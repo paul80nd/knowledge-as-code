@@ -83,12 +83,88 @@ proved.
     clauses.jsonl        every clause, one to a line, carrying the level it binds at
   standards/
     std-<MNEM>.json      the same, for a standard
-    rules.jsonl          every rule, one to a line, carrying the obligations under its heading
+    eng/
+      std-<MNEM>.json    a record of a corpus this one consumes, filed under that corpus
+    rules.jsonl          every rule of both corpora, one to a line
 ```
 
 The names are read from the schema. A type's directory is its own key, and its flat file is named for what the type
 calls one of its parts: `terms.jsonl`, because a glossary's `parts:` block says `noun: term`. Both are fixed once the
 type has declared them, because a skill addresses them by name.
+
+## A consumer inherits what its producers published
+
+A corpus naming another in `consumes:` publishes that corpus's records alongside its own. The alternative is what the
+skills already tell an agent to expect and what an export could not deliver: standards compose, so the rules binding a
+piece of work are the union of every layer that reaches it, and half that union sitting unexported reads to an agent
+exactly like a corpus that states no rule.
+
+### Every type the producer exported travels
+
+A consumer receives types it never adopted. A rule of this corpus cites a clause of a policy it does not hold, and that
+address resolves only where the policy travelled too. Filtering the inheritance down to the types the consumer adopted
+would publish an obligation whose authority is unreachable.
+
+It is also what decides which skills a plugin ships. [`bundle`](../cli/bundle.md) trims a component whose types the
+export does not carry, so a corpus inheriting a glossary ships the glossary skill without declaring anything.
+
+### The parts merge and the records do not
+
+One flat file per type, holding both corpora's lines, is the whole point: an agent greps once for every rule that binds
+it rather than learning which corpus wrote which. A line can say whose it is, so nothing is lost by merging them.
+
+A record file has only its name to say that, and two corpora may each hold a `std-TEST`. So an inherited record is
+filed under the shortcode of the corpus that wrote it, and the consumer's own records stay where they were.
+
+### A bare id is the corpus's own
+
+An inherited line carries its producer's shortcode on every key holding an id: the part's own id, the record it belongs
+to, and each id under `seeAlso`. It names that producer again under `shortcode`, which is the key into `sources`.
+
+A line with no `shortcode` was written by the corpus publishing the export. That is the rule a citation already
+follows, where `eng:pol-VURM` names another corpus and a bare `pol-VURM` names this one, so a reader learns one rule
+rather than two.
+
+`seeAlso` is the value worth being careful about. Left bare, an inherited reference would point at whatever the
+consuming corpus happens to call the same thing. That resolves, and resolves to the wrong record, which is worse than
+resolving to none.
+
+### A chain of any depth costs no code
+
+A grandparent's records arrive inside its child's export already carrying the grandparent's shortcode, and they keep
+it. Only an unstamped line is stamped, so a value is prefixed once however many corpora it passes through.
+
+`sources` carries the same property. A consumer publishes an entry for each corpus it consumes and for each corpus
+they consumed in turn, so a line naming a grandparent finds the address its own producer published for it.
+
+### What stops the run
+
+Each of these ends the run with the reason and nothing written. None is visible in the output, so the run that built it
+is the last place anyone would see it.
+
+* **A declared import with nothing restored.** The export would be missing a layer and say nothing about it.
+* **A consumed corpus at an export format this build does not read.** A merge reads the producer's own key names out
+  of its manifest, so an envelope this build does not know is one whose keys it cannot be sure of.
+* **Two corpora exporting one type at two shapes**, or carrying its sections at two fidelities. A merged file whose
+  halves are shaped differently reads as one file and answers two ways.
+* **One corpus arriving twice at two versions.** Two corpora consumed here may each have consumed a third. Whichever
+  account of it won, a line naming it would resolve to a commit half its records were never read at.
+
+### `sources` is the one thing a merge cannot merge
+
+Each entry holds the publishing block its producer wrote: its target, its base, its path prefix and its commit. A
+record of `eng` is read at eng's commit, under eng's path prefix, in eng's repository, and the consuming corpus's own
+block gets all three wrong.
+
+```json
+"sources": [
+  { "shortcode": "eng", "corpus": "example-engineering", "contentVersion": "0.7.4",
+    "publishing": { "target": "github", "ref": "133ebc79…", "pathPrefix": "examples/engineering" } }
+]
+```
+
+`publishing` stays what this corpus says about itself, so a reader holding an export that inherits nothing reads it
+exactly as before.
 
 ## The manifest lets a reader choose which file to open
 
@@ -113,16 +189,20 @@ entry under `types` carries it once.
 ### Each type names the two keys that address a part
 
 A part line's keys are the type's own words, so a consumer holding a corpus with a type it never adopted has no schema
-to read them from. Two of them are the ones any reader needs: which record a line belongs to, and which part of that
-record it is. The type's entry names both.
+to read them from. Four are named: which record a line belongs to, which part of that record it is, the part's own full
+id, and the ids of the parts it points at.
 
 ```json
-"partsFile": "policies/clauses.jsonl", "recordKey": "record", "partKey": "part"
+"partsFile": "policies/clauses.jsonl", "recordKey": "record", "partKey": "part",
+"idKey": "id", "seeAlsoKey": null
 ```
 
+The first two are what any reader needs to address a part. The last two are what a corpus merging this type stamps its
+shortcode onto, so a producer choosing its own words for them is stamped correctly rather than left unlabelled.
+
 A consumer assuming a spelling would read a producer's parts as empty wherever that producer chose different words, and
-every citation into them would fail for a reason nothing states. Both keys are absent where the type keeps no parts, as
-`partsFile` is.
+every citation into them would fail for a reason nothing states. All four are absent where the type keeps no parts, as
+`partsFile` is, and `seeAlsoKey` is null as well for a type declaring no such key.
 
 ### `about` carries what the corpus says about itself
 
@@ -333,6 +413,10 @@ glossary's file and no consumer of another type reads it.
 It went from 2 to 3 when `rawTemplate` left the manifest and `base` and `pathPrefix` arrived. A record's `links` lost
 its `raw` half in the same edit and moved no `shapeVersion`, because that object is written for every type by the
 exporter rather than declared by any one type's `export:` block. How a link is built is the envelope's business.
+
+It went from 3 to 4 when `sources` arrived and a consumer began carrying what it consumes. `idKey` and `seeAlsoKey`
+arrived on each type's entry in the same edit and moved no `shapeVersion`, because they name keys that were already
+there rather than changing any line.
 
 ## What a type cannot say
 

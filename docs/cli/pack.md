@@ -24,6 +24,11 @@ Packages and Azure DevOps Artifacts both store one, and neither this command nor
 NuGet client. What a consumer acts on is `corpus/manifest.json` inside the archive, which is the export's own manifest,
 unchanged.
 
+**A package carries what its corpus consumes**, because [`export`](export.md) does and this seals what that wrote. So a
+corpus consuming yours inherits the corpora you inherited, and you are republishing their records under your own name
+and version. [Imports](../design/imports.md#what-a-corpus-publishes-it-republishes) says why that is the design rather
+than an oversight.
+
 The version is `content-version` from [`.corpus.yaml`](../corpus-descriptor.md), the number a corpus moves by hand when
 its records change meaning. The package also has to name a `shortcode`, because that is the word a consuming corpus will
 cite it by.

@@ -1,0 +1,16 @@
+descriptor-version: 1
+corpus: test-inherited
+shortcode: own
+
+# Restored beside this file, so the export carries it. The `imports` fixture is the other half of this
+# pair: it declares the same thing with nothing restored, and `validate` reports it.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.1.0
+    source: ../engineering/.dist/package
+    resolved: "0.4.1"
+
+upstream:
+  url:
+skip: []

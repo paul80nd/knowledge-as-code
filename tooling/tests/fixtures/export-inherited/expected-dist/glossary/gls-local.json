@@ -1,0 +1,18 @@
+{
+  "type": "glossary",
+  "path": "glossary/local.md",
+  "fields": {
+    "id": "gls-local",
+    "title": "Local",
+    "narrows": null,
+    "status": "draft",
+    "review-by": "2030-01-01",
+    "tags": [
+      "local"
+    ]
+  },
+  "sections": {
+    "Scope": "What this corpus writes rather than inherits."
+  },
+  "links": null
+}

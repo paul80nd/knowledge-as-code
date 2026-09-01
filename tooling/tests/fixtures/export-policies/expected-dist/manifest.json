@@ -1,5 +1,5 @@
 {
-  "formatVersion": 3,
+  "formatVersion": 4,
   "corpus": null,
   "shortcode": null,
   "contentVersion": null,
@@ -20,6 +20,7 @@
     "pathPrefix": null,
     "ref": null
   },
+  "sources": [],
   "types": [
     {
       "type": "policies",
@@ -30,6 +31,8 @@
       "partsFile": "policies/clauses.jsonl",
       "recordKey": "record",
       "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
       "sections": {
         "Purpose": "summary",
         "Scope": "full",

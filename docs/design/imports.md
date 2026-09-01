@@ -31,7 +31,7 @@ governance layer has no opinion about, and the governance corpus keeps no list o
 The producer runs the first three and the consumer runs the last two.
 
 1. **`kac export`** writes `.dist/export/`: a manifest, one JSON file per record, and a flat file of parts for each type
-   that keeps them.
+   that keeps them, together with whatever this corpus consumes in turn.
 2. **`kac pack`** seals that tree into one file, named for the corpus and the version its content is on.
 3. **CI publishes** the file to a registry, which stores every version it has accepted and hands one back to whoever
    asks for it.
@@ -67,6 +67,22 @@ none for each reference into it.
 
 A skip would be cheaper and worse. A local run that checks less than the pipeline does is how a broken reference
 reaches a default branch, by which time whoever wrote it has stopped looking.
+
+## What a corpus publishes, it republishes
+
+An export carries the corpora its own corpus consumes, so `pack` seals them into the package and a third corpus
+consuming this one inherits them too. That is what makes a chain of any depth resolve with no rule about depth
+anywhere in the tool. [The export format](export.md#a-consumer-inherits-what-its-producers-published) says what the
+merge settles and what it refuses.
+
+**A consumer cannot withhold what it inherited.** `export.exclude` in [`.corpus.yaml`](../corpus-descriptor.md)
+governs the corpus's own records. A corpus shipping a trimmed copy of its producer under its own name would hand an
+agent a governance layer that reads as complete, and a producer that did not want a record published excludes it
+itself.
+
+**A package therefore carries records this corpus did not write.** Whoever publishes one is republishing another
+corpus's content under their own name and version. That is what inheriting means, and it is worth knowing where the
+two corpora sit under different licences or different owners.
 
 ## An import that has fallen behind
 
@@ -104,7 +120,8 @@ anybody runs for it. [Referring to an id](../framework/metadata.md#referring-to-
 
 ## What a check may ask across the boundary
 
-An export carries each record's declared fields and sections. The graph reads far less: an imported record's id, its
+An export carries each record's declared fields and sections, and a consumer republishes them untouched. What a check
+reads is far less: an imported record's id, its
 type, its path and the parts it carries, beside the producer's own template for a link into their published form. A
 citation needs those, and every export states them whatever type wrote the record.
 

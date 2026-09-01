@@ -229,8 +229,17 @@ else
     PARTS_FILE=$(jqr --arg d "$dir" '.types[] | select(.dir == $d) | .partsFile // empty' "$EXPORT_MANIFEST")
     PARTS_NAME=$(basename "$PARTS_FILE")
 
-    RECORD=$(find "$ROOT/$CORPUS_ROOT/$dir" -type f -name '*.json' ! -name "$PARTS_NAME" | sort | head -1)
-    [ -n "$RECORD" ] || fail "$dir declares $RECORDS record(s) and the installed plugin holds none."
+    # Directly inside the type's directory, and never below it. A subdirectory there holds the records
+    # of a corpus this one consumes, published at that corpus's own commit under its own prefix, so
+    # joining this corpus's three values to one of those paths builds an address for a file that was
+    # never there. The inherited half is fetched below, from the source that published it.
+    RECORD=$(find "$ROOT/$CORPUS_ROOT/$dir" -maxdepth 1 -type f -name '*.json' ! -name "$PARTS_NAME" \
+      | sort | head -1)
+
+    if [ -z "$RECORD" ]; then
+      echo "round-trip: $dir holds only inherited records — nothing of this corpus's own to fetch."
+      continue
+    fi
 
     RECORD_PATH=$(jqr '.path' "$RECORD")
     URL="$RAW_BASE/$PUB_REF$PREFIX_SEG/$RECORD_PATH"
@@ -245,6 +254,70 @@ else
     echo "round-trip: $dir — the fetched source matched the record."
   done < "$WORK/dirs.txt"
 fi
+
+# ── an inherited record, fetched from the corpus that published it ────────────────────────────────
+#
+# The assertion the merge exists for. An inherited record sits at its producer's commit under its
+# producer's path prefix, and this corpus's own three values name neither. Building the address from
+# `sources` is the work a consumer does for every link into a record it did not write, and a wrong
+# entry there resolves to a plausible 404 or to a version of somebody else's corpus nobody asked
+# about. Only the fetch tells those apart.
+#
+# The response is not compared against the working tree. A consumer holds the export of what it
+# consumes and never those files, so there is nothing here to compare with; that this corpus and its
+# producer happen to share a repository is an accident of the examples.
+
+jqr '.sources[]? | select(.publishing.target == "github") | .shortcode' "$EXPORT_MANIFEST" \
+  > "$WORK/sources.txt"
+
+while read -r code; do
+  [ -n "$code" ] || continue
+
+  SRC_BASE=$(jqr --arg c "$code" '.sources[] | select(.shortcode == $c) | .publishing.base // empty' \
+    "$EXPORT_MANIFEST")
+  SRC_PREFIX=$(jqr --arg c "$code" \
+    '.sources[] | select(.shortcode == $c) | .publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
+  SRC_REF=$(jqr --arg c "$code" '.sources[] | select(.shortcode == $c) | .publishing.ref // empty' \
+    "$EXPORT_MANIFEST")
+
+  if [ -z "$SRC_BASE" ] || [ -z "$SRC_REF" ]; then
+    echo "round-trip: source '$code' states no base or no ref, so no fetch is checked for it."
+    continue
+  fi
+
+  INHERITED=$(find "$ROOT/$CORPUS_ROOT" -type d -name "$code" | sort | head -1)
+  [ -n "$INHERITED" ] || fail "'$code' is a source and no directory holds the records it published."
+
+  RECORD=$(find "$INHERITED" -type f -name '*.json' | sort | head -1)
+  [ -n "$RECORD" ] || fail "'$code' is a source and $INHERITED holds no record."
+
+  RECORD_PATH=$(jqr '.path' "$RECORD")
+
+  SRC_RAW=$(echo "$SRC_BASE" | sed 's|https://github.com/|https://raw.githubusercontent.com/|')
+  SRC_SEG=""
+  if [ -n "$SRC_PREFIX" ]; then
+    SRC_SEG="/$SRC_PREFIX"
+  fi
+
+  URL="$SRC_RAW/$SRC_REF$SRC_SEG/$RECORD_PATH"
+
+  echo "round-trip: fetching $URL"
+  curl -sS --fail --location --output "$WORK/inherited.md" "$URL" \
+    || fail "'$code' in sources built a URL that does not fetch: $URL"
+
+  [ -s "$WORK/inherited.md" ] || fail "'$code' built a URL that fetched an empty file: $URL"
+
+  # The producer resolved its own link when it exported, so the record carries the address this run
+  # just rebuilt from `sources`. Two accounts of one address, and this is where they meet.
+  HUMAN=$(jqr '.links.human // empty' "$RECORD")
+  case "$HUMAN" in
+    "$SRC_BASE"*) ;;
+    "") fail "the inherited record $RECORD carries no resolved link." ;;
+    *) fail "$RECORD is published under '$HUMAN' and 'sources' names '$SRC_BASE'." ;;
+  esac
+
+  echo "round-trip: '$code' fetched a record from the corpus that published it."
+done < "$WORK/sources.txt"
 
 # ── the lookup each skill describes ───────────────────────────────────────────────────────────────
 #

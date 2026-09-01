@@ -50,13 +50,39 @@ public static class Commands
             return Fail($"export: .corpus.yaml excludes {string.Join(", ", unknown)}, which an export cannot "
                         + $"act on. It excludes {string.Join(" or ", CorpusDescriptor.Excludable)}.");
 
+        // What this corpus consumes travels with what it wrote, so a restore that has not run is a hole in
+        // the export rather than a smaller one. `docs/design/imports.md` makes the same argument for
+        // `validate`: an export missing its inherited layer installs, answers, and answers wrongly.
+        var (inherited, notRestored) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
+        if (notRestored.Count > 0)
+            return Fail($"export: nothing is restored for {string.Join(", ", notRestored)}, which this corpus "
+                        + "consumes and an export carries. Run kac restore.");
+
+        // A merge reads the producer's own key names out of its manifest, so an envelope this build does
+        // not know is one whose keys it cannot be sure of. `Bundler` refuses the same mismatch one step
+        // further on, and for the same reason.
+        var stale = inherited.Where(c => c.FormatVersion != Exporter.FormatVersion).ToList();
+        if (stale.Count > 0)
+            return Fail(
+                $"export: {string.Join(", ", stale.Select(c => $"{c.Shortcode} is at export format "
+                                                               + $"{c.FormatVersion}"))}, and this build reads "
+                + $"{Exporter.FormatVersion}. Re-export and re-pack it, then run kac restore.");
+
         var commit = Git.Head(corpusRoot);
         var dirty = Git.Dirty(corpusRoot);
         var publishing = Publishing.For(corpus.Descriptor, commit);
         var now = DateTime.UtcNow;
 
         var plan = Exporter.Plan(corpus, publishing, type,
-            new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty));
+            new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty),
+            inherited);
+
+        if (plan.Refused.Count > 0)
+        {
+            foreach (var reason in plan.Refused) Out.Line($"  {reason}");
+            return Fail("export: this corpus and one it consumes export a type differently, so nothing was "
+                        + "written. Bring the two to one shape, or drop the type from this corpus.");
+        }
 
         var written = Exporter.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
@@ -95,6 +121,13 @@ public static class Commands
         // An empty type list is a statement of what this corpus has, and not a failure. Either it adopted no type that
         // declares an export, or it withheld everything the types it did adopt would have carried. The line above says
         // which, where it was the second.
+        // Named because a file count says nothing about whose records are in it, and a consumer receiving
+        // another corpus's records under this corpus's name is the fact worth stating out loud.
+        if (inherited.Count > 0)
+            Note($"export: carried {string.Join(", ", inherited.Select(c => $"{c.Corpus ?? c.Shortcode} "
+                                                                            + $"{c.ContentVersion}"))}, which "
+                 + "this corpus consumes. Their records travel merged with its own.");
+
         Account(plan.Types.Count == 0
             ? $"export: wrote {written.Count} file(s); no type contributed a record."
             : $"export: wrote {written.Count} file(s) for {string.Join(", ", plan.Types.Select(t => t.Type))}.");

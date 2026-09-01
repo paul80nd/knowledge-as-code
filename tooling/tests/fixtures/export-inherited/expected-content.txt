@@ -1,0 +1,46 @@
+# The two fields that differ between two runs over one tree, which the golden comparison replaces on
+# both sides.
+.dist/export/manifest.json :: "commit": null
+.dist/export/manifest.json :: "generatedAt":
+
+# Two sources for one consumed corpus: the one this corpus named, and the one that corpus had named in
+# turn. Each keeps its own commit, because a record is read where its own producer published it.
+.dist/export/manifest.json :: "shortcode": "eng"
+.dist/export/manifest.json :: "shortcode": "gp"
+.dist/export/manifest.json :: "ref": "1111111111111111111111111111111111111111"
+.dist/export/manifest.json :: "ref": "2222222222222222222222222222222222222222"
+
+# This corpus publishes nowhere, and what it inherited still carries the addresses its producers built.
+# A merge borrowing this corpus's own template for an inherited record would address a repository that
+# holds no such file.
+.dist/export/manifest.json :: "target": "none"
+.dist/export/glossary/eng/gls-shared.json :: "human": "https://github.com/example/upstream
+
+# One entry per type, counting what this corpus wrote and what it inherited as one number. A consumer
+# asks how much of a type there is; which corpus wrote a record is a fact about the line.
+.dist/export/manifest.json :: "type": "glossary"
+.dist/export/manifest.json :: "records": 2
+.dist/export/manifest.json :: "parts": 3
+
+# A type this corpus never adopted, arriving whole because a record here may cite into it.
+.dist/export/manifest.json :: "type": "policies"
+.dist/export/policies/clauses.jsonl :: "id":"eng:pol-KEEP.HOLD"
+
+# A bare id is this corpus's own, and carries no shortcode. That is the rule a citation already follows,
+# so a consumer tells its own records from the rest without being told which corpus it is.
+.dist/export/glossary/terms.jsonl :: "id":"gls-local.shelf","title":"Shelf"
+.dist/export/glossary/terms.jsonl :: "record":"gls-local","part":"shelf"
+
+# An inherited line names its producer on all three keys that hold an id. `seeAlso` left bare would point
+# at whatever this corpus happens to call the same thing, which resolves and resolves wrongly.
+.dist/export/glossary/terms.jsonl :: "id":"eng:gls-shared.record"
+.dist/export/glossary/terms.jsonl :: "record":"eng:gls-shared"
+.dist/export/glossary/terms.jsonl :: "seeAlso":["eng:gls-shared.store"]
+.dist/export/glossary/terms.jsonl :: "anchor":"record","shortcode":"eng"
+
+# A grandparent is labelled once. This line arrived inside eng's export already naming `gp`, and keeps
+# that name on both keys and on the line. Restamping it would file the record under the corpus this one
+# fetched it through and send every link for it to the wrong repository.
+.dist/export/glossary/terms.jsonl :: "id":"gp:gls-old.store"
+.dist/export/glossary/terms.jsonl :: "record":"gp:gls-old"
+.dist/export/glossary/terms.jsonl :: "anchor":"store","shortcode":"gp"

@@ -1,0 +1,17 @@
+{
+  "type": "glossary",
+  "path": "glossary/shared.md",
+  "fields": {
+    "id": "gls-shared",
+    "title": "Shared",
+    "narrows": null,
+    "status": "active",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Scope": "The words every corpus below this one inherits."
+  },
+  "links": {
+    "human": "https://github.com/example/upstream/blob/1111111111111111111111111111111111111111/glossary/shared.md"
+  }
+}

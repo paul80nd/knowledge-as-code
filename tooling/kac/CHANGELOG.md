@@ -17,7 +17,24 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **`kac export` carries the corpora your corpus consumes.** Every type a producer exported travels, so a consumer
+  receives types it never adopted and a citation into them resolves. Their parts merge into one flat file per type,
+  and their records are filed under the shortcode of the corpus that wrote them. An inherited line carries that
+  shortcode on `id`, on `record` and on every `seeAlso` value, and again under `shortcode`; a line with none is your
+  own. The manifest gains `sources`, one entry per corpus inherited, each holding the publishing block its producer
+  wrote, because a record of theirs is read at their commit in their repository. `kac pack` seals all of it, so a
+  third corpus inherits the chain.
+- **`kac export` refuses rather than writing a hole.** It stops with the reason and no files where a declared import
+  has not been restored, where a consumed corpus is at an export format this build does not read, where two corpora
+  export one type at different shapes or section fidelities, and where one corpus arrives twice at two versions.
+
 ### Changed
+
+- **A type's manifest entry names two more of its part line's keys.** `idKey` and `seeAlsoKey` join `recordKey` and
+  `partKey`, so a corpus merging that type stamps the keys the producing type actually named. `formatVersion` moves to
+  4, so run `kac export` again before `kac bundle`, which refuses an export built to another shape.
 
 - **`kac validate` reports a `Covers` line that names nothing.** `mirrors-citations` now reports a labelled footnote
   gathering no citation the field could carry, against the line. A line naming only ids of types the field does not

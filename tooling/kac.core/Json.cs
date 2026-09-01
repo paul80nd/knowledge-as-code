@@ -50,7 +50,23 @@ public record ExportManifest(
     string GeneratedAt,
     ExportAbout About,
     ExportPublishing Publishing,
+    IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<ExportedType> Types);
+
+// One corpus this export inherited, and where that corpus publishes.
+//
+// The records travel merged into the types beside this corpus's own, so a consumer greps one file per
+// type. What cannot merge is the address: a record of `eng` is read at eng's commit, under eng's path
+// prefix, in eng's repository, and this corpus's own `Publishing` gets all three wrong. So each source
+// carries the publishing block its producer wrote, and a line names its source through `shortcode`.
+//
+// `Corpus` and `ContentVersion` are what the producer called itself and the version it published at.
+// They say which knowledge arrived, which a shortcode alone does not.
+public record ExportSource(
+    string Shortcode,
+    string? Corpus,
+    string? ContentVersion,
+    ExportPublishing Publishing);
 
 // What a corpus says about itself, for a reader who meets it as a package or as an installed plugin
 // rather than as a repository.
@@ -113,8 +129,12 @@ public record ExportPublishing(
 // belongs to, and which part of that record it is. They are published because a type names its own keys
 // and a consumer reading a type it never adopted has no schema to read them from. Assuming a spelling
 // would leave a producer whose type calls them something else exporting a valid package whose parts read
-// as empty, and every citation into them failing for a reason nothing states. Both are null where the
-// type keeps no parts, alongside `PartsFile`.
+// as empty, and every citation into them failing for a reason nothing states.
+//
+// `IdKey` and `SeeAlsoKey` name the other two that hold an id: the part's own full id, and the ids of
+// the parts it points at. A corpus merging this type in stamps its shortcode onto all four, and reads
+// which keys to stamp from here for the same reason. All four are null where the type keeps no parts,
+// alongside `PartsFile`, and `SeeAlsoKey` is null as well where the type declares no such key.
 public record ExportedType(
     string Type,
     int ShapeVersion,
@@ -124,6 +144,8 @@ public record ExportedType(
     string? PartsFile,
     string? RecordKey,
     string? PartKey,
+    string? IdKey,
+    string? SeeAlsoKey,
     IReadOnlyDictionary<string, string> Sections);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
