@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -54,7 +55,14 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     private readonly Dictionary<string, string> _bases = new(StringComparer.Ordinal);
 
     // What one lookup came to. `Value` is null exactly where `Problem` is set.
-    public sealed record Answer<T>(T? Value, string? Problem) where T : class;
+    public sealed record Answer<T>(T? Value, string? Problem) where T : class
+    {
+        // The invariant above, told to the compiler, so a caller that branches on it reads the other
+        // half without asserting anything. Every construction below holds it.
+        [MemberNotNullWhen(true, nameof(Problem))]
+        [MemberNotNullWhen(false, nameof(Value))]
+        public bool Failed => Problem is not null;
+    }
 
     // Every version of `id` the feed holds, in whatever order it lists them, or why it could not be
     // asked. The caller is choosing the highest version a range admits, so it orders them itself rather

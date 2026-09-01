@@ -175,8 +175,8 @@ public static class Commands
 
         var answered = Asking.Resolve(request, new DirectoryInfo(dir).Name, take.Declared,
             Git.Run(dir, "remote get-url origin")?.Trim(), asker);
-        if (answered.Problem is { } unanswered) return Fail(unanswered);
-        var answers = answered.Answers!;
+        if (answered.Failed) return Fail(answered.Problem);
+        var answers = answered.Answers;
 
         var upstream = new Upstream(request.From, request.Path, request.Ref, take.Commit,
             take.Manifest.Version, today);

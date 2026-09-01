@@ -34,8 +34,9 @@ public class TemplateSourceTests : IDisposable
         var fetch = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false);
 
         Assert.Null(fetch.Problem);
-        Assert.Equal(from, fetch.Source!.Root);
-        Assert.Null(fetch.Source.Commit);
+        var source = fetch.Fetched();
+        Assert.Equal(from, source.Root);
+        Assert.Null(source.Commit);
     }
 
     [Fact]
@@ -44,7 +45,7 @@ public class TemplateSourceTests : IDisposable
         var from = Dir("template");
         Write(from, "manifest.yaml");
 
-        TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Dispose();
+        TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Fetched().Dispose();
 
         Assert.True(Directory.Exists(from));
     }
@@ -85,7 +86,7 @@ public class TemplateSourceTests : IDisposable
 
         var fetch = TemplateSource.Read("new", from, null, "framework", _temp.FullName, prompt: false);
 
-        Assert.Equal(Path.Combine(from, "framework"), fetch.Source!.Root);
+        Assert.Equal(Path.Combine(from, "framework"), fetch.Fetched().Root);
     }
 
     [Fact]
@@ -97,7 +98,7 @@ public class TemplateSourceTests : IDisposable
         Write(from, "bin/kac.dll");
         if (!GitCli.Repository(from)) return;
 
-        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Files();
+        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Fetched().Files();
 
         Assert.Contains("manifest.yaml", files);
         Assert.DoesNotContain("bin/kac.dll", files);
@@ -110,7 +111,7 @@ public class TemplateSourceTests : IDisposable
         Write(from, "manifest.yaml");
         Write(from, "template/CLAUDE.md");
 
-        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Source!.Files();
+        var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Fetched().Files();
 
         Assert.Equal(["manifest.yaml", "template/CLAUDE.md"], files.OrderBy(f => f, StringComparer.Ordinal));
     }
@@ -125,7 +126,7 @@ public class TemplateSourceTests : IDisposable
         var read = TemplateSource.Read("new", Url(origin), GitCli.Branch, null, _temp.FullName, prompt: false);
 
         Assert.Null(read.Problem);
-        using var fetch = read.Source!;
+        using var fetch = read.Fetched();
         Assert.NotEqual(origin, fetch.Root);
         Assert.Equal(40, fetch.Commit!.Length);
         Assert.Contains("manifest.yaml", fetch.Files());
@@ -141,8 +142,9 @@ public class TemplateSourceTests : IDisposable
         var fetch = TemplateSource.Read("new", Url(origin), null, null, _temp.FullName, prompt: false);
         Assert.Null(fetch.Problem);
 
-        var clone = fetch.Source!.Root;
-        fetch.Source.Dispose();
+        var source = fetch.Fetched();
+        var clone = source.Root;
+        source.Dispose();
 
         Assert.False(Directory.Exists(clone));
     }

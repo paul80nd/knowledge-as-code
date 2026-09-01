@@ -69,13 +69,13 @@ public static class Restore
         foreach (var entry in entries)
         {
             var resolved = Version(entry, registry);
-            if (resolved.Problem is { } problem)
+            if (resolved.Failed)
             {
-                problems.Add(problem);
+                problems.Add(resolved.Problem);
                 continue;
             }
 
-            var version = resolved.Value!;
+            var version = resolved.Value;
 
             // Already unpacked, by the same corpus and at the version this resolved to, so nothing is
             // fetched. Both halves are asked, because the checks a fetch is held to are skipped here and
@@ -87,15 +87,15 @@ public static class Restore
             }
 
             var package = registry.Package(entry.Source, entry.Corpus, version);
-            if (package.Value is not { } bytes)
+            if (package.Failed)
             {
-                problems.Add(package.Problem!);
+                problems.Add(package.Problem);
                 continue;
             }
 
-            var unpacked = Unpack(bytes, entry, version);
-            if (unpacked.Problem is { } refused) problems.Add(refused);
-            else steps.Add(new RestoreStep(entry.Corpus, entry.Shortcode, version, false, unpacked.Value!));
+            var unpacked = Unpack(package.Value, entry, version);
+            if (unpacked.Failed) problems.Add(unpacked.Problem);
+            else steps.Add(new RestoreStep(entry.Corpus, entry.Shortcode, version, false, unpacked.Value));
         }
 
         return new RestorePlan(steps, problems);
