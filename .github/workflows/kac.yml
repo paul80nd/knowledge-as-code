@@ -301,6 +301,20 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # An export carries what its corpus consumes, and refuses where nothing is restored for one. So
+      # the producer's package is built and restored before the consumer exports, as the `corpora` job
+      # already does. Each job holds its own checkout, so nothing another one did is on this runner.
+      - name: Build the package this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/engineering
+        run: |
+          dotnet run --project ../../tooling/kac -- export
+          dotnet run --project ../../tooling/kac -- pack
+
+      - name: Restore what this corpus consumes
+        if: matrix.corpus == 'payments'
+        run: dotnet run --project ../../tooling/kac -- restore
+
       - name: Build the export
         run: dotnet run --project ../../tooling/kac -- export
 
