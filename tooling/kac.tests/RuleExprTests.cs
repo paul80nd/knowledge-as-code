@@ -10,9 +10,9 @@ public class RuleExprTests
     // A document with the frontmatter, sections and links a case needs, parsed the way kac parses one.
     private static Facts FactsFor(string frontmatter, string body)
     {
-        var doc = Doc.Parse("adrs/0001-a-title.md", $"---\n{frontmatter}\n---\n\n# A title\n\n{body}",
-            new Schema());
-        return new Facts(doc!);
+        var doc = Required.Parsed("adrs/0001-a-title.md",
+            $"---\n{frontmatter}\n---\n\n# A title\n\n{body}", new Schema());
+        return new Facts(doc);
     }
 
     private static bool Eval(string expr, string frontmatter = "id: adr-0001", string body = "Some prose.") =>

@@ -189,7 +189,7 @@ public class BreadcrumbTests
         IReadOnlyList<PluginComponent> included,
         params (string Path, string Content)[] exportFiles) =>
         Breadcrumb.Render(
-            (JsonObject)JsonNode.Parse(manifest)!,
+            (JsonObject)Required.Json(manifest),
             [.. exportFiles.Select(f => new BundleFile(f.Path, Encoding.UTF8.GetBytes(f.Content)))],
             included);
 

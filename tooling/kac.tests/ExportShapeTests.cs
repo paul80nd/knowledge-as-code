@@ -80,7 +80,7 @@ public class ExportShapeTests
                      .Where(t => t.Export is not null)
                      .OrderBy(t => t.Key, StringComparer.Ordinal))
         {
-            var export = t.Export!;
+            var export = t.DeclaredExport;
             shapes.AppendLine($"{t.Key}@{export.Version}");
             shapes.AppendLine($"  fields: {string.Join(", ", export.Fields)}");
             var sections = export.Sections.Select(s => $"{s.Section}={s.Fidelity}");

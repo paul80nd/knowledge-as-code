@@ -209,7 +209,7 @@ public class AlignmentRollupTests
 
         var found = new List<Finding>();
         new AlignmentRollup().Check(new CorpusRuleContext(
-            [doc], new Dictionary<string, Doc> { ["pol-SCRT"] = doc }, tree, doc.Type!,
+            [doc], new Dictionary<string, Doc> { ["pol-SCRT"] = doc }, tree, doc.TypeOf(),
             new RuleSpec { Id = new RuleId("alignment-rollup"), Postures = ["Obliged", "Self-obligated"] },
             (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Error, c, m)),
             (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Warning, c, m))));

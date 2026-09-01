@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Xunit.Sdk;
 using kac.core;
 
@@ -30,4 +31,23 @@ internal static class Required
     internal static TemplateSource Fetched(this TemplateSource.Fetch fetch) =>
         fetch.Source
         ?? throw new XunitException($"Expected a template, and the fetch refused: {fetch.Problem}");
+
+    // A document parsed from markdown a test wrote. `Doc.Parse` answers null for text it cannot read as
+    // a record, and a test writing that text is asserting something else, so the failure says which
+    // path was being parsed.
+    internal static Doc Parsed(string rel, string text, Schema schema, bool requireFrontmatter = true) =>
+        Doc.Parse(rel, text, schema, requireFrontmatter)
+        ?? throw new XunitException($"'{rel}' did not parse as a record.");
+
+    // The type a parsed document was read as. A test that fixed the folder has fixed the type with it.
+    internal static TypeSchema TypeOf(this Doc doc) =>
+        doc.Type ?? throw new XunitException($"'{doc.Rel}' was read as no type.");
+
+    // A frontmatter scalar a test wrote into the document it is now asserting on.
+    internal static string Scalar(this Doc doc, string field) =>
+        doc.FrontScalar(field) ?? throw new XunitException($"'{doc.Rel}' carries no '{field}'.");
+
+    // JSON a test wrote, or a command under test produced.
+    internal static JsonNode Json(string text) =>
+        JsonNode.Parse(text) ?? throw new XunitException("Expected JSON, and the text held null.");
 }

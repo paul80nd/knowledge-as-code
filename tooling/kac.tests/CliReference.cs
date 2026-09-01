@@ -148,7 +148,7 @@ internal static partial class CliReference
             // A runner naming itself in the environment turns colour back on, and escapes in the XML would render
             // into the page.
             Environment = { ["NO_COLOR"] = "1" },
-        })!;
+        }) ?? throw new XunitException("could not start kac to read its XML documentation.");
 
         var stdout = run.StandardOutput.ReadToEnd();
         var stderr = run.StandardError.ReadToEnd();

@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 using kac.core;
+using Xunit.Sdk;
 
 // In-process unit tests for the package.
 //
@@ -181,7 +182,9 @@ public class PackerTests
         var archive = Packer.Archive(Plan([Manifest(), ("glossary/terms.jsonl", line)]));
 
         using var zip = new ZipArchive(new MemoryStream(archive), ZipArchiveMode.Read);
-        using var reader = new StreamReader(zip.GetEntry("corpus/glossary/terms.jsonl")!.Open());
+        var terms = zip.GetEntry("corpus/glossary/terms.jsonl")
+                    ?? throw new XunitException("the package holds no corpus/glossary/terms.jsonl.");
+        using var reader = new StreamReader(terms.Open());
 
         Assert.Equal(line, reader.ReadToEnd());
     }

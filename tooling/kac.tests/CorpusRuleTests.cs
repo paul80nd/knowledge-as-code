@@ -129,7 +129,7 @@ public class CorpusRuleTests
             .ToList();
         Assert.Equal(records.Length, docs.Count);
 
-        var byId = docs.ToDictionary(d => d.FrontScalar("id")!, d => d, StringComparer.OrdinalIgnoreCase);
+        var byId = docs.ToDictionary(d => d.Scalar("id"), d => d, StringComparer.OrdinalIgnoreCase);
 
         var found = new List<Finding>();
 

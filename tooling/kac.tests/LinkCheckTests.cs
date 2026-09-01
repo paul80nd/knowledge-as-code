@@ -72,7 +72,7 @@ public class LinkCheckTests
     private static List<Finding> Findings(string fromRel, string markdown)
     {
         var schema = new Schema();
-        var doc = Doc.Parse(fromRel, markdown, schema, requireFrontmatter: false)!;
+        var doc = Required.Parsed(fromRel, markdown, schema, requireFrontmatter: false);
         var findings = new List<Finding>();
         LinkChecks.Check(doc, schema, Corpus(), new Report(doc.Rel, findings));
         return findings;

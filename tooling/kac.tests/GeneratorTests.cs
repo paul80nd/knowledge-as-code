@@ -72,8 +72,8 @@ public class GeneratorTests
     // the fixture corpora it runs over hold one type whose index sorts by id.
     private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
     [
-        .. rows.Select(r => Doc.Parse($"runbooks/{r.Id}.md",
-            $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema())!)
+        .. rows.Select(r => Required.Parsed($"runbooks/{r.Id}.md",
+            $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema()))
     ];
 
     // A link naming the file alone would land beside the index rather than on the record.
@@ -81,8 +81,8 @@ public class GeneratorTests
     public void IndexPage_links_a_record_through_the_category_folder_holding_it()
     {
         var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
-        var doc = Doc.Parse("standards/common/build-gates.md",
-            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+        var doc = Required.Parsed("standards/common/build-gates.md",
+            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema());
 
         var page = Generator.IndexPage(t, [doc]);
 
@@ -160,8 +160,8 @@ public class GeneratorTests
         var schema = Located();
         return (schema.ByFolder["policies"],
         [
-            .. rels.Select((rel, i) => Doc.Parse($"policies/{rel}",
-                $"---\nid: pol-{i:0000}\n---\n\n# Record {i}\n", schema)!)
+            .. rels.Select((rel, i) => Required.Parsed($"policies/{rel}",
+                $"---\nid: pol-{i:0000}\n---\n\n# Record {i}\n", schema))
         ]);
     }
 
@@ -234,8 +234,8 @@ public class GeneratorTests
     public void IndexPage_heads_nothing_where_the_type_derives_no_field_from_the_path()
     {
         var t = new TypeSchema { Label = "Standard", IdPrefix = "std", IndexColumns = ["title"] };
-        var doc = Doc.Parse("standards/common/build-gates.md",
-            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema())!;
+        var doc = Required.Parsed("standards/common/build-gates.md",
+            "---\nid: std-GATES\n---\n\n# A failing check blocks the merge\n", new Schema());
 
         var page = Generator.IndexPage(t, [doc]);
 
