@@ -126,6 +126,19 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+      # An export carries what its corpus consumes, and refuses where nothing is restored for one. So
+      # the producer's package is built and restored before the loop below reaches the consumer, as
+      # `verify` already does. This job holds its own checkout, so nothing `verify` did is on it.
+      - name: Build and restore the package a corpus here consumes
+        run: |
+          set -e
+
+          ( cd examples/engineering \
+            && dotnet run --project ../../tooling/kac -- export \
+            && dotnet run --project ../../tooling/kac -- pack )
+
+          ( cd examples/payments && dotnet run --project ../../tooling/kac -- restore )
+
       # Each corpus in turn, because the branch holds one marketplace offering every plugin. `bundle`
       # writes a marketplace naming the corpus it ran in, which is what installs a plugin from a path
       # while it is being proved. The published one offers them all at once, and is assembled below.

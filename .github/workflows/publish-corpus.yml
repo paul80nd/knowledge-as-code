@@ -126,6 +126,21 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # An export carries what its corpus consumes, and refuses where nothing is restored for one, so
+      # the producer's package is built and restored before the consumer exports. Each job holds its
+      # own checkout, so nothing `verify` or another job in this matrix did is on this runner.
+      - name: Build the package this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/engineering
+        run: |
+          dotnet run --project ../../tooling/kac -- export
+          dotnet run --project ../../tooling/kac -- pack
+
+      - name: Restore what this corpus consumes
+        if: matrix.corpus == 'payments'
+        working-directory: examples/payments
+        run: dotnet run --project ../../tooling/kac -- restore
+
       # Every link the export writes names the commit HEAD stands on, which here is one the raw host
       # serves.
       - name: Build the export

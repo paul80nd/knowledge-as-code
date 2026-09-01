@@ -22,7 +22,7 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 //
 // `Announce` is whether the breadcrumb names this component at the start of a session. False by
 // default, because a skill somebody asks for by name costs nothing to leave unannounced and the
-// breadcrumb is read at every start, resume, clear and compact. `docs/cli/bundle.md` says which
+// breadcrumb is read at every start, resume, clear and compact. `docs/design/plugin.md` says which
 // skills earn the line.
 public sealed record PluginComponent(
     string Path,
@@ -241,7 +241,7 @@ public static class Bundler
 
         // The breadcrumb, rendered here because everything it states is settled here. Asking the
         // surviving files rather than the components is what ties it to the hook directory.
-        // `docs/cli/bundle.md` says what that settles.
+        // `docs/design/plugin.md` says what that settles.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",

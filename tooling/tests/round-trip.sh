@@ -319,6 +319,48 @@ while read -r code; do
   echo "round-trip: '$code' fetched a record from the corpus that published it."
 done < "$WORK/sources.txt"
 
+# ── the breadcrumb a session is given ─────────────────────────────────────────────────────────────
+#
+# The one text every session reads whether it asks anything or not. Everything else here is reached by
+# an agent that decided to look, so a count stated wrongly in this file is the one nobody goes on to
+# check. A merged export counts several corpora's records into one type, and the breadcrumb credits
+# each corpus beside the count that belongs to it.
+#
+# Read from the installed copy, because the hook prints a file `bundle` wrote rather than reading the
+# export at runtime. A plugin whose hook was trimmed ships no breadcrumb, which is `bundle-empty`'s
+# case in the golden suite and is reported here rather than failed.
+
+BREADCRUMB="$ROOT/hooks/breadcrumb.txt"
+
+if [ -f "$BREADCRUMB" ]; then
+  grep -qF "travels with this session as data" "$BREADCRUMB" \
+    || fail "the breadcrumb does not open by naming the corpus that travels."
+
+  echo "round-trip: the breadcrumb names the corpus travelling with the session."
+
+  jqr '.sources[]? | .shortcode' "$EXPORT_MANIFEST" > "$WORK/credited.txt"
+
+  while read -r code; do
+    [ -n "$code" ] || continue
+
+    # A corpus reaches `sources` for publishing its own address, whether or not this export counts
+    # anything of its own. Asking the export first is what keeps the failure below an accusation the
+    # renderer has earned: a directory of its records, or a part line naming it, is what a line counts.
+    if ! find "$ROOT/$CORPUS_ROOT" -type d -name "$code" | grep -q . \
+      && ! grep -rq "\"shortcode\": *\"$code\"" "$ROOT/$CORPUS_ROOT"; then
+      echo "round-trip: '$code' sent nothing this export counts, so no line names it."
+      continue
+    fi
+
+    grep -qF "(from $code)" "$BREADCRUMB" \
+      || fail "'$code' wrote records this export carries and the breadcrumb credits none to it."
+
+    echo "round-trip: the breadcrumb credits $code with the records it wrote."
+  done < "$WORK/credited.txt"
+else
+  echo "round-trip: this plugin ships no hook, so there is no breadcrumb to read."
+fi
+
 # ── the lookup each skill describes ───────────────────────────────────────────────────────────────
 #
 # Everything above is read from the manifests, so it holds for any corpus. What a skill tells a reader
@@ -560,6 +602,65 @@ standards_lookup() {
   done
 
   echo "round-trip: $RECORD.json carries Summary and Conformance checklist."
+
+  # The union the skill promises. payments consumes engineering, so a search of one file has to reach
+  # engineering's rules as well as its own, and each of those arrives under the shortcode of the corpus
+  # that wrote it. A rule filed under a bare id would read as this estate's own work.
+  grep -E '"shortcode": *"eng"' "$RULES" > "$WORK/inherited-rules.txt" \
+    || fail "this corpus consumes eng and no rule in its export names eng as the producer."
+
+  head -1 "$WORK/inherited-rules.txt" > "$WORK/inherited-rule.txt"
+
+  INHERITED_ID=$(jqr '.id' "$WORK/inherited-rule.txt")
+  INHERITED_RECORD=$(jqr '.record' "$WORK/inherited-rule.txt")
+
+  case "$INHERITED_ID" in
+    eng:*) ;;
+    *) fail "a rule eng wrote arrived as '$INHERITED_ID', which names no producer." ;;
+  esac
+
+  case "$INHERITED_RECORD" in
+    eng:*) ;;
+    *) fail "a rule eng wrote belongs to record '$INHERITED_RECORD', which names no producer." ;;
+  esac
+
+  echo "round-trip: an engineering rule arrived in payments' own file, carrying eng: on its id."
+
+  # The assertion the `sources` block exists for, asked of the rule a reader actually followed. eng
+  # publishes its standards under its own path prefix, and this corpus's prefix names a directory that
+  # holds a different set of files. Only fetching tells the two apart, because both assemble into a URL
+  # that looks right.
+  ENG_TARGET=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.target // empty' "$EXPORT_MANIFEST")
+  ENG_BASE=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.base // empty' "$EXPORT_MANIFEST")
+  ENG_PREFIX=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
+  ENG_REF=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.ref // empty' "$EXPORT_MANIFEST")
+  OWN_PREFIX=$(jqr '.publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
+
+  [ -n "$ENG_PREFIX" ] || fail "eng is a source and states no path prefix for its standards."
+  [ "$ENG_PREFIX" != "$OWN_PREFIX" ] \
+    || fail "eng and this corpus both publish under '$OWN_PREFIX', so this proves nothing."
+
+  # Only a public GitHub repository answers without credentials, which is the same limit the generic
+  # fetch above works to. eng moving elsewhere leaves the two assertions above standing.
+  [ "$ENG_TARGET" = "github" ] || {
+    echo "round-trip: eng publishes to $ENG_TARGET, which no unauthenticated fetch reaches."
+    return 0
+  }
+
+  RULE_PATH=$(jqr '.path' "$WORK/inherited-rule.txt")
+  RULE_TITLE=$(jqr '.title' "$WORK/inherited-rule.txt")
+
+  ENG_RAW=$(echo "$ENG_BASE" | sed 's|https://github.com/|https://raw.githubusercontent.com/|')
+  URL="$ENG_RAW/$ENG_REF/$ENG_PREFIX/$RULE_PATH"
+
+  echo "round-trip: fetching $URL"
+  curl -sS --fail --location --output "$WORK/inherited-rule.md" "$URL" \
+    || fail "the sources entry for eng built a URL that does not fetch: $URL"
+
+  grep -qF "$RULE_TITLE" "$WORK/inherited-rule.md" \
+    || fail "$URL fetched a file that does not carry the rule '$RULE_TITLE'."
+
+  echo "round-trip: $INHERITED_ID reads at eng's commit, under eng's path prefix."
 }
 
 CORPUS=$(jqr '.corpus' "$EXPORT_MANIFEST")

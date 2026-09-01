@@ -303,3 +303,12 @@ The standards assertions ask it of a type with no `level` at all. A rule line ho
 sits inside the markdown, so the bold `**MUST**` and `**MUST NOT**` are what is asserted. `std-IDEM` is also where a
 part addressing itself is proved: a rule is a heading, so its `anchor` is its own key, where a clause resolves to the
 section holding its table.
+
+payments is also the corpus that consumes another, so the merge is asserted there. An engineering rule has to arrive in
+payments' own `rules.jsonl` carrying `eng:` on its `id` and on its `record`, and its source has to fetch from the
+`sources` entry for eng: eng's ref, under eng's path prefix. Payments publishes under a different prefix, so a link
+built from its own block reaches a file that is not there.
+
+**The breadcrumb is asserted for every corpus**, because it is the one text a session reads without having asked
+anything. A corpus whose manifest names `sources` has to credit each of them on a line of its own, or a reader is told
+their own corpus holds records nobody there wrote.
