@@ -60,10 +60,14 @@ public static class Breadcrumb
         return string.Join("\n", lines) + "\n";
     }
 
-    // The most things one line will name, the remainder counted among them. What a session pays for this
-    // text is fixed here rather than by however many records a corpus happens to hold: a type is named in
-    // one line whether it carries three records or three hundred, and the line is read at every start,
-    // resume, clear and compact.
+    // The most things one line will name, the remainder counted among them. What a session pays for one
+    // line is fixed here rather than by however many records the corpus behind it holds: a line names
+    // six titles whether it counts three records or three hundred, and every line is read at every
+    // start, resume, clear and compact.
+    //
+    // The bound is per line, so a type merged from several corpora costs a line each. That is the
+    // price of saying whose the records are, and it grows with how many corpora a corpus consumes
+    // rather than with how much any of them wrote.
     //
     // Six because the names are doing a job that stops at a handful. A reader scanning three or six
     // titles learns which contexts a type covers; one scanning two hundred has been handed the corpus
@@ -122,12 +126,21 @@ public static class Breadcrumb
         names.TryGetValue(source, out var held) ? held : [];
 
     // One line: whose records these are, how much of the type they make up, and which records hold them.
+    //
+    // A corpus reached through another sends its part lines and not its record files, so its line has
+    // entries to count and no record to count them across. "across 0 records" would read as an export
+    // that lost them on the way.
     private static string Line(string type, Contribution held)
     {
         var records = $"{held.Records} record{(held.Records == 1 ? "" : "s")}";
-        var body = held.Parts > 0
-            ? $"{held.Parts} entr{(held.Parts == 1 ? "y" : "ies")} across {records}"
-            : records;
+        var entries = $"{held.Parts} entr{(held.Parts == 1 ? "y" : "ies")}";
+
+        var body = (held.Parts > 0, held.Records > 0) switch
+        {
+            (true, true) => $"{entries} across {records}",
+            (true, false) => entries,
+            _ => records
+        };
 
         var label = held.Source is null ? type : $"{type} (from {held.Source})";
         var named = Named(held.Names);

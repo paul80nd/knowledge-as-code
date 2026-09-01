@@ -86,7 +86,8 @@ name, the version of it that travelled, and where it publishes. Look the shortco
 about the clause's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
 
 **A record file sits under its producer's shortcode**, because two corpora can name one policy and a filename cannot
-say whose it is. So the owning record for `eng:pol-SCRT.LOGS` is
+say whose it is. The shortcode moves out of the id and becomes the directory, so take it off the `record` value before
+you build the filename. The owning record for `eng:pol-SCRT.LOGS` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/policies/eng/pol-SCRT.json`, and for a bare id it is
 `${CLAUDE_PLUGIN_ROOT}/corpus/policies/pol-SCRT.json`.
 

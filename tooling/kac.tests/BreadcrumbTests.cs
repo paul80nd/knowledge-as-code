@@ -153,6 +153,19 @@ public class BreadcrumbTests
         Assert.DoesNotContain("\nglossary. ", text);
     }
 
+    // A corpus reached through another sends its part lines and not its record files. "across 0 records"
+    // would read as an export that lost them, where the count is the one thing the line exists to make.
+    [Fact]
+    public void A_source_that_sent_parts_and_no_record_file_counts_its_parts_alone()
+    {
+        var text = Render(
+            Manifest("example-payments", "1.0.0", ["gp"], Type("glossary", records: 0, parts: 2)),
+            Parts("gp", "gp"));
+
+        Assert.Contains("glossary (from gp). 2 entries.", text);
+        Assert.DoesNotContain("0 records", text);
+    }
+
     // The bound on how many records a line names is what a session pays for the text, and it is per
     // line rather than per type.
     [Fact]

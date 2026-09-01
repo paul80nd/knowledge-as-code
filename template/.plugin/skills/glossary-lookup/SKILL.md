@@ -70,7 +70,8 @@ name, the version of it that travelled, and where it publishes. Look the shortco
 about the entry's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
 
 **A record file sits under its producer's shortcode**, because two corpora can name one glossary and a filename cannot
-say whose it is. So the owning record for `eng:gls-estate.borrower` is
+say whose it is. The shortcode moves out of the id and becomes the directory, so take it off the `record` value before
+you build the filename. The owning record for `eng:gls-estate.borrower` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and for a bare id it is
 `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/gls-estate.json`.
 

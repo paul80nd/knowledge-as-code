@@ -343,6 +343,15 @@ if [ -f "$BREADCRUMB" ]; then
   while read -r code; do
     [ -n "$code" ] || continue
 
+    # A corpus reaches `sources` for publishing its own address, whether or not this export counts
+    # anything of its own. Asking the export first is what keeps the failure below an accusation the
+    # renderer has earned: a directory of its records, or a part line naming it, is what a line counts.
+    if ! find "$ROOT/$CORPUS_ROOT" -type d -name "$code" | grep -q . \
+      && ! grep -rq "\"shortcode\": *\"$code\"" "$ROOT/$CORPUS_ROOT"; then
+      echo "round-trip: '$code' sent nothing this export counts, so no line names it."
+      continue
+    fi
+
     grep -qF "(from $code)" "$BREADCRUMB" \
       || fail "'$code' wrote records this export carries and the breadcrumb credits none to it."
 
@@ -621,11 +630,11 @@ standards_lookup() {
   # publishes its standards under its own path prefix, and this corpus's prefix names a directory that
   # holds a different set of files. Only fetching tells the two apart, because both assemble into a URL
   # that looks right.
-  ENG_TARGET=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.target' "$EXPORT_MANIFEST")
-  ENG_BASE=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.base' "$EXPORT_MANIFEST")
-  ENG_PREFIX=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.pathPrefix' "$EXPORT_MANIFEST")
-  ENG_REF=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.ref' "$EXPORT_MANIFEST")
-  OWN_PREFIX=$(jqr '.publishing.pathPrefix' "$EXPORT_MANIFEST")
+  ENG_TARGET=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.target // empty' "$EXPORT_MANIFEST")
+  ENG_BASE=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.base // empty' "$EXPORT_MANIFEST")
+  ENG_PREFIX=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
+  ENG_REF=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.ref // empty' "$EXPORT_MANIFEST")
+  OWN_PREFIX=$(jqr '.publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
 
   [ -n "$ENG_PREFIX" ] || fail "eng is a source and states no path prefix for its standards."
   [ "$ENG_PREFIX" != "$OWN_PREFIX" ] \
