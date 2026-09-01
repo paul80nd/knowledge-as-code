@@ -1,12 +1,12 @@
 {
-  "formatVersion": 3,
+  "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.7.3",
+  "contentVersion": "0.7.4",
   "mechanismVersion": 5,
-  "commit": "c3ede280d28b9c7d9332f8749b945bc2d82fc650",
+  "commit": "ca05ca1497b857c42fd859fe7d85bda5db84f9e4",
   "dirty": false,
-  "generatedAt": "2026-08-31T19:05:59Z",
+  "generatedAt": "2026-09-01T12:35:45Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,24 +18,72 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c3ede280d28b9c7d9332f8749b945bc2d82fc650/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/ca05ca1497b857c42fd859fe7d85bda5db84f9e4/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "c3ede280d28b9c7d9332f8749b945bc2d82fc650"
+    "ref": "ca05ca1497b857c42fd859fe7d85bda5db84f9e4"
   },
+  "sources": [
+    {
+      "shortcode": "eng",
+      "corpus": "example-engineering",
+      "contentVersion": "0.7.5",
+      "publishing": {
+        "target": "github",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/ca05ca1497b857c42fd859fe7d85bda5db84f9e4/examples/engineering/{path}#{anchor}",
+        "base": "https://github.com/paul80nd/knowledge-as-code",
+        "pathPrefix": "examples/engineering",
+        "ref": "ca05ca1497b857c42fd859fe7d85bda5db84f9e4"
+      }
+    }
+  ],
   "types": [
     {
       "type": "standards",
       "shapeVersion": 1,
-      "records": 8,
-      "parts": 24,
+      "records": 20,
+      "parts": 61,
       "dir": "standards",
       "partsFile": "standards/rules.jsonl",
       "recordKey": "record",
       "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": "seeAlso",
       "sections": {
         "Summary": "full",
         "Conformance checklist": "full"
+      }
+    },
+    {
+      "type": "glossary",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 20,
+      "dir": "glossary",
+      "partsFile": "glossary/terms.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": "seeAlso",
+      "sections": {
+        "Scope": "full"
+      }
+    },
+    {
+      "type": "policies",
+      "shapeVersion": 2,
+      "records": 22,
+      "parts": 202,
+      "dir": "policies",
+      "partsFile": "policies/clauses.jsonl",
+      "recordKey": "record",
+      "partKey": "part",
+      "idKey": "id",
+      "seeAlsoKey": null,
+      "sections": {
+        "Purpose": "summary",
+        "Scope": "full",
+        "Exceptions": "full"
       }
     }
   ]

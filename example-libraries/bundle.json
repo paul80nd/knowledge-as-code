@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "corpusRoot": "corpus",
   "export": {
-    "formatVersion": 3,
+    "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.1.5",
+    "contentVersion": "0.1.6",
     "types": [
       "glossary"
     ]
