@@ -1,0 +1,83 @@
+# knowledge-as-code: corpus descriptor. What this corpus is, and where it stands against the framework
+# it took. Never overlaid and never reconciled: this file is the corpus's own.
+#
+# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means. The
+# comments below say only what each value means for this corpus.
+
+# The file's own format, stamped by `kac update`.
+descriptor-version: 1
+
+corpus: example-dogfooding
+
+# The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`. Immutable
+# once anything cites it, and nothing does yet.
+shortcode: dog
+
+# What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
+# against.
+content-version: "0.1.0"
+
+# Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
+# carried into neither.
+display-name: Example Dogfooding
+description: >
+  The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented
+  estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the
+  way any domain corpus consumes a governance layer.
+license: MIT
+author:
+  name: Paul Law
+  url: https://github.com/paul80nd
+
+# This repository is the published form, and the corpus sits in a folder of it.
+publishing-target: github
+publishing:
+  base: https://github.com/paul80nd/knowledge-as-code
+  path-prefix: examples/dog-fooding
+
+# The governance layer this corpus inherits rather than restates. `eng:` is what a citation into it
+# carries. The source is a folder because the producer is a corpus in this repository, so no registry
+# stands between them. `kac restore` writes `resolved`.
+consumes:
+  - corpus: example-engineering
+    shortcode: eng
+    version: ^0.7.0
+    source: ../engineering/.dist/package
+    resolved: "0.7.5"
+
+# Taken from this repository's root rather than over the network, because the template is served here.
+# `kac update` stamps the last three.
+upstream:
+  url: ../../
+  path:
+  ref:
+  commit:
+  template-version: 5
+  taken-on: "2026-09-01"
+
+# A seed is this corpus's own words, so an update leaves the ones already written.
+update-policy: cautious
+
+# The types this corpus chose. `adrs` is declined because a decision about `kac` is recorded in
+# `tooling/CLAUDE.md` and in the commit that made it. `glossary` is declined because the framework's
+# vocabulary is Example Engineering's to state and this corpus cites it as `eng:`.
+types:
+  - controls
+  - runbooks
+  - services
+  - standards
+  - tools
+
+# Nothing withheld, so a consumer meets a draft record as a draft rather than not at all.
+export:
+  exclude: []
+
+# The skills and hooks come from the one tree in this repository rather than a copy here.
+plugin:
+  from: ../../template/.plugin
+
+# This corpus sits inside the repository that authors the template, whose own `.editorconfig`
+# already covers every file here. A corpus created elsewhere receives the seed and owns it.
+skip:
+  - path: .editorconfig
+    reason: The repository holding this corpus sets the editor conventions for it.

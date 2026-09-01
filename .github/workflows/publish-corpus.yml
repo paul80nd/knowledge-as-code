@@ -2,10 +2,11 @@
 # touched one of them, it rebuilds that corpus's export, seals it, and pushes it to GitHub Packages at
 # the version .corpus.yaml states.
 #
-# What is published is fictional and is meant to be. These are the example corpora: publishing them is
-# how this repository proves the pack-and-push half of its own tool against a real registry, and how
-# somebody deciding whether to adopt it can pull one and look. Each package says so in its own
-# description, which `.corpus.yaml` states and `kac pack` writes into the envelope.
+# Publishing these corpora is how this repository proves the pack-and-push half of its own tool against
+# a real registry, and how somebody deciding whether to adopt it can pull one and look. Every corpus
+# but `dog-fooding` describes an invented estate and is meant to. `dog-fooding` describes the
+# repository it sits in. Each package says which it is in its own description, which `.corpus.yaml`
+# states and `kac pack` writes into the envelope.
 #
 # A content-version the registry already holds ends the job at exit 0, as publish-plugin.yml does for
 # the same reason. The path filter narrows the runs but cannot tell an edited record from an edited
@@ -28,6 +29,7 @@ on:
       - 'examples/library/**'
       - 'examples/engineering/**'
       - 'examples/payments/**'
+      - 'examples/dog-fooding/**'
 
 permissions:
   contents: read
@@ -52,6 +54,7 @@ jobs:
           - library
           - engineering
           - payments
+          - dog-fooding
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -66,11 +69,11 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # payments consumes engineering as a sealed package rather than as the corpus next door, so the
-      # producer's package is built here before the consumer asks for it. Each job holds its own
-      # checkout, so nothing another job in this matrix did is on this runner.
+      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, and `kac pack`
+      # is what writes there. Each job holds its own checkout, so this step packs engineering itself
+      # rather than taking what the engineering job already produced.
       - name: Build the package this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
         run: |
           dotnet run --project ../../tooling/kac -- export
@@ -79,8 +82,8 @@ jobs:
       # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
       # this command. A corpus consuming nothing skips the step.
       - name: Restore what this corpus consumes
-        if: matrix.corpus == 'payments'
-        working-directory: examples/payments
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- restore
 
       # The gate ran against the pull request's head, and main moved beneath it. A published version
@@ -112,6 +115,7 @@ jobs:
           - library
           - engineering
           - payments
+          - dog-fooding
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -127,18 +131,18 @@ jobs:
           dotnet-version: 10.0.x
 
       # An export carries what its corpus consumes, and refuses where nothing is restored for one, so
-      # the producer's package is built and restored before the consumer exports. Each job holds its
-      # own checkout, so nothing `verify` or another job in this matrix did is on this runner.
+      # engineering is packed and restored before a consumer exports. Each job holds its own checkout,
+      # so `verify` having done this already is no help here.
       - name: Build the package this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
         run: |
           dotnet run --project ../../tooling/kac -- export
           dotnet run --project ../../tooling/kac -- pack
 
       - name: Restore what this corpus consumes
-        if: matrix.corpus == 'payments'
-        working-directory: examples/payments
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
+        working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- restore
 
       # Every link the export writes names the commit HEAD stands on, which here is one the raw host

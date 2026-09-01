@@ -1,0 +1,15 @@
+# What kac writes into this corpus and rebuilds whole each run. The editor and
+# operating-system noise common to every folder is in the repository's own .gitignore,
+# which this one adds to.
+
+# Generated — rebuilt by `kac generate`
+_reports/
+
+# Generated — `export` rebuilds .dist/export/ whole, `bundle` rebuilds .dist/plugin/ and the
+# marketplace beside it, and `pack` rebuilds .dist/package/. One rule covers all three.
+.dist/
+
+# Restored — `restore` fetches each corpus this one consumes and unpacks it here. Committing it
+# would put another corpus's whole content in this repository's history, so CI restores before it
+# validates.
+.imports/

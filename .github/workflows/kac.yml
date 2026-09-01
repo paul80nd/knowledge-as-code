@@ -1,7 +1,7 @@
 # The gate on a pull request: kac run over each corpus under examples/ and over the one at template/,
 # a corpus stood up from nothing by the packed tool, the plugin each corpus builds, and the tool's own
-# three test layers. The corpus half mirrors examples/library/azure-pipelines.yml, which is a corpus's
-# own pipeline and therefore reads no template/.
+# three test layers. The corpus half mirrors template/azure-pipelines.yml, the starter a corpus
+# receives, which runs over that corpus alone and reads no template/.
 #
 # Nothing CI produces is written back over a file a human edits, and read-only permission is what
 # keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
@@ -21,9 +21,9 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 jobs:
-  # Every corpus, in parallel. Each declares a different `types:`, so running all three is what proves
-  # the framework holds for a corpus that adopted a subset and not only for one that adopted the lot.
-  # Each writes its own .dist/ under its own root, so the three never collide.
+  # Every corpus, in parallel. Each declares a different `types:`, so running all of them is what
+  # proves the framework holds for a corpus that adopted a subset and not only for one that adopted
+  # the lot. Each writes its own .dist/ under its own root, so no two collide.
   corpora:
     strategy:
       fail-fast: false
@@ -32,6 +32,7 @@ jobs:
           - library
           - engineering
           - payments
+          - dog-fooding
     runs-on: ubuntu-latest
     # kac takes the first ancestor holding a .corpus.yaml as the corpus, so the working directory is
     # what selects one. There is no flag that names a corpus.
@@ -48,11 +49,11 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # payments consumes engineering, and what it consumes is a sealed package rather than the corpus
-      # next door. So the producer's package is built here before the consumer asks for it. Each job
-      # holds its own checkout, so nothing another job in this matrix did is on this runner.
+      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, and `kac pack`
+      # is what writes there. Each job holds its own checkout, so this step packs engineering itself
+      # rather than taking what the engineering job already produced.
       - name: Build the package this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
         run: |
           dotnet run --project ../../tooling/kac -- export
@@ -61,7 +62,7 @@ jobs:
       # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
       # this command. A corpus consuming nothing skips the step.
       - name: Restore what this corpus consumes
-        if: matrix.corpus == 'payments'
+        if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         run: dotnet run --project ../../tooling/kac -- restore
 
       - name: Validate frontmatter, links and structure
@@ -81,7 +82,7 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
-      # Every corpus here declares a shortcode, and publish-corpus.yml pushes all three, so the gate
+      # Every corpus here declares a shortcode, and publish-corpus.yml pushes every one, so the gate
       # asks the same of each. A pack is refused without a shortcode. See docs/cli/pack.md.
       - name: Seal the export into a package
         run: dotnet run --project ../../tooling/kac -- pack
@@ -96,7 +97,7 @@ jobs:
       # really be in the tree, and .claude-plugin/ must hold the manifest and nothing else, because a
       # component filed in there is loaded by nothing.
       #
-      # Word for word the script in azure-pipelines.yml, so it is held to the POSIX subset Git Bash
+      # Word for word the script in .azuredevops/kac.yml, so it is held to the POSIX subset Git Bash
       # and older macOS bash agree on, with no `$(...)` for an Azure pipeline to read as its macro.
       - name: Validate the assembled plugin and its marketplace
         shell: sh
@@ -141,7 +142,7 @@ jobs:
 
       # `generate --check` is askable only here. The corpus the installed tool stands up further down
       # is generated as it is created, so nothing there holds these committed copies fresh.
-      # A corpus's own azure-pipelines.yml reads no template/, because a corpus has none to look at.
+      # The starter at template/azure-pipelines.yml reads no template/, because a corpus has none.
       - name: Validate the template where it is authored
         working-directory: template
         run: dotnet run --project ../tooling/kac -- validate
@@ -270,7 +271,8 @@ jobs:
   # of them. `library` adopts glossary and not policies, so it proves that a skill whose type stayed
   # behind is gone from the install. `engineering` adopts both and standards besides, so it proves
   # that several skills ship over one export and that none names another's file. `payments` adopts
-  # standards alone, so it proves the one heading-sourced lookup a reader receives.
+  # standards alone, so it proves the one heading-sourced lookup a reader receives. `dog-fooding` is
+  # left out because it is the same shape as `payments`.
   #
   # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
   # stands on into every link, and a pull_request run checks out a merge commit the raw host does

@@ -19,7 +19,7 @@ counts as absent, and one with a folder and no page fails `type-setup`.
    others.
 7. **Write at least one record.** Twelve of the type folders here hold none, so their rules have never run. A throwaway
    record is how you find out whether the schema says what you meant.
-8. **Run `kac generate` and `kac validate` in both corpora**, then the golden suite.
+8. **Run `kac generate` and `kac validate` in every corpus that adopted it**, then the golden suite.
 9. Run **[opening-a-pull-request](opening-a-pull-request.md)**.
 
 **Reply:** what the type holds, what it is not, which existing type it was nearly, and what the first record found.

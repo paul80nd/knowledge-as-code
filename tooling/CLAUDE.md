@@ -15,11 +15,11 @@ renders it for somebody who has installed nothing, so it takes `writing-the-docs
 `kac` is the published tool from `~/.dotnet/tools`, at whatever version was installed last, and it rewrites generated
 files with an older wording without saying so.
 
-**Run every corpus.** The three under `examples/` hold records and prove the tool against them. `template/` holds what
-a new corpus receives, and a copy of it has to validate before its owner has run anything.
+**Run every corpus.** Each one under `examples/` proves the tool against what it holds. `template/` holds what a new
+corpus receives, and a copy of it has to validate before its owner has run anything.
 
 ```sh
-# each corpus, one at a time: library, engineering, payments
+# each corpus under examples/, one at a time
 cd examples/library
 dotnet run --project ../../tooling/kac -- validate
 dotnet run --project ../../tooling/kac -- generate --check
@@ -41,11 +41,11 @@ reads. It holds locally as well as in CI, on purpose: a check running in one and
 catches reaches `main`. Where a warning is genuinely wrong, suppress that one with a reason beside it rather than
 turning the setting off.
 
-**Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
+**Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
-[`examples/library/azure-pipelines.yml`](../examples/library/azure-pipelines.yml) is a corpus's own, forked by each
-corpus that takes one,
-so it runs `kac` over that corpus and reads no `template/`.
+[`template/azure-pipelines.yml`](../template/azure-pipelines.yml) is the starter a corpus receives and then owns, so it
+runs `kac` over that corpus and reads no `template/`. No corpus under `examples/` keeps a copy: the two gates above
+are what cover them.
 
 ## Adding or changing a check
 
@@ -253,10 +253,10 @@ That also decides which commands get a spec. A spec asserts findings, so `Schema
 its `export:` block. What the exporter then writes is not a finding: the golden holds those bytes, the unit tests beside
 `Exporter` hold the rules behind them, and a feature file would only say it a third time.
 
-## The round-trip is the layer above all three
+## The round-trip is the layer above them all
 
-[`tests/round-trip.sh`](tests/round-trip.sh) is the only test that leaves the repository. The three layers above prove
-the export and the bundle over data: the goldens diff the tree file for file, the unit tests hold the rules that built
+[`tests/round-trip.sh`](tests/round-trip.sh) is the only test that leaves the repository. The layers above prove the
+export and the bundle over data: the goldens diff the tree file for file, the unit tests hold the rules that built
 it, and the specs hold what the validator says about it. None of them can show that the thing assembled installs, that
 the paths its skill names resolve inside the installed copy, or that a link built from its template fetches the record
 it points at.
@@ -270,8 +270,8 @@ cd examples/library && sh ../../tooling/tests/round-trip.sh
 
 **Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill,
 `example-engineering` proves the policy skill and `example-payments` proves the standards skill, because each holds the
-records that skill was written for. CI runs all three, so adding a fourth assertion means choosing the corpus that
-already holds what it asks about.
+records that skill was written for. CI runs each of them, and leaves `example-dogfooding` out because it is the same
+shape as `example-payments`. Adding an assertion means choosing the corpus that already holds what it asks about.
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden
 suite. Development happens on macOS and the first audience is on Windows, so the script is held to the subset Git Bash
@@ -304,8 +304,9 @@ sits inside the markdown, so the bold `**MUST**` and `**MUST NOT**` are what is 
 part addressing itself is proved: a rule is a heading, so its `anchor` is its own key, where a clause resolves to the
 section holding its table.
 
-payments is also the corpus that consumes another, so the merge is asserted there. An engineering rule has to arrive in
-payments' own `rules.jsonl` carrying `eng:` on its `id` and on its `record`, and its source has to fetch from the
+payments is the corpus in this set that consumes another, so the merge is asserted there. An engineering rule has to
+arrive in payments' own `rules.jsonl` carrying `eng:` on its `id` and on its `record`, and its source has to fetch from
+the
 `sources` entry for eng: eng's ref, under eng's path prefix. Payments publishes under a different prefix, so a link
 built from its own block reaches a file that is not there.
 

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/glossary-lookup",
+        "requires": [
+          "glossary@1"
+        ],
+        "announce": true,
+        "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+      },
+      {
+        "path": "skills/policy-lookup",
+        "requires": [
+          "policies@2"
+        ],
+        "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+      },
+      {
+        "path": "skills/standards-lookup",
+        "requires": [
+          "standards@1"
+        ],
+        "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+      },
+      {
+        "path": "hooks",
+        "requires": [
+          "glossary"
+        ],
+        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up."
+      }
+    ]
+  }
+}

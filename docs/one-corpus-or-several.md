@@ -69,14 +69,16 @@ None of that is heavy, and all of it is charged on a corpus that did not need to
 
 ## The worked corpora
 
-[`examples/`](https://github.com/paul80nd/knowledge-as-code/tree/main/examples) holds one of each, and CI runs `kac`
-over all three on every commit.
+[`examples/`](https://github.com/paul80nd/knowledge-as-code/tree/main/examples) holds a worked corpus for each side of
+that choice, and CI runs `kac` over every one of them on every commit.
 
 * **`library/`** is a single corpus, self-contained, taking nothing from outside.
 * **`engineering/`** is a governance layer. Its policies name no service and invent no estate, which is what lets a team
   running something else entirely read them.
 * **`payments/`** is a domain corpus, and thin on purpose. It consumes `engineering/` and holds nothing that corpus
   already says.
+* **`dog-fooding/`** is a domain corpus too, consuming `engineering/` as `payments/` does. Its subject is `kac` and the
+  repository it sits in. Nothing else here holds this project to the framework it publishes.
 
 CI publishes from `engineering/`, restores into `payments/`, and then renames a clause upstream to assert that the
 downstream build goes red naming the citation nobody downstream touched. That is the promise the layering exists to

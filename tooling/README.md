@@ -55,9 +55,9 @@ option carries generated `--help`. `Program.cs` says why that library and not an
 ## Running it against a corpus
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
-Running it from here reaches no corpus at all. This repository holds four: the three under `examples/`, which carry the
-records, and `template/`, which holds most of what `kac new` sends a corpus. The template manifest at the repository
-root names the rest, and is the only account of which files a corpus receives and where each one lands.
+Running it from here reaches no corpus at all. Every folder under [`../examples/`](../examples/) is one, and so is
+[`../template/`](../template/), which holds most of what `kac new` sends a corpus. The template manifest at the
+repository root names the rest, and is the only account of which files a corpus receives and where each one lands.
 
 ```bash
 cd ../examples/library
@@ -93,14 +93,15 @@ happily as a fix.
 Beneath that block, each page follows the same sections in this order: **What it does**, **Examples**, **Known
 limits**. That set is fixed, and it is what lets a reader ask the same question of any command and find the answer in
 the same place. Deeper structure goes under those headings rather than beside them, so a command with several worked
-examples keeps each at `###`. `CliReferenceTests` holds every page to the three, and to the first two being there.
+examples keeps each at `###`. `CliReferenceTests` holds every page to that set, and refuses one missing
+**What it does** or **Examples**.
 
 **Examples carry the output the command prints**, taken from a real run rather than written by hand. A reader deciding
 whether they have a clean run needs to see one.
 
 Why a command works the way it does belongs under [`../docs/design/`](../docs/design/), one page per feature area,
 which each command page links. That split is what keeps a command page the length somebody reads while running it, and
-it gives the reasoning one home instead of scattering it over seven verbs.
+it gives the reasoning one home instead of scattering it over the command pages.
 
 It is prose throughout and not a form. **Known limits** is left out where a command has none, because filler reads as
 an answer where an absence reads as work not yet done.
@@ -152,12 +153,12 @@ runs, so a precondition cannot stop that command and go unnoticed here.
 The golden layer builds `kac/` once per run and invokes the built assembly. Each scenario is then a real process,
 without paying `dotnet run`'s up-to-date check for every one.
 
-All three read the schema from [`../.schema/`](../.schema/), the one copy at the repository root. A schema edit
+Every layer reads the schema from [`../.schema/`](../.schema/), the one copy at the repository root. A schema edit
 therefore ripples into every fixture in the same run, rather than into a copy someone has to keep in step.
 
 ### The round-trip
 
-[`tests/round-trip.sh`](tests/round-trip.sh) is the layer above all three and the only test that leaves the repository.
+[`tests/round-trip.sh`](tests/round-trip.sh) sits above them all, and is the only test that leaves the repository.
 It installs the built plugin into a Claude config directory of its own, checks that the components `bundle.json` kept
 arrived and the ones it trimmed did not, asks a surviving skill for something only its own type can answer, and fetches
 a record's source from the base, prefix and ref the export wrote. That fetch is the one assertion that cannot be faked
@@ -173,8 +174,9 @@ proves the trim as well as the glossary skill. `example-engineering` adopts glos
 proves that several skills ship over one export and that none names another's file. `example-payments` adopts
 standards alone, and its rules are headings rather than table rows, so it is where a part addressing itself is proved.
 
-CI runs it over all three corpora on Linux and Windows, which is why it is a shell script held to the subset Git Bash
-and older macOS bash agree on.
+CI runs it over each of those corpora on Linux and Windows, which is why it is a shell script held to the subset Git
+Bash and older macOS bash agree on. `example-dogfooding` is left out: it is the same shape as `example-payments`, so
+running it there would repeat that job rather than add one.
 
 ### The import round-trip
 

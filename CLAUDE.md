@@ -1,9 +1,10 @@
 # Working in this repository
 
 This repository is not a corpus. It holds `kac`, the documentation site published beside it, the schema every corpus
-below is judged against, the template `kac new` sends a corpus, and three worked corpora standing in for ones that took
-it. The tool finds a corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or
-`template/`, and never this root.
+below is judged against, the template `kac new` sends a corpus, and four worked corpora under `examples/`. Three of
+them stand in for corpora that took the framework, and `dog-fooding` holds this repository to it. The tool finds a
+corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or `template/`, and never
+this root.
 
 **Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing skill
 for the surface you are on.
@@ -38,6 +39,64 @@ cd examples/library && dotnet run --project ../../tooling/kac -- update --check 
 It answers in both directions: a copy that differs, and a file the corpus holds that the template sends nothing to.
 [`manifest.yaml`](manifest.yaml) says which files this reaches.
 
+## Before you commit
+
+Run the layers your change touches, **one `kac` invocation at a time**: concurrent runs build the same project and
+contend over its output.
+
+```bash
+# in each corpus you changed, and in template/
+dotnet run --project ../../tooling/kac -- validate         # the corpus
+dotnet run --project ../../tooling/kac -- generate --check # generated output is fresh
+dotnet run --project ../../tooling/kac -- update --check --from ../../
+
+# from this root, which holds the tool and the tests that prove it
+dotnet test tooling/kac.tests      # unit
+dotnet test tooling/kac.features   # Reqnroll behaviour specs
+dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
+```
+
+A corpus declaring `consumes:` needs `restore` ahead of `validate`, and `restore` needs a package to take. That corpus's
+own `CLAUDE.md` names the producer to `export` and `pack` first.
+
+A bare `kac` runs the published tool rather than this one. [`tooling/CLAUDE.md`](tooling/CLAUDE.md) says what that
+costs, and carries the `template/` runs that go beside these.
+
+All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
+leave you green locally and red in CI.
+
+## Conventions
+
+These hold in every corpus under `examples/`, in `template/`, and in the prose this repository publishes.
+
+* **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
+  then run `kac generate`. A schema edit without a regeneration fails CI.
+* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
+  `.editorconfig` says so and no check enforces it.
+* **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
+  does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
+* **Keep comments and documentation timeless.** Describe the design as it stands. The history of a change belongs in its
+  commit message.
+* **Leave a whole document, not a diff.** Fold new material into what is there and delete what it supersedes, so the
+  file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
+* **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
+  `knowledge-as-code/`, written a single time.
+* **Where a prose rule and the schema disagree, the schema is right.** Report the contradiction rather than editing
+  records to match.
+* **Branch and open a PR.** Pushes to `main` are rejected.
+
+## Your working style
+
+Say in one sentence what you are about to do before your first tool call. While working, report what you found or where
+you changed direction, and nothing else. Finish by leading with the outcome (what happened, or what you found) and put
+the supporting detail after it.
+
+Keep answers brief: a high-level summary unless depth is asked for, short caveats, and a written document no longer than
+its substance needs.
+
+Deliver what was asked at the scope asked, making routine judgement calls yourself. Ask only where two readings would
+produce materially different work. Where the request looks mistaken, say so in a sentence and carry on with it as asked.
+
 ## Before you raise a pull request
 
 **Write the changelog entry always. Ask before you move `<Version>`.** A tool change somebody running `kac` can
@@ -60,13 +119,13 @@ nobody and the published copy drifts from `main` with no build reporting it.
 
 Semantic, and about the records rather than the file: major where a meaning changed or a published URL broke, minor
 for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you.
-`payments` publishes nothing yet and still moves, because it is the same discipline whichever corpus you are in.
+`dog-fooding` holds no record yet and still moves, because it is the same discipline whichever corpus you are in.
 
 **Repoint every consumer of a corpus whose minor moved.** Below 1.0.0 a caret pins the minor, so `examples/engineering`
-going to `0.4.0` leaves `examples/payments` locked at a version its own `consumes:` range no longer admits, and
-`kac restore` fails naming the version it could not find. A local run passes over it, because `.imports/` is untracked
-and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` and restore again to see
-what CI sees.
+going to `0.4.0` leaves `examples/payments` and `examples/dog-fooding` locked at a version their own `consumes:` ranges
+no longer admit, and `kac restore` fails naming the version it could not find. A local run passes over it, because
+`.imports/` is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/`
+and restore again to see what CI sees.
 
 **Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
 a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
@@ -74,9 +133,7 @@ reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACK
 [`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json),
 [`docs/framework/metadata.md`](docs/framework/metadata.md) and [`docs/design/held-to.md`](docs/design/held-to.md).
 
-**Run the layers your change touches.** [`examples/library/CLAUDE.md`](examples/library/CLAUDE.md) carries the commands,
-and every corpus carries the same set. Run one `kac` invocation at a time: concurrent runs build the same project and
-contend over its output.
+**Run the layers your change touches**, which the commands above cover.
 
 ## What has already cost a session
 
@@ -103,7 +160,7 @@ contend over its output.
 
 ## Agent skills
 
-The engineering skills read three files from [`.claude/agents-config/`](.claude/agents-config/), rather than the
+The engineering skills read their configuration from [`.claude/agents-config/`](.claude/agents-config/), rather than the
 `docs/agents/` their author assumes. `docs/` here is the published site, and `NavigationTests` fails a page the nav does
 not list.
 

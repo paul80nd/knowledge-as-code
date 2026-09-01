@@ -42,9 +42,9 @@ once at the root and read by every corpus below. A corpus of your own carries it
 templates a corpus starts from, and the repository-shaped files it cannot work without. Some a corpus receives once and
 owns afterwards, and some it receives again whenever it takes a newer framework.
 
-**[`examples/`](examples/README.md)** holds three complete corpora that took that template, run through the tool built
+**[`examples/`](examples/README.md)** holds the complete corpora that took that template, run through the tool built
 beside them on every commit. Each holds its own copy of every file the template shares, and each demonstrates a
-different deployment shape over a fictional bounded context of its own.
+different deployment shape. Most describe a fictional bounded context, and one describes this repository.
 
 **[`docs/`](docs/)** is the documentation site, published to
 [GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It is the reference for KaC and
@@ -152,8 +152,8 @@ proved. It stops short of committing, because a first commit is a person's own a
 from nuget.org as above and run it from wherever the corpus sits: it needs nothing but the `.schema/` that corpus
 already carries.
 
-**Read [`examples/`](examples/) rather than copying them.** They are worked corpora with fictional content in them,
-kept to show what real records look like. `new` never sends you any of it.
+**Read [`examples/`](examples/) rather than copying them.** They are worked corpora, kept to show what real records
+look like. `new` never sends you any of it.
 
 **A corpus takes a newer framework with [`kac update`](https://paul80nd.github.io/knowledge-as-code/cli/update/).** It
 fetches the template `.corpus.yaml` points at, decides file by file what the corpus receives, and leaves every change in
