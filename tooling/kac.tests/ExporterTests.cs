@@ -83,7 +83,7 @@ public class ExporterTests
     public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
     {
         static string[] Ids(params string[] glossaries) =>
-            [.. TermLines(Corpus(glossaries)).Select(l => l.GetProperty("id").GetString()!)];
+            [.. TermLines(Corpus(glossaries)).Select(l => l.Text("id"))];
 
         var estate = Glossary("gls-estate", narrows: null, terms: "### Record\n\nA bibliographic description.\n");
         var framework = Glossary("gls-framework", narrows: null, terms: "### Record\n\nA knowledge document.\n");
@@ -96,7 +96,7 @@ public class ExporterTests
         // What a reader needs to tell "refines" from "unrelated" is on the record, and every
         // line reaches it by naming the record it came from.
         foreach (var line in TermLines(Corpus(estate, framework)))
-            Assert.NotEmpty(line.GetProperty("record").GetString()!);
+            Assert.NotEmpty(line.Text("record"));
     }
 
     [Fact]
@@ -442,12 +442,12 @@ public class ExporterTests
             .GetProperty("links");
         var line = Assert.Single(Lines(plan));
 
-        var path = line.GetProperty("path").GetString()!;
-        var anchor = line.GetProperty("anchor").GetString()!;
+        var path = line.Text("path");
+        var anchor = line.Text("anchor");
 
         Assert.Equal(
             $"{links.GetProperty("human").GetString()}#{anchor}",
-            publishing.GetProperty("humanTemplate").GetString()!
+            publishing.Text("humanTemplate")
                 .Replace(Publishing.PathToken, path)
                 .Replace(Publishing.AnchorToken, anchor));
     }
@@ -613,7 +613,7 @@ public class ExporterTests
     public void An_inherited_line_carries_its_producer_s_name_on_every_id_it_holds()
     {
         var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
-        var line = Lines(plan).Single(l => l.GetProperty("id").GetString()!.StartsWith("eng:"));
+        var line = Lines(plan).Single(l => l.Text("id").StartsWith("eng:"));
 
         Assert.Equal("eng:gls-theirs.alpha", line.GetProperty("id").GetString());
         Assert.Equal("eng:gls-theirs", line.GetProperty("record").GetString());
@@ -647,7 +647,7 @@ public class ExporterTests
         var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
             Consumed("eng", TheirInheritedLine));
 
-        var line = Lines(plan).Single(l => l.GetProperty("id").GetString()!.Contains(':'));
+        var line = Lines(plan).Single(l => l.Text("id").Contains(':'));
 
         Assert.Equal("gp:gls-old.alpha", line.GetProperty("id").GetString());
         Assert.Equal("gp:gls-old", line.GetProperty("record").GetString());

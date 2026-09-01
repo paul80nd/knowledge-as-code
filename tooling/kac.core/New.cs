@@ -282,7 +282,7 @@ public static class New
         foreach (var file in plan.Composed)
         {
             var target = Path.Combine(corpusRoot, file.Path);
-            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+            Files.OpenFolderFor(target);
             File.WriteAllText(target, file.Content);
         }
 

@@ -327,7 +327,7 @@ public class BundlerTests
         => Assert.Equal(["knowledge-as-code", "glossary", "policies"],
             Written(Plan(plugin: [(Bundler.ManifestFile, Source())], export: [Manifest("glossary", "policies")]),
                     Bundler.ManifestFile)
-                .GetProperty("keywords").EnumerateArray().Select(k => k.GetString()!).ToArray());
+                .GetProperty("keywords").EnumerateArray().Select(k => k.Text()).ToArray());
 
     // A reader meets the plugin's identity before its declarations, whatever order the keys were added
     // in. `metadata` is last of the ones named, and anything this tool never heard of follows it.

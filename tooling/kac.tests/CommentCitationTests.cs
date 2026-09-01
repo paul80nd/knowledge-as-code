@@ -2,6 +2,7 @@
 // when the page moves. Nothing reads a comment, so the paths are resolved here instead.
 
 using System.Text.RegularExpressions;
+using kac.core;
 
 namespace kac.tests;
 
@@ -65,5 +66,5 @@ public partial class CommentCitationTests
     // a path from the file's own folder is what `../../CLAUDE.md` means. Either resolving is enough.
     private static bool Resolves(string file, string cited) =>
         File.Exists(Path.Combine(Repo.Root, cited))
-        || File.Exists(Path.Combine(Path.GetDirectoryName(file)!, cited));
+        || File.Exists(Path.Combine(Files.FolderOf(file), cited));
 }
