@@ -812,9 +812,18 @@ public static class Validator
     // A warning, and permanently one. The corpus decides what its vocabulary is, and the schema only says
     // that a value in this field is for dividing the type into groups. A value newly introduced is below
     // the floor on the day it is written, on the way to being above it.
+    // Documents paired with the type they were read as, dropping those read as no type. `Where` cannot
+    // tell `GroupBy` that it settled the key, so the pair is made here, where the narrowing survives
+    // into it.
+    private static IEnumerable<(Doc Doc, TypeSchema Type)> Typed(IEnumerable<Doc> docs)
+    {
+        foreach (var d in docs)
+            if (d.Type is { } type) yield return (d, type);
+    }
+
     private static void CheckMinRecords(List<Doc> docs, List<Finding> f)
     {
-        foreach (var group in docs.Where(d => d.Type is not null).GroupBy(d => d.Type!))
+        foreach (var group in Typed(docs).GroupBy(x => x.Type, x => x.Doc))
         {
             var type = group.Key;
             foreach (var name in type.FieldOrder)
@@ -1008,13 +1017,14 @@ public static class Validator
     // document says section by section which of the field's references that stretch of prose answers.
     private static void CheckMirrorsCitations(Doc d, TypeSchema t, Schema schema, Report report)
     {
-        var declared = new List<(FieldSpec Spec, List<CitationFootnote> Lines, List<TypeSchema> Targets)>();
+        var declared =
+            new List<(FieldSpec Spec, string Label, List<CitationFootnote> Lines, List<TypeSchema> Targets)>();
         foreach (var spec in t.DeclaredFields)
         {
             if (spec.MirrorsCitations is not { } label) continue;
             var targets = spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>().ToList();
             if (targets.Count == 0) continue;
-            declared.Add((spec, d.CitationFootnotes.GetValueOrDefault(label, []), targets));
+            declared.Add((spec, label, d.CitationFootnotes.GetValueOrDefault(label, []), targets));
         }
 
         // Three of the four faults about a line are decided here, against the lines rather than against
@@ -1031,7 +1041,7 @@ public static class Validator
         IEqualityComparer<List<CitationFootnote>> sameLines = ReferenceEqualityComparer.Instance;
         foreach (var group in declared.GroupBy(x => x.Lines, sameLines))
         {
-            var label = group.First().Spec.MirrorsCitations!;
+            var label = group.First().Label;
             var targets = group.SelectMany(x => x.Targets).ToList();
             foreach (var footnote in group.Key)
             {
@@ -1056,9 +1066,8 @@ public static class Validator
             }
         }
 
-        foreach (var (spec, lines, targets) in declared)
+        foreach (var (spec, label, lines, targets) in declared)
         {
-            var label = spec.MirrorsCitations!;
             var inFront = new HashSet<string>(d.FrontList(spec.Name), StringComparer.OrdinalIgnoreCase);
             var inBody = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -1141,16 +1150,16 @@ public static class Validator
 
         foreach (var rule in t.Rules)
         {
-            if (rule.Compiled is { } compiled)
+            if (rule.IsExpression)
             {
                 facts ??= new Facts(d);
-                if (RuleExpr.Eval(compiled, facts)) continue;
+                if (RuleExpr.Eval(rule.Compiled, facts)) continue;
                 // An expression rule reports under its own rule id, which is the one place the two ids are
                 // deliberately the same string. Written out so that sameness is a decision rather than a
                 // type the compiler let through.
                 var reported = new CheckId(rule.Id.Value);
-                if (rule.Severity == Sev.Error) report.Err(reported, rule.Message!, d.FrontStartLine);
-                else report.Warn(reported, rule.Message!, d.FrontStartLine);
+                if (rule.Severity == Sev.Error) report.Err(reported, rule.Message, d.FrontStartLine);
+                else report.Warn(reported, rule.Message, d.FrontStartLine);
                 continue;
             }
 

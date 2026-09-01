@@ -47,10 +47,19 @@ public static class VersionRange
     public static string? Best(string range, IEnumerable<string> available)
     {
         string? best = null;
+        Version? highest = null;
 
+        // The parse is carried beside the string it came from, rather than repeated on the incumbent
+        // once per candidate. A version `Admits` accepted has already parsed, so the miss below is
+        // unreachable and skipping it keeps the loop honest without a second claim about that.
         foreach (var version in available.Where(v => Admits(range, v)))
-            if (best is null || Compare(Parsed(version)!.Value, Parsed(best)!.Value) > 0)
-                best = version;
+        {
+            if (Parsed(version) is not { } parsed) continue;
+            if (highest is not null && Compare(parsed, highest.Value) <= 0) continue;
+
+            best = version;
+            highest = parsed;
+        }
 
         return best;
     }

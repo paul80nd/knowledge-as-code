@@ -377,7 +377,7 @@ public static class Bundler
                 ? null
                 : new JsonArray([
                     .. keywords.Prepend("knowledge-as-code")
-                        .Select(k => (JsonNode)JsonValue.Create(k)!)
+                        .Select(k => (JsonNode?)JsonValue.Create(k))
                 ]));
 
         if (JsonRead.Object(copy["metadata"]) is { } metadata && metadata["components"] is JsonArray components)
@@ -396,7 +396,7 @@ public static class Bundler
         var ordered = new JsonObject();
         foreach (var key in Order.Where(k => copy.ContainsKey(k)))
         {
-            ordered[key] = copy[key]!.DeepClone();
+            ordered[key] = copy[key]?.DeepClone();
             copy.Remove(key);
         }
 

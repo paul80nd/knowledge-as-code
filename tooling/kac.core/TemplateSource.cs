@@ -114,13 +114,20 @@ public sealed class TemplateSource : IDisposable
     public sealed class Taken(TemplateSource? source, Manifest? manifest, Schema? schema,
         IReadOnlyList<string>? declared, string? problem) : IDisposable
     {
+        // Each value below is set exactly where `Problem` is not, which is the contract above. A caller
+        // reads `Problem` first, so reaching one of these on a take that failed is a defect in that
+        // caller, and the message says which value it went for.
+        private static T Held<T>(T? value, string what) where T : class =>
+            value ?? throw new InvalidOperationException(
+                $"this take reported a problem and holds no {what}. read Problem first.");
+
         public string? Problem => problem;
-        public string Root => source!.Root;
-        public string? Commit => source!.Commit;
-        public Manifest Manifest => manifest!;
-        public Schema Schema => schema!;
-        public IReadOnlyList<string> Declared => declared!;
-        public IReadOnlySet<string> Files() => source!.Files();
+        public string Root => Held(source, "template").Root;
+        public string? Commit => Held(source, "template").Commit;
+        public Manifest Manifest => Held(manifest, "manifest");
+        public Schema Schema => Held(schema, "schema");
+        public IReadOnlyList<string> Declared => Held(declared, "list of declared types");
+        public IReadOnlySet<string> Files() => Held(source, "template").Files();
 
         public void Dispose() => source?.Dispose();
     }

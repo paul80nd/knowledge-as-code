@@ -660,8 +660,10 @@ public partial class Doc
         static Dictionary<string, string> Cells(IReadOnlyList<string>? headers, List<ContainerInline?> row)
         {
             var byHeader = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            for (var i = 0; i < Math.Min(headers?.Count ?? 0, row.Count); i++)
-                byHeader.TryAdd(headers![i], Md.PlainText(row[i]));
+            if (headers is null) return byHeader;
+
+            for (var i = 0; i < Math.Min(headers.Count, row.Count); i++)
+                byHeader.TryAdd(headers[i], Md.PlainText(row[i]));
             return byHeader;
         }
 
@@ -671,8 +673,10 @@ public partial class Doc
             List<ContainerInline?> row)
         {
             var byHeader = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
-            for (var i = 0; i < Math.Min(headers?.Count ?? 0, row.Count); i++)
-                byHeader.TryAdd(headers![i], row[i] is { } inline
+            if (headers is null) return byHeader;
+
+            for (var i = 0; i < Math.Min(headers.Count, row.Count); i++)
+                byHeader.TryAdd(headers[i], row[i] is { } inline
                     ? [.. inline.Descendants<LinkInline>().Select(l => l.Label ?? Md.PlainText(l))]
                     : []);
             return byHeader;
@@ -887,9 +891,8 @@ public partial class Doc
                 continue;
             }
 
-            section?.AddRange(from leaf in Leaves(block)
-                where leaf.Inline is not null
-                from link in leaf.Inline!.Descendants<LinkInline>()
+            section?.AddRange(from inline in Inlines(Leaves(block))
+                from link in inline.Descendants<LinkInline>()
                 where !link.IsImage
                 select new LinkRef
                     { Target = link.Url ?? "", Line = link.Line + 1, Label = link.Reference?.Label ?? link.Label });
@@ -902,6 +905,14 @@ public partial class Doc
     // nowhere else, which is what makes this the way to reach a link written as prose: descending from
     // the block itself yields the links in a list beneath it and none of the links in a paragraph, and
     // to whoever wrote the section those are the same link.
+    // The inline content of each leaf carrying any. A `where` in a query cannot tell the `from` after
+    // it that it settled the value, so the leaves without content are dropped here instead.
+    private static IEnumerable<ContainerInline> Inlines(IEnumerable<LeafBlock> leaves)
+    {
+        foreach (var leaf in leaves)
+            if (leaf.Inline is { } inline) yield return inline;
+    }
+
     private static IEnumerable<LeafBlock> Leaves(Block block) =>
         block is LeafBlock leaf ? [leaf] : ((ContainerBlock)block).Descendants<LeafBlock>();
 }

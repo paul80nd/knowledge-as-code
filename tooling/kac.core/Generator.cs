@@ -92,6 +92,15 @@ public static class Generator
     // climbs to the corpus root, so the link resolves wherever the corpus sits, whether that is a wiki
     // root or a subfolder of a documentation site. Naming the file rather than the folder is what stops
     // the link depending on a renderer that maps one to the other.
+    // Types paired with the lineage they declare, dropping those declaring none. A `Where` cannot tell
+    // the `Select` below it that it settled the value, so the pair is made here and carries it.
+    private static IEnumerable<(TypeSchema Type, LineageSpec Lineage)> WithLineage(
+        IEnumerable<TypeSchema> types)
+    {
+        foreach (var t in types)
+            if (t.Lineage is { } lineage) yield return (t, lineage);
+    }
+
     private static string Link(TypeSchema t, string up) => up + t.Page;
 
     // The decision table: what a contributor has in hand, and where it goes. The corpus's own types
@@ -149,12 +158,12 @@ public static class Generator
     public static string LineageTable(IEnumerable<TypeSchema> types, string up) =>
         RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
         [
-            .. types.Where(t => t.Lineage is not null)
-                .OrderBy(t => t.DisplayName, StringComparer.Ordinal)
-                .Select(t => new List<string>
+            .. WithLineage(types)
+                .OrderBy(x => x.Type.DisplayName, StringComparer.Ordinal)
+                .Select(x => new List<string>
                 {
-                    $"[{t.DisplayName}]({Link(t, up)})", Escape(t.Lineage!.PriorArt),
-                    Cell(t.Lineage.Alignment), Cell(t.Lineage.Divergence)
+                    $"[{x.Type.DisplayName}]({Link(x.Type, up)})", Escape(x.Lineage.PriorArt),
+                    Cell(x.Lineage.Alignment), Cell(x.Lineage.Divergence)
                 })
         ]);
 
@@ -413,12 +422,12 @@ public static class Generator
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
         var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
-        var rows = universal.Select(n => FieldRow(n, s.EffectiveField(t, n)!, true))
+        var rows = universal.Select(n => FieldRow(n, s.DeclaredField(t, n), true))
             .Concat(own.Select(n => FieldRow(n, t.Fields[n], false)))
             .ToList();
 
         var order = universal.Concat(own).ToList();
-        var specs = order.Select(n => s.EffectiveField(t, n)!).ToList();
+        var specs = order.Select(n => s.DeclaredField(t, n)).ToList();
         var table = RenderTable(headers, rows);
         return table + Legend(specs.Any(f => f.Required), universal.Count > 0, up);
 
@@ -442,8 +451,8 @@ public static class Generator
     private static string ValueFor(FieldSpec f) =>
         f.From is { } from
             ? $"derived from the record's {from}"
-            : f is { Type: "enum", Values.Count: > 0 }
-                ? string.Join(" ", f.Values!.Select(v => $"`{v}`"))
+            : f.Type is "enum" && f.Values is { Count: > 0 } values
+                ? string.Join(" ", values.Select(v => $"`{v}`"))
                 : f.Type;
 
     // The same reference for metadata.md, which documents the universal fields once for the whole
