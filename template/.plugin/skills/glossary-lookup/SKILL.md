@@ -13,13 +13,17 @@ The corpus travels with this plugin as data. You read it with the tools you alre
 and nothing to run.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: versions, commit, date, link templates
-${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl    # one line of JSON per term — search this
-${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json  # one file per glossary, holding its Scope and what it narrows
+${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
+${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl               # one line of JSON per term. Search this
+${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json             # one glossary this corpus wrote
+${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<shortcode>/<record>.json # one glossary a corpus this one consumes wrote
 ```
 
 Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+
+One file holds every term, whoever wrote it. A corpus that consumes another exports both, so `terms.jsonl` carries this
+corpus's terms and the terms of every corpus above it, and one search reaches all of them.
 
 ## Find the term
 
@@ -44,32 +48,56 @@ Each line carries the entry whole:
 
 | Field                 | What it holds                                                             |
 |-----------------------|---------------------------------------------------------------------------|
-| `id`                  | `<glossary-id>.<term>` — the address to quote and to search on            |
+| `id`                  | `<glossary-id>.<term>`, the address to quote and to search on             |
 | `title`, `definition` | the term and its meaning                                                  |
 | `not`                 | what the term excludes, where the corpus drew that boundary               |
 | `seeAlso`             | related terms as full ids, so you can search straight to them             |
 | `record`              | the glossary this entry belongs to                                        |
+| `shortcode`           | the corpus that published the entry, absent where this corpus wrote it    |
 | `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again |
-| `path`, `anchor`      | the two values a link template takes — see below                          |
+| `path`, `anchor`      | the two values a link template takes, and see below for which template    |
+
+## Read the prefix on an id
+
+**A prefix on an id names the corpus that wrote the entry.** `eng:gls-estate.borrower` is the term `borrower`, in the
+glossary `gls-estate`, as the corpus whose shortcode is `eng` published it. The prefix sits on `id`, on `record` and on
+every `seeAlso` value, so an id you take from one line and search for carries it.
+
+**A bare id belongs to the corpus you installed.** `gls-estate.borrower` was written here.
+
+**`shortcode` is the key into `sources`.** Each entry in `sources` in `manifest.json` holds one producing corpus: its
+name, the version of it that travelled, and where it publishes. Look the shortcode up there before you say anything
+about the entry's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
+
+**A record file sits under its producer's shortcode**, because two corpora can name one glossary and a filename cannot
+say whose it is. So the owning record for `eng:gls-estate.borrower` is
+`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and for a bare id it is
+`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/gls-estate.json`.
 
 ## Build a link from a template
 
-**No line holds a URL.** `manifest.json` holds one template under `publishing`, and each line holds the two values it
-takes. Read the manifest once in a session and keep the string; it is the same for every term in the export.
+**No line holds a URL.** `manifest.json` holds a publishing block per corpus, and each line holds the two values a
+template takes: `path` and `anchor`.
+
+**Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
+in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
+`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit,
+which fetches a 404 or somebody else's file, and both read as plausible.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
 right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
 nobody asked about.
 
-**One target spells `{path}` differently.** Where `target` is `azure-devops-wiki`, the template addresses a wiki page
-rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every other
-target takes the `path` whole.
+**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
+wiki page rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every
+other target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose
+above, every time.
 
-**To send a reader to a record, use `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered page, and
-the anchor lands the reader on the term rather than at the top of the glossary.
+**To send a reader to a record, use the block's `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered
+page, and the anchor lands the reader on the term rather than at the top of the glossary.
 
-**To read a record's source yourself, fetch the file rather than the page.** `publishing` names the `target`, the
+**To read a record's source yourself, fetch the file rather than the page.** The same block names the `target`, the
 `base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
 repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
 hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
@@ -79,8 +107,8 @@ record.
 client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
 read as the record.
 
-**Where `humanTemplate` is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
-`path` as the record's place in the repository. Do not assemble a URL of your own.
+**Where the block's `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so, and
+quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.
 
 ## Read every hit, not the first
 
@@ -88,15 +116,19 @@ read as the record.
 can use. One estate defines *record* as a thing on a shelf with a barcode; another defines it as a markdown file under
 version control. An answer taken from the wrong one is fluent, confident and about the wrong subject.
 
-Open the owning record for each hit — `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json` — and read two things from
-it:
+Open the owning record for each hit, at the path *Read the prefix on an id* builds from `record` and `shortcode`, and
+read two things from it:
 
 * **`fields.narrows`.** Where one glossary narrows the other, the two entries are the general meaning and a refinement
   of it. The narrower entry wins wherever its context applies.
 * **`sections.Scope`.** Where neither narrows the other, they are separate words that share a spelling. The right entry
   is the one whose Scope admits the thing being asked about.
 
-Where the question does not settle which context it sits in, give both meanings and say which glossary each came from.
+Two entries may also come from two corpora, and `shortcode` says which. A consuming corpus narrowing a term it
+inherited is the ordinary case, so read `fields.narrows` before you treat the pair as a clash.
+
+Where the question does not settle which context it sits in, give both meanings and say which glossary each came from,
+naming the corpus as well wherever the two glossaries were written by different ones.
 
 ## Answer
 
@@ -104,8 +136,8 @@ Where the question does not settle which context it sits in, give both meanings 
   things it excludes.
 * **Quote the `id`.** `gls-search.title` is one string a reader can search the corpus for, and it settles in seconds
   whether you read the entry correctly.
-* **Name the glossary in words as well**, every time. A reader working in the other context needs to see the mismatch
-  without decoding an id to find it.
+* **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the
+  one installed. A reader working in the other context needs to see the mismatch without decoding an id to find it.
 * **Link the reader to the record**, built from `humanTemplate` as above.
 * **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
 
@@ -121,6 +153,7 @@ An export is a copy taken on a day, and it reads the same however long ago that 
 
 ## Say when there is nothing
 
-Where no entry matches, say the corpus does not define the term, and name the corpus from `manifest.json`. Then answer
-from the code if you can, marked plainly as your reading of the code rather than as the estate's meaning. Offer the term
-as one worth adding to the glossary, and leave that to whoever owns it.
+Where no entry matches, say the term is defined nowhere in this export, and name the corpus and every entry in
+`sources` from `manifest.json`, so a reader knows which vocabularies were searched. Then answer from the code if you
+can, marked plainly as your reading of the code rather than as the estate's meaning. Offer the term as one worth adding
+to the glossary, and leave that to whoever owns it.

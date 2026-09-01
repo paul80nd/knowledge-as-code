@@ -68,6 +68,15 @@ An entry may name the shape it reads the type at, as `glossary@1`. A bare `gloss
 of its files, which is what the breadcrumb hook does. Both trim the same way where the export carries no glossary at
 all.
 
+### `requires` is answered by the merged export
+
+An export carries what its corpus consumes, so a type can reach it from a corpus above this one.
+`requires` asks what the export carries and never what the corpus adopted, so a corpus holding no glossary of its own,
+consuming one that does, ships the glossary skill and the breadcrumb hook.
+
+That is the wanted answer. The terms are in the export, and a skill that reads them finds them.
+Nothing special-cases it, because the trim already reads the artefact rather than the folder.
+
 ### What a trim takes with it
 
 A trimmed component's files leave with it. A path under no component's is unconditional and travels whatever the corpus
@@ -121,6 +130,26 @@ A component is named in the last line where its manifest entry says `"announce":
 default is out, because most skills need no introduction: you already know to ask what a policy commits you to. What
 earns the line is a skill whose question a session would never think to put.
 
+That last line warns against answering from memory and states no question of its own. The three skills that can
+announce ask three different ones, so naming a question would name a record type, and a corpus shipping the standards
+skill and no glossary would be warned about words alone.
+
+### A type line names the corpus whose records it counts
+
+An export carries what its corpus consumes, so one type can hold several corpora's records. Each type gets a line for
+the installing corpus's own records and another for each corpus it consumes, carrying that corpus's shortcode and that
+corpus's count:
+
+```text
+standards. 24 entries across 8 records: Card details reach the PSP and never reach us, One order pays once, …
+standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, …
+```
+
+The installing corpus gets no line of its own where it wrote none of the type, which is what a corpus adopting a type
+purely to inherit it looks like. One count under the installing corpus's name would send a reader looking for records
+nobody there wrote, and a payments developer told the session holds 202 policy clauses goes looking for a payments
+policy.
+
 ### The breadcrumb is rendered at build time
 
 Everything it states is a fact about the export sitting inside the plugin, and an installed plugin's export does not
@@ -133,8 +162,9 @@ out of asking which files survived, so no corpus has to declare that a generated
 
 ### The render names no record type
 
-The counts, the record names and the skill to ask are read off the export and off the surviving components. So a corpus
-adopting a type this tool has never heard of gets a breadcrumb about it with no line changing.
+The counts, the record names, the shortcodes and the skill to ask are read off the export and off the surviving
+components. So a corpus adopting a type this tool has never heard of gets a breadcrumb about it with no line changing,
+and so does a corpus consuming one.
 
 The record names do a job a count alone cannot. A corpus keeps one glossary per bounded context, so three names say
 which contexts are covered where the number three says only that there are some.

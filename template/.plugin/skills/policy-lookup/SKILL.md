@@ -14,13 +14,18 @@ The corpus travels with this plugin as data. You read it with the tools you alre
 and nothing to run.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json           # what this export is: versions, commit, date, link templates
-${CLAUDE_PLUGIN_ROOT}/corpus/policies/clauses.jsonl  # one line of JSON per clause — search this
-${CLAUDE_PLUGIN_ROOT}/corpus/policies/<record>.json  # one file per policy, holding its Purpose, Scope and Exceptions
+${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
+${CLAUDE_PLUGIN_ROOT}/corpus/policies/clauses.jsonl             # one line of JSON per clause. Search this
+${CLAUDE_PLUGIN_ROOT}/corpus/policies/<record>.json             # one policy this corpus wrote
+${CLAUDE_PLUGIN_ROOT}/corpus/policies/<shortcode>/<record>.json # one policy a corpus this one consumes wrote
 ```
 
 Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+
+One file holds every clause, whoever committed to it. A corpus that consumes another exports both, so `clauses.jsonl`
+carries this corpus's clauses and the clauses of every corpus above it, and one search reaches all of them. An estate
+is bound by what it inherited as surely as by what it wrote.
 
 ## Find the commitment, and leave the verdict
 
@@ -54,15 +59,36 @@ governs your subject when its wording says so, never because it matched.
 
 Each line carries the clause whole:
 
-| Field                | What it holds                                                                     |
-|----------------------|-----------------------------------------------------------------------------------|
-| `id`                 | `<policy-id>.<clause-key>` — the address to quote and to cite                     |
-| `clause`             | the obligation, in the words the policy wrote                                     |
-| `level`              | `MUST`, `MUST NOT`, `SHOULD` or `COULD` — read this before anything else          |
-| `record`             | the policy the clause belongs to                                                  |
-| `part`               | the clause's key inside that policy                                               |
-| `status`, `reviewBy` | how far the policy has settled, and the date it was meant to be read again        |
-| `path`, `anchor`     | the two values a link template takes — see below                                  |
+| Field                | What it holds                                                              |
+|----------------------|----------------------------------------------------------------------------|
+| `id`                 | `<policy-id>.<clause-key>`, the address to quote and to cite               |
+| `clause`             | the obligation, in the words the policy wrote                              |
+| `level`              | `MUST`, `MUST NOT`, `SHOULD` or `COULD`. Read this before anything else    |
+| `record`             | the policy the clause belongs to                                           |
+| `part`               | the clause's key inside that policy                                        |
+| `shortcode`          | the corpus that published the clause, absent where this corpus wrote it    |
+| `status`, `reviewBy` | how far the policy has settled, and the date it was meant to be read again |
+| `path`, `anchor`     | the two values a link template takes, and see below for which template     |
+
+## Read the prefix on an id
+
+**A prefix on an id names the corpus that committed to the clause.** `eng:pol-SCRT.LOGS` is the clause `LOGS`, in the
+policy `pol-SCRT`, as the corpus whose shortcode is `eng` published it. The prefix sits on `id` and on `record`, so an
+id you take from one line and search for carries it.
+
+**A bare id belongs to the corpus you installed.** `pol-SCRT.LOGS` was written here.
+
+**An inherited clause binds.** A corpus consumes another because that other one governs it, so a clause arriving under
+a prefix is a commitment this estate is held to. Quote it as readily as one written here, and say who wrote it.
+
+**`shortcode` is the key into `sources`.** Each entry in `sources` in `manifest.json` holds one producing corpus: its
+name, the version of it that travelled, and where it publishes. Look the shortcode up there before you say anything
+about the clause's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
+
+**A record file sits under its producer's shortcode**, because two corpora can name one policy and a filename cannot
+say whose it is. So the owning record for `eng:pol-SCRT.LOGS` is
+`${CLAUDE_PLUGIN_ROOT}/corpus/policies/eng/pol-SCRT.json`, and for a bare id it is
+`${CLAUDE_PLUGIN_ROOT}/corpus/policies/pol-SCRT.json`.
 
 ## Read `level` before you answer
 
@@ -79,8 +105,8 @@ of the four you found.
 
 ## Read the policy beside the clause
 
-**A clause read on its own is stricter than the one we wrote.** Open the owning record —
-`${CLAUDE_PLUGIN_ROOT}/corpus/policies/<record>.json` — and read three things from `sections`:
+**A clause read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on
+an id* builds from `record` and `shortcode`, and read three things from `sections`:
 
 * **`Scope`.** It says what the clauses bind. A clause about every store binds every store the Scope admits, and
   nothing outside it.
@@ -93,23 +119,29 @@ The clause table is not among those sections. Its rows travelled as the lines in
 
 ## Build a link from a template
 
-**No line holds a URL.** `manifest.json` holds one template under `publishing`, and each line holds the two values it
-takes. Read the manifest once in a session and keep the string; it is the same for every clause in the export.
+**No line holds a URL.** `manifest.json` holds a publishing block per corpus, and each line holds the two values a
+template takes: `path` and `anchor`.
+
+**Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
+in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
+`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit,
+which fetches a 404 or somebody else's file, and both read as plausible.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
 right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the
 corpus nobody asked about.
 
-**One target spells `{path}` differently.** Where `target` is `azure-devops-wiki`, the template addresses a wiki page
-rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every other
-target takes the `path` whole.
+**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
+wiki page rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every
+other target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose
+above, every time.
 
-**To send a reader to a policy, use `humanTemplate`.** Substitute `path` and `anchor`. Every clause of one policy
-carries the same anchor, because a table row is not a heading and no renderer gives it a fragment of its own. The link
-lands on the clause table, and the reader finds the row by the id you quoted.
+**To send a reader to a policy, use the block's `humanTemplate`.** Substitute `path` and `anchor`. Every clause of one
+policy carries the same anchor, because a table row is not a heading and no renderer gives it a fragment of its own.
+The link lands on the clause table, and the reader finds the row by the id you quoted.
 
-**To read a policy's source yourself, fetch the file rather than the page.** `publishing` names the `target`, the
+**To read a policy's source yourself, fetch the file rather than the page.** The same block names the `target`, the
 `base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
 repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
 hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
@@ -119,8 +151,8 @@ record.
 client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
 read as the record.
 
-**Where `humanTemplate` is `null`**, the corpus publishes nowhere the export could address. Say so, and quote the
-`path` as the policy's place in the repository. Do not assemble a URL of your own.
+**Where the block's `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so, and
+quote the `path` as the policy's place in its own repository. Do not assemble a URL of your own.
 
 ## Say what stayed behind
 
@@ -149,7 +181,7 @@ An export is a copy taken on a day, and it reads the same however long ago that 
 
 ## Say when there is nothing
 
-Where no clause matches, say the corpus commits to nothing on the subject, and name the corpus from `manifest.json`.
-Silence is not permission, and it is not a rule you may supply: it says only that the estate has not written this down.
-Do not read a commitment out of a policy about something else. Offer the subject as one worth a policy, and leave that
-to whoever owns it.
+Where no clause matches, say nothing in this export commits to anything on the subject, and name the corpus and every
+entry in `sources` from `manifest.json`, so a reader knows which policies were searched. Silence is not permission, and
+it is not a rule you may supply: it says only that the estate has not written this down. Do not read a commitment out
+of a policy about something else. Offer the subject as one worth a policy, and leave that to whoever owns it.

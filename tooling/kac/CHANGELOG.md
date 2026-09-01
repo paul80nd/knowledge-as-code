@@ -32,6 +32,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **The breadcrumb names the corpus each count belongs to.** A merged export holds several corpora's records under one
+  type, so a type now gets a line for your own records and another for each corpus you consume, reading
+  `standards (from eng). 37 entries across 12 records: …`. A type you wrote none of gets no line under your own name.
+  The closing line warns against answering from memory rather than naming what a word means, because a corpus may ship
+  any of the three lookup skills or none of them.
+
+- **`glossary-lookup`, `policy-lookup` and `standards-lookup` read `sources`.** Each builds a link and a fetch from the
+  publishing block of the corpus that wrote the line, reached through the line's `shortcode`, rather than from yours.
+  Each says what a prefixed id means and where an inherited record's file sits. `standards-lookup` states that one file
+  already holds the whole union, and reads what stayed behind off `types` in the manifest rather than naming a fixed
+  four. `kac update` brings the three down.
+
 - **A type's manifest entry names two more of its part line's keys.** `idKey` and `seeAlsoKey` join `recordKey` and
   `partKey`, so a corpus merging that type stamps the keys the producing type actually named. `formatVersion` moves to
   4, so run `kac export` again before `kac bundle`, which refuses an export built to another shape.
