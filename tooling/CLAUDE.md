@@ -43,9 +43,9 @@ turning the setting off.
 
 **Three pipelines, and each has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
-[`examples/library/azure-pipelines.yml`](../examples/library/azure-pipelines.yml) is a corpus's own, forked by each
-corpus that takes one,
-so it runs `kac` over that corpus and reads no `template/`.
+[`template/azure-pipelines.yml`](../template/azure-pipelines.yml) is the starter a corpus receives and then owns, so it
+runs `kac` over that corpus and reads no `template/`. No corpus under `examples/` keeps a copy: this repository's own
+two pipelines are what gate them.
 
 ## Adding or changing a check
 

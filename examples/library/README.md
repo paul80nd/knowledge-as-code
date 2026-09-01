@@ -131,16 +131,16 @@ export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**It carries one type.** A term is the smallest useful thing one corpus can hand another, so the glossary went first.
-The rest is agreed and unbuilt:
+**This plugin carries one type.** `library/` adopts glossary and exports it, so `glossary-lookup` ships and the policy
+and standards skills are trimmed. What is agreed and unbuilt:
 
-* **Every other type.** Only the glossary is exported and only the glossary is read. An ADR travels nowhere.
-* **Publishing from Azure DevOps.** [`azure-pipelines.yml`](azure-pipelines.yml) validates and publishes nothing, so a
-  corpus hosted there builds its bundle by hand. That is where this has to work for the first adopters, and it is a
-  pipeline of its own rather than a translation of the GitHub one.
+* **A type with no `export:` block.** `glossary`, `policies` and `standards` each declare one, so their records travel
+  and their parts reach a lookup skill. An ADR travels nowhere.
+* **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
+  and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the
+  first adopters, and it is a pipeline of its own rather than a translation of the GitHub one.
 * **Anything that writes back.** The plugin answers questions. Nothing yet lets a session contribute a record
-  ([#21](https://github.com/paul80nd/knowledge-as-code/issues/21)) or report what it looked for and could not find
-  ([#13](https://github.com/paul80nd/knowledge-as-code/issues/13)).
+  ([#21](https://github.com/paul80nd/knowledge-as-code/issues/21)).
 * **The distillation pass** that would fold what sessions learned back into the corpus
   ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
 * **A hook that matches a prompt against the glossary**, so a term is defined where it is used rather than when someone

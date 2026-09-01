@@ -1,30 +1,21 @@
-# The gate on a pull request for a copy of this whole repository, on Azure DevOps.
+# The Azure DevOps twin of ../.github/workflows/kac.yml. Same gate, same steps, same order, and a
+# change to one belongs in the other.
 #
-# It is for somebody building or customising the framework itself, so it runs every corpus under
-# examples/, the template, the plugin each corpus builds, and the tool's own three test layers. It
-# covers the same ground as ../.github/workflows/kac.yml, which splits those steps across jobs it can
-# run in parallel. A flat step list cannot, so the corpus steps are looped here instead.
+# Read that file for why each step is here. This one carries only what Azure does differently:
 #
-# examples/library/azure-pipelines.yml is a different file for a different reader: a corpus's own
-# pipeline, forked by each corpus, running kac over that corpus and nothing else. A corpus holds no
-# template/ and no tests, so it has no use for this one.
+#   * A flat step list cannot run jobs in parallel, so the corpus steps are a loop.
+#   * `$(...)` is an Azure macro, so no script here uses command substitution.
+#   * tooling/tests/round-trip.sh is left out. It fetches each record from raw.githubusercontent.com,
+#     and a commit that lives only in Azure Repos was never pushed there.
 #
 # Azure Pipelines finds no YAML by itself. Point the pipeline at this path when you create it:
 #   Pipelines -> New pipeline -> Azure Repos Git -> your repo -> Existing Azure Pipelines YAML file
 #   -> /.azuredevops/kac.yml
 #
-# Wiring PR validation (important): this is an Azure Repos repository, where the YAML `pr:` trigger
-# below is IGNORED. Add this pipeline as a required Branch Policy -> Build Validation on `main`:
+# The `pr:` trigger below is ignored on Azure Repos. Add this pipeline as a required build validation:
 #   Project settings -> Repositories -> <your-repo> -> Policies -> Branch Policies -> main ->
 #   Build Validation -> + -> select this pipeline -> Required.
-# The `pr:` block is kept for intent, and works as-is if the repo is ever mirrored to GitHub.
-#
-# Nothing this pipeline produces is written back over a file a human edits. `generate --check` only
-# reports staleness, naming the command to run locally.
-#
-# tooling/tests/round-trip.sh is deliberately absent. It fetches each record from the host
-# `publishing:` in .corpus.yaml names, which is raw.githubusercontent.com, and a commit that lives
-# only in Azure Repos was never pushed there. ../.github/workflows/kac.yml runs it.
+# The block is kept for intent, and works as written if the repository is mirrored to GitHub.
 
 trigger: none                 # no CI on branch pushes; PR validation is via branch policy
 
@@ -34,8 +25,7 @@ pr:
       - main
 
 parameters:
-  # The corpora this repository holds, expanded into steps when the pipeline compiles. Narrow it on a
-  # manual run to gate one corpus while working on it.
+  # Expanded into steps when the pipeline compiles. Narrow it on a manual run to gate one corpus.
   - name: corpora
     type: object
     default:
@@ -58,19 +48,11 @@ steps:
       packageType: sdk
       version: 10.0.x
 
-  # One invocation per subcommand, run sequentially. Concurrent runs build the same project and
-  # contend over its output, so the kac runs must not overlap.
-  #
-  # Each runs from a corpus directory, because kac takes the first ancestor holding a .corpus.yaml as
-  # one. The tool is the one this repository builds rather than one installed on the agent.
-  #
-  # Every corpus declares a different `types:`, so running all of them is what proves the framework
-  # holds for a corpus that adopted a subset and not only for one that adopted the lot.
+  # One kac invocation at a time: concurrent runs build the same project and contend over its output.
+  # Each runs from a corpus directory, because that is what selects the corpus.
   - ${{ each corpus in parameters.corpora }}:
-      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, which is where
-      # `kac pack` writes, so the producer is packed before a consumer restores. The package is built
-      # here rather than taken from engineering's own turn in this loop, so a run narrowed to one
-      # consumer still has a package to restore.
+      # Packed here rather than taken from engineering's own turn in this loop, so a run narrowed to
+      # one consumer still has a package to restore.
       - ${{ if or(eq(corpus, 'payments'), eq(corpus, 'dog-fooding')) }}:
           - script: |
               dotnet run --project ../../tooling/kac -- export
@@ -78,8 +60,6 @@ steps:
             displayName: Build the package this corpus consumes (${{ corpus }})
             workingDirectory: $(Build.SourcesDirectory)/examples/engineering
 
-          # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails
-          # naming this command. A corpus consuming nothing skips the step.
           - script: dotnet run --project ../../tooling/kac -- restore
             displayName: Restore what this corpus consumes (${{ corpus }})
             workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
@@ -92,8 +72,6 @@ steps:
         displayName: Check generated output is fresh (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
-      # Each corpus holds a materialised copy of what the template sends, so this is what keeps every
-      # tree equal to the template in both directions.
       - script: dotnet run --project ../../tooling/kac -- update --check --from ../../
         displayName: Check the corpus is in step with the template (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
@@ -106,14 +84,10 @@ steps:
         displayName: Assemble the plugin bundle (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
-      # Every corpus here declares a shortcode, so the gate asks the same of each. A pack is refused
-      # without one.
       - script: dotnet run --project ../../tooling/kac -- pack
         displayName: Seal the export into a package (${{ corpus }})
         workingDirectory: $(Build.SourcesDirectory)/examples/${{ corpus }}
 
-  # `generate --check` is askable only here. The corpus the installed tool stands up further down is
-  # generated as it is created, so nothing there holds these committed copies fresh.
   - script: dotnet run --project ../tooling/kac -- validate
     displayName: Validate the template where it is authored
     workingDirectory: $(Build.SourcesDirectory)/template
@@ -122,22 +96,12 @@ steps:
     displayName: Check the template's generated output is fresh
     workingDirectory: $(Build.SourcesDirectory)/template
 
-  # Taken at `latest` rather than pinned, because the bundle has to be valid against the CLI a
-  # reader actually runs.
   - script: npm install -g @anthropic-ai/claude-code@latest
     displayName: Install the Claude Code CLI
 
-  # A clean `claude plugin validate` prints one line whatever it looked at, and a plugin holding no
-  # component at all passes it. The two guards below close that: bundle.json's components must
-  # really be in the tree, and .claude-plugin/ must hold the manifest and nothing else, because a
-  # component filed in there is loaded by nothing.
-  #
-  # Word for word the script in ../.github/workflows/kac.yml, so it is held to the POSIX subset Git
-  # Bash and older macOS bash agree on, with no command substitution, whose `$(...)` an Azure
-  # pipeline reads as its own macro before the shell sees it.
-  #
-  # It follows the CLI install rather than the bundle it checks, because the install happens once and
-  # a flat step list cannot interleave it with the loop above.
+  # Word for word the script in ../.github/workflows/kac.yml. It sits after the CLI install rather
+  # than beside the bundle it checks, because the install happens once and a flat step list cannot
+  # interleave it with the loop above.
   - ${{ each corpus in parameters.corpora }}:
       - script: |
           claude plugin validate ./.dist/plugin --strict
@@ -167,8 +131,6 @@ steps:
         env:
           TEMPDIR: $(Agent.TempDirectory)
 
-  # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
-  # whether that plugin is still valid to install, which is what this asks.
   - script: |
       mkdir -p "$TEMPDIR/no-types"
       cp -R ../../.schema "$TEMPDIR/no-types/.schema"
@@ -214,17 +176,12 @@ steps:
     displayName: Run the golden test suite
     workingDirectory: $(Build.SourcesDirectory)
 
-  # The import half proved end to end: publish from examples/engineering, consume it from
-  # examples/payments, then rename a clause upstream and assert the downstream build goes red naming
-  # it. Unlike round-trip.sh this reaches no network, because the two corpora exchange a sealed
-  # package through a folder, so it runs here as well as on GitHub.
+  # This reaches no network, unlike round-trip.sh, because the two corpora exchange a sealed package
+  # through a folder. So it runs here as well as on GitHub.
   - script: sh tooling/tests/import-round-trip.sh
     displayName: Publish from one corpus, consume it from another, and break it on purpose
     workingDirectory: $(Build.SourcesDirectory)
 
-  # Pack fails on package metadata no test layer above reads, such as a readme the project names and
-  # nobody wrote. Installing what was packed catches a package that is well-formed and still does
-  # not resolve to a runnable command.
   - script: |
       dotnet pack tooling/kac/kac.csproj -o .dist/pack
       dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
