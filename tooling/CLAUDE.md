@@ -35,11 +35,12 @@ to this repository's root, where it is authored once.
 
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
-**A warning fails the build.** [`Directory.Build.props`](Directory.Build.props) sets `TreatWarningsAsErrors` for every
-project here and for `kac-tests.cs`, so a nullable warning is a broken build rather than a line in the log nobody
-reads. It holds locally as well as in CI, on purpose: a check running in one and not the other is how the thing it
-catches reaches `main`. Where a warning is genuinely wrong, suppress that one with a reason beside it rather than
-turning the setting off.
+**A warning fails the build.** [`Directory.Build.props`](Directory.Build.props) sets `TreatWarningsAsErrors`,
+`EnforceCodeStyleInBuild` and `AnalysisLevel` at `latest`, for every project here and for `kac-tests.cs`. A nullable
+warning and a style violation are both a broken build rather than a line in the log nobody reads, and
+[`.editorconfig`](.editorconfig) is where the style itself is written. It holds locally as well as in CI, on purpose: a
+check running in one and not the other is how the thing it catches reaches `main`. Where a warning is genuinely wrong,
+suppress that one with a reason beside it rather than turning the setting off.
 
 **Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.

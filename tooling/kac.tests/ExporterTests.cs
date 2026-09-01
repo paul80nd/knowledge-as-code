@@ -82,7 +82,7 @@ public class ExporterTests
     [Fact]
     public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
     {
-        string[] Ids(params string[] glossaries) =>
+        static string[] Ids(params string[] glossaries) =>
             [.. TermLines(Corpus(glossaries)).Select(l => l.GetProperty("id").GetString()!)];
 
         var estate = Glossary("gls-estate", narrows: null, terms: "### Record\n\nA bibliographic description.\n");
@@ -684,7 +684,7 @@ public class ExporterTests
     [Fact]
     public void One_corpus_arriving_twice_at_two_versions_refuses()
     {
-        ExportSource At(string version) =>
+        static ExportSource At(string version) =>
             new("gp", "gp-corpus", version,
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, version));
