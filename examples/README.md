@@ -36,16 +36,17 @@ inheritance visible: there is nothing here that `engineering/` already says. It 
 `standards`, and declines the rest.
 
 **[`dog-fooding/`](dog-fooding/) is the same shape and the estate is this repository.** It consumes `engineering/` as
-`payments/` does, and it adopts `controls`, `runbooks`, `services`, `standards` and `tools`. It stands the five types
-up and holds no record in any of them yet, which is also what a corpus looks like on the day it is created.
+`payments/` does, and it adopts `controls`, `runbooks`, `services`, `standards` and `tools`. It stands each of them up
+and holds no record yet, which is also what a corpus looks like on the day it is created.
 
 ## How payments consumes engineering
 
 `dog-fooding/` consumes it the same way, and everything below holds for both.
 
 `payments/.corpus.yaml` names `example-engineering` in `consumes:`, at a version range, and gives a `source:` of
-`../engineering/.dist/package`. That folder is where `kac pack` writes, so the two corpora exchange a sealed package
-without a registry between them. `kac restore` unpacks it under `payments/.imports/eng/`, which is not committed.
+`../engineering/.dist/package`. That folder is where `kac pack` writes, so a producer and its consumer exchange a
+sealed package without a registry between them. `kac restore` unpacks it under `payments/.imports/eng/`, which is not
+committed.
 
 `kac validate` then resolves a citation carrying the `eng:` shortcode against what arrived, and reports a clause the
 governance layer does not carry exactly as it reports a broken local reference. A declared import that has not been
@@ -81,8 +82,8 @@ installable plugins. That is how this repository proves the publishing half of i
 and how somebody deciding whether to adopt the framework can install one and ask it questions.
 
 A plugin carries the export and whatever in the plugin tree can read it, so what each one does follows from the types
-that reach its export. `library/` ships the glossary lookup alone. The other three ship all three lookups, because
-`engineering/` adopts every type they read and the two corpora consuming it carry its records into their own exports.
+that reach its export. `library/` ships the glossary lookup alone. Every other corpus here ships every lookup, because
+`engineering/` adopts each type they read and whatever consumes it carries its records into its own export.
 A skill whose type reaches neither the corpus nor its imports is trimmed, and `bundle.json` inside the plugin names
 every component that was dropped and the type it needed.
 

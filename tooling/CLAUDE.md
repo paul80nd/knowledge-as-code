@@ -270,7 +270,7 @@ cd examples/library && sh ../../tooling/tests/round-trip.sh
 
 **Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill,
 `example-engineering` proves the policy skill and `example-payments` proves the standards skill, because each holds the
-records that skill was written for. CI runs those three, and `example-dogfooding` is left out because it is the same
+records that skill was written for. CI runs each of them, and leaves `example-dogfooding` out because it is the same
 shape as `example-payments`. Adding an assertion means choosing the corpus that already holds what it asks about.
 
 **It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden

@@ -1,13 +1,13 @@
 # Example Dogfooding: this repository, held to its own framework
 
-> **Everything here is real.** The other three corpora describe invented estates. This one describes the repository it
+> **Everything here is real.** The corpora beside it describe invented estates. This one describes the repository it
 > sits in: the tool, the site, the branch, and the rules a change to any of them answers to. A record here is wrong if
 > the repository disagrees with it.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
 corpus in the same shape as [`../payments/`](../payments/): it consumes [`../engineering/`](../engineering/) for its
 governance and writes only what is its own. Its domain is the building and publishing of `kac`.
-[`../README.md`](../README.md) sets it beside the other three corpora here and says what each one demonstrates.
+[`../README.md`](../README.md) sets it beside the others here and says what each one demonstrates.
 
 **A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
 
@@ -51,10 +51,10 @@ working tree, and an installed `kac` does not.
 
 ## What it demonstrates
 
-**A corpus about the repository holding it.** The other three prove that the framework holds for an invented estate,
-which is a weaker claim than it sounds: nothing pushes back when the fiction is convenient. Here the estate answers
-back. A service record naming the wrong workflow is caught by whoever next reads the workflow, and a standard nobody
-follows is visible as a standard nobody follows.
+**A corpus about the repository holding it.** The corpora beside it prove that the framework holds for an invented
+estate, which is a weaker claim than it sounds: nothing pushes back when the fiction is convenient. Here the estate
+answers back. A service record naming the wrong workflow is caught by whoever next reads the workflow, and a standard
+nobody follows is visible as a standard nobody follows.
 
 **A corpus that stands up before it holds anything.** Every type here is declared, generated and validated with no
 record in it, which is the state a corpus created this morning is in. `kac validate` holds it to the types it declared
@@ -92,6 +92,6 @@ knowledge-as-code/     # the system's own documentation
 The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
 wiki published from this tree shows knowledge rather than mechanism.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with the other three corpora
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here
 and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
 first.

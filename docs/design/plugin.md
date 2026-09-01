@@ -130,9 +130,9 @@ A component is named in the last line where its manifest entry says `"announce":
 default is out, because most skills need no introduction: you already know to ask what a policy commits you to. What
 earns the line is a skill whose question a session would never think to put.
 
-That last line warns against answering from memory and states no question of its own. The three skills that can
-announce ask three different ones, so naming a question would name a record type, and a corpus shipping the standards
-skill and no glossary would be warned about words alone.
+That last line warns against answering from memory and states no question of its own. Each skill that can announce
+asks a different one, so naming a question would name a record type, and a corpus shipping the standards skill and no
+glossary would be warned about words alone.
 
 ### A type line names the corpus whose records it counts
 

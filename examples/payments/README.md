@@ -5,10 +5,10 @@
 > [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
-corpus, and it is thin on purpose. It adopts three types, and it writes rules about handling a payment and nothing
-else. A domain corpus inherits its governance rather than restating it, and a thin corpus shows that where a full one
-hides it.
-[`../README.md`](../README.md) sets it beside the other three corpora here and says what each one demonstrates.
+corpus, and it is thin on purpose. It adopts `nfrs`, `services` and `standards`, and writes rules about handling a
+payment and nothing else. A domain corpus inherits its governance rather than restating it, and a thin corpus shows
+that where a full one hides it.
+[`../README.md`](../README.md) sets it beside the others here and says what each one demonstrates.
 
 **A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
 This one is the thinnest of the corpora here that hold records, and it is still a corpus rather than a copy of the
@@ -108,7 +108,7 @@ The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays
 wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
 nothing else: what the tool reads lives beside the tool.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with the other three corpora
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here
 and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
 first.
 

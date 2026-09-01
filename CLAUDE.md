@@ -160,7 +160,7 @@ reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACK
 
 ## Agent skills
 
-The engineering skills read three files from [`.claude/agents-config/`](.claude/agents-config/), rather than the
+The engineering skills read their configuration from [`.claude/agents-config/`](.claude/agents-config/), rather than the
 `docs/agents/` their author assumes. `docs/` here is the published site, and `NavigationTests` fails a page the nav does
 not list.
 

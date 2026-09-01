@@ -118,7 +118,7 @@ Every command takes the same few options, and each answers with one of three exi
 
 ## Add your first record
 
-Your corpus arrives holding three records. The ADR under `adrs/` and the policy under `policies/` are there to show the
+Your corpus arrives holding a few records. The ADR under `adrs/` and the policy under `policies/` are there to show the
 shape, and yours go beside them. The glossary under `glossary/` is the framework's own vocabulary, inherited word for
 word: write your own glossaries beside it and leave that one as it is.
 

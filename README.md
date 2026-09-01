@@ -42,9 +42,9 @@ once at the root and read by every corpus below. A corpus of your own carries it
 templates a corpus starts from, and the repository-shaped files it cannot work without. Some a corpus receives once and
 owns afterwards, and some it receives again whenever it takes a newer framework.
 
-**[`examples/`](examples/README.md)** holds three complete corpora that took that template, run through the tool built
+**[`examples/`](examples/README.md)** holds the complete corpora that took that template, run through the tool built
 beside them on every commit. Each holds its own copy of every file the template shares, and each demonstrates a
-different deployment shape over a fictional bounded context of its own.
+different deployment shape. Most describe a fictional bounded context, and one describes this repository.
 
 **[`docs/`](docs/)** is the documentation site, published to
 [GitHub Pages](https://paul80nd.github.io/knowledge-as-code/) on every push to `main`. It is the reference for KaC and

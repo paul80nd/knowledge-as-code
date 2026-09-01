@@ -6,7 +6,7 @@
 
 A corpus is plain markdown in git where every document has a type and every type has a schema. This one is the
 governance layer: it holds the commitments an engineering organisation makes, and publishes them for other corpora to
-read rather than copy. [`../README.md`](../README.md) sets it beside the other three corpora here and says what each one
+read rather than copy. [`../README.md`](../README.md) sets it beside the others here and says what each one
 demonstrates.
 
 **Read this one, copy [`../../template/`](../../template/).** The template is the same corpus with the content taken
@@ -118,7 +118,7 @@ The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays
 wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
 nothing else: what the tool reads lives beside the tool.
 
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with the other three corpora
+The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here
 and with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks
 first.
 
