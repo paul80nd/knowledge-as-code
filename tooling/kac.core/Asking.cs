@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace kac.core;
 
 // Who a command puts a question to. `new` asks most of them, and `update --drop-type` asks the one
@@ -53,9 +55,17 @@ public static class Asking
     // The value `--types` takes to mean every type the template declares.
     public const string AllTypes = "all";
 
-    // What resolving the answers came to: the answers, or why there are none. Exactly one of the two is
-    // set, and a cancelled run is both null: the person was asked and said no.
-    public sealed record Answered(NewAnswers? Answers, string? Problem);
+    // What resolving the answers came to: the answers, or why there are none. Exactly one of the two
+    // is set. Cancelling is not one of the two, because the question that offers it is asked after
+    // this, and the caller reads the answer rather than this record.
+    public sealed record Answered(NewAnswers? Answers, string? Problem)
+    {
+        // The invariant above, told to the compiler, so a caller that branches on it reads the other
+        // half without asserting anything. Both constructions below hold it.
+        [MemberNotNullWhen(true, nameof(Problem))]
+        [MemberNotNullWhen(false, nameof(Answers))]
+        public bool Failed => Problem is not null;
+    }
 
     // Resolve every answer `new` needs, asking only what no flag and no default settles.
     //

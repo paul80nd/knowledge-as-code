@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace kac.core;
 
 // Where `new` and `update` read a template from.
@@ -45,7 +47,14 @@ public sealed class TemplateSource : IDisposable
     }
 
     // What a fetch came to: the template, or why there is none. Exactly one of the two is set.
-    public sealed record Fetch(TemplateSource? Source, string? Problem);
+    public sealed record Fetch(TemplateSource? Source, string? Problem)
+    {
+        // `Source` is null exactly where `Problem` is set, told to the compiler so a caller that
+        // branches on it reads the other half without asserting anything.
+        [MemberNotNullWhen(true, nameof(Problem))]
+        [MemberNotNullWhen(false, nameof(Source))]
+        public bool Failed => Problem is not null;
+    }
 
     // Read the template `from` names, which is either a folder on this machine or a repository to clone.
     //
@@ -126,9 +135,9 @@ public sealed class TemplateSource : IDisposable
         string into, bool prompt, string toolVersion)
     {
         var read = Read(verb, from, gitRef, path, into, prompt);
-        if (read.Problem is { } unreachable) return new Taken(null, null, null, null, unreachable);
+        if (read.Failed) return new Taken(null, null, null, null, read.Problem);
 
-        var source = read.Source!;
+        var source = read.Source;
 
         var manifestFile = Path.Combine(source.Root, Manifest.FileName);
         if (!File.Exists(manifestFile))

@@ -56,7 +56,7 @@ public class AskingTests
         var asker = new Scripted();
         var answered = Resolve(Flagged(), asker);
 
-        Assert.Equal("acme", answered.Answers!.Name);
+        Assert.Equal("acme", answered.Resolved().Name);
         Assert.Empty(asker.Asked);
     }
 
@@ -66,14 +66,14 @@ public class AskingTests
         var asker = new Scripted(text: "typed-in");
         var answered = Resolve(new NewRequest(), asker);
 
-        Assert.Equal("typed-in", answered.Answers!.Name);
+        Assert.Equal("typed-in", answered.Resolved().Name);
         Assert.Contains(asker.Asked, q => q.Contains("called"));
     }
 
     [Fact]
     public void Yes_takes_the_default_for_everything_unasked()
     {
-        var answers = Resolve(new NewRequest { Yes = true }).Answers!;
+        var answers = Resolve(new NewRequest { Yes = true }).Resolved();
 
         Assert.Equal("folder-name", answers.Name);
         Assert.Equal(Declared, answers.Types);
@@ -101,13 +101,13 @@ public class AskingTests
 
     [Fact]
     public void All_names_every_type_the_template_declares()
-        => Assert.Equal(Declared, Resolve(Flagged()).Answers!.Types);
+        => Assert.Equal(Declared, Resolve(Flagged()).Resolved().Types);
 
     // Two corpora adopting the same types write the same descriptor.
     [Fact]
     public void A_named_subset_is_kept_in_the_order_the_schema_declares()
         => Assert.Equal(["adrs", "policies"],
-            Resolve(Flagged() with { Types = "policies, adrs" }).Answers!.Types);
+            Resolve(Flagged() with { Types = "policies, adrs" }).Resolved().Types);
 
     [Fact]
     public void A_type_the_template_does_not_declare_is_named_back()
@@ -120,7 +120,7 @@ public class AskingTests
 
     [Fact]
     public void A_corpus_may_adopt_no_type_at_all()
-        => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Answers!.Types);
+        => Assert.Empty(Resolve(new NewRequest(), new Scripted(many: [])).Resolved().Types);
 
     [Fact]
     public void A_publishing_target_the_tool_cannot_act_on_is_refused()
@@ -139,7 +139,7 @@ public class AskingTests
     public void A_corpus_publishing_nowhere_is_asked_for_no_base()
     {
         var asker = new Scripted();
-        var answers = Resolve(Flagged(), asker).Answers!;
+        var answers = Resolve(Flagged(), asker).Resolved();
 
         Assert.Null(answers.Base);
         Assert.DoesNotContain(asker.Asked, q => q.Contains("published corpus is browsed"));
@@ -149,7 +149,7 @@ public class AskingTests
     public void The_base_is_filled_in_from_the_repositorys_own_remote()
     {
         var answers = Resolve(Flagged() with { Publishing = Publishing.GitHub, Yes = true },
-            origin: "git@github.com:acme/corpus.git").Answers!;
+            origin: "git@github.com:acme/corpus.git").Resolved();
 
         Assert.Equal("https://github.com/acme/corpus", answers.Base);
     }
@@ -157,7 +157,7 @@ public class AskingTests
     [Fact]
     public void A_repository_with_no_remote_states_no_base()
     {
-        var answers = Resolve(Flagged() with { Publishing = Publishing.GitHub, Yes = true }).Answers!;
+        var answers = Resolve(Flagged() with { Publishing = Publishing.GitHub, Yes = true }).Resolved();
 
         Assert.Null(answers.Base);
     }
