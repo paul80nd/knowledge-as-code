@@ -15,7 +15,7 @@ shortcode: pay
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.7.3"
+content-version: "0.7.4"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -42,7 +42,7 @@ consumes:
     shortcode: eng
     version: ^0.7.0
     source: ../engineering/.dist/package
-    resolved: "0.7.4"
+    resolved: "0.7.5"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.
