@@ -586,6 +586,164 @@ public class ExporterTests
         Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
     }
 
+    // A consumed corpus as `.imports/` states it. Every key a merge stamps is named here rather than
+    // assumed, because a producer names its own keys and this is where they arrive from.
+    private static InheritedCorpus Consumed(string shortcode, params string[] lines) =>
+        new(shortcode, Exporter.FormatVersion, $"{shortcode}-corpus", "1.0.0",
+            new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
+                $"https://example.com/{shortcode}", null, "beefbeef"),
+            [
+                new InheritedType("glossary", 1, "glossary", "glossary/terms.jsonl",
+                    "record", "part", "id", "seeAlso",
+                    new Dictionary<string, string>(StringComparer.Ordinal) { ["Scope"] = ExportSpec.Full },
+                    lines,
+                    [new InheritedRecord("gls-theirs.json", "{\"type\": \"glossary\"}\n")])
+            ]);
+
+    private static ExportPlan Merged(LoadedCorpus corpus, params InheritedCorpus[] consumed) =>
+        Exporter.Plan(corpus, null, null, Run, consumed);
+
+    private const string TheirLine =
+        """{"id":"gls-theirs.alpha","record":"gls-theirs","seeAlso":["gls-other.beta"],"part":"alpha"}""";
+
+    // All three keys that hold an id, and the line itself. A `seeAlso` left bare would point at whatever
+    // this corpus happens to call the same thing, which resolves and resolves wrongly.
+    [Fact]
+    public void An_inherited_line_carries_its_producer_s_name_on_every_id_it_holds()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
+        var line = Lines(plan).Single(l => l.GetProperty("id").GetString()!.StartsWith("eng:"));
+
+        Assert.Equal("eng:gls-theirs.alpha", line.GetProperty("id").GetString());
+        Assert.Equal("eng:gls-theirs", line.GetProperty("record").GetString());
+        Assert.Equal(["eng:gls-other.beta"],
+            line.GetProperty("seeAlso").EnumerateArray().Select(v => v.GetString()));
+        Assert.Equal("eng", line.GetProperty(Exporter.ShortcodeKey).GetString());
+    }
+
+    // The rule a citation already follows, on a line: bare names this corpus. So a consumer tells its own
+    // records from the ones it inherited without being told which corpus it is.
+    [Fact]
+    public void A_line_this_corpus_wrote_carries_no_name_and_no_shortcode()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
+        var line = Lines(plan).Single(l => l.GetProperty("record").GetString() == "gls-one");
+
+        Assert.Equal("gls-one.alpha", line.GetProperty("id").GetString());
+        Assert.False(line.TryGetProperty(Exporter.ShortcodeKey, out _));
+    }
+
+    // What makes a grandparent arrive labelled once. `eng` merging `gp` stamped its own lines and left
+    // `gp:` alone, and this corpus merging `eng` has to do the same or the prefixes stack.
+    [Fact]
+    public void An_id_already_naming_a_corpus_keeps_the_name_it_arrived_with()
+    {
+        var theirs =
+            """{"id":"gp:gls-old.alpha","record":"gp:gls-old","seeAlso":null,"part":"alpha"}""";
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", theirs));
+        var line = Lines(plan).Single(l => l.GetProperty("id").GetString()!.Contains(':'));
+
+        Assert.Equal("gp:gls-old.alpha", line.GetProperty("id").GetString());
+        Assert.Equal("gp:gls-old", line.GetProperty("record").GetString());
+        Assert.Equal("eng", line.GetProperty(Exporter.ShortcodeKey).GetString());
+    }
+
+    // Two corpora can name one record, so an inherited file is filed under the corpus that wrote it. The
+    // parts file merges because a line says whose it is; a filename cannot.
+    [Fact]
+    public void An_inherited_record_is_filed_under_its_producer_s_shortcode()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
+
+        Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+        Assert.Contains("glossary/gls-one.json", plan.Files.Select(f => f.Path));
+    }
+
+    // Two counts in one entry, because a consumer asks how much of a type there is and not how much of it
+    // each corpus wrote. Which corpus wrote a record is a fact about the line.
+    [Fact]
+    public void A_type_entry_counts_what_this_corpus_wrote_and_what_it_inherited_together()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n\n### Beta\n\nB.\n")),
+            Consumed("eng", TheirLine));
+
+        var type = Assert.Single(plan.Types);
+        Assert.Equal(2, type.Records);
+        Assert.Equal(3, type.Parts);
+    }
+
+    // The address is the one thing a merge cannot merge. A record of `eng` is read at eng's commit under
+    // eng's prefix, and this corpus's own template gets both wrong.
+    [Fact]
+    public void A_source_carries_the_publishing_its_producer_wrote()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
+
+        var source = Assert.Single(
+            JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+                .GetProperty("sources").EnumerateArray());
+
+        Assert.Equal("eng", source.GetProperty("shortcode").GetString());
+        Assert.Equal("eng-corpus", source.GetProperty("corpus").GetString());
+        Assert.Equal("1.0.0", source.GetProperty("contentVersion").GetString());
+        Assert.Equal("beefbeef", source.GetProperty("publishing").GetProperty("ref").GetString());
+    }
+
+    // A rule of this corpus cites a clause of a policy it never adopted, and that citation resolves only
+    // where the policy travelled too. So an inherited type arrives whole rather than being filtered to
+    // what this corpus happens to hold.
+    [Fact]
+    public void A_type_only_a_consumed_corpus_holds_still_travels()
+    {
+        var plan = Exporter.Plan(Corpus(), null, null, Run, [Consumed("eng", TheirLine)]);
+
+        var type = Assert.Single(plan.Types);
+        Assert.Equal("glossary", type.Type);
+        Assert.Equal(1, type.Records);
+        Assert.Equal("glossary/terms.jsonl", type.PartsFile);
+        Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+    }
+
+    // A merged file whose halves are shaped differently reads as one file and answers two ways, and
+    // nothing in the output says so. So the run stops where somebody can act on it.
+    [Fact]
+    public void A_type_exported_at_two_shapes_refuses_and_writes_nothing()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        var mismatched = theirs with { Types = [theirs.Types[0] with { ShapeVersion = 2 }] };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), mismatched);
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("shape 1", Assert.Single(plan.Refused));
+        Assert.Contains("shape 2", plan.Refused[0]);
+    }
+
+    // The same fault one level down. A skill told a section always travels would be right for half the
+    // records and wrong for the rest.
+    [Fact]
+    public void A_type_whose_sections_travelled_differently_refuses()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        var mismatched = theirs with
+        {
+            Types =
+            [
+                theirs.Types[0] with
+                {
+                    Sections = new Dictionary<string, string>(StringComparer.Ordinal)
+                        { ["Scope"] = ExportSpec.Summary }
+                }
+            ]
+        };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), mismatched);
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("fidelity", Assert.Single(plan.Refused));
+    }
+
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
     // A corpus with an address, for the tests that read one. The base and the ref are `PublishingTests`'

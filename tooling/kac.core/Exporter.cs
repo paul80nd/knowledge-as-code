@@ -16,11 +16,16 @@ public sealed record ExportFile(string Path, string Content);
 // drafts publishes a smaller vocabulary than it holds. A link naming a record and no term inside it
 // leaves a cross-reference the export could not carry. Neither leaves a mark in the export, so the run
 // that built it is the last place anyone will see them.
+//
+// `Refused` holds the reasons an export cannot be written at all, and is empty for every export that
+// can. A plan carrying one carries no files: two corpora disagreeing about a type is not something to
+// write a smaller export around.
 public sealed record ExportPlan(
     IReadOnlyList<ExportFile> Files,
     IReadOnlyList<ExportedType> Types,
     IReadOnlyList<string> Withheld,
-    IReadOnlyList<string> Unread);
+    IReadOnlyList<string> Unread,
+    IReadOnlyList<string> Refused);
 
 // The facts that differ between two runs over one commit, gathered so the exporter takes them rather
 // than reads them. A caller wanting byte-identical output holds them still. A test supplies its own
@@ -36,53 +41,87 @@ public static class Exporter
     // The shape of the output, versioned independently of anything the corpus says about itself.
     // `Bundler` refuses an export built to another shape, so moving this number means rebuilding every
     // export on disk. `docs/design/export.md` says what moves it.
-    public const int FormatVersion = 3;
+    public const int FormatVersion = 4;
 
     public const string ManifestFile = "manifest.json";
 
-    // What an export comes to, given a loaded corpus and the addresses its published form has.
+    // The key an inherited part line names its producer by, and the key into `sources` in the manifest.
+    // A line without it is this corpus's own, which is the rule a citation already follows: `eng:pol-VURM`
+    // names another corpus and a bare `pol-VURM` names this one.
+    public const string ShortcodeKey = "shortcode";
+
+    // What an export comes to, given a loaded corpus, the addresses its published form has, and the
+    // corpora it consumes.
     //
     // `type` narrows what is written and never what is read. The corpus arrives whole.
     //
     // `run` holds everything that varies between runs, so nothing here reads a clock. Two runs from
     // the same tree produce identical bytes but for the timestamp.
-    public static ExportPlan Plan(LoadedCorpus corpus, Publishing? publishing, string? type, ExportRun run)
+    //
+    // `inherited` is what `.imports/` holds, carried through so a consumer greps one file per type
+    // instead of learning which corpus wrote which rule. `docs/design/export.md` says what merging
+    // settles and what it refuses.
+    public static ExportPlan Plan(LoadedCorpus corpus, Publishing? publishing, string? type, ExportRun run,
+        IReadOnlyList<InheritedCorpus>? inherited = null)
     {
+        var consumed = Wanted(inherited ?? [], type);
+
+        // Nothing is written where two corpora disagree about a type. A merged file whose halves are
+        // shaped differently reads as one file and answers two ways.
+        var refused = Disagreements(corpus, consumed, type);
+        if (refused.Count > 0) return new ExportPlan([], [], [], [], refused);
+
         var files = new List<ExportFile>();
         var types = new List<ExportedType>();
         var withheld = new List<string>();
         var unread = new List<string>();
 
-        foreach (var t in corpus.Adopted)
+        foreach (var key in Keys(corpus, consumed, type))
         {
-            if (t.Export is not { } export) continue;
-            if (type is not null && !string.Equals(t.Key, type, StringComparison.Ordinal)) continue;
+            var local = corpus.Adopted.FirstOrDefault(t => t.Key == key && t.Export is not null);
+            var lines = new List<string>();
+            var records = 0;
 
-            var held = corpus.Docs.Where(d => d.Type?.Key == t.Key)
-                .ToLookup(d => Travels(d, corpus.Descriptor, run.Today));
+            if (local is { Export: { } export })
+            {
+                var held = corpus.Docs.Where(d => d.Type?.Key == key)
+                    .ToLookup(d => Travels(d, corpus.Descriptor, run.Today));
 
-            withheld.AddRange(held[false].Select(Id).OrderBy(id => id, StringComparer.Ordinal));
+                withheld.AddRange(held[false].Select(Id).OrderBy(id => id, StringComparer.Ordinal));
 
-            var records = Ordered([.. held[true]]);
-            if (records.Count == 0) continue;
+                var own = Ordered([.. held[true]]);
+                records += own.Count;
 
-            foreach (var doc in records)
-                files.Add(new ExportFile($"{t.Key}/{Id(doc)}.json",
-                    Serialize(Record(doc, t, corpus.Schema, publishing))));
+                foreach (var doc in own)
+                    files.Add(new ExportFile($"{key}/{Id(doc)}.json",
+                        Serialize(Record(doc, local, corpus.Schema, publishing))));
 
-            var parts = export.Parts.Length > 0 && t.Parts is not null
-                ? PartsFile(records, t, corpus.Tree, unread)
-                : null;
-            if (parts is not null) files.Add(parts);
+                if (export.Parts.Length > 0 && local.Parts is not null)
+                    lines.AddRange(PartLines(own, local, corpus.Tree, unread));
+            }
 
-            // Two counts, because they answer two questions and one number cannot. `ExportedType` says
-            // which is which.
-            types.Add(new ExportedType(
-                t.Key, export.Version, records.Count,
-                parts is null ? 0 : Lines(parts.Content), t.Key, parts?.Path,
-                parts is null ? null : KeyFrom(export, PartLineSource.RecordId),
-                parts is null ? null : KeyFrom(export, PartLineSource.PartKey),
-                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
+            // Each consumed corpus after this one's own, in shortcode order, and each keeping the order
+            // its producer published. Sorting across corpora would interleave them and leave neither
+            // corpus's own ordering readable, which is the one thing a flat file's order carries.
+            foreach (var from in consumed)
+            {
+                if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
+
+                records += theirs.Records.Count;
+
+                foreach (var record in theirs.Records)
+                    files.Add(new ExportFile($"{theirs.Dir}/{from.Shortcode}/{record.Name}", record.Content));
+
+                lines.AddRange(theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)));
+            }
+
+            if (records == 0) continue;
+
+            var partsFile = lines.Count > 0 ? PartsPath(key, local, consumed) : null;
+            if (partsFile is not null)
+                files.Add(new ExportFile(partsFile, string.Concat(lines.Select(l => l + "\n"))));
+
+            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile));
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -100,13 +139,153 @@ public static class Exporter
                 run.GeneratedAt,
                 About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
+                [.. consumed.Select(c => new ExportSource(
+                    c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing))],
                 types))));
 
         // The manifest is built last, because it reports what the rest of the run produced. Sorting
         // every file by path makes the listing a caller prints read in the order they sit on disk.
         return new ExportPlan([.. files.OrderBy(f => f.Path, StringComparer.Ordinal)], types, withheld,
-            [.. unread.Distinct(StringComparer.Ordinal).OrderBy(u => u, StringComparer.Ordinal)]);
+            [.. unread.Distinct(StringComparer.Ordinal).OrderBy(u => u, StringComparer.Ordinal)], []);
     }
+
+    // The consumed corpora this run carries, narrowed to the type asked for and ordered by shortcode so
+    // two runs over one tree write the same bytes.
+    private static List<InheritedCorpus> Wanted(IReadOnlyList<InheritedCorpus> inherited, string? type) =>
+    [
+        .. inherited
+            .Select(c => type is null
+                ? c
+                : c with { Types = [.. c.Types.Where(t => t.Type == type)] })
+            .Where(c => c.Types.Count > 0 || type is null)
+            .OrderBy(c => c.Shortcode, StringComparer.Ordinal)
+    ];
+
+    // Every type this export writes something for: the ones this corpus adopted, and the ones it holds
+    // only because a corpus it consumes exported them. A consumer receives the second kind whole, so a
+    // rule citing a clause of a policy this corpus never adopted resolves against the policy itself.
+    private static List<string> Keys(LoadedCorpus corpus, List<InheritedCorpus> consumed, string? type)
+    {
+        var keys = new List<string>();
+
+        foreach (var t in corpus.Adopted)
+            if (t.Export is not null && (type is null || t.Key == type))
+                keys.Add(t.Key);
+
+        foreach (var key in consumed.SelectMany(c => c.Types).Select(t => t.Type)
+                     .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal))
+            if (!keys.Contains(key, StringComparer.Ordinal) && (type is null || key == type))
+                keys.Add(key);
+
+        return keys;
+    }
+
+    // What stops the run, in the words a person acts on. Two corpora exporting one type at two shapes,
+    // and two carrying its sections at two fidelities.
+    //
+    // Both would merge without complaint and leave a consumer reading one file that answers two ways: a
+    // key present on half the lines, or a section a skill was told always travels standing empty on half
+    // the records. Neither is visible in the output, so the run that built it is where it has to stop.
+    private static List<string> Disagreements(LoadedCorpus corpus, List<InheritedCorpus> consumed, string? type)
+    {
+        var found = new List<string>();
+
+        foreach (var key in consumed.SelectMany(c => c.Types).Select(t => t.Type)
+                     .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal))
+        {
+            if (type is not null && key != type) continue;
+
+            var shapes = new List<(string Where, int Shape, IReadOnlyDictionary<string, string> Sections)>();
+
+            if (corpus.Adopted.FirstOrDefault(t => t.Key == key)?.Export is { } export)
+                shapes.Add((corpus.Descriptor.Shortcode ?? "this corpus", export.Version,
+                    export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal)));
+
+            foreach (var from in consumed)
+                if (from.Types.FirstOrDefault(t => t.Type == key) is { } theirs)
+                    shapes.Add((from.Shortcode, theirs.ShapeVersion, theirs.Sections));
+
+            var first = shapes[0];
+
+            foreach (var (where, shape, sections) in shapes.Skip(1))
+            {
+                if (shape != first.Shape)
+                    found.Add($"'{key}' is exported at shape {first.Shape} by {first.Where} and at shape "
+                              + $"{shape} by {where}. A merged file cannot hold both.");
+                else if (!Same(first.Sections, sections))
+                    found.Add($"'{key}' carries its sections at one fidelity in {first.Where} and another in "
+                              + $"{where}. A merged file cannot promise both.");
+            }
+        }
+
+        return found;
+    }
+
+    private static bool Same(
+        IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, string> b) =>
+        a.Count == b.Count && a.All(e => b.TryGetValue(e.Key, out var v) && v == e.Value);
+
+    // Where one type's parts file lands. This corpus's own name for a part decides it where the corpus
+    // adopted the type, and the producer's where it did not, so a consumer reading a type it never
+    // adopted finds the file that type's own manifest entry names.
+    private static string? PartsPath(string key, TypeSchema? local, List<InheritedCorpus> consumed)
+    {
+        if (local?.Parts is { } spec) return $"{key}/{spec.Noun}s.jsonl";
+
+        return consumed.SelectMany(c => c.Types).FirstOrDefault(t => t.Type == key)?.PartsFile;
+    }
+
+    // One type's manifest entry, counting what this corpus wrote and what it inherited together. A
+    // consumer reads one number per question, and which corpus a record came from is a fact about the
+    // line rather than about the type.
+    private static ExportedType Entry(string key, TypeSchema? local, List<InheritedCorpus> consumed,
+        int records, int parts, string? partsFile)
+    {
+        if (local?.Export is { } export)
+            return new ExportedType(
+                key, export.Version, records, parts, key, partsFile,
+                partsFile is null ? null : KeyFrom(export, PartLineSource.RecordId),
+                partsFile is null ? null : KeyFrom(export, PartLineSource.PartKey),
+                partsFile is null ? null : KeyFrom(export, PartLineSource.PartId),
+                partsFile is null ? null : KeyFrom(export, PartLineSource.PartSeeAlso),
+                export.Sections.ToDictionary(e => e.Section, e => e.Fidelity, StringComparer.Ordinal));
+
+        var theirs = consumed.SelectMany(c => c.Types).First(t => t.Type == key);
+
+        return new ExportedType(
+            key, theirs.ShapeVersion, records, parts, theirs.Dir, partsFile,
+            theirs.RecordKey, theirs.PartKey, theirs.IdKey, theirs.SeeAlsoKey, theirs.Sections);
+    }
+
+    // One inherited line, with its producer's shortcode written onto every key that holds an id and onto
+    // the line itself. Everything else is the producer's bytes, re-serialised because the object was
+    // parsed to reach those keys.
+    //
+    // A value already carrying a prefix keeps the one it has. That is what makes a grandparent arrive
+    // labelled once: `eng` merging `gp` stamps only its own unprefixed lines, and this corpus merging
+    // `eng` leaves `gp:` alone.
+    private static string Stamped(string line, string shortcode, InheritedType type)
+    {
+        if (JsonRead.Parse(line) is not { } read) return line;
+
+        foreach (var key in new[] { type.IdKey, type.RecordKey })
+            if (key is not null && JsonRead.Str(read[key]) is { } id)
+                read[key] = JsonValue.Create(Scoped(id, shortcode));
+
+        if (type.SeeAlsoKey is { } seeAlso && read[seeAlso] is JsonArray targets)
+            read[seeAlso] = new JsonArray([
+                .. targets.Select(t => (JsonNode?)JsonValue.Create(
+                    JsonRead.Str(t) is { } v ? Scoped(v, shortcode) : null))
+            ]);
+
+        read[ShortcodeKey] = JsonValue.Create(shortcode);
+        return Serialize(read);
+    }
+
+    // An id as this corpus writes it: the producer's own spelling, behind the shortcode that names the
+    // producer, unless it already names one.
+    private static string Scoped(string id, string shortcode) =>
+        id.Contains(':', StringComparison.Ordinal) ? id : $"{shortcode}:{id}";
 
     // Replace the export whole: delete what is there, then write. Overwriting in place would leave a
     // deleted record readable in the output indefinitely, and nothing downstream would catch it.
@@ -374,17 +553,20 @@ public static class Exporter
     private static string? KeyFrom(ExportSpec export, string source) =>
         export.Line.FirstOrDefault(l => string.Equals(l.Source, source, StringComparison.Ordinal)).Key;
 
-    // The flat file of every addressable part of a type, one part to a line. JSONL rather than pretty
+    // Every addressable part of this corpus's own records, one part to a line. JSONL rather than pretty
     // JSON, and each line repeats what a reader would otherwise have to look up.
     // `docs/design/export.md` says what that costs and what it buys.
     //
+    // The lines rather than the file, because a consumed corpus's lines join them in one file and
+    // `Plan` is where the two are put together.
+    //
     // What a line holds is the type's to declare. Nothing here names a key, so a second type exporting
     // parts costs an `export.parts.line:` block and no line of C#.
-    private static ExportFile? PartsFile(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
+    private static List<string> PartLines(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
         var spec = t.Parts!;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
-        var lines = new StringBuilder();
+        var lines = new List<string>();
         var footnotes = t.DeclaredFields.Select(f => f.MirrorsCitations).OfType<string>().ToList();
 
         foreach (var doc in records)
@@ -400,16 +582,12 @@ public static class Exporter
                 var line = new JsonObject();
                 foreach (var (key, source) in t.Export!.Line) line[key] = Value(source, part, t);
 
-                lines.Append(Serialize(line));
-                lines.Append('\n');
+                lines.Add(Serialize(line));
                 unread.AddRange(Unread(doc, row, partId, byPath, tree));
             }
         }
 
-        // The file is named for what a type calls one of its parts, so a reader told to look for terms
-        // finds a glossary's terms in `terms.jsonl`. A type whose records hold no addressable part
-        // writes no file at all, and the manifest names none for it.
-        return lines.Length > 0 ? new ExportFile($"{t.Key}/{spec.Noun}s.jsonl", lines.ToString()) : null;
+        return lines;
     }
 
     // The order a record's parts travel in, decided by where the type takes them from.
@@ -555,11 +733,6 @@ public static class Exporter
 
         return (Absent(lead), Absent(aside));
     }
-
-    // How many parts a flat file holds, counted off the file itself. One part is one line, so the count
-    // the manifest states and the file a consumer greps cannot come apart.
-    private static int Lines(string content) =>
-        content.Count(c => c == '\n');
 
     // How this export's links are built, for the manifest: the template a person's link is substituted
     // into, and the base, prefix and ref an agent fetches a record's source with. All null where the
