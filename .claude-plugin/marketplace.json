@@ -20,6 +20,11 @@
       "name": "example-payments",
       "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
       "source": "./example-payments"
+    },
+    {
+      "name": "example-dogfooding",
+      "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
+      "source": "./example-dogfooding"
     }
   ]
 }

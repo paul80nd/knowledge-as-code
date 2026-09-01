@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] A search for one trace id returns records from every service the request passed through.\n- [ ] Every timestamp in the central store is UTC, and the hosts agree to within a second.\n- [ ] The service has a health check, a dashboard and at least one alert.\n- [ ] Each alert names an owner and a first action.\n- [ ] Every alert raised in the last 30 days was acted on or removed.\n- [ ] The retention period for this service is recorded, and the platform is set to it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ca05ca1497b857c42fd859fe7d85bda5db84f9e4/examples/engineering/standards/common/observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/bf64d1adb7dc0927c99082181044e90c92ad0e12/examples/engineering/standards/common/observability.md"
   }
 }

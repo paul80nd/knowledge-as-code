@@ -10,10 +10,9 @@ The source is on [`main`](https://github.com/paul80nd/knowledge-as-code).
 
 ## What these are
 
-Each plugin here carries one of the **worked example corpora** that ship with knowledge-as-code.
-The estates they describe are invented, they govern nobody, and they are here so that somebody
-deciding whether to adopt the framework can install one and ask it questions. Each plugin's own
-description says so.
+Each plugin here carries one of the **worked corpora** that ship with knowledge-as-code. Install
+one and ask it questions. The estates they describe are invented and govern nobody, except
+`example-dogfooding`, which describes the repository they all come from.
 
 ## Installing
 
@@ -29,5 +28,6 @@ description says so.
 | `example-libraries` | `0.1.6` |
 | `example-engineering` | `0.7.5` |
 | `example-payments` | `0.7.4` |
+| `example-dogfooding` | `0.1.0` |
 
-Built from [`ca05ca1497b857c42fd859fe7d85bda5db84f9e4`](https://github.com/paul80nd/knowledge-as-code/commit/ca05ca1497b857c42fd859fe7d85bda5db84f9e4).
+Built from [`bf64d1adb7dc0927c99082181044e90c92ad0e12`](https://github.com/paul80nd/knowledge-as-code/commit/bf64d1adb7dc0927c99082181044e90c92ad0e12).

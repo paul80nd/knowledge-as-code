@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] The run has completed for every day in the last month.\n- [ ] Each run's record names the file it read, the entries it compared and the breaks it found.\n- [ ] A day with breaks does not appear in the revenue report.\n- [ ] Every break older than 30 days has a named owner.\n- [ ] A missing settlement file raises an alert within the run's own window.\n- [ ] Each break closed last month closed through a ledger correction."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ca05ca1497b857c42fd859fe7d85bda5db84f9e4/examples/payments/standards/ledger/reconciliation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/bf64d1adb7dc0927c99082181044e90c92ad0e12/examples/payments/standards/ledger/reconciliation.md"
   }
 }
