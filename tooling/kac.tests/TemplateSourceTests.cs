@@ -21,7 +21,7 @@ public class TemplateSourceTests : IDisposable
     private static void Write(string root, string rel, string text = "")
     {
         var path = Path.Combine(root, rel.Replace('/', Path.DirectorySeparatorChar));
-        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        Files.OpenFolderFor(path);
         File.WriteAllText(path, text);
     }
 

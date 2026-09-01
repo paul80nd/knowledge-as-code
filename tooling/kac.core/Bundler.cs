@@ -280,7 +280,7 @@ public static class Bundler
         foreach (var file in plan.Files)
         {
             var full = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
-            Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+            Files.OpenFolderFor(full);
             File.WriteAllBytes(full, file.Content);
             if (file.Executable) MakeExecutable(full);
             written.Add($"{Dist.Root}/{file.Path}");

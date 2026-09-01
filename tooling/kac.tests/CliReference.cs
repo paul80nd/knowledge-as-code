@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Xunit.Sdk;
 
 namespace kac.tests;
 
@@ -104,22 +105,29 @@ internal static partial class CliReference
     private static IReadOnlyList<Verb> Read()
     {
         var xml = XDocument.Parse(XmlDoc());
+        var root = xml.Root ?? throw new XunitException("The XML documentation for `kac` holds no root element.");
 
         return
         [
-            .. xml.Root!.Elements("Command")
+            .. root.Elements("Command")
                 .Select(c => new Verb(
-                    c.Attribute("Name")!.Value,
+                    c.Value("Name"),
                     c.Element("Parameters")?.Elements("Option")
                         .Select(o => new Option(
-                            o.Attribute("Long")!.Value,
-                            o.Attribute("Value")!.Value is "NULL" ? null : o.Attribute("Value")!.Value,
-                            o.Attribute("Required")!.Value is "true",
+                            o.Value("Long"),
+                            o.Value("Value") is "NULL" ? null : o.Value("Value"),
+                            o.Value("Required") is "true",
                             OneLine(o.Element("Description")?.Value)))
                         .OrderBy(o => o.Long, StringComparer.Ordinal).ToList()
                     ?? []))
         ];
     }
+
+    // The value of an attribute the generated XML always carries. A null means that file's shape moved,
+    // and naming the attribute says which one to go looking for.
+    private static string Value(this XElement element, string attribute) =>
+        element.Attribute(attribute)?.Value
+        ?? throw new XunitException($"<{element.Name}> carries no '{attribute}' attribute.");
 
     private static string Cell(string text) => text.Replace("|", "\\|", StringComparison.Ordinal);
 

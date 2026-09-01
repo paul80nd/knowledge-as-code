@@ -119,7 +119,7 @@ public static class Restore
             foreach (var file in step.Files)
             {
                 var path = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
-                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                Files.OpenFolderFor(path);
                 File.WriteAllBytes(path, file.Content);
             }
 

@@ -240,7 +240,7 @@ public class RestoreTests
     {
         var root = Temp();
         var stale = Path.Combine(root, Restore.ImportsDir, "eng", "glossary", "withdrawn.json");
-        Directory.CreateDirectory(Path.GetDirectoryName(stale)!);
+        Files.OpenFolderFor(stale);
         File.WriteAllText(stale, "{}");
 
         Restore.Write(root, Plan([Declared()], Feed(["0.1.0"], ["glossary/terms.jsonl"])));

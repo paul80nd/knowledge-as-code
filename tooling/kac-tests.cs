@@ -454,7 +454,7 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         // A file no record backs, left in the output before the second run. An export nobody reviews
         // would otherwise carry a deleted record's entry indefinitely.
         var orphan = Path.Combine(dist, "orphan.json");
-        Directory.CreateDirectory(Path.GetDirectoryName(orphan)!);
+        Directory.CreateDirectory(FolderOf(orphan));
         File.WriteAllText(orphan, "{}\n");
 
         var (_, _, second) = Run(temp, "dotnet", argv);
@@ -701,7 +701,7 @@ void RunBundleScenario(string name, string scenario, string corpusDir)
         // A file no component backs, left in the plugin before the second run. The same failure mode the
         // export has, and the same answer: the directory is replaced whole rather than written over.
         var orphan = Path.Combine(temp, ".dist", "plugin", "skills", "orphan", "SKILL.md");
-        Directory.CreateDirectory(Path.GetDirectoryName(orphan)!);
+        Directory.CreateDirectory(FolderOf(orphan));
         File.WriteAllText(orphan, "orphan\n");
 
         var (_, _, second) = Run(temp, "dotnet", kac, "bundle");
@@ -834,7 +834,7 @@ static int WriteGoldenExport(string dist, string golden)
     foreach (var (rel, content) in files)
     {
         var full = Path.Combine(golden, rel.Replace('/', Path.DirectorySeparatorChar));
-        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        Directory.CreateDirectory(FolderOf(full));
         File.WriteAllText(full, content);
     }
 
@@ -1137,9 +1137,21 @@ static IReadOnlySet<string> CheckCatalogue(string kac, string corpusRoot)
     using var doc = JsonDocument.Parse(json);
     var set = new HashSet<string>(StringComparer.Ordinal);
     foreach (var c in doc.RootElement.GetProperty("checks").EnumerateArray())
-        set.Add(c.GetProperty("check").GetString()!);
+        set.Add(Text(c, "check"));
     return set;
 }
+
+// The folder holding a file. `Path.GetDirectoryName` answers null for a path naming no folder above
+// it, which a path this suite builds never is, so the null is a defect rather than a case.
+static string FolderOf(string path) =>
+    Path.GetDirectoryName(path) ?? throw new Exception($"'{path}' names no folder above it.");
+
+// The text of a property `kac` always writes. Naming the property says which field went missing when
+// the shape of that output moves.
+static string Text(JsonElement element, string property) =>
+    element.TryGetProperty(property, out var found) && found.GetString() is { } text
+        ? text
+        : throw new Exception($"Expected a '{property}' holding text, and found {element}.");
 
 static Report ParseFindings(string json)
 {
@@ -1148,11 +1160,11 @@ static Report ParseFindings(string json)
     var findings = new List<F>();
     foreach (var e in root.GetProperty("findings").EnumerateArray())
         findings.Add(new F(
-            e.GetProperty("file").GetString()!,
+            Text(e, "file"),
             e.GetProperty("line").ValueKind == JsonValueKind.Null ? null : e.GetProperty("line").GetInt32(),
-            e.GetProperty("severity").GetString()!,
-            e.GetProperty("check").GetString()!,
-            e.GetProperty("message").GetString()!));
+            Text(e, "severity"),
+            Text(e, "check"),
+            Text(e, "message")));
     return new Report(findings);
 }
 
