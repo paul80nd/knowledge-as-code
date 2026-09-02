@@ -8,9 +8,9 @@ body:
       value: |
         Questions are welcome, including ones that turn out to be about the documentation being unclear.
 
-        [`knowledge-as-code.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/template/knowledge-as-code.md) is
-        the way in to the framework's own documentation, and `kac checks` lists what the tool enforces on the type in
-        front of you.
+        [`knowledge-as-code.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/template/knowledge-as-code.md)
+        is the way in to the framework's own documentation, and `kac checks` lists what the tool enforces on the type
+        in front of you.
 
   - type: textarea
     id: question

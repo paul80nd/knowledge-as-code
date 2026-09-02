@@ -252,10 +252,10 @@ jobs:
           echo "[${ENTRIES%,}]" | jq \
             --arg marketplace "$MARKETPLACE" \
             '{"$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-              name: $marketplace,
-              description: "The worked example corpora that ship with knowledge-as-code, each as an installable plugin.",
-              owner: {name: "Paul Law"},
-              plugins: .}' > "$WORKTREE/.claude-plugin/marketplace.json"
+            name: $marketplace,
+            description: "The worked example corpora that ship with knowledge-as-code, each as an installable plugin.",
+            owner: {name: "Paul Law"},
+            plugins: .}' > "$WORKTREE/.claude-plugin/marketplace.json"
 
           # Tells someone arriving in a browser where the source is, that these corpora are invented,
           # and that editing here is pointless.

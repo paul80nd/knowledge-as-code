@@ -1,0 +1,34 @@
+# How every YAML file in this repository is shaped, checked by the `lint` job in
+# .github/workflows/kac.yml. yamllint's `default` ruleset is the baseline, and the four overrides
+# below are the whole of what this repository does differently. Adding a fifth is a decision.
+#
+# examples/dog-fooding/standards/configuration.md is the standard these settings enforce.
+
+extends: default
+
+# What git does not track, yamllint does not read, so `yamllint --strict .` here answers the way the
+# lint job does after a fresh checkout.
+ignore-from-file: .gitignore
+
+rules:
+  # 120, the width .editorconfig already sets for prose here.
+  line-length:
+    max: 120
+    # A `prior-art:` or `lineage:` value carries a markdown link, and a URL cannot be broken. The
+    # same exemption this repository already makes for a link definition in Markdown.
+    ignore: |
+      .schema/*.yaml
+
+  # One space before an inline `#`, which is what GitHub's own hardening guide writes above a pinned
+  # action and what Dependabot writes when it moves that pin.
+  comments:
+    min-spaces-from-content: 1
+
+  # No file here opens on `---`. A single document per file needs no marker to separate it from a
+  # second one.
+  document-start: disable
+
+  # A workflow's `on:` key is read as the boolean `true` by any YAML 1.1 parser, GitHub Actions
+  # included, and it is spelt `on:` because that is the key Actions defines. Values are still checked.
+  truthy:
+    check-keys: false

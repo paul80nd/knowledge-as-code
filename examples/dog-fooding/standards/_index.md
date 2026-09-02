@@ -2,6 +2,8 @@
 
 # Standard Index (STD)
 
-| ID        | Title                                                 | Status | Derived from | Review by  |
-|-----------|-------------------------------------------------------|--------|--------------|------------|
-| std-PROSE | [Prose reads the same way whoever wrote it](prose.md) | active |              | 2027-09-02 |
+| ID         | Title                                                                                 | Status | Derived from | Review by  |
+|------------|---------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-CI     | [Every check and every publish runs from a workflow in this repository](workflows.md) | active |              | 2027-09-02 |
+| std-CONFIG | [Configuration is committed, pinned and explained](configuration.md)                  | active |              | 2027-09-02 |
+| std-PROSE  | [Prose reads the same way whoever wrote it](prose.md)                                 | active |              | 2027-09-02 |

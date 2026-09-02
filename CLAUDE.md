@@ -54,6 +54,10 @@ dotnet run --project ../../tooling/kac -- update --check --from ../../
 dotnet test tooling/kac.tests      # unit
 dotnet test tooling/kac.features   # Reqnroll behaviour specs
 dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
+
+# from this root, where you changed a YAML file or a workflow
+pip install -r .github/requirements.txt && yamllint --strict .
+go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 && "$(go env GOPATH)"/bin/actionlint
 ```
 
 A corpus declaring `consumes:` needs `restore` ahead of `validate`, and `restore` needs a package to take. That corpus's
@@ -73,6 +77,9 @@ These hold in every corpus under `examples/`, in `template/`, and in the prose t
   then run `kac generate`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
+* **A YAML file answers to `yamllint`, and a workflow to `actionlint`.** [`.yamllint`](.yamllint) extends yamllint's
+  `default` ruleset and carries the four places this repository departs from it. The `lint` job runs both, so an
+  unlinted file fails the build rather than a review.
 * **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
   does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
 * **Keep comments and documentation timeless.** Describe the design as it stands. The history of a change belongs in its

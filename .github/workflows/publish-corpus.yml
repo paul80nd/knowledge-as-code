@@ -196,9 +196,11 @@ jobs:
             exit 0
           fi
 
-          echo "NEW=yes" >> "$GITHUB_ENV"
-          echo "ID=$ID" >> "$GITHUB_ENV"
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          {
+            echo "NEW=yes"
+            echo "ID=$ID"
+            echo "VERSION=$VERSION"
+          } >> "$GITHUB_ENV"
 
       # No --skip-duplicate. The step above is what decides whether this version may be published, and
       # a flag swallowing the registry's own refusal would leave a green run that published nothing.
