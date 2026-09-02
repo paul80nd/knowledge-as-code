@@ -24,6 +24,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   sits. The row beside it is in the table `kac` ships, which your corpus holds no copy of, so the report says whose
   it is rather than naming a source file you cannot open.
 
+### Fixed
+
+- **The lookup skills `kac bundle` ships now state the type of every field they describe.** `obligations`,
+  `definition` and `not` are one string of markdown holding the record's bullets, and a skill calling any of them a
+  list sent a reader looping over a string. A field with no value arrives as `null` beside a key that is still there,
+  so test the value rather than the key. `shortcode` is the one key a line can be missing outright.
+
 ## 0.20.0 - 2026-09-01
 
 ### Added

@@ -46,16 +46,22 @@ term when its `title` says so, never because it matched.
 
 Each line carries the entry whole:
 
-| Field                 | What it holds                                                             |
-|-----------------------|---------------------------------------------------------------------------|
-| `id`                  | `<glossary-id>.<term>`, the address to quote and to search on             |
-| `title`, `definition` | the term and its meaning                                                  |
-| `not`                 | what the term excludes, where the corpus drew that boundary               |
-| `seeAlso`             | related terms as full ids, so you can search straight to them             |
-| `record`              | the glossary this entry belongs to                                        |
-| `shortcode`           | the corpus that published the entry, absent where this corpus wrote it    |
-| `status`, `reviewBy`  | how far the entry has settled, and the date it was meant to be read again |
-| `path`, `anchor`      | the two values a link template takes, and see below for which template    |
+| Field                | Type                     | What it holds                                                                |
+|----------------------|--------------------------|------------------------------------------------------------------------------|
+| `id`                 | string                   | `<glossary-id>.<term>`, the address to quote and to search on                |
+| `title`              | string                   | the term                                                                     |
+| `definition`         | string or null           | what the term means                                                          |
+| `not`                | string or null           | what the term excludes, where the corpus drew that boundary                  |
+| `seeAlso`            | list of strings, or null | related terms as full ids, so you can search straight to them                |
+| `type`               | string                   | `glossary`, on every line of this file                                       |
+| `record`             | string                   | the glossary this entry belongs to                                           |
+| `part`               | string                   | the term's key inside that glossary                                          |
+| `shortcode`          | string, or absent        | the corpus that published the entry. A term written here carries no such key |
+| `status`, `reviewBy` | string                   | how far the entry has settled, and the date it was meant to be read again    |
+| `path`, `anchor`     | string                   | the two values a link template takes, and see below for which template       |
+
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
+one exception, and the row above says so.
 
 ## Read the prefix on an id
 
@@ -82,8 +88,8 @@ template takes: `path` and `anchor`.
 
 **Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
 in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
-`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit,
-which fetches a 404 or somebody else's file, and both read as plausible.
+`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit, which
+fetches a 404 or somebody else's file, and both read as plausible.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
@@ -125,8 +131,8 @@ read two things from it:
 * **`sections.Scope`.** Where neither narrows the other, they are separate words that share a spelling. The right entry
   is the one whose Scope admits the thing being asked about.
 
-Two entries may also come from two corpora, and `shortcode` says which. A consuming corpus narrowing a term it
-inherited is the ordinary case, so read `fields.narrows` before you treat the pair as a clash.
+Two entries may also come from two corpora, and `shortcode` says which. A consuming corpus narrowing a term it inherited
+is the ordinary case, so read `fields.narrows` before you treat the pair as a clash.
 
 Where the question does not settle which context it sits in, give both meanings and say which glossary each came from,
 naming the corpus as well wherever the two glossaries were written by different ones.
@@ -137,8 +143,8 @@ naming the corpus as well wherever the two glossaries were written by different 
   things it excludes.
 * **Quote the `id`.** `gls-search.title` is one string a reader can search the corpus for, and it settles in seconds
   whether you read the entry correctly.
-* **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the
-  one installed. A reader working in the other context needs to see the mismatch without decoding an id to find it.
+* **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the one
+  installed. A reader working in the other context needs to see the mismatch without decoding an id to find it.
 * **Link the reader to the record**, built from `humanTemplate` as above.
 * **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
 

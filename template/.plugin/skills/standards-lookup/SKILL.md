@@ -25,8 +25,8 @@ rather than in the repository you are working in. A path you build relative to t
 ## Find the rule, and leave the verdict
 
 **This skill finds a rule. It does not certify code against one.** A rule line carries the obligations and the id to
-cite them by. That is enough to quote what the estate requires and say where it is written. It is not enough to say
-the work in front of you conforms. Whoever asked wants a ruling, and the ruling belongs to the estate.
+cite them by. That is enough to quote what the estate requires and say where it is written. It is not enough to say the
+work in front of you conforms. Whoever asked wants a ruling, and the ruling belongs to the estate.
 
 So: quote the obligation, name its keyword, link the standard, and say plainly which part of the question you are
 leaving to the reader.
@@ -43,8 +43,8 @@ file, not a set of files to visit in turn.
 
 Two fields on the owning record narrow a standard to your work, and you read both:
 
-* **`category`** says which folder the standard was filed under. `common` reaches everything and a deeper folder
-  reaches less.
+* **`category`** says which folder the standard was filed under. `common` reaches everything and a deeper folder reaches
+  less.
 * **`applies-to`** names the service ids the standard binds, or the single literal `all`.
 
 So search the subject, read the categories the hits name, then search the file again for the categories you have not
@@ -73,17 +73,21 @@ governs your work when its wording says so, never because it matched.
 
 Each line carries one heading of a standard's Rules section, with everything written under it:
 
-| Field                | What it holds                                                                      |
-|----------------------|------------------------------------------------------------------------------------|
-| `id`                 | `<standard-id>.<rule-key>`, the address to quote and to cite                       |
-| `title`              | the heading, which says what the obligations beneath it are about                  |
-| `obligations`        | the bullets, in the markdown the standard wrote them in. Read this whole           |
-| `seeAlso`            | the rules of other standards this one points at, or absent where it points at none |
-| `record`             | the standard the rule belongs to                                                   |
-| `part`               | the rule's key inside that standard                                                |
-| `shortcode`          | the corpus that published the rule, absent where this corpus wrote it              |
-| `status`, `reviewBy` | how far the standard has settled, and the date it was meant to be read again       |
-| `path`, `anchor`     | the two values a link template takes, and see below for which template             |
+| Field                | Type                     | What it holds                                                                |
+|----------------------|--------------------------|------------------------------------------------------------------------------|
+| `id`                 | string                   | `<standard-id>.<rule-key>`, the address to quote and to cite                 |
+| `title`              | string                   | the heading, which says what the obligations beneath it are about            |
+| `obligations`        | string or null           | every bullet under that heading, as one block of markdown. Read this whole   |
+| `seeAlso`            | list of strings, or null | the rules of other standards this one points at                              |
+| `type`               | string                   | `standards`, on every line of this file                                      |
+| `record`             | string                   | the standard the rule belongs to                                             |
+| `part`               | string                   | the rule's key inside that standard                                          |
+| `shortcode`          | string, or absent        | the corpus that published the rule. A rule written here carries no such key  |
+| `status`, `reviewBy` | string                   | how far the standard has settled, and the date it was meant to be read again |
+| `path`, `anchor`     | string                   | the two values a link template takes, and see below for which template       |
+
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
+one exception, and the row above says so.
 
 ## Read the prefix on an id
 
@@ -108,9 +112,10 @@ you build the filename. The owning record for `eng:std-TEST.every-test-is-hermet
 
 ## Read the keyword on every bullet
 
-**One line holds several obligations, and they do not all bind.** `obligations` is a list of bullets, and each carries
-its own RFC 2119 keyword in capitals and in bold. No field on the line says how strongly a bullet binds, so the keyword
-inside the wording is the only thing that says it. Take the bullet, not the line.
+**One line holds several obligations, and they do not all bind.** `obligations` is one string of markdown holding a
+`- ` bullet per obligation, and each bullet carries its own RFC 2119 keyword in capitals and in bold. No field on the
+line says how strongly a bullet binds, so the keyword inside the wording is the only thing that says it. Read the string
+whole, and take the bullet rather than the line.
 
 * **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it.
 * **`SHOULD` and `MAY` advise.** Neither is a rule, and neither blocks anything on its own.
@@ -122,8 +127,8 @@ Compare the keyword whole.
 
 ## Read the standard beside the rule
 
-**A rule read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on
-an id* builds from `record` and `shortcode`, and read two things from `sections`:
+**A rule read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on an
+id* builds from `record` and `shortcode`, and read two things from `sections`:
 
 * **`Summary`.** It says what the standard is for, in a paragraph. Use it to tell whether the rule you found is about
   your subject at all.
@@ -143,13 +148,13 @@ template takes: `path` and `anchor`.
 
 **Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
 in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
-`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit,
-which fetches a 404 or somebody else's file, and both read as plausible.
+`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit, which
+fetches a 404 or somebody else's file, and both read as plausible.
 
 **Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
 else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the
-corpus nobody asked about.
+right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
+nobody asked about.
 
 **One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
 wiki page rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every
@@ -188,8 +193,8 @@ Two things stay behind whatever `types` says, because they are sections of a sta
 Two more depend on `types`, so check it before you say either is missing:
 
 * **What the rule descends from.** A standard names the policy clause it puts into practice. Where `policies` is in
-  `types` the clause is here, under the prefix of the corpus that wrote it, and you can quote it. The obligation
-  travels whole either way.
+  `types` the clause is here, under the prefix of the corpus that wrote it, and you can quote it. The obligation travels
+  whole either way.
 * **How anyone checks it happened.** A standard says what to do, and a control says how we know it was done. Where
   `controls` is not in `types`, no control travelled and nothing here says whether anyone looked.
 
@@ -214,5 +219,4 @@ An export is a copy taken on a day, and it reads the same however long ago that 
 Where no rule matches, say nothing in this export states a rule on the subject, and name the corpus and every entry in
 `sources` from `manifest.json`, so a reader knows which standards were searched. Silence is not permission, and it is
 not a rule you may supply: it says only that the estate has not written this down. Do not read an obligation out of a
-standard about something else. Offer the subject as one worth a standard, and leave that to
-whoever owns it.
+standard about something else. Offer the subject as one worth a standard, and leave that to whoever owns it.

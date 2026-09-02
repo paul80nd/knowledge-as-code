@@ -278,9 +278,13 @@ nobody reviews is invisible.
 
 ## What holds in every file
 
-**Absent is `null`.** Every key writes it that way. A field a record leaves blank and a field it does not carry are one
-absence to a consumer, and `""` in one file beside `null` in another would leave that consumer checking which file it
-had opened before it could test for nothing. A list a record left empty is that same absence, so no key arrives as `[]`.
+**Absent is `null`.** A field a record leaves blank and a field it does not carry are one absence to a consumer, and
+`""` in one file beside `null` in another would leave that consumer checking which file it had opened before it could
+test for nothing. A list a record left empty is that same absence, so no key arrives as `[]`.
+
+**`shortcode` is the one key that can be missing outright.** A line the publishing corpus wrote carries no such key,
+because absence there is the same rule a bare id already follows. So a consumer tests the value of every other key,
+and tests for this one key itself.
 
 **A list field's shape comes from the type, not from the record.** A field its type declares as a list is a JSON array
 in every record file that carries anything under it, so a consumer reads one key one way across every record of the
