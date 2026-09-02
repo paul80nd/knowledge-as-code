@@ -16,23 +16,23 @@ public static class Breadcrumb
     // where the record names come from: the manifest counts records without naming them, and a count
     // alone does not tell a reader which contexts are covered.
     public static string Render(
-        JsonObject exportManifest,
+        ExportManifest exportManifest,
         IReadOnlyList<BundleFile> exportFiles,
         IReadOnlyList<PluginComponent> included)
     {
         var lines = new List<string>();
 
-        var corpus = JsonRead.Str(exportManifest["corpus"]) ?? "A knowledge corpus";
-        var version = JsonRead.Str(exportManifest["contentVersion"]);
-        var taken = JsonRead.Str(exportManifest["generatedAt"]) is { Length: >= 10 } stamp ? stamp[..10] : null;
+        var corpus = exportManifest.Corpus ?? "A knowledge corpus";
+        var version = exportManifest.ContentVersion;
+        var taken = exportManifest.GeneratedAt is { Length: >= 10 } stamp ? stamp[..10] : null;
 
         lines.Add(
             $"{corpus}{(version is null ? "" : $" {version}")} travels with this session as data"
             + $"{(taken is null ? "" : $", exported {taken}")}.");
 
-        var sources = Sources(exportManifest);
+        var sources = exportManifest.Sources.Select(s => s.Shortcode).Where(c => c.Length > 0).ToList();
 
-        foreach (var type in Types(exportManifest))
+        foreach (var type in exportManifest.Types)
         foreach (var held in Contributions(type, exportFiles, sources))
             lines.Add(Line(type.Type, held));
 
@@ -226,63 +226,6 @@ public static class Breadcrumb
         }
 
         return counted;
-    }
-
-    // The corpora this one consumes, in the order the manifest publishes them, which is the order their
-    // lines are printed in. A shortcode names a corpus everywhere else in the export, so it is what a
-    // line names here as well.
-    private static List<string> Sources(JsonObject exportManifest)
-    {
-        var sources = new List<string>();
-        if (exportManifest["sources"] is not JsonArray declared) return sources;
-
-        foreach (var node in declared)
-            if (node is JsonObject entry && JsonRead.Str(entry["shortcode"]) is { Length: > 0 } code)
-                sources.Add(code);
-
-        return sources;
-    }
-
-    // The types the export carried, read back into the record the exporter wrote them from. Restating
-    // that shape here would be a second account of one document, free to drift from the first.
-    private static List<ExportedType> Types(JsonObject exportManifest)
-    {
-        var types = new List<ExportedType>();
-        if (exportManifest["types"] is not JsonArray declared) return types;
-
-        foreach (var node in declared)
-        {
-            if (node is not JsonObject entry) continue;
-            if (JsonRead.Str(entry["type"]) is not { } key) continue;
-
-            types.Add(new ExportedType(
-                key,
-                JsonRead.Int(entry["shapeVersion"]) ?? 0,
-                JsonRead.Int(entry["records"]) ?? 0,
-                JsonRead.Int(entry["parts"]) ?? 0,
-                JsonRead.Str(entry["dir"]) ?? key,
-                JsonRead.Str(entry["partsFile"]),
-                JsonRead.Str(entry["recordKey"]),
-                JsonRead.Str(entry["partKey"]),
-                JsonRead.Str(entry["idKey"]),
-                JsonRead.Str(entry["seeAlsoKey"]),
-                Fidelities(entry["sections"])));
-        }
-
-        return types;
-    }
-
-    // The fidelity each of a type's sections travelled at, read back off the manifest entry.
-    private static IReadOnlyDictionary<string, string> Fidelities(JsonNode? node)
-    {
-        var found = new Dictionary<string, string>(StringComparer.Ordinal);
-        if (JsonRead.Object(node) is not { } sections) return found;
-
-        foreach (var (section, fidelity) in sections)
-            if (JsonRead.Str(fidelity) is { } value)
-                found[section] = value;
-
-        return found;
     }
 
     // An English list, because the breadcrumb is read by a person as often as by an agent and a

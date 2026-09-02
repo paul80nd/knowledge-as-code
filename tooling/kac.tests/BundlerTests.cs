@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using kac.core;
 
 // In-process unit tests for the bundle.
@@ -471,6 +472,38 @@ public class BundlerTests
         $$"""{"path":"{{path}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
 
     // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
+    // A corpus naming a person and no address. The plugin manifest says what the export said, rather
+    // than reading a key the corpus left empty as a key it never wrote.
+    [Fact]
+    public void An_author_with_no_address_travels_with_the_key_the_export_states()
+    {
+        var plan = Plan(
+            plugin: [(Bundler.ManifestFile, Source())],
+            export:
+            [
+                (Exporter.ManifestFile,
+                    $$"""
+                      {
+                        "formatVersion": {{Exporter.FormatVersion}},
+                        "corpus": "example-libraries",
+                        "about": {
+                          "displayName": null, "description": null, "license": null,
+                          "author": { "name": "Paul Law", "url": null }
+                        },
+                        "publishing": { "target": "none" },
+                        "sources": [],
+                        "types": []
+                      }
+                      """)
+            ]);
+
+        var author = Required.Json(Text(plan, Bundler.ManifestFile))["author"] as JsonObject;
+
+        Assert.NotNull(author);
+        Assert.Equal("Paul Law", author["name"]?.GetValue<string>());
+        Assert.True(author.ContainsKey("url") && author["url"] is null);
+    }
+
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
 
     // An export from a corpus that said who it is, so the generated half has something to carry.

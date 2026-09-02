@@ -795,6 +795,70 @@ public static class Exporter
     private static string Serialize(ExportManifest m) =>
         JsonSerializer.Serialize(m, KacJson.Relaxed.ExportManifest) + "\n";
 
+    // The manifest read back into the record that wrote it, through the context that wrote it. A reader
+    // walking the document by key would be a second account of a shape this tool controls both ends of,
+    // and the two would be free to drift. `plugin.json` is the opposite case and is read as a DOM: see
+    // Bundler.cs, where a corpus may write keys nothing here has heard of.
+    //
+    // Null where the text is missing or does not parse.
+    public static ExportManifest? ReadManifest(string? json)
+    {
+        if (json is null) return null;
+
+        try
+        {
+            return JsonSerializer.Deserialize(json, KacJson.Relaxed.ExportManifest) is { } manifest
+                ? Sound(manifest)
+                : null;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    // The document with every absence the deserialiser left filled in.
+    //
+    // A missing key arrives as null whatever the record declares, so a manifest short of one holds nulls
+    // its own type rules out. Settling them here is what lets every reader below take the record at its
+    // word: an entry naming no type is dropped, a type naming no directory is read under its own name,
+    // and a block naming no publishing target publishes nowhere.
+    //
+    // The alternative is each reader defaulting for itself, which is the arrangement this replaced.
+    private static ExportManifest Sound(ExportManifest m) => m with
+    {
+        About = Read(m.About) ?? new ExportAbout(null, null, null, null),
+        Publishing = Sound(m.Publishing),
+        Sources =
+        [
+            .. (Read(m.Sources) ?? []).Where(s => Read(s)?.Shortcode is { Length: > 0 })
+                .Select(s => s with { Publishing = Sound(s.Publishing) })
+        ],
+        Types = [.. (Read(m.Types) ?? []).Where(t => Read(t)?.Type is not null).Select(Sound)]
+    };
+
+    private static ExportPublishing Sound(ExportPublishing? p) =>
+        Read(p) is not { } stated ? new ExportPublishing(Publishing.None, null, null, null, null)
+        : Read(stated.Target) is null ? stated with { Target = Publishing.None }
+        : stated;
+
+    // A type is read under its own name where it named no directory, which is where the exporter writes
+    // one that declares nothing else.
+    private static ExportedType Sound(ExportedType t) => t with
+    {
+        Dir = Read(t.Dir) ?? t.Type,
+        Sections = Read(t.Sections) ?? new Dictionary<string, string>(StringComparer.Ordinal)
+    };
+
+    // A value as it arrived rather than as its own type describes it.
+    //
+    // The annotations on these records say what the exporter writes, and the deserialiser holds them to
+    // none of it: a key the document is short of arrives as null in a member declared without one. This
+    // returns the same value typed as the deserialiser could have left it, so the check above is a
+    // question rather than dead code, to a reader and to an analyser both.
+    // ReSharper disable once ReturnTypeCanBeNotNullable — the nullable return is what this exists for.
+    private static T? Read<T>(T value) => value;
+
     private static string Serialize(ExportRecord r) =>
         JsonSerializer.Serialize(r, KacJson.Relaxed.ExportRecord) + "\n";
 

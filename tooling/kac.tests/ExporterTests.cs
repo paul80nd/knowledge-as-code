@@ -12,6 +12,79 @@ namespace kac.tests;
 
 public class ExporterTests
 {
+    // A manifest short of a key the exporter always writes. Deserialising fills the gap with null
+    // whatever the record declares, so the read settles each one before a caller can walk into it.
+    [Fact]
+    public void A_type_naming_no_directory_is_read_under_its_own_name()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "types": [{ "type": "glossary", "shapeVersion": 1 }]
+              }
+              """);
+
+        var type = Assert.Single(manifest.Types);
+
+        Assert.Equal("glossary", type.Dir);
+        Assert.Empty(type.Sections);
+    }
+
+    [Fact]
+    public void An_entry_naming_no_type_is_not_read_as_one()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "types": [{ "shapeVersion": 1 }, { "type": "glossary" }]
+              }
+              """);
+
+        Assert.Equal(["glossary"], manifest.Types.Select(t => t.Type));
+    }
+
+    // A source is named by its shortcode everywhere else in the export, so one naming none names nobody.
+    [Fact]
+    public void A_source_naming_no_shortcode_is_dropped()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "sources": [{ "corpus": "Engineering" }, { "shortcode": "eng" }]
+              }
+              """);
+
+        var source = Assert.Single(manifest.Sources);
+
+        Assert.Equal("eng", source.Shortcode);
+        Assert.Equal(Publishing.None, source.Publishing.Target);
+    }
+
+    // A borrowed address resolves somewhere wrong rather than nowhere, so nothing of the reader's own
+    // is filled in for a producer that stated none.
+    [Fact]
+    public void A_manifest_stating_no_publishing_target_publishes_nowhere()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "publishing": { "base": "https://example.invalid/corpus" }
+              }
+              """);
+
+        Assert.Equal(Publishing.None, manifest.Publishing.Target);
+        Assert.Equal("https://example.invalid/corpus", manifest.Publishing.Base);
+        Assert.NotNull(manifest.About);
+    }
+
+    [Fact]
+    public void A_document_that_is_not_JSON_reads_as_no_manifest()
+        => Assert.Null(Exporter.ReadManifest("not json at all"));
+
     private static readonly ExportRun Run =
         new("2026-08-17T00:00:00Z", new DateOnly(2026, 8, 17), "abc123", false);
 
