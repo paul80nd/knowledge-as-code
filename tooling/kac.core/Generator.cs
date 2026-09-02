@@ -776,9 +776,13 @@ public static class Generator
         return sb.Append(text, at, text.Length - at).ToString();
     }
 
-    // Deterministic GFM table: fixed column widths, single-space padding and LF joins, with no trailing
-    // newline, because callers add their own.
-    private static string RenderTable(List<string> headers, List<List<string>> rows)
+    // Deterministic GFM table: columns padded to a fixed width, single-space padding, LF joins and no
+    // trailing newline, because callers add their own. A cell that changes length inside its column moves
+    // one row and leaves the rest alone.
+    //
+    // Public because `kac.tests` renders the CLI reference's blocks, and a second renderer there would
+    // drift from this one.
+    public static string RenderTable(List<string> headers, List<List<string>> rows)
     {
         var n = headers.Count;
         var w = new int[n];
@@ -821,6 +825,7 @@ public static class Generator
         return char.ToUpperInvariant(s[0]) + s[1..];
     }
 
-    private static string Escape(string cell)
+    // A newline or a pipe inside a cell breaks the row it sits in.
+    public static string Escape(string cell)
         => cell.Replace("\r", " ").Replace("\n", " ").Replace("|", "\\|");
 }
