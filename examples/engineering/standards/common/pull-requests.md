@@ -76,6 +76,7 @@ agent's own account in place of a check.
 
 - [ ] Branch policy requires a pull request, and requires at least one approval.
 - [ ] Branch policy excludes the author from satisfying that approval, whether that author is a person or an agent.
+- [ ] Auto-merge, where it is enabled, cannot complete a pull request that no other identity has approved.
 - [ ] The description links a work item.
 - [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.
 - [ ] The reviewer states what they checked, rather than restating what the change claims.
