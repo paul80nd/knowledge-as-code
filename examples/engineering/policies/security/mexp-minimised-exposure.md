@@ -30,6 +30,9 @@ arriving at our systems, traffic between them, and traffic leaving them.
 A trust boundary is the line between two things that have no automatic right to talk to each other: the public internet
 and our estate, or two of our own systems with no business calling one another.
 
+_Boundary: this policy governs what may cross a boundary. Watching what actually crossed it is [pol-OBSV]'s, under
+`SECMON`._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                              | Alignment                                        |
@@ -39,7 +42,7 @@ and our estate, or two of our own systems with no business calling one another.
 | `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                                                  | [ISO 27001:2022].A.8.20                          |
 | `PEERID`  | **MUST** verify the identity presented at the far end of a connection that crosses a trust boundary, and refuse it where that fails | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.24 |
 | `PRIVATE` | **MUST** prefer private paths to public ones for access between our own services                                                    | [ISO 27001:2022].A.8.21                          |
-| `EGRESS`  | **MUST** control and observe what leaves our systems, not only what arrives                                                         | [ISO 27001:2022].A.8.20                          |
+| `EGRESS`  | **MUST** control what leaves our systems, not only what arrives                                                                     | [ISO 27001:2022].A.8.20                          |
 | `ASCODE`  | **MUST** define network topology as reviewable code, under [pol-EVER]                                                               |                                                  |
 | `PUBLIC`  | **MUST NOT** expose a management interface or a datastore directly to the public internet                                           | [ISO 27001:2022].A.8.21                          |
 | `LATERAL` | **MUST NOT** leave traffic between our own systems unrestricted where they have no need to talk to each other                       | [ISO 27001:2022].A.8.22                          |
@@ -54,4 +57,5 @@ recorded deviation under [pol-DEVI].
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[pol-OBSV]: ../operations/obsv-observability.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
