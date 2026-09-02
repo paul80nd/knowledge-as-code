@@ -2,7 +2,7 @@
 id: std-API
 tier: normative
 status: draft
-implements: [ pol-INTC.BREAK, pol-INTC.DEPREC, pol-INTC.EXPOSE, pol-INTC.HOLDS, pol-INTC.SECURE, pol-INTC.SPEC,
+implements: [ pol-INTC.BREAK, pol-INTC.EXPOSE, pol-INTC.HOLDS, pol-INTC.NOTICE, pol-INTC.SECURE, pol-INTC.SPEC,
   pol-INTC.VERSION ]
 applies-to:
   - all
@@ -50,7 +50,7 @@ _**Covers:** [pol-INTC].EXPOSE, [pol-INTC].SECURE_
 - A deprecated version **MUST** answer with a `Deprecation` header and a `Sunset` header, so a consumer meets the notice
   in the traffic.
 
-_**Covers:** [pol-INTC].BREAK, [pol-INTC].DEPREC, [pol-INTC].VERSION_
+_**Covers:** [pol-INTC].BREAK, [pol-INTC].NOTICE, [pol-INTC].VERSION_
 
 ## Examples
 
