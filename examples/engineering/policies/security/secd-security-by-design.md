@@ -18,8 +18,7 @@ tags: [ secure-coding, secure-design, threat-modelling ]
 
 ## Purpose
 
-We decide security and privacy at design time. We write them as requirements, we apply recognised design principles, and
-we think deliberately about how the system could be attacked. We then carry that through into how the code is written.
+We decide security and privacy at design time, and carry that decision through into how the code is written.
 
 Retrofitted security is expensive and shallow. A flaw in a design is inherited by every line of code that implements it.
 Scanning finds the symptoms afterwards. Half an hour of threat modelling at the start removes the cause.

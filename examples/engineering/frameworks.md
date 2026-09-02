@@ -154,6 +154,22 @@ consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI
 
 Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
 
+### SLSA
+
+**Inspiration.** Supply-chain Levels for Software Artifacts, at version 1.1: a build track grading how far a consumer
+can trust where an artefact came from. `L1` asks that provenance exists, `L2` that a hosted build platform signs it,
+and `L3` that the build is hardened against tampering from inside. Cited as `build-L1`, `build-L2`. Free, and not
+certifiable.
+
+It puts a recognised shape on what [pol-TRUS] already asks for. `TRACE` wants a deployed artefact followed back to the
+build that produced it, which is what Build L1 provenance is for. `ATTEST` wants that provenance signed, which is L2.
+`ATTEST` is a COULD, so the corpus states the ambition and does not yet hold itself to it.
+
+SPDX and CycloneDX are formats for exchanging an inventory rather than rules about what one holds, so `INVENT` cites
+neither and names no format.
+
+Referenced by: [pol-TRUS].
+
 ### NIST AI RMF
 
 **Inspiration.** The AI Risk Management Framework, NIST AI 100-1, at version 1.0. Four functions: `GOVERN`

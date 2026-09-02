@@ -16,8 +16,8 @@ tags: [ access-control, identity, least-privilege ]
 
 ## Purpose
 
-We grant access to a named person or a named workload, never to a shared login. We authenticate it strongly, we limit it
-to what that person or workload actually needs, and we review it as circumstances change.
+We grant access to a named person or a named workload, never to a shared login. Each of them gets no more than the
+work needs.
 
 If we cannot tell who did something, we cannot hold anyone to any rule below. A shared account converts an audit trail
 into a guess. Standing privilege that nobody needs is a breach waiting for an attacker to find the credential.

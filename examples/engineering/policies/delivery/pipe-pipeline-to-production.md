@@ -16,9 +16,8 @@ tags: [ change-management, deployment, release-management ]
 
 ## Purpose
 
-The pipeline is the only route into production. Every production change (application, infrastructure, configuration or
-schema) arrives through an automated path that is traceable to its source change and its approval, and that can be
-reversed.
+The pipeline is the only route into production. A trivial change takes it and so does an urgent one. The one
+exception, for an outage, is recorded at the time and reconciled afterwards.
 
 If every change takes the same route, we can say what is running in production and how it got there. Every hand-applied
 change creates a system whose real state exists nowhere but the system itself, and the cost of that lands later, on
