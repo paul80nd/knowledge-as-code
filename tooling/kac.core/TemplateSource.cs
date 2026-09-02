@@ -163,7 +163,7 @@ public sealed class TemplateSource : IDisposable
         }
 
         // The schema the template serves, which is the one account of what types there are to adopt.
-        var serves = Schema.Load(Schema.FindRoot(source.Root) ?? source.Root);
+        var serves = Schema.LoadNearest(source.Root);
         return new Taken(source, held, serves,
             [.. serves.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal)], null);
     }
