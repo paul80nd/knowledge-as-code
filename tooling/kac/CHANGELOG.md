@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac checks` asks you for the half of a drifted checks table you hold.** Where the reader-facing table and your
+  `.schema/_checks.yaml` disagree, every line of the report names `on-type-page:` in that file and says where it
+  sits. The row beside it is in the table `kac` ships, which your corpus holds no copy of, so the report says whose
+  it is rather than naming a source file you cannot open.
+
 ## 0.20.0 - 2026-09-01
 
 ### Added

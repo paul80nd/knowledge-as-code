@@ -259,7 +259,7 @@ public static class Validator
         if (kind == DocKind.Record) CheckRules(d, t, report);
     }
 
-    // The markers a generated block lives between. `Generator.SpliceBlock` looks for the pair and returns
+    // The markers a generated block lives between. `Markers.SpliceBlock` looks for the pair and returns
     // the text untouched when either is missing, so a file that loses one silently stops being generated
     // into. `generate --check` then agrees it is fresh, because what the generator would write is exactly
     // what is already there. Nothing else can notice, which is why this is a check on the markers rather
@@ -273,8 +273,8 @@ public static class Validator
     {
         foreach (var name in names)
         {
-            var begin = text.IndexOf(Generator.Begin(name), StringComparison.Ordinal);
-            var end = text.IndexOf(Generator.End(name), StringComparison.Ordinal);
+            var begin = text.IndexOf(Markers.Begin(name), StringComparison.Ordinal);
+            var end = text.IndexOf(Markers.End(name), StringComparison.Ordinal);
             if (begin < 0 || end < 0)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
@@ -434,7 +434,7 @@ public static class Validator
             // Read with the generated blocks emptied. Everything below is a question about what a person
             // wrote, and a generated block answers to `generate --check` instead: it is regenerated from
             // this corpus, so its links are this corpus's and are right by construction.
-            var doc = Doc.Parse(rel, Generator.Authored(tree.Read(rel)),
+            var doc = Doc.Parse(rel, Markers.Authored(tree.Read(rel)),
                 schema, requireFrontmatter: false);
             if (doc is null) continue;
 

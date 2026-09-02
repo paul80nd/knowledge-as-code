@@ -81,7 +81,7 @@ public static class GeneratedFiles
 
             var current = tree.Read(spec.Path);
             var wanted = current;
-            foreach (var block in spec.Blocks) wanted = Generator.SpliceBlock(wanted, block.Name, block.Render(schema));
+            foreach (var block in spec.Blocks) wanted = Markers.SpliceBlock(wanted, block.Name, block.Render(schema));
             plan.Add(new GeneratedFile(spec.Path, current, wanted));
         }
 
@@ -130,7 +130,7 @@ public static class GeneratedFiles
             select new FileSpec(t.Page, true,
             [
                 new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema, Up(t.Page))),
-                new Block($"checks-{t.Key}", s => Generator.ChecksTable(s, t))
+                new Block($"checks-{t.Key}", s => ChecksTable.Render(s, t))
             ])).ToList();
 
         // The pages that describe the taxonomy to a reader rather than to the tool. Each lists types, and

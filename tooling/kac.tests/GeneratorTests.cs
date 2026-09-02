@@ -1,5 +1,5 @@
-// Unit tests for the pure Generator helpers. The full index / <type>.md generation is covered by the
-// golden 'generate' scenario; these pin the table/catalogue consistency and the splice in-process.
+// Unit tests for the page renderers. The full index and `<type>.md` generation is covered by the golden
+// `generate` scenario; these pin in-process what one renderer makes of a schema built for the question.
 
 using kac.core;
 
@@ -7,45 +7,6 @@ namespace kac.tests;
 
 public class GeneratorTests
 {
-    // The reader-facing table must stay a faithful, complete view of the catalogue, and the catalogue is
-    // `_checks.yaml`. `kac checks` reconciles the two against the real schema and exits non-zero on any
-    // drift, which the golden suite asserts. That is the one place the shipped file is read.
-    [Fact]
-    public void ChecksTableProblems_names_a_row_the_catalogue_does_not_carry()
-    {
-        // A catalogue carrying none of the curated rows: each is a row naming a check that does not
-        // exist, which has to be reported rather than quietly rendered onto every type page.
-        var problems = Generator.ChecksTableProblems(new Schema());
-
-        Assert.Contains(problems, p => p.Contains("'frontmatter-parses'") && p.Contains("stale row"));
-    }
-
-    [Fact]
-    public void ChecksTableProblems_names_a_check_no_row_documents()
-    {
-        // The other direction, and the one a new check trips: declared in the schema, rendered by
-        // nothing, and not waived.
-        var schema = new Schema { Checks = [new CheckDef(new CheckId("invented-check"), Sev.Error, "Something new.")] };
-
-        var problems = Generator.ChecksTableProblems(schema);
-
-        Assert.Contains(problems, p => p.Contains("'invented-check'") && p.Contains("no row in the checks table"));
-    }
-
-    // The page would advertise a check the schema says a record author cannot act on.
-    [Fact]
-    public void ChecksTableProblems_names_a_waived_check_that_has_a_row_anyway()
-    {
-        var schema = new Schema
-        {
-            Checks = [new CheckDef(new CheckId("frontmatter-parses"), Sev.Error, "Parsed.", OnTypePage: false)]
-        };
-
-        var problems = Generator.ChecksTableProblems(schema);
-
-        Assert.Contains(problems, p => p.Contains("'frontmatter-parses'") && p.Contains("has a row anyway"));
-    }
-
     [Fact]
     public void IndexPage_says_it_is_empty_rather_than_rendering_a_headless_table()
     {
@@ -410,46 +371,6 @@ public class GeneratorTests
         Assert.DoesNotContain("†", Generator.SchemaTable(t, new Schema(), ""));
     }
 
-    [Fact]
-    public void ChecksTable_omits_rows_for_checks_the_type_cannot_trip()
-    {
-        // A type declaring no rules and no reciprocal/mirrors-section field: the schema-conditional
-        // rows must not appear. Unconditional rows would tell a policy reader their documents are
-        // checked for Y-statements, which is the ADR-shaped table advertised on every page.
-        var table = Generator.ChecksTable(new Schema(), new TypeSchema());
-
-        Assert.DoesNotContain("y-statement", table);
-        Assert.DoesNotContain("alternatives-verdict", table);
-        Assert.DoesNotContain("related-matches-section", table);
-        Assert.DoesNotContain("reciprocal", table);
-        Assert.Contains("frontmatter-parses", table); // unconditional rows still render
-    }
-
-    [Fact]
-    public void ChecksTable_includes_rows_the_type_opts_into_through_its_schema()
-    {
-        var t = new TypeSchema
-        {
-            Fields = new Dictionary<string, FieldSpec>
-            {
-                ["supersedes"] = new() { Name = "supersedes", Reciprocal = "superseded-by" },
-                ["related"] = new() { Name = "related", MirrorsSection = "Related" }
-            },
-            Rules =
-            [
-                new RuleSpec { Id = new RuleId("y-statement-present") },
-                new RuleSpec { Id = new RuleId("alternatives-have-verdicts") }
-            ]
-        };
-
-        var table = Generator.ChecksTable(new Schema(), t);
-
-        Assert.Contains("y-statement", table);
-        Assert.Contains("alternatives-verdict", table);
-        Assert.Contains("related-matches-section", table);
-        Assert.Contains("reciprocal", table);
-    }
-
     private static TypeSchema Type(string label, string plural, string tier, string page, string goesHere,
         params (string Other, string Text)[] versus) => new()
     {
@@ -799,89 +720,4 @@ public class GeneratorTests
     [Fact]
     public void A_type_with_no_edges_is_still_drawn()
         => Assert.Contains("t_policies[Policy];", Generator.RelationDiagram(Graph()));
-
-    [Fact]
-    public void SpliceBlock_replaces_only_between_the_named_markers()
-    {
-        const string text = "before\n<!-- BEGIN GENERATED: x -->\nOLD\n<!-- END GENERATED: x -->\nafter";
-
-        var result = Generator.SpliceBlock(text, "x", "NEW");
-
-        Assert.Contains("<!-- BEGIN GENERATED: x -->\n\nNEW\n\n<!-- END GENERATED: x -->", result);
-        Assert.DoesNotContain("OLD", result);
-        Assert.StartsWith("before\n", result);
-        Assert.EndsWith("\nafter", result);
-    }
-
-    // A corpus that adopted few types has blocks with nothing to say: no pair of its types is easily
-    // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
-    [Fact]
-    public void SpliceBlock_closes_an_empty_block_on_the_next_line()
-    {
-        const string text = "<!-- BEGIN GENERATED: x -->\n\nOLD\n\n<!-- END GENERATED: x -->";
-
-        Assert.Equal("<!-- BEGIN GENERATED: x -->\n<!-- END GENERATED: x -->",
-            Generator.SpliceBlock(text, "x", ""));
-    }
-
-    [Fact]
-    public void SpliceBlock_leaves_text_untouched_when_the_marker_is_absent()
-    {
-        const string text = "no markers here";
-        Assert.Equal(text, Generator.SpliceBlock(text, "missing", "NEW"));
-    }
-
-    // Authored is what `update --check` compares, so it decides whether an overlay page may carry a
-    // corpus-specific table.
-    [Fact]
-    public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
-    {
-        const string local = "prose\n<!-- BEGIN GENERATED: a -->\n\n| one |\n\n<!-- END GENERATED: a -->\nafter";
-        const string reference =
-            "prose\n<!-- BEGIN GENERATED: a -->\n\n| another |\n\n<!-- END GENERATED: a -->\nafter";
-
-        Assert.Equal(Generator.Authored(reference), Generator.Authored(local));
-        Assert.Contains("<!-- BEGIN GENERATED: a -->", Generator.Authored(local));
-        Assert.Contains("<!-- END GENERATED: a -->", Generator.Authored(local));
-        Assert.DoesNotContain("one", Generator.Authored(local));
-    }
-
-    [Fact]
-    public void Authored_still_sees_a_difference_in_the_prose_around_a_block()
-    {
-        const string local = "prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
-        const string reference = "other prose\n<!-- BEGIN GENERATED: a -->\nX\n<!-- END GENERATED: a -->\n";
-
-        Assert.NotEqual(Generator.Authored(reference), Generator.Authored(local));
-    }
-
-    [Fact]
-    public void Authored_empties_every_block_on_a_page_that_carries_several()
-    {
-        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n<!-- END GENERATED: one -->\n"
-                            + "b\n<!-- BEGIN GENERATED: two -->\nY\n<!-- END GENERATED: two -->\nc";
-
-        var authored = Generator.Authored(text);
-
-        Assert.DoesNotContain("X", authored);
-        Assert.DoesNotContain("Y", authored);
-        Assert.Contains("\nb\n", authored);
-    }
-
-    [Fact]
-    public void Authored_compares_the_whole_page_where_a_block_is_never_closed()
-    {
-        // The generator cannot follow the structure, so nothing is treated as generated and the drift
-        // stays visible rather than being masked by a marker someone deleted half of.
-        const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n";
-
-        Assert.Equal(text, Generator.Authored(text));
-    }
-
-    [Fact]
-    public void Authored_leaves_a_page_with_no_blocks_exactly_as_it_is()
-    {
-        const string text = "just prose\n";
-        Assert.Equal(text, Generator.Authored(text));
-    }
 }

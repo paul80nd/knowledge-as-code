@@ -87,7 +87,7 @@ order must hold. A pair it leaves alone, such as `owner` against `decided-on`, i
 ## Decisions
 
 **A rule is data wherever it can be.** Wiring a rule as C# means a class, a registry line, unit tests, an entry in
-`_checks.yaml`, a row in `Generator.DocRows`, and a fixture. Wiring it as an expression means a line of YAML and a
+`_checks.yaml`, a row in `ChecksTable.DocRows`, and a fixture. Wiring it as an expression means a line of YAML and a
 fixture. A corpus downstream of this one may add a whole type file of its own. Without this layer every rule in that
 file would be inert, and enforcing one would need an upstream code change and a release.
 

@@ -210,11 +210,11 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = new RuleId("very-wordy"), Description = new string('x', Generator.DescriptionMax + 1) }
+            new RuleSpec { Id = new RuleId("very-wordy"), Description = new string('x', ChecksTable.DescriptionMax + 1) }
         ])));
 
         Assert.Equal("schema-shape", finding.Check.Value);
-        Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
+        Assert.Contains($"the limit is {ChecksTable.DescriptionMax}", finding.Message);
     }
 
     // A dispatched rule is precisely the one whose description reaches the table, and CheckRule lets
@@ -225,7 +225,7 @@ public class SchemaCheckTests
         var implemented = DocumentRules.All.First().RuleId;
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = implemented, Description = new string('x', Generator.DescriptionMax + 1) }
+            new RuleSpec { Id = implemented, Description = new string('x', ChecksTable.DescriptionMax + 1) }
         ])));
 
         Assert.Equal("schema-shape", finding.Check.Value);
@@ -235,7 +235,7 @@ public class SchemaCheckTests
     public void A_description_at_the_bound_passes()
         => Assert.Empty(Check(Widgets(rules:
         [
-            new RuleSpec { Id = new RuleId("just-fits"), Description = new string('x', Generator.DescriptionMax) }
+            new RuleSpec { Id = new RuleId("just-fits"), Description = new string('x', ChecksTable.DescriptionMax) }
         ])));
 
     // Any section the type declares reconciles, not one fixed name.
@@ -420,15 +420,15 @@ public class SchemaCheckTests
     [Fact]
     public void A_summary_too_long_for_the_cell_it_becomes_is_reported()
     {
-        var finding = Assert.Single(Check(Widgets(summary: new string('x', Generator.DescriptionMax + 1))));
+        var finding = Assert.Single(Check(Widgets(summary: new string('x', ChecksTable.DescriptionMax + 1))));
 
         Assert.Equal("schema-shape", finding.Check.Value);
-        Assert.Contains($"the limit is {Generator.DescriptionMax}", finding.Message);
+        Assert.Contains($"the limit is {ChecksTable.DescriptionMax}", finding.Message);
     }
 
     [Fact]
     public void A_summary_at_the_bound_passes()
-        => Assert.Empty(Check(Widgets(summary: new string('x', Generator.DescriptionMax))));
+        => Assert.Empty(Check(Widgets(summary: new string('x', ChecksTable.DescriptionMax))));
 
     [Fact]
     public void A_type_with_no_paragraph_beneath_its_one_liner_is_reported()
@@ -442,7 +442,7 @@ public class SchemaCheckTests
     // The paragraph is prose, not a cell, so the bound the other three are held to does not apply to it.
     [Fact]
     public void A_detail_longer_than_a_table_cell_passes()
-        => Assert.Empty(Check(Widgets(detail: new string('x', Generator.DescriptionMax * 3))));
+        => Assert.Empty(Check(Widgets(detail: new string('x', ChecksTable.DescriptionMax * 3))));
 
     [Fact]
     public void A_type_that_names_no_prior_art_is_reported()

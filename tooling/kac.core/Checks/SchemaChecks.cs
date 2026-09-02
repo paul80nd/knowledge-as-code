@@ -430,10 +430,10 @@ public static class SchemaChecks
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares no '{name}:'. Say {says}, in one line the taxonomy and the "
                     + "corpus index can be generated from."));
-            else if (value.Length > Generator.DescriptionMax)
+            else if (value.Length > ChecksTable.DescriptionMax)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' has a {value.Length}-character '{name}:'; the limit is "
-                    + $"{Generator.DescriptionMax}. It is rendered as a table cell. The fuller account belongs "
+                    + $"{ChecksTable.DescriptionMax}. It is rendered as a table cell. The fuller account belongs "
                     + $"on {(t.Page.Length > 0 ? t.Page : $"{key}.md")}."));
         }
     }
@@ -551,10 +551,10 @@ public static class SchemaChecks
 
         // Asked of every rule, before the dispatched ones are let go: a rule that runs is a rule whose
         // description reaches the type page, and that is the row a reader has to scan past.
-        if (rule.Description is { Length: > Generator.DescriptionMax } description)
+        if (rule.Description is { Length: > ChecksTable.DescriptionMax } description)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"rule '{rule.Id}' on type '{key}' has a {description.Length}-character description; the "
-                + $"limit is {Generator.DescriptionMax}. A description says what is checked. The reasoning "
+                + $"limit is {ChecksTable.DescriptionMax}. A description says what is checked. The reasoning "
                 + "belongs in its 'message:', where the author who trips it reads it."));
 
         if (rule.Compiled is not null

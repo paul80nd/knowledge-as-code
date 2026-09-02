@@ -394,7 +394,7 @@ public static class New
         {
             sb.Append($"\n## The knowledge types\n\n");
             sb.Append($"`kac generate` writes the table below. Delete both markers to decline it.\n\n");
-            sb.Append($"{Generator.Begin(block)}\n{Generator.End(block)}\n");
+            sb.Append($"{Markers.Begin(block)}\n{Markers.End(block)}\n");
         }
 
         sb.Append("\n## Working here\n\n");

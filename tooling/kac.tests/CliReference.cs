@@ -56,12 +56,12 @@ internal static partial class CliReference
             var does = heading.Groups["does"].Value.TrimEnd('.');
             return new List<string>
             {
-                Generator.Escape($"[`{page}`]({page}.md)"),
-                Generator.Escape(char.ToUpperInvariant(does[0]) + does[1..] + ".")
+                Gfm.Escape($"[`{page}`]({page}.md)"),
+                Gfm.Escape(char.ToUpperInvariant(does[0]) + does[1..] + ".")
             };
         }).ToList();
 
-        return Generator.RenderTable(["Command", "What it does"], rows);
+        return Gfm.RenderTable(["Command", "What it does"], rows);
     }
 
     // The block body for one verb: the invocation it accepts, then a row per option.
@@ -80,15 +80,15 @@ internal static partial class CliReference
         var rows = verb.Options
             .Select(o => new List<string>
             {
-                Generator.Escape(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
-                Generator.Escape(o.Description)
+                Gfm.Escape(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
+                Gfm.Escape(o.Description)
             })
             .ToList();
 
-        return $"{usage}\n\n{Generator.RenderTable(["Option", "What it does"], rows)}";
+        return $"{usage}\n\n{Gfm.RenderTable(["Option", "What it does"], rows)}";
     }
 
-    // The page carrying `body` in the block called `name`. `Generator.SpliceBlock` writes it, so a page of
+    // The page carrying `body` in the block called `name`. `Markers.SpliceBlock` writes it, so a page of
     // the documentation and a page a corpus holds are filled by one piece of code.
     //
     // A page that has never carried the block is given an empty pair of markers under its first heading,
@@ -97,12 +97,12 @@ internal static partial class CliReference
     // A block that opens and never closes stops the run instead. `SpliceBlock` hands back a page it could
     // not splice untouched, and an untouched page is what the caller reads as up to date, so the block
     // would freeze where it stood. Writing a second pair above it is worse again: the orphan and the
-    // content under it stay on the page, and `Generator.Authored` reads everything past an unmatched
+    // content under it stay on the page, and `Markers.Authored` reads everything past an unmatched
     // marker as prose somebody wrote. Which of the two markers went is a question for whoever deleted one.
     internal static string Replaced(string page, string name, string body)
     {
-        var begin = Generator.Begin(name);
-        var end = Generator.End(name);
+        var begin = Markers.Begin(name);
+        var end = Markers.End(name);
         var from = page.IndexOf(begin, StringComparison.Ordinal);
 
         if (from >= 0 && page.IndexOf(end, from, StringComparison.Ordinal) < 0)
@@ -121,7 +121,7 @@ internal static partial class CliReference
             page = page[..at] + $"\n\n{begin}\n{end}" + page[at..];
         }
 
-        return Generator.SpliceBlock(page, name, body);
+        return Markers.SpliceBlock(page, name, body);
     }
 
     private static IReadOnlyList<Verb> Read()
