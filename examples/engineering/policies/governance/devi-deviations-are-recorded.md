@@ -52,15 +52,11 @@ None. Departing from this policy means not recording a deviation, which is the o
 
 Some commitments admit no deviation at all, and no record makes any of them acceptable:
 
-* [pol-SCRT] forbids embedding a secret, reusing a production secret outside production, or writing one to a log. Its
-  four operational obligations are deviable; those three prohibitions are not.
-* [pol-DATA] requires handling personal data on a lawful basis. Its other obligations are deviable.
-* [pol-KNOW] requires writing down what is needed to build, run and recover a system. The effort is proportionate to the
-  system. The commitment does not vary.
-* [pol-AGNT] sets the acceptance gate. Agent-produced work carries no authority until a person accepts it, and
-  convenience does not make it authoritative.
-* [pol-INCR] requires recording a significant incident, and recording a personal data breach whether or not it is
-  notifiable.
+* [pol-SCRT].EMBED, [pol-SCRT].REUSE and [pol-SCRT].LOGS. The operational obligations beside them are deviable.
+* [pol-DATA].LAWFUL. Its other obligations are deviable.
+* [pol-KNOW].DOCS, at an effort proportionate to the system. The commitment does not vary with the effort.
+* [pol-AGNT].ACCEPT. Being in a hurry does not make agent output authoritative.
+* [pol-INCR].EVIDENC, whether or not a breach is notifiable.
 * This policy, for the reason given above.
 
 ## Notes
@@ -71,9 +67,9 @@ No standard implements this directly. Standards cite it wherever they carry an e
 This policy says nothing about where a deviation is recorded. That belongs to the process that carries it, so that
 changing where we file deviations does not change what we committed to.
 
-[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
-[pol-DATA]: ../security/data-data-protection.md
-[pol-INCR]: ../operations/incr-incident-response.md
-[pol-KNOW]: ../governance/know-knowledge-is-written-down.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md#clauses
+[pol-DATA]: ../security/data-data-protection.md#clauses
+[pol-INCR]: ../operations/incr-incident-response.md#clauses
+[pol-KNOW]: ../governance/know-knowledge-is-written-down.md#clauses
+[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

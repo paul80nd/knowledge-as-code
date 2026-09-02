@@ -30,8 +30,8 @@ arriving at our systems, traffic between them, and traffic leaving them.
 A trust boundary is the line between two things that have no automatic right to talk to each other: the public internet
 and our estate, or two of our own systems with no business calling one another.
 
-_Boundary: this policy governs what may cross a boundary. Watching what actually crossed it is [pol-OBSV]'s, under
-`SECMON`._
+_Boundary: this policy governs what may cross a boundary, and by what route. Which environments a boundary stands
+between is [pol-ENVS]'s. Watching what actually crossed it is [pol-OBSV]'s, under `SECMON`._
 
 ## Clauses
 
@@ -56,6 +56,7 @@ it. They are exposed through an intended route, and everything behind them stays
 recorded deviation under [pol-DEVI].
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-ENVS]: ../security/envs-environment-separation.md
 [pol-EVER]: ../delivery/ever-everything-in-version-control.md
 [pol-OBSV]: ../operations/obsv-observability.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

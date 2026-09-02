@@ -28,6 +28,9 @@ and protects nothing.
 All environments hosting systems we build or operate, from a developer's machine through to production, including
 temporary and on-demand environments.
 
+_Boundary: this policy says which environments stand apart and what may not cross between them. The network
+segmentation enforcing that is [pol-MEXP]'s, under `SEGMENT`._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                                | Alignment                                     |
@@ -53,6 +56,7 @@ admits no exception. Any other departure requires a recorded deviation under [po
 [pol-DATA]: ../security/data-data-protection.md
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-INCR]: ../operations/incr-incident-response.md
+[pol-MEXP]: ../security/mexp-minimised-exposure.md
 [pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf
