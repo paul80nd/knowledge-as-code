@@ -76,7 +76,8 @@ These hold in every corpus under `examples/`, in `template/`, and in the prose t
 * **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
   then run `kac generate`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
-  `.editorconfig` says so and no check enforces it.
+  `.editorconfig` says so and no check enforces it. Count characters and not bytes when you sweep for long lines: these
+  corpora are full of em dashes, so `awk 'length > 120'` reports violations that are not there.
 * **A YAML file answers to `yamllint`, and a workflow to `actionlint`.** [`.yamllint`](.yamllint) extends yamllint's
   `default` ruleset and carries the four places this repository departs from it. The `lint` job runs both, so an
   unlinted file fails the build rather than a review.
@@ -103,6 +104,36 @@ its substance needs.
 
 Deliver what was asked at the scope asked, making routine judgement calls yourself. Ask only where two readings would
 produce materially different work. Where the request looks mistaken, say so in a sentence and carry on with it as asked.
+
+## Ask this repository's own corpus
+
+`example-dogfooding` is what this repository knows about itself, installed here as a plugin.
+[`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch it is served from and turns it on, so
+a clone has it without anyone adding a marketplace by hand. Three skills read it:
+
+* **`standards-lookup`** finds the rule you have to build to. Ask it before you change a workflow, a YAML file, or any
+  prose published here.
+* **`policy-lookup`** finds what the estate is committed to, in the clauses `examples/engineering` states. Ask it
+  before you propose anything touching secrets, access, dependencies, or what reaches production.
+* **`glossary-lookup`** says what a word here means. Ask it before you infer a meaning from usage.
+
+**Use them, and then say where they let you down.** This is the one corpus whose subject is the repository you are
+working in, so a session here is the only reader who can tell what it is missing. Tell the developer, in the reply that
+closes the session, whichever of these happened:
+
+* a question one of the skills should have answered and could not
+* a record that is missing, or one whose wording sent you the wrong way
+* a lookup that would have helped, that you only thought of afterwards
+* something the plugin cannot do that would have made it worth reaching for
+
+Raise an issue for each that is a gap rather than a slip. The installed copy is read-only, so that is the only way an
+agent writes back to it.
+
+**The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
+`examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
+changed. To read the working tree instead, run `kac export` and `kac bundle` in that corpus and add its `.dist/` as a
+marketplace of your own. That one stays yours: a directory source resolves against the marketplace rather than the
+project, so an absolute path is the only thing that works and none belongs in a checked-in file.
 
 ## Before you raise a pull request
 
@@ -134,54 +165,15 @@ no longer admit, and `kac restore` fails naming the version it could not find. A
 `.imports/` is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/`
 and restore again to see what CI sees.
 
-**Ask which pages your change makes wrong.** Nothing in CI reads prose for meaning, so this is yours to do. A change to
-a command reaches [`docs/`](docs/) and often [`tooling/README.md`](tooling/README.md); a change to what the tool is for
-reaches [`README.md`](README.md) and [`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md); a change to the schema reaches
-[`.schema/README.md`](.schema/README.md), [`.schema/meta/type.schema.json`](.schema/meta/type.schema.json),
-[`docs/framework/metadata.md`](docs/framework/metadata.md) and [`docs/design/held-to.md`](docs/design/held-to.md).
-
-**Run the layers your change touches**, which the commands above cover.
-
-## What has already cost a session
-
-* **Count characters, not bytes, when sweeping for long lines.** These corpora are full of em dashes, so
-  `awk 'length > 120'` reports violations that are not there.
-* **A seeded root type page assumes every type exists.** `services.md` and its siblings link to the other sixteen, so a
-  corpus adopting a subset carries links to pages it does not hold, and `validate` fails on every one. Name the type
-  and drop the link, which is what the pages under `knowledge-as-code/` already do for the same reason.
-* **An XML comment cannot contain a double hyphen.** A `.csproj` comment therefore cannot spell a flag such as
-  `--version`, and MSBuild fails to load the project rather than warning about it.
-* **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the
-  push is what stops a run inside that window failing. The version check ahead of it cannot see in.
-* **[`tooling/tests/round-trip.sh`](tooling/tests/round-trip.sh) fails locally on a commit you have not pushed**,
-  because it fetches the commit `HEAD` stands on from `raw.githubusercontent.com`. That failure is not a defect. CI runs
-  against a pushed head and passes.
-* **Regenerating goldens with `--update` blesses a regression as happily as a fix.** Regenerate, then read the diff.
-* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: `tooling/kac-tests.cs`,
-  `tooling/kac.features/Harness.cs` and `tooling/kac.tests/Repo.cs`. The tool has two of its own: `.corpus.yaml` finds
-  the corpus, and `.schema/` above it finds what to judge that corpus against. Do not unify any of them without keeping
-  those distinctions.
-* **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the tool
-  instead. A corpus is read from wherever it was installed, so a path written into its content is a fact about somebody
-  else's machine.
-
 ## Agent skills
 
 The engineering skills read their configuration from [`.claude/agents-config/`](.claude/agents-config/), rather than the
 `docs/agents/` their author assumes. `docs/` here is the published site, and `NavigationTests` fails a page the nav does
-not list.
+not list. Three files carry that configuration:
 
-### Issue tracker
-
-Issues live as GitHub issues on `paul80nd/knowledge-as-code`, reached with the `gh` CLI. See
-[`.claude/agents-config/issue-tracker.md`](.claude/agents-config/issue-tracker.md).
-
-### Triage labels
-
-The five canonical roles, each label string equal to its name. See
-[`.claude/agents-config/triage-labels.md`](.claude/agents-config/triage-labels.md).
-
-### Domain docs
-
-Single-context, and the domain is described by the four `CLAUDE.md` files rather than by a `CONTEXT.md`. See
-[`.claude/agents-config/domain.md`](.claude/agents-config/domain.md).
+* [`issue-tracker.md`](.claude/agents-config/issue-tracker.md): issues live as GitHub issues on
+  `paul80nd/knowledge-as-code`, reached with the `gh` CLI.
+* [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, each label string equal to
+  its name.
+* [`domain.md`](.claude/agents-config/domain.md): single-context, and the domain is described by the four `CLAUDE.md`
+  files rather than by a `CONTEXT.md`.

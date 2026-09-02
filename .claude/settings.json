@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "knowledge-as-code": {
+      "source": {
+        "source": "github",
+        "repo": "paul80nd/knowledge-as-code",
+        "ref": "marketplace"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "example-dogfooding@knowledge-as-code": true
+  }
+}

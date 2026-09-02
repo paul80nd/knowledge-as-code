@@ -317,3 +317,20 @@ built from its own block reaches a file that is not there.
 **The breadcrumb is asserted for every corpus**, because it is the one text a session reads without having asked
 anything. A corpus whose manifest names `sources` has to credit each of them on a line of its own, or a reader is told
 their own corpus holds records nobody there wrote.
+
+## What has already cost a session
+
+* **An XML comment cannot contain a double hyphen.** A `.csproj` comment therefore cannot spell a flag such as
+  `--version`, and MSBuild fails to load the project rather than warning about it.
+* **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the
+  push is what stops a run inside that window failing. The version check ahead of it cannot see in.
+* **[`tests/round-trip.sh`](tests/round-trip.sh) fails locally on a commit you have not pushed**, because it fetches
+  the commit `HEAD` stands on from `raw.githubusercontent.com`. That failure is not a defect. CI runs against a pushed
+  head and passes.
+* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: [`kac-tests.cs`](kac-tests.cs),
+  [`kac.features/Harness.cs`](kac.features/Harness.cs) and [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two
+  of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
+  unify any of them without keeping those distinctions.
+* **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the
+  tool instead. A corpus is read from wherever it was installed, so a path written into its content is a fact about
+  somebody else's machine.
