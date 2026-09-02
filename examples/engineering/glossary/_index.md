@@ -2,6 +2,7 @@
 
 # Glossary Index (GLS)
 
-| ID                    | Title                                     | Narrows | Status | Owner    | Review by  |
-|-----------------------|-------------------------------------------|---------|--------|----------|------------|
-| gls-knowledge-as-code | [Knowledge as code](knowledge-as-code.md) |         | draft  | paul.law | 2027-08-12 |
+| ID                    | Title                                     | Narrows               | Status | Owner    | Review by  |
+|-----------------------|-------------------------------------------|-----------------------|--------|----------|------------|
+| gls-engineering       | [Engineering](engineering.md)             | gls-knowledge-as-code | draft  | paul.law | 2027-09-02 |
+| gls-knowledge-as-code | [Knowledge as code](knowledge-as-code.md) |                       | draft  | paul.law | 2027-08-12 |
