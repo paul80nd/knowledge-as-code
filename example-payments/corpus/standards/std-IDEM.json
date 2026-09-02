@@ -22,6 +22,6 @@
     "Conformance checklist": "- [ ] The contract documents the header, its format and its lifetime.\n- [ ] Sending the same request twice returns one payment and the same response body.\n- [ ] Sending the same key with a different amount returns `422` and charges nothing.\n- [ ] A request with no key is refused.\n- [ ] The key reaching the PSP is the key the caller sent.\n- [ ] The stored keys survive a restart of the service."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/payments/standards/authorisation/idempotency.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/payments/standards/authorisation/idempotency.md"
   }
 }

@@ -4,9 +4,9 @@
   "shortcode": "dog",
   "contentVersion": "0.4.0",
   "mechanismVersion": 5,
-  "commit": "104bfa51319bafaf21333ef9c11c3d69541f3ebe",
+  "commit": "4c18c9dfab6dbea897feb72d7ce83425c3255eb4",
   "dirty": false,
-  "generatedAt": "2026-09-02T18:36:23Z",
+  "generatedAt": "2026-09-02T18:49:27Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "104bfa51319bafaf21333ef9c11c3d69541f3ebe"
+    "ref": "4c18c9dfab6dbea897feb72d7ce83425c3255eb4"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.9.1",
+      "contentVersion": "0.10.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "104bfa51319bafaf21333ef9c11c3d69541f3ebe"
+        "ref": "4c18c9dfab6dbea897feb72d7ce83425c3255eb4"
       }
     }
   ],

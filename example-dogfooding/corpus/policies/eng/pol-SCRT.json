@@ -14,6 +14,6 @@
     "Exceptions": "`EMBED`, `REUSE` and `LOGS` admit none, and no recorded deviation makes them acceptable. A leaked secret does not care\nwhy it was written down. They do not bend for expediency, prototypes or \"temporary\" work. A secret that has reached\nsource control is treated as compromised and rotated, not deleted and forgotten. [pol-ENVS] binds the same prohibition\non production credentials below production through its own `CREDS` and `REUSE`. The posture stated here covers those\ntoo.\n\n`STORE`, `ROTATE`, `KEYS` and `LEAKED` bend where they have to. A vendor-issued certificate only the vendor can rotate\nis the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the risk, what compensates for\nit and when it is revisited."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/engineering/policies/security/scrt-secrets-are-never-embedded.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/engineering/policies/security/scrt-secrets-are-never-embedded.md"
   }
 }

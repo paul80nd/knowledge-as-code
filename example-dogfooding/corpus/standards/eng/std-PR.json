@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] Branch policy requires a pull request, and requires at least one approval.\n- [ ] Branch policy excludes the author from satisfying that approval, whether that author is a person or an agent.\n- [ ] Auto-merge, where it is enabled, cannot complete a pull request that no other identity has approved.\n- [ ] The description links a work item.\n- [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.\n- [ ] The reviewer states what they checked, rather than restating what the change claims."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/engineering/standards/common/pull-requests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/engineering/standards/common/pull-requests.md"
   }
 }

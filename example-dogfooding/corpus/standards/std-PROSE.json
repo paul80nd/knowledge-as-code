@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] The longest sentence can be read aloud in one breath.\n- [ ] No more than one crafted line closes two sections in a row.\n- [ ] Reading the draft cold, you cannot tell which paragraph was written last.\n- [ ] No em dash survives, and every semicolon joins a statement to its exact negation.\n- [ ] Contrasts counted over `rather than`, `, not ` and `, never ` come under 5 per 1000 words of prose.\n- [ ] Every instruction is a command, under about 20 words, with its condition first.\n- [ ] Every count names the command that reports it.\n- [ ] Every rule left behind on a prose-stops-here ground is named in the reply."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/dog-fooding/standards/prose.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4c18c9dfab6dbea897feb72d7ce83425c3255eb4/examples/dog-fooding/standards/prose.md"
   }
 }
