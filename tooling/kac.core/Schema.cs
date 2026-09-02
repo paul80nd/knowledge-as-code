@@ -622,7 +622,7 @@ public sealed partial class Schema
     // the copies stay one file.
     //
     // Null where nothing above the corpus holds a schema. `kac` declines that corpus before loading it,
-    // and `Corpus.Load` falls back to the corpus root so the failure stays a plain missing file.
+    // and `LoadNearest` below falls back to the corpus root so the failure stays a plain missing file.
     public static string? FindRoot(string corpusRoot)
     {
         var dir = new DirectoryInfo(corpusRoot);
@@ -636,8 +636,16 @@ public sealed partial class Schema
         return null;
     }
 
-    // Takes whatever holds a `.schema/`. A caller starting from a corpus finds that folder with `FindRoot`
-    // above. The schema is one document however many corpora read it.
+    // The schema at or above `root`, which is a corpus root or a template root. Both readings come to the
+    // same document: whichever `.schema/` the walk lands on first.
+    //
+    // Falls back to `root` itself where nothing above it holds one, so a run with no schema anywhere fails
+    // on the file it cannot open rather than on a null. `kac` declines a corpus that far gone ahead of
+    // this, so only a caller of `kac.core` reaches the fallback.
+    public static Schema LoadNearest(string root) => Load(FindRoot(root) ?? root);
+
+    // Takes whatever holds a `.schema/`, which is what `LoadNearest` above walks up for. The schema is one
+    // document however many corpora read it.
     //
     // This is the one place a path becomes a schema. Everything below it is decided from values.
     public static Schema Load(string root)
