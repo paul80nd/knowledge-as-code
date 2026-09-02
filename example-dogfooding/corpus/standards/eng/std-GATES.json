@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] A push triggers the build with no manual step.\n- [ ] Branch policy lists the build and the test suite as required checks.\n- [ ] The build passes from a clean clone on a fresh agent.\n- [ ] Every skipped, excluded or suppressed check names a deviation.\n- [ ] Every such deviation is open, owned by an individual, and inside its review date.\n- [ ] The last defect fix in this repository carries a test that fails without the fix."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2b9c8af3ee2c524dc13c06b66aedfb948a3b3e8d/examples/engineering/standards/common/build-gates.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/acabb82560350da4eb1ffa919dba62d3de57719e/examples/engineering/standards/common/build-gates.md"
   }
 }

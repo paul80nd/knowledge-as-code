@@ -14,6 +14,6 @@
     "Exceptions": "A finding may be accepted, rather than fixed, where it is not exploitable in our context or where the fix carries greater risk than the finding. That acceptance is recorded under [pol-DEVI] with a named risk owner and a review date."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2b9c8af3ee2c524dc13c06b66aedfb948a3b3e8d/examples/engineering/policies/security/vurm-vulnerability-remediation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/acabb82560350da4eb1ffa919dba62d3de57719e/examples/engineering/policies/security/vurm-vulnerability-remediation.md"
   }
 }

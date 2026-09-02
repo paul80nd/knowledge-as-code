@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/configuration.md",
+  "fields": {
+    "id": "std-CONFIG",
+    "title": "Configuration is committed, pinned and explained",
+    "category": null,
+    "status": "active",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-09-02",
+    "tags": [
+      "configuration",
+      "dependencies",
+      "yaml"
+    ]
+  },
+  "sections": {
+    "Summary": "The schema under `.schema/`, the descriptor each corpus carries, the overlay manifest, the site's navigation and the dependency pins all decide what this repository builds and publishes. Each of them is a tracked file, names an exact version where it names a version, and carries the comment a reviewer needs to judge the change. How the YAML itself is shaped is [yamllint]'s to say, and `.yamllint` holds the short list of places this repository departs from it.",
+    "Conformance checklist": "- [ ] `yamllint --strict .` passes.\n- [ ] Every file the change touches is tracked, and holds no credential.\n- [ ] Every dependency it adds names one exact version.\n- [ ] `.github/dependabot.yml` names the directory that manifest sits in.\n- [ ] Every new value carries a comment giving its reason, and no comment restates its value.\n- [ ] Any new `.yamllint` override carries the reason it departs from the baseline.\n- [ ] `kac update --check --from ../../` passes in each corpus the change reaches."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/acabb82560350da4eb1ffa919dba62d3de57719e/examples/dog-fooding/standards/configuration.md"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "standards",
+  "path": "standards/workflows.md",
+  "fields": {
+    "id": "std-CI",
+    "title": "Every check and every publish runs from a workflow in this repository",
+    "category": null,
+    "status": "active",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-09-02",
+    "tags": [
+      "continuous-integration",
+      "github-actions",
+      "publishing"
+    ]
+  },
+  "sections": {
+    "Summary": "One workflow gates a pull request. The others publish what landed: the tool to nuget.org, each corpus to GitHub\nPackages, the plugins to the `marketplace` branch, and the site to GitHub Pages. A job says what it may do before it\ndoes it, pins the actions it runs, and holds no credential of its own. Those three are [OpenSSF Scorecard]'s\n`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks, and [actionlint] holds the rest of how a\nworkflow is written.",
+    "Conformance checklist": "- [ ] `actionlint` passes.\n- [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.\n- [ ] Every `uses:` names a commit SHA and carries its released version in a trailing comment.\n- [ ] Every workflow declares `permissions: contents: read` at its top level.\n- [ ] Every job holding a write permission has a step that uses it.\n- [ ] No secret appears in a workflow's text, and no step prints one.\n- [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.\n- [ ] The version this pull request ships has moved, and the changelog carries its section."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/acabb82560350da4eb1ffa919dba62d3de57719e/examples/dog-fooding/standards/workflows.md"
+  }
+}
