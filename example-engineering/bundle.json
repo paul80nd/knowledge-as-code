@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.8.0",
+    "contentVersion": "0.8.1",
     "types": [
       "glossary",
       "policies",

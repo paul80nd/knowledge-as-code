@@ -9,11 +9,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "The pipeline is the only route into production. Every production change (application, infrastructure, configuration or schema) arrives through an automated path that is traceable to its source change and its approval, and that can be reversed.",
+    "Purpose": "The pipeline is the only route into production. A trivial change takes it and so does an urgent one. The one exception, for an outage, is recorded at the time and reconciled afterwards.",
     "Scope": "Production and any environment where a change affects customers or holds real data. Applies equally to application deployments, infrastructure changes, configuration changes and database changes.\n\n_Boundary: this policy governs the route a change takes into production and the approval behind it. What an artefact is made of, where it is held and whether its origin can be proved is [pol-TRUS]'s._",
     "Exceptions": "An emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back into version control before the incident is closed. Otherwise, the fix becomes the next outage."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b846a0ed5dca2b1284449a2d2b9272f8dda2a41/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
   }
 }

@@ -14,6 +14,6 @@
     "Exceptions": "There is no exception to a person accepting the work. Being in a hurry does not give agent output authority, and neither does a recorded deviation. If some agent output had authority and some did not, nobody could tell which they were reading.\n\nHow much accepting takes depends on what is being accepted. Putting an agent's change up for review is enough. Turning one of its observations into a standard takes the person who owns that standard. Neither is an exception. They are the same rule at different sizes.\n\nAn incident is not an exception either. If an agent proposes a fix during one, the person who applies it has thereby accepted it. [pol-PIPE] governs putting that fix back into version control afterwards."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b846a0ed5dca2b1284449a2d2b9272f8dda2a41/examples/engineering/policies/governance/agnt-agents-propose-people-decide.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/governance/agnt-agents-propose-people-decide.md"
   }
 }

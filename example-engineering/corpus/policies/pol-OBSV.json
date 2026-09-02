@@ -9,11 +9,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "Our systems tell us what they're doing. They emit enough telemetry (logs, metrics and traces) to explain their behaviour afterwards. It is protected and correlated so events in different systems line up on one timeline. We watch it closely enough to know about a problem before a customer reports it.",
+    "Purpose": "Our systems tell us what they're doing, in telemetry (logs, metrics and traces) they emit as they run. Somebody is watching what they say.",
     "Scope": "All production systems we operate, and the lower environments where behaviour must be understood to validate a change.\n\n_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where that telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be written into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._",
     "Exceptions": "The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too unimportant to monitor is a system to question the existence of."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b846a0ed5dca2b1284449a2d2b9272f8dda2a41/examples/engineering/policies/operations/obsv-observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/operations/obsv-observability.md"
   }
 }

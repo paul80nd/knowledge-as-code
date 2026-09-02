@@ -9,11 +9,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "We grant access to a named person or a named workload, never to a shared login. We authenticate it strongly, we limit it to what that person or workload actually needs, and we review it as circumstances change.",
+    "Purpose": "We grant access to a named person or a named workload, never to a shared login. Each of them gets no more than the work needs.",
     "Scope": "All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for machine identities alike. Applies to routine and privileged access.\n\n_Boundary: [pol-AGNT] governs the authority of what an agent produces. A person who accepts agent work becomes its author, not its approver, so `DUTIES` still requires a second person to release it._",
     "Exceptions": "Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b846a0ed5dca2b1284449a2d2b9272f8dda2a41/examples/engineering/policies/security/accs-access-by-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/security/accs-access-by-identity.md"
   }
 }

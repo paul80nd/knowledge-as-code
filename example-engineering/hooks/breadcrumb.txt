@@ -1,4 +1,4 @@
-example-engineering 0.8.0 travels with this session as data, exported 2026-09-02.
+example-engineering 0.8.1 travels with this session as data, exported 2026-09-02.
 glossary. 25 entries across 2 records: Engineering and Knowledge as code.
 policies. 203 entries across 22 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 17 more.
 standards. 37 entries across 12 records: An interface is described by a contract in the repository, A container image is pinned by digest and runs as a non-root user, C# follows the runtime team's conventions, and the compiler enforces them, One artefact is built once and promoted to production, A dependency is pinned, screened and named in the inventory and 7 more.
