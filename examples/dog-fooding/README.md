@@ -56,9 +56,9 @@ estate, which is a weaker claim than it sounds: nothing pushes back when the fic
 answers back. A service record naming the wrong workflow is caught by whoever next reads the workflow, and a standard
 nobody follows is visible as a standard nobody follows.
 
-**A corpus that stands up before it holds anything.** Every type here is declared, generated and validated with no
-record in it, which is the state a corpus created this morning is in. `kac validate` holds it to the types it declared
-either way.
+**A corpus that stands up before it is full.** Most types here are declared, generated and validated with no record in
+them, which is the state a corpus created this morning is in. `kac validate` holds a type to what it declared whether
+or not anything has been filed under it.
 
 ## What this corpus declares about itself
 
