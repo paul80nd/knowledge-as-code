@@ -40,9 +40,9 @@ publishing:
 consumes:
   - corpus: example-engineering
     shortcode: eng
-    version: ^0.9.0
+    version: ^0.10.0
     source: ../engineering/.dist/package
-    resolved: "0.9.1"
+    resolved: "0.10.0"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.

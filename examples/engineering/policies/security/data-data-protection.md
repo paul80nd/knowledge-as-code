@@ -45,7 +45,7 @@ data itself requires, in whichever environment it sits._
 | `LAWFUL`  | **MUST** handle personal data on a lawful basis                                                                               | [ISO 27001:2022].A.5.34, [UK GDPR].Art.6                           |
 | `MINIMAL` | **MUST** collect only the personal data that is needed                                                                        | [UK GDPR].Art.5(1)(c)                                              |
 | `RIGHTS`  | **MUST** support the rights of the people the data concerns                                                                   | [UK GDPR].Ch.III                                                   |
-| `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                     | [ISO 27001:2022].A.5.9, [ISO 27001:2022].A.5.12, [UK GDPR].Art.30  |
+| `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                     | [ISO 27001:2022].A.5.9, [UK GDPR].Art.30                           |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                      | [ISO 27001:2022].A.5.14, [UK GDPR].Art.44                          |
 | `DELETE`  | **MUST** delete data when its defined retention period ends                                                                   | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production. See [pol-ENVS]                  | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
