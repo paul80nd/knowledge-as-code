@@ -1,20 +1,27 @@
-# Example Payments: a domain corpus
+# `payments` ... a tiered example corpus for a payments domain
 
 > **Everything here is invented.** Example Payments is a fictional payments system, and nothing in this corpus
 > describes anyone. A record written here takes its hostnames from `example.com`, which
 > [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
 
-A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
-corpus, and it is thin on purpose. It adopts `nfrs`, `services` and `standards`, and writes rules about handling a
-payment and nothing else. A domain corpus inherits its governance rather than restating it, and a thin corpus shows
-that where a full one hides it.
-[`../README.md`](../README.md) sets it beside the others here and says what each one demonstrates.
+```text
+                                              YOU ARE HERE
+                                                   ▼
+┌───────────────┐      ┌─────────────┐      ┌─────────────┐
+│ kac framework │ ━━━► │ engineering │ ━┳━► │ payments    │
+└───────────────┘      └─────────────┘  ┃   └─────────────┘
+        ╎                       ╎       ┃   ┌─────────────┐
+   The framework defines how    ╎       ┗━► │ dog-fooding │
+   knowledge is structured      ╎           └─────────────┘
+                                ╎               ╎
+        Parent corpus defines cross-cutting     ╎
+        engineering expectations and policies   ╎
+                                                ╎
+             Downstream corpora adopt those expectations
+             and extend them within a specific domain
+```
 
-**A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
-This one is the thinnest of the corpora here that hold records, and it is still a corpus rather than a copy of the
-template.
-
-Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
+> [/examples/README.md](../README.md) provides the overview of the KaC example corpora - read it first.
 
 ## The knowledge types
 
@@ -83,34 +90,5 @@ live in it, each named for what it versions, and the file's own comments say wha
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
 to standing up everything it declared, and every generated list of types is written from that declaration. That matters
 most here: this corpus declined more types than it adopted, and the file is where that decision is written down.
-
-## Layout
-
-```
-<type>.md              # what the type is, why it exists, how to contribute. One per type
-<type>/
-  ├── _index.md        # GENERATED from frontmatter
-  ├── _template.md     # what humans and agents copy
-  └── <records>.md
-
-frameworks.md          # the external frameworks this corpus refers to, and what each one obliges
-knowledge-as-code.md   # the approach, and the way in to everything below
-knowledge-as-code/     # the system's own documentation
-  ├── taxonomy.md      # the types and where things go
-  ├── metadata.md      # the frontmatter fields
-  ├── contributing.md  # the way in for somebody adding to this corpus
-  └── lineage.md       # where the taxonomy's names came from
-.corpus.yaml           # what this corpus is, and where it publishes
-.plugin/               # source for the plugin that carries this corpus's export to another repository
-```
-
-The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
-wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
-nothing else: what the tool reads lives beside the tool.
-
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
-with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
-
-Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
 
 [std-TELEM]: standards/operations/payment-telemetry.md

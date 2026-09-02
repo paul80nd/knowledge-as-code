@@ -1,18 +1,27 @@
-# Example Engineering: a governance corpus
+# `engineering` ... a tiered example corpus for engineering governance
 
 > **Everything here is invented.** Example Engineering is a fictional engineering organisation. Its policies are written
-> to be stack-agnostic, so they name no service and invent no estate, but the compliance posture standing behind them is
-> made up. Nothing in this corpus describes anyone. **Delete these records before you write your first real one.**
+> to be stack-agnostic, so they name no service and invent no estate, and the compliance posture standing behind them is
+> made up.
 
-A corpus is plain markdown in git where every document has a type and every type has a schema. This one is the
-governance layer: it holds the commitments an engineering organisation makes, and publishes them for other corpora to
-read rather than copy. [`../README.md`](../README.md) sets it beside the others here and says what each one
-demonstrates.
+```text
+                         YOU ARE HERE
+                              ▼
+┌───────────────┐      ┌─────────────┐      ┌─────────────┐
+│ kac framework │ ━━━► │ engineering │ ━┳━► │ dog-fooding │
+└───────────────┘      └─────────────┘  ┃   └─────────────┘
+        ╎                       ╎       ┃   ┌─────────────┐
+   The framework defines how    ╎       ┗━► │ payments    │
+   knowledge is structured      ╎           └─────────────┘
+                                ╎               ╎
+        Parent corpus defines cross-cutting     ╎
+        engineering expectations and policies   ╎
+                                                ╎
+             Downstream corpora adopt those expectations
+             and extend them within a specific domain
+```
 
-**Read this one, copy [`../../template/`](../../template/).** The template is the same corpus with the content taken
-out, and it is what a new corpus starts from. Everything here is a worked example to borrow ideas from.
-
-Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
+> [/examples/README.md](../README.md) provides the overview of the KaC example corpora - read it first.
 
 ## The knowledge types
 
@@ -50,8 +59,8 @@ working tree, and an installed `kac` does not.
 ## The policies are the part worth reading
 
 The clause model, the mnemonic ids, the per-clause alignment and the gap analysis that closed it were worked out on
-these records rather than assumed. Policies alone forced the mnemonic id style, a category field, the identity line,
-the clause table and the checks that hold it.
+these records rather than assumed. Policies alone forced the mnemonic id style, a category field, the identity line, the
+clause table and the checks that hold it.
 
 They are principle-level and stack-agnostic by design, so they name no service and invent no domain. That is why they
 would survive adoption with only the specifics rewritten, where a service catalogue would not.
@@ -93,32 +102,3 @@ today, so what a consumer takes from here is a vocabulary and not the policies. 
 
 Nothing publishes this corpus's plugin. `../library/` is the one this repository pushes to its marketplace branch, and
 its README walks that path.
-
-## Layout
-
-```
-<type>.md              # what the type is, why it exists, how to contribute. One per type
-<type>/
-  ├── _index.md        # GENERATED from frontmatter
-  ├── _template.md     # what humans and agents copy
-  └── <records>.md
-
-frameworks.md          # the external frameworks the policies align to, and what each one obliges
-knowledge-as-code.md   # the approach, and the way in to everything below
-knowledge-as-code/     # the system's own documentation
-  ├── taxonomy.md      # the types and where things go
-  ├── metadata.md      # the frontmatter fields
-  ├── contributing.md  # the way in for somebody adding to this corpus
-  └── lineage.md       # where the taxonomy's names came from
-.corpus.yaml           # what this corpus is, and where it publishes
-.plugin/               # source for the plugin that carries this corpus's export to another repository
-```
-
-The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
-wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
-nothing else: what the tool reads lives beside the tool.
-
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
-with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
-
-Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.
