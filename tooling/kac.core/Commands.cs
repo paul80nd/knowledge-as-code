@@ -625,13 +625,13 @@ public static class Commands
                        + $"{Tally(catalogue.Count(c => c.Severity == Sev.Info), Sev.Info)}.");
         }
 
-        var problems = Generator.ChecksTableProblems(schema);
+        var problems = ChecksTable.Problems(schema);
         if (problems.Count == 0) return 0;
 
         Stop("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Out.ErrLine($"  {p}");
         Out.ErrLine(
-            "fix Generator.DocRows in tooling/kac.core/Generator.cs, or the check's 'on-type-page:' "
+            "fix ChecksTable.DocRows in tooling/kac.core/ChecksTable.cs, or the check's 'on-type-page:' "
             + "in .schema/_checks.yaml.");
         return 1;
     }

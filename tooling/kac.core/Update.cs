@@ -439,7 +439,7 @@ public static class Update
 
     // Whether the template's copy of a file and the corpus's copy say the same thing. LF-normalised, so a
     // working copy checked out with CRLF never reads as drift, and compared on the authored half alone.
-    // See `Generator.Authored` for why an overlay page may hold a different table in each corpus and
+    // See `Markers.Authored` for why an overlay page may hold a different table in each corpus and
     // still be in step.
     //
     // The template's side is unlinked before the comparison, so what a corpus is held to under `full` is
@@ -451,8 +451,8 @@ public static class Update
     {
         var sent = Files.ReadLf(Path.Combine(templateRoot, file.From));
         if (SeedLinks.Reaches(file)) sent = SeedLinks.Unlinked(sent, declined);
-        return Generator.Authored(sent)
-               == Generator.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
+        return Markers.Authored(sent)
+               == Markers.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
     }
 
     // The id the record at a path carries, or null where the file carries none. Read with the document

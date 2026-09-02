@@ -151,8 +151,8 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 1. **An entry in [`../.schema/_checks.yaml`](../.schema/_checks.yaml)**, the declaration. Its
    `description:` is what `kac checks` prints and what a reader meets; its `notes:` take the reasoning and the boundary.
    A check a rule class reports under with no entry here fails `schema-dispatch` when the schema loads.
-2. **A row in `Generator.DocRows`**, unless the check declares `on-type-page: false`. One or the other, or
-   `ChecksTableProblems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
+2. **A row in `ChecksTable.DocRows`**, unless the check declares `on-type-page: false`. One or the other, or
+   `ChecksTable.Problems` fails. `DocRows` is for the checks a type page should advertise to whoever writes one of its
    records. The flag is for a check that reads the schema, the template or the page itself, which is real and is not
    theirs to act on. The flag sits with the check because it is a fact about the check.
 3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is also

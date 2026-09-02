@@ -261,8 +261,8 @@ public class NewTests
 
         foreach (var block in GeneratedFiles.Blocks([]).Single(f => f.Path == "README.md").Blocks)
         {
-            Assert.Contains(Generator.Begin(block), readme);
-            Assert.Contains(Generator.End(block), readme);
+            Assert.Contains(Markers.Begin(block), readme);
+            Assert.Contains(Markers.End(block), readme);
         }
     }
 

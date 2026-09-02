@@ -15,6 +15,14 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac checks` names the file the checks table now lives in.** Where a schema declares a check the reader-facing
+  table does not carry, the hint printed beside the failure names `ChecksTable.cs`. The rows moved there out of
+  `Generator.cs`.
+
 ## 0.20.0 - 2026-09-01
 
 ### Added

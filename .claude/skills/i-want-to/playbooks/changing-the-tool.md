@@ -16,7 +16,7 @@
     rung: `words()` is whole-document, and there is no fact measuring a section.
 3. **Write the class in `kac.core/Rules/`**, where the third rung was the answer. Its unit tests sit beside it and a
    line goes in the registry. Take the narrower interface wherever it will do.
-4. **Declare what it reports.** An entry in `_checks.yaml`, and either a row in `Generator.DocRows` or
+4. **Declare what it reports.** An entry in `_checks.yaml`, and either a row in `ChecksTable.DocRows` or
    `on-type-page: false`. Three places have to agree and each fails a different meta-test.
 5. **Write a fixture that trips it**, one per check id it emits. The coverage gate reads ids rather than branches.
 6. **Load `technical-writing`, then `writing-in-the-tool`** for the comments and the test names. Read the code under
