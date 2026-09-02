@@ -126,8 +126,10 @@ closes the session, whichever of these happened:
 * a lookup that would have helped, that you only thought of afterwards
 * something the plugin cannot do that would have made it worth reaching for
 
-Raise an issue for each that is a gap rather than a slip. The installed copy is read-only, so that is the only way an
-agent writes back to it.
+Raise an issue for each that is a gap rather than a slip, and label it `dogfood`. The installed copy is read-only, so
+an issue is the only way an agent writes back to it, and the label is what makes the loop countable. The same label
+covers a finding about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/), which a
+session meets the same way and by using it.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
