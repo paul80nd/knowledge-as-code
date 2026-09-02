@@ -10,10 +10,10 @@
   },
   "sections": {
     "Purpose": "We separate production from every environment below it, by access, by network and by credential. That way a change is checked before it reaches customers, and nothing outside production can reach production's data or its identity.",
-    "Scope": "All environments hosting systems we build or operate, from a developer's machine through to production, including temporary and on-demand environments.",
+    "Scope": "All environments hosting systems we build or operate, from a developer's machine through to production, including temporary and on-demand environments.\n\n_Boundary: this policy says which environments stand apart and what may not cross between them. The network segmentation enforcing that is [pol-MEXP]'s, under `SEGMENT`._",
     "Exceptions": "Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/engineering/policies/security/envs-environment-separation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/engineering/policies/security/envs-environment-separation.md"
   }
 }

@@ -10,10 +10,10 @@
   },
   "sections": {
     "Purpose": "A system is reachable only from where it needs to be reachable, and it can reach only what it needs. We deny traffic crossing a trust boundary unless we have deliberately allowed it.",
-    "Scope": "All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic arriving at our systems, traffic between them, and traffic leaving them.\n\nA trust boundary is the line between two things that have no automatic right to talk to each other: the public internet and our estate, or two of our own systems with no business calling one another.\n\n_Boundary: this policy governs what may cross a boundary. Watching what actually crossed it is [pol-OBSV]'s, under\n`SECMON`._",
+    "Scope": "All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic arriving at our systems, traffic between them, and traffic leaving them.\n\nA trust boundary is the line between two things that have no automatic right to talk to each other: the public internet and our estate, or two of our own systems with no business calling one another.\n\n_Boundary: this policy governs what may cross a boundary, and by what route. Which environments a boundary stands between is [pol-ENVS]'s. Watching what actually crossed it is [pol-OBSV]'s, under `SECMON`._",
     "Exceptions": "Some services are meant to be reached by anyone. They are in scope for the rest of this policy rather than exempt from it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/engineering/policies/security/mexp-minimised-exposure.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/104bfa51319bafaf21333ef9c11c3d69541f3ebe/examples/engineering/policies/security/mexp-minimised-exposure.md"
   }
 }
