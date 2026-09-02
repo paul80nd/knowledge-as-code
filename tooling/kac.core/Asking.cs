@@ -22,6 +22,23 @@ public interface IAsker
     bool Confirm(string question, bool fallback = true);
 }
 
+// What a question standing in front of an irreversible step came to.
+//
+// `Unattended` is the state that makes this worth a type. A run with nobody at the keyboard has to do
+// something with the question, and the two answers are not interchangeable: taking the default is right
+// where the step is what the caller asked for, and stopping is right where it is a deletion they did not.
+public enum Consent
+{
+    // Asked and answered yes, or nobody had to be asked.
+    Given,
+
+    // Asked and answered no. The run stops, having written nothing.
+    Withheld,
+
+    // Nobody was there to ask, and this question has no default worth taking.
+    Unattended
+}
+
 // What `new` was given on the command line. Every answer has a flag, so nothing is reachable only by
 // typing. `docs/cli/new.md` carries the table of defaults.
 public sealed record NewRequest
@@ -55,6 +72,30 @@ public static class Asking
     // The value `--types` takes to mean every type the template declares.
     public const string AllTypes = "all";
 
+    // Whether there is anybody to put a question to: a terminal, and no `--yes` answering in advance.
+    //
+    // Every command reads this once and carries the answer, so a run cannot be interactive in one decision
+    // and unattended in the next. `interactive` is the caller's, because a terminal is the one thing here
+    // that is not a decision.
+    public static bool Asks(bool yes, bool interactive) => interactive && !yes;
+
+    // A question a run with nobody at it answers for itself, by going ahead. The step is the one the
+    // caller asked for, and the question only offers them a way out of it.
+    public static Consent OrDefault(IAsker? asker, string question, bool fallback = true) =>
+        asker is null || asker.Confirm(question, fallback) ? Consent.Given : Consent.Withheld;
+
+    // A question a run with nobody at it may not answer for itself, because the step takes something away.
+    // `--yes` is the caller saying it anyway, in advance, and is the only thing that gets past this
+    // unattended.
+    public static Consent OrRefuse(IAsker? asker, bool yes, string question, bool fallback = true) =>
+        Unattended(asker, yes) ? Consent.Unattended
+        : asker is null || asker.Confirm(question, fallback) ? Consent.Given
+        : Consent.Withheld;
+
+    // Nobody to ask, and nobody who answered in advance. A question reaching this state with no default
+    // is refused rather than waited on: a hung pipeline is worse than a failed one.
+    private static bool Unattended(IAsker? asker, bool yes) => asker is null && !yes;
+
     // What resolving the answers came to: the answers, or why there are none. Exactly one of the two
     // is set. Cancelling is not one of the two, because the question that offers it is asked after
     // this, and the caller reads the answer rather than this record.
@@ -78,7 +119,7 @@ public static class Asking
     public static Answered Resolve(NewRequest request, string folderName, IReadOnlyList<string> declared,
         string? origin, IAsker? asker)
     {
-        if (asker is null && !request.Yes && Unanswerable(request) is { } unanswerable)
+        if (Unattended(asker, request.Yes) && Unanswerable(request) is { } unanswerable)
             return Problem(unanswerable);
 
         var name = request.Name ?? (asker is null

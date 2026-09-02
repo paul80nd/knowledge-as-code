@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace kac.core;
 
 // The `update` engine: what taking a newer framework into a corpus that already has one comes to.
@@ -29,6 +31,20 @@ public sealed record UpdateRequest
     // Reaches the clone, and the one question an update asks: giving up a type leaves the pages that
     // name it holding a dead link, and `--drop-type` waits on an answer before it deletes anything.
     public bool Yes { get; init; }
+}
+
+// The template an update takes and the policy it takes it under, each named by a flag or by the corpus.
+public sealed record UpdateSettings(string From, string Policy);
+
+// What the flags and the descriptor settled between them, or why the run cannot start. Exactly one of
+// the two is set.
+public sealed record Settled(UpdateSettings? Settings, string? Problem)
+{
+    // The invariant above, told to the compiler, so a caller that branches on it reads the other half
+    // without asserting anything. Both constructions below hold it.
+    [MemberNotNullWhen(true, nameof(Problem))]
+    [MemberNotNullWhen(false, nameof(Settings))]
+    public bool Failed => Problem is not null;
 }
 
 // Which types the template declares, which this corpus holds, and the predicate telling a declined
@@ -93,6 +109,36 @@ public sealed record UpdatePlan(
 
 public static class Update
 {
+    // What the invocation asked for that it cannot have, or null where it asked for something coherent.
+    //
+    // Judged before anything reads the corpus, because it is decidable without one and because the corpus
+    // may be the second thing wrong: a descriptor that does not parse would otherwise throw over a run
+    // this refuses in a line.
+    public static string? Contradiction(UpdateRequest request) =>
+        request.AddType is not null && request.DropType is not null
+            ? "update: --add-type and --drop-type change the same list. ask for one."
+            : null;
+
+    // Which template an update takes and under which policy, each named by a flag or by the descriptor.
+    //
+    // Off `Commands` because both are decisions, and every decision in this project is testable without a
+    // terminal. See Asking.cs. They are also the refusals a person is likeliest to meet, because they are
+    // what an invocation typed wrong comes to.
+    public static Settled Settle(UpdateRequest request, CorpusDescriptor descriptor)
+    {
+        var from = request.From ?? descriptor.UpstreamUrl;
+        if (from is null)
+            return new Settled(null, "update: this corpus names no template, so there is nothing to take. "
+                                     + "pass --from, or set upstream.url in .corpus.yaml.");
+
+        var policy = request.Policy ?? descriptor.UpdatePolicy;
+        if (!CorpusDescriptor.Policies.Contains(policy, StringComparer.Ordinal))
+            return new Settled(null, $"update: '{policy}' is not an update policy. it is "
+                                     + $"{string.Join(" or ", CorpusDescriptor.Policies)}.");
+
+        return new Settled(new UpdateSettings(from, policy), null);
+    }
+
     // What taking this template into this corpus comes to, decided from listings rather than from a
     // filesystem.
     //

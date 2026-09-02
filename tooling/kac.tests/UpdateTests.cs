@@ -10,6 +10,78 @@ namespace kac.tests;
 
 public class UpdateTests
 {
+    // What the flags and the descriptor settle between them, which is everything an update decides before
+    // it reaches git or the network. Each refusal below is what an invocation typed wrong comes to.
+    [Fact]
+    public void An_invocation_asking_to_add_and_to_drop_is_refused()
+    {
+        var contradiction = Update.Contradiction(new UpdateRequest { AddType = "adrs", DropType = "glossary" });
+
+        Assert.NotNull(contradiction);
+        Assert.Contains("--add-type and --drop-type", contradiction, StringComparison.Ordinal);
+    }
+
+    // Judged before the descriptor is read, so a corpus that is itself broken cannot swallow it.
+    [Fact]
+    public void An_invocation_asking_for_one_of_them_is_let_through()
+    {
+        Assert.Null(Update.Contradiction(new UpdateRequest { AddType = "adrs" }));
+        Assert.Null(Update.Contradiction(new UpdateRequest { DropType = "glossary" }));
+        Assert.Null(Update.Contradiction(new UpdateRequest()));
+    }
+
+    [Fact]
+    public void A_corpus_naming_no_template_with_no_flag_to_name_one_is_refused()
+    {
+        var settled = Update.Settle(new UpdateRequest(), new CorpusDescriptor());
+
+        Assert.True(settled.Failed);
+        Assert.Contains("names no template", settled.Problem, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void A_policy_the_tool_does_not_offer_is_refused()
+    {
+        var settled = Update.Settle(
+            new UpdateRequest { Policy = "reckless" },
+            new CorpusDescriptor { UpstreamUrl = "https://example.invalid/framework" });
+
+        Assert.True(settled.Failed);
+        Assert.Contains("'reckless' is not an update policy", settled.Problem, StringComparison.Ordinal);
+    }
+
+    // The descriptor answers where no flag does, and the flag wins where both do. That is the whole of
+    // what `--from` and `--policy` mean, and neither was reachable without running the command.
+    [Fact]
+    public void The_descriptor_names_the_template_and_the_policy_where_no_flag_does()
+    {
+        var settled = Update.Settle(
+            new UpdateRequest(),
+            new CorpusDescriptor
+            {
+                UpstreamUrl = "https://example.invalid/framework", UpdatePolicy = CorpusDescriptor.Full
+            });
+
+        Assert.False(settled.Failed);
+        Assert.Equal("https://example.invalid/framework", settled.Settings.From);
+        Assert.Equal(CorpusDescriptor.Full, settled.Settings.Policy);
+    }
+
+    [Fact]
+    public void A_flag_is_taken_over_what_the_descriptor_says()
+    {
+        var settled = Update.Settle(
+            new UpdateRequest { From = "../framework", Policy = CorpusDescriptor.Full },
+            new CorpusDescriptor
+            {
+                UpstreamUrl = "https://example.invalid/framework", UpdatePolicy = CorpusDescriptor.Cautious
+            });
+
+        Assert.False(settled.Failed);
+        Assert.Equal("../framework", settled.Settings.From);
+        Assert.Equal(CorpusDescriptor.Full, settled.Settings.Policy);
+    }
+
     // A manifest holding one rule per layer, and one that relocates. Written here rather than read from
     // the repository, so a case says what it is about and a rule added upstream cannot rewrite it.
     private static Manifest Rules() => new()
