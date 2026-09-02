@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] Every authorisation request our services send carries a PSP authentication reference.\n- [ ] An authorisation with no authentication outcome is declined, confirmed by a test.\n- [ ] The challenge page in the browser's network trace is served by the PSP.\n- [ ] No page we serve has a field for a one-time passcode.\n- [ ] Every ledger entry for an authorisation records the outcome and the liability holder.\n- [ ] The checkout releases a held order when the challenge passes its timeout."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/bf64d1adb7dc0927c99082181044e90c92ad0e12/examples/payments/standards/checkout/customer-authentication.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2b9c8af3ee2c524dc13c06b66aedfb948a3b3e8d/examples/payments/standards/checkout/customer-authentication.md"
   }
 }
