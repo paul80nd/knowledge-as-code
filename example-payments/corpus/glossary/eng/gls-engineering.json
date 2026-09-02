@@ -1,0 +1,23 @@
+{
+  "type": "glossary",
+  "path": "glossary/engineering.md",
+  "fields": {
+    "id": "gls-engineering",
+    "title": "Engineering",
+    "narrows": "gls-knowledge-as-code",
+    "status": "draft",
+    "review-by": "2027-09-02",
+    "tags": [
+      "data-protection",
+      "dependencies",
+      "privacy",
+      "secrets"
+    ]
+  },
+  "sections": {
+    "Scope": "The estate: what our systems are built from, what they hold, and what we owe the people that data describes. A word about the framework this corpus runs on belongs to the framework's own glossary, which every corpus shares.\n\nAn entry here may cite a record, which the shared glossary may not. Where a policy turns on a word, the entry names the clause that owns the detail."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b846a0ed5dca2b1284449a2d2b9272f8dda2a41/examples/engineering/glossary/engineering.md"
+  }
+}
