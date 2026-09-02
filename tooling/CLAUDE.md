@@ -265,21 +265,14 @@ it, and the specs hold what the validator says about it. None of them can show t
 the paths its skill names resolve inside the installed copy, or that a link built from its template fetches the record
 it points at.
 
-So it installs the plugin into a Claude config directory of its own and asks it those questions. Run it from the corpus
-root after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code CLI on the path:
+So it installs the plugin into a Claude config directory of its own and asks it those questions.
+[`README.md`](README.md#the-round-trip) says what it asserts, how to run it and which corpus proves which skill, and the
+script's own header carries that last part beside the code. Adding an assertion means choosing the corpus that already
+holds what it asks about.
 
-```sh
-cd examples/library && sh ../../tooling/tests/round-trip.sh
-```
-
-**Which lookup it performs is decided by the corpus it runs in.** `example-libraries` proves the glossary skill,
-`example-engineering` proves the policy skill and `example-payments` proves the standards skill, because each holds the
-records that skill was written for. CI runs each of them, and leaves `example-dogfooding` out because it is the same
-shape as `example-payments`. Adding an assertion means choosing the corpus that already holds what it asks about.
-
-**It runs on two platforms in CI**, which is the reason it is a shell script rather than another scenario in the golden
-suite. Development happens on macOS and the first audience is on Windows, so the script is held to the subset Git Bash
-and older macOS bash agree on: no arrays, no `[[`, no process substitution.
+**It is a shell script rather than another scenario in the golden suite**, because CI runs it on two platforms.
+Development happens on macOS and the first audience is on Windows, so it is held to the subset Git Bash and older macOS
+bash agree on: no arrays, no `[[`, no process substitution.
 
 **The fetch is the assertion that cannot be faked from the working tree.** A template built from the wrong host, the
 wrong ref, or a path prefix that no longer exists assembles into a string that matches any pattern you would write for
@@ -310,10 +303,26 @@ section holding its table.
 
 payments is the corpus in this set that consumes another, so the merge is asserted there. An engineering rule has to
 arrive in payments' own `rules.jsonl` carrying `eng:` on its `id` and on its `record`, and its source has to fetch from
-the
-`sources` entry for eng: eng's ref, under eng's path prefix. Payments publishes under a different prefix, so a link
+the `sources` entry for eng: eng's ref, under eng's path prefix. Payments publishes under a different prefix, so a link
 built from its own block reaches a file that is not there.
 
 **The breadcrumb is asserted for every corpus**, because it is the one text a session reads without having asked
 anything. A corpus whose manifest names `sources` has to credit each of them on a line of its own, or a reader is told
 their own corpus holds records nobody there wrote.
+
+## What has already cost a session
+
+* **An XML comment cannot contain a double hyphen.** A `.csproj` comment therefore cannot spell a flag such as
+  `--version`, and MSBuild fails to load the project rather than warning about it.
+* **nuget.org answers 404 for a version it has already accepted**, for minutes afterwards. `--skip-duplicate` on the
+  push is what stops a run inside that window failing. The version check ahead of it cannot see in.
+* **[`tests/round-trip.sh`](tests/round-trip.sh) fails locally on a commit you have not pushed**, because it fetches
+  the commit `HEAD` stands on from `raw.githubusercontent.com`. That failure is not a defect. CI runs against a pushed
+  head and passes.
+* **Three walk-ups look for `kac.slnx`, and each of them means the repository**: [`kac-tests.cs`](kac-tests.cs),
+  [`kac.features/Harness.cs`](kac.features/Harness.cs) and [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two
+  of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
+  unify any of them without keeping those distinctions.
+* **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the
+  tool instead. A corpus is read from wherever it was installed, so a path written into its content is a fact about
+  somebody else's machine.
