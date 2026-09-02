@@ -16,9 +16,8 @@ tags: [ credentials, key-management, secrets ]
 
 ## Purpose
 
-Secrets (credentials, keys, tokens and certificates) are held in a controlled store that restricts and records access
-and allows rotation without changing code. They are never embedded in source, configuration, pipeline definitions or
-build artefacts.
+Secrets (credentials, keys, tokens and certificates) live in a store we control, which limits who can reach them and
+records who did. They never live in the thing that uses them.
 
 An embedded secret cannot be rotated without a release, cannot be revoked in isolation, and survives in history long
 after the file that carried it is deleted. A secret held in a store we control can be rotated the day it leaks, and

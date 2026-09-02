@@ -28,6 +28,9 @@ Systems where throughput, latency, concurrency or capacity affect whether the sy
 customer-facing systems and many internal ones. Targets themselves are recorded as NFRs. This policy commits us to
 having them.
 
+_Boundary: this policy checks a target before a release. Noticing that a live system has stopped meeting one is
+[pol-OBSV]'s, and `DEFECT` says what we do once it has._
+
 ## Clauses
 
 | Id        | Clause                                                                                                                                        | Alignment                                                  |
@@ -45,5 +48,6 @@ targets. That judgement is a recorded deviation under [pol-DEVI], and its review
 has since acquired users.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-OBSV]: ../operations/obsv-observability.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

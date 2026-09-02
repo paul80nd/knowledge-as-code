@@ -78,16 +78,17 @@ Referenced by: [pol-DATA], [pol-DERV].
 
 ### PSBAR 2018
 
-**Obliged in law**, in the markets we serve. The Public Sector Bodies Accessibility Regulations 2018 set the
-accessibility duty on public sector websites and mobile applications, including the requirement to publish and maintain
-an accessibility statement.
+**Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
+Accessibility Regulations 2018, SI 2018/952, set the accessibility duty on public sector websites and mobile
+applications. That duty includes publishing an accessibility statement and keeping it current.
 
 Referenced by: [pol-A11Y].
 
 ### EN 301 549
 
 **Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
-expression of the duty [PSBAR 2018] creates, and it incorporates [WCAG 2.2 AA] by reference for web content.
+expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
+AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
 
 Referenced by: [pol-A11Y].
 
@@ -152,6 +153,22 @@ NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses
 consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
 
 Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
+
+### SLSA
+
+**Inspiration.** Supply-chain Levels for Software Artifacts, at version 1.1: a build track grading how far a consumer
+can trust where an artefact came from. `L1` asks that provenance exists, `L2` that a hosted build platform signs it,
+and `L3` that the build is hardened against tampering from inside. Cited as `build-L1`, `build-L2`. Free, and not
+certifiable.
+
+It puts a recognised shape on what [pol-TRUS] already asks for. `TRACE` wants a deployed artefact followed back to the
+build that produced it, which is what Build L1 provenance is for. `ATTEST` wants that provenance signed, which is L2.
+`ATTEST` is a COULD, so the corpus states the ambition and does not yet hold itself to it.
+
+SPDX and CycloneDX are formats for exchanging an inventory rather than rules about what one holds, so `INVENT` cites
+neither and names no format.
+
+Referenced by: [pol-TRUS].
 
 ### NIST AI RMF
 

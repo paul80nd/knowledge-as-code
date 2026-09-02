@@ -6,7 +6,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.9, A.5.12, A.5.14, A.5.34, A.8.10, A.8.11, A.8.12, A.8.24 ]
   - framework: UK GDPR
-    clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.17, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
+    clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
                Art.44, Ch.III ]
 review-by: "2027-08-04"
 owner: paul.law
@@ -19,9 +19,8 @@ tags: [ classification, data-protection, encryption, privacy ]
 
 ## Purpose
 
-Data is classified by how sensitive it is and handled accordingly: protected in transit and at rest, kept away from
-places it does not belong, and deleted when its purpose ends. Personal data carries the additional obligations owed to
-the people it describes.
+Data is classified by how sensitive it is, and handled accordingly. Personal data carries the additional obligations
+owed to the people it describes.
 
 Uniform handling is either wasteful or unsafe, and usually both: it over-protects trivial data while under-protecting
 the records that would actually cause harm. Until we say which data is which, we cannot protect it in proportion to its
@@ -33,7 +32,8 @@ All data held or processed by systems we build or operate, in every environment,
 analytical copies and test data.
 
 _Boundary: [pol-ENVS] governs the separation between the environments this data moves through, and [pol-SCRT] the
-secrets that protect it. This policy owns what the data itself requires, in whichever environment it sits._
+secrets that protect it. Recording a personal data breach and notifying it is [pol-INCR]'s. This policy owns what the
+data itself requires, in whichever environment it sits._
 
 ## Clauses
 
@@ -46,7 +46,7 @@ secrets that protect it. This policy owns what the data itself requires, in whic
 | `RIGHTS`  | **MUST** support the rights of the people the data concerns                                                                                        | [UK GDPR].Ch.III                                                   |
 | `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                                          | [ISO 27001:2022].A.5.9, [ISO 27001:2022].A.5.12, [UK GDPR].Art.30  |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                                           | [ISO 27001:2022].A.5.14, [UK GDPR].Art.44                          |
-| `DELETE`  | **MUST** delete data when its defined retention period ends                                                                                        | [ISO 27001:2022].A.8.10, [UK GDPR].Art.17                          |
+| `DELETE`  | **MUST** delete data when its defined retention period ends                                                                                        | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production. See [pol-ENVS]                                       | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                                                   | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
 | `LINGER`  | **MUST NOT** retain sensitive or personal data beyond its defined lifetime without a recorded deviation ([pol-DEVI])                               | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
@@ -65,6 +65,7 @@ answer; whether we were entitled to hold it at all is not.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-ENVS]: ../security/envs-environment-separation.md
+[pol-INCR]: ../operations/incr-incident-response.md
 [pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr

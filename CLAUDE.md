@@ -164,11 +164,14 @@ Semantic, and about the records rather than the file: major where a meaning chan
 for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you,
 and a corpus holding one record moves the same way as one holding fifty.
 
-**Repoint every consumer of a corpus whose minor moved.** Below 1.0.0 a caret pins the minor, so `examples/engineering`
-going to `0.4.0` leaves `examples/payments` and `examples/dog-fooding` locked at a version their own `consumes:` ranges
-no longer admit, and `kac restore` fails naming the version it could not find. A local run passes over it, because
-`.imports/` is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/`
-and restore again to see what CI sees.
+**Repoint every consumer whenever a corpus's `content-version` moves.** A `consumes:` entry carries a range in
+`version:` and a committed lock in `resolved:`, and a restore takes the lock. Every corpus here fetches from a folder,
+and `kac pack` rebuilds that folder whole, so it holds the version packed last and nothing else. A lock naming any
+other version fails, so a patch bump breaks a consumer exactly as a minor one does. Move `resolved:` in
+`examples/payments` and `examples/dog-fooding`, and `version:` as well where the minor went, since below 1.0.0 a caret
+pins the minor. A local run passes over all of it: `.imports/` is untracked, and a restore keeps a folder already
+holding the version it resolved to. Delete `.imports/` in both, repack the producer, and restore again to see what CI
+sees.
 
 ## Agent skills
 

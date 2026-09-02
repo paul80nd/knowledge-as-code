@@ -264,9 +264,12 @@ make it checkable, and keep the argument out of the part that gets quoted.
   `clause-modal` is an error, and it asks for the modal bold where it binds and plain where it does not. What separates
   a policy clause from a standard's is altitude: a policy clause stays true when the whole technology estate is
   replaced.
-* **Purpose does not preview the clauses.** A sentence there a reader could re-read as an obligation belongs in the
-  table, where a citation can reach it. Purpose states the position and earns it, and the table is what binds. Cut from
-  a Purpose: "We do not change it under its consumers without a version and reasonable notice."
+* **Purpose states the position, and stops before the qualifiers.** The opening says what we commit to, at the
+  altitude of the title. A reader who stops there still knows what the policy is for, so that much has to summarise the
+  clauses. It must not copy what makes a clause checkable: its enumeration, its threshold, its exception.
+  Two copies of one specific obligation drift apart, and only one of them is what a citation reaches. Keep: "The
+  pipeline is the only route into production." Cut: "We do not change it under its consumers without a version and
+  reasonable notice."
 * **One obligation per clause.** A clause that cannot be failed in exactly one way splits. `clause-order` and
   `clause-compound` warn where a row carries more than one.
 * **A clause is testable, or it is a wish.** *Services are secure* is untestable. *Services read secrets from a managed
