@@ -2,8 +2,8 @@
 id: std-PR
 tier: normative
 status: draft
-implements: [ pol-AGNT.ACCEPT, pol-AGNT.EQUAL, pol-AGNT.PROV, pol-AGNT.SELFVER, pol-EVER.BRANCH, pol-EVER.INTENT,
-  pol-SECD.CODEREV ]
+implements: [ pol-AGNT.ACCEPT, pol-AGNT.DUTIES, pol-AGNT.EQUAL, pol-AGNT.PROV, pol-AGNT.SELFVER, pol-EVER.BRANCH,
+  pol-EVER.INTENT, pol-SECD.CODEREV ]
 applies-to:
   - all
 review-by: "2027-08-26"
@@ -43,8 +43,9 @@ _**Covers:** [pol-SECD].CODEREV_
 - Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards.
 - A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct.
 - Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in.
+- The identity that opened an agent-produced pull request **MUST NOT** approve or merge it.
 
-_**Covers:** [pol-AGNT].ACCEPT, [pol-AGNT].EQUAL, [pol-AGNT].PROV, [pol-AGNT].SELFVER_
+_**Covers:** [pol-AGNT].ACCEPT, [pol-AGNT].DUTIES, [pol-AGNT].EQUAL, [pol-AGNT].PROV, [pol-AGNT].SELFVER_
 
 ## Examples
 
@@ -74,7 +75,7 @@ agent's own account in place of a check.
 ## Conformance checklist
 
 - [ ] Branch policy requires a pull request, and requires at least one approval.
-- [ ] Branch policy excludes the author from satisfying that approval.
+- [ ] Branch policy excludes the author from satisfying that approval, whether that author is a person or an agent.
 - [ ] The description links a work item.
 - [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.
 - [ ] The reviewer states what they checked, rather than restating what the change claims.

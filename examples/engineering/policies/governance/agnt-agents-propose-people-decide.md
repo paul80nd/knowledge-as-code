@@ -4,7 +4,7 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.8.25, A.8.30 ]
+    clauses: [ A.5.3, A.8.25, A.8.30 ]
 review-by: "2027-08-05"
 owner: paul.law
 tags: [ ai-agents, knowledge-management, provenance ]
@@ -31,7 +31,7 @@ recorded observation. This applies whether a person told the agent what to do or
 watching.
 
 _Boundary: [pol-ACCS] governs who the agent logs in as, and [pol-SCRT] the credentials it holds. This policy is about
-the authority of what it produces._
+the authority of what it produces. `DUTIES` is shared with [pol-ACCS], which owns separation of duties for everyone._
 
 ## Clauses
 
@@ -42,6 +42,7 @@ the authority of what it produces._
 | `EQUAL`   | **MUST** hold agent-produced changes to every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
 | `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                      | [NIST AI RMF 1.0].MEASURE                         |
 | `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                          | [NIST AI RMF 1.0].MEASURE                         |
+| `DUTIES`  | **MUST NOT** approve or merge an agent-authored change under the identity that opened or accepted it. See [pol-ACCS]                                                        | [ISO 27001:2022].A.5.3, [NIST AI RMF 1.0].MANAGE  |
 | `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it                                                                                                     | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
 | `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                          | [NIST AI RMF 1.0].MANAGE                          |
 
@@ -55,16 +56,15 @@ How much accepting takes depends on what is being accepted. Putting an agent's c
 one of its observations into a standard takes the person who owns that standard. Neither is an exception. They are the
 same rule at different sizes.
 
-A person who accepts agent work becomes its author, not its approver, so [pol-ACCS] still requires a second person to
-approve the release. An incident is not an exception either. If an agent proposes a fix during one, the person who
-applies it has thereby accepted it. [pol-PIPE] governs putting that fix back into version control afterwards.
+An incident is not an exception either. If an agent proposes a fix during one, the person who applies it has thereby
+accepted it. [pol-PIPE] governs putting that fix back into version control afterwards.
 
 ## Notes
 
 This corpus already works the way this policy describes. When someone records an observation here, it goes in as a
 discovery. A discovery names its source, says how confident we are, and expires unless someone confirms it. It cannot
-confirm itself. It becomes an FAQ or a [standard](../../standards) only when a person promotes it. [adr-0001] records why,
-and says what we lose if that promotion step is skipped.
+confirm itself. It becomes an FAQ or a [standard](../../standards) only when a person promotes it. [adr-0001] records
+why, and says what we lose if that promotion step is skipped.
 
 [adr-0001]: ../../adrs/0001-knowledge-as-code.md
 [pol-ACCS]: ../security/accs-access-by-identity.md
