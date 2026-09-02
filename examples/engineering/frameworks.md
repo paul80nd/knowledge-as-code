@@ -78,16 +78,17 @@ Referenced by: [pol-DATA], [pol-DERV].
 
 ### PSBAR 2018
 
-**Obliged in law**, in the markets we serve. The Public Sector Bodies Accessibility Regulations 2018 set the
-accessibility duty on public sector websites and mobile applications, including the requirement to publish and maintain
-an accessibility statement.
+**Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
+Accessibility Regulations 2018, SI 2018/952, set the accessibility duty on public sector websites and mobile
+applications. That duty includes publishing an accessibility statement and keeping it current.
 
 Referenced by: [pol-A11Y].
 
 ### EN 301 549
 
 **Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
-expression of the duty [PSBAR 2018] creates, and it incorporates [WCAG 2.2 AA] by reference for web content.
+expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
+AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
 
 Referenced by: [pol-A11Y].
 

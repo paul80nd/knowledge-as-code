@@ -36,13 +36,13 @@ is about its output. Protecting that data, rather than checking it, is [pol-DATA
 
 ## Clauses
 
-| Id        | Clause                                                                                           | Alignment                                      |
-|-----------|--------------------------------------------------------------------------------------------------|------------------------------------------------|
-| `EXPECT`  | **MUST** state what a correct output looks like, in terms that can be checked automatically      | [Azure WAF].reliability                        |
-| `CHECK`   | **MUST** check a production output against those expectations before anything downstream uses it | [UK GDPR].Art.5(1)(d), [Azure WAF].reliability |
-| `RUNLOG`  | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence             |
-| `FAILED`  | **MUST NOT** use a derived output whose checks did not pass                                      |                                                |
-| `LINEAGE` | SHOULD be able to trace a derived value back through the runs that produced it to its source     |                                                |
+| Id        | Clause                                                                                           | Alignment                          |
+|-----------|--------------------------------------------------------------------------------------------------|------------------------------------|
+| `EXPECT`  | **MUST** state what a correct output looks like, in terms that can be checked automatically      |                                    |
+| `CHECK`   | **MUST** check a production output against those expectations before anything downstream uses it | [UK GDPR].Art.5(1)(d)              |
+| `RUNLOG`  | **MUST** keep, for each production run, a record of its inputs, its output and its check result  | [Azure WAF].operational-excellence |
+| `FAILED`  | **MUST NOT** use a derived output whose checks did not pass                                      |                                    |
+| `LINEAGE` | SHOULD be able to trace a derived value back through the runs that produced it to its source     |                                    |
 
 ## Exceptions
 
@@ -55,8 +55,10 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 ## Notes
 
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
-computation was correct. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as
-well would overstate what this policy adds.
+computation was correct. The [Azure WAF] pillars do not reach it either. Reliability is about a workload staying
+available and recovering. `RUNLOG` cites Operational Excellence for its run record, and no clause here cites
+Reliability. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as well would
+overstate what this policy adds.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-DATA]: ../security/data-data-protection.md

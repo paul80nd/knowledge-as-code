@@ -4,7 +4,7 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.8.25, A.8.28, A.8.29 ]
+    clauses: [ A.8.25, A.8.29 ]
 review-by: "2027-08-04"
 owner: paul.law
 tags: [ continuous-integration, quality-gates, testing ]
@@ -32,7 +32,7 @@ configuration, data pipelines and the documentation held with them.
 
 | Id        | Clause                                                                                                                 | Alignment                                                                                        |
 |-----------|------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.28, [DORA metrics].lead-time, [NIST SSDF 1.1].PO.3 |
+| `INTEG`   | **MUST** build and verify every change automatically, on integration, without anyone asking for it                     | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.29, [DORA metrics].lead-time, [NIST SSDF 1.1].PO.3 |
 | `BLOCK`   | **MUST** treat a failing check as blocking: a red build does not merge and does not promote                            | [ISO 27001:2022].A.8.29, [DORA metrics].change-failure-rate, [NIST SSDF 1.1].PO.4                |
 | `REPRO`   | **MUST** be able to reproduce a build from version control alone, on any machine set up to do so                       | [NIST SSDF 1.1].PW.6                                                                             |
 | `LEVELS`  | **MUST** test at the levels the change warrants, fast enough that the feedback arrives while the work is still in hand | [ISO 27001:2022].A.8.29, [DORA metrics].lead-time, [NIST SSDF 1.1].PW.8                          |

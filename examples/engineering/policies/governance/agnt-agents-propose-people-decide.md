@@ -38,7 +38,7 @@ the authority of what it produces. `DUTIES` is shared with [pol-ACCS], which own
 | Id        | Clause                                                                                                                                                                      | Alignment                                         |
 |-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
 | `PROV`    | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                   | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
-| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                       | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].GOVERN |
+| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                       | [NIST AI RMF 1.0].GOVERN                          |
 | `EQUAL`   | **MUST** hold agent-produced changes to every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
 | `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                      | [NIST AI RMF 1.0].MEASURE                         |
 | `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                          | [NIST AI RMF 1.0].MEASURE                         |
@@ -61,10 +61,10 @@ accepted it. [pol-PIPE] governs putting that fix back into version control after
 
 ## Notes
 
-This corpus already works the way this policy describes. When someone records an observation here, it goes in as a
-discovery. A discovery names its source, says how confident we are, and expires unless someone confirms it. It cannot
-confirm itself. It becomes an FAQ or a [standard](../../standards) only when a person promotes it. [adr-0001] records
-why, and says what we lose if that promotion step is skipped.
+[adr-0001] decides how an observation here becomes something anyone relies on. An observation goes in as a discovery. A
+discovery names its source, says how confident we are, and expires unless someone confirms it. It cannot confirm
+itself. It becomes an FAQ or a [standard](../../standards) only when a person promotes it. [adr-0001] says what we lose
+if that promotion step is skipped.
 
 [adr-0001]: ../../adrs/0001-knowledge-as-code.md
 [pol-ACCS]: ../security/accs-access-by-identity.md
