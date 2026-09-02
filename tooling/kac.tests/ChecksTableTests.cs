@@ -46,6 +46,20 @@ public class ChecksTableTests
         Assert.Contains(problems, p => p.Contains("'frontmatter-parses'") && p.Contains("has a row anyway"));
     }
 
+    // A corpus holds the schema and no copy of this tool's source, so a path into that source is a wall
+    // rather than a way out. What a corpus author can act on is the flag beside their own check.
+    [Fact]
+    public void Problems_asks_for_nothing_a_corpus_does_not_hold()
+    {
+        var schema = new Schema { Checks = [new CheckDef(new CheckId("invented-check"), Sev.Error, "New.")] };
+
+        Assert.All(ChecksTable.Problems(schema), p =>
+        {
+            Assert.DoesNotContain(".cs", p, StringComparison.Ordinal);
+            Assert.DoesNotContain("tooling/", p, StringComparison.Ordinal);
+        });
+    }
+
     [Fact]
     public void Render_omits_rows_for_checks_the_type_cannot_trip()
     {

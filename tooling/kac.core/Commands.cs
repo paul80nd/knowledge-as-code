@@ -630,9 +630,10 @@ public static class Commands
 
         Stop("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Out.ErrLine($"  {p}");
-        Out.ErrLine(
-            "fix ChecksTable.DocRows in tooling/kac.core/ChecksTable.cs, or the check's 'on-type-page:' "
-            + "in .schema/_checks.yaml.");
+        // The lines above say what to do and this says where. Only the flag is named by a path: the row
+        // beside it lives in a table this tool ships, which a corpus holds no copy of. `tooling/CLAUDE.md`
+        // is where somebody who can move that row is told where it sits.
+        Out.ErrLine("'on-type-page:' sits beside the check in .schema/_checks.yaml.");
         return 1;
     }
 

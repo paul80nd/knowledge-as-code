@@ -19,9 +19,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
-- **`kac checks` names the file the checks table now lives in.** Where a schema declares a check the reader-facing
-  table does not carry, the hint printed beside the failure names `ChecksTable.cs`. The rows moved there out of
-  `Generator.cs`.
+- **`kac checks` asks you for the half of a drifted checks table you hold.** Where the reader-facing table and your
+  `.schema/_checks.yaml` disagree, every line of the report names `on-type-page:` in that file and says where it
+  sits. The row beside it is in the table `kac` ships, which your corpus holds no copy of, so the report says whose
+  it is rather than naming a source file you cannot open.
 
 ## 0.20.0 - 2026-09-01
 

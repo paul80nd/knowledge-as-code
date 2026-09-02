@@ -201,10 +201,11 @@ public static class ChecksTable
         foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order())
             problems.Add($"the checks table documents '{id}', which the schema does not declare (stale row).");
         foreach (var id in advertised.Where(id => !documented.Contains(id)).Order())
-            problems.Add($"check '{id}' has no row in the checks table. Write one, or declare "
-                         + "'on-type-page: false' where the schema declares the check.");
+            problems.Add($"check '{id}' has no row in the checks table. declare 'on-type-page: false' where "
+                         + "the schema declares the check, or give it a row in the table kac ships.");
         foreach (var id in documented.Where(id => catalogue.Contains(id) && !advertised.Contains(id)).Order())
-            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. Drop one of the two.");
+            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. drop the flag, "
+                         + "or drop the row from the table kac ships.");
 
         // The rows written above, held to the bound a schema's rules are held to. Nothing else would
         // notice: these are C# literals rendered into a generated table, so a row that grows past it
