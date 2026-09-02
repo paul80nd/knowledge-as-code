@@ -118,8 +118,8 @@ version the corpus states. A version that has not moved publishes nothing, silen
 nobody and the published copy drifts from `main` with no build reporting it.
 
 Semantic, and about the records rather than the file: major where a meaning changed or a published URL broke, minor
-for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you.
-`dog-fooding` holds no record yet and still moves, because it is the same discipline whichever corpus you are in.
+for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you,
+and a corpus holding one record moves the same way as one holding fifty.
 
 **Repoint every consumer of a corpus whose minor moved.** Below 1.0.0 a caret pins the minor, so `examples/engineering`
 going to `0.4.0` leaves `examples/payments` and `examples/dog-fooding` locked at a version their own `consumes:` ranges

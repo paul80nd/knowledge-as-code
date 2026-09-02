@@ -1,19 +1,11 @@
-# Example Libraries: a knowledge corpus
+# `libraries` ... a self-contained knowledge corpus
 
 > **Everything here is invented.** Example Libraries is a fictional public-library consortium. Its services, decisions
 > and vocabulary were written to give the schema something real-shaped to hold, and to push it into its
 > awkward corners. Nothing in this corpus describes anyone, and no hostname in it resolves: every one is under
 > `example.com`, which [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered.
-> **Delete these records before you write your first real one.**
 
-A corpus is plain markdown in git where every document has a type and every type has a schema. This one is
-self-contained: it consumes nothing.
-[`../README.md`](../README.md) sets it beside the others here and says what each one demonstrates.
-
-**Read this one, copy [`../../template/`](../../template/).** The template is the same corpus with the content taken
-out, and it is what a new corpus starts from. Everything here is a worked example to borrow ideas from.
-
-Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
+> [/examples/README.md](../README.md) provides the overview of the KaC example corpora - read it first.
 
 ## The knowledge types
 
@@ -145,31 +137,3 @@ and standards skills are trimmed. What is agreed and unbuilt:
   ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
 * **A hook that matches a prompt against the glossary**, so a term is defined where it is used rather than when someone
   thinks to ask. The `SessionStart` breadcrumb says the glossary is there, and nothing yet reads what was typed.
-
-## Layout
-
-```
-<type>.md              # what the type is, why it exists, how to contribute. One per type
-<type>/
-  ├── _index.md        # GENERATED from frontmatter
-  ├── _template.md     # what humans and agents copy
-  └── <records>.md
-
-knowledge-as-code.md   # the approach, and the way in to everything below
-knowledge-as-code/     # the system's own documentation
-  ├── taxonomy.md      # the types and where things go
-  ├── metadata.md      # the frontmatter fields
-  ├── contributing.md  # the way in for somebody adding to this corpus
-  └── lineage.md       # where the taxonomy's names came from
-.corpus.yaml           # what this corpus is, and where it publishes
-.plugin/               # source for the plugin that carries this corpus's export to another repository
-```
-
-The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
-wiki published from this tree shows knowledge rather than mechanism. `knowledge-as-code/` holds documentation and
-nothing else: what the tool reads lives beside the tool.
-
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
-with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.
-
-Adding a knowledge type is adding a YAML file to `.schema/` and a line to `.corpus.yaml`, not editing the tool.

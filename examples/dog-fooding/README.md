@@ -1,17 +1,27 @@
-# Example Dogfooding: this repository, held to its own framework
+# `dog-fooding` ... a tiered example corpus defined against the KaC framework itself
 
-> **Everything here is real.** The corpora beside this one describe invented estates. This one describes the
-> repository it sits in: the tool, the site, the branch, and the rules a change to any of them answers to. A record
-> here is wrong if the repository disagrees with it.
+> **Everything here is real.** Unlike the other example corpora this one describes the repository it sits in: the tool,
+> the docs site, the marketplace branch, and the rules a change to any of them answers to. It's here to test the
+> framework against itself as per 'eating your own dogfood'.
 
-A corpus is plain markdown in git where every document has a type and every type has a schema. This one is a domain
-corpus in the same shape as [`../payments/`](../payments/): it consumes [`../engineering/`](../engineering/) for its
-governance and writes only what is its own. Its domain is the building and publishing of `kac`.
-[`../README.md`](../README.md) sets it beside the others here and says what each one demonstrates.
+```text
+                                              YOU ARE HERE
+                                                   ▼
+┌───────────────┐      ┌─────────────┐      ┌─────────────┐
+│ kac framework │ ━━━► │ engineering │ ━┳━► │ dog-fooding │
+└───────────────┘      └─────────────┘  ┃   └─────────────┘
+        ╎                       ╎       ┃   ┌─────────────┐
+   The framework defines how    ╎       ┗━► │ payments    │
+   knowledge is structured      ╎           └─────────────┘
+                                ╎               ╎
+        Parent corpus defines cross-cutting     ╎
+        engineering expectations and policies   ╎
+                                                ╎
+             Downstream corpora adopt those expectations
+             and extend them within a specific domain
+```
 
-**A new corpus starts from [`../../template/`](../../template/)**, which is the same corpus with the content taken out.
-
-Why it is built this way is in [`knowledge-as-code.md`](knowledge-as-code.md) and the documents beneath it.
+> [/examples/README.md](../README.md) provides the overview of the KaC example corpora - read it first.
 
 ## The knowledge types
 
@@ -56,9 +66,9 @@ estate, which is a weaker claim than it sounds: nothing pushes back when the fic
 answers back. A service record naming the wrong workflow is caught by whoever next reads the workflow, and a standard
 nobody follows is visible as a standard nobody follows.
 
-**A corpus that stands up before it holds anything.** Every type here is declared, generated and validated with no
-record in it, which is the state a corpus created this morning is in. `kac validate` holds it to the types it declared
-either way.
+**A corpus that stands up before it is full.** Most types here are declared, generated and validated with no record in
+them, which is the state a corpus created this morning is in. `kac validate` holds a type to what it declared whether or
+not anything has been filed under it.
 
 ## What this corpus declares about itself
 
@@ -68,29 +78,3 @@ published form is served from, and any deviation from the shared baseline it has
 It declines `adrs`, because a decision about `kac` is recorded in `tooling/CLAUDE.md` and in the commit that made it,
 and moving those here is a separate call. It declines `glossary`, because the framework's own vocabulary belongs to
 `../engineering/` and this corpus cites it as `eng:`.
-
-## Layout
-
-```
-<type>.md              # what the type is, why it exists, how to contribute. One per type
-<type>/
-  ├── _index.md        # GENERATED from frontmatter
-  ├── _template.md     # what humans and agents copy
-  └── <records>.md
-
-frameworks.md          # the external frameworks this corpus refers to, and what each one obliges
-knowledge-as-code.md   # the approach, and the way in to everything below
-knowledge-as-code/     # the system's own documentation
-  ├── taxonomy.md      # the types and where things go
-  ├── metadata.md      # the frontmatter fields
-  ├── contributing.md  # the way in for somebody adding to this corpus
-  └── lineage.md       # where the taxonomy's names came from
-.corpus.yaml           # what this corpus is, and where it publishes
-.plugin/               # source for the plugin that carries this corpus's export to another repository
-```
-
-The machinery is dot-prefixed: `.corpus.yaml` and `.plugin/`. The markdown stays the visible half, so an Azure DevOps
-wiki published from this tree shows knowledge rather than mechanism.
-
-The `.schema/` this corpus is judged against sits at the repository root, one copy shared with every corpus here and
-with `template/`. A corpus outside this repository carries its own at its own root, which is where `kac` looks first.

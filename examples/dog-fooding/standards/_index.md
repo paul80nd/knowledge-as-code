@@ -2,4 +2,6 @@
 
 # Standard Index (STD)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID        | Title                                                 | Status | Derived from | Review by  |
+|-----------|-------------------------------------------------------|--------|--------------|------------|
+| std-PROSE | [Prose reads the same way whoever wrote it](prose.md) | active |              | 2027-09-02 |
