@@ -56,8 +56,8 @@ dotnet test tooling/kac.features   # Reqnroll behaviour specs
 dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
 
 # from this root, where you changed a YAML file or a workflow
-pip install -r .github/requirements.txt && yamllint --strict .
-go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 && "$(go env GOPATH)"/bin/actionlint
+yamllint --strict .
+actionlint
 ```
 
 A corpus declaring `consumes:` needs `restore` ahead of `validate`, and `restore` needs a package to take. That corpus's
@@ -68,6 +68,9 @@ costs, and carries the `template/` runs that go beside these.
 
 All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
 leave you green locally and red in CI.
+
+**Install the two linters once.** `brew install yamllint actionlint` takes the versions the `lint` job pins. That job's
+own `pip install -r .github/requirements.txt` needs Python 3.10 or newer, and macOS ships an older `python3`.
 
 ## Conventions
 
