@@ -95,19 +95,12 @@ public sealed record NewPlan(
     IReadOnlyList<ComposedFile> Composed,
     IReadOnlyList<string> DeclinedTypes,
     IReadOnlyList<string> DeclinedCi,
-    IReadOnlyList<string> Unclassified,
-    IReadOnlyList<string> UnknownCi)
+    TemplateFaults Faults)
 {
     // Every path the creation writes, in the order a listing reads them. What a golden snapshots, and
     // what a caller reports.
     public IEnumerable<string> Paths =>
         Copied.Select(f => f.To).Concat(Composed.Select(f => f.Path)).OrderBy(p => p, StringComparer.Ordinal);
-
-    // A template this tool cannot read the whole of: a file its own manifest cannot place, or a rule
-    // serving a continuous integration system the tool does not offer. The creation stops rather than
-    // guessing, because each of those is a defect upstream, and acting anyway means a corpus receives a
-    // file nobody meant to send or loses one nobody meant to withhold.
-    public bool TemplateIsUnsound => Unclassified.Count > 0 || UnknownCi.Count > 0;
 }
 
 public static class New
@@ -243,8 +236,8 @@ public static class New
         copied.Sort((a, b) => string.CompareOrdinal(a.To, b.To));
         declinedTypes.Sort(StringComparer.Ordinal);
         declinedCi.Sort(StringComparer.Ordinal);
-        unknownCi.Sort(StringComparer.Ordinal);
-        return new NewPlan(copied, composed, declinedTypes, declinedCi, unclassified, unknownCi);
+        return new NewPlan(copied, composed, declinedTypes, declinedCi,
+            TemplateFaults.Of(unclassified, unknownCi));
     }
 
     // Whether a destination belongs to a type the corpus declined: the type's schema file, its root page,

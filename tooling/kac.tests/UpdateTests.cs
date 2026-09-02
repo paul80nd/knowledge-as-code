@@ -357,8 +357,8 @@ public class UpdateTests
         var plan = Update.Plan(Files("template/ci.yml"), Files(), manifest, new CorpusDescriptor(),
             Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false, Anonymous);
 
-        Assert.Equal(["jenkins"], plan.UnknownCi);
-        Assert.True(plan.TemplateIsUnsound);
+        Assert.Equal(["jenkins"], plan.Faults.UnknownCi);
+        Assert.True(plan.Faults.Unsound);
     }
 
     [Fact]
@@ -369,8 +369,8 @@ public class UpdateTests
         var plan = Update.Plan(Files("stray.txt"), Files(), manifest, new CorpusDescriptor(),
             Everything(), CorpusDescriptor.Cautious, readInPlace: false, _ => false, Anonymous);
 
-        Assert.Equal(["stray.txt"], plan.Unclassified);
-        Assert.True(plan.TemplateIsUnsound);
+        Assert.Equal(["stray.txt"], plan.Faults.Unclassified);
+        Assert.True(plan.Faults.Unsound);
     }
 
     [Fact]
