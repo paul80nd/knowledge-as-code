@@ -1,4 +1,7 @@
 {
+  "enabledPlugins": {
+    "example-dogfooding@knowledge-as-code": true
+  },
   "extraKnownMarketplaces": {
     "knowledge-as-code": {
       "source": {
@@ -7,8 +10,5 @@
         "ref": "marketplace"
       }
     }
-  },
-  "enabledPlugins": {
-    "example-dogfooding@knowledge-as-code": true
   }
 }

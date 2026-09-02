@@ -35,7 +35,7 @@ Both gate the branch, so a clean local run is what a pull request expects rather
   file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
 * **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
   `knowledge-as-code/`, written a single time.
-* **Branch and open a PR.** Pushes to `main` are rejected.
+* **Branch and open a pull request.** A reviewed merge is what the starter pipeline is written to gate.
 
 ## Writing a record
 
