@@ -45,6 +45,16 @@ ways. [`NullForgivingTests`](kac.tests/NullForgivingTests.cs) holds the count of
 the compiler cannot see is settled either carries the fact on its type through `MemberNotNullWhen`, or is
 read through something naming what it expected.
 
+**Ask Rider about a file you just changed, where you can reach it.** The `mcp__rider__get_file_problems` tool reports
+what the compiler above cannot: a member hiding one on an outer class, an unused deconstruction, a redundant cast. It
+answers for one file in about a second. The tool comes from the Rider MCP server, so a session running inside Rider has
+it and a session in a bare terminal does not. Check whether it is there, and carry on without it where it is not:
+nothing here depends on it, and the build is what gates the branch.
+
+**Do not sweep a project with it.** A pass over `kac.core` returns roughly 120 findings, about 46 of them warnings, and
+most are this repository's own idiom rather than defects. Reading them costs more than they are worth. One file you have
+just edited is the case where the ratio is good.
+
 **Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
 [`template/azure-pipelines.yml`](../template/azure-pipelines.yml) is the starter a corpus receives and then owns, so it
