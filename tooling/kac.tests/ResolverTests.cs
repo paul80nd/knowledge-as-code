@@ -119,13 +119,13 @@ public class ResolverTests
         var schema = Schema();
         var docs = new List<Doc>
         {
-            Doc.Parse("standards/error-responses.md",
+            Required.Parsed("standards/error-responses.md",
                 $"---\nid: std-ERRORS\n{(implements is null ? "" : $"implements: {implements}\n")}---\n\n{body}",
-                schema)!,
-            Doc.Parse("policies/pol-LOCAL.md",
+                schema),
+            Required.Parsed("policies/pol-LOCAL.md",
                 "---\nid: pol-LOCAL\n---\n\n# pol-LOCAL\n\n## Clauses\n\n"
                 + "| Id | Clause |\n|----|--------|\n| `HERE` | **MUST** stay put |\n",
-                schema)!
+                schema)
         };
 
         var found = new List<Finding>();

@@ -128,7 +128,8 @@ public class TemplateSourceTests : IDisposable
         Assert.Null(read.Problem);
         using var fetch = read.Fetched();
         Assert.NotEqual(origin, fetch.Root);
-        Assert.Equal(40, fetch.Commit!.Length);
+        Assert.NotNull(fetch.Commit);
+        Assert.Equal(40, fetch.Commit.Length);
         Assert.Contains("manifest.yaml", fetch.Files());
     }
 

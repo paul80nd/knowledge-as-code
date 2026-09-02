@@ -1,4 +1,5 @@
 using kac.core;
+using Xunit.Sdk;
 
 // In-process unit tests for how a publishing target addresses what it publishes.
 //
@@ -18,6 +19,12 @@ public class PublishingTests
     private static CorpusDescriptor Descriptor(
         string? target = Publishing.GitHub, string? published = GitHubBase, string? prefix = null) =>
         new() { PublishingTarget = target, Base = published, PathPrefix = prefix };
+
+    // The publishing a descriptor resolves to. Every descriptor above names a target and a base, so a
+    // null is this file's own arrangement being wrong rather than the case a test is making.
+    private static Publishing For(CorpusDescriptor descriptor) =>
+        Publishing.For(descriptor, Sha)
+        ?? throw new XunitException($"'{descriptor.PublishingTarget}' resolved to no publishing.");
 
     [Fact]
     public void A_github_corpus_with_a_base_and_a_ref_is_addressable()
@@ -71,7 +78,7 @@ public class PublishingTests
     [Fact]
     public void A_github_record_is_read_at_a_blob_url_under_the_commit()
     {
-        var link = Publishing.For(Descriptor(), Sha)!.Link("glossary/search.md");
+        var link = For(Descriptor()).Link("glossary/search.md");
 
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
@@ -80,7 +87,7 @@ public class PublishingTests
     [Fact]
     public void A_wiki_record_is_read_at_an_encoded_page_path()
     {
-        var link = Publishing.For(Descriptor(Publishing.AzureDevOpsWiki, WikiBase), Sha)!
+        var link = For(Descriptor(Publishing.AzureDevOpsWiki, WikiBase))
             .Link("glossary/search.md");
 
         Assert.Equal($"{WikiBase}?pagePath=%2Fglossary%2Fsearch", link);
@@ -89,7 +96,7 @@ public class PublishingTests
     [Fact]
     public void An_azure_repos_record_is_read_at_a_path_pinned_to_the_commit()
     {
-        var link = Publishing.For(Descriptor(Publishing.AzureDevOps, RepoBase), Sha)!
+        var link = For(Descriptor(Publishing.AzureDevOps, RepoBase))
             .Link("glossary/search.md");
 
         Assert.Equal($"{RepoBase}?path=/glossary/search.md&version=GC{Sha}", link);
@@ -104,7 +111,7 @@ public class PublishingTests
     public void A_cited_part_anchors_the_link_the_way_its_target_spells_an_anchor(
         string target, string published, string expected)
     {
-        var link = Publishing.For(Descriptor(target, published), Sha)!.Link("glossary/search.md", "query");
+        var link = For(Descriptor(target, published)).Link("glossary/search.md", "query");
 
         Assert.EndsWith(expected, link, StringComparison.Ordinal);
     }
@@ -116,7 +123,7 @@ public class PublishingTests
     [InlineData(Publishing.AzureDevOps, RepoBase)]
     public void A_link_resolves_against_the_ref_and_not_against_a_branch(string target, string published)
     {
-        var link = Publishing.For(Descriptor(target, published), Sha)!.Link("glossary/search.md");
+        var link = For(Descriptor(target, published)).Link("glossary/search.md");
 
         Assert.Contains(Sha, link, StringComparison.Ordinal);
         Assert.DoesNotContain("/main/", link, StringComparison.Ordinal);
@@ -126,7 +133,7 @@ public class PublishingTests
     [Fact]
     public void A_trailing_slash_on_a_base_does_not_double()
     {
-        var link = Publishing.For(Descriptor(published: GitHubBase + "/"), Sha)!.Link("glossary/search.md");
+        var link = For(Descriptor(published: GitHubBase + "/")).Link("glossary/search.md");
 
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
@@ -142,7 +149,7 @@ public class PublishingTests
     public void A_corpus_in_a_subdirectory_is_addressed_under_it(
         string target, string published, string expected)
     {
-        var link = Publishing.For(Descriptor(target, published, "example"), Sha)!
+        var link = For(Descriptor(target, published, "example"))
             .Link("glossary/search.md", "query");
 
         Assert.Equal(expected, link);
@@ -155,7 +162,7 @@ public class PublishingTests
     [InlineData("example/")]
     public void A_prefix_written_with_slashes_addresses_the_same_folder(string prefix)
     {
-        var publishing = Publishing.For(Descriptor(prefix: prefix), Sha)!;
+        var publishing = For(Descriptor(prefix: prefix));
 
         Assert.Equal($"{GitHubBase}/blob/{Sha}/example/glossary/search.md",
             publishing.Link("glossary/search.md"));
@@ -170,7 +177,7 @@ public class PublishingTests
     [InlineData("/")]
     public void A_corpus_that_is_the_repository_is_addressed_at_its_root(string? prefix)
     {
-        var publishing = Publishing.For(Descriptor(prefix: prefix), Sha)!;
+        var publishing = For(Descriptor(prefix: prefix));
 
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", publishing.Link("glossary/search.md"));
         Assert.Null(publishing.PathPrefix);
@@ -194,7 +201,7 @@ public class PublishingTests
     public void A_template_leaves_the_path_and_the_anchor_and_settles_the_rest(
         string target, string published, string expected)
     {
-        Assert.Equal(expected, Publishing.For(Descriptor(target, published), Sha)!.Template());
+        Assert.Equal(expected, For(Descriptor(target, published)).Template());
     }
 
     // A reader holding a record's path supplies the path alone, and cannot join it to the prefix in the
@@ -202,7 +209,7 @@ public class PublishingTests
     [Fact]
     public void A_template_settles_the_subdirectory_too()
     {
-        var template = Publishing.For(Descriptor(prefix: "example"), Sha)!.Template();
+        var template = For(Descriptor(prefix: "example")).Template();
 
         Assert.Equal($"{GitHubBase}/blob/{Sha}/example/{{path}}#{{anchor}}", template);
     }
@@ -218,7 +225,7 @@ public class PublishingTests
     public void A_substituted_template_is_the_link_this_class_resolves(
         string target, string published, string? anchor)
     {
-        var publishing = Publishing.For(Descriptor(target, published), Sha)!;
+        var publishing = For(Descriptor(target, published));
         var wiki = target == Publishing.AzureDevOpsWiki;
         var mark = wiki ? "&anchor=" : "#";
         var path = wiki ? "glossary%2Fsearch" : "glossary/search.md";

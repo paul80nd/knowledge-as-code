@@ -1074,6 +1074,7 @@ public class ExporterTests
     private static TypeSchema FieldType(string name, FieldSpec spec)
     {
         var type = GlossaryType();
+        var export = type.DeclaredExport;
         return new TypeSchema
         {
             Key = type.Key,
@@ -1086,12 +1087,12 @@ public class ExporterTests
             Fields = new Dictionary<string, FieldSpec>(StringComparer.Ordinal) { [name] = spec },
             Export = new ExportSpec
             {
-                Version = type.Export!.Version,
+                Version = export.Version,
                 Fields = [name],
-                Sections = type.Export.Sections,
-                Parts = type.Export.Parts,
-                PartsDeclared = type.Export.PartsDeclared,
-                Line = type.Export.Line
+                Sections = export.Sections,
+                Parts = export.Parts,
+                PartsDeclared = export.PartsDeclared,
+                Line = export.Line
             }
         };
     }

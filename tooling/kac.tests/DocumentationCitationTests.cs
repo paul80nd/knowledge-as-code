@@ -5,6 +5,7 @@
 // citation is followed by anything that would report it, so both are followed here.
 
 using System.Text.RegularExpressions;
+using kac.core;
 
 namespace kac.tests;
 
@@ -97,7 +98,7 @@ public partial class DocumentationCitationTests
             if (target.Length == 0 || target.StartsWith("http", StringComparison.Ordinal)
                                    || target.StartsWith("mailto:", StringComparison.Ordinal)) continue;
 
-            var from = Path.GetDirectoryName(Path.Combine(Repo.Root, page))!;
+            var from = Files.FolderOf(Path.Combine(Repo.Root, page));
             if (File.Exists(Path.Combine(from, target)) || Directory.Exists(Path.Combine(from, target))) continue;
 
             dead.Add($"{page}:{line} links {target}, which nothing answers to");

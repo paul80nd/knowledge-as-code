@@ -78,7 +78,8 @@ public class FreshnessTests
 
         Assert.Equal(Standing.Unreachable, standing.How);
         Assert.Null(standing.Available);
-        Assert.Contains(Shelf, standing.Problem!, StringComparison.Ordinal);
+        Assert.NotNull(standing.Problem);
+        Assert.Contains(Shelf, standing.Problem, StringComparison.Ordinal);
     }
 
     // `restore` refuses each of these by name, in a sentence saying which key is missing. Reporting them

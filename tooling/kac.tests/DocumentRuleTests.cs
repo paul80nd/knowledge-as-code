@@ -145,7 +145,9 @@ public class DocumentRuleTests
     {
         var found = new List<Finding>();
 
-        rule.Check(new RuleContext(doc, doc.Type!, spec ?? new RuleSpec { Id = rule.RuleId },
+        // `RuleContext` asks for a type and no rule below reads one, so it is handed a bare stand-in
+        // rather than the document's own. Parsing against an empty schema leaves that null.
+        rule.Check(new RuleContext(doc, new TypeSchema(), spec ?? new RuleSpec { Id = rule.RuleId },
             new Report(doc.Rel, found)));
         return found;
     }
@@ -153,7 +155,8 @@ public class DocumentRuleTests
     private static Finding Single(List<Finding> found) => Assert.Single(found);
 
     // A rule reads a parsed document and nothing else, so the fixture is the markdown itself. The
-    // schema is empty because no rule here asks anything of the type beyond having one.
+    // schema is empty because no rule here asks anything of the type, which is why `Run` above can
+    // hand the context a stand-in.
     private static Doc Adr(string body)
     {
         var text = $"---\nid: adr-0001\nstatus: accepted\n---\n\n# A title\n\n`ADR: adr-0001` `ACCEPTED`\n\n{body}\n";

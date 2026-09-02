@@ -3,6 +3,7 @@
 // `.github/workflows/kac.yml` carries why the gate is shaped this way.
 
 using YamlDotNet.RepresentationModel;
+using Xunit.Sdk;
 
 namespace kac.tests;
 
@@ -25,13 +26,19 @@ public class WorkflowGateTests
     public void Every_job_is_behind_the_one_name_the_branch_rule_requires()
     {
         var jobs = Jobs();
-        var declared = jobs.Children.Keys.Select(k => ((YamlScalarNode)k).Value!).ToList();
+        var declared = jobs.Children.Keys.Select(Text).ToList();
 
         var needs = (YamlSequenceNode)((YamlMappingNode)jobs.Children[new YamlScalarNode(Gate)])
             .Children[new YamlScalarNode("needs")];
 
-        var gated = needs.Children.Select(n => ((YamlScalarNode)n).Value!).Append(Gate);
+        var gated = needs.Children.Select(Text).Append(Gate);
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), gated.Order(StringComparer.Ordinal));
     }
+    // The text of a scalar the workflow writes. A node holding none is an empty key or an empty item,
+    // and this file reads neither.
+    private static string Text(YamlNode node) =>
+        (node as YamlScalarNode)?.Value
+        ?? throw new XunitException($"a node in kac.yml holds no text: {node}");
+
 }

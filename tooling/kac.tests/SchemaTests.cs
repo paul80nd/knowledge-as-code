@@ -86,7 +86,11 @@ public class SchemaTests
     [InlineData("classification in [personal, special-category]", "special-category", true)]
     [InlineData("classification in [personal, special-category]", "internal", false)]
     public void RequiredWhen_reads_every_form_the_schema_uses(string condition, string actual, bool expected)
-        => Assert.Equal(expected, Schema.ParseRequiredWhen("f", condition)!.Holds(actual));
+    {
+        var required = Schema.ParseRequiredWhen("f", condition);
+        Assert.NotNull(required);
+        Assert.Equal(expected, required.Holds(actual));
+    }
 
     // Including for `!=`, where "not equal to anything" is tempting but wrong: `required-field` is already
     // reporting the absent field, and a second finding would report one omission as two.
@@ -95,7 +99,11 @@ public class SchemaTests
     [InlineData("mechanism != not-enforced")]
     [InlineData("classification in [personal, special-category]")]
     public void RequiredWhen_does_not_hold_when_the_field_it_names_is_absent(string condition)
-        => Assert.False(Schema.ParseRequiredWhen("f", condition)!.Holds(null));
+    {
+        var required = Schema.ParseRequiredWhen("f", condition);
+        Assert.NotNull(required);
+        Assert.False(required.Holds(null));
+    }
 
     [Fact]
     public void RequiredWhen_is_absent_when_nothing_is_declared()

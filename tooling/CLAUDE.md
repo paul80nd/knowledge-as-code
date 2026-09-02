@@ -40,7 +40,10 @@ to this repository's root, where it is authored once.
 warning and a style violation are both a broken build rather than a line in the log nobody reads, and
 [`.editorconfig`](.editorconfig) is where the style itself is written. It holds locally as well as in CI, on purpose: a
 check running in one and not the other is how the thing it catches reaches `main`. Where a warning is genuinely wrong,
-suppress that one with a reason beside it rather than turning the setting off.
+suppress that one with a reason beside it rather than turning the setting off. `!` is not one of those
+ways. [`NullForgivingTests`](kac.tests/NullForgivingTests.cs) holds the count of it at nothing, so a value
+the compiler cannot see is settled either carries the fact on its type through `MemberNotNullWhen`, or is
+read through something naming what it expected.
 
 **Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
 [`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.

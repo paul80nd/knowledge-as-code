@@ -66,7 +66,7 @@ public class PlaceholderTests
     public void A_placeholder_is_found_in_frontmatter_the_identity_line_the_prose_and_a_link(
         string text, string expected)
     {
-        var found = Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!).ToList();
+        var found = Placeholder.Occurrences(Required.Parsed("services/a.md", text, new Schema())).ToList();
         Assert.Contains(expected, found.Select(f => f.Token));
     }
 
@@ -76,13 +76,13 @@ public class PlaceholderTests
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\nWrite `${{ vars.id }}` to read it.\n")]
     [InlineData("---\nid: svc-a\n---\n\n# A title\n\n    indented: ${{ vars.id }}\n")]
     public void Code_is_not_scanned(string text)
-        => Assert.Empty(Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!));
+        => Assert.Empty(Placeholder.Occurrences(Required.Parsed("services/a.md", text, new Schema())));
 
     [Fact]
     public void Every_occurrence_is_returned_so_the_check_can_count_what_it_does_not_name()
     {
         const string text = "---\nid: svc-{{slug}}\n---\n\n# {{Name}}\n\nIt calls [{{a}}]({{a}}.md).\n";
-        Assert.Equal(4, Placeholder.Occurrences(Doc.Parse("services/a.md", text, new Schema())!).Count());
+        Assert.Equal(4, Placeholder.Occurrences(Required.Parsed("services/a.md", text, new Schema())).Count());
     }
 
     private static YamlDotNet.RepresentationModel.YamlNode Value(string yaml)

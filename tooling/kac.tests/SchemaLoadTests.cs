@@ -104,8 +104,9 @@ public class SchemaLoadTests
         var status = Schema.Load(files).Universal["status"];
 
         Assert.Null(status.Values);
-        Assert.Contains("$enums.status", status.Problem!);
-        Assert.Contains("declares no 'status'", status.Problem!);
+        Assert.NotNull(status.Problem);
+        Assert.Contains("$enums.status", status.Problem);
+        Assert.Contains("declares no 'status'", status.Problem);
     }
 
     // A `.schema/` short of one of its shared blocks fails through the findings naming what is missing,
@@ -121,7 +122,9 @@ public class SchemaLoadTests
                                        values: $enums.status
                                    """;
 
-        Assert.Contains("declares no 'status'", Schema.Load(files).Universal["status"].Problem!);
+        var problem = Schema.Load(files).Universal["status"].Problem;
+        Assert.NotNull(problem);
+        Assert.Contains("declares no 'status'", problem);
     }
 
     // A check's `notes:` carries its whitespace through untouched, where a rule's is collapsed at load.
@@ -183,7 +186,8 @@ public class SchemaLoadTests
                             """);
 
         Assert.Null(rule.Compiled);
-        Assert.Contains("no severity", rule.Problem!);
+        Assert.NotNull(rule.Problem);
+        Assert.Contains("no severity", rule.Problem);
     }
 
     [Fact]
@@ -197,7 +201,8 @@ public class SchemaLoadTests
                             """);
 
         Assert.Null(rule.Compiled);
-        Assert.Contains("no message", rule.Problem!);
+        Assert.NotNull(rule.Problem);
+        Assert.Contains("no message", rule.Problem);
     }
 
     [Fact]
@@ -212,7 +217,8 @@ public class SchemaLoadTests
                             """);
 
         Assert.Null(rule.Compiled);
-        Assert.Contains("has-a-title", rule.Problem!);
+        Assert.NotNull(rule.Problem);
+        Assert.Contains("has-a-title", rule.Problem);
     }
 
     // A severity the tool does not recognise reads as absent too, which leaves the rule declared but not

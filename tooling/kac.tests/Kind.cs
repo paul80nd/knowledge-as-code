@@ -6,8 +6,8 @@ namespace kac.tests;
 // correctly. They are what a change to `kac.core` breaks.
 //
 // A few ask whether **this repository** still holds together: whether a page states the usage the parser
-// accepts, whether a comment cites a file that exists, whether the changelog carries a section for the
-// version `kac.csproj` names. Those fail when content here drifts and never when the tool's logic is
+// accepts, whether a comment cites a file that exists, whether the source keeps a convention no compiler
+// enforces, whether the changelog carries a section for the version `kac.csproj` names. Those fail when content here drifts and never when the tool's logic is
 // wrong, and no corpus consuming `kac` carries any of them, because none of it is shipped.
 //
 // A trait rather than a project of their own. They are a small tail of this suite rather than half of it,
