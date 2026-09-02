@@ -88,12 +88,12 @@ public class NewTests
         var manifest = new Manifest { Rules = [new ManifestRule([".schema/**"], Manifest.Overlay)] };
         var plan = New.Plan(Set("template/CLAUDE.md"), manifest, Answers(), Taken(), _ => false);
 
-        Assert.Equal(["template/CLAUDE.md"], plan.Unclassified);
-        Assert.True(plan.TemplateIsUnsound);
+        Assert.Equal(["template/CLAUDE.md"], plan.Faults.Unclassified);
+        Assert.True(plan.Faults.Unsound);
     }
 
     [Fact]
-    public void A_template_every_rule_places_is_sound() => Assert.False(Plan(["template/CLAUDE.md"]).TemplateIsUnsound);
+    public void A_template_every_rule_places_is_sound() => Assert.False(Plan(["template/CLAUDE.md"]).Faults.Unsound);
 
     [Fact]
     public void A_declined_types_schema_page_and_folder_are_not_written()
@@ -151,9 +151,28 @@ public class NewTests
         };
         var plan = New.Plan(Set("template/Jenkinsfile"), manifest, Answers(), Taken(), _ => false);
 
-        Assert.Equal(["jenkins"], plan.UnknownCi);
+        Assert.Equal(["jenkins"], plan.Faults.UnknownCi);
         Assert.Empty(plan.Copied);
-        Assert.True(plan.TemplateIsUnsound);
+        Assert.True(plan.Faults.Unsound);
+    }
+
+    // Named in the order a reader meets them rather than the order the walk did, so the same template
+    // reads the same way whichever verb reported it. `TemplateFaults.Of` is where that happens.
+    [Fact]
+    public void The_systems_the_tool_cannot_offer_are_named_in_order()
+    {
+        var manifest = new Manifest
+        {
+            Rules =
+            [
+                new ManifestRule(["template/a.yml"], Manifest.Seed, "", "zulu"),
+                new ManifestRule(["template/b.yml"], Manifest.Seed, "", "alpha")
+            ]
+        };
+
+        var plan = New.Plan(Set("template/a.yml", "template/b.yml"), manifest, Answers(), Taken(), _ => false);
+
+        Assert.Equal(["alpha", "zulu"], plan.Faults.UnknownCi);
     }
 
     [Fact]

@@ -186,8 +186,7 @@ public static class Commands
 
         var plan = kac.core.New.Plan(take.Files(), take.Manifest, answers, upstream,
             kac.core.New.DeclinesTypes(take.Schema, answers.Types));
-        if (plan.TemplateIsUnsound)
-            return Unsound("new", request.From, plan.Unclassified, plan.UnknownCi);
+        if (plan.Faults.Unsound) return StopUnsound("new", request.From, plan.Faults);
 
         var declined = SeedLinks.Declined(take.Schema, answers.Types);
         foreach (var path in kac.core.New.Apply(plan, take.Root, dir, declined)) Out.Markup(Wrote(path));
@@ -293,19 +292,18 @@ public static class Commands
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
     }
 
-    // Both halves of `TemplateIsUnsound`, which `NewPlan` and `UpdatePlan` declare alike. Each names what
-    // the template did rather than the count of it, because the fix is upstream and needs the paths.
-    private static int Unsound(string verb, string from, IReadOnlyList<string> unclassified,
-        IReadOnlyList<string> unknownCi)
+    // Both halves of `TemplateFaults`, whichever verb read the template. Each names what the template did
+    // rather than the count of it, because the fix is upstream and needs the paths.
+    private static int StopUnsound(string verb, string from, TemplateFaults faults)
     {
-        if (unclassified.Count > 0)
+        if (faults.Unclassified.Count > 0)
         {
             Stop($"{verb}: {from} has a manifest that does not place its own tree. these files match no rule:");
-            foreach (var path in unclassified) Out.ErrLine($"  {path}");
+            foreach (var path in faults.Unclassified) Out.ErrLine($"  {path}");
         }
 
-        if (unknownCi.Count > 0)
-            Stop($"{verb}: {from} serves {string.Join(" and ", unknownCi)}, which this tool cannot offer. "
+        if (faults.UnknownCi.Count > 0)
+            Stop($"{verb}: {from} serves {string.Join(" and ", faults.UnknownCi)}, which this tool cannot offer. "
                  + $"it offers {string.Join(", ", CiSystem.All)}.");
 
         return 1;
@@ -704,8 +702,7 @@ public static class Commands
                 ]
             };
 
-        if (plan.TemplateIsUnsound)
-            return Unsound("update", from, plan.Unclassified, plan.UnknownCi);
+        if (plan.Faults.Unsound) return StopUnsound("update", from, plan.Faults);
 
         var origin = from + At(take.Commit);
         if (request.Check) return ReportCheck(plan, origin, request.DropType);

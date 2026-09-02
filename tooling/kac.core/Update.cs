@@ -77,8 +77,7 @@ public sealed record UpdatePlan(
     IReadOnlyList<string> Skipped,      // named in `skip:`, with the reason the corpus gave
     IReadOnlyList<string> Unshared,     // sits where the rules call overlay, and the template sends no such file
     IReadOnlyList<string> Offered,      // types the template declares and this corpus has not adopted
-    IReadOnlyList<string> Unclassified,
-    IReadOnlyList<string> UnknownCi,
+    TemplateFaults Faults,
     int InStep,
     int Declined,       // withheld for a type this corpus has not adopted
     int DeclinedCi,     // a starter for a system that does not build this corpus
@@ -90,9 +89,6 @@ public sealed record UpdatePlan(
     // not something an update writes, and it fails a check all the same: it is a framework change made in
     // the wrong tree, and it would reach no other corpus.
     public bool Changes => Written.Count > 0 || Seeded.Count > 0 || Deleted.Count > 0 || Unshared.Count > 0;
-
-    // The same two faults `NewPlan.TemplateIsUnsound` names, and stopped for the same reason.
-    public bool TemplateIsUnsound => Unclassified.Count > 0 || UnknownCi.Count > 0;
 }
 
 public static class Update
@@ -252,9 +248,8 @@ public static class Update
             .ToList();
 
         skipped.Sort(StringComparer.Ordinal);
-        unknownCi.Sort(StringComparer.Ordinal);
-        return new UpdatePlan(written, seeded, deleted, skipped, unshared, types.Offered, unclassified,
-            unknownCi, inStep, declined, declinedCi, declinedPlugin);
+        return new UpdatePlan(written, seeded, deleted, skipped, unshared, types.Offered,
+            TemplateFaults.Of(unclassified, unknownCi), inStep, declined, declinedCi, declinedPlugin);
     }
 
     // The same rules read from the corpus's side: each rule's patterns rewritten to where its files land,
