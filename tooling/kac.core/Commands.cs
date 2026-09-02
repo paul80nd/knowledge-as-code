@@ -156,9 +156,7 @@ public static class Commands
             return Fail("new: this repository holds uncommitted changes. commit or stash them first, so "
                         + "that what `new` writes reads as a diff of its own.");
 
-        // Nobody to ask, in the two ways that happen: `--yes` answered everything in advance, and a run
-        // with no terminal has nobody at the keyboard. What each comes to differs, and `--yes` decides.
-        var asker = request.Yes || !Out.Interactive ? null : new ConsoleAsker();
+        var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
 
         if (!ground.Repository && Initialise(dir, request, asker) is { } refused) return refused;
 
@@ -166,7 +164,8 @@ public static class Commands
         {
             Note($"new: this folder already holds {string.Join(", ", ground.Holds)}. without a committed "
                  + "baseline there is nothing to tell those from the files about to arrive.");
-            if (asker is not null && !asker.Confirm("Create the corpus here anyway?")) return Cancelled("new");
+            if (Asking.OrDefault(asker, "Create the corpus here anyway?") is Consent.Withheld)
+                return Cancelled("new");
         }
 
         using var take = TemplateSource.Take("new", request.From, request.From, request.Ref, request.Path,
@@ -182,7 +181,7 @@ public static class Commands
             take.Manifest.Version, today);
 
         Summarise(dir, answers, upstream, take.Declared.Count);
-        if (asker is not null && !asker.Confirm("Create it?")) return Cancelled("new");
+        if (Asking.OrDefault(asker, "Create it?") is Consent.Withheld) return Cancelled("new");
 
         var plan = kac.core.New.Plan(take.Files(), take.Manifest, answers, upstream,
             kac.core.New.DeclinesTypes(take.Schema, answers.Types));
@@ -219,20 +218,17 @@ public static class Commands
 
     // Offer `git init`, and answer with the refusal where there is one. Discovery reads the git listing,
     // so the choice is between running it and cancelling rather than carrying on without a repository.
-    private static int? Initialise(string dir, NewRequest request, IAsker? asker)
-    {
-        if (asker is null && !request.Yes)
-            return Fail("new: this folder is not a git repository, and there is no terminal to ask on. "
-                        + "run `git init` first, or pass --yes to have it run.");
-
-        if (asker is not null && !asker.Confirm($"{dir} is not a git repository. Run `git init` here?"))
-            return Cancelled("new");
-
-        return Git.Run(dir, "init -q") is null
-            ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
-                   + "so a corpus git cannot see is not one worth writing.")
-            : null;
-    }
+    private static int? Initialise(string dir, NewRequest request, IAsker? asker) =>
+        Asking.OrRefuse(asker, request.Yes, $"{dir} is not a git repository. Run `git init` here?") switch
+        {
+            Consent.Unattended => Fail("new: this folder is not a git repository, and there is no terminal to ask on. "
+                                       + "run `git init` first, or pass --yes to have it run."),
+            Consent.Withheld => Cancelled("new"),
+            _ => Git.Run(dir, "init -q") is null
+                ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
+                       + "so a corpus git cannot see is not one worth writing.")
+                : null
+        };
 
     // Put the cost of giving up a type to whoever asked for it, and answer with the refusal where there
     // is one.
@@ -246,20 +242,20 @@ public static class Commands
     // framework while leaving the type in place is a third thing nobody asked for.
     private static int? Relinquish(string dropping, UpdateRequest request)
     {
-        var asker = request.Yes || !Out.Interactive ? null : new ConsoleAsker();
+        var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
 
         Note($"update: giving up {dropping} deletes its page. every page still linking to it is left "
              + "holding a dead link, and `kac validate` reports the ones it can reach.");
         Note("update: a reference it cannot parse is reported by nobody. search the corpus for the name "
              + "as well, and fix what you find.");
 
-        if (asker is null && !request.Yes)
-            return Fail($"update: giving up {dropping} needs an answer, and there is no terminal to ask "
-                        + "on. pass --yes to give it up anyway.");
-
-        return asker is not null && !asker.Confirm($"Give up {dropping}?", fallback: false)
-            ? Cancelled("update")
-            : null;
+        return Asking.OrRefuse(asker, request.Yes, $"Give up {dropping}?", fallback: false) switch
+        {
+            Consent.Unattended => Fail($"update: giving up {dropping} needs an answer, and there is no "
+                                       + "terminal to ask on. pass --yes to give it up anyway."),
+            Consent.Withheld => Cancelled("update"),
+            _ => null
+        };
     }
 
     // What the run is about to do, before the one question that can still stop it.
@@ -643,22 +639,15 @@ public static class Commands
     // pin what the descriptor says.
     public static int Update(string corpusRoot, UpdateRequest request, string toolVersion, string today)
     {
-        if (request.AddType is not null && request.DropType is not null)
-            return Fail("update: --add-type and --drop-type change the same list. ask for one.");
+        if (kac.core.Update.Contradiction(request) is { } contradiction) return Fail(contradiction);
 
         if (CorpusDescriptor.RenamedKeyInUse(corpusRoot) is { } renamed) return Fail(renamed);
 
         var descriptor = CorpusDescriptor.Load(corpusRoot);
 
-        var from = request.From ?? descriptor.UpstreamUrl;
-        if (from is null)
-            return Fail("update: this corpus names no template, so there is nothing to take. pass --from, "
-                        + "or set upstream.url in .corpus.yaml.");
-
-        var policy = request.Policy ?? descriptor.UpdatePolicy;
-        if (!CorpusDescriptor.Policies.Contains(policy, StringComparer.Ordinal))
-            return Fail($"update: '{policy}' is not an update policy. it is "
-                        + $"{string.Join(" or ", CorpusDescriptor.Policies)}.");
+        var settled = kac.core.Update.Settle(request, descriptor);
+        if (settled.Failed) return Fail(settled.Problem);
+        var (from, policy) = settled.Settings;
 
         // A clean tree is what makes everything this writes distinguishable from everything the person
         // wrote. A tree git could not answer for is not reported as clean, and is not stopped either.
@@ -669,7 +658,7 @@ public static class Commands
 
         using var take = TemplateSource.Take("update", kac.core.Update.TemplatePath(from, corpusRoot), from,
             request.Ref ?? descriptor.UpstreamRef, request.Path ?? descriptor.UpstreamPath,
-            Path.GetTempPath(), prompt: Out.Interactive && !request.Yes, toolVersion);
+            Path.GetTempPath(), prompt: Asking.Asks(request.Yes, Out.Interactive), toolVersion);
         if (take.Problem is { } unreadable) return Fail(unreadable);
 
         var corpusFiles = kac.core.Update.Listing(corpusRoot);

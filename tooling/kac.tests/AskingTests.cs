@@ -17,6 +17,10 @@ public class AskingTests
     {
         public readonly List<string> Asked = [];
 
+        // What each confirm was offered as its bare-Enter answer. `fallback: false` is what makes Enter
+        // mean "leave it alone" on a question standing in front of a deletion.
+        public readonly List<bool> Fallbacks = [];
+
         public string Text(string question, string fallback)
         {
             Asked.Add(question);
@@ -38,6 +42,7 @@ public class AskingTests
         public bool Confirm(string question, bool fallback = true)
         {
             Asked.Add(question);
+            Fallbacks.Add(fallback);
             return confirm;
         }
     }
@@ -49,6 +54,60 @@ public class AskingTests
     {
         Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None
     };
+
+    // Both ways of having nobody to ask, and the one way of having somebody. Read once per command, so
+    // the two readings a command used to hold cannot disagree.
+    [Theory]
+    [InlineData(false, true, true)]    // a terminal, and nothing answered in advance
+    [InlineData(true, true, false)]    // `--yes` answered everything, terminal or not
+    [InlineData(false, false, false)]  // a pipeline, with nobody at a keyboard
+    [InlineData(true, false, false)]
+    public void Whether_there_is_anybody_to_ask(bool yes, bool interactive, bool asks)
+        => Assert.Equal(asks, Asking.Asks(yes, interactive));
+
+    [Fact]
+    public void A_question_with_a_default_goes_ahead_where_there_is_nobody_to_ask()
+        => Assert.Equal(Consent.Given, Asking.OrDefault(null, "Create it?"));
+
+    [Fact]
+    public void A_question_with_a_default_is_put_to_whoever_is_there()
+    {
+        var asker = new Scripted(confirm: false);
+
+        Assert.Equal(Consent.Withheld, Asking.OrDefault(asker, "Create it?"));
+        Assert.Equal(["Create it?"], asker.Asked);
+    }
+
+    [Fact]
+    public void A_question_standing_in_front_of_a_deletion_stops_a_run_with_nobody_to_ask()
+        => Assert.Equal(Consent.Unattended, Asking.OrRefuse(null, yes: false, "Give up glossary?"));
+
+    // `--yes` is the caller answering in advance, which is the one thing that gets past this unattended.
+    [Fact]
+    public void A_question_standing_in_front_of_a_deletion_takes_yes_in_advance()
+        => Assert.Equal(Consent.Given, Asking.OrRefuse(null, yes: true, "Give up glossary?"));
+
+    [Fact]
+    public void A_question_standing_in_front_of_a_deletion_is_put_to_whoever_is_there()
+    {
+        Assert.Equal(Consent.Withheld,
+            Asking.OrRefuse(new Scripted(confirm: false), yes: false, "Give up glossary?"));
+        Assert.Equal(Consent.Given,
+            Asking.OrRefuse(new Scripted(confirm: true), yes: false, "Give up glossary?"));
+    }
+
+    // Each question is offered the answer a bare Enter gives, and the two kinds differ in it.
+    [Fact]
+    public void A_question_carries_the_answer_a_bare_Enter_gives()
+    {
+        var deletion = new Scripted();
+        Asking.OrRefuse(deletion, yes: false, "Give up glossary?", fallback: false);
+        Assert.Equal([false], deletion.Fallbacks);
+
+        var asked = new Scripted();
+        Asking.OrDefault(asked, "Create it?");
+        Assert.Equal([true], asked.Fallbacks);
+    }
 
     [Fact]
     public void A_flag_given_is_never_asked_for()
