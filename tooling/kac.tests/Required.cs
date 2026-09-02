@@ -47,6 +47,12 @@ internal static class Required
     internal static string Scalar(this Doc doc, string field) =>
         doc.FrontScalar(field) ?? throw new XunitException($"'{doc.Rel}' carries no '{field}'.");
 
+    // The export manifest a test wrote. `Exporter.ReadManifest` answers null for text that is not one,
+    // and a test writing that text is asserting something else.
+    internal static ExportManifest Manifest(string json) =>
+        Exporter.ReadManifest(json)
+        ?? throw new XunitException("The text did not read as an export manifest.");
+
     // JSON a test wrote, or a command under test produced.
     internal static JsonNode Json(string text) =>
         JsonNode.Parse(text) ?? throw new XunitException("Expected JSON, and the text held null.");

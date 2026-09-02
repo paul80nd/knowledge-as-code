@@ -134,7 +134,7 @@ public static class Bundler
                 $"{ManifestFile} names metadata.corpusRoot '{corpusRoot}', and the plugin tree already holds "
                 + $"{clash.Path}. The export is copied there, so one would overwrite the other.");
 
-        var exportManifest = JsonRead.Parse(Text(source.Export, Exporter.ManifestFile));
+        var exportManifest = Exporter.ReadManifest(Text(source.Export, Exporter.ManifestFile));
         if (exportManifest is null)
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
@@ -142,7 +142,7 @@ public static class Bundler
         // A plugin with no name is refused. The name is what a marketplace installs by and what a user
         // types, and it is the corpus's own name rather than a second one to keep in step. Asked of the
         // export, because that is where `Rewrite` takes it from.
-        var pluginName = JsonRead.Str(exportManifest["corpus"]);
+        var pluginName = exportManifest.Corpus;
         if (pluginName is null)
             return Stop(problems,
                 $"the export names no corpus, and that name is what a plugin is installed by. Write "
@@ -151,16 +151,15 @@ public static class Bundler
         // The shape the export declares, held against the shape this build knows how to read. A
         // mismatch is refused, and both numbers are named. `docs/cli/bundle.md` says what a
         // silent one would produce, and how two builds of this tool come to disagree.
-        var declaredFormat = JsonRead.Int(exportManifest["formatVersion"]);
-        if (declaredFormat != Exporter.FormatVersion)
+        if (exportManifest.FormatVersion != Exporter.FormatVersion)
             return Stop(problems,
-                $"the export declares format version {declaredFormat?.ToString() ?? "none"} and this tool reads "
-                + $"version {Exporter.FormatVersion}. Rebuild it: kac export");
+                $"the export declares format version {Declared(exportManifest.FormatVersion)} and this tool "
+                + $"reads version {Exporter.FormatVersion}. Rebuild it: kac export");
 
         // What the export carried and the shape each type is at, which is what decides the trimming
         // below. A type the corpus adopted and exported nothing for is absent here, so a component
         // reading it would find nothing.
-        var carried = Types(exportManifest);
+        var carried = exportManifest.Types;
 
         var declared = Components(JsonRead.Object(manifest["metadata"])?["components"]);
         var included = new List<PluginComponent>();
@@ -179,7 +178,7 @@ public static class Bundler
             {
                 var (type, shape) = Need(entry);
                 var held = carried.FirstOrDefault(c => string.Equals(c.Type, type, StringComparison.Ordinal));
-                if (held.Type is null)
+                if (held is null)
                 {
                     missing.Add(type);
                     continue;
@@ -190,9 +189,9 @@ public static class Bundler
                 if (!int.TryParse(shape, out var wanted))
                     problems.Add($"{ManifestFile} declares '{component.Path}' against '{entry}', and a shape "
                                  + "version is a whole number. Write it as '<type>@<version>'.");
-                else if (wanted != held.Shape)
+                else if (wanted != held.ShapeVersion)
                     problems.Add($"{ManifestFile} declares '{component.Path}' against '{type}' shape version "
-                                 + $"{wanted}, and the export carries version {held.Shape}. Write the component "
+                                 + $"{wanted}, and the export carries version {held.ShapeVersion}. Write the component "
                                  + "against the shape the export carries, or bundle an export built at "
                                  + $"version {wanted}.");
             }
@@ -218,7 +217,7 @@ public static class Bundler
 
         // The plugin's version is the corpus content version, taken from the export.
         // `docs/cli/bundle.md` says why, and why the format version stays put.
-        var version = JsonRead.Str(exportManifest["contentVersion"]);
+        var version = exportManifest.ContentVersion;
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin manifest carries no version "
                          + "and nothing will install it. Set content-version in .corpus.yaml.");
@@ -251,8 +250,8 @@ public static class Bundler
             Serialize(new BundleRecord(
                 RecordVersion, pluginName, version ?? JsonRead.Str(manifest["version"]), corpusRoot,
                 new BundleExport(
-                    JsonRead.Int(exportManifest["formatVersion"]), JsonRead.Str(exportManifest["corpus"]),
-                    JsonRead.Str(exportManifest["contentVersion"]), [.. carried.Select(c => c.Type)]),
+                    exportManifest.FormatVersion, exportManifest.Corpus,
+                    exportManifest.ContentVersion, [.. carried.Select(c => c.Type)]),
                 [.. included.Select(c => new BundleIncluded(c.Path, c.Requires, c.Note))],
                 [.. trimmed.Select(t => new BundleTrimmed(t.Path, t.Requires, t.Reason))]))));
 
@@ -337,41 +336,39 @@ public static class Bundler
     // write keys this tool has never heard of, and reading it into a shape known here would delete them
     // without a word.
     private static JsonObject Rewrite(
-        JsonObject manifest, JsonObject exportManifest, string? version, List<PluginComponent> included)
+        JsonObject manifest, ExportManifest exportManifest, string? version, List<PluginComponent> included)
     {
         var copy = (JsonObject)manifest.DeepClone();
         if (version is not null) copy["version"] = version;
 
-        var about = JsonRead.Object(exportManifest["about"]);
-        var name = JsonRead.Str(exportManifest["corpus"]);
+        var about = exportManifest.About;
+        var name = exportManifest.Corpus;
         if (name is not null) copy["name"] = name;
 
-        State(copy, "displayName", JsonRead.Str(about?["displayName"]));
-        State(copy, "license", JsonRead.Str(about?["license"]));
+        State(copy, "displayName", about.DisplayName);
+        State(copy, "license", about.License);
 
         // A corpus naming nobody is filed under its own name, as `Packer.Nuspec` files one under its own
         // id and for the same reason: the field is asked for, and the honest answer to "who wrote this"
         // is the corpus rather than whoever wrote the template it copied. A licence is not asked for, so
         // a corpus that chose none asserts none.
-        Set(copy, "author",
-            JsonRead.Object(about?["author"])?.DeepClone()
-            ?? (name is null ? null : new JsonObject { ["name"] = name }));
+        Set(copy, "author", Author(about.Author) ?? (name is null ? null : new JsonObject { ["name"] = name }));
 
         // Both name the same place, which is where the corpus's source lives. A plugin manifest asks for
         // them separately and the export states it once.
-        var home = JsonRead.Str(JsonRead.Object(exportManifest["publishing"])?["base"]);
+        var home = exportManifest.Publishing.Base;
         State(copy, "homepage", home);
         State(copy, "repository", home);
 
         // Said by the corpus where it said anything, and otherwise a sentence naming what a reader is
         // installing. A description is what a marketplace lists, so leaving none is worse than a plain one.
         State(copy, "description",
-            JsonRead.Str(about?["description"])
+            about.Description
             ?? (name is null ? null : $"The {name} knowledge corpus, and the skills that read it."));
 
         // The types the export actually carried, so a plugin never advertises a type its corpus declined.
         // The framework's own name leads, because that is what somebody searches a marketplace for.
-        var keywords = Types(exportManifest).Select(t => t.Type).ToList();
+        var keywords = exportManifest.Types.Select(t => t.Type).ToList();
         Set(copy, "keywords",
             keywords.Count == 0
                 ? null
@@ -420,6 +417,17 @@ public static class Bundler
         else manifest[key] = value;
     }
 
+    // A manifest stating no version reads as zero, which no export has ever declared. Named as the
+    // absence it is, because a reader told an export declares version 0 would go looking for one.
+    private static string Declared(int version) => version == 0 ? "none" : version.ToString();
+
+    // The author as a plugin manifest states one, or null where the corpus named nobody.
+    //
+    // Both keys are written whether or not the corpus filled them, which is what the export states and
+    // what a reader of either document sees. A corpus naming a person and no address says so in both.
+    private static JsonObject? Author(ExportAuthor? author) =>
+        author is null ? null : new JsonObject { ["name"] = author.Name, ["url"] = author.Url };
+
     private static void State(JsonObject manifest, string key, string? value) =>
         Set(manifest, key, value is { Length: > 0 } said ? JsonValue.Create(said) : null);
 
@@ -449,23 +457,6 @@ public static class Bundler
     // correct.
     private static string? Owner(JsonObject manifest) =>
         JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
-
-    // The types the export carried and the shape each is at, read off its manifest in the order it
-    // lists them. A type that contributed no record is absent from that list.
-    //
-    // A type stating no shape reads as version 0, which no type declares, so a component naming a
-    // version against it is refused rather than matched by accident.
-    private static List<(string Type, int Shape)> Types(JsonObject exportManifest)
-    {
-        var types = new List<(string, int)>();
-        if (exportManifest["types"] is not JsonArray declared) return types;
-
-        foreach (var node in declared)
-            if (JsonRead.Object(node) is { } entry && JsonRead.Str(entry["type"]) is { } key)
-                types.Add((key, JsonRead.Int(entry["shapeVersion"]) ?? 0));
-
-        return types;
-    }
 
     // A `requires` entry split into the type and the shape version the component reads it at, which is
     // null where the entry names none. A bare `glossary` needs a glossary in the export and opens none

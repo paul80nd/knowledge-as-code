@@ -1,5 +1,3 @@
-using System.Text.Json.Nodes;
-
 namespace kac.core;
 
 // One type of a consumed corpus, as that corpus published it.
@@ -88,89 +86,32 @@ public static class Inherited
     private static InheritedCorpus? One(
         string shortcode, Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
     {
-        if (read($"{shortcode}/{Exporter.ManifestFile}") is not { } text) return null;
-        if (JsonRead.Parse(text) is not { } manifest) return null;
+        if (Exporter.ReadManifest(read($"{shortcode}/{Exporter.ManifestFile}")) is not { } manifest) return null;
 
         var types = new List<InheritedType>();
 
-        foreach (var declared in manifest["types"] as JsonArray ?? [])
-        {
-            var entry = JsonRead.Object(declared);
-            if (JsonRead.Str(entry?["type"]) is not { } key) continue;
-            if (JsonRead.Str(entry?["dir"]) is not { } dir) continue;
-
-            var partsFile = JsonRead.Str(entry?["partsFile"]);
-
+        foreach (var declared in manifest.Types)
             types.Add(new InheritedType(
-                key,
-                JsonRead.Int(entry?["shapeVersion"]) ?? 0,
-                dir,
-                partsFile,
-                JsonRead.Str(entry?["recordKey"]),
-                JsonRead.Str(entry?["partKey"]),
-                JsonRead.Str(entry?["idKey"]),
-                JsonRead.Str(entry?["seeAlsoKey"]),
-                Fidelities(entry?["sections"]),
-                Lines(partsFile is null ? null : read($"{shortcode}/{partsFile}")),
-                RecordsIn(shortcode, dir, partsFile, names, read)));
-        }
+                declared.Type,
+                declared.ShapeVersion,
+                declared.Dir,
+                declared.PartsFile,
+                declared.RecordKey,
+                declared.PartKey,
+                declared.IdKey,
+                declared.SeeAlsoKey,
+                declared.Sections,
+                Lines(declared.PartsFile is null ? null : read($"{shortcode}/{declared.PartsFile}")),
+                RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, read)));
 
         return new InheritedCorpus(
             shortcode,
-            JsonRead.Int(manifest["formatVersion"]) ?? 0,
-            JsonRead.Str(manifest["corpus"]),
-            JsonRead.Str(manifest["contentVersion"]),
-            Addresses(JsonRead.Object(manifest["publishing"])),
-            SourcesIn(manifest["sources"]),
+            manifest.FormatVersion,
+            manifest.Corpus,
+            manifest.ContentVersion,
+            manifest.Publishing,
+            manifest.Sources,
             types);
-    }
-
-    // The corpora the producer inherited, carried forward whole. Each names the corpus that wrote the
-    // records rather than the one this corpus fetched them through, which is what a line's `shortcode`
-    // has to key into.
-    private static List<ExportSource> SourcesIn(JsonNode? sources)
-    {
-        var read = new List<ExportSource>();
-
-        foreach (var node in sources as JsonArray ?? [])
-        {
-            var entry = JsonRead.Object(node);
-            if (JsonRead.Str(entry?["shortcode"]) is not { } shortcode) continue;
-
-            read.Add(new ExportSource(
-                shortcode,
-                JsonRead.Str(entry?["corpus"]),
-                JsonRead.Str(entry?["contentVersion"]),
-                Addresses(JsonRead.Object(entry?["publishing"]))));
-        }
-
-        return read;
-    }
-
-    // How the producer publishes, carried through as it wrote it. A key it did not write reads as absent
-    // rather than as this corpus's own value, because a borrowed address resolves somewhere wrong rather
-    // than nowhere.
-    private static ExportPublishing Addresses(JsonObject? publishing) =>
-        new(
-            JsonRead.Str(publishing?["target"]) ?? Publishing.None,
-            JsonRead.Str(publishing?["humanTemplate"]),
-            JsonRead.Str(publishing?["base"]),
-            JsonRead.Str(publishing?["pathPrefix"]),
-            JsonRead.Str(publishing?["ref"]));
-
-    // The fidelity each section travelled at, as the producer stated it. Read so a consumer can refuse a
-    // merge where the two corpora carried one type's sections differently, rather than publishing a file
-    // whose halves promise different things.
-    private static Dictionary<string, string> Fidelities(JsonNode? sections)
-    {
-        var read = new Dictionary<string, string>(StringComparer.Ordinal);
-        if (sections is not JsonObject map) return read;
-
-        foreach (var (name, fidelity) in map)
-            if (JsonRead.Str(fidelity) is { } value)
-                read[name] = value;
-
-        return read;
     }
 
     // A parts file as its lines, with the blank one a trailing newline leaves taken out. Nothing here
