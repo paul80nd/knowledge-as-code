@@ -14,6 +14,6 @@
     "Exceptions": "Exploratory analysis that nobody else acts on falls outside the Scope above rather than being excepted. It comes into scope the moment its output informs a decision or feeds another system, which is usually before anyone notices.\n\nRelying on a derived output that has no stated expectations requires a recorded deviation under [pol-DEVI], naming who accepts a wrong answer reaching a decision. \"The numbers have always looked about right\" is not a check."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/delivery/derv-derived-data-is-verified.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/engineering/policies/delivery/derv-derived-data-is-verified.md"
   }
 }

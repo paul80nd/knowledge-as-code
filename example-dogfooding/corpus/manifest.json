@@ -4,9 +4,9 @@
   "shortcode": "dog",
   "contentVersion": "0.4.0",
   "mechanismVersion": 5,
-  "commit": "0530689e43cf749151c64b2434f849d582487859",
+  "commit": "50b67e5a416683611da3c648a5199f7258bde672",
   "dirty": false,
-  "generatedAt": "2026-09-02T18:13:21Z",
+  "generatedAt": "2026-09-02T18:25:13Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "0530689e43cf749151c64b2434f849d582487859"
+    "ref": "50b67e5a416683611da3c648a5199f7258bde672"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.8.1",
+      "contentVersion": "0.9.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "0530689e43cf749151c64b2434f849d582487859"
+        "ref": "50b67e5a416683611da3c648a5199f7258bde672"
       }
     }
   ],
@@ -73,7 +73,7 @@
       "type": "policies",
       "shapeVersion": 2,
       "records": 22,
-      "parts": 203,
+      "parts": 207,
       "dir": "policies",
       "partsFile": "policies/clauses.jsonl",
       "recordKey": "record",

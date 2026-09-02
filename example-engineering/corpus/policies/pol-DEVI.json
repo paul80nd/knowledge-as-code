@@ -14,6 +14,6 @@
     "Exceptions": "None. Departing from this policy means not recording a deviation, which is the one thing it exists to stop.\n\nSome commitments admit no deviation at all, and no record makes any of them acceptable:\n\n* [pol-SCRT] forbids embedding a secret, reusing a production secret outside production, or writing one to a log. Its\n  four operational obligations are deviable; those three prohibitions are not.\n* [pol-DATA] requires handling personal data on a lawful basis. Its other obligations are deviable.\n* [pol-KNOW] requires writing down what is needed to build, run and recover a system. The effort is proportionate to the\n  system. The commitment does not vary.\n* [pol-AGNT] sets the acceptance gate. Agent-produced work carries no authority until a person accepts it, and\n  convenience does not make it authoritative.\n* [pol-INCR] requires recording a significant incident, and recording a personal data breach whether or not it is\n  notifiable.\n* This policy, for the reason given above."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0530689e43cf749151c64b2434f849d582487859/examples/engineering/policies/governance/devi-deviations-are-recorded.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/50b67e5a416683611da3c648a5199f7258bde672/examples/engineering/policies/governance/devi-deviations-are-recorded.md"
   }
 }
