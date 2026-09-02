@@ -163,7 +163,8 @@ certifiable.
 
 It puts a recognised shape on what [pol-TRUS] already asks for. `TRACE` wants a deployed artefact followed back to the
 build that produced it, which is what Build L1 provenance is for. `ATTEST` wants that provenance signed, which is L2.
-`ATTEST` is a COULD, so the corpus states the ambition and does not yet hold itself to it.
+`ATTEST` is a SHOULD, so a build that cannot prove where an artefact came from needs a reason rather than a
+deviation.
 
 SPDX and CycloneDX are formats for exchanging an inventory rather than rules about what one holds, so `INVENT` cites
 neither and names no format.
