@@ -35,10 +35,9 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 
 ### A pin names an exact version
 
-- A dependency **MUST** name one version: a `PackageReference`, a line in `docs/requirements.txt`, or an action's
-  commit SHA.
+- A dependency **MUST** name one version, as a `PackageReference` does and as a line in `docs/requirements.txt` does.
 - `.github/dependabot.yml` **MUST** name every directory holding a manifest that builds this repository.
-- Every ecosystem it tracks **MUST** carry a `schedule:`, so a component is looked at again after we adopt it.
+- Every ecosystem it tracks **MUST** carry a `schedule:`.
 - Packages that only move as a set **MUST** be raised as one grouped update.
 - A manifest Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
 
@@ -46,13 +45,13 @@ _**Covers:** `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.REVIEW`, `eng:pol-TRUS.SOURCE`
 
 ### A file says what it is for, and why each value is what it is
 
-- A YAML file **MUST** open with a comment saying what it is for, or with the `# yaml-language-server: $schema=` line
-  naming what describes it.
+- A configuration file **MUST** open with a comment saying what it is for, or with the
+  `# yaml-language-server: $schema=` line naming what describes it.
 - A comment **MUST** give the reason a value is what it is.
 - A comment **MUST NOT** restate the value beside it.
-- A comment **SHOULD** run to one line where one line carries the reason.
+- Where one line carries the reason, a comment **SHOULD** run to one line.
 - A date **MUST** be quoted.
-- A YAML file **MUST** indent by two spaces.
+- A configuration file **MUST** indent by two spaces.
 - A flow sequence **MUST** be written `[a, b]`, which `.editorconfig` sets.
 - A change to a configuration file **MUST** take the review a change to code takes.
 
@@ -61,11 +60,12 @@ _**Covers:** `eng:pol-EVER.PARITY`_
 ### A value living in more than one tree is copied and proved
 
 - A setting every project under `tooling/` takes **MUST** sit in `tooling/Directory.Build.props`.
-- A file `manifest.yaml` names **MUST** be copied by hand into `template/` and into each corpus under `examples/`.
-- `kac update --check --from ../../` **MUST** pass in every corpus after that copy.
-- `.schema/` and `template/.plugin/` **MUST** be read where they are authored, and copied into no corpus here.
-- A corpus's own configuration **MUST** stay in that corpus, and the package `kac pack` seals **MUST NOT** carry
-  another corpus's.
+- You **MUST** copy a file `manifest.yaml` names into `template/` and into each corpus under `examples/`.
+- You **MUST** run `kac update --check --from ../../` in every corpus after that copy.
+- You **MUST** read `.schema/` and `template/.plugin/` where they are authored.
+- You **MUST NOT** copy either of those two trees into a corpus here.
+- A corpus's own configuration **MUST** stay in that corpus.
+- The package `kac pack` seals **MUST NOT** carry another corpus's configuration.
 
 _**Covers:** `eng:pol-PIPE.CONFIG`_
 
@@ -73,30 +73,37 @@ _**Covers:** `eng:pol-PIPE.CONFIG`_
 
 ```
 ✅ Good
+# in .github/dependabot.yml
 # MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
 - package-ecosystem: pip
   directory: /docs
   schedule:
     interval: weekly
 
+# in docs/requirements.txt
 mkdocs==1.6.1
 mkdocs-material==9.7.7
 
-review-by: "2027-09-02"
+# in .corpus.yaml
+taken-on: "2026-09-01"
 
 ❌ Avoid
+# in .github/dependabot.yml
 # The pip ecosystem.
 - package-ecosystem: pip
   directory: /docs
 
+# in docs/requirements.txt
 mkdocs
 mkdocs-material
 
-review-by: 2027-09-02
+# in .corpus.yaml
+taken-on: 2026-09-01
 ```
 
-The avoided comment names the key underneath it and says nothing a reader could not see. An unpinned requirement
-changes the site on a day nobody chose. The unquoted date arrives as a datetime, and renders with a timezone shift.
+The avoided comment names the key underneath it and says nothing a reader could not see. The ecosystem carries no
+schedule, so nothing looks at those two packages again. An unpinned requirement changes the site on a day nobody
+chose. The unquoted date arrives as a datetime, and renders with a locale format and a timezone shift.
 
 ## Conformance checklist
 
@@ -109,11 +116,13 @@ changes the site on a day nobody chose. The unquoted date arrives as a datetime,
 
 ## Rationale and provenance
 
-The tool walks up for a `.corpus.yaml` to find the corpus, and up again for `.schema/` to find what to judge it
-against. Both walks read files, so a corpus is portable and a checkout is enough to reproduce a run.
+The tool finds the corpus by walking up for a `.corpus.yaml`, and finds what to judge it against by walking up for
+`.schema/`. Both walks read committed files, which is why a checkout is enough to reproduce a run and why the first
+rule above is the one the rest stand on.
 
-Nothing here checks a comment, an indent or a pin. `kac update --check` compares the overlay copies in both
-directions, and it is the one rule on this page a command answers. The rest is what a reviewer is reading for.
+`kac update --check` compares the overlay copies in both directions, and it is the one rule on this page a command
+answers. Nothing checks a comment, an indent, a quoted date in a configuration file, or a pin. The `date-quoted` check
+reaches a record's frontmatter and stops there. The rest is what a reviewer is reading for.
 
 `.github/workflows/` and the release are [std-CI]'s. This standard reaches the files those workflows read.
 

@@ -51,7 +51,7 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 - A step in `.github/workflows/` **MUST** pin its action to a commit SHA.
 - A pinned step **MUST** carry the released version in a trailing comment, as `# v7.0.1`.
-- `.github/dependabot.yml` **MUST** track `github-actions`, so a pin moves through a reviewed pull request.
+- `.github/dependabot.yml` **MUST** track `github-actions`.
 - A job holding a write permission **MUST NOT** install a tool at a moving version.
 - A workflow needing a tool at `latest` **MUST** install it in a job holding `contents: read`.
 
@@ -59,7 +59,7 @@ _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 
 ### A workflow holds no credential of its own
 
-- A workflow **MUST NOT** carry a key, a token or a password in its text.
+- A workflow **MUST** take every credential from GitHub's secret store or from an identity it exchanged.
 - A publish to nuget.org **MUST** authenticate through a trusted publishing policy naming this repository, this
   workflow file and the `nuget.org` environment.
 - A job **MUST** exchange its own identity for a short-lived key in the step before the one that spends it.
@@ -78,7 +78,8 @@ _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `
 - The publishing job **MUST** build what it publishes from that commit.
 - The publishing job **MUST** declare `timeout-minutes`.
 - A workflow publishing a version **MUST** declare a `concurrency` group that queues rather than cancels.
-- A workflow writing to a branch **MUST** assert that the worktree tracks no file before it stages one.
+- A workflow writing to a branch **MUST** empty its worktree, and **MUST** prove `git ls-files` returns nothing
+  there before it stages a file.
 - A person **MUST NOT** edit a published branch, package or release by hand.
 
 _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
@@ -88,7 +89,7 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 - `<Version>` in `tooling/kac/kac.csproj` **MUST** move in the pull request carrying the change it ships.
 - `content-version` in a corpus's `.corpus.yaml` **MUST** move in the pull request changing what that corpus knows.
 - A publishing job **MUST** ask the registry whether it already holds the version in front of it.
-- A publishing job **MUST** finish green where the registry holds that version already.
+- Where the registry holds that version already, a publishing job **MUST** finish green.
 - A publish to nuget.org **MUST** wait for a person to approve the `nuget.org` environment.
 - A publish to nuget.org **MUST** tag the commit it published from.
 - The release notes **MUST** be that version's section of `tooling/kac/CHANGELOG.md`.
@@ -146,10 +147,9 @@ for six hours when a push hangs. A tag moves, so `@v7` is a different action tom
 Read-only permission is what keeps CI out of the files a person edits. `generate --check` reports a stale generated
 file and names the command to run locally, so no job needs to write one back.
 
-`WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. A job the branch rule cannot reach
-still runs and still reports, and blocks nothing, which shows neither in the workflow file nor on the pull request.
-Nothing else here reads a workflow, so review is what holds the rest, and the drift between `.azuredevops/kac.yml` and
-its GitHub twin is caught by a reader alone.
+`WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name, and its header comment says why a
+job outside the gate is invisible. Nothing else here reads a workflow, so review is what holds the rest, and a reader
+is the only thing that catches `.azuredevops/kac.yml` drifting from its GitHub twin.
 
 The timeout rule reaches the publishing jobs, where a hang parks a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, which is what makes a release body available to the tag step.
