@@ -1,0 +1,7 @@
+# What the `lint` job in workflows/kac.yml installs. Pinned, as that workflow pins its actions to a
+# commit: a linter release changes what the gate rejects when we take it, not on its own. Dependabot
+# moves this.
+#
+# actionlint sits beside it and is not here: it is a Go binary with no pip package, so the job pins
+# its version in the `go install` line and the header there says what it pins today.
+yamllint==1.38.0

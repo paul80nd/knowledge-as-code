@@ -163,6 +163,26 @@ steps:
       TEMPDIR: $(Agent.TempDirectory)
       SOURCES: $(Build.SourcesDirectory)
 
+  # The GitHub twin runs these as a `lint` job. Here they are two steps in the flat list, because a
+  # flat step list cannot run jobs in parallel. `.yamllint` at the root carries the overrides both
+  # take on top of yamllint's `default` ruleset, and actionlint runs with its own defaults.
+  #
+  # actionlint ships no manifest Dependabot reads, so its version is pinned here and moved by hand,
+  # and the same pin sits in ../.github/workflows/kac.yml. It is v1.7.12 today.
+  - script: |
+      set -e
+      python3 -m pip install --quiet --disable-pip-version-check -r .github/requirements.txt
+      python3 -m yamllint --strict .
+    displayName: Check every YAML file
+    workingDirectory: $(Build.SourcesDirectory)
+
+  - script: |
+      set -e
+      go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+      "$(go env GOPATH)"/bin/actionlint
+    displayName: Check the workflows
+    workingDirectory: $(Build.SourcesDirectory)
+
   # tooling/README.md#tests says what each layer covers and why all three are here.
   - script: dotnet test tooling/kac.tests
     displayName: Run kac.core unit tests

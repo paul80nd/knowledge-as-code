@@ -223,6 +223,45 @@ jobs:
           "$SOURCES/.dist/tools/kac" validate
           "$SOURCES/.dist/tools/kac" generate --check
 
+  # How a YAML file and a workflow are written, checked by the two linters this repository defers to
+  # rather than by rules of its own. `.yamllint` at the root carries the four overrides it takes on top
+  # of yamllint's `default` ruleset, and actionlint runs with its own defaults. std-CONFIG and std-CI in
+  # examples/dog-fooding are the standards these two answer.
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Python 3.13
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Install Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: stable
+
+      # actionlint ships no manifest Dependabot reads, so its version is pinned here and moved by hand.
+      # It is v1.7.12 today. yamllint's pin is in .github/requirements.txt, which Dependabot does move.
+      - name: Install the linters
+        run: |
+          pip install -r .github/requirements.txt
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+
+      # --strict, because `comments`, `comments-indentation` and `truthy` are warning-level in the
+      # default ruleset, and a warning that fails nothing is a warning nobody reads. `.yamllint` reads
+      # .gitignore, so this walks the same files a fresh checkout holds.
+      - name: Check every YAML file
+        run: yamllint --strict .
+
+      # The runner carries shellcheck, so actionlint puts every `run:` block through it as well as
+      # checking the workflow itself.
+      - name: Check the workflows
+        run: |
+          "$(go env GOPATH)"/bin/actionlint
+
   # The one name the branch rule on `main` requires, and it does no work. Three of the jobs it gathers are
   # matrices. `corpora` reports as `corpora (library)` and two more rather than as `corpora`, and a rule
   # naming a matrix job waits for a check that never arrives. Gathering every job behind one name keeps
@@ -234,6 +273,7 @@ jobs:
     needs:
       - corpora
       - tool
+      - lint
       - docs
       - round-trip
       - import-round-trip
@@ -242,9 +282,8 @@ jobs:
       - name: Report that the gate passed
         run: echo "every job passed."
 
-  # The documentation site, built the way publish-docs.yml builds it. A job of its own because it
-  # needs Python and nothing else here does, and `strict:` in mkdocs.yml is what makes a dead link
-  # or an unreachable page fail rather than warn.
+  # The documentation site, built the way publish-docs.yml builds it. A job of its own because
+  # `strict:` in mkdocs.yml is what makes a dead link or an unreachable page fail rather than warn.
   docs:
     runs-on: ubuntu-latest
     steps:

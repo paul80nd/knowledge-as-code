@@ -21,7 +21,9 @@ tags: [ continuous-integration, github-actions, publishing ]
 
 One workflow gates a pull request. The others publish what landed: the tool to nuget.org, each corpus to GitHub
 Packages, the plugins to the `marketplace` branch, and the site to GitHub Pages. A job says what it may do before it
-does it, pins the actions it runs, and holds no credential of its own.
+does it, pins the actions it runs, and holds no credential of its own. Those three are [OpenSSF Scorecard]'s
+`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks, and [actionlint] holds the rest of how a
+workflow is written.
 
 ## Rules
 
@@ -31,6 +33,7 @@ does it, pins the actions it runs, and holds no credential of its own.
 - `kac.yml` **MUST** name every one of its jobs in the `needs:` of its `validate` job.
 - The branch rule on `main` **MUST** name `validate` as the check a merge waits for.
 - A job **MUST NOT** declare `continue-on-error`.
+- A workflow **MUST** pass `actionlint`, which also puts every `run:` block through shellcheck.
 - A workflow file **MUST** arrive on `main` by the same reviewed merge as any other change.
 - `.azuredevops/kac.yml` **MUST** run the same steps, in the same order, as `.github/workflows/kac.yml`.
 - `.azuredevops/kac.yml` **MUST** name in its own header comment each step it leaves out, and why.
@@ -40,7 +43,8 @@ _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.BRANCH`, 
 
 ### A job declares the permission it needs
 
-- A workflow **MUST** declare `permissions: contents: read` at its top level.
+- A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard]'s
+  `Token-Permissions` check asks for.
 - A job needing wider access **MUST** declare that permission on itself.
 - A job **MUST NOT** hold a permission no step in it uses.
 - A workflow **MUST NOT** commit to a branch a person edits.
@@ -49,7 +53,8 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 ### Every action is pinned to a commit
 
-- A step in `.github/workflows/` **MUST** pin its action to a commit SHA.
+- A step in `.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s
+  `Pinned-Dependencies` check asks for.
 - A pinned step **MUST** carry the released version in a trailing comment, as `# v7.0.1`.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
 - A job holding a write permission **MUST NOT** install a tool at a moving version.
@@ -134,6 +139,7 @@ for six hours when a push hangs. A tag moves, so `@v7` is a different action tom
 
 ## Conformance checklist
 
+- [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
 - [ ] Every `uses:` names a commit SHA and carries its released version in a trailing comment.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
@@ -148,8 +154,9 @@ Read-only permission is what keeps CI out of the files a person edits. `generate
 file and names the command to run locally, so no job needs to write one back.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name, and its header comment says why a
-job outside the gate is invisible. Nothing else here reads a workflow, so review is what holds the rest, and a reader
-is the only thing that catches `.azuredevops/kac.yml` drifting from its GitHub twin.
+job outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. What neither answers is a
+permission nobody uses, a credential in the wrong place, or `.azuredevops/kac.yml` drifting from its GitHub twin, so a
+reader is what catches those.
 
 The timeout rule reaches the publishing jobs, where a hang parks a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, which is what makes a release body available to the tag step.
@@ -163,8 +170,12 @@ belongs to whichever corpus receives it, and it names `actions/checkout@v4` toda
 
 ## Sources and further reading
 
-- **Normative.** [Security hardening for GitHub Actions] sets the baseline for pinning an action, scoping a token and
-  handling a secret.
+- **Normative.** [OpenSSF Scorecard] defines `Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow`, the
+  three checks the permission and pinning rules above answer.
+- **Normative.** [actionlint] sets how a workflow is written. It runs with its own defaults here, and this standard
+  adds what a linter reading one file cannot see.
+- **Normative.** [Security hardening for GitHub Actions] is what Scorecard's three checks operationalise, and it
+  carries the reasoning behind each.
 - **Normative.** [Trusted publishing on nuget.org] defines the policy this repository's publish authenticates against.
 - **Informative.** [Semantic Versioning 2.0.0] is the grammar both `<Version>` and `content-version` are read under.
 
@@ -172,6 +183,8 @@ belongs to whichever corpus receives it, and it names `actions/checkout@v4` toda
 
 - 2026-09-02: initial version.
 
+[OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md
 [Security hardening for GitHub Actions]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
 [Semantic Versioning 2.0.0]: https://semver.org
 [Trusted publishing on nuget.org]: https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
+[actionlint]: https://github.com/rhysd/actionlint

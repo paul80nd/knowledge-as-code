@@ -212,7 +212,7 @@ rules:
   # It seeds, so a file added to `template/` and classified by nothing is the corpus's from the moment it
   # arrives. That is the safe way round here: a corpus's own edit is never overwritten by a file nobody
   # thought about, and every template file reaches a corpus whether or not a rule was written for it.
-  - { path: "template/**", to: "", layer: seed }
+  - {path: "template/**", to: "", layer: seed}
 
   # Everything this repository holds and no corpus receives: the tool, the three test layers, the
   # documentation site, the worked corpora under `examples/`, and the repository's own CI and licence.
@@ -220,4 +220,4 @@ rules:
   # This catch-all withholds, where the one above it seeds. The rules name the whole repository, so a
   # file outside `template/` that nobody classified is far more likely to be this repository's own than
   # a corpus's, and silence has to mean "stays here".
-  - { path: "**", layer: withheld }
+  - {path: "**", layer: withheld}

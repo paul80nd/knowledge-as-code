@@ -42,9 +42,10 @@ ij_markdown_format_tables = true
 [*.{yaml,yml}]
 indent_size = 2
 
-# A flow sequence is written `[a, b]`. One form across the repository, so a file does not
-# reformat on its way from one folder to another.
+# A flow sequence is written `[a, b]` and a flow mapping `{a: b}`, which is what yamllint's
+# `brackets` and `braces` rules check in CI. Set here so a save does not fight the lint job.
 ij_yaml_spaces_within_brackets = false
+ij_yaml_spaces_within_braces = false
 
 [*.json]
 indent_size = 2
