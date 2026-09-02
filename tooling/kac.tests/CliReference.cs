@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using kac.core;
 using Xunit.Sdk;
 
 namespace kac.tests;
@@ -24,15 +25,16 @@ internal static partial class CliReference
 
     private static readonly Lazy<IReadOnlyList<Verb>> Model = new(Read);
 
-    internal static string BeginMarker(string block) => $"<!-- BEGIN GENERATED: {block} -->";
-    internal static string EndMarker(string block) => $"<!-- END GENERATED: {block} -->";
-
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
 
     // A command page opens `# `verb` what running it does`, and the overview's table is built from both halves.
     [GeneratedRegex(@"^# `(?<verb>[a-z]+)` (?<does>.+)$")]
     private static partial Regex PageHeading();
+
+    // The first heading of a page, under which a missing marker pair is inserted.
+    [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
+    private static partial Regex Heading();
 
     // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
@@ -52,20 +54,14 @@ internal static partial class CliReference
                     $"kac.tests: docs/cli/{page}.md opens on no `# `verb` what running it does` heading.");
 
             var does = heading.Groups["does"].Value.TrimEnd('.');
-            return (Command: Cell($"[`{page}`]({page}.md)"),
-                Does: Cell(char.ToUpperInvariant(does[0]) + does[1..] + "."));
+            return new List<string>
+            {
+                Generator.Escape($"[`{page}`]({page}.md)"),
+                Generator.Escape(char.ToUpperInvariant(does[0]) + does[1..] + ".")
+            };
         }).ToList();
 
-        var left = Math.Max("Command".Length, rows.Max(r => r.Command.Length));
-        var right = Math.Max("What it does".Length, rows.Max(r => r.Does.Length));
-
-        var table = new StringBuilder();
-        table.Append($"| {"Command".PadRight(left)} | {"What it does".PadRight(right)} |\n");
-        table.Append($"|{new string('-', left + 2)}|{new string('-', right + 2)}|\n");
-        foreach (var row in rows)
-            table.Append($"| {row.Command.PadRight(left)} | {row.Does.PadRight(right)} |\n");
-
-        return table.ToString();
+        return Generator.RenderTable(["Command", "What it does"], rows);
     }
 
     // The block body for one verb: the invocation it accepts, then a row per option.
@@ -78,28 +74,54 @@ internal static partial class CliReference
             invocation.Append(option.Required ? $" {flag}" : $" [{flag}]");
         }
 
-        var block = new StringBuilder();
-        block.Append("```text\n").Append(invocation).Append("\n```\n");
-
-        if (verb.Options.Count == 0) return block.ToString();
+        var usage = $"```text\n{invocation}\n```";
+        if (verb.Options.Count == 0) return usage;
 
         var rows = verb.Options
-            .Select(o => (Option: Cell(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
-                Does: Cell(o.Description)))
+            .Select(o => new List<string>
+            {
+                Generator.Escape(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
+                Generator.Escape(o.Description)
+            })
             .ToList();
 
-        // Fixed column widths, as the corpus generator writes them. A description that changes length then moves one
-        // row and leaves the rest of the table alone.
-        var left = Math.Max("Option".Length, rows.Max(r => r.Option.Length));
-        var right = Math.Max("What it does".Length, rows.Max(r => r.Does.Length));
+        return $"{usage}\n\n{Generator.RenderTable(["Option", "What it does"], rows)}";
+    }
 
-        block.Append('\n');
-        block.Append($"| {"Option".PadRight(left)} | {"What it does".PadRight(right)} |\n");
-        block.Append($"|{new string('-', left + 2)}|{new string('-', right + 2)}|\n");
-        foreach (var row in rows)
-            block.Append($"| {row.Option.PadRight(left)} | {row.Does.PadRight(right)} |\n");
+    // The page carrying `body` in the block called `name`. `Generator.SpliceBlock` writes it, so a page of
+    // the documentation and a page a corpus holds are filled by one piece of code.
+    //
+    // A page that has never carried the block is given an empty pair of markers under its first heading,
+    // which is what a command page added to `docs/cli/` arrives as.
+    //
+    // A block that opens and never closes stops the run instead. `SpliceBlock` hands back a page it could
+    // not splice untouched, and an untouched page is what the caller reads as up to date, so the block
+    // would freeze where it stood. Writing a second pair above it is worse again: the orphan and the
+    // content under it stay on the page, and `Generator.Authored` reads everything past an unmatched
+    // marker as prose somebody wrote. Which of the two markers went is a question for whoever deleted one.
+    internal static string Replaced(string page, string name, string body)
+    {
+        var begin = Generator.Begin(name);
+        var end = Generator.End(name);
+        var from = page.IndexOf(begin, StringComparison.Ordinal);
 
-        return block.ToString();
+        if (from >= 0 && page.IndexOf(end, from, StringComparison.Ordinal) < 0)
+            throw new XunitException(
+                $"kac.tests: the block '{name}' opens and never closes. Put its '{end}' line back, or "
+                + $"delete its '{begin}' line and let the block be written again.");
+
+        if (from < 0)
+        {
+            var heading = Heading().Match(page);
+            if (!heading.Success)
+                throw new XunitException(
+                    $"kac.tests: the page carrying '{name}' has no heading to put a generated block under.");
+
+            var at = heading.Index + heading.Length;
+            page = page[..at] + $"\n\n{begin}\n{end}" + page[at..];
+        }
+
+        return Generator.SpliceBlock(page, name, body);
     }
 
     private static IReadOnlyList<Verb> Read()
@@ -128,8 +150,6 @@ internal static partial class CliReference
     private static string Value(this XElement element, string attribute) =>
         element.Attribute(attribute)?.Value
         ?? throw new XunitException($"<{element.Name}> carries no '{attribute}' attribute.");
-
-    private static string Cell(string text) => text.Replace("|", "\\|", StringComparison.Ordinal);
 
     private static string OneLine(string? text) => Whitespace().Replace(text?.Trim() ?? string.Empty, " ");
 

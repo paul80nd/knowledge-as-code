@@ -13,10 +13,6 @@ public partial class CliReferenceTests
 {
     private static bool Updating => Environment.GetEnvironmentVariable("KAC_UPDATE_DOCS") == "1";
 
-    // The first heading of a page, after which a missing block is inserted.
-    [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
-    private static partial Regex Heading();
-
     // The fenced block holding the flow chart, opened by the plain fence GitHub renders natively.
     [GeneratedRegex(@"^```mermaid$.*?^```$", RegexOptions.Multiline | RegexOptions.Singleline)]
     private static partial Regex Mermaid();
@@ -52,7 +48,7 @@ public partial class CliReferenceTests
         {
             var path = Path.Combine(CliReference.Cli, verb.Name + ".md");
             var page = File.ReadAllText(path);
-            var wanted = Replaced(page, "usage-" + verb.Name, CliReference.Render(verb));
+            var wanted = CliReference.Replaced(page, "usage-" + verb.Name, CliReference.Render(verb));
 
             if (page == wanted) continue;
 
@@ -158,7 +154,7 @@ public partial class CliReferenceTests
     public void The_overview_indexes_every_page()
     {
         var page = File.ReadAllText(CliReference.Index);
-        var wanted = Replaced(page, "command-table", CliReference.CommandTable());
+        var wanted = CliReference.Replaced(page, "command-table", CliReference.CommandTable());
 
         if (page == wanted) return;
 
@@ -168,22 +164,4 @@ public partial class CliReferenceTests
                         + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 
-    // The page with its block replaced, or with one inserted below the heading where it has none yet.
-    private static string Replaced(string page, string name, string body)
-    {
-        var begin = CliReference.BeginMarker(name);
-        var end = CliReference.EndMarker(name);
-        var block = $"{begin}\n\n{body}\n{end}";
-
-        var from = page.IndexOf(begin, StringComparison.Ordinal);
-        var to = page.IndexOf(end, StringComparison.Ordinal);
-
-        if (from >= 0 && to > from)
-            return page[..from] + block + page[(to + end.Length)..];
-
-        var heading = Heading().Match(page);
-        Assert.True(heading.Success, $"the page carrying '{name}' has no heading to put a generated block under.");
-
-        return page[..(heading.Index + heading.Length)] + "\n\n" + block + page[(heading.Index + heading.Length)..];
-    }
 }
