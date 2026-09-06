@@ -27,6 +27,8 @@ particular surface adds on top is that surface's own business.
 - Every word written for a reader **MUST** answer to this standard, whoever or whatever wrote it.
 - You **MUST** leave alone a heading you may not rename, an identifier, a clause whose wording is the record of an
   obligation, a fixed form such as an ADR's decision sentence, and a transcript quoting what a program printed.
+- You **MUST** leave alone the span between a `BEGIN GENERATED` marker and its `END GENERATED`.
+- To move what that span holds, you **MUST** change the schema or the frontmatter and run `kac generate`.
 - You **MUST** name in your reply every rule you left behind on one of those grounds.
 - A comment inside a fenced code block counts as prose, and you **MUST NOT** touch the command, its flags or its
   output.
@@ -34,6 +36,8 @@ particular surface adds on top is that surface's own business.
   back **MUST NOT** count as prose.
 - Where two rules pull against each other, the one leaving the reader fewer readings **MUST** win, and where they tie
   you **MAY** take either answer.
+- Where this standard and `.schema/` disagree, the schema **MUST** win.
+- You **MUST** report that contradiction, and **MUST NOT** edit a record to match this standard instead.
 
 _**Covers:** `eng:pol-KNOW.AGENTS`_
 
@@ -135,16 +139,22 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
 - A numbered list **MUST** appear only where the order carries meaning.
 - A list **SHOULD** open on a sentence saying what the items are, with the items parallel, and **MAY** open without a
   stem where the items speak for themselves.
+- Markdown prose **MUST** wrap at 120 columns, which `.editorconfig` states and no check enforces.
+- A table row and a link reference definition **MUST NOT** wrap, because a URL cannot be broken.
+- A sweep for an over-long line **MUST** count characters, because a byte count reports a violation that is not there.
 
 ### Write what stays true
 
 - Prose **MUST** describe what is, and **MUST NOT** read as a correction of what was.
+- Prose **MUST** describe what exists today, and agreed but unbuilt work **MUST** go to the issue tracker instead.
+- A schema rule the tool does not implement **MUST** be written as declared and not running.
 - Change history **MUST** stay in the commit message and the changelog, which are the two documents whose subject is
   change.
 - A released changelog entry **MUST** keep the tense it shipped with.
 - A count **MUST** name the command that reports it, unless decision rather than accumulation fixes the set.
 - A number making an argument about cost **MUST NOT** read as a count.
 - Reasoning that lives elsewhere **MUST** carry a citation and not a restatement, because nobody updates a copy.
+- A paragraph belonging in two documents **MUST** be written once, in `knowledge-as-code/`, and cited from both.
 
 ### Rewrite the block, not the diff
 
@@ -208,6 +218,8 @@ the last line is a link reference definition that disappears from the page.
 - [ ] Contrasts counted over `rather than`, `, not ` and `, never ` come under 5 per 1000 words of prose.
 - [ ] Every instruction is a command, under about 20 words, with its condition first.
 - [ ] Every count names the command that reports it.
+- [ ] Every line of prose outside a table or a link definition is under 120 columns, counted in characters.
+- [ ] No hand edit sits between a `BEGIN GENERATED` marker and its `END GENERATED`.
 - [ ] Every rule left behind on a prose-stops-here ground is named in the reply.
 
 ## Rationale and provenance
@@ -227,6 +239,8 @@ work in a checkout that holds no corpus.
 
 ## Changelog
 
+- 2026-09-06: took the wrapping, generated-block, write-what-exists and schema-precedence rules that `CLAUDE.md` had
+  been stating a second time.
 - 2026-09-02: initial version.
 
 [RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174

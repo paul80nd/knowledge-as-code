@@ -93,7 +93,15 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 ### A version moves by hand and publishes once
 
 - `<Version>` in `tooling/kac/kac.csproj` **MUST** move in the pull request carrying the change it ships.
+- A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in
+  that same pull request.
+- A release **MUST** rename `## Unreleased` to the version and its date in the commit moving `<Version>`.
 - `content-version` in a corpus's `.corpus.yaml` **MUST** move in the pull request changing what that corpus knows.
+- A `content-version` **MUST** be read as a statement about the records rather than about the file.
+- Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
+  and its patch a change of wording.
+- A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in that same pull request.
+- That consumer **MUST** move its `version:` range as well wherever the producer's minor moved.
 - A publishing job **MUST** ask the registry whether it already holds the version in front of it.
 - Where the registry holds that version already, a publishing job **MUST** finish green.
 - A publish to nuget.org **MUST** wait for a person to approve the `nuget.org` environment.
@@ -148,11 +156,19 @@ for six hours when a push hangs. A tag moves, so `@v7` is a different action tom
 - [ ] No secret appears in a workflow's text, and no step prints one.
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
 - [ ] The version this pull request ships has moved, and the changelog carries its section.
+- [ ] Every corpus whose records changed has moved its `content-version`.
+- [ ] Every consumer of one of those corpora has moved its `resolved:` lock.
 
 ## Rationale and provenance
 
 Read-only permission is what keeps CI out of the files a person edits. `generate --check` reports a stale generated
 file and names the command to run locally, so no job needs to write one back.
+
+A version that has not moved publishes nothing and says nothing, so an edited record reaches no reader and the
+published copy drifts from `main` with no build reporting it. A restore takes the committed lock rather than the range,
+and `kac pack` rebuilds the producer's folder whole, so a consumer left on the old lock fails against a folder that no
+longer holds that version. A patch bump breaks a consumer exactly as a minor one does. Below 1.0.0 a caret pins the
+minor, which is why a minor bump moves the range as well as the lock.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name, and its header comment says why a
 job outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. What neither answers is a
@@ -182,6 +198,8 @@ belongs to whichever corpus receives it, and it names `actions/checkout@v4` toda
 
 ## Changelog
 
+- 2026-09-06: took the changelog, semantic `content-version` and consumer-repointing rules that `CLAUDE.md` had been
+  stating a second time.
 - 2026-09-02: initial version.
 
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md

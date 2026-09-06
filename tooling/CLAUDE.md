@@ -36,14 +36,14 @@ to this repository's root, where it is authored once.
 **Run one invocation at a time.** Concurrent runs build the same project and contend over its output.
 
 **A warning fails the build.** [`Directory.Build.props`](Directory.Build.props) sets `TreatWarningsAsErrors`,
-`EnforceCodeStyleInBuild` and `AnalysisLevel` at `latest`, for every project here and for `kac-tests.cs`. A nullable
-warning and a style violation are both a broken build rather than a line in the log nobody reads, and
-[`.editorconfig`](.editorconfig) is where the style itself is written. It holds locally as well as in CI, on purpose: a
-check running in one and not the other is how the thing it catches reaches `main`. Where a warning is genuinely wrong,
-suppress that one with a reason beside it rather than turning the setting off. `!` is not one of those
-ways. [`NullForgivingTests`](kac.tests/NullForgivingTests.cs) holds the count of it at nothing, so a value
-the compiler cannot see is settled either carries the fact on its type through `MemberNotNullWhen`, or is
-read through something naming what it expected.
+`EnforceCodeStyleInBuild` and `AnalysisLevel` at `latest`, for every project here and for `kac-tests.cs`, and
+[`.editorconfig`](.editorconfig) is where the style itself is written. Both hold locally as well as in CI, on purpose: a
+check running in one and not the other is how the thing it catches reaches `main`.
+[`eng:std-CSSTY`](../examples/engineering/standards/platform/dotnet/code-style.md) says what those settings oblige you
+to, and [`eng:std-NETTST`](../examples/engineering/standards/platform/dotnet/testing.md) says the same for a test.
+[`NullForgivingTests`](kac.tests/NullForgivingTests.cs) holds the count of `!` at nothing, so a value the compiler
+cannot see is settled either carries the fact on its type through `MemberNotNullWhen`, or is read through something
+naming what it expected.
 
 **Ask Rider about a file you just changed, where you can reach it.** The `mcp__rider__get_file_problems` tool reports
 what the compiler above cannot: a member hiding one on an outer class, an unused deconstruction, a redundant cast. It
@@ -56,7 +56,8 @@ most are this repository's own idiom rather than defects. Reading them costs mor
 just edited is the case where the ratio is good.
 
 **Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
-[`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and a change to one belongs in the other.
+[`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and
+[`std-CI`](../examples/dog-fooding/standards/workflows.md) is what holds `.azuredevops/kac.yml` to its GitHub twin.
 [`template/azure-pipelines.yml`](../template/azure-pipelines.yml) is the starter a corpus receives and then owns, so it
 runs `kac` over that corpus and reads no `template/`. No corpus under `examples/` keeps a copy: the two gates above
 are what cover them.
@@ -168,8 +169,9 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
 
-No prose states a check count: `kac checks` reports it. [Checks](https://paul80nd.github.io/knowledge-as-code/design/checks/)
-carries no table of checks either: it points at the schema, so there is nothing there to go quietly out of date.
+[Checks](https://paul80nd.github.io/knowledge-as-code/design/checks/) carries no table of checks: it points at the
+schema, so there is nothing there to go quietly out of date. `kac checks` reports how many there are, which is what
+[`std-PROSE`](../examples/dog-fooding/standards/prose.md) asks of a count.
 
 `DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its row
@@ -333,6 +335,6 @@ their own corpus holds records nobody there wrote.
   [`kac.features/Harness.cs`](kac.features/Harness.cs) and [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two
   of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
   unify any of them without keeping those distinctions.
-* **Never write a path into a file a corpus keeps.** The generated banner and the stale-index message both name the
-  tool instead. A corpus is read from wherever it was installed, so a path written into its content is a fact about
-  somebody else's machine.
+* **A path written into a file a corpus keeps is a fact about somebody else's machine.** A corpus is read from wherever
+  it was installed, so the generated banner and the stale-index message both name the tool instead.
+  [`std-CONFIG`](../examples/dog-fooding/standards/configuration.md) is the rule.
