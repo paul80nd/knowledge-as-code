@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] The repository holds the contract, and a reviewer can read the diff to it in the pull request.\n- [ ] The build fails when a route, a field or a status code drifts from the contract.\n- [ ] Every path carries a version segment, and the previous version still answers.\n- [ ] Each endpoint rejects an unauthenticated call, confirmed by a test.\n- [ ] A request carrying an unknown or malformed field is refused rather than accepted and ignored.\n- [ ] Each deprecated version answers with a removal date in the response headers."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5f069fccaac28eee5dee325b9f56e3c9b83494c6/examples/engineering/standards/common/api-contracts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6bcbc30c0a87e2ca0acbad961911f62cefaaf020/examples/engineering/standards/common/api-contracts.md"
   }
 }
