@@ -86,8 +86,9 @@ and moving those here is a separate call. It declines `glossary`, because the fr
 below, written by hand and read against the repository rather than against the graph.
 
 **Covered.** A standard that binds this corpus states the rule, and the verdict is that standard's id. A standard
-binds where a record here names it: `implements:` on a standard, or `verifies:` on a control. Three standards here
-qualify, and two inherited from `eng:` do.
+binds where a record here names it: a standard naming its clauses in `implements:`, or a control naming the standard
+in `verifies:`. Three standards here qualify, and two inherited from `eng:` do. Where two policies state one
+obligation from both sides, covering either clause covers the pair, and the row says which clause it is paired with.
 
 **Gap.** The clause reaches this repository and no standard here states it. A gap is a fact rather than a task. Some
 are worth closing, and some are what a repository with one maintainer costs.
@@ -102,6 +103,12 @@ Three limits sit on the whole map. It reads this corpus alone, so a clause uncov
 `../library/` or in `../payments/`, and every consumer of `eng:` answers for its own coverage. It never says a clause
 is verified: a control names a standard rather than a rule, so it vouches for a whole document whatever it checks
 inside it. The controls belong to the standards, listed once below, and a clause row leaves them out.
+
+**Six clauses land differently if a reader follows `implements:` alone.** `eng:std-TEST` names `DEBUG`, `MASK` and
+`UNMASK` of `eng:pol-ENVS`, so the graph calls those covered, and there is no data here to mask. The map covers
+`eng:pol-OBSV.SECRETS`, `eng:pol-TRUS.TRACE` and `eng:pol-VURM.REGRESS`, which no `implements:` here names: the last
+two are the other side of a clause that is covered, and `std-CI` forbids a step to print a secret while naming
+`eng:pol-SCRT.LOGS` for it.
 
 Nothing regenerates this map. Move it by hand when a policy, a standard or a control moves.
 
@@ -193,7 +200,8 @@ rules for an agent are written, which is `eng:pol-KNOW.AGENTS`, and not what the
 
 ### pol-AUTV: every change is verified automatically, and failures block
 
-The best-covered policy here, between the gate `std-CI` describes and the two inherited standards its controls verify.
+This is the best-covered policy here, between the gate `std-CI` describes and the two inherited standards its
+controls verify.
 
 | Clause    | Verdict                                 | Note                                                                |
 |-----------|-----------------------------------------|---------------------------------------------------------------------|
@@ -203,7 +211,7 @@ The best-covered policy here, between the gate `std-CI` describes and the two in
 | `LEVELS`  | `eng:std-TEST`                          | Unit, behaviour and golden layers each catch a different fault.     |
 | `REGRESS` | `eng:std-GATES`                         | Paired with `eng:pol-VURM.REGRESS`, which states the same duty.     |
 | `BROKEN`  | Gap                                     | Nothing says a red `main` comes before other work.                  |
-| `BYPASS`  | `eng:std-GATES`                         | Verified by ctl-0001, which reads the branch rule.                  |
+| `BYPASS`  | `eng:std-GATES`                         | A merge over a failing check needs a deviation nobody can record.   |
 | `DISABLE` | `eng:std-GATES`                         | `std-CI` adds that no job may declare `continue-on-error`.          |
 | `MACHINE` | `eng:std-GATES`                         | Each matrix cell is a fresh runner holding its own checkout.        |
 | `OFTEN`   | Gap                                     | Branch size is a habit here rather than a rule.                     |
@@ -227,7 +235,7 @@ account holder asked it to. That reaches `CLASS`, `CRYPTO`, `RETIRE`, `LAWFUL`, 
 ### pol-DERV: derived data is verified before it is trusted
 
 `kac generate` computes a generated block from the schema and the frontmatter, and `kac export` computes the data a
-consumer reads. Both are derived data, and every clause about it is a gap.
+consumer reads. Both are derived data, and every clause here is a gap.
 
 | Clause    | Verdict | Note                                                                                  |
 |-----------|---------|---------------------------------------------------------------------------------------|
@@ -239,8 +247,8 @@ consumer reads. Both are derived data, and every clause about it is a gap.
 
 ### pol-DEVI: deviations are recorded, owned and time-bound
 
-This corpus has nowhere to record a deviation. It declines `adrs`, and no type it adopted holds one, so the two
-clauses `eng:std-GATES` covers are covered for a check that is skipped rather than for a policy that is departed from.
+No type this corpus adopted holds a deviation, so it has nowhere to record one. The two clauses `eng:std-GATES`
+covers reach a suppressed check, and nothing here reaches a departure from a policy.
 
 | Clause    | Verdict         | Note                                                                     |
 |-----------|-----------------|--------------------------------------------------------------------------|
@@ -261,22 +269,19 @@ from. `kac` is a command somebody runs on their own machine, and what CI publish
 anybody else. That reaches `SPLIT`, `CREDS`, `SAMEDEF`, `BASELIN`, `PROMOTE`, `MASK`, `DEBUG`, `REUSE`, `UNMASK` and
 `EPHEM`.
 
-_**Read this one against the graph.** `eng:std-TEST` names `DEBUG`, `MASK` and `UNMASK`, and ctl-0009 verifies that
-standard, so a report reading the edges alone would call those three covered. There is no data here to mask._
-
 ### pol-EVER: everything is in version control
 
-The policy this repository was built to satisfy, and half of it is still a gap.
+This repository was built to satisfy this policy, and half of it is still a gap.
 
 | Clause    | Verdict      | Note                                                                              |
 |-----------|--------------|-----------------------------------------------------------------------------------|
 | `ASSETS`  | `std-CONFIG` | Every value the build reads is committed.                                         |
 | `HISTORY` | Gap          | Git attributes every change, and no record states the rule.                       |
 | `INTENT`  | Gap          | A branch names its issue by habit. `eng:std-VCS` states it and nothing adopts it. |
-| `BRANCH`  | `std-CI`     | A push to `main` is rejected, and ctl-0001 reads the branch rule.                 |
+| `BRANCH`  | `std-CI`     | A push to `main` is rejected, and the branch rule lives in GitHub's settings.     |
 | `PARITY`  | `std-CONFIG` | A YAML file and a workflow answer to the same gate as the code.                   |
 | `ORPHAN`  | `std-CONFIG` | A value living in more than one tree is copied and proved.                        |
-| `SHARED`  | Gap          | No shared account exists, and no record forbids one.                              |
+| `SHARED`  | Gap          | Paired with `eng:pol-ACCS.SHARED`, which states the same duty.                    |
 | `SIGNED`  | Gap          | Commits are not signed.                                                           |
 
 ### pol-INCR: incidents are managed and learned from
@@ -295,7 +300,7 @@ failures, and a runbook is not a standard.
 | `INFORM`  | Out of scope | Same: there is nobody whom a breach here could put at risk.                          |
 | `REPORT`  | Gap          | `.github/SECURITY.md` gives the route, and no record here names it.                  |
 | `LEARN`   | Gap          | A fix lands and nothing asks what allowed the fault.                                 |
-| `ACTIONS` | Gap          | Findings become issues by habit rather than by rule.                                 |
+| `ACTIONS` | Gap          | Paired with `eng:pol-SECD.ACTIONS`, which states the same duty.                      |
 | `DRILL`   | Gap          | The publish path is first exercised for real, every time.                            |
 | `ADHOC`   | Gap          | Nothing here has to be handled formally, so everything is handled informally.        |
 | `TOOSOON` | Gap          | Nothing holds an incident open until the learning is written down.                   |
@@ -326,7 +331,7 @@ only how the words are written for an agent.
 |----------|-------------|--------------------------------------------------------------------------------------|
 | `DOCS`   | Gap         | The site and the `CLAUDE.md` files carry it, and no record requires them.            |
 | `SYNC`   | Gap         | `generate --check` catches a stale generated block, and nothing catches stale prose. |
-| `DECIDE` | Gap         | A decision about `kac` goes to `tooling/CLAUDE.md` and to the commit that made it.   |
+| `DECIDE` | Gap         | The reasoning behind a decision lives in the commit that made it.                    |
 | `AGENTS` | `std-PROSE` | The rules sit where the agents doing the work read them.                             |
 | `HEADS`  | Gap         | One maintainer, and nothing tests what only they know.                               |
 | `COPY`   | Gap         | One tree holds the words for both readers, by convention rather than by rule.        |
@@ -344,13 +349,12 @@ terminates. That reaches `SEGMENT`, `DENY`, `TRANSIT`, `PEERID`, `PRIVATE`, `EGR
 telemetry, GitHub keeps it, and no alert has anywhere to arrive. That reaches `CENTRAL`, `CLOCKS`, `RETAIN`, `HEALTH`,
 `SECMON`, `ALERTS`, `BLIND`, `SLO` and `CORREL`.
 
-`SECRETS` is the tenth, and `std-CI` covers it: a step must not print a secret. The standard's `implements:` names
-`eng:pol-SCRT.LOGS`, which states the same prohibition for a log.
+`SECRETS` is the tenth, and `std-CI` covers it: a step must not print a secret.
 
 ### pol-PERF: performance targets are stated and verified
 
-**Out of scope, all five clauses.** Nothing here is performance-sensitive. The largest corpus is a few hundred files,
-`kac` reads it in seconds, and no load arrives that anybody did not start. That reaches `TARGETS`, `MEASURE`,
+**Out of scope, all five clauses.** Nothing here is performance-sensitive. No corpus is large enough for its size to
+matter, and no load arrives that somebody did not start. That reaches `TARGETS`, `MEASURE`,
 `DEFECT`, `PEAK` and `NOTEST`.
 
 ### pol-PIPE: changes reach production through the pipeline
@@ -397,13 +401,13 @@ identity they exchange, and `std-CI` states where both come from.
 ### pol-SECD: security is designed in, not added on
 
 `.github/SECURITY.md` states what is in scope, and says how CI contains the untrusted code it runs on purpose. No
-record here names that page, and `eng:std-CSSTY` states the coding clause for a standard nothing here adopts.
+record here names that page, and `eng:std-CSSTY` carries the coding clause for a standard nothing here adopts.
 
 | Clause    | Verdict      | Note                                                                             |
 |-----------|--------------|----------------------------------------------------------------------------------|
 | `REQS`    | Gap          | A security requirement arrives as a review comment rather than as a requirement. |
 | `DESIGN`  | Gap          | The workflows fail closed and deny by default, stated by no record.              |
-| `THREAT`  | Gap          | `.github/SECURITY.md` carries the threat model for CI, and no record names it.   |
+| `THREAT`  | Gap          | `.github/SECURITY.md` says how CI contains what it runs, named by no record.     |
 | `IMPACT`  | Out of scope | No processing of personal data, so nothing to assess the impact of.              |
 | `ACTIONS` | Gap          | A finding becomes an issue by habit rather than by rule.                         |
 | `CODING`  | Gap          | The C# follows the runtime team's conventions. `eng:std-CSSTY` states that.      |
