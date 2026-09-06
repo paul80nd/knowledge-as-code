@@ -66,9 +66,10 @@ estate, which is a weaker claim than it sounds: nothing pushes back when the fic
 answers back. A service record naming the wrong workflow is caught by whoever next reads the workflow, and a standard
 nobody follows is visible as a standard nobody follows.
 
-**A corpus that stands up before it is full.** Most types here are declared, generated and validated with no record in
-them, which is the state a corpus created this morning is in. `kac validate` holds a type to what it declared whether or
-not anything has been filed under it.
+**A graph the tool can check.** Every type this corpus adopted holds records, and the edges between them are
+frontmatter rather than prose. `implements:` on a standard names a clause in `../engineering/`, `verifies:` on a
+control names the standard, and `applies-to:` on a runbook names the service it covers. `kac validate` fails the day
+one of those stops resolving.
 
 ## What this corpus declares about itself
 

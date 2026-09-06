@@ -2,4 +2,8 @@
 
 # Runbook Index (RBK)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID                              | Title                                                                                  | Severity | Status | Last rehearsed |
+|---------------------------------|----------------------------------------------------------------------------------------|----------|--------|----------------|
+| rbk-goldens-disagree            | [The golden suite reports a diff nobody meant](goldens-disagree.md)                    | sev3     | active | never          |
+| rbk-nuget-404-on-publish        | [nuget.org answers 404 for a version it has already accepted](nuget-404-on-publish.md) | sev3     | active | never          |
+| rbk-restore-cannot-find-version | [kac restore cannot find the version the lock names](restore-cannot-find-version.md)   | sev3     | active | never          |

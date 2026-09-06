@@ -2,4 +2,8 @@
 
 # Service Index (SVC)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID              | Title                                | Platform | Criticality | Status | Owner    |
+|-----------------|--------------------------------------|----------|-------------|--------|----------|
+| svc-docs-site   | [Documentation site](docs-site.md)   | static   | important   | live   | paul.law |
+| svc-kac         | [kac](kac.md)                        | mixed    | critical    | live   | paul.law |
+| svc-marketplace | [Plugin marketplace](marketplace.md) | static   | important   | live   | paul.law |
