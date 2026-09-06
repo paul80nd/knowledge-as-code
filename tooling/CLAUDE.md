@@ -170,8 +170,8 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
    what catches a check declared in the schema and reported by nothing.
 
 [Checks](https://paul80nd.github.io/knowledge-as-code/design/checks/) carries no table of checks: it points at the
-schema, so there is nothing there to go quietly out of date. `kac checks` reports how many there are, which is what
-[`std-PROSE`](../examples/dog-fooding/standards/prose.md) asks of a count.
+schema, so there is nothing there to go quietly out of date. No page here states how many checks there are either:
+`kac checks` reports that, and [`std-PROSE`](../examples/dog-fooding/standards/prose.md) is the rule.
 
 `DocRows` is deliberately *not* generated from the catalogue. Rows are grouped and hand-worded, so several catalogue ids
 fold into one reader-facing row. An expression rule is the opposite, one id reporting under its own name, so its row

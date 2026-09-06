@@ -152,6 +152,7 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
   change.
 - A released changelog entry **MUST** keep the tense it shipped with.
 - A count **MUST** name the command that reports it, unless decision rather than accumulation fixes the set.
+- A count that grows as the codebase grows **MUST** give way to that command, and **MUST NOT** stand beside it.
 - A number making an argument about cost **MUST NOT** read as a count.
 - Reasoning that lives elsewhere **MUST** carry a citation and not a restatement, because nobody updates a copy.
 - A paragraph belonging in two documents **MUST** be written once, in `knowledge-as-code/`, and cited from both.

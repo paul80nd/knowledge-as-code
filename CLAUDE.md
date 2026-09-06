@@ -89,11 +89,11 @@ produce materially different work. Where the request looks mistaken, say so in a
 `example-dogfooding` is what this repository knows about itself, installed here as a plugin. The rules you build to are
 records in it rather than lines on this page.
 
-| Before you change                                       | Read                                                                                                                                                             |
-|---------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| a workflow, a version, a changelog or a consumer's lock | [`std-CI`](examples/dog-fooding/standards/workflows.md)                                                                                                          |
-| a YAML file, a pin, or a file two of the trees hold     | [`std-CONFIG`](examples/dog-fooding/standards/configuration.md)                                                                                                  |
-| any prose, comment, commit message or generated block   | [`std-PROSE`](examples/dog-fooding/standards/prose.md)                                                                                                           |
+| Before you change                                       | Read                                                                                                                                                              |
+|---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| a workflow, a version, a changelog or a consumer's lock | [`std-CI`](examples/dog-fooding/standards/workflows.md)                                                                                                           |
+| a YAML file, a pin, or a file two of the trees hold     | [`std-CONFIG`](examples/dog-fooding/standards/configuration.md)                                                                                                   |
+| any prose, comment, commit message or generated block   | [`std-PROSE`](examples/dog-fooding/standards/prose.md)                                                                                                            |
 | C# or a test under `tooling/`                           | [`eng:std-CSSTY`](examples/engineering/standards/platform/dotnet/code-style.md) and [`eng:std-NETTST`](examples/engineering/standards/platform/dotnet/testing.md) |
 
 `eng:std-CSSTY` and `eng:std-NETTST` are authored in `examples/engineering` and arrive through `consumes:`, so a clause
@@ -130,9 +130,10 @@ project, so an absolute path is the only thing that works and none belongs in a 
 
 ## Before you raise a pull request
 
-**Ask before you move `<Version>`.** [`std-CI`](examples/dog-fooding/standards/workflows.md) carries the changelog
-entry, the version, the `content-version` each corpus you changed owes, and the lock every consumer of that corpus owes
-back. Whether the entry you wrote ships is the separate question, and it belongs to whoever owns the branch. A push to
+**The changelog entry and the version are two separate calls, and only the second is yours to ask about.**
+[`std-CI`](examples/dog-fooding/standards/workflows.md) carries the entry, the version, the `content-version` each
+corpus you changed owes, and the lock every consumer of that corpus owes back. Whether the entry you wrote ships is the
+question that belongs to whoever owns the branch. A push to
 `main` publishes `kac` whenever [`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not
 already hold, so moving `<Version>` **is** the release. Put the call to them before you open the pull request, with a
 recommendation: release where the change stands on its own, and hold where it is one part of a group that is no use
