@@ -4,7 +4,7 @@ tier: descriptive
 status: live
 repo: knowledge-as-code
 platform: static
-criticality: supporting
+criticality: important
 depends-on:
 data-stores:
 owner: paul.law
@@ -23,7 +23,7 @@ The Claude Code marketplace offering each worked corpus as an installable plugin
 
 The branch holds one directory per plugin, a `.claude-plugin/marketplace.json` offering all of them, and a generated
 `README.md` telling a browser where the source is. `publish-plugin.yml` builds it by running `kac export` and
-`kac bundle` in each corpus, then copying the four bundles onto an emptied worktree.
+`kac bundle` in each corpus, then copying each bundle onto an emptied worktree.
 
 `kac bundle` runs in one corpus and knows only that corpus's own, so the marketplace listing every plugin is assembled
 by the workflow rather than by the tool. Taken from the header comment in `.github/workflows/publish-plugin.yml`.
@@ -58,6 +58,8 @@ agent that finds a record wrong raises an issue rather than editing one.
 
 ## Operational notes
 
+* **`criticality` is `important` rather than `supporting`.** A reader who cannot install a plugin sees the failure, so
+  the impact is not internal only. It sits below [svc-kac], which builds the branch and is what a corpus runs.
 * **The branch is orphaned and never merged back.** One job in `publish-plugin.yml` holds `contents: write`, and it
   empties the worktree and asserts that nothing is still tracked before staging. That assertion is what keeps the
   source out of the published branch.

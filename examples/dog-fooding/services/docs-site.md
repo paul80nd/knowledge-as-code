@@ -48,7 +48,7 @@ descriptor is a separate thing this build does not exercise. Taken from the head
 
 ## Dependencies
 
-None in this catalogue. The site is HTML on a CDN and calls nothing.
+None in this catalogue. The site is static HTML and calls nothing.
 
 The packages that build it are in the tool register: [tol-mkdocs] and [tol-mkdocs-material].
 

@@ -41,6 +41,12 @@ emits, and the export golden is a published contract a consumer reads.
 
 ## Diagnosis
 
+**Does the failure reproduce on your machine?**
+
+* **Yes** → continue.
+* **No** → the three layers assert different things about the same corpus, so a regenerated golden can leave you green
+  here and red in CI. Go to [Resolution](#resolution) and start at step 4.
+
 **Did you change `.schema/`?**
 
 * **Yes** → every type page's generated tables move with it, and so do the `generate` scenarios. The diff is expected.
@@ -86,7 +92,7 @@ emits, and the export golden is a published contract a consumer reads.
 5. Run `kac generate` in each corpus you changed, and in `template/`.
 6. Say in the commit message why the golden moved.
 
-Service is restored when all three layers pass and the diff carries only lines you can account for.
+Confirmed when all three layers pass and the diff carries only lines you can account for.
 
 ## Escalation
 

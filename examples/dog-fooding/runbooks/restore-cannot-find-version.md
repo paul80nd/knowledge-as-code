@@ -62,8 +62,8 @@ ls examples/engineering/.dist/package
    The last line names the version it sealed. That is the version every consumer has to ask for.
 
 2. Open `.corpus.yaml` in `examples/payments` and set `resolved:` to that version.
-3. Set `version:` to a range admitting it, where the minor moved. Below 1.0.0 a caret pins the minor, so `^0.10.0` does
-   not admit `0.11.0`.
+3. Where the minor moved, set `version:` to a range admitting it. Below 1.0.0 a caret pins the minor, so `^0.10.0`
+   does not admit `0.11.0`.
 4. Repeat steps 2 and 3 in `examples/dog-fooding`.
 5. Delete `.imports/` in both consumers. A restore keeps a folder already holding the version it resolved to, so a
    stale folder hides the fix.
@@ -75,7 +75,7 @@ ls examples/engineering/.dist/package
    dotnet run --project ../../tooling/kac -- validate
    ```
 
-Service is restored when both consumers restore and validate with no errors.
+Confirmed when both consumers restore and validate with no errors.
 
 ## Escalation
 

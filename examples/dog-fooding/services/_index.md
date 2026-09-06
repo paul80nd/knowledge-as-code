@@ -6,4 +6,4 @@
 |-----------------|--------------------------------------|----------|-------------|--------|----------|
 | svc-docs-site   | [Documentation site](docs-site.md)   | static   | important   | live   | paul.law |
 | svc-kac         | [kac](kac.md)                        | mixed    | critical    | live   | paul.law |
-| svc-marketplace | [Plugin marketplace](marketplace.md) | static   | supporting  | live   | paul.law |
+| svc-marketplace | [Plugin marketplace](marketplace.md) | static   | important   | live   | paul.law |
