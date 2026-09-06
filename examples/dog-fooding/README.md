@@ -80,6 +80,9 @@ It declines `adrs`, because a decision about `kac` is recorded in `tooling/CLAUD
 and moving those here is a separate call. It declines `glossary`, because the framework's own vocabulary belongs to
 `../engineering/` and this corpus cites it as `eng:`.
 
+<details>
+<summary>The clause map: 207 clauses, one verdict each</summary>
+
 ## How this corpus stands against `eng:`
 
 [`../engineering/`](../engineering/) states 22 policies carrying 207 clauses. Every one of them carries a verdict
@@ -449,6 +452,8 @@ screened, licensed or left behind is not written anywhere.
 | `SHIP`    | Gap             | Nothing stops a release over an open finding.                              |
 | `OVERDUE` | Gap             | There is no timeframe for a finding to run past.                           |
 | `INDEP`   | Out of scope    | One maintainer, and nobody else to test what they built.                   |
+
+</details>
 
 [PSBAR 2018]: ../engineering/frameworks.md#psbar-2018
 [WCAG 2.2 AA]: ../engineering/frameworks.md#wcag
