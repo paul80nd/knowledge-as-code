@@ -52,8 +52,9 @@ rather than by which folder holds them.
 
 These are not repeated in the playbooks. Read them where they live.
 
-* [`CLAUDE.md`](../../../CLAUDE.md) at the root says which of the four guidance pages your work answers to, carries the
-  conventions and the commands for all four test layers, and names what has already cost a session here.
+* [`CLAUDE.md`](../../../CLAUDE.md) at the root says which of the four guidance pages your work answers to, routes to
+  the standards holding the rules, carries the commands for all four test layers, and names what has already cost a
+  session here.
 * **A corpus's own `CLAUDE.md` carries what is that corpus's alone**: the estate it extends, and the producer it has to
   pack before it can restore.
 * **Run one `kac` invocation at a time.** Concurrent runs build the same project and contend over its output.

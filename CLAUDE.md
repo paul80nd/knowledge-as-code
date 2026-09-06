@@ -28,16 +28,16 @@ here to ask.
 `.schema/` is not one of them. It is authored once at this root and read from there by every corpus, which is what the
 tool's second walk-up is for. Neither is `.plugin/` bar its manifest: each corpus here names `plugin.from` in its
 descriptor, so the skills and hooks are authored once under `template/` and `kac bundle` reads them from there.
-Everything else the overlay layer names does live once in `template/` and again in each corpus under `examples/`. Copy
-the file across by hand, in whichever direction the change came from, then run the check that proves you did, once per
-corpus:
+Everything else the overlay layer names does live once in `template/` and again in each corpus under `examples/`.
+[`manifest.yaml`](manifest.yaml) says which files that reaches, and
+[`std-CONFIG`](examples/dog-fooding/standards/configuration.md) says what you owe each of them.
 
 ```sh
 cd examples/library && dotnet run --project ../../tooling/kac -- update --check --from ../../
 ```
 
-It answers in both directions: a copy that differs, and a file the corpus holds that the template sends nothing to.
-[`manifest.yaml`](manifest.yaml) says which files this reaches.
+That check answers in both directions: a copy that differs, and a file the corpus holds that the template sends nothing
+to.
 
 ## Before you commit
 
@@ -72,30 +72,6 @@ leave you green locally and red in CI.
 **Install the two linters once.** `brew install yamllint actionlint` takes the versions the `lint` job pins. That job's
 own `pip install -r .github/requirements.txt` needs Python 3.10 or newer, and macOS ships an older `python3`.
 
-## Conventions
-
-These hold in every corpus under `examples/`, in `template/`, and in the prose this repository publishes.
-
-* **Regenerate rather than edit between `BEGIN GENERATED` and `END GENERATED`.** Change the schema or the frontmatter,
-  then run `kac generate`. A schema edit without a regeneration fails CI.
-* **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
-  `.editorconfig` says so and no check enforces it. Count characters and not bytes when you sweep for long lines: these
-  corpora are full of em dashes, so `awk 'length > 120'` reports violations that are not there.
-* **A YAML file answers to `yamllint`, and a workflow to `actionlint`.** [`.yamllint`](.yamllint) extends yamllint's
-  `default` ruleset and carries the four places this repository departs from it. The `lint` job runs both, so an
-  unlinted file fails the build rather than a review.
-* **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
-  does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
-* **Keep comments and documentation timeless.** Describe the design as it stands. The history of a change belongs in its
-  commit message.
-* **Leave a whole document, not a diff.** Fold new material into what is there and delete what it supersedes, so the
-  file reads in one voice and someone arriving cold cannot tell which paragraph is newest.
-* **Say it once.** Cite rather than duplicate. A paragraph that belongs in two documents belongs in
-  `knowledge-as-code/`, written a single time.
-* **Where a prose rule and the schema disagree, the schema is right.** Report the contradiction rather than editing
-  records to match.
-* **Branch and open a PR.** Pushes to `main` are rejected.
-
 ## Your working style
 
 Say in one sentence what you are about to do before your first tool call. While working, report what you found or where
@@ -110,9 +86,21 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Ask this repository's own corpus
 
-`example-dogfooding` is what this repository knows about itself, installed here as a plugin.
-[`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch it is served from and turns it on, so
-a clone has it without anyone adding a marketplace by hand. Three skills read it:
+`example-dogfooding` is what this repository knows about itself, installed here as a plugin. The rules you build to are
+records in it rather than lines on this page.
+
+| Before you change                                       | Read                                                                                                                                                              |
+|---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| a workflow, a version, a changelog or a consumer's lock | [`std-CI`](examples/dog-fooding/standards/workflows.md)                                                                                                           |
+| a YAML file, a pin, or a file two of the trees hold     | [`std-CONFIG`](examples/dog-fooding/standards/configuration.md)                                                                                                   |
+| any prose, comment, commit message or generated block   | [`std-PROSE`](examples/dog-fooding/standards/prose.md)                                                                                                            |
+| C# or a test under `tooling/`                           | [`eng:std-CSSTY`](examples/engineering/standards/platform/dotnet/code-style.md) and [`eng:std-NETTST`](examples/engineering/standards/platform/dotnet/testing.md) |
+
+`eng:std-CSSTY` and `eng:std-NETTST` are authored in `examples/engineering` and arrive through `consumes:`, so a clause
+of either is cited as `eng:`.
+
+[`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch the plugin is served from and turns it
+on, so a clone has it without anyone adding a marketplace by hand. Three skills read it:
 
 * **`standards-lookup`** finds the rule you have to build to. Ask it before you change a workflow, a YAML file, or any
   prose published here.
@@ -142,36 +130,18 @@ project, so an absolute path is the only thing that works and none belongs in a 
 
 ## Before you raise a pull request
 
-**Write the changelog entry always. Ask before you move `<Version>`.** A tool change somebody running `kac` can
-observe gets a line under `## Unreleased` in [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md), on the branch that
-makes it. An entry written after the merge reaches nobody.
+**The changelog entry and the version are two separate calls, and only the second is yours to ask about.**
+[`std-CI`](examples/dog-fooding/standards/workflows.md) carries the entry, the version, the `content-version` each
+corpus you changed owes, and the lock every consumer of that corpus owes back. Whether the entry you wrote ships is the
+question that belongs to whoever owns the branch. A push to
+`main` publishes `kac` whenever [`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not
+already hold, so moving `<Version>` **is** the release. Put the call to them before you open the pull request, with a
+recommendation: release where the change stands on its own, and hold where it is one part of a group that is no use
+apart. Where the tool did not change there is nothing to ask.
 
-Whether that entry ships is a separate question, and it belongs to whoever owns the branch. A push to `main` publishes
-`kac` whenever [`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not already hold, so
-moving `<Version>` **is** the release, and the release that publish opens carries that version's section. Put the call
-to them before you open the pull request, with a recommendation: release where the change stands on its own, and hold
-where it is one part of a group that is no use apart. Where the tool did not change there is nothing to ask.
-
-Releasing renames `## Unreleased` to `## <version> - <date>` and moves `<Version>` in the same commit.
-`ChangelogTests` fails a version that has no section.
-
-**Move a corpus's `content-version` whenever you change what it knows.** Each corpus under `examples/` publishes: a
-push to `main` packs it to GitHub Packages and bundles it into the `marketplace` branch, and both publishers take the
-version the corpus states. A version that has not moved publishes nothing, silently, so an edited record reaches
-nobody and the published copy drifts from `main` with no build reporting it.
-
-Semantic, and about the records rather than the file: major where a meaning changed or a published URL broke, minor
-for a record added, patch for wording. This is the corpus's own call and not the tool's, so nothing bumps it for you,
-and a corpus holding one record moves the same way as one holding fifty.
-
-**Repoint every consumer whenever a corpus's `content-version` moves.** A `consumes:` entry carries a range in
-`version:` and a committed lock in `resolved:`, and a restore takes the lock. Every corpus here fetches from a folder,
-and `kac pack` rebuilds that folder whole, so it holds the version packed last and nothing else. A lock naming any
-other version fails, so a patch bump breaks a consumer exactly as a minor one does. Move `resolved:` in
-`examples/payments` and `examples/dog-fooding`, and `version:` as well where the minor went, since below 1.0.0 a caret
-pins the minor. A local run passes over all of it: `.imports/` is untracked, and a restore keeps a folder already
-holding the version it resolved to. Delete `.imports/` in both, repack the producer, and restore again to see what CI
-sees.
+`ChangelogTests` fails a version that has no section. A local run passes over the consumer's lock, because `.imports/`
+is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` in
+`examples/payments` and `examples/dog-fooding`, repack the producer, and restore again to see what CI sees.
 
 ## Agent skills
 

@@ -1,7 +1,7 @@
 # Working in Example Dogfooding
 
-[`../../CLAUDE.md`](../../CLAUDE.md) at the repository root carries the conventions, the commands and the writing rules
-for every corpus here. This page carries what is this corpus's alone.
+[`../../CLAUDE.md`](../../CLAUDE.md) at the repository root carries the commands, and routes to the standards that hold
+the rules for every corpus here. This page carries what is this corpus's alone.
 
 * **This corpus describes the repository it sits in.** Every other corpus here is fiction, so a convenient record is
   good enough there. A record here names a real workflow file, binds a real pull request, or is followed by whoever is
