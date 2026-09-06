@@ -4,6 +4,7 @@ tier: normative
 status: active
 implements: [ eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.ASSETS, eng:pol-EVER.ORPHAN, eng:pol-EVER.PARITY,
   eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-TRUS.INVENT, eng:pol-TRUS.REVIEW, eng:pol-TRUS.SOURCE ]
+verified-by: [ ctl-0004, ctl-0005 ]
 applies-to:
   - all
 review-by: "2027-09-02"
