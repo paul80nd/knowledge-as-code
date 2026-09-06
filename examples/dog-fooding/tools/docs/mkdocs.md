@@ -1,0 +1,51 @@
+---
+id: tol-mkdocs
+tier: descriptive
+status: approved
+versions: 1.6.x
+licence: BSD-2-Clause
+decided-in:
+replaces:
+successor:
+owner: paul.law
+tags: [ documentation, static-site ]
+---
+
+# MkDocs
+
+`Tool: tol-mkdocs` `APPROVED`
+
+The static site generator that builds the documentation site from `docs/`, configured by `mkdocs.yml` at the
+repository root.
+
+## What we use it for
+
+MkDocs is here because it is what tool documentation uses. The site documents `kac`, and it is not a corpus:
+`publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.
+
+`strict: true` in `mkdocs.yml` turns a dead link into a failed build. A page the navigation does not list is only
+reported at INFO, so `NavigationTests` in `kac.tests` holds that half instead.
+
+## Status
+
+**approved** since 2026-08-24.
+
+## Where it is used
+
+* [svc-docs-site] is built with it.
+
+## Alternatives considered
+
+None recorded.
+
+## Licence and obligations
+
+BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output rather than
+a redistribution of the generator, so nothing follows for what is published.
+
+## Related
+
+* [tol-mkdocs-material] is the theme it renders with.
+
+[svc-docs-site]: ../../services/docs-site.md
+[tol-mkdocs-material]: mkdocs-material.md
