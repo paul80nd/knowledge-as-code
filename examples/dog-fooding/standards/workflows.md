@@ -6,6 +6,7 @@ implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:p
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
   eng:pol-PIPE.REVERT, eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE,
   eng:pol-SCRT.STORE, eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
+verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006 ]
 applies-to:
   - all
 review-by: "2027-09-02"
