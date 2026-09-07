@@ -183,7 +183,10 @@ jobs:
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
 
-          if ! jq -e '.included == [] and (.trimmed | length) > 0' .dist/plugin/bundle.json > /dev/null; then
+          # A component naming no type reads no export, so it survives the trim that takes everything
+          # else. What must not ship is one that reads a type this corpus does not hold.
+          if ! jq -e 'all(.included[]; .requires == []) and (.trimmed | length) > 0' \
+            .dist/plugin/bundle.json > /dev/null; then
             echo "a corpus with no type bundled something that reads a type it does not hold"
             exit 1
           fi
