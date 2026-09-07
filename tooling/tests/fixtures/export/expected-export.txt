@@ -1,9 +1,11 @@
 # The CLI's own account of the run. Every type declaring an `export:` block travels, so the count below
-# covers both of them. A run narrowed with `--type` is `bundle`'s to pin.
+# covers all three. A parts file is named for the two types that keep parts and for neither the third.
+# A run narrowed with `--type` is `bundle`'s to pin.
 wrote .dist/export/manifest.json
 wrote .dist/export/glossary/terms.jsonl
 wrote .dist/export/policies/clauses.jsonl
-export: wrote 7 file(s) for glossary, policies.
+wrote .dist/export/processes/prc-add-a-title.json
+export: wrote 8 file(s) for glossary, policies, processes.
 
 # The temp root is not a git repository, so no ref resolves and no link can be built. Saying so is the
 # point: a corpus that publishes nowhere exports successfully and reports what it could not write.

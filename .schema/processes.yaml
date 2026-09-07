@@ -70,6 +70,26 @@ sections:
   required: [When to use this, Prerequisites, Steps, Verification]
   optional: [If it goes wrong, Related]
 
+# What a process contributes to a published export. It carries what decides whether this is the right
+# procedure and whether the reader can start it, and stops there. A process is followed whole and in
+# order, so the steps are read from the published record rather than lifted out of a flat file: the
+# record's own `links.human` addresses the commit the export was taken at. `parts:` is absent for the
+# same reason. A step is the one piece of a corpus that means nothing on its own, and a type declaring
+# it a part would invite an agent to act on one.
+export:
+  version: 1
+  fields: [id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags]
+  sections:
+    When to use this: full
+    Prerequisites: full
+  notes: >
+    `Prerequisites` travels whole beside the trigger, because the access a step needs decides whether
+    a reader may start at all, and that is a question asked before the record is opened.
+
+    `last-rehearsed` and `rehearsal-frequency` travel together. A date says nothing about staleness
+    without the cadence it is read against, and an unrehearsed procedure is a hypothesis whoever
+    follows it should be told about.
+
 index:
   columns: [id, title, status, last-rehearsed, owner]
   sort: id

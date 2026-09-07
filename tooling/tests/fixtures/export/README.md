@@ -43,7 +43,17 @@ differently.
 * Its line carries `level`, and a term line has no key for it. Alignment stays behind: a reference resolves through
   `frameworks.md`, and no consumer receives that page.
 
-The run exports both types, so the manifest holds an entry apiece. A run narrowed with `--type` belongs to the
+**A third type, keeping no parts at all.** `prc-add-a-title` is an ordinary process, and it is here because neither
+glossary nor policy can show what a type with nothing to flatten writes.
+
+* No `.jsonl` is written for it. Its one record travels as its own JSON, and that record is the unit a reader takes.
+* The manifest entry says so rather than leaving it to be inferred from a file that is not there: `parts` is zero and
+  `partsFile`, `recordKey`, `partKey`, `idKey` and `seeAlsoKey` are all null.
+* Two of its four sections travel. `Steps` and `Verification` stay in the record, so the export carries what decides
+  whether a procedure is yours and never the order you would follow.
+* Its `applies-to` is null. The field is declared, this corpus has no services to name, and the key is still there.
+
+The run exports all three types, so the manifest holds an entry apiece. A run narrowed with `--type` belongs to the
 [`bundle` fixture](../bundle/README.md).
 
 **No git repository.** The runner assembles the corpus in a temp directory and never initialises one, so no ref

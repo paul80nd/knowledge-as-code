@@ -201,8 +201,16 @@ The first two are what any reader needs to address a part. The last two are what
 shortcode onto, so a producer choosing its own words for them is stamped correctly rather than left unlabelled.
 
 A consumer assuming a spelling would read a producer's parts as empty wherever that producer chose different words, and
-every citation into them would fail for a reason nothing states. All four are absent where the type keeps no parts, as
-`partsFile` is, and `seeAlsoKey` is null as well for a type declaring no such key.
+every citation into them would fail for a reason nothing states. `seeAlsoKey` is null for a type declaring no such key.
+
+A type keeping no parts writes all five as null, beside `parts` at zero, and its records travel one JSON apiece.
+`processes` is that case, and the entry says so rather than leaving a consumer to infer it from a file that is not
+there:
+
+```json
+"type": "processes", "shapeVersion": 1, "records": 7, "parts": 0, "dir": "processes",
+"partsFile": null, "recordKey": null, "partKey": null, "idKey": null, "seeAlsoKey": null
+```
 
 ### `about` carries what the corpus says about itself
 
