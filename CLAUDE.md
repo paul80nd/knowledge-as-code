@@ -122,6 +122,26 @@ changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-
 carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
 skill does.
 
+## Where a page or a skill let you down
+
+The plugin is a read-only copy, so an issue is the only way an agent writes back to it. The guidance is not. The four
+`CLAUDE.md` files, the playbooks under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the four writing
+skills all sit in the working tree, one edit from whoever is reading your reply.
+
+Tell the developer, in the reply that closes the session, whichever of these happened:
+
+* an instruction that sent you the wrong way, or that you had to read twice before you could act on it
+* a question one of those pages should have answered and did not
+* an instruction you would have followed anyway, because Claude Code already asks for it
+* a playbook whose steps did not fit the work, or work no playbook covered
+* a rule in a writing skill that misfired on the surface you were writing
+
+**Say nothing where none of that happened.** Most sessions have no finding. One invented to fill the space costs the
+developer a read and a check, and leaves them nothing.
+
+**Raise no issue either.** The file is in front of you both, so the developer decides on the spot whether the edit is
+worth making, and says so where it is.
+
 ## Before you raise a pull request
 
 **The changelog entry and the version are two separate calls, and only the second is yours to ask about.**
