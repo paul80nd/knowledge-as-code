@@ -59,9 +59,9 @@ The folder does not have to be a repository yet. `new` offers to run `git init` 
 running `generate`, then `validate`, then `git add -A`:
 
 ```text
-new: wrote 100 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
-updated 1 of 38 generated file(s).
-validated 3 document(s) and 17 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+new: wrote 108 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
+updated 1 of 40 generated file(s).
+validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
 

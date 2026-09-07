@@ -32,7 +32,7 @@ The register records **current state**. An ADR records the **decision**, where t
 A small, uncontroversial adoption needs only a register entry. A contested or expensive choice earns both, and the entry
 cites the ADR in `decided-in`.
 
-A `rejected` entry earns its place. Somebody proposes the same package eighteen months later, and the entry hands them
+A `rejected` entry earns its place. Somebody proposes the same package two years later, and the entry hands them
 the evaluation we already did.
 
 ## Metadata

@@ -21,6 +21,7 @@ column for your row.
 | A check that proves a rule is being followed                         | [Controls](../controls.md)         |
 | A commitment about how we engineer, at principle level               | [Policies](../policies.md)         |
 | A decision that affects more than one repo, and its reasoning        | [ADRs](../adrs.md)                 |
+| A departure from a rule that somebody agreed to                      | [Deviations](../deviations.md)     |
 | A description of what a deployable component is and does             | [Services](../services.md)         |
 | A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
 | A narrative of how something works or why it's shaped that way       | [Explanations](../explanations.md) |
@@ -66,6 +67,10 @@ ADR records what was intended, a postmortem what the estate did about it.
 **[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
 leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
 honest state and the number worth watching.
+
+**[Deviations](../deviations.md).** A knowing departure from a rule, the person who accepted the risk, and the date it
+is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
+nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
 
 **[FAQs](../faqs.md).** A problem with a confirmed fix, promoted from a discovery once a human has verified it. It
 carries provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
@@ -147,6 +152,7 @@ graph LR;
   t_capabilities[Capability];
   t_controls[Control];
   t_data[Data];
+  t_deviations[Deviation];
   t_discoveries[Discovery];
   t_explanations[Explanation];
   t_faqs[FAQ];
@@ -169,6 +175,9 @@ graph LR;
   t_data -- flows-to --> t_services;
   t_data -- flows-to --> t_integrations;
   t_data -- owned-by --> t_services;
+  t_deviations -- applies-to --> t_services;
+  t_deviations -- departs-from --> t_policies;
+  t_deviations -- departs-from --> t_standards;
   t_discoveries -- applies-to --> t_services;
   t_discoveries -- promoted-to --> t_faqs;
   t_discoveries -- promoted-to --> t_standards;
@@ -216,6 +225,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Control     | `verifies`       | Standard                         | `verified-by`   |
 | Data        | `flows-to`       | Service, Integration             |                 |
 | Data        | `owned-by`       | Service                          |                 |
+| Deviation   | `applies-to`     | Service                          |                 |
+| Deviation   | `departs-from`   | Policy, Standard                 |                 |
 | Discovery   | `applies-to`     | Service                          |                 |
 | Discovery   | `promoted-to`    | FAQ, Standard                    | `promoted-from` |
 | Explanation | `explains`       | Service, Capability              |                 |
@@ -267,6 +278,13 @@ that is a standard. Most substantial changes produce both.
 
 **Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
 typically spans several services. One service often contributes to several capabilities.
+
+**Deviation vs ADR.** An ADR decides how something is built, and the decision stays true. A deviation says we are
+knowingly not following a rule, and is written to be closed. If the estate is meant to look like this from now on, write
+the ADR and change the rule.
+
+**Deviation vs Policy.** The policy is the commitment. The deviation is one named, dated departure from it, and it
+changes nothing the policy says. A departure everyone takes is a policy that needs rewriting.
 
 **Discovery vs FAQ.** A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a
 human and carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion do
