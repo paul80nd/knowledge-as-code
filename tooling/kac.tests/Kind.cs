@@ -7,8 +7,10 @@ namespace kac.tests;
 //
 // A few ask whether **this repository** still holds together: whether a page states the usage the parser
 // accepts, whether a comment cites a file that exists, whether the source keeps a convention no compiler
-// enforces, whether the changelog carries a section for the version `kac.csproj` names. Those fail when content here drifts and never when the tool's logic is
-// wrong, and no corpus consuming `kac` carries any of them, because none of it is shipped.
+// enforces, whether the changelog carries a section for the version `kac.csproj` names, whether a fixture's
+// dates still sit clear of today. Those fail when content here drifts, or when the calendar moves under it,
+// and never when the tool's logic is wrong. No corpus consuming `kac` carries any of them, because none of
+// it is shipped.
 //
 // A trait rather than a project of their own. They are a small tail of this suite rather than half of it,
 // `Repo` and `CliReference` are read from both sides, and the whole suite runs in under a second, so a

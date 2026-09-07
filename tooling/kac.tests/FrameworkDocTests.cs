@@ -91,7 +91,7 @@ public class FrameworkDocTests
 
         return
         [
-            .. Validator.CheckAll(Corpus.Load(tree, Schema(), new CorpusDescriptor()))
+            .. Validator.CheckAll(Corpus.Load(tree, Schema(), new CorpusDescriptor()), Required.Today)
                 .Where(f => f.Check.Value == "framework-names-types")
         ];
     }

@@ -10,6 +10,11 @@ public static class Harness
     // Shared with `Creation`, which needs the same tree for a different reason: the template it reads.
     internal static readonly string RepoRoot = FindRepoRoot();
 
+    // The day every scenario is judged against. Named rather than read from the clock, so a rule written
+    // against `today()` gives one answer for the life of the fixture. `FixtureDateTests` in `kac.tests`
+    // keeps the dates in those fixtures well clear of it.
+    internal static readonly DateOnly Today = new(2026, 6, 15);
+
     public static ValidationResult Validate(string fixtureName)
     {
         var schemaDir = Path.Combine(RepoRoot, ".schema");
@@ -27,7 +32,7 @@ public static class Harness
             CopyTree(corpusDir, temp);
 
             var corpus = Corpus.Load(temp);
-            return new ValidationResult(Validator.CheckAll(corpus), corpus.Docs.Count,
+            return new ValidationResult(Validator.CheckAll(corpus, Today), corpus.Docs.Count,
                 corpus.SkippedNoFrontmatter);
         }
         finally

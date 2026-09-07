@@ -8,19 +8,37 @@ namespace kac.tests;
 public class RuleExprTests
 {
     // A document with the frontmatter, sections and links a case needs, parsed the way kac parses one.
-    private static Facts FactsFor(string frontmatter, string body)
+    private static Facts FactsFor(string frontmatter, string body, DateOnly? today = null)
     {
         var doc = Required.Parsed("adrs/0001-a-title.md",
             $"---\n{frontmatter}\n---\n\n# A title\n\n{body}", new Schema());
-        return new Facts(doc);
+        return new Facts(doc, today ?? Required.Today);
     }
 
-    private static bool Eval(string expr, string frontmatter = "id: adr-0001", string body = "Some prose.") =>
-        RuleExpr.Eval(RuleExpr.Compile(expr), FactsFor(frontmatter, body));
+    private static bool Eval(string expr, string frontmatter = "id: adr-0001", string body = "Some prose.",
+        DateOnly? today = null) =>
+        RuleExpr.Eval(RuleExpr.Compile(expr), FactsFor(frontmatter, body, today));
 
     [Fact]
     public void Field_reads_a_frontmatter_scalar()
         => Assert.True(Eval("field('status') == 'deprecated'", "id: adr-0001\nstatus: deprecated"));
+
+    // The ISO string is what makes the fact useful: the ordinary string comparison is then a date
+    // comparison, which is the bargain the grammar already strikes between two date fields. The literal is
+    // `Required.Today` written out, so a move of that day fails here rather than everywhere at once.
+    [Fact]
+    public void Today_is_the_run_day_as_an_iso_date()
+        => Assert.True(Eval("today() == '2026-06-15'"));
+
+    // The reading `expiry` is built on, both ways round and on the day itself, where a review has come
+    // due and is not yet late.
+    [Theory]
+    [InlineData("2026-06-14", false)]
+    [InlineData("2026-06-15", true)]
+    [InlineData("2026-06-16", true)]
+    public void A_date_field_compares_against_today(string reviewBy, bool stillInside)
+        => Assert.Equal(stillInside,
+            Eval("field('review-by') >= today()", $"id: dev-a-slug\nreview-by: \"{reviewBy}\""));
 
     [Fact]
     public void Present_is_false_for_a_bare_key_as_well_as_a_missing_one()

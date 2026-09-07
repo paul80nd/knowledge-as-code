@@ -1,17 +1,22 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Markdig.Syntax;
 
 namespace kac.core;
 
-// Everything a rule expression is allowed to ask about a document, and the whole of it. Each answer
-// reads what the parse pass already produced, and the evaluator never re-parses markdown. So adding
-// a fact means adding one method here and one entry to RuleExpr's function table, and never touching
-// the grammar.
+// Everything a rule expression is allowed to ask, and the whole of it. Almost all of it is about one
+// document, and each answer reads what the parse pass already produced, so the evaluator never
+// re-parses markdown. So adding a fact means adding one method here and one entry to RuleExpr's
+// function table, and never touching the grammar.
+//
+// `today` is the exception: the day the run happens, which is not something the document says. A rule
+// about a date the record has gone past cannot be written without it. It arrives as an argument, so
+// the caller settles the day once for a whole run and a test can name one.
 //
 // Built per document and discarded after its rules have run, which is what makes the measurements it
 // caches safe to cache: the document it was built from cannot change while it exists.
-public sealed class Facts(Doc doc)
+public sealed class Facts(Doc doc, DateOnly today)
 {
     // Null where the document does not carry the key at all, or carries it as a bare key. A field the
     // type derives answers with what it derived, and with the empty string where that is nothing. A
@@ -42,6 +47,10 @@ public sealed class Facts(Doc doc)
     public string FirstSection() => doc.Sections.Count > 0 ? doc.Sections[0].Title : "";
 
     public int Links() => doc.Links.Count;
+
+    // The day the run happens, as the ISO string every date field is written in, so a rule compares it
+    // against `field('review-by')` under the ordinary string comparison and needs no date type.
+    public string Today() => today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
     // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which

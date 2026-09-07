@@ -12,11 +12,15 @@ public static class Validator
     // caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up running
     // a subset and believing it ran the lot.
     //
+    // `today` is the day a rule written against `today()` judges a record by. It is taken rather than
+    // read here, so the caller decides once for the whole run and a test can name a day.
+    // `docs/design/expressions.md` says what a rule may do with it.
+    //
     // `standings` is what each import's source publishes now, which only a caller holding a registry can
-    // answer. Null is the honest default: a caller that did not ask reports nothing, rather than
-    // reporting every import as current on the strength of never having looked.
+    // answer. Null is the honest default: a caller that did not ask reports nothing, and never every
+    // import as current on the strength of never having looked.
     public static List<Finding> CheckAll(
-        LoadedCorpus corpus, IReadOnlyList<ImportStanding>? standings = null)
+        LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
     {
         var (schema, tree) = (corpus.Schema, corpus.Tree);
         var findings = new List<Finding>();
@@ -25,7 +29,7 @@ public static class Validator
         SchemaChecks.Check(schema, findings);
 
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, tree, findings);
+            CheckDocument(doc, schema, tree, findings, today);
 
         // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file that gets a block is a file this
@@ -77,7 +81,7 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter: a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, tree, findings, DocKind.Template);
+                CheckDocument(template, schema, tree, findings, today, DocKind.Template);
         }
 
         // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
@@ -99,7 +103,7 @@ public static class Validator
         return findings;
     }
 
-    public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f,
+    public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f, DateOnly today,
         DocKind kind = DocKind.Record)
     {
         var report = new Report(d.Rel, f);
@@ -256,7 +260,8 @@ public static class Validator
         // answers none of those questions, and its guidance prose would answer several of them wrongly.
         // This is also the one open-ended set: a type may declare a rule tomorrow. So a template is exempt
         // from the category rather than from the rules that happen to exist today.
-        if (kind == DocKind.Record) CheckRules(d, t, report);
+        if (kind == DocKind.Record)
+            CheckRules(d, t, report, today);
     }
 
     // The markers a generated block lives between. `Markers.SpliceBlock` looks for the pair and returns
@@ -1142,7 +1147,7 @@ public static class Validator
     // carrying an `expr:` is answered by evaluating it, and needs no C# at all. A rule whose question
     // needs a real algorithm is one of `DocumentRules`, looked up by id. `CLAUDE.md` beside this project
     // draws the line between them, and this loop is the whole of the dispatch either way.
-    private static void CheckRules(Doc d, TypeSchema t, Report report)
+    private static void CheckRules(Doc d, TypeSchema t, Report report, DateOnly today)
     {
         // Built once for the document and only where a rule actually asks something of it, so a type
         // with no expression rules measures nothing.
@@ -1152,7 +1157,7 @@ public static class Validator
         {
             if (rule.IsExpression)
             {
-                facts ??= new Facts(d);
+                facts ??= new Facts(d, today);
                 if (RuleExpr.Eval(rule.Compiled, facts)) continue;
                 // An expression rule reports under its own rule id, which is the one place the two ids are
                 // deliberately the same string. Written out so that sameness is a decision rather than a

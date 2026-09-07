@@ -88,7 +88,7 @@ public sealed class CreationSteps
     [Then("no link fails to resolve")]
     public void ThenNoLinkFailsToResolve()
     {
-        var dangling = Validator.CheckAll(Corpus.Load(_folder))
+        var dangling = Validator.CheckAll(Corpus.Load(_folder), Harness.Today)
             .Where(f => f.Check.Value == "link-resolves")
             .Select(f => $"{f.File}: {f.Message}")
             .ToList();

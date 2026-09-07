@@ -122,11 +122,6 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `review-after-acceptance`   | error   | The review date falls after the day the risk was accepted.                                                      |
 | `not-open-ended`            | warning | The record does not claim the departure is permanent or open-ended.                                             |
-
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule     | What it would verify                                               |
-|----------|--------------------------------------------------------------------|
-| `expiry` | Scheduled. Reports active deviations whose `review-by` has passed. |
+| `expiry`                    | warning | An active deviation is still inside the review date it carries.                                                 |
 
 <!-- END GENERATED: checks-deviations -->

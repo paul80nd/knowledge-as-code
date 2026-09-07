@@ -325,7 +325,7 @@ departure from a policy.
 | `EXPIRY`  | `eng:std-GATES`                | A skipped check carries the date it is revisited.                          |
 | `SURFACE` | Gap, `dev-deviations-unstated` | The register is published, and no standard says it has to be.              |
 | `CLOSE`   | Gap, `dev-deviations-unstated` | Every record here is open, and no standard says what closing takes.        |
-| `PERM`    | Gap, `dev-deviations-unstated` | Every record carries a review date. `expiry` is declared and does not run. |
+| `PERM`    | Gap, `dev-deviations-unstated` | Every record carries a review date, and `expiry` warns once one goes by.   |
 | `CUSTOM`  | Gap, `dev-deviations-unstated` | This map did exactly that, once. No standard asks for it again.            |
 | `DEBT`    | Gap, `dev-deviations-unstated` | A shortcut becomes an issue on the tracker, and no standard requires that. |
 

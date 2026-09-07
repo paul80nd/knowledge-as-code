@@ -92,7 +92,7 @@ appears wired up and never fires, the exact failure this layer exists to end.
 ## The facts an expression can ask for
 
 These are the whole callable surface. Each reads what the parse pass already produced, so the evaluator never re-parses
-markdown.
+markdown, and `today()` is the last row because it is the one that reads nothing about the record.
 
 | Function                         | Returns | Reads                                                                                                                |
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
@@ -106,6 +106,11 @@ markdown.
 | `words()`                        | int     | every heading and paragraph the record **renders**. Frontmatter and fenced code carry no inline content and fall out |
 | `matches('re')`                  | bool    | the body **as written**, code fences, link targets and markdown syntax included. Frontmatter is not read             |
 | `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the record holds no such section                                   |
+| `today()`                        | string  | the day the run happens, as an ISO date, so a rule compares it against a date field                                  |
+
+**`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has
+gone by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first
+record and its last the same answer.
 
 **`words()` and `matches()` deliberately see different documents.** One walks the rendered text and the other the
 source. That is what lets `matches()` find a credential pasted into a fenced block, the case those rules exist for. It

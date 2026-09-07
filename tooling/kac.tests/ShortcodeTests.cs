@@ -91,7 +91,7 @@ public class ShortcodeTests
 
         return
         [
-            .. Validator.CheckAll(Corpus.Load(tree, schema, descriptor))
+            .. Validator.CheckAll(Corpus.Load(tree, schema, descriptor), Required.Today)
                 .Where(f => f.Check.Value == "shortcode")
         ];
     }

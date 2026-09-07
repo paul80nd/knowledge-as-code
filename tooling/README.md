@@ -124,8 +124,9 @@ Three layers, all run from the repository root and all run in CI, on GitHub thro
 
 Most of `kac.tests` asks whether `kac` behaves. A small tail asks whether **this repository** still holds
 together: whether a page states the usage the parser accepts, whether a comment cites a file that exists, whether
-`CHANGELOG.md` carries a section for the version `kac.csproj` names. Those fail when content here drifts and never when
-the tool's logic is wrong, and no corpus consuming `kac` carries one, because none of it ships.
+`CHANGELOG.md` carries a section for the version `kac.csproj` names, whether a fixture's dates still sit clear of
+today. Those fail when content here drifts, or when the calendar moves under it, and never when the tool's logic is
+wrong. No corpus consuming `kac` carries one, because none of it ships.
 
 A `Kind` trait separates them, so a tight loop can leave the second out:
 
