@@ -69,14 +69,13 @@ instead. `export` reads the `.imports/` that `restore` fetches, so a clean clone
 ```bash
 kac export       # write the records this branch holds
 kac bundle       # assemble them and ../../template/.plugin/ into .dist/plugin/
-claude plugin marketplace add /absolute/path/to/knowledge-as-code/examples/dog-fooding/.dist
+claude plugin marketplace add ./.dist
 claude plugin install example-dogfooding@example-dogfooding
 ```
 
 `bundle` writes `.dist/` as a marketplace offering one plugin, and names the marketplace and the plugin alike after
-the corpus. A directory source resolves against the marketplace rather than against the project, so the path has to be
-absolute. That path is a fact about your machine, and `claude plugin marketplace add` puts it in your own user
-settings where no commit reaches it.
+the corpus. `claude plugin marketplace add` resolves whatever path you type and stores the absolute one in your own
+user settings. That absolute path is a fact about your machine, so the install stays yours and no commit carries it.
 
 Leaving the branch copy enabled as well gives you two of every skill. Turn it off in the settings file git ignores:
 
