@@ -22,6 +22,6 @@
     "Conformance checklist": "- [ ] Every store holding payment data has a period written against it in the repository.\n- [ ] The retention job has run in the last week, and its record says what it deleted.\n- [ ] A query for tokens last used over 13 months ago returns nothing.\n- [ ] The telemetry platform is configured to 90 days.\n- [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.\n- [ ] Backup lifecycle rules match the periods of the stores they hold."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4b2b31880aaf45ed962b94cd86f74a89da619c47/examples/payments/standards/operations/data-retention.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/690a9b40daec8166dc7bbf8e9a9936772d7e58a4/examples/payments/standards/operations/data-retention.md"
   }
 }
