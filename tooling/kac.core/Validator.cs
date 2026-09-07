@@ -181,6 +181,14 @@ public static class Validator
             ValueChecks.Check(name, node, spec, kind, d.FrontStartLine, report);
         }
 
+        // Held against the singular name the type declares rather than against the folder, because that
+        // is the name frontmatter carries. The folder, that name and the id prefix are declared together
+        // in the type's schema file, and `id-prefix` below holds a record to the third of them.
+        if (present.TryGetValue("type", out var typeNode) && Yaml.Raw(typeNode) is { } type && type != t.TypeName)
+            report.Err(new CheckId("type-matches-folder"),
+                $"type '{type}' does not match the '{t.Key}' folder's type '{t.TypeName}'.",
+                Yaml.LineOf(typeNode, d.FrontStartLine));
+
         if (present.TryGetValue("tier", out var tierNode) && Yaml.Raw(tierNode) is { } tier && tier != t.Tier)
             report.Err(new CheckId("tier-matches-type"),
                 $"tier '{tier}' does not match the '{t.TypeName}' type tier '{t.Tier}'.",

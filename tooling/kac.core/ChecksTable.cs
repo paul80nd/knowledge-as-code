@@ -50,6 +50,8 @@ public static class ChecksTable
         ("min-records", [new("min-records")],
             "A value in a grouping field is carried by at least as many records as the schema asks for.",
             t => t.AnyField(f => f.MinRecords is not null)),
+        ("type-matches-folder", [new("type-matches-folder")],
+            "`type` matches the singular type name the record's folder declares.", null),
         ("tier-matches-type", [new("tier-matches-type")], "`tier` matches the tier the type declares.", null),
         // Which of the three shapes an id takes is the type's to decide, so the row says a shape is held
         // to rather than naming the three a reader might be on.
