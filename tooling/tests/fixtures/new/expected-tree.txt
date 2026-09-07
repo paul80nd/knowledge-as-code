@@ -10,8 +10,10 @@
 .plugin/hooks/breadcrumb
 .plugin/hooks/breadcrumb.cmd
 .plugin/hooks/hooks.json
+.plugin/skills/corpus-retrieval/SKILL.md
 .plugin/skills/glossary-lookup/SKILL.md
 .plugin/skills/policy-lookup/SKILL.md
+.plugin/skills/process-lookup/SKILL.md
 .plugin/skills/standards-lookup/SKILL.md
 .schema/CLAUDE.md
 .schema/README.md

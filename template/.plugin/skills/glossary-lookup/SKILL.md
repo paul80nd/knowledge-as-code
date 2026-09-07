@@ -58,7 +58,7 @@ Each line carries the entry whole:
 | `part`               | string                   | the term's key inside that glossary                                          |
 | `shortcode`          | string, or absent        | the corpus that published the entry. A term written here carries no such key |
 | `status`, `reviewBy` | string                   | how far the entry has settled, and the date it was meant to be read again    |
-| `path`, `anchor`     | string                   | the two values a link template takes, and see below for which template       |
+| `path`, `anchor`     | string                   | the two values `corpus-retrieval` builds a link from                         |
 
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
 one exception, and the row above says so.
@@ -81,41 +81,16 @@ you build the filename. The owning record for `eng:gls-estate.borrower` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and for a bare id it is
 `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/gls-estate.json`.
 
-## Build a link from a template
+## Link to the term, and read its source
 
-**No line holds a URL.** `manifest.json` holds a publishing block per corpus, and each line holds the two values a
-template takes: `path` and `anchor`.
+**Load the `corpus-retrieval` skill.** It carries the whole of this: which publishing block addresses the corpus that
+wrote the line, how to substitute a template without breaking it, how to fetch the file through the client that
+authenticates to that platform, and what to say where nothing reaches it.
 
-**Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
-in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
-`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit, which
-fetches a 404 or somebody else's file, and both read as plausible.
+**Bring it two values.** A line holds `path` and `anchor`, and those are what a template takes.
 
-**Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
-else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
-nobody asked about.
-
-**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
-wiki page rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every
-other target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose
-above, every time.
-
-**To send a reader to a record, use the block's `humanTemplate`.** Substitute `path` and `anchor`. That is the rendered
-page, and the anchor lands the reader on the term rather than at the top of the glossary.
-
-**To read a record's source yourself, fetch the file rather than the page.** The same block names the `target`, the
-`base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
-repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
-hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
-record.
-
-**No unauthenticated host serves that source**, except GitHub's and only for a public repository. Where you have no
-client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
-read as the record.
-
-**Where the block's `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so, and
-quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.
+**A term is written as a heading**, so it has an anchor of its own and the link lands on the entry rather than at
+the top of the glossary.
 
 ## Read every hit, not the first
 
@@ -145,7 +120,7 @@ naming the corpus as well wherever the two glossaries were written by different 
   whether you read the entry correctly.
 * **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the one
   installed. A reader working in the other context needs to see the mismatch without decoding an id to find it.
-* **Link the reader to the record**, built from `humanTemplate` as above.
+* **Link the reader to the record**, with the `corpus-retrieval` skill.
 * **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
 
 ## Say when an entry is unsettled

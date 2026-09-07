@@ -84,12 +84,25 @@ adopted, so a README or a licence in the plugin tree needs no declaration. A com
 file, so the trim matches the declared path itself as well as anything beneath it, on whole segments: `skills/a` does
 not take `skills/ab` with it.
 
-### Each component reads its own type's parts file
+### A skill addresses the type it declares
 
-A corpus adopting several types that export ships a skill for each, over one export. The export writes one parts file
-per type, and each skill addresses the one belonging to the type it declares in `requires`. A skill naming another
-type's parts file answers from one written for a different question, and whoever asked cannot tell. `bundle` does not
-read a component's files, so nothing here catches that. The round trip does, over the installed copy.
+A corpus adopting several types that export ships a skill for each, over one export. Where that type declares parts,
+the export writes one parts file for it and the skill addresses that file. A skill naming another type's parts file
+answers from one written for a different question, and whoever asked cannot tell. `bundle` does not read a component's
+files, so nothing here catches that. The round trip does, over the installed copy.
+
+A type declaring no parts writes no such file, and its records travel one JSON apiece. `processes` is that case. A
+process is followed whole and in order, so the record is the unit, and a step addressed on its own would be quoted out
+of the sequence that makes it safe. Its skill reads the directory, and `manifest.json` reports `partsFile` as null.
+
+### A component naming no type travels with every plugin
+
+`requires` names the types a component reads. One naming none reads no export at all, so nothing can trim it.
+`corpus-retrieval` is that component: it reaches a record's published source, which every lookup skill needs and no
+single type owns.
+
+One consequence is worth knowing. A corpus exporting nothing still ships that skill, so the warning below fires only
+where the plugin declares no unconditional component at all.
 
 ### Trimming everything warns and still builds
 
