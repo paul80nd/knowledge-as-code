@@ -459,12 +459,16 @@ public sealed class TypeSchema
     // Whether any field on this type declares the given FieldSpec property. The same question serves the
     // schema-driven core checks (reciprocal, mirrors-section, mirrors-citations) that fire only when a
     // field opts in.
-    //
-    // An object list's entry keys are asked as well. A key inside one is declared with the vocabulary a
-    // field is declared with and held to it the same way, so a check firing on a declaration fires on a
-    // record whether the declaration sits at the top level or one step in.
-    public bool AnyField(Func<FieldSpec, bool> predicate) =>
-        Fields.Values.Any(f => predicate(f) || (f.Entry ?? []).Any(predicate));
+    public bool AnyField(Func<FieldSpec, bool> predicate) => Fields.Values.Any(predicate);
+
+    // The same question of the keys inside an object list's entries, which are declared with the
+    // vocabulary a field is declared with. Asked apart from `AnyField` rather than folded into it,
+    // because only some checks read a key one step in: `ValueChecks` walks an entry and holds each key
+    // to its own declaration, where `reciprocal`, `mirrors-section` and `ref` are read from the top
+    // level alone. Folding the two would let a nested declaration advertise a check that cannot fire on
+    // it.
+    public bool AnyEntryKey(Func<FieldSpec, bool> predicate) =>
+        Fields.Values.Any(f => (f.Entry ?? []).Any(predicate));
 
     // The universal fields, the type's own, and the reserved keys the publishing platform adds.
     // Deduplicated, since a type refining `status` declares it in both chains. Order carries no meaning

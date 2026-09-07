@@ -38,7 +38,7 @@ public static class ChecksTable
             "Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.", null),
         ("timestamp-format", [new("timestamp-format")],
             "Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.",
-            t => t.AnyField(f => f.Type == "timestamp")),
+            t => t.AnyField(f => f.Type == "timestamp") || t.AnyEntryKey(k => k.Type == "timestamp")),
         ("enum", [new("enum"), new("enum-lowercase")], "Enum values are in range and lowercase.", null),
         ("field-pattern", [new("field-pattern")],
             "Values match the pattern their field declares (e.g. `tags`).", null),

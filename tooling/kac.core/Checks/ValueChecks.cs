@@ -127,12 +127,12 @@ public static class ValueChecks
         => v.Length == 10 && v[4] == '-' && v[7] == '-'
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
 
-    // A moment rather than a day, in UTC and to the second: `2026-09-07T20:18:00Z`. Shape then calendar
-    // under one id, as `Date` above splits them, because both leave the author with the same thing to do.
+    // A moment, to the second and in UTC: `2026-09-07T20:18:00Z`. Shape then calendar under one id, on
+    // `Date` above's division and for its reason.
     //
-    // The value is left unquoted, where a date is required to be quoted. A date reread as a datetime is
-    // shifted by whichever zone the reader is in, and shows a day the file does not carry. A `Z` instant
-    // carries its own zone, so no reread can move it.
+    // Style is not read. A date is held to being quoted because an unquoted one is reread as a datetime
+    // and shifted into the reader's zone; a `Z` instant names the same moment either way. `_checks.yaml`
+    // carries that argument in full.
     private static void Timestamp(string name, YamlNode node, int frontStart, Report report)
     {
         var v = Yaml.Raw(node) ?? "";
@@ -146,8 +146,8 @@ public static class ValueChecks
                 $"'{name}' is not a moment on the calendar, got '{v}'.", Yaml.LineOf(node, frontStart));
     }
 
-    // Written as an instant, which is a question about the characters alone, on the division `IsIsoShape`
-    // above draws. `DateTimeOffset` answers whether those characters name a moment.
+    // Written as an instant, which is a question about the characters alone. `DateTimeOffset` answers
+    // whether those characters name a moment.
     private static bool IsInstantShape(string v)
         => v.Length == 20 && IsIsoShape(v[..10]) && v[10] == 'T' && v[13] == ':' && v[16] == ':' && v[19] == 'Z'
            && v[11..13].All(char.IsDigit) && v[14..16].All(char.IsDigit) && v[17..19].All(char.IsDigit);

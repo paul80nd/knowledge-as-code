@@ -484,8 +484,8 @@ public static class Exporter
 
     // One declared field as JSON, in the shape its type declared. A field declared as a list is an array
     // however the record wrote it, so `depends-on: svc-a` and `depends-on: [svc-a]` both reach a consumer
-    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`, `enum` and
-    // `id` all come to here.
+    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`,
+    // `timestamp`, `enum` and `id` all come to here.
     //
     // The declaration decides the shape because a consumer holds the declaration and reads one key one
     // way. A shape read off the document would vary record by record. `docs/design/export.md` states it.

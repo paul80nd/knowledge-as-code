@@ -82,8 +82,8 @@ fields:
       and who checked it before that. One confirmation is one entry, so the moment and the person are
       edited together.
 
-      `at` leads the entry because the list sorts on its first key and an index column renders it. A
-      confirmation history then reads oldest first, and the index carries the moment.
+      `at` leads the entry because the list sorts on its first key. A confirmation history then reads
+      oldest first, and the last line is the one somebody asking about trust reads.
 
       `by` refuses an agent, a session id and a team alias, because none of them can be asked what they
       checked. It refuses `role:` as well: a post cannot read an answer, and the person who did read it
@@ -99,7 +99,7 @@ sections:
   optional: [Why it happens, How we found it, Related]
 
 index:
-  columns: [id, title, applies-to, status, confirmed]
+  columns: [id, title, applies-to, status, review-by]
   sort: id
 
 rules:

@@ -145,9 +145,12 @@ checks:
     severity: error
     description: A timestamp field is `YYYY-MM-DDThh:mm:ssZ` and names a moment the calendar has.
     notes: >
-      A moment rather than a day, in UTC and to the second. It is written unquoted, where a date is
-      required to be quoted: a date reread as a datetime is shifted by whichever zone the reader sits in
-      and shows a day the file does not carry, and a `Z` instant carries its own zone.
+      A moment rather than a day, in UTC and to the second. Fractional seconds and an offset other than
+      `Z` are refused, so two records name one instant one way.
+
+      Style is not read, where a date is held to being quoted. An unquoted date is reread as a datetime
+      and shifted into whichever zone the reader sits in, which shows a day the file does not carry. A
+      `Z` instant names the same moment either way, so the house form is unquoted and nothing checks it.
 
   enum:
     severity: error

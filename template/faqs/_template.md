@@ -36,8 +36,9 @@ Name the title and the filename for the **symptom**, not the cause. That is what
     - { at: 2026-09-07T20:18:00Z, by: human:alex.doe }
   ```
 
-  `at` is a moment in UTC, unquoted. `by` is a person, and a `role:` is refused because a post cannot read an
-  answer. Add a line each time somebody checks the answer again, and leave the earlier lines alone.
+  `at` is a moment in UTC, to the second, and written unquoted. `by` is a person, and a `role:` is refused because
+  a post cannot read an answer. Add a line each time somebody checks the answer again, and leave the earlier lines
+  alone.
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is

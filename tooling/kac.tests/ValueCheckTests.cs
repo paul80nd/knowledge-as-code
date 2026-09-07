@@ -94,7 +94,6 @@ public class ValueCheckTests
         Assert.Contains("timestamp-format", Ids(found));
     }
 
-    // The distinct wording is the whole reason the shape and the calendar are asked separately.
     [Fact]
     public void A_moment_that_is_not_on_the_calendar_says_something_else()
     {
