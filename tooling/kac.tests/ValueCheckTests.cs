@@ -295,6 +295,52 @@ public class ValueCheckTests
         Assert.Contains("date-format", Ids(Run("field: \"{{date}}\"\n", Field("date"))));
     }
 
+    [Theory]
+    [InlineData("field: 12345\n")]
+    [InlineData("field: -7\n")]
+    [InlineData("field: +7\n")]
+    [InlineData("field: 0\n")]
+    [InlineData("field: \"12345\"\n")] // quoted, which YAML calls a string and this check does not read
+    public void A_whole_number_passes(string yaml)
+    {
+        Assert.Empty(Run(yaml, Field("int")));
+    }
+
+    [Theory]
+    [InlineData("field: 12a\n")]
+    [InlineData("field: 1.5\n")]
+    [InlineData("field: 1,000\n")]
+    [InlineData("field: 1_000\n")] // a YAML 1.1 separator, refused rather than decoded
+    [InlineData("field: 0x1f\n")] // a base prefix, likewise
+    public void A_value_not_written_as_a_number_says_so(string yaml)
+    {
+        var found = Assert.Single(Run(yaml, Field("int")));
+        Assert.Equal("int-format", found.Check.Value);
+        Assert.Contains("is not a whole number", found.Message);
+    }
+
+    // Written as a number and naming no value a `long` holds, which is the second half `Date` and
+    // `Timestamp` report under one id for the same reason: the author has one thing to do about either.
+    [Fact]
+    public void A_number_past_what_the_tool_holds_says_so()
+    {
+        var found = Assert.Single(Run("field: 99999999999999999999\n", Field("int")));
+        Assert.Equal("int-format", found.Check.Value);
+        Assert.Contains("more digits than a number can hold", found.Message);
+    }
+
+    // An entry of an `of: int` list reaches the same check, and the message says which half of the field
+    // is at fault.
+    [Fact]
+    public void An_entry_of_an_int_list_is_held_to_the_same_thing()
+    {
+        var spec = new FieldSpec { Name = "field", Type = "list", Of = "int" };
+        var found = Assert.Single(Run("field: [ 41, abc ]\n", spec));
+
+        Assert.Equal("int-format", found.Check.Value);
+        Assert.Contains("'field' entry 'abc'", found.Message);
+    }
+
     // An unquoted placeholder opens a YAML flow mapping, so the value never arrives as text. Reported
     // with the fix, rather than left to the date check to quote an empty string back at the author.
     [Fact]

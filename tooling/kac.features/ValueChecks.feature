@@ -69,9 +69,15 @@ Scenario: A timestamp is held to its shape and then to the calendar
     | 7    | timestamp-format | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.    |
     | 8    | timestamp-format | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'. |
 
+Scenario: An int list is read one entry at a time
+  When I validate the corpus
+  Then the findings for "capabilities/ado-epics-that-are-not-numbers.md" are exactly:
+    | line | check      | message                                           |
+    | 7    | int-format | 'ado-epics' entry 'EPIC-7' is not a whole number. |
+
 Scenario: The corpus as a whole produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 10 documents and 0 skipped
+  Then validation reports 12 documents and 0 skipped
   And no warnings are reported
   And the findings are exactly:
     | file                                 | line | check              | message                                                                             |
@@ -83,6 +89,7 @@ Scenario: The corpus as a whole produces exactly these findings and nothing else
     | adrs/0004-bad-tag-pattern.md         | 10   | field-pattern      | 'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$.                     |
     | adrs/0005-impossible-date.md         | 5    | date-format        | 'decided-on' is not a date on the calendar, got '2026-13-40'.                       |
     | adrs/0006-owner-without-a-prefix.md  | 6    | field-pattern      | 'owner' value 'alex.doe' does not match ^(human\|role):[a-z0-9.-]+$.                |
+    | capabilities/ado-epics-that-are-not-numbers.md | 7 | int-format    | 'ado-epics' entry 'EPIC-7' is not a whole number.                                    |
     | faqs/confirmed-at-is-not-a-moment.md | 7    | timestamp-format   | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.         |
     | faqs/confirmed-at-is-not-a-moment.md | 8    | timestamp-format   | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.      |
     | faqs/role-cannot-confirm.md          | 7    | field-pattern      | 'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |

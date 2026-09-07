@@ -51,8 +51,9 @@ checks:
     notes: >
       The question is whether code acts on the value, not whether it is spelled correctly: `style:
       mnemonic` would pass a spelling test, and what makes it sound is the branch that reads it. Covers
-      a rule id claiming a `severity:` nothing answers, `values:` on anything but an enum, `min-items:`
-      on anything but a list, and an unknown `id.style` or `index.order`.
+      a `type:` or an `of:` naming something no check reads, a rule id claiming a `severity:` nothing
+      answers, `values:` on anything but an enum, `min-items:` on anything but a list, and an unknown
+      `id.style` or `index.order`.
 
       A `ref:` and a `versus:` are outside it, because each names a type and a corpus adopts as many
       types as it has use for. One naming a type this corpus declined is asked nothing, and adopting the
@@ -152,6 +153,16 @@ checks:
       Style is not read, where a date is held to being quoted. An unquoted date is reread as a datetime
       and shifted into whichever zone the reader sits in, which shows a day the file does not carry. A
       `Z` instant names the same moment either way, so the house form is unquoted and nothing checks it.
+
+  int-format:
+    severity: error
+    description: An int field, and each entry of an int list, is a whole number the tool can read.
+    notes: >
+      Plain decimal, with an optional leading sign. A separator and a base prefix are
+      refused rather than decoded: YAML reads `1_000` and `0x1f` as numbers of its own, and an author
+      should not have to know which spellings the parser admits before writing one down. A run of digits
+      past what a 64-bit number holds is reported under the same id, because the author has the same
+      thing to do about either.
 
   enum:
     severity: error

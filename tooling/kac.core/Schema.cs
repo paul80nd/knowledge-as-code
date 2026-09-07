@@ -16,8 +16,8 @@ public sealed class FieldSpec
     public bool Required { get; init; }
     public string? RequiredWhen { get; init; }                // as written, for the message that quotes it
     public RequiredWhen? RequiredWhenCondition { get; init; } // as parsed, for the check that applies it
-    public string Type { get; init; } = "string";             // string|date|enum|id|list
-    public string? Of { get; init; }                          // element type when Type == list
+    public string Type { get; init; } = "string";             // one of ValueChecks.FieldTypes
+    public string? Of { get; init; }                          // each entry, where Type is list: ValueChecks.EntryTypes
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
     // The shape of one entry, where a list's entries are objects rather than scalars. Declared with the
@@ -467,8 +467,15 @@ public sealed class TypeSchema
     // to its own declaration, where `reciprocal`, `mirrors-section` and `ref` are read from the top
     // level alone. Folding the two would let a nested declaration advertise a check that cannot fire on
     // it.
+    //
+    // Asked to whatever depth the field nests, because `Entry` recurses and so does `ParseField`. A key
+    // two levels in is held to its own `type:` exactly as one level in is, and a check advertised only
+    // to the first depth would be missing from the page of the type that nests.
     public bool AnyEntryKey(Func<FieldSpec, bool> predicate) =>
-        Fields.Values.Any(f => (f.Entry ?? []).Any(predicate));
+        Fields.Values.Any(f => Nested(f).Any(predicate));
+
+    private static IEnumerable<FieldSpec> Nested(FieldSpec field) =>
+        (field.Entry ?? []).SelectMany(key => new[] { key }.Concat(Nested(key)));
 
     // The universal fields, the type's own, and the reserved keys the publishing platform adds.
     // Deduplicated, since a type refining `status` declares it in both chains. Order carries no meaning

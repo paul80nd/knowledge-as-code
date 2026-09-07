@@ -17,7 +17,26 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
+  `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
+  base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an
+  author should not have to know which spellings the parser admits. `ado-epics` on a capability is the field this
+  reaches, and its entries were checked by nothing before.
+
 ### Fixed
+
+- **A field's `type:` and `of:` are held to what the tool dispatches.** Either naming a value no check reads now fails
+  `schema-dispatch` when the schema loads, so `type: tiemstamp` is reported rather than loading and holding the field
+  to nothing. An entry key answers to the same vocabulary, to whatever depth an `entry:` block nests, because its value
+  goes back through the same checks. The types are `date`, `enum`, `id`, `int`, `list`, `string` and `timestamp`; a
+  list's entries are `id`, `int`, `object` and `string`. `bool` was offered by `meta/type.schema.json` and dispatched
+  by nothing, as was `of: date`, and both are gone from it.
+
+- **An `of:` on a field that is not a list is reported.** It is read from a list's entries and nowhere else, so a
+  scalar carrying one states a shape its value can never take. `values:`, `min-items:` and `min-records:` were already
+  held to the field type they are read against, and `of:` now joins them.
 
 - **An unquoted placeholder in a record is reported.** YAML reads `owner: {{owner}}` as a flow mapping rather than as
   text, so the value reached no check at all and the record validated clean. `bare-key` now reports it and names the

@@ -20,6 +20,8 @@ you, and every finding names the file and the key.
 | A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
+| A `type:` or an `of:` naming a value no check reads, at any depth of an `entry:` block   | `schema-dispatch`    |
+| An `of:` on any field that is not a `list`                                               | `schema-dispatch`    |
 | An `entry:` block on a list whose `of:` is not `object`                                  | `schema-dispatch`    |
 | `of: object` with no `entry:` block saying what an entry holds                           | `schema-shape`       |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |

@@ -806,6 +806,103 @@ public class SchemaCheckTests
         Assert.Contains("'shelf'", finding.Message);
     }
 
+    // The value checks switch on `type:`, so a value outside the switch reaches nothing. A misspelling
+    // is one of those, and it is the case that reads as validated: the corpus goes green.
+    [Fact]
+    public void A_field_whose_type_no_check_reads_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("stamped", new FieldSpec { Name = "stamped", Type = "tiemstamp" })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Contains("type: tiemstamp", finding.Message);
+        Assert.Contains("'timestamp'", finding.Message);
+    }
+
+    // An entry's checks are written into the walk `Sequence` makes, which is narrower than the switch.
+    // So a value a field may take is not one an entry may, and `date` is the one that reads as though
+    // it were.
+    [Fact]
+    public void A_list_whose_entries_no_check_reads_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("due", new FieldSpec { Name = "due", Type = "list", Of = "date" })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("of: date", finding.Message);
+    }
+
+    // `Entry` sends each key's value back through `Check`, so a key's `type:` dispatches exactly as a
+    // field's does and answers to the same vocabulary.
+    [Fact]
+    public void An_entry_key_whose_type_no_check_reads_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("confirmed", new FieldSpec
+            {
+                Name = "confirmed", Type = "list", Of = "object",
+                Entry = [new FieldSpec { Name = "at", Type = "moment" }]
+            })
+        ])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("entry key 'at'", finding.Message);
+        Assert.Contains("type: moment", finding.Message);
+    }
+
+    // `ParseField` recurses into an `entry:` block, and so does `Entry` when it walks one, so a key two
+    // levels in is held to its own declaration. A question asked one level down would go quiet here.
+    [Fact]
+    public void An_entry_key_nested_two_levels_in_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("approvals", new FieldSpec
+            {
+                Name = "approvals", Type = "list", Of = "object",
+                Entry =
+                [
+                    new FieldSpec
+                    {
+                        Name = "signoffs", Type = "list", Of = "object",
+                        Entry = [new FieldSpec { Name = "at", Type = "moment" }]
+                    }
+                ]
+            })
+        ])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("entry key 'signoffs' entry key 'at'", finding.Message);
+    }
+
+    // `of:` is read from a list's entries and nowhere else, so a scalar carrying one states a shape its
+    // value can never take. Reported as the misplaced key rather than as an entry type, which would
+    // point the author at the wrong half of the declaration.
+    [Fact]
+    public void An_of_on_a_field_that_is_not_a_list_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("shelf", new FieldSpec { Name = "shelf", Type = "string", Of = "bool" })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("is 'type: string' and declares 'of: bool'", finding.Message);
+        Assert.DoesNotContain("A list's entries are", finding.Message);
+    }
+
+    [Theory]
+    [InlineData("date")]
+    [InlineData("enum")]
+    [InlineData("id")]
+    [InlineData("int")]
+    [InlineData("list")]
+    [InlineData("string")]
+    [InlineData("timestamp")]
+    public void A_field_whose_type_the_tool_dispatches_is_left_alone(string type)
+        => Assert.Empty(Check(Widgets(
+            fields: [("value", new FieldSpec { Name = "value", Type = type })])));
+
     // A part is read out of the record a reference names, so a field declaring no `ref:` leaves the key
     // with nothing to be resolved against.
     [Fact]

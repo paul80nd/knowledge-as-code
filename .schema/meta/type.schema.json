@@ -535,25 +535,22 @@
         "type": {
           "description": "What the value is. Defaults to `string`. A `date` is a day and is written quoted; a `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`.",
           "enum": [
-            "string",
             "date",
-            "timestamp",
             "enum",
             "id",
+            "int",
             "list",
-            "bool",
-            "int"
+            "string",
+            "timestamp"
           ]
         },
         "of": {
           "description": "What each entry of a list is. `object` makes them mappings, and `entry:` then declares the keys one holds.",
           "enum": [
-            "string",
-            "date",
             "id",
-            "bool",
             "int",
-            "object"
+            "object",
+            "string"
           ]
         },
         "entry": {

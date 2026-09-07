@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 27,
+    "errors": 29,
     "warnings": 0,
     "infos": 0
   },
@@ -133,6 +133,20 @@
       "severity": "error",
       "check": "schema-shape",
       "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section. Name a section the type has, or add it."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'stamped' declares 'type: tiemstamp', which no value check reads. The types the tool acts on are 'date', 'enum', 'id', 'int', 'list', 'string', 'timestamp'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'sizes' declares 'of: bool', which no entry check reads. A list's entries are 'id', 'int', 'object', 'string'."
     },
     {
       "file": ".schema/widgets.yaml",

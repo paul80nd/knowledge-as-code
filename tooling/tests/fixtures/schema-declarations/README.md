@@ -14,8 +14,10 @@ so the golden is the schema pass and nothing else.
   The loader asks for severity first, so a rule omitting both reports only the missing severity. The two faults
   therefore need a rule each.
 * **Undispatched** — a rule claiming `severity: warning` that nothing implements, `id.style: roman-numeral`,
-  `index.order: newest-first`, `tier: experimental`, a `values:` list on a `type: list` field, a `min-items:` on a
-  `type: string` field, and a `part-required:` on a field naming no `ref:` to resolve the part against.
+  `index.order: newest-first`, `tier: experimental`, `type: tiemstamp` on a field, `of: bool` on a list, a `values:`
+  list on a `type: list` field, a `min-items:` on a `type: string` field, and a `part-required:` on a field naming no
+  `ref:` to resolve the part against. An entry key's own `type:` answers to the same vocabulary and reaches the same
+  finding, so `SchemaCheckTests` pins that third way in rather than a fourth field here.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
   is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
   pointing at `widgets`, which keeps no parts, a `summary:` too long for the table cell it becomes, and no

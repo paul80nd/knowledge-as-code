@@ -65,7 +65,9 @@ fields:
     required: false
     type: list
     of: int
-    notes: ADO work item ids. CI cannot resolve them, so they are here for humans and for the reverse harvest.
+    notes: >
+      ADO work item ids. Each entry is held to being a whole number and nothing resolves it against ADO, so the
+      field is here for humans and for the reverse harvest.
 
   feature-files:
     required: false

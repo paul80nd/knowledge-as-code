@@ -447,6 +447,11 @@ public static class SchemaChecks
         if (spec.Problem is { } problem)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
 
+        // What the field says it is, and what its entries are. Both are vocabularies, and a value
+        // outside either reaches no check at all: the switch in `ValueChecks.Check` passes over it, no
+        // `pattern:` need be declared, and the type page renders the field as though something held it.
+        CheckDeclaredTypes(at, $"field '{name}'", spec, f);
+
         // Only an enum's range is applied. A `values:` list anywhere else states a vocabulary that
         // nothing holds a document to, which is the shape of promise this pass exists to stop.
         if (spec.Values is { Count: > 0 } && spec.Type != "enum")
@@ -586,6 +591,37 @@ public static class SchemaChecks
             Dispatch(at, $"a rule class reports under '{id}', which this file does not declare. A check "
                          + "reaches a reader through its entry here, so one without an entry has no severity, "
                          + "no description, and nothing to render.", f);
+    }
+
+    // The two vocabularies a field declares itself with, read from `ValueChecks`, which holds them
+    // beside the code dispatching them. A second list here would say what is spelled correctly rather
+    // than what runs, and a value dropped from the switch would go on passing.
+    //
+    // Asked of an entry key as well, to whatever depth the field nests. `Entry` sends each key's value
+    // back through `Check`, so a key's `type:` dispatches exactly as a field's does, and a key
+    // declaring its own `entry:` nests again. `ParseField` bounds that by the schema rather than by a
+    // guard, and a question asked one level down would go quiet at the second.
+    private static void CheckDeclaredTypes(string at, string what, FieldSpec spec, List<Finding> f)
+    {
+        if (!ValueChecks.FieldTypes.Contains(spec.Type))
+            Dispatch(at, $"{what} declares 'type: {spec.Type}', which no value check reads. The types the "
+                         + $"tool acts on are {List(ValueChecks.FieldTypes)}.", f);
+
+        // `of:` is read from a list's entries and nowhere else, so a scalar carrying one states a shape
+        // its value can never take. Reported before the vocabulary below, because a reader told their
+        // `of: bool` is not an entry type would take the field for a list it is not.
+        if (spec.Of is { } of)
+        {
+            if (spec.Type != "list")
+                Dispatch(at, $"{what} is 'type: {spec.Type}' and declares 'of: {of}', which is read from "
+                             + "the entries of a list. Declare it 'type: list', or drop the key.", f);
+            else if (!ValueChecks.EntryTypes.Contains(of))
+                Dispatch(at, $"{what} declares 'of: {of}', which no entry check reads. A list's entries "
+                             + $"are {List(ValueChecks.EntryTypes)}.", f);
+        }
+
+        foreach (var key in spec.Entry ?? [])
+            CheckDeclaredTypes(at, $"{what} entry key '{key.Name}'", key, f);
     }
 
     private static void Dispatch(string at, string message, List<Finding> f)

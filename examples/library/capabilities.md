@@ -42,18 +42,18 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-capabilities -->
 
-| Field              | Value                                    | Notes                                                                                               |
-|--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `id` *†            | string                                   | Stable, unique across the corpus, never reused. Format set by the type.                             |
-| `type` *†          | string                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.                      |
-| `tier` *†          | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                 |
-| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                                         |
-| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                              |
-| `tags` †           | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
-| `implemented-by` * | list                                     | Service ids. A capability no service implements is a plan.                                          |
-| `ado-epics`        | list                                     | ADO work item ids. CI cannot resolve them, so they are here for humans and for the reverse harvest. |
-| `feature-files`    | list                                     | Repo-relative paths. Nothing resolves them today.                                                   |
-| `nfrs`             | list                                     | NFR ids, the targets this capability is held to.                                                    |
+| Field              | Value                                    | Notes                                                                                                                                                           |
+|--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                   | Stable, unique across the corpus, never reused. Format set by the type.                                                                                         |
+| `type` *†          | string                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.                                                                                  |
+| `tier` *†          | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                                                             |
+| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                                                                                                     |
+| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                          |
+| `tags` †           | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                                                |
+| `implemented-by` * | list                                     | Service ids. A capability no service implements is a plan.                                                                                                      |
+| `ado-epics`        | list                                     | ADO work item ids. Each entry is held to being a whole number and nothing resolves it against ADO, so the field is here for humans and for the reverse harvest. |
+| `feature-files`    | list                                     | Repo-relative paths. Nothing resolves them today.                                                                                                               |
+| `nfrs`             | list                                     | NFR ids, the targets this capability is held to.                                                                                                                |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -88,6 +88,7 @@ Related but different:
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
+| `int-format`                | error   | Int fields, and the entries of an `of: int` list, are whole numbers.                                            |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
