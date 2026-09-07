@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 12,
+    "validated": 13,
     "templates": 2,
     "skipped": 0,
-    "errors": 19,
+    "errors": 21,
     "warnings": 1,
     "infos": 0
   },
@@ -126,6 +126,20 @@
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off."
+    },
+    {
+      "file": "gizmos/named-whole.md",
+      "line": 1,
+      "severity": "error",
+      "check": "mirrors-citations",
+      "message": "'covers' lists 'giz-behaving' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field."
+    },
+    {
+      "file": "gizmos/named-whole.md",
+      "line": 1,
+      "severity": "error",
+      "check": "ref-resolves",
+      "message": "'covers' points at 'giz-behaving' whole, and this field names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered."
     },
     {
       "file": "gizmos/unitalic.md",

@@ -20,11 +20,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **The framework declares a `deviations` type.** A deviation records a knowing departure from a policy or a standard:
-  the rule it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks at
-  it again. `kac update --add-type deviations` takes it, and `kac new` offers it beside the rest. Two rules run over a
-  record. `review-after-acceptance` errors where the review date falls on or before the acceptance date, so a
-  deviation cannot expire as it is written. `not-open-ended` warns where the record reads as a standing departure
-  rather than a bounded one. `expiry` is declared and does not run.
+  the clauses it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks
+  at it again. `departs-from` names those clauses one by one and refuses a bare policy or standard id, because a bare
+  id claims a departure from every clause the rule carries. `kac update --add-type deviations` takes it, and `kac new`
+  offers it beside the rest. Two rules run over a record. `review-after-acceptance` errors where the review date falls
+  on or before the acceptance date, so a deviation cannot expire as it is written. `not-open-ended` warns where the
+  record reads as a standing departure rather than a bounded one. `expiry` is declared and does not run.
 
 ### Changed
 

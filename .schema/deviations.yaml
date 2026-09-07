@@ -64,10 +64,21 @@ fields:
     type: list
     of: id
     ref: [policies, standards]
+    part-required: true
     allow-literal: [none]
+    description: Policy or standard clause ids this departs from, as `pol-TRUS.SCREEN`, or `none`.
     notes: >
-      Policy or standard ids, ideally clause-level anchors. `none` is the shortcut that breaks no rule,
-      which is technical debt: recorded here, owned by somebody, and closed the same way.
+      Clause by clause, and a bare policy or standard id is refused. A deviation departs from a clause or
+      two, and almost never from every clause a rule carries. A bare id claims that wider departure, and
+      a coverage report reads the field rather than the prose.
+
+      No `mirrors-citations:` goes with it. A standard names each clause again on the `Covers` line
+      closing the rule that discharges it. A deviation holds one departure and no per-clause sections, so
+      it has nothing to reconcile a line against.
+
+      A shortcut that breaks no rule is technical debt: recorded here, owned by somebody, and closed the
+      same way. `none` is what such a record puts in the field, and it is a literal, so nothing looks it
+      up.
 
   accepted-on:
     required: false
