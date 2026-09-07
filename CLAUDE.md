@@ -78,12 +78,6 @@ Say in one sentence what you are about to do before your first tool call. While 
 you changed direction, and nothing else. Finish by leading with the outcome (what happened, or what you found) and put
 the supporting detail after it.
 
-Keep answers brief: a high-level summary unless depth is asked for, short caveats, and a written document no longer than
-its substance needs.
-
-Deliver what was asked at the scope asked, making routine judgement calls yourself. Ask only where two readings would
-produce materially different work. Where the request looks mistaken, say so in a sentence and carry on with it as asked.
-
 ## Ask this repository's own corpus
 
 `example-dogfooding` is what this repository knows about itself, installed here as a plugin. The rules you build to are
