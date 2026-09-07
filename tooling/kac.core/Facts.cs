@@ -10,9 +10,9 @@ namespace kac.core;
 // re-parses markdown. So adding a fact means adding one method here and one entry to RuleExpr's
 // function table, and never touching the grammar.
 //
-// `today` is the exception: the day the run happens rather than anything the document says. A rule
-// about a date the record has passed cannot be written without it, and taking it as an argument is
-// what keeps the answer the same for every document in one run and pinnable from a test.
+// `today` is the exception: the day the run happens, which is not something the document says. A rule
+// about a date the record has gone past cannot be written without it. It arrives as an argument, so
+// the caller settles the day once for a whole run and a test can name one.
 //
 // Built per document and discarded after its rules have run, which is what makes the measurements it
 // caches safe to cache: the document it was built from cannot change while it exists.

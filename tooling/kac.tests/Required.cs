@@ -11,6 +11,11 @@ namespace kac.tests;
 // leaving a `NullReferenceException` several lines further on.
 internal static class Required
 {
+    // The day a validation a test set up is judged against, where the case is about something else and any
+    // day would do. It is a named day, so a rule written against `today()` cannot make an unrelated case
+    // start failing on a date nobody chose.
+    internal static readonly DateOnly Today = new(2026, 6, 15);
+
     // The text of a property, named in the failure so the assertion says which field was missing.
     internal static string Text(this JsonElement element, string property) =>
         element.TryGetProperty(property, out var found) && found.GetString() is { } text

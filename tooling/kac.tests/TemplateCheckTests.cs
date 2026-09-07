@@ -75,7 +75,7 @@ public class TemplateCheckTests
 
         return
         [
-            .. Validator.CheckAll(Corpus.Load(tree, schema, new CorpusDescriptor()))
+            .. Validator.CheckAll(Corpus.Load(tree, schema, new CorpusDescriptor()), Required.Today)
                 .Where(f => f.Check.Value == "template-fields")
         ];
     }

@@ -175,7 +175,7 @@ public class MirrorsCitationsTests
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found, Required.Today);
         Assert.DoesNotContain(found, x => x.Check.Value == "mirrors-citations");
     }
 
@@ -192,7 +192,7 @@ public class MirrorsCitationsTests
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found, Required.Today);
         Assert.Equal("this 'Covers' line names nothing it could gather. Name what the section answers, "
                      + "or take the line off.",
             Assert.Single(found, x => x.Check.Value == "mirrors-citations").Message);
@@ -271,7 +271,7 @@ public class MirrorsCitationsTests
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found, Required.Today);
         return [.. found.Where(x => x.Check.Value == "mirrors-citations")];
     }
 }

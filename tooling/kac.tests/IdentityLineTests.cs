@@ -40,7 +40,7 @@ public class IdentityLineTests
         Assert.NotNull(doc);
 
         var found = new List<Finding>();
-        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found);
+        Validator.CheckDocument(doc, schema, new Tree(new HashSet<string>(), _ => ""), found, Required.Today);
         return Assert.Single(found, x => x.Check.Value == "identity-type").Message;
     }
 }

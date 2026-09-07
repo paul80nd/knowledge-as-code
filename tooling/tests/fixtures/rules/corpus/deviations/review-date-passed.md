@@ -15,7 +15,7 @@ owner: alex.doe
 
 ## What we are doing instead
 
-The batch export endpoint answers a failure with a status code and an empty body, rather than the error shape the
+The batch export endpoint answers a failure with a status code and an empty body. It does not send the error shape the
 standard names.
 
 ## Why we need it

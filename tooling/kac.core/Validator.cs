@@ -12,25 +12,24 @@ public static class Validator
     // caller wanting to know what the tool thinks of a corpus calls this, so no caller can end up running
     // a subset and believing it ran the lot.
     //
-    // `standings` is what each import's source publishes now, which only a caller holding a registry can
-    // answer. Null is the honest default: a caller that did not ask reports nothing, rather than
-    // reporting every import as current on the strength of never having looked.
+    // `today` is the day a rule written against `today()` judges a record by. It is taken rather than
+    // read here, so the caller decides once for the whole run and a test can name a day.
+    // `docs/design/expressions.md` says what a rule may do with it.
     //
-    // `today` is the day a rule about a passed date is judged against. It is read once here and handed
-    // to every document, so one run cannot answer differently for the first record and the last, and a
-    // test naming a day gets the same reading whenever it is run.
+    // `standings` is what each import's source publishes now, which only a caller holding a registry can
+    // answer. Null is the honest default: a caller that did not ask reports nothing, and never every
+    // import as current on the strength of never having looked.
     public static List<Finding> CheckAll(
-        LoadedCorpus corpus, IReadOnlyList<ImportStanding>? standings = null, DateOnly? today = null)
+        LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
     {
         var (schema, tree) = (corpus.Schema, corpus.Tree);
         var findings = new List<Finding>();
-        var run = today ?? Today();
 
         // The schema first, because it decides how every document below is read.
         SchemaChecks.Check(schema, findings);
 
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, tree, findings, today: run);
+            CheckDocument(doc, schema, tree, findings, today);
 
         // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file that gets a block is a file this
@@ -82,7 +81,7 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter: a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, tree, findings, DocKind.Template, run);
+                CheckDocument(template, schema, tree, findings, today, DocKind.Template);
         }
 
         // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
@@ -104,13 +103,8 @@ public static class Validator
         return findings;
     }
 
-    // What `today` falls back to where a caller named no day. One reading, so a caller reaching either
-    // entry point gets the same answer, and UTC so two people in different places validating one commit
-    // agree on whether a date has gone by.
-    private static DateOnly Today() => DateOnly.FromDateTime(DateTime.UtcNow);
-
-    public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f,
-        DocKind kind = DocKind.Record, DateOnly? today = null)
+    public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f, DateOnly today,
+        DocKind kind = DocKind.Record)
     {
         var report = new Report(d.Rel, f);
 
@@ -267,7 +261,7 @@ public static class Validator
         // This is also the one open-ended set: a type may declare a rule tomorrow. So a template is exempt
         // from the category rather than from the rules that happen to exist today.
         if (kind == DocKind.Record)
-            CheckRules(d, t, report, today ?? Today());
+            CheckRules(d, t, report, today);
     }
 
     // The markers a generated block lives between. `Markers.SpliceBlock` looks for the pair and returns

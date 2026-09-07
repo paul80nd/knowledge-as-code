@@ -66,13 +66,14 @@ public static class RuleExpr
             ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount(Str(a, 0))),
             ["first_section"] = new([], ValueType.Str, (f, _) => f.FirstSection()),
             ["links"] = new([], ValueType.Int, (f, _) => f.Links()),
-            ["today"] = new([], ValueType.Str, (f, _) => f.Today()),
             ["words"] = new([], ValueType.Int, (f, _) => f.Words()),
             ["matches"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Matches(Str(a, 0))),
             ["section_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
                 (f, a) => f.SectionMatches(Str(a, 0), Str(a, 1))),
             ["field_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
-                (f, a) => f.FieldMatches(Str(a, 0), Str(a, 1)))
+                (f, a) => f.FieldMatches(Str(a, 0), Str(a, 1))),
+            // Last, because it is the one row that reads nothing about the document.
+            ["today"] = new([], ValueType.Str, (f, _) => f.Today())
         };
 
     // The callable surface by name, for the meta-test holding the reference table in

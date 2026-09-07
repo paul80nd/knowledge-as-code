@@ -11,7 +11,11 @@ public static class Commands
     public static int Validate(string corpusRoot, bool json)
     {
         var corpus = Corpus.Load(corpusRoot);
-        var findings = Validator.CheckAll(corpus, Standings(corpusRoot, corpus.Descriptor));
+
+        // The day is read here and handed down, so every record in one run is judged against the same
+        // one. UTC, so two people in different places validating one commit agree on what has gone by.
+        var findings = Validator.CheckAll(corpus, DateOnly.FromDateTime(DateTime.UtcNow),
+            Standings(corpusRoot, corpus.Descriptor));
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
