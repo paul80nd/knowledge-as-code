@@ -145,21 +145,25 @@ public class ValueCheckTests
         Assert.Contains("entry 'NotAnId'", found.Message);
     }
 
-    // `implements: [ pol-KNOW ]` is the edge the taxonomy declares between a standard and a policy, so a
-    // shape test that read the whole entry as lower-case made that edge unwritable.
+    // The shape test reads the record and leaves the scope and the part alone. See ValueChecks.cs.
     [Theory]
     [InlineData("pol-KNOW")]
     [InlineData("adr-0007")]
     [InlineData("svc-search")]
     [InlineData("pol-VURM.TIMEBOX")]
+    [InlineData("std-ERRORS.a-failure-says-what-happened")]
+    [InlineData("eng:std-ERRORS.a-failure-says-what-happened")]
+    [InlineData("gls-search.title")]
     public void Every_id_style_is_id_shaped_in_a_list(string id)
         => Assert.Empty(Run($"field: [ {id} ]\n", new FieldSpec { Name = "field", Type = "list", Of = "id" }));
 
-    // Loosening the case test to reach the mnemonic stops here.
+    // The record in front of a part still carries the taxonomy's spelling.
     [Theory]
     [InlineData("Pol-KNOW")]
     [InlineData("pol-Know")]
     [InlineData("noprefix")]
+    [InlineData("pol-Know.TIMEBOX")]
+    [InlineData("noprefix.TIMEBOX")]
     public void A_miscased_or_prefixless_entry_is_still_not_an_id(string id)
     {
         var spec = new FieldSpec { Name = "field", Type = "list", Of = "id" };

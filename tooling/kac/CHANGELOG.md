@@ -31,6 +31,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **The template's shape is at version 7.** It carries the `deviations` page, its index and its record template, so a
   corpus running `kac update` is offered the type.
 
+### Fixed
+
+- **A field may name a part spelled unlike the record holding it.** `id-format` read the whole entry as one id, so
+  `std-ERRORS.a-failure-says-what-happened` failed: a standard's record id carries a mnemonic and its rules are
+  heading slugs. The check now reads the record and leaves the part to `ref-resolves`, which is what answers for
+  whether the part exists.
+
 ## 0.21.0 - 2026-09-07
 
 ### Added
