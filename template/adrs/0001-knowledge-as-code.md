@@ -3,7 +3,7 @@ id: adr-0001
 type: adr
 tier: decided
 status: proposed
-owner: {{owner}}
+owner: human:paul.law
 tags: [ documentation, knowledge-management, tooling ]
 ---
 

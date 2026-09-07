@@ -305,6 +305,40 @@ public class ValueCheckTests
         Assert.Contains("read as a YAML mapping", found.Message);
     }
 
+    // The same spelling in a record, under the id a reader already looks to for a field nobody filled in.
+    [Fact]
+    public void The_same_mapping_in_a_record_is_reported_as_a_bare_key()
+    {
+        var found = Assert.Single(Run("field: {{date}}\n", Field("date")));
+        Assert.Equal("bare-key", found.Check.Value);
+        Assert.Contains("read as a YAML mapping", found.Message);
+    }
+
+    // A mapping reaches neither the declared pattern nor any other value check, so `bare-key` is the
+    // whole of the finding.
+    [Fact]
+    public void A_mapping_in_a_pattern_field_is_not_passed_over()
+    {
+        var spec = new FieldSpec
+        {
+            Name = "field", Type = "string",
+            Pattern = "^(human|role):[a-z.]+$", PatternRegex = new Regex("^(human|role):[a-z.]+$")
+        };
+        Assert.Equal(["bare-key"], Ids(Run("field: {{owner}}\n", spec)));
+    }
+
+    // An object entry recurses into `Check` under the path it reached the entry by, and the fix has to
+    // quote the key the file writes rather than that path.
+    [Fact]
+    public void The_fix_quotes_the_key_an_entry_carries()
+    {
+        var findings = new List<Finding>();
+        ValueChecks.Check("confirmed.at", Value("field: {{date}}\n"), Field("date"), DocKind.Record,
+            FrontStart, new Report("rec.md", findings));
+
+        Assert.Contains("has to be quoted: at: \"{{…}}\".", Assert.Single(findings).Message);
+    }
+
     // The parser reads a frontmatter block on its own, so its line 1 is the block's first key.
     [Fact]
     public void A_finding_names_the_line_in_the_document_not_in_the_block()
@@ -324,6 +358,7 @@ public class ValueCheckTests
     [InlineData("field: []\n", true)]
     [InlineData("field: something\n", false)]
     [InlineData("field: [ a ]\n", false)]
+    [InlineData("field: {{owner}}\n", true)] // an unquoted placeholder, which YAML reads as a mapping
     public void IsAbsent_reads_every_way_of_supplying_nothing(string yaml, bool absent)
     {
         Assert.Equal(absent, ValueChecks.IsAbsent(Value(yaml)));

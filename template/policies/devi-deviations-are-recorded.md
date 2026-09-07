@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
 review-by: "2027-08-23"
-owner: {{owner}}
+owner: human:paul.law
 tags: [ exceptions, governance, risk-acceptance ]
 ---
 
