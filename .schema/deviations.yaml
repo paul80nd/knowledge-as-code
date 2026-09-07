@@ -64,9 +64,10 @@ fields:
     type: list
     of: id
     ref: [policies, standards]
+    allow-literal: [none]
     notes: >
-      Policy or standard ids, ideally clause-level anchors. A deviation that names no rule is a note to
-      self.
+      Policy or standard ids, ideally clause-level anchors. `none` is the shortcut that breaks no rule,
+      which is technical debt: recorded here, owned by somebody, and closed the same way.
 
   accepted-on:
     required: false
@@ -113,7 +114,7 @@ rules:
     description: The record does not claim the departure is permanent or open-ended.
     severity: warning
     expr: >-
-      not matches('(?i)\b(permanently|indefinitely|no expiry|until further notice)\b')
+      not matches('(?i)\b(permanent(ly)?|indefinite(ly)?|no expiry|until further notice)\b')
     message: >
       A deviation is a bounded departure, and this one reads as a standing one. Say what has to be true
       for it to close, and put the date in `review-by`. A departure meant to last is a rule that needs

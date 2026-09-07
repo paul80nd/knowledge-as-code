@@ -10,18 +10,19 @@ A written, owned, time-bound departure from a [policy](policies.md) or a [standa
 departs from, says what we are doing instead and why, and gives a date somebody has to come back to it.
 
 It also covers a shortcut that breaks no rule. Skipping the retry logic to ship on Friday, knowing the next person has
-to add it, is technical debt. Nothing forbids it, and the debt is real, so it is recorded the same way.
+to add it, is technical debt. Nothing forbids it, and the debt is real, so it is recorded the same way. Such a record
+names `none` in `departs-from`.
 
 ## Why we use them
 
-A rule with no way out gets broken quietly. Somebody ships under pressure, tells nobody, and a year later the estate
+A rule with no way out gets broken quietly. Somebody ships under pressure and tells nobody. A year later the estate
 carries a departure that nobody can tell from never having known the rule.
 
 A deviation is the way out, and it costs one page. The departure is decided rather than drifted into, one person has
 their name against the risk, and a date brings it back. That is what makes the exception clause in a policy mean
 something.
 
-**The count going up is the type working.** A folder holding twelve deviations is not a worse estate than one holding
+The count going up is the type working. A folder holding twelve deviations is not a worse estate than one holding
 none. It is the same estate with twelve things written down.
 
 ## Scope
@@ -49,18 +50,18 @@ A deviation is also not:
 
 <!-- BEGIN GENERATED: schema-deviations -->
 
-| Field            | Value                     | Notes                                                                                                   |
-|------------------|---------------------------|---------------------------------------------------------------------------------------------------------|
-| `id` *†          | string                    | Stable, unique across the corpus, never reused. Format set by the type.                                 |
-| `tier` *†        | `normative`               | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                     |
-| `status` *†      | `active` `draft` `closed` | Whether the deviation is in force, still being agreed, or closed.                                       |
-| `owner` *†       | string                    | A named person, never a team alias.                                                                     |
-| `tags` †         | list                      | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                        |
-| `departs-from` * | list                      | Policy or standard ids, ideally clause-level anchors. A deviation that names no rule is a note to self. |
-| `accepted-on`    | date                      | The day the named owner accepted the risk. Required when `status != draft`.                             |
-| `review-by` *    | date                      | The day this is looked at again. Every deviation carries one.                                           |
-| `closed-on`      | date                      | The day the gap was fixed, or the risk consciously re-accepted. Required when `status == closed`.       |
-| `applies-to`     | list                      | Service ids, or `all`.                                                                                  |
+| Field            | Value                     | Notes                                                                                                                                                                                 |
+|------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†          | string                    | Stable, unique across the corpus, never reused. Format set by the type.                                                                                                               |
+| `tier` *†        | `normative`               | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                                                                                   |
+| `status` *†      | `active` `draft` `closed` | Whether the deviation is in force, still being agreed, or closed.                                                                                                                     |
+| `owner` *†       | string                    | A named person, never a team alias.                                                                                                                                                   |
+| `tags` †         | list                      | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                                                                      |
+| `departs-from` * | list                      | Policy or standard ids, ideally clause-level anchors. `none` is the shortcut that breaks no rule, which is technical debt: recorded here, owned by somebody, and closed the same way. |
+| `accepted-on`    | date                      | The day the named owner accepted the risk. Required when `status != draft`.                                                                                                           |
+| `review-by` *    | date                      | The day this is looked at again. Every deviation carries one.                                                                                                                         |
+| `closed-on`      | date                      | The day the gap was fixed, or the risk consciously re-accepted. Required when `status == closed`.                                                                                     |
+| `applies-to`     | list                      | Service ids, or `all`.                                                                                                                                                                |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -70,10 +71,12 @@ A deviation is also not:
 ## Adding a deviation
 
 1. Copy [`_template.md`](deviations/_template.md) to `<slug>.md`. Deviations use slug ids: `dev-legacy-report-secrets`.
-2. Name the rule in `departs-from`, as a clause-level anchor where the rule has one.
+2. Name the rule in `departs-from`, as a clause-level anchor where the rule has one. Write `none` for a shortcut that
+   breaks no rule.
 3. Put the person who accepted the risk in `owner`. Someone with the authority to accept it, never a team.
-4. Set `review-by` to the day somebody has to look at this again, and set `accepted-on` to the day they agreed.
-5. Say what compensates. A monitoring alert, a manual check, a smaller scope: something that makes the risk survivable.
+4. Set `accepted-on` to the day they agreed.
+5. Set `review-by` to the day somebody has to look at this again.
+6. Say what compensates. A monitoring alert, a manual check, a smaller scope: something that makes the risk survivable.
 
 **Conventions**
 
@@ -82,7 +85,7 @@ A deviation is also not:
   that a citation needs.
 * **Name the risk plainly.** A deviation that reads as a defence of the departure hides what the reviewer needs.
 * **Close it by fixing the gap, or by re-accepting the risk with the same scrutiny as the first time.** Set `closed-on`
-  and move the status.
+  to the day that happened, and move the status with it.
 
 ## What CI checks
 

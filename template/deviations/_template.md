@@ -25,6 +25,7 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 * **`status`**: `active` · `draft` · `closed`. A deviation past its review date is still `active`, because that is what
   is true.
 * **`departs-from`**: the policy or standard ids this departs from, as clause-level anchors where the rule has them.
+  Write `none` for a shortcut that breaks no rule, which is technical debt and is recorded the same way.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
 * **`review-by`**: the day somebody has to look at this again. Every deviation carries one.
 * **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is
