@@ -22,6 +22,6 @@
     "Conformance checklist": "- [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else.\n- [ ] Every path a skill names opens on `${CLAUDE_PLUGIN_ROOT}`.\n- [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.\n- [ ] Every skill names the parts file of the type it requires, and no other.\n- [ ] Every skill says what its corpus did not carry, from `types` in `manifest.json`.\n- [ ] Every skill directory and hook directory in the plugin tree is declared under `metadata.components`.\n- [ ] Every `requires` entry names a type at the shape version it reads, bare where it opens none of that type's\n      files, and empty where the component reads no export.\n- [ ] No skill offers to write to the export, and each names the issue tracker instead.\n- [ ] `bundle.json` names every component that left, and the type that left it out."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4747bb5f489db3b365eb9285ba3b61cfc38c3883/examples/dog-fooding/standards/plugin.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ca4a4a050ee6b656b04db4b630395481576cacba/examples/dog-fooding/standards/plugin.md"
   }
 }

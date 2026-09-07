@@ -14,6 +14,6 @@
     "Exceptions": "None. Departing from this policy means not recording a deviation, which is the one thing it exists to stop.\n\nSome commitments admit no deviation at all, and no record makes any of them acceptable:\n\n* [pol-SCRT].EMBED, [pol-SCRT].REUSE and [pol-SCRT].LOGS. The operational obligations beside them are deviable.\n* [pol-DATA].LAWFUL. Its other obligations are deviable.\n* [pol-KNOW].DOCS, at an effort proportionate to the system. The commitment does not vary with the effort.\n* [pol-AGNT].ACCEPT. Being in a hurry does not make agent output authoritative.\n* [pol-INCR].EVIDENC, whether or not a breach is notifiable.\n* This policy, for the reason given above."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4747bb5f489db3b365eb9285ba3b61cfc38c3883/examples/engineering/policies/governance/devi-deviations-are-recorded.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ca4a4a050ee6b656b04db4b630395481576cacba/examples/engineering/policies/governance/devi-deviations-are-recorded.md"
   }
 }
