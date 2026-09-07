@@ -3,7 +3,7 @@ id: dev-clean-baseline
 tier: normative
 status: active
 departs-from:
-  - pol-VURM
+  - pol-VURM.CLEAN
 accepted-on: "2026-05-01"
 review-by: "2026-11-01"
 owner: alex.doe

@@ -3,7 +3,7 @@ id: dev-open-ended-departure
 tier: normative
 status: active
 departs-from:
-  - std-ERRORS
+  - std-ERRORS.a-failure-says-what-happened
 accepted-on: "2026-05-01"
 review-by: "2027-05-01"
 owner: alex.doe

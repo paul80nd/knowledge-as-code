@@ -194,6 +194,10 @@ checks:
   id-format:
     severity: error
     description: The id's discriminator has the shape the type's `id.style` declares.
+    notes: >
+      The record alone. A citation may open on a producer's shortcode and close on a part. Each of those
+      is spelled by whatever it names, so a policy's clause is a mnemonic and a standard's rule is a
+      heading slug. Whether the part exists is `ref-resolves`.
 
   id-matches-filename:
     severity: error

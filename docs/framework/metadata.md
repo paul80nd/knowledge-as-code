@@ -142,8 +142,9 @@ to cite. Where the reader lands is the definition's to decide, so point it at th
 id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
 
 A field may require the part rather than admit it. A standard's `implements:` names the clauses it puts into practice,
-and `kac validate` refuses a bare policy id, in the field and on a `Covers` line alike. The whole policy is shorter to
-write than the list it stands for, and it reads to anything counting coverage as every clause covered.
+and a deviation's `departs-from:` names the clauses it breaks. `kac validate` refuses a bare id in either field, and on
+a `Covers` line too. The whole policy is shorter to write than the list it stands for, and it reads to anything counting
+coverage as every clause covered.
 
 A field may also be held to what the prose cites. `implements:` declares `mirrors-citations: Covers`, so each rule
 closes on a footnote naming the clauses it discharges, and `kac validate` holds the union of those lines equal to the

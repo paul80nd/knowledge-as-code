@@ -20,16 +20,24 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **The framework declares a `deviations` type.** A deviation records a knowing departure from a policy or a standard:
-  the rule it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks at
-  it again. `kac update --add-type deviations` takes it, and `kac new` offers it beside the rest. Two rules run over a
-  record. `review-after-acceptance` errors where the review date falls on or before the acceptance date, so a
-  deviation cannot expire as it is written. `not-open-ended` warns where the record reads as a standing departure
-  rather than a bounded one. `expiry` is declared and does not run.
+  the clauses it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks
+  at it again. `departs-from` names those clauses one by one and refuses a bare policy or standard id, because a bare
+  id claims a departure from every clause the rule carries. `kac update --add-type deviations` takes it, and `kac new`
+  offers it beside the rest. Two rules run over a record. `review-after-acceptance` errors where the review date falls
+  on or before the acceptance date, so a deviation cannot expire as it is written. `not-open-ended` warns where the
+  record reads as a standing departure rather than a bounded one. `expiry` is declared and does not run.
 
 ### Changed
 
 - **The template's shape is at version 7.** It carries the `deviations` page, its index and its record template, so a
   corpus running `kac update` is offered the type.
+
+### Fixed
+
+- **A field may name a part spelled unlike the record holding it.** `id-format` read the whole entry as one id, so
+  `std-ERRORS.a-failure-says-what-happened` failed: a standard's record id carries a mnemonic and its rules are
+  heading slugs. The check now reads the record and leaves the part to `ref-resolves`, which is what answers for
+  whether the part exists.
 
 ## 0.21.0 - 2026-09-07
 

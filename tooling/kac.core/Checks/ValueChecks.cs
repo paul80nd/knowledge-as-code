@@ -270,9 +270,12 @@ public static class ValueChecks
     // and a string, which is what lets these checks be tested without one.
     private static bool LooksLikeId(string v)
     {
-        // A producer's shortcode may open it, as `eng:pol-VURM`. What follows is held to the same shape
-        // whichever corpus wrote it. See Citation.cs.
-        var (_, id) = Citation.Split(v);
+        // A producer's shortcode may open it and a part may close it, as `eng:std-ERRORS.a-failure-says-what-happened`.
+        // Only the record between them has a shape to read, and it is held to that shape whichever corpus
+        // wrote it. A part is spelled the way its own type writes one, so a policy's clause is a mnemonic
+        // where a standard's rule is a heading slug, and no one case test could admit both. Whether the
+        // part exists is `ref-resolves`'s question. See Citation.cs.
+        var id = Citation.Read(v).Record;
 
         var dash = id.IndexOf('-');
         if (dash <= 0 || dash == id.Length - 1) return false;
