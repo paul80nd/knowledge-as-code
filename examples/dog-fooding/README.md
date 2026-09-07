@@ -27,14 +27,15 @@
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                     | Tier        | What it holds                                                                                                   |
-|--------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
-| [Control](controls.md)   | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
-| [Process](processes.md)  | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
-| [Runbook](runbooks.md)   | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
-| [Service](services.md)   | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
-| [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
-| [Tool](tools.md)         | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
+| Type                       | Tier        | What it holds                                                                                                   |
+|----------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
+| [Control](controls.md)     | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
+| [Deviation](deviations.md) | normative   | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.                 |
+| [Process](processes.md)    | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
+| [Runbook](runbooks.md)     | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
+| [Service](services.md)     | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
+| [Standard](standards.md)   | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
+| [Tool](tools.md)           | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.
@@ -135,23 +136,24 @@ and moving those here is a separate call. It declines `glossary`, because the fr
 [`../engineering/`](../engineering/) states 22 policies carrying 207 clauses. Every one of them carries a verdict
 below, written by hand.
 
-**Sixteen standards bind this corpus.** Four are its own, and twelve arrive with `eng:`. A standard is inherited the
-way a policy is: a rule holding for any repository is written once in the governance corpus, and the corpus below it
-writes only what is its own. `kac bundle` seals both sets into one plugin, so an agent reading this corpus reads all
-sixteen.
+**Twelve standards arrive with `eng:`, and six are this corpus's own.** A standard is inherited the way a policy is:
+a rule holding for any repository is written once in the governance corpus, and the corpus below it writes only what is
+its own. `kac bundle` seals both sets into one plugin, so an agent reading this corpus reads every one of them.
 
-**Covered.** One of those sixteen names the clause in `implements:`, and the verdict is that standard's id. Where two
+**Covered.** One of those standards names the clause in `implements:`, and the verdict is that standard's id. Where two
 policies state one obligation from both sides, covering either clause covers the pair. A covered clause has a rule.
 Whether this repository follows that rule is a separate question, and the row answers it where the two differ.
 
 **Gap.** No standard names the clause, and it reaches this repository. A gap is a fact rather than a task. Some are
-worth closing, and some are what a repository with one maintainer costs.
+worth closing, and some are what a repository with one maintainer costs. Every gap below names the deviation holding
+it, because a departure nobody wrote down is one nobody can tell from never having known the rule.
 
 **Out of scope.** No standard names the clause, and the thing it governs does not exist here.
 
-**No clause is deviated.** A deviation under `eng:pol-DEVI` is recorded, owned and given a review date, and this
-corpus holds no record that does any of that. Where the repository knowingly departs from a clause, the row says so
-and the verdict stays whatever the standards make it.
+**Every gap is deviated.** [deviations](deviations.md) holds a record for each departure this map found, with an
+owner and a date somebody comes back to it. A gap row names that record and its verdict stays `Gap`, because a
+deviation says the departure was decided rather than that a standard now covers the clause. One record holds every
+clause the same departure reaches, so the register is shorter than the list of gaps.
 
 Three limits sit on the whole map. It reads this corpus and what it imports, so a clause uncovered here may well be
 covered in `../library/` or in `../payments/`, and every consumer of `eng:` answers for its own coverage. It never
@@ -169,7 +171,7 @@ carries the step that sends you here. The hand-written form stands until `kac` r
 ### The controls behind the standards
 
 `eng:` exports policies, standards and a glossary, and holds no controls, so every control here is this corpus's own.
-Six standards have one. The other eleven have none, which says nothing about whether they are followed.
+Six standards have one. The other twelve have none, which says nothing about whether they are followed.
 
 | Standard        | Controls                                         |
 |-----------------|--------------------------------------------------|
@@ -184,7 +186,7 @@ Six standards have one. The other eleven have none, which says nothing about whe
 
 | Policy     | Clauses | Covered | Gap    | Out of scope |
 |------------|---------|---------|--------|--------------|
-| [pol-A11Y] | 7       | 0       | 5      | 2            |
+| [pol-A11Y] | 7       | 5       | 1      | 1            |
 | [pol-ACCS] | 11      | 3       | 4      | 4            |
 | [pol-AGNT] | 8       | 8       | 0      | 0            |
 | [pol-AUTV] | 13      | 9       | 4      | 0            |
@@ -206,41 +208,42 @@ Six standards have one. The other eleven have none, which says nothing about whe
 | [pol-SECD] | 8       | 2       | 5      | 1            |
 | [pol-TRUS] | 13      | 9       | 4      | 0            |
 | [pol-VURM] | 8       | 5       | 2      | 1            |
-| **Total**  | **207** | **88**  | **53** | **66**       |
+| **Total**  | **207** | **95**  | **47** | **65**       |
 
 ### pol-A11Y: software we build is usable by everyone
 
-The documentation site is the one thing here a stranger reads, and `kac` prints to a terminal. No standard in either
-corpus reaches accessibility.
+The documentation site is the one thing here a stranger reads, and `kac` prints to a terminal. `std-A11Y` governs
+both and divides them, because WCAG 2.2 AA measures a page a browser renders and reaches no terminal. Nothing in CI
+checks any of it.
 
-| Clause    | Verdict      | Note                                                                           |
-|-----------|--------------|--------------------------------------------------------------------------------|
-| `UPFRONT` | Gap          | The site is designed as it is written, and no standard asks for a requirement. |
-| `CONFORM` | Gap          | Nothing checks the published site against WCAG 2.2 AA.                         |
-| `VENDOR`  | Gap          | The MkDocs theme was taken on its features, and nothing records what it fails. |
-| `PUBLISH` | Out of scope | [PSBAR 2018] binds public sector bodies, and this repository is not one.       |
-| `WORSE`   | Gap          | Nothing would report a change that made the site harder to use.                |
-| `ASSIST`  | Gap          | Nobody has read the site with a screen reader.                                 |
-| `INCLUDE` | Out of scope | There is no user research here for anybody to take part in.                    |
+| Clause    | Verdict                          | Note                                                                            |
+|-----------|----------------------------------|---------------------------------------------------------------------------------|
+| `UPFRONT` | `std-A11Y`                       | `std-A11Y` says what each surface owes before a page is written.                |
+| `CONFORM` | `std-A11Y`                       | WCAG 2.2 AA is the measure, and a reviewer applies it. No check does.           |
+| `VENDOR`  | `std-A11Y`                       | `tol-mkdocs-material` and `tol-spectre-console` each carry an assessment.       |
+| `PUBLISH` | `std-A11Y`                       | A statement is owed where a law or a contract asks. [PSBAR 2018] binds neither. |
+| `WORSE`   | `std-A11Y`                       | A change knowingly reducing either surface needs a recorded deviation.          |
+| `ASSIST`  | Gap, `dev-no-screen-reader-pass` | Neither surface has been read with a screen reader.                             |
+| `INCLUDE` | Out of scope                     | There is no user research here for anybody to take part in.                     |
 
 ### pol-ACCS: access is by individual identity, on least privilege
 
 Access here is a GitHub account and the tokens a workflow holds. `std-CI` reaches the tokens, and nothing reaches the
 account.
 
-| Clause    | Verdict                  | Note                                                                          |
-|-----------|--------------------------|-------------------------------------------------------------------------------|
-| `NAMED`   | Gap                      | Every change arrives under a named account, and no standard states it.        |
-| `LEAST`   | `eng:std-CONT`, `std-CI` | A job declares the permission it needs. No container runs here.               |
-| `DUTIES`  | `std-CI`                 | A person approves the `nuget.org` environment before a publish spends it.     |
-| `AUTHN`   | Gap                      | GitHub holds the authentication, and no standard says what it must be.        |
-| `RECERT`  | Out of scope             | One maintainer holds every grant, so there is no access review to run.        |
-| `REVOKE`  | Out of scope             | Nobody joins and nobody leaves.                                               |
-| `ADMIN`   | Out of scope             | The administrative tooling is GitHub's settings, which record their use.      |
-| `SHARED`  | `eng:std-VCS`            | Covered through `eng:pol-EVER.SHARED`, the same duty from the other side.     |
-| `PERSIST` | Gap                      | The maintainer's publish rights stand permanently, and nothing revisits them. |
-| `DIRECT`  | Out of scope             | Identity is GitHub's, and it is already in one place.                         |
-| `ZERO`    | Gap                      | Publishing waits for an approval, and the rights behind it never go away.     |
+| Clause    | Verdict                            | Note                                                                          |
+|-----------|------------------------------------|-------------------------------------------------------------------------------|
+| `NAMED`   | Gap, `dev-github-holds-identity`   | Every change arrives under a named account, and no standard states it.        |
+| `LEAST`   | `eng:std-CONT`, `std-CI`           | A job declares the permission it needs. No container runs here.               |
+| `DUTIES`  | `std-CI`                           | A person approves the `nuget.org` environment before a publish spends it.     |
+| `AUTHN`   | Gap, `dev-github-holds-identity`   | GitHub holds the authentication, and no standard says what it must be.        |
+| `RECERT`  | Out of scope                       | One maintainer holds every grant, so there is no access review to run.        |
+| `REVOKE`  | Out of scope                       | Nobody joins and nobody leaves.                                               |
+| `ADMIN`   | Out of scope                       | The administrative tooling is GitHub's settings, which record their use.      |
+| `SHARED`  | `eng:std-VCS`                      | Covered through `eng:pol-EVER.SHARED`, the same duty from the other side.     |
+| `PERSIST` | Gap, `dev-standing-publish-rights` | The maintainer's publish rights stand permanently, and nothing revisits them. |
+| `DIRECT`  | Out of scope                       | Identity is GitHub's, and it is already in one place.                         |
+| `ZERO`    | Gap, `dev-standing-publish-rights` | Publishing waits for an approval, and the rights behind it never go away.     |
 
 ### pol-AGNT: agents propose, people decide
 
@@ -267,17 +270,17 @@ This is the best-covered policy here, between the gate `std-CI` describes and fo
 |-----------|-----------------------------------------|-------------------------------------------------------------------|
 | `INTEG`   | `eng:std-GATES`, `std-CI`, `std-CONFIG` | Every job runs on a pull request into `main`.                     |
 | `BLOCK`   | `eng:std-GATES`, `std-CI`, `std-CONFIG` | The branch rule names `validate` as the check a merge waits for.  |
-| `REPRO`   | Gap                                     | Any clone builds the tool, and no standard states the rule.       |
+| `REPRO`   | Gap, `dev-no-reproducible-build`        | Any clone builds the tool, and no standard states the rule.       |
 | `LEVELS`  | `eng:std-NETTST`, `eng:std-TEST`        | Unit, behaviour and golden layers each catch a different fault.   |
 | `REGRESS` | `eng:std-GATES`                         | A fixed defect keeps the test that catches it.                    |
-| `BROKEN`  | Gap                                     | Nothing says a red `main` comes before other work.                |
+| `BROKEN`  | Gap, `dev-branch-habits-unstated`       | Nothing says a red `main` comes before other work.                |
 | `BYPASS`  | `eng:std-GATES`                         | A merge over a failing check needs a deviation nobody can record. |
 | `DISABLE` | `eng:std-GATES`                         | `std-CI` adds that no job may declare `continue-on-error`.        |
 | `MACHINE` | `eng:std-GATES`                         | Each matrix cell is a fresh runner holding its own checkout.      |
-| `OFTEN`   | Gap                                     | Branch size is a habit here rather than a rule.                   |
+| `OFTEN`   | Gap, `dev-branch-habits-unstated`       | Branch size is a habit here rather than a rule.                   |
 | `WARN`    | `eng:std-CSSTY`                         | The analysers decide, and a suppression is local and says why.    |
 | `COVER`   | `eng:std-NETTST`, `eng:std-TEST`        | `kac-tests.cs` carries the coverage gate.                         |
-| `BITWISE` | Gap                                     | Nothing asks two builds of the tool to produce the same bytes.    |
+| `BITWISE` | Gap, `dev-no-reproducible-build`        | Nothing asks two builds of the tool to produce the same bytes.    |
 
 ### pol-COST: cost is a non-functional requirement
 
@@ -300,30 +303,31 @@ a step to print a secret. `eng:std-TEST` covers `UNMASK`, because its test data 
 `kac generate` computes a generated block from the schema and the frontmatter, and `kac export` computes the data a
 consumer reads. Both are derived data, and every clause here is a gap.
 
-| Clause    | Verdict | Note                                                                                  |
-|-----------|---------|---------------------------------------------------------------------------------------|
-| `EXPECT`  | Gap     | `generate --check` regenerates and compares, and no standard states that as the rule. |
-| `CHECK`   | Gap     | ctl-0007 runs that check on every pull request, for `eng:std-GATES` rather than this. |
-| `RUNLOG`  | Gap     | The run leaves a workflow log, and nothing keeps its inputs beside its output.        |
-| `FAILED`  | Gap     | A stale generated file fails the gate, and no standard says the output is unusable.   |
-| `LINEAGE` | Gap     | A generated block names itself, and not the records it was computed from.             |
+| Clause    | Verdict                                | Note                                                                                  |
+|-----------|----------------------------------------|---------------------------------------------------------------------------------------|
+| `EXPECT`  | Gap, `dev-generated-output-ungoverned` | `generate --check` regenerates and compares, and no standard states that as the rule. |
+| `CHECK`   | Gap, `dev-generated-output-ungoverned` | ctl-0007 runs that check on every pull request, for `eng:std-GATES` rather than this. |
+| `RUNLOG`  | Gap, `dev-generated-output-ungoverned` | The run leaves a workflow log, and nothing keeps its inputs beside its output.        |
+| `FAILED`  | Gap, `dev-generated-output-ungoverned` | A stale generated file fails the gate, and no standard says the output is unusable.   |
+| `LINEAGE` | Gap, `dev-generated-output-ungoverned` | A generated block names itself, and not the records it was computed from.             |
 
 ### pol-DEVI: deviations are recorded, owned and time-bound
 
-No type this corpus adopted holds a deviation, so it has nowhere to record one. The two clauses `eng:std-GATES` covers
-reach a suppressed check, and nothing here reaches a departure from a policy.
+This corpus holds the register, in [deviations](deviations.md). What it does not hold is a standard saying how a
+deviation is written, closed or reviewed. The two clauses `eng:std-GATES` covers reach a suppressed check rather than a
+departure from a policy.
 
-| Clause    | Verdict         | Note                                                                       |
-|-----------|-----------------|----------------------------------------------------------------------------|
-| `RECORD`  | Gap             | No record here holds a deviation, so none is recorded before or after.     |
-| `OWNER`   | `eng:std-GATES` | A skipped check names the person who accepted it.                          |
-| `CONTENT` | Gap             | No standard states what a deviation has to say.                            |
-| `EXPIRY`  | `eng:std-GATES` | A skipped check carries the date it is revisited.                          |
-| `SURFACE` | Gap             | A departure lives in a commit message, where only its author looks.        |
-| `CLOSE`   | Gap             | Nothing here is closed, because nothing here is open.                      |
-| `PERM`    | Gap             | The departures this map names have stood since the corpus was written.     |
-| `CUSTOM`  | Gap             | Nothing tests a long-standing habit against the policy it breaks.          |
-| `DEBT`    | Gap             | A shortcut becomes an issue on the tracker, and no standard requires that. |
+| Clause    | Verdict                        | Note                                                                       |
+|-----------|--------------------------------|----------------------------------------------------------------------------|
+| `RECORD`  | Gap, `dev-deviations-unstated` | The register exists. No standard says a record comes before the departure. |
+| `OWNER`   | `eng:std-GATES`                | A skipped check names the person who accepted it.                          |
+| `CONTENT` | Gap, `dev-deviations-unstated` | The schema requires four sections. No standard states them.                |
+| `EXPIRY`  | `eng:std-GATES`                | A skipped check carries the date it is revisited.                          |
+| `SURFACE` | Gap, `dev-deviations-unstated` | The register is published, and no standard says it has to be.              |
+| `CLOSE`   | Gap, `dev-deviations-unstated` | Every record here is open, and no standard says what closing takes.        |
+| `PERM`    | Gap, `dev-deviations-unstated` | Every record carries a review date. `expiry` is declared and does not run. |
+| `CUSTOM`  | Gap, `dev-deviations-unstated` | This map did exactly that, once. No standard asks for it again.            |
+| `DEBT`    | Gap, `dev-deviations-unstated` | A shortcut becomes an issue on the tracker, and no standard requires that. |
 
 ### pol-ENVS: environments are separated, and production stays in production
 
@@ -356,44 +360,44 @@ This repository was built to satisfy this policy, and `eng:std-VCS` states most 
 | `PARITY`  | `eng:std-VCS`, `std-CONFIG`           | A YAML file and a workflow answer to the same gate as the code. |
 | `ORPHAN`  | `eng:std-VCS`, `std-CONFIG`           | A value living in more than one tree is copied and proved.      |
 | `SHARED`  | `eng:std-VCS`                         | No shared account exists here to lose attribution to.           |
-| `SIGNED`  | Gap                                   | Commits are not signed.                                         |
+| `SIGNED`  | Gap, `dev-unsigned-commits`           | Commits are not signed.                                         |
 
 ### pol-INCR: incidents are managed and learned from
 
 A bad version on nuget.org reaches whoever installs it, so most of this policy binds. Three runbooks cover known
 failures, and no standard in either corpus reaches incident response.
 
-| Clause    | Verdict      | Note                                                                                 |
-|-----------|--------------|--------------------------------------------------------------------------------------|
-| `PROCESS` | Gap          | The runbooks cover three failures, and nothing says who decides in the rest.         |
-| `TRIAGE`  | Out of scope | One maintainer, and nobody to escalate to.                                           |
-| `COMMS`   | Gap          | Whoever installed a bad version hears nothing until the next one lands.              |
-| `RECOVER` | Gap          | `std-VERS` says a correction ships as a new version, for `eng:pol-PIPE.REVERT`. |
-| `EVIDENC` | Gap          | The corpus adopted no type that holds an incident record.                            |
-| `NOTIFY`  | Out of scope | No personal data, so no breach to report to a supervisory authority.                 |
-| `INFORM`  | Out of scope | Same: there is nobody whom a breach here could put at risk.                          |
-| `REPORT`  | Gap          | `.github/SECURITY.md` gives the route, and no standard names it.                     |
-| `LEARN`   | Gap          | A fix lands and nothing asks what allowed the fault.                                 |
-| `ACTIONS` | Gap          | Paired with `eng:pol-SECD.ACTIONS`, which no standard covers either.                 |
-| `DRILL`   | Gap          | The publish path is first exercised for real, every time.                            |
-| `ADHOC`   | Gap          | Nothing here has to be handled formally, so everything is handled informally.        |
-| `TOOSOON` | Gap          | Nothing holds an incident open until the learning is written down.                   |
+| Clause    | Verdict                                | Note                                                                            |
+|-----------|----------------------------------------|---------------------------------------------------------------------------------|
+| `PROCESS` | Gap, `dev-no-incident-process`         | The runbooks cover three failures, and nothing says who decides in the rest.    |
+| `TRIAGE`  | Out of scope                           | One maintainer, and nobody to escalate to.                                      |
+| `COMMS`   | Gap, `dev-no-incident-process`         | Whoever installed a bad version hears nothing until the next one lands.         |
+| `RECOVER` | Gap, `dev-no-incident-process`         | `std-VERS` says a correction ships as a new version, for `eng:pol-PIPE.REVERT`. |
+| `EVIDENC` | Gap, `dev-nothing-learns-from-a-fault` | The corpus adopted no type that holds an incident record.                       |
+| `NOTIFY`  | Out of scope                           | No personal data, so no breach to report to a supervisory authority.            |
+| `INFORM`  | Out of scope                           | Same: there is nobody whom a breach here could put at risk.                     |
+| `REPORT`  | Gap, `dev-no-incident-process`         | `.github/SECURITY.md` gives the route, and no standard names it.                |
+| `LEARN`   | Gap, `dev-nothing-learns-from-a-fault` | A fix lands and nothing asks what allowed the fault.                            |
+| `ACTIONS` | Gap, `dev-nothing-learns-from-a-fault` | Paired with `eng:pol-SECD.ACTIONS`, which no standard covers either.            |
+| `DRILL`   | Gap, `dev-no-incident-process`         | The publish path is first exercised for real, every time.                       |
+| `ADHOC`   | Gap, `dev-no-incident-process`         | Nothing here has to be handled formally, so everything is handled informally.   |
+| `TOOSOON` | Gap, `dev-nothing-learns-from-a-fault` | Nothing holds an incident open until the learning is written down.              |
 
 ### pol-INTC: interfaces are contracts we honour
 
 `kac` publishes four interfaces: the command surface, `.schema/`, the export a consumer reads, and the package.
 `eng:std-API` states the rules for all four, and it is written for an HTTP service.
 
-| Clause    | Verdict       | Note                                                                   |
-|-----------|---------------|------------------------------------------------------------------------|
-| `SPEC`    | `eng:std-API` | The contract is the source of truth. `.schema/` is that contract here. |
-| `VERSION` | `eng:std-API` | A change carries a version and a notice.                               |
-| `DEPREC`  | Gap           | No standard says how much notice a consumer of the export gets.        |
-| `NOTICE`  | `eng:std-API` | The same rule as `VERSION`.                                            |
-| `SECURE`  | `eng:std-API` | Every endpoint authenticates and validates. Nothing here listens.      |
-| `HOLDS`   | `eng:std-API` | ctl-0008 reads a published corpus back and compares it.                |
-| `BREAK`   | `eng:std-API` | A break carries a version increment and a notice.                      |
-| `EXPOSE`  | `eng:std-API` | Everything here is public, so no interface hides anything.             |
+| Clause    | Verdict                         | Note                                                                   |
+|-----------|---------------------------------|------------------------------------------------------------------------|
+| `SPEC`    | `eng:std-API`                   | The contract is the source of truth. `.schema/` is that contract here. |
+| `VERSION` | `eng:std-API`                   | A change carries a version and a notice.                               |
+| `DEPREC`  | Gap, `dev-export-has-no-notice` | No standard says how much notice a consumer of the export gets.        |
+| `NOTICE`  | `eng:std-API`                   | The same rule as `VERSION`.                                            |
+| `SECURE`  | `eng:std-API`                   | Every endpoint authenticates and validates. Nothing here listens.      |
+| `HOLDS`   | `eng:std-API`                   | ctl-0008 reads a published corpus back and compares it.                |
+| `BREAK`   | `eng:std-API`                   | A break carries a version increment and a notice.                      |
+| `EXPOSE`  | `eng:std-API`                   | Everything here is public, so no interface hides anything.             |
 
 ### pol-KNOW: knowledge is written down and kept with what it describes
 
@@ -401,14 +405,14 @@ The four `CLAUDE.md` files, the site and this corpus are the answer to most of t
 words are written for an agent, `std-PLUGIN` reaches the one copy those words travel in, and `std-VERS` reaches how
 each of them is versioned and kept beside what it describes.
 
-| Clause   | Verdict      | Note                                                                                 |
-|----------|--------------|--------------------------------------------------------------------------------------|
-| `DOCS`   | `std-VERS`   | Every stamp is named, and what a move of each one says is written down.              |
-| `SYNC`   | `std-VERS`   | A producer's move and its consumers' locks land in one pull request.                 |
-| `DECIDE` | Gap          | The reasoning behind a decision lives in the commit that made it.                    |
-| `AGENTS` | `std-PROSE`  | The rules sit where the agents doing the work read them.                             |
-| `HEADS`  | Gap          | One maintainer, and nothing tests what only they know.                               |
-| `COPY`   | `std-PLUGIN` | A skill quotes what the export carried, and links the record for the rest.           |
+| Clause   | Verdict                              | Note                                                                       |
+|----------|--------------------------------------|----------------------------------------------------------------------------|
+| `DOCS`   | `std-VERS`                           | Every stamp is named, and what a move of each one says is written down.    |
+| `SYNC`   | `std-VERS`                           | A producer's move and its consumers' locks land in one pull request.       |
+| `DECIDE` | Gap, `dev-decisions-live-in-commits` | The reasoning behind a decision lives in the commit that made it.          |
+| `AGENTS` | `std-PROSE`                          | The rules sit where the agents doing the work read them.                   |
+| `HEADS`  | Gap, `dev-one-maintainer`            | One maintainer, and nothing tests what only they know.                     |
+| `COPY`   | `std-PLUGIN`                         | A skill quotes what the export carried, and links the record for the rest. |
 
 ### pol-MEXP: exposure is minimised and traffic is controlled
 
@@ -453,7 +457,7 @@ Publishing is what this repository does to production, and `std-CI` and `eng:std
 | `SAMEART` | `eng:std-DEPLOY`               | The artefact is built once. The publish job rebuilds from the merge commit.  |
 | `CONFIG`  | `eng:std-DEPLOY`, `std-CONFIG` | Configuration sits outside the artefact.                                     |
 | `TRACE`   | `eng:std-DEPLOY`, `std-CI`     | A publish tags the commit it published from.                                 |
-| `REVERT`  | `eng:std-DEPLOY`, `std-VERS`   | A correction ships as a new version, and no published one moves.            |
+| `REVERT`  | `eng:std-DEPLOY`, `std-VERS`   | A correction ships as a new version, and no published one moves.             |
 | `ASCODE`  | `eng:std-DEPLOY`, `std-CI`     | The workflows are reviewed like any other file.                              |
 | `GATES`   | `std-CI`                       | `validate` is the check a merge waits for.                                   |
 | `FLAGS`   | Out of scope                   | Nothing here carries a flag that changes behaviour in production.            |
@@ -482,7 +486,7 @@ identity they exchange, and `std-CI` states where both come from.
 | `EMBED`   | `eng:std-SECRET`, `std-CI`, `std-CONFIG` | No secret sits in a workflow, a configuration file or an artefact.       |
 | `REUSE`   | `eng:std-SECRET`                         | Covered through `eng:pol-ENVS.REUSE`, the same duty from the other side. |
 | `LOGS`    | `eng:std-SECRET`, `std-CI`               | A step passes a secret through `env:` and never prints one.              |
-| `ZEROSEC` | Gap                                      | Trusted publishing removed the last static key, and no standard says so. |
+| `ZEROSEC` | Gap, `dev-trusted-publishing-unstated`   | Trusted publishing removed the last static key, and no standard says so. |
 
 ### pol-SECD: security is designed in, not added on
 
@@ -490,16 +494,16 @@ identity they exchange, and `std-CI` states where both come from.
 standard names that page, and the two clauses that are covered are covered by standards written for the code rather
 than for the design.
 
-| Clause    | Verdict         | Note                                                                           |
-|-----------|-----------------|--------------------------------------------------------------------------------|
-| `REQS`    | Gap             | A security requirement arrives as a review comment rather than a requirement.  |
-| `DESIGN`  | Gap             | The workflows fail closed and deny by default, stated by no standard.          |
-| `THREAT`  | Gap             | `.github/SECURITY.md` says how CI contains what it runs, named by no standard. |
-| `IMPACT`  | Out of scope    | No processing of personal data, so nothing to assess the impact of.            |
-| `ACTIONS` | Gap             | Paired with `eng:pol-INCR.ACTIONS`, which no standard covers either.           |
-| `CODING`  | `eng:std-CSSTY` | The conventions come from one file, and the analysers enforce them.            |
-| `CODEREV` | `eng:std-PR`    | Somebody other than the author approves it. One maintainer does both here.     |
-| `HIRISK`  | Gap             | Nothing sorts a change by risk before it is built.                             |
+| Clause    | Verdict                                | Note                                                                           |
+|-----------|----------------------------------------|--------------------------------------------------------------------------------|
+| `REQS`    | Gap, `dev-security-design-unstated`    | A security requirement arrives as a review comment rather than a requirement.  |
+| `DESIGN`  | Gap, `dev-security-design-unstated`    | The workflows fail closed and deny by default, stated by no standard.          |
+| `THREAT`  | Gap, `dev-security-design-unstated`    | `.github/SECURITY.md` says how CI contains what it runs, named by no standard. |
+| `IMPACT`  | Out of scope                           | No processing of personal data, so nothing to assess the impact of.            |
+| `ACTIONS` | Gap, `dev-nothing-learns-from-a-fault` | Paired with `eng:pol-INCR.ACTIONS`, which no standard covers either.           |
+| `CODING`  | `eng:std-CSSTY`                        | The conventions come from one file, and the analysers enforce them.            |
+| `CODEREV` | `eng:std-PR`                           | Somebody other than the author approves it. One maintainer does both here.     |
+| `HIRISK`  | Gap, `dev-security-design-unstated`    | Nothing sorts a change by risk before it is built.                             |
 
 ### pol-TRUS: we ship only components we know and trust
 
@@ -511,32 +515,32 @@ and after.
 | `INVENT`  | `eng:std-DEPS`, `std-CONFIG`                           | A pin names an exact version, and `tools/` names what is chosen.          |
 | `SCREEN`  | `eng:std-DEPS`                                         | A new package is screened before the pull request adding it merges.       |
 | `LICENCE` | `eng:std-DEPS`                                         | A licence is checked against the allowed list before adoption.            |
-| `MALWARE` | Gap                                                    | Nothing scans the package the tool ships.                                 |
+| `MALWARE` | Gap, `dev-package-unscanned`                           | Nothing scans the package the tool ships.                                 |
 | `SOURCE`  | `eng:std-CONT`, `eng:std-DEPS`, `std-CI`, `std-CONFIG` | An action is pinned to a commit, and a package comes from nuget.org.      |
-| `CLOUD`   | Gap                                                    | GitHub holds most of the responsibility here, and no standard divides it. |
-| `EXIT`    | Gap                                                    | Nothing says how this would leave GitHub.                                 |
+| `CLOUD`   | Gap, `dev-github-concentration`                        | GitHub holds most of the responsibility here, and no standard divides it. |
+| `EXIT`    | Gap, `dev-github-concentration`                        | Nothing says how this would leave GitHub.                                 |
 | `REPO`    | `eng:std-DEPS`, `std-CI`                               | Every artefact is a version on a registry that keeps it.                  |
 | `TRACE`   | `eng:std-DEPLOY`, `std-CI`                             | Covered through `eng:pol-PIPE.TRACE`, the same duty from the other side.  |
 | `REVIEW`  | `std-CONFIG`                                           | Dependabot brings each pinned version back weekly.                        |
 | `UNTRUST` | `eng:std-DEPS`, `std-CI`                               | A moving version may not enter a job holding a write permission.          |
 | `MUTATE`  | `eng:std-CONT`, `std-CI`, `std-VERS`                   | A published tag never moves.                                              |
-| `ATTEST`  | Gap                                                    | Nothing proves the origin of an artefact before it is installed.          |
+| `ATTEST`  | Gap, `dev-package-unscanned`                           | Nothing proves the origin of an artefact before it is installed.          |
 
 ### pol-VURM: vulnerabilities are found, prioritised and closed to a timeframe
 
 `eng:std-DEPS` sets the scanning, the ranking and the windows. `.github/SECURITY.md` opens the route in, and no
 standard names it.
 
-| Clause    | Verdict         | Note                                                                       |
-|-----------|-----------------|----------------------------------------------------------------------------|
-| `SCAN`    | `eng:std-DEPS`  | The dependency tree is scanned on every build and weekly.                  |
-| `RANK`    | `eng:std-DEPS`  | A finding is ranked by severity and by whether the path runs.              |
-| `TIMEBOX` | `eng:std-DEPS`  | Critical closes in 7 days and high in 30. Nothing here tracks that.        |
-| `DISCLOS` | Gap             | A private advisory is the route in, and no standard names it.              |
-| `REGRESS` | `eng:std-GATES` | Covered through `eng:pol-AUTV.REGRESS`, the same duty from the other side. |
-| `SHIP`    | `eng:std-DEPS`  | A release with an open critical finding needs a recorded deviation.        |
-| `OVERDUE` | Gap             | No standard names who is accountable past the window.                      |
-| `INDEP`   | Out of scope    | One maintainer, and nobody else to test what they built.                   |
+| Clause    | Verdict                                 | Note                                                                       |
+|-----------|-----------------------------------------|----------------------------------------------------------------------------|
+| `SCAN`    | `eng:std-DEPS`                          | The dependency tree is scanned on every build and weekly.                  |
+| `RANK`    | `eng:std-DEPS`                          | A finding is ranked by severity and by whether the path runs.              |
+| `TIMEBOX` | `eng:std-DEPS`                          | Critical closes in 7 days and high in 30. Nothing here tracks that.        |
+| `DISCLOS` | Gap, `dev-vulnerability-route-unstated` | A private advisory is the route in, and no standard names it.              |
+| `REGRESS` | `eng:std-GATES`                         | Covered through `eng:pol-AUTV.REGRESS`, the same duty from the other side. |
+| `SHIP`    | `eng:std-DEPS`                          | A release with an open critical finding needs a recorded deviation.        |
+| `OVERDUE` | Gap, `dev-vulnerability-route-unstated` | No standard names who is accountable past the window.                      |
+| `INDEP`   | Out of scope                            | One maintainer, and nobody else to test what they built.                   |
 
 </details>
 

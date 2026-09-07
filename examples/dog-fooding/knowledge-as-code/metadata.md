@@ -38,8 +38,9 @@ what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
-[Control](../controls.md#metadata) · [Process](../processes.md#metadata) · [Runbook](../runbooks.md#metadata) ·
-[Service](../services.md#metadata) · [Standard](../standards.md#metadata) · [Tool](../tools.md#metadata)
+[Control](../controls.md#metadata) · [Deviation](../deviations.md#metadata) · [Process](../processes.md#metadata) ·
+[Runbook](../runbooks.md#metadata) · [Service](../services.md#metadata) · [Standard](../standards.md#metadata) ·
+[Tool](../tools.md#metadata)
 
 <!-- END GENERATED: types-metadata -->
 
