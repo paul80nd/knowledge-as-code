@@ -56,15 +56,22 @@ Scenario: An actor field without its prefix is refused
     | line | check         | message                                                              |
     | 6    | field-pattern | 'owner' value 'alex.doe' does not match ^(human\|role):[a-z0-9.-]+$. |
 
-Scenario: A role is refused where the field records who performed an act
+Scenario: A role is refused where the key records who performed an act
   When I validate the corpus
   Then the findings for "faqs/role-cannot-confirm.md" are exactly:
     | line | check         | message                                                                             |
-    | 6    | field-pattern | 'confirmed-by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
+    | 7    | field-pattern | 'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
+
+Scenario: A timestamp is held to its shape and then to the calendar
+  When I validate the corpus
+  Then the findings for "faqs/confirmed-at-is-not-a-moment.md" are exactly:
+    | line | check            | message                                                                        |
+    | 7    | timestamp-format | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.    |
+    | 8    | timestamp-format | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'. |
 
 Scenario: The corpus as a whole produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 9 documents and 0 skipped
+  Then validation reports 10 documents and 0 skipped
   And no warnings are reported
   And the findings are exactly:
     | file                                 | line | check              | message                                                                             |
@@ -76,6 +83,8 @@ Scenario: The corpus as a whole produces exactly these findings and nothing else
     | adrs/0004-bad-tag-pattern.md         | 10   | field-pattern      | 'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$.                     |
     | adrs/0005-impossible-date.md         | 5    | date-format        | 'decided-on' is not a date on the calendar, got '2026-13-40'.                       |
     | adrs/0006-owner-without-a-prefix.md  | 6    | field-pattern      | 'owner' value 'alex.doe' does not match ^(human\|role):[a-z0-9.-]+$.                |
-    | faqs/role-cannot-confirm.md          | 6    | field-pattern      | 'confirmed-by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
+    | faqs/confirmed-at-is-not-a-moment.md | 7    | timestamp-format   | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.         |
+    | faqs/confirmed-at-is-not-a-moment.md | 8    | timestamp-format   | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.      |
+    | faqs/role-cannot-confirm.md          | 7    | field-pattern      | 'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
     | faqs/too-few-keywords.md             | 5    | min-items          | 'symptom-keywords' has 2 entries: the schema asks for at least 3.                   |
     | tools/bad-licence-pattern.md         | 5    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                   |

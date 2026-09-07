@@ -10,8 +10,8 @@ using YamlDotNet.RepresentationModel;
 // declares rather than on anything they assume about policies or glossaries.
 //
 // The golden fixtures cover each check id once, which is what the coverage gate asks. The branches
-// below are the ones a fixture could only duplicate: the two ways a date fails, the two ways an enum
-// does, and every arm of the template exemption.
+// below are the ones a fixture could only duplicate: the two ways a date fails, the near misses a
+// timestamp meets, the two ways an enum fails, and every arm of the template exemption.
 
 namespace kac.tests;
 
@@ -67,6 +67,40 @@ public class ValueCheckTests
         var found = Run("field: \"2027-13-40\"\n", Field("date"));
         var date = Assert.Single(found, f => f.Check.Value == "date-format");
         Assert.Contains("not a date on the calendar", date.Message);
+    }
+
+    [Fact]
+    public void An_unquoted_utc_moment_passes()
+    {
+        Assert.Empty(Run("field: 2027-08-04T09:30:00Z\n", Field("timestamp")));
+    }
+
+    // A day is a well-formed value of a different type, and the commonest thing written where a moment
+    // belongs. Nothing about it names an hour, so it fails on shape rather than on the calendar.
+    [Fact]
+    public void A_day_written_where_a_moment_belongs_says_so()
+    {
+        var found = Run("field: 2027-08-04\n", Field("timestamp"));
+        var moment = Assert.Single(found, f => f.Check.Value == "timestamp-format");
+        Assert.Contains("must be a YYYY-MM-DDThh:mm:ssZ moment in UTC", moment.Message);
+    }
+
+    // A local time is the other near miss. It is written as a moment and names no zone, so two readers
+    // would take it as two different instants.
+    [Fact]
+    public void A_moment_without_its_zone_is_refused()
+    {
+        var found = Run("field: 2027-08-04T09:30:00\n", Field("timestamp"));
+        Assert.Contains("timestamp-format", Ids(found));
+    }
+
+    // The distinct wording is the whole reason the shape and the calendar are asked separately.
+    [Fact]
+    public void A_moment_that_is_not_on_the_calendar_says_something_else()
+    {
+        var found = Run("field: 2027-02-31T09:30:00Z\n", Field("timestamp"));
+        var moment = Assert.Single(found, f => f.Check.Value == "timestamp-format");
+        Assert.Contains("not a moment on the calendar", moment.Message);
     }
 
     [Fact]

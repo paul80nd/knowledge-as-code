@@ -19,9 +19,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A schema field can hold a moment.** `type: timestamp` sits beside `type: date` in a type's `fields:` block, and
+  takes `2026-09-07T20:18:00Z`: UTC, to the second, unquoted. A date is a day and is written quoted, because YAML
+  rereads an unquoted one as a datetime and a reader's own zone then shifts the day it shows. A `Z` instant carries
+  its zone in the value, so no reread moves it. `timestamp-format` errors on a value written in another shape, and on
+  one naming a moment the calendar does not have.
+
 - **A field naming a person carries an actor prefix.** `owner` takes `human:alex.doe` for a person, or
   `role:head-of-engineering` for a post. Exactly one person holds a post, so a role keeps answerability with one human
-  and survives a handover that leaves every record naming the previous holder wrong. `confirmed-by` on an FAQ and
+  and survives a handover that leaves every record naming the previous holder wrong. `confirmed.by` on an FAQ and
   `deciders` on an ADR take `human:` alone: each records who performed an act, and a post cannot perform one. A
   bare name, an agent, a session id and a team alias all fail `field-pattern`, so the tier boundary between a
   discovery and an FAQ is checked rather than described. The three prefixes are [OKF v0.2]'s, whose trust tiers key
@@ -33,6 +39,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   from its folder therefore says what it is. `type-matches-folder` errors where the field and the folder disagree.
   Every `_template.md` carries the line, so `kac new` writes it. A corpus created before this adds the line to each
   record it holds, and `kac validate` names the ones that are missing it.
+
+### Changed
+
+- **An FAQ records every confirmation, rather than the last one.** `confirmed` replaces `confirmed-by` and
+  `confirmed-on` with a list, one entry per confirmation and oldest first:
+  `- { at: 2026-09-07T20:18:00Z, by: human:alex.doe }`. The moment and the person are one entry, so they are edited
+  together and neither can be left behind. A reader asking when the answer was last checked, by whom, and who checked
+  it before that now has all three. The shape is [OKF v0.2]'s. A corpus holding FAQs written before this rewrites the
+  two keys as one entry per record, and `kac validate` names the ones still carrying the old pair.
 
 ## 0.22.0 - 2026-09-07
 

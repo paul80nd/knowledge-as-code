@@ -52,8 +52,7 @@ Other boundaries:
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
 | `applies-to`         | list                                   | Service ids this answer concerns.                                                           |
 | `promoted-from`      | id                                     | The discovery this was promoted from.                                                       |
-| `confirmed-by` *     | string                                 | The person who confirmed it, as `human:alex.doe`.                                           |
-| `confirmed-on` *     | date                                   | Quoted. When a human last confirmed the answer still holds.                                 |
+| `confirmed` *        | list                                   | Every confirmation this answer has had, oldest first, one line each.                        |
 | `review-by` *        | date                                   | Quoted. The date by which someone confirms this is still true.                              |
 
 \* Field is required  
@@ -67,7 +66,7 @@ Other boundaries:
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Name whoever verified the fix in `confirmed-by`, and date the verification in `confirmed-on`.
+4. Add a `confirmed` line naming who verified the fix and the moment they did it.
 5. Set `review-by`. A fix goes stale when the thing it fixes gets rewritten.
 
 **Conventions**
@@ -89,10 +88,12 @@ Other boundaries:
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""` or `—`.                                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
+| `timestamp-format`          | error   | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                                |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                           |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `entry-shape / entry-key`   | error   | Each entry of an object list is a mapping, carrying the keys the field declares and no others.                  |
 | `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |

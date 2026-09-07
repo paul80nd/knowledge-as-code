@@ -70,7 +70,7 @@ The one flow that crosses tiers. Where the observation turns out to be a rule pe
 **standard** instead, and that needs an ADR first.
 
 1. A human confirms the observation is real, general, and still current.
-2. Create the FAQ with `promoted-from`, `confirmed-by` and `confirmed-on`.
+2. Create the FAQ with `promoted-from`, and a `confirmed` entry naming who confirmed it and when.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
 Nothing proposes a promotion automatically

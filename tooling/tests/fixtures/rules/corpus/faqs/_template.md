@@ -6,8 +6,7 @@ status: active
 symptom-keywords:
 applies-to:
 promoted-from:
-confirmed-by:
-confirmed-on:
+confirmed:
 review-by:
 owner:
 tags: [ a, b ]
