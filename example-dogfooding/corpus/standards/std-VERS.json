@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] Every corpus whose records changed has moved its `content-version`, at the major, minor or patch that change\n      earns.\n- [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record\n      changed.\n- [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.\n- [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.\n- [ ] `.imports/` is deleted in `examples/payments` and `examples/dog-fooding`, the producer repacked, and\n      `kac restore` run again. That is what CI sees, because `.imports/` is untracked.\n- [ ] `version:` in `manifest.yaml` has moved where a corpus has to respond, and every `upstream.template-version`\n      holds it.\n- [ ] A type whose exported files changed shape has moved `version:` under `export:` in its `.schema/<type>.yaml`.\n- [ ] `formatVersion` has moved where a reader of the export envelope would now be wrong.\n- [ ] No published version has been replaced, and every correction ships as a new version."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/46fb7bc374e5130b2a6f9d79c9726480d2f0399a/examples/dog-fooding/standards/versioning.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/20f64c4db23deda20ffe085ba909c0827cdd0f7e/examples/dog-fooding/standards/versioning.md"
   }
 }
