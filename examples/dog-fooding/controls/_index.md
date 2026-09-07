@@ -2,15 +2,15 @@
 
 # Control Index (CTL)
 
-| ID       | Title                                                                                    | Mechanism | Frequency | Verifies                            | Status |
-|----------|------------------------------------------------------------------------------------------|-----------|-----------|-------------------------------------|--------|
-| ctl-0001 | [A merge waits for the validate job](0001-merge-gate.md)                                 | ci        | per-pr    | eng:std-GATES, std-CI               | active |
-| ctl-0002 | [Every job in kac.yml sits behind the gate](0002-workflow-gate-tests.md)                 | ci        | per-pr    | std-CI                              | active |
-| ctl-0003 | [Every workflow passes actionlint](0003-actionlint.md)                                   | ci        | per-pr    | std-CI                              | active |
-| ctl-0004 | [Every YAML file passes yamllint](0004-yamllint.md)                                      | ci        | per-pr    | std-CONFIG                          | active |
-| ctl-0005 | [Every corpus holds the file the template sends it](0005-update-check.md)                | ci        | per-pr    | std-CONFIG                          | active |
-| ctl-0006 | [A version carries the changelog section its release publishes](0006-changelog-tests.md) | ci        | per-pr    | std-CI                              | active |
-| ctl-0007 | [Every corpus validates and its generated output is fresh](0007-corpus-validation.md)    | ci        | per-pr    | eng:std-GATES, std-VERS             | active |
-| ctl-0008 | [Every corpus publishes, installs and is read back](0008-publish-round-trip.md)          | ci        | per-pr    | eng:std-GATES, std-PLUGIN, std-VERS | active |
-| ctl-0009 | [Three test layers run before a merge](0009-tool-test-layers.md)                         | ci        | per-pr    | eng:std-GATES, eng:std-TEST         | active |
-| ctl-0010 | [The documentation site builds with no dead link](0010-docs-build.md)                    | ci        | per-pr    | eng:std-GATES                       | active |
+| ID       | Title                                                                                    | Mechanism | Frequency | Verifies                    | Status |
+|----------|------------------------------------------------------------------------------------------|-----------|-----------|-----------------------------|--------|
+| ctl-0001 | [A merge waits for the validate job](0001-merge-gate.md)                                 | ci        | per-pr    | eng:std-GATES, std-CI       | active |
+| ctl-0002 | [Every job in kac.yml sits behind the gate](0002-workflow-gate-tests.md)                 | ci        | per-pr    | std-CI                      | active |
+| ctl-0003 | [Every workflow passes actionlint](0003-actionlint.md)                                   | ci        | per-pr    | std-CI                      | active |
+| ctl-0004 | [Every YAML file passes yamllint](0004-yamllint.md)                                      | ci        | per-pr    | std-CONFIG                  | active |
+| ctl-0005 | [Every corpus holds the file the template sends it](0005-update-check.md)                | ci        | per-pr    | std-CONFIG                  | active |
+| ctl-0006 | [A version carries the changelog section its release publishes](0006-changelog-tests.md) | ci        | per-pr    | std-CI                      | active |
+| ctl-0007 | [Every corpus validates and its generated output is fresh](0007-corpus-validation.md)    | ci        | per-pr    | eng:std-GATES, std-VERS     | active |
+| ctl-0008 | [Every corpus publishes, installs and is read back](0008-publish-round-trip.md)          | ci        | per-pr    | eng:std-GATES, std-PLUGIN   | active |
+| ctl-0009 | [Three test layers run before a merge](0009-tool-test-layers.md)                         | ci        | per-pr    | eng:std-GATES, eng:std-TEST | active |
+| ctl-0010 | [The documentation site builds with no dead link](0010-docs-build.md)                    | ci        | per-pr    | eng:std-GATES               | active |

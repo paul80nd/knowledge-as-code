@@ -2,7 +2,7 @@
 id: ctl-0008
 tier: normative
 status: active
-verifies: [ eng:std-GATES, std-PLUGIN, std-VERS ]
+verifies: [ eng:std-GATES, std-PLUGIN ]
 mechanism: ci
 frequency: per-pr
 evidence: The `corpora`, `round-trip` and `import-round-trip` job logs on the pull request.
@@ -24,8 +24,6 @@ A corpus that validates can still export a package nobody can install.
   suite, without anyone asking for it".
 * `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes` says a skill "**MUST** name the parts file of the
   type its component declares, and no other type's".
-* `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request` says a corpus here "**MUST NOT** publish
-  a `content-version` that a committed range in this repository refuses".
 
 ## How it works
 
@@ -48,9 +46,6 @@ fails a skill naming another type's. Nothing else `std-PLUGIN` asks of the wordi
 
 The component list is read from `bundle.json`, which carries what the manifest declared. So a skill or hook directory
 somebody forgot to declare travels undeclared and fails nothing.
-
-`import-round-trip` proves the coupling in one direction: a producer that changes what it published turns its
-consumer red. It moves no version, so a range or a lock left behind is not what turns it red.
 
 Nothing here reaches the publishing workflows. What CI proves is that a package and a plugin assemble. Whether
 nuget.org, GitHub Packages or the `marketplace` branch accepts either is answered after the merge.

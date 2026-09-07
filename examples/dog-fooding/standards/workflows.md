@@ -5,7 +5,7 @@ status: active
 implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.BRANCH,
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
   eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE, eng:pol-SCRT.STORE,
-  eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
+  eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
 verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006 ]
 applies-to:
   - all
@@ -104,7 +104,8 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 - The release notes **MUST** be that version's section of `tooling/kac/CHANGELOG.md`.
 - A person **MUST NOT** push a package from their own machine.
 
-_**Covers:** `eng:pol-ACCS.DUTIES`, `eng:pol-PIPE.LOCAL`, `eng:pol-PIPE.TRACE`, `eng:pol-TRUS.REPO`_
+_**Covers:** `eng:pol-ACCS.DUTIES`, `eng:pol-PIPE.LOCAL`, `eng:pol-PIPE.TRACE`, `eng:pol-TRUS.MUTATE`,
+`eng:pol-TRUS.REPO`_
 
 ## Examples
 
@@ -186,8 +187,8 @@ belongs to whichever corpus receives it, and it names `actions/checkout@v4` toda
 
 ## Changelog
 
-- 2026-09-07: gave the stamp semantics and the consumer's lock and range to [std-VERS], keeping when a version moves
-  and how a workflow publishes it.
+- 2026-09-07: gave the stamp semantics and the consumer's lock and range to [std-VERS], keeping when a version moves,
+  how a workflow publishes it, and the registry check that holds a published version in place.
 - 2026-09-06: took the changelog, semantic `content-version` and consumer-repointing rules that `CLAUDE.md` had been
   stating a second time.
 - 2026-09-02: initial version.

@@ -3,7 +3,7 @@ id: std-VERS
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.DOCS, eng:pol-KNOW.SYNC, eng:pol-PIPE.REVERT, eng:pol-TRUS.MUTATE ]
-verified-by: [ ctl-0007, ctl-0008 ]
+verified-by: [ ctl-0007 ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -17,11 +17,11 @@ tags: [ compatibility, imports, versioning ]
 
 ## Summary
 
-Eleven stamps decide what this repository publishes and what a corpus consuming it may take. Two are semantic versions
-a person moves: `<Version>` in `tooling/kac/kac.csproj`, and `content-version` in a corpus's `.corpus.yaml`. Most of
-the rest are counts a tool writes and a reader compares for equality. A count moves where something reading the file
-has to respond, so a reader meeting a count above its own stops on it. Every consumer in this repository takes a
-producer's move in the same pull request.
+The stamps on this repository's files decide what it publishes and what a corpus consuming it may take. Two are
+semantic versions a person moves: `<Version>` in `tooling/kac/kac.csproj`, and `content-version` in a corpus's
+`.corpus.yaml`. The rest are counts a tool writes and a reader compares for equality. A count moves where something
+reading the file has to respond, so a reader meeting a count above its own stops on it. Every consumer in this
+repository takes a producer's move in the same pull request.
 
 ## Rules
 
@@ -33,7 +33,7 @@ producer's move in the same pull request.
   `.schema/<type>.yaml`, `formatVersion`, `mechanismVersion` and a type's `shapeVersion` **MUST** each be a whole
   number that only increases.
 - A count **MUST NOT** be read as a major, a minor or a patch.
-- A key spelled `version:` **MUST** be read as versioning the file or the block holding it.
+- A key spelled `version:` **MUST** version the file or the block holding it.
 - `minimum-tool:` in `manifest.yaml` **MUST** name a `<Version>` nuget.org has published.
 - A `version:` under `consumes:` **MUST** be an exact version or a caret over one, and no other form.
 - A caret **MUST NOT** be read as admitting a prerelease.
@@ -45,7 +45,7 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 - `content-version` **MUST** be read as a statement about the records rather than about the file.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
   and its patch a change of wording.
-- `<Version>` **MUST** move where a user of `kac` can observe the change.
+- A move of `<Version>` **MUST** name a change to `kac` that a user can observe.
 - `descriptor-version` **MUST** move where `.corpus.yaml` gains a key, loses one, or has one read differently.
 - `version:` in `manifest.yaml` **MUST** move where a corpus has to respond: a file added, removed, renamed, or moved
   between layers.
@@ -53,7 +53,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 - `formatVersion` and a type's `shapeVersion` **MUST** move where a reader written against the shape before it would
   now be wrong.
 - Adding a key to a line, or a file to a type's directory, **MUST NOT** move either of those two.
-- `mechanismVersion` in an export's `manifest.json` **MUST** hold that corpus's `upstream.template-version`.
+- `mechanismVersion` in an export's `manifest.json` **MUST** hold that corpus's `upstream.template-version`, and
+  **MUST** be null where the corpus states none.
 - A rename of `mechanismVersion` **MUST** move `formatVersion`.
 
 _**Covers:** `eng:pol-KNOW.DOCS`_
@@ -75,8 +76,9 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
   producer's `content-version`.
 - That consumer **MUST** move its `version:` range as well wherever the producer sits below 1.0.0 and its minor moved.
 - A corpus here **MUST NOT** publish a `content-version` that a committed range in this repository refuses.
-- Before you open the pull request, you **MUST** delete `.imports/` in every consumer, repack the producer, and run
-  `kac restore` again.
+- You **MUST** delete `.imports/` in every consumer before you open the pull request.
+- You **MUST** repack the producer after that delete.
+- You **MUST** run `kac restore` again in every consumer, and read what it reports.
 - A `kac restore` over an `.imports/` you did not delete **MUST NOT** be offered as proof.
 
 _**Covers:** `eng:pol-KNOW.SYNC`_
@@ -134,7 +136,8 @@ restore keeps a folder already holding 0.10.0.
 
 - [ ] Every corpus whose records changed has moved its `content-version`, at the major, minor or patch that change
       earns.
-- [ ] `<Version>` has moved where a user of `kac` can observe the change, and has not moved because a record changed.
+- [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record
+      changed.
 - [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.
 - [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.
 - [ ] `.imports/` is deleted in `examples/payments` and `examples/dog-fooding`, the producer repacked, and
@@ -167,10 +170,10 @@ what the move means. The `glossary@1` a component names in `plugin.json` is [std
 it states nothing the rules above have not already bound.
 
 **A reviewer reads most of the rules above.** [ctl-0007] runs `kac validate`, which fails a declared import that was
-never restored and warns where a lock sits behind its own range. [ctl-0008] renames a clause in `examples/engineering`
-and asserts the downstream build goes red naming it. Nothing counts a stamp that should have moved and did not,
-nothing compares a `shapeVersion` against the files it stamps, and nothing reads `<Version>` against what a user of
-`kac` can observe.
+never restored and warns where a newer version sits inside the declared range. The caret trap surfaces there as
+information rather than a warning, because a corpus that capped itself on purpose is reporting a decision. Nothing
+counts a stamp that should have moved and did not, nothing compares a `shapeVersion` against the files it stamps, and
+nothing reads `<Version>` against what a user of `kac` can observe.
 
 ## Sources and further reading
 
@@ -185,7 +188,6 @@ nothing compares a `shapeVersion` against the files it stamps, and nothing reads
 
 [Semantic Versioning 2.0.0]: https://semver.org
 [ctl-0007]: ../controls/0007-corpus-validation.md
-[ctl-0008]: ../controls/0008-publish-round-trip.md
 [npm semver ranges]: https://github.com/npm/node-semver#ranges
 [std-CI]: workflows.md
 [std-CONFIG]: configuration.md
