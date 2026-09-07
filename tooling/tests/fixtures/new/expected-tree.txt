@@ -25,6 +25,7 @@
 .schema/capabilities.yaml
 .schema/controls.yaml
 .schema/data.yaml
+.schema/deviations.yaml
 .schema/discoveries.yaml
 .schema/explanations.yaml
 .schema/faqs.yaml
@@ -54,6 +55,9 @@ controls/_template.md
 data.md
 data/_index.md
 data/_template.md
+deviations.md
+deviations/_index.md
+deviations/_template.md
 discoveries.md
 discoveries/_index.md
 discoveries/_template.md

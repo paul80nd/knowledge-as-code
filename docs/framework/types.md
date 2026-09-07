@@ -1,6 +1,6 @@
 # The default types
 
-Seventeen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
+Eighteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
 [`.corpus.yaml`](../corpus-descriptor.md). A declined type's schema file is never written, so nothing arrives to be
 ignored.
 
@@ -23,13 +23,14 @@ Immutable once accepted. Superseded, never rewritten.
 
 Living and owned. Edited in place, with a changelog.
 
-| Type          | Folder       | What it holds                                                                                         |
-|---------------|--------------|-------------------------------------------------------------------------------------------------------|
-| **Policies**  | `policies/`  | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely |
-| **Standards** | `standards/` | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist                |
-| **Controls**  | `controls/`  | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
-| **NFRs**      | `nfrs/`      | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |
-| **FAQs**      | `faqs/`      | A problem with a confirmed fix, promoted from a discovery once a human has verified it                |
+| Type           | Folder        | What it holds                                                                                         |
+|----------------|---------------|-------------------------------------------------------------------------------------------------------|
+| **Policies**   | `policies/`   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely |
+| **Standards**  | `standards/`  | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist                |
+| **Controls**   | `controls/`   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
+| **Deviations** | `deviations/` | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed        |
+| **NFRs**       | `nfrs/`       | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |
+| **FAQs**       | `faqs/`       | A problem with a confirmed fix, promoted from a discovery once a human has verified it                |
 
 ## Descriptive
 

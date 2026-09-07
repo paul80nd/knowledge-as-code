@@ -71,9 +71,9 @@ It names each file as it writes it, then generates, validates and stages. The ta
 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
-new: wrote 101 file(s) for my-corpus, taken from /path/to/template.
-updated 1 of 38 generated file(s).
-validated 3 document(s) and 17 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+new: wrote 108 file(s) for my-corpus, taken from /path/to/template.
+updated 1 of 40 generated file(s).
+validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
 

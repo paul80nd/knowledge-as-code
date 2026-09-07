@@ -48,7 +48,7 @@ Where it sits in the stack and which problem it solves for us specifically.
 
 For `deprecated`: name the replacement in `successor`, and say by when.
 
-For `rejected`: this entry exists so the evaluation isn't repeated in eighteen months. Say what was wrong with it.
+For `rejected`: this entry exists so the evaluation isn't repeated in two years. Say what was wrong with it.
 
 ## Trial criteria
 

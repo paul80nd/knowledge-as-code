@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: deviation
+label: Deviation
+label-plural: Deviations
+folder: deviations
+page: deviations.md
+tier: normative
+lifecycle: living
+summary: A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.
+goes-here: A departure from a rule that somebody agreed to
+detail: >
+  The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
+  nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
+
+versus:
+  adrs: >
+    An ADR decides how something is built, and the decision stays true. A deviation says we are knowingly
+    not following a rule, and is written to be closed. If the estate is meant to look like this from now
+    on, write the ADR and change the rule.
+  policies: >
+    The policy is the commitment. The deviation is one named, dated departure from it, and it changes
+    nothing the policy says. A departure everyone takes is a policy that needs rewriting.
+
+lineage:
+  prior-art: "[NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final), the plan of action and milestones a named official accepts risk against"
+  alignment: >
+    A named individual accepts a residual risk for a bounded period, and the remediation stays tracked
+  divergence: >
+    A plan of action and milestones sits inside a system authorisation and feeds an accreditation. A
+    deviation here departs from one internal rule, and nothing accredits it
+
+collision: >
+  In audit and quality practice a **deviation** is found rather than granted. An auditor records a
+  departure from a procedure after it happened, and what is agreed in advance is called a waiver, an
+  exception or a concession. Here the record *is* the agreement, written before the departure or
+  immediately after one an incident left no time for.
+
+  A reader arriving from that background will read this folder as a list of findings against us, and a
+  growing count as the estate getting worse. The count measures how much of the estate somebody wrote
+  down. Say which sense is meant wherever the word crosses into an audit conversation.
+
+id:
+  prefix: dev
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [active, draft, closed]
+    description: Whether the deviation is in force, still being agreed, or closed.
+    notes: >
+      A deviation whose review date has passed is still `active`. Letting it stand is the failure, so the
+      status says what is true rather than what should have happened.
+
+  departs-from:
+    required: true
+    type: list
+    of: id
+    ref: [policies, standards]
+    notes: >
+      Policy or standard ids, ideally clause-level anchors. A deviation that names no rule is a note to
+      self.
+
+  accepted-on:
+    required: false
+    required-when: 'status != draft'
+    type: date
+    description: The day the named owner accepted the risk.
+
+  review-by:
+    required: true
+    type: date
+    description: The day this is looked at again. Every deviation carries one.
+
+  closed-on:
+    required: false
+    required-when: 'status == closed'
+    type: date
+    description: The day the gap was fixed, or the risk consciously re-accepted.
+
+  applies-to:
+    required: false
+    type: list
+    of: id
+    ref: services
+    allow-literal: [all]
+    description: Service ids, or `all`.
+
+sections:
+  required: [What we are doing instead, Why we need it, What compensates, How it closes]
+  optional: [Scope, Related]
+
+index:
+  columns: [id, title, status, departs-from, review-by, owner]
+  sort: review-by
+
+rules:
+  - id: review-after-acceptance
+    description: The review date falls after the day the risk was accepted.
+    severity: error
+    expr: "present('accepted-on') and present('review-by') implies field('review-by') > field('accepted-on')"
+    message: >
+      This deviation is reviewed on or before the day it was accepted, so it expired as it was written.
+      Set `review-by` to the day somebody has to look at this again.
+  - id: not-open-ended
+    description: The record does not claim the departure is permanent or open-ended.
+    severity: warning
+    expr: >-
+      not matches('(?i)\b(permanently|indefinitely|no expiry|until further notice)\b')
+    message: >
+      A deviation is a bounded departure, and this one reads as a standing one. Say what has to be true
+      for it to close, and put the date in `review-by`. A departure meant to last is a rule that needs
+      rewriting.
+  - id: expiry
+    description: >
+      Scheduled. Reports active deviations whose `review-by` has passed.

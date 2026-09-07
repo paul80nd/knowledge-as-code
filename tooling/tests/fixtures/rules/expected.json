@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 24,
-    "templates": 16,
+    "validated": 26,
+    "templates": 17,
     "skipped": 0,
-    "errors": 12,
-    "warnings": 14,
+    "errors": 13,
+    "warnings": 15,
     "infos": 0
   },
   "findings": [
@@ -42,6 +42,20 @@
       "severity": "error",
       "check": "no-actual-data",
       "message": "This reads as an actual record rather than as a description of one. Addresses in examples belong under `example.com`, which RFC 2606 reserves so that it can never be anybody's."
+    },
+    {
+      "file": "deviations/open-ended-departure.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "not-open-ended",
+      "message": "A deviation is a bounded departure, and this one reads as a standing one. Say what has to be true for it to close, and put the date in `review-by`. A departure meant to last is a rule that needs rewriting."
+    },
+    {
+      "file": "deviations/review-before-acceptance.md",
+      "line": 1,
+      "severity": "error",
+      "check": "review-after-acceptance",
+      "message": "This deviation is reviewed on or before the day it was accepted, so it expired as it was written. Set `review-by` to the day somebody has to look at this again."
     },
     {
       "file": "discoveries/pool-exhaustion-under-load.md",

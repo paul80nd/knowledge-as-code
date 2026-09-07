@@ -52,7 +52,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 6
+  template-version: 7
   taken-on: "2026-09-07"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.
