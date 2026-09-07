@@ -162,7 +162,9 @@ it checks inside it. The controls belong to the standards, listed once below, an
 `eng:pol-DATA.LOGS`, `eng:pol-DATA.UNMASK`, `eng:pol-SCRT.REUSE`, `eng:pol-TRUS.TRACE` or `eng:pol-VURM.REGRESS`.
 Each states an obligation another clause states from the other side, and a standard covers that one.
 
-Nothing regenerates this map. Move it by hand when a policy, a standard or a control moves.
+Nothing regenerates this map. Move it by hand when a policy, a standard or a control moves. [prc-add-a-record]
+carries the step that sends you here. The hand-written form stands until `kac` reports the coverage edge itself.
+[#313] carries that work.
 
 ### The controls behind the standards
 
@@ -538,6 +540,7 @@ standard names it.
 
 </details>
 
+[#313]: https://github.com/paul80nd/knowledge-as-code/issues/313
 [PSBAR 2018]: ../engineering/frameworks.md#psbar-2018
 [WCAG 2.2 AA]: ../engineering/frameworks.md#wcag
 [pol-A11Y]: ../engineering/policies/governance/a11y-accessibility.md#clauses
@@ -562,3 +565,4 @@ standard names it.
 [pol-SECD]: ../engineering/policies/security/secd-security-by-design.md#clauses
 [pol-TRUS]: ../engineering/policies/security/trus-trusted-components.md#clauses
 [pol-VURM]: ../engineering/policies/security/vurm-vulnerability-remediation.md#clauses
+[prc-add-a-record]: processes/add-a-record.md

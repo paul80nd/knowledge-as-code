@@ -42,9 +42,12 @@ nothing in CI tells you that you reached for the wrong tier's rules.
 7. Write the frontmatter once the record has settled. Field order is topological and `key-order` checks it.
 8. Name the records that now point at this one. An edge such as `depends-on` is written one way and nothing generates
    the reverse view.
-9. Run `kac validate`, then `kac generate`. The record's H1 lands in a generated index, so the corpus is stale until
-   you regenerate.
-10. Run [prc-pull-request].
+9. List the pages naming records of this type by id, and fix the ones this record makes wrong. Nothing in CI reads
+   prose for meaning. In this corpus that list holds the [clause coverage
+   map](../README.md#how-this-corpus-stands-against-eng).
+10. Run `kac validate`, then `kac generate`. The record's H1 lands in a generated index, so the corpus is stale until
+    you regenerate.
+11. Run [prc-pull-request].
 
 ## Verification
 
