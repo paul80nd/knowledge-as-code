@@ -59,13 +59,15 @@ nuget.org has already accepted cannot be replaced, so a release that shipped wro
 
 ## Related
 
-* [std-CI.a-version-moves-by-hand-and-publishes-once] carries the changelog entry, the `<Version>` move, the
-  `content-version` each corpus owes and the lock every consumer owes back. Steps 2 and 3 say where in the order those
-  fall.
+* [std-CI.a-version-moves-by-hand-and-publishes-once] carries the changelog entry, the `<Version>` move and the
+  `content-version` each corpus owes. Steps 2 and 3 say where in the order those fall.
+* [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] carries the lock and the range every
+  consumer owes back, and what proves them before the merge rather than in CI.
 * [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says what a file two trees hold owes you. Step
   4 is where you prove it.
 * [svc-kac] is what a release publishes.
 
 [std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
 [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
 [svc-kac]: ../services/kac.md

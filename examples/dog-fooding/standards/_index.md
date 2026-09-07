@@ -8,3 +8,4 @@
 | std-CONFIG | [Configuration is committed, pinned and explained](configuration.md)                  | active |              | 2027-09-02 |
 | std-PLUGIN | [The plugin carries the corpus, and a skill answers from what travelled](plugin.md)   | active |              | 2027-09-07 |
 | std-PROSE  | [Prose reads the same way whoever wrote it](prose.md)                                 | active |              | 2027-09-02 |
+| std-VERS   | [A version stamp says what it versions, and a move says what changed](versioning.md)  | active |              | 2027-09-07 |

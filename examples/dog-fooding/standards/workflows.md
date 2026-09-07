@@ -4,8 +4,8 @@ tier: normative
 status: active
 implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.BRANCH,
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
-  eng:pol-PIPE.REVERT, eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE,
-  eng:pol-SCRT.STORE, eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
+  eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE, eng:pol-SCRT.STORE,
+  eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
 verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006 ]
 applies-to:
   - all
@@ -97,22 +97,15 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
   that same pull request.
 - A release **MUST** rename `## Unreleased` to the version and its date in the commit moving `<Version>`.
 - `content-version` in a corpus's `.corpus.yaml` **MUST** move in the pull request changing what that corpus knows.
-- A `content-version` **MUST** be read as a statement about the records rather than about the file.
-- Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
-  and its patch a change of wording.
-- A consuming corpus **MUST** move the `resolved:` lock of its `consumes:` entry in that same pull request.
-- That consumer **MUST** move its `version:` range as well wherever the producer's minor moved.
 - A publishing job **MUST** ask the registry whether it already holds the version in front of it.
 - Where the registry holds that version already, a publishing job **MUST** finish green.
 - A publish to nuget.org **MUST** wait for a person to approve the `nuget.org` environment.
 - A publish to nuget.org **MUST** tag the commit it published from.
 - The release notes **MUST** be that version's section of `tooling/kac/CHANGELOG.md`.
-- A published version **MUST NOT** be pushed again, replaced or deleted.
-- A correction **MUST** ship as a new version.
 - A person **MUST NOT** push a package from their own machine.
 
-_**Covers:** `eng:pol-ACCS.DUTIES`, `eng:pol-PIPE.LOCAL`, `eng:pol-PIPE.REVERT`, `eng:pol-PIPE.TRACE`,
-`eng:pol-TRUS.MUTATE`, `eng:pol-TRUS.REPO`_
+_**Covers:** `eng:pol-ACCS.DUTIES`, `eng:pol-PIPE.LOCAL`, `eng:pol-PIPE.TRACE`, `eng:pol-TRUS.MUTATE`,
+`eng:pol-TRUS.REPO`_
 
 ## Examples
 
@@ -157,7 +150,6 @@ for six hours when a push hangs. A tag moves, so `@v7` is a different action tom
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
 - [ ] The version this pull request ships has moved, and the changelog carries its section.
 - [ ] Every corpus whose records changed has moved its `content-version`.
-- [ ] Every consumer of one of those corpora has moved its `resolved:` lock.
 
 ## Rationale and provenance
 
@@ -165,10 +157,9 @@ Read-only permission is what keeps CI out of the files a person edits. `generate
 file and names the command to run locally, so no job needs to write one back.
 
 A version that has not moved publishes nothing and says nothing, so an edited record reaches no reader and the
-published copy drifts from `main` with no build reporting it. A restore takes the committed lock rather than the range,
-and `kac pack` rebuilds the producer's folder whole, so a consumer left on the old lock fails against a folder that no
-longer holds that version. A patch bump breaks a consumer exactly as a minor one does. Below 1.0.0 a caret pins the
-minor, which is why a minor bump moves the range as well as the lock.
+published copy drifts from `main` with no build reporting it. What each of these numbers means, and what a producer's
+move obliges of the corpora consuming it, are [std-VERS]'s. This standard reaches when a number moves in the delivery
+flow, and how a workflow publishes it.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name, and its header comment says why a
 job outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. What neither answers is a
@@ -178,9 +169,8 @@ reader is what catches those.
 The timeout rule reaches the publishing jobs, where a hang parks a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, which is what makes a release body available to the tag step.
 
-A published version is permanent on both registries, so the recovery path for a bad release is the next version. The
-tool's publish runs the three test layers again against the merge commit, because the gate saw the pull request's head
-and `main` moved beneath it.
+The tool's publish runs the three test layers again against the merge commit, because the gate saw the pull request's
+head and `main` moved beneath it.
 
 The pinning rule reaches `.github/workflows/`. The starter at `template/.github/workflows/kac.yml` is a seed that
 belongs to whichever corpus receives it, and it names `actions/checkout@v4` today.
@@ -194,16 +184,17 @@ belongs to whichever corpus receives it, and it names `actions/checkout@v4` toda
 - **Normative.** [Security hardening for GitHub Actions] is what Scorecard's three checks operationalise, and it
   carries the reasoning behind each.
 - **Normative.** [Trusted publishing on nuget.org] defines the policy this repository's publish authenticates against.
-- **Informative.** [Semantic Versioning 2.0.0] is the grammar both `<Version>` and `content-version` are read under.
 
 ## Changelog
 
+- 2026-09-07: gave the stamp semantics and the consumer's lock and range to [std-VERS], keeping when a version moves,
+  how a workflow publishes it, and the registry check that holds a published version in place.
 - 2026-09-06: took the changelog, semantic `content-version` and consumer-repointing rules that `CLAUDE.md` had been
   stating a second time.
 - 2026-09-02: initial version.
 
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md
 [Security hardening for GitHub Actions]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
-[Semantic Versioning 2.0.0]: https://semver.org
 [Trusted publishing on nuget.org]: https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
 [actionlint]: https://github.com/rhysd/actionlint
+[std-VERS]: versioning.md

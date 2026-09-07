@@ -85,7 +85,8 @@ records in it rather than lines on this page.
 
 | Before you change                                       | Read                                                                                                                                                              |
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| a workflow, a version, a changelog or a consumer's lock | [`std-CI`](examples/dog-fooding/standards/workflows.md)                                                                                                           |
+| a workflow, a version or a changelog                    | [`std-CI`](examples/dog-fooding/standards/workflows.md)                                                                                                           |
+| a version stamp, a consumer's lock or its range         | [`std-VERS`](examples/dog-fooding/standards/versioning.md)                                                                                                        |
 | a YAML file, a pin, or a file two of the trees hold     | [`std-CONFIG`](examples/dog-fooding/standards/configuration.md)                                                                                                   |
 | any prose, comment, commit message or generated block   | [`std-PROSE`](examples/dog-fooding/standards/prose.md)                                                                                                            |
 | a skill, a hook or a `plugin.json` under `.plugin/`     | [`std-PLUGIN`](examples/dog-fooding/standards/plugin.md)                                                                                                          |
@@ -146,13 +147,14 @@ worth making, and says so where it is.
 ## Before you raise a pull request
 
 **The changelog entry and the version are two separate calls, and only the second is yours to ask about.**
-[`std-CI`](examples/dog-fooding/standards/workflows.md) carries the entry, the version, the `content-version` each
-corpus you changed owes, and the lock every consumer of that corpus owes back. Whether the entry you wrote ships is the
-question that belongs to whoever owns the branch. A push to
-`main` publishes `kac` whenever [`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not
-already hold, so moving `<Version>` **is** the release. Put the call to them before you open the pull request, with a
-recommendation: release where the change stands on its own, and hold where it is one part of a group that is no use
-apart. Where the tool did not change there is nothing to ask.
+[`std-CI`](examples/dog-fooding/standards/workflows.md) carries the entry, the version and the `content-version` each
+corpus you changed owes. [`std-VERS`](examples/dog-fooding/standards/versioning.md) carries what a move of each of
+those means, and the lock and range every consumer of that corpus owes back. Whether the entry you wrote ships is the
+question that belongs to whoever owns the branch. A push to `main` publishes `kac` whenever
+[`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not already hold, so moving
+`<Version>` **is** the release. Put the call to them before you open the pull request, with a recommendation: release
+where the change stands on its own, and hold where it is one part of a group that is no use apart. Where the tool did
+not change there is nothing to ask.
 
 `ChangelogTests` fails a version that has no section. A local run passes over the consumer's lock, because `.imports/`
 is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` in

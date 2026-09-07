@@ -167,13 +167,14 @@ Nothing regenerates this map. Move it by hand when a policy, a standard or a con
 ### The controls behind the standards
 
 `eng:` exports policies, standards and a glossary, and holds no controls, so every control here is this corpus's own.
-Five standards have one. The other eleven have none, which says nothing about whether they are followed.
+Six standards have one. The other eleven have none, which says nothing about whether they are followed.
 
 | Standard        | Controls                                         |
 |-----------------|--------------------------------------------------|
 | `std-CI`        | ctl-0001, ctl-0002, ctl-0003, ctl-0006           |
 | `std-CONFIG`    | ctl-0004, ctl-0005                               |
 | `std-PLUGIN`    | ctl-0008                                         |
+| `std-VERS`      | ctl-0007                                         |
 | `eng:std-GATES` | ctl-0001, ctl-0007, ctl-0008, ctl-0009, ctl-0010 |
 | `eng:std-TEST`  | ctl-0009                                         |
 
@@ -193,7 +194,7 @@ Five standards have one. The other eleven have none, which says nothing about wh
 | [pol-EVER] | 8       | 7       | 1      | 0            |
 | [pol-INCR] | 13      | 0       | 10     | 3            |
 | [pol-INTC] | 8       | 7       | 1      | 0            |
-| [pol-KNOW] | 6       | 2       | 4      | 0            |
+| [pol-KNOW] | 6       | 4       | 2      | 0            |
 | [pol-MEXP] | 11      | 1       | 0      | 10           |
 | [pol-OBSV] | 10      | 9       | 0      | 1            |
 | [pol-PERF] | 5       | 0       | 0      | 5            |
@@ -365,7 +366,7 @@ failures, and no standard in either corpus reaches incident response.
 | `PROCESS` | Gap          | The runbooks cover three failures, and nothing says who decides in the rest.         |
 | `TRIAGE`  | Out of scope | One maintainer, and nobody to escalate to.                                           |
 | `COMMS`   | Gap          | Whoever installed a bad version hears nothing until the next one lands.              |
-| `RECOVER` | Gap          | `std-CI` states that a correction ships as a new version, for `eng:pol-PIPE.REVERT`. |
+| `RECOVER` | Gap          | `std-VERS` says a correction ships as a new version, for `eng:pol-PIPE.REVERT`. |
 | `EVIDENC` | Gap          | The corpus adopted no type that holds an incident record.                            |
 | `NOTIFY`  | Out of scope | No personal data, so no breach to report to a supervisory authority.                 |
 | `INFORM`  | Out of scope | Same: there is nobody whom a breach here could put at risk.                          |
@@ -395,12 +396,13 @@ failures, and no standard in either corpus reaches incident response.
 ### pol-KNOW: knowledge is written down and kept with what it describes
 
 The four `CLAUDE.md` files, the site and this corpus are the answer to most of this policy. `std-PROSE` reaches how the
-words are written for an agent, and `std-PLUGIN` reaches the one copy those words travel in.
+words are written for an agent, `std-PLUGIN` reaches the one copy those words travel in, and `std-VERS` reaches how
+each of them is versioned and kept beside what it describes.
 
 | Clause   | Verdict      | Note                                                                                 |
 |----------|--------------|--------------------------------------------------------------------------------------|
-| `DOCS`   | Gap          | The site and the `CLAUDE.md` files carry it, and no standard requires them.          |
-| `SYNC`   | Gap          | `generate --check` catches a stale generated block, and nothing catches stale prose. |
+| `DOCS`   | `std-VERS`   | Every stamp is named, and what a move of each one says is written down.              |
+| `SYNC`   | `std-VERS`   | A producer's move and its consumers' locks land in one pull request.                 |
 | `DECIDE` | Gap          | The reasoning behind a decision lives in the commit that made it.                    |
 | `AGENTS` | `std-PROSE`  | The rules sit where the agents doing the work read them.                             |
 | `HEADS`  | Gap          | One maintainer, and nothing tests what only they know.                               |
@@ -449,7 +451,7 @@ Publishing is what this repository does to production, and `std-CI` and `eng:std
 | `SAMEART` | `eng:std-DEPLOY`               | The artefact is built once. The publish job rebuilds from the merge commit.  |
 | `CONFIG`  | `eng:std-DEPLOY`, `std-CONFIG` | Configuration sits outside the artefact.                                     |
 | `TRACE`   | `eng:std-DEPLOY`, `std-CI`     | A publish tags the commit it published from.                                 |
-| `REVERT`  | `eng:std-DEPLOY`, `std-CI`     | A way back exists before the change goes.                                    |
+| `REVERT`  | `eng:std-DEPLOY`, `std-VERS`   | A correction ships as a new version, and no published one moves.            |
 | `ASCODE`  | `eng:std-DEPLOY`, `std-CI`     | The workflows are reviewed like any other file.                              |
 | `GATES`   | `std-CI`                       | `validate` is the check a merge waits for.                                   |
 | `FLAGS`   | Out of scope                   | Nothing here carries a flag that changes behaviour in production.            |
@@ -515,7 +517,7 @@ and after.
 | `TRACE`   | `eng:std-DEPLOY`, `std-CI`                             | Covered through `eng:pol-PIPE.TRACE`, the same duty from the other side.  |
 | `REVIEW`  | `std-CONFIG`                                           | Dependabot brings each pinned version back weekly.                        |
 | `UNTRUST` | `eng:std-DEPS`, `std-CI`                               | A moving version may not enter a job holding a write permission.          |
-| `MUTATE`  | `eng:std-CONT`, `std-CI`                               | A published tag never moves.                                              |
+| `MUTATE`  | `eng:std-CONT`, `std-CI`, `std-VERS`                   | A published tag never moves.                                              |
 | `ATTEST`  | Gap                                                    | Nothing proves the origin of an artefact before it is installed.          |
 
 ### pol-VURM: vulnerabilities are found, prioritised and closed to a timeframe
