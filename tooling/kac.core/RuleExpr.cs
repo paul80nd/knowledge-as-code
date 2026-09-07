@@ -66,6 +66,7 @@ public static class RuleExpr
             ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount(Str(a, 0))),
             ["first_section"] = new([], ValueType.Str, (f, _) => f.FirstSection()),
             ["links"] = new([], ValueType.Int, (f, _) => f.Links()),
+            ["today"] = new([], ValueType.Str, (f, _) => f.Today()),
             ["words"] = new([], ValueType.Int, (f, _) => f.Words()),
             ["matches"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Matches(Str(a, 0))),
             ["section_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,

@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 26,
+    "validated": 27,
     "templates": 17,
     "skipped": 0,
     "errors": 13,
-    "warnings": 15,
+    "warnings": 16,
     "infos": 0
   },
   "findings": [
@@ -56,6 +56,13 @@
       "severity": "error",
       "check": "review-after-acceptance",
       "message": "This deviation is reviewed on or before the day it was accepted, so it expired as it was written. Set `review-by` to the day somebody has to look at this again."
+    },
+    {
+      "file": "deviations/review-date-passed.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "expiry",
+      "message": "This deviation is still active and its `review-by` has passed, so nobody has looked at it on the day it said they would. Close it, or set a new date and say in the record what was re-accepted."
     },
     {
       "file": "discoveries/pool-exhaustion-under-load.md",

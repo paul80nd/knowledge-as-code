@@ -23,9 +23,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the clauses it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks
   at it again. `departs-from` names those clauses one by one and refuses a bare policy or standard id, because a bare
   id claims a departure from every clause the rule carries. `kac update --add-type deviations` takes it, and `kac new`
-  offers it beside the rest. Two rules run over a record. `review-after-acceptance` errors where the review date falls
+  offers it beside the rest. Three rules run over a record. `review-after-acceptance` errors where the review date falls
   on or before the acceptance date, so a deviation cannot expire as it is written. `not-open-ended` warns where the
-  record reads as a standing departure rather than a bounded one. `expiry` is declared and does not run.
+  record reads as a standing departure rather than a bounded one. `expiry` warns where a record is still `active` on a
+  day its `review-by` has gone by, and stays a warning so a late review never makes deleting the record the cheapest
+  way to a green build.
+- **A rule expression can call `today()`.** It answers with the day the run happens, as an ISO date, so a rule compares
+  it against a date field under the string comparison the grammar already uses between two dates. The day is read once
+  for the whole run, so a corpus validated across midnight cannot answer one way for its first record and another for
+  its last.
 
 ### Changed
 

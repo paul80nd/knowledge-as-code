@@ -92,7 +92,7 @@ appears wired up and never fires, the exact failure this layer exists to end.
 ## The facts an expression can ask for
 
 These are the whole callable surface. Each reads what the parse pass already produced, so the evaluator never re-parses
-markdown.
+markdown. `today()` is the exception, and reads nothing about the record at all.
 
 | Function                         | Returns | Reads                                                                                                                |
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
@@ -103,9 +103,14 @@ markdown.
 | `section_count('Title')`         | int     | how many times it appears. `section()` asks whether, this asks how many                                              |
 | `first_section()`                | string  | the first H2, or empty where there is none                                                                           |
 | `links()`                        | int     | how many links the body carries                                                                                      |
+| `today()`                        | string  | the day the run happens, as an ISO date, so a rule compares it against a date field                                  |
 | `words()`                        | int     | every heading and paragraph the record **renders**. Frontmatter and fenced code carry no inline content and fall out |
 | `matches('re')`                  | bool    | the body **as written**, code fences, link targets and markdown syntax included. Frontmatter is not read             |
 | `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the record holds no such section                                   |
+
+**`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has
+gone by. It is read once and handed to every record, so a corpus validated across midnight cannot answer one way for
+its first record and another for its last.
 
 **`words()` and `matches()` deliberately see different documents.** One walks the rendered text and the other the
 source. That is what lets `matches()` find a credential pasted into a fenced block, the case those rules exist for. It

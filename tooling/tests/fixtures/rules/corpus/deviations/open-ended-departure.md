@@ -4,8 +4,8 @@ tier: normative
 status: active
 departs-from:
   - std-ERRORS.a-failure-says-what-happened
-accepted-on: "2026-05-01"
-review-by: "2027-05-01"
+accepted-on: "2030-01-01"
+review-by: "2030-05-01"
 owner: alex.doe
 ---
 

@@ -130,6 +130,14 @@ rules:
       A deviation is a bounded departure, and this one reads as a standing one. Say what has to be true
       for it to close, and put the date in `review-by`. A departure meant to last is a rule that needs
       rewriting.
+  # A warning, because a passed date says the review is late rather than that the record is wrong, and an
+  # error would make deleting the record the cheapest way back to a green branch. `draft` and `closed`
+  # are silent: neither is a departure anybody owes a review on.
   - id: expiry
-    description: >
-      Scheduled. Reports active deviations whose `review-by` has passed.
+    description: An active deviation is still inside the review date it carries.
+    severity: warning
+    expr: >-
+      field('status') == 'active' and present('review-by') implies field('review-by') >= today()
+    message: >
+      This deviation is still active and its `review-by` has passed, so nobody has looked at it on the
+      day it said they would. Close it, or set a new date and say in the record what was re-accepted.
