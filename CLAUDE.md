@@ -124,9 +124,9 @@ session meets the same way and by using it.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
-changed. To read the working tree instead, run `kac export` and `kac bundle` in that corpus and add its `.dist/` as a
-marketplace of your own. That one stays yours: a directory source resolves against the marketplace rather than the
-project, so an absolute path is the only thing that works and none belongs in a checked-in file.
+changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)
+carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
+skill does.
 
 ## Before you raise a pull request
 

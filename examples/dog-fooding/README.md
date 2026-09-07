@@ -59,6 +59,53 @@ kac checks       # list every check the validator implements
 While you are changing the tool, run `dotnet run --project ../../tooling/kac -- validate` instead. That reaches the
 working tree, and an installed `kac` does not.
 
+## Reading this corpus as a plugin while you change it
+
+The plugin a session here already carries is served from the `marketplace` branch, which holds what is on `main`. A
+branch editing this corpus leaves that copy behind, so `standards-lookup` answers with a record you have already
+rewritten. Build the plugin here and install it as a marketplace of your own, and a session reads the working tree
+instead. `export` reads the `.imports/` that `restore` fetches, so a clean clone runs the block above first.
+
+```bash
+kac export       # write the records this branch holds
+kac bundle       # assemble them and ../../template/.plugin/ into .dist/plugin/
+claude plugin marketplace add /absolute/path/to/knowledge-as-code/examples/dog-fooding/.dist
+claude plugin install example-dogfooding@example-dogfooding
+```
+
+`bundle` writes `.dist/` as a marketplace offering one plugin, and names the marketplace and the plugin alike after
+the corpus. A directory source resolves against the marketplace rather than against the project, so the path has to be
+absolute. That path is a fact about your machine, and `claude plugin marketplace add` puts it in your own user
+settings where no commit reaches it.
+
+Leaving the branch copy enabled as well gives you two of every skill. Turn it off in the settings file git ignores:
+
+```bash
+claude plugin disable example-dogfooding@knowledge-as-code --scope local
+```
+
+Then restart the session. Claude Code reads a skill when a session starts, so nothing installed part way through one is
+reachable until the next.
+
+### Rebuilding after a change
+
+| You changed                                                               | Run                             |
+|---------------------------------------------------------------------------|---------------------------------|
+| a record here, or the `.corpus.yaml` describing this corpus               | `kac export`, then `kac bundle` |
+| a skill or a hook in [`../../template/.plugin/`](../../template/.plugin/) | `kac bundle`                    |
+
+`bundle` reads what `export` last wrote, so a skill change needs no second export. Reinstall either way:
+
+```bash
+claude plugin uninstall example-dogfooding@example-dogfooding
+claude plugin install example-dogfooding@example-dogfooding
+```
+
+**Uninstall before you install.** The install caches the plugin under the `content-version` it carries, and neither
+`claude plugin update` nor `claude plugin marketplace update` looks past that number. A rebuild leaving
+`content-version` where it was refreshes nothing and reports success. Restart the session again to pick the new copy
+up.
+
 ## What it demonstrates
 
 **A corpus about the repository holding it.** The corpora beside it prove that the framework holds for an invented
