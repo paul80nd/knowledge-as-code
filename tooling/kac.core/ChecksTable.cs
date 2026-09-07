@@ -40,6 +40,9 @@ public static class ChecksTable
         ("timestamp-format", [new("timestamp-format")],
             "Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.",
             t => t.AnyField(f => f.Type == "timestamp") || t.AnyEntryKey(k => k.Type == "timestamp")),
+        ("int-format", [new("int-format")], "Int fields, and the entries of an `of: int` list, are whole numbers.",
+            t => t.AnyField(f => f.Type == "int" || f.Of == "int")
+                 || t.AnyEntryKey(k => k.Type == "int" || k.Of == "int")),
         ("enum", [new("enum"), new("enum-lowercase")], "Enum values are in range and lowercase.", null),
         ("field-pattern", [new("field-pattern")],
             "Values match the pattern their field declares (e.g. `tags`).", null),

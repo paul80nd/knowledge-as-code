@@ -55,6 +55,13 @@ fields:
     mirrors-section: See also
     unique: true
 
+  stamped:
+    type: tiemstamp
+
+  sizes:
+    type: list
+    of: bool
+
   retention:
     type: string
     required-when: classification is personal
