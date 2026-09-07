@@ -8,7 +8,7 @@ platform: mixed
 criticality: critical
 depends-on:
 data-stores:
-owner: paul.law
+owner: human:paul.law
 facets:
 tags: [ cli, dotnet-tool, nuget ]
 ---

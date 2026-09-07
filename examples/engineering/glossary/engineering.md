@@ -3,7 +3,7 @@ id: gls-engineering
 type: glossary
 tier: descriptive
 status: draft
-owner: paul.law
+owner: human:paul.law
 narrows: gls-knowledge-as-code
 review-by: "2027-09-02"
 tags: [ data-protection, dependencies, privacy, secrets ]

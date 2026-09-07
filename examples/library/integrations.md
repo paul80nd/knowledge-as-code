@@ -44,7 +44,7 @@ Not the place for:
 | `type` *†       | string                              | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *†       | `descriptive`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†     | `active` `trial` `retired`          | Whether the integration is live, on trial, or retired.                              |
-| `owner` *†      | string                              | A named person, never a team alias.                                                 |
+| `owner` *†      | string                              | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags` †        | list                                | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `vendor` *      | string                              | Who supplies it.                                                                    |
 | `used-by` *     | list                                | An integration nothing uses is a candidate for retirement.                          |

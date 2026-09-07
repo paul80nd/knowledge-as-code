@@ -48,7 +48,7 @@ postmortem means something.
 | `type` *†       | string               | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *†       | `decided`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem.          |
-| `owner` *†      | string               | A named person, never a team alias.                                                 |
+| `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags` †        | list                 | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `occurred-on` * | date                 | Quoted. When the incident began, not when it was noticed.                           |
 | `detected-on` * | date                 | Separate from `occurred-on`, because the gap between them is often the finding.     |

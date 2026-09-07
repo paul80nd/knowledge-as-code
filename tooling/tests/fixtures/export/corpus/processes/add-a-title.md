@@ -7,7 +7,7 @@ last-rehearsed: "2029-06-01"
 rehearsal-frequency: quarterly
 requires-access:
   - The cataloguing role in the library management system
-owner: alex.doe
+owner: human:alex.doe
 tags: [ cataloguing ]
 ---
 

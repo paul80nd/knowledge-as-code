@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.29, A.5.30, A.8.13, A.8.14 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ backup, continuity, recovery, resilience ]
 ---
 

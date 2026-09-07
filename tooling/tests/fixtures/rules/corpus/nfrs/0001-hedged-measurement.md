@@ -7,7 +7,7 @@ applies-to: [cap-borrower-notifications]
 target: 99.5% monthly
 measured-by: Monitored by the platform team where practical.
 review-by: "2026-12-31"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A target measured where practical

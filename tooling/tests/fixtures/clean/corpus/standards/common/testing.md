@@ -8,7 +8,7 @@ implements:
 applies-to:
   - all
 review-by: "2027-08-05"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Testing, stated once for every platform

@@ -4,7 +4,7 @@ type: adr
 tier: decided
 status: accepted
 decided-on: "2026-06-14"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A Y-statement that states four of the six moves

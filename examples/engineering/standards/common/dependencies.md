@@ -8,7 +8,7 @@ implements: [ pol-TRUS.INVENT, pol-TRUS.LICENCE, pol-TRUS.REPO, pol-TRUS.SCREEN,
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ dependencies, licences, supply-chain ]
 ---
 

@@ -9,7 +9,7 @@ applies-to:
   - svc-docs-site
   - svc-kac
 review-by: "2027-09-07"
-owner: paul.law
+owner: human:paul.law
 tags: [ accessibility, cli, documentation, wcag ]
 ---
 

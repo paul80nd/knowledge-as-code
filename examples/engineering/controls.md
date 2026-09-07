@@ -47,7 +47,7 @@ several rules, and one rule may need several controls.
 | `type` *†     | string                                                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.           |
 | `tier` *†     | `normative`                                                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.      |
 | `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                                 |
-| `owner` *†    | string                                                                   | A named person, never a team alias.                                                      |
+| `owner` *†    | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
 | `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
 | `verifies` *  | list                                                                     | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
 | `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.     |

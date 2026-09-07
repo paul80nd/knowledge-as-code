@@ -4,7 +4,7 @@ type: adr
 tier: decided
 status: accepted
 decided-on: "2026-06-12"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Second graph fixture

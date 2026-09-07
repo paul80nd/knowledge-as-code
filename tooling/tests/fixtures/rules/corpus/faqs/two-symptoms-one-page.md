@@ -4,10 +4,10 @@ type: faq
 tier: normative
 status: active
 symptom-keywords: [holds, notifications, timeout]
-confirmed-by: alex.doe
+confirmed-by: human:alex.doe
 confirmed-on: "2026-06-12"
 review-by: "2026-12-31"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Two symptoms filed as one page

@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [A.5.7, A.8.7, A.8.8, A.8.29]
 review-by: "2027-08-05"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Numbers in a list compare as numbers

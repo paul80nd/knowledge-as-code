@@ -7,7 +7,7 @@ implements: [ eng:pol-KNOW.AGENTS ]
 applies-to:
   - all
 review-by: "2027-09-02"
-owner: paul.law
+owner: human:paul.law
 tags: [ documentation, prose, writing ]
 ---
 

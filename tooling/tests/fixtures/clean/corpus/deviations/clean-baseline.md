@@ -7,7 +7,7 @@ departs-from:
   - pol-VURM.CLEAN
 accepted-on: "2030-01-01"
 review-by: "2030-11-01"
-owner: alex.doe
+owner: human:alex.doe
 tags: [ baseline ]
 ---
 

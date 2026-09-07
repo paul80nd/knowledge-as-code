@@ -11,7 +11,7 @@ review-by: "2027-09-07"
 closed-on:
 applies-to:
   - svc-kac
-owner: paul.law
+owner: human:paul.law
 tags: [ build, reproducibility, verification ]
 ---
 

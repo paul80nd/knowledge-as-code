@@ -3,7 +3,7 @@ id: gls-example-libraries
 type: glossary
 tier: descriptive
 status: draft
-owner: robin.hale
+owner: human:robin.hale
 narrows:
 review-by: "2027-08-12"
 tags: [ catalogue, lending ]

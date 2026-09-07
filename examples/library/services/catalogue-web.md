@@ -11,7 +11,7 @@ depends-on:
   - svc-covers-cdn
   - svc-search
 data-stores:
-owner: robin.hale
+owner: human:robin.hale
 facets: [ public ]
 tags: [ discovery ]
 ---

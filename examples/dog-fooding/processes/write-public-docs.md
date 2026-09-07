@@ -7,7 +7,7 @@ applies-to: [ svc-docs-site, svc-kac ]
 last-rehearsed: "never"
 rehearsal-frequency:
 requires-access:
-owner: paul.law
+owner: human:paul.law
 tags: [ mkdocs, nuget ]
 ---
 

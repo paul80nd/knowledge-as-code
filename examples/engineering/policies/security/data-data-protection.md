@@ -10,7 +10,7 @@ aligns-with:
     clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
                Art.44, Ch.III ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ classification, data-protection, encryption, privacy ]
 ---
 

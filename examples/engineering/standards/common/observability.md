@@ -8,7 +8,7 @@ implements: [ pol-OBSV.ALERTS, pol-OBSV.BLIND, pol-OBSV.CENTRAL, pol-OBSV.CLOCKS
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ alerting, logging, tracing ]
 ---
 

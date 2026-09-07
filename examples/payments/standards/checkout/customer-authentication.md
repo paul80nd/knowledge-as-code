@@ -7,7 +7,7 @@ implements: [ eng:pol-INTC.SECURE, eng:pol-SECD.DESIGN, eng:pol-SECD.REQS ]
 applies-to:
   - svc-payment-api
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ 3ds, checkout, strong-customer-authentication ]
 ---
 

@@ -41,9 +41,13 @@ fields:
   owner:
     required: true
     type: string
-    description: A named person, never a team alias.
+    pattern: '^(human|role):[a-z0-9.-]+$'
+    description: A person as `human:alex.doe`, or a post as `role:head-of-engineering`.
     notes: >
-      Someone has to be answerable, which a team alias leaves open.
+      Someone has to be answerable, and a team alias leaves that open. The prefix says which kind of
+      actor the value names, so a reader never infers it from the spelling. Exactly one person holds a
+      post, so `role:` keeps answerability with one human and stays right on the day the post changes
+      hands.
 
   tags:
     required: false

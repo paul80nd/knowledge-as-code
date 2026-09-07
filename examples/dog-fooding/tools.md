@@ -45,7 +45,7 @@ the evaluation we already did.
 | `type` *†    | string                                     | The type's singular name. Fixed for the type. CI checks it matches the folder.                       |
 | `tier` *†    | `descriptive`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                  |
 | `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` means approved for new work. Existing use that is not approved is drift.                  |
-| `owner` *†   | string                                     | A named person, never a team alias.                                                                  |
+| `owner` *†   | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                               |
 | `tags` †     | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                     |
 | `category`   | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                                  |
 | `versions`   | string                                     | A range, not a pin. The register states what we stand behind. The manifests state what is installed. |

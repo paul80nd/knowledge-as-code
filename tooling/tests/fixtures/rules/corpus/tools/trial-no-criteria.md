@@ -3,7 +3,7 @@ id: tol-trial-no-criteria
 type: tool
 tier: descriptive
 status: trial
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A trial that nothing will end

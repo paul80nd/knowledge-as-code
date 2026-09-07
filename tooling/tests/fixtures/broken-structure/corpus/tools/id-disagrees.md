@@ -3,7 +3,7 @@ id: tol-names-another-tool
 type: tool
 tier: descriptive
 status: approved
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Slug id disagreeing with the filename

@@ -3,7 +3,7 @@ id: exp-how-holds-are-queued
 type: explanation
 tier: descriptive
 status: active
-owner: alex.doe
+owner: human:alex.doe
 explains: [cap-borrower-notifications]
 review-by: "2026-12-31"
 ---

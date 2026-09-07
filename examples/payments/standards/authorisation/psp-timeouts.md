@@ -7,7 +7,7 @@ implements: [ eng:pol-PERF.TARGETS, eng:pol-RECV.DEGRADE, eng:pol-RECV.RETRY, en
 applies-to:
   - svc-payment-api
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ psp, resilience, timeouts ]
 ---
 

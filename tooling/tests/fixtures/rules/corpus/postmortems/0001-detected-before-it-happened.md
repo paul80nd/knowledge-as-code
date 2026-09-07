@@ -9,7 +9,7 @@ duration: 40 minutes
 severity: sev2
 affected: [svc-catalogue]
 prompted:
-owner: alex.doe
+owner: human:alex.doe
 tags: [expressions]
 ---
 

@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.17, A.8.15, A.8.24 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ credentials, key-management, secrets ]
 ---
 

@@ -13,7 +13,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `type` *†      | string                                     | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *†      | `normative`                                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
-| `owner` *†     | string                                     | A named person, never a team alias.                                                 |
+| `owner` *†     | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags` †       | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `category`     | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                         |
 | `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |

@@ -9,7 +9,7 @@ last-rehearsed: "never"
 rehearsal-frequency:
 requires-access:
   - A .NET 10 SDK and a checkout of this repository
-owner: paul.law
+owner: human:paul.law
 tags: [ goldens, testing ]
 ---
 

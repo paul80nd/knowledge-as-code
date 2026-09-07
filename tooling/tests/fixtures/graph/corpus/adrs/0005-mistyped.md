@@ -3,7 +3,7 @@ id: adr-0005
 type: adr
 tier: decided
 status: superseded
-owner: alex.doe
+owner: human:alex.doe
 superseded-by: giz-mirrored
 ---
 

@@ -3,7 +3,7 @@ id: rbk-database-connections-exhausted
 type: runbook
 tier: procedural
 status: active
-owner: alex.doe
+owner: human:alex.doe
 last-rehearsed: "never"
 ---
 

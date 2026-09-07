@@ -8,7 +8,7 @@ platform: dotnet-api
 criticality: critical
 depends-on:
 data-stores:
-owner: dev.raman
+owner: human:dev.raman
 facets: [ internal ]
 tags: [ legacy, loans ]
 ---

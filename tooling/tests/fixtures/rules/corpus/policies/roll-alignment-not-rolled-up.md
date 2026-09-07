@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [A.5.17]
 review-by: "2026-12-31"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Alignment claimed and not shown

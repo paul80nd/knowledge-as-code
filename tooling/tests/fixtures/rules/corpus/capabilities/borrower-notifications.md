@@ -3,7 +3,7 @@ id: cap-borrower-notifications
 type: capability
 tier: descriptive
 status: live
-owner: alex.doe
+owner: human:alex.doe
 implemented-by: [svc-notifications]
 ---
 

@@ -8,7 +8,7 @@ platform: dotnet-web
 criticality: critical
 depends-on:
 data-stores:
-owner: dev.raman
+owner: human:dev.raman
 tags: [ internal ]
 ---
 

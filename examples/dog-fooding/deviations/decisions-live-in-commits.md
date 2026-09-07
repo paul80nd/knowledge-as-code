@@ -9,7 +9,7 @@ accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
 applies-to:
-owner: paul.law
+owner: human:paul.law
 tags: [ decisions, knowledge, provenance ]
 ---
 

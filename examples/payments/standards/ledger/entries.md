@@ -7,7 +7,7 @@ implements: [ eng:pol-DERV.EXPECT, eng:pol-DERV.LINEAGE ]
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ append-only, double-entry, ledger ]
 ---
 

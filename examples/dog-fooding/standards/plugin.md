@@ -8,7 +8,7 @@ verified-by: [ ctl-0008 ]
 applies-to:
   - all
 review-by: "2027-09-07"
-owner: paul.law
+owner: human:paul.law
 tags: [ agents, export, plugin, skills ]
 ---
 

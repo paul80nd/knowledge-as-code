@@ -3,7 +3,7 @@ id: ctl-0001
 type: control
 tier: normative
 status: active
-owner: alex.doe
+owner: human:alex.doe
 verifies: [std-ERRORS]
 mechanism: ci
 evidence: The build log for the pipeline this control runs in.

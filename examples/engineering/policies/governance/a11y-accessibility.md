@@ -10,7 +10,7 @@ aligns-with:
     clauses: [ reg.8 ]
   - framework: WCAG 2.2 AA
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ accessibility, inclusive-design, legal-obligation ]
 ---
 

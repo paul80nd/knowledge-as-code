@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.3, A.8.25, A.8.30 ]
 review-by: "2027-08-05"
-owner: paul.law
+owner: human:paul.law
 tags: [ ai-agents, knowledge-management, provenance ]
 ---
 

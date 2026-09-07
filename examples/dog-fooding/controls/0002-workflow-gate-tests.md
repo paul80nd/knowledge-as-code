@@ -9,7 +9,7 @@ frequency: per-pr
 evidence: The `tool` job's log on the pull request, under the step "Run kac.core unit tests".
 applies-to:
   - all
-owner: paul.law
+owner: human:paul.law
 tags: [ continuous-integration, github-actions ]
 ---
 

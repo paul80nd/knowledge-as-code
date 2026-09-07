@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.19, A.5.21, A.5.22, A.5.23, A.5.32, A.8.7, A.8.19 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ dependencies, provenance, supply-chain ]
 ---
 

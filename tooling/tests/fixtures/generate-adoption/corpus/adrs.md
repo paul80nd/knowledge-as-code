@@ -13,12 +13,12 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 | `type` *†       | string                                          | The type's singular name. Fixed for the type. CI checks it matches the folder.                                    |
 | `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                               |
 | `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                         |
-| `owner` *†      | string                                          | A named person, never a team alias.                                                                               |
+| `owner` *†      | string                                          | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                            |
 | `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                  |
 | `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                                 |
 | `supersedes`    | id                                              | The ADR this replaces.                                                                                            |
 | `superseded-by` | id                                              | CI reconciles both directions, so a one-sided supersession fails the build. Required when `status == superseded`. |
-| `deciders`      | list                                            | The people who agreed it.                                                                                         |
+| `deciders`      | list                                            | The people who agreed it, each as `human:alex.doe`.                                                               |
 | `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.                  |
 
 \* Field is required  

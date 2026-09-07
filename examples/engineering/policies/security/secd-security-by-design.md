@@ -9,7 +9,7 @@ aligns-with:
   - framework: UK GDPR
     clauses: [ Art.35 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ secure-coding, secure-design, threat-modelling ]
 ---
 

@@ -3,7 +3,7 @@ id: pol-CERT
 type: policy
 tier: normative
 status: active
-owner: alex.doe
+owner: human:alex.doe
 review-by: "2026-12-31"
 ---
 

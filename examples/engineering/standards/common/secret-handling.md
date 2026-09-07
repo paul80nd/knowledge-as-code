@@ -7,7 +7,7 @@ implements: [ pol-ENVS.REUSE, pol-SCRT.EMBED, pol-SCRT.LEAKED, pol-SCRT.LOGS, po
 applies-to:
   - all
 review-by: "2027-08-26"
-owner: paul.law
+owner: human:paul.law
 tags: [ credentials, key-management, secrets ]
 ---
 

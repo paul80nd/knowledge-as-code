@@ -43,7 +43,7 @@ deliver.
 | `type` *†        | string                     | The type's singular name. Fixed for the type. CI checks it matches the folder.                    |
 | `tier` *†        | `normative`                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.               |
 | `status` *†      | `draft` `agreed` `retired` | `agreed` is a commitment someone accepted, not an aspiration.                                     |
-| `owner` *†       | string                     | A named person, never a team alias.                                                               |
+| `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                            |
 | `tags` †         | list                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
 | `applies-to` *   | list                       | Estate-wide targets are almost always wrong. Scope them.                                          |
 | `target` *       | string                     | Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window. |

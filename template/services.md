@@ -49,7 +49,7 @@ of the catalogue as well, because it deploys services.
 | `type` *†       | string                                                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *†       | `descriptive`                                                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                   |
-| `owner` *†      | string                                                                   | A named person, never a team alias.                                                 |
+| `owner` *†      | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `repo` *        | string                                                                   | Where the code lives.                                                               |
 | `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                  |

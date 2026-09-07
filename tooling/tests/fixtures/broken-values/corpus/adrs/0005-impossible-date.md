@@ -4,7 +4,7 @@ type: adr
 tier: decided
 status: accepted
 decided-on: "2026-13-40"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A date the calendar does not have

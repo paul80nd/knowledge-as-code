@@ -3,7 +3,7 @@ id: std-ERRORS
 type: standard
 tier: normative
 status: active
-owner: alex.doe
+owner: human:alex.doe
 verified-by: [ctl-0001, ctl-0002]
 applies-to: [svc-catalogue]
 review-by: "2026-12-31"

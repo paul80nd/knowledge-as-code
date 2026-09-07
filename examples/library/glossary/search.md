@@ -3,7 +3,7 @@ id: gls-search
 type: glossary
 tier: descriptive
 status: draft
-owner: mira.okonjo
+owner: human:mira.okonjo
 narrows: gls-example-libraries
 review-by: "2027-08-12"
 tags: [ search ]

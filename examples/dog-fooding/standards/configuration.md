@@ -9,7 +9,7 @@ verified-by: [ ctl-0004, ctl-0005 ]
 applies-to:
   - all
 review-by: "2027-09-02"
-owner: paul.law
+owner: human:paul.law
 tags: [ configuration, dependencies, yaml ]
 ---
 

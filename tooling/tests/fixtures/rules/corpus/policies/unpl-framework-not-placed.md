@@ -5,7 +5,7 @@ tier: normative
 status: active
 aligns-with:
 review-by: "2026-12-31"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A framework the register does not place

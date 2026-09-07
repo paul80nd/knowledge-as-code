@@ -3,7 +3,7 @@ id: gls-knowledge-as-code
 type: glossary
 tier: descriptive
 status: draft
-owner: paul.law
+owner: human:paul.law
 narrows:
 review-by: "2027-08-12"
 tags: [ framework ]

@@ -11,7 +11,7 @@ verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006 ]
 applies-to:
   - all
 review-by: "2027-09-02"
-owner: paul.law
+owner: human:paul.law
 tags: [ continuous-integration, github-actions, publishing ]
 ---
 

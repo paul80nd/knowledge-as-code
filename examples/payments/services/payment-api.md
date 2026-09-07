@@ -9,7 +9,7 @@ criticality: critical
 depends-on:
   - svc-payment-ledger
 data-stores:
-owner: paul.law
+owner: human:paul.law
 tags: [ authorisation, cards, psp ]
 ---
 

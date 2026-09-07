@@ -9,7 +9,7 @@ criticality: critical
 depends-on:
   - svc-thumbnailer
 data-stores:
-owner: dev.raman
+owner: human:dev.raman
 facets: [ public ]
 tags: [ jackets ]
 ---
