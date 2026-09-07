@@ -31,6 +31,21 @@ on its own.
 
 **approved** since 2026-08-24.
 
+## Accessibility
+
+Assessed against [WCAG 2.2 AA] at 9.7.7, by building the site with the pinned version and reading the HTML it emits.
+[std-A11Y] carries the rules the assessment answers.
+
+The theme supplies what a Markdown author cannot. `<html lang="en">` names the language of every page. A "Skip to
+content" link is the first thing the keyboard reaches. The header logo is an image with `alt="logo"`, inside a link
+carrying `aria-label="knowledge-as-code"`, so the accessible name is the site's own. Contrast comes from the `default`
+and `slate` schemes with `indigo` primary, which are the theme's own and unmodified. `docs/assets/extra.css` sets two
+margins and nothing else.
+
+Two things fall short. Nobody has run the site through a screen reader or a contrast checker, so the contrast of the
+two schemes is taken from the theme rather than measured here. A Mermaid diagram renders as an SVG the theme gives no
+text alternative, which leaves the prose beside it as the only route to what it says.
+
 ## Where it is used
 
 * [svc-docs-site] is built with it.
@@ -46,7 +61,10 @@ package and nothing here uses it.
 
 ## Related
 
+* [std-A11Y] holds the site it renders, and this entry, to [WCAG 2.2 AA].
 * [tol-mkdocs] is the generator it themes.
 
+[WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/
+[std-A11Y]: ../../standards/accessibility.md
 [svc-docs-site]: ../../services/docs-site.md
 [tol-mkdocs]: mkdocs.md

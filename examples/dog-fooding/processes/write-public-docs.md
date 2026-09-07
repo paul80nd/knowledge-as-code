@@ -39,25 +39,28 @@ reader has installed nothing and has nobody here to ask, and that is the whole d
 5. Measure the prose alone, with code blocks and tables excluded, before and after. `writing-the-docs` carries the two
    figures to aim under, and they are tighter here than [std-PROSE] asks of prose anywhere else. The measurement is a
    prompt to look, never the diagnosis.
-6. Pack the package where you touched the package page. `dotnet pack tooling/kac/kac.csproj` proves it still renders as
+6. Answer [std-A11Y]'s conformance checklist against every page you changed.
+7. Pack the package where you touched the package page. `dotnet pack tooling/kac/kac.csproj` proves it still renders as
    the readme nuget.org receives.
-7. Run `mkdocs build --strict` where you touched the site. A dead link fails it, and a page the nav does not list is
+8. Run `mkdocs build --strict` where you touched the site. A dead link fails it, and a page the nav does not list is
    caught by `NavigationTests` instead.
-8. Run [prc-pull-request].
+9. Run [prc-pull-request].
 
 ## Verification
 
-The build reports no dead link, the measured figures sit inside both targets, and a reader who has installed nothing
-can say what the thing is after the first paragraph.
+The build reports no dead link, every box on the accessibility checklist is ticked, the measured figures sit inside
+both targets, and a reader who has installed nothing can say what the thing is after the first paragraph.
 
 Close by naming what changed and why, the figures before and after, and every claim you checked against the source.
 
 ## Related
 
+* [std-A11Y] carries what a page owes a reader who cannot see it. Step 6 is where you answer it.
 * [std-PROSE] carries the writing rules this page answers to.
 * [svc-docs-site] is what publishes the site.
 * [prc-pull-request] is how the change lands.
 
 [prc-pull-request]: pull-request.md
+[std-A11Y]: ../standards/accessibility.md
 [std-PROSE]: ../standards/prose.md
 [svc-docs-site]: ../services/docs-site.md
