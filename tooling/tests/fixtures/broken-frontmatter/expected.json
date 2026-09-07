@@ -3,7 +3,7 @@
     "validated": 1,
     "templates": 1,
     "skipped": 0,
-    "errors": 8,
+    "errors": 9,
     "warnings": 0,
     "infos": 0
   },
@@ -60,6 +60,13 @@
     {
       "file": "adrs/0002-broken-frontmatter.md",
       "line": 7,
+      "severity": "error",
+      "check": "bare-key",
+      "message": "'supersedes' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: supersedes: \"{{…}}\"."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 8,
       "severity": "error",
       "check": "bare-key",
       "message": "'deciders' is absent but not a bare key. Use 'deciders:' with no value (not null, ~, \"\", or —)."

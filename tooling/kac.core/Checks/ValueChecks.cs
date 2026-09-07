@@ -28,11 +28,18 @@ public static class ValueChecks
         // one position, so `review-by: {{date}}` parses as a mapping and arrives here with nothing
         // readable in it. Reported with the fix rather than left to the value checks, which would say
         // the date is malformed and quote an empty string back at whoever wrote it.
-        if (kind == DocKind.Template && node is YamlMappingNode)
+        //
+        // The id is what the two kinds differ on. A template teaches the fault to every copy, which is
+        // `template-fields`. A record holds a field nobody filled in, which is `bare-key`, and
+        // `IsAbsent` below reads the mapping the same way so the required-field pass agrees.
+        if (node is YamlMappingNode)
         {
-            report.Err(new CheckId("template-fields"),
+            // The fix quotes the key as the file writes it. `name` is the path where an object entry
+            // recursed in, and `confirmed.at` is a line nobody can type.
+            var key = name[(name.LastIndexOf('.') + 1)..];
+            report.Err(new CheckId(kind == DocKind.Template ? "template-fields" : "bare-key"),
                 $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "
-                + "one has to be quoted: " + name + ": \"{{…}}\".", Yaml.LineOf(node, frontStart));
+                + "one has to be quoted: " + key + ": \"{{…}}\".", Yaml.LineOf(node, frontStart));
             return;
         }
 
@@ -83,6 +90,10 @@ public static class ValueChecks
         {
             YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL",
             YamlSequenceNode seq => seq.Children.Count == 0,
+            // No field declares a mapping, so a value parsing as one holds nothing the field can read.
+            // An unquoted placeholder is how that happens, and `owner: {{owner}}` says what a bare key
+            // says. `Check` above reports it.
+            YamlMappingNode => true,
             _ => false
         };
 

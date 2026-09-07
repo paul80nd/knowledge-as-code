@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **An unquoted placeholder in a record is reported.** YAML reads `owner: {{owner}}` as a flow mapping rather than as
+  text, so the value reached no check at all and the record validated clean. `bare-key` now reports it and names the
+  quoting that fixes it, and `required-field` reports the field missing where the type requires it. A template still
+  reports the same spelling under `template-fields`, which answers for the documents copied from it. The two seed
+  records `kac new` writes carried the mark, and now name an owner.
+
 ## 0.23.0 - 2026-09-07
 
 ### Added

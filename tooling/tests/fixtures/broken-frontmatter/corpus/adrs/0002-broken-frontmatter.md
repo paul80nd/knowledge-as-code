@@ -5,6 +5,7 @@ status: accepted
 tier: descriptive
 priority: high
 decided-on: 2026/06/12
+supersedes: {{adr}}
 deciders: null
 ---
 
@@ -24,7 +25,8 @@ that the only findings kac produces come from the frontmatter above.
 ## Decision
 
 Break exactly one thing per frontmatter rule under test: an unknown key, a key-order violation, a missing required
-field, a mismatched type, a mismatched tier, an unquoted and mis-shaped date, and a non-bare absent value.
+field, a mismatched type, a mismatched tier, an unquoted and mis-shaped date, an unquoted placeholder, and a non-bare
+absent value.
 
 ## Alternatives Considered
 

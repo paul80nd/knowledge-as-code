@@ -125,10 +125,11 @@ checks:
 
   bare-key:
     severity: error
-    description: An absent value is a bare key, never `null`, `~`, `""`, `''` or an em dash.
+    description: An absent value is a bare key, never `null`, `~`, `""`, `''`, an em dash or an unquoted `{{…}}`.
     notes: >
-      One spelling of absence, so a search for a field nobody has filled in finds all of them. Each of
-      the alternatives reads as a value to something.
+      One spelling of absence, so a search for a field nobody has filled in finds all of them. Every
+      other spelling reads as a value to something, and `owner: {{owner}}` is the one that reads as a
+      value to nobody: YAML parses it as a mapping, so the field arrives holding nothing.
 
   date-quoted:
     severity: error
