@@ -6,4 +6,5 @@
 |------------|---------------------------------------------------------------------------------------|--------|--------------|------------|
 | std-CI     | [Every check and every publish runs from a workflow in this repository](workflows.md) | active |              | 2027-09-02 |
 | std-CONFIG | [Configuration is committed, pinned and explained](configuration.md)                  | active |              | 2027-09-02 |
+| std-PLUGIN | [The plugin carries the corpus, and a skill answers from what travelled](plugin.md)   | active |              | 2027-09-07 |
 | std-PROSE  | [Prose reads the same way whoever wrote it](prose.md)                                 | active |              | 2027-09-02 |

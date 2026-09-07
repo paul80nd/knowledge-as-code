@@ -135,12 +135,12 @@ and moving those here is a separate call. It declines `glossary`, because the fr
 [`../engineering/`](../engineering/) states 22 policies carrying 207 clauses. Every one of them carries a verdict
 below, written by hand.
 
-**Fifteen standards bind this corpus.** Three are its own, and twelve arrive with `eng:`. A standard is inherited the
+**Sixteen standards bind this corpus.** Four are its own, and twelve arrive with `eng:`. A standard is inherited the
 way a policy is: a rule holding for any repository is written once in the governance corpus, and the corpus below it
 writes only what is its own. `kac bundle` seals both sets into one plugin, so an agent reading this corpus reads all
-fifteen.
+sixteen.
 
-**Covered.** One of those fifteen names the clause in `implements:`, and the verdict is that standard's id. Where two
+**Covered.** One of those sixteen names the clause in `implements:`, and the verdict is that standard's id. Where two
 policies state one obligation from both sides, covering either clause covers the pair. A covered clause has a rule.
 Whether this repository follows that rule is a separate question, and the row answers it where the two differ.
 
@@ -167,12 +167,13 @@ Nothing regenerates this map. Move it by hand when a policy, a standard or a con
 ### The controls behind the standards
 
 `eng:` exports policies, standards and a glossary, and holds no controls, so every control here is this corpus's own.
-Four standards have one. The other eleven have none, which says nothing about whether they are followed.
+Five standards have one. The other eleven have none, which says nothing about whether they are followed.
 
 | Standard        | Controls                                         |
 |-----------------|--------------------------------------------------|
 | `std-CI`        | ctl-0001, ctl-0002, ctl-0003, ctl-0006           |
 | `std-CONFIG`    | ctl-0004, ctl-0005                               |
+| `std-PLUGIN`    | ctl-0008                                         |
 | `eng:std-GATES` | ctl-0001, ctl-0007, ctl-0008, ctl-0009, ctl-0010 |
 | `eng:std-TEST`  | ctl-0009                                         |
 
@@ -182,7 +183,7 @@ Four standards have one. The other eleven have none, which says nothing about wh
 |------------|---------|---------|--------|--------------|
 | [pol-A11Y] | 7       | 0       | 5      | 2            |
 | [pol-ACCS] | 11      | 3       | 4      | 4            |
-| [pol-AGNT] | 8       | 5       | 3      | 0            |
+| [pol-AGNT] | 8       | 8       | 0      | 0            |
 | [pol-AUTV] | 13      | 9       | 4      | 0            |
 | [pol-COST] | 8       | 0       | 0      | 8            |
 | [pol-DATA] | 15      | 2       | 0      | 13           |
@@ -192,7 +193,7 @@ Four standards have one. The other eleven have none, which says nothing about wh
 | [pol-EVER] | 8       | 7       | 1      | 0            |
 | [pol-INCR] | 13      | 0       | 10     | 3            |
 | [pol-INTC] | 8       | 7       | 1      | 0            |
-| [pol-KNOW] | 6       | 1       | 5      | 0            |
+| [pol-KNOW] | 6       | 2       | 4      | 0            |
 | [pol-MEXP] | 11      | 1       | 0      | 10           |
 | [pol-OBSV] | 10      | 9       | 0      | 1            |
 | [pol-PERF] | 5       | 0       | 0      | 5            |
@@ -202,7 +203,7 @@ Four standards have one. The other eleven have none, which says nothing about wh
 | [pol-SECD] | 8       | 2       | 5      | 1            |
 | [pol-TRUS] | 13      | 9       | 4      | 0            |
 | [pol-VURM] | 8       | 5       | 2      | 1            |
-| **Total**  | **207** | **84**  | **57** | **66**       |
+| **Total**  | **207** | **88**  | **53** | **66**       |
 
 ### pol-A11Y: software we build is usable by everyone
 
@@ -240,19 +241,20 @@ account.
 
 ### pol-AGNT: agents propose, people decide
 
-Agents write a large part of this repository, and `eng:std-PR` governs what they hand over. It asks for an approval
-from somebody other than the author, and one maintainer does both here.
+Agents write a large part of this repository. `eng:std-PR` governs what they hand over, and asks for an approval from
+somebody other than the author, which one maintainer does both halves of here. `std-PLUGIN` governs what they read: the
+plugin this corpus publishes, and the skills that answer out of it.
 
 | Clause    | Verdict      | Note                                                                               |
 |-----------|--------------|------------------------------------------------------------------------------------|
 | `PROV`    | `eng:std-PR` | Agent-produced work says what produced it, and a commit trailer names it.          |
 | `ACCEPT`  | `eng:std-PR` | The approval is what makes the work somebody's.                                    |
 | `EQUAL`   | `eng:std-PR` | A change arrives as a pull request, whoever wrote the branch.                      |
-| `CONFID`  | Gap          | Nothing here expires an unverified observation.                                    |
+| `CONFID`  | `std-PLUGIN` | A skill dates the export and reports an unsettled record. No observation expires.  |
 | `SELFVER` | `eng:std-PR` | The approver reads the change rather than the agent's account of it.               |
 | `DUTIES`  | `eng:std-PR` | Somebody other than the author approves it. One maintainer does both here.         |
-| `UNPROV`  | Gap          | Nothing traces a proposal back to the run that produced it.                        |
-| `ACCESS`  | Gap          | An agent works with the maintainer's own credentials, and no standard bounds that. |
+| `UNPROV`  | `std-PLUGIN` | A skill names the record an answer came from. No proposal names the run behind it. |
+| `ACCESS`  | `std-PLUGIN` | A skill asks only to read a file. An agent still holds the maintainer's own keys.  |
 
 ### pol-AUTV: every change is verified automatically, and failures block
 
@@ -392,17 +394,17 @@ failures, and no standard in either corpus reaches incident response.
 
 ### pol-KNOW: knowledge is written down and kept with what it describes
 
-The four `CLAUDE.md` files, the site and this corpus are the answer to most of this policy, and `std-PROSE` reaches
-only how the words are written for an agent.
+The four `CLAUDE.md` files, the site and this corpus are the answer to most of this policy. `std-PROSE` reaches how the
+words are written for an agent, and `std-PLUGIN` reaches the one copy those words travel in.
 
-| Clause   | Verdict     | Note                                                                                 |
-|----------|-------------|--------------------------------------------------------------------------------------|
-| `DOCS`   | Gap         | The site and the `CLAUDE.md` files carry it, and no standard requires them.          |
-| `SYNC`   | Gap         | `generate --check` catches a stale generated block, and nothing catches stale prose. |
-| `DECIDE` | Gap         | The reasoning behind a decision lives in the commit that made it.                    |
-| `AGENTS` | `std-PROSE` | The rules sit where the agents doing the work read them.                             |
-| `HEADS`  | Gap         | One maintainer, and nothing tests what only they know.                               |
-| `COPY`   | Gap         | One tree holds the words for both readers, by convention rather than by rule.        |
+| Clause   | Verdict      | Note                                                                                 |
+|----------|--------------|--------------------------------------------------------------------------------------|
+| `DOCS`   | Gap          | The site and the `CLAUDE.md` files carry it, and no standard requires them.          |
+| `SYNC`   | Gap          | `generate --check` catches a stale generated block, and nothing catches stale prose. |
+| `DECIDE` | Gap          | The reasoning behind a decision lives in the commit that made it.                    |
+| `AGENTS` | `std-PROSE`  | The rules sit where the agents doing the work read them.                             |
+| `HEADS`  | Gap          | One maintainer, and nothing tests what only they know.                               |
+| `COPY`   | `std-PLUGIN` | A skill quotes what the export carried, and links the record for the rest.           |
 
 ### pol-MEXP: exposure is minimised and traffic is controlled
 
