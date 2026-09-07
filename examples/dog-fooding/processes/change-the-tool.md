@@ -35,6 +35,8 @@ a fixture. Come here where the question needs C#, or where the command itself ch
    * A new fact plus an `expr:` is both. Adding a fact is one method on `Facts`, one row in `RuleExpr.Functions` and
      one row in the fact table, which `DocumentationTests` holds equal.
    * A question no expression can ask is a rule class. Carry on down this page.
+
+   Read the fact table before you settle on a rung. `words()` is whole-document, and no fact measures a section.
 2. Write the class under `kac.core/Rules/`. Its unit tests sit beside it and a line goes in the registry. Take the
    narrower interface wherever it will do.
 3. Declare what it reports. An entry in `_checks.yaml`, and either a row in `ChecksTable.DocRows` or
@@ -47,6 +49,9 @@ a fixture. Come here where the question needs C#, or where the command itself ch
 7. Write the changelog entry under `## Unreleased`, because a user can observe this change.
 8. Run all four layers, one `kac` invocation at a time: unit, behaviour specs, golden fixtures, then `validate` and
    `generate --check` in each corpus. Run the goldens as CI sees them, with `GITHUB_ACTIONS=true`.
+
+   While you are still changing the code, `dotnet test tooling/kac.tests --filter "Kind!=Repository"` leaves out the
+   guards that answer for this repository's own pages. Run everything before step 9.
 9. Run [prc-pull-request].
 
 ## Verification
@@ -57,8 +62,8 @@ Close by naming what the tool now does, which layer proves it, and what you deci
 
 ## If it goes wrong
 
-A warning fails the build here, so an analyser complaint stops you locally rather than in CI. A published version
-cannot be replaced, so a release that shipped wrong is followed by the next patch.
+A warning fails the build here, so an analyser complaint stops you locally and not first in CI. What a release costs
+is [prc-pull-request]'s to say, and step 9 is where you meet it.
 
 ## Related
 

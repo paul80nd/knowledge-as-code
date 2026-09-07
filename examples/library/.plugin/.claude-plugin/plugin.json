@@ -6,7 +6,7 @@
       {
         "path": "skills/corpus-retrieval",
         "requires": [],
-        "note": "Reaches the published source of a record the export summarises. Named no type, so it travels with whichever lookup skills survive the trim."
+        "note": "Reaches the published source of a record the export summarises. It names no type, so it travels with whichever lookup skills survive the trim."
       },
       {
         "path": "skills/glossary-lookup",

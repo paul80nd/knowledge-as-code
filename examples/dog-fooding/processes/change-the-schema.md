@@ -60,7 +60,7 @@ moved.
 
 * [prc-add-a-type] is the wider job a schema file is one part of.
 * [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says what a type page and a `_template.md` owe
-  you, because both live in every tree.
+  you, because both live in every tree. Step 8 is where that bites.
 * [prc-pull-request] is how the change lands.
 
 [prc-add-a-type]: add-a-type.md

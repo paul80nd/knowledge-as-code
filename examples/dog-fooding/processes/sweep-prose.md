@@ -31,7 +31,8 @@ job, and it does not belong here.
 1. Count first, from the files. A folder nobody listed is a folder nobody swept. Count the type templates and the
    glossary as files rather than as folders.
 2. Put a version check at the top of the prompt. Name three or four lines only the current skills carry, and tell the
-   agent to stop where any is missing.
+   agent to stop where any is missing. Have it load the skills with the Read tool, because the Skill tool has served a
+   stale render.
 3. Name the trap for that batch. A schema sweep meets plain YAML scalars where a colon is a parse error. A type page
    meets generated regions. A policy meets the clause override. A named trap has never fired.
 4. Say which files belong to somebody else, including a human reading a folder right now.

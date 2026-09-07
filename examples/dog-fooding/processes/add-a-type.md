@@ -33,7 +33,9 @@ a folder and no page fails `type-setup`.
    types share one.
 3. Write the type's schema file. Run [prc-change-the-schema] for the rules governing it.
 4. Write the root page and the `_template.md` beside it. Both are `seed`, so nothing holds the two trees equal and the
-   copy across is yours. Where either names another type, link that type's page and give the link the type's own noun.
+   copy across is yours. Where either names another type, link that type's page and give the link the type's own noun,
+   because `kac new` drops the link for a corpus that declined that type and the noun is what carries the sentence
+   afterwards. Never link into another type's folder, which `TemplateLinkTests` refuses.
 5. Record the lineage. The schema's `lineage:` and `collision:` blocks are read into
    [lineage](../knowledge-as-code/lineage.md).
 6. Add the type to `types:` in `.corpus.yaml`. Generation and validation cover the types a corpus adopted and no

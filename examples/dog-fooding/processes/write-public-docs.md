@@ -24,7 +24,7 @@ reader has installed nothing and has nobody here to ask, and that is the whole d
 ## Prerequisites
 
 * `technical-writing` and `writing-the-docs`, loaded in that order.
-* The source for every fact the page states, so each one can be checked rather than reworded.
+* The source for every fact the page states, so each one can be checked.
 * The .NET SDK, where you touched the package page.
 
 ## Steps
@@ -36,8 +36,9 @@ reader has installed nothing and has nobody here to ask, and that is the whole d
 3. Open on what the reader gets. A definition answers a question nobody has asked yet.
 4. Put each fact where its reader meets it. A flag met while running the tool belongs at `--help` and in the reference.
    A page somebody reads before installing carries what decides them.
-5. Measure the prose alone, with code blocks and tables excluded, before and after. Aim under four contrasts per
-   thousand words, in sentences averaging fourteen. The measurement is a prompt to look rather than the diagnosis.
+5. Measure the prose alone, with code blocks and tables excluded, before and after. `writing-the-docs` carries the two
+   figures to aim under, and they are tighter here than [std-PROSE] asks of prose anywhere else. The measurement is a
+   prompt to look, never the diagnosis.
 6. Pack the package where you touched the package page. `dotnet pack tooling/kac/kac.csproj` proves it still renders as
    the readme nuget.org receives.
 7. Run `mkdocs build --strict` where you touched the site. A dead link fails it, and a page the nav does not list is

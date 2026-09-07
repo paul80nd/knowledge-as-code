@@ -70,12 +70,8 @@ sections:
   required: [When to use this, Prerequisites, Steps, Verification]
   optional: [If it goes wrong, Related]
 
-# What a process contributes to a published export. It carries what decides whether this is the right
-# procedure and whether the reader can start it, and stops there. A process is followed whole and in
-# order, so the steps are read from the published record rather than lifted out of a flat file: the
-# record's own `links.human` addresses the commit the export was taken at. `parts:` is absent for the
-# same reason. A step is the one piece of a corpus that means nothing on its own, and a type declaring
-# it a part would invite an agent to act on one.
+# What a process contributes to a published export. `Steps` and `Verification` are absent from the
+# sections, and the type declares no `parts:` at all, both for the reason `notes:` gives.
 export:
   version: 1
   fields: [id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags]
@@ -83,6 +79,11 @@ export:
     When to use this: full
     Prerequisites: full
   notes: >
+    A process is followed whole and in order, so its steps travel nowhere. A reader who has found the
+    right procedure reads it from the published record, which that record's own `links.human`
+    addresses at the commit this export was taken from. Nothing here is declared a part for the same
+    reason: a step means nothing lifted out of its order, and an agent handed one would act on it.
+
     `Prerequisites` travels whole beside the trigger, because the access a step needs decides whether
     a reader may start at all, and that is a question asked before the record is opened.
 
