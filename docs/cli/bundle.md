@@ -49,7 +49,7 @@ bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude
 ```
 
 A trimmed component is not an error. It is a skill whose record type this corpus does not export. `corpus-retrieval`
-names no type, so it survives every trim and reaches the published source for whichever lookup skills are left.
+names no type: it reaches the published source for whichever lookup skills are left, and follows the last of them out.
 
 ### Install what you just built
 
