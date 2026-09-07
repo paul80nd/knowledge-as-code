@@ -58,8 +58,6 @@ Every fault in `kac`, in the documentation site, in the workflows or in the plug
 
 ## Related
 
-* `eng:pol-INCR.ACTIONS`, `eng:pol-INCR.EVIDENC`, `eng:pol-INCR.LEARN`, `eng:pol-INCR.TOOSOON` and
-  `eng:pol-SECD.ACTIONS` are the clauses this departs from.
 * [dev-no-incident-process] carries what happens before the fix.
 * [dev-decisions-live-in-commits] is the same weakness for a decision.
 

@@ -213,7 +213,7 @@ Six standards have one. The other twelve have none, which says nothing about whe
 ### pol-A11Y: software we build is usable by everyone
 
 The documentation site is the one thing here a stranger reads, and `kac` prints to a terminal. `std-A11Y` governs
-both and divides them, because WCAG 2.2 AA measures a page a browser renders and reaches no terminal. Nothing in CI
+both and divides them, because [WCAG 2.2 AA] measures a page a browser renders and reaches no terminal. Nothing in CI
 checks any of it.
 
 | Clause    | Verdict                          | Note                                                                            |

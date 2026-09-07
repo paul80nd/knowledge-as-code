@@ -51,7 +51,6 @@ Every commit in this repository, on `main` and on every branch.
 
 ## Related
 
-* `eng:pol-EVER.SIGNED` is the clause this departs from.
 * [std-CI] states what the branch rule requires today.
 
 [std-CI]: ../standards/workflows.md

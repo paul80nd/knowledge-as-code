@@ -30,8 +30,8 @@ Finding the reasoning behind a design means reading `git log` and knowing what t
 ## Why we need it
 
 `adrs/` in the corpora beside this one records the invented estate's decisions, and a decision about the tool would sit
-oddly among them. Adopting the type here means moving several years of reasoning out of commit messages that already
-carry it, and nobody has needed it badly enough to do that.
+oddly among them. Adopting the type here means moving several years of reasoning out of commit
+messages that already carry it. Nobody has needed it badly enough to do that.
 
 ## What compensates
 
@@ -52,7 +52,6 @@ Every decision about `kac`, the schema, the documentation site or the workflows.
 
 ## Related
 
-* `eng:pol-KNOW.DECIDE` is the clause this departs from.
 * [dev-one-maintainer] is why nobody has needed this yet.
 * [std-PROSE] holds a commit message to saying why.
 

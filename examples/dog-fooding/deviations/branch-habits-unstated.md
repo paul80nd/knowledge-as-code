@@ -13,7 +13,7 @@ owner: paul.law
 tags: [ branches, habits, verification ]
 ---
 
-# How often a branch merges is a habit, not a rule
+# Branch size and a red `main` are habits here
 
 `Deviation: dev-branch-habits-unstated` `ACTIVE`
 
@@ -37,7 +37,7 @@ puts a clause in a standard that no reviewer could fail a change against.
 
 * The merge gate refuses a change that breaks a check, so `main` goes red from a merge conflict or a flake rather than
   from an untested change.
-* ctl-0001 checks the gate is still required on the branch rule.
+* ctl-0001 names the branch rule, and says plainly that nothing in CI reads it.
 * One maintainer means one branch in flight, so a long-running branch has nothing to diverge from.
 
 ## How it closes
@@ -51,7 +51,8 @@ Every branch of this repository, and `main` itself.
 
 ## Related
 
-* `eng:pol-AUTV.BROKEN` and `eng:pol-AUTV.OFTEN` are the clauses this departs from.
+* [dev-one-maintainer] is why there is nobody else to notice a red `main`.
 * [std-CI] holds the gate those two clauses sit beside.
 
+[dev-one-maintainer]: one-maintainer.md
 [std-CI]: ../standards/workflows.md

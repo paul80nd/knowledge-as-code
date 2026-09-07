@@ -37,11 +37,6 @@ A deviation records a departure from a rule. It does not change the rule.
 Where everybody is deviating from the same clause, the clause is wrong. Rewrite the policy or the standard, and close
 the deviations it was carrying.
 
-**A deviation sits in the corpus whose people accepted the risk.** It names the clause it departs from, wherever that
-clause was written. A corpus consuming a governance layer holds its own departures from that layer's policies. Nothing
-flows upward in an export: a corpus reads what it consumes and writes nothing back. The corpus stating a policy never
-sees what was taken against it, so an auditor reads every corpus in the estate rather than the governance layer alone.
-
 A deviation is also not:
 
 * **A decision about how we build.** "We chose Postgres over MySQL" is an [ADR](adrs.md), and it stays true. A deviation
@@ -50,6 +45,11 @@ A deviation is also not:
   before, or immediately after an incident left no time.
 * **A backlog item.** The work that closes a deviation belongs in the issue tracker. The record says what has to be true
   for it to close, and the tracker carries the work.
+
+**A deviation sits in the corpus whose people accepted the risk.** It names the clause it departs from, wherever that
+clause was written. A corpus consuming a governance layer holds its own departures from that layer's policies. Nothing
+flows upward in an export: a corpus reads what it consumes and writes nothing back. The corpus stating a policy never
+sees what was taken against it, so an auditor reads every corpus in the estate rather than the governance layer alone.
 
 ## Metadata
 

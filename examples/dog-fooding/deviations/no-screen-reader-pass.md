@@ -49,8 +49,8 @@ Somebody reads the site's navigation, one command page and one framework page wi
 validate` on a corpus with the same reader open. What that finds becomes issues, and this record closes on the day they
 are raised.
 
-Where nobody can run that pass by the review date, the honest close is to publish the accessibility statement
-[std-A11Y] asks for and say in it that neither surface has been tested.
+Where nobody can run that pass by the review date, the honest close is the accessibility statement [std-A11Y] asks
+for. That statement says neither surface has been tested.
 
 ## Scope
 
@@ -58,7 +58,6 @@ Both surfaces [std-A11Y] governs: the documentation site MkDocs builds from `doc
 
 ## Related
 
-* `eng:pol-A11Y.ASSIST` is the clause this departs from.
 * [std-A11Y] is the standard that reaches everything else in that policy.
 
 [std-A11Y]: ../standards/accessibility.md

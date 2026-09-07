@@ -38,7 +38,7 @@ tool built from a public repository.
 ## What compensates
 
 * The package is built by one workflow, whose run log is public and names the commit it built.
-* ctl-0008 restores the published package and compares what it holds against the repository.
+* ctl-0007 stands a corpus up from the packed tool on every pull request, so what ships has been run.
 * Trusted publishing means no key exists that would let anybody else push under this name.
 * nuget.org refuses a second push to a version it already holds, so what shipped cannot be replaced.
 
@@ -53,7 +53,6 @@ The `kac` package on nuget.org, and the plugin served from the marketplace branc
 
 ## Related
 
-* `eng:pol-TRUS.ATTEST` and `eng:pol-TRUS.MALWARE` are the clauses this departs from.
 * [dev-no-reproducible-build] carries the other half of the provenance question.
 * [std-CONFIG] holds the pins the package is built from.
 

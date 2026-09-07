@@ -34,13 +34,13 @@ needed.
 ## Why we need it
 
 A just-in-time grant needs somebody to grant it. With one maintainer, the approver and the requester are the same
-person, so the grant would be a form filled in by whoever wanted it. That is ceremony rather than control.
+person, so the grant is a form filled in by whoever wanted it.
 
 ## What compensates
 
 * The `nuget.org` environment approval is a deliberate second act, recorded against the run that asked for it.
 * Trusted publishing means no long-lived key exists to steal, so the rights are useless without the account.
-* Every publish leaves a workflow run naming the commit it built, and ctl-0008 checks the round trip.
+* Every publish leaves a workflow run naming the commit it built, and that log is public.
 * nuget.org refuses a second push to a version it already holds, so a stolen session cannot replace what shipped.
 
 ## How it closes
@@ -48,8 +48,8 @@ person, so the grant would be a form filled in by whoever wanted it. That is cer
 A second maintainer makes just-in-time access mean something: one person asks, another grants, and the grant expires.
 This record closes on the pull request that writes that down.
 
-Where this repository still has one maintainer at the review date, the question is whether standing rights on a public
-repository with no data behind it are worth the machinery to remove them.
+Where this repository still has one maintainer at the review date, the question is what the machinery costs. Nothing
+here holds anybody's data, and the repository is public already.
 
 ## Scope
 
@@ -57,7 +57,6 @@ The GitHub organisation, the nuget.org package, the pages site and the marketpla
 
 ## Related
 
-* `eng:pol-ACCS.PERSIST` and `eng:pol-ACCS.ZERO` are the clauses this departs from.
 * [dev-one-maintainer] is the condition underneath it.
 
 [dev-one-maintainer]: one-maintainer.md

@@ -50,7 +50,6 @@ The export `kac export` writes, the package `kac pack` seals, and the plugin `ka
 
 ## Related
 
-* `eng:pol-INTC.DEPREC` is the clause this departs from.
 * [std-VERS] carries the stamps that stand in for a notice period.
 
 [std-VERS]: ../standards/versioning.md

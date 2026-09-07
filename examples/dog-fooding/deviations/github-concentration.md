@@ -33,9 +33,9 @@ moving elsewhere.
 
 ## Why we need it
 
-An exit plan is worth what it would cost to use. Every corpus here is Markdown in git, and the tool is a .NET project,
-so the content and the code move to any git host by pushing them. What does not move is the workflow syntax, the pages
-publish and the plugin marketplace, and that is the part somebody would have to write down.
+Every corpus here is Markdown in git and the tool is a .NET project, so the content and the code move to any git host
+by pushing them. What does not move is the workflow syntax, the pages publish and the plugin marketplace. Writing down
+that third of the problem is the whole of the work, and nobody has needed it.
 
 Nothing here earns revenue or holds anybody's data, so the loss on the day GitHub stops is a rebuild rather than an
 outage.
@@ -58,7 +58,6 @@ The repository, its issues, its workflows, the documentation site and the market
 
 ## Related
 
-* `eng:pol-TRUS.CLOUD` and `eng:pol-TRUS.EXIT` are the clauses this departs from.
 * [std-CI] keeps the CI logic in files that would move with the repository.
 
 [std-CI]: ../standards/workflows.md

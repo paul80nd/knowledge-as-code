@@ -15,7 +15,7 @@ owner: paul.law
 tags: [ design, security, threat-model ]
 ---
 
-# Security arrives in review rather than in a requirement
+# A security requirement arrives as a review comment
 
 `Deviation: dev-security-design-unstated` `ACTIVE`
 
@@ -34,15 +34,15 @@ identifies a change as higher risk before the work starts.
 ## Why we need it
 
 Threat modelling a documentation tool that reads a repository and writes files back into it produces a short list, and
-`.github/SECURITY.md` already carries it. The work of turning that into a standard, a risk triage and a design review
-is real, and one person doing all three roles gets little from the separation.
+`.github/SECURITY.md` already carries it. Turning that into a standard, a risk triage and a design review is real work.
+One person holding all three roles gets little from the separation.
 
 ## What compensates
 
-* [std-CI] holds each job to the least permission it needs, and ctl-0003 reads the workflow files for it.
-* `.github/SECURITY.md` states the containment CI relies on, and it is public.
+* [std-CI] holds each job to the least permission it needs. ctl-0003 says actionlint checks no such thing, so a
+  reviewer does.
+* `.github/SECURITY.md` is public, so a reader can see what CI contains and where a report is in scope.
 * `eng:std-CSSTY` turns the analysers on, so the security rules they carry fail a build rather than a reviewer.
-* The tool reaches the filesystem it was pointed at and the network never, which is a small surface to reason about.
 
 ## How it closes
 
@@ -57,8 +57,8 @@ The `kac` tool, the workflows, and the documentation site's build.
 
 ## Related
 
-* `eng:pol-SECD.DESIGN`, `eng:pol-SECD.HIRISK`, `eng:pol-SECD.REQS` and `eng:pol-SECD.THREAT` are the clauses this
-  departs from.
+* [dev-one-maintainer] is why one person holds the author, reviewer and approver roles.
 * [std-CI] carries the permission rules a standard would cite.
 
+[dev-one-maintainer]: one-maintainer.md
 [std-CI]: ../standards/workflows.md

@@ -44,7 +44,7 @@ have to emit them.
 ## What compensates
 
 * `generate --check` fails the branch where any generated file is stale, so drift never reaches `main`.
-* ctl-0007 is checked by the golden fixtures, so the check itself has a test behind it.
+* The golden fixtures run `generate` over a corpus and compare the result, so the check has a test behind it.
 * The generated block markers name the generator, so a reader can tell which command owns the text.
 * Every input is a committed file in the same repository, so the run's inputs are recoverable from the commit it ran
   on.
@@ -62,8 +62,6 @@ Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, an
 
 ## Related
 
-* `eng:pol-DERV.CHECK`, `eng:pol-DERV.EXPECT`, `eng:pol-DERV.FAILED`, `eng:pol-DERV.LINEAGE` and `eng:pol-DERV.RUNLOG`
-  are the clauses this departs from.
 * [ctl-0007] runs the check that four of them describe.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md

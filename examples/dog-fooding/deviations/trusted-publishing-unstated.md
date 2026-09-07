@@ -35,7 +35,8 @@ already did, and a clause about a credential that does not exist reads as a clau
 
 ## What compensates
 
-* The workflows hold no key, which ctl-0003 and ctl-0004 read the files for.
+* The workflows hold no key. Nothing checks that: ctl-0003 says actionlint reports nothing about a credential
+  written in the wrong place.
 * [std-CI] already refuses a workflow that carries a credential of its own, which reaches the same outcome from the
   other side.
 * Publishing waits for an approval on the `nuget.org` environment, so a token exchange still needs a person.
@@ -52,7 +53,6 @@ The publish workflows, and any registry this repository publishes to.
 
 ## Related
 
-* `eng:pol-SCRT.ZEROSEC` is the clause this departs from.
 * [std-CI] is where the rule closing this belongs.
 
 [std-CI]: ../standards/workflows.md

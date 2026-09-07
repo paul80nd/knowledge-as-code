@@ -51,7 +51,6 @@ Everything this repository holds: the tool, the schema, the four corpora, the si
 
 ## Related
 
-* `eng:pol-KNOW.HEADS` is the clause this departs from.
 * [dev-standing-publish-rights] and [dev-decisions-live-in-commits] both rest on this condition.
 
 [dev-decisions-live-in-commits]: decisions-live-in-commits.md

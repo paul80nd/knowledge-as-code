@@ -35,15 +35,15 @@ passkey and a hardware key because GitHub offers them, not because a record asks
 ## Why we need it
 
 Writing a standard for authentication means writing rules this repository cannot enforce. GitHub owns the login screen,
-and a rule about it would be a wish with no check behind it. `eng:std-GATES` and [std-CI] state what a workflow's
-identity may do, which is the half that is ours to hold.
+and a rule about it would be a wish with no check behind it. [std-CI] states what a workflow's identity may do, which
+is the half that is ours to hold.
 
 ## What compensates
 
 * Every commit, review and merge is attributable to a GitHub account, and the history shows it.
 * [std-CI] gives each workflow the least permission it needs, so a compromised account reaches only what its job
   declares.
-* Publishing to nuget.org waits for an approval on a named environment, which ctl-0007 checks.
+* Publishing to nuget.org waits for an approval on a named environment, so a stolen session still meets a person.
 * The repository is public and holds nothing private, so a lost account costs the history's integrity rather than its
   confidentiality.
 
@@ -60,7 +60,6 @@ Every account and token reaching the repository, its packages, its pages and its
 
 ## Related
 
-* `eng:pol-ACCS.AUTHN` and `eng:pol-ACCS.NAMED` are the clauses this departs from.
 * [std-CI] states what a workflow's identity may do.
 
 [std-CI]: ../standards/workflows.md

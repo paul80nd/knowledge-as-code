@@ -49,9 +49,9 @@ The gap that costs a user is the silence, and that one is real.
 ## What compensates
 
 * A correction ships as a new version, which [std-VERS] states, and a published version is never replaced.
-* ctl-0008 restores the published package on each release, so a broken publish is caught by CI rather than by a user.
+* ctl-0007 stands a corpus up from the packed tool on every pull request, so a `kac` that cannot run is caught
+  before it ships.
 * `.github/SECURITY.md` gives a private route for a vulnerability, and GitHub security advisories carry the thread.
-* The three runbooks cover the three failures that have actually happened.
 
 ## How it closes
 
@@ -68,8 +68,6 @@ both exist.
 
 ## Related
 
-* `eng:pol-INCR.ADHOC`, `eng:pol-INCR.COMMS`, `eng:pol-INCR.DRILL`, `eng:pol-INCR.PROCESS`, `eng:pol-INCR.RECOVER` and
-  `eng:pol-INCR.REPORT` are the clauses this departs from.
 * [dev-nothing-learns-from-a-fault] carries what happens after the fix.
 * [std-VERS] governs the version a correction ships as.
 

@@ -31,8 +31,8 @@ Every departure this corpus knows about is written here, with an owner and a rev
 record to the sections the type declares. That much is the type's doing rather than a standard's.
 
 Nothing here says a deviation is written before the departure. Nothing sweeps a review date that has passed. Nothing
-tests a long-standing habit against the policy it breaks, which is exactly how this register came to be written in one
-sitting rather than one departure at a time.
+tests a long-standing habit against the policy it breaks. That is how this register came to be written in one sitting
+rather than one departure at a time.
 
 ## Why we need it
 
@@ -56,7 +56,3 @@ record has to say, who may accept the risk, and what closing means. It cites the
 
 Every record in this folder, and every departure this repository takes from a clause `../engineering/` states.
 
-## Related
-
-* `eng:pol-DEVI.CLOSE`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.CUSTOM`, `eng:pol-DEVI.DEBT`, `eng:pol-DEVI.PERM`,
-  `eng:pol-DEVI.RECORD` and `eng:pol-DEVI.SURFACE` are the clauses this departs from.

@@ -38,7 +38,7 @@ is built by a workflow whose run is public, from a commit anybody can read.
 ## What compensates
 
 * The publish workflow is the only thing that builds what ships, and its run log names the commit.
-* ctl-0008 restores the published package and compares what it holds against the repository.
+* ctl-0007 stands a corpus up from the packed tool on every pull request, so what ships has been run.
 * [tol-dotnet-sdk] pins the SDK, and [std-CONFIG] holds that pin to an exact version.
 * nuget.org never lets a published version be replaced, so a rebuild cannot quietly overwrite what people already have.
 
@@ -56,7 +56,6 @@ The `kac` package published to nuget.org, and the local builds a contributor run
 
 ## Related
 
-* `eng:pol-AUTV.BITWISE` and `eng:pol-AUTV.REPRO` are the clauses this departs from.
 * [dev-package-unscanned] carries the provenance half of the same question.
 
 [dev-package-unscanned]: package-unscanned.md

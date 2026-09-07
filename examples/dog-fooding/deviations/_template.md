@@ -70,10 +70,11 @@ Which services, environments and data this reaches. A deviation with no boundary
 
 ## Related
 
-* `eng:pol-{{MNEM}}.{{CLAUSE}}` is the clause this departs from. An inherited record lives in `.imports/`, so it is
-  named in a code span rather than linked.
 * [std-{{MNEM}}] is the standard here that would close it.
 * [svc-{{a}}] is the service it applies to.
+
+_(`departs-from` already names the clause, so no bullet here repeats it. An inherited record lives in `.imports/`, so
+where the prose above names a clause it uses a code span rather than a link.)_
 
 [std-{{MNEM}}]: ../standards/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md
