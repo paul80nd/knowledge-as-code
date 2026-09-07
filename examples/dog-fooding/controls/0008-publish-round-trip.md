@@ -2,7 +2,7 @@
 id: ctl-0008
 tier: normative
 status: active
-verifies: [ eng:std-GATES ]
+verifies: [ eng:std-GATES, std-PLUGIN ]
 mechanism: ci
 frequency: per-pr
 evidence: The `corpora`, `round-trip` and `import-round-trip` job logs on the pull request.
@@ -22,6 +22,8 @@ A corpus that validates can still export a package nobody can install.
 
 * `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push "**MUST** trigger a build and the test
   suite, without anyone asking for it".
+* `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes` says a skill "**MUST** name the parts file of the
+  type its component declares, and no other type's".
 
 ## How it works
 
@@ -38,6 +40,12 @@ The `tool` job adds the empty case. It bundles a corpus that adopted no type and
 ## Coverage and gaps
 
 `dog-fooding` is left out of `round-trip`, because it is the same shape as `payments`.
+
+`round-trip` reads one sentence of each skill: it greps `SKILL.md` for the parts file the component requires, and
+fails a skill naming another type's. Nothing else `std-PLUGIN` asks of the wording is read here.
+
+The component list is read from `bundle.json`, which carries what the manifest declared. So a skill or hook directory
+somebody forgot to declare travels undeclared and fails nothing.
 
 Nothing here reaches the publishing workflows. What CI proves is that a package and a plugin assemble. Whether
 nuget.org, GitHub Packages or the `marketplace` branch accepts either is answered after the merge.
