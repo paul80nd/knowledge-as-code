@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] The suite that runs on every push finishes in under ten minutes.\n- [ ] Running the suite twice in a row, and in a different order, gives the same result.\n- [ ] No test in the repository calls a hostname outside the build agent.\n- [ ] The build publishes a coverage figure, and the threshold it fails at is in the repository.\n- [ ] Every fixture in the repository is generated or masked, confirmed by reading it.\n- [ ] No test configuration names a production connection string or endpoint."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/690a9b40daec8166dc7bbf8e9a9936772d7e58a4/examples/engineering/standards/common/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3156ca54e2fdf494d3b30e8e1a0ee8d6e05389a7/examples/engineering/standards/common/testing.md"
   }
 }

@@ -21,6 +21,6 @@
     "Conformance checklist": "- [ ] `actionlint` passes.\n- [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.\n- [ ] Every `uses:` names a commit SHA and carries its released version in a trailing comment.\n- [ ] Every workflow declares `permissions: contents: read` at its top level.\n- [ ] Every job holding a write permission has a step that uses it.\n- [ ] No secret appears in a workflow's text, and no step prints one.\n- [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.\n- [ ] The version this pull request ships has moved, and the changelog carries its section.\n- [ ] Every corpus whose records changed has moved its `content-version`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/690a9b40daec8166dc7bbf8e9a9936772d7e58a4/examples/dog-fooding/standards/workflows.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3156ca54e2fdf494d3b30e8e1a0ee8d6e05389a7/examples/dog-fooding/standards/workflows.md"
   }
 }
