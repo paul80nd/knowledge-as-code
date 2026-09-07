@@ -27,7 +27,7 @@ document that links to all six.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
-* **How to deploy it.** That is a process.
+* **How to deploy it.** That is a [process](processes.md).
 * **How to fix it when it breaks.** That is a runbook.
 * **Why it is shaped the way it is.** That is an ADR or an explanation.
 * **What it promises.** Availability and latency targets are NFRs.

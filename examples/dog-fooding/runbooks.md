@@ -21,7 +21,7 @@ the recovery has never been run, while there is still time to run it.
 
 ## Scope
 
-**Broken, not planned.** If you are doing this because you decided to, it is a process.
+**Broken, not planned.** If you are doing this because you decided to, it is a [process](processes.md).
 
 Two other types sit close enough to confuse:
 

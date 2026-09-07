@@ -4,6 +4,11 @@
     "corpusRoot": "corpus",
     "components": [
       {
+        "path": "skills/corpus-retrieval",
+        "requires": [],
+        "note": "Reaches the published source of a record the export summarises. It names no type, so it supports the lookup skills and travels only where at least one of them did."
+      },
+      {
         "path": "skills/glossary-lookup",
         "requires": [
           "glossary@1"
@@ -17,6 +22,13 @@
           "policies@2"
         ],
         "note": "Reads a clause from corpus/policies/clauses.jsonl and the owning policy beside it."
+      },
+      {
+        "path": "skills/process-lookup",
+        "requires": [
+          "processes@1"
+        ],
+        "note": "Reads a process from corpus/processes/ and hands the steps to corpus-retrieval, because a process export carries the trigger and not the order."
       },
       {
         "path": "skills/standards-lookup",

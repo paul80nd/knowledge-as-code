@@ -18,7 +18,8 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 // One component the plugin manifest declares, as the manifest states it. `Requires` names the record
 // types the component reads, each optionally with the shape version it reads that type at, as
 // `glossary@1`. Held as the manifest wrote them, because `bundle.json` reports them back. A component
-// naming no type is unconditional and always travels.
+// naming no type reads no export, so it supports the ones that do and travels only where one of them
+// did. A file no component claims at all is the unconditional case, and needs no declaration.
 //
 // `Announce` is whether the breadcrumb names this component at the start of a session. False by
 // default, because a skill somebody asks for by name costs nothing to leave unannounced and the
@@ -30,8 +31,8 @@ public sealed record PluginComponent(
     string? Note,
     bool Announce = false);
 
-// A component left out, and the type whose absence left it out. The reason is carried, because it is
-// the one thing the assembled plugin cannot say about itself.
+// A component left out, and what left it out: an absent type, or the absence of everything it supports.
+// The reason is carried, because it is the one thing the assembled plugin cannot say about itself.
 public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Requires, string Reason);
 
 // What a bundle comes to. Named before anything is written, as `ExportPlan` and the generator's plan
@@ -202,6 +203,17 @@ public static class Bundler
                 trimmed.Add(new TrimmedComponent(component.Path, component.Requires,
                     $"the export carries no {string.Join(" or ", missing)}"));
         }
+
+        // A component naming no type reads no export, so nothing above could trim it. It is there to
+        // support the ones that do, and where every one of those went it has nothing left to support.
+        // So it follows them out rather than shipping into a plugin with no reader of its own.
+        if (!included.Any(c => c.Requires.Count > 0))
+            foreach (var supporting in included.Where(c => c.Requires.Count == 0).ToList())
+            {
+                included.Remove(supporting);
+                trimmed.Add(new TrimmedComponent(supporting.Path, supporting.Requires,
+                    "no component it supports survived"));
+            }
 
         if (problems.Count > 0) return new BundlePlan([], "", null, [], [], [], problems);
 

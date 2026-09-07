@@ -39,14 +39,17 @@ Each file is named as it is written. The run closes with what shipped, what was 
 wrote .dist/plugin/corpus/glossary/terms.jsonl
 wrote .dist/plugin/corpus/manifest.json
 wrote .dist/plugin/hooks/breadcrumb
+wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 bundle: trimmed skills/policy-lookup: the export carries no policies.
+bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 13 file(s) to .dist/plugin/ as example-libraries 0.1.0. 2 component(s) included, 2 trimmed.
+bundle: wrote 14 file(s) to .dist/plugin/ as example-libraries 0.1.7. 3 component(s) included, 3 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
-A trimmed component is not an error. It is a skill whose record type this corpus does not export.
+A trimmed component is not an error. It is a skill whose record type this corpus does not export. `corpus-retrieval`
+names no type: it reaches the published source for whichever lookup skills are left, and follows the last of them out.
 
 ### Install what you just built
 
@@ -59,10 +62,11 @@ what CI publishes.
 
 ### Read which components shipped
 
-A corpus adopting three record types ships three skills over one export. The closing line counts them:
+A corpus adopting three record types ships a skill for each over one export, beside the two that travel whatever it
+adopted. The closing line counts them:
 
 ```text
-bundle: wrote 49 file(s) to .dist/plugin/ as example-engineering 0.1.0. 4 component(s) included, 0 trimmed.
+bundle: wrote 51 file(s) to .dist/plugin/ as example-engineering 0.10.0. 5 component(s) included, 1 trimmed.
 ```
 
 `bundle.json` names them, and it travels inside the plugin:
@@ -72,7 +76,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/glossary-lookup","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":[]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
 ```
 
 Search the assembled skills for the file one type exports, to see which of them reads it:

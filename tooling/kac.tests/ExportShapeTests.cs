@@ -48,6 +48,9 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        processes@1
+          fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
+          sections: When to use this=full, Prerequisites=full
         standards@1
           fields: id, title, category, status, applies-to, review-by, tags
           sections: Summary=full, Conformance checklist=full

@@ -34,7 +34,8 @@ twenty-two documents that `clause-modal` requires it in.
 * **Never delete a required section.** An empty one is a content gap to report.
 * **Never edit a `_template.md` or a `<type>.md`.** See *Template defects* below. Where the request is *about* one of
   those files rather than about the records, this is the wrong playbook: run
-  [sweeping-prose](sweeping-prose.md), whose step 8 is the only one covering them.
+  [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md), whose step 8 is the only one
+  covering them.
 
 ## The procedure
 
@@ -43,7 +44,8 @@ twenty-two documents that `clause-modal` requires it in.
    nothing.** Most hold no record at all, so a folder named in a request may have only its `_index.md` and
    `_template.md`, both of which the never-list puts out of reach. Say so, and say what the candidates are: where the
    request meant the type page or the template, it belongs to
-   [sweeping-prose](sweeping-prose.md) rather than here. **Test the claim the request makes.** "These are verbose" and
+   [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md) rather than here. **Test the claim the
+   request makes.** "These are verbose" and
    "there are semicolons everywhere" are counts, and a count that comes back small or empty is the answer rather than
    the start of one.
 2. **Run `kac validate` and expect it clean.** CI gates the branch, so a clean corpus is the normal state. It is your
@@ -65,7 +67,8 @@ twenty-two documents that `clause-modal` requires it in.
 8. **Check the second tree.** `template/` holds its own copy of every type page and template. Those are `seed`, so
    `kac update --check` does not hold them equal and nothing catches drift. A record under `examples/` has no twin.
 9. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
-10. **Propose rather than commit.** Run [opening-a-pull-request](opening-a-pull-request.md) only if asked.
+10. **Propose rather than commit.** Run
+    [prc-pull-request](../../../../examples/dog-fooding/processes/pull-request.md) only if asked.
 
 ## What to look for
 

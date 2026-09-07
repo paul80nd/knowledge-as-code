@@ -1,0 +1,20 @@
+{
+  "type": "processes",
+  "path": "processes/add-a-title.md",
+  "fields": {
+    "id": "prc-add-a-title",
+    "title": "Add a title to the catalogue",
+    "status": "active",
+    "applies-to": null,
+    "last-rehearsed": "2029-06-01",
+    "rehearsal-frequency": "quarterly",
+    "tags": [
+      "cataloguing"
+    ]
+  },
+  "sections": {
+    "When to use this": "A title has arrived that the catalogue does not hold. If a title is already catalogued and a copy will not scan, that is a fault rather than a planned task.",
+    "Prerequisites": "* The cataloguing role in the library management system.\n* The publisher's record, or an ISBN the supplier will resolve."
+  },
+  "links": null
+}

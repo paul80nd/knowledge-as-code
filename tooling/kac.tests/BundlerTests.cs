@@ -198,15 +198,53 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@one")))],
             export: [Manifest("glossary")]).Problems));
 
-    // `bundle.json` still records a component requiring nothing, because a reader asking what is in the
-    // plugin wants it listed beside the ones that had to earn their place.
+    // A component naming no type reads no export, so the trim above cannot reach it. It is there to
+    // support the ones that do, and it travels wherever one of those did.
     [Fact]
-    public void A_component_requiring_nothing_always_travels()
+    public void A_component_requiring_nothing_travels_beside_one_that_earned_its_place()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Component("skills/support"), Component("skills/look", "glossary")))
+            ],
+            export: [Manifest("glossary")]);
+
+        Assert.Equal(["skills/support", "skills/look"], plan.Included.Select(c => c.Path));
+        Assert.Empty(plan.Trimmed);
+    }
+
+    // And it follows the last of them out. A plugin shipping it alone would carry a skill supporting
+    // nothing the reader can reach, and `bundle.json` would report a component included where the run
+    // in fact left nothing that answers a question.
+    [Fact]
+    public void A_component_requiring_nothing_follows_the_last_one_it_supports_out()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Component("skills/support"), Component("skills/look", "glossary")))
+            ],
+            export: [Manifest()]);
+
+        Assert.Empty(plan.Included);
+        Assert.Equal(["skills/look", "skills/support"], plan.Trimmed.Select(c => c.Path));
+        Assert.Equal("no component it supports survived",
+            plan.Trimmed.Single(c => c.Path == "skills/support").Reason);
+    }
+
+    // The one a corpus declares on its own. Nothing supports it and nothing it supports, so the plugin
+    // carries the export and no reader of it, which is what the warning below says.
+    [Fact]
+    public void A_component_requiring_nothing_and_standing_alone_is_trimmed()
     {
         var plan = Plan(plugin: [(Bundler.ManifestFile, Source(Component("hooks/hooks.json")))],
             export: [Manifest()]);
 
-        Assert.Equal(["hooks/hooks.json"], plan.Included.Select(c => c.Path));
+        Assert.Empty(plan.Included);
+        Assert.Equal(["hooks/hooks.json"], plan.Trimmed.Select(c => c.Path));
     }
 
     [Fact]

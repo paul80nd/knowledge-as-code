@@ -53,6 +53,22 @@
         "Scope": "full",
         "Exceptions": "full"
       }
+    },
+    {
+      "type": "processes",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "processes",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "When to use this": "full",
+        "Prerequisites": "full"
+      }
     }
   ]
 }

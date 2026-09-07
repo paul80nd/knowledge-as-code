@@ -30,6 +30,7 @@
 | Type                     | Tier        | What it holds                                                                                                   |
 |--------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
 | [Control](controls.md)   | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
+| [Process](processes.md)  | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
 | [Runbook](runbooks.md)   | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
 | [Service](services.md)   | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
 | [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |

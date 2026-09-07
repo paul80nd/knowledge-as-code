@@ -15,9 +15,31 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.21.0 - 2026-09-07
+
+### Added
+
+- **A corpus adopting `processes` now publishes them.** `kac export` writes one JSON per process carrying its
+  frontmatter, its `When to use this` trigger and its `Prerequisites`, and stops there. `Steps` and `Verification`
+  stay in the record, because a procedure is followed whole and in order against the version in force rather than
+  against a copy taken on an earlier day. The type declares no parts, so nothing writes a flat file for it and
+  `manifest.json` reports `partsFile`, `recordKey`, `partKey`, `idKey` and `seeAlsoKey` as null beside `parts` at
+  zero.
+- **`kac bundle` ships two more skills.** `process-lookup` finds the procedure written for a planned task and reads
+  its trigger before deciding it is yours. It is trimmed where the export carries no processes. `corpus-retrieval`
+  reaches a record's published source and builds a link to it, naming `gh` and `az devops invoke` as the clients that
+  authenticate to each platform and saying what to do where neither reaches. The three skills that shipped before now
+  hand their link building to it.
 
 ### Changed
+
+- **A component your plugin manifest declares with an empty `requires` now travels only where a component that reads a
+  type did.** It reads no export itself, so it is there to support the ones that do, and a plugin shipping it alone
+  would carry a skill supporting nothing a reader can reach. `bundle.json` gives the reason as
+  `no component it supports survived`, and a run that trims every component warns as it did before. A file no
+  component claims is unchanged: it needs no declaration and travels whatever the corpus adopted.
+- **The template's shape is at version 6.** It carries the two skills above, so a corpus running `kac update` receives
+  them.
 
 - **`kac checks` asks you for the half of a drifted checks table you hold.** Where the reader-facing table and your
   `.schema/_checks.yaml` disagree, every line of the report names `on-type-page:` in that file and says where it

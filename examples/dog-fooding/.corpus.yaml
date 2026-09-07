@@ -15,7 +15,7 @@ shortcode: dog
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.7.0"
+content-version: "0.8.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -52,8 +52,8 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 5
-  taken-on: "2026-09-01"
+  template-version: 6
+  taken-on: "2026-09-07"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.
 update-policy: cautious
@@ -63,6 +63,7 @@ update-policy: cautious
 # vocabulary is Example Engineering's to state and this corpus cites it as `eng:`.
 types:
   - controls
+  - processes
   - runbooks
   - services
   - standards

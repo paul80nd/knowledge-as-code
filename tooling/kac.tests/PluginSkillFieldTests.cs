@@ -35,6 +35,7 @@ public class PluginSkillFieldTests
         var components = manifest?["metadata"]?["components"] as JsonArray
                          ?? throw new InvalidOperationException("the plugin manifest declares no metadata.components.");
 
+        var schema = Schema.Load(Repo.Root);
         var data = new TheoryData<string, string>();
         foreach (var component in components)
         {
@@ -44,11 +45,22 @@ public class PluginSkillFieldTests
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
 
+            // A skill naming no type reads no parts file and holds no field table. `corpus-retrieval`
+            // reaches a record's published source, which every lookup skill needs and no line describes.
+            if (requires.Count == 0) continue;
+
             if (requires.Count != 1)
                 throw new InvalidOperationException(
                     $"'{path}' requires {requires.Count} types, and one skill holds one field table.");
 
-            data.Add(path["skills/".Length..], requires[0].Split('@')[0]);
+            var type = requires[0].Split('@')[0];
+
+            // A type exporting no parts writes no line, so its skill describes the record's own keys and
+            // there is nothing here to hold them to. `processes` is the case: a step means nothing lifted
+            // out of its order, so the record travels and the steps are read from the published source.
+            if (!schema.ByFolder[type].DeclaredExport.PartsDeclared) continue;
+
+            data.Add(path["skills/".Length..], type);
         }
 
         return data;
