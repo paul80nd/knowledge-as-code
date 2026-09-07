@@ -21,6 +21,7 @@ column for your row.
 | A check that proves a rule is being followed                 | [Controls](../controls.md)   |
 | A description of what a deployable component is and does     | [Services](../services.md)   |
 | A rule people must follow when building                      | [Standards](../standards.md) |
+| A step-by-step for a planned task                            | [Processes](../processes.md) |
 | A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)   |
 | A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)         |
 
@@ -63,6 +64,9 @@ evaluation.
 
 Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
+**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
+rotating a secret). Written to be followed by someone who has not done it before.
+
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
 decision tree. Disaster recovery and estate rebuild live here.
 
@@ -78,12 +82,14 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 ```mermaid
 graph LR;
   t_controls[Control];
+  t_processes[Process];
   t_runbooks[Runbook];
   t_services[Service];
   t_standards[Standard];
   t_tools[Tool];
   t_controls -- applies-to --> t_services;
   t_controls -- verifies --> t_standards;
+  t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
@@ -101,6 +107,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 |----------|---------------|-----------|---------------|
 | Control  | `applies-to`  | Service   |               |
 | Control  | `verifies`    | Standard  | `verified-by` |
+| Process  | `applies-to`  | Service   |               |
 | Runbook  | `applies-to`  | Service   |               |
 | Service  | `depends-on`  | Service   |               |
 | Standard | `applies-to`  | Service   |               |
@@ -129,6 +136,9 @@ The calls that are actually close. Each is written once, on the type its heading
 this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
+
+**Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
+Broken is a runbook.
 
 **Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
 from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
