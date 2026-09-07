@@ -1,0 +1,23 @@
+{
+  "type": "processes",
+  "path": "processes/add-a-type.md",
+  "fields": {
+    "id": "prc-add-a-type",
+    "title": "Add a knowledge type",
+    "status": "active",
+    "applies-to": null,
+    "last-rehearsed": "never",
+    "rehearsal-frequency": null,
+    "tags": [
+      "schema",
+      "taxonomy"
+    ]
+  },
+  "sections": {
+    "When to use this": "An existing type will not hold the records you have. A type with a schema and no folder counts as absent, and one with a folder and no page fails `type-setup`.",
+    "Prerequisites": "* A candidate set of records no existing type would take.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/48b0807d7db17c0decea8224c5f34d9610daf625/examples/dog-fooding/processes/add-a-type.md"
+  }
+}

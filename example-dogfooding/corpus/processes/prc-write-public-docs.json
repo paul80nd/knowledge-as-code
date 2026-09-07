@@ -1,0 +1,26 @@
+{
+  "type": "processes",
+  "path": "processes/write-public-docs.md",
+  "fields": {
+    "id": "prc-write-public-docs",
+    "title": "Write the public documentation",
+    "status": "active",
+    "applies-to": [
+      "svc-docs-site",
+      "svc-kac"
+    ],
+    "last-rehearsed": "never",
+    "rehearsal-frequency": null,
+    "tags": [
+      "mkdocs",
+      "nuget"
+    ]
+  },
+  "sections": {
+    "When to use this": "You are changing the root `README.md`, the package page nuget.org renders, or a page of the documentation site. The reader has installed nothing and has nobody here to ask, and that is the whole difference from every other surface.",
+    "Prerequisites": "* `technical-writing` and `writing-the-docs`, loaded in that order.\n* The source for every fact the page states, so each one can be checked.\n* The .NET SDK, where you touched the package page."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/48b0807d7db17c0decea8224c5f34d9610daf625/examples/dog-fooding/processes/write-public-docs.md"
+  }
+}

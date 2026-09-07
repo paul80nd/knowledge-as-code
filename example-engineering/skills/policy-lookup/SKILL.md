@@ -69,7 +69,7 @@ Each line carries the clause whole:
 | `part`               | string            | the clause's key inside that policy                                             |
 | `shortcode`          | string, or absent | the corpus that published the clause. A clause written here carries no such key |
 | `status`, `reviewBy` | string            | how far the policy has settled, and the date it was meant to be read again      |
-| `path`, `anchor`     | string            | the two values a link template takes, and see below for which template          |
+| `path`, `anchor`     | string            | the two values `corpus-retrieval` builds a link from                            |
 
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
 one exception, and the row above says so. A clause opening with no modal carries `"level": null`, so read the level
@@ -123,42 +123,16 @@ an id* builds from `record` and `shortcode`, and read three things from `section
 
 The clause table is not among those sections. Its rows travelled as the lines in `clauses.jsonl`, one line each.
 
-## Build a link from a template
+## Link to the clause, and read its source
 
-**No line holds a URL.** `manifest.json` holds a publishing block per corpus, and each line holds the two values a
-template takes: `path` and `anchor`.
+**Load the `corpus-retrieval` skill.** It carries the whole of this: which publishing block addresses the corpus that
+wrote the line, how to substitute a template without breaking it, how to fetch the file through the client that
+authenticates to that platform, and what to say where nothing reaches it.
 
-**Take the block belonging to the corpus that wrote the line.** A line carrying `shortcode` is published by that entry
-in `sources`, and its `publishing` block is the one to read. A line with no `shortcode` is published by the top-level
-`publishing` block. Read the wrong one and you address the right path in the wrong repository at the wrong commit, which
-fetches a 404 or somebody else's file, and both read as plausible.
+**Bring it two values.** A line holds `path` and `anchor`, and those are what a template takes.
 
-**Copy a template exactly as it stands, replace `{path}` and `{anchor}` with the line's own values, and change nothing
-else.** The commit is already inside the string. Do not retype it, shorten it, swap the host or judge whether it looks
-right. A template with one character altered gives a 404 that reads as plausible, or a page from a version of the corpus
-nobody asked about.
-
-**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
-wiki page rather than a file, so substitute the line's `path` with `.md` removed and every `/` written as `%2F`. Every
-other target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose
-above, every time.
-
-**To send a reader to a policy, use the block's `humanTemplate`.** Substitute `path` and `anchor`. Every clause of one
-policy carries the same anchor, because a table row is not a heading and no renderer gives it a fragment of its own. The
-link lands on the clause table, and the reader finds the row by the id you quoted.
-
-**To read a policy's source yourself, fetch the file rather than the page.** The same block names the `target`, the
-`base`, the `pathPrefix` and the `ref`. Join `pathPrefix` ahead of the line's `path` to reach the file inside the
-repository, then ask the client that authenticates to that target for it at that `ref`. Fetching the human URL instead
-hands you the markdown wrapped in someone else's HTML, and you will read the page furniture as though it were the
-record.
-
-**No unauthenticated host serves that source**, except GitHub's and only for a public repository. Where you have no
-client for the target, say so and quote the human link, rather than assembling a URL that will return a sign-in page you
-read as the record.
-
-**Where the block's `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so, and
-quote the `path` as the policy's place in its own repository. Do not assemble a URL of your own.
+**Every clause of one policy carries the same anchor**, because a table row is not a heading and no renderer gives it
+a fragment of its own. The link lands on the clause table, and the reader finds the row by the id you quoted.
 
 ## Say what stayed behind
 

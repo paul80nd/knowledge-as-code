@@ -15,6 +15,11 @@
   },
   "included": [
     {
+      "path": "skills/corpus-retrieval",
+      "requires": [],
+      "note": "Reaches the published source of a record the export summarises. It names no type, so it supports the lookup skills and travels only where at least one of them did."
+    },
+    {
       "path": "skills/glossary-lookup",
       "requires": [
         "glossary@1"
@@ -43,5 +48,13 @@
       "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up."
     }
   ],
-  "trimmed": []
+  "trimmed": [
+    {
+      "path": "skills/process-lookup",
+      "requires": [
+        "processes@1"
+      ],
+      "reason": "the export carries no processes"
+    }
+  ]
 }

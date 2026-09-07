@@ -1,0 +1,23 @@
+{
+  "type": "processes",
+  "path": "processes/sweep-prose.md",
+  "fields": {
+    "id": "prc-sweep-prose",
+    "title": "Sweep the writing rules across a folder",
+    "status": "active",
+    "applies-to": null,
+    "last-rehearsed": "never",
+    "rehearsal-frequency": null,
+    "tags": [
+      "agents",
+      "prose"
+    ]
+  },
+  "sections": {
+    "When to use this": "A folder's prose has to answer to the current rules and nobody has read it against them. Testing a rule is a different job, and it does not belong here.",
+    "Prerequisites": "* The main checkout, so an agent can read what it needs. One agent per folder.\n* `technical-writing` and the voice skill for the surface, loaded with the Read tool.\n* `kac` run from inside a corpus, and nobody else running it at the same time."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/48b0807d7db17c0decea8224c5f34d9610daf625/examples/dog-fooding/processes/sweep-prose.md"
+  }
+}
