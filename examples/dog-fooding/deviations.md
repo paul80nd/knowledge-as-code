@@ -6,8 +6,8 @@ Where we knowingly break one of our own rules, who agreed to it, and when it is 
 
 ## What is a deviation?
 
-A written, owned, time-bound departure from a [policy](policies.md) or a [standard](standards.md). It names the rule it
-departs from, says what we are doing instead and why, and gives a date somebody has to come back to it.
+A written, owned, time-bound departure from a policy or a [standard](standards.md). It names the rule it departs from,
+says what we are doing instead and why, and gives a date somebody has to come back to it.
 
 It also covers a shortcut that breaks no rule. Skipping the retry logic to ship on Friday, knowing the next person has
 to add it, is technical debt. Nothing forbids it, and the debt is real, so it is recorded the same way. Such a record
@@ -39,8 +39,8 @@ the deviations it was carrying.
 
 A deviation is also not:
 
-* **A decision about how we build.** "We chose Postgres over MySQL" is an [ADR](adrs.md), and it stays true. A deviation
-  is written to be closed.
+* **A decision about how we build.** "We chose Postgres over MySQL" is an ADR, and it stays true. A deviation is
+  written to be closed.
 * **An audit finding.** A finding is something an auditor noticed afterwards. A deviation is something we agreed to
   before, or immediately after an incident left no time.
 * **A backlog item.** The work that closes a deviation belongs in the issue tracker. The record says what has to be true

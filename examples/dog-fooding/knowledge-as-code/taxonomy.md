@@ -16,14 +16,15 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                    | It goes in                   |
-|--------------------------------------------------------------|------------------------------|
-| A check that proves a rule is being followed                 | [Controls](../controls.md)   |
-| A description of what a deployable component is and does     | [Services](../services.md)   |
-| A rule people must follow when building                      | [Standards](../standards.md) |
-| A step-by-step for a planned task                            | [Processes](../processes.md) |
-| A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)   |
-| A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)         |
+| You have…                                                    | It goes in                     |
+|--------------------------------------------------------------|--------------------------------|
+| A check that proves a rule is being followed                 | [Controls](../controls.md)     |
+| A departure from a rule that somebody agreed to              | [Deviations](../deviations.md) |
+| A description of what a deployable component is and does     | [Services](../services.md)     |
+| A rule people must follow when building                      | [Standards](../standards.md)   |
+| A step-by-step for a planned task                            | [Processes](../processes.md)   |
+| A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)     |
+| A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)           |
 
 <!-- END GENERATED: types-placement -->
 
@@ -43,6 +44,10 @@ type's own page.
 **[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
 leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
 honest state and the number worth watching.
+
+**[Deviations](../deviations.md).** A knowing departure from a rule, the person who accepted the risk, and the date it
+is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
+nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
 
 **[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
 checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
@@ -82,6 +87,7 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 ```mermaid
 graph LR;
   t_controls[Control];
+  t_deviations[Deviation];
   t_processes[Process];
   t_runbooks[Runbook];
   t_services[Service];
@@ -89,6 +95,8 @@ graph LR;
   t_tools[Tool];
   t_controls -- applies-to --> t_services;
   t_controls -- verifies --> t_standards;
+  t_deviations -- applies-to --> t_services;
+  t_deviations -- departs-from --> t_standards;
   t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
@@ -103,17 +111,19 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From     | Field         | Points at | Answered by   |
-|----------|---------------|-----------|---------------|
-| Control  | `applies-to`  | Service   |               |
-| Control  | `verifies`    | Standard  | `verified-by` |
-| Process  | `applies-to`  | Service   |               |
-| Runbook  | `applies-to`  | Service   |               |
-| Service  | `depends-on`  | Service   |               |
-| Standard | `applies-to`  | Service   |               |
-| Standard | `verified-by` | Control   | `verifies`    |
-| Tool     | `replaces`    | Tool      | `successor`   |
-| Tool     | `successor`   | Tool      | `replaces`    |
+| From      | Field          | Points at | Answered by   |
+|-----------|----------------|-----------|---------------|
+| Control   | `applies-to`   | Service   |               |
+| Control   | `verifies`     | Standard  | `verified-by` |
+| Deviation | `applies-to`   | Service   |               |
+| Deviation | `departs-from` | Standard  |               |
+| Process   | `applies-to`   | Service   |               |
+| Runbook   | `applies-to`   | Service   |               |
+| Service   | `depends-on`   | Service   |               |
+| Standard  | `applies-to`   | Service   |               |
+| Standard  | `verified-by`  | Control   | `verifies`    |
+| Tool      | `replaces`     | Tool      | `successor`   |
+| Tool      | `successor`    | Tool      | `replaces`    |
 
 <!-- END GENERATED: types-edges -->
 

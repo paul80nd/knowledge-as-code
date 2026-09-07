@@ -92,7 +92,7 @@ _**Covers:** `eng:pol-A11Y.PUBLISH`_
 - The deviation **MUST** name the individual accepting the risk.
 - The deviation **MUST** state what compensates for the loss.
 - The deviation **MUST** carry the date somebody looks at it again.
-- The deviation **MUST** sit in the record for the thing that changed.
+- The deviation **MUST** be a record in this corpus's deviations register.
 
 _**Covers:** `eng:pol-A11Y.WORSE`_
 
@@ -172,9 +172,10 @@ message for a colour standing alone. Every rule above is a reviewer's, which is 
 Saying so is what keeps the standard honest. A rule nobody checks still binds whoever reads it. A `verified-by` naming
 a control that does not exist would claim a check CI never runs.
 
-**A deviation goes in the record for the thing that changed.** `eng:pol-DEVI` says where a deviation lives belongs to
-the process carrying it rather than to the policy. This corpus adopts no deviations type, so the record for the
-component or the page holds it.
+**A deviation goes in this corpus's own register.** `eng:pol-DEVI` says where a deviation lives belongs to the process
+carrying it rather than to the policy. This corpus adopts the deviations type, so a departure from a rule above is a
+record in [deviations](../deviations.md), and the tool record for the component keeps the assessment that found the
+shortfall.
 
 ## Sources and further reading
 
@@ -185,6 +186,8 @@ component or the page holds it.
 
 ## Changelog
 
+- 2026-09-07: sent a deviation to the register this corpus now holds, rather than to the record for the thing that
+  changed.
 - 2026-09-07: initial version.
 
 [Material for MkDocs]: https://squidfunk.github.io/mkdocs-material/setup/
