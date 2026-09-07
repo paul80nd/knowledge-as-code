@@ -3,7 +3,7 @@ id: dsc-pool-exhaustion-under-load
 type: discovery
 tier: observed
 status: open
-owner: alex.doe
+owner: human:alex.doe
 source: human
 confidence: unverified
 expires: "2026-12-31"

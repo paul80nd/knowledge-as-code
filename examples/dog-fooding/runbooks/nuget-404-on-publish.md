@@ -10,7 +10,7 @@ rehearsal-frequency:
 requires-access:
   - Actions, to read a run log and re-run a job on paul80nd/knowledge-as-code
   - The required reviewer on the nuget.org environment
-owner: paul.law
+owner: human:paul.law
 tags: [ nuget, publishing ]
 ---
 

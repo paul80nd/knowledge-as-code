@@ -10,7 +10,7 @@ rehearsal-frequency:
 requires-access:
   - A .NET 10 SDK and a checkout of this repository
   - Write access to the branch the fix lands on
-owner: paul.law
+owner: human:paul.law
 tags: [ imports, restore, versioning ]
 ---
 

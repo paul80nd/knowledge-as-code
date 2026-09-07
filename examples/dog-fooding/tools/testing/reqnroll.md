@@ -8,7 +8,7 @@ licence: BSD-3-Clause
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ bdd, gherkin, testing ]
 ---
 

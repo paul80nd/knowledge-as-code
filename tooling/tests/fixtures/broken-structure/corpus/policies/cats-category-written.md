@@ -5,7 +5,7 @@ tier: normative
 category: security
 status: draft
 review-by: "2027-08-05"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # A policy writing its derived category by hand

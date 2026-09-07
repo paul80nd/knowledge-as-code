@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.4, A.5.36 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ exceptions, governance, risk-acceptance ]
 ---
 

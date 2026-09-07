@@ -8,7 +8,7 @@ platform: typescript
 criticality: important
 depends-on:
 data-stores:
-owner: mira.okonjo
+owner: human:mira.okonjo
 facets: [ event-driven, internal ]
 tags: [ discovery, indexing ]
 ---

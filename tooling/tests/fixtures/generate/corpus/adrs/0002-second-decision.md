@@ -4,7 +4,7 @@ type: adr
 tier: decided
 status: proposed
 decided-on:
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Second decision

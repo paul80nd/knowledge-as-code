@@ -8,7 +8,7 @@ licence: BSD-2-Clause
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ markdown, parser ]
 ---
 

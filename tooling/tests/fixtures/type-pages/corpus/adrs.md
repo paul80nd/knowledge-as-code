@@ -2,7 +2,7 @@
 id: adrs
 tier: decided
 status: draft
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # ADRs

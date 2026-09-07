@@ -8,7 +8,7 @@ platform: dotnet-web
 criticality: critical
 depends-on: [svc-notifications]
 data-stores: [dat-borrower-records, dat-reader-contact-list]
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Catalogue

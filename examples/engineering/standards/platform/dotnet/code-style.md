@@ -7,7 +7,7 @@ implements: [ pol-AUTV.WARN, pol-SECD.CODING ]
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ analyzers, code-style, csharp ]
 ---
 

@@ -37,7 +37,8 @@ and how it is reviewed. Below is only what a service adds to that.
   impact is internal only. It drives runbook and NFR priority, so grade it honestly.
 * **`depends-on`**: other service ids, pointing downward only (this service is **configured to reach** that one).
   Messages over a bus are not a dependency.
-* **`owner`**: the named person answerable for the service, never a team alias.
+* **`owner`**: who is answerable for the service, as `human:alex.doe` or `role:head-of-engineering`. Never a team
+  alias.
 * **`facets`**: one exposure, then any traits that apply. These slice the catalogue, so a value earns its place by
   grouping several services (CI will warn on one that does not). [The type page](../services.md) carries the vocabulary
   and the reasoning behind it, derived from this estate, so read it before you invent a facet.

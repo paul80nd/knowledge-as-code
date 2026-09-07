@@ -7,7 +7,7 @@ departs-from:
   - std-ERRORS.a-failure-says-what-happened
 accepted-on: "2020-01-01"
 review-by: "2020-06-01"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # The batch export endpoint returns a bare status code

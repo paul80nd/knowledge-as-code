@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 licence: GPL/2.0 †
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Bad licence pattern

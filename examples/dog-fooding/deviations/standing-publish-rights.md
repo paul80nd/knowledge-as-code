@@ -12,7 +12,7 @@ closed-on:
 applies-to:
   - svc-kac
   - svc-marketplace
-owner: paul.law
+owner: human:paul.law
 tags: [ access, publishing, standing-grant ]
 ---
 

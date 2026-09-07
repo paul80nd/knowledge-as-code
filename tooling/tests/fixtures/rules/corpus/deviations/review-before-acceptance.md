@@ -7,7 +7,7 @@ departs-from:
   - std-ERRORS.a-failure-says-what-happened
 accepted-on: "2030-05-01"
 review-by: "2030-04-01"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # The batch importer returns bare status codes

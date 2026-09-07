@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ cost, efficiency, non-functional-requirements ]
 ---
 

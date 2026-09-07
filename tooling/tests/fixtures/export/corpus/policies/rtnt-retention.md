@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
 review-by: "2030-01-01"
-owner: mira.okonjo
+owner: human:mira.okonjo
 tags: [ retention ]
 ---
 

@@ -8,7 +8,7 @@ licence:
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ claude-code, plugin, validation ]
 ---
 

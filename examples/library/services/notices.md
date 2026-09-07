@@ -8,7 +8,7 @@ platform: azure-function
 criticality: important
 depends-on:
 data-stores:
-owner: mira.okonjo
+owner: human:mira.okonjo
 facets: [ event-driven, internal, scheduled ]
 tags: [ email, renewals ]
 ---

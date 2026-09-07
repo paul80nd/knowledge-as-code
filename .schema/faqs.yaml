@@ -64,8 +64,13 @@ fields:
   confirmed-by:
     required: true
     type: string
+    pattern: '^human:[a-z0-9.-]+$'
+    description: The person who confirmed it, as `human:alex.doe`.
     notes: >
-      A named human. An FAQ nobody confirmed is a discovery. This field is what separates the two tiers.
+      An FAQ nobody confirmed is a discovery, and this field is what separates the two tiers. The
+      pattern refuses an agent, a session id and a team alias, because none of them can be asked what
+      they checked. It refuses `role:` as well: a post cannot read an answer, and the person who did
+      read it stays named after the post changes hands.
 
   confirmed-on:
     required: true
@@ -93,6 +98,3 @@ rules:
     message: >
       This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a
       symptom matches on the first one and never reads the second. Split it.
-  - id: human-confirmed
-    description: >
-      `confirmed-by` must be present and must not be an agent, a session id or a team alias.

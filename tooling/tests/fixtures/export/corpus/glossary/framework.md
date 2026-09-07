@@ -3,7 +3,7 @@ id: gls-framework
 type: glossary
 tier: descriptive
 status: draft
-owner: alex.doe
+owner: human:alex.doe
 narrows:
 review-by: "2030-01-01"
 ---

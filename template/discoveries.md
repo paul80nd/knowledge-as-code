@@ -44,7 +44,7 @@ Boundaries:
 | `type` *†      | string                                  | The type's singular name. Fixed for the type. CI checks it matches the folder.                                                    |
 | `tier` *†      | `observed`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                               |
 | `status` *†    | `open` `promoted` `expired` `rejected`  | Open until promoted, expired or rejected.                                                                                         |
-| `owner` *†     | string                                  | A named person, never a team alias.                                                                                               |
+| `owner` *†     | string                                  | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                            |
 | `tags` †       | list                                    | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                  |
 | `source` *     | `human` `session` `dreamed`             | Who or what observed it. `dreamed` means proposed by an agent.                                                                    |
 | `confidence` * | `unverified` `corroborated` `confirmed` | Starts at `unverified`, and stays there unless genuinely proven.                                                                  |

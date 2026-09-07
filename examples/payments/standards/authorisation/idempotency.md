@@ -8,7 +8,7 @@ applies-to:
   - svc-payment-api
   - svc-payment-ledger
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ authorisation, idempotency, retries ]
 ---
 

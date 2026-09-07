@@ -8,7 +8,7 @@ licence: MIT
 decided-in:
 replaces: tol-system-commandline
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ cli, console, terminal ]
 ---
 

@@ -8,7 +8,7 @@ licence: GPL-3.0-or-later
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ linting, yaml ]
 ---
 

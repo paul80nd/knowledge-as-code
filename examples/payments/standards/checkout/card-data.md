@@ -7,7 +7,7 @@ implements: [ eng:pol-DATA.MINIMAL, eng:pol-MEXP.PEERID, eng:pol-TRUS.CLOUD ]
 applies-to:
   - svc-payment-api
 review-by: "2027-08-28"
-owner: paul.law
+owner: human:paul.law
 tags: [ cards, pci-dss, tokenisation ]
 ---
 

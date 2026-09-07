@@ -28,7 +28,8 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`confirmed-by`**: a named person.
+* **`confirmed-by`**: the person who confirmed it, as `human:alex.doe`. A `role:` is refused, because a post
+  cannot read an answer.
 * **`confirmed-on`**: a real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
 

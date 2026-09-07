@@ -11,7 +11,7 @@ closed-on:
 applies-to:
   - svc-docs-site
   - svc-kac
-owner: paul.law
+owner: human:paul.law
 tags: [ accessibility, documentation, screen-reader ]
 ---
 

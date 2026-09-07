@@ -3,7 +3,7 @@ id: tol-deprecated-no-successor
 type: tool
 tier: descriptive
 status: deprecated
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Deprecated with nothing named to replace it

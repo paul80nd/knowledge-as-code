@@ -7,7 +7,7 @@ aligns-with:
   - framework: UK GDPR
     clauses: [ Art.5(1)(d) ]
 review-by: "2027-08-09"
-owner: paul.law
+owner: human:paul.law
 tags: [ data-quality, integrity, provenance ]
 ---
 

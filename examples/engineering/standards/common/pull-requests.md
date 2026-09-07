@@ -8,7 +8,7 @@ implements: [ pol-AGNT.ACCEPT, pol-AGNT.DUTIES, pol-AGNT.EQUAL, pol-AGNT.PROV, p
 applies-to:
   - all
 review-by: "2027-08-26"
-owner: paul.law
+owner: human:paul.law
 tags: [ agents, code-review, pull-requests ]
 ---
 

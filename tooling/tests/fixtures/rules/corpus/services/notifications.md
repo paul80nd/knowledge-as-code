@@ -8,7 +8,7 @@ platform: azure-function
 criticality: important
 depends-on: [svc-catalogue]
 data-stores:
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Notifications

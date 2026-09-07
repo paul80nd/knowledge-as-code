@@ -9,7 +9,7 @@ frequency: per-pr
 evidence: The `tool` job's log on the pull request, under its three test steps.
 applies-to:
   - all
-owner: paul.law
+owner: human:paul.law
 tags: [ golden-tests, testing ]
 ---
 

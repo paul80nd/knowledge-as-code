@@ -7,7 +7,7 @@ implements: [ pol-ACCS.LEAST, pol-ENVS.BASELIN, pol-MEXP.PUBLIC, pol-TRUS.MUTATE
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ base-images, containers, runtime ]
 ---
 

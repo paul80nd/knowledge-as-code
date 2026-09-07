@@ -34,7 +34,8 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 * **`review-by`**: the day somebody has to look at this again. Every deviation carries one.
 * **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is
   `closed`.
-* **`owner`**: the person accepting the risk, with the authority to accept it. Never a team.
+* **`owner`**: who accepts the risk, and has the authority to accept it. Write `human:alex.doe`, or
+  `role:head-of-engineering` where the authority belongs to the post. Never a team.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

@@ -8,7 +8,7 @@ implements: [ pol-ENVS.PROMOTE, pol-ENVS.SAMEDEF, pol-PIPE.ASCODE, pol-PIPE.CONF
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ artefacts, deployment, release ]
 ---
 

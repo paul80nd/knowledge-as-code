@@ -3,7 +3,7 @@ id: giz-adrift
 type: gizmo
 tier: descriptive
 status: live
-owner: alex.doe
+owner: human:alex.doe
 depends-on:
 ---
 

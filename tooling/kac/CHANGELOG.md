@@ -19,6 +19,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A field naming a person carries an actor prefix.** `owner` takes `human:alex.doe` for a person, or
+  `role:head-of-engineering` for a post. Exactly one person holds a post, so a role keeps answerability with one human
+  and survives a handover that leaves every record naming the previous holder wrong. `confirmed-by` on an FAQ and
+  `deciders` on an ADR take `human:` alone: each records who performed an act, and a post cannot perform one. A
+  bare name, an agent, a session id and a team alias all fail `field-pattern`, so the tier boundary between a
+  discovery and an FAQ is checked rather than described. The three prefixes are [OKF v0.2]'s, whose trust tiers key
+  off `human:` the same way. A corpus created before this rewrites the field in each record it holds, and
+  `kac validate` names the ones still bare.
+
 - **Every record carries its own `type`.** The universal schema requires the field, directly after `id`. Its value is
   the singular type name the record's folder declares: `standard` in `standards/`, `adr` in `adrs/`. A record read away
   from its folder therefore says what it is. `type-matches-folder` errors where the field and the folder disagree.
@@ -789,3 +798,5 @@ The first published version.
 - `kac export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning.
 - `kac bundle` assembles that export and `.plugin/` into an installable plugin.
 - `kac mechanism` compares the shared layers against a reference corpus, or takes them from one.
+
+[OKF v0.2]: https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md

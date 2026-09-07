@@ -9,7 +9,7 @@ criticality: important
 depends-on:
   - svc-lending
 data-stores:
-owner: mira.okonjo
+owner: human:mira.okonjo
 facets: [ public ]
 tags: [ holds, payments ]
 ---

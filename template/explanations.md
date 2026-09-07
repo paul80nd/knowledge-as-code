@@ -46,7 +46,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `type` *†     | string                   | The type's singular name. Fixed for the type. CI checks it matches the folder.               |
 | `tier` *†     | `descriptive`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.          |
 | `status` *†   | `draft` `active` `stale` | `stale` is an honest state: say so rather than let the page quietly rot.                     |
-| `owner` *†    | string                   | A named person, never a team alias.                                                          |
+| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                       |
 | `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                             |
 | `explains` *  | list                     | Service or capability ids this explains.                                                     |
 | `review-by` * | date                     | The field that stops this type rotting. Explanations need the tightest staleness discipline. |

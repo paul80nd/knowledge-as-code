@@ -3,7 +3,7 @@ id: gad-grouped-too
 type: gadget
 tier: descriptive
 status: live
-owner: alex.doe
+owner: human:alex.doe
 facets: [ inbound ]
 ---
 

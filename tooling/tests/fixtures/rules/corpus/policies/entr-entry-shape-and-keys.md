@@ -7,7 +7,7 @@ aligns-with:
   - ISO 27001:2022
   - frameworks: ISO 27001:2022
 review-by: "2026-12-31"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # An object list written the wrong way

@@ -26,7 +26,8 @@ and how it is reviewed. What is below is only what an ADR adds to that.
 * **`status`**: `proposed` while under review, then `accepted`, and later `deprecated` or `superseded`. Values are
   lowercase.
 * **`decided-on`**: the acceptance date, quoted `"YYYY-MM-DD"`. Leave the key bare until accepted.
-* **`owner`**: the named person answerable for the decision, never a team alias.
+* **`owner`**: who is answerable for the decision, as `human:alex.doe` or `role:head-of-engineering`. Never a team
+  alias.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

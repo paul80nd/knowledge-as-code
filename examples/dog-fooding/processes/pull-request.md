@@ -8,7 +8,7 @@ last-rehearsed: "2026-09-07"
 rehearsal-frequency:
 requires-access:
   - Push to paul80nd/knowledge-as-code, and the `gh` CLI signed in to it
-owner: paul.law
+owner: human:paul.law
 tags: [ contributing, review ]
 ---
 

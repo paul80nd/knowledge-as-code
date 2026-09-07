@@ -7,7 +7,7 @@ implements: [ pol-AUTV.COVER, pol-AUTV.LEVELS ]
 applies-to:
   - all
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ csharp, testcontainers, xunit ]
 ---
 

@@ -4,7 +4,7 @@ type: policy
 tier: normative
 status: draft
 review-by: "2027-08-05"
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # An over-long slug behind a mnemonic

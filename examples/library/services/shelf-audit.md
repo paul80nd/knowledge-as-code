@@ -8,7 +8,7 @@ platform: mixed
 criticality: supporting
 depends-on:
 data-stores:
-owner: dev.raman
+owner: human:dev.raman
 facets: [ internal, scheduled ]
 tags: [ monitoring ]
 ---

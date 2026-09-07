@@ -3,7 +3,7 @@ id: adr-0001
 type: adr
 tier: decided
 status: Draft
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Bad enum value

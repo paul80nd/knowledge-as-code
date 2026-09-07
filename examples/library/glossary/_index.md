@@ -2,8 +2,8 @@
 
 # Glossary Index (GLS)
 
-| ID                    | Title                                     | Narrows               | Status | Owner       | Review by  |
-|-----------------------|-------------------------------------------|-----------------------|--------|-------------|------------|
-| gls-example-libraries | [Example Libraries](example-libraries.md) |                       | draft  | robin.hale  | 2027-08-12 |
-| gls-knowledge-as-code | [Knowledge as code](knowledge-as-code.md) |                       | draft  | paul.law    | 2027-08-12 |
-| gls-search            | [Search](search.md)                       | gls-example-libraries | draft  | mira.okonjo | 2027-08-12 |
+| ID                    | Title                                     | Narrows               | Status | Owner             | Review by  |
+|-----------------------|-------------------------------------------|-----------------------|--------|-------------------|------------|
+| gls-example-libraries | [Example Libraries](example-libraries.md) |                       | draft  | human:robin.hale  | 2027-08-12 |
+| gls-knowledge-as-code | [Knowledge as code](knowledge-as-code.md) |                       | draft  | human:paul.law    | 2027-08-12 |
+| gls-search            | [Search](search.md)                       | gls-example-libraries | draft  | human:mira.okonjo | 2027-08-12 |

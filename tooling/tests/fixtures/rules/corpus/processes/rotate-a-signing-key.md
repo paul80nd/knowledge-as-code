@@ -3,7 +3,7 @@ id: prc-rotate-a-signing-key
 type: process
 tier: procedural
 status: active
-owner: alex.doe
+owner: human:alex.doe
 last-rehearsed: "2026-04-02"
 ---
 

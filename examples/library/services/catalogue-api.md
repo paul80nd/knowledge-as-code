@@ -9,7 +9,7 @@ criticality: critical
 depends-on:
   - svc-lending
 data-stores:
-owner: robin.hale
+owner: human:robin.hale
 facets: [ internal ]
 tags: [ holdings ]
 ---

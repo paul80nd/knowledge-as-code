@@ -3,7 +3,7 @@ id: adr-0004
 type: adr
 tier: decided
 status: superseded
-owner: alex.doe
+owner: human:alex.doe
 superseded-by: adr-0099
 ---
 

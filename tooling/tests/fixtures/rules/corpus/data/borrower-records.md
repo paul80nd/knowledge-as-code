@@ -3,7 +3,7 @@ id: dat-borrower-records
 type: data
 tier: descriptive
 status: active
-owner: alex.doe
+owner: human:alex.doe
 owned-by: svc-catalogue
 classification: personal
 ---

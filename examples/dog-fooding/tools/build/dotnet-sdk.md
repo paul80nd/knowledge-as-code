@@ -8,7 +8,7 @@ licence: MIT
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ dotnet, sdk ]
 ---
 

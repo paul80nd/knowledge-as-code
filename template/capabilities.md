@@ -48,7 +48,7 @@ Related but different:
 | `type` *†          | string                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.                      |
 | `tier` *†          | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                 |
 | `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                                         |
-| `owner` *†         | string                                   | A named person, never a team alias.                                                                 |
+| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                              |
 | `tags` †           | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                    |
 | `implemented-by` * | list                                     | Service ids. A capability no service implements is a plan.                                          |
 | `ado-epics`        | list                                     | ADO work item ids. CI cannot resolve them, so they are here for humans and for the reverse harvest. |

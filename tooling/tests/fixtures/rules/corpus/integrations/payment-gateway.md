@@ -3,7 +3,7 @@ id: int-payment-gateway
 type: integration
 tier: descriptive
 status: active
-owner: alex.doe
+owner: human:alex.doe
 vendor: Example Payments
 used-by: [svc-catalogue]
 criticality: important

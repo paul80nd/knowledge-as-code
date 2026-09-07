@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 7,
+    "validated": 9,
     "templates": 3,
     "skipped": 0,
-    "errors": 9,
+    "errors": 11,
     "warnings": 0,
     "infos": 0
   },
@@ -56,6 +56,20 @@
       "severity": "error",
       "check": "date-format",
       "message": "'decided-on' is not a date on the calendar, got '2026-13-40'."
+    },
+    {
+      "file": "adrs/0006-owner-without-a-prefix.md",
+      "line": 6,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'owner' value 'alex.doe' does not match ^(human|role):[a-z0-9.-]+$."
+    },
+    {
+      "file": "faqs/role-cannot-confirm.md",
+      "line": 6,
+      "severity": "error",
+      "check": "field-pattern",
+      "message": "'confirmed-by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$."
     },
     {
       "file": "faqs/too-few-keywords.md",

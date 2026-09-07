@@ -8,7 +8,7 @@ licence: Apache-2.0
 decided-in:
 replaces:
 successor:
-owner: paul.law
+owner: human:paul.law
 tags: [ testing, unit-tests ]
 ---
 

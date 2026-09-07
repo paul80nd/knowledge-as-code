@@ -8,7 +8,7 @@ platform: static
 criticality: important
 depends-on:
 data-stores:
-owner: paul.law
+owner: human:paul.law
 facets: [ public ]
 tags: [ claude-code, plugin ]
 ---

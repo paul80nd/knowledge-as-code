@@ -70,7 +70,11 @@ fields:
     required: false
     type: list
     of: string
-    notes: The people who agreed it.
+    pattern: '^human:[a-z0-9.-]+$'
+    description: The people who agreed it, each as `human:alex.doe`.
+    notes: >
+      A post cannot agree a decision, so `role:` is refused here. The people in the room agreed it, and
+      they stay named after any of them moves on.
 
   related:
     required: false

@@ -9,7 +9,7 @@ aligns-with:
   - framework: UK GDPR
     clauses: [ Art.33, Art.33(5), Art.34 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ incident-response, learning, postmortem ]
 ---
 

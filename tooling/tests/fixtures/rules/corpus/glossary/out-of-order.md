@@ -3,7 +3,7 @@ id: gls-out-of-order
 type: glossary
 tier: descriptive
 status: draft
-owner: alex.doe
+owner: human:alex.doe
 review-by: "2027-08-07"
 ---
 

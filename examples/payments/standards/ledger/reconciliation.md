@@ -7,7 +7,7 @@ implements: [ eng:pol-DERV.CHECK, eng:pol-DERV.FAILED, eng:pol-DERV.RUNLOG, eng:
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"
-owner: paul.law
+owner: human:paul.law
 tags: [ ledger, reconciliation, settlement ]
 ---
 

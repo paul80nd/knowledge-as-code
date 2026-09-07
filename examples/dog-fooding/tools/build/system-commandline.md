@@ -8,7 +8,7 @@ licence: MIT
 decided-in:
 replaces:
 successor: tol-spectre-console
-owner: paul.law
+owner: human:paul.law
 tags: [ cli, parser ]
 ---
 

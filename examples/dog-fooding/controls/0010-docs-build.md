@@ -9,7 +9,7 @@ frequency: per-pr
 evidence: The `docs` job's log on the pull request, under the step "Build the site".
 applies-to:
   - all
-owner: paul.law
+owner: human:paul.law
 tags: [ documentation, mkdocs ]
 ---
 

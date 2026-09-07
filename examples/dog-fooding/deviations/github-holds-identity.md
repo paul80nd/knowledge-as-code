@@ -13,7 +13,7 @@ applies-to:
   - svc-docs-site
   - svc-kac
   - svc-marketplace
-owner: paul.law
+owner: human:paul.law
 tags: [ access, github, identity ]
 ---
 

@@ -8,7 +8,7 @@ implements: [ pol-AUTV.BLOCK, pol-AUTV.BYPASS, pol-AUTV.DISABLE, pol-AUTV.INTEG,
 applies-to:
   - all
 review-by: "2027-08-26"
-owner: paul.law
+owner: human:paul.law
 tags: [ continuous-integration, quality-gates, testing ]
 ---
 

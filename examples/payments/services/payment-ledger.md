@@ -8,7 +8,7 @@ platform: dotnet-api
 criticality: critical
 depends-on:
 data-stores:
-owner: paul.law
+owner: human:paul.law
 tags: [ audit, ledger, reconciliation ]
 ---
 

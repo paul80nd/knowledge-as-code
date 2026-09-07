@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.8.13 ]
 review-by: "2030-06-01"
-owner: mira.okonjo
+owner: human:mira.okonjo
 tags: [ recovery ]
 ---
 

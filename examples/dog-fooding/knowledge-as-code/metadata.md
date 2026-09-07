@@ -22,7 +22,7 @@ Carried by every document in the taxonomy.
 | `type` *   | string                                                      | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` * | enum                                                        | Values vary by type.                                                                |
-| `owner` *  | string                                                      | A named person, never a team alias.                                                 |
+| `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 
 \* Field is required
@@ -53,10 +53,10 @@ id: adr-0017
 tier: decided
 status: accepted
 decided-on: "2026-07-14"
-owner: alex.doe
+owner: human:alex.doe
 deciders:
-  - alex.doe
-  - sam.patel
+  - human:alex.doe
+  - human:sam.patel
 related:
   - adr-0007
   - adr-0008

@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.8.3, A.8.9, A.8.31, A.8.33 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ environments, production-data, separation ]
 ---
 

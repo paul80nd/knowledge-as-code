@@ -3,7 +3,7 @@ id: tol-Site_Server
 type: tool
 tier: descriptive
 status: approved
-owner: alex.doe
+owner: human:alex.doe
 ---
 
 # Slug id in the wrong alphabet

@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.3, A.5.15, A.5.16, A.5.18, A.8.2, A.8.3, A.8.5, A.8.18 ]
 review-by: "2027-08-04"
-owner: paul.law
+owner: human:paul.law
 tags: [ access-control, identity, least-privilege ]
 ---
 

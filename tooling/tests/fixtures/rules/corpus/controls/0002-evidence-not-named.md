@@ -3,7 +3,7 @@ id: ctl-0002
 type: control
 tier: normative
 status: active
-owner: alex.doe
+owner: human:alex.doe
 verifies: [std-ERRORS]
 mechanism: review-checklist
 frequency: per-pr
