@@ -78,12 +78,6 @@ Say in one sentence what you are about to do before your first tool call. While 
 you changed direction, and nothing else. Finish by leading with the outcome (what happened, or what you found) and put
 the supporting detail after it.
 
-Keep answers brief: a high-level summary unless depth is asked for, short caveats, and a written document no longer than
-its substance needs.
-
-Deliver what was asked at the scope asked, making routine judgement calls yourself. Ask only where two readings would
-produce materially different work. Where the request looks mistaken, say so in a sentence and carry on with it as asked.
-
 ## Ask this repository's own corpus
 
 `example-dogfooding` is what this repository knows about itself, installed here as a plugin. The rules you build to are
@@ -124,9 +118,29 @@ session meets the same way and by using it.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
-changed. To read the working tree instead, run `kac export` and `kac bundle` in that corpus and add its `.dist/` as a
-marketplace of your own. That one stays yours: a directory source resolves against the marketplace rather than the
-project, so an absolute path is the only thing that works and none belongs in a checked-in file.
+changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)
+carries the loop that installs the working tree instead, and says what to rebuild after a record changes and after a
+skill does.
+
+## Where a page or a skill let you down
+
+The plugin is a read-only copy, so an issue is the only way an agent writes back to it. The guidance is not. The four
+`CLAUDE.md` files, the playbooks under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the four writing
+skills all sit in the working tree, one edit from whoever is reading your reply.
+
+Tell the developer, in the reply that closes the session, whichever of these happened:
+
+* an instruction that sent you the wrong way, or that you had to read twice before you could act on it
+* a question one of those pages should have answered and did not
+* an instruction you would have followed anyway, because Claude Code already asks for it
+* a playbook whose steps did not fit the work, or work no playbook covered
+* a rule in a writing skill that misfired on the surface you were writing
+
+**Say nothing where none of that happened.** Most sessions have no finding. One invented to fill the space costs the
+developer a read and a check, and leaves them nothing.
+
+**Raise no issue either.** The file is in front of you both, so the developer decides on the spot whether the edit is
+worth making, and says so where it is.
 
 ## Before you raise a pull request
 

@@ -15,8 +15,11 @@ Run at the end of every other playbook. A push to `main` is rejected, so this is
    change stands on its own, and holding where it is one part of a group that is no use apart. Where the tool did not
    change there is nothing to ask. Releasing renames `## Unreleased` to `## <version> - <date>` and moves `<Version>`
    in the same commit.
-4. **Check the trees still match.** Run `kac update --check --from ../../` inside each corpus under `examples/`, which
-   holds the overlay files equal in both directions. A `seed` file is yours to copy across, and nothing catches it.
+4. **Check the trees still match.** Run `kac update --check --from ../../` inside each corpus under `examples/` that you
+   changed. Where you changed an overlay file in `template/`, or a rule in `manifest.yaml`, run it inside every one of
+   them: a single edit there leaves all of them out of step. The check answers in both directions, so it reports a copy
+   that differs and a file the corpus holds that the template sends nothing to. A `seed` file is yours to copy across,
+   and nothing catches it.
 5. **Run the layers your change touches**, one `kac` invocation at a time. Where you are unsure, run all four.
 6. **Write the commit message to `technical-writing`.** The subject says what changed, imperative and without a full
    stop. The body says why, and it is the one place describing what used to be true is correct.
