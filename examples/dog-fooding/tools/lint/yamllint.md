@@ -1,5 +1,6 @@
 ---
 id: tol-yamllint
+type: tool
 tier: descriptive
 status: approved
 versions: 1.38.x

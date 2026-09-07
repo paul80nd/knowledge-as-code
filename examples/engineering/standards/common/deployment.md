@@ -1,5 +1,6 @@
 ---
 id: std-DEPLOY
+type: standard
 tier: normative
 status: draft
 implements: [ pol-ENVS.PROMOTE, pol-ENVS.SAMEDEF, pol-PIPE.ASCODE, pol-PIPE.CONFIG, pol-PIPE.DEPLOY, pol-PIPE.LOCAL,

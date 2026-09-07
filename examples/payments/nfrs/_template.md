@@ -1,5 +1,6 @@
 ---
 id: nfr-{{nnnn}}
+type: nfr
 tier: normative
 status: draft
 applies-to:

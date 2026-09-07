@@ -1,5 +1,6 @@
 ---
 id: std-CARD
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DATA.MINIMAL, eng:pol-MEXP.PEERID, eng:pol-TRUS.CLOUD ]

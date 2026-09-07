@@ -1,5 +1,6 @@
 ---
 id: std-OBS
+type: standard
 tier: normative
 status: draft
 implements: [ pol-OBSV.ALERTS, pol-OBSV.BLIND, pol-OBSV.CENTRAL, pol-OBSV.CLOCKS, pol-OBSV.CORREL, pol-OBSV.HEALTH,

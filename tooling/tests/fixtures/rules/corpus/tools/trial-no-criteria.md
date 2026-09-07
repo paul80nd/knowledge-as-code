@@ -1,5 +1,6 @@
 ---
 id: tol-trial-no-criteria
+type: tool
 tier: descriptive
 status: trial
 owner: alex.doe

@@ -1,5 +1,6 @@
 ---
 id: pol-ROLL
+type: policy
 tier: normative
 status: active
 aligns-with:

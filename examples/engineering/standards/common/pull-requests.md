@@ -1,5 +1,6 @@
 ---
 id: std-PR
+type: standard
 tier: normative
 status: draft
 implements: [ pol-AGNT.ACCEPT, pol-AGNT.DUTIES, pol-AGNT.EQUAL, pol-AGNT.PROV, pol-AGNT.SELFVER, pol-EVER.BRANCH,

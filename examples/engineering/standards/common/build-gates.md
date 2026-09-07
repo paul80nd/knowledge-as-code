@@ -1,5 +1,6 @@
 ---
 id: std-GATES
+type: standard
 tier: normative
 status: draft
 implements: [ pol-AUTV.BLOCK, pol-AUTV.BYPASS, pol-AUTV.DISABLE, pol-AUTV.INTEG, pol-AUTV.MACHINE, pol-AUTV.REGRESS,

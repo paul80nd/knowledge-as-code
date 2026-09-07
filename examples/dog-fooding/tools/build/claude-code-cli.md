@@ -1,5 +1,6 @@
 ---
 id: tol-claude-code-cli
+type: tool
 tier: descriptive
 status: approved
 versions:

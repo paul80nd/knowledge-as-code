@@ -1,5 +1,6 @@
 ---
 id: std-TEST
+type: standard
 tier: normative
 status: draft
 implements: [ pol-AUTV.COVER, pol-AUTV.LEVELS, pol-ENVS.DEBUG, pol-ENVS.MASK, pol-ENVS.UNMASK ]

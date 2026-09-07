@@ -1,5 +1,6 @@
 ---
 id: nfr-0002
+type: nfr
 tier: normative
 status: agreed
 applies-to:

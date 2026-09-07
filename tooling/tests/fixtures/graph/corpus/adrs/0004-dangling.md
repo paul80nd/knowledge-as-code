@@ -1,5 +1,6 @@
 ---
 id: adr-0004
+type: adr
 tier: decided
 status: superseded
 owner: alex.doe

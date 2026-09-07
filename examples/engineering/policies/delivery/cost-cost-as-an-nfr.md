@@ -1,5 +1,6 @@
 ---
 id: pol-COST
+type: policy
 tier: normative
 status: draft
 aligns-with:

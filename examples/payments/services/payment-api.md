@@ -1,5 +1,6 @@
 ---
 id: svc-payment-api
+type: service
 tier: descriptive
 status: live
 repo: payment-api

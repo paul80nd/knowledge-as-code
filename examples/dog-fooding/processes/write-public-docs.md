@@ -1,5 +1,6 @@
 ---
 id: prc-write-public-docs
+type: process
 tier: procedural
 status: active
 applies-to: [ svc-docs-site, svc-kac ]

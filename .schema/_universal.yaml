@@ -2,9 +2,8 @@
 # Type files may override `values` (status differs per type) and add their own fields.
 
 notes: >
-  What is deliberately not a field here. `type` is inferred from the folder and `title` is the H1. `created`
-  and `updated` are what git knows. `lifecycle` follows from `tier`, and a second field could disagree with
-  the first.
+  What is deliberately not a field here. `title` is the H1. `created` and `updated` are what git knows.
+  `lifecycle` follows from `tier`, and a second field could disagree with the first.
 
 fields:
 
@@ -15,6 +14,14 @@ fields:
     notes: >
       The anchor every cross-reference resolves against, so a filename may be corrected and an id may not.
       Format and width are set by the type's `id` block.
+
+  type:
+    required: true
+    type: string
+    description: The type's singular name. Fixed for the type. CI checks it matches the folder.
+    notes: >
+      Derivable from the folder, and stated in frontmatter anyway: a record read away from its folder
+      still says what kind of thing it is.
 
   tier:
     required: true

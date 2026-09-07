@@ -1,5 +1,6 @@
 ---
 id: "adr-0003
+type: adr
 status: accepted
 ---
 

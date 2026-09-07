@@ -1,5 +1,6 @@
 ---
 id: pol-OBSV
+type: policy
 tier: normative
 status: draft
 aligns-with:

@@ -1,5 +1,6 @@
 ---
 id: tol-xunit
+type: tool
 tier: descriptive
 status: approved
 versions: 3.1.x

@@ -1,5 +1,6 @@
 ---
 id: prc-{{slug}}
+type: process
 tier: procedural
 status: draft
 applies-to:

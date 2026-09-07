@@ -1,5 +1,6 @@
 ---
 id: prc-add-a-title
+type: process
 tier: procedural
 status: active
 last-rehearsed: "2029-06-01"

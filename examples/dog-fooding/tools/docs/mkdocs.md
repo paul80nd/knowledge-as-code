@@ -1,5 +1,6 @@
 ---
 id: tol-mkdocs
+type: tool
 tier: descriptive
 status: approved
 versions: 1.6.x

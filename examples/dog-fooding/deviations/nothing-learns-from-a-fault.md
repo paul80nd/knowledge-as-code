@@ -1,5 +1,6 @@
 ---
 id: dev-nothing-learns-from-a-fault
+type: deviation
 tier: normative
 status: active
 departs-from:

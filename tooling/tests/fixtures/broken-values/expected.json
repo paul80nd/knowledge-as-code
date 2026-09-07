@@ -10,21 +10,21 @@
   "findings": [
     {
       "file": "adrs/0001-bad-enum-value.md",
-      "line": 3,
+      "line": 4,
       "severity": "error",
       "check": "enum",
       "message": "'status' value 'Draft' is not one of: proposed, accepted, deprecated, superseded."
     },
     {
       "file": "adrs/0001-bad-enum-value.md",
-      "line": 3,
+      "line": 4,
       "severity": "error",
       "check": "enum-lowercase",
       "message": "'status' enum value 'Draft' must be lowercase."
     },
     {
       "file": "adrs/0002-scalar-list.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "list",
       "message": "'tags' must be a YAML sequence."
@@ -38,35 +38,35 @@
     },
     {
       "file": "adrs/0004-bad-tag-pattern.md",
-      "line": 8,
+      "line": 9,
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'Not Lowercase' does not match ^[a-z0-9-]+$."
     },
     {
       "file": "adrs/0004-bad-tag-pattern.md",
-      "line": 9,
+      "line": 10,
       "severity": "error",
       "check": "field-pattern",
       "message": "'tags' entry 'trailing_underscore' does not match ^[a-z0-9-]+$."
     },
     {
       "file": "adrs/0005-impossible-date.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "date-format",
       "message": "'decided-on' is not a date on the calendar, got '2026-13-40'."
     },
     {
       "file": "faqs/too-few-keywords.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "min-items",
       "message": "'symptom-keywords' has 2 entries: the schema asks for at least 3."
     },
     {
       "file": "tools/bad-licence-pattern.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "field-pattern",
       "message": "'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\\-+ ()]+$."

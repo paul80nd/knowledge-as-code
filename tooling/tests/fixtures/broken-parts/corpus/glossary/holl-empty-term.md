@@ -1,5 +1,6 @@
 ---
 id: gls-holl-empty-term
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **Every record carries its own `type`.** The universal schema requires the field, directly after `id`. Its value is
+  the singular type name the record's folder declares: `standard` in `standards/`, `adr` in `adrs/`. A record read away
+  from its folder therefore says what it is. `type-matches-folder` errors where the field and the folder disagree.
+  Every `_template.md` carries the line, so `kac new` writes it. A corpus created before this adds the line to each
+  record it holds, and `kac validate` names the ones that are missing it.
+
 ## 0.22.0 - 2026-09-07
 
 ### Added

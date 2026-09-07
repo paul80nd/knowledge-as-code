@@ -1,5 +1,6 @@
 ---
 id: pol-RTNT
+type: policy
 tier: normative
 status: draft
 aligns-with:

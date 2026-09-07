@@ -45,6 +45,7 @@ Related but different:
 | Field              | Value                                    | Notes                                                                                               |
 |--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------|
 | `id` *†            | string                                   | Stable, unique across the corpus, never reused. Format set by the type.                             |
+| `type` *†          | string                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.                      |
 | `tier` *†          | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                 |
 | `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability, not of the services behind it.                                         |
 | `owner` *†         | string                                   | A named person, never a team alias.                                                                 |
@@ -90,6 +91,7 @@ Related but different:
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |

@@ -1,5 +1,6 @@
 ---
 id: prc-rotate-a-signing-key
+type: process
 tier: procedural
 status: active
 owner: alex.doe

@@ -1,5 +1,6 @@
 ---
 id: ctl-0009
+type: control
 tier: normative
 status: active
 verifies: [ eng:std-GATES, eng:std-TEST ]

@@ -1,5 +1,6 @@
 ---
 id: tol-markdig
+type: tool
 tier: descriptive
 status: approved
 versions: 1.x

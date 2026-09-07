@@ -1,5 +1,6 @@
 ---
 id: exp-why-holds-expire
+type: explanation
 tier: descriptive
 status: active
 owner: alex.doe

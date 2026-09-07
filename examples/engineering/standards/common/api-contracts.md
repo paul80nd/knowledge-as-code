@@ -1,5 +1,6 @@
 ---
 id: std-API
+type: standard
 tier: normative
 status: draft
 implements: [ pol-INTC.BREAK, pol-INTC.EXPOSE, pol-INTC.HOLDS, pol-INTC.NOTICE, pol-INTC.SECURE, pol-INTC.SPEC,

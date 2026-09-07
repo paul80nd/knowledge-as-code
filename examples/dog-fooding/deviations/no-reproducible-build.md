@@ -1,5 +1,6 @@
 ---
 id: dev-no-reproducible-build
+type: deviation
 tier: normative
 status: active
 departs-from:

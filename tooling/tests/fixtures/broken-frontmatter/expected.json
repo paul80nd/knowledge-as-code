@@ -3,7 +3,7 @@
     "validated": 1,
     "templates": 1,
     "skipped": 0,
-    "errors": 7,
+    "errors": 8,
     "warnings": 0,
     "infos": 0
   },
@@ -31,28 +31,35 @@
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 3,
+      "line": 2,
+      "severity": "error",
+      "check": "type-matches-folder",
+      "message": "type 'policy' does not match the 'adrs' folder's type 'adr'."
+    },
+    {
+      "file": "adrs/0002-broken-frontmatter.md",
+      "line": 4,
       "severity": "error",
       "check": "tier-matches-type",
       "message": "tier 'descriptive' does not match the 'adr' type tier 'decided'."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 5,
+      "line": 6,
       "severity": "error",
       "check": "date-quoted",
       "message": "'decided-on' date must be quoted, e.g. \"2026/06/12\"."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 5,
+      "line": 6,
       "severity": "error",
       "check": "date-format",
       "message": "'decided-on' must be a YYYY-MM-DD date, got '2026/06/12'."
     },
     {
       "file": "adrs/0002-broken-frontmatter.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "bare-key",
       "message": "'deciders' is absent but not a bare key. Use 'deciders:' with no value (not null, ~, \"\", or —)."

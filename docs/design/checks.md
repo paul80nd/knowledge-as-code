@@ -76,8 +76,8 @@ parses to no link and no marker for them to find.
 
 ### The key-order rule
 
-Two files declare field order, and both name `status`. `_universal.yaml` orders `id, tier, status, owner, tags`. The
-type file orders the rest, which for an ADR is `status, decided-on, supersedes, superseded-by, deciders, related`.
+Two files declare field order, and both name `status`. `_universal.yaml` orders `id, type, tier, status, owner, tags`.
+The type file orders the rest, which for an ADR is `status, decided-on, supersedes, superseded-by, deciders, related`.
 Neither file states one order for the merged set.
 
 So `kac` holds a document to both chains at once rather than to a single invented order. Every pair the schema does

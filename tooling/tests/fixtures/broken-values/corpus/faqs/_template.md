@@ -1,5 +1,6 @@
 ---
 id: faq-{{nnnn}}
+type: faq
 tier: normative
 status: active
 symptom-keywords:

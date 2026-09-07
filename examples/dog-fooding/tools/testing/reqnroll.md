@@ -1,5 +1,6 @@
 ---
 id: tol-reqnroll
+type: tool
 tier: descriptive
 status: approved
 versions: 3.3.x

@@ -1,5 +1,6 @@
 ---
 id: gls-tref-unknown-term
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

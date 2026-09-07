@@ -1,5 +1,6 @@
 ---
 id: gls-none-terms-section-empty
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

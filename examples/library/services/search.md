@@ -1,5 +1,6 @@
 ---
 id: svc-search
+type: service
 tier: descriptive
 status: live
 repo: search

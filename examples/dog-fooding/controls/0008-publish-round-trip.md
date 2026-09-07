@@ -1,5 +1,6 @@
 ---
 id: ctl-0008
+type: control
 tier: normative
 status: active
 verifies: [ eng:std-GATES, std-PLUGIN ]

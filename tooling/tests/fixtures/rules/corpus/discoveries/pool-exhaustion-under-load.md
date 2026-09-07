@@ -1,5 +1,6 @@
 ---
 id: dsc-pool-exhaustion-under-load
+type: discovery
 tier: observed
 status: open
 owner: alex.doe

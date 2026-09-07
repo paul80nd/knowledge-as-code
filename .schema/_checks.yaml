@@ -183,6 +183,10 @@ checks:
       two authors agree on without discussion. Numbers compare as numbers, so `A.8.7` precedes `A.8.29`.
       Only the first pair out of order is reported.
 
+  type-matches-folder:
+    severity: error
+    description: "`type` equals the singular type name the record's folder declares."
+
   tier-matches-type:
     severity: error
     description: "`tier` equals the tier the type declares."

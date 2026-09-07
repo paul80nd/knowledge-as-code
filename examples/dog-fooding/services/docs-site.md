@@ -1,5 +1,6 @@
 ---
 id: svc-docs-site
+type: service
 tier: descriptive
 status: live
 repo: knowledge-as-code

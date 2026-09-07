@@ -1,5 +1,6 @@
 ---
 id: std-RETAIN
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DATA.DELETE, eng:pol-DATA.LINGER, eng:pol-DATA.RIGHTS, eng:pol-OBSV.RETAIN ]

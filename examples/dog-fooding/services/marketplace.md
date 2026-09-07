@@ -1,5 +1,6 @@
 ---
 id: svc-marketplace
+type: service
 tier: descriptive
 status: live
 repo: knowledge-as-code

@@ -1,5 +1,6 @@
 ---
 id: tol-actionlint
+type: tool
 tier: descriptive
 status: approved
 versions: 1.7.x

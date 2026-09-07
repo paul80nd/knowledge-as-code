@@ -1,5 +1,6 @@
 ---
 id: prc-add-a-record
+type: process
 tier: procedural
 status: active
 last-rehearsed: "never"

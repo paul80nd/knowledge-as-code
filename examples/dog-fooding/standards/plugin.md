@@ -1,5 +1,6 @@
 ---
 id: std-PLUGIN
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.UNPROV, eng:pol-KNOW.COPY ]

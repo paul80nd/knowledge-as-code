@@ -1,5 +1,6 @@
 ---
 id: dev-generated-output-ungoverned
+type: deviation
 tier: normative
 status: active
 departs-from:

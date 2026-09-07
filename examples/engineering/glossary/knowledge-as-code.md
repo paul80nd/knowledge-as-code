@@ -1,5 +1,6 @@
 ---
 id: gls-knowledge-as-code
+type: glossary
 tier: descriptive
 status: draft
 owner: paul.law
@@ -137,8 +138,8 @@ procedural or observed.
 
 ### Type
 
-The kind of knowledge a record holds, taken from the folder it sits in and given its fields and rules by one schema
-file.
+The kind of knowledge a record holds. The folder a record sits in decides it, the record writes it down in its `type`
+field, and one schema file gives every record of that type its fields and rules.
 
 ### Upstream
 

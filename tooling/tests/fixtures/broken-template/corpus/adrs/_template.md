@@ -1,5 +1,6 @@
 ---
 id: adr-{{nnnn}}
+type: adr
 tier: decided
 status: proposed
 decided-on: {{YYYY-MM-DD}}

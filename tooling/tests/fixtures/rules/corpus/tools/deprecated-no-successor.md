@@ -1,5 +1,6 @@
 ---
 id: tol-deprecated-no-successor
+type: tool
 tier: descriptive
 status: deprecated
 owner: alex.doe

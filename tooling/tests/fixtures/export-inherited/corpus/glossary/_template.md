@@ -1,5 +1,6 @@
 ---
 id: gls-{{slug}}
+type: glossary
 tier: descriptive
 status: draft
 owner:

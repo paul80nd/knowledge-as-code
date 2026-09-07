@@ -1,5 +1,6 @@
 ---
 id: pol-EVER
+type: policy
 tier: normative
 status: draft
 aligns-with:

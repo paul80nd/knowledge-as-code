@@ -1,5 +1,6 @@
 ---
 id: prc-pull-request
+type: process
 tier: procedural
 status: active
 applies-to: [ svc-docs-site, svc-kac, svc-marketplace ]

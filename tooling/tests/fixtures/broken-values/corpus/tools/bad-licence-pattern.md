@@ -1,5 +1,6 @@
 ---
 id: tol-bad-licence-pattern
+type: tool
 tier: descriptive
 status: approved
 licence: GPL/2.0 †

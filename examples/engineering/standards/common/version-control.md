@@ -1,5 +1,6 @@
 ---
 id: std-VCS
+type: standard
 tier: normative
 status: draft
 implements: [ pol-EVER.ASSETS, pol-EVER.BRANCH, pol-EVER.HISTORY, pol-EVER.INTENT, pol-EVER.ORPHAN, pol-EVER.PARITY,

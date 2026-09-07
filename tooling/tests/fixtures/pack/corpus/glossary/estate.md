@@ -1,5 +1,6 @@
 ---
 id: gls-estate
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

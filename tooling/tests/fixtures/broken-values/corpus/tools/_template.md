@@ -1,5 +1,6 @@
 ---
 id: tol-{{slug}}
+type: tool
 tier: descriptive
 status: trial
 versions:

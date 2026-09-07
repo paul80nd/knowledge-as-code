@@ -44,6 +44,7 @@ Other boundaries:
 | Field                | Value                                  | Notes                                                                                              |
 |----------------------|----------------------------------------|----------------------------------------------------------------------------------------------------|
 | `id` *†              | string                                 | Stable, unique across the corpus, never reused. Format set by the type.                            |
+| `type` *†            | string                                 | The type's singular name. Fixed for the type. CI checks it matches the folder.                     |
 | `tier` *†            | `normative`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                |
 | `status` *†          | `active` `superseded` `fixed-upstream` | `fixed-upstream` means the cause is gone. The entry stays for whoever searches for it.             |
 | `owner` *†           | string                                 | A named person, never a team alias.                                                                |
@@ -92,6 +93,7 @@ Other boundaries:
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                           |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
 | `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |

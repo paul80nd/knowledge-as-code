@@ -1,5 +1,6 @@
 ---
 id: pol-RECV
+type: policy
 tier: normative
 status: draft
 aligns-with:

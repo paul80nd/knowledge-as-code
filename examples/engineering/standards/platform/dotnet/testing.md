@@ -1,5 +1,6 @@
 ---
 id: std-NETTST
+type: standard
 tier: normative
 status: draft
 implements: [ pol-AUTV.COVER, pol-AUTV.LEVELS ]

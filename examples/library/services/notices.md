@@ -1,5 +1,6 @@
 ---
 id: svc-notices
+type: service
 tier: descriptive
 status: live
 repo: notices

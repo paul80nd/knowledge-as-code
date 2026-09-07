@@ -1,5 +1,6 @@
 ---
 id: faq-0001
+type: faq
 tier: normative
 status: active
 symptom-keywords: [timeout, upload]

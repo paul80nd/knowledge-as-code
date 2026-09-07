@@ -1,5 +1,6 @@
 ---
 id: svc-catalogue-api
+type: service
 tier: descriptive
 status: live
 repo: platform

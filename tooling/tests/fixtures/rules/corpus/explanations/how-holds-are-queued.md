@@ -1,5 +1,6 @@
 ---
 id: exp-how-holds-are-queued
+type: explanation
 tier: descriptive
 status: active
 owner: alex.doe

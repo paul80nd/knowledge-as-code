@@ -1,5 +1,6 @@
 ---
 id: gls-knowledge-as-code
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

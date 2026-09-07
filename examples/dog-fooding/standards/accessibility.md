@@ -1,5 +1,6 @@
 ---
 id: std-A11Y
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-A11Y.CONFORM, eng:pol-A11Y.PUBLISH, eng:pol-A11Y.UPFRONT, eng:pol-A11Y.VENDOR,

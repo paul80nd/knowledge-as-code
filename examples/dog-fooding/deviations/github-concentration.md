@@ -1,5 +1,6 @@
 ---
 id: dev-github-concentration
+type: deviation
 tier: normative
 status: active
 departs-from:

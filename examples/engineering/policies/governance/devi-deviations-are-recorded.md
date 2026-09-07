@@ -1,5 +1,6 @@
 ---
 id: pol-DEVI
+type: policy
 tier: normative
 status: draft
 aligns-with:

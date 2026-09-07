@@ -1,5 +1,6 @@
 ---
 id: xyz-0006
+type: adr
 tier: decided
 status: accepted
 decided-on: "2026-06-12"

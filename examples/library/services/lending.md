@@ -1,5 +1,6 @@
 ---
 id: svc-lending
+type: service
 tier: descriptive
 status: live
 repo: lending

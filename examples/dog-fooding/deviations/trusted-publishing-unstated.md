@@ -1,5 +1,6 @@
 ---
 id: dev-trusted-publishing-unstated
+type: deviation
 tier: normative
 status: active
 departs-from:

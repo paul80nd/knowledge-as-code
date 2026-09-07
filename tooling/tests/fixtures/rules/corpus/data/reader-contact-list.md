@@ -1,5 +1,6 @@
 ---
 id: dat-reader-contact-list
+type: data
 tier: descriptive
 status: active
 owner: alex.doe

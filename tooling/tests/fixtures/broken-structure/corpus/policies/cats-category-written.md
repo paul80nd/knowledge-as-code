@@ -1,5 +1,6 @@
 ---
 id: pol-CATS
+type: policy
 tier: normative
 category: security
 status: draft

@@ -1,5 +1,6 @@
 ---
 id: pol-{{MNEM}}
+type: policy
 tier: normative
 status: draft
 aligns-with:

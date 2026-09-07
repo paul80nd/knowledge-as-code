@@ -1,5 +1,6 @@
 ---
 id: pol-PERF
+type: policy
 tier: normative
 status: draft
 aligns-with:

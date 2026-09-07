@@ -19,6 +19,7 @@ Carried by every document in the taxonomy.
 | Field      | Value                                                       | Notes                                                                               |
 |------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | `id` *     | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `type` *   | string                                                      | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
 | `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` * | enum                                                        | Values vary by type.                                                                |
 | `owner` *  | string                                                      | A named person, never a team alias.                                                 |

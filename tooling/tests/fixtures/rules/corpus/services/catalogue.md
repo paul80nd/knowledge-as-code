@@ -1,5 +1,6 @@
 ---
 id: svc-catalogue
+type: service
 tier: descriptive
 status: live
 repo: catalogue

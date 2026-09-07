@@ -1,5 +1,6 @@
 ---
 id: std-CI
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.BRANCH,

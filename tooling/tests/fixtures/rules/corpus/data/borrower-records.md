@@ -1,5 +1,6 @@
 ---
 id: dat-borrower-records
+type: data
 tier: descriptive
 status: active
 owner: alex.doe
