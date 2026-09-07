@@ -533,10 +533,11 @@
           "pattern": "^\\s*[a-z][a-z0-9-]*\\s*(==|!=)[^=]+$|^\\s*[a-z][a-z0-9-]*\\s+in\\s*\\[.*\\]\\s*$"
         },
         "type": {
-          "description": "What the value is. Defaults to `string`.",
+          "description": "What the value is. Defaults to `string`. A `date` is a day and is written quoted; a `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`.",
           "enum": [
             "string",
             "date",
+            "timestamp",
             "enum",
             "id",
             "list",

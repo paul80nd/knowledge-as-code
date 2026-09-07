@@ -61,21 +61,33 @@ fields:
     reciprocal: promoted-to
     description: The discovery this was promoted from.
 
-  confirmed-by:
+  confirmed:
     required: true
-    type: string
-    pattern: '^human:[a-z0-9.-]+$'
-    description: The person who confirmed it, as `human:alex.doe`.
+    type: list
+    of: object
+    entry:
+      at:
+        required: true
+        type: timestamp
+        description: The moment of the confirmation, in UTC as `2026-09-07T20:18:00Z`.
+      by:
+        required: true
+        type: string
+        pattern: '^human:[a-z0-9.-]+$'
+        description: The person who confirmed it, as `human:alex.doe`.
+    description: Every confirmation this answer has had, oldest first, one line each.
     notes: >
-      An FAQ nobody confirmed is a discovery, and this field is what separates the two tiers. The
-      pattern refuses an agent, a session id and a team alias, because none of them can be asked what
-      they checked. It refuses `role:` as well: a post cannot read an answer, and the person who did
-      read it stays named after the post changes hands.
+      An FAQ nobody confirmed is a discovery, and this field is what separates the two tiers. The list
+      keeps every confirmation the answer has had, so a reader sees when it was last checked, by whom,
+      and who checked it before that. One confirmation is one entry, so the moment and the person are
+      edited together.
 
-  confirmed-on:
-    required: true
-    type: date
-    description: Quoted. When a human last confirmed the answer still holds.
+      `at` leads the entry because the list sorts on its first key. A confirmation history then reads
+      oldest first, and the last line is the one somebody asking about trust reads.
+
+      `by` refuses an agent, a session id and a team alias, because none of them can be asked what they
+      checked. It refuses `role:` as well: a post cannot read an answer, and the person who did read it
+      stays named after the post changes hands.
 
   review-by:
     required: true
@@ -87,7 +99,7 @@ sections:
   optional: [Why it happens, How we found it, Related]
 
 index:
-  columns: [id, title, applies-to, status, confirmed-on]
+  columns: [id, title, applies-to, status, review-by]
   sort: id
 
 rules:

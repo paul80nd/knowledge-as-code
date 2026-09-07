@@ -484,8 +484,8 @@ public static class Exporter
 
     // One declared field as JSON, in the shape its type declared. A field declared as a list is an array
     // however the record wrote it, so `depends-on: svc-a` and `depends-on: [svc-a]` both reach a consumer
-    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`, `enum` and
-    // `id` all come to here.
+    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`,
+    // `timestamp`, `enum` and `id` all come to here.
     //
     // The declaration decides the shape because a consumer holds the declaration and reads one key one
     // way. A shape read off the document would vary record by record. `docs/design/export.md` states it.
@@ -765,9 +765,13 @@ public static class Exporter
 
         var marker = label.Length > 0 ? $"**{label}:**" : null;
         var lead = blocks.FirstOrDefault(b => marker is null || !b.StartsWith(marker, StringComparison.Ordinal));
-        var aside = marker is null
-            ? null
-            : blocks.FirstOrDefault(b => b.StartsWith(marker, StringComparison.Ordinal))?[marker.Length..].Trim();
+
+        // Both halves bind rather than closing on `marker?[marker.Length..]`. Rider reads a
+        // null-conditional index as a dereference of what may be null and reports it as an error, where
+        // the C# compiler is satisfied. Two patterns say the same thing and leave nothing to disagree over.
+        string? aside = null;
+        if (marker is { } m && blocks.FirstOrDefault(b => b.StartsWith(m, StringComparison.Ordinal)) is { } found)
+            aside = found[m.Length..].Trim();
 
         return (Absent(lead), Absent(aside));
     }

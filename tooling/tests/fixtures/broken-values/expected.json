@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 9,
+    "validated": 10,
     "templates": 3,
     "skipped": 0,
-    "errors": 11,
+    "errors": 13,
     "warnings": 0,
     "infos": 0
   },
@@ -65,11 +65,25 @@
       "message": "'owner' value 'alex.doe' does not match ^(human|role):[a-z0-9.-]+$."
     },
     {
+      "file": "faqs/confirmed-at-is-not-a-moment.md",
+      "line": 7,
+      "severity": "error",
+      "check": "timestamp-format",
+      "message": "'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'."
+    },
+    {
+      "file": "faqs/confirmed-at-is-not-a-moment.md",
+      "line": 8,
+      "severity": "error",
+      "check": "timestamp-format",
+      "message": "'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'."
+    },
+    {
       "file": "faqs/role-cannot-confirm.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "field-pattern",
-      "message": "'confirmed-by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$."
+      "message": "'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$."
     },
     {
       "file": "faqs/too-few-keywords.md",

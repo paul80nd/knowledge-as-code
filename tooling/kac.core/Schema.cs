@@ -461,6 +461,15 @@ public sealed class TypeSchema
     // field opts in.
     public bool AnyField(Func<FieldSpec, bool> predicate) => Fields.Values.Any(predicate);
 
+    // The same question of the keys inside an object list's entries, which are declared with the
+    // vocabulary a field is declared with. Asked apart from `AnyField` rather than folded into it,
+    // because only some checks read a key one step in: `ValueChecks` walks an entry and holds each key
+    // to its own declaration, where `reciprocal`, `mirrors-section` and `ref` are read from the top
+    // level alone. Folding the two would let a nested declaration advertise a check that cannot fire on
+    // it.
+    public bool AnyEntryKey(Func<FieldSpec, bool> predicate) =>
+        Fields.Values.Any(f => (f.Entry ?? []).Any(predicate));
+
     // The universal fields, the type's own, and the reserved keys the publishing platform adds.
     // Deduplicated, since a type refining `status` declares it in both chains. Order carries no meaning
     // here: the only question asked of the set is whether a key is in it.

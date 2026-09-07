@@ -6,8 +6,7 @@ status: active
 symptom-keywords:
 applies-to:
 promoted-from:
-confirmed-by:
-confirmed-on:
+confirmed:
 review-by:
 owner:
 tags: [ a, b ]
@@ -28,9 +27,18 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`confirmed-by`**: the person who confirmed it, as `human:alex.doe`. A `role:` is refused, because a post
-  cannot read an answer.
-* **`confirmed-on`**: a real quoted date. An FAQ nobody confirmed is a [discovery](../discoveries.md).
+* **`confirmed`**: one line per confirmation, oldest first. An FAQ nobody confirmed is a
+  [discovery](../discoveries.md).
+
+  ```yaml
+  confirmed:
+    - { at: 2025-03-11T09:00:00Z, by: human:mira.okonjo }
+    - { at: 2026-09-07T20:18:00Z, by: human:alex.doe }
+  ```
+
+  `at` is a moment in UTC, to the second, and written unquoted. `by` is a person, and a `role:` is refused because
+  a post cannot read an answer. Add a line each time somebody checks the answer again, and leave the earlier lines
+  alone.
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is

@@ -60,6 +60,7 @@ public static class ValueChecks
         switch (spec.Type)
         {
             case "date": Date(name, node, frontStart, report); break;
+            case "timestamp": Timestamp(name, node, frontStart, report); break;
             case "enum": Enumerated(name, node, spec, frontStart, report); break;
             case "list": Sequence(name, node, spec, kind, frontStart, report); break;
         }
@@ -125,6 +126,31 @@ public static class ValueChecks
     private static bool IsIsoShape(string v)
         => v.Length == 10 && v[4] == '-' && v[7] == '-'
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
+
+    // A moment, to the second and in UTC: `2026-09-07T20:18:00Z`. Shape then calendar under one id, on
+    // `Date` above's division and for its reason.
+    //
+    // Style is not read. A date is held to being quoted because an unquoted one is reread as a datetime
+    // and shifted into the reader's zone; a `Z` instant names the same moment either way. `_checks.yaml`
+    // carries that argument in full.
+    private static void Timestamp(string name, YamlNode node, int frontStart, Report report)
+    {
+        var v = Yaml.Raw(node) ?? "";
+        if (!IsInstantShape(v))
+            report.Err(new CheckId("timestamp-format"),
+                $"'{name}' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '{v}'.",
+                Yaml.LineOf(node, frontStart));
+        else if (!DateTimeOffset.TryParseExact(v, "yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture,
+                     DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out _))
+            report.Err(new CheckId("timestamp-format"),
+                $"'{name}' is not a moment on the calendar, got '{v}'.", Yaml.LineOf(node, frontStart));
+    }
+
+    // Written as an instant, which is a question about the characters alone. `DateTimeOffset` answers
+    // whether those characters name a moment.
+    private static bool IsInstantShape(string v)
+        => v.Length == 20 && IsIsoShape(v[..10]) && v[10] == 'T' && v[13] == ':' && v[16] == ':' && v[19] == 'Z'
+           && v[11..13].All(char.IsDigit) && v[14..16].All(char.IsDigit) && v[17..19].All(char.IsDigit);
 
     // Named for what it judges rather than for the keyword, which the language has taken.
     private static void Enumerated(string name, YamlNode node, FieldSpec spec, int frontStart, Report report)
