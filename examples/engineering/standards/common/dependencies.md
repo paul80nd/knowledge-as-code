@@ -1,5 +1,6 @@
 ---
 id: std-DEPS
+type: standard
 tier: normative
 status: draft
 implements: [ pol-TRUS.INVENT, pol-TRUS.LICENCE, pol-TRUS.REPO, pol-TRUS.SCREEN, pol-TRUS.SOURCE, pol-TRUS.UNTRUST,

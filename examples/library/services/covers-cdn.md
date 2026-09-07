@@ -1,5 +1,6 @@
 ---
 id: svc-covers-cdn
+type: service
 tier: descriptive
 status: live
 repo: infrastructure

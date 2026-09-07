@@ -34,18 +34,20 @@ heading, and the schema says nothing about either.
 A field costs every record of its type a column, because a wiki renders frontmatter as a table at the top of the page.
 So a field is a decision about the reader as much as about the schema.
 
-**Type comes from the folder. Title is the H1. Creation and modification dates come from git.** None of those belong in
-frontmatter. What does belong is what is semantically the record's own: `decided-on` is a real fact about a decision,
-where the file's last-modified date is git's business.
+**Title is the H1. Creation and modification dates come from git.** Neither belongs in frontmatter. What does belong is
+what is semantically the record's own: `decided-on` is a real fact about a decision, where the file's last-modified date
+is git's business.
 
-`tier` is the deliberate exception. It follows from the type and is stated anyway. A reader meets it at the top of the
-page as a trust signal, and the validator holds the two to agreeing.
+`type` and `tier` are the deliberate exceptions. The folder gives a record its type, the type gives it its tier, and
+both are written down anyway. A record read away from its folder still says what kind of thing it is and how much
+weight to give it, and the validator holds each field to the value the schema derives. `type` is also the only key the
+[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) always requires,
+so every record here satisfies that format's one rule about a document's frontmatter.
 
-Four fields are deliberately absent, and the reasoning is the same each time.
+Three fields are deliberately absent, and the reasoning is the same each time.
 
 | Not a field           | Because                                          |
 |-----------------------|--------------------------------------------------|
-| `type`                | Inferred from the folder                         |
 | `title`               | It is the H1, verbatim                           |
 | `created` / `updated` | Git knows, and will not forget to update it      |
 | `lifecycle`           | Follows from tier. A second field could disagree |
@@ -66,9 +68,9 @@ hand is an error, reported as `derived-key`, because the folder and the line cou
 ## Naming a type
 
 **A type name is singular** and its folder and page are plural: an *ADR* in `adrs/`, a *standard* in `standards/`. The
-folder is a collection, and a record's type is inferred from it, so the mapping is a rule rather than a lookup. Two
-types take the singular. `data/` is a mass noun, and a corpus has one `glossary/` held in several files, one per bounded
-context.
+folder is a collection, and it decides the type of every record in it, so the mapping is a rule rather than a lookup.
+The singular name is what each record writes in its `type` field. Two types take the singular. `data/` is a mass noun,
+and a corpus has one `glossary/` held in several files, one per bounded context.
 
 ## Allocating an id
 

@@ -1,5 +1,6 @@
 ---
 id: tol-spectre-console
+type: tool
 tier: descriptive
 status: approved
 versions: Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x

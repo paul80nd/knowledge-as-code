@@ -1,5 +1,6 @@
 ---
 id: tol-gh
+type: tool
 tier: descriptive
 status: approved
 versions:

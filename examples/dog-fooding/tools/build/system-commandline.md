@@ -1,5 +1,6 @@
 ---
 id: tol-system-commandline
+type: tool
 tier: descriptive
 status: deprecated
 versions:

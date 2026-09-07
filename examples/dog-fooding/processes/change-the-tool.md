@@ -1,5 +1,6 @@
 ---
 id: prc-change-the-tool
+type: process
 tier: procedural
 status: active
 applies-to: [ svc-kac ]

@@ -1,5 +1,6 @@
 ---
 id: pol-PIPE
+type: policy
 tier: normative
 status: draft
 aligns-with:

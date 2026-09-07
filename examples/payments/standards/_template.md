@@ -1,5 +1,6 @@
 ---
 id: std-{{MNEM}}
+type: standard
 tier: normative
 status: draft
 derived-from:

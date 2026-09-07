@@ -1,5 +1,6 @@
 ---
 id: gls-framework
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

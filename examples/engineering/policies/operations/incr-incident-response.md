@@ -1,5 +1,6 @@
 ---
 id: pol-INCR
+type: policy
 tier: normative
 status: draft
 aligns-with:

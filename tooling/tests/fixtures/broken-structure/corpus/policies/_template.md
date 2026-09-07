@@ -1,5 +1,6 @@
 ---
 id: pol-{{MNEM}}
+type: policy
 tier: normative
 category: security
 status: draft

@@ -1,5 +1,6 @@
 ---
 id: int-payment-gateway
+type: integration
 tier: descriptive
 status: active
 owner: alex.doe

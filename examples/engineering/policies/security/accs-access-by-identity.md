@@ -1,5 +1,6 @@
 ---
 id: pol-ACCS
+type: policy
 tier: normative
 status: draft
 aligns-with:

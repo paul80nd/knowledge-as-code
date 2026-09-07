@@ -1,5 +1,6 @@
 ---
 id: pol-CERT
+type: policy
 tier: normative
 status: active
 owner: alex.doe

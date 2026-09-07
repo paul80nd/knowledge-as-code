@@ -1,5 +1,6 @@
 ---
 id: pol-TRUS
+type: policy
 tier: normative
 status: draft
 aligns-with:

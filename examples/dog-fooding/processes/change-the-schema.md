@@ -1,5 +1,6 @@
 ---
 id: prc-change-the-schema
+type: process
 tier: procedural
 status: active
 last-rehearsed: "never"

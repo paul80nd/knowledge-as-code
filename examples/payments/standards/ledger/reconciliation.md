@@ -1,5 +1,6 @@
 ---
 id: std-RECON
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DERV.CHECK, eng:pol-DERV.FAILED, eng:pol-DERV.RUNLOG, eng:pol-OBSV.ALERTS ]

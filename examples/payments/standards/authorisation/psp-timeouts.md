@@ -1,5 +1,6 @@
 ---
 id: std-PSPOUT
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-PERF.TARGETS, eng:pol-RECV.DEGRADE, eng:pol-RECV.RETRY, eng:pol-RECV.TIMEOUT ]

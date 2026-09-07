@@ -1,5 +1,6 @@
 ---
 id: ctl-0003
+type: control
 tier: normative
 status: active
 verifies: [ std-CI ]

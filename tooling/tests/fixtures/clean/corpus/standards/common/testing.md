@@ -1,5 +1,6 @@
 ---
 id: std-TEST
+type: standard
 tier: normative
 status: draft
 implements:

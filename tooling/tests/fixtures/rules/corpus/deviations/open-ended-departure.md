@@ -1,5 +1,6 @@
 ---
 id: dev-open-ended-departure
+type: deviation
 tier: normative
 status: active
 departs-from:

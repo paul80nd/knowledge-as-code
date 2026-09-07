@@ -1,5 +1,6 @@
 ---
 id: gls-engineering
+type: glossary
 tier: descriptive
 status: draft
 owner: paul.law

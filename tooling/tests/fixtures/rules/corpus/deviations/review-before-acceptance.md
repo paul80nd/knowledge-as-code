@@ -1,5 +1,6 @@
 ---
 id: dev-review-before-acceptance
+type: deviation
 tier: normative
 status: active
 departs-from:

@@ -1,5 +1,6 @@
 ---
 id: gls-example-libraries
+type: glossary
 tier: descriptive
 status: draft
 owner: robin.hale

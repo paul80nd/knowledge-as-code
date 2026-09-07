@@ -1,5 +1,6 @@
 ---
 id: dat-{{slug}}
+type: data
 tier: descriptive
 status: active
 owned-by:

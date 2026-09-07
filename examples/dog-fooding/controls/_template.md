@@ -1,5 +1,6 @@
 ---
 id: ctl-{{nnnn}}
+type: control
 tier: normative
 status: planned
 verifies:

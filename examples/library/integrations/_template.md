@@ -1,5 +1,6 @@
 ---
 id: int-{{slug}}
+type: integration
 tier: descriptive
 status: active
 vendor:

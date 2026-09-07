@@ -1,5 +1,6 @@
 ---
 id: ctl-0005
+type: control
 tier: normative
 status: active
 verifies: [ std-CONFIG ]

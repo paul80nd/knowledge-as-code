@@ -1,5 +1,6 @@
 ---
 id: gls-dupe-two-terms-alike
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

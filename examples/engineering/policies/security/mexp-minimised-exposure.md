@@ -1,5 +1,6 @@
 ---
 id: pol-MEXP
+type: policy
 tier: normative
 status: draft
 aligns-with:

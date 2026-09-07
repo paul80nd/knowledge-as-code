@@ -1,5 +1,6 @@
 ---
 id: pol-REFS
+type: policy
 tier: normative
 status: draft
 review-by: "2027-08-05"

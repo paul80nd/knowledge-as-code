@@ -1,5 +1,6 @@
 ---
 id: std-PROSE
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.AGENTS ]

@@ -1,5 +1,6 @@
 ---
 id: pol-NATR
+type: policy
 tier: normative
 status: draft
 aligns-with:

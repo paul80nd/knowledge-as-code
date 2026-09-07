@@ -1,5 +1,6 @@
 ---
 id: pol-BKUP
+type: policy
 tier: normative
 status: active
 aligns-with:

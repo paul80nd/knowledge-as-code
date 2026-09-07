@@ -1,5 +1,6 @@
 ---
 id: dev-decisions-live-in-commits
+type: deviation
 tier: normative
 status: active
 departs-from:

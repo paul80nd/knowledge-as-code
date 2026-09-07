@@ -1,5 +1,6 @@
 ---
 id: dsc-{{slug}}
+type: discovery
 tier: observed
 status: open
 source: human

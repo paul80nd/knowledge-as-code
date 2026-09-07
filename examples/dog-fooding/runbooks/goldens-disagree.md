@@ -1,5 +1,6 @@
 ---
 id: rbk-goldens-disagree
+type: runbook
 tier: procedural
 status: active
 applies-to: [ svc-kac ]

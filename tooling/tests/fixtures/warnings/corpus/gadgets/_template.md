@@ -1,5 +1,6 @@
 ---
 id: gad-{{slug}}
+type: gadget
 tier: descriptive
 status: live
 owner:

@@ -1,5 +1,6 @@
 ---
 id: dev-branch-habits-unstated
+type: deviation
 tier: normative
 status: active
 departs-from:

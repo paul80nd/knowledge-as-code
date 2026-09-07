@@ -1,5 +1,6 @@
 ---
 id: tol-Site_Server
+type: tool
 tier: descriptive
 status: approved
 owner: alex.doe

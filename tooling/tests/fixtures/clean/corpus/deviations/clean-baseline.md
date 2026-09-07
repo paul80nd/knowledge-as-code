@@ -1,5 +1,6 @@
 ---
 id: dev-clean-baseline
+type: deviation
 tier: normative
 status: active
 departs-from:

@@ -1,5 +1,6 @@
 ---
 id: dev-no-screen-reader-pass
+type: deviation
 tier: normative
 status: active
 departs-from:

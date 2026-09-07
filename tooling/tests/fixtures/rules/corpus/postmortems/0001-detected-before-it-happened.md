@@ -1,5 +1,6 @@
 ---
 id: pmt-0001
+type: postmortem
 tier: decided
 status: draft
 occurred-on: "2026-06-12"

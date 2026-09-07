@@ -1,5 +1,6 @@
 ---
 id: adr-0002
+type: adr
 tier: decided
 status: proposed
 decided-on:

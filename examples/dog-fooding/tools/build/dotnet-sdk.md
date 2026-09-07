@@ -1,5 +1,6 @@
 ---
 id: tol-dotnet-sdk
+type: tool
 tier: descriptive
 status: approved
 versions: 10.0.x

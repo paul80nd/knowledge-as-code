@@ -1,5 +1,6 @@
 ---
 id: dev-export-has-no-notice
+type: deviation
 tier: normative
 status: active
 departs-from:

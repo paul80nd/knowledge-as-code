@@ -1,5 +1,6 @@
 ---
 id: std-SECRET
+type: standard
 tier: normative
 status: draft
 implements: [ pol-ENVS.REUSE, pol-SCRT.EMBED, pol-SCRT.LEAKED, pol-SCRT.LOGS, pol-SCRT.ROTATE, pol-SCRT.STORE ]

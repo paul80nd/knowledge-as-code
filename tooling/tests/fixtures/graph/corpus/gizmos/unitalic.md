@@ -1,5 +1,6 @@
 ---
 id: giz-unitalic
+type: gizmo
 tier: descriptive
 status: live
 owner: alex.doe

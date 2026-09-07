@@ -1,5 +1,6 @@
 ---
 id: std-NODE
+type: standard
 tier: normative
 status: draft
 implements:

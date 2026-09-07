@@ -1,5 +1,6 @@
 ---
 id: std-LEDGER
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DERV.EXPECT, eng:pol-DERV.LINEAGE ]

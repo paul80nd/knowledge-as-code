@@ -1,5 +1,6 @@
 ---
 id: gad-grouped
+type: gadget
 tier: descriptive
 status: live
 owner: alex.doe

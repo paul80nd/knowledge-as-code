@@ -1,5 +1,6 @@
 ---
 id: std-VERS
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.DOCS, eng:pol-KNOW.SYNC, eng:pol-PIPE.REVERT, eng:pol-TRUS.MUTATE ]

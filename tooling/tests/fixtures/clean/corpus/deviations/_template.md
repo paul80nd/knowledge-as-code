@@ -1,5 +1,6 @@
 ---
 id: dev-{{slug}}
+type: deviation
 tier: normative
 status: draft
 departs-from:

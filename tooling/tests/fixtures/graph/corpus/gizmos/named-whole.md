@@ -1,5 +1,6 @@
 ---
 id: giz-named-whole
+type: gizmo
 tier: descriptive
 status: live
 owner: alex.doe

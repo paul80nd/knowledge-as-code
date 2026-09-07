@@ -1,5 +1,6 @@
 ---
 id: gls-out-of-order
+type: glossary
 tier: descriptive
 status: draft
 owner: alex.doe

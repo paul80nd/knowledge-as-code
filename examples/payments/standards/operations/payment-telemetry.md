@@ -1,5 +1,6 @@
 ---
 id: std-TELEM
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DATA.LOGS, eng:pol-SCRT.LOGS, eng:pol-SCRT.STORE ]

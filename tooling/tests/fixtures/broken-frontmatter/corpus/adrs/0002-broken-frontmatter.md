@@ -1,5 +1,6 @@
 ---
 id: adr-0002
+type: policy
 status: accepted
 tier: descriptive
 priority: high
@@ -23,7 +24,7 @@ that the only findings kac produces come from the frontmatter above.
 ## Decision
 
 Break exactly one thing per frontmatter rule under test: an unknown key, a key-order violation, a missing required
-field, a mismatched tier, an unquoted and mis-shaped date, and a non-bare absent value.
+field, a mismatched type, a mismatched tier, an unquoted and mis-shaped date, and a non-bare absent value.
 
 ## Alternatives Considered
 

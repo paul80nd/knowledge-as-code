@@ -1,5 +1,6 @@
 ---
 id: tol-names-another-tool
+type: tool
 tier: descriptive
 status: approved
 owner: alex.doe

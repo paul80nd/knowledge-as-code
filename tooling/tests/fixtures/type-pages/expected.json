@@ -31,14 +31,14 @@
     },
     {
       "file": "glossary/knowledge-as-code.md",
-      "line": 18,
+      "line": 19,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '/nope.md' does not resolve."
     },
     {
       "file": "glossary/knowledge-as-code.md",
-      "line": 18,
+      "line": 19,
       "severity": "error",
       "check": "framework-names-types",
       "message": "'/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off."

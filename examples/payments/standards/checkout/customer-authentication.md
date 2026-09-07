@@ -1,5 +1,6 @@
 ---
 id: std-SCA
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-INTC.SECURE, eng:pol-SECD.DESIGN, eng:pol-SECD.REQS ]

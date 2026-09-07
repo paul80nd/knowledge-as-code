@@ -1,5 +1,6 @@
 ---
 id: std-ERRORS
+type: standard
 tier: normative
 status: active
 owner: alex.doe

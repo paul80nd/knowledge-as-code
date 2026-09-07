@@ -1,5 +1,6 @@
 ---
 id: svc-thumbnailer
+type: service
 tier: descriptive
 status: live
 repo: thumbnailer

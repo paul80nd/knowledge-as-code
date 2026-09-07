@@ -1,5 +1,6 @@
 ---
 id: svc-reservations
+type: service
 tier: descriptive
 status: building
 repo: platform

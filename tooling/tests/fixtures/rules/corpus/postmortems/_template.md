@@ -1,5 +1,6 @@
 ---
 id: pmt-{{nnnn}}
+type: postmortem
 tier: decided
 status: draft
 occurred-on:

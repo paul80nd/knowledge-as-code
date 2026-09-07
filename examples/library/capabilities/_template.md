@@ -1,5 +1,6 @@
 ---
 id: cap-{{slug}}
+type: capability
 tier: descriptive
 status: planned
 implemented-by:

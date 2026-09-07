@@ -1,5 +1,6 @@
 ---
 id: exp-{{slug}}
+type: explanation
 tier: descriptive
 status: draft
 owner:

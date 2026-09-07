@@ -1,5 +1,6 @@
 ---
 id: rbk-restore-cannot-find-version
+type: runbook
 tier: procedural
 status: active
 applies-to:

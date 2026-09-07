@@ -1,5 +1,6 @@
 ---
 id: rbk-{{slug}}
+type: runbook
 tier: procedural
 status: draft
 applies-to:

@@ -1,5 +1,6 @@
 ---
 id: std-CSSTY
+type: standard
 tier: normative
 status: draft
 implements: [ pol-AUTV.WARN, pol-SECD.CODING ]

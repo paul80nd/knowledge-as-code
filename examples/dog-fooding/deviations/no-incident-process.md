@@ -1,5 +1,6 @@
 ---
 id: dev-no-incident-process
+type: deviation
 tier: normative
 status: active
 departs-from:

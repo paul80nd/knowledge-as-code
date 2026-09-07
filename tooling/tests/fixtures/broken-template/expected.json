@@ -24,14 +24,14 @@
     },
     {
       "file": "adrs/_template.md",
-      "line": 4,
+      "line": 5,
       "severity": "error",
       "check": "template-fields",
       "message": "'decided-on' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: decided-on: \"{{…}}\"."
     },
     {
       "file": "adrs/_template.md",
-      "line": 21,
+      "line": 22,
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '0404-superseded-and-deleted.md' does not resolve."

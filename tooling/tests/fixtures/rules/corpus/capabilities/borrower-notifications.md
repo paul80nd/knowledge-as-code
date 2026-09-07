@@ -1,5 +1,6 @@
 ---
 id: cap-borrower-notifications
+type: capability
 tier: descriptive
 status: live
 owner: alex.doe

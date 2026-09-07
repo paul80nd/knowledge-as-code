@@ -1,5 +1,6 @@
 ---
 id: prc-sweep-prose
+type: process
 tier: procedural
 status: active
 last-rehearsed: "never"

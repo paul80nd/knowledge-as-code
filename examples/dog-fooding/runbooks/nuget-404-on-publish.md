@@ -1,5 +1,6 @@
 ---
 id: rbk-nuget-404-on-publish
+type: runbook
 tier: procedural
 status: active
 applies-to: [ svc-kac ]

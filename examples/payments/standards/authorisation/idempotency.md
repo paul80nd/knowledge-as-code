@@ -1,5 +1,6 @@
 ---
 id: std-IDEM
+type: standard
 tier: normative
 status: active
 implements: [ eng:pol-INTC.SPEC, eng:pol-RECV.IDEMPOT ]

@@ -1,5 +1,6 @@
 ---
 id: gls-search
+type: glossary
 tier: descriptive
 status: draft
 owner: mira.okonjo

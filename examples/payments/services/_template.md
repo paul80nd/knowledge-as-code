@@ -1,5 +1,6 @@
 ---
 id: svc-{{slug}}
+type: service
 tier: descriptive
 status: live
 repo:

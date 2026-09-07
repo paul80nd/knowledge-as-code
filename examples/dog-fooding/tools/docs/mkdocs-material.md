@@ -1,5 +1,6 @@
 ---
 id: tol-mkdocs-material
+type: tool
 tier: descriptive
 status: approved
 versions: 9.7.x
