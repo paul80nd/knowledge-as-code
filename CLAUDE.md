@@ -90,6 +90,7 @@ records in it rather than lines on this page.
 | a YAML file, a pin, or a file two of the trees hold     | [`std-CONFIG`](examples/dog-fooding/standards/configuration.md)                                                                                                   |
 | any prose, comment, commit message or generated block   | [`std-PROSE`](examples/dog-fooding/standards/prose.md)                                                                                                            |
 | a skill, a hook or a `plugin.json` under `.plugin/`     | [`std-PLUGIN`](examples/dog-fooding/standards/plugin.md)                                                                                                          |
+| a page of the documentation site, or what `kac` prints  | [`std-A11Y`](examples/dog-fooding/standards/accessibility.md)                                                                                                     |
 | C# or a test under `tooling/`                           | [`eng:std-CSSTY`](examples/engineering/standards/platform/dotnet/code-style.md) and [`eng:std-NETTST`](examples/engineering/standards/platform/dotnet/testing.md) |
 
 `eng:std-CSSTY` and `eng:std-NETTST` are authored in `examples/engineering` and arrive through `consumes:`, so a clause

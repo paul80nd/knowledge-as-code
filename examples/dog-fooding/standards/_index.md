@@ -2,10 +2,11 @@
 
 # Standard Index (STD)
 
-| ID         | Title                                                                                 | Status | Derived from | Review by  |
-|------------|---------------------------------------------------------------------------------------|--------|--------------|------------|
-| std-CI     | [Every check and every publish runs from a workflow in this repository](workflows.md) | active |              | 2027-09-02 |
-| std-CONFIG | [Configuration is committed, pinned and explained](configuration.md)                  | active |              | 2027-09-02 |
-| std-PLUGIN | [The plugin carries the corpus, and a skill answers from what travelled](plugin.md)   | active |              | 2027-09-07 |
-| std-PROSE  | [Prose reads the same way whoever wrote it](prose.md)                                 | active |              | 2027-09-02 |
-| std-VERS   | [A version stamp says what it versions, and a move says what changed](versioning.md)  | active |              | 2027-09-07 |
+| ID         | Title                                                                                          | Status | Derived from | Review by  |
+|------------|------------------------------------------------------------------------------------------------|--------|--------------|------------|
+| std-A11Y   | [The documentation site and kac are usable without sight, a mouse or colour](accessibility.md) | active |              | 2027-09-07 |
+| std-CI     | [Every check and every publish runs from a workflow in this repository](workflows.md)          | active |              | 2027-09-02 |
+| std-CONFIG | [Configuration is committed, pinned and explained](configuration.md)                           | active |              | 2027-09-02 |
+| std-PLUGIN | [The plugin carries the corpus, and a skill answers from what travelled](plugin.md)            | active |              | 2027-09-07 |
+| std-PROSE  | [Prose reads the same way whoever wrote it](prose.md)                                          | active |              | 2027-09-02 |
+| std-VERS   | [A version stamp says what it versions, and a move says what changed](versioning.md)           | active |              | 2027-09-07 |
