@@ -1,0 +1,27 @@
+{
+  "type": "standards",
+  "path": "standards/plugin.md",
+  "fields": {
+    "id": "std-PLUGIN",
+    "title": "The plugin carries the corpus, and a skill answers from what travelled",
+    "category": null,
+    "status": "active",
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-09-07",
+    "tags": [
+      "agents",
+      "export",
+      "plugin",
+      "skills"
+    ]
+  },
+  "sections": {
+    "Summary": "Every corpus here publishes a Claude Code plugin: a frozen copy of its export, and the skills that read it.\n`template/.plugin/` holds those skills, `plugin.json` says which of them travel, and `kac bundle` assembles the two. A\nskill answers from the export sitting beside it, using no more than a session's ability to read a file, and says\nplainly what did not travel. Where the answer is wrong, the skill writes back to the repository the export came from,\nbecause the copy it is reading cannot be changed.",
+    "Conformance checklist": "- [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else.\n- [ ] Every path a skill names opens on `${CLAUDE_PLUGIN_ROOT}`.\n- [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.\n- [ ] Every skill names the parts file of the type it requires, and no other.\n- [ ] Every skill says what its corpus did not carry, from `types` in `manifest.json`.\n- [ ] Every skill directory and hook directory in the plugin tree is declared under `metadata.components`.\n- [ ] Every `requires` entry names a type at the shape version it reads, bare where it opens none of that type's\n      files, and empty where the component reads no export.\n- [ ] No skill offers to write to the export, and each names the issue tracker instead.\n- [ ] `bundle.json` names every component that left, and the type that left it out."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4b2b31880aaf45ed962b94cd86f74a89da619c47/examples/dog-fooding/standards/plugin.md"
+  }
+}
