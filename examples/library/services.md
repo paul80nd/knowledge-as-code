@@ -102,14 +102,13 @@ this catalogue entirely.
 framework a contributor would need to know, and let that be the range. Do not inherit a list from elsewhere. A value no
 service can carry reaches an author at exactly the moment they are least able to judge it.
 
-The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), because it is this catalogue's answer and not the
-framework's. `.schema/services.yaml` declares `values: $corpus.platform` and states no values of its own, so one schema
-can sit above several catalogues and stand behind the list each of them wrote. Write a service before you write the
-list and `corpus-enum-undeclared` says so.
+The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this catalogue's own file.
+`.schema/services.yaml` declares `values: $corpus.platform` and states no values, so one schema can sit above several
+catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
+the list does.
 
-The eight deployables here came to six values. **`mixed` means several of them in one deployable, and never
-*none of the above*.** A service released as a function and a workflow app together carries it. Where the estate
-grows something no value names, add the value.
+**`mixed` means several of the other values in one deployable, and never *none of the above*.** A service released as
+a function and a workflow app together carries it. Where the estate grows something no value names, add the value.
 
 ### Deriving the facet vocabulary
 
