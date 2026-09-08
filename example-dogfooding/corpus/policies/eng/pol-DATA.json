@@ -14,6 +14,6 @@
     "Exceptions": "Where a defect genuinely cannot be reproduced without production data, a time-boxed, access-restricted copy may be used under a recorded deviation ([pol-DEVI]) that names who approved it, who can see it and when it will be destroyed. Legal hold overrides deletion, and is recorded when it does.\n\n`LAWFUL` admits none. Where personal data may be copied, and for how long, is a question a recorded deviation can\nanswer; whether we were entitled to hold it at all is not."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b088989c13833ab0a1c807de0f792a20e5c6f311/examples/engineering/policies/security/data-data-protection.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24dcea21945982d92104c78a854465207d644ad6/examples/engineering/policies/security/data-data-protection.md"
   }
 }
