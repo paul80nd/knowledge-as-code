@@ -30,6 +30,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   a `deviations` record needs, and leaves `owner` and `accepted-on` to the reply, because no export carries a record's
   owner. It files inside the organisation holding the plugin and nowhere else, and it asks before it files. Take it with
   `kac update --from <template>`.
+- **A control travels in an export.** `.schema/controls.yaml` declares an `export:` block at shape 1, so `kac export`
+  writes one JSON per control carrying `verifies`, `mechanism`, `frequency`, `evidence` and the three sections a
+  control holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
+  `kac update --from <template>`.
+- **`controls-lookup`, the skill that says what proves a rule.** It answers what checks a standard, where the evidence
+  lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. It
+  reads each `verifies` entry to see whether the control named a record or one rule inside it, and refuses a per-rule
+  figure where only records were named. Take it with `kac update --from <template>`.
 
 ### Fixed
 

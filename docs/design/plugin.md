@@ -91,9 +91,11 @@ the export writes one parts file for it and the skill addresses that file. A ski
 answers from one written for a different question, and whoever asked cannot tell. `bundle` does not read a component's
 files, so nothing here catches that. The round trip does, over the installed copy.
 
-A type declaring no parts writes no such file, and its records travel one JSON apiece. `processes` is that case. A
-process is followed whole and in order, so the record is the unit, and a step addressed on its own would be quoted out
-of the sequence that makes it safe. Its skill reads the directory, and `manifest.json` reports `partsFile` as null.
+A type declaring no parts writes no such file, and its records travel one JSON apiece. `processes` and `controls` are
+both that case, each for a reason of its own. A process is followed whole and in order, so a step addressed alone would
+be quoted out of the sequence that makes it safe. A control has no repeated heading to lift out: it names the rules it
+checks, says what performs the check, and says where the check stops. Those are three different answers, where a part
+is one answer repeated. Each skill reads its own directory, and `manifest.json` reports `partsFile` as null for both.
 
 ### A component naming no type either supports the others or stands alone
 
