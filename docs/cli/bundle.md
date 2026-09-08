@@ -68,8 +68,9 @@ what CI publishes.
 
 ### Read which components shipped
 
-A corpus adopting three record types ships a lookup skill for each over one export, beside the three that name no type
-of their own. The closing line counts them:
+A corpus whose export carries three record types ships a lookup skill for each, beside the three that name no type of
+their own. Adoption is not the test: engineering adopted `controls` and holds no record, so that skill is trimmed
+alongside the type it never carried. The closing line counts what survived:
 
 ```text
 bundle: wrote 54 file(s) to .dist/plugin/ as example-engineering 0.11.0. 7 component(s) included, 2 trimmed.

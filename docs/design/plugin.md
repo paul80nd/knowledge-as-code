@@ -94,8 +94,8 @@ files, so nothing here catches that. The round trip does, over the installed cop
 A type declaring no parts writes no such file, and its records travel one JSON apiece. `processes` and `controls` are
 both that case, each for a reason of its own. A process is followed whole and in order, so a step addressed alone would
 be quoted out of the sequence that makes it safe. A control has no repeated heading to lift out: it names the rules it
-checks, says what performs the check, and says where the check stops, which is three answers instead of a run of one.
-Each skill reads its own directory, and `manifest.json` reports `partsFile` as null for both.
+checks, says what performs the check, and says where the check stops. Those are three different answers, where a part
+is one answer repeated. Each skill reads its own directory, and `manifest.json` reports `partsFile` as null for both.
 
 ### A component naming no type either supports the others or stands alone
 

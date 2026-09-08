@@ -35,9 +35,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   control holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
   `kac update --from <template>`.
 - **`controls-lookup`, the skill that says what proves a rule.** It answers what checks a standard, where the evidence
-  lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. A
-  control names a standard and not a rule, so the skill says the per-rule figure is not in the export. Take it with
-  `kac update --from <template>`.
+  lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. It
+  reads each `verifies` entry to see whether the control named a record or one rule inside it, and refuses a per-rule
+  figure where only records were named. Take it with `kac update --from <template>`.
 
 ### Fixed
 

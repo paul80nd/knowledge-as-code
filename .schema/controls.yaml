@@ -110,8 +110,9 @@ export:
 
     `evidence` is the only key answering where the proof lives, so it travels beside them.
 
-    A control names a standard and not a rule, so it vouches for a whole document whatever it checks inside
-    it. A consumer counting coverage rule by rule cannot get that number from here.
+    `verifies` reaches a whole standard or one rule inside it, and a consumer reads the value to tell which.
+    Where a control names the record, it vouches for that whole document whatever it checks inside it, and no
+    per-rule figure can be had from it.
 
     `owner` stays behind. Who stewards a control is a fact about this corpus, and whoever holds a vendored
     copy has no standing to ask.

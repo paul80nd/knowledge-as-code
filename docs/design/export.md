@@ -209,8 +209,8 @@ A consumer assuming a spelling would read a producer's parts as empty wherever t
 every citation into them would fail for a reason nothing states. `seeAlsoKey` is null for a type declaring no such key.
 
 A type keeping no parts writes all five as null, beside `parts` at zero, and its records travel one JSON apiece.
-`processes` is that case, and the entry says so rather than leaving a consumer to infer it from a file that is not
-there:
+`processes` and `controls` are both that case, and the entry says so rather than leaving a consumer to infer it from a
+file that is not there:
 
 ```json
 "type": "processes", "shapeVersion": 1, "records": 7, "parts": 0, "dir": "processes",
