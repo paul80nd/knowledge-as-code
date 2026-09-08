@@ -27,6 +27,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`kac update` writes the descriptor's upstream block with one space after each colon.** It padded every key it
+  stamped to a column, and `yamllint --strict` refuses that under its `colons` rule, so a corpus running the linter its
+  template ships went red on `commit`, `template-version` and `taken-on` the moment it updated. The next run repairs a
+  descriptor an earlier one aligned.
+
 - **A field's `type:` and `of:` are held to what the tool dispatches.** Either naming a value no check reads now fails
   `schema-dispatch` when the schema loads, so `type: tiemstamp` is reported rather than loading and holding the field
   to nothing. An entry key answers to the same vocabulary, to whatever depth an `entry:` block nests, because its value
