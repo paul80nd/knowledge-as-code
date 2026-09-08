@@ -164,8 +164,9 @@ way: print the body and say which of the two it was.
 ### Azure DevOps
 
 `target` is `azure-devops` or `azure-devops-wiki`, and `base` carries the organisation and the project together, as
-`https://dev.azure.com/<org>/<project>/_git/<repo>`. `az` wants them apart: the organisation is `base` up to and
-including `<org>`, and the project is the segment after it.
+`https://dev.azure.com/<org>/<project>/_git/<repo>`. A wiki publishes from
+`https://dev.azure.com/<org>/<project>/_wiki/wikis/<id>` instead, and the two segments you need sit in the same places.
+`az` wants them apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding"

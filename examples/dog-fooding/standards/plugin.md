@@ -5,7 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER,
   eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY, eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM,
-  eng:pol-DEVI.RECORD, eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
+  eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
 verified-by: [ ctl-0008 ]
 applies-to:
   - all
@@ -132,24 +132,27 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 - The block **MAY** carry `applies-to` and `tags` after those.
 - The block **MUST NOT** carry any other key.
 - `status` **MUST** be `draft`.
-- Every entry in `departs-from` **MUST** name a clause, and never a whole policy or standard.
-- Every entry **MUST** carry the shortcode the export writes on that record's id.
+- Every entry in `departs-from` **MUST** name a clause, scoped exactly as the export writes that record's id.
+- An entry **MUST NOT** name a whole policy or standard.
 - A skill **MUST NOT** write `owner` or `accepted-on`, because the individual who accepts the risk is what the request
   asks for.
 - A request **MUST NOT** describe the departure as permanent, indefinite, or standing until further notice.
 - The body **MUST** carry `## What we are doing instead`, `## Why we need it`, `## What compensates` and
-  `## How it closes`, in that order, and `## Who is asking` after them.
+  `## How it closes`, in that order.
+- `## Who is asking` **MUST** follow those four.
 - `## Who is asking` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
   doing.
+- Where the agent cannot reach one of those, `## Who is asking` **MUST** name it as unreached.
 - The title **MUST** be the departure in one line, naming the work and the rule it breaks.
 - A skill **MUST** file the request on the repository addressed by the `publishing` block of the corpus that owns the
   clause.
 - A skill **MUST NOT** file a request on a repository outside the organisation holding the plugin.
 - A skill **MUST** mark the issue `kac:deviation`, using whatever the platform calls a label.
+- Where the platform refuses a mark it does not already hold, a skill **MUST** file the request unmarked.
 - A skill **MUST** say that the request accepts nothing, and that the record is still owed.
 
 _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`, `eng:pol-DEVI.OWNER`,
-`eng:pol-DEVI.PERM`, `eng:pol-DEVI.RECORD`, `eng:pol-DEVI.SURFACE`_
+`eng:pol-DEVI.PERM`, `eng:pol-DEVI.SURFACE`_
 
 ## Examples
 
@@ -284,6 +287,7 @@ breaking it.
 - [ ] No deviation request carries an `owner` or an `accepted-on`, and none reads as a standing departure.
 - [ ] Every deviation request is filed inside the organisation holding the plugin, and says that nothing is accepted
       yet.
+- [ ] No deviation request is dropped, or held back, because the target holds no `kac:deviation` label.
 - [ ] No finding is dropped, or held back, because the target holds no `kac:finding` label.
 
 ## Rationale and provenance
@@ -338,6 +342,10 @@ has to arrive before the work lands.
 individual with the authority to accept a risk is unreachable from an installed plugin. `eng:pol-DEVI.OWNER` wants that
 person named, and an agent proposing one reads as a decision somebody already took. So the block carries everything the
 record will need, leaves `owner` and `accepted-on` to the reply, and the skill says the record is still owed.
+
+Both skills write the platform mechanics out again rather than citing each other. A session loads one skill, and the
+bundle that kept `raise-finding` may have trimmed the other, so a citation across would sometimes point at a file the
+reader does not hold. The cost is that a mistake in one of them has to be corrected twice.
 
 The boundary is the one rule here that no clause states. A deviation register is what one organisation keeps about
 itself, and a request names the rule being broken, the service it is in and how long the gap stands. Filed on a public

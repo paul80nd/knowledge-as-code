@@ -4,7 +4,7 @@ type: report
 tier: descriptive
 status: active
 owner: human:paul.law
-generated: { at: 2026-09-08T15:33:16Z, by: kac/0.24.0 }
+generated: { at: 2026-09-08T16:09:00Z, by: kac/0.24.0 }
 sources:
   - { resource: example-dogfooding, version: "0.16.0" }
   - { resource: example-engineering, version: "0.11.0" }
@@ -59,7 +59,7 @@ where the two differ.
 | `eng:pol-COST` | 8       | 0       | 8         |
 | `eng:pol-DATA` | 15      | 0       | 15        |
 | `eng:pol-DERV` | 5       | 0       | 5         |
-| `eng:pol-DEVI` | 9       | 6       | 3         |
+| `eng:pol-DEVI` | 9       | 5       | 4         |
 | `eng:pol-ENVS` | 10      | 7       | 3         |
 | `eng:pol-EVER` | 8       | 7       | 1         |
 | `eng:pol-INCR` | 13      | 0       | 13        |
@@ -74,7 +74,7 @@ where the two differ.
 | `eng:pol-SECD` | 8       | 2       | 6         |
 | `eng:pol-TRUS` | 13      | 8       | 5         |
 | `eng:pol-VURM` | 8       | 4       | 4         |
-| **Total**      | **207** | **93**  | **114**   |
+| **Total**      | **207** | **92**  | **115**   |
 
 ## Clauses
 
@@ -184,9 +184,9 @@ where the two differ.
 
 | Clause    | Level    | Covered by                    | Deviations                | Controls                                                   | Pair candidate | Verdict | Note                                                                                                                      |
 |-----------|----------|-------------------------------|---------------------------|------------------------------------------------------------|----------------|---------|---------------------------------------------------------------------------------------------------------------------------|
-| `RECORD`  | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`                                                 |                | Covered | It covers the request a session files. No standard says a record comes before a departure a person takes.                 |
+| `RECORD`  | MUST     |                               | `dev-deviations-unstated` |                                                            |                | Gap     | The register exists. No standard says a record comes before the departure.                                                |
 | `OWNER`   | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                | Covered | A skipped check names the person who accepted it, and a deviation request asks for that person by name.                   |
-| `CONTENT` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`                                                 |                | Covered | The four sections a request carries are the record's own.                                                                 |
+| `CONTENT` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`                                                 |                | Covered | It covers what a request an agent files has to say. The four sections are the record's own.                               |
 | `EXPIRY`  | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                | Covered | A skipped check carries the date it is revisited, and a request proposes one for the owner to settle.                     |
 | `SURFACE` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`                                                 |                | Covered | A request lands where the people carrying the risk read it. The register is published, and no standard says it has to be. |
 | `CLOSE`   | MUST     |                               | `dev-deviations-unstated` |                                                            |                | Gap     | Every record here is open, and no standard says what closing takes.                                                       |

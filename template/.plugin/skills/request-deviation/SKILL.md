@@ -108,11 +108,16 @@ which rule you are breaking, in which service, what you put in its place, and ho
 of a corpus anybody can install never agreed to hold your risk, and cannot accept it on your behalf.
 
 **Compare the owning corpus's `base` with the top-level corpus's `base`.** The same repository is the same people, and
-the request goes there. A different repository under the same account or organisation is still inside, so read the
-owner segment rather than the whole address.
+the request goes there. A different repository under the same account or organisation is still inside, so compare the
+segment naming the account. On a GitHub address that is the segment after the host, and on an Azure DevOps address it is
+the `<org>`. Two different platforms share no such segment, so treat them as two organisations unless somebody tells you
+otherwise.
 
 **Where the owner differs, or where you cannot tell, print the body and stop.** Ask whoever is with you who accepts
 this risk inside your own organisation. Never file it on a stranger's repository to find out.
+
+**Where either `base` is `null`, there is nothing to compare.** A corpus published nowhere says nothing about who owns
+it, so the comparison cannot answer. Print the body and ask.
 
 **Consuming a public corpus is what this is for.** A corpus published by somebody you have no relationship with states
 rules you chose to take on, and a departure from one of them is yours to own. Record it at home.
@@ -173,8 +178,8 @@ Each key of the block, and what to put in it:
 * **`id`** is `dev-` and a short slug of the title. You cannot see what ids that corpus already holds, so treat this as
   a suggestion. Whoever writes the record settles it.
 * **`status`** is `draft`. Nobody has accepted this yet, and that is the whole reason the issue exists.
-* **`departs-from`** is the clause ids, each one scoped as you found it. Write `[ none ]` for a shortcut that breaks no
-  clause, which belongs in your own corpus rather than in a request.
+* **`departs-from`** is the clause ids, each one scoped exactly as you found it. A request names at least one, because
+  a departure from no clause has nobody to ask.
 * **`review-by`** is the day somebody looks at this again, quoted. Propose the earliest date the work makes possible,
   and say in `## How it closes` what you based it on. The owner may move it, and is the only one who can.
 * **`applies-to`** and `tags` are optional, and go after `review-by` in that order. Nothing else belongs in the block.
@@ -182,6 +187,10 @@ Each key of the block, and what to put in it:
 **`owner` and `accepted-on` are the answer, so the block leaves them out.** The individual accepting the risk is what
 the request asks for, and the day they accept it is the day they reply. Proposing a name here reads as a decision
 somebody already took.
+
+**`owner` is required whatever the status, so the record cannot land without one.** A draft deviation missing it fails
+validation. The reply is what unblocks the record as well as the work, which is worth saying when you hand the request
+over.
 
 **Write nothing open-ended.** "Permanent", "indefinitely" and "until further notice" each describe a rule that needs
 rewriting rather than a deviation, and a corpus validating the record warns on all three.
@@ -225,8 +234,9 @@ way: print the body and say which of the two it was.
 ### Azure DevOps
 
 `target` is `azure-devops` or `azure-devops-wiki`, and `base` carries the organisation and the project together, as
-`https://dev.azure.com/<org>/<project>/_git/<repo>`. `az` wants them apart: the organisation is `base` up to and
-including `<org>`, and the project is the segment after it.
+`https://dev.azure.com/<org>/<project>/_git/<repo>`. A wiki publishes from
+`https://dev.azure.com/<org>/<project>/_wiki/wikis/<id>` instead, and the two segments you need sit in the same places.
+`az` wants them apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:deviation"
