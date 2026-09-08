@@ -123,6 +123,10 @@ arrives in a shape the next run can act on. Filing one by hand costs the same an
 **It asks before it files, every time.** Say what you are about to raise in the reply that closes the session, and let
 the developer answer. A finding filed unasked is the one thing this skill must never do.
 
+**Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
+it to know about. This repository does: project 3, with a `Status` and a `Phase`. An issue left off it is one the
+developer never sees.
+
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
 changed. [That corpus's own README](examples/dog-fooding/README.md#reading-this-corpus-as-a-plugin-while-you-change-it)

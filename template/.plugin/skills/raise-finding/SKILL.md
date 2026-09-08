@@ -116,11 +116,15 @@ observation about Rider" names the subject and says nothing.
 Each key of the block, and what to put in it:
 
 * **`corpus`** is the name from the block you picked above.
-* **`id`** is `dsc-` and a short slug of the title. The repository receiving it may rename it, so keep it plain.
+* **`id`** is `dsc-` and a short slug of the title. You cannot see what ids that corpus already holds, so treat this as
+  a suggestion and keep it plain. Whoever writes the record settles it.
 * **`source`** is `session`.
 * **`confidence`** is `unverified`. Write `corroborated` only where something outside your own session confirmed it: a
   second run, a failing check, a colleague who saw it too. Your own account of your own work is not confirmation.
-* **`expires`** is ninety days from today, quoted.
+* **`expires`** is the day this stops being worth reading unchallenged, quoted. Ninety days from today is the
+  default, because most of what a session notices is tied to a version, a machine or a moment, and an observation
+  nobody dated stays on unchallenged. Give a longer life to something anybody can re-check from the repository itself,
+  and say in `## Context` what you chose and why.
 * **`provenance`** names the agent, the session it ran in, the repository you were working in, the commit you were at,
   and what you were doing. Add `manifest.json`'s own `commit` where the finding is about the corpus, because that says
   which export you read. **Name any of those you cannot reach**, rather than leaving it out. A reviewer needs to know
@@ -185,3 +189,7 @@ you to paste it. A finding read out to somebody is worth more than one lost to a
 
 Close by naming the issue you opened and its URL, or the repository the body still needs pasting on. Where you filed it
 unlabelled, say so. Where you left something out of `provenance`, say which.
+
+**Say that it is untriaged.** A repository may route a new issue onto a board, into a milestone, or past somebody who
+decides what happens to it, and none of that is visible from here. A finding nobody routes is a finding nobody reads,
+so hand the person you are with the URL and let them place it.
