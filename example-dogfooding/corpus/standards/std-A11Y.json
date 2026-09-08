@@ -30,6 +30,6 @@
     "Conformance checklist": "- [ ] The page opens on one H1, and every heading below it descends one level at a time.\n- [ ] Every link says where it goes without the sentence around it.\n- [ ] Every table has a header row and holds data.\n- [ ] Every image has alternative text, and every diagram has prose beside it carrying the same information.\n- [ ] No instruction on the page depends on a colour, a shape or a position.\n- [ ] `mkdocs.yml` and `docs/assets/extra.css` set no colour, focus outline or font size of their own.\n- [ ] A new `kac` message says in words what its colour says.\n- [ ] A new `kac` prompt has a flag that answers it.\n- [ ] A pin that moved carries an assessment against the version it moved to.\n- [ ] A shortfall this change introduced has a deviation, an owner and a review date."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/standards/accessibility.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/28b3748bb48c0fa8631a59fc2057be07b87f6170/examples/dog-fooding/standards/accessibility.md"
   }
 }

@@ -18,6 +18,6 @@
     "Prerequisites": "* A candidate set of records no existing type would take.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/processes/add-a-type.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/28b3748bb48c0fa8631a59fc2057be07b87f6170/examples/dog-fooding/processes/add-a-type.md"
   }
 }

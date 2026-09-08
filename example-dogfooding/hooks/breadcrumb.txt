@@ -1,4 +1,4 @@
-example-dogfooding 0.16.1 travels with this session as data, exported 2026-09-08.
+example-dogfooding 0.16.2 travels with this session as data, exported 2026-09-08.
 controls. 10 records: A merge waits for the validate job, Every job in kac.yml sits behind the gate, Every workflow passes actionlint, Every YAML file passes yamllint, Every corpus holds the file the template sends it and 5 more.
 processes. 7 records: Add a record to a corpus, Add a knowledge type, Change the schema, Change the tool, Open a pull request and 2 more.
 standards. 43 entries across 6 records: The documentation site and kac are usable without sight, a mouse or colour, Every check and every publish runs from a workflow in this repository, Configuration is committed, pinned and explained, The plugin carries the corpus, and a skill answers from what travelled, Prose reads the same way whoever wrote it and A version stamp says what it versions, and a move says what changed.
