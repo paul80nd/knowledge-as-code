@@ -16,16 +16,17 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                    | It goes in                     |
-|--------------------------------------------------------------|--------------------------------|
-| A check that proves a rule is being followed                 | [Controls](../controls.md)     |
-| A departure from a rule that somebody agreed to              | [Deviations](../deviations.md) |
-| A description of what a deployable component is and does     | [Services](../services.md)     |
-| A rule people must follow when building                      | [Standards](../standards.md)   |
-| A step-by-step for a planned task                            | [Processes](../processes.md)   |
-| A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)     |
-| A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)           |
-| An answer about the corpus that no single record holds       | [Reports](../reports.md)       |
+| You have…                                                    | It goes in                       |
+|--------------------------------------------------------------|----------------------------------|
+| A check that proves a rule is being followed                 | [Controls](../controls.md)       |
+| A departure from a rule that somebody agreed to              | [Deviations](../deviations.md)   |
+| A description of what a deployable component is and does     | [Services](../services.md)       |
+| A rule people must follow when building                      | [Standards](../standards.md)     |
+| A step-by-step for a planned task                            | [Processes](../processes.md)     |
+| A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)       |
+| A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)             |
+| An answer about the corpus that no single record holds       | [Reports](../reports.md)         |
+| Something surprising you noticed and haven't verified        | [Discoveries](../discoveries.md) |
 
 <!-- END GENERATED: types-placement -->
 
@@ -81,6 +82,15 @@ rotating a secret). Written to be followed by someone who has not done it before
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
 decision tree. Disaster recovery and estate rebuild live here.
 
+### Observed: perishable, unreviewed until promoted
+
+The tier carrying the least authority is the one a corpus most depends on, because capture that is not free does not
+happen.
+
+**[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
+unless promoted. Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence
+level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
+
 <!-- END GENERATED: types-detail -->
 
 ## How the types relate
@@ -94,6 +104,7 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 graph LR;
   t_controls[Control];
   t_deviations[Deviation];
+  t_discoveries[Discovery];
   t_processes[Process];
   t_reports[Report];
   t_runbooks[Runbook];
@@ -104,6 +115,8 @@ graph LR;
   t_controls -- verifies --> t_standards;
   t_deviations -- applies-to --> t_services;
   t_deviations -- departs-from --> t_standards;
+  t_discoveries -- applies-to --> t_services;
+  t_discoveries -- promoted-to --> t_standards;
   t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
@@ -118,19 +131,21 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From      | Field          | Points at | Answered by   |
-|-----------|----------------|-----------|---------------|
-| Control   | `applies-to`   | Service   |               |
-| Control   | `verifies`     | Standard  | `verified-by` |
-| Deviation | `applies-to`   | Service   |               |
-| Deviation | `departs-from` | Standard  |               |
-| Process   | `applies-to`   | Service   |               |
-| Runbook   | `applies-to`   | Service   |               |
-| Service   | `depends-on`   | Service   |               |
-| Standard  | `applies-to`   | Service   |               |
-| Standard  | `verified-by`  | Control   | `verifies`    |
-| Tool      | `replaces`     | Tool      | `successor`   |
-| Tool      | `successor`    | Tool      | `replaces`    |
+| From      | Field          | Points at | Answered by     |
+|-----------|----------------|-----------|-----------------|
+| Control   | `applies-to`   | Service   |                 |
+| Control   | `verifies`     | Standard  | `verified-by`   |
+| Deviation | `applies-to`   | Service   |                 |
+| Deviation | `departs-from` | Standard  |                 |
+| Discovery | `applies-to`   | Service   |                 |
+| Discovery | `promoted-to`  | Standard  | `promoted-from` |
+| Process   | `applies-to`   | Service   |                 |
+| Runbook   | `applies-to`   | Service   |                 |
+| Service   | `depends-on`   | Service   |                 |
+| Standard  | `applies-to`   | Service   |                 |
+| Standard  | `verified-by`  | Control   | `verifies`      |
+| Tool      | `replaces`     | Tool      | `successor`     |
+| Tool      | `successor`    | Tool      | `replaces`      |
 
 <!-- END GENERATED: types-edges -->
 
@@ -156,6 +171,9 @@ this corpus holds both sides of it.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
+
+**Report vs Discovery.** A report is a walk over the corpus, repeatable and dated. A discovery is something somebody
+noticed once. If nothing would reproduce it, it is a discovery.
 
 **Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
 from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a

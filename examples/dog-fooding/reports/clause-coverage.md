@@ -6,10 +6,11 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-08T10:42:33Z, by: kac/0.23.0+955356490b0bfa1f7caa3863fa100346dd6849c1 }
 sources:
-  - { resource: example-dogfooding, version: "0.13.0" }
+  - { resource: example-dogfooding, version: "0.14.0" }
   - { resource: example-engineering, version: "0.11.0" }
 confirmed:
   - { at: 2026-09-08T11:00:00Z, by: human:paul.law }
+  - { at: 2026-09-08T13:27:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -111,7 +112,7 @@ it where the two differ.
 | `PROV` | MUST | `eng:std-PR` |  |  |  | Covered | Agent-produced work says what produced it, and a commit trailer names it. |
 | `ACCEPT` | MUST | `eng:std-PR` |  |  |  | Covered | The approval is what makes the work somebody's. |
 | `EQUAL` | MUST | `eng:std-PR` |  |  |  | Covered | A change arrives as a pull request, whoever wrote the branch. |
-| `CONFID` | MUST | `std-PLUGIN` |  | `ctl-0008` |  | Covered | A skill dates the export and reports an unsettled record. No observation expires. |
+| `CONFID` | MUST | `std-PLUGIN` |  | `ctl-0008` |  | Covered | A skill dates the export and reports an unsettled record. A discovery here states its confidence and carries an expiry date. Nothing runs `expiry-sweep`, so no observation expires. |
 | `SELFVER` | MUST NOT | `eng:std-PR` |  |  |  | Covered | The approver reads the change rather than the agent's account of it. |
 | `DUTIES` | MUST NOT | `eng:std-PR` |  |  | `eng:pol-ACCS.DUTIES` | Covered | Somebody other than the author approves it. One maintainer does both here. |
 | `UNPROV` | MUST NOT | `std-PLUGIN` |  | `ctl-0008` |  | Covered | A skill names the record an answer came from. No proposal names the run behind it. |
