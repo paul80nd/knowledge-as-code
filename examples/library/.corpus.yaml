@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 1
+descriptor-version: 2
 
 corpus: example-libraries
 
@@ -15,7 +15,7 @@ shortcode: lib
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.1.9"
+content-version: "0.1.10"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -59,6 +59,11 @@ types:
   - processes
   - runbooks
   - services
+
+# What a service here is built on. Derived from the deployables this catalogue holds and closed on them,
+# which is the estate's answer rather than the framework's. `services.md` says how they were reached.
+enums:
+  platform: [azure-function, dotnet-api, dotnet-web, mixed, static, typescript]
 
 # Nothing withheld, so a consumer meets a draft record as a draft rather than not at all.
 export:

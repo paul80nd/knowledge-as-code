@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "validated": 1,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 2,
+    "warnings": 0,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "corpus-enum-undeclared",
+      "message": "'platform' on a service is judged against `enums.platform`, and that list carries 'Dotnet-Web'. An enum value is lower case, so no record can satisfy this one."
+    },
+    {
+      "file": "services/catalogue.md",
+      "line": 6,
+      "severity": "error",
+      "check": "enum",
+      "message": "'platform' value 'dotnet-web' is not one of: Dotnet-Web."
+    }
+  ]
+}

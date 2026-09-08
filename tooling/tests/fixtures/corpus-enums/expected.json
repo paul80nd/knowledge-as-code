@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "validated": 1,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 1,
+    "warnings": 0,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": "services/catalogue.md",
+      "line": 6,
+      "severity": "error",
+      "check": "enum",
+      "message": "'platform' value 'azure-function' is not one of: dotnet-api, dotnet-web."
+    }
+  ]
+}

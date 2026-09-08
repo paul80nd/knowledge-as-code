@@ -1,0 +1,3 @@
+corpus: fixture-corpus
+
+# No `enums:` block, which is the fault. Everything else stays at its default.

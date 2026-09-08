@@ -353,7 +353,16 @@ public static class New
         sb.Append("types:\n");
         foreach (var type in answers.Types) sb.Append($"  - {Scalar(type)}\n");
 
-        sb.Append("\n# What `kac export` leaves behind. Empty means a consumer reads what this corpus"
+        // Opened and left empty, because the values are derived from an estate this corpus has not
+        // described yet. A field drawing on this reports `corpus-enum-undeclared` from the first record
+        // that carries it, which is the moment somebody can answer.
+        sb.Append("\n# The ranges this corpus states, for the fields whose values are its estate's rather"
+                  + " than the framework's.\n");
+        sb.Append("# Each type's page says how to reach its own. A field drawing on one is judged against"
+                  + " what you write here.\n");
+        sb.Append("enums:\n\n");
+
+        sb.Append("# What `kac export` leaves behind. Empty means a consumer reads what this corpus"
                   + " actually holds.\n");
         sb.Append("export:\n");
         sb.Append("  exclude: []\n\n");

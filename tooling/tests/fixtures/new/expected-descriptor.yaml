@@ -3,7 +3,7 @@
 # https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means.
 
 # The format of this file, which the tool owns rather than the corpus.
-descriptor-version: 1
+descriptor-version: 2
 
 # What this corpus calls itself, and the version of what it knows. Move `content-version` by hand.
 corpus: acme-corpus
@@ -57,6 +57,10 @@ types:
   - services
   - standards
   - tools
+
+# The ranges this corpus states, for the fields whose values are its estate's rather than the framework's.
+# Each type's page says how to reach its own. A field drawing on one is judged against what you write here.
+enums:
 
 # What `kac export` leaves behind. Empty means a consumer reads what this corpus actually holds.
 export:

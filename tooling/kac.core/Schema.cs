@@ -20,6 +20,13 @@ public sealed class FieldSpec
     public string? Of { get; init; }                          // each entry, where Type is list: ValueChecks.EntryTypes
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
+    // The corpus-owned enum this field draws its range from, where it declares `values: $corpus.<name>`,
+    // and null where the schema states the range itself. `Values` above carries what the corpus supplied
+    // and stays null where it supplied nothing, so a field that has to be judged against a list the
+    // corpus never wrote is indistinguishable here from one with no range at all. This name is what tells
+    // the two apart, and `corpus-enum-undeclared` is where the difference is reported.
+    public string? CorpusEnum { get; init; }
+
     // The shape of one entry, where a list's entries are objects rather than scalars. Declared with the
     // vocabulary a field is declared with, so an entry's key is held to its own `type:`, `pattern:` and
     // `required:` by the code that already reads a field, and nothing here is a second language.
@@ -673,20 +680,28 @@ public sealed partial class Schema
     // Falls back to `root` itself where nothing above it holds one, so a run with no schema anywhere fails
     // on the file it cannot open rather than on a null. `kac` declines a corpus that far gone ahead of
     // this, so only a caller of `kac.core` reaches the fallback.
-    public static Schema LoadNearest(string root) => Load(FindRoot(root) ?? root);
+    //
+    // `corpusEnums` is what the corpus supplied for the fields whose range is its own. Taken rather than
+    // read, because the walk lands on a `.schema/` that may sit above several corpora and this half of the
+    // declaration belongs to one of them.
+    public static Schema LoadNearest(string root,
+        IReadOnlyDictionary<string, IReadOnlyList<string>>? corpusEnums = null) =>
+        Load(FindRoot(root) ?? root, corpusEnums);
 
-    // Takes whatever holds a `.schema/`, which is what `LoadNearest` above walks up for. The schema is one
-    // document however many corpora read it.
+    // Takes whatever holds a `.schema/`, which is what `LoadNearest` above walks up for. The files are one
+    // document however many corpora read them, and a field drawing its range from `$corpus.` is where the
+    // loaded schema stops being the same for all of them.
     //
     // This is the one place a path becomes a schema. Everything below it is decided from values.
-    public static Schema Load(string root)
+    public static Schema Load(string root,
+        IReadOnlyDictionary<string, IReadOnlyList<string>>? corpusEnums = null)
     {
         var dir = Path.Combine(root, ".schema");
         // Read as the file carries it, where the corpus side reads through `Files.ReadLf`. The schema
         // needs no normalising of its own, because YAML normalises a line break to `\n` on input. So a
         // `.schema/` checked out with CRLF endings reaches every value as LF.
         return Load(Directory.GetFiles(dir, "*.yaml")
-            .ToDictionary(f => Path.GetFileName(f), File.ReadAllText, StringComparer.Ordinal));
+            .ToDictionary(f => Path.GetFileName(f), File.ReadAllText, StringComparer.Ordinal), corpusEnums);
     }
 
     // The schema's files by name, already read: `_enums.yaml`, `adrs.yaml`, and the rest of `.schema/`.
@@ -699,8 +714,10 @@ public sealed partial class Schema
     // A name the map does not hold reads as an empty document. A `.schema/` short of one of the four
     // shared blocks then fails through the findings naming what is missing, rather than on the file it
     // could not open.
-    public static Schema Load(IReadOnlyDictionary<string, string> files)
+    public static Schema Load(IReadOnlyDictionary<string, string> files,
+        IReadOnlyDictionary<string, IReadOnlyList<string>>? corpusEnums = null)
     {
+        corpusEnums ??= new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
         var unread = new List<UnreadKey>();
         YamlNode Read(string name) => Yaml.Load(files.GetValueOrDefault(name, ""));
 
@@ -722,7 +739,7 @@ public sealed partial class Schema
             var keys = new List<FieldSpec>();
             foreach (var (key, decl) in Yaml.Map(shape.Get("entry")))
                 keys.Add(ParseField(shapeKeys, shapeKeys.At(decl, $"shape '{name}' key '{key}'"), key,
-                    enums, shapes));
+                    enums, shapes, corpusEnums));
             shapes[name] = keys;
         }
 
@@ -771,7 +788,7 @@ public sealed partial class Schema
         {
             universalOrder.Add(name);
             universal[name] = ParseField(universalKeys, universalKeys.At(node, $"field '{name}'"), name,
-                enums, shapes);
+                enums, shapes, corpusEnums);
         }
 
         var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(uni.Get("reserved")), enums,
@@ -786,7 +803,7 @@ public sealed partial class Schema
             if (baseName.StartsWith('_')) continue; // the shared blocks, which declare no type
 
             var keys = new KeyReader($".schema/{baseName}.yaml");
-            byFolder[baseName] = ParseType(keys.At(Read(name), TheFile), keys, layer, baseName);
+            byFolder[baseName] = ParseType(keys.At(Read(name), TheFile), keys, layer, baseName, corpusEnums);
             unread.AddRange(keys.Unread());
         }
 
@@ -807,7 +824,8 @@ public sealed partial class Schema
     // one says only that it is the file.
     private const string TheFile = "the file";
 
-    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer, string key)
+    private static TypeSchema ParseType(Level root, KeyReader keys, UniversalLayer layer, string key,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> corpusEnums)
     {
         var id = keys.At(root.Get("id"), "the 'id' block");
         var fn = keys.At(root.Get("filename"), "the 'filename' block");
@@ -819,7 +837,8 @@ public sealed partial class Schema
         foreach (var (name, node) in Yaml.Map(root.Get("fields")))
         {
             fieldOrder.Add(name);
-            fields[name] = ParseField(keys, keys.At(node, $"field '{name}'"), name, layer.Enums, layer.Shapes);
+            fields[name] = ParseField(keys, keys.At(node, $"field '{name}'"), name, layer.Enums, layer.Shapes,
+                corpusEnums);
         }
 
         var rules = root.Get("rules") is YamlSequenceNode ruleNodes
@@ -957,7 +976,8 @@ public sealed partial class Schema
 
     private static FieldSpec ParseField(KeyReader keys, Level node, string name,
         IReadOnlyDictionary<string, IReadOnlyList<string>> enums,
-        IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> shapes)
+        IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> shapes,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> corpusEnums)
     {
         var pattern = Yaml.Str(node.Get("pattern"));
         string? problem = null;
@@ -965,9 +985,23 @@ public sealed partial class Schema
         // `values: $enums.status` draws the vocabulary from _enums.yaml. A sequence declares it inline.
         // A name no enum answers to is a defect in the schema rather than a field with no range: the
         // declaration says the values are written down somewhere, and they are not.
+        //
+        // `values: $corpus.platform` draws it from the corpus instead. A name the corpus answers nothing to
+        // is no defect here: the schema is right and the corpus has not written its list yet, which
+        // `Validator.CheckCorpusEnums` reports against the descriptor.
         IReadOnlyList<string>? values = null;
+        string? corpusEnum = null;
         switch (node.Get("values"))
         {
+            case YamlScalarNode { Value: { } v } when v.StartsWith("$corpus.", StringComparison.Ordinal):
+                corpusEnum = v["$corpus.".Length..];
+                // An empty list resolves to no range rather than to a range holding nothing, which would
+                // refuse every value a record carries. A corpus opening the key and writing nothing under
+                // it has stated none, and `corpus-enum-undeclared` reads it the same way.
+                values = corpusEnums.TryGetValue(corpusEnum, out var stated) && stated.Count > 0
+                    ? stated
+                    : null;
+                break;
             case YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal):
                 var enumName = v["$enums.".Length..];
                 values = enums.GetValueOrDefault(enumName);
@@ -1004,7 +1038,8 @@ public sealed partial class Schema
         foreach (var (key, decl) in Yaml.Map(node.Get("entry")))
         {
             entry ??= [];
-            entry.Add(ParseField(keys, keys.At(decl, $"field '{name}' entry key '{key}'"), key, enums, shapes));
+            entry.Add(ParseField(keys, keys.At(decl, $"field '{name}' entry key '{key}'"), key, enums, shapes,
+                corpusEnums));
         }
 
         // `shape: event` takes its keys from _shapes.yaml, whole. Nothing narrows a shape here, so a
@@ -1032,6 +1067,7 @@ public sealed partial class Schema
             Of = Yaml.Str(node.Get("of")),
             Entry = entry,
             Values = values,
+            CorpusEnum = corpusEnum,
             Refs = refs,
             PartRequired = Yaml.Bool(node.Get("part-required")),
             Reciprocal = Yaml.Str(node.Get("reciprocal")),

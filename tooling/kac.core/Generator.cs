@@ -452,12 +452,18 @@ public static class Generator
     //
     // A derived field carries neither. Nothing an author types lands in it, so the column that would
     // tell them what to write says where the value comes from instead.
+    //
+    // A field whose range this corpus states, on a corpus that has not stated it yet, is the third case.
+    // The set is what the column carries everywhere else, so an empty one has to say why it is empty
+    // rather than fall back to the word the comment above rejects.
     private static string ValueFor(FieldSpec f) =>
         f.From is { } from
             ? $"derived from the record's {from}"
             : f.Type is "enum" && f.Values is { Count: > 0 } values
                 ? string.Join(" ", values.Select(v => $"`{v}`"))
-                : f.Type;
+                : f.CorpusEnum is not null
+                    ? "stated by this corpus"
+                    : f.Type;
 
     // The same reference for metadata.md, which documents the universal fields once for the whole
     // taxonomy. Values are the unrefined universal declarations: with no type in hand to narrow it,
