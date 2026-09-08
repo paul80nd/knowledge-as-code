@@ -189,15 +189,21 @@ internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
         ? "The rule names no standings, so nothing it cites can bind."
         : $"File it under {Join(postures)}, or under a standing that binds nothing.";
 
-    public Posture Standing(Doc doc, string label)
+    // The register's own word for where a framework is filed, or null where the register places it
+    // nowhere. `Standing` rules on that word and this hands it back, so a caller printing the answer
+    // prints the corpus's own vocabulary.
+    public string? Filed(Doc doc, string label)
     {
-        if (Anchor(doc, label) is not ({ } page, { } anchor)) return Posture.Unstated;
-        if (!Placed(page).TryGetValue(anchor, out var standing)) return Posture.Unstated;
-
-        return postures.Contains(standing, StringComparer.OrdinalIgnoreCase)
-            ? Posture.Binding
-            : Posture.Loose;
+        if (Anchor(doc, label) is not ({ } page, { } anchor)) return null;
+        return Placed(page).GetValueOrDefault(anchor);
     }
+
+    public Posture Standing(Doc doc, string label) => Filed(doc, label) switch
+    {
+        null => Posture.Unstated,
+        var standing when postures.Contains(standing, StringComparer.OrdinalIgnoreCase) => Posture.Binding,
+        _ => Posture.Loose
+    };
 
     // The page and heading a label points at, or nothing where the label reaches no fragment of a page
     // the corpus holds. A framework named with no link behind it cannot be placed, which is `Unstated`.

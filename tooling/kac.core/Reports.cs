@@ -47,10 +47,14 @@ public sealed record CoverageRow(
     string? Pair);
 
 // One row of the framework report: a reference into a framework, and what cites it.
+//
+// `Standing` is the heading the register files the framework under, verbatim, and null where the
+// register places it nowhere. The tool states the corpus's own word and never rules on what it means, so
+// a corpus renaming its standings reports in the vocabulary it wrote.
 public sealed record FrameworkRow(
     string Framework,
     string? Reference,
-    string? Posture,
+    string? Standing,
     IReadOnlyList<string> Clauses,
     IReadOnlyList<string> Records);
 
@@ -203,7 +207,7 @@ public static class Reports
     public static List<FrameworkRow> FrameworkRows(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
     {
-        var register = RegisterFor(corpus);
+        var register = new Register(corpus.Tree, []);
         var byReference = new Dictionary<string, (string Framework, string? Reference, List<string> Clauses)>(
             StringComparer.Ordinal);
 
@@ -240,28 +244,17 @@ public static class Reports
         ];
     }
 
-    // The register reading `frameworks.md`, or null where no type declares the standings that bind. The
-    // report names a posture where the corpus states one and leaves the column empty otherwise.
-    private static Register? RegisterFor(LoadedCorpus corpus)
+    // Where the register files a framework, in the register's own words. Read through a document citing
+    // it, because the label is defined as a link and only a citing document holds that definition.
+    //
+    // The register is built with no standings, because this asks it to place a framework and never to
+    // weigh one. Which standings bind is `alignment-rollup`'s judgement, and a report repeating it would
+    // tie what it prints to a rule's configuration it has no other use for.
+    private static string? Standing(Register register, LoadedCorpus corpus, string framework)
     {
-        var postures = corpus.Adopted
-            .SelectMany(t => t.Rules)
-            .FirstOrDefault(r => r.Id == new RuleId("alignment-rollup"))?.Postures;
-
-        return postures is null ? null : new Register(corpus.Tree, postures);
-    }
-
-    // What the register says of a framework, read through a document citing it, because the label is
-    // defined as a link and only a citing document holds that definition.
-    private static string? Standing(Register? register, LoadedCorpus corpus, string framework)
-    {
-        if (register is null) return null;
-
         foreach (var doc in ClauseDocs(corpus))
-        {
-            var standing = register.Standing(doc, framework);
-            if (standing != Posture.Unstated) return standing == Posture.Binding ? "binding" : "loose";
-        }
+            if (register.Filed(doc, framework) is { Length: > 0 } standing)
+                return standing;
 
         return null;
     }
@@ -419,7 +412,7 @@ public static class Reports
 
         foreach (var group in rows.GroupBy(r => r.Framework, StringComparer.Ordinal)
                      .OrderBy(g => g.Key, StringComparer.Ordinal))
-            body.AppendLine($"| {group.Key} | {group.First().Posture ?? ""} | {group.Count()} "
+            body.AppendLine($"| {group.Key} | {group.First().Standing ?? ""} | {group.Count()} "
                             + $"| {group.Count(r => r.Clauses.Count == 1)} |");
 
         body.AppendLine($"| **Total** | | **{rows.Count}** | **{rows.Count(r => r.Clauses.Count == 1)}** |");
