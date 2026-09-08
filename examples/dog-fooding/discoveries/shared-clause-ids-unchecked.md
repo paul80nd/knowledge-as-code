@@ -27,8 +27,8 @@ names `eng:pol-SCRT` and `eng:pol-DATA`. Neither target holds a clause of that i
 
 ## Context
 
-Read while adopting this type in this corpus. The convention lives in `examples/engineering/policies/_template.md`
-alone. `kac checks` lists nothing for it, and the phrase appears nowhere under `tooling/`.
+Read while adopting this type in this corpus. The policy template states the convention, in both trees that hold a
+copy of it. `kac checks` lists nothing that enforces it.
 
 ## Why it might matter
 

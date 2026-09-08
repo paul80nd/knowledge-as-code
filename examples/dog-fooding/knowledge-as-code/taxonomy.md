@@ -131,21 +131,22 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From      | Field          | Points at | Answered by     |
-|-----------|----------------|-----------|-----------------|
-| Control   | `applies-to`   | Service   |                 |
-| Control   | `verifies`     | Standard  | `verified-by`   |
-| Deviation | `applies-to`   | Service   |                 |
-| Deviation | `departs-from` | Standard  |                 |
-| Discovery | `applies-to`   | Service   |                 |
-| Discovery | `promoted-to`  | Standard  | `promoted-from` |
-| Process   | `applies-to`   | Service   |                 |
-| Runbook   | `applies-to`   | Service   |                 |
-| Service   | `depends-on`   | Service   |                 |
-| Standard  | `applies-to`   | Service   |                 |
-| Standard  | `verified-by`  | Control   | `verifies`      |
-| Tool      | `replaces`     | Tool      | `successor`     |
-| Tool      | `successor`    | Tool      | `replaces`      |
+| From      | Field           | Points at | Answered by     |
+|-----------|-----------------|-----------|-----------------|
+| Control   | `applies-to`    | Service   |                 |
+| Control   | `verifies`      | Standard  | `verified-by`   |
+| Deviation | `applies-to`    | Service   |                 |
+| Deviation | `departs-from`  | Standard  |                 |
+| Discovery | `applies-to`    | Service   |                 |
+| Discovery | `promoted-to`   | Standard  | `promoted-from` |
+| Process   | `applies-to`    | Service   |                 |
+| Runbook   | `applies-to`    | Service   |                 |
+| Service   | `depends-on`    | Service   |                 |
+| Standard  | `applies-to`    | Service   |                 |
+| Standard  | `promoted-from` | Discovery | `promoted-to`   |
+| Standard  | `verified-by`   | Control   | `verifies`      |
+| Tool      | `replaces`      | Tool      | `successor`     |
+| Tool      | `successor`     | Tool      | `replaces`      |
 
 <!-- END GENERATED: types-edges -->
 

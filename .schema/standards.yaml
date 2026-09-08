@@ -128,6 +128,18 @@ fields:
     reciprocal: verifies
     description: Control ids that check it.
 
+  promoted-from:
+    required: false
+    type: id
+    ref: discoveries
+    reciprocal: promoted-to
+    description: The discovery this was promoted from.
+    notes: >
+      A discovery that turns out to be a rule people should follow is promoted here rather than to an FAQ,
+      and an FAQ carries the same field for the answers it takes. A standard reached this way still needs
+      the provenance `provenance-required` asks for, because a promotion says where the observation came
+      from and not which decision or clause the rule stands on.
+
   applies-to:
     required: true
     type: list

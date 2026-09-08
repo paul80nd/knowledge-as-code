@@ -7,4 +7,4 @@
 | dsc-comment-moves-to-a-new-method | [A comment above a method attaches to a method inserted beneath it](comment-moves-to-a-new-method.md)      | session | unverified   | open   | 2026-12-07 |
 | dsc-rider-holds-the-editorconfig  | [Rider does not re-read an .editorconfig changed from a shell](rider-holds-the-editorconfig.md)            | session | unverified   | open   | 2026-12-07 |
 | dsc-shared-clause-ids-unchecked   | [A shared clause carries the same id on both sides, and nothing checks it](shared-clause-ids-unchecked.md) | session | unverified   | open   | 2026-12-07 |
-| dsc-type-rules-never-run          | [Seven adopted type folders hold no record, so their rules have never run](type-rules-never-run.md)        | session | corroborated | open   | 2026-12-07 |
+| dsc-type-rules-never-run          | [Three knowledge types hold no record anywhere, so their rules have never run](type-rules-never-run.md)    | session | corroborated | open   | 2026-12-07 |
