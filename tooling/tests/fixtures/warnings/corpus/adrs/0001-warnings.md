@@ -33,4 +33,4 @@ Trigger `alternatives-verdict` and `unused-definition`, both warnings, so the ru
 
 The golden pins the two warnings and no errors for this document.
 
-[unused-ref]: /adrs/0001-warnings
+[unused-ref]: /adrs

@@ -100,7 +100,7 @@ public static class ChecksTable
             null),
         ("undefined-label", [new("undefined-label")], "Every shortcut reference has a link definition.", null),
         ("label-canonical", [new("label-canonical")],
-            "A shortcut label that names a document is written as that document's id.", null),
+            "A shortcut label is the id of the record it leads to, written as that record carries it.", null),
         ("related-matches-section", [new("related-matches-section")],
             "A field that mirrors a section reconciles with the ids in that section.",
             t => t.AnyField(f => f.MirrorsSection is not null)),
