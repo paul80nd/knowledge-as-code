@@ -25,6 +25,7 @@ column for your row.
 | A step-by-step for a planned task                            | [Processes](../processes.md)   |
 | A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)     |
 | A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)           |
+| An answer about the corpus that no single record holds       | [Reports](../reports.md)       |
 
 <!-- END GENERATED: types-placement -->
 
@@ -58,6 +59,11 @@ of work are the union of the layers that apply to it.
 These are the types CI can check against the estate rather than merely against themselves, which matters because they
 rot faster than anything else.
 
+**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
+added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
+the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
+answered them.
+
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
 stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
@@ -89,6 +95,7 @@ graph LR;
   t_controls[Control];
   t_deviations[Deviation];
   t_processes[Process];
+  t_reports[Report];
   t_runbooks[Runbook];
   t_services[Service];
   t_standards[Standard];
