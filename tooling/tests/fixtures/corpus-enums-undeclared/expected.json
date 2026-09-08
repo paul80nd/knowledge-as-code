@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "validated": 1,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 1,
+    "warnings": 0,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "corpus-enum-undeclared",
+      "message": "'platform' on a service is judged against a list this corpus states, and it states none. Write the values your estate uses under `enums:`, as `platform: [a, b]`, then close the list: services.md says how to reach it."
+    }
+  ]
+}

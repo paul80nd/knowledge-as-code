@@ -97,6 +97,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
+        CheckCorpusEnums(corpus.Docs, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
 
@@ -380,6 +381,34 @@ public static class Validator
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("type-setup"),
                     $"type '{key}' is stood up here and is not in 'types:'. Every generated list leaves it out while "
                     + "the corpus holds it. Adopt it, or delete what was built."));
+        }
+    }
+
+    // Whether the corpus has written the ranges the schema leaves to it. See docs/corpus-descriptor.md.
+    //
+    // Reported once, against the descriptor, rather than against each record carrying the field. Nobody who
+    // wrote a record can fix this, and a corpus with thirty services would otherwise meet thirty copies of
+    // one setup mistake, each pointing at the wrong file.
+    //
+    // Asked of the types the corpus holds a record of rather than of the types it declared. A corpus that
+    // stood the folder up and wrote nothing into it has no estate to derive a list from, so the question
+    // arrives with the first record.
+    private static void CheckCorpusEnums(
+        IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
+    {
+        var types = docs.Select(d => d.Type).OfType<TypeSchema>()
+            .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal);
+
+        foreach (var t in types)
+        foreach (var field in t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value))
+        {
+            if (field.CorpusEnum is not { } name) continue;
+            if (descriptor.Enums.TryGetValue(name, out var values) && values.Count > 0) continue;
+
+            f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("corpus-enum-undeclared"),
+                $"'{field.Name}' on a {t.TypeName} is judged against a list this corpus states, and it "
+                + $"states none. Write the values your estate uses under `enums:`, as `{name}: [a, b]`, "
+                + $"then close the list: {t.Page} says how to reach it."));
         }
     }
 

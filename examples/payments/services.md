@@ -38,20 +38,20 @@ of the catalogue as well, because it deploys services.
 
 <!-- BEGIN GENERATED: schema-services -->
 
-| Field           | Value                                                                    | Notes                                                                               |
-|-----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†       | string                                                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†       | `descriptive`                                                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                   |
-| `owner` *†      | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `repo` *        | string                                                                   | Where the code lives.                                                               |
-| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                  |
-| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                       |
-| `depends-on`    | list                                                                     | What this service calls, downward only.                                             |
-| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                |
-| `facets`        | list                                                                     | Slices the catalogue. One exposure, then any traits. Each value groups services.    |
+| Field           | Value                                    | Notes                                                                               |
+|-----------------|------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†         | string                                   | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `type` *†       | string                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
+| `tier` *†       | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `live` `building` `deprecated` `retired` | Where the service is in its life.                                                   |
+| `owner` *†      | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `tags` †        | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `repo` *        | string                                   | Where the code lives.                                                               |
+| `platform` *    | `dotnet-api`                             | What it is built on. Drives which standards apply.                                  |
+| `criticality` * | `critical` `important` `supporting`      | Judged by what a customer experiences when it is unavailable.                       |
+| `depends-on`    | list                                     | What this service calls, downward only.                                             |
+| `data-stores`   | list                                     | Data ids this service owns or reads.                                                |
+| `facets`        | list                                     | Slices the catalogue. One exposure, then any traits. Each value groups services.    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -99,11 +99,15 @@ say what deploys it: a service deployed by Terraform is not a Terraform service,
 this catalogue entirely.
 
 **Derive the values from the estate you have, then close the list.** Walk the deployables, group them by the runtime and
-framework a contributor would need to know, and let that be the enum. Do not inherit a list from elsewhere. A value no
-service can carry reaches an author at exactly the moment they are least able to judge it. A value the estate needs and
-the enum lacks sends someone to `mixed` who does not belong there.
+framework a contributor would need to know, and let that be the range. Do not inherit a list from elsewhere. A value no
+service can carry reaches an author at exactly the moment they are least able to judge it.
 
-The values in `.schema/services.yaml` are the example estate's, reached that way. Replace them with your own.
+The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), because it is this catalogue's answer and not the
+framework's. `.schema/services.yaml` declares `values: $corpus.platform` and states no values of its own, so one schema
+can sit above several catalogues and stand behind the list each of them wrote. Write a service before you write the
+list and `corpus-enum-undeclared` says so.
+
+Both deployables here are .NET APIs, so the list holds `dotnet-api` alone.
 
 ### Deriving the facet vocabulary
 
@@ -115,7 +119,7 @@ One **exposure**, then zero or more **traits**:
 
 | Facet          | Means                                                                                          |
 |----------------|------------------------------------------------------------------------------------------------|
-| `public`       | Has an inbound surface a customer or member of the public can reach. Exactly one of these two. |
+| `public`       | Has an inbound surface a customer or member of the public can reach. At most one of these two. |
 | `internal`     | Inbound only from staff or from other services in this catalogue.                              |
 | `event-driven` | Publishes to or consumes from the message bus.                                                 |
 | `scheduled`    | Runs on a timer as well as, or instead of, on request.                                         |
@@ -123,12 +127,15 @@ One **exposure**, then zero or more **traits**:
 Two rules keep the vocabulary small enough to browse, and they are the transferable part:
 
 1. **Exposure describes the inbound surface.** A staff portal on the public internet is `internal`, because only staff
-   are meant to reach it.
+   are meant to reach it. A service reached by nobody carries neither value, and a command line tool somebody installs
+   and runs is one.
 2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it. There is no `monorepo`
    facet, because `repo` says it. A value that duplicates a field can only ever disagree with it.
 
 Membership stays a judgement. The floor holds the shape of the vocabulary (that every value in it groups), and no
 declaration anywhere says which words this estate chose. That is the corpus's to decide and this page's to record.
+`platform` states its list in `.corpus.yaml` instead, because a value nothing recognises there detaches a service from
+its standards. A facet nobody else carries only costs a grouping, and `min-records` reports it.
 
 ### What a tag is for instead
 

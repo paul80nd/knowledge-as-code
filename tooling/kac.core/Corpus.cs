@@ -84,7 +84,7 @@ public static class Corpus
                 new HashSet<string>(AllFiles(corpusRoot).Select(f => f.Replace('\\', '/')), StringComparer.Ordinal),
                 rel => Files.ReadLf(Path.Combine(corpusRoot, rel)),
                 rel => File.Exists(Path.Combine(corpusRoot, rel))),
-            Schema.LoadNearest(corpusRoot),
+            Schema.LoadNearest(corpusRoot, descriptor.Enums),
             descriptor,
             Imports.Load(corpusRoot, descriptor.Consumes));
     }

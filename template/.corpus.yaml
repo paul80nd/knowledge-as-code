@@ -4,6 +4,6 @@
 # before its owner has run anything. The manifest withholds this file, because a corpus's descriptor
 # names the corpus, says where it publishes and lists the types it adopted, and no copied file could
 # answer any of that.
-descriptor-version: 1
+descriptor-version: 2
 corpus: template
 publishing-target: none

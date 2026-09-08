@@ -38,6 +38,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. It
   reads each `verifies` entry to see whether the control named a record or one rule inside it, and refuses a per-rule
   figure where only records were named. Take it with `kac update --from <template>`.
+- **A corpus states the ranges the framework cannot know.** A field declaring `values: $corpus.<name>` in `.schema/`
+  draws its range from `enums:` in `.corpus.yaml`, so one schema above several catalogues stands behind the list each
+  of them wrote. `services.platform` is the first field to use it: what a service is built on is one list in a library
+  and another in a payments platform. `kac validate` reports `corpus-enum-undeclared` once against `.corpus.yaml` where
+  a corpus holds a record carrying such a field and has stated no range, and an out-of-range value stays an ordinary
+  `enum` failure quoting the corpus's own values. `kac new` opens the block and leaves it empty. Take it with
+  `kac update --from <template>`.
+
+### Changed
+
+- **`.corpus.yaml` is at descriptor format 2, and `services.platform` no longer carries a range of its own.** A corpus
+  holding services states `enums.platform` in its descriptor before `kac validate` passes. Derive the values from your
+  own deployables and close the list on what you found, which is what the type's page has always asked for. There is no
+  migration: `kac update` stamps the format and writes no values, because only the corpus can say what its estate runs
+  on.
 
 ### Fixed
 

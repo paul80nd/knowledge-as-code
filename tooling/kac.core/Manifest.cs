@@ -133,7 +133,7 @@ public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
     // newer tool writes, so an update stamps this alongside what it took.
-    public const int Format = 1;
+    public const int Format = 2;
 
     // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
     // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.
@@ -290,6 +290,14 @@ public class CorpusDescriptor
     // makes when it is ready rather than one the tool forces on the version that arrives without it.
     public List<string>? Types;
 
+    // The ranges this corpus states, keyed as a field's `values: $corpus.<name>` names them. See
+    // docs/corpus-descriptor.md.
+    //
+    // Empty where the corpus has written none, which `corpus-enum-undeclared` reports. A field drawing on a
+    // key nothing answers to resolves to no range rather than to an empty one, because an empty range would
+    // refuse every value a record carries.
+    public readonly Dictionary<string, IReadOnlyList<string>> Enums = new(StringComparer.Ordinal);
+
     public static CorpusDescriptor Load(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
@@ -330,6 +338,9 @@ public class CorpusDescriptor
 
         if (Yaml.Get(root, "types") is YamlSequenceNode types)
             descriptor.Types = [.. types.Children.Select(Yaml.Str).OfType<string>()];
+
+        foreach (var (name, node) in Yaml.Map(Yaml.Get(root, "enums")))
+            descriptor.Enums[name] = Yaml.StrList(node);
 
         if (Yaml.Get(root, "consumes") is YamlSequenceNode consumes)
             foreach (var item in consumes.Children)
