@@ -208,6 +208,11 @@ public sealed class ExportSpec
     // empty, and the second would otherwise read as a type exporting no parts.
     public bool PartsDeclared { get; init; }
 
+    // The file a type's framework references travel in, and empty where none do. A reference is read
+    // from a clause's `Alignment` cell rather than from any key a type declares, so the type names the
+    // file and the exporter fills the line. `docs/design/export.md` says what a line carries.
+    public string Frameworks { get; init; } = "";
+
     // The keys of one part line, in the order the line writes them, each with the source filling it.
     //
     // The key is the type's own word and reaches the wire as written. `definition` and `not` are a
@@ -873,6 +878,7 @@ public sealed partial class Schema
                         .. Yaml.Map(export.Get("sections"))
                             .Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))
                     ],
+                    Frameworks = Yaml.Str(export.Get("frameworks")) ?? "",
                     Parts = Yaml.Str(exportParts.Get("fidelity")) ?? "",
                     PartsDeclared = exportPartsNode is not null,
                     Line =

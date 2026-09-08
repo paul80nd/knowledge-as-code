@@ -35,7 +35,8 @@
       "seeAlsoKey": "seeAlso",
       "sections": {
         "Scope": "full"
-      }
+      },
+      "frameworksFile": null
     },
     {
       "type": "policies",
@@ -52,7 +53,8 @@
         "Purpose": "summary",
         "Scope": "full",
         "Exceptions": "full"
-      }
+      },
+      "frameworksFile": null
     },
     {
       "type": "processes",
@@ -68,7 +70,8 @@
       "sections": {
         "When to use this": "full",
         "Prerequisites": "full"
-      }
+      },
+      "frameworksFile": null
     }
   ]
 }

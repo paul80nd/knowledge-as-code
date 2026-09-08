@@ -1088,6 +1088,110 @@ public class ExporterTests
         }
     };
 
+    // The framework edge, read back from the framework's end. A reference two clauses cite is one line
+    // naming both, because the file answers what a control rests on rather than what a clause maps to.
+    [Fact]
+    public void A_reference_two_clauses_cite_is_one_line_naming_both()
+    {
+        var line = Assert.Single(FrameworkLines(Plan(Aligned())));
+
+        Assert.Equal("ISO 27001:2022", line.GetProperty("framework").GetString());
+        Assert.Equal("A.8.13", line.GetProperty("reference").GetString());
+        Assert.Equal(["pol-BKUP.COPY", "pol-BKUP.WARM"],
+            line.GetProperty("clauses").EnumerateArray().Select(c => c.GetString()));
+        Assert.Equal(["pol-BKUP"], line.GetProperty("records").EnumerateArray().Select(r => r.GetString()));
+    }
+
+    // The register's own heading, verbatim. The tool states what the corpus filed the framework under
+    // and rules on nothing, so a corpus naming its standings differently exports the words it wrote.
+    [Fact]
+    public void A_framework_line_carries_the_register_word_and_the_entry_it_sits_at()
+    {
+        var line = Assert.Single(FrameworkLines(Plan(Aligned())));
+
+        Assert.Equal("Obliged", line.GetProperty("standing").GetString());
+        Assert.Equal("frameworks.md", line.GetProperty("path").GetString());
+        Assert.Equal("iso-27001", line.GetProperty("anchor").GetString());
+    }
+
+    // The manifest names the file, so a consumer opens what it was told about rather than guessing.
+    [Fact]
+    public void The_manifest_names_the_frameworks_file()
+        => Assert.Equal("policies/frameworks.jsonl",
+            Assert.Single(Plan(Aligned()).Types).FrameworksFile);
+
+    // A type declaring no `frameworks:` key writes no such file, which is every type bar policies.
+    [Fact]
+    public void A_type_declaring_no_frameworks_file_writes_none()
+    {
+        var plan = Plan(Corpus(PolicyType(), ("pol-DATA", Policy())));
+
+        Assert.DoesNotContain(plan.Files, f => f.Path.EndsWith("frameworks.jsonl", StringComparison.Ordinal));
+        Assert.Null(Assert.Single(plan.Types).FrameworksFile);
+    }
+
+    // A policy citing a framework by link, beside the register that link reaches. The definition at the
+    // foot is what makes the cell a reference: without one the brackets are literal text and the
+    // exporter reads no framework at all.
+    private static LoadedCorpus Aligned()
+    {
+        var corpus = Corpus(PolicyType("frameworks.jsonl"), ("pol-BKUP", AlignedPolicy));
+
+        var files = new HashSet<string>(corpus.Docs.Select(d => d.Rel), StringComparer.Ordinal)
+            { "frameworks.md" };
+
+        corpus.Tree = new Tree(files, rel => rel == "frameworks.md"
+            ? Register
+            : corpus.Docs.FirstOrDefault(d => d.Rel == rel)?.Text ?? "");
+
+        return corpus;
+    }
+
+    private const string Register =
+        """
+        # Frameworks
+
+        ## Obliged
+
+        ### ISO 27001
+
+        Registered against it.
+        """;
+
+    private const string AlignedPolicy =
+        """
+        ---
+        id: pol-BKUP
+        tier: normative
+        status: active
+        owner: someone
+        review-by: "2030-01-01"
+        ---
+
+        # Backups
+
+        ## Purpose
+
+        Why this exists.
+
+        ## Clauses
+
+        | Id     | Clause                          | Alignment               |
+        |--------|---------------------------------|-------------------------|
+        | `COPY` | **MUST** hold a second copy.    | [ISO 27001:2022].A.8.13 |
+        | `WARM` | **MUST** keep one of them warm. | [ISO 27001:2022].A.8.13 |
+
+        [ISO 27001:2022]: ../frameworks.md#iso-27001
+
+        """;
+
+    private static List<JsonElement> FrameworkLines(ExportPlan plan) =>
+    [
+        .. Single(plan, "policies/frameworks.jsonl").Content
+            .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => JsonDocument.Parse(l).RootElement)
+    ];
+
     private static List<JsonElement> ClauseLines() =>
     [
         .. Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/clauses.jsonl").Content
@@ -1155,7 +1259,7 @@ public class ExporterTests
 
     // The type behind those clauses. Its line names a modal and a column, and neither has a home in a
     // glossary's line.
-    private static TypeSchema PolicyType() => new()
+    private static TypeSchema PolicyType(string frameworks = "") => new()
     {
         Key = "policies",
         TypeName = "policy",
@@ -1170,6 +1274,7 @@ public class ExporterTests
             Version = 1,
             Fields = ["id", "title"],
             Sections = [("Purpose", ExportSpec.Full), ("Exceptions", ExportSpec.Full)],
+            Frameworks = frameworks,
             Parts = ExportSpec.Full,
             PartsDeclared = true,
             Line =

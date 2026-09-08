@@ -151,6 +151,7 @@ export:
     Purpose: summary
     Scope: full
     Exceptions: full
+  frameworks: frameworks.jsonl
   parts:
     fidelity: full
     line:
@@ -174,10 +175,14 @@ export:
     holding a clause without them reads a stricter policy than the one we wrote. `Purpose` travels as
     its opening paragraph, which is where a policy states its position.
 
-    Alignment stays behind entire, cell and roll-up alike. A reference resolves through `frameworks.md`,
-    which says whether we are obliged, self-obligated or merely borrowing, and no consumer receives that
-    page. A mapping carried without it says a policy touches A.8.24 and leaves the reader to guess what
-    touching it commits us to.
+    Alignment stays off the clause line, cell and roll-up alike. A mapping carried there says a policy
+    touches A.8.24 and leaves the reader to guess what touching it commits us to, because the standing
+    that answers that lives on `frameworks.md` and no consumer receives the page.
+
+    `frameworks.jsonl` carries the same edge from the other end, where the standing can travel beside it.
+    One line per reference, naming the standing the register files it under, the clauses citing it, and
+    the page and anchor the entry sits at. The exporter fills those keys, because a reference is read
+    from a cell and from the register the cell links to rather than from any field this type declares.
 
     A clause carries no `seeAlso`: a cross-reference is read from the body beneath a part, and a table
     row has none. A clause pointing at another policy reaches a consumer as the id inside its words.

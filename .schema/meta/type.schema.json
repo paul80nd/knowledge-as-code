@@ -408,6 +408,11 @@
             "$ref": "#/$defs/fidelity"
           }
         },
+        "frameworks": {
+          "description": "The file this type's framework references travel in, named relative to the type's own directory. A reference is read from a clause's `Alignment` cell, so the exporter fills each line and the type names only the file. Omit it and none travel.",
+          "type": "string",
+          "pattern": "^[a-z0-9-]+\\.jsonl$"
+        },
         "parts": {
           "description": "What a record's parts contribute, and the shape of the line each one is written as. They are read from the type's `parts:` block, so a type exporting parts declares one.",
           "type": "object",

@@ -41,6 +41,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   register is found by following a clause's own link, so a corpus whose clauses cite nothing has none in view. A
   finding lands on the policy that reached the page and names the page the entry is deleted from.
 
+- **`policies/frameworks.jsonl` travels in the export.** One line per external framework reference, naming the
+  standing the register files it under, the clauses citing it, the policies holding those clauses, and the page and
+  anchor the register entry sits at. A type names the file with `frameworks:` in its `export:` block and the exporter
+  fills the keys, because a reference is read from a clause's cell and from the register the cell links to rather than
+  from any field a type declares. Navigation stays one way: `clauses.jsonl` is unchanged, and a clause still carries no
+  framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
+  still correct.
+
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
   base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an

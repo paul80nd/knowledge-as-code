@@ -51,12 +51,17 @@ public sealed record CoverageRow(
 // `Standing` is the heading the register files the framework under, verbatim, and null where the
 // register places it nowhere. The tool states the corpus's own word and never rules on what it means, so
 // a corpus renaming its standings reports in the vocabulary it wrote.
+//
+// `Path` and `Anchor` address the register entry itself, so a reader holding this row can reach the
+// page that placed the framework. Both stand null where the register places it nowhere.
 public sealed record FrameworkRow(
     string Framework,
     string? Reference,
     string? Standing,
     IReadOnlyList<string> Clauses,
-    IReadOnlyList<string> Records);
+    IReadOnlyList<string> Records,
+    string? Path,
+    string? Anchor);
 
 // The reports `kac report` can print, and what each comes to.
 //
@@ -237,26 +242,34 @@ public static class Reports
         [
             .. byReference.OrderBy(e => e.Value.Framework, StringComparer.Ordinal)
                 .ThenBy(e => e.Value.Reference ?? "", Comparer<string>.Create(Natural.Compare))
-                .Select(e => new FrameworkRow(e.Value.Framework, e.Value.Reference,
-                    Standing(register, corpus, e.Value.Framework),
-                    e.Value.Clauses,
-                    [.. e.Value.Clauses.Select(c => c[..c.LastIndexOf('.')]).Distinct(StringComparer.Ordinal)]))
+                .Select(e => Row(e.Value.Framework, e.Value.Reference, e.Value.Clauses,
+                    Placed(register, corpus, e.Value.Framework)))
         ];
     }
 
-    // Where the register files a framework, in the register's own words. Read through a document citing
-    // it, because the label is defined as a link and only a citing document holds that definition.
+    // One reference, with the policies holding its clauses taken from the clause ids themselves. A
+    // clause id opens with the record that wrote it, so the set of policies is already in hand.
+    private static FrameworkRow Row(string framework, string? reference, List<string> clauses,
+        (string? Standing, string? Path, string? Anchor) placed) =>
+        new(framework, reference, placed.Standing, clauses,
+            [.. clauses.Select(c => c[..c.LastIndexOf('.')]).Distinct(StringComparer.Ordinal)],
+            placed.Path, placed.Anchor);
+
+    // Where the register puts a framework: the word it is filed under, the page carrying the entry, and
+    // the anchor a link reaches it by. Read through a document citing it, because the label is defined
+    // as a link and only a citing document holds that definition.
     //
     // The register is built with no standings, because this asks it to place a framework and never to
     // weigh one. Which standings bind is `alignment-rollup`'s judgement, and a report repeating it would
     // tie what it prints to a rule's configuration it has no other use for.
-    private static string? Standing(Register register, LoadedCorpus corpus, string framework)
+    private static (string? Standing, string? Path, string? Anchor) Placed(
+        Register register, LoadedCorpus corpus, string framework)
     {
         foreach (var doc in ClauseDocs(corpus))
-            if (register.Filed(doc, framework) is { Length: > 0 } standing)
-                return standing;
+            if (register.Reaches(doc, framework) is ({ } page, { } anchor))
+                return (register.Filed(doc, framework), page, anchor);
 
-        return null;
+        return (null, null, null);
     }
 
     // Every id a field of the given name names, keyed by the id it points at. One pass over every

@@ -23,6 +23,9 @@ Three keys select what a record sends:
 
 Neither `sections:` nor `parts:` falls back to a default. A type states the fidelity or the schema pass fails.
 
+A fourth key, **`frameworks:`**, names a second flat file rather than selecting anything from a record.
+[`frameworks.jsonl`](#frameworksjsonl-carries-the-framework-edge-from-the-frameworks-end) below says what it holds.
+
 A corpus that adopted no exporting type still writes a manifest, with an empty type list.
 
 ### What each fidelity carries
@@ -81,6 +84,7 @@ proved.
   policies/
     pol-<MNEM>.json      the same, for a policy
     clauses.jsonl        every clause, one to a line, carrying the level it binds at
+    frameworks.jsonl     every external framework reference, one to a line, and the clauses citing it
   standards/
     std-<MNEM>.json      the same, for a standard
     eng/
@@ -88,9 +92,10 @@ proved.
     rules.jsonl          every rule of both corpora, one to a line
 ```
 
-The names are read from the schema. A type's directory is its own key, and its flat file is named for what the type
-calls one of its parts: `terms.jsonl`, because a glossary's `parts:` block says `noun: term`. Both are fixed once the
-type has declared them, because a skill addresses them by name.
+The names are read from the schema. A type's directory is its own key, and its parts file is named for what the type
+calls one of its parts: `terms.jsonl`, because a glossary's `parts:` block says `noun: term`. `frameworks.jsonl` is
+named outright, by the `frameworks:` key. All three are fixed once the type has declared them, because a skill
+addresses them by name.
 
 ## A consumer inherits what its producers published
 
@@ -212,6 +217,15 @@ there:
 "partsFile": null, "recordKey": null, "partKey": null, "idKey": null, "seeAlsoKey": null
 ```
 
+### `frameworksFile` names the second flat file where a type keeps one
+
+```json
+"frameworksFile": "policies/frameworks.jsonl"
+```
+
+It is null for every type declaring no `frameworks:` key, and null as well where the type declares one and no clause
+cites a framework. So a consumer opens the file the manifest names and never seeks one that was not written.
+
 ### `about` carries what the corpus says about itself
 
 `kac pack` never loads the corpus and a plugin is assembled from the export rather than from the tree, so the
@@ -272,6 +286,29 @@ record it came from.
 **Within a record, the part source decides.** A glossary's terms sort alphabetically. A policy's clauses travel in the
 order the table writes them, because that order groups the obligations ahead of the recommendations. Sorting them would
 hand a consumer a different policy from the one the page shows.
+
+### `frameworks.jsonl` carries the framework edge from the framework's end
+
+A policy clause maps to an external framework in its `Alignment` cell, and that edge travels in a file of its own rather
+than on the clause line. One line per reference, and the type that declares a `frameworks:` key gets it:
+
+```json
+{"framework":"ISO 27001:2022","reference":"A.8.13","standing":"Obliged",
+ "clauses":["pol-BKUP.COPY","pol-BKUP.SHARED"],"records":["pol-BKUP"],
+ "path":"frameworks.md","anchor":"iso-27001"}
+```
+
+**The exporter writes these keys, and the type names only the file.** A reference is read from a clause's cell and from
+the register, meaning the corpus's own `frameworks.md`, that the cell links to. Neither is a field the type declares, so
+a `line:` block over its own fields could not name where any of it comes from.
+
+**`standing` is the register's word, verbatim.** Example Engineering files a framework under `Obliged`,
+`Self-obligated` or `Inspiration`, and another corpus may use words of its own. `path` and `anchor` address the entry
+itself, so a reader can reach the page that placed it.
+
+**A line names its own corpus's clauses alone.** An inherited clause left its `Alignment` cell behind, so a consumer
+knows nothing about what its producer's clauses cite and reads the producer's own file for that half. This is the one
+place the merge does not reach.
 
 ### A cross-reference is read, never inferred
 
@@ -436,10 +473,11 @@ there rather than changing any line.
 there writes `null` on every line of the flat file. The record file carries that same field as an array, which is where
 a consumer reads it.
 
-**A clause carries no framework alignment.** A policy states one in the `Alignment` cell of the clause it qualifies,
-and that reference resolves through the corpus's own `frameworks.md`, which says whether the corpus is obliged to the
-framework, self-obligated to it, or borrowing from it. No consumer receives that page, so a mapping carried without it
-would say a clause touches `A.8.24` and leave the reader to work out what that commits anyone to.
+**A clause carries no framework alignment.** A reference on the clause line would say a clause touches `A.8.24` and
+leave the reader to work out what that commits anyone to, because the standing answering that sits on the corpus's own
+`frameworks.md` and no consumer receives the page. `frameworks.jsonl` carries the same edge from the other end, where
+the standing travels beside it. Navigation is therefore one way: a framework names its clauses, and a clause names no
+framework.
 
 **A clause carries no `seeAlso`.** A cross-reference is read from the body beneath a part, and a table row has none. So
 a clause pointing at another policy reaches a consumer as the id inside its words, and the run does not name that link

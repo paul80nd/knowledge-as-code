@@ -181,11 +181,11 @@ public static class Breadcrumb
 
         foreach (var file in exportFiles)
         {
-            // A record file, which is every `.json` in the type's directory bar the flat file the
-            // manifest names. Both tests are asked: today the flat file is `.jsonl` and the extension
-            // alone would settle it, but the name is the manifest's to choose and this reads it.
+            // A record file, which is every `.json` in the type's directory bar the two flat files the
+            // manifest names. Both tests are asked: today a flat file is `.jsonl` and the extension
+            // alone would settle it, but the names are the manifest's to choose and this reads them.
             if (!file.Path.StartsWith(prefix, StringComparison.Ordinal)) continue;
-            if (file.Path == type.PartsFile) continue;
+            if (file.Path == type.PartsFile || file.Path == type.FrameworksFile) continue;
             if (!file.Path.EndsWith(".json", StringComparison.Ordinal)) continue;
 
             var within = file.Path[prefix.Length..];

@@ -121,7 +121,17 @@ public static class Exporter
             if (partsFile is not null)
                 files.Add(new ExportFile(partsFile, string.Concat(lines.Select(l => l + "\n"))));
 
-            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile));
+            var frameworks = FrameworkLines(local, corpus);
+            var frameworksFile = frameworks.Count > 0 && local?.Export is { Frameworks: { Length: > 0 } named }
+                ? $"{key}/{named}"
+                : null;
+            if (frameworksFile is not null)
+                files.Add(new ExportFile(frameworksFile, string.Concat(frameworks.Select(l => l + "\n"))));
+
+            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile) with
+            {
+                FrameworksFile = frameworksFile
+            });
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -259,6 +269,35 @@ public static class Exporter
     private static bool Same(
         IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, string> b) =>
         a.Count == b.Count && a.All(e => b.TryGetValue(e.Key, out var v) && v == e.Value);
+
+    // Every external framework this corpus's own clauses cite, one line apiece, and none where the type
+    // declares no file for them.
+    //
+    // This corpus's own clauses alone. An inherited clause left its `Alignment` cell behind, so nothing
+    // here could say which frameworks it reaches, and a consumer reads its producer's own file for that
+    // half. `docs/design/export.md` carries the reasoning and `Reports.FrameworkRows` gathers the rows.
+    //
+    // The keys are written here rather than declared by the type. A reference is read from a cell and
+    // from the register the cell links to, so no `line:` block over the type's own fields could name
+    // where any of it comes from.
+    private static List<string> FrameworkLines(TypeSchema? local, LoadedCorpus corpus)
+    {
+        if (local?.Export is not { Frameworks.Length: > 0 }) return [];
+
+        return
+        [
+            .. Reports.FrameworkRows(corpus, []).Select(row => Serialize(new JsonObject
+            {
+                ["framework"] = row.Framework,
+                ["reference"] = row.Reference,
+                ["standing"] = row.Standing,
+                ["clauses"] = new JsonArray([.. row.Clauses.Select(c => (JsonNode?)JsonValue.Create(c))]),
+                ["records"] = new JsonArray([.. row.Records.Select(r => (JsonNode?)JsonValue.Create(r))]),
+                ["path"] = row.Path,
+                ["anchor"] = row.Anchor
+            }))
+        ];
+    }
 
     // Where one type's parts file lands. This corpus's own name for a part decides it where the corpus
     // adopted the type, and the producer's where it did not, so a consumer reading a type it never
