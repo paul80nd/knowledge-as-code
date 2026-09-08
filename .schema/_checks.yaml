@@ -654,6 +654,17 @@ checks:
 
       Reported once per framework rather than once per clause citing it.
 
+  framework-uncited:
+    severity: error
+    description: A framework on the corpus's framework register is cited by at least one clause.
+    notes: >
+      The register is the list of frameworks this estate has taken a standing against, so an entry no
+      clause reaches is a standing nothing acts on and reads to an auditor as coverage.
+
+      The register is found by following a clause's own link to it, so a corpus whose clauses cite
+      nothing has no register in view and reports nothing. Reported against the policy that reached the
+      page, because the register carries no frontmatter and is no record; the message names the page.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

@@ -122,6 +122,9 @@ public static class ChecksTable
             "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
             + "places each framework.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
+        ("framework-uncited", [new("framework-uncited")],
+            "Every framework on the register is cited by at least one clause.",
+            t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)

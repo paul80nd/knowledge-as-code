@@ -3,7 +3,7 @@
     "validated": 27,
     "templates": 17,
     "skipped": 0,
-    "errors": 13,
+    "errors": 15,
     "warnings": 16,
     "infos": 0
   },
@@ -154,6 +154,20 @@
       "severity": "error",
       "check": "alignment-rollup",
       "message": "'aligns-with' claims 'ISO 27001:2022.A.5.17', and no clause cites it."
+    },
+    {
+      "file": "policies/unpl-framework-not-placed.md",
+      "line": null,
+      "severity": "error",
+      "check": "framework-uncited",
+      "message": "'Azure Well-Architected Framework' is filed on 'frameworks.md' and no clause cites it."
+    },
+    {
+      "file": "policies/unpl-framework-not-placed.md",
+      "line": null,
+      "severity": "error",
+      "check": "framework-uncited",
+      "message": "'ISO 27001' is filed on 'frameworks.md' and no clause cites it."
     },
     {
       "file": "policies/unpl-framework-not-placed.md",

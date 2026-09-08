@@ -1,8 +1,8 @@
 using kac.core;
 
-// `alignment-rollup` reports two faults under one id and `framework-posture` under another, and the
-// coverage gate reads ids. So a fixture tripping any one of them turns that id green. These are what
-// hold the rest honest.
+// `alignment-rollup` reports two faults under one id, and `framework-posture` and `framework-uncited`
+// take one each. The coverage gate reads ids, so a fixture tripping any one of them turns that id
+// green. These are what hold the rest honest.
 //
 // The cell reader gets its own tests at the foot. What it has to get right is a boundary the flattened
 // cell no longer marks, and every framework label in the corpus with a dot in it is a case for it.
@@ -186,11 +186,57 @@ public class AlignmentRollupTests
                                       Ideas taken, nothing bound.
                                       """;
 
+    // A framework the register places and no clause reaches. The register is the list of frameworks
+    // this estate has taken a standing against, so an entry nothing cites is a standing nobody acts on.
+    [Fact]
+    public void A_framework_the_register_places_and_no_clause_cites_is_reported()
+        => Assert.Equal(
+            ["'Azure Well-Architected Framework' is filed on 'frameworks.md' and no clause cites it.",
+                "'ISO 27001' is filed on 'frameworks.md' and no clause cites it."],
+            Uncited("aligns-with:\n  - framework: WCAG 2.2 AA",
+                "| `CONFORM` | **MUST** conform. | [WCAG 2.2 AA] |").Select(f => f.Message));
+
+    // The register carries no frontmatter, so a finding about it has no document of its own to name. It
+    // lands on the record that reached the page, and the message names the page the entry is deleted
+    // from. There is no line, because the policy holds nothing to point at.
+    [Fact]
+    public void An_uncited_framework_is_reported_against_the_record_that_reached_the_register()
+    {
+        var found = Uncited("aligns-with:\n  - framework: WCAG 2.2 AA",
+            "| `CONFORM` | **MUST** conform. | [WCAG 2.2 AA] |").First();
+
+        Assert.Equal("policies/scrt-secrets.md", found.File);
+        Assert.Null(found.Line);
+    }
+
+    // A clause citing a framework for provenance still reaches its entry. The standing decides what
+    // rolls up, and never whether anybody is using the register entry.
+    [Fact]
+    public void A_citation_of_a_framework_that_binds_nothing_counts_as_a_citation()
+        => Assert.DoesNotContain(
+            Uncited("aligns-with:", "| `SPEND` | SHOULD watch the spend. | [Azure WAF].cost-optimization |"),
+            f => f.Message.Contains("Azure Well-Architected Framework", StringComparison.Ordinal));
+
+    // A heading above the first standing is filed under none, so there is no entry for a clause to
+    // leave uncited. `framework-posture` is what reports that one, once a clause cites it.
+    [Fact]
+    public void A_framework_heading_under_no_standing_is_not_reported_as_uncited()
+        => Assert.DoesNotContain(
+            Uncited("aligns-with:\n  - framework: WCAG 2.2 AA",
+                "| `CONFORM` | **MUST** conform. | [WCAG 2.2 AA] |"),
+            f => f.Message.Contains("Loose Framework", StringComparison.Ordinal));
+
+    // The rule finds a register by following a clause's own link, so a policy citing nothing reaches no
+    // page and the check has nothing to read.
+    [Fact]
+    public void A_policy_citing_nothing_leaves_the_register_unread()
+        => Assert.Empty(Uncited("aligns-with:", "| `ZEROSEC` | COULD reach zero secrets. | |"));
+
     // The definitions at the foot are not decoration. Markdig resolves a shortcut reference only where
     // one is defined, so a cell written without them parses as literal brackets and the rule reads no
     // links at all. They are also how the rule reaches the register, because a label names the page and
     // the heading on it.
-    private static List<Finding> Run(string frontmatter, params string[] rows)
+    private static List<Finding> Findings(string frontmatter, params string[] rows)
     {
         var table = "| Id | Clause | Alignment |\n|----|--------|-----------|\n"
                     + string.Join("\n", rows) + "\n";
@@ -216,6 +262,17 @@ public class AlignmentRollupTests
 
         return found;
     }
+
+    // The register above holds three placed frameworks and a case cites one or two, so
+    // `framework-uncited` fires in every one of them. It is asked its own questions further up, and
+    // dropped here so that a case about the roll-up asserts the roll-up alone.
+    private static List<Finding> Run(string frontmatter, params string[] rows) =>
+        [.. Findings(frontmatter, rows).Where(f => f.Check != Unreferenced)];
+
+    private static List<Finding> Uncited(string frontmatter, params string[] rows) =>
+        [.. Findings(frontmatter, rows).Where(f => f.Check == Unreferenced)];
+
+    private static readonly CheckId Unreferenced = new("framework-uncited");
 
     // The anchor a label points at, which is the framework's heading without the version the label
     // carries. `FinOps 2024` deliberately names a heading the register does not hold.

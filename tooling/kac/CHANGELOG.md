@@ -35,6 +35,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   labelled footnote closing a part. Neither addition moves `standards@1`, because a reader written against the shape
   before them is still correct.
 
+- **`framework-uncited` fails a framework on the register that no clause cites.** The register is the list of
+  frameworks an estate has taken a standing against, so an entry nothing reaches is a standing nobody acts on, and it
+  reads as coverage to whoever is looking for evidence. It is the third check `alignment-rollup` reports under. The
+  register is found by following a clause's own link, so a corpus whose clauses cite nothing has none in view. A
+  finding lands on the policy that reached the page and names the page the entry is deleted from.
+
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
   base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an

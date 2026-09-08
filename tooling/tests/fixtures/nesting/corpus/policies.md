@@ -58,6 +58,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `label-canonical`                      | error   | A shortcut label that names a document is written as that document's id.                                            |
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
+| `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.           |
 
 <!-- END GENERATED: checks-policies -->

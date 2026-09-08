@@ -16,6 +16,10 @@ namespace kac.core;
 // reference in the roll-up that no clause cites is a claim of coverage no clause can show, and that one
 // reads as evidence to whoever is looking for it.
 //
+// The register itself is held to the same account. A framework filed there that no clause reaches is
+// the register claiming a standing this corpus never acts on, which is what the page says of itself: a
+// framework nothing references does not belong here.
+//
 // A corpus rule rather than a document rule, because the standing is not in the policy. It is on the
 // register the policy's own links point at, which carries no frontmatter and is therefore no record.
 public sealed class AlignmentRollup : ICorpusRule
@@ -24,8 +28,9 @@ public sealed class AlignmentRollup : ICorpusRule
 
     private static readonly CheckId Reports = new("alignment-rollup");
     private static readonly CheckId Unstated = new("framework-posture");
+    private static readonly CheckId Unreferenced = new("framework-uncited");
 
-    public IReadOnlyList<CheckId> Emits => [Reports, Unstated];
+    public IReadOnlyList<CheckId> Emits => [Reports, Unstated, Unreferenced];
 
     // The frontmatter key holding the roll-up. Named here rather than read from the type, because no
     // declaration says which field summarises a column: the type declares the column and the field
@@ -41,10 +46,11 @@ public sealed class AlignmentRollup : ICorpusRule
         if (column is null) return;
 
         var register = new Register(ctx.Tree, ctx.Spec.Postures);
+        var reached = new Dictionary<string, (Doc First, HashSet<string> Cited)>(StringComparer.Ordinal);
 
         foreach (var doc in ctx.Records)
         {
-            var cited = FromClauses(doc, column, register, ctx);
+            var cited = FromClauses(doc, column, register, ctx, reached);
             var declared = FromFrontmatter(doc, out var fieldLine);
 
             // A policy citing nothing that binds and claiming nothing is the ordinary case for a
@@ -59,6 +65,25 @@ public sealed class AlignmentRollup : ICorpusRule
                 ctx.Err(doc, Reports,
                     $"'{Field}' claims '{reference}', and no clause cites it.", fieldLine);
         }
+
+        Uncited(register, reached, ctx);
+    }
+
+    // Every framework a register page places that no clause reached. Only the pages a clause table led
+    // to are asked, because the rule finds a register by following a link and never by guessing a
+    // filename. A corpus whose clauses cite nothing has no register in view.
+    //
+    // A finding names a file the corpus read as a document, and the register is not one. So the finding
+    // lands on the record that reached the page, the message names the page where the entry is deleted,
+    // and it carries no line.
+    private static void Uncited(Register register,
+        Dictionary<string, (Doc First, HashSet<string> Cited)> reached, CorpusRuleContext ctx)
+    {
+        foreach (var (page, (doc, cited)) in reached.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        foreach (var (anchor, entry) in register.Entries(page))
+            if (!cited.Contains(anchor))
+                ctx.Err(doc, Unreferenced,
+                    $"'{entry.Heading}' is filed on '{page}' and no clause cites it.", null);
     }
 
     // What one side holds that the other does not, in the order the first side reads. Comparison is
@@ -76,7 +101,7 @@ public sealed class AlignmentRollup : ICorpusRule
     // moves stays readable and a clause mentioning a framework in its wording is not mistaken for a
     // mapping.
     private static Dictionary<string, int?> FromClauses(Doc doc, string column, Register register,
-        CorpusRuleContext ctx)
+        CorpusRuleContext ctx, Dictionary<string, (Doc First, HashSet<string> Cited)> reached)
     {
         var found = new Dictionary<string, int?>(StringComparer.Ordinal);
         var said = new HashSet<string>(StringComparer.Ordinal);
@@ -88,6 +113,16 @@ public sealed class AlignmentRollup : ICorpusRule
             var labels = row.CellLinks?.GetValueOrDefault(column) ?? [];
 
             foreach (var (framework, reference) in Alignment.References(cell, labels))
+            {
+                // Collected whatever the standing is. A clause citing a framework for provenance still
+                // reaches the register entry, and `framework-uncited` asks only whether anything did.
+                if (register.Reaches(doc, framework) is var (page, anchor))
+                {
+                    if (!reached.TryGetValue(page, out var seen))
+                        reached[page] = seen = (doc, new HashSet<string>(StringComparer.Ordinal));
+                    seen.Cited.Add(anchor);
+                }
+
                 switch (register.Standing(doc, framework))
                 {
                     case Posture.Binding:
@@ -103,6 +138,7 @@ public sealed class AlignmentRollup : ICorpusRule
                             + $"is. {register.Wanted}", row.Line);
                         break;
                 }
+            }
         }
 
         return found;
@@ -155,6 +191,10 @@ public sealed class AlignmentRollup : ICorpusRule
     }
 }
 
+// One framework on the register: the heading a reader meets it under, and the standing it sits under.
+// Both, because a rule weighing the standing and a message naming the framework each want one half.
+internal sealed record RegisterEntry(string Heading, string Standing);
+
 // What a corpus says about a framework one of its clauses cites.
 public enum Posture
 {
@@ -181,7 +221,8 @@ public enum Posture
 // carry a second one beside the first.
 internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
 {
-    private readonly Dictionary<string, Dictionary<string, string>> _byPage = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<string, RegisterEntry>> _byPage =
+        new(StringComparer.Ordinal);
 
     // What to tell an author whose framework the register does not place, naming the standings that
     // would carry it into the roll-up. One string, because every such finding ends the same way.
@@ -195,8 +236,19 @@ internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
     public string? Filed(Doc doc, string label)
     {
         if (Anchor(doc, label) is not ({ } page, { } anchor)) return null;
-        return Placed(page).GetValueOrDefault(anchor);
+        return Placed(page).GetValueOrDefault(anchor)?.Standing;
     }
+
+    // The register page a label reaches and the anchor on it, whatever standing that anchor sits under.
+    // A caller counting citations wants the reach alone: a framework filed under a standing that binds
+    // nothing is still one a clause cited.
+    public (string Page, string Anchor)? Reaches(Doc doc, string label) =>
+        Anchor(doc, label) is ({ } page, { } anchor) ? (page, anchor) : null;
+
+    // Every framework a page places, ordered by the anchor a clause links to, so a caller reporting on
+    // them reports the same order every run.
+    public IEnumerable<KeyValuePair<string, RegisterEntry>> Entries(string page) =>
+        Placed(page).OrderBy(kv => kv.Key, StringComparer.Ordinal);
 
     public Posture Standing(Doc doc, string label) => Filed(doc, label) switch
     {
@@ -225,17 +277,17 @@ internal sealed class Register(Tree tree, IReadOnlyList<string> postures)
 
     // Every framework heading on a register page, against the standing it sits under. Read once per
     // page: a corpus has one register and every policy asks the same question of it.
-    private Dictionary<string, string> Placed(string page)
+    private Dictionary<string, RegisterEntry> Placed(string page)
     {
         if (_byPage.TryGetValue(page, out var known)) return known;
 
-        var placed = new Dictionary<string, string>(StringComparer.Ordinal);
+        var placed = new Dictionary<string, RegisterEntry>(StringComparer.Ordinal);
         var standing = "";
 
         foreach (var (level, text) in Md.Headings(tree.Read(page)))
             if (level <= 2) standing = level == 2 ? text : "";
             else if (standing.Length > 0 && Md.Slug(text) is { Length: > 0 } slug)
-                placed.TryAdd(slug, standing);
+                placed.TryAdd(slug, new RegisterEntry(text, standing));
 
         _byPage[page] = placed;
         return placed;
