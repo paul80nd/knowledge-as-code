@@ -40,7 +40,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `enum`                                 | error   | Enum values are in range and lowercase.                                                                             |
 | `field-pattern`                        | error   | Values match the pattern their field declares (e.g. `tags`).                                                        |
 | `list-order`                           | warning | List entries read in alphabetical order, with numbers compared as numbers.                                          |
-| `entry-shape / entry-key`              | error   | Each entry of an object list is a mapping, carrying the keys the field declares and no others.                      |
+| `entry-shape / entry-key`              | error   | An object field, and each entry of an object list, carries the keys the field declares and no others.               |
 | `type-matches-folder`                  | error   | `type` matches the singular type name the record's folder declares.                                                 |
 | `tier-matches-type`                    | error   | `tier` matches the tier the type declares.                                                                          |
 | `id`                                   | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.     |

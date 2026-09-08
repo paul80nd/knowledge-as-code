@@ -49,6 +49,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
   still correct.
 
+- **`reports` is a knowledge type, and the nineteenth the framework ships.** A finished report is a record: it has an
+  owner, a person confirms it before it is published, and a reader browsing the corpus finds it beside everything else.
+  `generated` names what produced the content and when, `sources` names each corpus it answers for and the
+  `content-version` each was at, and `confirmed` names every person who has checked it since. Sections are free-form,
+  because a report's headings follow the question it answers. Take it with `kac update --add-type reports`.
+
 - **A field may hold one object, and a shared shape may say what it holds.** `type: object` declares a value that is
   one mapping, and its keys are held to their own declarations exactly as a list's object entries are. `_shapes.yaml`
   joins `_enums.yaml` as a shared block, declaring an object shape a field takes whole with `shape: <name>`. Nothing

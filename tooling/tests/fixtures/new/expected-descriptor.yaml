@@ -52,6 +52,7 @@ types:
   - policies
   - postmortems
   - processes
+  - reports
   - runbooks
   - services
   - standards

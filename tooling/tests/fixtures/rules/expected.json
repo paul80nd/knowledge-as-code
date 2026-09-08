@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 27,
-    "templates": 17,
+    "validated": 28,
+    "templates": 18,
     "skipped": 0,
-    "errors": 15,
+    "errors": 16,
     "warnings": 16,
     "infos": 0
   },
@@ -189,6 +189,13 @@
       "severity": "warning",
       "check": "no-hedged-ordering",
       "message": "A step hedged with \"typically\", \"usually\" or \"normally\" leaves the reader to decide. Say what the ordering depends on, or state it plainly."
+    },
+    {
+      "file": "reports/producer-without-a-version.md",
+      "line": 1,
+      "severity": "error",
+      "check": "generated-by-a-producer",
+      "message": "`generated.by` names a producer and its version together, as `kac/0.24.0`. A bare name leaves a reader unable to tell which version of the producer wrote this."
     },
     {
       "file": "runbooks/database-connections-exhausted.md",

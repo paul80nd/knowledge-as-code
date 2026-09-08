@@ -93,7 +93,7 @@ Other boundaries:
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                           |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
-| `entry-shape / entry-key`   | error   | Each entry of an object list is a mapping, carrying the keys the field declares and no others.                  |
+| `entry-shape / entry-key`   | error   | An object field, and each entry of an object list, carries the keys the field declares and no others.           |
 | `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |

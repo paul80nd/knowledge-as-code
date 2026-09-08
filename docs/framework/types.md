@@ -1,6 +1,6 @@
 # The default types
 
-Eighteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
+Nineteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
 [`.corpus.yaml`](../corpus-descriptor.md). A declined type's schema file is never written, so nothing arrives to be
 ignored.
 
@@ -45,6 +45,7 @@ Living, and must mirror reality. Verifiable against the estate.
 | **Tools**        | `tools/`        | The approved-software register: what is chosen, rejected or deprecated, and the version ranges you stand behind |
 | **Glossaries**   | `glossary/`     | The ubiquitous language. Terms whose meaning is specific to you, or which are easily confused                   |
 | **Explanations** | `explanations/` | Narrative that helps you understand how something works, or why it is shaped the way it is                      |
+| **Reports**      | `reports/`      | A question about the corpus answered over the whole of it, with the judgement a person added                   |
 
 ## Procedural
 
