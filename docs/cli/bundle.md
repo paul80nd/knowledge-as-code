@@ -41,15 +41,17 @@ wrote .dist/plugin/corpus/manifest.json
 wrote .dist/plugin/hooks/breadcrumb
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
+wrote .dist/plugin/skills/raise-finding/SKILL.md
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 14 file(s) to .dist/plugin/ as example-libraries 0.1.7. 3 component(s) included, 3 trimmed.
+bundle: wrote 15 file(s) to .dist/plugin/ as example-libraries 0.1.9. 4 component(s) included, 3 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
 A trimmed component is not an error. It is a skill whose record type this corpus does not export. `corpus-retrieval`
 names no type: it reaches the published source for whichever lookup skills are left, and follows the last of them out.
+`raise-finding` names no type either and is declared standalone, so it ships whatever the corpus adopted.
 
 ### Install what you just built
 
@@ -76,7 +78,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
 ```
 
 Search the assembled skills for the file one type exports, to see which of them reads it:

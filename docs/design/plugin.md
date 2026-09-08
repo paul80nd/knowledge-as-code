@@ -95,15 +95,21 @@ A type declaring no parts writes no such file, and its records travel one JSON a
 process is followed whole and in order, so the record is the unit, and a step addressed on its own would be quoted out
 of the sequence that makes it safe. Its skill reads the directory, and `manifest.json` reports `partsFile` as null.
 
-### A component naming no type supports the ones that do
+### A component naming no type either supports the others or stands alone
 
 `requires` names the types a component reads. One naming none reads no export at all, so the trim above cannot reach
-it. `corpus-retrieval` is that component: it reaches a record's published source, which every lookup skill needs and no
-single type owns.
+it. Two skills are in that position and they want opposite things, so `standalone` tells them apart.
 
-It travels wherever one component that reads a type did, and follows the last of them out. A plugin shipping it alone
-would carry a skill supporting nothing a reader can reach, and `bundle.json` would report a component included where
-the run left nothing to answer a question. The trim names it too, at `no component it supports survived`.
+`corpus-retrieval` supports the lookups: it reaches a record's published source, which every lookup skill needs and no
+single type owns. It travels wherever one component that reads a type did, and follows the last of them out. A plugin
+shipping it alone would carry a skill supporting nothing a reader can reach, and `bundle.json` would report a component
+included where the run left nothing to answer a question. The trim names it too, at `no component it supports
+survived`.
+
+`raise-finding` supports nothing and serves whoever is holding the plugin, so it declares `"standalone": true` and the
+sweep leaves it alone. A corpus holding no record at all is the one a session most needs a route to report, and
+trimming the skill would take that route away at exactly the wrong moment. Standalone says nothing about the trim
+above it: a standalone component naming a type the export left out is trimmed like any other.
 
 **A file no component claims is the unconditional case**, and it needs no declaration. A README or a licence in the
 plugin tree travels whatever the corpus adopted.

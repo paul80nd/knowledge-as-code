@@ -17,6 +17,12 @@
         "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
       },
       {
+        "path": "skills/raise-finding",
+        "requires": [],
+        "standalone": true,
+        "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
+      },
+      {
         "path": "skills/policy-lookup",
         "requires": [
           "policies@2"

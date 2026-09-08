@@ -97,27 +97,31 @@ records in it rather than lines on this page.
 of either is cited as `eng:`.
 
 [`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch the plugin is served from and turns it
-on, so a clone has it without anyone adding a marketplace by hand. Three skills read it:
+on, so a clone has it without anyone adding a marketplace by hand. Four skills read it:
 
 * **`standards-lookup`** finds the rule you have to build to. Ask it before you change a workflow, a YAML file, or any
   prose published here.
 * **`policy-lookup`** finds what the estate is committed to, in the clauses `examples/engineering` states. Ask it
   before you propose anything touching secrets, access, dependencies, or what reaches production.
 * **`glossary-lookup`** says what a word here means. Ask it before you infer a meaning from usage.
+* **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
 
-**Use them, and then say where they let you down.** This is the one corpus whose subject is the repository you are
-working in, so a session here is the only reader who can tell what it is missing. Tell the developer, in the reply that
-closes the session, whichever of these happened:
+**Use them, and then raise a finding where they let you down.** This is the one corpus whose subject is the repository
+you are working in, so a session here is the only reader who can tell what it is missing. Raise one for whichever of
+these happened:
 
 * a question one of the skills should have answered and could not
 * a record that is missing, or one whose wording sent you the wrong way
 * a lookup that would have helped, that you only thought of afterwards
 * something the plugin cannot do that would have made it worth reaching for
+* something about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/), which a session
+  meets the same way and by using it
 
-Raise an issue for each that is a gap rather than a slip, and label it `dogfood`. The installed copy is read-only, so
-an issue is the only way an agent writes back to it, and the label is what makes the loop countable. The same label
-covers a finding about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/), which a
-session meets the same way and by using it.
+**Load `raise-finding` and let it write the issue.** It carries the body, the provenance and the label, so a finding
+arrives in a shape the next run can act on. Filing one by hand costs the same and lands a shape nothing reads.
+
+**It asks before it files, every time.** Say what you are about to raise in the reply that closes the session, and let
+the developer answer. A finding filed unasked is the one thing this skill must never do.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
@@ -139,8 +143,8 @@ Tell the developer, in the reply that closes the session, whichever of these hap
 * a playbook whose steps did not fit the work, or work no playbook covered
 * a rule in a writing skill that misfired on the surface you were writing
 
-**Say nothing where none of that happened.** Most sessions have no finding. One invented to fill the space costs the
-developer a read and a check, and leaves them nothing.
+**Say nothing where none of that happened.** Most sessions have nothing to say here. One invented to fill the space
+costs the developer a read and a check, and leaves them nothing.
 
 **Raise no issue either.** The file is in front of you both, so the developer decides on the spot whether the edit is
 worth making, and says so where it is.
