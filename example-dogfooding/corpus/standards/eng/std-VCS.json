@@ -30,6 +30,6 @@
     "Conformance checklist": "- [ ] The repository builds from a clean clone on a machine that has never seen this service.\n- [ ] The infrastructure definition sits in the repository, and the running estate matches it.\n- [ ] Branch protection is on, and it blocks direct pushes to the default branch.\n- [ ] Recent commit subjects each name a work item.\n- [ ] No commit in the last release carries a shared account as its author."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/standards/common/version-control.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b088989c13833ab0a1c807de0f792a20e5c6f311/examples/engineering/standards/common/version-control.md"
   }
 }

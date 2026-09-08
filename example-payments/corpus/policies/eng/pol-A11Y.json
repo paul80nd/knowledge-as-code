@@ -14,6 +14,6 @@
     "Exceptions": "A third-party component we cannot replace may fall short of the target standard. We record the gap, we provide an equivalent route to the same outcome where one exists, and the accessibility statement says so. Recording a gap honestly is acceptable; concealing it is not."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/policies/governance/a11y-accessibility.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b088989c13833ab0a1c807de0f792a20e5c6f311/examples/engineering/policies/governance/a11y-accessibility.md"
   }
 }

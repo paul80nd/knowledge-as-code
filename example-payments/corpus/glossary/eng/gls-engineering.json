@@ -18,6 +18,6 @@
     "Scope": "The estate: what our systems are built from, what they hold, and what we owe the people that data describes. A word about the framework this corpus runs on belongs to the framework's own glossary, which every corpus shares.\n\nAn entry here may cite a record, which the shared glossary may not. Where a policy turns on a word, the entry names the clause that owns the detail."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/glossary/engineering.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b088989c13833ab0a1c807de0f792a20e5c6f311/examples/engineering/glossary/engineering.md"
   }
 }
