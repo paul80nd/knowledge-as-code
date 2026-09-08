@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.15.0",
+    "contentVersion": "0.16.0",
     "types": [
       "processes",
       "standards",
@@ -26,6 +26,16 @@
         "glossary@1"
       ],
       "note": "Reads a term from corpus/glossary/terms.jsonl and the owning glossary record beside it."
+    },
+    {
+      "path": "skills/raise-finding",
+      "requires": [],
+      "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
+    },
+    {
+      "path": "skills/request-deviation",
+      "requires": [],
+      "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
     },
     {
       "path": "skills/policy-lookup",
