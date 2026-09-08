@@ -37,6 +37,8 @@ app.Configure(config =>
         .WithDescription("Seal the export into a versioned package under .dist/package/.");
     config.AddCommand<ChecksCommand>("checks")
         .WithDescription("List every check the validator implements.");
+    config.AddCommand<ReportCommand>("report")
+        .WithDescription("Print a report over this corpus and what it imports.");
     config.AddCommand<UpdateCommand>("update")
         .WithDescription("Take a newer framework into this corpus, or adopt a type.");
 });
@@ -266,6 +268,23 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
 {
     protected override int Execute(CommandContext context, ChecksSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
+}
+
+// `report` prints markdown to stdout, so the caller decides where it lands. The mechanical half fills
+// what the corpus states and leaves every judgement open, which is what lets a skill complete it and a
+// human confirm the result. `docs/cli/report.md` carries the division.
+internal sealed class ReportSettings : KacSettings
+{
+    [CommandArgument(0, "<NAME>")]
+    [Description("Which report to print.")]
+    public string Name { get; init; } = "";
+}
+
+internal sealed class ReportCommand : Command<ReportSettings>
+{
+    protected override int Execute(CommandContext context, ReportSettings settings, CancellationToken token) =>
+        Cli.InCorpus(settings, corpus => Commands.Report(corpus, settings.Name, Cli.Version,
+            DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")));
 }
 
 // `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a

@@ -19,6 +19,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac report <name>` prints a report over the corpus and everything it imports.** Two reports ship. `kac report
+  coverage` names every policy clause and what discharges it, with the deviations departing from it, the controls
+  behind each covering standard, and any clause elsewhere sharing its key. `kac report frameworks` names every
+  external framework reference the clause tables cite, the clauses citing each one, and how many rest on a single
+  citation. Output is markdown on standard output, so a caller pipes it where they want it. Every run stamps
+  `generated` and `sources` into the frontmatter it writes, naming the tool version, the moment, and the
+  `content-version` each corpus answered at. The tool prints `covered` and `uncovered` and never splits a gap from
+  something out of scope, because only a person can tell those apart.
+
 - **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each
   rule line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers
   to can now count its own coverage: before this, it saw what its own standards covered and nothing that arrived with

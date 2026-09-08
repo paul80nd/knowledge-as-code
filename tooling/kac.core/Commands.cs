@@ -635,6 +635,39 @@ public static class Commands
         return 1;
     }
 
+    // Print one report over this corpus and everything it imports.
+    //
+    // Markdown to stdout, so the caller pipes it into a record, a pull request or a terminal. The run
+    // stamps what produced it and which content version it answers for, because only the tool knows
+    // both. `docs/cli/report.md` says what each report carries and what it leaves open.
+    public static int Report(string corpusRoot, string name, string toolVersion, string at)
+    {
+        if (!Reports.Names.Contains(name, StringComparer.Ordinal))
+            return Fail($"report: there is no report called '{name}'. "
+                        + $"There is {string.Join(" and ", Reports.Names)}.");
+
+        var corpus = Corpus.Load(corpusRoot);
+
+        // An import that has not been restored is a hole in the report rather than a smaller one, which
+        // is the argument `Export` above makes about the same folder.
+        var (inherited, notRestored) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
+        if (notRestored.Count > 0)
+            return Fail($"report: nothing is restored for {string.Join(", ", notRestored)}, which this corpus "
+                        + "consumes and a report reads. Run kac restore.");
+
+        var sources = new List<ReportSource>
+        {
+            new(corpus.Descriptor.Name ?? corpusRoot, corpus.Descriptor.ContentVersion)
+        };
+        sources.AddRange(inherited.Select(i => new ReportSource(i.Corpus ?? i.Shortcode, i.ContentVersion)));
+
+        var plan = Reports.Plan(name, corpus, inherited, new ReportStamp($"kac/{toolVersion}", at, sources));
+        if (plan is null) return Fail($"report: '{name}' named no report this build can write.");
+
+        Out.Line(plan.Text);
+        return 0;
+    }
+
     // Take a newer framework into a corpus that already has one.
     //
     // The order mirrors `New`: everything that can stop the run is settled before anything is written.

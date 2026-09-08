@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -64,10 +65,16 @@ internal static partial class CliReference
         return Gfm.RenderTable(["Command", "What it does"], rows);
     }
 
-    // The block body for one verb: the invocation it accepts, then a row per option.
+    // The block body for one verb: the invocation it accepts, then a table for what it takes.
+    //
+    // Arguments come first and in the order the parser declares them, because that order is the one a
+    // reader has to type. Options are alphabetical, because their order on the line is free.
     internal static string Render(Verb verb)
     {
         var invocation = new StringBuilder($"kac {verb.Name}");
+        foreach (var argument in verb.Arguments)
+            invocation.Append(argument.Required ? $" <{argument.Name}>" : $" [<{argument.Name}>]");
+
         foreach (var option in verb.Options)
         {
             var flag = option.Value is null ? $"--{option.Long}" : $"--{option.Long} <{option.Value}>";
@@ -75,17 +82,27 @@ internal static partial class CliReference
         }
 
         var usage = $"```text\n{invocation}\n```";
-        if (verb.Options.Count == 0) return usage;
 
-        var rows = verb.Options
-            .Select(o => new List<string>
-            {
-                Gfm.Escape(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
-                Gfm.Escape(o.Description)
-            })
-            .ToList();
+        var tables = new List<string>();
 
-        return $"{usage}\n\n{Gfm.RenderTable(["Option", "What it does"], rows)}";
+        if (verb.Arguments.Count > 0)
+            tables.Add(Gfm.RenderTable(["Argument", "What it does"],
+            [
+                .. verb.Arguments.Select(a => new List<string>
+                    { Gfm.Escape($"`<{a.Name}>`"), Gfm.Escape(a.Description) })
+            ]));
+
+        if (verb.Options.Count > 0)
+            tables.Add(Gfm.RenderTable(["Option", "What it does"],
+            [
+                .. verb.Options.Select(o => new List<string>
+                {
+                    Gfm.Escape(o.Value is null ? $"`--{o.Long}`" : $"`--{o.Long} <{o.Value}>`"),
+                    Gfm.Escape(o.Description)
+                })
+            ]));
+
+        return tables.Count == 0 ? usage : $"{usage}\n\n{string.Join("\n\n", tables)}";
     }
 
     // The page carrying `body` in the block called `name`. `Markers.SpliceBlock` writes it, so a page of
@@ -134,6 +151,14 @@ internal static partial class CliReference
             .. root.Elements("Command")
                 .Select(c => new Verb(
                     c.Value("Name"),
+                    c.Element("Parameters")?.Elements("Argument")
+                        .OrderBy(a => int.Parse(a.Value("Position"), CultureInfo.InvariantCulture))
+                        .Select(a => new Argument(
+                            a.Value("Name"),
+                            a.Value("Required") is "true",
+                            OneLine(a.Element("Description")?.Value)))
+                        .ToList()
+                    ?? [],
                     c.Element("Parameters")?.Elements("Option")
                         .Select(o => new Option(
                             o.Value("Long"),
@@ -180,7 +205,10 @@ internal static partial class CliReference
         return stdout;
     }
 
-    internal sealed record Verb(string Name, IReadOnlyList<Option> Options);
+    internal sealed record Verb(
+        string Name, IReadOnlyList<Argument> Arguments, IReadOnlyList<Option> Options);
+
+    internal sealed record Argument(string Name, bool Required, string Description);
 
     internal sealed record Option(string Long, string? Value, bool Required, string Description);
 }

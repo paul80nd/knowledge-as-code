@@ -20,6 +20,7 @@ links the part of it that explains the command.
 | [`bundle`](bundle.md)     | Assemble the export into an installable agent plugin.   |
 | [`pack`](pack.md)         | Seal the export into a versioned package.               |
 | [`checks`](checks.md)     | List every check the validator can report.              |
+| [`report`](report.md)     | Print a report over the corpus and what it imports.     |
 | [`update`](update.md)     | Take a newer framework into a corpus.                   |
 
 <!-- END GENERATED: command-table -->
