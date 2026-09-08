@@ -97,7 +97,7 @@ records in it rather than lines on this page.
 of either is cited as `eng:`.
 
 [`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch the plugin is served from and turns it
-on, so a clone has it without anyone adding a marketplace by hand. Four skills read it:
+on, so a clone has it without anyone adding a marketplace by hand. These skills come with it:
 
 * **`standards-lookup`** finds the rule you have to build to. Ask it before you change a workflow, a YAML file, or any
   prose published here.
@@ -105,6 +105,8 @@ on, so a clone has it without anyone adding a marketplace by hand. Four skills r
   before you propose anything touching secrets, access, dependencies, or what reaches production.
 * **`glossary-lookup`** says what a word here means. Ask it before you infer a meaning from usage.
 * **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
+* **`request-deviation`** asks the owner of a clause to accept a departure from it. Reach for it before you build
+  something that breaks one of the inherited clauses in `examples/engineering`.
 
 **Use them, and then raise a finding where they let you down.** This is the one corpus whose subject is the repository
 you are working in, so a session here is the only reader who can tell what it is missing. Raise one for whichever of
@@ -122,6 +124,11 @@ arrives in a shape the next run can act on. Filing one by hand costs the same an
 
 **It asks before it files, every time.** Say what you are about to raise in the reply that closes the session, and let
 the developer answer. A finding filed unasked is the one thing this skill must never do.
+
+**The clause owner here is the developer you are talking to.** A consumer elsewhere files a deviation request because
+they cannot reach that person. You can, so put the departure to them in the conversation, and let `request-deviation`
+write the issue where they say one belongs. The record itself lands in
+[`examples/dog-fooding/deviations/`](examples/dog-fooding/deviations/) once they have accepted it.
 
 **Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
 it to know about. This repository does: project 3, with a `Status` and a `Phase`. An issue left off it is one the

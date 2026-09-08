@@ -42,16 +42,19 @@ wrote .dist/plugin/hooks/breadcrumb
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
+wrote .dist/plugin/skills/request-deviation/SKILL.md
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 15 file(s) to .dist/plugin/ as example-libraries 0.1.9. 4 component(s) included, 3 trimmed.
+bundle: wrote 16 file(s) to .dist/plugin/ as example-libraries 0.1.9. 5 component(s) included, 3 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
-A trimmed component is not an error. It is a skill whose record type this corpus does not export. `corpus-retrieval`
-names no type: it reaches the published source for whichever lookup skills are left, and follows the last of them out.
-`raise-finding` names no type either and is declared standalone, so it ships whatever the corpus adopted.
+A trimmed component is not an error. It is a skill whose record type this corpus does not export. Three skills name no
+type at all, and who each one serves decides what happens to it. `corpus-retrieval` reaches the published source for
+whichever lookup skills are left, and `request-deviation` asks the owner of a clause a lookup found, so both follow the
+last lookup out. `raise-finding` is declared standalone and ships whatever the corpus adopted, because a corpus holding
+no record is the one a session most needs a route to report.
 
 ### Install what you just built
 
@@ -64,11 +67,11 @@ what CI publishes.
 
 ### Read which components shipped
 
-A corpus adopting three record types ships a skill for each over one export, beside the two that travel whatever it
-adopted. The closing line counts them:
+A corpus adopting three record types ships a lookup skill for each over one export, beside the three that name no type
+of their own. The closing line counts them:
 
 ```text
-bundle: wrote 51 file(s) to .dist/plugin/ as example-engineering 0.10.0. 5 component(s) included, 1 trimmed.
+bundle: wrote 54 file(s) to .dist/plugin/ as example-engineering 0.11.0. 7 component(s) included, 1 trimmed.
 ```
 
 `bundle.json` names them, and it travels inside the plugin:
@@ -78,7 +81,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
 ```
 
 Search the assembled skills for the file one type exports, to see which of them reads it:

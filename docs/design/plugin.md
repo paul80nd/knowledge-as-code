@@ -98,13 +98,14 @@ of the sequence that makes it safe. Its skill reads the directory, and `manifest
 ### A component naming no type either supports the others or stands alone
 
 `requires` names the types a component reads. One naming none reads no export at all, so the trim above cannot reach
-it. Two skills are in that position and they want opposite things, so `standalone` tells them apart.
+it. Three skills are in that position, and `standalone` says which of two things each one is.
 
-`corpus-retrieval` supports the lookups: it reaches a record's published source, which every lookup skill needs and no
-single type owns. It travels wherever one component that reads a type did, and follows the last of them out. A plugin
-shipping it alone would carry a skill supporting nothing a reader can reach, and `bundle.json` would report a component
-included where the run left nothing to answer a question. The trim names it too, at `no component it supports
-survived`.
+`corpus-retrieval` and `request-deviation` support the lookups. The first reaches a record's published source, and the
+second asks the owner of a clause to accept a departure from it. Each needs a record a lookup found, and no single type
+owns either job. Both travel wherever one component that reads a type did, and follow the last of them out. A plugin
+shipping either alone would carry a skill supporting nothing a reader can reach, and `bundle.json` would report a
+component included where the run left nothing to answer a question. The trim names them too, at `no component it
+supports survived`.
 
 `raise-finding` supports nothing and serves whoever is holding the plugin, so it declares `"standalone": true` and the
 sweep leaves it alone. A corpus holding no record at all is the one a session most needs a route to report.
