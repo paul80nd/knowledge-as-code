@@ -1,0 +1,30 @@
+{
+  "type": "controls",
+  "path": "controls/0005-update-check.md",
+  "fields": {
+    "id": "ctl-0005",
+    "title": "Every corpus holds the file the template sends it",
+    "status": "active",
+    "verifies": [
+      "std-CONFIG"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "evidence": "The `corpora` job's log on the pull request, under the step \"Check the corpus is in step with the template\".",
+    "applies-to": [
+      "all"
+    ],
+    "tags": [
+      "overlay",
+      "template"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says you \"**MUST** run\n  `kac update --check --from ../../` in every corpus after that copy\".",
+    "How it works": "The `corpora` job runs `dotnet run --project ../../tooling/kac -- update --check --from ../../` in each of the four corpora under `examples/`. `manifest.yaml` at the root names the files the check reaches, and each of its rules says which layer those files sit in.\n\nThe check answers in both directions. It reports a copy whose content differs from the template's, and a file a corpus holds that the template sends nothing to. Either exits non-zero.",
+    "Coverage and gaps": "The matrix covers `examples/`. `template/` is where these files are authored, so nothing holds it to a copy of itself.\n\n`.schema/` and `template/.plugin/` sit outside the manifest, because a corpus reads both where they are authored\nrather than taking a copy. A corpus created elsewhere receives its own `.editorconfig`, and each corpus here declares\nthat file under `skip:`."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/controls/0005-update-check.md"
+  }
+}

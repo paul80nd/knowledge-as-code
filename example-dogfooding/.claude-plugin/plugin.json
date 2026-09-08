@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-dogfooding",
   "displayName": "Example Dogfooding",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
   "author": {
     "name": "Paul Law",
@@ -13,6 +13,7 @@
   "license": "MIT",
   "keywords": [
     "knowledge-as-code",
+    "controls",
     "processes",
     "standards",
     "glossary",
@@ -44,6 +45,13 @@
         "path": "skills/request-deviation",
         "requires": [],
         "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
+      },
+      {
+        "path": "skills/controls-lookup",
+        "requires": [
+          "controls@1"
+        ],
+        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
       },
       {
         "path": "skills/policy-lookup",

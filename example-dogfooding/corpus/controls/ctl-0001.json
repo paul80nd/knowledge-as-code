@@ -1,0 +1,31 @@
+{
+  "type": "controls",
+  "path": "controls/0001-merge-gate.md",
+  "fields": {
+    "id": "ctl-0001",
+    "title": "A merge waits for the validate job",
+    "status": "active",
+    "verifies": [
+      "eng:std-GATES",
+      "std-CI"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "evidence": "The `validate` check on the pull request, and the branch rule on `main` in the repository settings.",
+    "applies-to": [
+      "all"
+    ],
+    "tags": [
+      "branch-protection",
+      "continuous-integration"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main] says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
+    "How it works": "`kac.yml` declares a `validate` job whose `needs:` names `corpora`, `tool`, `lint`, `docs`, `round-trip` and\n`import-round-trip`. The job itself runs one `echo`. GitHub reports it once every job it needs has passed, so the\nbranch rule can require that one name.\n\nThree of the jobs it gathers are matrices. `corpora` reports as `corpora (library)` and three more, so a branch rule naming the matrix would wait for a check that never arrives.",
+    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository holds it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] holds the other half of the same promise: whether `validate` still reaches every job."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/controls/0001-merge-gate.md"
+  }
+}

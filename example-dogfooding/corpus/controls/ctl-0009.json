@@ -1,0 +1,31 @@
+{
+  "type": "controls",
+  "path": "controls/0009-tool-test-layers.md",
+  "fields": {
+    "id": "ctl-0009",
+    "title": "Three test layers run before a merge",
+    "status": "active",
+    "verifies": [
+      "eng:std-GATES",
+      "eng:std-TEST"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "evidence": "The `tool` job's log on the pull request, under its three test steps.",
+    "applies-to": [
+      "all"
+    ],
+    "tags": [
+      "golden-tests",
+      "testing"
+    ]
+  },
+  "sections": {
+    "What it checks": "* `eng:std-TEST.pick-the-level-from-the-fault` says a team \"**MUST** cover a rule about one unit's behaviour with a\n  test on that unit alone\".\n* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push \"**MUST** trigger a build and the test\n  suite, without anyone asking for it\".",
+    "How it works": "The `tool` job runs `dotnet test tooling/kac.tests` for the unit layer, `dotnet test tooling/kac.features` for the Reqnroll behaviour specs, and `dotnet run tooling/kac-tests.cs` for the golden fixtures. `tooling/README.md` says what each layer covers.\n\nThe golden suite carries two gates of its own. It fails a reachable check id that no fixture exercises, and it fails a\ntype page whose generated checks table has drifted from the catalogue. Each fixture is assembled over the real\n`.schema/`, copied in per run, so a schema change that alters behaviour surfaces in the run that made it.",
+    "Coverage and gaps": "No layer reports line coverage, which is what `eng:std-TEST.know-what-the-suite-reaches` asks for. What the golden suite measures is the share of check ids a fixture reaches, and the two figures answer different questions.\n\nThe suite runs on a pull request into `main`. A push to a branch with no pull request open triggers nothing, so the answer arrives when the work is offered rather than when it is written."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/controls/0009-tool-test-layers.md"
+  }
+}

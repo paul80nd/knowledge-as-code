@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.8.2",
+    "contentVersion": "0.8.3",
     "types": [
       "standards",
       "glossary",
@@ -59,6 +59,13 @@
     }
   ],
   "trimmed": [
+    {
+      "path": "skills/controls-lookup",
+      "requires": [
+        "controls@1"
+      ],
+      "reason": "the export carries no controls"
+    },
     {
       "path": "skills/process-lookup",
       "requires": [

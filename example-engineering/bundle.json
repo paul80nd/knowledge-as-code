@@ -60,6 +60,13 @@
   ],
   "trimmed": [
     {
+      "path": "skills/controls-lookup",
+      "requires": [
+        "controls@1"
+      ],
+      "reason": "the export carries no controls"
+    },
+    {
       "path": "skills/process-lookup",
       "requires": [
         "processes@1"

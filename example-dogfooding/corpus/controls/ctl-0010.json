@@ -1,0 +1,30 @@
+{
+  "type": "controls",
+  "path": "controls/0010-docs-build.md",
+  "fields": {
+    "id": "ctl-0010",
+    "title": "The documentation site builds with no dead link",
+    "status": "active",
+    "verifies": [
+      "eng:std-GATES"
+    ],
+    "mechanism": "ci",
+    "frequency": "per-pr",
+    "evidence": "The `docs` job's log on the pull request, under the step \"Build the site\".",
+    "applies-to": [
+      "all"
+    ],
+    "tags": [
+      "documentation",
+      "mkdocs"
+    ]
+  },
+  "sections": {
+    "What it checks": "* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push \"**MUST** trigger a build and the test\n  suite, without anyone asking for it\".",
+    "How it works": "The `docs` job installs what `docs/requirements.txt` pins and runs `mkdocs build`. `mkdocs.yml` sets `strict: true`, so a dead link or an unreachable page exits non-zero.\n\n`NavigationTests` in `tooling/kac.tests` covers two faults the build lets through. It fails a page under `docs/` that\n`mkdocs.yml` does not list, which the build mentions at INFO and exits 0 on. It also fails a CLI reference reading in\nan order the parser does not declare, which the build says nothing about. `DocumentationTests` holds two tables on\nthe site to the names the code carries.",
+    "Coverage and gaps": "`strict: true` reads links inside the site. Nothing fetches an external URL, so a link to a page that has moved stays\ngreen.\n\nWhether a page is accurate is a reader's judgement. A published page describing behaviour the tool no longer has passes every check here."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3ae657b62f001f3dced9996001da3f8e63f82526/examples/dog-fooding/controls/0010-docs-build.md"
+  }
+}
