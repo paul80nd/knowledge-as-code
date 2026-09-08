@@ -1,5 +1,6 @@
 // The manifest and the descriptor as values. The engines acting on them are in NewTests and UpdateTests.
 
+using System.Text.RegularExpressions;
 using kac.core;
 
 namespace kac.tests;
@@ -277,20 +278,44 @@ public class ManifestTests
         var dir = Directory.CreateTempSubdirectory().FullName;
         var path = Path.Combine(dir, ".corpus.yaml");
         File.WriteAllText(path,
-            "descriptor-version: 0\ncontent-version: \"2.1.0\"\n\nupstream:\n  url:               ../src\n"
-            + "  template-version:  1\n  commit:            5fa039b0\n  taken-on:          \"2026-01-01\"\n\n"
+            "descriptor-version: 0\ncontent-version: \"2.1.0\"\n\nupstream:\n  url: ../src\n"
+            + "  template-version: 1\n  commit: 5fa039b0\n  taken-on: \"2026-01-01\"\n\n"
             + "# Why owning a file is worth declaring.\nskip: []\n");
 
         CorpusDescriptor.Stamp(dir, 3, "2026-08-11", "9c4e1d2a");
 
         var after = File.ReadAllText(path);
         Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", after);
-        Assert.Contains("  template-version:  3\n", after);
-        Assert.Contains("  taken-on:          \"2026-08-11\"\n", after);
-        Assert.Contains("  commit:            9c4e1d2a\n", after);
-        Assert.Contains("  url:               ../src\n", after); // untouched: the update does not own it
+        Assert.Contains("  template-version: 3\n", after);
+        Assert.Contains("  taken-on: \"2026-08-11\"\n", after);
+        Assert.Contains("  commit: 9c4e1d2a\n", after);
+        Assert.Contains("  url: ../src\n", after);              // untouched: the update does not own it
         Assert.Contains("content-version: \"2.1.0\"\n", after);  // untouched: only the corpus knows this one
         Assert.Contains("# Why owning a file is worth declaring.", after);
+    }
+
+    // The corpus runs `yamllint --strict` over the file this writes, and its `colons` rule allows one
+    // space. A descriptor an older stamp aligned is repaired on the next run, key by key.
+    [Theory]
+    [InlineData("descriptor-version: 0\n\nupstream:\n  url: ../src\n  template-version: 1\n"
+                + "  commit: 5fa039b0\n  taken-on: \"2026-01-01\"\n")] // every stamped key already there
+    [InlineData("descriptor-version: 0\n\nupstream:\n  template-version:  1\n"
+                + "  taken-on:          \"2026-01-01\"\n")]            // aligned by an older stamp
+    [InlineData("corpus: sample\n")]                                    // no block, so the stamp opens one
+    public void A_stamped_descriptor_leaves_one_space_after_every_colon(string before)
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        var path = Path.Combine(dir, ".corpus.yaml");
+        File.WriteAllText(path, before);
+
+        CorpusDescriptor.Stamp(dir, 3, "2026-08-11", "9c4e1d2a");
+
+        Assert.DoesNotContain(File.ReadAllLines(path), Padded);
+        return;
+
+        // yamllint's `colons` rule, read over a line carrying a value. A key ending its line carries
+        // none, so it has nothing for a space to stand in front of.
+        static bool Padded(string line) => Regex.IsMatch(line, @"^\s*[^#\s][^:]*:\s\s+\S");
     }
 
     // A template read from a folder resolves no commit, and a key filled with one nobody resolved is
@@ -300,11 +325,11 @@ public class ManifestTests
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         var path = Path.Combine(dir, ".corpus.yaml");
-        File.WriteAllText(path, "upstream:\n  commit:            5fa039b0\n  template-version:  1\n");
+        File.WriteAllText(path, "upstream:\n  commit: 5fa039b0\n  template-version: 1\n");
 
         CorpusDescriptor.Stamp(dir, 3, "2026-08-11");
 
-        Assert.Contains("  commit:            5fa039b0\n", File.ReadAllText(path));
+        Assert.Contains("  commit: 5fa039b0\n", File.ReadAllText(path));
     }
 
     // The tool owns the file's format.

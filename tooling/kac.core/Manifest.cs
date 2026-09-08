@@ -467,7 +467,9 @@ public class CorpusDescriptor
         File.WriteAllText(path, string.Join('\n', lines).TrimEnd('\n') + "\n");
         return;
 
-        static string Line(string key, string value) => $"  {key + ":",-18} {value}";
+        // One space after the colon, and no column to align to. yamllint's `colons` rule refuses
+        // padding, and a corpus that took the template runs that linter over the file this writes.
+        static string Line(string key, string value) => $"  {key}: {value}";
 
         static (string key, string value)[] Stamped(int version, string on, string? head)
         {
