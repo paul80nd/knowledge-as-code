@@ -21,6 +21,10 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 // naming no type reads no export, so it supports the ones that do and travels only where one of them
 // did. A file no component claims at all is the unconditional case, and needs no declaration.
 //
+// `Standalone` is how a component naming no type says it supports nothing either, so the sweep for the
+// supporting case leaves it alone. It says nothing about the trim above it: a standalone component that
+// does name a type is trimmed where the export carries none, like any other.
+//
 // `Announce` is whether the breadcrumb names this component at the start of a session. False by
 // default, because a skill somebody asks for by name costs nothing to leave unannounced and the
 // breadcrumb is read at every start, resume, clear and compact. `docs/design/plugin.md` says which
@@ -29,7 +33,8 @@ public sealed record PluginComponent(
     string Path,
     IReadOnlyList<string> Requires,
     string? Note,
-    bool Announce = false);
+    bool Announce = false,
+    bool Standalone = false);
 
 // A component left out, and what left it out: an absent type, or the absence of everything it supports.
 // The reason is carried, because it is the one thing the assembled plugin cannot say about itself.
@@ -206,9 +211,10 @@ public static class Bundler
 
         // A component naming no type reads no export, so nothing above could trim it. It is there to
         // support the ones that do, and where every one of those went it has nothing left to support.
-        // So it follows them out rather than shipping into a plugin with no reader of its own.
+        // So it follows them out rather than shipping into a plugin with no reader of its own. One
+        // declaring `standalone` supports nothing and answers to none of that.
         if (!included.Any(c => c.Requires.Count > 0))
-            foreach (var supporting in included.Where(c => c.Requires.Count == 0).ToList())
+            foreach (var supporting in included.Where(c => c.Requires.Count == 0 && !c.Standalone).ToList())
             {
                 included.Remove(supporting);
                 trimmed.Add(new TrimmedComponent(supporting.Path, supporting.Requires,
@@ -500,7 +506,7 @@ public static class Bundler
                 : [];
 
             components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"]),
-                JsonRead.Bool(component["announce"])));
+                JsonRead.Bool(component["announce"]), JsonRead.Bool(component["standalone"])));
         }
 
         return components;

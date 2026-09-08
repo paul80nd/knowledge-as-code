@@ -17,6 +17,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A plugin component can declare itself standalone.** `metadata.components` in `plugin.json` takes
+  `"standalone": true` on a component whose `requires` is empty. `kac bundle` trims an empty-`requires` component when
+  every component reading a type has gone, because such a component exists to support those. A standalone one supports
+  nothing and serves the reader, so it now survives that sweep. Take it with `kac update --from <template>`.
+
 ### Fixed
 
 - **`kac report` stamps the release without the commit behind it.** `generated.by` takes the Open Knowledge Format's

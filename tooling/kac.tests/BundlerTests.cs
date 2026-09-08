@@ -235,6 +235,42 @@ public class BundlerTests
             plan.Trimmed.Single(c => c.Path == "skills/support").Reason);
     }
 
+    // A standalone component reads no export and supports nothing, so the sweep above has no claim on
+    // it. `raise-finding` is that case: a corpus holding no record is the one a session most needs a
+    // route to report, and trimming it would take that route away.
+    [Fact]
+    public void A_standalone_component_stays_when_every_component_reading_a_type_has_gone()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Standalone("skills/alone"), Component("skills/support"),
+                        Component("skills/look", "glossary")))
+            ],
+            export: [Manifest()]);
+
+        Assert.Equal(["skills/alone"], plan.Included.Select(c => c.Path));
+        Assert.Equal(["skills/look", "skills/support"], plan.Trimmed.Select(c => c.Path));
+    }
+
+    // A type it named is still a type it reads, so the ordinary trim reaches it. Standalone says the
+    // sweep does not, and says nothing about the trim above.
+    [Fact]
+    public void A_standalone_component_naming_a_type_the_export_left_out_is_still_trimmed()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source($$"""{"path":"skills/alone","requires":["glossary"],"standalone":true}"""))
+            ],
+            export: [Manifest()]);
+
+        Assert.Empty(plan.Included);
+        Assert.Equal("the export carries no glossary", plan.Trimmed.Single().Reason);
+    }
+
     // The one a corpus declares on its own. Nothing supports it and nothing it supports, so the plugin
     // carries the export and no reader of it, which is what the warning below says.
     [Fact]
@@ -508,6 +544,9 @@ public class BundlerTests
 
     private static string Component(string path, params string[] requires) =>
         $$"""{"path":"{{path}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
+
+    private static string Standalone(string path) =>
+        $$"""{"path":"{{path}}","requires":[],"standalone":true}""";
 
     // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
     // A corpus naming a person and no address. The plugin manifest says what the export said, rather
