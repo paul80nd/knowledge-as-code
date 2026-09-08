@@ -107,8 +107,8 @@ included where the run left nothing to answer a question. The trim names it too,
 survived`.
 
 `raise-finding` supports nothing and serves whoever is holding the plugin, so it declares `"standalone": true` and the
-sweep leaves it alone. A corpus holding no record at all is the one a session most needs a route to report, and
-trimming the skill would take that route away at exactly the wrong moment. Standalone says nothing about the trim
+sweep leaves it alone. A corpus holding no record at all is the one a session most needs a route to report.
+Trimming the skill would take that route away at exactly the wrong moment. Standalone says nothing about the trim
 above it: a standalone component naming a type the export left out is trimmed like any other.
 
 **A file no component claims is the unconditional case**, and it needs no declaration. A README or a licence in the

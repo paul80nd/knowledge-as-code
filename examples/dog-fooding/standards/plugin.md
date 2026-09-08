@@ -255,8 +255,8 @@ type fixes.
 The label is how a person filters, and never what a harvester selects on. `gh issue create` refuses a label the target
 repository does not hold. A corpus published from somebody else's repository holds whatever labels its maintainer
 chose. A skill that stopped there would lose the observation to a missing string. The block in the body is the
-contract. This repository's own `dogfood` label answers a different question, which is how something was found, and
-both marks sit on one issue.
+contract, and it is why a platform calling a label something else costs nothing: an Azure tag and a GitHub label carry
+the same mark, and neither is what a harvester reads.
 
 What CI reaches is narrow. `round-trip.sh` installs the plugin, asks each skill the question that skill describes, and
 greps each `SKILL.md` for the parts file its component requires. Everything else above is a reviewer's, and two gaps

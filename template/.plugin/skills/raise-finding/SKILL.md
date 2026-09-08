@@ -19,8 +19,8 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it con
 Use that path exactly as it appears; it is already absolute. An installed plugin sits in a cache of its own rather than
 in the repository you are working in.
 
-**Producing the body needs nothing installed.** Filing it needs whichever client already signs in to the platform.
-Where that client is missing, the body is still the valuable part, so this skill prints it rather than giving up.
+**Producing the body needs nothing installed.** Filing it needs whichever client already signs in to the platform. Where
+that client is missing, the body is still the valuable part, so this skill prints it rather than giving up.
 
 ## Never file one unasked
 
@@ -39,9 +39,10 @@ way.
 
 Three things are not findings, and each has somewhere better to go.
 
-* **A rule you want to depart from** is a deviation, and it is asked for rather than reported. It stays in the
-  repository you are working in.
-* **A record you can edit** is an edit. This skill is for a corpus you are reading through a frozen copy.
+* **A rule you are about to depart from** is a deviation. It is asked for rather than reported, it goes to the corpus
+  owning the clause, and `request-deviation` is the skill for it. A finding says you noticed something. A deviation
+  request asks somebody to accept a risk, and the two arrive at different moments.
+* **A record you are already changing** is an edit. Make the change.
 * **A guess you have not seen happen** is not an observation. Say what you saw, or say nothing.
 
 ## Pick the corpus, and the repository behind it
@@ -49,22 +50,29 @@ Three things are not findings, and each has somewhere better to go.
 `manifest.json` describes this corpus at the top level and every corpus it consumes under `sources`. Each carries its
 own `publishing` block, and the finding goes to the one that owns what you noticed.
 
-| Field                        | Type             | What it holds                                                  |
-|------------------------------|------------------|----------------------------------------------------------------|
-| `corpus`                     | string           | the name of this corpus, as `example-payments`                 |
-| `commit`                     | string           | the commit this export was taken at                            |
-| `publishing`                 | object or null   | where this corpus publishes                                    |
-| `publishing.base`            | string or null   | the repository to file against                                 |
-| `publishing.target`          | string           | the platform, as `github` or `azure-devops-wiki`               |
-| `sources`                    | list of objects  | one entry per corpus this one consumes                         |
-| `sources[].corpus`           | string           | that corpus's name, for the `corpus:` line of the body         |
-| `sources[].publishing.base`  | string or null   | the repository that corpus publishes from                      |
+| Field                  | Type            | What it holds                                                          |
+|------------------------|-----------------|------------------------------------------------------------------------|
+| `corpus`               | string          | the name of this corpus, as `example-payments`                         |
+| `shortcode`            | string or null  | this corpus's own prefix                                               |
+| `commit`               | string          | the commit this export was taken at                                    |
+| `publishing`           | object          | where this corpus publishes                                            |
+| `publishing.base`      | string or null  | the address to file against                                            |
+| `publishing.target`    | string          | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
+| `sources`              | list of objects | one entry per corpus this one consumes                                 |
+| `sources[].corpus`     | string          | that corpus's name, for the `corpus:` line of the body                 |
+| `sources[].shortcode`  | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`      |
+| `sources[].publishing` | object or null  | where that corpus publishes, with the same keys as the block above     |
 
-**A record carrying a shortcode belongs to the `sources` entry with that shortcode.** One carrying none belongs to the
-top-level corpus. File against the wrong one and the issue lands where nobody owns the thing you noticed.
+**A record whose id carries a shortcode belongs to the `sources` entry with that shortcode.** One carrying none belongs
+to the top-level corpus, and so does anything you noticed about the plugin, a skill or the export itself. File against
+the wrong one and the issue lands where nobody owns the thing you saw.
 
-**Where the block you need is `null`, that corpus publishes nowhere this export can address.** Say so, print the body,
-and ask whoever is with you where it should go. Do not invent a repository.
+**Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be,
+which is itself worth reporting. Print the body and ask whoever is with you where it belongs.
+
+**A `publishing` block is always there, and its `base` may be present and `null`.** Test the value rather than the key.
+A `base` of `null`, or a `target` of `none`, means that corpus publishes nowhere this export can address. Say so, print
+the body, and ask whoever is with you where it should go. Do not invent a repository.
 
 ## Write the body
 
@@ -130,9 +138,12 @@ under `${CLAUDE_PLUGIN_ROOT}`.
 Write the body to a file first. Passing it inline turns every backtick and quote into a quoting problem, and the block
 is full of both.
 
+The section to follow is chosen by the block's `target`, every time. Two corpora in one export can publish to two
+platforms, so read it from the block you picked rather than from the one above it.
+
 ### GitHub
 
-`base` is the repository, as `https://github.com/<owner>/<repo>`.
+`target` is `github`, and `base` is the repository, as `https://github.com/<owner>/<repo>`.
 
 ```bash
 gh issue create --repo <owner>/<repo> --title "<the title>" --body-file <path> --label kac:finding
@@ -142,19 +153,33 @@ gh issue create --repo <owner>/<repo> --title "<the title>" --body-file <path> -
 with no `--label`, and say in your reply that you filed it unlabelled and why. Never let a missing label cost the
 observation.
 
+**A command that fails on sign-in or on permission is not a failure to report.** `gh auth status` says whether you are
+signed in to that host. A repository with issues turned off, or an account without the rights to open one, ends the same
+way: print the body and say which of the two it was.
+
 ### Azure DevOps
 
+`target` is `azure-devops` or `azure-devops-wiki`, and `base` carries the organisation and the project together, as
+`https://dev.azure.com/<org>/<project>/_git/<repo>`. `az` wants them apart: the organisation is `base` up to and
+including `<org>`, and the project is the segment after it.
+
 ```bash
-az boards work-item create --org <base> --project <project> --type Issue --title "<the title>" \
-  --fields "System.Description=@<path>"
+az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding"
 ```
 
-The organisation is the block's `base`. Ask for the project where the URL does not carry one.
+**A tag is what this platform calls a label**, so `System.Tags` is where the mark goes. Azure creates a tag it does not
+already hold rather than refusing, so nothing is lost here. Where the command fails for any other reason, print the body
+and say so.
+
+### Where the platform runs no issue tracker
+
+`target` of `mkdocs` or `none` names a corpus published as pages, or not published at all. There is nowhere to file.
+Print the whole body, name the corpus it belongs to, and ask whoever is with you where it should go.
 
 ### Where no client is here
 
-Print the whole body, name the repository it belongs on, and say plainly that you could not file it. Ask whoever is
-with you to paste it. A finding read out to somebody is worth more than one lost to a missing tool.
+Print the whole body, name the repository it belongs on, and say plainly that you could not file it. Ask whoever is with
+you to paste it. A finding read out to somebody is worth more than one lost to a missing tool.
 
 ## Say what you did
 
