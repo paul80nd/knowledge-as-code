@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 28,
+    "validated": 29,
     "templates": 18,
     "skipped": 0,
     "errors": 16,
-    "warnings": 16,
+    "warnings": 17,
     "infos": 0
   },
   "findings": [
@@ -189,6 +189,13 @@
       "severity": "warning",
       "check": "no-hedged-ordering",
       "message": "A step hedged with \"typically\", \"usually\" or \"normally\" leaves the reader to decide. Say what the ordering depends on, or state it plainly."
+    },
+    {
+      "file": "reports/answers-for-an-old-version.md",
+      "line": 8,
+      "severity": "warning",
+      "check": "report-stale",
+      "message": "this answers for 'fixture-corpus' at 0.1.0, and the corpus is at 0.2.0. Check the report still holds and raise the version, or run it again."
     },
     {
       "file": "reports/producer-without-a-version.md",

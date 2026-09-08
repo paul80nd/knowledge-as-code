@@ -665,6 +665,18 @@ checks:
       nothing has no register in view and reports nothing. Reported against the policy that reached the
       page, because the register carries no frontmatter and is no record; the message names the page.
 
+  report-stale:
+    severity: warning
+    description: A report answers for the version of each corpus that is in front of the reader now.
+    notes: >
+      Every other record is about the estate, so a corpus that moved leaves it as true as it was. A
+      report is about the corpus, and the same change can make it wrong with nothing in the record
+      showing it.
+
+      A warning, because the report may well still hold. Whoever owns it either confirms that and raises
+      the version by hand, or runs the report again, and only a person can tell which. A `resource` this
+      corpus does not read is skipped rather than reported.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

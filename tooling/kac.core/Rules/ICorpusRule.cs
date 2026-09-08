@@ -29,12 +29,18 @@ public interface ICorpusRule
 // `Tree` is the corpus's files, for the rule whose question is answered by a page no record links into
 // the graph. A framework register is that case: it carries no frontmatter and no id, so it is absent
 // from `Docs` while being the only place the corpus says what a framework standing is.
+//
+// `Versions` is the content version of every corpus this one reads: its own under its own name, and
+// each consumed corpus under the name its descriptor gives it. A record naming a corpus and the
+// version it answers for is held against it, which is a fact about the corpus rather than about any
+// document, and therefore in no document's reach.
 public sealed record CorpusRuleContext(
     IReadOnlyList<Doc> Docs,
     IReadOnlyDictionary<string, Doc> ById,
     Tree Tree,
     TypeSchema Type,
     RuleSpec Spec,
+    IReadOnlyDictionary<string, string> Versions,
     Action<Doc, CheckId, string, int?> Err,
     Action<Doc, CheckId, string, int?> Warn)
 {

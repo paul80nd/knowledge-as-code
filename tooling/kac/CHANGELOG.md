@@ -49,7 +49,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
   still correct.
 
-- **`reports` is a knowledge type, and the nineteenth the framework ships.** A finished report is a record: it has an
+- **`report-stale` warns where a report answers for a version the corpus has left behind.** Every other record is
+  about the estate, so a corpus that moved leaves it as true as it was; a report is about the corpus, and the same
+  change can make it wrong with nothing in the record showing it. Each `sources` entry is held against the version in
+  front of the reader: the descriptor's own `content-version`, or the version a consumed corpus's restore resolved to.
+  A warning, because the report may well still hold, and whoever owns it either confirms that and raises the version by
+  hand or runs it again.
+
+- **`reports` is a knowledge type the framework ships.** A finished report is a record: it has an
   owner, a person confirms it before it is published, and a reader browsing the corpus finds it beside everything else.
   `generated` names what produced the content and when, `sources` names each corpus it answers for and the
   `content-version` each was at, and `confirmed` names every person who has checked it since. Sections are free-form,

@@ -125,6 +125,9 @@ public static class ChecksTable
         ("framework-uncited", [new("framework-uncited")],
             "Every framework on the register is cited by at least one clause.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
+        ("report-stale", [new("report-stale")],
+            "Each corpus a report answers for is at the version the report names.",
+            t => t.Rules.Any(r => r.Id == new RuleId("report-stale"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)

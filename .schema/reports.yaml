@@ -116,6 +116,10 @@ index:
   sort: id
 
 rules:
+  - id: report-stale
+    description: A report answers for the version of each corpus that is in front of the reader now.
+    severity: warning
+
   - id: confirmed-by-a-person
     description: A confirmation names the person who made it.
     severity: error

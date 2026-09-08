@@ -7,7 +7,8 @@ public static class CorpusRules
     public static readonly IReadOnlyList<ICorpusRule> All =
     [
         new NoDependencyCycles(),
-        new AlignmentRollup()
+        new AlignmentRollup(),
+        new ReportStale()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, ICorpusRule> ByRuleId =

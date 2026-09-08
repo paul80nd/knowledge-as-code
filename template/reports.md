@@ -97,6 +97,7 @@ instead: that says somebody checked, and it saves re-reading every verdict.
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `report-stale`              | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `confirmed-by-a-person`     | error   | A confirmation names the person who made it.                                                                    |
 | `generated-by-a-producer`   | error   | `generated.by` names what produced the content, in OKF's `<producer>/<version>` form.                           |
 
