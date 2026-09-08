@@ -393,6 +393,11 @@ public static class Validator
     // Asked of the types the corpus holds a record of rather than of the types it declared. A corpus that
     // stood the folder up and wrote nothing into it has no estate to derive a list from, so the question
     // arrives with the first record.
+    //
+    // A value spelled wrong is the same fault as a list nobody wrote, because no record can satisfy either.
+    // The casing is what a corpus reaches first: `enum-lowercase` refuses the value in the record, so a
+    // range holding `Dotnet-Web` refuses `dotnet-web` from one side and `Dotnet-Web` from the other. Both
+    // findings would name the record, and the file to edit is this one.
     private static void CheckCorpusEnums(
         Schema schema, IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
     {
@@ -412,11 +417,22 @@ public static class Validator
         void Ask(FieldSpec field, string said, string page)
         {
             if (field.CorpusEnum is not { } name) return;
-            if (descriptor.Enums.TryGetValue(name, out var values) && values.Count > 0) return;
 
-            f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("corpus-enum-undeclared"),
-                $"{said} is judged against a list this corpus states, and it states none. Write the values "
-                + $"your estate uses under `enums:`, as `{name}: [a, b]`.{page}"));
+            if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+            {
+                Report($"{said} is judged against a list this corpus states, and it states none. Write the "
+                       + $"values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
+                return;
+            }
+
+            foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
+                Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
+                       + "value is lower case, so no record can satisfy this one.");
+
+            return;
+
+            void Report(string message) => f.Add(new Finding(
+                Corpus.Descriptor, null, Sev.Error, new CheckId("corpus-enum-undeclared"), message));
         }
     }
 

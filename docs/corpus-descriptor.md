@@ -268,6 +268,12 @@ can fix that, so it is reported where the person who can fix it works.
 From the record's side the fault is the same either way: a value the field's range does not hold. The message quotes
 the values your descriptor states, so an author reads back the list they are being held to.
 
+### Write each value in lower case
+
+An enum value is a grep target first and prose second, so a range carrying `Dotnet-Web` refuses `dotnet-web` from one
+side and `Dotnet-Web` from the other. No record can satisfy it, which is the same state as a range you never wrote, so
+`corpus-enum-undeclared` reports it the same way.
+
 ## `export.exclude:` drops a record from the output
 
 ```yaml

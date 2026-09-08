@@ -45,6 +45,20 @@ public class CorpusEnumTests
         Assert.Empty(Assert.Single(descriptor.Enums).Value);
     }
 
+    // A range no record can satisfy, reported where the values were written rather than where they were met.
+    [Fact]
+    public void A_value_that_is_not_lower_case_is_reported_against_the_descriptor()
+    {
+        var finding = Assert.Single(Findings(PlatformField, ["Dotnet-Web"]));
+
+        Assert.Equal(".corpus.yaml", finding.File);
+        Assert.Contains("carries 'Dotnet-Web'", finding.Message);
+    }
+
+    [Fact]
+    public void A_range_the_corpus_can_satisfy_is_silent()
+        => Assert.Empty(Findings(PlatformField, ["dotnet-web"]));
+
     // `values:` is read wherever a field is declared, so the check has to look wherever one can be.
     [Fact]
     public void A_key_inside_an_object_entry_is_asked_for_its_range_too()
@@ -71,14 +85,19 @@ public class CorpusEnumTests
     public void A_name_the_corpus_answers_nothing_to_is_no_fault_in_the_schema()
         => Assert.Empty(Schema.Load(Files("$corpus.platform"), Declared(null)).UnreadKeys);
 
+    private const string PlatformField =
+        "fields:\n  platform:\n    type: enum\n    values: $corpus.platform\n";
+
+    private static List<Finding> Undeclared(string fields) => Findings(fields, null);
+
     // One service, so the pass has a record of the type and asks the question the record's arrival raises.
-    private static List<Finding> Undeclared(string fields)
+    private static List<Finding> Findings(string fields, IReadOnlyList<string>? declared)
     {
         var schema = Schema.Load(new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["_universal.yaml"] = "fields:\n  id:\n    required: true\n",
             ["services.yaml"] = "type: service\nfolder: services\npage: services.md\n" + fields
-        }, Declared(null));
+        }, Declared(declared));
 
         const string record = "---\nid: svc-one\ntype: service\n---\n\n# One\n";
         var tree = new Tree(
@@ -86,9 +105,17 @@ public class CorpusEnumTests
 
         return
         [
-            .. Validator.CheckAll(Corpus.Load(tree, schema, new CorpusDescriptor()), Required.Today)
+            .. Validator.CheckAll(Corpus.Load(tree, schema, WithEnums(declared)), Required.Today)
                 .Where(f => f.Check.Value == "corpus-enum-undeclared")
         ];
+    }
+
+    private static CorpusDescriptor WithEnums(IReadOnlyList<string>? platform)
+    {
+        var descriptor = new CorpusDescriptor();
+        if (platform is not null) descriptor.Enums["platform"] = platform;
+
+        return descriptor;
     }
 
     private static CorpusDescriptor Descriptor(string yaml)

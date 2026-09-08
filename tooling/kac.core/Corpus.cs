@@ -93,6 +93,10 @@ public static class Corpus
     // everything an entry point needs before it can ask a question, and the whole of what this reads.
     // A caller with a corpus nobody wrote to disk hands over the same three things, so a check can be
     // written against one.
+    //
+    // The schema handed over is this corpus's, which the overload above builds by giving `Schema.Load` the
+    // descriptor's `enums:`. A caller passing one built without them, beside a descriptor that states them,
+    // gets a field with no range and no finding to say so.
     public static LoadedCorpus Load(
         Tree tree, Schema schema, CorpusDescriptor descriptor, ImportGraph? imports = null)
     {

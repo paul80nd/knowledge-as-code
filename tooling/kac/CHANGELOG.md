@@ -42,9 +42,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   draws its range from `enums:` in `.corpus.yaml`, so one schema above several catalogues stands behind the list each
   of them wrote. `services.platform` is the first field to use it: what a service is built on is one list in a library
   and another in a payments platform. `kac validate` reports `corpus-enum-undeclared` once against `.corpus.yaml` where
-  a corpus holds a record carrying such a field and has stated no range, and an out-of-range value stays an ordinary
-  `enum` failure quoting the corpus's own values. `kac new` opens the block and leaves it empty. Take it with
-  `kac update --from <template>`.
+  a corpus holds a record carrying such a field and has stated a range no record can satisfy, meaning none at all or
+  one carrying a value that is not lower case. An out-of-range value stays an ordinary `enum` failure quoting the
+  corpus's own values. `kac new` opens the block and leaves it empty. Take it with `kac update --from <template>`.
 
 ### Changed
 
