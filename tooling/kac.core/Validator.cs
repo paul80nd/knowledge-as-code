@@ -97,7 +97,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
-        CheckCorpusEnums(corpus.Docs, corpus.Descriptor, findings);
+        CheckCorpusEnums(schema, corpus.Docs, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
 
@@ -394,23 +394,36 @@ public static class Validator
     // stood the folder up and wrote nothing into it has no estate to derive a list from, so the question
     // arrives with the first record.
     private static void CheckCorpusEnums(
-        IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
+        Schema schema, IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
     {
         var types = docs.Select(d => d.Type).OfType<TypeSchema>()
-            .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal);
+            .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal).ToList();
+        if (types.Count == 0) return;
+
+        // A universal field reaches every type, so it is asked once and its message names no page.
+        foreach (var field in Reachable(schema.Universal.Values))
+            Ask(field, $"'{field.Name}'", "");
 
         foreach (var t in types)
-        foreach (var field in t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value))
+        foreach (var field in Reachable(t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+                     .Select(kv => kv.Value)))
+            Ask(field, $"'{field.Name}' on a {t.TypeName}", $" {t.Page} says how to reach them.");
+
+        void Ask(FieldSpec field, string said, string page)
         {
-            if (field.CorpusEnum is not { } name) continue;
-            if (descriptor.Enums.TryGetValue(name, out var values) && values.Count > 0) continue;
+            if (field.CorpusEnum is not { } name) return;
+            if (descriptor.Enums.TryGetValue(name, out var values) && values.Count > 0) return;
 
             f.Add(new Finding(Corpus.Descriptor, null, Sev.Error, new CheckId("corpus-enum-undeclared"),
-                $"'{field.Name}' on a {t.TypeName} is judged against a list this corpus states, and it "
-                + $"states none. Write the values your estate uses under `enums:`, as `{name}: [a, b]`, "
-                + $"then close the list: {t.Page} says how to reach it."));
+                $"{said} is judged against a list this corpus states, and it states none. Write the values "
+                + $"your estate uses under `enums:`, as `{name}: [a, b]`.{page}"));
         }
     }
+
+    // Every field a declaration reaches, including the keys of an object entry. A `shape:` is resolved into
+    // `Entry` at load, so a shape's keys arrive here without a walk of their own.
+    private static IEnumerable<FieldSpec> Reachable(IEnumerable<FieldSpec> fields) =>
+        fields.SelectMany(field => new[] { field }.Concat(Reachable(field.Entry ?? [])));
 
     // The shorthand another corpus cites this one by, held to a spelling a citation can carry.
     // `.schema/_checks.yaml` argues each part of that spelling under `shortcode`.

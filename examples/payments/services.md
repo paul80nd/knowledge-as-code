@@ -107,7 +107,7 @@ The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this c
 catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
 the list does.
 
-Both deployables here are .NET APIs, so the list holds `dotnet-api` alone.
+Every deployable here is a .NET API, so the list holds `dotnet-api` alone.
 
 ### Deriving the facet vocabulary
 

@@ -13,7 +13,7 @@
       "line": null,
       "severity": "error",
       "check": "corpus-enum-undeclared",
-      "message": "'platform' on a service is judged against a list this corpus states, and it states none. Write the values your estate uses under `enums:`, as `platform: [a, b]`, then close the list: services.md says how to reach it."
+      "message": "'platform' on a service is judged against a list this corpus states, and it states none. Write the values your estate uses under `enums:`, as `platform: [a, b]`. services.md says how to reach them."
     }
   ]
 }

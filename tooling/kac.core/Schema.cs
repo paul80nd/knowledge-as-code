@@ -995,7 +995,12 @@ public sealed partial class Schema
         {
             case YamlScalarNode { Value: { } v } when v.StartsWith("$corpus.", StringComparison.Ordinal):
                 corpusEnum = v["$corpus.".Length..];
-                values = corpusEnums.GetValueOrDefault(corpusEnum);
+                // An empty list resolves to no range rather than to a range holding nothing, which would
+                // refuse every value a record carries. A corpus opening the key and writing nothing under
+                // it has stated none, and `corpus-enum-undeclared` reads it the same way.
+                values = corpusEnums.TryGetValue(corpusEnum, out var stated) && stated.Count > 0
+                    ? stated
+                    : null;
                 break;
             case YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal):
                 var enumName = v["$enums.".Length..];

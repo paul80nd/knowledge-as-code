@@ -108,7 +108,7 @@ The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this c
 catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
 the list does.
 
-This repository publishes a dotnet tool and two static sites, so the list holds `dotnet-tool` and `static`.
+This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`.
 
 ### Deriving the facet vocabulary
 

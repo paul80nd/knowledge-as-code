@@ -60,8 +60,8 @@ types:
   - runbooks
   - services
 
-# What a service here is built on. Derived from the eight deployables this catalogue holds and closed on
-# them, which is the estate's answer rather than the framework's. `services.md` says how they were reached.
+# What a service here is built on. Derived from the deployables this catalogue holds and closed on them,
+# which is the estate's answer rather than the framework's. `services.md` says how they were reached.
 enums:
   platform: [azure-function, dotnet-api, dotnet-web, mixed, static, typescript]
 

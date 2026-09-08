@@ -63,7 +63,7 @@ types:
   - services
   - standards
 
-# What a service here is built on. Both deployables are .NET APIs, so the list holds one value.
+# What a service here is built on. Every deployable here is a .NET API, so the list holds one value.
 enums:
   platform: [dotnet-api]
 
