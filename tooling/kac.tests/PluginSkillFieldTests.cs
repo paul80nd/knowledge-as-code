@@ -111,6 +111,10 @@ public class PluginSkillFieldTests
 
         if (PartLineSource.Argument(source, PartLineSource.ColumnPrefix) is not null) return OrNull;
 
+        // A part carrying no such footnote writes null rather than an empty array, so a reader has one
+        // absence to test rather than two.
+        if (PartLineSource.Argument(source, PartLineSource.CitationPrefix) is not null) return List;
+
         return source switch
         {
             PartLineSource.PartId or PartLineSource.PartKey or PartLineSource.PartText

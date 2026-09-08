@@ -256,6 +256,10 @@ public static class PartLineSource
     public const string FrontPrefix = "front.";
     public const string ColumnPrefix = "column.";
 
+    // A labelled footnote closing a part, named by the label a field of this type reconciles against.
+    // The remainder is that label, so `part.citations.Covers` carries what the `Covers` line gathers.
+    public const string CitationPrefix = "part.citations.";
+
     // The sources naming one thing each, so the two prefixed families are tested separately.
     public static readonly IReadOnlyList<string> Fixed =
     [

@@ -52,12 +52,13 @@ public class ExportShapeTests
           fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
           sections: When to use this=full, Prerequisites=full
         standards@1
-          fields: id, title, category, status, applies-to, review-by, tags
+          fields: id, title, category, status, implements, applies-to, review-by, tags
           sections: Summary=full, Conformance checklist=full
           parts: full
             id: part.id
             title: part.text
             obligations: part.lead
+            covers: part.citations.Covers
             seeAlso: part.see-also
             type: record.type
             record: record.id

@@ -19,6 +19,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each
+  rule line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers
+  to can now count its own coverage: before this, it saw what its own standards covered and nothing that arrived with
+  the policies. `part.citations.<Label>` is the export source behind the rule line, and it takes the ids from the
+  labelled footnote closing a part. Neither addition moves `standards@1`, because a reader written against the shape
+  before them is still correct.
+
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
   base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an

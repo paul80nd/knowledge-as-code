@@ -329,12 +329,24 @@ public static class SchemaChecks
                 return;
             }
 
+            if (PartLineSource.Argument(source, PartLineSource.CitationPrefix) is { } label)
+            {
+                if (!t.DeclaredFields.Any(d =>
+                        string.Equals(d.MirrorsCitations, label, StringComparison.OrdinalIgnoreCase)))
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and no field of "
+                        + "the type declares a 'mirrors-citations:' with that label. A footnote nothing "
+                        + "reconciles is prose."));
+                return;
+            }
+
             if (!PartLineSource.Fixed.Contains(source, StringComparer.Ordinal))
             {
                 Dispatch(at, $"type '{key}' declares 'export.parts.line: {name}' at source '{source}', which "
                              + $"nothing fills. A line takes {List(PartLineSource.Fixed)}, a "
-                             + $"'{PartLineSource.FrontPrefix}<field>' or a "
-                             + $"'{PartLineSource.ColumnPrefix}<Header>'.", f);
+                             + $"'{PartLineSource.FrontPrefix}<field>', a "
+                             + $"'{PartLineSource.ColumnPrefix}<Header>' or a "
+                             + $"'{PartLineSource.CitationPrefix}<Label>'.", f);
                 return;
             }
 

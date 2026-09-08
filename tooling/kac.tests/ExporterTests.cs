@@ -953,6 +953,141 @@ public class ExporterTests
         Assert.Equal(line.GetProperty("part").GetString(), line.GetProperty("anchor").GetString());
     }
 
+    // A rule's `Covers` line is dropped from the obligations it exports, so without this the clauses a
+    // rule discharges reach a consumer nowhere at all.
+    [Fact]
+    public void A_rule_line_carries_the_clauses_its_footnote_gathers()
+    {
+        var line = RuleLines()[0];
+
+        Assert.Equal("std-TEST.tests-run-on-every-push", line.GetProperty("id").GetString());
+        Assert.Equal(["pol-AUTV.BLOCK", "pol-AUTV.MACHINE"],
+            line.GetProperty("covers").EnumerateArray().Select(c => c.GetString()));
+    }
+
+    // A footnote is found once for the whole document, so a rule carrying none must not take the one
+    // belonging to the rule above it.
+    [Fact]
+    public void A_rule_with_no_footnote_carries_no_clauses()
+    {
+        var line = RuleLines()[1];
+
+        Assert.Equal("std-TEST.tests-say-what-they-prove", line.GetProperty("id").GetString());
+        Assert.Equal(JsonValueKind.Null, line.GetProperty("covers").ValueKind);
+    }
+
+    // The footnote is prose about coverage rather than a piece of the rule, and a consumer reading the
+    // obligations should meet the words the standard wrote and nothing else.
+    [Fact]
+    public void The_footnote_is_dropped_from_the_obligations_it_travelled_beside()
+    {
+        var line = RuleLines()[0];
+
+        Assert.DoesNotContain("Covers", line.GetProperty("obligations").GetString());
+    }
+
+    // The policy type is declared and holds no record. A citation is read against the id prefixes the
+    // schema knows, so a rule citing `pol-AUTV` gathers nothing where nothing declares `pol`.
+    private static List<JsonElement> RuleLines()
+    {
+        var standards = StandardType();
+        var schema = new Schema
+        {
+            ByFolder = new Dictionary<string, TypeSchema>
+            {
+                [standards.Key] = standards,
+                [PolicyType().Key] = PolicyType()
+            }
+        };
+
+        var doc = Doc.Parse("standards/std-TEST.md", Standard(), schema);
+        Assert.NotNull(doc);
+
+        var corpus = new LoadedCorpus
+        {
+            Schema = schema,
+            Descriptor = new CorpusDescriptor { Name = "test-corpus", ContentVersion = "2.1.0" },
+            Tree = new Tree(new HashSet<string>([doc.Rel], StringComparer.Ordinal),
+                rel => rel == doc.Rel ? doc.Text : ""),
+            Adopted = [standards],
+            Docs = [doc],
+            Templates = [],
+            SkippedNoFrontmatter = 0
+        };
+
+        return
+        [
+            .. Single(Plan(corpus), "standards/rules.jsonl").Content
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                .Select(l => JsonDocument.Parse(l).RootElement)
+        ];
+    }
+
+    // A standard as this corpus writes one: rules are headings under `Rules`, each closing on the
+    // footnote naming the clauses it discharges.
+    private static string Standard() =>
+        """
+        ---
+        id: std-TEST
+        tier: normative
+        status: active
+        owner: someone
+        implements: [ pol-AUTV.BLOCK, pol-AUTV.MACHINE ]
+        review-by: "2030-01-01"
+        ---
+
+        # Testing
+
+        ## Summary
+
+        What this is for.
+
+        ## Rules
+
+        ### Tests run on every push
+
+        - A push **MUST** run the tests.
+
+        _**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].MACHINE_
+
+        ### Tests say what they prove
+
+        - A test name **SHOULD** say what it proves.
+
+        [pol-AUTV]: autv-automated-verification.md
+
+        """;
+
+    private static TypeSchema StandardType() => new()
+    {
+        Key = "standards",
+        TypeName = "standard",
+        Folder = "standards",
+        Page = "standards.md",
+        IdPrefix = "std",
+        RequiredSections = ["Summary", "Rules"],
+        Parts = new PartSpec(PartSpec.Headings, "", [], [])
+            { Section = "Rules", Noun = "rule", Level = 3 },
+        DeclaredFields = [new FieldSpec { Name = "implements", MirrorsCitations = "Covers" }],
+        Export = new ExportSpec
+        {
+            Version = 1,
+            Fields = ["id", "title", "implements"],
+            Sections = [("Summary", ExportSpec.Full)],
+            Parts = ExportSpec.Full,
+            PartsDeclared = true,
+            Line =
+            [
+                ("id", PartLineSource.PartId),
+                ("title", PartLineSource.PartText),
+                ("obligations", PartLineSource.PartLead),
+                ("covers", $"{PartLineSource.CitationPrefix}Covers"),
+                ("record", PartLineSource.RecordId),
+                ("part", PartLineSource.PartKey)
+            ]
+        }
+    };
+
     private static List<JsonElement> ClauseLines() =>
     [
         .. Single(Plan(Corpus(PolicyType(), ("pol-DATA", Policy()))), "policies/clauses.jsonl").Content
