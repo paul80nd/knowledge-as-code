@@ -6,8 +6,8 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-08T10:42:33Z, by: kac/0.23.0+955356490b0bfa1f7caa3863fa100346dd6849c1 }
 sources:
-  - { resource: example-dogfooding, version: "0.12.3" }
-  - { resource: example-engineering, version: "0.10.2" }
+  - { resource: example-dogfooding, version: "0.13.0" }
+  - { resource: example-engineering, version: "0.11.0" }
 confirmed:
   - { at: 2026-09-08T11:00:00Z, by: human:paul.law }
 tags: [ coverage, governance ]

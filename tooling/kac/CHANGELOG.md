@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.24.0 - 2026-09-08
 
 ### Added
 
@@ -24,10 +24,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   each covering standard, and any clause elsewhere sharing its key. `kac report frameworks` names every external
   framework reference the clause tables cite, the standing the register files each framework under, the clauses citing
   each one, and how many rest on a single citation. Each row of both carries an empty `Note`, for whoever confirms
-  the report. Output is markdown on standard output, so a caller pipes it where
-  they want it. Every run stamps `generated` and `sources` into the frontmatter it writes, naming the tool version, the
-  moment, and the `content-version` each corpus answered at. The tool prints `covered` and `uncovered` and never splits
-  a gap from something out of scope, because only a person can tell those apart.
+  the report. Output is markdown on standard output, so a caller pipes it where they want it. Every run stamps
+  `generated` and `sources` into the frontmatter it writes, naming the tool version, the moment, and the
+  `content-version` each corpus answered at. The tool prints `covered` and `uncovered` and never splits a gap from
+  something out of scope, because only a person can tell those apart.
 
 - **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each
   rule line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers
