@@ -28,6 +28,13 @@
         "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
       },
       {
+        "path": "skills/controls-lookup",
+        "requires": [
+          "controls@1"
+        ],
+        "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+      },
+      {
         "path": "skills/policy-lookup",
         "requires": [
           "policies@2"

@@ -18,6 +18,9 @@ public class ExportShapeTests
 {
     private const string Pinned =
         """
+        controls@1
+          fields: id, title, status, verifies, mechanism, frequency, evidence, applies-to, tags
+          sections: What it checks=full, How it works=full, Coverage and gaps=full
         glossary@1
           fields: id, title, narrows, status, review-by, tags
           sections: Scope=full

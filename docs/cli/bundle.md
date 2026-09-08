@@ -43,10 +43,11 @@ wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
 wrote .dist/plugin/skills/request-deviation/SKILL.md
+bundle: trimmed skills/controls-lookup: the export carries no controls.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 16 file(s) to .dist/plugin/ as example-libraries 0.1.9. 5 component(s) included, 3 trimmed.
+bundle: wrote 16 file(s) to .dist/plugin/ as example-libraries 0.1.9. 5 component(s) included, 4 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -71,7 +72,7 @@ A corpus adopting three record types ships a lookup skill for each over one expo
 of their own. The closing line counts them:
 
 ```text
-bundle: wrote 54 file(s) to .dist/plugin/ as example-engineering 0.11.0. 7 component(s) included, 1 trimmed.
+bundle: wrote 54 file(s) to .dist/plugin/ as example-engineering 0.11.0. 7 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` names them, and it travels inside the plugin:
@@ -81,7 +82,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/process-lookup"]}
 ```
 
 Search the assembled skills for the file one type exports, to see which of them reads it:

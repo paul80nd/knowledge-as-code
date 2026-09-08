@@ -91,6 +91,31 @@ sections:
   required: [What it checks, How it works, Coverage and gaps]
   optional: [Evidence, Owner]
 
+export:
+  version: 1
+  fields: [id, title, status, verifies, mechanism, frequency, evidence, applies-to, tags]
+  sections:
+    What it checks: full
+    How it works: full
+    Coverage and gaps: full
+  notes: >
+    A control travels whole. It runs to a few hundred words, and a consumer reading what a check promises
+    without reading what it misses reads a stronger check than the one we built. `What it checks` names the
+    rules in the author's words, `How it works` says what performs the check, and `Coverage and gaps` says
+    where it stops.
+
+    `mechanism` and `frequency` are the two keys an agent filters on. `not-enforced` travels like any other
+    value, so a consumer reading one learns that a rule is written and that nobody looks. Withholding those
+    records would publish a coverage figure this corpus cannot show.
+
+    `evidence` is the only key answering where the proof lives, so it travels beside them.
+
+    A control names a standard and not a rule, so it vouches for a whole document whatever it checks inside
+    it. A consumer counting coverage rule by rule cannot get that number from here.
+
+    `owner` stays behind. Who stewards a control is a fact about this corpus, and whoever holds a vendored
+    copy has no standing to ask.
+
 index:
   columns: [id, title, mechanism, frequency, verifies, status]
   sort: id

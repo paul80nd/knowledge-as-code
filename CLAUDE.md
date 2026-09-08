@@ -104,6 +104,9 @@ on, so a clone has it without anyone adding a marketplace by hand. These skills 
 * **`policy-lookup`** finds what the estate is committed to, in the clauses `examples/engineering` states. Ask it
   before you propose anything touching secrets, access, dependencies, or what reaches production.
 * **`glossary-lookup`** says what a word here means. Ask it before you infer a meaning from usage.
+* **`controls-lookup`** says what proves a rule, and which rules nothing checks. Ask it before you change a job in a
+  workflow, or before you tell anybody a rule here is enforced.
+* **`process-lookup`** finds the procedure for a planned task. Ask it before you invent an order of your own.
 * **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
 * **`request-deviation`** asks the owner of a clause to accept a departure from it. Reach for it before you build
   something that breaks one of the inherited clauses in `examples/engineering`.
