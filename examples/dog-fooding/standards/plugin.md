@@ -3,7 +3,8 @@ id: std-PLUGIN
 type: standard
 tier: normative
 status: active
-implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.UNPROV, eng:pol-KNOW.COPY ]
+implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER,
+  eng:pol-AGNT.UNPROV, eng:pol-KNOW.COPY ]
 verified-by: [ ctl-0008 ]
 applies-to:
   - all
@@ -97,6 +98,28 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
 _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 
+### A finding an agent files carries the shape a discovery takes
+
+- A finding **MUST** open its body with a fenced block whose info string is `yaml kac-finding`.
+- That block **MUST** open on `corpus`, naming the corpus the finding is about.
+- The block **MUST** then carry `id`, `source`, `confidence`, `expires` and `provenance`, under the names and in the
+  order the `discoveries` template writes them.
+- The block **MAY** carry `applies-to` and `tags` after those.
+- The block **MUST NOT** carry any other key.
+- `source` **MUST** be `session`.
+- `confidence` **MUST** be `unverified` where the filing session's own account is the only evidence.
+- `provenance` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
+  doing.
+- Where the agent cannot reach one of those, `provenance` **MUST** name it as unreached.
+- The body **MUST** carry `## What I saw`, `## Context` and `## Why it might matter`, in that order.
+- A finding **MUST NOT** put anything between the block and the first of those headings.
+- The title **MUST** be the observation in one line, written as the record's H1 would be.
+- A skill **MUST** mark the issue `kac:finding`, using whatever the platform calls a label.
+- Where the platform refuses a mark it does not already hold, a skill **MUST** file the finding unmarked.
+- A skill **MUST** say that it filed one unmarked.
+
+_**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
+
 ## Examples
 
 ```
@@ -126,6 +149,52 @@ ignoring it and stopping. The avoided table states no type at all, so a reader i
 character at a time. It says a field with no value is absent, and a reader testing for the key finds it every time and
 reads nothing.
 
+A finding is the whole of an issue body. `dsc-rider-holds-the-editorconfig` was written straight into the corpus,
+and this is the finding it would have arrived as.
+
+`````
+✅ Good
+Title: Rider does not re-read an .editorconfig changed from a shell
+
+```yaml kac-finding
+corpus: example-dogfooding
+id: dsc-rider-holds-the-editorconfig
+source: session
+confidence: unverified
+expires: "2026-12-07"
+provenance: >
+  Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, in paul80nd/knowledge-as-code at 24dcea21,
+  editing .editorconfig from a shell while the developer had the repository open in Rider.
+tags: [ editorconfig, formatting, rider ]
+```
+
+## What I saw
+
+A key edited in `.editorconfig` from the terminal changed nothing about how Rider formatted a file. Opening
+`.editorconfig` in the IDE made the same change take effect. Flipping a key with an obvious effect was the
+control.
+
+## Context
+
+Seen once, on one machine. The Rider version was not recorded.
+
+## Why it might matter
+
+A session changes `.editorconfig`, sees no difference in the IDE, and concludes the edit did nothing. The
+next move is usually to change something else that was already right.
+
+❌ Avoid
+Title: An observation about Rider
+
+While working on the wrap width I noticed that Rider seems to cache `.editorconfig`, which could be worth
+looking into. Fairly confident about this one. Raised by an agent session.
+`````
+
+The avoided body states the same observation and hands a harvester nothing to copy. There is no id to write the
+filename from, no `expires` to let the claim lapse, and no commit anybody can go and read. Its title gives the subject
+alone, so a reader scanning the issue list learns nothing. "Fairly confident" is not a value `confidence` takes, and a
+session vouching for itself is what `eng:pol-AGNT.SELFVER` refuses.
+
 ## Conformance checklist
 
 - [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else.
@@ -138,6 +207,11 @@ reads nothing.
       files, and empty where the component reads no export.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
 - [ ] `bundle.json` names every component that left, and the type that left it out.
+- [ ] Every finding opens on a `yaml kac-finding` block, carrying `corpus`, then the `discoveries` keys the rule
+      names, and nothing else.
+- [ ] Every finding's `provenance` names the agent, the session, the repository, the commit and what it was doing, or
+      names which of those it could not reach.
+- [ ] No finding is dropped, or held back, because the target holds no `kac:finding` label.
 
 ## Rationale and provenance
 
@@ -160,10 +234,27 @@ type present and opens none of its files names it bare, which is what the breadc
 reads no export at all declares nothing, and travels with the components it supports.
 `docs/design/plugin.md` carries how `kac bundle` acts on all three.
 
+A finding is a discovery that has not landed yet. An observation is worth the same whether a session writes it into a
+corpus it can edit or files it against one it cannot. So the issue carries the fields the record will need, under the
+names the type gives them. A harvester copies the block into frontmatter, and the three headings into sections. Every
+key it would otherwise read out of prose is a key it would sometimes read wrongly. `expires` is the one that costs
+most, because an observation nobody dated stays on unchallenged, and `eng:pol-AGNT.CONFID` exists to stop that.
+
+One required field never travels. `owner` says who is answerable for a record, and the receiving corpus decides that. A
+filer on somebody else's repository would be guessing at it. So the harvester fills `owner` in, along with the keys the
+type fixes.
+
+The label is how a person filters, and never what a harvester selects on. `gh issue create` refuses a label the target
+repository does not hold. A corpus published from somebody else's repository holds whatever labels its maintainer
+chose. A skill that stopped there would lose the observation to a missing string. The block in the body is the
+contract. This repository's own `dogfood` label answers a different question, which is how something was found, and
+both marks sit on one issue.
+
 What CI reaches is narrow. `round-trip.sh` installs the plugin, asks each skill the question that skill describes, and
-greps each `SKILL.md` for the parts file its component requires. Everything else above is a reviewer's, and an
-undeclared component directory is the gap worth naming: `bundle.json` lists what was declared, so nothing looks for
-what was not.
+greps each `SKILL.md` for the parts file its component requires. Everything else above is a reviewer's, and two gaps
+are worth naming. An undeclared component directory travels undeclared, because `bundle.json` lists what was declared
+and nothing looks for what was not. A filed finding is read by nobody here. The issue lands on a repository this build
+never opens, so the shape holds for as long as the skill writing it holds to this standard.
 
 ## Sources and further reading
 
@@ -172,6 +263,7 @@ what was not.
 
 ## Changelog
 
+- 2026-09-08: added the shape a finding an agent files carries, and the label duty beside it.
 - 2026-09-07: initial version.
 
 [Claude Code plugin manifest]: https://json.schemastore.org/claude-code-plugin-manifest.json

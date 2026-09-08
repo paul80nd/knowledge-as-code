@@ -63,6 +63,15 @@ public class ReportsTests
         Assert.Contains("  - { resource: test-corpus, version: \"2.1.0\" }", plan.Frontmatter);
     }
 
+    [Fact]
+    public void The_stamp_names_the_release_without_the_commit_the_build_carries()
+        => Assert.Equal("kac/0.24.0", ReportStamp.ForTool("0.24.0+f7e3108a720ad698197fe8c08f8f6c51323777ea",
+            "2026-08-08T10:00:00Z", []).By);
+
+    [Fact]
+    public void The_stamp_takes_a_version_with_no_build_metadata_whole()
+        => Assert.Equal("kac/0.24.0", ReportStamp.ForTool("0.24.0", "2026-08-08T10:00:00Z", []).By);
+
     // Left empty rather than guessed. A report is a record somebody owns and confirms, and the tool can
     // answer for neither.
     [Fact]
