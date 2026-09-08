@@ -4,14 +4,14 @@
 
 ## Build
 
-| ID                     | Title                                             | Status     | Versions                                           | Licence      |
-|------------------------|---------------------------------------------------|------------|----------------------------------------------------|--------------|
-| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   |                                                    |              |
-| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 10.0.x                                             | MIT          |
-| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 1.x                                                | BSD-2-Clause |
-| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x | MIT          |
-| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated |                                                    | MIT          |
-| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 18.x                                               | MIT          |
+| ID                     | Title                                             | Status     | Versions                                           | Licence                               |
+|------------------------|---------------------------------------------------|------------|----------------------------------------------------|---------------------------------------|
+| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   |                                                    | LicenseRef-Anthropic-Terms-of-Service |
+| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 10.0.x                                             | MIT                                   |
+| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 1.x                                                | BSD-2-Clause                          |
+| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x | MIT                                   |
+| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated |                                                    | MIT                                   |
+| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 18.x                                               | MIT                                   |
 
 ## Docs
 

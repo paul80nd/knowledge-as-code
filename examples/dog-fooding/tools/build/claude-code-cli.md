@@ -4,7 +4,7 @@ type: tool
 tier: descriptive
 status: approved
 versions:
-licence:
+licence: LicenseRef-Anthropic-Terms-of-Service
 decided-in:
 replaces:
 successor:
@@ -45,15 +45,24 @@ None. Nothing else reads a plugin manifest the way the CLI that loads it does.
 
 ## Licence and obligations
 
-Not established. The package's own licence metadata has not been read, so this entry states none. The inherited clause
-`eng:pol-TRUS.LICENCE` asks that a component's licence be screened before we adopt it, and that screening is the open
-question here.
+`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and the `LICENSE.md` beside
+it reserves all rights to Anthropic PBC. That file grants use under the [legal agreements] Anthropic publishes. The
+Commercial Terms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro
+and Max ones.
+
+The licence grants no right to copy, change or redistribute the package. CI installs the published binary with
+`npm install -g` and runs it untouched. The CLI sits outside the working tree, and the plugin bundle it validates
+carries no part of it.
+
+Anthropic puts further conditions on preinstalling or running the CLI inside a product offered to other people. Nothing
+here does that, so those conditions do not reach this repository.
 
 ## Related
 
 * [std-CI] holds the rule that a tool installed at a moving version runs in a job with no write permission.
 * [std-CONFIG] requires a pin, and names the header comment as where an unpinnable one is explained.
 
+[legal agreements]: https://code.claude.com/docs/en/legal-and-compliance
 [std-CI]: ../../standards/workflows.md
 [std-CONFIG]: ../../standards/configuration.md
 [svc-marketplace]: ../../services/marketplace.md
