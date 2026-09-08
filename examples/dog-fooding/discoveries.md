@@ -15,8 +15,8 @@ Deliberately low-ceremony: a title, what you saw, the context you were in, and w
 ## Why we use them
 
 Capture has to be nearly free or it doesn't happen. Nobody writes up a gotcha that costs them a template, an owner and
-two reviewers, so a discovery asks for none of the three. You write what you saw, mark it unverified, and get **no
-review at all**. It expires on its own unless someone promotes it.
+two reviewers, so a discovery asks for none of the three. A change here still arrives as a pull request, and **nobody
+has to agree the observation is true** before it lands. It expires on its own unless someone promotes it.
 
 A human adds the rigour at promotion. The corpus can then take in everything anyone notices while the documents that
 carry authority stay few and checked.

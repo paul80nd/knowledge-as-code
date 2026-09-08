@@ -51,5 +51,5 @@ for.
 ---
 
 _(**Keep this short.** Discoveries are deliberately low-ceremony, because capture has to cost nothing. Don't tidy it up,
-don't verify it first, and don't write it as an FAQ. If it turns out to be real, general and current, a
-human promotes it and the polish happens then.)_
+don't verify it first, and don't write it as a standard. If it turns out to be real, general and current,
+a human promotes it and the polish happens then.)_
