@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Fixed
+
+- **A discovery can be promoted to a standard.** `promoted-to` names an FAQ or a standard and declares
+  `reciprocal: promoted-from`, but only `faqs` carried that field, so promoting to a standard failed `reciprocal` and
+  adding the key to the standard failed `unknown-key`. `standards` now declares `promoted-from` as well, optional and
+  pointing back at the discovery. Take it with `kac update --from <template>`, which brings the schema down with it.
+
 ## 0.24.0 - 2026-09-08
 
 ### Added

@@ -252,6 +252,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Standard    | `applies-to`     | Service                          |                 |
 | Standard    | `derived-from`   | ADR                              |                 |
 | Standard    | `implements`     | Policy                           |                 |
+| Standard    | `promoted-from`  | Discovery                        | `promoted-to`   |
 | Standard    | `verified-by`    | Control                          | `verifies`      |
 | Tool        | `decided-in`     | ADR                              |                 |
 | Tool        | `replaces`       | Tool                             | `successor`     |

@@ -6,6 +6,7 @@ status: draft
 derived-from:
 implements:
 verified-by:
+promoted-from:
 applies-to:
 review-by:
 owner:

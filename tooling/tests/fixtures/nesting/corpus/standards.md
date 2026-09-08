@@ -7,20 +7,21 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Value                                      | Notes                                                                               |
-|----------------|--------------------------------------------|-------------------------------------------------------------------------------------|
-| `id` *†        | string                                     | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†      | string                                     | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†      | `normative`                                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
-| `owner` *†     | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `tags` †       | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `category`     | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                         |
-| `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |
-| `implements`   | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.           |
-| `verified-by`  | list                                       | Control ids that check it.                                                          |
-| `applies-to` * | list                                       | Service ids, or `all`.                                                              |
-| `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                      |
+| Field           | Value                                      | Notes                                                                               |
+|-----------------|--------------------------------------------|-------------------------------------------------------------------------------------|
+| `id` *†         | string                                     | Stable, unique across the corpus, never reused. Format set by the type.             |
+| `type` *†       | string                                     | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
+| `tier` *†       | `normative`                                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
+| `status` *†     | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
+| `owner` *†      | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `tags` †        | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| `category`      | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                         |
+| `derived-from`  | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |
+| `implements`    | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.           |
+| `verified-by`   | list                                       | Control ids that check it.                                                          |
+| `promoted-from` | id                                         | The discovery this was promoted from.                                               |
+| `applies-to` *  | list                                       | Service ids, or `all`.                                                              |
+| `review-by` *   | date                                       | Quoted. The date by which someone confirms this is still true.                      |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
