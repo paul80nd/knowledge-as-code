@@ -14,6 +14,6 @@
     "Exceptions": "Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that admits no exception. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/24dcea21945982d92104c78a854465207d644ad6/examples/engineering/policies/security/envs-environment-separation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/81a84d36668a2c49cd14581695827b4048ede926/examples/engineering/policies/security/envs-environment-separation.md"
   }
 }

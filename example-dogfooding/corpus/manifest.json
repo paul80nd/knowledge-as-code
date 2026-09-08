@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.14.1",
+  "contentVersion": "0.15.0",
   "mechanismVersion": 8,
-  "commit": "24dcea21945982d92104c78a854465207d644ad6",
+  "commit": "81a84d36668a2c49cd14581695827b4048ede926",
   "dirty": false,
-  "generatedAt": "2026-09-08T13:47:42Z",
+  "generatedAt": "2026-09-08T14:17:56Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/24dcea21945982d92104c78a854465207d644ad6/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/81a84d36668a2c49cd14581695827b4048ede926/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "24dcea21945982d92104c78a854465207d644ad6"
+    "ref": "81a84d36668a2c49cd14581695827b4048ede926"
   },
   "sources": [
     {
@@ -30,10 +30,10 @@
       "contentVersion": "0.11.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/24dcea21945982d92104c78a854465207d644ad6/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/81a84d36668a2c49cd14581695827b4048ede926/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "24dcea21945982d92104c78a854465207d644ad6"
+        "ref": "81a84d36668a2c49cd14581695827b4048ede926"
       }
     }
   ],
@@ -59,7 +59,7 @@
       "type": "standards",
       "shapeVersion": 1,
       "records": 18,
-      "parts": 78,
+      "parts": 79,
       "dir": "standards",
       "partsFile": "standards/rules.jsonl",
       "recordKey": "record",
