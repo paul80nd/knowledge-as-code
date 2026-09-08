@@ -37,7 +37,8 @@
         "Purpose": "summary",
         "Scope": "full",
         "Exceptions": "full"
-      }
+      },
+      "frameworksFile": "policies/frameworks.jsonl"
     }
   ]
 }

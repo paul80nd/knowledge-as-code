@@ -19,6 +19,7 @@
 .schema/README.md
 .schema/_checks.yaml
 .schema/_enums.yaml
+.schema/_shapes.yaml
 .schema/_tiers.yaml
 .schema/_universal.yaml
 .schema/adrs.yaml
@@ -36,6 +37,7 @@
 .schema/policies.yaml
 .schema/postmortems.yaml
 .schema/processes.yaml
+.schema/reports.yaml
 .schema/runbooks.yaml
 .schema/services.yaml
 .schema/standards.yaml
@@ -94,6 +96,9 @@ postmortems/_template.md
 processes.md
 processes/_index.md
 processes/_template.md
+reports.md
+reports/_index.md
+reports/_template.md
 runbooks.md
 runbooks/_index.md
 runbooks/_template.md

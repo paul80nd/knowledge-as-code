@@ -15,15 +15,78 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.24.0 - 2026-09-08
 
 ### Added
+
+- **`kac report <name>` prints a report over the corpus and everything it imports.** Two reports ship. `kac report
+  coverage` names every policy clause and what discharges it, with the deviations departing from it, the controls behind
+  each covering standard, and any clause elsewhere sharing its key. `kac report frameworks` names every external
+  framework reference the clause tables cite, the standing the register files each framework under, the clauses citing
+  each one, and how many rest on a single citation. Each row of both carries an empty `Note`, for whoever confirms
+  the report. Output is markdown on standard output, so a caller pipes it where they want it. Every run stamps
+  `generated` and `sources` into the frontmatter it writes, naming the tool version, the moment, and the
+  `content-version` each corpus answered at. The tool prints `covered` and `uncovered` and never splits a gap from
+  something out of scope, because only a person can tell those apart.
+
+- **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each
+  rule line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers
+  to can now count its own coverage: before this, it saw what its own standards covered and nothing that arrived with
+  the policies. `part.citations.<Label>` is the export source behind the rule line, and it takes the ids from the
+  labelled footnote closing a part. Neither addition moves `standards@1`, because a reader written against the shape
+  before them is still correct.
+
+- **`framework-uncited` fails a framework on the register that no clause cites.** The register is the list of
+  frameworks an estate has taken a standing against, so an entry nothing reaches is a standing nobody acts on, and it
+  reads as coverage to whoever is looking for evidence. It is the third check `alignment-rollup` reports under. The
+  register is found by following a clause's own link, so a corpus whose clauses cite nothing has none in view. A
+  finding lands on the policy that reached the page and names the page the entry is deleted from.
+
+- **`policies/frameworks.jsonl` travels in the export.** One line per external framework reference, naming the
+  standing the register files it under, the clauses citing it, the policies holding those clauses, and the page and
+  anchor the register entry sits at. A type names the file with `frameworks:` in its `export:` block and the exporter
+  fills the keys, because a reference is read from a clause's cell and from the register the cell links to rather than
+  from any field a type declares. Navigation stays one way: `clauses.jsonl` is unchanged, and a clause still carries no
+  framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
+  still correct.
+
+- **`report-stale` warns where a report answers for a version the corpus has left behind.** Every other record is
+  about the estate, so a corpus that moved leaves it as true as it was; a report is about the corpus, and the same
+  change can make it wrong with nothing in the record showing it. Each `sources` entry is held against the version in
+  front of the reader: the descriptor's own `content-version`, or the version a consumed corpus's restore resolved to.
+  A warning, because the report may well still hold, and whoever owns it either confirms that and raises the version by
+  hand or runs it again.
+
+- **`reports` is a knowledge type the framework ships.** A finished report is a record: it has an
+  owner, a person confirms it before it is published, and a reader browsing the corpus finds it beside everything else.
+  `generated` names what produced the content and when, `sources` names each corpus it answers for and the
+  `content-version` each was at, and `confirmed` names every person who has checked it since. Sections are free-form,
+  because a report's headings follow the question it answers. Take it with `kac update --add-type reports`.
+
+- **A field may hold one object, and a shared shape may say what it holds.** `type: object` declares a value that is
+  one mapping, and its keys are held to their own declarations exactly as a list's object entries are. `_shapes.yaml`
+  joins `_enums.yaml` as a shared block, declaring an object shape a field takes whole with `shape: <name>`. Nothing
+  narrows a shape at the point of use, so a type holding one of its keys to a narrower value writes a rule. `event`,
+  an actor doing something at a point in time, is the shape that ships. This moves the template to version 8, so a
+  corpus takes `_shapes.yaml` with `kac update`.
+
+- **`entries_match('field', 'key', 're')` joins the expression facts.** It reads one key inside every object a field
+  holds: each entry of a list of them, and the one an `object` field holds. It is true where the field is absent and
+  true where an object omits the key, because presence is `required-field`'s question and `entry-key`'s, so a rule
+  written on top of it reports one fault once.
 
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
   base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an
   author should not have to know which spellings the parser admits. `ado-epics` on a capability is the field this
   reaches, and its entries were checked by nothing before.
+
+### Changed
+
+- **An FAQ's `confirmed.by` is held to a person by a rule rather than by a pattern.** The finding moves from
+  `field-pattern` on the entry's own line to `confirmed-by-a-person` against the record, and the message says why a
+  post, an agent and a team alias are each refused. `confirmed` now takes the shared `event` shape, whose `by` is a
+  plain string, and who may confirm is the FAQ type's own question to ask.
 
 ### Fixed
 

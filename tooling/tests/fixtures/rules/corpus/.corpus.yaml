@@ -1,0 +1,4 @@
+# This fixture declares a name and a content version so that `report-stale` has something to compare a
+# report's `sources` against. Everything else stays at its default, as an absent descriptor would leave it.
+corpus: fixture-corpus
+content-version: 0.2.0

@@ -135,6 +135,7 @@ public class CorpusRuleTests
 
         new NoDependencyCycles().Check(new CorpusRuleContext(docs, byId, Empty, type,
             new RuleSpec { Id = new RuleId("no-dependency-cycles") },
+            new Dictionary<string, string>(StringComparer.Ordinal),
             (at, c, m, l) => Report(Sev.Error, at, c, m, l),
             (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return found;

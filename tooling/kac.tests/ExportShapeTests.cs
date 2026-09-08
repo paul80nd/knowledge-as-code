@@ -37,6 +37,7 @@ public class ExportShapeTests
         policies@2
           fields: id, title, category, status, review-by
           sections: Purpose=summary, Scope=full, Exceptions=full
+          frameworks: frameworks.jsonl
           parts: full
             id: part.id
             clause: part.text
@@ -52,12 +53,13 @@ public class ExportShapeTests
           fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
           sections: When to use this=full, Prerequisites=full
         standards@1
-          fields: id, title, category, status, applies-to, review-by, tags
+          fields: id, title, category, status, implements, applies-to, review-by, tags
           sections: Summary=full, Conformance checklist=full
           parts: full
             id: part.id
             title: part.text
             obligations: part.lead
+            covers: part.citations.Covers
             seeAlso: part.see-also
             type: record.type
             record: record.id
@@ -88,6 +90,8 @@ public class ExportShapeTests
             shapes.AppendLine($"  fields: {string.Join(", ", export.Fields)}");
             var sections = export.Sections.Select(s => $"{s.Section}={s.Fidelity}");
             shapes.AppendLine($"  sections: {string.Join(", ", sections)}");
+
+            if (export.Frameworks.Length > 0) shapes.AppendLine($"  frameworks: {export.Frameworks}");
 
             if (!export.PartsDeclared) continue;
 

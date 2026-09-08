@@ -135,6 +135,10 @@ public record ExportPublishing(
 // the parts it points at. A corpus merging this type in stamps its shortcode onto all four, and reads
 // which keys to stamp from here for the same reason. All four are null where the type keeps no parts,
 // alongside `PartsFile`, and `SeeAlsoKey` is null as well where the type declares no such key.
+//
+// `FrameworksFile` names the second flat file a type may keep, holding the external frameworks its
+// parts cite. It is null for every type that declares none, which is all of them bar policies. Nothing
+// here says what a line of it holds, because the exporter writes those keys rather than the type.
 public record ExportedType(
     string Type,
     int ShapeVersion,
@@ -146,7 +150,8 @@ public record ExportedType(
     string? PartKey,
     string? IdKey,
     string? SeeAlsoKey,
-    IReadOnlyDictionary<string, string> Sections);
+    IReadOnlyDictionary<string, string> Sections,
+    string? FrameworksFile = null);
 
 // One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
 // `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not

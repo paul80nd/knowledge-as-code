@@ -60,7 +60,8 @@
       "seeAlsoKey": "seeAlso",
       "sections": {
         "Scope": "full"
-      }
+      },
+      "frameworksFile": null
     },
     {
       "type": "policies",
@@ -77,7 +78,8 @@
         "Purpose": "summary",
         "Scope": "full",
         "Exceptions": "full"
-      }
+      },
+      "frameworksFile": null
     }
   ]
 }

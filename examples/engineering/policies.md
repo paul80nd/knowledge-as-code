@@ -138,7 +138,7 @@ Accessibility under governance is the clearest of them.
 | `enum`                                 | error   | Enum values are in range and lowercase.                                                                             |
 | `field-pattern`                        | error   | Values match the pattern their field declares (e.g. `tags`).                                                        |
 | `list-order`                           | warning | List entries read in alphabetical order, with numbers compared as numbers.                                          |
-| `entry-shape / entry-key`              | error   | Each entry of an object list is a mapping, carrying the keys the field declares and no others.                      |
+| `entry-shape / entry-key`              | error   | An object field, and each entry of an object list, carries the keys the field declares and no others.               |
 | `type-matches-folder`                  | error   | `type` matches the singular type name the record's folder declares.                                                 |
 | `tier-matches-type`                    | error   | `tier` matches the tier the type declares.                                                                          |
 | `id`                                   | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename.     |
@@ -156,6 +156,7 @@ Accessibility under governance is the clearest of them.
 | `label-canonical`                      | error   | A shortcut label that names a document is written as that document's id.                                            |
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
+| `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" near a framework reference. Standing belongs in `frameworks.md`.           |
 
 <!-- END GENERATED: checks-policies -->

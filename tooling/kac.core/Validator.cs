@@ -93,7 +93,7 @@ public static class Validator
         // one would be free to answer differently.
         var byId = CheckCorpus(schema, corpus.Docs, findings, corpus.Imports);
 
-        CheckCorpusRules(schema, corpus.Docs, byId, tree, findings);
+        CheckCorpusRules(schema, corpus.Docs, byId, tree, Versions(corpus.Descriptor), findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
@@ -161,7 +161,7 @@ public static class Validator
             foreach (var spec in t.DeclaredFields)
             {
                 var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
-                var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name]);
+                var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name], spec);
                 if (req && absent)
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
@@ -803,13 +803,34 @@ public static class Validator
     // A finding names the document the rule chose, so a corpus rule is handed the document to report
     // against where a document rule is handed the `Report` for the one it is reading. Everything else is
     // the same dispatch: found by the id the schema declares, and silent where nothing implements it.
+    // What content this corpus reads, by the name each corpus goes under. Its own version comes from its
+    // descriptor and a consumed corpus's from the version its restore resolved to, so a record naming a
+    // corpus is held against the content actually in front of it rather than against whatever a
+    // registry now publishes.
+    //
+    // A corpus with no name, and a consumed entry with no name or no resolved version, are left out. An
+    // entry nothing answers is a comparison that cannot be made rather than one that failed.
+    private static Dictionary<string, string> Versions(CorpusDescriptor descriptor)
+    {
+        var found = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        if (descriptor.Name is { Length: > 0 } name && descriptor.ContentVersion is { Length: > 0 } version)
+            found[name] = version;
+
+        foreach (var consumed in descriptor.Consumes)
+            if (consumed is { Corpus: { Length: > 0 } from, Resolved: { Length: > 0 } locked })
+                found[from] = locked;
+
+        return found;
+    }
+
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
-        Tree tree, List<Finding> f)
+        Tree tree, IReadOnlyDictionary<string, string> versions, List<Finding> f)
     {
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
             if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule,
+                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule, versions,
                     (at, c, m, l) => Report(Sev.Error, at, c, m, l),
                     (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return;

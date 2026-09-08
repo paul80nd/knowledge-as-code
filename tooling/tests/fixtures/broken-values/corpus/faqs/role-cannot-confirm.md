@@ -16,8 +16,9 @@ owner: role:head-of-engineering
 
 ## Symptom
 
-`confirmed` declares `pattern: '^human:[a-z0-9.-]+$'` on its `by` key, so it refuses the `role:` its own `owner`
-accepts. One document carrying both values shows where the two patterns differ.
+`confirmed` takes the shared `event` shape, whose `by` is a plain string. The FAQ type holds it to a person with the
+`confirmed-by-a-person` rule, so it refuses the `role:` its own `owner` accepts. One document carrying both values
+shows where the two patterns differ.
 
 ## Cause
 
@@ -27,5 +28,5 @@ post changes hands.
 ## Fix
 
 Name the person. `owner` above is untouched and fires nothing, which is what makes the finding readable as a
-statement about `confirmed.by` alone. The message names the key inside the entry, so an author reads which half of
-the pair is wrong.
+statement about `confirmed.by` alone. The rule asks one question of the whole document, so the message names the key
+rather than the entry, and a list of several confirmations reports once.

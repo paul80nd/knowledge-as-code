@@ -33,12 +33,16 @@ KAC="$REPO/tooling/kac"
 PRODUCER="$REPO/examples/engineering"
 CONSUMER="$REPO/examples/payments"
 
-# The clause this proves the trip with. It is a real citation: `examples/payments/` binds its card-data
-# standard to the governance policy on collecting no more personal data than is needed.
-POLICY="$PRODUCER/policies/security/data-data-protection.md"
-CLAUSE=MINIMAL
-RENAMED=MINIMUM
-CITATION="eng:pol-DATA.$CLAUSE"
+# The clause this proves the trip with. It is a real citation: `examples/payments/` binds its ledger
+# standard to the governance policy on tracing a derived value back to the runs that produced it.
+#
+# It cites no external framework, and that is what keeps the rename below clean. `rpt-framework-coverage`
+# names every clause that cites one, so renaming any of those would break the producer's own report as
+# well, and the break would no longer be downstream alone.
+POLICY="$PRODUCER/policies/delivery/derv-derived-data-is-verified.md"
+CLAUSE=LINEAGE
+RENAMED=ORIGIN
+CITATION="eng:pol-DERV.$CLAUSE"
 
 WORK=${WORK:-$(mktemp -d)}
 mkdir -p "$WORK"
@@ -124,7 +128,8 @@ cp "$WORK/renamed.md" "$POLICY"
 # rename that broke the producer would go out in the package and the downstream failure would no longer
 # mean what the assertion below says it means.
 kac "$PRODUCER" validate \
-  || fail "renaming '$CLAUSE' left $PRODUCER invalid, so the break is not a clean one."
+  || fail "renaming '$CLAUSE' left $PRODUCER invalid, so the break is not a clean one. A record \
+upstream cites the old spelling, and a report naming that clause is the likely one."
 
 publish_and_restore
 

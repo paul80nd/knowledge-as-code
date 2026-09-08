@@ -52,8 +52,8 @@ public static class ChecksTable
         ("list-order", [new("list-order")],
             "List entries read in alphabetical order, with numbers compared as numbers.", null),
         ("entry-shape / entry-key", [new("entry-shape"), new("entry-key")],
-            "Each entry of an object list is a mapping, carrying the keys the field declares and no others.",
-            t => t.AnyField(f => f.Of == "object")),
+            "An object field, and each entry of an object list, carries the keys the field declares and no others.",
+            t => t.AnyField(f => f.Of == "object" || f.Type == "object")),
         ("min-records", [new("min-records")],
             "A value in a grouping field is carried by at least as many records as the schema asks for.",
             t => t.AnyField(f => f.MinRecords is not null)),
@@ -122,6 +122,12 @@ public static class ChecksTable
             "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
             + "places each framework.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
+        ("framework-uncited", [new("framework-uncited")],
+            "Every framework on the register is cited by at least one clause.",
+            t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
+        ("report-stale", [new("report-stale")],
+            "Each corpus a report answers for is at the version the report names.",
+            t => t.Rules.Any(r => r.Id == new RuleId("report-stale"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)

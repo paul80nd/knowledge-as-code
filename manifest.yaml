@@ -22,7 +22,7 @@
 
 # The version of the template's shape. Increment when a corpus has to respond to the change: a file
 # added or removed, a file renamed, or a file moving between layers.
-version: 7
+version: 8
 
 # The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
 # package, so the two version independently. An older tool meeting a newer template stops on this and

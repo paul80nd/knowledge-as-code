@@ -78,6 +78,7 @@ Each line carries one heading of a standard's Rules section, with everything wri
 | `id`                 | string                   | `<standard-id>.<rule-key>`, the address to quote and to cite                 |
 | `title`              | string                   | the heading, which says what the obligations beneath it are about            |
 | `obligations`        | string or null           | every bullet under that heading, as one block of markdown. Read this whole   |
+| `covers`             | list of strings, or null | the policy clauses this rule discharges                                      |
 | `seeAlso`            | list of strings, or null | the rules of other standards this one points at                              |
 | `type`               | string                   | `standards`, on every line of this file                                      |
 | `record`             | string                   | the standard the rule belongs to                                             |

@@ -87,11 +87,12 @@ public partial class CliReferenceTests
 
     // The verbs the flow chart deliberately leaves out, each because it is not a step in any sequence.
     // `checks` reads the schema and prints what could ever fire, which is a question about the schema.
+    // `report` reads the corpus and prints what it found, which is a question about the corpus.
     //
     // A list rather than an absence, so a verb added to the parser fails the test below until somebody
     // decides which it is. That is the bargain `on-type-page: false` already strikes for a check the type
     // pages do not advertise.
-    private static readonly string[] NotSteps = ["checks"];
+    private static readonly string[] NotSteps = ["checks", "report"];
 
     // The chart is drawn by hand, and nothing in MkDocs would notice a verb missing from it. A new
     // command that nobody placed in the sequence is exactly what a reader comes to this page to find.

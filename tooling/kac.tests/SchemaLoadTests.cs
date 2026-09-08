@@ -6,7 +6,7 @@ namespace kac.tests;
 
 public class SchemaLoadTests
 {
-    // The four shared blocks, each declaring nothing. A case adds only the keys it is about.
+    // The shared blocks, each declaring nothing. A case adds only the keys it is about.
     private static Dictionary<string, string> Blocks() => new(StringComparer.Ordinal)
     {
         ["_enums.yaml"] = "enums: {}",
@@ -14,6 +14,73 @@ public class SchemaLoadTests
         ["_checks.yaml"] = "checks: {}",
         ["_universal.yaml"] = "fields: {}"
     };
+
+    // A shape is declared once and taken whole, so a field naming one carries the shape's keys as
+    // though it had written them out. Nothing narrows a shape here: a type holding one of its keys to a
+    // narrower value writes a rule.
+    [Fact]
+    public void A_field_naming_a_shape_takes_its_keys()
+    {
+        var schema = Schema.Load(WithShapes("shape: event"));
+        var field = schema.ByFolder["adrs"].Fields["confirmed"];
+
+        Assert.Equal(["at", "by"], field.Entry?.Select(k => k.Name));
+        Assert.Equal("timestamp", field.Entry?[0].Type);
+        Assert.Equal("event", field.Shape);
+    }
+
+    [Fact]
+    public void A_field_naming_a_shape_nothing_declares_says_so()
+        => Assert.Contains("_shapes.yaml declares no such shape",
+            Schema.Load(WithShapes("shape: occurrence")).ByFolder["adrs"].Fields["confirmed"].Problem);
+
+    // A shape and an `entry:` block are two accounts of one thing, and merging them is deliberately not
+    // a mechanism this language has.
+    [Fact]
+    public void A_field_naming_a_shape_and_declaring_an_entry_block_says_so()
+    {
+        var files = WithShapes("shape: event");
+        files["adrs.yaml"] = """
+                             id:
+                               prefix: adr
+                             fields:
+                               confirmed:
+                                 type: object
+                                 shape: event
+                                 entry:
+                                   at:
+                                     type: timestamp
+                             """;
+
+        Assert.Contains("drop one of the two",
+            Schema.Load(files).ByFolder["adrs"].Fields["confirmed"].Problem);
+    }
+
+    // A type declaring one object field, over a `_shapes.yaml` holding the shape it may name.
+    private static Dictionary<string, string> WithShapes(string declaration)
+    {
+        var files = Blocks();
+        files["_shapes.yaml"] = """
+                                shapes:
+                                  event:
+                                    entry:
+                                      at:
+                                        required: true
+                                        type: timestamp
+                                      by:
+                                        required: true
+                                        type: string
+                                """;
+        files["adrs.yaml"] = $"""
+                              id:
+                                prefix: adr
+                              fields:
+                                confirmed:
+                                  type: object
+                                  {declaration}
+                              """;
+        return files;
+    }
 
     [Fact]
     public void A_schema_handed_over_as_strings_loads()

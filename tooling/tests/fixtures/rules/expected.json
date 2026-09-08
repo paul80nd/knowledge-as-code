@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 27,
-    "templates": 17,
+    "validated": 29,
+    "templates": 18,
     "skipped": 0,
-    "errors": 13,
-    "warnings": 16,
+    "errors": 16,
+    "warnings": 17,
     "infos": 0
   },
   "findings": [
@@ -157,6 +157,20 @@
     },
     {
       "file": "policies/unpl-framework-not-placed.md",
+      "line": null,
+      "severity": "error",
+      "check": "framework-uncited",
+      "message": "'Azure Well-Architected Framework' is filed on 'frameworks.md' and no clause cites it."
+    },
+    {
+      "file": "policies/unpl-framework-not-placed.md",
+      "line": null,
+      "severity": "error",
+      "check": "framework-uncited",
+      "message": "'ISO 27001' is filed on 'frameworks.md' and no clause cites it."
+    },
+    {
+      "file": "policies/unpl-framework-not-placed.md",
       "line": 29,
       "severity": "error",
       "check": "framework-posture",
@@ -175,6 +189,20 @@
       "severity": "warning",
       "check": "no-hedged-ordering",
       "message": "A step hedged with \"typically\", \"usually\" or \"normally\" leaves the reader to decide. Say what the ordering depends on, or state it plainly."
+    },
+    {
+      "file": "reports/answers-for-an-old-version.md",
+      "line": 8,
+      "severity": "warning",
+      "check": "report-stale",
+      "message": "this answers for 'fixture-corpus' at 0.1.0, and the corpus is at 0.2.0. Check the report still holds and raise the version, or run it again."
+    },
+    {
+      "file": "reports/producer-without-a-version.md",
+      "line": 1,
+      "severity": "error",
+      "check": "generated-by-a-producer",
+      "message": "`generated.by` names a producer and its version together, as `kac/0.24.0`. A bare name leaves a reader unable to tell which version of the producer wrote this."
     },
     {
       "file": "runbooks/database-connections-exhausted.md",

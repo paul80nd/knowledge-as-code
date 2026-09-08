@@ -34,6 +34,7 @@ column for your row.
 | A third-party or external system we depend on                        | [Integrations](../integrations.md) |
 | A tool or package we've approved, rejected, or are trialling         | [Tools](../tools.md)               |
 | An account of an incident and what caused it                         | [Postmortems](../postmortems.md)   |
+| An answer about the corpus that no single record holds               | [Reports](../reports.md)           |
 | Something surprising you noticed and haven't verified                | [Discoveries](../discoveries.md)   |
 | Where data lives, how long we keep it, and how sensitive it is       | [Data](../data.md)                 |
 
@@ -111,6 +112,11 @@ time it appears belongs in the most general glossary that admits it, and everyth
 their SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires
 both. It also names who to call when the system is down.
 
+**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
+added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
+the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
+answered them.
+
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
 stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
 
@@ -162,6 +168,7 @@ graph LR;
   t_policies[Policy];
   t_postmortems[Postmortem];
   t_processes[Process];
+  t_reports[Report];
   t_runbooks[Runbook];
   t_services[Service];
   t_standards[Standard];
@@ -308,6 +315,12 @@ be true after replacing the entire technology estate, it is a policy.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
+
+**Report vs Discovery.** A report is a walk over the corpus, repeatable and dated. A discovery is something somebody
+noticed once. If nothing would reproduce it, it is a discovery.
+
+**Report vs Explanation.** A report answers a question about the corpus itself. An explanation says how something in the
+estate works. If it would still be true with every record deleted, it is an explanation.
 
 **Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
 from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a

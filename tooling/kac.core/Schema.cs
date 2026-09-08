@@ -29,6 +29,11 @@ public sealed class FieldSpec
     // say which entry it means.
     public IReadOnlyList<FieldSpec>? Entry { get; init; }
 
+    // The shared shape this field's object keys come from, and empty where it declares them itself.
+    // Kept beside `Entry` rather than resolved away, because `schema-shape` reports a field naming a
+    // shape and declaring an `entry:` too, and a type page names the shape a reader can look up.
+    public string Shape { get; init; } = "";
+
     // The entry key of the given name, or null where the shape declares none.
     public FieldSpec? EntryKey(string name) =>
         Entry?.FirstOrDefault(k => string.Equals(k.Name, name, StringComparison.Ordinal));
@@ -208,6 +213,11 @@ public sealed class ExportSpec
     // empty, and the second would otherwise read as a type exporting no parts.
     public bool PartsDeclared { get; init; }
 
+    // The file a type's framework references travel in, and empty where none do. A reference is read
+    // from a clause's `Alignment` cell rather than from any key a type declares, so the type names the
+    // file and the exporter fills the line. `docs/design/export.md` says what a line carries.
+    public string Frameworks { get; init; } = "";
+
     // The keys of one part line, in the order the line writes them, each with the source filling it.
     //
     // The key is the type's own word and reaches the wire as written. `definition` and `not` are a
@@ -255,6 +265,10 @@ public static class PartLineSource
     // is a source naming nothing, which `SchemaChecks` reports.
     public const string FrontPrefix = "front.";
     public const string ColumnPrefix = "column.";
+
+    // A labelled footnote closing a part, named by the label a field of this type reconciles against.
+    // The remainder is that label, so `part.citations.Covers` carries what the `Covers` line gathers.
+    public const string CitationPrefix = "part.citations.";
 
     // The sources naming one thing each, so the two prefixed families are tested separately.
     public static readonly IReadOnlyList<string> Fixed =
@@ -630,7 +644,8 @@ public sealed partial class Schema
         IReadOnlyList<string> Order,
         IReadOnlyDictionary<string, FieldSpec> Fields,
         IReadOnlyList<string> Reserved,
-        IReadOnlyDictionary<string, IReadOnlyList<string>> Enums);
+        IReadOnlyDictionary<string, IReadOnlyList<string>> Enums,
+        IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> Shapes);
 
     // The folder holding the schema a corpus is judged against: the nearest one at or above the corpus
     // root carrying a `.schema/`. A standalone corpus stops on its own root, which is the ordinary case.
@@ -696,6 +711,23 @@ public sealed partial class Schema
             enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
         unread.AddRange(enumKeys.Unread());
 
+        // After the enums, because a shape's keys are fields and one of them may draw its values from
+        // `$enums.`. Before the universal fields, because either of those may name a shape.
+        var shapeKeys = new KeyReader(".schema/_shapes.yaml");
+        var shapesRoot = shapeKeys.At(Read("_shapes.yaml"), TheFile);
+        var shapes = new Dictionary<string, IReadOnlyList<FieldSpec>>(StringComparer.Ordinal);
+        foreach (var (name, node) in Yaml.Map(shapesRoot.Get("shapes")))
+        {
+            var shape = shapeKeys.At(node, $"shape '{name}'");
+            var keys = new List<FieldSpec>();
+            foreach (var (key, decl) in Yaml.Map(shape.Get("entry")))
+                keys.Add(ParseField(shapeKeys, shapeKeys.At(decl, $"shape '{name}' key '{key}'"), key,
+                    enums, shapes));
+            shapes[name] = keys;
+        }
+
+        unread.AddRange(shapeKeys.Unread());
+
         var tierKeys = new KeyReader(".schema/_tiers.yaml");
         var tiersRoot = tierKeys.At(Read("_tiers.yaml"), TheFile);
         var tiers = new List<TierSpec>();
@@ -738,10 +770,12 @@ public sealed partial class Schema
         foreach (var (name, node) in Yaml.Map(uni.Get("fields")))
         {
             universalOrder.Add(name);
-            universal[name] = ParseField(universalKeys, universalKeys.At(node, $"field '{name}'"), name, enums);
+            universal[name] = ParseField(universalKeys, universalKeys.At(node, $"field '{name}'"), name,
+                enums, shapes);
         }
 
-        var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(uni.Get("reserved")), enums);
+        var layer = new UniversalLayer(universalOrder, universal, Yaml.StrList(uni.Get("reserved")), enums,
+            shapes);
         unread.AddRange(universalKeys.Unread());
 
         var byFolder = new Dictionary<string, TypeSchema>();
@@ -785,7 +819,7 @@ public sealed partial class Schema
         foreach (var (name, node) in Yaml.Map(root.Get("fields")))
         {
             fieldOrder.Add(name);
-            fields[name] = ParseField(keys, keys.At(node, $"field '{name}'"), name, layer.Enums);
+            fields[name] = ParseField(keys, keys.At(node, $"field '{name}'"), name, layer.Enums, layer.Shapes);
         }
 
         var rules = root.Get("rules") is YamlSequenceNode ruleNodes
@@ -869,6 +903,7 @@ public sealed partial class Schema
                         .. Yaml.Map(export.Get("sections"))
                             .Select(e => (e.Item1, Yaml.Str(e.Item2)?.Trim() ?? ""))
                     ],
+                    Frameworks = Yaml.Str(export.Get("frameworks")) ?? "",
                     Parts = Yaml.Str(exportParts.Get("fidelity")) ?? "",
                     PartsDeclared = exportPartsNode is not null,
                     Line =
@@ -921,7 +956,8 @@ public sealed partial class Schema
     ];
 
     private static FieldSpec ParseField(KeyReader keys, Level node, string name,
-        IReadOnlyDictionary<string, IReadOnlyList<string>> enums)
+        IReadOnlyDictionary<string, IReadOnlyList<string>> enums,
+        IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> shapes)
     {
         var pattern = Yaml.Str(node.Get("pattern"));
         string? problem = null;
@@ -968,7 +1004,21 @@ public sealed partial class Schema
         foreach (var (key, decl) in Yaml.Map(node.Get("entry")))
         {
             entry ??= [];
-            entry.Add(ParseField(keys, keys.At(decl, $"field '{name}' entry key '{key}'"), key, enums));
+            entry.Add(ParseField(keys, keys.At(decl, $"field '{name}' entry key '{key}'"), key, enums, shapes));
+        }
+
+        // `shape: event` takes its keys from _shapes.yaml, whole. Nothing narrows a shape here, so a
+        // field naming one and declaring an `entry:` of its own has said the same thing twice and
+        // `schema-shape` reports it. A name no shape answers to is the same defect `$enums.` has.
+        var shape = Yaml.Str(node.Get("shape"));
+        if (shape is { Length: > 0 })
+        {
+            if (entry is not null)
+                problem ??= $"field '{name}' takes its shape from '{shape}' and declares an 'entry:' "
+                            + "block as well. A shape is taken whole, so drop one of the two.";
+            else if (shapes.GetValueOrDefault(shape) is { } declared) entry = [.. declared];
+            else problem ??= $"field '{name}' takes its shape from '{shape}', and _shapes.yaml declares "
+                             + "no such shape.";
         }
 
         return new FieldSpec
@@ -977,6 +1027,7 @@ public sealed partial class Schema
             Required = Yaml.Bool(node.Get("required")),
             RequiredWhen = requiredWhen,
             RequiredWhenCondition = condition,
+            Shape = shape ?? "",
             Type = Yaml.Str(node.Get("type")) ?? "string",
             Of = Yaml.Str(node.Get("of")),
             Entry = entry,

@@ -24,6 +24,7 @@ column for your row.
 | A rule people must follow when building                              | [Standards](../standards.md) |
 | A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](../glossary.md) |
 | A tool or package we've approved, rejected, or are trialling         | [Tools](../tools.md)         |
+| An answer about the corpus that no single record holds               | [Reports](../reports.md)     |
 
 <!-- END GENERATED: types-placement -->
 
@@ -68,6 +69,11 @@ rot faster than anything else.
 confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
 time it appears belongs in the most general glossary that admits it, and everything else links to it.
 
+**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
+added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
+the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
+answered them.
+
 **[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
 we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
 evaluation.
@@ -87,6 +93,7 @@ graph LR;
   t_controls[Control];
   t_glossary[Glossary];
   t_policies[Policy];
+  t_reports[Report];
   t_standards[Standard];
   t_tools[Tool];
   t_adrs -- related --> t_adrs;

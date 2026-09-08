@@ -1,0 +1,139 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: report
+label: Report
+label-plural: Reports
+folder: reports
+page: reports.md
+tier: descriptive
+lifecycle: living
+summary: A question about the corpus answered over the whole of it, with the judgement a person added.
+goes-here: An answer about the corpus that no single record holds
+detail: >
+  Which clauses nothing implements, which framework references hang on one citation. `kac report` fills
+  every cell the corpus states and leaves the judgement cells open, and this is where the finished
+  document lives once somebody has answered them.
+
+versus:
+  explanations: >
+    A report answers a question about the corpus itself. An explanation says how something in the estate
+    works. If it would still be true with every record deleted, it is an explanation.
+  discoveries: >
+    A report is a walk over the corpus, repeatable and dated. A discovery is something somebody noticed
+    once. If nothing would reproduce it, it is a discovery.
+
+lineage:
+  prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys"
+  alignment: >
+    `generated` names the producer and the moment, in OKF's `<producer>/<version>` form, and `sources`
+    names each body of knowledge the document answers for
+  divergence: >
+    OKF carries no version on a source. Ours does, because the fact a reader needs is which content the
+    report is true of. We also require a human `confirmed` entry, which OKF leaves to the publisher
+
+collision: >
+  A report reads like an explanation, and the two are told apart by what deleting the corpus would do to
+  them. An explanation survives it and a report has nothing left to say.
+
+id:
+  prefix: rpt
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+  notes: Named for the question it answers, which is what somebody searches for.
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [draft, active, stale]
+    description: '`stale` is an honest state: a report nobody has run since the corpus moved says so.'
+
+  generated:
+    required: true
+    type: object
+    shape: event
+    description: What produced the content and when.
+    notes: >
+      `by` takes OKF's `<producer>/<version>` form, so a report an agent extended names the agent the
+      same way the tool names itself. `generated-by-a-producer` below is what holds it to that form.
+
+      One event rather than a list. A regeneration replaces the content, so the moment before it is a
+      fact about a document that no longer exists. `confirmed` is the field with a history, because a
+      confirmation is added to the document rather than replacing it.
+
+  sources:
+    required: true
+    type: list
+    of: object
+    entry:
+      resource:
+        required: true
+        type: string
+        description: The corpus the report answers for, by the name its descriptor gives it.
+      version:
+        required: true
+        type: string
+        description: Quoted. The `content-version` that corpus was at.
+    min-items: 1
+    description: Every corpus this report answers for, and the version of each it is true of.
+    notes: >
+      A reviewer moves a `version` by hand, and that is the point of it. A corpus moves its
+      `content-version` whenever what it knows changes, and most of those changes touch no report.
+      Somebody who has checked that the report still holds raises the version and adds a `confirmed`
+      entry, rather than running it again and re-reading every verdict.
+
+      `resource` names the corpus rather than a path, because a consumer reads the same report about a
+      corpus it holds under a shortcode of its own.
+
+  confirmed:
+    required: true
+    type: list
+    of: object
+    shape: event
+    min-items: 1
+    description: Every confirmation this report has had, oldest first, one line each.
+    notes: >
+      A report nobody confirmed is output. The judgement cells are what make it a record, and this field
+      is what says a person filled them in.
+
+      A confirmation is an actor doing something at a point in time, so the keys come from the `event`
+      shape. Who may confirm is this type's question, and `confirmed-by-a-person` below is where it is
+      asked.
+
+sections:
+  required: []
+  optional: []
+  notes: >
+    Free-form throughout. A report's headings follow the question it answers, and `kac report` writes
+    them, so declaring any of them here would hold every future report to the shape of the first two.
+
+index:
+  columns: [id, title, status]
+  sort: id
+
+rules:
+  - id: report-stale
+    description: A report answers for the version of each corpus that is in front of the reader now.
+    severity: warning
+
+  - id: confirmed-by-a-person
+    description: A confirmation names the person who made it.
+    severity: error
+    expr: "entries_match('confirmed', 'by', '^human:[a-z0-9.-]+$')"
+    message: >
+      A confirmation here names something other than a person. Write `human:alex.doe`. The tool filled
+      the mechanical cells and a person answered the rest, so this key records who that person was.
+
+  - id: generated-by-a-producer
+    description: '`generated.by` names what produced the content, in OKF''s `<producer>/<version>` form.'
+    severity: error
+    # A slash and something after it is the whole of the form. What produced a report is a tool or an
+    # agent, and neither has a naming scheme this corpus is entitled to narrow further.
+    expr: "entries_match('generated', 'by', '^[a-z0-9.-]+/[^ ]+$')"
+    message: >
+      `generated.by` names a producer and its version together, as `kac/0.24.0`. A bare name leaves a
+      reader unable to tell which version of the producer wrote this.

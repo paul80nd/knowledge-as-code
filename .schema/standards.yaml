@@ -161,7 +161,7 @@ parts:
 # absent from the sections because the headings under it are parts, and `parts:` above carries them.
 export:
   version: 1
-  fields: [id, title, category, status, applies-to, review-by, tags]
+  fields: [id, title, category, status, implements, applies-to, review-by, tags]
   sections:
     Summary: full
     Conformance checklist: full
@@ -171,6 +171,7 @@ export:
       id: part.id
       title: part.text
       obligations: part.lead
+      covers: part.citations.Covers
       seeAlso: part.see-also
       type: record.type
       record: record.id
@@ -192,16 +193,21 @@ export:
     stack, and the record is a fetch away for a reader who wants it. `Rationale and provenance` stays
     behind because it argues from ADRs and policy clauses no consumer receives.
 
-    `implements` stays behind as well, and it is the loss worth naming. A clause id such as
-    `eng:pol-RECV.IDEMPOT` resolves only for a consumer holding that corpus, and one that does not would
-    receive an address it cannot follow. The obligation travels whole either way.
+    `implements` travels, and `covers` carries the same edge one rule at a time. The clauses a rule
+    discharges are named on its `Covers` line, and the exporter drops that line before it takes the
+    obligations, so a rule carrying nothing else travels with no obligations rather than with the
+    footnote standing where they belong. The ids reach the line instead.
+
+    Both are there so a consumer can count its own coverage. A corpus inheriting the policies it answers
+    to also inherits the standards discharging them, and without this edge it can see only what its own
+    standards cover. A clause id such as `eng:pol-RECV.IDEMPOT` resolves for exactly the consumer that
+    holds that corpus, which is the one asking the question.
 
     `seeAlso` carries the rules of other standards this one points at. A standard composes by union, so
     one rule commonly leans on another, and a link's target is stripped out of the words: an agent
-    reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. A policy
-    clause reaches neither: the clauses a rule discharges are named on its `Covers` line, and the
-    exporter drops that line before it takes the obligations. So a rule carrying nothing but the
-    footnote travels with no obligations rather than with the footnote standing where they belong.
+    reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. It never
+    carries a policy clause, because a clause is cited as `[pol-INTC].HOLDS` and the link ends at the
+    policy.
 
     The rules of one standard reach a consumer sorted on the heading, because that is what a
     heading-sourced type does. The order the author grouped them in is a fact about the page, and a

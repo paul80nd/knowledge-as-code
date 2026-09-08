@@ -121,7 +121,17 @@ public static class Exporter
             if (partsFile is not null)
                 files.Add(new ExportFile(partsFile, string.Concat(lines.Select(l => l + "\n"))));
 
-            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile));
+            var frameworks = FrameworkLines(local, corpus);
+            var frameworksFile = frameworks.Count > 0 && local?.Export is { Frameworks: { Length: > 0 } named }
+                ? $"{key}/{named}"
+                : null;
+            if (frameworksFile is not null)
+                files.Add(new ExportFile(frameworksFile, string.Concat(frameworks.Select(l => l + "\n"))));
+
+            types.Add(Entry(key, local, consumed, records, lines.Count, partsFile) with
+            {
+                FrameworksFile = frameworksFile
+            });
         }
 
         files.Add(new ExportFile(ManifestFile,
@@ -260,6 +270,35 @@ public static class Exporter
         IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, string> b) =>
         a.Count == b.Count && a.All(e => b.TryGetValue(e.Key, out var v) && v == e.Value);
 
+    // Every external framework this corpus's own clauses cite, one line apiece, and none where the type
+    // declares no file for them.
+    //
+    // This corpus's own clauses alone. An inherited clause left its `Alignment` cell behind, so nothing
+    // here could say which frameworks it reaches, and a consumer reads its producer's own file for that
+    // half. `docs/design/export.md` carries the reasoning and `Reports.FrameworkRows` gathers the rows.
+    //
+    // The keys are written here rather than declared by the type. A reference is read from a cell and
+    // from the register the cell links to, so no `line:` block over the type's own fields could name
+    // where any of it comes from.
+    private static List<string> FrameworkLines(TypeSchema? local, LoadedCorpus corpus)
+    {
+        if (local?.Export is not { Frameworks.Length: > 0 }) return [];
+
+        return
+        [
+            .. Reports.FrameworkRows(corpus, []).Select(row => Serialize(new JsonObject
+            {
+                ["framework"] = row.Framework,
+                ["reference"] = row.Reference,
+                ["standing"] = row.Standing,
+                ["clauses"] = new JsonArray([.. row.Clauses.Select(c => (JsonNode?)JsonValue.Create(c))]),
+                ["records"] = new JsonArray([.. row.Records.Select(r => (JsonNode?)JsonValue.Create(r))]),
+                ["path"] = row.Path,
+                ["anchor"] = row.Anchor
+            }))
+        ];
+    }
+
     // Where one type's parts file lands. This corpus's own name for a part decides it where the corpus
     // adopted the type, and the producer's where it did not, so a consumer reading a type it never
     // adopted finds the file that type's own manifest entry names.
@@ -322,7 +361,11 @@ public static class Exporter
 
     // An id as this corpus writes it: the producer's own spelling, behind the shortcode that names the
     // producer, unless it already names one.
-    private static string Scoped(string id, string shortcode) =>
+    /// <summary>How a consumer names an id it inherited: the producer's shortcode, then the id.</summary>
+    /// <remarks>An id already carrying one was written further up the chain and keeps the name it arrived
+    /// under. Public because a report reads inherited parts and has to name them the way an export does.
+    /// See Reports.cs.</remarks>
+    public static string Scoped(string id, string shortcode) =>
         id.Contains(':', StringComparison.Ordinal) ? id : $"{shortcode}:{id}";
 
     // Replace the export whole: delete what is there, then write. Overwriting in place would leave a
@@ -615,7 +658,8 @@ public static class Exporter
                 if (row.Id is not { Length: > 0 } partId) continue;
 
                 var (lead, aside) = Split(doc, row, spec.Aside, footnotes);
-                var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree));
+                var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree),
+                    Citations(doc, row, footnotes));
 
                 var line = new JsonObject();
                 foreach (var (key, source) in t.DeclaredExport.Line) line[key] = Value(source, part, t);
@@ -650,7 +694,8 @@ public static class Exporter
         string Record,
         string? Lead,
         string? Aside,
-        IReadOnlyList<string>? SeeAlso);
+        IReadOnlyList<string>? SeeAlso,
+        IReadOnlyDictionary<string, IReadOnlyList<string>> Citations);
 
     // What one declared source comes to for one part. The vocabulary is `PartLineSource`, and
     // `SchemaChecks` has already refused a source outside it, so the fall-through writes null for a
@@ -662,6 +707,11 @@ public static class Exporter
 
         if (PartLineSource.Argument(source, PartLineSource.ColumnPrefix) is { } header)
             return JsonValue.Create(Absent(part.Row.Cells?.GetValueOrDefault(header)));
+
+        if (PartLineSource.Argument(source, PartLineSource.CitationPrefix) is { } label)
+            return part.Citations.GetValueOrDefault(label) is { Count: > 0 } cited
+                ? new JsonArray([.. cited.Select(v => (JsonNode?)JsonValue.Create(v))])
+                : null;
 
         return source switch
         {
@@ -683,6 +733,40 @@ public static class Exporter
             _ => null
         };
     }
+
+    // What each labelled footnote inside this part's body gathers, keyed by the label it opens on.
+    //
+    // Matched by line, because a footnote is found once for the whole document and a part is a span of
+    // characters. A part carrying no such footnote is absent from the map, so a declared source writes
+    // null rather than an empty array.
+    //
+    // Read from the footnote rather than from the links in the body, because a clause is cited as
+    // `[pol-INTC].HOLDS`: the link ends at the policy and the clause key follows it as text, so
+    // `SeeAlso` below resolves the record and never the part. `docs/design/export.md` says why.
+    private static IReadOnlyDictionary<string, IReadOnlyList<string>> Citations(
+        Doc doc, PartRow part, IReadOnlyList<string> labels)
+    {
+        var found = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
+        if (labels.Count == 0) return found;
+
+        var from = LineAt(doc.Text, part.BodyStart);
+        var to = LineAt(doc.Text, part.BodyEnd);
+
+        foreach (var label in labels)
+        {
+            var cited = doc.CitationFootnotes.GetValueOrDefault(label, [])
+                .Where(c => c.Line >= from && c.Line <= to)
+                .SelectMany(c => c.Citations).ToList();
+
+            if (cited.Count > 0) found[label] = cited;
+        }
+
+        return found;
+    }
+
+    // The one-based line an offset falls on, which is how a footnote records its own position.
+    private static int LineAt(string text, int offset) =>
+        text.AsSpan()[..Math.Min(offset, text.Length)].Count('\n') + 1;
 
     // The parts this part points at, as full part ids, or null where it points at none.
     //
