@@ -62,6 +62,13 @@ fields:
     type: list
     of: bool
 
+  approved:
+    type: object
+
+  measured:
+    type: string
+    shape: event
+
   retention:
     type: string
     required-when: classification is personal

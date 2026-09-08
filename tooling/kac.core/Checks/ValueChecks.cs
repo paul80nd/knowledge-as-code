@@ -26,7 +26,7 @@ public static class ValueChecks
     // `ref:` is resolved against nothing, and no check here or there reports that. The rest are arms of
     // the switch.
     public static readonly IReadOnlyList<string> FieldTypes =
-        ["date", "enum", "id", "int", "list", "string", "timestamp"];
+        ["date", "enum", "id", "int", "list", "object", "string", "timestamp"];
 
     // What a list's entries may be, which is narrower. `Sequence` reads an entry through the field's
     // `of:` rather than through a declaration of the entry's own, so an entry reaches only the checks
@@ -50,6 +50,15 @@ public static class ValueChecks
         // The id is what the two kinds differ on. A template teaches the fault to every copy, which is
         // `template-fields`. A record holds a field nobody filled in, which is `bare-key`, and
         // `IsAbsent` below reads the mapping the same way so the required-field pass agrees.
+        // A field declaring `object` holds one of these on purpose, and its keys are judged exactly as a
+        // list's entries are. Ahead of the placeholder reading below, which is what every other field
+        // gets for a mapping.
+        if (spec.Type == "object" && node is YamlMappingNode obj)
+        {
+            Entry(name, obj, spec, kind, frontStart, report);
+            return;
+        }
+
         if (node is YamlMappingNode)
         {
             // The fix quotes the key as the file writes it. `name` is the path where an object entry
@@ -89,6 +98,10 @@ public static class ValueChecks
             case "enum": Enumerated(name, node, spec, frontStart, report); break;
             case "int": Integer(name, "value", node, frontStart, report); break;
             case "list": Sequence(name, node, spec, kind, frontStart, report); break;
+
+            // Only a value that is not a mapping reaches here, because one that is was sent to `Entry`
+            // above. `Entry` reports it as the wrong shape and names the keys the field wanted.
+            case "object": Entry(name, node, spec, kind, frontStart, report); break;
         }
 
         // A declared `pattern:` applies to a scalar field's value; for a list it applies to each entry,
@@ -104,15 +117,15 @@ public static class ValueChecks
     // Public because the required-field pass asks the same question before this class is reached: a
     // field that is declared required and carries an explicit nothing is missing, and a second reading
     // of "absent" would be free to disagree with this one.
-    public static bool IsAbsent(YamlNode node) =>
+    public static bool IsAbsent(YamlNode node, FieldSpec? spec = null) =>
         node switch
         {
             YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL",
             YamlSequenceNode seq => seq.Children.Count == 0,
-            // No field declares a mapping, so a value parsing as one holds nothing the field can read.
-            // An unquoted placeholder is how that happens, and `owner: {{owner}}` says what a bare key
-            // says. `Check` above reports it.
-            YamlMappingNode => true,
+            // A mapping is a value where the field declares `object`, and nothing anywhere else. An
+            // unquoted placeholder is how a mapping otherwise arrives, and `owner: {{owner}}` says what
+            // a bare key says. `Check` above reports it.
+            YamlMappingNode map => spec?.Type != "object" || map.Children.Count == 0,
             _ => false
         };
 

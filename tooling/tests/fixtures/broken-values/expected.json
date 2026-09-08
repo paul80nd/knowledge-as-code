@@ -87,10 +87,10 @@
     },
     {
       "file": "faqs/role-cannot-confirm.md",
-      "line": 7,
+      "line": 1,
       "severity": "error",
-      "check": "field-pattern",
-      "message": "'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$."
+      "check": "confirmed-by-a-person",
+      "message": "A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands."
     },
     {
       "file": "faqs/too-few-keywords.md",

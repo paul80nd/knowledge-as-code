@@ -8,6 +8,37 @@ namespace kac.tests;
 public class RuleExprTests
 {
     // A document with the frontmatter, sections and links a case needs, parsed the way kac parses one.
+    // `entries_match` is the one fact that reads inside an object. A shared shape leaves a key such as
+    // `by` a plain string, so this is how a type holds it to the kind of actor that type admits.
+    [Fact]
+    public void Entries_match_reads_every_object_in_a_list()
+        => Assert.False(Eval("entries_match('confirmed', 'by', '^human:')",
+            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            + "  - { at: 2026-06-13T09:00:00Z, by: role:head-of-engineering }\n"));
+
+    [Fact]
+    public void Entries_match_is_true_where_every_object_matches()
+        => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')",
+            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
+
+    // One mapping is one object, so a field declaring `type: object` is asked the same question.
+    [Fact]
+    public void Entries_match_reads_the_one_object_a_mapping_holds()
+        => Assert.False(Eval("entries_match('generated', 'by', '^kac/')",
+            "id: rpt-coverage\ngenerated: { at: 2026-06-12T09:00:00Z, by: someone }\n"));
+
+    // True where there is nothing to hold to the pattern. Whether the field ought to be there is
+    // `required-field`'s question, and whether the key ought to be is `entry-key`'s, so a rule written
+    // on top of this reports one fault once.
+    [Fact]
+    public void Entries_match_is_true_where_the_field_is_absent()
+        => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')", "id: faq-0001"));
+
+    [Fact]
+    public void Entries_match_is_true_where_an_object_does_not_carry_the_key()
+        => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')",
+            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z }\n"));
+
     private static Facts FactsFor(string frontmatter, string body, DateOnly? today = null)
     {
         var doc = Required.Parsed("adrs/0001-a-title.md",

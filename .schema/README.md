@@ -21,6 +21,7 @@ opening its template and making the same change there. Assume that, rather than 
 |-------------------------|-----------------------------------------------|
 | `_universal.yaml`       | Fields every document in the taxonomy carries |
 | `_enums.yaml`           | Enums shared by more than one type            |
+| `_shapes.yaml`          | Object shapes shared by more than one type    |
 | `_tiers.yaml`           | What each tier is called, and how it behaves  |
 | `_checks.yaml`          | Every check the validator can report          |
 | `<folder>.yaml`         | One per knowledge type, named for its folder  |

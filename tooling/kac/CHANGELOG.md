@@ -49,11 +49,30 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
   still correct.
 
+- **A field may hold one object, and a shared shape may say what it holds.** `type: object` declares a value that is
+  one mapping, and its keys are held to their own declarations exactly as a list's object entries are. `_shapes.yaml`
+  joins `_enums.yaml` as a shared block, declaring an object shape a field takes whole with `shape: <name>`. Nothing
+  narrows a shape at the point of use, so a type holding one of its keys to a narrower value writes a rule. `event`,
+  an actor doing something at a point in time, is the shape that ships. This moves the template to version 8, so a
+  corpus takes `_shapes.yaml` with `kac update`.
+
+- **`entries_match('field', 'key', 're')` joins the expression facts.** It reads one key inside every object a field
+  holds: each entry of a list of them, and the one an `object` field holds. It is true where the field is absent and
+  true where an object omits the key, because presence is `required-field`'s question and `entry-key`'s, so a rule
+  written on top of it reports one fault once.
+
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
   base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an
   author should not have to know which spellings the parser admits. `ado-epics` on a capability is the field this
   reaches, and its entries were checked by nothing before.
+
+### Changed
+
+- **An FAQ's `confirmed.by` is held to a person by a rule rather than by a pattern.** The finding moves from
+  `field-pattern` on the entry's own line to `confirmed-by-a-person` against the record, and the message says why a
+  post, an agent and a team alias are each refused. `confirmed` now takes the shared `event` shape, whose `by` is a
+  plain string, and who may confirm is the FAQ type's own question to ask.
 
 ### Fixed
 

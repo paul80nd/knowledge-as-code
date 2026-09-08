@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Markdig.Syntax;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
@@ -66,6 +67,35 @@ public sealed class Facts(Doc doc, DateOnly today)
     // to be there is `required-field`'s question, asked in better words.
     public bool FieldMatches(string name, string pattern) =>
         doc.FrontScalar(name) is { Length: > 0 } value && Pattern(pattern).IsMatch(value);
+
+    // A pattern asked of one key inside the objects a field holds: every entry of a list of them, and
+    // the one an `object` field holds. A shared shape leaves `by` a plain string, so this is how a type
+    // holds it to the kind of actor that type admits.
+    //
+    // True where the field is absent, and true for an object not carrying the key, because presence is
+    // `required-field`'s question and `entry-key`'s. So a false says the value is there and wrong, and
+    // one fault is reported once.
+    public bool EntriesMatch(string field, string key, string pattern)
+    {
+        var re = Pattern(pattern);
+
+        return Objects(field).All(o => Yaml.Get(o, key) is not YamlScalarNode { Value: { Length: > 0 } v }
+                                       || re.IsMatch(v));
+    }
+
+    // The objects one field holds, read from the frontmatter rather than through `FrontScalar`, which
+    // flattens a value to a string and has nothing to say about a mapping.
+    private IEnumerable<YamlMappingNode> Objects(string field)
+    {
+        if (doc.Front is null) return [];
+
+        return Yaml.Get(doc.Front, field) switch
+        {
+            YamlMappingNode map => [map],
+            YamlSequenceNode seq => seq.Children.OfType<YamlMappingNode>(),
+            _ => []
+        };
+    }
 
     // The same question asked of one section's body. False where the document has no such section, so a
     // rule naming a section reads as satisfied rather than throwing; whether the section ought to be

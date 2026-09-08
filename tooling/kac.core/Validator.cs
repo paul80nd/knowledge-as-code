@@ -161,7 +161,7 @@ public static class Validator
             foreach (var spec in t.DeclaredFields)
             {
                 var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
-                var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name]);
+                var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name], spec);
                 if (req && absent)
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";

@@ -19,6 +19,7 @@
 .schema/README.md
 .schema/_checks.yaml
 .schema/_enums.yaml
+.schema/_shapes.yaml
 .schema/_tiers.yaml
 .schema/_universal.yaml
 .schema/adrs.yaml

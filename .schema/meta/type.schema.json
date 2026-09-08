@@ -538,13 +538,14 @@
           "pattern": "^\\s*[a-z][a-z0-9-]*\\s*(==|!=)[^=]+$|^\\s*[a-z][a-z0-9-]*\\s+in\\s*\\[.*\\]\\s*$"
         },
         "type": {
-          "description": "What the value is. Defaults to `string`. A `date` is a day and is written quoted; a `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`.",
+          "description": "What the value is. Defaults to `string`. A `date` is a day and is written quoted; a `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`. An `object` is one mapping, and `entry:` or `shape:` then declares the keys it holds.",
           "enum": [
             "date",
             "enum",
             "id",
             "int",
             "list",
+            "object",
             "string",
             "timestamp"
           ]
@@ -559,12 +560,16 @@
           ]
         },
         "entry": {
-          "description": "The keys one entry of the list holds, where `of: object` makes its entries mappings. Declared with the vocabulary a field is declared with, so a key is held to its own `type:`, `pattern:` and `required:`. The first key declared names the entry, and is what the entries sort on and what an index column renders.",
+          "description": "The keys one object holds, where `type: object` makes the value one or `of: object` makes each entry of a list one. Declared with the vocabulary a field is declared with, so a key is held to its own `type:`, `pattern:` and `required:`. The first key declared names the object, and is what a list's entries sort on and what an index column renders.",
           "type": "object",
           "minProperties": 1,
           "additionalProperties": {
             "$ref": "#/$defs/field"
           }
+        },
+        "shape": {
+          "description": "A shared object shape from `_shapes.yaml`, taken whole in place of an `entry:` block. Nothing narrows a shape at the point of use, so a type holding one of its keys to a narrower value writes a rule with an `expr:`.",
+          "$ref": "#/$defs/name"
         },
         "values": {
           "description": "An enum's range: written inline, or drawn from `_enums.yaml` as `$enums.<name>`.",

@@ -59,8 +59,8 @@ Scenario: An actor field without its prefix is refused
 Scenario: A role is refused where the key records who performed an act
   When I validate the corpus
   Then the findings for "faqs/role-cannot-confirm.md" are exactly:
-    | line | check         | message                                                                             |
-    | 7    | field-pattern | 'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
+    | line | check                 | message                                                                                                                                                                                                                                              |
+    | 1    | confirmed-by-a-person | A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands. |
 
 Scenario: A timestamp is held to its shape and then to the calendar
   When I validate the corpus
@@ -92,6 +92,6 @@ Scenario: The corpus as a whole produces exactly these findings and nothing else
     | capabilities/ado-epics-that-are-not-numbers.md | 7 | int-format    | 'ado-epics' entry 'EPIC-7' is not a whole number.                                    |
     | faqs/confirmed-at-is-not-a-moment.md | 7    | timestamp-format   | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.         |
     | faqs/confirmed-at-is-not-a-moment.md | 8    | timestamp-format   | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.      |
-    | faqs/role-cannot-confirm.md          | 7    | field-pattern      | 'confirmed.by' value 'role:head-of-engineering' does not match ^human:[a-z0-9.-]+$. |
+    | faqs/role-cannot-confirm.md          | 1    | confirmed-by-a-person | A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands. |
     | faqs/too-few-keywords.md             | 5    | min-items          | 'symptom-keywords' has 2 entries: the schema asks for at least 3.                   |
     | tools/bad-licence-pattern.md         | 5    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                   |

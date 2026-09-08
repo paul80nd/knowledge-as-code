@@ -21,6 +21,56 @@ public class ValueCheckTests
 
     private static FieldSpec Field(string type, string name = "field") => new() { Name = name, Type = type };
 
+    // A field declaring `object` holds one mapping, and its keys are judged as a list's entries are.
+    // Every other field reads a mapping as an unquoted placeholder, which is what `bare-key` reports.
+    [Fact]
+    public void An_object_field_holds_a_mapping()
+        => Assert.Empty(Run("field: { at: 2026-06-12T09:00:00Z, by: kac/0.24.0 }\n", Event()));
+
+    [Fact]
+    public void A_key_inside_an_object_field_is_held_to_its_own_type()
+        => Assert.Equal(["timestamp-format"],
+            Ids(Run("field: { at: yesterday, by: kac/0.24.0 }\n", Event())));
+
+    [Fact]
+    public void A_key_an_object_field_does_not_declare_is_reported()
+        => Assert.Equal(["entry-key"], Ids(Run("field: { at: 2026-06-12T09:00:00Z, by: x, why: y }\n", Event())));
+
+    [Fact]
+    public void A_key_an_object_field_requires_and_omits_is_reported()
+        => Assert.Equal(["entry-key"], Ids(Run("field: { at: 2026-06-12T09:00:00Z }\n", Event())));
+
+    // A scalar under a field declared an object never reaches the mapping arm, so `Entry` reports the
+    // shape and names the keys the field wanted.
+    [Fact]
+    public void A_scalar_under_an_object_field_is_reported_as_the_wrong_shape()
+        => Assert.Equal(["entry-shape"], Ids(Run("field: today\n", Event())));
+
+    // A bare key is absent for an object exactly as it is for everything else, so a template writing
+    // the key with nothing under it is not read as a malformed object.
+    [Fact]
+    public void A_bare_object_field_is_absent()
+        => Assert.False(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"), Event()));
+
+    [Fact]
+    public void A_mapping_is_absent_to_every_field_that_is_not_an_object()
+        => Assert.True(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"),
+            Field("string")));
+
+    // The `event` shape as `_shapes.yaml` declares it, written out here because these tests read no
+    // schema file.
+    private static FieldSpec Event() => new()
+    {
+        Name = "field",
+        Type = "object",
+        Entry =
+        [
+            new FieldSpec { Name = "at", Type = "timestamp", Required = true },
+            new FieldSpec { Name = "by", Type = "string", Required = true }
+        ]
+    };
+
+
     // The value under `field:`, read from a real parse so quoting style and node positions are the
     // parser's rather than the test's.
     private static YamlNode Value(string yaml)

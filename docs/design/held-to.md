@@ -16,14 +16,15 @@ you, and every finding names the file and the key.
 | An `expr:` that will not compile, or that names no `severity:` or `message:`             | `schema-unreadable`  |
 | A `required-when:` outside its three forms                                               | `schema-unreadable`  |
 | `values: $enums.x` where `_enums.yaml` declares no `x`                                   | `schema-unreadable`  |
+| `shape: x` where `_shapes.yaml` declares no `x`, or a `shape:` beside an `entry:` block  | `schema-unreadable`  |
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers           | `schema-dispatch`    |
 | A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
 | A `type:` or an `of:` naming a value no check reads, at any depth of an `entry:` block   | `schema-dispatch`    |
 | An `of:` on any field that is not a `list`                                               | `schema-dispatch`    |
-| An `entry:` block on a list whose `of:` is not `object`                                  | `schema-dispatch`    |
-| `of: object` with no `entry:` block saying what an entry holds                           | `schema-shape`       |
+| An `entry:` block or a `shape:` on a field whose value is never an object                | `schema-dispatch`    |
+| `type: object` or `of: object` with neither an `entry:` block nor a `shape:`             | `schema-shape`       |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
 | A `tier:` no `_tiers.yaml` declares, or a tier only one of the two files knows           | `schema-shape`       |
 | A tier declaring no `label:` or no `behaviour:` (both head its section in the taxonomy)  | `schema-shape`       |

@@ -72,6 +72,8 @@ public static class RuleExpr
                 (f, a) => f.SectionMatches(Str(a, 0), Str(a, 1))),
             ["field_matches"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
                 (f, a) => f.FieldMatches(Str(a, 0), Str(a, 1))),
+            ["entries_match"] = new([ValueType.Str, ValueType.Str, ValueType.Str], ValueType.Bool,
+                (f, a) => f.EntriesMatch(Str(a, 0), Str(a, 1), Str(a, 2))),
             // Last, because it is the one row that reads nothing about the document.
             ["today"] = new([], ValueType.Str, (f, _) => f.Today())
         };

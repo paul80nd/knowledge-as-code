@@ -483,18 +483,23 @@ public static class SchemaChecks
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);
 
-        // The two halves of an object list are declared apart and neither reads without the other. A shape
-        // with nothing sourcing it would hold no entry to anything; a list of scalars carrying a shape
-        // states one the entries can never take. Both read as enforced from the file and are not.
-        if (spec.Of == "object" && spec.Entry is null or { Count: 0 })
-            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                $"field '{name}' declares 'of: object' and no 'entry:' block, so nothing says what an "
-                + "entry holds. Declare the entry's keys, or give the list a scalar 'of:'."));
+        // The two halves of an object are declared apart and neither reads without the other. A value
+        // declared an object with nothing saying what it holds would be held to nothing; keys declared
+        // against a value that is never an object state a shape it can never take. Both read as enforced
+        // from the file and are not.
+        var holdsObjects = spec.Type == "object" || spec.Of == "object";
+        var declared = spec.Type == "object" ? "type: object" : $"of: {spec.Of}";
 
-        if (spec.Entry is { Count: > 0 } && spec.Of != "object")
-            Dispatch(at, $"field '{name}' declares an 'entry:' block and 'of: {spec.Of ?? "string"}', and "
-                         + "an entry's shape is read only where the entries are objects. Declare "
-                         + "'of: object', or drop the block.", f);
+        if (holdsObjects && spec.Entry is null or { Count: 0 })
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"field '{name}' declares '{declared}' and neither an 'entry:' block nor a 'shape:', so "
+                + "nothing says what it holds. Declare the keys, name a shape, or give it a scalar type."));
+
+        if (spec.Entry is { Count: > 0 } && !holdsObjects)
+            Dispatch(at, $"field '{name}' declares "
+                         + $"{(spec.Shape.Length > 0 ? $"'shape: {spec.Shape}'" : "an 'entry:' block")} and "
+                         + $"'type: {spec.Type}', and an object's keys are read only where the value is "
+                         + "an object. Declare 'type: object' or 'of: object', or drop it.", f);
 
         // A source is a vocabulary, and `Doc.Derived` is the branch that answers to it. A name nothing
         // resolves leaves the field empty in every record, which reads on the page as a column the

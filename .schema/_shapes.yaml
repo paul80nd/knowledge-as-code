@@ -1,0 +1,35 @@
+# Object shapes used by more than one type. Referenced as `shape: <name>` on a field.
+# A shape used by exactly one type lives in that type's file, as an `entry:` block.
+
+notes: >
+  A shape declares the keys of one object, in the order they are written. A field naming it takes those
+  keys whole: nothing narrows a shape at the point of use, so every record writing this shape writes the
+  same keys with the same types. Where one type has to hold its own key to a narrower value, it writes a
+  rule with an `expr:`, which reports against the record rather than against the declaration.
+
+  Which types draw on a shape is not recorded here. A list would be a second place to keep in step. Grep
+  the shape's name to find them.
+
+shapes:
+
+  event:
+    entry:
+      at:
+        required: true
+        type: timestamp
+        description: The moment it happened, in UTC as `2026-09-07T20:18:00Z`.
+      by:
+        required: true
+        type: string
+        description: Who or what acted. A type holding this to a kind of actor writes a rule.
+    notes: >
+      An actor doing something at a point in time: a person confirming an answer, a tool generating a
+      report. The two keys are the whole of it, because anything else is about the act rather than about
+      who did it and when.
+
+      `at` leads the entry, and a list of these sorts on its first key. A history then reads oldest
+      first, and the last line is the one somebody asking about trust reads.
+
+      `by` is a plain string here and carries no pattern. What counts as an actor differs by what the
+      event is: a confirmation is a person and refuses an agent, where a generation is usually a tool.
+      The type that knows which writes the rule.
