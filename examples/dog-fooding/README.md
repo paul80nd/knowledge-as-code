@@ -27,16 +27,17 @@
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                       | Tier        | What it holds                                                                                                   |
-|----------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
-| [Control](controls.md)     | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
-| [Deviation](deviations.md) | normative   | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.                 |
-| [Process](processes.md)    | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
-| [Report](reports.md)       | descriptive | A question about the corpus answered over the whole of it, with the judgement a person added.                   |
-| [Runbook](runbooks.md)     | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
-| [Service](services.md)     | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
-| [Standard](standards.md)   | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
-| [Tool](tools.md)           | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
+| Type                        | Tier        | What it holds                                                                                                   |
+|-----------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
+| [Control](controls.md)      | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
+| [Deviation](deviations.md)  | normative   | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.                 |
+| [Discovery](discoveries.md) | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.              |
+| [Process](processes.md)     | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
+| [Report](reports.md)        | descriptive | A question about the corpus answered over the whole of it, with the judgement a person added.                   |
+| [Runbook](runbooks.md)      | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |
+| [Service](services.md)      | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.              |
+| [Standard](standards.md)    | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
+| [Tool](tools.md)            | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.
