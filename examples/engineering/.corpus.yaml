@@ -44,7 +44,7 @@ upstream:
   ref:
   commit:
   template-version: 8
-  taken-on: "2026-08-24"
+  taken-on: "2026-09-08"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.
 update-policy: cautious
@@ -55,6 +55,7 @@ types:
   - controls
   - glossary
   - policies
+  - reports
   - standards
   - tools
 
