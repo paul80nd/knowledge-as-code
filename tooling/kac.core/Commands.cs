@@ -661,7 +661,7 @@ public static class Commands
         };
         sources.AddRange(inherited.Select(i => new ReportSource(i.Corpus ?? i.Shortcode, i.ContentVersion)));
 
-        var plan = Reports.Plan(name, corpus, inherited, new ReportStamp($"kac/{toolVersion}", at, sources));
+        var plan = Reports.Plan(name, corpus, inherited, ReportStamp.ForTool(toolVersion, at, sources));
         if (plan is null) return Fail($"report: '{name}' named no report this build can write.");
 
         Out.Line(plan.Text);

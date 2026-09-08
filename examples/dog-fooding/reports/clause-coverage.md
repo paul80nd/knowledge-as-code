@@ -4,7 +4,7 @@ type: report
 tier: descriptive
 status: active
 owner: human:paul.law
-generated: { at: 2026-09-08T13:55:35Z, by: kac/0.24.0+24dcea21945982d92104c78a854465207d644ad6 }
+generated: { at: 2026-09-08T13:55:35Z, by: kac/0.24.0 }
 sources:
   - { resource: example-dogfooding, version: "0.15.0" }
   - { resource: example-engineering, version: "0.11.0" }

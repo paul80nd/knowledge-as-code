@@ -19,6 +19,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`kac report` stamps the release without the commit behind it.** `generated.by` takes the Open Knowledge Format's
+  `<producer>/<version>` form, and the value carried the build metadata as well, as
+  `kac/0.24.0+24dcea21945982d92104c78a854465207d644ad6`. It now reads `kac/0.24.0`. A regenerated report no longer
+  shows a moved commit where the tool's version stood still.
 - **A discovery can be promoted to a standard.** `promoted-to` names an FAQ or a standard and declares
   `reciprocal: promoted-from`, but only `faqs` carried that field, so promoting to a standard failed `reciprocal` and
   adding the key to the standard failed `unknown-key`. `standards` now declares `promoted-from` as well, optional and

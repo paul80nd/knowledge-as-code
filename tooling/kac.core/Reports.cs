@@ -12,7 +12,17 @@ public sealed record ReportSource(string Resource, string? Version);
 //
 // `By` takes OKF's `<producer>/<version>` form, so a later run by an agent names itself the same way the
 // tool does.
-public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSource> Sources);
+public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSource> Sources)
+{
+    /// <summary>This tool's stamp, from the version string the assembly was built with.</summary>
+    /// <remarks>
+    /// The build metadata `--version` carries is cut off, because `<producer>/<version>` admits a release
+    /// and not a commit. A reader comparing two reports would otherwise meet a changed commit and read it
+    /// as content that moved.
+    /// </remarks>
+    public static ReportStamp ForTool(string toolVersion, string at, IReadOnlyList<ReportSource> sources)
+        => new($"kac/{toolVersion.Split('+')[0]}", at, sources);
+}
 
 // What a report comes to, decided before anything is written, as `ExportPlan` and `BundlePlan` are. A
 // test asks what a report would say without a filesystem, and the command prints what it answers.
