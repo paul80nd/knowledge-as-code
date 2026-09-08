@@ -4,7 +4,8 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER,
-  eng:pol-AGNT.UNPROV, eng:pol-KNOW.COPY ]
+  eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY, eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM,
+  eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
 verified-by: [ ctl-0008 ]
 applies-to:
   - all
@@ -22,8 +23,9 @@ tags: [ agents, export, plugin, skills ]
 Every corpus here publishes a Claude Code plugin: a frozen copy of its export, and the skills that read it.
 `template/.plugin/` holds those skills, `plugin.json` says which of them travel, and `kac bundle` assembles the two. A
 skill answers from the export sitting beside it, using no more than a session's ability to read a file, and says
-plainly what did not travel. Where the answer is wrong, the skill writes back to the repository the export came from,
-because the copy it is reading cannot be changed.
+plainly what did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue
+on the repository the export came from: a finding where the corpus is wrong, and a request where the work is about to
+depart from a clause that is right.
 
 ## Rules
 
@@ -121,6 +123,37 @@ _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 
+### A deviation request an agent files asks for the owner it cannot name
+
+- A deviation request **MUST** open its body with a fenced block whose info string is `yaml kac-deviation`.
+- That block **MUST** open on `corpus`, naming the corpus that will hold the record.
+- The block **MUST** then carry `id`, `status`, `departs-from` and `review-by`, under the names and in the order the
+  `deviations` template writes them.
+- The block **MAY** carry `applies-to` and `tags` after those.
+- The block **MUST NOT** carry any other key.
+- `status` **MUST** be `draft`.
+- Every entry in `departs-from` **MUST** name a clause, scoped exactly as the export writes that record's id.
+- An entry **MUST NOT** name a whole policy or standard.
+- A skill **MUST NOT** write `owner` or `accepted-on`, because the individual who accepts the risk is what the request
+  asks for.
+- A request **MUST NOT** describe the departure as permanent, indefinite, or standing until further notice.
+- The body **MUST** carry `## What we are doing instead`, `## Why we need it`, `## What compensates` and
+  `## How it closes`, in that order.
+- `## Who is asking` **MUST** follow those four.
+- `## Who is asking` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
+  doing.
+- Where the agent cannot reach one of those, `## Who is asking` **MUST** name it as unreached.
+- The title **MUST** be the departure in one line, naming the work and the rule it breaks.
+- A skill **MUST** file the request on the repository addressed by the `publishing` block of the corpus that owns the
+  clause.
+- A skill **MUST NOT** file a request on a repository outside the organisation holding the plugin.
+- A skill **MUST** mark the issue `kac:deviation`, using whatever the platform calls a label.
+- Where the platform refuses a mark it does not already hold, a skill **MUST** file the request unmarked.
+- A skill **MUST** say that the request accepts nothing, and that the record is still owed.
+
+_**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`, `eng:pol-DEVI.OWNER`,
+`eng:pol-DEVI.PERM`, `eng:pol-DEVI.SURFACE`_
+
 ## Examples
 
 ```
@@ -196,6 +229,41 @@ filename from, no `expires` to let the claim lapse, and no commit anybody can go
 alone, so a reader scanning the issue list learns nothing. "Fairly confident" is not a value `confidence` takes, and a
 session vouching for itself is what `eng:pol-AGNT.SELFVER` refuses.
 
+A deviation request opens on a block of the same kind, and what it leaves out is the point.
+
+`````
+✅ Good
+Title: Adopt the reconciliation client before it has been screened for vulnerabilities
+
+```yaml kac-deviation
+corpus: example-payments
+id: dev-unscreened-recon-client
+status: draft
+departs-from: [ eng:pol-TRUS.SCREEN ]
+review-by: "2026-11-07"
+applies-to: [ svc-payment-api ]
+tags: [ dependencies, vulnerabilities ]
+```
+
+❌ Avoid
+Title: Dependency screening deviation
+
+```yaml kac-deviation
+corpus: example-payments
+id: dev-unscreened-recon-client
+status: active
+departs-from: [ eng:pol-TRUS ]
+owner: human:paul.law
+review-by: "until the vendor publishes an SBOM"
+```
+`````
+
+The avoided block accepts the risk on somebody else's behalf. It names an `owner` who has not answered, a `status`
+saying the departure is already in force, and a `review-by` holding a condition where the field takes a date. Bare
+`eng:pol-TRUS` claims a departure from every clause that policy carries, where the work departs from one of them. Its
+title names the subject, so a reader scanning the issue list learns neither which rule is breaking nor which service is
+breaking it.
+
 ## Conformance checklist
 
 - [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else.
@@ -214,6 +282,12 @@ session vouching for itself is what `eng:pol-AGNT.SELFVER` refuses.
       names, and nothing else.
 - [ ] Every finding's `provenance` names the agent, the session, the repository, the commit and what it was doing, or
       names which of those it could not reach.
+- [ ] Every deviation request opens on a `yaml kac-deviation` block, carrying `corpus`, then the `deviations` keys the
+      rule names, and nothing else.
+- [ ] No deviation request carries an `owner` or an `accepted-on`, and none reads as a standing departure.
+- [ ] Every deviation request is filed inside the organisation holding the plugin, and says that nothing is accepted
+      yet.
+- [ ] No deviation request is dropped, or held back, because the target holds no `kac:deviation` label.
 - [ ] No finding is dropped, or held back, because the target holds no `kac:finding` label.
 
 ## Rationale and provenance
@@ -236,11 +310,12 @@ the shape it reads them at, so a moved key stops the build rather than reaching 
 type present and opens none of its files names it bare, which is what the breadcrumb hook does. A component that
 reads no export at all declares nothing.
 
-That third state answers two different questions, so `standalone` separates them. `corpus-retrieval` reads no export
-and exists for the lookup skills, so a bundle keeping it after the last of them left would ship a skill nothing can
-reach. `raise-finding` reads no export and serves whoever is holding the plugin, and a corpus holding no record at all
-is the one a session most needs a route to report. Declaring it standalone is what keeps that route open.
-`docs/design/plugin.md` carries how `kac bundle` acts on all of them.
+That third state answers two different questions, so `standalone` separates them. `corpus-retrieval` and
+`request-deviation` read no export and exist for the lookup skills. One reaches a record's published source and the
+other asks the owner of a clause a lookup found, so a bundle keeping either after the last lookup left would ship a
+skill nothing can reach. `raise-finding` reads no export and serves whoever is holding the plugin, and a corpus holding
+no record at all is the one a session most needs a route to report. Declaring it standalone is what keeps that route
+open. `docs/design/plugin.md` carries how `kac bundle` acts on all of them.
 
 A finding is a discovery that has not landed yet. An observation is worth the same whether a session writes it into a
 corpus it can edit or files it against one it cannot. So the issue carries the fields the record will need, under the
@@ -258,11 +333,31 @@ chose. A skill that stopped there would lose the observation to a missing string
 contract, and it is why a platform calling a label something else costs nothing: an Azure tag and a GitHub label carry
 the same mark, and neither is what a harvester reads.
 
+A deviation request is the same plumbing asking a different question. A finding says the corpus is wrong. A request
+says the rule is right and the work is about to break it, so somebody has to carry that risk. One skill holding both
+would fire at one of those moments and be wrong at the other, because a finding is filed after the fact and a request
+has to arrive before the work lands.
+
+`owner` is what a request exists for, and the one key it must not write. No export carries a record's `owner`, so the
+individual with the authority to accept a risk is unreachable from an installed plugin. `eng:pol-DEVI.OWNER` wants that
+person named, and an agent proposing one reads as a decision somebody already took. So the block carries everything the
+record will need, leaves `owner` and `accepted-on` to the reply, and the skill says the record is still owed.
+
+Both skills write the platform mechanics out again rather than citing each other. A session loads one skill, and the
+bundle that kept `raise-finding` may have trimmed the other, so a citation across would sometimes point at a file the
+reader does not hold. The cost is that a mistake in one of them has to be corrected twice.
+
+The boundary is the one rule here that no clause states. A deviation register is what one organisation keeps about
+itself, and a request names the rule being broken, the service it is in and how long the gap stands. Filed on a public
+corpus's repository, that is an organisation's engineering published to whoever is watching, and the maintainer there
+could not accept the risk anyway. So the skill reads the owner segment of both `publishing` addresses and stops where
+they differ.
+
 What CI reaches is narrow. `round-trip.sh` installs the plugin, asks each skill the question that skill describes, and
 greps each `SKILL.md` for the parts file its component requires. Everything else above is a reviewer's, and two gaps
 are worth naming. An undeclared component directory travels undeclared, because `bundle.json` lists what was declared
-and nothing looks for what was not. A filed finding is read by nobody here. The issue lands on a repository this build
-never opens, so the shape holds for as long as the skill writing it holds to this standard.
+and nothing looks for what was not. A filed finding or request is read by nobody here. The issue lands on a repository
+this build never opens, so both shapes hold for as long as the skills writing them hold to this standard.
 
 ## Sources and further reading
 
@@ -271,6 +366,8 @@ never opens, so the shape holds for as long as the skill writing it holds to thi
 
 ## Changelog
 
+- 2026-09-08: added the shape a deviation request carries, and the boundary that keeps one inside its own
+  organisation.
 - 2026-09-08: a component reading no export says whether it supports the others, so one serving the reader
   survives a bundle that trimmed every lookup.
 - 2026-09-08: added the shape a finding an agent files carries, and the label duty beside it.

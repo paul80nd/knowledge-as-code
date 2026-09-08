@@ -30,7 +30,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 8
+  template-version: 9
   taken-on: <today>
 
 # How far an update goes. `cautious` writes a seed only where this corpus has none.

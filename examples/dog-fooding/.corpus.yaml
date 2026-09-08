@@ -15,7 +15,7 @@ shortcode: dog
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.15.0"
+content-version: "0.16.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -52,7 +52,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 8
+  template-version: 9
   taken-on: "2026-09-08"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.

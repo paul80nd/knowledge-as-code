@@ -167,6 +167,13 @@ steps:
         echo "the standalone skill was trimmed, so a corpus holding no record cannot report that"
         exit 1
       fi
+
+      # A skill supporting the lookups has nothing to support here, and leaves with the last of them.
+      if ! jq -e '[.included[].path] | index("skills/request-deviation") == null' \
+        .dist/plugin/bundle.json > /dev/null; then
+        echo "a supporting skill shipped where no lookup did, so no clause reaches the reader"
+        exit 1
+      fi
     displayName: Bundle a corpus that adopted no type, and validate what it produced
     workingDirectory: $(Build.SourcesDirectory)/examples/library
     env:

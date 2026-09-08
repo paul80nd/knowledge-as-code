@@ -23,6 +23,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `"standalone": true` on a component whose `requires` is empty. `kac bundle` trims an empty-`requires` component when
   every component reading a type has gone, because such a component exists to support those. A standalone one supports
   nothing and serves the reader, so it now survives that sweep. Take it with `kac update --from <template>`.
+- **`raise-finding`, the skill that files what a session noticed about a corpus.** The plugin's export is frozen, so an
+  issue on the repository that published it is the only route back. The body carries the keys a `discoveries` record
+  needs, and the skill asks before it files, every time. Take it with `kac update --from <template>`.
+- **`request-deviation`, the skill that asks a clause's owner to accept a departure from it.** The body carries the keys
+  a `deviations` record needs, and leaves `owner` and `accepted-on` to the reply, because no export carries a record's
+  owner. It files inside the organisation holding the plugin and nowhere else, and it asks before it files. Take it with
+  `kac update --from <template>`.
 
 ### Fixed
 

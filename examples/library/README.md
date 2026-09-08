@@ -131,7 +131,8 @@ and standards skills are trimmed. What is agreed and unbuilt:
 * **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
   and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the
   first adopters, and it is a pipeline of its own rather than a translation of the GitHub one.
-* **Anything that writes back.** The plugin answers questions. Nothing yet lets a session contribute a record
+* **Contributing a record.** A session can file a finding or ask for a deviation, and each leaves as an issue on the
+  repository that published the corpus. Nothing yet writes the record itself
   ([#21](https://github.com/paul80nd/knowledge-as-code/issues/21)).
 * **The distillation pass** that would fold what sessions learned back into the corpus
   ([#24](https://github.com/paul80nd/knowledge-as-code/issues/24)).
