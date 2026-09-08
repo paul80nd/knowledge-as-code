@@ -33,7 +33,8 @@ A report is a template. `report` fills every cell it can read out of the corpus 
 
 `coverage` prints `covered` or `uncovered` against each clause, and nothing else. Whether an uncovered clause is a gap
 worth closing or something that does not exist in this estate is a judgement about the estate, and the tool has no way
-to tell the two apart. The `Verdict` column is where somebody writes which.
+to tell the two apart. The `Verdict` column is where somebody writes which, and the `Note` beside it is where they say
+why.
 
 That split is what makes the output worth committing. The mechanical half is the same on every run, so two people
 reading one corpus get one report, and the argument on top of it is written once.

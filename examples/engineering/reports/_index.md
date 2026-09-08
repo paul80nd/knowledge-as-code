@@ -2,4 +2,6 @@
 
 # Report Index (RPT)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID                     | Title                                       | Status |
+|------------------------|---------------------------------------------|--------|
+| rpt-framework-coverage | [Framework coverage](framework-coverage.md) | active |

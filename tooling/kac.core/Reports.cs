@@ -179,10 +179,10 @@ public static class Reports
         Limits(body, corpus, inherited);
         CoverageTotals(body, rows);
         CoverageSections(body, rows);
-        Judgement(body, "Every `uncovered` row needs a verdict.",
-            "The tool prints `covered` and `uncovered` and stops. Splitting `uncovered` into a gap and "
-            + "something out of scope is a judgement about this estate, and it belongs to whoever "
-            + "confirms this report.");
+        Judgement(body, "The tool prints two verdicts and a person writes the rest.",
+            "It prints `covered` and `uncovered`, and splitting `uncovered` into a gap and something out "
+            + "of scope is a judgement about this estate. That judgement, and the `Note` beside it, "
+            + "belong to whoever confirms this report.");
 
         return new ReportPlan(Coverage, "Clause coverage", Frontmatter(stamp), body.ToString().TrimEnd() + "\n");
     }
@@ -403,14 +403,16 @@ public static class Reports
         {
             body.AppendLine($"### {group.Key}");
             body.AppendLine();
-            body.AppendLine("| Clause | Level | Covered by | Deviations | Controls | Pair candidate | Verdict |");
-            body.AppendLine("|--------|-------|------------|------------|----------|----------------|---------|");
+            body.AppendLine(
+                "| Clause | Level | Covered by | Deviations | Controls | Pair candidate | Verdict | Note |");
+            body.AppendLine(
+                "|--------|-------|------------|------------|----------|----------------|---------|------|");
 
             foreach (var row in group)
                 body.AppendLine($"| `{row.Clause.Key}` | {row.Clause.Level ?? ""} "
                                 + $"| {Cite(row.CoveredBy)} | {Cite(row.Deviations)} | {Cite(row.Controls)} "
                                 + $"| {(row.Pair is null ? "" : $"`{row.Pair}`")} "
-                                + $"| {(row.CoveredBy.Count > 0 ? "covered" : "uncovered")} |");
+                                + $"| {(row.CoveredBy.Count > 0 ? "covered" : "uncovered")} | |");
 
             body.AppendLine();
         }

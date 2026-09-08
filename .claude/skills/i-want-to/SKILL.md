@@ -34,6 +34,7 @@ than an order.
 | change `kac`, or add a check                             | [prc-change-the-tool](../../../examples/dog-fooding/processes/change-the-tool.md)     |
 | add a knowledge type                                     | [prc-add-a-type](../../../examples/dog-fooding/processes/add-a-type.md)               |
 | apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)             |
+| publish a report, or bring one up to date                 | [writing-a-report](../writing-a-report/SKILL.md)                                      |
 | write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md) |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)           |
 
@@ -48,6 +49,7 @@ rather than by which folder holds them.
 | You are writing                                                                                   | Load next             |
 |---------------------------------------------------------------------------------------------------|-----------------------|
 | a record, a type page, a corpus's own `README.md`, or a `description:` and `notes:` in `.schema/` | `writing-a-record`    |
+| a report record, which takes `writing-a-record` and then the verdicts on top of it                | `writing-a-report`    |
 | a comment, a feature document, a test name, or the changelog                                      | `writing-in-the-tool` |
 | the root `README.md`, `PACKAGE.md`, or the documentation site                                     | `writing-the-docs`    |
 | a commit message or a pull request body                                                           | nothing more          |

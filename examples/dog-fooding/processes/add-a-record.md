@@ -44,8 +44,8 @@ nothing in CI tells you that you reached for the wrong tier's rules.
 8. Name the records that now point at this one. An edge such as `depends-on` is written one way and nothing generates
    the reverse view.
 9. List the pages naming records of this type by id, and fix the ones this record makes wrong. Nothing in CI reads
-   prose for meaning. In this corpus that list holds the [clause coverage
-   map](../README.md#how-this-corpus-stands-against-eng).
+   prose for meaning. Where the record is a standard or a deviation, [rpt-clause-coverage] answers for the clauses it
+   reaches, and `writing-a-report` carries the merge that brings it up to date.
 10. Run `kac validate`, then `kac generate`. The record's H1 lands in a generated index, so the corpus is stale until
     you regenerate.
 11. Run [prc-pull-request].
@@ -63,4 +63,5 @@ not answer.
 * [std-PROSE] carries the prose rules every record here answers to.
 
 [prc-pull-request]: pull-request.md
+[rpt-clause-coverage]: ../reports/clause-coverage.md
 [std-PROSE]: ../standards/prose.md

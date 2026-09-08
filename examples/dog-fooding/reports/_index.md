@@ -2,4 +2,6 @@
 
 # Report Index (RPT)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID                  | Title                                 | Status |
+|---------------------|---------------------------------------|--------|
+| rpt-clause-coverage | [Clause coverage](clause-coverage.md) | active |
