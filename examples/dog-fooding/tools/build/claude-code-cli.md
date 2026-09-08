@@ -45,10 +45,11 @@ None. Nothing else reads a plugin manifest the way the CLI that loads it does.
 
 ## Licence and obligations
 
-`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and the `LICENSE.md` beside
-it reserves all rights to Anthropic PBC. That file grants use under the [legal agreements] Anthropic publishes. The
-Commercial Terms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro
-and Max ones.
+`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and that README carries no
+licence section. The `LICENSE.md` shipped in the same package reserves all rights to Anthropic PBC, and grants use
+under the [legal agreements](https://code.claude.com/docs/en/legal-and-compliance) Anthropic publishes. The Commercial
+Terms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro and Max
+ones.
 
 The licence grants no right to copy, change or redistribute the package. CI installs the published binary with
 `npm install -g` and runs it untouched. The CLI sits outside the working tree, and the plugin bundle it validates
@@ -62,7 +63,6 @@ here does that, so those conditions do not reach this repository.
 * [std-CI] holds the rule that a tool installed at a moving version runs in a job with no write permission.
 * [std-CONFIG] requires a pin, and names the header comment as where an unpinnable one is explained.
 
-[legal agreements]: https://code.claude.com/docs/en/legal-and-compliance
 [std-CI]: ../../standards/workflows.md
 [std-CONFIG]: ../../standards/configuration.md
 [svc-marketplace]: ../../services/marketplace.md
