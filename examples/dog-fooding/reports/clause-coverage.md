@@ -10,6 +10,7 @@ sources:
   - { resource: example-engineering, version: "0.11.0" }
 confirmed:
   - { at: 2026-09-08T11:00:00Z, by: human:paul.law }
+  - { at: 2026-09-08T13:27:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
