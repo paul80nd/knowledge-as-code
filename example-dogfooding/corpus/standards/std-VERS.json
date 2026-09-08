@@ -6,6 +6,12 @@
     "title": "A version stamp says what it versions, and a move says what changed",
     "category": null,
     "status": "active",
+    "implements": [
+      "eng:pol-KNOW.DOCS",
+      "eng:pol-KNOW.SYNC",
+      "eng:pol-PIPE.REVERT",
+      "eng:pol-TRUS.MUTATE"
+    ],
     "applies-to": [
       "all"
     ],
@@ -21,6 +27,6 @@
     "Conformance checklist": "- [ ] Every corpus whose records changed has moved its `content-version`, at the major, minor or patch that change\n      earns.\n- [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record\n      changed.\n- [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.\n- [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.\n- [ ] `.imports/` is deleted in `examples/payments` and `examples/dog-fooding`, the producer repacked, and\n      `kac restore` run again. That is what CI sees, because `.imports/` is untracked.\n- [ ] `version:` in `manifest.yaml` has moved where a corpus has to respond, and every `upstream.template-version`\n      holds it.\n- [ ] A type whose exported files changed shape has moved `version:` under `export:` in its `.schema/<type>.yaml`.\n- [ ] `formatVersion` has moved where a reader of the export envelope would now be wrong.\n- [ ] No published version has been replaced, and every correction ships as a new version."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/dog-fooding/standards/versioning.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/dog-fooding/standards/versioning.md"
   }
 }

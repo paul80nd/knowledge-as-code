@@ -6,6 +6,13 @@
     "title": "The documentation site and kac are usable without sight, a mouse or colour",
     "category": null,
     "status": "active",
+    "implements": [
+      "eng:pol-A11Y.CONFORM",
+      "eng:pol-A11Y.PUBLISH",
+      "eng:pol-A11Y.UPFRONT",
+      "eng:pol-A11Y.VENDOR",
+      "eng:pol-A11Y.WORSE"
+    ],
     "applies-to": [
       "svc-docs-site",
       "svc-kac"
@@ -23,6 +30,6 @@
     "Conformance checklist": "- [ ] The page opens on one H1, and every heading below it descends one level at a time.\n- [ ] Every link says where it goes without the sentence around it.\n- [ ] Every table has a header row and holds data.\n- [ ] Every image has alternative text, and every diagram has prose beside it carrying the same information.\n- [ ] No instruction on the page depends on a colour, a shape or a position.\n- [ ] `mkdocs.yml` and `docs/assets/extra.css` set no colour, focus outline or font size of their own.\n- [ ] A new `kac` message says in words what its colour says.\n- [ ] A new `kac` prompt has a flag that answers it.\n- [ ] A pin that moved carries an assessment against the version it moved to.\n- [ ] A shortfall this change introduced has a deviation, an owner and a review date."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/dog-fooding/standards/accessibility.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/dog-fooding/standards/accessibility.md"
   }
 }

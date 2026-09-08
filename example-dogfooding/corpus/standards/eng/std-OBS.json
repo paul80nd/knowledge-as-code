@@ -6,6 +6,17 @@
     "title": "A service ships its telemetry to one place, keyed by one id",
     "category": "common",
     "status": "draft",
+    "implements": [
+      "pol-OBSV.ALERTS",
+      "pol-OBSV.BLIND",
+      "pol-OBSV.CENTRAL",
+      "pol-OBSV.CLOCKS",
+      "pol-OBSV.CORREL",
+      "pol-OBSV.HEALTH",
+      "pol-OBSV.RETAIN",
+      "pol-OBSV.SECRETS",
+      "pol-OBSV.SLO"
+    ],
     "applies-to": [
       "all"
     ],
@@ -21,6 +32,6 @@
     "Conformance checklist": "- [ ] A search for one trace id returns records from every service the request passed through.\n- [ ] Every timestamp in the central store is UTC, and the hosts agree to within a second.\n- [ ] The service has a health check, a dashboard and at least one alert.\n- [ ] Each alert names an owner and a first action.\n- [ ] Every alert raised in the last 30 days was acted on or removed.\n- [ ] The retention period for this service is recorded, and the platform is set to it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/engineering/standards/common/observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/standards/common/observability.md"
   }
 }

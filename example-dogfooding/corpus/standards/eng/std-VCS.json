@@ -6,6 +6,15 @@
     "title": "Everything a service needs is committed to its repository",
     "category": "common",
     "status": "draft",
+    "implements": [
+      "pol-EVER.ASSETS",
+      "pol-EVER.BRANCH",
+      "pol-EVER.HISTORY",
+      "pol-EVER.INTENT",
+      "pol-EVER.ORPHAN",
+      "pol-EVER.PARITY",
+      "pol-EVER.SHARED"
+    ],
     "applies-to": [
       "all"
     ],
@@ -21,6 +30,6 @@
     "Conformance checklist": "- [ ] The repository builds from a clean clone on a machine that has never seen this service.\n- [ ] The infrastructure definition sits in the repository, and the running estate matches it.\n- [ ] Branch protection is on, and it blocks direct pushes to the default branch.\n- [ ] Recent commit subjects each name a work item.\n- [ ] No commit in the last release carries a shared account as its author."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/engineering/standards/common/version-control.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/standards/common/version-control.md"
   }
 }

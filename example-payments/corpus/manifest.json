@@ -3,10 +3,10 @@
   "corpus": "example-payments",
   "shortcode": "pay",
   "contentVersion": "0.8.2",
-  "mechanismVersion": 7,
-  "commit": "c6d018ff20f6b825b6cfc115f14b93870b9ca721",
+  "mechanismVersion": 8,
+  "commit": "26e3dffda2fea22a34e9c0cc12b5763f37737e4c",
   "dirty": false,
-  "generatedAt": "2026-09-07T19:14:35Z",
+  "generatedAt": "2026-09-08T11:13:59Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "c6d018ff20f6b825b6cfc115f14b93870b9ca721"
+    "ref": "26e3dffda2fea22a34e9c0cc12b5763f37737e4c"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.10.2",
+      "contentVersion": "0.11.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "c6d018ff20f6b825b6cfc115f14b93870b9ca721"
+        "ref": "26e3dffda2fea22a34e9c0cc12b5763f37737e4c"
       }
     }
   ],
@@ -52,7 +52,8 @@
       "sections": {
         "Summary": "full",
         "Conformance checklist": "full"
-      }
+      },
+      "frameworksFile": null
     },
     {
       "type": "glossary",
@@ -67,7 +68,8 @@
       "seeAlsoKey": "seeAlso",
       "sections": {
         "Scope": "full"
-      }
+      },
+      "frameworksFile": null
     },
     {
       "type": "policies",
@@ -84,7 +86,8 @@
         "Purpose": "summary",
         "Scope": "full",
         "Exceptions": "full"
-      }
+      },
+      "frameworksFile": null
     }
   ]
 }

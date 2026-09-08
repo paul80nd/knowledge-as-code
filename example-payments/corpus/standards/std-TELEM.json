@@ -6,6 +6,11 @@
     "title": "A payment leaves an order reference in the logs and nothing else",
     "category": "operations",
     "status": "active",
+    "implements": [
+      "eng:pol-DATA.LOGS",
+      "eng:pol-SCRT.LOGS",
+      "eng:pol-SCRT.STORE"
+    ],
     "applies-to": [
       "svc-payment-api",
       "svc-payment-ledger"
@@ -22,6 +27,6 @@
     "Conformance checklist": "- [ ] The redaction field list is in the repository and a test asserts each entry is removed.\n- [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.\n- [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.\n- [ ] Error reports carry a request id and no request body.\n- [ ] The PSP key resolves from the managed store at start-up, and appears in no configuration file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c6d018ff20f6b825b6cfc115f14b93870b9ca721/examples/payments/standards/operations/payment-telemetry.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/26e3dffda2fea22a34e9c0cc12b5763f37737e4c/examples/payments/standards/operations/payment-telemetry.md"
   }
 }

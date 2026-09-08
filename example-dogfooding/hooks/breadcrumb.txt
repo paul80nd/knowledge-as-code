@@ -1,4 +1,4 @@
-example-dogfooding 0.12.3 travels with this session as data, exported 2026-09-07.
+example-dogfooding 0.13.0 travels with this session as data, exported 2026-09-08.
 processes. 7 records: Add a record to a corpus, Add a knowledge type, Change the schema, Change the tool, Open a pull request and 2 more.
 standards. 41 entries across 6 records: The documentation site and kac are usable without sight, a mouse or colour, Every check and every publish runs from a workflow in this repository, Configuration is committed, pinned and explained, The plugin carries the corpus, and a skill answers from what travelled, Prose reads the same way whoever wrote it and A version stamp says what it versions, and a move says what changed.
 standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, A container image is pinned by digest and runs as a non-root user, C# follows the runtime team's conventions, and the compiler enforces them, One artefact is built once and promoted to production, A dependency is pinned, screened and named in the inventory and 7 more.
