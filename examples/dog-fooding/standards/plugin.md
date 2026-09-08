@@ -68,6 +68,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
   `glossary@1`.
 - A component that needs a type present and opens none of its files **MUST** name that type bare.
 - A component that reads no export at all **MUST** declare `requires` empty.
+- A component that reads no export and supports no other component **MUST** declare `standalone` true.
 - A component entry **MUST** carry a `note` saying what it reads.
 - `metadata.corpusRoot` **MUST** name the directory every skill in the tree addresses the export through.
 - A component naming a type the export does not carry **MUST** leave the plugin, with every file under its declared
@@ -205,6 +206,8 @@ session vouching for itself is what `eng:pol-AGNT.SELFVER` refuses.
 - [ ] Every skill directory and hook directory in the plugin tree is declared under `metadata.components`.
 - [ ] Every `requires` entry names a type at the shape version it reads, bare where it opens none of that type's
       files, and empty where the component reads no export.
+- [ ] Every component reading no export declares `standalone` where it supports nothing, and leaves it off where it
+      supports the components that do.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
 - [ ] `bundle.json` names every component that left, and the type that left it out.
 - [ ] Every finding opens on a `yaml kac-finding` block, carrying `corpus`, then the `discoveries` keys the rule
@@ -231,8 +234,13 @@ reads.
 `requires` carries three states, and the manifest rules keep them apart. A component that opens a type's files names
 the shape it reads them at, so a moved key stops the build rather than reaching a reader. A component that needs the
 type present and opens none of its files names it bare, which is what the breadcrumb hook does. A component that
-reads no export at all declares nothing, and travels with the components it supports.
-`docs/design/plugin.md` carries how `kac bundle` acts on all three.
+reads no export at all declares nothing.
+
+That third state answers two different questions, so `standalone` separates them. `corpus-retrieval` reads no export
+and exists for the lookup skills, so a bundle keeping it after the last of them left would ship a skill nothing can
+reach. `raise-finding` reads no export and serves whoever is holding the plugin, and a corpus holding no record at all
+is the one a session most needs a route to report. Declaring it standalone is what keeps that route open.
+`docs/design/plugin.md` carries how `kac bundle` acts on all of them.
 
 A finding is a discovery that has not landed yet. An observation is worth the same whether a session writes it into a
 corpus it can edit or files it against one it cannot. So the issue carries the fields the record will need, under the
@@ -247,8 +255,8 @@ type fixes.
 The label is how a person filters, and never what a harvester selects on. `gh issue create` refuses a label the target
 repository does not hold. A corpus published from somebody else's repository holds whatever labels its maintainer
 chose. A skill that stopped there would lose the observation to a missing string. The block in the body is the
-contract. This repository's own `dogfood` label answers a different question, which is how something was found, and
-both marks sit on one issue.
+contract, and it is why a platform calling a label something else costs nothing: an Azure tag and a GitHub label carry
+the same mark, and neither is what a harvester reads.
 
 What CI reaches is narrow. `round-trip.sh` installs the plugin, asks each skill the question that skill describes, and
 greps each `SKILL.md` for the parts file its component requires. Everything else above is a reviewer's, and two gaps
@@ -263,6 +271,8 @@ never opens, so the shape holds for as long as the skill writing it holds to thi
 
 ## Changelog
 
+- 2026-09-08: a component reading no export says whether it supports the others, so one serving the reader
+  survives a bundle that trimmed every lookup.
 - 2026-09-08: added the shape a finding an agent files carries, and the label duty beside it.
 - 2026-09-07: initial version.
 

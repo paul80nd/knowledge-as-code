@@ -183,8 +183,18 @@ jobs:
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
 
-          if ! jq -e '.included == [] and (.trimmed | length) > 0' .dist/plugin/bundle.json > /dev/null; then
+          # Nothing that reads a type may ship, because the corpus holds none of them. A component
+          # declaring `standalone` reads no export and supports nothing, so it survives and is what
+          # leaves this corpus a route to report that it is empty.
+          if ! jq -e '[.included[] | select(.requires | length > 0)] == [] and (.trimmed | length) > 0' \
+            .dist/plugin/bundle.json > /dev/null; then
             echo "a corpus with no type bundled something that reads a type it does not hold"
+            exit 1
+          fi
+
+          if ! jq -e '[.included[].path] | index("skills/raise-finding") != null' \
+            .dist/plugin/bundle.json > /dev/null; then
+            echo "the standalone skill was trimmed, so a corpus holding no record cannot report that"
             exit 1
           fi
 
