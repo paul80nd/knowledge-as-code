@@ -13,7 +13,7 @@ A [policy](policies.md) maps its clauses to a framework's controls in the `Align
 correcting in every policy that cites it at once.
 
 Maintained by hand: no frontmatter, no id, no index. It exists so the references in the corpus have somewhere honest to
-land.
+land. To read those references back, run `kac report frameworks`, which names every reference and the clauses citing it.
 
 ## The three postures
 
@@ -60,8 +60,6 @@ Without saying so, a reader who takes the rule above at face value counts every 
 of them are not ours to answer. The ones that *are* ours and still uncited are the real ones, and they are worth naming
 as gaps.
 
-Referenced by: most policies under `category: security`, `delivery` and `operations`.
-
 ### UK GDPR
 
 **Obliged in law**, wherever we process personal data: the UK GDPR and the Data Protection Act 2018 together. The EU
@@ -74,23 +72,17 @@ the duty. The practical difference is who can waive it: an Annex A control is ou
 justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
 break the law rather than a risk to accept.
 
-Referenced by: [pol-DATA], [pol-DERV].
-
 ### PSBAR 2018
 
 **Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
 Accessibility Regulations 2018, SI 2018/952, set the accessibility duty on public sector websites and mobile
 applications. That duty includes publishing an accessibility statement and keeping it current.
 
-Referenced by: [pol-A11Y].
-
 ### EN 301 549
 
 **Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
 expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
 AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
-
-Referenced by: [pol-A11Y].
 
 ## Self-obligated
 
@@ -99,8 +91,6 @@ Referenced by: [pol-A11Y].
 **Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. We target level AA because the policy says we do, not because
 a particular market has yet required that version of it. Where law obliges an older or narrower target, this is the
 higher bar and the one we hold.
-
-Referenced by: [pol-A11Y].
 
 ## Inspiration
 
@@ -119,8 +109,6 @@ that moves it. That is a testable claim about our own delivery rather than a con
 Not the **Digital Operational Resilience Act**, the EU regulation for financial entities, which shares the acronym and
 nothing else. If that ever applies to us it goes under Obliged, under its full name.
 
-Referenced by: [pol-PIPE], [pol-AUTV].
-
 ### Azure Well-Architected Framework
 
 **Inspiration.** Microsoft's five pillars for designing and operating a workload: Reliability, Security, Cost
@@ -133,8 +121,6 @@ framework is revised, and a citation that rots quietly is worse than one that is
 This is the only framework covering [pol-COST], and worth being plain about why. No external body will ever oblige us to
 manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a
 policy that borrows from established practice and one that appears to have been invented in a meeting.
-
-Referenced by: [pol-COST], [pol-RECV], [pol-PERF], [pol-OBSV], [pol-DERV].
 
 ### NIST SSDF
 
@@ -152,8 +138,6 @@ is where it is worth defending.
 NIST also publishes SP 800-218A, an SSDF profile for generative AI. It addresses producers of models rather than
 consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI RMF below does.
 
-Referenced by: [pol-SECD], [pol-AUTV], [pol-TRUS], [pol-VURM], [pol-EVER], [pol-PIPE], [pol-ENVS].
-
 ### SLSA
 
 **Inspiration.** Supply-chain Levels for Software Artifacts, at version 1.1: a build track grading how far a consumer
@@ -168,8 +152,6 @@ deviation.
 
 SPDX and CycloneDX are formats for exchanging an inventory rather than rules about what one holds, so `INVENT` cites
 neither and names no format.
-
-Referenced by: [pol-TRUS].
 
 ### NIST AI RMF
 
@@ -188,8 +170,6 @@ registration if the use of AI ever needs auditing rather than governing. It move
 before. That is the same relationship SSDF has to 27001: the free framework describes the practice, the certifiable
 standard makes someone check.
 
-Referenced by: [pol-AGNT].
-
 ### OWASP ASVS
 
 **Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard, at
@@ -201,8 +181,6 @@ The version is pinned deliberately: ASVS re-chapters between major versions, so 
 alongside the version it was written against. Moving to a later one is a re-mapping exercise, which is why the version
 is carried by the label every policy cites it under, `[OWASP ASVS 4.0]`, so nobody has to infer it. A bump has to be
 written out everywhere it is read.
-
-Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 
 ## Adding a framework
 
@@ -218,26 +196,15 @@ Referenced by: [pol-INTC], [pol-SECD], [pol-ACCS].
 5. In the citing policy, define the link at the foot, `[ISO 27001:2022]: ../frameworks.md#iso-27001`, below the corpus
    references, and cite it per clause rather than per document.
 
-A framework nothing references does not belong here. If we stop using one, say so and when, rather than deleting the
-entry: a policy clause written under its influence is easier to read with the history intact.
+A framework nothing references does not belong here, and `kac validate` reports an entry no clause reaches. The entry
+goes when the last citation goes, and the commit removing it is where the reason for dropping the framework belongs.
 
 [pol-A11Y]: policies/governance/a11y-accessibility.md
-[pol-ACCS]: policies/security/accs-access-by-identity.md
 [pol-AGNT]: policies/governance/agnt-agents-propose-people-decide.md
-[pol-AUTV]: policies/delivery/autv-automated-verification.md
 [pol-COST]: policies/delivery/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/security/data-data-protection.md
-[pol-DERV]: policies/delivery/derv-derived-data-is-verified.md
 [pol-DEVI]: policies/governance/devi-deviations-are-recorded.md
 [pol-ENVS]: policies/security/envs-environment-separation.md
-[pol-EVER]: policies/delivery/ever-everything-in-version-control.md
-[pol-INTC]: policies/delivery/intc-interface-contracts.md
-[pol-OBSV]: policies/operations/obsv-observability.md
-[pol-PERF]: policies/delivery/perf-performance-targets.md
-[pol-PIPE]: policies/delivery/pipe-pipeline-to-production.md
-[pol-RECV]: policies/operations/recv-recoverability.md
-[pol-SECD]: policies/security/secd-security-by-design.md
 [pol-TRUS]: policies/security/trus-trusted-components.md
-[pol-VURM]: policies/security/vurm-vulnerability-remediation.md
 [PSBAR 2018]: #psbar-2018
 [WCAG 2.2 AA]: #wcag

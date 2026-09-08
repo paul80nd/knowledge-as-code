@@ -8,7 +8,7 @@ is, because that standing changes on its own schedule and would otherwise need c
 at once.
 
 Maintained by hand: no frontmatter, no id, no index. It exists so the references in the corpus have somewhere honest to
-land.
+land. To read those references back, run `kac report frameworks`, which names every reference and the clauses citing it.
 
 ## The three postures
 
@@ -53,5 +53,3 @@ claim it discharges either control.
 
 Move this entry to **Obliged** on the day the organisation registers against the standard, and say there what the
 registration covers. Until then an Annex A reference marks provenance and nothing more.
-
-Referenced by: `pol-DEVI`.
