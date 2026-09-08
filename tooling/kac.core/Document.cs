@@ -145,6 +145,14 @@ public partial class Doc
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
 
+    // What each label was defined to point at, keyed the way a reference reaches it. A definition holds
+    // the target and the reference holds only the label, so a check asking where an unused definition
+    // leads has nowhere else to read it.
+    //
+    // A label defined twice keeps the first target, because that is the one a renderer resolves a
+    // reference to. Taking the last would report a finding against a definition the page never uses.
+    public readonly Dictionary<string, string> DefinedTargets = new(StringComparer.OrdinalIgnoreCase);
+
     // Where each link reference definition sits in the document's text. A definition renders as nothing,
     // and this corpus writes them in a block at the foot, which puts them inside whichever section is
     // written last. Held as spans because the export carries a section as its author's prose, and a
@@ -290,7 +298,12 @@ public partial class Doc
 
         foreach (var def in ast.Descendants<LinkReferenceDefinition>())
         {
-            if (def.Label is not null) doc.DefinedLabels.Add(def.Label);
+            if (def.Label is not null)
+            {
+                doc.DefinedLabels.Add(def.Label);
+                doc.DefinedTargets.TryAdd(def.Label, def.Url ?? "");
+            }
+
             doc.DefinitionSpans.Add((def.Span.Start, def.Span.End + 1));
         }
 

@@ -49,6 +49,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `reciprocal: promoted-from`, but only `faqs` carried that field, so promoting to a standard failed `reciprocal` and
   adding the key to the standard failed `unknown-key`. `standards` now declares `promoted-from` as well, optional and
   pointing back at the discovery. Take it with `kac update --from <template>`, which brings the schema down with it.
+- **`label-canonical` catches a shortcut label that leads to a record it does not name.** The check compared a label
+  against the canonical spelling of its own id, so `[std-BOGUS]` defined as `../standards/workflows.md` passed:
+  `link-resolves` was happy with the path, and the reader was shown an id no record carries. `kac validate` now holds a
+  label to the id in the frontmatter of the record it resolves to, which reaches a label the id styles do not
+  recognise at all. A template is exempt, since its definitions demonstrate the form under labels nobody has chosen
+  yet. The row this check gets on a type page is reworded to match, so run `kac generate` after upgrading.
 
 ## 0.24.0 - 2026-09-08
 

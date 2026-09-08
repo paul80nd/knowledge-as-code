@@ -89,6 +89,15 @@ Scenario: A mis-cased id label is flagged where it is read and where it is defin
     | 17   | label-canonical | reference '[pol-vurm]' should be written as the id 'pol-VURM'.       |
     | 18   | label-canonical | reference '[ADR-0004]' should be written as the id 'adr-0004'.       |
 
+Scenario: A label the style admits is held against the document it leads to
+  When I validate the corpus
+  Then the findings for "policies/lead-label-leads-elsewhere.md" are exactly:
+    | line | check           | message                                                                                     |
+    |      | label-canonical | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+    |      | label-canonical | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+    | 17   | label-canonical | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+    | 18   | label-canonical | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+
 Scenario: A field the type derives from the folder is not the author's to write
   When I validate the corpus
   Then the findings for "policies/cats-category-written.md" are exactly:
@@ -103,7 +112,7 @@ Scenario: A template carrying a derived field is reported, not only a record
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 23 documents and 0 skipped
+  Then validation reports 24 documents and 0 skipped
   And the findings are exactly:
     | file                                                        | severity | line | check               | message                                                                                                |
     | policies/cats-category-written.md                            | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
@@ -127,6 +136,10 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/intc-label-case.md                                 | error    | 17   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                                         |
     | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                                         |
     | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case: `DRAFT`.                                              |
+    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.     |
+    | policies/lead-label-leads-elsewhere.md                      | error    | 17   | label-canonical     | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.           |
+    | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.       |
     | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                         |
     | policies/obsv-no-identity-line.md                           | error    |  10 | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                       |
     | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'.                                        |

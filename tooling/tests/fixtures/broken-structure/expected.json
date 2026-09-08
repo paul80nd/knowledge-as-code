@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 23,
+    "validated": 24,
     "templates": 3,
     "skipped": 0,
-    "errors": 29,
+    "errors": 33,
     "warnings": 1,
     "infos": 0
   },
@@ -154,6 +154,34 @@
       "severity": "error",
       "check": "identity-status",
       "message": "identity line status 'Draft' must be upper-case: `DRAFT`."
+    },
+    {
+      "file": "policies/lead-label-leads-elsewhere.md",
+      "line": null,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
+    },
+    {
+      "file": "policies/lead-label-leads-elsewhere.md",
+      "line": null,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
+    },
+    {
+      "file": "policies/lead-label-leads-elsewhere.md",
+      "line": 17,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
+    },
+    {
+      "file": "policies/lead-label-leads-elsewhere.md",
+      "line": 18,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
     },
     {
       "file": "policies/mexp-slug-that-is-definitely-way-too-long.md",

@@ -387,11 +387,15 @@ checks:
 
   label-canonical:
     severity: error
-    description: An id-shaped shortcut label is written as the canonical id.
+    description: A shortcut label is the id of the record it leads to, written canonically.
     notes: >
-      Prefix lower-case, mnemonic upper-case, slug lower-case. Reference and definition match
-      case-insensitively, so a mis-cased label resolves and nothing else would catch it. The label is
-      its own display text, so it shows the reader an id that does not exist.
+      Prefix lower-case, mnemonic upper-case, slug lower-case. A label spelled canonically, and a label
+      no id style recognises at all, are both then held against the id in the frontmatter of the record
+      the definition resolves to. The frontmatter is what carries the id of a type keeping it out of the
+      filename. The label is its own display text, so either fault shows the reader an id nothing has.
+      Markdown matches a reference to its definition case-insensitively, and link-resolves passes as
+      soon as the path is real, so nothing else would catch either. A template is exempt, since its
+      definitions demonstrate the form under labels nobody has chosen yet.
 
   part-ref:
     severity: error
