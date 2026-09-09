@@ -1,6 +1,7 @@
-example-dogfooding 0.20.2 travels with this session as data, exported 2026-09-09.
+example-dogfooding 0.21.0 travels with this session as data, exported 2026-09-09.
 controls. 10 records: A merge waits for the validate job, Every job in kac.yml sits behind the gate, Every workflow passes actionlint, Every YAML file passes yamllint, Every corpus holds the file the template sends it and 5 more.
 deviations. 18 records: Branch size and a red main are habits here, The reasoning behind a decision lives in the commit that made it, No standard here says how a deviation is handled, A consumer of the export gets no notice period, No standard governs what kac generate computes and 13 more.
+fixes. 2 records: pip cannot find the yamllint version the lint job pins and An .editorconfig key edited from a shell changes nothing in the IDE.
 processes. 7 records: Add a record to a corpus, Add a knowledge type, Change the schema, Change the tool, Open a pull request and 2 more.
 reports. 1 record: Clause coverage.
 reports (from eng). 1 record: Framework coverage.

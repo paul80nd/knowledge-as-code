@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.9.1",
+  "contentVersion": "0.10.0",
   "mechanismVersion": 11,
-  "commit": "adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc",
+  "commit": "8712428e76578356d9632cd1630691e4b2a2d6e6",
   "dirty": false,
-  "generatedAt": "2026-09-09T14:27:00Z",
+  "generatedAt": "2026-09-09T15:04:49Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8712428e76578356d9632cd1630691e4b2a2d6e6/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc"
+    "ref": "8712428e76578356d9632cd1630691e4b2a2d6e6"
   },
   "sources": [
     {
@@ -30,14 +30,33 @@
       "contentVersion": "0.13.1",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8712428e76578356d9632cd1630691e4b2a2d6e6/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc"
+        "ref": "8712428e76578356d9632cd1630691e4b2a2d6e6"
       }
     }
   ],
   "types": [
+    {
+      "type": "fixes",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "fixes",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Symptom": "full",
+        "Cause": "full",
+        "Resolution": "full",
+        "Why it happens": "full"
+      },
+      "frameworksFile": null
+    },
     {
       "type": "nfrs",
       "shapeVersion": 1,

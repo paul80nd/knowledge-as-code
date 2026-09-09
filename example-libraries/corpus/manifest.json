@@ -4,9 +4,9 @@
   "shortcode": "lib",
   "contentVersion": "0.2.2",
   "mechanismVersion": 11,
-  "commit": "adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc",
+  "commit": "8712428e76578356d9632cd1630691e4b2a2d6e6",
   "dirty": false,
-  "generatedAt": "2026-09-09T14:26:53Z",
+  "generatedAt": "2026-09-09T15:04:40Z",
   "about": {
     "displayName": "Example Libraries",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc/examples/library/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8712428e76578356d9632cd1630691e4b2a2d6e6/examples/library/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/library",
-    "ref": "adfb13c1da37b97a6ca01aff54df9e4e4a02ccbc"
+    "ref": "8712428e76578356d9632cd1630691e4b2a2d6e6"
   },
   "sources": [],
   "types": [

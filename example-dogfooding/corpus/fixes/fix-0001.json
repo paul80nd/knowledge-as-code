@@ -1,0 +1,44 @@
+{
+  "type": "fixes",
+  "path": "fixes/pip-cannot-install-yamllint.md",
+  "trust": "human-reviewed",
+  "fields": {
+    "id": "fix-0001",
+    "title": "pip cannot find the yamllint version the lint job pins",
+    "status": "active",
+    "symptom-keywords": [
+      "actionlint",
+      "brew",
+      "homebrew",
+      "linters",
+      "macos",
+      "no matching distribution found",
+      "pip",
+      "python",
+      "requirements.txt",
+      "yamllint"
+    ],
+    "applies-to": null,
+    "verified": [
+      {
+        "at": "2026-09-02T17:27:31Z",
+        "by": "human:paul.law"
+      }
+    ],
+    "review-by": "2027-03-09",
+    "tags": [
+      "linting",
+      "macos",
+      "setup"
+    ]
+  },
+  "sections": {
+    "Symptom": "`pip install -r .github/requirements.txt` fails on a Mac, and the release it says is missing is the one the file pins.\n\n```text\nERROR: Could not find a version that satisfies the requirement yamllint==1.38.0 (from versions: 0.1.0, ... 1.37.1)\nERROR: No matching distribution found for yamllint==1.38.0\n```\n\nThe versions it offers stop one release short of the pin.",
+    "Cause": "macOS ships `/usr/bin/python3` at 3.9, and yamllint 1.38.0 needs Python 3.10 or newer. pip narrows the index to the releases the running interpreter can take, so the pinned one is on PyPI and invisible from here. The error quotes the pin because that is what it was asked for, and says nothing about the interpreter.",
+    "Resolution": "1. Install both linters from Homebrew, which brings a Python of its own.\n\n```sh\n   brew install yamllint actionlint\n   ```\n\n2. Check each version against what the `lint` job pins.\n\n```sh\n   yamllint --version    # 1.38.0\n   actionlint --version  # 1.7.12\n   ```\n\nHomebrew serves the pinned yamllint and the pinned actionlint together. The `lint` job takes actionlint from a\n`go install` line instead, so `.github/requirements.txt` never names it.",
+    "Why it happens": "The `lint` job sets Python up at 3.13 before it installs, so CI never meets this. `.github/requirements.txt` records what that job takes rather than what a laptop can run. Dependabot moves the pin, so the floor rises again whenever yamllint drops a Python version."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8712428e76578356d9632cd1630691e4b2a2d6e6/examples/dog-fooding/fixes/pip-cannot-install-yamllint.md"
+  }
+}
