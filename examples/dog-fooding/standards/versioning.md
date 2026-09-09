@@ -46,6 +46,10 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 - `content-version` **MUST** be read as a statement about the records rather than about the file.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
   and its patch a change of wording.
+- A change to a field's accepted value format, its name, or its removal **MUST** move `content-version`'s major where
+  the change reaches a record whose type names that field under `export:`, and its patch where it reaches none.
+- A field added **MUST** move `content-version`'s minor where a record's type names it under `export:`, and its patch
+  where none does.
 - A move of `<Version>` **MUST** name a change to `kac` that a user can observe.
 - `descriptor-version` **MUST** move where `.corpus.yaml` gains a key, loses one, or has one read differently.
 - `version:` in `manifest.yaml` **MUST** move where a corpus has to respond: a file added, removed, renamed, or moved
@@ -137,6 +141,8 @@ restore keeps a folder already holding 0.10.0.
 
 - [ ] Every corpus whose records changed has moved its `content-version`, at the major, minor or patch that change
       earns.
+- [ ] Where a field's value format or name changed, or a field was added or removed, the `export:` block of every type
+      it reached decided which component that corpus moved.
 - [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record
       changed.
 - [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.
@@ -157,10 +163,16 @@ against changed meaning underneath it, and reading on would be reading something
 the argument for splitting `formatVersion` from a `shapeVersion`, which is that one number across every type would stop
 a reader over a change to a type it never opens.
 
-The caret is where this bites. `kac` takes two range forms and no more: an exact version, and a caret over one. Above
-1.0.0 a caret runs to the next major, because a major above zero promises that nothing below it changed meaning. Below
-one there is no such promise, so the minor carries it. A producer that moves its minor and leaves its consumers alone
-publishes something they have already said they will not take.
+A field that reaches the export is data a consumer parses. A field that stays behind is a fact about this corpus's
+stewardship, and nothing downstream reads it. That is why the `export:` block decides what a change to a field earns,
+and why one such change falls differently in two corpora. `owner` is the case that shows it: `deviations` is the one
+type whose export carries the field, for the reason `.schema/deviations.yaml` gives. Change how `owner` is written,
+and a corpus holding a deviation has moved something a consumer reads. A corpus holding none has not.
+
+The caret is where a producer's move bites. `kac` takes two range forms and no more: an exact version, and a caret
+over one. Above 1.0.0 a caret runs to the next major, because a major above zero promises that nothing below it
+changed meaning. Below one there is no such promise, so the minor carries it. A producer that moves its minor and
+leaves its consumers alone publishes something they have already said they will not take.
 
 `mechanismVersion` is the descriptor's `upstream.template-version` published under the name that key used to carry. It
 adds nothing a corpus does not already state, and renaming it in the export is what `formatVersion` exists to announce.
@@ -185,6 +197,7 @@ nothing reads `<Version>` against what a user of `kac` can observe.
 
 ## Changelog
 
+- 2026-09-09: a field's value format, name, addition or removal moves the component the `export:` block decides.
 - 2026-09-07: initial version, taking the stamp semantics and the consumer-repointing rules from [std-CI].
 
 [Semantic Versioning 2.0.0]: https://semver.org
