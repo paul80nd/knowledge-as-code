@@ -25,6 +25,6 @@
     "Coverage and gaps": "`strict: true` reads links inside the site. Nothing fetches an external URL, so a link to a page that has moved stays\ngreen.\n\nWhether a page is accurate is a reader's judgement. A published page describing behaviour the tool no longer has passes every check here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/controls/0010-docs-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/dog-fooding/controls/0010-docs-build.md"
   }
 }

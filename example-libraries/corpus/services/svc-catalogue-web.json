@@ -28,6 +28,6 @@
     "Data": "No database connection is configured for this app service. It reaches data through the gateway."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/catalogue-web.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/library/services/catalogue-web.md"
   }
 }

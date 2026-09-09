@@ -26,6 +26,6 @@
     "Data": "None of its own, and that is the point. It holds a card token for the life of one request and stores nothing. What happened to a payment is [svc-payment-ledger]'s."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/payments/services/payment-api.md"
   }
 }

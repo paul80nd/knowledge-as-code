@@ -26,6 +26,6 @@
     "Coverage and gaps": "The reach is the section for the version in front of it. Whether that section describes the change is a reviewer's judgement, and the release it becomes is where a reader would notice.\n\nNothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already holds passes here, and its publish finishes green having published nothing."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }
