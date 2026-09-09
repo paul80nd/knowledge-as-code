@@ -23,7 +23,7 @@ carries generated blocks derived from these files.
 
 * The schema guidance at `.schema/CLAUDE.md`, which carries the closed key space and the field-order trap.
 * `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.
-* The .NET SDK, for the golden suite at step 8.
+* The .NET SDK, for the golden suite at step 8 and the behaviour specs at step 9.
 
 ## Steps
 
@@ -41,25 +41,31 @@ carries generated blocks derived from these files.
 5. Run `kac generate` in every corpus that adopted the type, then `kac validate` in each.
 6. Write a fixture that trips a new rule, one per check id it reports. The coverage gate fails a rule nothing
    exercises.
-7. Run the golden suite. The fixtures validate against the real schema, so this edit can move expectations already
+7. Where the edit added a required field to `_universal.yaml`, write that field into every record under
+   `tooling/tests/fixtures/`. Every record already there fails `required-field` without it, and an optional field asks
+   for none of this.
+8. Run the golden suite. The fixtures validate against the real schema, so this edit can move expectations already
    committed there. Regenerate with `--update` after reading the diff.
-8. Copy nothing. `.schema/` is authored once at the repository root and read from there by every corpus. A type page or
-   a `_template.md` you also touched does live in every tree.
-9. Run [prc-pull-request].
+9. Repair by hand every pinned line in `tooling/kac.features/*.feature` that step 7 moved. Each one moves down by one,
+   and no flag regenerates a feature file. A finding reported against the frontmatter stays at line 1, and a document
+   carrying no frontmatter keeps the numbers it had. Prove the repair with `dotnet test tooling/kac.features`.
+10. Copy nothing. `.schema/` is authored once at the repository root and read from there by every corpus. A type page or
+    a `_template.md` you also touched does live in every tree.
+11. Run [prc-pull-request].
 
 ## Verification
 
 Every corpus that adopted the type validates clean, `generate --check` reports the generated blocks fresh, and the
-golden suite passes.
+golden suite and the behaviour specs pass.
 
-Close by naming what the schema now declares, which pass would catch it being wrong, and any golden expectation that
-moved.
+Close by naming what the schema now declares, which pass would catch it being wrong, and any golden expectation or
+pinned line that moved.
 
 ## Related
 
 * [prc-add-a-type] is the wider job a schema file is one part of.
 * [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says what a type page and a `_template.md` owe
-  you, because both live in every tree. Step 8 is where that bites.
+  you, because both live in every tree. Step 10 is where that bites.
 * [prc-pull-request] is how the change lands.
 
 [prc-add-a-type]: add-a-type.md
