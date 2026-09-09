@@ -8,7 +8,7 @@ generated: { at: 2026-09-08T15:51:13Z, by: kac/0.24.0 }
 sources:
   - { resource: example-dogfooding, version: "0.19.0" }
   - { resource: example-engineering, version: "0.12.0" }
-confirmed:
+verified:
   - { at: 2026-09-08T13:41:31Z, by: human:paul.law }
   - { at: 2026-09-08T15:57:57Z, by: human:paul.law }
 tags: [ coverage, governance ]
@@ -400,5 +400,5 @@ where the two differ.
 
 **The tool prints two verdicts and a person writes the rest.** It prints `covered` and `uncovered`, and splitting
 `uncovered` into a gap and something out of scope is a judgement about this estate. That judgement, and the `Note`
-beside it, belong to whoever confirms this report.
+beside it, belong to whoever verifies this report.
 

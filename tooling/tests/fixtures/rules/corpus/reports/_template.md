@@ -6,7 +6,7 @@ status: draft
 owner:
 generated:
 sources:
-confirmed:
+verified:
 ---
 
 # {{Title}}

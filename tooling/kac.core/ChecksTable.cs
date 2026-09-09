@@ -130,6 +130,9 @@ public static class ChecksTable
         ("report-stale", [new("report-stale")],
             "Each corpus a report answers for is at the version the report names.",
             t => t.Rules.Any(r => r.Id == new RuleId("report-stale"))),
+        ("self-verification", [new("self-verification")],
+            "A report's `verified` list does not name the producer that `generated.by` names.",
+            t => t.Rules.Any(r => r.Id == new RuleId("no-self-verification"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)

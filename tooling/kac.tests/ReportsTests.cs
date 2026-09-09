@@ -72,16 +72,17 @@ public class ReportsTests
     public void The_stamp_takes_a_version_with_no_build_metadata_whole()
         => Assert.Equal("kac/0.24.0", ReportStamp.ForTool("0.24.0", "2026-08-08T10:00:00Z", []).By);
 
-    // Left empty rather than guessed. A report is a record somebody owns and confirms, and the tool can
-    // answer for neither.
+    // Left empty rather than guessed. A report is a record somebody owns and somebody verifies, and the
+    // tool can answer for neither. `verified` is empty as well because the run writing it is the one
+    // actor `no-self-verification` refuses.
     [Fact]
-    public void The_frontmatter_leaves_the_owner_and_the_confirmation_open()
+    public void The_frontmatter_leaves_the_owner_and_the_verification_open()
     {
         var plan = Plan("coverage");
 
         Assert.Contains("id: rpt-\n", plan.Frontmatter);
         Assert.Contains("owner: human:\n", plan.Frontmatter);
-        Assert.Contains("confirmed: []\n", plan.Frontmatter);
+        Assert.Contains("verified: []\n", plan.Frontmatter);
     }
 
     // The one thing the tool refuses to print. `Gap` and `Out of scope` are judgements about an estate,

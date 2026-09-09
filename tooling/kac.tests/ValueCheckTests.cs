@@ -452,7 +452,7 @@ public class ValueCheckTests
     public void The_fix_quotes_the_key_an_entry_carries()
     {
         var findings = new List<Finding>();
-        ValueChecks.Check("confirmed.at", Value("field: {{date}}\n"), Field("date"), DocKind.Record,
+        ValueChecks.Check("verified.at", Value("field: {{date}}\n"), Field("date"), DocKind.Record,
             FrontStart, new Report("rec.md", findings));
 
         Assert.Contains("has to be quoted: at: \"{{…}}\".", Assert.Single(findings).Message);

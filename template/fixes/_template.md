@@ -4,7 +4,7 @@ type: fix
 tier: normative
 status: active
 symptom-keywords:
-confirmed:
+verified:
 review-by:
 owner:
 tags: [ a, b ]
@@ -25,18 +25,22 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`confirmed`**: one line per confirmation, oldest first. A fix nobody confirmed is a
+* **`verified`**: one line per verification, oldest first. A fix nobody verified is a
   [discovery](../discoveries.md).
 
   ```yaml
-  confirmed:
-    - { at: 2025-03-11T09:00:00Z, by: human:mira.okonjo }
+  verified:
+    - { at: 2025-03-11T09:00:00Z, by: symptom-sweep/1.4.0 }
     - { at: 2026-09-07T20:18:00Z, by: human:alex.doe }
   ```
 
-  `at` is a moment in UTC, to the second, and written unquoted. `by` is a person, and a `role:` is refused because
-  a post cannot read an answer. Add a line each time somebody checks the answer again, and leave the earlier lines
-  alone.
+  `at` is a moment in UTC, to the second, and written unquoted. `by` is a person as `human:alex.doe`, or an agent
+  named with its version the way a tool names itself. An agent that reproduced the symptom and ran the resolution
+  belongs here. A `role:` does not: a post cannot read an answer. Add a line each time somebody checks the answer
+  again, and leave the earlier lines alone.
+
+  Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
+  `human:` line makes it human-reviewed.
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
 
 **Fields this template leaves out.** `applies-to` and `promoted-from` are optional, so the frontmatter above carries
@@ -62,7 +66,7 @@ What is actually happening underneath, in a sentence or two.
 1. {{Step.}}
 2. {{Step.}}
 
-How to confirm it worked.
+How to check it worked.
 
 ## Why it happens
 

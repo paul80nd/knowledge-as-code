@@ -23,7 +23,7 @@ shapes:
         type: string
         description: Who or what acted. A type holding this to a kind of actor writes a rule.
     notes: >
-      An actor doing something at a point in time: a person confirming an answer, a tool generating a
+      An actor doing something at a point in time: a person verifying an answer, a tool generating a
       report. The two keys are the whole of it, because anything else is about the act rather than about
       who did it and when.
 
@@ -31,5 +31,5 @@ shapes:
       first, and the last line is the one somebody asking about trust reads.
 
       `by` is a plain string here and carries no pattern. What counts as an actor differs by what the
-      event is: a confirmation is a person and refuses an agent, where a generation is usually a tool.
-      The type that knows which writes the rule.
+      event is: a verification takes a person or an agent, where a generation is a tool naming its own
+      version. The type that knows which writes the rule.

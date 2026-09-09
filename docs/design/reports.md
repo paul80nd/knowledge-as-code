@@ -31,8 +31,8 @@ coincidence is the other reading, and only a person can tell them apart.
 
 ## A report is a record
 
-A finished report is a record in the corpus, under the `reports` type. It has an owner, it is confirmed by a person
-before it is published, and a reader browsing the corpus finds it beside everything else.
+A finished report is a record in the corpus, under the `reports` type. It has an owner, somebody has verified it before
+it is published, and a reader browsing the corpus finds it beside everything else.
 
 The alternative is a file nobody keeps: generated on demand, read once, thrown away. That costs every reader the run and
 the judgement, and it means the argument written on top of the numbers is written again each time.
@@ -49,7 +49,7 @@ a specification for knowledge documents that a growing set of tools reads.
 generated: { at: 2026-09-08T10:00:00Z, by: kac/0.24.0 }
 sources:
   - { resource: example-engineering, version: "0.10.2" }
-confirmed:
+verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
 ```
 
@@ -59,7 +59,15 @@ extended names the agent the same way the tool names itself.
 `sources` names each corpus the report answers for. OKF carries no version on a source, and this one does: the fact a
 reader needs is which content the report is true of, and `content-version` is what the corpus already keeps.
 
-`confirmed` is this corpus's own field, shared with the fix type, and it holds every confirmation the report has had.
+`verified` holds every verification the report has had, and the fix type carries the same field. An actor is a person
+as `human:alex.doe`, or an agent named with its version the way the tool names itself. Two are refused: a `role:`,
+because a post cannot read an answer and the person who did stays named after the post changes hands, and the producer
+that `generated.by` names, because a run cannot sign off its own output.
+
+Who is in the list decides the report's trust tier, which is OKF's word for how much weight an answer carries. A list of
+agents alone is machine-confirmed, and one `human:` entry is human-reviewed. The tier is derived rather than stored, so
+a record has one place saying who checked it. The export ships the answer as `trust`, so a consumer that never opens
+the record still knows what it is reading.
 
 ### The version moves without a regeneration
 
@@ -67,9 +75,9 @@ A reviewer edits `sources[].version` by hand. That is the point of it.
 
 A corpus moves its `content-version` whenever what it knows changes, and most of those changes touch no report. Adding
 a fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds
-raises the version and adds a `confirmed` entry, rather than running the report again and re-reading every verdict.
+raises the version and adds a `verified` entry, rather than running the report again and re-reading every verdict.
 
-`validate` warns where the version falls behind the corpus. The gap between `generated.at` and the newest `confirmed`
+`validate` warns where the version falls behind the corpus. The gap between `generated.at` and the newest `verified`
 entry is worth reading too: a report carried forward across several versions without a regeneration is one to run again.
 
 ## Adding a report

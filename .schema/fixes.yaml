@@ -7,8 +7,8 @@ folder: fixes
 page: fixes.md
 tier: normative
 lifecycle: living
-summary: A problem with a confirmed resolution, promoted from a discovery once a human has verified it.
-goes-here: A problem with a known, confirmed resolution
+summary: A problem with a verified resolution, promoted from a discovery once somebody has checked it.
+goes-here: A problem with a known, verified resolution
 detail: >
   It carries provenance back to the observation it came from, so the reader can see how far the resolution has
   been taken on trust.
@@ -18,7 +18,7 @@ lineage:
   alignment: >
     A problem whose cause is understood and whose fix is documented, and the observed → analysed → promoted lifecycle
   divergence: >
-    ITIL binds a known error to a formal problem record and an owning practice. Ours is promoted by any human
+    ITIL binds a known error to a formal problem record and an owning practice. Ours is promoted by any
     verification, from anything noticed
 
 id:
@@ -61,26 +61,36 @@ fields:
     reciprocal: promoted-to
     description: The discovery this was promoted from.
 
-  confirmed:
+  verified:
     required: true
     type: list
     of: object
     shape: event
-    description: Every confirmation this fix has had, oldest first, one line each.
+    description: Every verification this fix has had, oldest first, one line each.
     notes: >
-      A fix nobody confirmed is a discovery, and this field is what separates the two tiers. The list
-      keeps every confirmation the fix has had, so a reader sees when it was last checked, by whom,
-      and who checked it before that. One confirmation is one entry, so the moment and the person are
-      edited together.
+      A fix nobody verified is a discovery, and this field is what separates the two tiers. The list
+      keeps every verification the fix has had, so a reader sees when it was last checked, by whom, and
+      who checked it before that. One verification is one entry, so the moment and the actor are edited
+      together.
 
-      A confirmation is an actor doing something at a point in time, so the keys come from the `event`
-      shape rather than being written out here. Who may confirm is this type's own question, and
-      `confirmed-by-a-person` below is where it is asked.
+      Any actor may verify, bar a post. An agent that reproduced the symptom and ran the resolution has
+      checked something real, and refusing the entry leaves that work nowhere to go. A `role:` is
+      refused because a post cannot read an answer, and `verified-by-a-known-actor` below is where both
+      halves of that are asked.
+
+      How far the fix has been taken on trust is read off the list by eye. Entries by agents alone leave
+      it machine-confirmed and one `human:` entry makes it human-reviewed, which are the Open Knowledge
+      Format's words for the same reading. This type declares no `export:` block, so no field carries
+      the answer and a fix stays in the corpus that holds it.
+
+      A verification is an actor doing something at a point in time, so the keys come from the `event`
+      shape rather than being written out here. `verified` is the name the Open Knowledge Format gives
+      the same list, and taking it lets a reader who knows that format read this one.
 
   review-by:
     required: true
     type: date
-    description: Quoted. The date by which someone confirms this is still true.
+    description: Quoted. The date by which someone verifies this is still true.
 
 sections:
   required: [Symptom, Cause, Resolution]
@@ -91,15 +101,26 @@ index:
   sort: id
 
 rules:
-  - id: confirmed-by-a-person
-    description: A confirmation names the person who made it.
+  - id: verified-by-a-known-actor
+    description: A verification names a person or a producer, and never a post.
     severity: error
-    expr: "entries_match('confirmed', 'by', '^human:[a-z0-9.-]+$')"
+    expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a
-      session id and a team alias are all refused, because none of them can be asked what it checked.
-      `role:` is refused as well: a post cannot read an answer, and the person who did read it stays
-      named after the post changes hands.
+      A verification here names neither a person nor a producer. Write `human:alex.doe`, or name an
+      agent the way a tool names itself, as `symptom-sweep/1.4.0`. `role:` is refused: a post cannot
+      read an answer, and the person who did read it stays named after the post changes hands.
+
+  - id: raiser-does-not-verify
+    description: An agent does not verify a fix it raised.
+    notes: >
+      Verifying your own work confirms nothing, and it is the one thing accepting any actor opens up.
+      Nothing on a fix names who raised it: `owner` names the person answerable for it now, and the
+      discovery it was promoted from is another record a rule reading one document cannot open. So this
+      is declared and does not run.
+
+      A report asks the narrower question its own frontmatter can answer, and `no-self-verification`
+      there is built: `generated.by` names the producer, so the one actor that may not verify is on the
+      record already.
 
   - id: one-problem-per-document
     description: One Symptom section, because a fix is found by its symptom.

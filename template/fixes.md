@@ -7,7 +7,7 @@ Problems we have hit before, with the resolution that worked.
 ## What is a fix?
 
 One document per problem: the symptom as you would encounter it, what causes it, how to resolve it, and why it happens.
-A human has confirmed it, so a fix carries authority.
+Somebody has verified it, so a fix carries authority.
 
 Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
 
@@ -21,12 +21,18 @@ current.
 
 ## Scope
 
-A fix is **confirmed**. A human has verified that the problem is real, that the resolution works, and that both are
-still current. A [discovery](discoveries.md) arrives with none of that verification: nobody reviews one, and it might
-be wrong or already fixed.
+A fix is **verified**. Somebody has checked that the problem is real, that the resolution works, and that both are
+still current. A [discovery](discoveries.md) arrives with none of that: nobody reviews one, and it might be wrong or
+already fixed.
 
-**Never write straight to a fix from a session.** An agent cannot confirm its own observations, so capture a discovery
-and let a human confirm it at promotion.
+**Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
+resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
+see how far the fix has been taken: agents alone leave it machine-confirmed, and one `human:` line makes it
+human-reviewed. Those words are a reading rather than a field, because this type publishes nothing and no key carries
+the answer.
+
+**Never write straight to a fix from a session.** An agent cannot verify its own observation, so capture a discovery
+and let somebody else check it at promotion.
 
 Other boundaries:
 
@@ -52,8 +58,8 @@ Other boundaries:
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
 | `applies-to`         | list                                   | Service ids this fix concerns.                                                              |
 | `promoted-from`      | id                                     | The discovery this was promoted from.                                                       |
-| `confirmed` *        | list                                   | Every confirmation this fix has had, oldest first, one line each.                           |
-| `review-by` *        | date                                   | Quoted. The date by which someone confirms this is still true.                              |
+| `verified` *         | list                                   | Every verification this fix has had, oldest first, one line each.                           |
+| `review-by` *        | date                                   | Quoted. The date by which someone verifies this is still true.                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -66,7 +72,7 @@ Other boundaries:
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Add a `confirmed` line naming who verified the resolution and the moment they did it.
+4. Add a `verified` line naming who checked the resolution and the moment they did it.
 5. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.
 
 **Conventions**
@@ -110,7 +116,13 @@ Other boundaries:
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `confirmed-by-a-person`     | error   | A confirmation names the person who made it.                                                                    |
+| `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
 | `one-problem-per-document`  | warning | One Symptom section, because a fix is found by its symptom.                                                     |
+
+**Declared, not yet enforced**: carried by the schema, run by nothing.
+
+| Rule                     | What it would verify                      |
+|--------------------------|-------------------------------------------|
+| `raiser-does-not-verify` | An agent does not verify a fix it raised. |
 
 <!-- END GENERATED: checks-fixes -->

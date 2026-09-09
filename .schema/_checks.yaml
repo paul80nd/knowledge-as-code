@@ -705,6 +705,18 @@ checks:
       the version by hand, or runs the report again, and only a person can tell which. A `resource` this
       corpus does not read is skipped rather than reported.
 
+  self-verification:
+    severity: error
+    description: A report's `verified` list does not name the producer that generated it.
+    notes: >
+      Any actor may verify a report, which is what lets an agent's check count for something. The one
+      actor that cannot is the producer named in `generated.by`, because a run confirming its own output
+      adds nothing a reader can weigh.
+
+      Reported against the entry rather than the field, so the message names the line to delete. The
+      comparison is exact, so `kac/0.25.0` verifying a report `kac/0.24.0` generated stands: a later
+      version reading the corpus again is a second look.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

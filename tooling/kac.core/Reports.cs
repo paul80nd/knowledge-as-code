@@ -353,7 +353,7 @@ public static class Reports
         foreach (var source in stamp.Sources)
             sb.Append($"  - {{ resource: {source.Resource}, version: \"{source.Version ?? ""}\" }}\n");
 
-        sb.Append("confirmed: []\n");
+        sb.Append("verified: []\n");
         return sb.ToString();
     }
 

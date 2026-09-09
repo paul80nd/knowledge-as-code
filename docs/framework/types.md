@@ -30,7 +30,7 @@ Living and owned. Edited in place, with a changelog.
 | **Controls**   | `controls/`   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
 | **Deviations** | `deviations/` | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed        |
 | **NFRs**       | `nfrs/`       | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |
-| **Fixes**      | `fixes/`      | A problem with a confirmed resolution, promoted from a discovery once a human has verified it         |
+| **Fixes**      | `fixes/`      | A problem with a verified resolution, promoted from a discovery once somebody has checked it          |
 
 ## Descriptive
 

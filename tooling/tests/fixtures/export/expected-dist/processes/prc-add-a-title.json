@@ -1,6 +1,7 @@
 {
   "type": "processes",
   "path": "processes/add-a-title.md",
+  "trust": null,
   "fields": {
     "id": "prc-add-a-title",
     "title": "Add a title to the catalogue",

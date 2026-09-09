@@ -85,8 +85,8 @@ public class ExportShapeTests
           sections:
             When to use this: full
             Prerequisites: full
-        reports@1
-          fields: id, title, status, generated, sources, confirmed, tags
+        reports@2
+          fields: id, title, status, generated, sources, verified, tags
         runbooks@1
           fields: id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-access, tags
           sections:

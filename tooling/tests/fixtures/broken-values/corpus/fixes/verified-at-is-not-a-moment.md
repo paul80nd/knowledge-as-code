@@ -4,14 +4,14 @@ type: fix
 tier: normative
 status: active
 symptom-keywords: [calendar, moment, timestamp]
-confirmed:
+verified:
   - { at: 2026-02-31T09:00:00Z, by: human:alex.doe }
   - { at: 2026-06-12, by: human:mira.okonjo }
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---
 
-# A confirmation moment the calendar does not have
+# A verification moment the calendar does not have
 
 `Fix: fix-0003` `ACTIVE`
 

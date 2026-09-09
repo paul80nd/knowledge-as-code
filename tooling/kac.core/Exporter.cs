@@ -484,7 +484,52 @@ public static class Exporter
                     string.Equals(s.Title, name, StringComparison.OrdinalIgnoreCase)) is { } section)
                 sections[name] = Carry(Body(doc, section), fidelity);
 
-        return new ExportRecord(t.Key, doc.Rel, fields, sections, Links(link));
+        return new ExportRecord(t.Key, doc.Rel, Trust(doc, export), fields, sections, Links(link));
+    }
+
+    // The field a trust tier is read from, and the key inside one entry that names the actor.
+    //
+    // Held here rather than declared by a type. A type writing `verified` has taken the Open Knowledge
+    // Format's field, and the tiers follow from that name, so a corpus gains the answer by adopting the
+    // field rather than by choosing again on every type.
+    private const string VerifiedField = "verified";
+
+    private const string ActorKey = "by";
+    private const string HumanPrefix = "human:";
+
+    // How far a record has been taken on trust, in the Open Knowledge Format's three tiers: an empty
+    // list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is
+    // `human-reviewed`.
+    //
+    // Derived rather than stored, so a record has one place saying who checked it and cannot carry a
+    // tier that disagrees with its own list. A type whose export declares no `verified` field answers
+    // null, which is the absence every other key already spells.
+    //
+    // A field written as one mapping is the one-entry case, which is how `Value` reads a list as well.
+    // `list` refuses that shape and `validate` reports it, so reading it the same way here keeps the
+    // two accounts of one field together.
+    private static string? Trust(Doc doc, ExportSpec export)
+    {
+        if (!export.Fields.Contains(VerifiedField, StringComparer.Ordinal)) return null;
+
+        IEnumerable<YamlNode> entries = doc.FrontNode(VerifiedField) switch
+        {
+            YamlSequenceNode seq => seq.Children,
+            YamlMappingNode map => [map],
+            _ => []
+        };
+
+        var verified = false;
+        foreach (var item in entries)
+        {
+            if (item is not YamlMappingNode entry) continue;
+            if (Yaml.Get(entry, ActorKey) is not YamlScalarNode { Value: { Length: > 0 } actor }) continue;
+
+            if (actor.StartsWith(HumanPrefix, StringComparison.Ordinal)) return "human-reviewed";
+            verified = true;
+        }
+
+        return verified ? "machine-confirmed" : "unverified";
     }
 
     // A section's own words, with its link reference definitions taken out.

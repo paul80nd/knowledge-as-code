@@ -49,6 +49,25 @@ answers needs, and a schema naming any of them would hold every future report to
 Its records carry `sections` as an empty object, and its manifest entry does the same. A consumer reads the frontmatter,
 then follows the record's own `links` for the body.
 
+### `trust` is derived from `verified`
+
+A record carries one key its type never declares. `trust` says how far the record has been taken on trust, and the
+exporter writes it from the `verified` field: an empty list is `unverified`, agents alone are `machine-confirmed`, and
+one `human:` actor is `human-reviewed`. Only that prefix reads as a person, and each type declaring the field holds
+its entries to a person or a producer so that nothing else can reach the tier. Those three tiers are the
+[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s, and a type
+gains them by taking that specification's field name.
+
+It is derived rather than stored so that a record has one place saying who checked it. A stored tier is a second
+account of the same fact, and the two go out of step the day somebody adds a line to the list.
+
+A type whose `fields:` does not name `verified` carries `trust` as `null`, which is the absence every other key already
+spells. `reports` is the one type that answers with a tier today.
+
+A record a consumer inherited carries no `trust` key at all, because it is copied from the producer's export byte for
+byte and a producer older than this key wrote none. So a consumer tests for the key on an inherited record, the way it
+already tests for `shortcode`.
+
 ### What each fidelity carries
 
 Take a policy whose `Exceptions` section runs to two paragraphs. Its record carries one of these three.

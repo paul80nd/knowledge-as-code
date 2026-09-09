@@ -1,6 +1,7 @@
 {
   "type": "glossary",
   "path": "glossary/local.md",
+  "trust": null,
   "fields": {
     "id": "gls-local",
     "title": "Local",

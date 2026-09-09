@@ -62,7 +62,7 @@ public static class ValueChecks
         if (node is YamlMappingNode)
         {
             // The fix quotes the key as the file writes it. `name` is the path where an object entry
-            // recursed in, and `confirmed.at` is a line nobody can type.
+            // recursed in, and `verified.at` is a line nobody can type.
             var key = name[(name.LastIndexOf('.') + 1)..];
             report.Err(new CheckId(kind == DocKind.Template ? "template-fields" : "bare-key"),
                 $"'{name}' is read as a YAML mapping rather than a value. A placeholder that opens "

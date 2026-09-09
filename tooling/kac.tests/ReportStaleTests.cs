@@ -47,7 +47,7 @@ public class ReportStaleTests
         var text = "---\nid: rpt-coverage\ntype: report\ntier: descriptive\nstatus: active\n"
                    + "owner: human:alex.doe\ngenerated: { at: 2026-09-08T10:00:00Z, by: kac/0.24.0 }\n"
                    + $"sources:\n  - {{ resource: eng, version: \"{answersFor}\" }}\n"
-                   + "confirmed:\n  - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }\n---\n\n"
+                   + "verified:\n  - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }\n---\n\n"
                    + "# Clause coverage\n\n`Report: rpt-coverage` `ACTIVE`\n";
 
         var schema = new Schema

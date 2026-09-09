@@ -1,6 +1,7 @@
 {
   "type": "glossary",
   "path": "glossary/estate.md",
+  "trust": null,
   "fields": {
     "id": "gls-estate",
     "title": "Estate",

@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 29,
+    "validated": 31,
     "templates": 18,
     "skipped": 0,
-    "errors": 16,
+    "errors": 18,
     "warnings": 17,
     "infos": 0
   },
@@ -203,6 +203,20 @@
       "severity": "error",
       "check": "generated-by-a-producer",
       "message": "`generated.by` names a producer and its version together, as `kac/0.24.0`. A bare name leaves a reader unable to tell which version of the producer wrote this."
+    },
+    {
+      "file": "reports/verified-by-a-post.md",
+      "line": 1,
+      "severity": "error",
+      "check": "verified-by-a-known-actor",
+      "message": "A verification here names neither a person nor a producer. Write `human:alex.doe`, or name an agent the way the tool names itself, as `coverage-sweep/1.2.0`. `role:` is refused: a post cannot read an answer, and the person who did read it stays named after the post changes hands. The prefix is what the exported `trust` tier reads, so a value outside these two forms weighs the answer wrongly rather than only reading oddly."
+    },
+    {
+      "file": "reports/verified-by-its-own-producer.md",
+      "line": 11,
+      "severity": "error",
+      "check": "self-verification",
+      "message": "'kac/0.24.0' generated this report and verifies it here. A run confirming its own output tells a reader nothing. Delete the entry, or have somebody else read the verdicts and name them."
     },
     {
       "file": "runbooks/database-connections-exhausted.md",

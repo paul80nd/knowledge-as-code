@@ -30,7 +30,7 @@ A report is **not**:
 * **Raw output.** If nobody has answered the judgement cells, it is a command's output and belongs in a pipe.
 
 **A report is stale the moment the corpus moves.** That is the price of keeping it, and the frontmatter is what keeps
-the price visible: `sources` names the version of each corpus the report answers for, and `confirmed` names who last
+the price visible: `sources` names the version of each corpus the report answers for, and `verified` names who last
 checked that it still holds.
 
 ## Metadata
@@ -47,7 +47,7 @@ checked that it still holds.
 | `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `generated` * | object                   | What produced the content and when.                                                 |
 | `sources` *   | list                     | Every corpus this report answers for, and the version of each it is true of.        |
-| `confirmed` * | list                     | Every confirmation this report has had, oldest first, one line each.                |
+| `verified` *  | list                     | Every verification this report has had, oldest first, one line each.                |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -60,10 +60,10 @@ checked that it still holds.
 2. Copy [`_template.md`](reports/_template.md) to a kebab-case filename naming the question, and paste the output under
    the frontmatter.
 3. Answer every judgement cell. A cell you cannot answer is a question for whoever owns the area, not a blank.
-4. Set `sources` to the `content-version` of each corpus the run read, and add a `confirmed` entry naming yourself.
+4. Set `sources` to the `content-version` of each corpus the run read, and add a `verified` entry naming yourself.
 
 **Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
-moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `confirmed` alone.
+moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `verified` alone.
 A version the corpus moved for something else is no reason to claim a fresh read.
 
 ## What CI checks
@@ -99,7 +99,8 @@ A version the corpus moved for something else is no reason to claim a fresh read
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `report-stale`              | warning | Each corpus a report answers for is at the version the report names.                                            |
-| `confirmed-by-a-person`     | error   | A confirmation names the person who made it.                                                                    |
+| `self-verification`         | error   | A report's `verified` list does not name the producer that `generated.by` names.                                |
+| `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
 | `generated-by-a-producer`   | error   | `generated.by` names what produced the content, in OKF's `<producer>/<version>` form.                           |
 
 <!-- END GENERATED: checks-reports -->

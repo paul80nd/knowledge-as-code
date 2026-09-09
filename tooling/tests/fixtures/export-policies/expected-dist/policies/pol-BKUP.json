@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/bkup-recoverability.md",
+  "trust": null,
   "fields": {
     "id": "pol-BKUP",
     "title": "Every store we run can be brought back",

@@ -840,9 +840,9 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(fields:
         [
-            ("confirmed", new FieldSpec
+            ("verified", new FieldSpec
             {
-                Name = "confirmed", Type = "list", Of = "object",
+                Name = "verified", Type = "list", Of = "object",
                 Entry = [new FieldSpec { Name = "at", Type = "moment" }]
             })
         ])));

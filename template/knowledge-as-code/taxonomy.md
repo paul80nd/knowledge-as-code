@@ -25,7 +25,7 @@ column for your row.
 | A description of what a deployable component is and does             | [Services](../services.md)         |
 | A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
 | A narrative of how something works or why it's shaped that way       | [Explanations](../explanations.md) |
-| A problem with a known, confirmed resolution                         | [Fixes](../fixes.md)               |
+| A problem with a known, verified resolution                          | [Fixes](../fixes.md)               |
 | A rule people must follow when building                              | [Standards](../standards.md)       |
 | A step-by-step for a planned task                                    | [Processes](../processes.md)       |
 | A step-by-step for when something is broken                          | [Runbooks](../runbooks.md)         |
@@ -73,7 +73,7 @@ honest state and the number worth watching.
 is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
 nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
 
-**[Fixes](../fixes.md).** A problem with a confirmed resolution, promoted from a discovery once a human has verified it.
+**[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
 It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
 on trust.
 
@@ -295,9 +295,9 @@ the ADR and change the rule.
 **Deviation vs Policy.** The policy is the commitment. The deviation is one named, dated departure from it, and it
 changes nothing the policy says. A departure everyone takes is a policy that needs rewriting.
 
-**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been confirmed by a human
-and carries authority. Never write straight to a fix from a session. Capture the discovery and let promotion do the
-work.
+**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody
+who checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery and let
+promotion do the work.
 
 **Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
