@@ -49,7 +49,7 @@ elsewhere in the management system:
 | Area                                                     | Owned by                                  |
 |----------------------------------------------------------|-------------------------------------------|
 | Physical controls: `A.7.1`–`A.7.14` entire               | Facilities                                |
-| People controls: `A.6.1`–`A.6.7`                         | HR, with the security awareness programme |
+| People controls: `A.6.1`–`A.6.7`, since `A.6.8` is ours  | HR, with the security awareness programme |
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
