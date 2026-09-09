@@ -43,9 +43,11 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 
 ### What a move of each stamp means
 
-- `content-version` **MUST** be read as a statement about the records rather than about the file.
+- `content-version` **MUST** be read as a statement about what the corpus publishes rather than about the file.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
   and its patch a change of wording.
+- `content-version` **MUST** move where a skill the bundle carries changes what it tells a reader to do. `kac bundle`
+  stamps the plugin with it, so a reader takes a changed skill only where it moves.
 - A change to a field's accepted value format, its name, or its removal **MUST** move `content-version`'s major where
   the change reaches a record whose type names that field under `export:`, and its patch where it reaches none.
 - A corpus below 1.0.0 **MUST** move its minor where the rule above asks for its major, because reaching 1.0.0 is a
@@ -141,8 +143,8 @@ restore keeps a folder already holding 0.10.0.
 
 ## Conformance checklist
 
-- [ ] Every corpus whose records changed has moved its `content-version`, at the major, minor or patch that change
-      earns.
+- [ ] Every corpus whose records changed, or whose bundled skills changed what they tell a reader to do, has moved
+      its `content-version`, at the major, minor or patch that change earns.
 - [ ] Where a field's value format or name changed, or a field was added or removed, the `export:` block of every type
       it reached decided which component that corpus moved.
 - [ ] `<Version>`, where it moved, names a change to `kac` a user can observe, and did not move because a record
@@ -199,6 +201,7 @@ nothing reads `<Version>` against what a user of `kac` can observe.
 
 ## Changelog
 
+- 2026-09-09: `content-version` moves where a bundled skill changes what it tells a reader to do.
 - 2026-09-09: a field's value format, name, addition or removal moves the component the `export:` block decides.
 - 2026-09-07: initial version, taking the stamp semantics and the consumer-repointing rules from [std-CI].
 

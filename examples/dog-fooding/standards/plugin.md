@@ -31,9 +31,8 @@ depart from a clause that is right.
 
 ### A skill assumes only that the session can read a file
 
-- A skill **MUST** state the property a search needs, and not the name of the tool that performs it.
-- A skill **MUST** give a session holding no such tool a route to the same answer.
-- A skill **MUST** say where that route behaves differently on Windows.
+- A skill **MUST** leave the choice of search tool to the session.
+- A skill **MUST** name the file or the directory holding the answer.
 - A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine.
 - A skill **MUST NOT** require a network call to answer from the export.
 - A skill **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}`.
@@ -158,9 +157,9 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 
 ```
 ✅ Good
-**Search the file with something that needs no shell.** A Grep tool is the one to reach for, and it runs on
-every platform. Where the session holds none, `grep -i` reads a line-delimited JSON file on Linux and on
-macOS. A Windows reader may have neither `grep` nor the same quoting, so say which route you took.
+**Read the `obligations` of every hit before you use it.** The field names in this file are ordinary English
+words: `title`, `obligations`, `record`, `status`, `type`. A search for one of those matches every line in
+the file.
 
 | Field         | Type                     | What it holds                                             |
 |---------------|--------------------------|-----------------------------------------------------------|
@@ -178,10 +177,11 @@ macOS. A Windows reader may have neither `grep` nor the same quoting, so say whi
 | `seeAlso`     | the rules this one points at, or absent where it points at none |
 ```
 
-The avoided instruction names a tool the session may not hold, and leaves a reader who holds none choosing between
-ignoring it and stopping. The avoided table states no type at all, so a reader iterates a string of markdown one
-character at a time. It says a field with no value is absent, and a reader testing for the key finds it every time and
-reads nothing.
+The good instruction names no tool. It says where the answer lives and what will trip a reader who takes a match for
+an answer, and it leaves how to search to the session, which knows what it holds. The avoided instruction names a tool
+the session may not hold, and leaves a reader who holds none choosing between ignoring it and stopping. The avoided
+table states no type at all, so a reader iterates a string of markdown one character at a time. It says a field with no
+value is absent, and a reader testing for the key finds it every time and reads nothing.
 
 A finding is the whole of an issue body. `dsc-rider-holds-the-editorconfig` was written straight into the corpus,
 and this is the finding it would have arrived as.
@@ -366,6 +366,7 @@ this build never opens, so both shapes hold for as long as the skills writing th
 
 ## Changelog
 
+- 2026-09-09: a skill leaves the choice of search tool to the session, and names no tool of its own.
 - 2026-09-08: added the shape a deviation request carries, and the boundary that keeps one inside its own
   organisation.
 - 2026-09-08: a component reading no export says whether it supports the others, so one serving the reader
