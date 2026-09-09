@@ -13,7 +13,6 @@ verified:
 tags: [ coverage, frameworks ]
 ---
 
-
 # Framework coverage
 
 `Report: rpt-framework-coverage` `ACTIVE`
@@ -34,9 +33,9 @@ That matters differently by standing. `Obliged` names something outside us: an a
 commitment implementing it, and a control with no commitment left is a finding. `Inspiration` binds nothing, so a
 reference losing its last citation is provenance we stopped claiming rather than coverage we lost.
 
-**A count of one does not always mean one clause is at risk.** Six UK GDPR articles, `Art.15` through `Art.21`, are
-each reached by `pol-DATA.RIGHTS` alone, because one capability answers all of them: being able to find, export,
-correct, delete and restrict one person's data. Losing that clause would drop six articles at once rather than one,
+**A count of one does not always mean one clause is at risk.** Six of the rights a data subject holds, from access to
+objection, are each reached by `pol-DATA.RIGHTS` alone, because one capability answers all six: being able to find,
+export, correct, delete and restrict one person's data. Losing that clause would drop six articles at once rather than one,
 which is a sharper risk than the column can show.
 
 The `Note` column carries the judgement the columns beside it cannot hold: what [frameworks.md](../frameworks.md) says
