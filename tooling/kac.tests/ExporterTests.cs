@@ -407,6 +407,45 @@ public class ExporterTests
         Assert.Equal(["A.8.24", "A.8.8"], entry.GetProperty("clauses").EnumerateArray().Select(e => e.GetString()));
     }
 
+    // A field declared as an object rather than a list of them. `generated` on a report is the case:
+    // one event, so a consumer reads the keys directly rather than through an array of one.
+    [Fact]
+    public void An_object_field_carries_the_keys_its_type_declares()
+    {
+        var fields = Fields(ObjectType(), "gls-one", "generated:\n  at: 2026-09-08T10:00:00Z\n  by: kac/0.16.0");
+
+        var generated = fields.GetProperty("generated");
+        Assert.Equal("2026-09-08T10:00:00Z", generated.GetProperty("at").GetString());
+        Assert.Equal("kac/0.16.0", generated.GetProperty("by").GetString());
+    }
+
+    // An object nobody wrote is the same absence every other field spells `null`, rather than an object
+    // whose every key is null.
+    [Fact]
+    public void An_object_field_left_out_is_null_and_never_an_object_of_nulls()
+    {
+        var fields = Fields(ObjectType(), "gls-one", "generated:");
+
+        Assert.Equal(JsonValueKind.Null, fields.GetProperty("generated").ValueKind);
+    }
+
+    // A type may declare no sections at all, which `reports` does because each report's headings follow the
+    // question it answers. The key is still written, so a consumer reads one shape across every record file.
+    [Fact]
+    public void A_type_declaring_no_sections_writes_an_empty_sections_object()
+    {
+        var text = "---\nid: gls-one\ntier: descriptive\nstatus: draft\nowner: someone\n"
+                   + "review-by: \"2030-01-01\"\ntags: [ search ]\n---\n\n"
+                   + "# gls-one\n\n## Scope\n\nWhat this admits.\n\n## Terms\n\n### Alpha\n\nA.\n";
+
+        var record = JsonDocument.Parse(
+                Single(Plan(Corpus(SectionlessType(), ("gls-one", text))), "glossary/gls-one.json").Content)
+            .RootElement;
+
+        Assert.Equal(JsonValueKind.Object, record.GetProperty("sections").ValueKind);
+        Assert.Empty(record.GetProperty("sections").EnumerateObject());
+    }
+
     [Fact]
     public void A_record_carries_the_fields_and_sections_its_type_declares_and_no_others()
     {
@@ -1338,6 +1377,47 @@ public class ExporterTests
         [
             new FieldSpec { Name = "framework", Type = "string" },
             new FieldSpec { Name = "clauses", Type = "list", Of = "string" }
+        ]
+    });
+
+    // A glossary exporting a field and no section, which is the shape `reports` declares.
+    private static TypeSchema SectionlessType()
+    {
+        var type = FieldType("tags", new FieldSpec { Name = "tags", Type = "list", Of = "string" });
+        var export = type.DeclaredExport;
+
+        return new TypeSchema
+        {
+            Key = type.Key,
+            TypeName = type.TypeName,
+            Folder = type.Folder,
+            Page = type.Page,
+            IdPrefix = type.IdPrefix,
+            RequiredSections = type.RequiredSections,
+            Parts = type.Parts,
+            Fields = type.Fields,
+            Export = new ExportSpec
+            {
+                Version = export.Version,
+                Fields = export.Fields,
+                Sections = [],
+                Parts = export.Parts,
+                PartsDeclared = export.PartsDeclared,
+                Line = export.Line
+            }
+        };
+    }
+
+    // A glossary declaring the shape a report's `generated` has: one object, its keys taken from a shape
+    // rather than from a list of entries.
+    private static TypeSchema ObjectType() => FieldType("generated", new FieldSpec
+    {
+        Name = "generated",
+        Type = "object",
+        Entry =
+        [
+            new FieldSpec { Name = "at", Type = "timestamp" },
+            new FieldSpec { Name = "by", Type = "string" }
         ]
     });
 

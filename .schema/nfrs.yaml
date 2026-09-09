@@ -75,6 +75,33 @@ sections:
   required: [Target, How it is measured, If it is breached]
   optional: [Current actual, Constraints, Related]
 
+export:
+  version: 1
+  fields: [id, title, status, applies-to, target, measured-by, constrained-by, review-by, tags]
+  sections:
+    Target: full
+    How it is measured: full
+    If it is breached: full
+    Constraints: full
+  notes: >
+    An NFR is normative, and a reader may act on it without opening anything else. So the three required
+    sections travel whole: what the target is, how anybody tells whether it was met, and what happens
+    where it is missed.
+
+    `target` and `measured-by` say as fields what those sections say at length. The fields are what a
+    consumer filters and sorts on, and the sections are what somebody building against the number reads.
+
+    `Constraints` travels because a target read without what limits it reads as a stronger promise than
+    the estate made. It carries the limits in words, which is what a consumer can act on: `constrained-by`
+    names integrations, and an integration travels nowhere.
+
+    `Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export
+    carries no way to say how old it has since become. A consumer acting on a stale figure is worse off
+    than one who fetched the record.
+
+    `applies-to` names what the target binds. A service in it resolves for a consumer holding the
+    catalogue, and a capability does not, because capabilities travel nowhere.
+
 index:
   columns: [id, title, applies-to, target, status, review-by]
   sort: id

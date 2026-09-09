@@ -28,6 +28,27 @@ A fourth key, **`frameworks:`**, names a second flat file rather than selecting 
 
 A corpus that adopted no exporting type still writes a manifest, with an empty type list.
 
+### Every type travels, and a type held back says why
+
+A type declaring no `export:` block reaches nobody but a reader browsing the repository it sits in, which is a different
+product from the one this framework describes. So declaring the block is part of writing a type. A type deliberately
+held back carries the reason in its own schema file, where the next person to ask the question is already reading.
+
+Which types travel is therefore a fact about `.schema/` rather than about the tool. A corpus adopting a type receives
+what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
+
+`discoveries` is the type held back, and `.schema/discoveries.yaml` carries the reason. A few others declare no block
+either, and none of those is a decision: no corpus in this repository holds a record of one, so nothing here could prove
+the block was written right.
+
+### A type declaring no sections travels as frontmatter
+
+A type may declare no sections at all. `reports` is that case, because `kac report` writes the headings the question it
+answers needs, and a schema naming any of them would hold every future report to the shape of the first two.
+
+Its records carry `sections` as an empty object, and its manifest entry does the same. A consumer reads the frontmatter,
+then follows the record's own `links` for the body.
+
 ### What each fidelity carries
 
 Take a policy whose `Exceptions` section runs to two paragraphs. Its record carries one of these three.
@@ -74,6 +95,8 @@ and compares the whole tree file by file, so a corpus running the tool without t
 proved.
 
 ## The tree
+
+A corpus that adopted three types, and consumes a corpus holding standards of its own:
 
 ```text
 .dist/export/
@@ -208,9 +231,8 @@ shortcode onto, so a producer choosing its own words for them is stamped correct
 A consumer assuming a spelling would read a producer's parts as empty wherever that producer chose different words, and
 every citation into them would fail for a reason nothing states. `seeAlsoKey` is null for a type declaring no such key.
 
-A type keeping no parts writes all five as null, beside `parts` at zero, and its records travel one JSON apiece.
-`processes` and `controls` are both that case, and the entry says so rather than leaving a consumer to infer it from a
-file that is not there:
+A type keeping no parts writes all five as null, beside `parts` at zero, and its records travel one JSON apiece. Most
+types are that case, and the entry says so rather than leaving a consumer to infer it from a file that is not there:
 
 ```json
 "type": "processes", "shapeVersion": 1, "records": 7, "parts": 0, "dir": "processes",
