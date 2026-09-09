@@ -3,10 +3,7 @@ id: prc-{{slug}}
 type: process
 tier: procedural
 status: draft
-applies-to:
 last-rehearsed:
-rehearsal-frequency:
-requires-access:
 owner:
 tags: [ a, b ]
 ---
@@ -27,6 +24,10 @@ and how it is reviewed. What is below is only what a process adds to that.
   is a hypothesis. Update it when someone actually follows the process end to end, not when someone edits the document.
 * **`rehearsal-frequency`**: `per-release` · `quarterly` · `annual`.
 * **`requires-access`**: the systems or roles needed.
+
+**Fields this template leaves out.** `applies-to`, `rehearsal-frequency` and `requires-access` are optional, so the
+frontmatter above carries none of them. Add a key where you have a value for it, and leave it out where you do not. [The
+type page](../processes.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

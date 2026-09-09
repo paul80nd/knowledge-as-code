@@ -6,7 +6,6 @@ status: active
 applies-to: [ svc-kac ]
 severity: sev3
 last-rehearsed: "never"
-rehearsal-frequency:
 requires-access:
   - A .NET 10 SDK and a checkout of this repository
 owner: human:paul.law

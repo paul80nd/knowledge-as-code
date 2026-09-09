@@ -8,7 +8,6 @@ platform: dotnet-api
 criticality: critical
 depends-on:
   - svc-lending
-data-stores:
 owner: human:robin.hale
 facets: [ internal ]
 tags: [ holdings ]

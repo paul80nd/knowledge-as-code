@@ -5,9 +5,6 @@ tier: descriptive
 status: approved
 versions: 1.x
 licence: BSD-2-Clause
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ markdown, parser ]
 ---

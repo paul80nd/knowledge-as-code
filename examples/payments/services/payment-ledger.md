@@ -6,8 +6,6 @@ status: live
 repo: payment-ledger
 platform: dotnet-api
 criticality: critical
-depends-on:
-data-stores:
 owner: human:paul.law
 tags: [ audit, ledger, reconciliation ]
 ---

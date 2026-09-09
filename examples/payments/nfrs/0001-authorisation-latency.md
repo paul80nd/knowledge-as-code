@@ -7,7 +7,6 @@ applies-to:
   - svc-payment-api
 target: p95 under 800ms, measured over a rolling hour
 measured-by: Application Insights, on the server duration of POST /authorisations
-constrained-by:
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ checkout, latency, psp ]

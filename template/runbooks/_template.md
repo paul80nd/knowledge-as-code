@@ -3,11 +3,7 @@ id: rbk-{{slug}}
 type: runbook
 tier: procedural
 status: draft
-applies-to:
-severity:
 last-rehearsed:
-rehearsal-frequency:
-requires-access:
 owner:
 tags: [ a, b ]
 ---
@@ -30,6 +26,10 @@ Title this document for the **failure**, not the fix. A reader at 2am searches f
   rather than during it.
 * **`requires-access`**: name every system and role the fix needs. Discovering you lack a permission mid-incident is its
   own outage.
+
+**Fields this template leaves out.** `applies-to`, `severity`, `rehearsal-frequency` and `requires-access` are optional,
+so the frontmatter above carries none of them. Add a key where you have a value for it, and leave it out where you do
+not. [The type page](../runbooks.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

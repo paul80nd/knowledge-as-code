@@ -6,8 +6,6 @@ status: live
 repo: knowledge-as-code
 platform: static
 criticality: important
-depends-on:
-data-stores:
 owner: human:paul.law
 facets: [ public ]
 tags: [ claude-code, plugin ]

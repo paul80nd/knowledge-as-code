@@ -6,8 +6,6 @@ status: live
 repo: search
 platform: typescript
 criticality: important
-depends-on:
-data-stores:
 owner: human:mira.okonjo
 facets: [ event-driven, internal ]
 tags: [ discovery, indexing ]

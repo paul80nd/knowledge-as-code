@@ -7,7 +7,6 @@ owner:
 generated:
 sources:
 confirmed:
-tags:
 ---
 
 # {{Title}}
@@ -32,6 +31,10 @@ beside them.
   version by hand where a corpus moved and nothing in this report changed, and add a `confirmed` entry saying you
   checked.
 * **`confirmed`**: every confirmation this report has had, oldest first. A report nobody confirmed is output.
+
+**Fields this template leaves out.** `tags` is optional, so the frontmatter above does not carry it. Add a key where you
+have a value for it, and leave it out where you do not. [The type page](../reports.md#metadata) says what each one
+holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

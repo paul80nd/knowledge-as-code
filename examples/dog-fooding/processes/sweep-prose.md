@@ -4,8 +4,6 @@ type: process
 tier: procedural
 status: active
 last-rehearsed: "never"
-rehearsal-frequency:
-requires-access:
 owner: human:paul.law
 tags: [ agents, prose ]
 ---

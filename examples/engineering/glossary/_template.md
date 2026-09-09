@@ -4,9 +4,7 @@ type: glossary
 tier: descriptive
 status: draft
 owner:
-narrows:
 review-by:
-tags:
 ---
 
 # {{Context}}
@@ -27,6 +25,10 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 * **`narrows`**: the more general glossary this one sits inside. Left empty by the corpus-wide glossary, which nothing
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.
+
+**Fields this template leaves out.** `tags` and `narrows` are optional, so the frontmatter above carries none of them.
+Add a key where you have a value for it, and leave it out where you do not. [The type page](../glossary.md#metadata)
+says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

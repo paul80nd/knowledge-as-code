@@ -6,10 +6,7 @@ status: live
 repo: knowledge-as-code
 platform: static
 criticality: important
-depends-on:
-data-stores:
 owner: human:paul.law
-facets:
 tags: [ github-packages, nuget ]
 ---
 
@@ -75,8 +72,8 @@ A restored package is not the consumer's to keep. `kac restore` writes what it t
 * **`criticality` sits level with [svc-marketplace], though nothing here restores from the feed.** `examples/payments`
   and `examples/dog-fooding` name `../engineering/.dist/package` as their `source:`, so every build in this repository
   reads a folder. The reader who meets a broken feed is outside, which puts the grade above `supporting`.
-* **`facets` is bare because a package has no inbound surface of its own.** The registry serving it is GitHub's, and
-  the same reasoning leaves [svc-kac] bare on nuget.org.
+* **`facets` is left out because a package has no inbound surface of its own.** The registry serving it is GitHub's,
+  and the same reasoning leaves [svc-kac] without one on nuget.org.
 * **A corpus joins the publishing matrix by name.** `publish-corpus.yml` lists all four in its `paths:` filter and in
   both matrices. Declaring a shortcode is what lets the pack succeed once it is listed, because a pack is refused
   without one.

@@ -8,7 +8,6 @@ detected-on:
 duration:
 severity:
 affected:
-prompted:
 owner:
 tags: [ a, b ]
 ---
@@ -30,6 +29,10 @@ and how it is reviewed. What is below is only what a postmortem adds to that.
 * **`prompted`**: the ADRs, runbooks, NFRs and FAQs this incident caused to be written.
 * **`status`**: `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
   published**. A materially different understanding becomes a new document that references this one.
+
+**Fields this template leaves out.** `prompted` is optional, so the frontmatter above does not carry it. Add a key where
+you have a value for it, and leave it out where you do not. [The type page](../postmortems.md#metadata) says what each
+one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
