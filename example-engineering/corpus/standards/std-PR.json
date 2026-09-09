@@ -1,6 +1,7 @@
 {
   "type": "standards",
   "path": "standards/common/pull-requests.md",
+  "trust": null,
   "fields": {
     "id": "std-PR",
     "title": "A pull request carries its reasoning and one accountable approval",
@@ -32,6 +33,6 @@
     "Conformance checklist": "- [ ] Branch policy requires a pull request, and requires at least one approval.\n- [ ] Branch policy excludes the author from satisfying that approval, whether that author is a person or an agent.\n- [ ] Auto-merge, where it is enabled, cannot complete a pull request that no other identity has approved.\n- [ ] The description links a work item.\n- [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.\n- [ ] The reviewer states what they checked, rather than restating what the change claims."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/standards/common/pull-requests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/standards/common/pull-requests.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "standards",
   "path": "standards/common/testing.md",
+  "trust": null,
   "fields": {
     "id": "std-TEST",
     "title": "A test runs at the lowest level that can catch the fault",
@@ -29,6 +30,6 @@
     "Conformance checklist": "- [ ] The suite that runs on every push finishes in under ten minutes.\n- [ ] Running the suite twice in a row, and in a different order, gives the same result.\n- [ ] No test in the repository calls a hostname outside the build agent.\n- [ ] The build publishes a coverage figure, and the threshold it fails at is in the repository.\n- [ ] Every fixture in the repository is generated or masked, confirmed by reading it.\n- [ ] No test configuration names a production connection string or endpoint."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/standards/common/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/standards/common/testing.md"
   }
 }

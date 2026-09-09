@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/delivery/cost-cost-as-an-nfr.md",
+  "trust": null,
   "fields": {
     "id": "pol-COST",
     "title": "Cost is a non-functional requirement",
@@ -14,6 +15,6 @@
     "Exceptions": "Deliberate over-provisioning for resilience, performance headroom or a known event departs from `SIZING`. It is a cost decision rather than an oversight, and it is recorded as a deviation under [pol-DEVI], owned by whoever made it. Short-lived experiments are exempt from right-sizing but not from ownership or from being cleaned up."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/security/vurm-vulnerability-remediation.md",
+  "trust": null,
   "fields": {
     "id": "pol-VURM",
     "title": "Vulnerabilities are found, prioritised and closed to a timeframe",
@@ -14,6 +15,6 @@
     "Exceptions": "A finding may be accepted, rather than fixed, where it is not exploitable in our context or where the fix carries greater risk than the finding. That acceptance is recorded under [pol-DEVI] with a named risk owner and a review date."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/policies/security/vurm-vulnerability-remediation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/policies/security/vurm-vulnerability-remediation.md"
   }
 }

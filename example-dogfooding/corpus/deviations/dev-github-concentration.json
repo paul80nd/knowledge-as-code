@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/github-concentration.md",
+  "trust": null,
   "fields": {
     "id": "dev-github-concentration",
     "title": "Everything here runs on GitHub, and nothing says how it would leave",
@@ -32,6 +33,6 @@
     "Scope": "The repository, its issues, its workflows, the documentation site and the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/github-concentration.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/github-concentration.md"
   }
 }

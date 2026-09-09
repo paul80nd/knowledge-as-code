@@ -1,6 +1,7 @@
 {
   "type": "tools",
   "path": "tools/lint/actionlint.md",
+  "trust": null,
   "fields": {
     "id": "tol-actionlint",
     "title": "actionlint",
@@ -24,6 +25,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/tools/lint/actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/tools/lint/actionlint.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "services",
   "path": "services/reservations.md",
+  "trust": null,
   "fields": {
     "id": "svc-reservations",
     "title": "Reservations",
@@ -27,6 +28,6 @@
     "Data": "**None of its own** (verified): the infrastructure declares no database, no storage account and no connection string for this app service. The single durable write is the provisional hold created in [svc-lending], which owns it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/library/services/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/library/services/reservations.md"
   }
 }

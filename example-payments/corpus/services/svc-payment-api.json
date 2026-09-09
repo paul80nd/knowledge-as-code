@@ -1,6 +1,7 @@
 {
   "type": "services",
   "path": "services/payment-api.md",
+  "trust": null,
   "fields": {
     "id": "svc-payment-api",
     "title": "Payment API",
@@ -26,6 +27,6 @@
     "Data": "None of its own, and that is the point. It holds a card token for the life of one request and stores nothing. What happened to a payment is [svc-payment-ledger]'s."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/payments/services/payment-api.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/security/accs-access-by-identity.md",
+  "trust": null,
   "fields": {
     "id": "pol-ACCS",
     "title": "Access is by individual identity, on least privilege",
@@ -14,6 +15,6 @@
     "Exceptions": "Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/policies/security/accs-access-by-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/policies/security/accs-access-by-identity.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "processes",
   "path": "processes/pull-request.md",
+  "trust": null,
   "fields": {
     "id": "prc-pull-request",
     "title": "Open a pull request",
@@ -23,6 +24,6 @@
     "Prerequisites": "* A branch off `main`, carrying the change as commits.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --`, which is the tool this branch holds."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/processes/pull-request.md"
   }
 }

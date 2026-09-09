@@ -1,6 +1,7 @@
 {
   "type": "controls",
   "path": "controls/0006-changelog-tests.md",
+  "trust": null,
   "fields": {
     "id": "ctl-0006",
     "title": "A version carries the changelog section its release publishes",
@@ -26,6 +27,6 @@
     "Coverage and gaps": "The reach is the section for the version in front of it. Whether that section describes the change is a reviewer's judgement, and the release it becomes is where a reader would notice.\n\nNothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already holds passes here, and its publish finishes green having published nothing."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/generated-output-ungoverned.md",
+  "trust": null,
   "fields": {
     "id": "dev-generated-output-ungoverned",
     "title": "No standard governs what kac generate computes",
@@ -33,6 +34,6 @@
     "Scope": "Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, and the export `kac export` writes."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/generated-output-ungoverned.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/generated-output-ungoverned.md"
   }
 }

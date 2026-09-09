@@ -1,6 +1,7 @@
 {
   "type": "services",
   "path": "services/marketplace.md",
+  "trust": null,
   "fields": {
     "id": "svc-marketplace",
     "title": "Plugin marketplace",
@@ -25,6 +26,6 @@
     "Data": "Each plugin carries a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so an agent that finds a record wrong raises an issue rather than editing one."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/services/marketplace.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/services/marketplace.md"
   }
 }

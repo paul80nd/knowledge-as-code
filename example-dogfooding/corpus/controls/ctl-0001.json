@@ -1,6 +1,7 @@
 {
   "type": "controls",
   "path": "controls/0001-merge-gate.md",
+  "trust": null,
   "fields": {
     "id": "ctl-0001",
     "title": "A merge waits for the validate job",
@@ -26,6 +27,6 @@
     "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository holds it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] holds the other half of the same promise: whether `validate` still reaches every job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/controls/0001-merge-gate.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0001-merge-gate.md"
   }
 }

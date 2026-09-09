@@ -4,9 +4,9 @@
   "shortcode": "pay",
   "contentVersion": "0.9.0",
   "mechanismVersion": 11,
-  "commit": "a749e0a98a03707f5166755d6d727718c8f6b6e9",
+  "commit": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c",
   "dirty": false,
-  "generatedAt": "2026-09-09T12:03:03Z",
+  "generatedAt": "2026-09-09T13:01:01Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "a749e0a98a03707f5166755d6d727718c8f6b6e9"
+    "ref": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.12.1",
+      "contentVersion": "0.13.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "a749e0a98a03707f5166755d6d727718c8f6b6e9"
+        "ref": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c"
       }
     }
   ],
@@ -147,7 +147,7 @@
     },
     {
       "type": "reports",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 1,
       "parts": 0,
       "dir": "reports",

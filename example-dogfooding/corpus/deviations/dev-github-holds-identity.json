@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/github-holds-identity.md",
+  "trust": null,
   "fields": {
     "id": "dev-github-holds-identity",
     "title": "GitHub decides who anybody here is",
@@ -32,6 +33,6 @@
     "Scope": "Every account and token reaching the repository, its packages, its pages and its marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/github-holds-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/github-holds-identity.md"
   }
 }

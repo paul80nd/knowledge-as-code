@@ -1,6 +1,7 @@
 {
   "type": "controls",
   "path": "controls/0004-yamllint.md",
+  "trust": null,
   "fields": {
     "id": "ctl-0004",
     "title": "Every YAML file passes yamllint",
@@ -25,6 +26,6 @@
     "Coverage and gaps": "yamllint reads shape. Whether a value is correct, whether a comment gives a reason, and whether that reason is true are all a reviewer's to judge.\n\nThe other four rules [std-CONFIG] states have no check of their own. Dependabot moves the pin in\n`.github/requirements.txt`, so a yamllint release arrives as a pull request."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/controls/0004-yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0004-yamllint.md"
   }
 }

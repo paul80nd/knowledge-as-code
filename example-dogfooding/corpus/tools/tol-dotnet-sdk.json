@@ -1,6 +1,7 @@
 {
   "type": "tools",
   "path": "tools/build/dotnet-sdk.md",
+  "trust": null,
   "fields": {
     "id": "tol-dotnet-sdk",
     "title": ".NET SDK",
@@ -23,6 +24,6 @@
     "Where it is used": "* [svc-kac] is built, tested and packed with it.\n\nThe docs site and the marketplace branch are built by other toolchains, so neither carries it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/tools/build/dotnet-sdk.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/tools/build/dotnet-sdk.md"
   }
 }

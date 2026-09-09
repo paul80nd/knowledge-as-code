@@ -1,6 +1,7 @@
 {
   "type": "nfrs",
   "path": "nfrs/0001-authorisation-latency.md",
+  "trust": null,
   "fields": {
     "id": "nfr-0001",
     "title": "A customer waits under a second to hear whether their card was accepted",
@@ -25,6 +26,6 @@
     "Constraints": "The PSP's contract promises a p95 of 500ms on its authorisation endpoint. The 800ms here is that plus what [svc-payment-api] spends on either side of the call, so a faster target needs a conversation with the PSP rather than a change to our code. The `integrations` type is not adopted here, so `constrained-by` carries no id and the cap is recorded in these words."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/payments/nfrs/0001-authorisation-latency.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/payments/nfrs/0001-authorisation-latency.md"
   }
 }

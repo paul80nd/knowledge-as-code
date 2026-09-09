@@ -1,6 +1,7 @@
 {
   "type": "controls",
   "path": "controls/0003-actionlint.md",
+  "trust": null,
   "fields": {
     "id": "ctl-0003",
     "title": "Every workflow passes actionlint",
@@ -26,6 +27,6 @@
     "Coverage and gaps": "actionlint reports nothing about a permission a job holds and never uses, a credential written in the wrong place, or\n`.azuredevops/kac.yml` drifting from its GitHub twin. A reviewer is what catches those three, and they are most of\nwhat [std-CI] states: its permission, credential, pinning and publishing rules have no check here.\n\nactionlint ships no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/controls/0003-actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0003-actionlint.md"
   }
 }

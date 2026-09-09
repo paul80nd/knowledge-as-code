@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/deviations-unstated.md",
+  "trust": null,
   "fields": {
     "id": "dev-deviations-unstated",
     "title": "No standard here says how a deviation is handled",
@@ -33,6 +34,6 @@
     "Scope": "Every record in this folder, and every departure this repository takes from a clause `../engineering/` states."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/deviations-unstated.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/deviations-unstated.md"
   }
 }

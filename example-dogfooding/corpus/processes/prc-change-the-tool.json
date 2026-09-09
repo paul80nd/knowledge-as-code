@@ -1,6 +1,7 @@
 {
   "type": "processes",
   "path": "processes/change-the-tool.md",
+  "trust": null,
   "fields": {
     "id": "prc-change-the-tool",
     "title": "Change the tool",
@@ -20,6 +21,6 @@
     "Prerequisites": "* The tool guidance at `tooling/CLAUDE.md`, which carries the test for expression against class and the two rule\n  interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` rather than a `kac` on your path.\n* The fact table in `docs/design/expressions.md`, which says what an expression can already reach."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/processes/change-the-tool.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/processes/change-the-tool.md"
   }
 }

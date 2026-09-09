@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/governance/know-knowledge-is-written-down.md",
+  "trust": null,
   "fields": {
     "id": "pol-KNOW",
     "title": "Knowledge is written down and kept with what it describes",
@@ -14,6 +15,6 @@
     "Exceptions": "None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to write down what is needed does not vary."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/policies/governance/know-knowledge-is-written-down.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/policies/governance/know-knowledge-is-written-down.md"
   }
 }

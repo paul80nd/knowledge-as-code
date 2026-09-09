@@ -1,6 +1,7 @@
 {
   "type": "services",
   "path": "services/notices.md",
+  "trust": null,
   "fields": {
     "id": "svc-notices",
     "title": "Notices",
@@ -27,6 +28,6 @@
     "Data": "* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.\n* A blob container carrying message bodies too large to travel on the bus.\n\nBoth are in the shared storage account."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/library/services/notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/library/services/notices.md"
   }
 }

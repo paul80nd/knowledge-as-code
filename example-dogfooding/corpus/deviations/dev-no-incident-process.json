@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/no-incident-process.md",
+  "trust": null,
   "fields": {
     "id": "dev-no-incident-process",
     "title": "There is no incident process, so everything is handled informally",
@@ -36,6 +37,6 @@
     "Scope": "`kac` as published to nuget.org, the documentation site, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/no-incident-process.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/no-incident-process.md"
   }
 }

@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/operations/obsv-observability.md",
+  "trust": null,
   "fields": {
     "id": "pol-OBSV",
     "title": "Systems are observable and actively monitored",
@@ -14,6 +15,6 @@
     "Exceptions": "The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too unimportant to monitor is a system to question the existence of."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/policies/operations/obsv-observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/policies/operations/obsv-observability.md"
   }
 }

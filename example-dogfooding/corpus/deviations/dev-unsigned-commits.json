@@ -1,6 +1,7 @@
 {
   "type": "deviations",
   "path": "deviations/unsigned-commits.md",
+  "trust": null,
   "fields": {
     "id": "dev-unsigned-commits",
     "title": "Commits are not signed",
@@ -27,6 +28,6 @@
     "Scope": "Every commit in this repository, on `main` and on every branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/deviations/unsigned-commits.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/deviations/unsigned-commits.md"
   }
 }

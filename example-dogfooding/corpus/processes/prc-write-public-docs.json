@@ -1,6 +1,7 @@
 {
   "type": "processes",
   "path": "processes/write-public-docs.md",
+  "trust": null,
   "fields": {
     "id": "prc-write-public-docs",
     "title": "Write the public documentation",
@@ -21,6 +22,6 @@
     "Prerequisites": "* `technical-writing` and `writing-the-docs`, loaded in that order.\n* The source for every fact the page states, so each one can be checked.\n* The .NET SDK, where you touched the package page."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/processes/write-public-docs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/processes/write-public-docs.md"
   }
 }

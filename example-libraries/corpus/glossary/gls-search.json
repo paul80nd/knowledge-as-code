@@ -1,6 +1,7 @@
 {
   "type": "glossary",
   "path": "glossary/search.md",
+  "trust": null,
   "fields": {
     "id": "gls-search",
     "title": "Search",
@@ -15,6 +16,6 @@
     "Scope": "How a reader's words reach a catalogue record: what is typed, what is matched, and what orders the results. The things being searched for belong to the whole estate, so they sit in its glossary rather than here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/library/glossary/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/library/glossary/search.md"
   }
 }
