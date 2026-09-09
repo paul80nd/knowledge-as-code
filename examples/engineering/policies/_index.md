@@ -29,16 +29,16 @@
 |----------|-----------------------------------------------------------------------------------|--------|-------------------------|------------|
 | pol-INCR | [Incidents are managed and learned from](operations/incr-incident-response.md)    | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-OBSV | [Systems are observable and actively monitored](operations/obsv-observability.md) | draft  | ISO 27001:2022          | 2027-08-04 |
-| pol-RECV | [Services and data are recoverable](operations/recv-recoverability.md)            | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-RECV | [Services and data are recoverable](operations/recv-recoverability.md)            | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 
 ## Security
 
 | ID       | Title                                                                                                          | Status | Aligns with             | Review by  |
 |----------|----------------------------------------------------------------------------------------------------------------|--------|-------------------------|------------|
-| pol-ACCS | [Access is by individual identity, on least privilege](security/accs-access-by-identity.md)                    | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-ACCS | [Access is by individual identity, on least privilege](security/accs-access-by-identity.md)                    | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-DATA | [Data is protected according to its sensitivity](security/data-data-protection.md)                             | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-ENVS | [Environments are separated, and production stays in production](security/envs-environment-separation.md)      | draft  | ISO 27001:2022          | 2027-08-04 |
-| pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-are-never-embedded.md)                             | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-SECD | [Security is designed in, not added on](security/secd-security-by-design.md)                                   | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-TRUS | [We ship only components we know and trust](security/trus-trusted-components.md)                               | draft  | ISO 27001:2022          | 2027-08-04 |

@@ -6,6 +6,8 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.3, A.5.15, A.5.16, A.5.18, A.8.2, A.8.3, A.8.4, A.8.5, A.8.18 ]
+  - framework: UK GDPR
+    clauses: [ Art.5(1)(f) ]
 review-by: "2027-08-04"
 owner: human:paul.law
 tags: [ access-control, identity, least-privilege ]
@@ -33,21 +35,21 @@ author, not its approver, so `DUTIES` still requires a second person to release 
 
 ## Clauses
 
-| Id        | Clause                                                                                                                | Alignment                                                                                    |
-|-----------|-----------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| `NAMED`   | **MUST** grant access to a named individual or a distinctly identified workload, never to a shared persona            | [ISO 27001:2022].A.5.16                                                                      |
-| `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3, [ISO 27001:2022].A.8.4, [OWASP ASVS 4.0].V4 |
-| `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it. See [pol-AGNT]         | [ISO 27001:2022].A.5.3                                                                       |
-| `AUTHN`   | **MUST** require more than one factor wherever a person authenticates to our systems, our code or our data            | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2                                                  |
-| `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it reaches, before it is made                | [ISO 27001:2022].A.5.18                                                                      |
-| `RECERT`  | **MUST** review access rights on a defined cycle, confirming each grant is still needed                               | [ISO 27001:2022].A.5.18                                                                      |
-| `REVOKE`  | **MUST** remove access promptly when a role changes or a person leaves                                                | [ISO 27001:2022].A.5.18                                                                      |
-| `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2                                                                       |
-| `UTILS`   | **MUST** limit tooling that can override a system's own controls to people whose work requires it                     | [ISO 27001:2022].A.8.18                                                                      |
-| `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost. See [pol-EVER]       | [ISO 27001:2022].A.8.2                                                                       |
-| `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                        | [ISO 27001:2022].A.8.2                                                                       |
-| `DIRECT`  | SHOULD hold identity in a single directory, so that access granted or removed once takes effect everywhere            | [ISO 27001:2022].A.5.16                                                                      |
-| `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes | [ISO 27001:2022].A.8.2                                                                       |
+| Id        | Clause                                                                                                                | Alignment                                                                                                           |
+|-----------|-----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `NAMED`   | **MUST** grant access to a named individual or a distinctly identified workload, never to a shared persona            | [ISO 27001:2022].A.5.16                                                                                             |
+| `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3, [ISO 27001:2022].A.8.4, [OWASP ASVS 4.0].V4, [UK GDPR].Art.5(1)(f) |
+| `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it. See [pol-AGNT]         | [ISO 27001:2022].A.5.3                                                                                              |
+| `AUTHN`   | **MUST** require more than one factor wherever a person authenticates to our systems, our code or our data            | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2                                                                         |
+| `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it reaches, before it is made                | [ISO 27001:2022].A.5.18                                                                                             |
+| `RECERT`  | **MUST** review access rights on a defined cycle, confirming each grant is still needed                               | [ISO 27001:2022].A.5.18                                                                                             |
+| `REVOKE`  | **MUST** remove access promptly when a role changes or a person leaves                                                | [ISO 27001:2022].A.5.18                                                                                             |
+| `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2                                                                                              |
+| `UTILS`   | **MUST** limit tooling that can override a system's own controls to people whose work requires it                     | [ISO 27001:2022].A.8.18                                                                                             |
+| `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost. See [pol-EVER]       | [ISO 27001:2022].A.8.2                                                                                              |
+| `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                        | [ISO 27001:2022].A.8.2                                                                                              |
+| `DIRECT`  | SHOULD hold identity in a single directory, so that access granted or removed once takes effect everywhere            | [ISO 27001:2022].A.5.16                                                                                             |
+| `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes | [ISO 27001:2022].A.8.2                                                                                              |
 
 ## Exceptions
 
@@ -59,4 +61,5 @@ and someone reviews that use afterwards. Any other departure requires a recorded
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-EVER]: ../delivery/ever-everything-in-version-control.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
+[UK GDPR]: ../../frameworks.md#uk-gdpr
 [OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs
