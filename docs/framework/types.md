@@ -30,7 +30,7 @@ Living and owned. Edited in place, with a changelog.
 | **Controls**   | `controls/`   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
 | **Deviations** | `deviations/` | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed        |
 | **NFRs**       | `nfrs/`       | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |
-| **FAQs**       | `faqs/`       | A problem with a confirmed fix, promoted from a discovery once a human has verified it                |
+| **Fixes**      | `fixes/`      | A problem with a confirmed resolution, promoted from a discovery once a human has verified it         |
 
 ## Descriptive
 
@@ -68,7 +68,7 @@ Perishable. Unreviewed until promoted, and it expires by default.
 
 Several of these sit close enough to be confused, and the schema declares the distinction on the type it belongs to. An
 ADR is the decision and its reasoning, frozen. A standard is the rule that results, kept current. A process is read at
-a desk, and a runbook at three in the morning. A discovery is cheap and unverified, and an FAQ is what it becomes once
+a desk, and a runbook at three in the morning. A discovery is cheap and unverified, and a fix is what it becomes once
 somebody confirms it.
 
 A corpus's own taxonomy page renders every such pair it holds both sides of. The distinctions you meet are therefore

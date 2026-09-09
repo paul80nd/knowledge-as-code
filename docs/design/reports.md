@@ -59,14 +59,14 @@ extended names the agent the same way the tool names itself.
 `sources` names each corpus the report answers for. OKF carries no version on a source, and this one does: the fact a
 reader needs is which content the report is true of, and `content-version` is what the corpus already keeps.
 
-`confirmed` is this corpus's own field, shared with the FAQ type, and it holds every confirmation the report has had.
+`confirmed` is this corpus's own field, shared with the fix type, and it holds every confirmation the report has had.
 
 ### The version moves without a regeneration
 
 A reviewer edits `sources[].version` by hand. That is the point of it.
 
 A corpus moves its `content-version` whenever what it knows changes, and most of those changes touch no report. Adding
-an FAQ does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds
+a fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds
 raises the version and adds a `confirmed` entry, rather than running the report again and re-reading every verdict.
 
 `validate` warns where the version falls behind the corpus. The gap between `generated.at` and the newest `confirmed`

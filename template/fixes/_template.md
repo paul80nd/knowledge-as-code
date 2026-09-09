@@ -1,6 +1,6 @@
 ---
-id: faq-{{nnnn}}
-type: faq
+id: fix-{{nnnn}}
+type: fix
 tier: normative
 status: active
 symptom-keywords:
@@ -12,12 +12,12 @@ tags: [ a, b ]
 
 # {{The symptom, as you would encounter it}}
 
-`FAQ: faq-{{nnnn}}` `ACTIVE`
+`Fix: fix-{{nnnn}}` `ACTIVE`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
 **Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what an FAQ adds to that.
+and how it is reviewed. What is below is only what a fix adds to that.
 
 **Frontmatter**
 
@@ -25,7 +25,7 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`confirmed`**: one line per confirmation, oldest first. An FAQ nobody confirmed is a
+* **`confirmed`**: one line per confirmation, oldest first. A fix nobody confirmed is a
   [discovery](../discoveries.md).
 
   ```yaml
@@ -41,7 +41,7 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 **Fields this template leaves out.** `applies-to` and `promoted-from` are optional, so the frontmatter above carries
 none of them. Add a key where you have a value for it, and leave it out where you do not. [The type
-page](../faqs.md#metadata) says what each one holds.
+page](../fixes.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
@@ -57,7 +57,7 @@ what someone will paste into a search.
 
 What is actually happening underneath, in a sentence or two.
 
-## Fix
+## Resolution
 
 1. {{Step.}}
 2. {{Step.}}
@@ -69,13 +69,13 @@ How to confirm it worked.
 The underlying reason, briefly. Enough that a reader can recognise the next variant of this problem rather than only
 this exact instance.
 
-_(If the honest answer is "because of a design flaw nobody has fixed", say so and link to where that is tracked. An FAQ
+_(If the honest answer is "because of a design flaw nobody has fixed", say so and link to where that is tracked. A fix
 is not a place to park unowned work, but it is a fine place to point at it.)_
 
 ## How we found it
 
-The diagnostic route, not just the destination. This is often more reusable than the fix itself: the next problem will
-be different, but the way in may be the same.
+The diagnostic route, not just the destination. This is often more reusable than the resolution itself: the next problem
+will be different, but the way in may be the same.
 
 ## Related
 

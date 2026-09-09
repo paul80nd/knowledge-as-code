@@ -46,7 +46,7 @@ public sealed class FieldSpec
         Entry?.FirstOrDefault(k => string.Equals(k.Name, name, StringComparison.Ordinal));
 
     // The folders an id in this field may belong to. A list, because several fields point at more than
-    // one type: a discovery is promoted to a FAQ or a standard. A scalar `ref:` is the one-entry case
+    // one type: a discovery is promoted to a fix or a standard. A scalar `ref:` is the one-entry case
     // rather than a separate shape.
     public IReadOnlyList<string> Refs { get; init; } = [];
 
@@ -74,7 +74,7 @@ public sealed class FieldSpec
     public IReadOnlyList<string> AllowLiteral { get; init; } = [];
 
     // The floor on a list field's length, where the schema sets one. A field whose whole purpose is to be
-    // over-filled, such as a FAQ's search keywords, has nothing else holding it to more than one entry.
+    // over-filled, such as a fix's search keywords, has nothing else holding it to more than one entry.
     public int? MinItems { get; init; }
 
     // The floor on how many records of the type carry a given value, where the schema sets one. A field

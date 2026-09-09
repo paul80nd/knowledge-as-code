@@ -840,7 +840,7 @@ public static class Validator
     private static string Named(IReadOnlyList<string> refs) =>
         string.Join(", ", refs.Select(r => $"'{r}'"));
 
-    // The types named as a reader would say them aloud ("a Service", "an FAQ or a Standard") in the
+    // The types named as a reader would say them aloud ("a Service", "an ADR or a Standard") in the
     // order the declaration lists them. That is the order whoever wrote it chose.
     private static string OneOf(List<TypeSchema> types)
     {

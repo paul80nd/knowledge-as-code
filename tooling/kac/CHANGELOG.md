@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **The `faq` type is now `fix`, and its `Fix` section is now `Resolution`.** A record lands in `fixes/` as
+  `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and
+  Resolution. The type and its third section no longer share a word. A corpus that adopted `faqs` renames the
+  folder, the page, each record's `type:` and `id:`, and the `Fix` heading. Take it with
+  `kac update --from <template>`.
+
 ## 0.25.0 - 2026-09-09
 
 ### Added

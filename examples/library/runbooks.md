@@ -25,8 +25,8 @@ the recovery has never been run, while there is still time to run it.
 
 Two other types sit close enough to confuse:
 
-* **FAQ**: a known problem with a known fix, usually one or two steps, no urgency. If it needs a diagnosis tree and an
-  escalation path, it is a runbook.
+* **Fix**: a known problem with a known resolution, usually one or two steps, no urgency. If it needs a diagnosis tree
+  and an escalation path, it is a runbook.
 * **Postmortem**: an account of an incident that happened. A runbook gives instructions for an incident that has not
   happened yet. A good postmortem frequently produces a runbook.
 

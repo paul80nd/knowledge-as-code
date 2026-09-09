@@ -68,7 +68,7 @@ Capture has to be nearly free or it does not happen. Nobody writes up a gotcha i
 and two reviewers. So you record an observation with no review at all and mark it unverified, and it expires on its own
 if nothing promotes it.
 
-The rigour lives at promotion. A discovery becomes an FAQ when a human confirms it, and the FAQ carries provenance back
+The rigour lives at promotion. A discovery becomes a fix when a human confirms it, and the fix carries provenance back
 to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
 
 ## Trust is what a corpus is for

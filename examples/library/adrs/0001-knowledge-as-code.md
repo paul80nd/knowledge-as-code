@@ -48,7 +48,7 @@ We treat knowledge as code:
 * **We group types into tiers by behaviour**: decided, normative, descriptive, procedural and observed. The tier decides
   the review bar, the validation rules and the lifecycle.
 * **Observed knowledge is cheap to capture and deliberate to promote.** A session records an unverified discovery with
-  no review. The discovery expires by default. Promotion to an FAQ or a standard needs a human.
+  no review. The discovery expires by default. Promotion to a fix or a standard needs a human.
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships. It generates
   indexes, reports and an always-loaded rules digest.
 * **The mechanism is separable from the content.** Tooling is provided via managed packages. Schema and skills are part

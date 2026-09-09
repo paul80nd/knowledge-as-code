@@ -17,7 +17,7 @@ understand the same incident differently, we write another one.
 The ADR log records what we intended. A postmortem records what the estate did instead, and the gap between the two is
 what we did not know on the day we decided.
 
-One incident routinely produces an [FAQ](faqs.md), a [runbook](runbooks.md), a revised [NFR](nfrs.md) and sometimes an
+One incident routinely produces a [fix](fixes.md), a [runbook](runbooks.md), a revised [NFR](nfrs.md) and sometimes an
 [ADR](adrs.md). A root cause that recurs shows up in no single account, so read several postmortems together when you
 want to know what keeps breaking.
 
@@ -31,8 +31,8 @@ Boundaries:
 
 * **[Runbook](runbooks.md)**: instructions for an incident that might happen. A postmortem is an account of one that
   did.
-* **[FAQ](faqs.md)**: a reusable fix, which an incident often produces as a by-product. A postmortem is the account of
-  the incident itself.
+* **[Fix](fixes.md)**: a reusable resolution, which an incident often produces as a by-product. A postmortem is the
+  account of the incident itself.
 * **A work item.** Actions belong in ADO. The postmortem links to them and tracks nothing itself.
 
 Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a

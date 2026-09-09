@@ -1,6 +1,6 @@
 ---
-id: faq-0001
-type: faq
+id: fix-0001
+type: fix
 tier: normative
 status: active
 symptom-keywords: [holds, notifications, timeout]
@@ -12,7 +12,7 @@ owner: human:alex.doe
 
 # Two symptoms filed as one page
 
-`FAQ: faq-0001` `ACTIVE`
+`Fix: fix-0001` `ACTIVE`
 
 ## Symptom
 
@@ -26,7 +26,7 @@ Notification emails arrive twice.
 
 Two unrelated faults, written up together because whoever met them met them on the same afternoon.
 
-## Fix
+## Resolution
 
 Split the page. Someone arriving with the second symptom matches on the first heading, reads a cause that is
 not theirs, and leaves — which is the failure `one-problem-per-document` reports.

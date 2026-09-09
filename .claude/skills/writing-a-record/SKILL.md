@@ -219,7 +219,7 @@ first thing a corpus deletes. Where a link genuinely belongs there, put it in a 
 writes those from the types the corpus adopted, so they can only name pages that exist. `framework-names-types` holds
 you to this.
 
-**Everywhere else, naming a type is not linking to one.** A record may say a discovery becomes an FAQ where the corpus
+**Everywhere else, naming a type is not linking to one.** A record may say a discovery becomes a fix where the corpus
 adopted neither. Those are the ordinary nouns, and naming one promises no page. What adoption governs is the link. A
 corpus that never adopted standards has no `standards.md` to open, so name the type and leave the label off.
 
@@ -253,7 +253,7 @@ here. A reader who stops halfway through *Restart the consumer if the queue dept
 
 The rule has to be checkable, and a reader has to tell obligation from commentary at a glance.
 
-**The clause rules bind the types that carry clauses**, which are policies and standards. A control, an NFR and an FAQ
+**The clause rules bind the types that carry clauses**, which are policies and standards. A control, an NFR and a fix
 are normative for a different reason: a reader may act on them without checking. Those three hold no clause table, no
 Purpose and no RFC 2119 keywords. Every normative type answers to one sentence: state the thing a reader will act on,
 make it checkable, and keep the argument out of the part that gets quoted.
@@ -324,7 +324,7 @@ Capture stays nearly free, or it does not happen.
   padded.
 * **Say what you do not know.** *Unconfirmed*, *seen once* and *may be specific to this branch* are honest here, and are
   what the confidence level carries.
-* **Do not tidy a discovery into authority.** A discovery reading like an FAQ is trusted like one. Promotion is where
+* **Do not tidy a discovery into authority.** A discovery reading like a fix is trusted like one. Promotion is where
   certainty is added.
 
 ## A type root page
