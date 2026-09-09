@@ -62,7 +62,7 @@ It is derived rather than stored so that a record has one place saying who check
 account of the same fact, and the two go out of step the day somebody adds a line to the list.
 
 A type whose `fields:` does not name `verified` carries `trust` as `null`, which is the absence every other key already
-spells. `reports` is the one type that answers with a tier today.
+spells. A type answering with a tier names the field, as `reports` and `fixes` do.
 
 A record a consumer inherited carries no `trust` key at all, because it is copied from the producer's export byte for
 byte and a producer older than this key wrote none. So a consumer tests for the key on an inherited record, the way it

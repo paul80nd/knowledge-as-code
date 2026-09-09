@@ -2,19 +2,19 @@
 id: dsc-rider-holds-the-editorconfig
 type: discovery
 tier: observed
-status: open
+status: promoted
 source: session
-confidence: unverified
+confidence: confirmed
 expires: "2026-12-07"
 provenance: An agent session editing .editorconfig from a shell while the developer had the repository open in Rider.
-promoted-to:
+promoted-to: fix-0002
 owner: human:paul.law
 tags: [ editorconfig, formatting, rider ]
 ---
 
 # Rider does not re-read an .editorconfig changed from a shell
 
-`Discovery: dsc-rider-holds-the-editorconfig` `OPEN`
+`Discovery: dsc-rider-holds-the-editorconfig` `PROMOTED`
 
 ## What I saw
 

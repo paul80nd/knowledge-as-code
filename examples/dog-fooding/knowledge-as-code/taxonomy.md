@@ -21,6 +21,7 @@ column for your row.
 | A check that proves a rule is being followed                 | [Controls](../controls.md)       |
 | A departure from a rule that somebody agreed to              | [Deviations](../deviations.md)   |
 | A description of what a deployable component is and does     | [Services](../services.md)       |
+| A problem with a known, verified resolution                  | [Fixes](../fixes.md)             |
 | A rule people must follow when building                      | [Standards](../standards.md)     |
 | A step-by-step for a planned task                            | [Processes](../processes.md)     |
 | A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)       |
@@ -50,6 +51,10 @@ honest state and the number worth watching.
 **[Deviations](../deviations.md).** A knowing departure from a rule, the person who accepted the risk, and the date it
 is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
 nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
+
+**[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
+It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
+on trust.
 
 **[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
 checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
@@ -105,6 +110,7 @@ graph LR;
   t_controls[Control];
   t_deviations[Deviation];
   t_discoveries[Discovery];
+  t_fixes[Fix];
   t_processes[Process];
   t_reports[Report];
   t_runbooks[Runbook];
@@ -116,7 +122,9 @@ graph LR;
   t_deviations -- applies-to --> t_services;
   t_deviations -- departs-from --> t_standards;
   t_discoveries -- applies-to --> t_services;
+  t_discoveries -- promoted-to --> t_fixes;
   t_discoveries -- promoted-to --> t_standards;
+  t_fixes -- applies-to --> t_services;
   t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
@@ -131,22 +139,24 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From      | Field           | Points at | Answered by     |
-|-----------|-----------------|-----------|-----------------|
-| Control   | `applies-to`    | Service   |                 |
-| Control   | `verifies`      | Standard  | `verified-by`   |
-| Deviation | `applies-to`    | Service   |                 |
-| Deviation | `departs-from`  | Standard  |                 |
-| Discovery | `applies-to`    | Service   |                 |
-| Discovery | `promoted-to`   | Standard  | `promoted-from` |
-| Process   | `applies-to`    | Service   |                 |
-| Runbook   | `applies-to`    | Service   |                 |
-| Service   | `depends-on`    | Service   |                 |
-| Standard  | `applies-to`    | Service   |                 |
-| Standard  | `promoted-from` | Discovery | `promoted-to`   |
-| Standard  | `verified-by`   | Control   | `verifies`      |
-| Tool      | `replaces`      | Tool      | `successor`     |
-| Tool      | `successor`     | Tool      | `replaces`      |
+| From      | Field           | Points at     | Answered by     |
+|-----------|-----------------|---------------|-----------------|
+| Control   | `applies-to`    | Service       |                 |
+| Control   | `verifies`      | Standard      | `verified-by`   |
+| Deviation | `applies-to`    | Service       |                 |
+| Deviation | `departs-from`  | Standard      |                 |
+| Discovery | `applies-to`    | Service       |                 |
+| Discovery | `promoted-to`   | Fix, Standard | `promoted-from` |
+| Fix       | `applies-to`    | Service       |                 |
+| Fix       | `promoted-from` | Discovery     | `promoted-to`   |
+| Process   | `applies-to`    | Service       |                 |
+| Runbook   | `applies-to`    | Service       |                 |
+| Service   | `depends-on`    | Service       |                 |
+| Standard  | `applies-to`    | Service       |                 |
+| Standard  | `promoted-from` | Discovery     | `promoted-to`   |
+| Standard  | `verified-by`   | Control       | `verifies`      |
+| Tool      | `replaces`      | Tool          | `successor`     |
+| Tool      | `successor`     | Tool          | `replaces`      |
 
 <!-- END GENERATED: types-edges -->
 
@@ -169,6 +179,10 @@ The calls that are actually close. Each is written once, on the type its heading
 this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
+
+**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody
+who checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery and let
+promotion do the work.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
