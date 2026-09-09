@@ -7,7 +7,7 @@ Problems we have hit before, with the resolution that worked.
 ## What is a fix?
 
 One document per problem: the symptom as you would encounter it, what causes it, how to resolve it, and why it happens.
-*"The golden suite passes here and fails in CI."* *"An `.editorconfig` change does nothing in the IDE."* Somebody has
+*"pip cannot find the version the lint job pins."* *"An `.editorconfig` change does nothing in the IDE."* Somebody has
 verified it, so a fix carries authority.
 
 Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
@@ -17,8 +17,8 @@ Add one when an investigation cost real time. You will hit the same problem agai
 The same problems come back, and the next person to hit one pays the cost again. A fix turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-Most of the searching here is done by an agent session that arrives with the symptom and nothing else. A session
-finding the answer here stops working out again what the last one already worked out.
+An agent session does most of the searching here, and it arrives with the symptom and nothing else. Every session that
+finds its answer here is one that does not spend an hour reaching the answer the last one already had.
 
 A [discovery](discoveries.md) can also become a fix. A human promotes it once the observation proves real, general and
 current.
@@ -42,7 +42,7 @@ Other boundaries:
 * **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. A fix has one known
   resolution.
 * **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the
-  resolution is a rule, and that needs an ADR first.
+  resolution is a rule, and it belongs in a standard.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 

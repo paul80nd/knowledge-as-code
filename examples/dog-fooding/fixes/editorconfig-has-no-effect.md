@@ -3,7 +3,7 @@ id: fix-0002
 type: fix
 tier: normative
 status: active
-symptom-keywords: [editorconfig, formatting, ide, indent, reformat, rider, wrapping]
+symptom-keywords: [ editorconfig, formatting, ide, indent, reformat, rider, wrapping ]
 promoted-from: dsc-rider-holds-the-editorconfig
 verified:
   - { at: 2026-09-09T08:14:30Z, by: human:paul.law }
@@ -38,9 +38,9 @@ reformat rewraps the paragraph in front of you.
 
 ## Why it happens
 
-This repository holds three `.editorconfig` files. The four corpora under `examples/` read the one at the root,
-`tooling/` layers a second over it, and `template/` holds its own with `root = true`. So a key that looks inert may be
-overridden rather than unread, and the control above is what separates the two.
+An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` layers a
+second over it, and `template/` holds its own with `root = true`. So a key that looks inert may be overridden rather
+than unread, and the control above is what separates the two.
 
 ## How we found it
 

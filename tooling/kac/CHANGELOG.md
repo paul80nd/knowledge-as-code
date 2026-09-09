@@ -20,10 +20,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **A fix travels in an export.** `.schema/fixes.yaml` declares an `export:` block at shape 1, so `kac export` writes
-  one JSON per fix. It carries `symptom-keywords`, which is what a lookup searches on, the Symptom, Cause and
-  Resolution sections whole, and `verified`, from which the record's `trust` is derived. `How we found it` and `Why it
-  happens` stay behind, and so do `promoted-from`, which names a discovery that travels nowhere, and `owner`. Take it
-  with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
+  one JSON per fix. The record carries `symptom-keywords`, which is what a lookup searches on. It carries Symptom,
+  Cause, Resolution and Why it happens whole, because a resolution read without its cause is half an answer. It carries
+  `verified`, and the record's `trust` is derived from that list. Three things stay behind: `How we found it`, which
+  names commands a consumer cannot run, `promoted-from`, which names a discovery that travels nowhere, and `owner`.
+  Take the schema with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
 
 - **Every record can say where its content came from.** `.schema/_universal.yaml` declares `sources`, an optional list
   whose entries carry a required `resource`. A `resource` names something a reader can follow, such as a ticket URL, or

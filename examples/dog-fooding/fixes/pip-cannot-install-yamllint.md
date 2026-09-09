@@ -3,8 +3,8 @@ id: fix-0001
 type: fix
 tier: normative
 status: active
-symptom-keywords: [actionlint, brew, homebrew, linters, macos, "no matching distribution found", pip, python,
-  requirements.txt, yamllint]
+symptom-keywords: [ actionlint, brew, homebrew, linters, macos, "no matching distribution found", pip, python,
+  requirements.txt, yamllint ]
 verified:
   - { at: 2026-09-02T17:27:31Z, by: human:paul.law }
 review-by: "2027-03-09"

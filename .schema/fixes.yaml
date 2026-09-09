@@ -80,8 +80,8 @@ fields:
 
       How far the fix has been taken on trust is read off this list. Entries by agents alone leave it
       machine-confirmed, and one `human:` entry makes it human-reviewed. Those are the Open Knowledge
-      Format's words for the same reading, and `trust` carries it into the export. The exporter derives
-      that tier from this list, so a record has one place saying who checked.
+      Format's words for the same reading, and the export carries it as `trust`.
+      <https://paul80nd.github.io/knowledge-as-code/design/export/> says why that tier is derived here.
 
       A verification is an actor doing something at a point in time, so the keys come from the `event`
       shape rather than being written out here. `verified` is the name the Open Knowledge Format gives
@@ -103,6 +103,7 @@ export:
     Symptom: full
     Cause: full
     Resolution: full
+    Why it happens: full
   notes: >
     `symptom-keywords` is what a lookup searches on, and a fix arriving without it is one nobody
     downstream can find. It is the field this type exports for.
@@ -110,6 +111,9 @@ export:
     `Symptom`, `Cause` and `Resolution` travel whole. A reader matches on the symptom, checks the cause
     is theirs, and then acts, so a resolution arriving without its cause is half an answer. All three
     are short, because this type holds one problem per document.
+
+    `Why it happens` travels with them. `Cause` says what went wrong this time and `Why it happens` says
+    what class it belongs to, so a consumer meeting the next variant of the symptom recognises it as one.
 
     `verified` travels, and `trust` is derived from it. This type exists to say how far a resolution has
     been taken on trust, and a consumer that cannot read the list weighs the answer by its wording
@@ -123,9 +127,9 @@ export:
     id to the record.
 
     `How we found it` stays behind, for the reason `Rationale and provenance` stays behind on a
-    standard. It carries the diagnostic route, and a consumer acts on the answer. `Why it happens` goes
-    with it. That section points at the design flaw the resolution works around, and at wherever the
-    flaw is tracked, which is a place only this estate can open.
+    standard. The route is often the more reusable half of a fix, and it is reusable to somebody who can
+    run the commands it names. A consumer holds a copy and can run none of them, so the answer is what
+    reaches them and the record is a fetch away through `links.human`.
 
     `promoted-from` names a discovery, and a discovery travels nowhere, so the id would reach nothing.
 

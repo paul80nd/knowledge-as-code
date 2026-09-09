@@ -3,7 +3,7 @@ id: fix-0001
 type: fix
 tier: normative
 status: active
-symptom-keywords: [authorisation, "double charge", duplicate, idempotency-key, pending, retry, statement, timeout]
+symptom-keywords: [ authorisation, "double charge", duplicate, idempotency-key, pending, retry, statement, timeout ]
 applies-to:
   - svc-payment-api
   - svc-payment-ledger
@@ -40,9 +40,9 @@ attempt satisfies the header without satisfying the rule.
 
 ## Why it happens
 
-A UUID per attempt is what an HTTP client library generates by default, and the request passes every check the API
-makes: the header is present, well formed and unique. The rule that a retry reuses its key lives in the caller, and
-nothing on this side can tell a retry from a new order.
+A fresh UUID is the obvious way to fill a header that asks for a unique value, and the request then passes every check
+the API makes: the header is present, well formed and unique. The rule that a retry reuses its key lives in the caller,
+and nothing on this side can tell a retry from a new order.
 
 ## How we found it
 

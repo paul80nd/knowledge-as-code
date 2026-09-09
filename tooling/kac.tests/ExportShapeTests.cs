@@ -44,6 +44,7 @@ public class ExportShapeTests
             Symptom: full
             Cause: full
             Resolution: full
+            Why it happens: full
         glossary@1
           fields: id, title, narrows, status, review-by, tags
           sections:

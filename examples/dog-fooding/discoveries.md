@@ -32,8 +32,7 @@ deliberate: an observation nobody has needed in three months was probably situat
 Boundaries:
 
 * **[A fix](fixes.md)**: checked, general, current, and carries authority. That is what a discovery here is promoted
-  *to* where the answer is a resolution. Where the answer is a rule people must follow, it becomes a standard instead,
-  and that needs an ADR first.
+  *to* where the answer is a resolution. Where the answer is a rule people must follow, it becomes a standard instead.
 * **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
 * **A bug.** Where something is broken and somebody should fix it, raise a GitHub issue. A discovery records something
   surprising, and claims nothing is owed.
@@ -76,7 +75,7 @@ observation here names a real file, a real run or a real command.
 ## Promoting a discovery
 
 The one flow that crosses tiers. A resolution somebody has checked becomes a [fix](fixes.md). A rule people must follow
-becomes a standard instead, and that needs an ADR first.
+becomes a standard instead.
 
 1. A human confirms the observation is real, general, and still current.
 2. Write the record it becomes.
