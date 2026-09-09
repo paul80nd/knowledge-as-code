@@ -81,13 +81,16 @@ fields:
     min-items: 1
     description: Every corpus this report answers for, and the version of each it is true of.
     notes: >
+      The universal `sources` is optional and carries a `resource` alone. A report is a walk over a corpus,
+      so the field is required here, and each entry adds the `version` it answers for.
+
+      `resource` names the corpus rather than a path, because a consumer reads the same report about a
+      corpus it holds under a shortcode of its own.
+
       A reviewer moves a `version` by hand, and that is the point of it. A corpus moves its
       `content-version` whenever what it knows changes, and most of those changes touch no report.
       Somebody who has checked that the report still holds raises the version and adds a `verified`
       entry, rather than running it again and re-reading every verdict.
-
-      `resource` names the corpus rather than a path, because a consumer reads the same report about a
-      corpus it holds under a shortcode of its own.
 
   verified:
     required: true

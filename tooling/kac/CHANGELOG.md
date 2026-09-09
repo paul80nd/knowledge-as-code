@@ -17,6 +17,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **Every record can say where its content came from.** `.schema/_universal.yaml` declares `sources`, an optional list
+  whose entries carry a required `resource`. A `resource` names something a reader can follow, such as a ticket URL, or
+  the population the content was drawn from. `sources` is what the [Open Knowledge
+  Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list, and
+  `resource` is its one required key. No type carries the universal field into an export, so a record a consumer holds
+  stands up without the ticket behind it. `reports` keeps its own `sources`, which requires the field and adds the
+  `version` each corpus was at. Take the field with `kac update --from <template>`.
+
 ### Changed
 
 - **`confirmed` is now `verified`, it takes any actor, and the export carries the trust tier derived from it.** The

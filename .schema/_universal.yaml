@@ -1,5 +1,5 @@
 # Fields carried by every document in the taxonomy.
-# Type files may override `values` (status differs per type) and add their own fields.
+# A type file may refine a field here, and may declare fields of its own.
 
 notes: >
   What is deliberately not a field here. `title` is the H1. `created` and `updated` are what git knows.
@@ -49,6 +49,27 @@ fields:
       Knowledge Format's actor form for a person, taken unchanged. `role:` is ours, because OKF names a
       person, a process or a producer and has no form for a post. Exactly one person holds a post, so
       `role:` keeps answerability with one human and stays right on the day the post changes hands.
+
+  sources:
+    required: false
+    type: list
+    of: object
+    entry:
+      resource:
+        required: true
+        type: string
+        description: A work item, a page, a path, or the population the content was drawn from.
+    description: Where the content came from, one entry per source.
+    notes: >
+      Where a record came from, kept for whoever maintains it. An exported record has to stand up without
+      the work item that raised it, so this field stays behind. `reports` exports its own refinement of
+      it, which names corpora rather than tickets.
+
+      `resource` is the Open Knowledge Format's one required key on a source, taken unchanged. We leave
+      out OKF's optional `id`, `title`, `author`, `usage_count` and `last_modified` until something here
+      reads one.
+
+      Write one entry per source, so two agents finding the same thing leave two entries.
 
   tags:
     required: false

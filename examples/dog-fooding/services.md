@@ -51,6 +51,7 @@ of the catalogue as well, because it deploys services.
 | `tier` *†       | `descriptive`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†     | `live` `building` `deprecated` `retired` | Where the service is in its life.                                                   |
 | `owner` *†      | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `sources` †     | list                                     | Where the content came from, one entry per source.                                  |
 | `tags` †        | list                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `repo` *        | string                                   | Where the code lives.                                                               |
 | `platform` *    | `dotnet-tool` `static`                   | What it is built on. Drives which standards apply.                                  |

@@ -45,6 +45,7 @@ A process is also not:
 | `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.            |
 | `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                                        |
 | `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                         |
+| `sources` †           | list                               | Where the content came from, one entry per source.                                             |
 | `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
 | `applies-to`          | list                               | Service ids this process concerns.                                                             |
 | `last-rehearsed` *    | date                               | Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited. |

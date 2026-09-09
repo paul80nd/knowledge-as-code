@@ -29,9 +29,9 @@ and how it is reviewed. What is below is only what a discovery adds to that.
 * **`provenance`**: required when `source: dreamed`. A reference back to the session and passage it came from, so review
   is a thirty-second check rather than an act of faith.
 
-**Fields this template leaves out.** `applies-to` is optional, so the frontmatter above does not carry it. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../discoveries.md#metadata) says what
-each one holds.
+**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../discoveries.md#metadata) lists
+every field and says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

@@ -44,6 +44,7 @@ look like processes. You open the document on a day when the estate is already d
 | `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.     |
 | `status` *†           | `active` `draft` `retired`         | Whether the runbook is current, drafted, or stood down.                                 |
 | `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                  |
+| `sources` †           | list                               | Where the content came from, one entry per source.                                      |
 | `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                        |
 | `applies-to`          | list                               | Service ids this runbook covers.                                                        |
 | `severity`            | `sev1` `sev2` `sev3`               | The severity this runbook is written for.                                               |

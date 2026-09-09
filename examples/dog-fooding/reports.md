@@ -44,9 +44,9 @@ checked that it still holds.
 | `tier` *†     | `descriptive`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†   | `draft` `active` `stale` | `stale` is an honest state: a report nobody has run since the corpus moved says so. |
 | `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `sources` *†  | list                     | Every corpus this report answers for, and the version of each it is true of.        |
 | `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `generated` * | object                   | What produced the content and when.                                                 |
-| `sources` *   | list                     | Every corpus this report answers for, and the version of each it is true of.        |
 | `verified` *  | list                     | Every verification this report has had, oldest first, one line each.                |
 
 \* Field is required  

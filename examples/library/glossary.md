@@ -84,6 +84,7 @@ nothing runs the rule and the limit is yours to keep.
 | `tier` *†     | `descriptive`    | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                         |
 | `owner` *†    | string           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `sources` †   | list             | Where the content came from, one entry per source.                                  |
 | `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                |
 | `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                 |
