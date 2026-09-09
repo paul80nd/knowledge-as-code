@@ -40,7 +40,7 @@ meaningful.
 | `UNUSED`  | **MUST** remove what we no longer use, including in environments below production                      | [Azure WAF].cost-optimization |
 | `UNOWNED` | **MUST NOT** run a production workload that nobody owns the cost of                                    | [Azure WAF].cost-optimization |
 | `ERODE`   | **MUST NOT** let cost efficiency erode resilience, security or accessibility                           | [Azure WAF].cost-optimization |
-| `PERUNIT` | COULD state what a system costs per unit of the work it does, and watch that figure as volume changes  | [Azure WAF].cost-optimization |
+| `PERUNIT` | SHOULD state what a system costs per unit of the work it does, and watch that figure as volume changes | [Azure WAF].cost-optimization |
 
 ## Exceptions
 
