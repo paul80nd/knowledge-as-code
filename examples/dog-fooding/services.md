@@ -91,9 +91,9 @@ of the catalogue as well, because it deploys services.
   application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not an
   edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
   event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
-* **A bare field means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
-  third-party integration or anything else outside this catalogue carries a bare `depends-on`. None of those is an edge.
-  The same holds for `data-stores`. The field records what is here.
+* **A field left out means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
+  third-party integration or anything else outside this catalogue writes no `depends-on` at all. None of those is an
+  edge. The same holds for `data-stores`. The field records what is here, and the body records the rest.
 * **Sourcing.** Say where a claim came from. "Taken from the application settings the infrastructure declares" weighs
   differently from "the README says", and the reader needs to know which one they have. Where you cannot establish
   something, write it down as an open question. Nobody reading later can tell your guess from a fact.
@@ -167,6 +167,7 @@ words worth keeping are the ones thrown away.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
+| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |

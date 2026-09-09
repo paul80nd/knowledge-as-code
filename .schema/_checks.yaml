@@ -128,9 +128,19 @@ checks:
     severity: error
     description: An absent value is a bare key, never `null`, `~`, `""`, `''`, an em dash or an unquoted `{{…}}`.
     notes: >
-      One spelling of absence, so a search for a field nobody has filled in finds all of them. Every
-      other spelling reads as a value to something, and `owner: {{owner}}` is the one that reads as a
-      value to nobody: YAML parses it as a mapping, so the field arrives holding nothing.
+      One spelling of absence, so a search for a required field nobody has filled in finds all of them.
+      Every other spelling reads as a value to something, and `owner: {{owner}}` is the one that reads
+      as a value to nobody: YAML parses it as a mapping, so the field arrives holding nothing. An
+      optional field is left out rather than written empty, which `empty-optional-key` holds you to.
+
+  empty-optional-key:
+    severity: warning
+    description: An optional field is filled in or left out, rather than written with no value.
+    notes: >
+      A bare optional key says what leaving the key out says, so it is a line a reader scans past. A
+      required field is the other case: there the empty key is a state worth seeing, and
+      `required-field` is what reports it. A field declaring `required-when:` is exempt, because
+      whether it is optional depends on another field's value.
 
   date-quoted:
     severity: error

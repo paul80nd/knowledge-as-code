@@ -3,11 +3,7 @@ id: tol-gh
 type: tool
 tier: descriptive
 status: approved
-versions:
 licence: MIT
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ cli, github, releases ]
 ---

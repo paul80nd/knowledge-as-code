@@ -3,11 +3,7 @@ id: tol-claude-code-cli
 type: tool
 tier: descriptive
 status: approved
-versions:
 licence: LicenseRef-Anthropic-Terms-of-Service
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ claude-code, plugin, validation ]
 ---

@@ -4,9 +4,7 @@ type: glossary
 tier: descriptive
 status: draft
 owner:
-narrows:
 review-by:
-tags:
 ---
 
 # {{Context}}

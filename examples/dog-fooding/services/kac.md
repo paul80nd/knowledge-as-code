@@ -6,10 +6,7 @@ status: live
 repo: knowledge-as-code
 platform: dotnet-tool
 criticality: critical
-depends-on:
-data-stores:
 owner: human:paul.law
-facets:
 tags: [ cli, dotnet-tool, nuget ]
 ---
 
@@ -60,8 +57,8 @@ corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` r
 
 ## Operational notes
 
-* **`facets` is bare because a downloaded command has no inbound surface.** An exposure facet describes the surface
-  a service is reached on, and `kac` is reached by nothing: it runs on the machine that installed it.
+* **`facets` is left out because a downloaded command has no inbound surface.** An exposure facet describes the
+  surface a service is reached on, and `kac` is reached by nothing: it runs on the machine that installed it.
 * **A published version cannot be replaced, only followed.** `publish-tool.yml` reads `<Version>` in `kac.csproj` and
   publishes where nuget.org does not already hold that version, so the version moves by hand before the merge.
 * **Runbooks**: [rbk-nuget-404-on-publish] covers the window in which nuget.org answers 404 for a version it has

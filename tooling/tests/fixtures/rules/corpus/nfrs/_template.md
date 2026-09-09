@@ -6,7 +6,6 @@ status: draft
 applies-to:
 target:
 measured-by:
-constrained-by:
 review-by:
 owner:
 tags: [ a, b ]

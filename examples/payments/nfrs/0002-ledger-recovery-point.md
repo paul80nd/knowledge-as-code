@@ -7,7 +7,6 @@ applies-to:
   - svc-payment-ledger
 target: RPO 5 minutes, RTO 1 hour
 measured-by: A quarterly restore of the ledger database into an isolated environment
-constrained-by:
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ ledger, recovery, resilience ]

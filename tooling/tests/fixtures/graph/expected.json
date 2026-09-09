@@ -115,14 +115,14 @@
     },
     {
       "file": "gizmos/drifting.md",
-      "line": 32,
+      "line": 31,
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to."
     },
     {
       "file": "gizmos/drifting.md",
-      "line": 40,
+      "line": 39,
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off."
@@ -143,7 +143,7 @@
     },
     {
       "file": "gizmos/unitalic.md",
-      "line": 26,
+      "line": 25,
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end."
@@ -157,7 +157,7 @@
     },
     {
       "file": "gizmos/wholesale.md",
-      "line": 26,
+      "line": 25,
       "severity": "error",
       "check": "mirrors-citations",
       "message": "this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered."

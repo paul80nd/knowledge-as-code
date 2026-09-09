@@ -9,7 +9,6 @@ criticality:
 depends-on:
   - svc-{{a}}
   - svc-{{b}}
-data-stores:
 owner:
 tags: [ public ]
 ---

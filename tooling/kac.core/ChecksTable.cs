@@ -35,6 +35,8 @@ public static class ChecksTable
         ("required-field", [new("required-field")], "Required and conditionally-required fields are present.", null),
         ("bare-key", [new("bare-key")],
             "An absent value is a bare key, never `null`, `~`, `\"\"`, `—` or an unquoted `{{…}}`.", null),
+        ("empty-optional-key", [new("empty-optional-key")],
+            "An optional field is filled in or left out, rather than written with no value.", null),
         ("date-quoted / date-format", [new("date-quoted"), new("date-format")],
             "Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.", null),
         ("timestamp-format", [new("timestamp-format")],

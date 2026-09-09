@@ -43,9 +43,9 @@ Scenario: A value below its field's floor is reported against each record carryi
     | severity | line | check       | message                                                                                                                                                                                           |
     | warning  |    1 | min-records | 'facets: singular' is carried by 1 gadget record: the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |
 
-Scenario: The corpus as a whole warns seven times and errors not at all
+Scenario: The corpus as a whole warns eight times and errors not at all
   When I validate the corpus
-  Then validation reports 9 documents and 0 skipped
+  Then validation reports 10 documents and 0 skipped
   And the findings are exactly:
     | file                                 | severity | line | check                | message                                                                                                                                                                                           |
     | adrs/0001-warnings.md                | warning  |      | unused-definition    | link definition '[unused-ref]' is never referenced.                                                                                                                                               |
@@ -55,3 +55,4 @@ Scenario: The corpus as a whole warns seven times and errors not at all
     | adrs/0004-incomplete-y-statement.md  | warning  | 14   | y-statement          | Y-statement is missing "facing" and "rather than". The six moves are what make it a Y-statement rather than a summary of one.                                                                     |
     | policies/ordn-ordinal-not-natural.md | warning  | 7    | list-order           | 'aligns-with.clauses' is not in alphabetical order: 'A.8.7' should come before 'A.8.29'.                                                                                                          |
     | gadgets/alone.md                     | warning  | 1    | min-records          | 'facets: singular' is carried by 1 gadget record: the schema asks for at least 2, because a value here is meant to group records. One that does not belongs in a field that is free to be unique. |
+    | gadgets/emptied.md                   | warning  | 6    | empty-optional-key   | 'facets' is optional and carries no value. Remove the key, or fill it in.                                                                                                                         |

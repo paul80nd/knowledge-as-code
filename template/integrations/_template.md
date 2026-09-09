@@ -6,7 +6,6 @@ status: active
 vendor:
 used-by:
 criticality:
-their-sla:
 owner:
 tags: [ a, b ]
 ---
@@ -26,6 +25,10 @@ and how it is reviewed. What is below is only what an integration adds to that.
 * **`used-by`**: the service ids that call it. An integration nothing uses is a candidate for retirement.
 * **`criticality`**: judged by what breaks for a customer when it is unavailable.
 * **`their-sla`**: what the contract actually says, not what the marketing page implies.
+
+**Fields this template leaves out.** `their-sla` is optional, so the frontmatter above does not carry it. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../integrations.md#metadata) says what
+each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

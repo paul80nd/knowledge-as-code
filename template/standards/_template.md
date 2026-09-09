@@ -3,10 +3,6 @@ id: std-{{MNEM}}
 type: standard
 tier: normative
 status: draft
-derived-from:
-implements:
-verified-by:
-promoted-from:
 applies-to:
 review-by:
 owner:
@@ -40,6 +36,10 @@ and how it is reviewed. What is below is only what a standard adds to that.
   A reader takes the same list from the `Covers` lines below, so this field is written for whatever counts coverage.
 * **`applies-to`**: service ids, or `all`.
 * **`review-by`**: a quoted `"YYYY-MM-DD"`. Drives the staleness report.
+
+**Fields this template leaves out.** `category`, `derived-from`, `implements`, `verified-by` and `promoted-from` are
+optional, so the frontmatter above carries none of them. Add a key where you have a value for it, and leave it out where
+you do not. [The type page](../standards.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

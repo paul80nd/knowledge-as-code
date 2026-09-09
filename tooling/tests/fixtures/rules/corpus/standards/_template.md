@@ -3,9 +3,6 @@ id: std-{{MNEM}}
 type: standard
 tier: normative
 status: draft
-derived-from:
-implements:
-verified-by:
 applies-to:
 review-by:
 owner:

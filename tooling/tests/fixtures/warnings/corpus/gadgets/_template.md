@@ -4,8 +4,6 @@ type: gadget
 tier: descriptive
 status: live
 owner:
-tags:
-facets:
 ---
 
 # {{Title}}

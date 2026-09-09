@@ -6,8 +6,6 @@ status: live
 repo: notices
 platform: azure-function
 criticality: important
-depends-on:
-data-stores:
 owner: human:mira.okonjo
 facets: [ event-driven, internal, scheduled ]
 tags: [ email, renewals ]

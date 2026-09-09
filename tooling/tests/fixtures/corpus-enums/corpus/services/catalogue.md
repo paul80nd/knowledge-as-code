@@ -6,8 +6,6 @@ status: live
 repo: catalogue
 platform: azure-function
 criticality: critical
-depends-on:
-data-stores:
 owner: human:alex.doe
 ---
 

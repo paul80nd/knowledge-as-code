@@ -5,9 +5,6 @@ tier: descriptive
 status: approved
 versions: 10.0.x
 licence: MIT
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ dotnet, sdk ]
 ---

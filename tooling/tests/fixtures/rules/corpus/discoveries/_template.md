@@ -7,7 +7,6 @@ source: human
 confidence: unverified
 expires:
 provenance:
-applies-to:
 promoted-to:
 owner:
 tags: [ a, b ]

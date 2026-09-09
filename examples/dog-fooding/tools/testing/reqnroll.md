@@ -5,9 +5,6 @@ tier: descriptive
 status: approved
 versions: 3.3.x
 licence: BSD-3-Clause
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ bdd, gherkin, testing ]
 ---

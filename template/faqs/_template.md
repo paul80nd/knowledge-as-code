@@ -4,8 +4,6 @@ type: faq
 tier: normative
 status: active
 symptom-keywords:
-applies-to:
-promoted-from:
 confirmed:
 review-by:
 owner:
@@ -40,6 +38,10 @@ Name the title and the filename for the **symptom**, not the cause. That is what
   a post cannot read an answer. Add a line each time somebody checks the answer again, and leave the earlier lines
   alone.
 * **`status`**: `active` · `superseded` · `fixed-upstream`.
+
+**Fields this template leaves out.** `applies-to` and `promoted-from` are optional, so the frontmatter above carries
+none of them. Add a key where you have a value for it, and leave it out where you do not. [The type
+page](../faqs.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

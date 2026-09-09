@@ -8,7 +8,6 @@ platform: static
 criticality: critical
 depends-on:
   - svc-thumbnailer
-data-stores:
 owner: human:dev.raman
 facets: [ public ]
 tags: [ jackets ]

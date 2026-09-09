@@ -6,8 +6,6 @@ status: live
 repo: lending
 platform: dotnet-api
 criticality: critical
-depends-on:
-data-stores:
 owner: human:dev.raman
 facets: [ internal ]
 tags: [ legacy, loans ]
@@ -57,7 +55,8 @@ nothing is meant to call them.
 
 ## Dependencies
 
-No service in this catalogue (which is why `depends-on` is bare). Its downward dependencies are all legacy:
+No service in this catalogue, which is why the record carries no `depends-on`. Its downward dependencies are all
+legacy:
 
 * The **legacy database**, configured as `ConnectionStrings__Legacy`.
 * The **legacy circulation API**, reached through a reverse-proxy cluster. That API is the unreplaced half of the

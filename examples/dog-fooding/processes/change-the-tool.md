@@ -5,8 +5,6 @@ tier: procedural
 status: active
 applies-to: [ svc-kac ]
 last-rehearsed: "never"
-rehearsal-frequency:
-requires-access:
 owner: human:paul.law
 tags: [ checks, dotnet ]
 ---

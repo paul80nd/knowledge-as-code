@@ -4,8 +4,6 @@ type: faq
 tier: normative
 status: active
 symptom-keywords:
-applies-to:
-promoted-from:
 confirmed:
 review-by:
 owner:

@@ -4,7 +4,6 @@ type: gizmo
 tier: descriptive
 status: live
 owner: human:alex.doe
-depends-on:
 covers:
   - giz-behaving
 ---
