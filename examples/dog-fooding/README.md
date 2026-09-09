@@ -32,6 +32,7 @@
 | [Control](controls.md)      | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
 | [Deviation](deviations.md)  | normative   | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.                 |
 | [Discovery](discoveries.md) | observed    | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.              |
+| [Fix](fixes.md)             | normative   | A problem with a verified resolution, promoted from a discovery once somebody has checked it.                   |
 | [Process](processes.md)     | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).             |
 | [Report](reports.md)        | descriptive | A question about the corpus answered over the whole of it, with the judgement a person added.                   |
 | [Runbook](runbooks.md)      | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.               |

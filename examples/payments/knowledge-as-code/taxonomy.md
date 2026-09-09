@@ -19,6 +19,7 @@ column for your row.
 | You have…                                                | It goes in                   |
 |----------------------------------------------------------|------------------------------|
 | A description of what a deployable component is and does | [Services](../services.md)   |
+| A problem with a known, verified resolution              | [Fixes](../fixes.md)         |
 | A rule people must follow when building                  | [Standards](../standards.md) |
 | A target for speed, uptime, or recovery                  | [NFRs](../nfrs.md)           |
 
@@ -36,6 +37,10 @@ type's own page.
 <!-- BEGIN GENERATED: types-detail -->
 
 ### Normative: living, owned, reviewed
+
+**[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
+It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
+on trust.
 
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
@@ -63,9 +68,11 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 
 ```mermaid
 graph LR;
+  t_fixes[Fix];
   t_nfrs[NFR];
   t_services[Service];
   t_standards[Standard];
+  t_fixes -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
@@ -80,6 +87,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 | From     | Field        | Points at | Answered by |
 |----------|--------------|-----------|-------------|
+| Fix      | `applies-to` | Service   |             |
 | NFR      | `applies-to` | Service   |             |
 | Service  | `depends-on` | Service   |             |
 | Standard | `applies-to` | Service   |             |

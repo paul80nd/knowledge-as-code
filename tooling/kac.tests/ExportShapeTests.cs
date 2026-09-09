@@ -38,6 +38,13 @@ public class ExportShapeTests
             What compensates: full
             How it closes: full
             Scope: full
+        fixes@1
+          fields: id, title, status, symptom-keywords, applies-to, verified, review-by, tags
+          sections:
+            Symptom: full
+            Cause: full
+            Resolution: full
+            Why it happens: full
         glossary@1
           fields: id, title, narrows, status, review-by, tags
           sections:

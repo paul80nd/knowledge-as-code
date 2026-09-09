@@ -16,14 +16,12 @@ Add one when an investigation cost real time. You will hit the same problem agai
 The same problems come back, and the next person to hit one pays the cost again. A fix turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-A [discovery](discoveries.md) can also become a fix. A human promotes it once the observation proves real, general and
-current.
+A discovery can also become a fix. A human promotes it once the observation proves real, general and current.
 
 ## Scope
 
 A fix is **verified**. Somebody has checked that the problem is real, that the resolution works, and that both are
-still current. A [discovery](discoveries.md) arrives with none of that: nobody reviews one, and it might be wrong or
-already fixed.
+still current. A discovery arrives with none of that: nobody reviews one, and it might be wrong or already fixed.
 
 **Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
 resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
@@ -35,10 +33,9 @@ and let somebody else check it at promotion.
 
 Other boundaries:
 
-* **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. A fix has one known
-  resolution.
+* **Runbook.** If it needs a diagnosis tree and an escalation path, it is a runbook. A fix has one known resolution.
 * **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the
-  resolution is a rule, and that needs an [ADR](adrs.md) first.
+  resolution is a rule, and that needs an ADR first.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 

@@ -31,8 +31,8 @@ deliberate: an observation nobody has needed in three months was probably situat
 
 Boundaries:
 
-* **A standard**: checked, general, current, and carries authority. That is what a discovery here is promoted *to*.
-  This corpus declined the fix type, so a standard is the only promotion target it has.
+* **[A fix](fixes.md)**: checked, general, current, and carries authority. That is what a discovery here is promoted
+  *to* where the answer is a resolution. Where the answer is a rule people must follow, it becomes a standard instead.
 * **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
 * **A bug.** Where something is broken and somebody should fix it, raise a GitHub issue. A discovery records something
   surprising, and claims nothing is owed.
@@ -72,12 +72,13 @@ Don't tidy it up and don't verify it first.
 Check the claim against the repository before you write it down. This corpus describes the repository it sits in, so an
 observation here names a real file, a real run or a real command.
 
-## Promoting a discovery to a standard
+## Promoting a discovery
 
-The one flow that crosses tiers.
+The one flow that crosses tiers. A resolution somebody has checked becomes a [fix](fixes.md). A rule people must follow
+becomes a standard instead.
 
 1. A human confirms the observation is real, general, and still current.
-2. Write the rule into a standard, or add it to one that already covers the ground.
+2. Write the record it becomes.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
 Nothing proposes a promotion automatically
