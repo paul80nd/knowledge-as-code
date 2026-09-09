@@ -109,6 +109,34 @@ sections:
   required: [What we are doing instead, Why we need it, What compensates, How it closes]
   optional: [Scope, Related]
 
+export:
+  version: 1
+  fields: [id, title, status, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags]
+  sections:
+    What we are doing instead: full
+    Why we need it: full
+    What compensates: full
+    How it closes: full
+    Scope: full
+  notes: >
+    A deviation travels whole. The people who carry the risk of a departure are usually outside the team
+    that raised it, and a register they cannot read is one that surfaces nothing. This is the one type
+    whose whole purpose is to be read by somebody else.
+
+    The five sections are the whole of the argument: what we do instead, why, what holds the risk down
+    meanwhile, what ends it, and how far it reaches. A consumer reading four of them reads a smaller
+    departure than the one we took.
+
+    `owner` travels. A deviation names the individual who accepted the risk, and a register that says what
+    was excused without saying who excused it is not a register.
+
+    `accepted-on`, `review-by` and `closed-on` say whether a departure is live, overdue or over. They
+    travel beside `status`, which stays `active` past its review date, so the two accounts of the same
+    record can be compared.
+
+    `departs-from` names the rule departed from. It resolves for exactly the consumer that also holds the
+    corpus stating that rule, which is the consumer asking the question.
+
 index:
   columns: [id, title, status, departs-from, review-by, owner]
   sort: review-by

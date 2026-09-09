@@ -173,7 +173,7 @@ parts:
 # absent from the sections because the headings under it are parts, and `parts:` above carries them.
 export:
   version: 1
-  fields: [id, title, category, status, implements, applies-to, review-by, tags]
+  fields: [id, title, category, status, derived-from, implements, applies-to, review-by, tags]
   sections:
     Summary: full
     Conformance checklist: full
@@ -201,9 +201,13 @@ export:
     more than the standard does. `Conformance checklist` travels because it is the same rules written as
     a test, and an agent asking what it has to do here can answer from the checklist alone.
 
-    `Examples` stays behind. It is the longest section a standard holds, it is written against one
-    stack, and the record is a fetch away for a reader who wants it. `Rationale and provenance` stays
-    behind because it argues from ADRs and policy clauses no consumer receives.
+    `Examples` and `Rationale and provenance` both stay behind, and both are a fetch away for a reader who
+    wants them. `Examples` is the longest section a standard holds, and it is written against one stack.
+    `Rationale and provenance` argues the rule where the rest of the record states it, and a consumer
+    acts on what the rule says.
+
+    `derived-from` travels, so the ADR a standard was decided in resolves for a consumer holding that
+    corpus's ADRs as well.
 
     `implements` travels, and `covers` carries the same edge one rule at a time. The clauses a rule
     discharges are named on its `Covers` line, and the exporter drops that line before it takes the

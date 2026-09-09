@@ -96,6 +96,34 @@ sections:
   required: [What it does, Where it lives, Environments]
   optional: [Dependencies, Data, Operational notes]
 
+export:
+  version: 1
+  fields: [id, title, status, platform, criticality, repo, depends-on, data-stores, facets, tags]
+  sections:
+    What it does: full
+    Where it lives: full
+    Dependencies: full
+    Data: full
+  notes: >
+    A service id is cited from every other type, so what travels is what makes that id resolve to
+    something a reader recognises. `What it does` and `Where it lives` are both short, and together they
+    say which deployable this is and where its code sits.
+
+    `depends-on` and `data-stores` carry the estate's own graph, and they are the reason this type
+    exports at all. A consumer holding the catalogue walks the edges without opening a record.
+    `Dependencies` and `Data` travel beside them, because an edge says which service and the prose says
+    what the call is for.
+
+    `platform`, `criticality` and `facets` are the three keys an agent filters on. A question about the
+    estate is usually a question about a slice of it.
+
+    `Environments` stays behind. It is a table of addresses that mean something to whoever operates the
+    service, and a consumer holding a copy can reach none of them. `Operational notes` stays behind with
+    it, because both describe running the thing rather than depending on it.
+
+    `owner` stays behind. Who runs a service is a fact about this corpus, and whoever holds a vendored
+    copy has no standing to ask them anything.
+
 index:
   columns: [id, title, platform, criticality, status, owner]
   sort: id

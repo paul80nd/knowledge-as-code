@@ -111,6 +111,24 @@ sections:
     Free-form throughout. A report's headings follow the question it answers, and `kac report` writes
     them, so declaring any of them here would hold every future report to the shape of the first two.
 
+export:
+  version: 1
+  fields: [id, title, status, generated, sources, confirmed, tags]
+  notes: >
+    A report declares no sections, for the reason `sections:` above gives. So the frontmatter is the whole
+    of what travels, and the body is a fetch away through the record's own `links`.
+
+    The frontmatter answers the one question a consumer asks of a report it cannot read: whether the
+    answer still holds. `sources` names each corpus the report answers for and the `content-version` it
+    was true of, so a consumer at a later version knows the answer has moved on. `confirmed` carries every
+    confirmation the report has had, oldest first, which is how a reader sees that a person read the
+    verdicts.
+
+    `generated` travels as an object carrying `at` and `by`, which is the `event` shape the field
+    declares. A consumer reads the two keys directly.
+
+    `owner` stays behind. Who stewards a report is a fact about this corpus.
+
 index:
   columns: [id, title, status]
   sort: id

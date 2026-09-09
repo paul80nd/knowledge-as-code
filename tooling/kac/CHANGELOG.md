@@ -19,6 +19,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **Seven more types travel in an export.** `.schema/` declares an `export:` block at shape 1 on `adrs`,
+  `deviations`, `nfrs`, `reports`, `runbooks`, `services` and `tools`, so `kac export` writes one JSON per record for
+  each of them. `deviations` carries `owner`, because a register that says what was excused without saying who excused
+  it is not a register. `runbooks` carries `Symptoms` and no steps, for the reason `processes` carries no steps.
+  `discoveries` holds everything back still, and its schema file says why. A standard now carries `derived-from` too,
+  so the ADR behind a rule resolves for a consumer holding both. Take them with `kac update --from <template>`.
 - **`kac validate` warns where an optional field is written with no value.** `empty-optional-key` reports a
   bare key on a field the schema does not require, because it says exactly what leaving the key out says. A
   required field is the other case, and `required-field` still reports that one. A field declaring
@@ -32,9 +38,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   issue on the repository that published it is the only route back. The body carries the keys a `discoveries` record
   needs, and the skill asks before it files, every time. Take it with `kac update --from <template>`.
 - **`request-deviation`, the skill that asks a clause's owner to accept a departure from it.** The body carries the keys
-  a `deviations` record needs, and leaves `owner` and `accepted-on` to the reply, because no export carries a record's
-  owner. It files inside the organisation holding the plugin and nowhere else, and it asks before it files. Take it with
-  `kac update --from <template>`.
+  a `deviations` record needs, and leaves `owner` and `accepted-on` to the reply, because the individual accepting the
+  risk is what the request asks for. It files inside the organisation holding the plugin and nowhere else, and it asks
+  before it files. Take it with `kac update --from <template>`.
 - **A control travels in an export.** `.schema/controls.yaml` declares an `export:` block at shape 1, so `kac export`
   writes one JSON per control carrying `verifies`, `mechanism`, `frequency`, `evidence` and the three sections a
   control holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
@@ -61,6 +67,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **An export field declared as an object carries its keys.** A field such as a report's `generated` reached a consumer
+  as `null`, because only a list of objects was read. It now travels as an object carrying the keys its `shape:` or
+  `entry:` block names.
 - **`kac report` stamps the release without the commit behind it.** `generated.by` takes the Open Knowledge Format's
   `<producer>/<version>` form, and the value carried the build metadata as well, as
   `kac/0.24.0+24dcea21945982d92104c78a854465207d644ad6`. It now reads `kac/0.24.0`. A regenerated report no longer

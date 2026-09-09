@@ -18,12 +18,30 @@ public class ExportShapeTests
 {
     private const string Pinned =
         """
+        adrs@1
+          fields: id, title, status, decided-on, supersedes, superseded-by, related, tags
+          sections:
+            Context: summary
+            Decision: full
+            Consequences: full
         controls@1
           fields: id, title, status, verifies, mechanism, frequency, evidence, applies-to, tags
-          sections: What it checks=full, How it works=full, Coverage and gaps=full
+          sections:
+            What it checks: full
+            How it works: full
+            Coverage and gaps: full
+        deviations@1
+          fields: id, title, status, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags
+          sections:
+            What we are doing instead: full
+            Why we need it: full
+            What compensates: full
+            How it closes: full
+            Scope: full
         glossary@1
           fields: id, title, narrows, status, review-by, tags
-          sections: Scope=full
+          sections:
+            Scope: full
           parts: full
             id: part.id
             title: part.text
@@ -37,9 +55,19 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        nfrs@1
+          fields: id, title, status, applies-to, target, measured-by, constrained-by, review-by, tags
+          sections:
+            Target: full
+            How it is measured: full
+            If it is breached: full
+            Constraints: full
         policies@2
           fields: id, title, category, status, review-by
-          sections: Purpose=summary, Scope=full, Exceptions=full
+          sections:
+            Purpose: summary
+            Scope: full
+            Exceptions: full
           frameworks: frameworks.jsonl
           parts: full
             id: part.id
@@ -54,10 +82,27 @@ public class ExportShapeTests
             anchor: part.anchor
         processes@1
           fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
-          sections: When to use this=full, Prerequisites=full
+          sections:
+            When to use this: full
+            Prerequisites: full
+        reports@1
+          fields: id, title, status, generated, sources, confirmed, tags
+        runbooks@1
+          fields: id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-access, tags
+          sections:
+            Symptoms: full
+        services@1
+          fields: id, title, status, platform, criticality, repo, depends-on, data-stores, facets, tags
+          sections:
+            What it does: full
+            Where it lives: full
+            Dependencies: full
+            Data: full
         standards@1
-          fields: id, title, category, status, implements, applies-to, review-by, tags
-          sections: Summary=full, Conformance checklist=full
+          fields: id, title, category, status, derived-from, implements, applies-to, review-by, tags
+          sections:
+            Summary: full
+            Conformance checklist: full
           parts: full
             id: part.id
             title: part.text
@@ -71,6 +116,13 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        tools@1
+          fields: id, title, status, category, versions, licence, decided-in, replaces, successor, tags
+          sections:
+            What we use it for: full
+            Status: full
+            Licence and obligations: full
+            Where it is used: full
         """;
 
     [Fact]
@@ -91,8 +143,8 @@ public class ExportShapeTests
             var export = t.DeclaredExport;
             shapes.AppendLine($"{t.Key}@{export.Version}");
             shapes.AppendLine($"  fields: {string.Join(", ", export.Fields)}");
-            var sections = export.Sections.Select(s => $"{s.Section}={s.Fidelity}");
-            shapes.AppendLine($"  sections: {string.Join(", ", sections)}");
+            if (export.Sections.Count > 0) shapes.AppendLine("  sections:");
+            foreach (var s in export.Sections) shapes.AppendLine($"    {s.Section}: {s.Fidelity}");
 
             if (export.Frameworks.Length > 0) shapes.AppendLine($"  frameworks: {export.Frameworks}");
 

@@ -94,6 +94,34 @@ sections:
   required: [What we use it for, Status]
   optional: [Trial criteria, Where it is used, Alternatives considered, Licence and obligations, Related]
 
+export:
+  version: 1
+  fields: [id, title, status, category, versions, licence, decided-in, replaces, successor, tags]
+  sections:
+    What we use it for: full
+    Status: full
+    Licence and obligations: full
+    Where it is used: full
+  notes: >
+    A tool register answers what an estate builds on, which is the question an inventory exists to
+    answer. An inventory nobody outside the team can read proves nothing to the people who ask for one.
+
+    `licence` and `Licence and obligations` travel together. The identifier says which licence and the
+    section says what holding it obliges us to, and a reader acts on the second.
+
+    `Status` says whether the tool is in use, on trial or on its way out. `replaces` and `successor` are
+    that same move written as ids, so a consumer meeting a retired tool finds the one that took its
+    place.
+
+    `Where it is used` travels because a tool with nothing using it is a row in a table. The section
+    names the records that use it, and those ids resolve for a consumer holding them.
+
+    `Trial criteria` and `Alternatives considered` stay behind. Both record how this estate reached the
+    decision, and `decided-in` carries the ADR for a reader who wants that argument.
+
+    `owner` stays behind. Who stewards a tool is a fact about this corpus, and a vendored copy has no
+    standing to ask.
+
 index:
   columns: [id, title, category, status, versions, licence]
   sort: [category, id]

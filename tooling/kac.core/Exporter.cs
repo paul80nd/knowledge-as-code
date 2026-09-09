@@ -527,13 +527,15 @@ public static class Exporter
 
     // One declared field as JSON, in the shape its type declared. A field declared as a list is an array
     // however the record wrote it, so `depends-on: svc-a` and `depends-on: [svc-a]` both reach a consumer
-    // as an array of one entry. Everything else is the scalar, which is what `string`, `date`,
+    // as an array of one entry. A field declared as an object is an object, carrying the keys its
+    // `shape:` or `entry:` block names. Everything else is the scalar, which is what `string`, `date`,
     // `timestamp`, `enum` and `id` all come to here.
     //
     // The declaration decides the shape because a consumer holds the declaration and reads one key one
     // way. A shape read off the document would vary record by record. `docs/design/export.md` states it.
     private static JsonNode? Value(YamlNode? node, FieldSpec? spec)
     {
+        if (spec?.Type == "object") return Mapping(node, spec);
         if (spec?.Type != "list") return JsonValue.Create(Absent((node as YamlScalarNode)?.Value));
 
         // A list written as one scalar is the one-entry case, as `Doc.FrontList` reads it. `list` refuses
@@ -557,14 +559,24 @@ public static class Exporter
     }
 
     // One entry of a list. A scalar entry is its own value, and an entry the type declares as an object
-    // carries the keys that declaration names, each read back through `Value` so a key holding a list of
-    // its own travels as an array too.
+    // carries the keys that declaration names.
     //
     // An entry written in the other shape is dropped. `entry-shape` reports it, so the corpus is one
     // `validate` already refuses, and a guess here would hand a consumer a second reading of that record.
-    private static JsonNode? Entry(YamlNode node, FieldSpec spec)
+    private static JsonNode? Entry(YamlNode node, FieldSpec spec) =>
+        spec.Of != "object"
+            ? JsonValue.Create(Absent((node as YamlScalarNode)?.Value))
+            : Mapping(node, spec);
+
+    // One object as JSON, carrying the keys its declaration names and each read back through `Value` so
+    // a key holding a list of its own travels as an array too. It serves a field declared as an object
+    // and one entry of a list declared as objects alike, because the two are the same shape read from
+    // the same `entry:` block or `shape:`.
+    //
+    // An object nobody wrote is `null`, which is the absence every other field spells the same way. An
+    // object of null keys would leave a consumer testing each key to learn the field was never filled.
+    private static JsonNode? Mapping(YamlNode? node, FieldSpec spec)
     {
-        if (spec.Of != "object") return JsonValue.Create(Absent((node as YamlScalarNode)?.Value));
         if (node is not YamlMappingNode map || spec.Entry is null) return null;
 
         var obj = new JsonObject();

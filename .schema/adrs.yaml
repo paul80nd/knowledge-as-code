@@ -89,6 +89,31 @@ sections:
   required: [Context, Decision, Alternatives Considered, Consequences]
   optional: [Related, References]
 
+export:
+  version: 1
+  fields: [id, title, status, decided-on, supersedes, superseded-by, related, tags]
+  sections:
+    Context: summary
+    Decision: full
+    Consequences: full
+  notes: >
+    A standard cites the decision its authority comes from, and `derived-from` resolves only where the
+    ADR travelled too. So a consumer inheriting a rule can read what was decided behind it.
+
+    `Decision` travels whole, because the decision sentence is the record. `Consequences` travels whole
+    beside it: a consumer reading what a decision bought and not what it cost reads a better decision
+    than the one we took. `Context` travels as its opening paragraph, which is where an ADR says what
+    problem it was answering.
+
+    `Alternatives Considered` stays behind. It is the longest section an ADR holds, it argues against
+    options this estate weighed, and the record is a fetch away for a reader who wants the weighing.
+
+    `supersedes` and `superseded-by` travel together. A superseded decision still binds whatever was
+    built under it, so a consumer meeting one needs the id that replaced it.
+
+    `deciders` and `owner` stay behind. Both name people, and whoever holds a vendored copy has no
+    standing to ask them anything.
+
 index:
   columns: [id, title, status, decided-on]
   sort: id
