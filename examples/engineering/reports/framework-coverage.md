@@ -4,11 +4,12 @@ type: report
 tier: descriptive
 status: active
 owner: human:alex.doe
-generated: { at: 2026-09-08T10:45:58Z, by: kac/0.23.0+955356490b0bfa1f7caa3863fa100346dd6849c1 }
+generated: { at: 2026-09-09T18:29:19Z, by: kac/0.25.0 }
 sources:
-  - { resource: example-engineering, version: "0.12.0" }
+  - { resource: example-engineering, version: "0.13.2" }
 verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
+  - { at: 2026-09-09T18:29:19Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, frameworks ]
 ---
 
@@ -32,8 +33,10 @@ That matters differently by standing. `Obliged` names something outside us: an a
 commitment implementing it, and a control with no commitment left is a finding. `Inspiration` binds nothing, so a
 reference losing its last citation is provenance we stopped claiming rather than coverage we lost.
 
-The `Note` column carries what [frameworks.md](../frameworks.md) says about a particular reference. Most rows have
-nothing to add to the clauses beside them, and an empty cell says so.
+The `Note` column carries the judgement the columns beside it cannot hold: what [frameworks.md](../frameworks.md) says
+about a reference, and how far the clauses cited against it reach the control itself. A citation is honest coverage, a
+nearest fit, or one instance of something wider, and only a reader tells those apart. Most rows have nothing to add,
+and an empty cell says so.
 
 ## Totals
 
@@ -76,7 +79,7 @@ nothing to add to the clauses beside them, and an empty cell says so.
 
 | Reference | Clauses | Policies | Note |
 |-----------|---------|----------|------|
-| §9 | `pol-A11Y.CONFORM`, `pol-A11Y.VENDOR` | `pol-A11Y` | Incorporates WCAG 2.1 level AA by reference. `WCAG 2.2 AA` is the later version and the bar we hold. |
+| §9 | `pol-A11Y.CONFORM`, `pol-A11Y.VENDOR` | `pol-A11Y` | Incorporates WCAG 2.1 level AA by reference, for web content. `WCAG 2.2 AA` is the later version and the bar we hold. Clause 11 carries the same criteria for non-web software and is cited nowhere, though `pol-A11Y` reaches every user-facing interface. |
 
 ### ISO 27001:2022
 
@@ -84,15 +87,15 @@ nothing to add to the clauses beside them, and an empty cell says so.
 |-----------|---------|----------|------|
 | A.5.3 | `pol-AGNT.DUTIES`, `pol-ACCS.DUTIES` | `pol-AGNT`, `pol-ACCS` | |
 | A.5.4 | `pol-DEVI.OWNER`, `pol-DEVI.CUSTOM` | `pol-DEVI` | |
-| A.5.5 | `pol-INCR.NOTIFY` | `pol-INCR` | |
-| A.5.7 | `pol-VURM.DISCLOS` | `pol-VURM` | |
+| A.5.5 | `pol-INCR.NOTIFY` | `pol-INCR` | The control asks that contact with the relevant authorities be established and kept up. `NOTIFY` answers the statutory breach instance. The rest of the control is one of the organisational-reach controls `frameworks.md` places with Legal and the ISMS owner. |
+| A.5.7 | `pol-VURM.DISCLOS` | `pol-VURM` | The control collects external threat information to inform our own risk decisions. `DISCLOS` is the route for people outside the organisation to report a vulnerability to us. Nothing in this corpus produces or consumes threat intelligence as the control describes. |
 | A.5.8 | `pol-SECD.REQS`, `pol-SECD.ACTIONS` | `pol-SECD` | |
 | A.5.9 | `pol-DATA.LOCATE` | `pol-DATA` | |
 | A.5.12 | `pol-DATA.CLASS` | `pol-DATA` | |
 | A.5.14 | `pol-DATA.CRYPTO`, `pol-DATA.XBORDER`, `pol-DATA.SHARE` | `pol-DATA` | |
 | A.5.15 | `pol-ACCS.LEAST` | `pol-ACCS` | |
 | A.5.16 | `pol-ACCS.NAMED`, `pol-ACCS.DIRECT` | `pol-ACCS` | |
-| A.5.17 | `pol-SCRT.STORE`, `pol-SCRT.ROTATE`, `pol-SCRT.LEAKED`, `pol-SCRT.EMBED`, `pol-SCRT.REUSE`, `pol-SCRT.LOGS` | `pol-SCRT` | |
+| A.5.17 | `pol-SCRT.STORE`, `pol-SCRT.ROTATE`, `pol-SCRT.LEAKED`, `pol-SCRT.EMBED`, `pol-SCRT.REUSE`, `pol-SCRT.LOGS` | `pol-SCRT` | The control is scoped to authentication information: issuing, resetting and storing things like passwords. `pol-SCRT` reaches wider, to API keys, tokens and certificates. Annex A carries no secrets-management control, so this is the nearest fit. |
 | A.5.18 | `pol-ACCS.RECERT`, `pol-ACCS.REVOKE` | `pol-ACCS` | |
 | A.5.19 | `pol-TRUS.SOURCE`, `pol-TRUS.UNTRUST` | `pol-TRUS` | |
 | A.5.21 | `pol-TRUS.INVENT`, `pol-TRUS.SCREEN`, `pol-TRUS.TRACE` | `pol-TRUS` | |
@@ -120,7 +123,7 @@ nothing to add to the clauses beside them, and an empty cell says so.
 | A.8.9 | `pol-EVER.ASSETS`, `pol-EVER.ORPHAN`, `pol-PIPE.CONFIG`, `pol-PIPE.ASCODE`, `pol-PIPE.MANUAL`, `pol-ENVS.BASELIN` | `pol-EVER`, `pol-PIPE`, `pol-ENVS` | |
 | A.8.10 | `pol-DATA.DELETE`, `pol-DATA.LINGER` | `pol-DATA` | |
 | A.8.11 | `pol-DATA.UNMASK` | `pol-DATA` | |
-| A.8.12 | `pol-DATA.LOGS` | `pol-DATA` | |
+| A.8.12 | `pol-DATA.LOGS` | `pol-DATA` | Data leakage prevention reaches endpoints, networks and stores. `LOGS` answers the logging instance alone. `pol-MEXP.EGRESS` controls what leaves the estate and cites `A.8.20` only. |
 | A.8.13 | `pol-RECV.BACKUP`, `pol-RECV.RESTORE`, `pol-RECV.OFFSITE`, `pol-RECV.UNTEST` | `pol-RECV` | |
 | A.8.14 | `pol-RECV.OFFSITE`, `pol-RECV.DEGRADE`, `pol-RECV.REDUND` | `pol-RECV` | |
 | A.8.15 | `pol-OBSV.CENTRAL`, `pol-OBSV.RETAIN`, `pol-OBSV.SECRETS`, `pol-OBSV.CORREL`, `pol-SCRT.LOGS` | `pol-OBSV`, `pol-SCRT` | |
@@ -134,10 +137,10 @@ nothing to add to the clauses beside them, and an empty cell says so.
 | A.8.24 | `pol-DATA.CRYPTO`, `pol-DATA.RETIRE`, `pol-MEXP.PEERID`, `pol-MEXP.WEAKEN`, `pol-SCRT.KEYS` | `pol-DATA`, `pol-MEXP`, `pol-SCRT` | |
 | A.8.25 | `pol-AUTV.INTEG`, `pol-EVER.PARITY`, `pol-AGNT.EQUAL`, `pol-SECD.HIRISK` | `pol-AUTV`, `pol-EVER`, `pol-AGNT`, `pol-SECD` | |
 | A.8.26 | `pol-INTC.SECURE`, `pol-INTC.HOLDS`, `pol-INTC.EXPOSE`, `pol-SECD.REQS`, `pol-SECD.HIRISK` | `pol-INTC`, `pol-SECD` | |
-| A.8.27 | `pol-INTC.SPEC`, `pol-INTC.VERSION`, `pol-SECD.DESIGN`, `pol-SECD.THREAT` | `pol-INTC`, `pol-SECD` | |
+| A.8.27 | `pol-INTC.SPEC`, `pol-INTC.VERSION`, `pol-SECD.DESIGN`, `pol-SECD.THREAT` | `pol-INTC`, `pol-SECD` | `INTC.VERSION` is a compatibility discipline. Nothing in its wording is motivated by security, so it sits oddly beside `SECD.DESIGN` and `SECD.THREAT`. |
 | A.8.28 | `pol-SECD.CODING`, `pol-SECD.CODEREV` | `pol-SECD` | |
-| A.8.29 | `pol-AUTV.INTEG`, `pol-AUTV.BLOCK`, `pol-AUTV.LEVELS`, `pol-AUTV.REGRESS`, `pol-AUTV.BYPASS`, `pol-VURM.REGRESS` | `pol-AUTV`, `pol-VURM` | |
-| A.8.30 | `pol-AGNT.PROV`, `pol-AGNT.UNPROV` | `pol-AGNT` | |
+| A.8.29 | `pol-AUTV.INTEG`, `pol-AUTV.BLOCK`, `pol-AUTV.LEVELS`, `pol-AUTV.REGRESS`, `pol-AUTV.BYPASS`, `pol-VURM.REGRESS` | `pol-AUTV`, `pol-VURM` | The control asks for security testing in development and acceptance. `pol-AUTV` establishes a blocking test gate and never names security testing among the checks it runs. The scanning that answers the control is `pol-VURM.SCAN` and `pol-VURM.RANK`, cited to `A.8.8` alone. The two policies answer this control together, and neither answers it by itself. |
+| A.8.30 | `pol-AGNT.PROV`, `pol-AGNT.UNPROV` | `pol-AGNT` | Outsourced development assumes the supplier answers for the work, and `pol-AGNT` holds that an agent does not. See the `NIST AI RMF 1.0` `GOVERN` row. Kept for the trail an assessor expects to follow, rather than as an honest fit. |
 | A.8.31 | `pol-ENVS.SPLIT`, `pol-ENVS.SAMEDEF`, `pol-ENVS.PROMOTE`, `pol-ENVS.DEBUG` | `pol-ENVS` | |
 | A.8.32 | `pol-EVER.HISTORY`, `pol-EVER.INTENT`, `pol-EVER.BRANCH`, `pol-EVER.PARITY`, `pol-PIPE.TRACE`, `pol-PIPE.REVERT`, `pol-PIPE.GATES`, `pol-PIPE.FLAGS`, `pol-PIPE.MANUAL` | `pol-EVER`, `pol-PIPE` | |
 | A.8.33 | `pol-ENVS.MASK`, `pol-ENVS.UNMASK` | `pol-ENVS` | |
@@ -167,7 +170,7 @@ nothing to add to the clauses beside them, and an empty cell says so.
 | PW.5 | `pol-SECD.CODING` | `pol-SECD` | |
 | PW.6 | `pol-AUTV.REPRO`, `pol-AUTV.BITWISE` | `pol-AUTV` | |
 | PW.7 | `pol-EVER.PARITY` | `pol-EVER` | |
-| PW.8 | `pol-AUTV.LEVELS`, `pol-AUTV.REGRESS` | `pol-AUTV` | |
+| PW.8 | `pol-AUTV.LEVELS`, `pol-AUTV.REGRESS` | `pol-AUTV` | PW.8 is dynamic testing: DAST, fuzzing and penetration testing. `LEVELS` and `REGRESS` cover test levels and defect regression, which is the pattern `ISO 27001:2022`.A.8.29 carries. |
 | RV.1 | `pol-VURM.SCAN`, `pol-VURM.DISCLOS`, `pol-VURM.INDEP` | `pol-VURM` | |
 | RV.2 | `pol-VURM.RANK`, `pol-VURM.TIMEBOX`, `pol-VURM.SHIP`, `pol-VURM.OVERDUE` | `pol-VURM` | |
 | RV.3 | `pol-VURM.REGRESS` | `pol-VURM` | |
@@ -204,10 +207,10 @@ nothing to add to the clauses beside them, and an empty cell says so.
 | Art.5(1)(e) | `pol-DATA.DELETE`, `pol-DATA.LINGER` | `pol-DATA` | |
 | Art.5(1)(f) | `pol-DATA.LOGS` | `pol-DATA` | |
 | Art.6 | `pol-DATA.LAWFUL` | `pol-DATA` | |
-| Art.25 | `pol-DATA.UNMASK` | `pol-DATA` | |
-| Art.28 | `pol-DATA.SHARE` | `pol-DATA` | |
-| Art.30 | `pol-DATA.LOCATE` | `pol-DATA` | |
-| Art.32 | `pol-DATA.CRYPTO`, `pol-DATA.RETIRE` | `pol-DATA` | |
+| Art.25 | `pol-DATA.UNMASK` | `pol-DATA` | Article 25 is the duty to build data protection in by design and by default. `UNMASK` answers one instance of it, masking below production. `pol-SECD.REQS` states the same idea and carries no citation to this article. |
+| Art.28 | `pol-DATA.SHARE` | `pol-DATA` | Article 28 governs the controller-to-processor relationship. The written processing agreement `SHARE` requires is that instrument. Sharing with an independent controller is a case no clause here reaches. |
+| Art.30 | `pol-DATA.LOCATE` | `pol-DATA` | Article 30 requires a documented record of processing activities: purposes, categories of data and of subjects, recipients, retention and security measures. `LOCATE` requires knowing where the data lives, which is one field of that record. No clause requires the record itself. |
+| Art.32 | `pol-DATA.CRYPTO`, `pol-DATA.RETIRE` | `pol-DATA` | Article 32(1)(c) requires the ability to restore access to personal data in good time. `pol-RECV.RTORPO`, `BACKUP` and `RESTORE` are that ability, and no clause of `pol-RECV` carries a UK GDPR citation. |
 | Art.32(1)(a) | `pol-DATA.CLEAR` | `pol-DATA` | |
 | Art.32(1)(d) | `pol-VURM.SCAN` | `pol-VURM` | |
 | Art.33 | `pol-INCR.NOTIFY` | `pol-INCR` | |
