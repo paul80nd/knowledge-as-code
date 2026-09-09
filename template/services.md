@@ -25,9 +25,13 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets
-a [capability](capabilities.md)
-document that links to all six.
+independently deployed apps gets three documents. A capability spanning six services gets a
+[capability](capabilities.md) document that links to all six.
+
+**Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
+unit.** A feed of six packages, built from six folders by one workflow, is one document. The artefacts are the same
+build run over different content, so splitting it would repeat one repository, one owner and one platform six times.
+Six codebases published by one pipeline are still six services.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 

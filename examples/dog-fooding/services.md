@@ -21,9 +21,13 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets
-a capability
-document that links to all six.
+independently deployed apps gets three documents. A capability spanning six services gets a capability document that
+links to all six.
+
+**Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
+unit.** [svc-marketplace] is one branch holding four plugins, and [svc-corpus-feed] is one workflow pushing four
+packages. Their artefacts are the same build run over different content, so splitting either would repeat one
+repository, one owner and one platform four times. Four codebases published by one pipeline are still four services.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
@@ -188,3 +192,6 @@ words worth keeping are the ones thrown away.
 | `drift-against-repos` | The catalogue against the real repository list, in both directions. |
 
 <!-- END GENERATED: checks-services -->
+
+[svc-corpus-feed]: services/corpus-feed.md
+[svc-marketplace]: services/marketplace.md
