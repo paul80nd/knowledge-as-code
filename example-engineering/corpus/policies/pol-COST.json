@@ -14,6 +14,6 @@
     "Exceptions": "Deliberate over-provisioning for resilience, performance headroom or a known event departs from `SIZING`. It is a cost decision rather than an oversight, and it is recorded as a deviation under [pol-DEVI], owned by whoever made it. Short-lived experiments are exempt from right-sizing but not from ownership or from being cleaned up."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/28b3748bb48c0fa8631a59fc2057be07b87f6170/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/policies/delivery/cost-cost-as-an-nfr.md"
   }
 }

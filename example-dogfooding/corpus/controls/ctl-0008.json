@@ -27,6 +27,6 @@
     "Coverage and gaps": "`dog-fooding` is left out of `round-trip`, because it is the same shape as `payments`.\n\n`round-trip` reads one sentence of each skill: it greps `SKILL.md` for the parts file the component requires, and\nfails a skill naming another type's. Nothing else `std-PLUGIN` asks of the wording is read here.\n\nThe component list is read from `bundle.json`, which carries what the manifest declared. So a skill or hook directory somebody forgot to declare travels undeclared and fails nothing.\n\nNothing here reaches the publishing workflows. What CI proves is that a package and a plugin assemble. Whether nuget.org, GitHub Packages or the `marketplace` branch accepts either is answered after the merge.\n\nThe Claude Code CLI installs at `latest` in every one of these jobs, so a release of it can turn the gate red with no change here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/28b3748bb48c0fa8631a59fc2057be07b87f6170/examples/dog-fooding/controls/0008-publish-round-trip.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/dog-fooding/controls/0008-publish-round-trip.md"
   }
 }

@@ -6,6 +6,7 @@
     "title": "Open a pull request",
     "status": "active",
     "applies-to": [
+      "svc-corpus-feed",
       "svc-docs-site",
       "svc-kac",
       "svc-marketplace"
@@ -22,6 +23,6 @@
     "Prerequisites": "* A branch off `main`, carrying the change as commits.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --`, which is the tool this branch holds."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/28b3748bb48c0fa8631a59fc2057be07b87f6170/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/dog-fooding/processes/pull-request.md"
   }
 }
