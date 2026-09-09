@@ -82,6 +82,14 @@ public static class ValueChecks
                 report.Err(new CheckId("bare-key"),
                     $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
                     Yaml.LineOf(node, frontStart));
+
+            // Only where the spelling is right, so one omission is never reported twice. A field
+            // declaring `required-when:` is exempt because this pass reads one value at a time, and
+            // whether that field is optional depends on another. See .schema/_checks.yaml.
+            else if (!spec.Required && spec.RequiredWhen is null)
+                report.Warn(new CheckId("empty-optional-key"),
+                    $"'{name}' is optional and carries no value. Remove the key, or fill it in.",
+                    Yaml.LineOf(node, frontStart));
             return;
         }
 

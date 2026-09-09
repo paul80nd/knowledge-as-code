@@ -3,7 +3,6 @@ id: pol-{{MNEM}}
 type: policy
 tier: normative
 status: draft
-aligns-with:
 review-by:
 owner:
 tags: [ a, b ]

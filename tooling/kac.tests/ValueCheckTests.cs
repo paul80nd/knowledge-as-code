@@ -289,7 +289,30 @@ public class ValueCheckTests
     [Fact]
     public void A_bare_key_is_how_absence_is_written()
     {
-        Assert.Empty(Run("field:\n", Field("date")));
+        Assert.Empty(Run("field:\n", new FieldSpec { Name = "field", Type = "date", Required = true }));
+    }
+
+    [Fact]
+    public void A_bare_key_on_an_optional_field_is_reported()
+    {
+        Assert.Equal(["empty-optional-key"], Ids(Run("field:\n", Field("date"))));
+    }
+
+    // Whether the field is optional here depends on another field's value, and this pass reads one
+    // value at a time.
+    [Fact]
+    public void A_required_when_field_is_exempt_from_the_optional_reading()
+    {
+        var spec = new FieldSpec { Name = "field", Type = "date", RequiredWhen = "status = live" };
+        Assert.Empty(Run("field:\n", spec));
+    }
+
+    // Two findings would be one omission reported twice, so the spelling is the finding and the
+    // optional reading is not reached.
+    [Fact]
+    public void A_value_that_is_absent_and_misspelt_is_reported_once()
+    {
+        Assert.Equal(["bare-key"], Ids(Run("field: null\n", Field("date"))));
     }
 
     [Theory]

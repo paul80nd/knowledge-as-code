@@ -6,7 +6,6 @@ status: active
 owned-by:
 classification:
 retention:
-flows-to:
 owner:
 tags: [ a, b ]
 ---

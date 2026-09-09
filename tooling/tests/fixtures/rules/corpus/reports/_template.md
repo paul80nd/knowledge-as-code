@@ -7,7 +7,6 @@ owner:
 generated:
 sources:
 confirmed:
-tags:
 ---
 
 # {{Title}}

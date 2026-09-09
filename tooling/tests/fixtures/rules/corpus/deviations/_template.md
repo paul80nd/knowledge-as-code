@@ -7,7 +7,6 @@ departs-from:
 accepted-on:
 review-by:
 closed-on:
-applies-to:
 owner:
 tags: [ a, b ]
 ---

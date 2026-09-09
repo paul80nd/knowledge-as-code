@@ -6,7 +6,6 @@ status: draft
 owner:
 explains:
 review-by:
-tags:
 ---
 
 # {{Title}}

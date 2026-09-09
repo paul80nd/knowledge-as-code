@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` warns where an optional field is written with no value.** `empty-optional-key` reports a
+  bare key on a field the schema does not require, because it says exactly what leaving the key out says. A
+  required field is the other case, and `required-field` still reports that one. A field declaring
+  `required-when:` is exempt. The templates a corpus starts from now carry the required fields alone, and each
+  one names the optional fields it leaves out. Take those with `kac update --from <template>`.
 - **A plugin component can declare itself standalone.** `metadata.components` in `plugin.json` takes
   `"standalone": true` on a component whose `requires` is empty. `kac bundle` trims an empty-`requires` component when
   every component reading a type has gone, because such a component exists to support those. A standalone one supports

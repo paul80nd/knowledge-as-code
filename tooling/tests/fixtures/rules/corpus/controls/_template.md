@@ -6,8 +6,6 @@ status: planned
 verifies:
 mechanism:
 frequency:
-evidence:
-applies-to:
 owner:
 tags: [ a, b ]
 ---

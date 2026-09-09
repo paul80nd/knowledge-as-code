@@ -3,7 +3,6 @@ id: pol-UNPL
 type: policy
 tier: normative
 status: active
-aligns-with:
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---

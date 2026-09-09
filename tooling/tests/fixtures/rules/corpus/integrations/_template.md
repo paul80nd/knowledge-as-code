@@ -6,7 +6,6 @@ status: active
 vendor:
 used-by:
 criticality:
-their-sla:
 owner:
 tags: [ a, b ]
 ---
