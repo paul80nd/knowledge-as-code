@@ -44,15 +44,17 @@ nothing genuinely maps, the control is absent from the corpus and that absence i
 
 **What this corpus is responsible for.** Annex A has 93 controls and the Statement of Applicability covers all of them;
 this corpus is the engineering function's share and no more. Roughly a third of Annex A is deliberately answered
-elsewhere in the management system:
+elsewhere in the management system, whole or in part:
 
 | Area                                                     | Owned by                                  |
 |----------------------------------------------------------|-------------------------------------------|
 | Physical controls: `A.7.1`–`A.7.14` entire               | Facilities                                |
 | People controls: `A.6.1`–`A.6.7`, since `A.6.8` is ours  | HR, with the security awareness programme |
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
+| Compliance review, inside `A.5.36`                       | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
+| Retention schedules, inside `A.5.33`                     | The business data owner / DPO             |
 | Supplier contracting: `A.5.20`                           | Procurement and legal                     |
 | Corporate IT: `A.8.1`, `A.8.23`, `A.8.34`                | IT operations                             |
 

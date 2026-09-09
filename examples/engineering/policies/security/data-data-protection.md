@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.5.9, A.5.12, A.5.14, A.5.34, A.8.10, A.8.11, A.8.12, A.8.24 ]
+    clauses: [ A.5.9, A.5.12, A.5.14, A.5.33, A.5.34, A.8.10, A.8.11, A.8.12, A.8.24 ]
   - framework: UK GDPR
     clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
                Art.44, Ch.III ]
@@ -48,6 +48,7 @@ data itself requires, in whichever environment it sits._
 | `RIGHTS`  | **MUST** support the rights of the people the data concerns                                                                   | [UK GDPR].Ch.III                                                   |
 | `LOCATE`  | **MUST** know where our sensitive and personal data lives                                                                     | [ISO 27001:2022].A.5.9, [UK GDPR].Art.30                           |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                      | [ISO 27001:2022].A.5.14, [UK GDPR].Art.44                          |
+| `KEEP`    | **MUST** keep the records we are required to retain intact and retrievable for the retention period set for them              | [ISO 27001:2022].A.5.33                                            |
 | `DELETE`  | **MUST** delete data when its defined retention period ends                                                                   | [ISO 27001:2022].A.8.10, [UK GDPR].Art.5(1)(e)                     |
 | `UNMASK`  | **MUST NOT** place unmasked production or personal data into an environment below production. See [pol-ENVS]                  | [ISO 27001:2022].A.8.11, [UK GDPR].Art.25                          |
 | `SHARE`   | **MUST NOT** send personal data to a third party before a written processing agreement covers it                              | [ISO 27001:2022].A.5.14, [UK GDPR].Art.28                          |
