@@ -1,4 +1,4 @@
-example-libraries 0.2.1 travels with this session as data, exported 2026-09-09.
+example-libraries 0.2.2 travels with this session as data, exported 2026-09-09.
 adrs. 1 record: Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to.
 glossary. 29 entries across 3 records: Example Libraries, Knowledge as code and Search.
 services. 9 records: Catalogue API, Catalogue, Covers CDN, Lending, Notices and 4 more.
