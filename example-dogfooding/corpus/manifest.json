@@ -3,10 +3,10 @@
   "corpus": "example-dogfooding",
   "shortcode": "dog",
   "contentVersion": "0.19.0",
-  "mechanismVersion": 10,
-  "commit": "9eca622af58a22d8db1a4dc4cf21ac150d932da2",
+  "mechanismVersion": 11,
+  "commit": "a749e0a98a03707f5166755d6d727718c8f6b6e9",
   "dirty": false,
-  "generatedAt": "2026-09-09T11:21:23Z",
+  "generatedAt": "2026-09-09T12:03:08Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "9eca622af58a22d8db1a4dc4cf21ac150d932da2"
+    "ref": "a749e0a98a03707f5166755d6d727718c8f6b6e9"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.12.0",
+      "contentVersion": "0.12.1",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9eca622af58a22d8db1a4dc4cf21ac150d932da2/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a749e0a98a03707f5166755d6d727718c8f6b6e9/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "9eca622af58a22d8db1a4dc4cf21ac150d932da2"
+        "ref": "a749e0a98a03707f5166755d6d727718c8f6b6e9"
       }
     }
   ],
