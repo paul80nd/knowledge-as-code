@@ -52,6 +52,7 @@ recover._
 | `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it             | [ISO 27001:2022].A.8.14, [Azure WAF].reliability                          |
 | `IDEMPOT` | **MUST** make operations that may be retried safe to re-run                                                                    | [Azure WAF].reliability                                                   |
 | `UNTEST`  | **MUST NOT** rely on a backup that has never been test-restored                                                                | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `FAILOVR` | **MUST NOT** rely on a failover that has never been tested                                                                     | [ISO 27001:2022].A.8.14                                                   |
 | `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                                        | [Azure WAF].reliability                                                   |
 | `REDUND`  | SHOULD run critical services across more than one failure domain                                                               | [ISO 27001:2022].A.8.14                                                   |
 | `SHED`    | SHOULD shed or slow work deliberately when load exceeds capacity, turning some requests away rather than failing unpredictably | [Azure WAF].reliability                                                   |

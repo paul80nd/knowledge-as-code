@@ -59,6 +59,7 @@ elsewhere in the management system, whole or in part:
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
 | Retention schedules, inside `A.5.33`                     | The business data owner / DPO             |
 | Supplier contracting: `A.5.20`                           | Procurement and legal                     |
+| Network service agreements, inside `A.8.21`              | Procurement and legal                     |
 | Corporate IT: `A.8.1`, `A.8.23`, `A.8.34`                | IT operations                             |
 
 Without saying so, a reader who takes the rule above at face value counts every uncited control as a finding, and most
