@@ -100,6 +100,11 @@ applications. That duty includes publishing an accessibility statement and keepi
 expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
 AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
 
+`§9` is web content, `§10` the documents an application produces and `§11` software that is not a web page, and
+[pol-A11Y] verifies against all three. The rest is not ours. `§12.2` is what a support service tells somebody about an
+accessibility feature, which the support function answers. `§13` binds ICT carrying two-way voice or reaching emergency
+services, and we build none.
+
 ## Self-obligated
 
 ### WCAG
