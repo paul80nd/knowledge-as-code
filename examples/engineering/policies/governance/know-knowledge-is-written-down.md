@@ -28,8 +28,9 @@ work.
 
 ## Scope
 
-All solutions we build or operate. That covers setup and build instructions, operational runbooks, and architecturally
-significant decisions. It also covers the reference material a person or an agent needs to work on the system safely.
+All solutions we build or operate. That covers what a feature is meant to do, setup and build instructions, operational
+runbooks, and architecturally significant decisions. It also covers the reference material a person or an agent needs to
+work on the system safely.
 
 ## Clauses
 
@@ -41,6 +42,7 @@ significant decisions. It also covers the reference material a person or an agen
 | `AGENTS` | **MUST** document the rules we expect agent-produced work to follow, where the agents doing that work will read them ([pol-AGNT])                                        |                         |
 | `HEADS`  | **MUST NOT** allow knowledge that is critical to operating or recovering a system to exist only in someone's head or in an ephemeral conversation                        | [ISO 27001:2022].A.5.37 |
 | `COPY`   | **MUST NOT** maintain a separate copy of documentation for agents to read                                                                                                |                         |
+| `BEHAVE` | SHOULD state a new feature's expected behaviour as scenarios the tests can run, before it is built                                                                       |                         |
 
 ## Exceptions
 
