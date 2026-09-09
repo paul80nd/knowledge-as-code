@@ -26,6 +26,6 @@
     "Coverage and gaps": "The matrix covers `examples/`. `template/` is where these files are authored, so nothing holds it to a copy of itself.\n\n`.schema/` and `template/.plugin/` sit outside the manifest, because a corpus reads both where they are authored\nrather than taking a copy. A corpus created elsewhere receives its own `.editorconfig`, and each corpus here declares\nthat file under `skip:`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0005-update-check.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0c4894d30a8b492c6096209e667a2d0fd1e50d14/examples/dog-fooding/controls/0005-update-check.md"
   }
 }

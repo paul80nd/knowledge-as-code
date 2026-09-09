@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.20.0",
+  "contentVersion": "0.20.1",
   "mechanismVersion": 11,
-  "commit": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c",
+  "commit": "0c4894d30a8b492c6096209e667a2d0fd1e50d14",
   "dirty": false,
-  "generatedAt": "2026-09-09T13:01:06Z",
+  "generatedAt": "2026-09-09T13:38:49Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0c4894d30a8b492c6096209e667a2d0fd1e50d14/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c"
+    "ref": "0c4894d30a8b492c6096209e667a2d0fd1e50d14"
   },
   "sources": [
     {
@@ -30,10 +30,10 @@
       "contentVersion": "0.13.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/0c4894d30a8b492c6096209e667a2d0fd1e50d14/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "683a4e20b8805c2153a9cf6271ed2bd1e8fe622c"
+        "ref": "0c4894d30a8b492c6096209e667a2d0fd1e50d14"
       }
     }
   ],

@@ -27,6 +27,6 @@
     "Conformance checklist": "- [ ] The repository root holds an `.editorconfig`, and it matches the upstream one apart from documented departures.\n- [ ] A build with a style violation fails.\n- [ ] `<NoWarn>` is empty in every project file.\n- [ ] Every `SuppressMessage` in the repository carries a `Justification` a reader can act on.\n- [ ] The solution builds with zero warnings from a clean checkout.\n- [ ] No `!` appears in the repository outside a test asserting a null argument is refused."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/engineering/standards/platform/dotnet/code-style.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0c4894d30a8b492c6096209e667a2d0fd1e50d14/examples/engineering/standards/platform/dotnet/code-style.md"
   }
 }

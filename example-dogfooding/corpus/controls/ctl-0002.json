@@ -26,6 +26,6 @@
     "Coverage and gaps": "It reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list holding no jobs, so this fault cannot arise there. Whether that file still runs the same steps in the same order is a reader's to confirm.\n\nWhether the branch rule still names `validate` is outside the repository, and [ctl-0001] says what covers it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/683a4e20b8805c2153a9cf6271ed2bd1e8fe622c/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0c4894d30a8b492c6096209e667a2d0fd1e50d14/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
   }
 }
