@@ -39,6 +39,7 @@ author, not its approver, so `DUTIES` still requires a second person to release 
 | `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3, [OWASP ASVS 4.0].V4 |
 | `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it. See [pol-AGNT]         | [ISO 27001:2022].A.5.3                                               |
 | `AUTHN`   | **MUST** require strong authentication for access to our systems, our code and our data                               | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2                          |
+| `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it reaches, before it is made                | [ISO 27001:2022].A.5.18                                              |
 | `RECERT`  | **MUST** review access rights on a defined cycle, confirming each grant is still needed                               | [ISO 27001:2022].A.5.18                                              |
 | `REVOKE`  | **MUST** remove access promptly when a role changes or a person leaves                                                | [ISO 27001:2022].A.5.18                                              |
 | `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2, [ISO 27001:2022].A.8.18                      |

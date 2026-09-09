@@ -54,6 +54,7 @@ elsewhere in the management system, whole or in part:
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
 | Compliance review, inside `A.5.36`                       | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
+| Forensic custody, inside `A.5.28`                        | Legal                                     |
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
 | Retention schedules, inside `A.5.33`                     | The business data owner / DPO             |
 | Supplier contracting: `A.5.20`                           | Procurement and legal                     |
