@@ -78,6 +78,10 @@ the duty. The practical difference is who can waive it: an Annex A control is ou
 justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
 break the law rather than a risk to accept.
 
+Not all of it is engineering's. Deciding whether a data subject's request is valid, and answering the person within the
+month Article 12 allows, belongs to the DPO. What engineering owes is the capability that answer rests on: finding,
+exporting, correcting, deleting and restricting one person's data in every store that holds it.
+
 ### PSBAR 2018
 
 **Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
