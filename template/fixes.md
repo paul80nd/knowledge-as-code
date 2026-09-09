@@ -28,8 +28,7 @@ already fixed.
 **Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
 resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
 see how far the fix has been taken: agents alone leave it machine-confirmed, and one `human:` line makes it
-human-reviewed. Those words are a reading rather than a field, because this type publishes nothing and no key carries
-the answer.
+human-reviewed. An export carries that reading as `trust`, derived from the list so that one place names who checked.
 
 **Never write straight to a fix from a session.** An agent cannot verify its own observation, so capture a discovery
 and let somebody else check it at promotion.
