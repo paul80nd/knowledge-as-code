@@ -7,7 +7,7 @@ owner: human:alex.doe
 generated: { at: 2026-09-08T10:00:00Z, by: kac }
 sources:
   - { resource: fixture-corpus, version: "0.2.0" }
-confirmed:
+verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
 ---
 

@@ -6,7 +6,7 @@ status: draft
 owner:
 generated:
 sources:
-confirmed:
+verified:
 ---
 
 # {{Title}}
@@ -28,9 +28,12 @@ beside them.
   what produced it. `by` names a producer and its version together, so a report an agent extended names the agent the
   same way the tool names itself.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
-  version by hand where a corpus moved and nothing in this report changed, and add a `confirmed` entry saying you
+  version by hand where a corpus moved and nothing in this report changed, and add a `verified` entry saying you
   checked.
-* **`confirmed`**: every confirmation this report has had, oldest first. A report nobody confirmed is output.
+* **`verified`**: every verification this report has had, oldest first. A report nobody verified is output. Write a
+  person as `human:alex.doe`, or an agent with its version as `coverage-sweep/1.2.0`. Two actors are refused: a
+  `role:`, because a post cannot read an answer, and the producer in `generated.by`, because a run cannot sign off
+  its own output.
 
 **Fields this template leaves out.** `tags` is optional, so the frontmatter above does not carry it. Add a key where you
 have a value for it, and leave it out where you do not. [The type page](../reports.md#metadata) says what each one
@@ -55,4 +58,4 @@ One row per thing counted, with the judgement cells answered.
 
 ## What this leaves open
 
-What the tool declined to decide, and what whoever confirmed this decided instead.
+What the tool declined to decide, and what whoever verified this decided instead.

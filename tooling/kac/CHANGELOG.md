@@ -19,6 +19,20 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`confirmed` is now `verified`, it takes any actor, and the export carries the trust tier derived from it.** The
+  field is renamed on `fixes` and `reports`, which is what the [Open Knowledge
+  Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list. It no
+  longer refuses an agent: a session that reproduced a symptom and ran the resolution has checked something real, and
+  `verified-by-a-known-actor` admits it, named with its version the way the tool names itself. That rule still refuses
+  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file now ships as `trust`:
+  an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is `human-reviewed`. A
+  type whose export does not name `verified` carries `trust` as `null`. One actor is still refused, and
+  `no-self-verification` is the new check: a report may not be verified by the producer its `generated.by` names. A
+  fix declares `raiser-does-not-verify` and nothing runs it, because nothing on a fix names who raised it. `kac
+  report` writes `verified: []` where it wrote `confirmed: []`. A corpus that adopted either type renames the key in
+  every record and in its `_template.md`, and takes the new schema with `kac update --from <template>`. The `reports`
+  type's `shapeVersion` moves to 2, so a consumer reading records of that type reads the new key.
+
 - **The `faq` type is now `fix`, and its `Fix` section is now `Resolution`.** A record lands in `fixes/` as
   `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and
   Resolution. The type and its third section no longer share a word. A corpus that adopted `faqs` renames the

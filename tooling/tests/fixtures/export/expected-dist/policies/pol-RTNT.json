@@ -1,6 +1,7 @@
 {
   "type": "policies",
   "path": "policies/rtnt-retention.md",
+  "trust": null,
   "fields": {
     "id": "pol-RTNT",
     "title": "Data is kept for as long as somebody needs it",

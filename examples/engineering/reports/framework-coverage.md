@@ -7,7 +7,7 @@ owner: human:alex.doe
 generated: { at: 2026-09-08T10:45:58Z, by: kac/0.23.0+955356490b0bfa1f7caa3863fa100346dd6849c1 }
 sources:
   - { resource: example-engineering, version: "0.12.0" }
-confirmed:
+verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
 tags: [ coverage, frameworks ]
 ---
@@ -225,5 +225,5 @@ nothing to add to the clauses beside them, and an empty cell says so.
 
 ## What this leaves open
 
-**A reference on one clause is one citation from losing its coverage.** The tool counts the citations it can see. Whether a control still has honest coverage, and whether an uncited reference should be removed from the register, belongs to whoever confirms this report.
+**A reference on one clause is one citation from losing its coverage.** The tool counts the citations it can see. Whether a control still has honest coverage, and whether an uncited reference should be removed from the register, belongs to whoever verifies this report.
 

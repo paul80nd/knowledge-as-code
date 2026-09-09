@@ -56,18 +56,12 @@ Scenario: An actor field without its prefix is refused
     | line | check         | message                                                              |
     | 6    | field-pattern | 'owner' value 'alex.doe' does not match ^(human\|role):[a-z0-9.-]+$. |
 
-Scenario: A role is refused where the key records who performed an act
-  When I validate the corpus
-  Then the findings for "fixes/role-cannot-confirm.md" are exactly:
-    | line | check                 | message                                                                                                                                                                                                                                              |
-    | 1    | confirmed-by-a-person | A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands. |
-
 Scenario: A timestamp is held to its shape and then to the calendar
   When I validate the corpus
-  Then the findings for "fixes/confirmed-at-is-not-a-moment.md" are exactly:
+  Then the findings for "fixes/verified-at-is-not-a-moment.md" are exactly:
     | line | check            | message                                                                        |
-    | 7    | timestamp-format | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.    |
-    | 8    | timestamp-format | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'. |
+    | 7    | timestamp-format | 'verified.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.    |
+    | 8    | timestamp-format | 'verified.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'. |
 
 Scenario: An int list is read one entry at a time
   When I validate the corpus
@@ -77,7 +71,7 @@ Scenario: An int list is read one entry at a time
 
 Scenario: The corpus as a whole produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 12 documents and 0 skipped
+  Then validation reports 11 documents and 0 skipped
   And no warnings are reported
   And the findings are exactly:
     | file                                  | line | check              | message                                                                             |
@@ -90,8 +84,7 @@ Scenario: The corpus as a whole produces exactly these findings and nothing else
     | adrs/0005-impossible-date.md          | 5    | date-format        | 'decided-on' is not a date on the calendar, got '2026-13-40'.                       |
     | adrs/0006-owner-without-a-prefix.md   | 6    | field-pattern      | 'owner' value 'alex.doe' does not match ^(human\|role):[a-z0-9.-]+$.                |
     | capabilities/ado-epics-that-are-not-numbers.md | 7 | int-format    | 'ado-epics' entry 'EPIC-7' is not a whole number.                                    |
-    | fixes/confirmed-at-is-not-a-moment.md | 7    | timestamp-format   | 'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.         |
-    | fixes/confirmed-at-is-not-a-moment.md | 8    | timestamp-format   | 'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.      |
-    | fixes/role-cannot-confirm.md          | 1    | confirmed-by-a-person | A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands. |
+    | fixes/verified-at-is-not-a-moment.md | 7    | timestamp-format   | 'verified.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.         |
+    | fixes/verified-at-is-not-a-moment.md | 8    | timestamp-format   | 'verified.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.      |
     | fixes/too-few-keywords.md             | 5    | min-items          | 'symptom-keywords' has 2 entries: the schema asks for at least 3.                   |
     | tools/bad-licence-pattern.md          | 5    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                   |

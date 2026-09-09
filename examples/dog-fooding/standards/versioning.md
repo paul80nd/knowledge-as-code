@@ -48,6 +48,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
   and its patch a change of wording.
 - A change to a field's accepted value format, its name, or its removal **MUST** move `content-version`'s major where
   the change reaches a record whose type names that field under `export:`, and its patch where it reaches none.
+- A corpus below 1.0.0 **MUST** move its minor where the rule above asks for its major, because reaching 1.0.0 is a
+  statement about that corpus's stability rather than about the change in front of you.
 - A field added **MUST** move `content-version`'s minor where a record's type names it under `export:`, and its patch
   where none does.
 - A move of `<Version>` **MUST** name a change to `kac` that a user can observe.

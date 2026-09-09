@@ -153,9 +153,13 @@ public record ExportedType(
     IReadOnlyDictionary<string, string> Sections,
     string? FrameworksFile = null);
 
-// One record, carrying what its type's `export:` block declares and nothing else. `Fields` and
-// `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does not
-// know still gets a document it can walk.
+// One record, carrying what its type's `export:` block declares, and one value derived from it. `Fields`
+// and `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does
+// not know still gets a document it can walk.
+//
+// `Trust` is the derived one, and it is the exporter's rather than any record's. It reads the `verified`
+// list and answers with one of the Open Knowledge Format's three tiers. A type whose export declares no
+// `verified` field leaves it null, which is the same absence every other key spells.
 //
 // Absent is `null` throughout, here and on every line of the flat file. `Exporter.Absent` is where that
 // is decided. A section carried at `reference` is `null` for that reason, and a section the record never
@@ -167,6 +171,7 @@ public record ExportedType(
 public record ExportRecord(
     string Type,
     string Path,
+    string? Trust,
     IReadOnlyDictionary<string, JsonNode?> Fields,
     IReadOnlyDictionary<string, string?> Sections,
     ExportLinks? Links);

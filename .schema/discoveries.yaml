@@ -15,9 +15,9 @@ detail: >
 
 versus:
   fixes: >
-    A discovery is unverified and might be wrong or already fixed. A fix has been confirmed by a human and
-    carries authority. Never write straight to a fix from a session. Capture the discovery and let promotion
-    do the work.
+    A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody who
+    checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery
+    and let promotion do the work.
 
 lineage:
   prior-art: "None. See [What has no precedent](https://paul80nd.github.io/knowledge-as-code/framework/lineage/#what-has-no-precedent)"

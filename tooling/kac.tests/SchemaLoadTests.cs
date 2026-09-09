@@ -22,7 +22,7 @@ public class SchemaLoadTests
     public void A_field_naming_a_shape_takes_its_keys()
     {
         var schema = Schema.Load(WithShapes("shape: event"));
-        var field = schema.ByFolder["adrs"].Fields["confirmed"];
+        var field = schema.ByFolder["adrs"].Fields["verified"];
 
         Assert.Equal(["at", "by"], field.Entry?.Select(k => k.Name));
         Assert.Equal("timestamp", field.Entry?[0].Type);
@@ -32,7 +32,7 @@ public class SchemaLoadTests
     [Fact]
     public void A_field_naming_a_shape_nothing_declares_says_so()
         => Assert.Contains("_shapes.yaml declares no such shape",
-            Schema.Load(WithShapes("shape: occurrence")).ByFolder["adrs"].Fields["confirmed"].Problem);
+            Schema.Load(WithShapes("shape: occurrence")).ByFolder["adrs"].Fields["verified"].Problem);
 
     // A shape and an `entry:` block are two accounts of one thing, and merging them is deliberately not
     // a mechanism this language has.
@@ -44,7 +44,7 @@ public class SchemaLoadTests
                              id:
                                prefix: adr
                              fields:
-                               confirmed:
+                               verified:
                                  type: object
                                  shape: event
                                  entry:
@@ -53,7 +53,7 @@ public class SchemaLoadTests
                              """;
 
         Assert.Contains("drop one of the two",
-            Schema.Load(files).ByFolder["adrs"].Fields["confirmed"].Problem);
+            Schema.Load(files).ByFolder["adrs"].Fields["verified"].Problem);
     }
 
     // A type declaring one object field, over a `_shapes.yaml` holding the shape it may name.
@@ -75,7 +75,7 @@ public class SchemaLoadTests
                               id:
                                 prefix: adr
                               fields:
-                                confirmed:
+                                verified:
                                   type: object
                                   {declaration}
                               """;

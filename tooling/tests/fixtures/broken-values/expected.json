@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 12,
+    "validated": 11,
     "templates": 5,
     "skipped": 0,
-    "errors": 14,
+    "errors": 13,
     "warnings": 0,
     "infos": 0
   },
@@ -72,32 +72,25 @@
       "message": "'ado-epics' entry 'EPIC-7' is not a whole number."
     },
     {
-      "file": "fixes/confirmed-at-is-not-a-moment.md",
-      "line": 7,
-      "severity": "error",
-      "check": "timestamp-format",
-      "message": "'confirmed.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'."
-    },
-    {
-      "file": "fixes/confirmed-at-is-not-a-moment.md",
-      "line": 8,
-      "severity": "error",
-      "check": "timestamp-format",
-      "message": "'confirmed.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'."
-    },
-    {
-      "file": "fixes/role-cannot-confirm.md",
-      "line": 1,
-      "severity": "error",
-      "check": "confirmed-by-a-person",
-      "message": "A confirmation here names something other than a person. Write `human:alex.doe`. An agent, a session id and a team alias are all refused, because none of them can be asked what it checked. `role:` is refused as well: a post cannot read an answer, and the person who did read it stays named after the post changes hands."
-    },
-    {
       "file": "fixes/too-few-keywords.md",
       "line": 5,
       "severity": "error",
       "check": "min-items",
       "message": "'symptom-keywords' has 2 entries: the schema asks for at least 3."
+    },
+    {
+      "file": "fixes/verified-at-is-not-a-moment.md",
+      "line": 7,
+      "severity": "error",
+      "check": "timestamp-format",
+      "message": "'verified.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'."
+    },
+    {
+      "file": "fixes/verified-at-is-not-a-moment.md",
+      "line": 8,
+      "severity": "error",
+      "check": "timestamp-format",
+      "message": "'verified.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'."
     },
     {
       "file": "tools/bad-licence-pattern.md",

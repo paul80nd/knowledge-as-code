@@ -4,7 +4,7 @@ type: fix
 tier: normative
 status: active
 symptom-keywords:
-confirmed:
+verified:
 review-by:
 owner:
 tags: [ a, b ]

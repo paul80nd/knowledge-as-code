@@ -1,6 +1,7 @@
 {
   "type": "glossary",
   "path": "glossary/search.md",
+  "trust": null,
   "fields": {
     "id": "gls-search",
     "title": "Search",

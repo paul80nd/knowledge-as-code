@@ -29,7 +29,7 @@ deliberate: an observation nobody has needed in three months was probably situat
 
 Boundaries:
 
-* **[Fix](fixes.md)**: confirmed, general, current, and carries authority. That is what a discovery is promoted *to*.
+* **[Fix](fixes.md)**: verified, general, current, and carries authority. That is what a discovery is promoted *to*.
 * **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
 * **A bug.** If it is broken and should be fixed, raise a work item. A discovery records something surprising, not
   something owed.
@@ -69,8 +69,8 @@ up, don't verify it first, and don't write it as a fix.
 The one flow that crosses tiers. Where the observation turns out to be a rule people should follow, promote it to a
 **standard** instead, and that needs an ADR first.
 
-1. A human confirms the observation is real, general, and still current.
-2. Create the fix with `promoted-from`, and a `confirmed` entry naming who confirmed it and when.
+1. Somebody other than whoever raised it checks the observation is real, general, and still current.
+2. Create the fix with `promoted-from`, and a `verified` entry naming who checked it and when.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
 Nothing proposes a promotion automatically

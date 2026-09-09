@@ -4,7 +4,7 @@ type: fix
 tier: normative
 status: active
 symptom-keywords: [timeout, upload]
-confirmed:
+verified:
   - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }
 review-by: "2026-12-31"
 owner: human:alex.doe

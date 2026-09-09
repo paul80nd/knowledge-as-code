@@ -45,7 +45,7 @@ The frontmatter carries `generated`, naming the tool and version that wrote the 
 carries `sources`, naming this corpus and each corpus it imports, with the `content-version` each answered at.
 
 Only the tool knows both, so it writes both rather than leaving a reader to work them out. The frontmatter arrives with
-`id`, `owner` and `confirmed` left empty, because a report is a record somebody owns and confirms.
+`id`, `owner` and `verified` left empty, because a report is a record somebody owns and somebody else verifies.
 
 ## Examples
 

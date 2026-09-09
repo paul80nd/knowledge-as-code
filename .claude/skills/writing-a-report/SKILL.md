@@ -43,7 +43,10 @@ coverage sits on. Where the verdict is obvious from the row, leave the cell empt
    them.
 3. Fill `id`, `owner` and `status`. `generated` and `sources` arrive filled in.
 4. Answer every `Verdict` cell, and every `Note` that earns one.
-5. Add a `confirmed` entry naming the person who read it. Ask them; do not write a name they have not given you.
+5. Add a `verified` entry naming whoever read it. A person is `human:alex.doe`, and you ask them rather than writing a
+   name they have not given you. An agent is named with its version the way the tool names itself, as
+   `coverage-sweep/1.2.0`, and a report verified by agents alone stays machine-confirmed until a person adds a line.
+   Two actors are refused: a `role:`, and the producer in `generated.by`.
 6. Run `kac validate`, then `kac generate`.
 
 **A verdict you cannot reach is a question, not a blank.** Ask whoever owns the area. A report published with an empty
@@ -54,8 +57,8 @@ cell says the corpus was read and it was not.
 A report is wrong the moment the corpus moves, and `report-stale` says so once `sources` falls behind.
 
 **Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, raise the
-`sources` version by hand and leave `confirmed` alone. A version the corpus moved for something else is no reason to
-claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `confirmed` entry.
+`sources` version by hand and leave `verified` alone. A version the corpus moved for something else is no reason to
+claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `verified` entry.
 
 **The merge, in order:**
 
@@ -67,7 +70,7 @@ claim a fresh read. Where the coverage itself moved, run the report again, merge
    note may have gone stale. A clause that lost one needs a fresh verdict.
 5. Carry forward every section the tool does not write. It writes `Limits`, `Totals`, the rows, and
    `What this leaves open`, and anything else on the page is yours.
-6. Take the new `generated` and `sources` whole, and add a `confirmed` entry.
+6. Take the new `generated` and `sources` whole, and add a `verified` entry.
 
 **Nothing marks a cell as carried forward.** The judgement lives in the cell, so a merge is a read of two documents
 rather than a splice of one into the other. A marker would be a second thing to keep in step and the first thing to
