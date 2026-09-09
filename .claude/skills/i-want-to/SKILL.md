@@ -36,6 +36,7 @@ than an order.
 | apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)             |
 | publish a report, or bring one up to date                 | [writing-a-report](../writing-a-report/SKILL.md)                                      |
 | write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md) |
+| change a skill, a hook or `plugin.json`                   | [std-PLUGIN](../../../examples/dog-fooding/standards/plugin.md)                       |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)           |
 
 **Every other row ends by running `prc-pull-request`.** It is where the version, the changelog and the pages your
@@ -52,6 +53,7 @@ rather than by which folder holds them.
 | a report record, which takes `writing-a-record` and then the verdicts on top of it                | `writing-a-report`    |
 | a comment, a feature document, a test name, or the changelog                                      | `writing-in-the-tool` |
 | the root `README.md`, `PACKAGE.md`, or the documentation site                                     | `writing-the-docs`    |
+| a skill, a hook or a `plugin.json` under `.plugin/`, whose rules are `std-PLUGIN`                 | nothing more          |
 | a commit message or a pull request body                                                           | nothing more          |
 
 ## What holds whatever you are doing
