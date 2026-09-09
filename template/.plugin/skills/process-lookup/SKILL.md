@@ -16,7 +16,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<record>.json             # one process t
 ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<shortcode>/<record>.json # one process a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in.
 
 ## Find one process, and follow that one
@@ -30,8 +30,7 @@ runbook, and a runbook is a different type that may not have travelled at all.
 ## Search the trigger, not the title
 
 **There is no flat file here.** A process is followed whole, so the record is the unit and each one is its own file.
-Point your Grep tool at `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`, ask for matching content, and search
-case-insensitively.
+Search `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`, and read the files that hit.
 
 What travels is what decides whether a process is yours:
 
