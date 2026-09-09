@@ -116,16 +116,16 @@ export:
     alone.
 
     `status` and `review-by` say whether the answer still holds. `fixed-upstream` is the value that
-    earns the pair: the cause is gone, and a consumer following the resolution would be repairing
-    something it does not have.
+    earns them both: the cause is gone, so a consumer following the resolution repairs something its
+    own estate no longer has.
 
     `applies-to` names services, and a service travels, so a consumer holding the catalogue follows each
     id to the record.
 
     `How we found it` stays behind, for the reason `Rationale and provenance` stays behind on a
     standard. It carries the diagnostic route, and a consumer acts on the answer. `Why it happens` goes
-    with it, because it points at the design flaw the resolution works around and at wherever that flaw
-    is tracked, which is a place only this estate can open.
+    with it. That section points at the design flaw the resolution works around, and at wherever the
+    flaw is tracked, which is a place only this estate can open.
 
     `promoted-from` names a discovery, and a discovery travels nowhere, so the id would reach nothing.
 

@@ -15,7 +15,7 @@ shortcode: pay
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.9.1"
+content-version: "0.10.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -52,13 +52,14 @@ upstream:
   ref:
   commit:
   template-version: 11
-  taken-on: "2026-08-24"
+  taken-on: "2026-09-09"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.
 update-policy: cautious
 
 # The types this corpus chose. A domain corpus holds the rules that are its own and inherits the rest.
 types:
+  - fixes
   - nfrs
   - services
   - standards

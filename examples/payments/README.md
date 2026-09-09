@@ -29,6 +29,7 @@
 
 | Type                     | Tier        | What it holds                                                                                      |
 |--------------------------|-------------|----------------------------------------------------------------------------------------------------|
+| [Fix](fixes.md)          | normative   | A problem with a verified resolution, promoted from a discovery once somebody has checked it.      |
 | [NFR](nfrs.md)           | normative   | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.     |
 | [Service](services.md)   | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner. |
 | [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.            |

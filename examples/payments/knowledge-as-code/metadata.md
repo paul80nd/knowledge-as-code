@@ -40,7 +40,8 @@ what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
-[NFR](../nfrs.md#metadata) · [Service](../services.md#metadata) · [Standard](../standards.md#metadata)
+[Fix](../fixes.md#metadata) · [NFR](../nfrs.md#metadata) · [Service](../services.md#metadata) ·
+[Standard](../standards.md#metadata)
 
 <!-- END GENERATED: types-metadata -->
 

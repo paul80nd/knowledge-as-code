@@ -3,7 +3,8 @@ id: fix-0001
 type: fix
 tier: normative
 status: active
-symptom-keywords: [actionlint, brew, homebrew, linters, macos, "no matching distribution found", pip, python, requirements.txt, yamllint]
+symptom-keywords: [actionlint, brew, homebrew, linters, macos, "no matching distribution found", pip, python,
+  requirements.txt, yamllint]
 verified:
   - { at: 2026-09-02T17:27:31Z, by: human:paul.law }
 review-by: "2027-03-09"
@@ -47,8 +48,8 @@ pin because that is what it was asked for, and says nothing about the interprete
    actionlint --version  # 1.7.12
    ```
 
-Homebrew serves the pinned yamllint and the pinned actionlint together, and the `lint` job takes actionlint from `go
-install` rather than from the requirements file.
+Homebrew serves the pinned yamllint and the pinned actionlint together. The `lint` job takes actionlint from a
+`go install` line instead, so `.github/requirements.txt` never names it.
 
 ## Why it happens
 
@@ -58,9 +59,9 @@ yamllint drops a Python version.
 
 ## How we found it
 
-Read the version list rather than the message above it. A list that stops just short of the pin is the interpreter
-filtering the index, and `/usr/bin/python3 --version` is the next command. A genuinely bad pin offers no neighbouring
-releases either.
+Read the version list under the message rather than the message itself. Check the pinned release on PyPI, because a
+list stopping short of a release that exists is the interpreter filtering the index. `/usr/bin/python3 --version` is
+the next command.
 
 ## Related
 

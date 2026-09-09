@@ -29,8 +29,9 @@ standing.
 
 ## Resolution
 
-1. Open `.editorconfig` in Rider. The IDE reads it on open, and the edit takes effect.
-2. Reformat a file the key governs, and check the result changed.
+1. Open `.editorconfig` in Rider, which reads it on open.
+2. Reformat a file the key governs.
+3. Check the result changed.
 
 Where the result is unchanged, flip a key with an obvious effect as a control. `max_line_length` is one, because a
 reformat rewraps the paragraph in front of you.
@@ -43,8 +44,9 @@ overridden rather than unread, and the control above is what separates the two.
 
 ## How we found it
 
-A session edited the file from a shell while the developer had the repository open. The give-away is a second machine,
-or a fresh `dotnet format` run, honouring a key the IDE ignores.
+A session edited the file from a shell while the developer had the repository open in Rider, and the two then
+disagreed about the same key. That disagreement is the give-away, and the question settling it is which of them has
+opened `.editorconfig` since the edit.
 
 ## Related
 
