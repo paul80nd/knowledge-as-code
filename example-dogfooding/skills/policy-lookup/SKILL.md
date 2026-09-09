@@ -20,7 +20,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/policies/<record>.json             # one policy thi
 ${CLAUDE_PLUGIN_ROOT}/corpus/policies/<shortcode>/<record>.json # one policy a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 One file holds every clause, whoever committed to it. A corpus that consumes another exports both, so `clauses.jsonl`
@@ -33,25 +33,10 @@ bound by what it inherited as surely as by what it wrote.
 the id to cite it by. That is enough to quote what we committed to and say where it is written. It is not enough to say
 whether a design meets it. Whoever asked wants a ruling, and the ruling belongs to the estate.
 
-So: quote the clause, name its level, link the policy, and say plainly which part of the question you are leaving to the
+Quote the clause, name its level, link the policy, and say plainly which part of the question you are leaving to the
 reader. Send them to the published record for the rest.
 
 ## Search the clause table
-
-**Use your Grep tool, not a shell command.** It runs on every platform and needs no shell, which is what makes the
-promise above true for a reader on Windows. Point it at `${CLAUDE_PLUGIN_ROOT}/corpus/policies/clauses.jsonl`, ask for
-matching content rather than a list of files, and search case-insensitively.
-
-Two patterns, in this order:
-
-1. **`<subject>`** on its own finds every clause mentioning the thing you are asking about. A clause is written in
-   ordinary words, so search the words the estate would use: `secret`, `restore`, `retention`.
-2. **`"record":\s*"<policy-id>"`** collects every clause of one policy, once a first hit has told you which policy
-   covers the subject. Write the `\s*`. Nothing promises the export puts no space after a colon, and a pattern assuming
-   one returns nothing the day that changes.
-
-**Search the stem rather than the word.** "backups" misses "back up", and "retention" misses "retain". Try both
-spellings, and try the plainer word the clause is more likely to use.
 
 **Read the `clause` of every hit before you use it.** The field names in this file are ordinary English words:
 `clause`, `level`, `record`, `status`, `type`. A search for one of those matches every line in the file. A line governs
@@ -112,7 +97,7 @@ of the four you found.
 ## Read the policy beside the clause
 
 **A clause read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on
-an id* builds from `record` and `shortcode`, and read three things from `sections`:
+an id* builds from `record` and `shortcode`, and read three things from `sections`, which is an object keyed by heading:
 
 * **`Scope`.** It says what the clauses bind. A clause about every store binds every store the Scope admits, and nothing
   outside it.
@@ -157,6 +142,18 @@ Two fields on the line say how far the policy has settled, in three states. Read
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
 `manifest.json` say when it was taken, and are worth quoting alongside any of the three.
+
+## Say when the clause is about something else
+
+A subject the estate has not written down often sits beside one it has. "Password rotation" meets a policy about
+rotating secrets. Answer that case in three steps:
+
+1. **Say the estate has not written your subject down**, in the words it would have used.
+2. **Name the nearest clause, and say what it is about.** Quote it as the estate wrote it.
+3. **Leave the reading to whoever owns the clause.** Whether your subject falls inside that clause's Scope is a ruling,
+   and this skill does not make one.
+
+Answering from the nearest clause without saying it is the nearest one hands the reader a commitment nobody made.
 
 ## Say when there is nothing
 

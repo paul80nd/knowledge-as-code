@@ -21,7 +21,7 @@ leaves as an issue on the repository that published the corpus owning the clause
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it consumes, and where each one publishes
 ```
 
-Use that path exactly as it appears; it is already absolute. An installed plugin sits in a cache of its own rather than
+Use that path exactly as it appears. It is already absolute. An installed plugin sits in a cache of its own rather than
 in the repository you are working in.
 
 **Producing the body needs nothing installed.** Filing it needs whichever client already signs in to the platform.

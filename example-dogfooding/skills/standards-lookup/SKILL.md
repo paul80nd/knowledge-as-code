@@ -19,7 +19,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<record>.json             # one standard 
 ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<shortcode>/<record>.json # one standard a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 ## Find the rule, and leave the verdict
@@ -28,7 +28,7 @@ rather than in the repository you are working in. A path you build relative to t
 cite them by. That is enough to quote what the estate requires and say where it is written. It is not enough to say the
 work in front of you conforms. Whoever asked wants a ruling, and the ruling belongs to the estate.
 
-So: quote the obligation, name its keyword, link the standard, and say plainly which part of the question you are
+Quote the obligation, name its keyword, link the standard, and say plainly which part of the question you are
 leaving to the reader.
 
 ## Collect every rule that applies, rather than the first
@@ -51,21 +51,6 @@ So search the subject, read the categories the hits name, then search the file a
 covered yet. A rule you inherited narrows the same way a rule written here does.
 
 ## Search the rules
-
-**Use your Grep tool, not a shell command.** It runs on every platform and needs no shell, which is what makes the
-promise above true for a reader on Windows. Point it at `${CLAUDE_PLUGIN_ROOT}/corpus/standards/rules.jsonl`, ask for
-matching content rather than a list of files, and search case-insensitively.
-
-Two patterns, in this order:
-
-1. **`<subject>`** on its own finds every rule mentioning the thing you are asking about. A rule is written in ordinary
-   words, so search the words the estate would use: `secret`, `retry`, `contract`.
-2. **`"record":\s*"<standard-id>"`** collects every rule of one standard, once a first hit has told you which standard
-   covers the subject. Write the `\s*`. Nothing promises the export puts no space after a colon, and a pattern assuming
-   one returns nothing the day that changes.
-
-**Search the stem rather than the word.** "retries" misses "retry", and "deployment" misses "deploy". Try both
-spellings, and try the plainer word the rule is more likely to use.
 
 **Read the `obligations` of every hit before you use it.** The field names in this file are ordinary English words:
 `title`, `obligations`, `record`, `status`, `type`. A search for one of those matches every line in the file. A line
@@ -129,7 +114,7 @@ Compare the keyword whole.
 ## Read the standard beside the rule
 
 **A rule read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on an
-id* builds from `record` and `shortcode`, and read two things from `sections`:
+id* builds from `record` and `shortcode`, and read two things from `sections`, which is an object keyed by heading:
 
 * **`Summary`.** It says what the standard is for, in a paragraph. Use it to tell whether the rule you found is about
   your subject at all.
@@ -189,6 +174,17 @@ Two fields on the line say how far the standard has settled, in four states. Rea
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
 `manifest.json` say when it was taken, and are worth quoting alongside any of the four.
+
+## Say when the rule is about something else
+
+A subject the estate has not written a rule for often sits beside one it has. Answer that case in three steps:
+
+1. **Say the estate has not written your subject down**, in the words it would have used.
+2. **Name the nearest rule, and say what it governs.** Quote the obligations as the standard wrote them.
+3. **Leave the reading to whoever owns the standard.** Whether your work falls inside that rule is a ruling, and this
+   skill does not make one.
+
+Answering from the nearest rule without saying it is the nearest one hands the reader a requirement nobody set.
 
 ## Say when there is nothing
 

@@ -18,7 +18,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/controls/<record>.json             # one control th
 ${CLAUDE_PLUGIN_ROOT}/corpus/controls/<shortcode>/<record>.json # one control a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 ## A control here is the check, not the safeguard
@@ -36,13 +36,8 @@ claims only that checks exist.
 **Start from the standard, and search `verifies`.** Every control names the standards it checks, so the standard's id is
 the string that finds it.
 
-**What this needs is a search that reads file content, ignores case, and walks a directory.** A Grep tool is the one to
-reach for, because it runs on every platform and needs no shell. Where the session holds none,
-`grep -ril std-CI ${CLAUDE_PLUGIN_ROOT}/corpus/controls/` answers the same question on Linux and on macOS. A Windows
-reader may have neither `grep` nor the same quoting, so say which route you took and what it returned.
-
 **There is no flat file here.** A control is read whole, so the record is the unit and each one is its own file. Search
-the directory, and read the files that hit.
+`${CLAUDE_PLUGIN_ROOT}/corpus/controls/`, and read the files that hit.
 
 **A standard may be covered by more than one control, and commonly is.** Two controls often hold two halves of one
 promise, and each says in `Coverage and gaps` what the other picks up. Collect every hit before you answer.

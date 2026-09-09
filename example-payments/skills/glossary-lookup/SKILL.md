@@ -19,26 +19,13 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json             # one glossary t
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<shortcode>/<record>.json # one glossary a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above; they are already absolute. An installed plugin sits in a cache of its own
+Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
 rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
 
 One file holds every term, whoever wrote it. A corpus that consumes another exports both, so `terms.jsonl` carries this
 corpus's terms and the terms of every corpus above it, and one search reaches all of them.
 
 ## Find the term
-
-**Use your Grep tool, not a shell command.** It runs on every platform and needs no shell, which is what makes the
-promise above true for a reader on Windows. Point it at `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/terms.jsonl`, ask for
-matching content rather than a list of files, and search case-insensitively.
-
-Two patterns, in this order:
-
-1. **`"title":\s*"<term>"`** finds the lines that define the term. Write the `\s*`. Nothing promises the export puts no
-   space after a colon, and a pattern assuming one returns nothing the day that changes.
-2. **`<term>`** on its own finds every line mentioning it. This is how a term defined under one spelling turns up under
-   another, in someone else's definition, `not` line or `seeAlso`.
-
-Where the first pattern comes back empty, widen the second: try the singular, and try the other spelling.
 
 **Read the `title` of every hit before you use it.** The field names in this file are ordinary English words: `title`,
 `record`, `definition`, `status`, `type`. A search for one of those matches every line in the file. A line defines a
@@ -95,7 +82,7 @@ the top of the glossary.
 ## Read every hit, not the first
 
 **Where two entries share a title, read both before you answer.** The file's order is stable and carries no ranking you
-can use. One estate defines *record* as a thing on a shelf with a barcode; another defines it as a markdown file under
+can use. One estate defines *record* as a thing on a shelf with a barcode. Another defines it as a markdown file under
 version control. An answer taken from the wrong one is fluent, confident and about the wrong subject.
 
 Open the owning record for each hit, at the path *Read the prefix on an id* builds from `record` and `shortcode`, and
@@ -132,6 +119,17 @@ Two fields on the line say how far the entry has settled. Use it either way, and
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
 `manifest.json` say when it was taken, and are worth quoting alongside either warning above.
+
+## Say when the entry is about something else
+
+A word the glossary has not defined often sits beside one it has. Answer that case in three steps:
+
+1. **Say the corpus has not defined your word**, in the spelling you were asked about.
+2. **Name the nearest entry, and say what it defines.** Quote the definition as the glossary wrote it.
+3. **Leave the reading to whoever owns the glossary.** Whether your word means what that entry means is a ruling, and
+   this skill does not make one.
+
+Answering from the nearest entry without saying it is the nearest one hands the reader a definition nobody wrote.
 
 ## Say when there is nothing
 
