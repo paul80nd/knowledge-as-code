@@ -79,8 +79,14 @@ justification, and an article is not. A recorded deviation ([pol-DEVI]) against 
 break the law rather than a risk to accept.
 
 Not all of it is engineering's. Deciding whether a data subject's request is valid, and answering the person within the
-month Article 12 allows, belongs to the DPO. What engineering owes is the capability that answer rests on: finding,
-exporting, correcting, deleting and restricting one person's data in every store that holds it.
+month Article 12 allows, belongs to the DPO, and so does judging how long a purpose makes a retention necessary. What
+engineering owes is the capability those answers rest on: finding, exporting, correcting, deleting and restricting one
+person's data in every store that holds it, and holding it no longer than the period set.
+
+Three more sit outside this corpus for the same reason. The Article 9 condition that permits special category data is a
+legal judgement rather than an engineering one, though the glossary defines that class and `MASK` covers handling it. An
+Article 26 arrangement is between organisations. The privacy notice Article 5(1)(a) requires is written by product and
+legal, and engineering keeps it true as the processing changes.
 
 ### PSBAR 2018
 

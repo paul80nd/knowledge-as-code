@@ -7,7 +7,7 @@ aligns-with:
   - framework: ISO 27001:2022
     clauses: [ A.5.9, A.5.12, A.5.14, A.5.33, A.5.34, A.8.3, A.8.10, A.8.11, A.8.12, A.8.24 ]
   - framework: UK GDPR
-    clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.15, Art.16, Art.17, Art.18, Art.20, Art.21, Art.25,
+    clauses: [ Art.5(1)(b), Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.15, Art.16, Art.17, Art.18, Art.20, Art.21, Art.25,
                Art.28, Art.30, Art.32, Art.32(1)(a), Art.44 ]
 review-by: "2027-08-04"
 owner: human:paul.law
@@ -45,7 +45,9 @@ data itself requires, in whichever environment it sits._
 | `CRYPTO`  | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms                       | [ISO 27001:2022].A.5.14, [ISO 27001:2022].A.8.24, [UK GDPR].Art.32, [UK GDPR].Art.32(1)(a), [UK GDPR].Art.5(1)(f) |
 | `RETIRE`  | **MUST** retire a cryptographic algorithm as it weakens                                                                            | [ISO 27001:2022].A.8.24, [UK GDPR].Art.32                                                                         |
 | `LAWFUL`  | **MUST** handle personal data on a lawful basis                                                                                    | [ISO 27001:2022].A.5.34, [UK GDPR].Art.6                                                                          |
-| `MINIMAL` | **MUST** collect only the personal data that is needed                                                                             | [UK GDPR].Art.5(1)(c)                                                                                             |
+| `BASIS`   | **MUST** record which lawful basis covers each processing of personal data                                                         | [UK GDPR].Art.6                                                                                                   |
+| `PURPOSE` | **MUST** state the purpose each store of personal data serves, and check a new use against it                                      | [UK GDPR].Art.5(1)(b)                                                                                             |
+| `MINIMAL` | **MUST** limit personal data to what is needed, wherever it is collected, copied or derived                                        | [UK GDPR].Art.5(1)(c)                                                                                             |
 | `RIGHTS`  | **MUST** be able to find, export, correct, delete and restrict one person's data in every store that holds it                      | [UK GDPR].Art.15, [UK GDPR].Art.16, [UK GDPR].Art.17, [UK GDPR].Art.18, [UK GDPR].Art.20, [UK GDPR].Art.21        |
 | `INVENT`  | **MUST** maintain an inventory of the information we hold, naming what it is, where it lives, who owns it and who we share it with | [ISO 27001:2022].A.5.9, [UK GDPR].Art.30                                                                          |
 | `XBORDER` | **MUST** hold and process personal data only where a lawful transfer mechanism covers it                                           | [UK GDPR].Art.44                                                                                                  |
