@@ -36,6 +36,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **The five lookup skills drop their search procedure.** `kac new`, `kac update` and `kac bundle` send skills that
+  name no search tool and no search flags. A trial ran three variants of `policy-lookup` over five questions: the
+  skill as it shipped, one without the tool name, and one without the search section at all. Every variant found and
+  cited every governing clause. Each run of the shipped skill spent tool calls hunting a Grep tool the session did
+  not hold. What stays is what an agent cannot work out for itself: the file map, the field table, and the warning
+  that a field name like `status` matches every line of the file.
+
+- **`glossary-lookup`, `policy-lookup` and `standards-lookup` answer the near miss.** Each carries a section for a
+  subject the corpus has not written down that sits beside one it has. "Password rotation" meets a policy about
+  rotating secrets, and the skill now says to name the nearest clause as the nearest one and leave the reading to
+  its owner.
+
 - **`confirmed` is now `verified`, it takes any actor, and the export carries the trust tier derived from it.** The
   field is renamed on `fixes` and `reports`, which is what the [Open Knowledge
   Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list. It no
@@ -58,6 +70,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   step, because the template no longer declares the name. `kac update --from <template>` then takes the new
   schema file. The type's page and its `_template.md` are seeds, so a corpus keeps the copies it has, and
   `validate` names every line of them still saying FAQ.
+
+### Fixed
+
+- **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two
+  or three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets
+  nothing back.
 
 ## 0.25.0 - 2026-09-09
 
