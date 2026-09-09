@@ -194,8 +194,9 @@ separator. No type's prefix either, since `std:pol-VURM` reads as a standard. `k
 First ask whether the content belongs in frontmatter at all. [What a record carries](#what-a-record-carries) answers
 that. Then check that git, the folder, the H1 or an existing link does not already hold the fact.
 
-Where the field is new, declare it in the type's `.schema/<folder>.yaml` and add it to that type's `_template.md`. Then
-run [`kac generate`](../cli/generate.md) so the generated tables carry it. The validator reads the schema, so it needs
-no change of its own.
+Where the field is new, declare it in the type's `.schema/<folder>.yaml` and add it to that type's `_template.md`. A
+field every type carries goes in `.schema/_universal.yaml` instead, and a type file may refine it with a declaration
+of its own. Then run [`kac generate`](../cli/generate.md) so the generated tables carry it. The validator reads the
+schema, so it needs no change of its own.
 
 [Taxonomy](taxonomy.md) is the page for deciding which type a new field belongs to.

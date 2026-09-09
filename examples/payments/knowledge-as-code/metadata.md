@@ -23,6 +23,7 @@ Carried by every document in the taxonomy.
 | `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` * | enum                                                        | Values vary by type.                                                                |
 | `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `sources`  | list                                                        | Where the content came from, one entry per source.                                  |
 | `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 
 \* Field is required

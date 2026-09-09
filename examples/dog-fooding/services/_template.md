@@ -43,9 +43,9 @@ and how it is reviewed. Below is only what a service adds to that.
 * **`tags`**: words a reader would search for that this service does not otherwise say. One service may be the only one
   carrying a tag, which is what separates a tag from a facet. Never restate another field.
 
-**Fields this template leaves out.** `tags` and `data-stores` are optional, so the frontmatter above carries none of
-them. Add a key where you have a value for it, and leave it out where you do not. [The type
-page](../services.md#metadata) says what each one holds.
+**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../services.md#metadata) lists every
+field and says what each one holds.
 
 **The identity line.** Beneath the title come the type, the `id`, then the `status` in upper case. It is the first thing
 a reader arriving from a citation sees, and CI checks all three against the frontmatter above.

@@ -48,6 +48,7 @@ Boundaries:
 | `tier` *†      | `observed`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                               |
 | `status` *†    | `open` `promoted` `expired` `rejected`  | Open until promoted, expired or rejected.                                                                                         |
 | `owner` *†     | string                                  | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                            |
+| `sources` †    | list                                    | Where the content came from, one entry per source.                                                                                |
 | `tags` †       | list                                    | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                  |
 | `source` *     | `human` `session` `dreamed`             | Who or what observed it. `dreamed` means proposed by an agent.                                                                    |
 | `confidence` * | `unverified` `corroborated` `confirmed` | Starts at `unverified`, and stays there unless genuinely proven.                                                                  |

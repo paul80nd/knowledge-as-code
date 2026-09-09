@@ -26,9 +26,9 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.
 
-**Fields this template leaves out.** `tags` and `narrows` are optional, so the frontmatter above carries none of them.
-Add a key where you have a value for it, and leave it out where you do not. [The type page](../glossary.md#metadata)
-says what each one holds.
+**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../glossary.md#metadata) lists every
+field and says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

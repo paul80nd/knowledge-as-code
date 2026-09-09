@@ -75,6 +75,7 @@ A payment-specific rule belongs in the payments corpus.
 | `tier` *†       | `normative`                                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
 | `status` *†     | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                       |
 | `owner` *†      | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
+| `sources` †     | list                                       | Where the content came from, one entry per source.                                  |
 | `tags` †        | list                                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `category`      | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                         |
 | `derived-from`  | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead.      |

@@ -14,6 +14,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `tier` *†     | `normative`                        | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.  |
 | `status` *†   | `draft` `active` `retired`         | `draft` until agreed. `retired` rather than deleted.                                 |
 | `owner` *†    | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.               |
+| `sources` †   | list                               | Where the content came from, one entry per source.                                   |
 | `tags` †      | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                     |
 | `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                             |
 | `aligns-with` | list                               | The binding frameworks this policy's clauses map to, with the references they reach. |

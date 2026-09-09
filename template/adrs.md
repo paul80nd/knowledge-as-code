@@ -44,6 +44,7 @@ its id.
 | `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                               |
 | `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                         |
 | `owner` *†      | string                                          | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                            |
+| `sources` †     | list                                            | Where the content came from, one entry per source.                                                                |
 | `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                  |
 | `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                                 |
 | `supersedes`    | id                                              | The ADR this replaces.                                                                                            |

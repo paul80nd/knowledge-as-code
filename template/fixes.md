@@ -54,6 +54,7 @@ Other boundaries:
 | `tier` *†            | `normative`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.         |
 | `status` *†          | `active` `superseded` `fixed-upstream` | `fixed-upstream` means the cause is gone. The entry stays for whoever searches for it.      |
 | `owner` *†           | string                                 | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
+| `sources` †          | list                                   | Where the content came from, one entry per source.                                          |
 | `tags` †             | list                                   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                            |
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
 | `applies-to`         | list                                   | Service ids this fix concerns.                                                              |

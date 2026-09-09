@@ -56,8 +56,10 @@ verified:
 `generated` names what produced the content and when. `by` takes OKF's `<producer>/<version>` form, so a report an agent
 extended names the agent the same way the tool names itself.
 
-`sources` names each corpus the report answers for. OKF carries no version on a source, and this one does: the fact a
-reader needs is which content the report is true of, and `content-version` is what the corpus already keeps.
+`sources` is a field every record may carry, and a report refines it. Elsewhere it names where content came from, as
+a URL or as a description of what was read. Here it names each corpus the report answers for. OKF carries no version
+on a source, and this one does: the fact a reader needs is which content the report is true of, and
+`content-version` is what the corpus already keeps.
 
 `verified` holds every verification the report has had, and the fix type carries the same field. An actor is a person
 as `human:alex.doe`, or an agent named with its version the way the tool names itself. Two are refused: a `role:`,

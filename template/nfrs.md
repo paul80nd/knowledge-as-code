@@ -44,6 +44,7 @@ deliver.
 | `tier` *†        | `normative`                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.               |
 | `status` *†      | `draft` `agreed` `retired` | `agreed` is a commitment someone accepted, not an aspiration.                                     |
 | `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                            |
+| `sources` †      | list                       | Where the content came from, one entry per source.                                                |
 | `tags` †         | list                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
 | `applies-to` *   | list                       | Estate-wide targets are almost always wrong. Scope them.                                          |
 | `target` *       | string                     | Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window. |

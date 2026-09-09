@@ -24,9 +24,9 @@ and how it is reviewed. What is below is only what an explanation adds to that.
 * **`review-by`**: a quoted date. Explanations are the residual category, so they need the tightest staleness
   discipline, not the loosest.
 
-**Fields this template leaves out.** `tags` is optional, so the frontmatter above does not carry it. Add a key where you
-have a value for it, and leave it out where you do not. [The type page](../explanations.md#metadata) says what each one
-holds.
+**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../explanations.md#metadata) lists
+every field and says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
