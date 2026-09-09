@@ -67,7 +67,7 @@ Other boundaries:
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
 4. Add a `confirmed` line naming who verified the resolution and the moment they did it.
-5. Set `review-by`. A fix goes stale when the thing it fixes gets rewritten.
+5. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.
 
 **Conventions**
 
