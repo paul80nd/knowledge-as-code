@@ -6,6 +6,7 @@
     "title": "A dependency is pinned, screened and named in the inventory",
     "category": "common",
     "status": "draft",
+    "derived-from": null,
     "implements": [
       "pol-TRUS.INVENT",
       "pol-TRUS.LICENCE",
@@ -33,6 +34,6 @@
     "Conformance checklist": "- [ ] Every package source configured in the repository points at the organisation's feed.\n- [ ] The lockfile is committed, and CI installs from it rather than resolving afresh.\n- [ ] The dependency scan runs on every build, and its results are visible without opening the tool.\n- [ ] No critical finding is open past 7 days without a recorded deviation.\n- [ ] Every licence in the tree appears on the allowed list.\n- [ ] The build artefacts for the last release are still in the managed repository."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/standards/common/dependencies.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/standards/common/dependencies.md"
   }
 }

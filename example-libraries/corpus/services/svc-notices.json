@@ -1,0 +1,32 @@
+{
+  "type": "services",
+  "path": "services/notices.md",
+  "fields": {
+    "id": "svc-notices",
+    "title": "Notices",
+    "status": "live",
+    "platform": "azure-function",
+    "criticality": "important",
+    "repo": "notices",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": [
+      "event-driven",
+      "internal",
+      "scheduled"
+    ],
+    "tags": [
+      "email",
+      "renewals"
+    ]
+  },
+  "sections": {
+    "What it does": "Sends templated emails on behalf of the library to a reader. It runs on a schedule and reacts to events. Timers sweep for loans falling due and for loans already overdue. Three bus topics carry the events that need an immediate message.\n\nThe message bodies live with the mail provider as templates, selected by event type. Changing the wording is a provider change and takes no deployment. The trade is deliberate: the people accountable for the wording can change it without a developer, and the wording is not in version control.",
+    "Where it lives": "* **Repository**: [`notices`](https://git.example.com/example-libraries/notices), at `src/Notices.FunctionApp`\n* **Platform**: Azure Functions, .NET isolated worker\n* **Deployed as**: Function App `func-notices-<env>`",
+    "Dependencies": "None. It consumes from the bus and calls the mail provider. We do not deploy that provider, so it is an integration.",
+    "Data": "* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.\n* A blob container carrying message bodies too large to travel on the bus.\n\nBoth are in the shared storage account."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/notices.md"
+  }
+}

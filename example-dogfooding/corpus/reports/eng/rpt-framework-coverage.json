@@ -1,0 +1,33 @@
+{
+  "type": "reports",
+  "path": "reports/framework-coverage.md",
+  "fields": {
+    "id": "rpt-framework-coverage",
+    "title": "Framework coverage",
+    "status": "active",
+    "generated": {
+      "at": "2026-09-08T10:45:58Z",
+      "by": "kac/0.23.0+955356490b0bfa1f7caa3863fa100346dd6849c1"
+    },
+    "sources": [
+      {
+        "resource": "example-engineering",
+        "version": "0.12.0"
+      }
+    ],
+    "confirmed": [
+      {
+        "at": "2026-09-08T11:00:00Z",
+        "by": "human:alex.doe"
+      }
+    ],
+    "tags": [
+      "coverage",
+      "frameworks"
+    ]
+  },
+  "sections": {},
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/reports/framework-coverage.md"
+  }
+}

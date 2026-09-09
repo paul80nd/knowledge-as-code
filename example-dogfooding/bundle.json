@@ -1,16 +1,22 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.17.0",
+    "contentVersion": "0.18.0",
     "types": [
       "controls",
+      "deviations",
       "processes",
+      "reports",
+      "runbooks",
+      "services",
       "standards",
+      "tools",
+      "adrs",
       "glossary",
       "policies"
     ]

@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/build/yamldotnet.md",
+  "fields": {
+    "id": "tol-yamldotnet",
+    "title": "YamlDotNet",
+    "status": "approved",
+    "category": "build",
+    "versions": "18.x",
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "parser",
+      "yaml"
+    ]
+  },
+  "sections": {
+    "What we use it for": "`kac.core` references it. Four kinds of file reach it, and a record's frontmatter is the one a reader meets: the\n`frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.",
+    "Status": "**approved** since 2026-08-03.",
+    "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
+    "Where it is used": "* [svc-kac] carries it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/build/yamldotnet.md"
+  }
+}

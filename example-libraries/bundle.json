@@ -1,14 +1,16 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.1.10",
+    "contentVersion": "0.2.0",
     "types": [
-      "glossary"
+      "adrs",
+      "glossary",
+      "services"
     ]
   },
   "included": [

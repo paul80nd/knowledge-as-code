@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.17.0",
+  "contentVersion": "0.18.0",
   "mechanismVersion": 10,
-  "commit": "a8decabef67229a1ac93960008d559168c2923f6",
+  "commit": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda",
   "dirty": false,
-  "generatedAt": "2026-09-09T07:46:55Z",
+  "generatedAt": "2026-09-09T09:08:33Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+    "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.11.0",
+      "contentVersion": "0.12.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+        "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
       }
     }
   ],
@@ -57,6 +57,26 @@
       "frameworksFile": null
     },
     {
+      "type": "deviations",
+      "shapeVersion": 1,
+      "records": 18,
+      "parts": 0,
+      "dir": "deviations",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What we are doing instead": "full",
+        "Why we need it": "full",
+        "What compensates": "full",
+        "How it closes": "full",
+        "Scope": "full"
+      },
+      "frameworksFile": null
+    },
+    {
       "type": "processes",
       "shapeVersion": 1,
       "records": 7,
@@ -74,6 +94,55 @@
       "frameworksFile": null
     },
     {
+      "type": "reports",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "reports",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {},
+      "frameworksFile": null
+    },
+    {
+      "type": "runbooks",
+      "shapeVersion": 1,
+      "records": 3,
+      "parts": 0,
+      "dir": "runbooks",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Symptoms": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "services",
+      "shapeVersion": 1,
+      "records": 4,
+      "parts": 0,
+      "dir": "services",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Where it lives": "full",
+        "Dependencies": "full",
+        "Data": "full"
+      },
+      "frameworksFile": null
+    },
+    {
       "type": "standards",
       "shapeVersion": 1,
       "records": 18,
@@ -87,6 +156,43 @@
       "sections": {
         "Summary": "full",
         "Conformance checklist": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "tools",
+      "shapeVersion": 1,
+      "records": 13,
+      "parts": 0,
+      "dir": "tools",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What we use it for": "full",
+        "Status": "full",
+        "Licence and obligations": "full",
+        "Where it is used": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "adrs",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "adrs",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Context": "summary",
+        "Decision": "full",
+        "Consequences": "full"
       },
       "frameworksFile": null
     },

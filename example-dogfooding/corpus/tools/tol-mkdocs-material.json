@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/docs/mkdocs-material.md",
+  "fields": {
+    "id": "tol-mkdocs-material",
+    "title": "Material for MkDocs",
+    "status": "approved",
+    "category": "docs",
+    "versions": "9.7.x",
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "documentation",
+      "theme"
+    ]
+  },
+  "sections": {
+    "What we use it for": "The `features:` and `palette:` blocks in `mkdocs.yml` are this theme's. They put each section's index page behind the section name, offer an edit pencil on every page, and let the reader's own light or dark setting decide, with a toggle either way.\n\nIt is pinned beside MkDocs in `docs/requirements.txt`, so a theme release changes the site when we take it rather than on its own.",
+    "Status": "**approved** since 2026-08-24.",
+    "Licence and obligations": "MIT for the community edition, which is what `docs/requirements.txt` installs. The sponsor-only edition is a separate package and nothing here uses it.",
+    "Where it is used": "* [svc-docs-site] is built with it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/docs/mkdocs-material.md"
+  }
+}

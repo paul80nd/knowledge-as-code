@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/lint/yamllint.md",
+  "fields": {
+    "id": "tol-yamllint",
+    "title": "yamllint",
+    "status": "approved",
+    "category": "lint",
+    "versions": "1.38.x",
+    "licence": "GPL-3.0-or-later",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "linting",
+      "yaml"
+    ]
+  },
+  "sections": {
+    "What we use it for": "`.yamllint` extends yamllint's own `default` ruleset and carries the four places this repository departs from it, each\nwith the reason in the comment above it. The shape of a YAML file is this tool's to decide rather than a reviewer's.\n\nThe `lint` job installs it from `.github/requirements.txt`, pinned so a linter release changes what the gate rejects when we take it rather than on its own.",
+    "Status": "**approved** since 2026-09-02.",
+    "Licence and obligations": "GPL-3.0-or-later. It is run as a separate program and never linked into anything published here, so the copyleft terms reach no artefact this repository ships.",
+    "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against every YAML file in the repository, and no service ships it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/lint/yamllint.md"
+  }
+}

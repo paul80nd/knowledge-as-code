@@ -13,9 +13,9 @@ A clause beside you says what has to happen, and the work in front of you is abo
 somebody decided on, wrote down and gave a review date is managed risk. The same departure taken quietly is erosion, and
 a year later nobody can tell it from never having known the rule.
 
-Accepting the risk takes an individual with the authority to accept it. You cannot name that person from here. A
-record's `owner` does not travel in the export, and the copy beside you is frozen anyway. So the request leaves as an
-issue on the repository that published the corpus owning the clause.
+Accepting the risk takes an individual with the authority to accept it. You cannot name that person from here. A policy
+and a standard both leave `owner` behind when they travel, and the copy beside you is frozen anyway. So the request
+leaves as an issue on the repository that published the corpus owning the clause.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it consumes, and where each one publishes

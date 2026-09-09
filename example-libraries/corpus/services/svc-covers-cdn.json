@@ -1,0 +1,31 @@
+{
+  "type": "services",
+  "path": "services/covers-cdn.md",
+  "fields": {
+    "id": "svc-covers-cdn",
+    "title": "Covers CDN",
+    "status": "live",
+    "platform": "static",
+    "criticality": "critical",
+    "repo": "infrastructure",
+    "depends-on": [
+      "svc-thumbnailer"
+    ],
+    "data-stores": null,
+    "facets": [
+      "public"
+    ],
+    "tags": [
+      "jackets"
+    ]
+  },
+  "sections": {
+    "What it does": "Serves every jacket image that appears in a result list, on an item page or on a branch terminal. Each one is resized and re-encoded to the dimensions the request asks for. The `?width=320&quality=80` form appears throughout the estate.\n\n**It does not front blob storage directly.** Its origin is [svc-thumbnailer], which reads the underlying container and resizes the image. The edge therefore caches the resized result. That is why it has an endpoint of its own, separate from the estate's static one.\n\nContent reaches the underlying container from two places:\n\n* `covers-import` carries jacket imagery from the bibliographic data supplier, published nightly by its own pipeline.\n* [svc-catalogue-api] writes jackets uploaded by branch staff at runtime, for items the supplier has no image for.\n\n**`repo` names `infrastructure`** as the repository that defines the edge and the one a change to this service is made\nin. It does not answer \"where do I change what this serves\". That question has the two answers above (neither of them is\n`infrastructure`).",
+    "Where it lives": "* **Repository**: [`infrastructure`](https://git.example.com/example-libraries/infrastructure), at `services/covers`\n* **Platform**: CDN custom domain over an origin application\n* **Deployed as**: route `covers` on a dedicated endpoint, origin group `thumbnailer`, origin path `/covers`\n\nDNS is managed outside the infrastructure repository, as it is for the estate's other edge surfaces.",
+    "Dependencies": "* [svc-thumbnailer] is the origin the edge forwards to. The CDN origin host configures it, so this dependency lives in\n  the routing and in neither service's application settings.",
+    "Data": "Backed by the `covers` container in the shared storage account. The thumbnailer reads it on the edge's behalf."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/covers-cdn.md"
+  }
+}

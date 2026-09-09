@@ -1,0 +1,27 @@
+{
+  "type": "services",
+  "path": "services/thumbnailer.md",
+  "fields": {
+    "id": "svc-thumbnailer",
+    "title": "Thumbnailer",
+    "status": "live",
+    "platform": "dotnet-web",
+    "criticality": "critical",
+    "repo": "thumbnailer",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": null,
+    "tags": [
+      "internal"
+    ]
+  },
+  "sections": {
+    "What it does": "Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It holds no state and caches nothing itself. Caching is the edge's job.\n\n**It is not reached directly.** [svc-covers-cdn] forwards to it as its origin, so every request arrives through the edge, and the edge caches the resized result.",
+    "Where it lives": "* **Repository**: [`thumbnailer`](https://git.example.com/example-libraries/thumbnailer)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-thumbnailer-<env>`",
+    "Dependencies": "None. It reads blob storage and returns an image.",
+    "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It reads the container and owns nothing in it: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn] records both."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/thumbnailer.md"
+  }
+}

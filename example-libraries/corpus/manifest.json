@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-libraries",
   "shortcode": "lib",
-  "contentVersion": "0.1.10",
+  "contentVersion": "0.2.0",
   "mechanismVersion": 10,
-  "commit": "a8decabef67229a1ac93960008d559168c2923f6",
+  "commit": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda",
   "dirty": false,
-  "generatedAt": "2026-09-09T07:46:42Z",
+  "generatedAt": "2026-09-09T09:08:25Z",
   "about": {
     "displayName": "Example Libraries",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
@@ -18,13 +18,31 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/library/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/library",
-    "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+    "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
   },
   "sources": [],
   "types": [
+    {
+      "type": "adrs",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "adrs",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Context": "summary",
+        "Decision": "full",
+        "Consequences": "full"
+      },
+      "frameworksFile": null
+    },
     {
       "type": "glossary",
       "shapeVersion": 1,
@@ -38,6 +56,25 @@
       "seeAlsoKey": "seeAlso",
       "sections": {
         "Scope": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "services",
+      "shapeVersion": 1,
+      "records": 9,
+      "parts": 0,
+      "dir": "services",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Where it lives": "full",
+        "Dependencies": "full",
+        "Data": "full"
       },
       "frameworksFile": null
     }

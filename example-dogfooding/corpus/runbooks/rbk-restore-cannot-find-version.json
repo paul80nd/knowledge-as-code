@@ -1,0 +1,28 @@
+{
+  "type": "runbooks",
+  "path": "runbooks/restore-cannot-find-version.md",
+  "fields": {
+    "id": "rbk-restore-cannot-find-version",
+    "title": "kac restore cannot find the version the lock names",
+    "status": "active",
+    "severity": "sev3",
+    "applies-to": null,
+    "last-rehearsed": "never",
+    "rehearsal-frequency": null,
+    "requires-access": [
+      "A .NET 10 SDK and a checkout of this repository",
+      "Write access to the branch the fix lands on"
+    ],
+    "tags": [
+      "imports",
+      "restore",
+      "versioning"
+    ]
+  },
+  "sections": {
+    "Symptoms": "* `kac restore` prints `restore: ../engineering/.dist/package holds no package for example-engineering <version>.` and\n  exits 1.\n* `kac validate` fails in `examples/payments` or `examples/dog-fooding`, naming `restore` as the command to run first.\n* The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`\n  and `engineering` consume nothing, so they pass.\n\nWhat you are not seeing: any failure in the producer. `examples/engineering` validates, exports and packs."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
+  }
+}

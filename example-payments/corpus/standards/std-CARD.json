@@ -6,6 +6,7 @@
     "title": "Card details reach the PSP and never reach us",
     "category": "checkout",
     "status": "active",
+    "derived-from": null,
     "implements": [
       "eng:pol-DATA.MINIMAL",
       "eng:pol-MEXP.PEERID",
@@ -26,6 +27,6 @@
     "Conformance checklist": "- [ ] The checkout page posts card fields to a PSP hostname, confirmed in the browser's network trace.\n- [ ] No request body reaching our estate carries a field named for a card number, expiry or security code.\n- [ ] A search of every schema in the estate for a card-number column returns nothing.\n- [ ] The support tool has no free-text field a card number could be typed into.\n- [ ] The PSP contract's responsibility matrix is current, and someone here has read it this year."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/payments/standards/checkout/card-data.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/standards/checkout/card-data.md"
   }
 }

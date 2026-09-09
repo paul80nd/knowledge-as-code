@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-dogfooding",
   "displayName": "Example Dogfooding",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
   "author": {
     "name": "Paul Law",
@@ -14,8 +14,14 @@
   "keywords": [
     "knowledge-as-code",
     "controls",
+    "deviations",
     "processes",
+    "reports",
+    "runbooks",
+    "services",
     "standards",
+    "tools",
+    "adrs",
     "glossary",
     "policies"
   ],

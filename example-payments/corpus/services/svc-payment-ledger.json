@@ -1,0 +1,29 @@
+{
+  "type": "services",
+  "path": "services/payment-ledger.md",
+  "fields": {
+    "id": "svc-payment-ledger",
+    "title": "Payment Ledger",
+    "status": "live",
+    "platform": "dotnet-api",
+    "criticality": "critical",
+    "repo": "payment-ledger",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": null,
+    "tags": [
+      "audit",
+      "ledger",
+      "reconciliation"
+    ]
+  },
+  "sections": {
+    "What it does": "Writes one immutable entry per event on a payment, and answers queries about a payment's history. Nothing here amends an entry: a correction is a further entry, so the reconciliation a month later reads the same sequence finance read on the day.\n\nIt also runs the nightly reconciliation against the PSP's settlement file, and raises a discrepancy where the two disagree. Its own README says the file arrives by SFTP at 02:00.",
+    "Where it lives": "* **Repository**: [`payment-ledger`](https://git.example.com/example-payments/payment-ledger)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-payment-ledger-<env>`",
+    "Dependencies": "None in this catalogue. It reads the PSP's settlement file and writes to its own database.",
+    "Data": "Owns the ledger database, `sql-payment-ledger-<env>`, configured as `ConnectionStrings__Ledger`. An entry holds the order, the amount, the PSP's reference and the token, and no card number reaches it. The `data` type is not adopted here, so nothing in this corpus describes the schema. The repository's own migrations do."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/services/payment-ledger.md"
+  }
+}

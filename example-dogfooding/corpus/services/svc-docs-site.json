@@ -1,0 +1,30 @@
+{
+  "type": "services",
+  "path": "services/docs-site.md",
+  "fields": {
+    "id": "svc-docs-site",
+    "title": "Documentation site",
+    "status": "live",
+    "platform": "static",
+    "criticality": "important",
+    "repo": "knowledge-as-code",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": [
+      "public"
+    ],
+    "tags": [
+      "github-pages",
+      "mkdocs"
+    ]
+  },
+  "sections": {
+    "What it does": "The site is where somebody who has installed nothing reads what this is and how to use it. It carries a page for each\n`kac` verb, the framework pages, the corpus descriptor reference and the tool's changelog.\n\nA page's content need not come from the file holding the page. `docs/changelog.md` is a snippet of\n`tooling/kac/CHANGELOG.md`, so a release moves the site without any file under `docs/` changing. Taken from the header\ncomment in `.github/workflows/publish-docs.yml`.\n\n`docs/` holds every page and nothing else does. The site is not a corpus, and `publishing-target: mkdocs` in a corpus\ndescriptor is a separate thing this build does not exercise. Taken from the header comment in `mkdocs.yml`.",
+    "Where it lives": "* **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `docs`, configured by\n  `mkdocs.yml` at the root\n* **Platform**: MkDocs with the Material theme, both pinned in `docs/requirements.txt`\n* **Deployed as**: a static site uploaded as a Pages artifact by `publish-docs.yml`",
+    "Dependencies": "None in this catalogue. The site is static HTML and calls nothing.\n\nThe packages that build it are in the tool register: [tol-mkdocs] and [tol-mkdocs-material].",
+    "Data": "None of its own. Every page is built from a file in the repository."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/services/docs-site.md"
+  }
+}

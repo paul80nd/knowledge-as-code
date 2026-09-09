@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/build/system-commandline.md",
+  "fields": {
+    "id": "tol-system-commandline",
+    "title": "System.CommandLine",
+    "status": "deprecated",
+    "category": "build",
+    "versions": null,
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": null,
+    "successor": "tol-spectre-console",
+    "tags": [
+      "cli",
+      "parser"
+    ]
+  },
+  "sections": {
+    "What we use it for": "Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-08-21, and no project references it today.",
+    "Status": "**deprecated** since 2026-08-21. [tol-spectre-console] replaced it in `kac` 0.2.1, and the reference is gone rather than pending.\n\nEvery verb, option and exit code answered as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped standing for `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
+    "Licence and obligations": "MIT. Nothing followed for a package this repository published.",
+    "Where it is used": "Nowhere. No service in this catalogue carries it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/build/system-commandline.md"
+  }
+}

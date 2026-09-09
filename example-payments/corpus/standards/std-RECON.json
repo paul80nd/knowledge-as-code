@@ -6,6 +6,7 @@
     "title": "The ledger is reconciled against the PSP every day",
     "category": "ledger",
     "status": "active",
+    "derived-from": null,
     "implements": [
       "eng:pol-DERV.CHECK",
       "eng:pol-DERV.FAILED",
@@ -27,6 +28,6 @@
     "Conformance checklist": "- [ ] The run has completed for every day in the last month.\n- [ ] Each run's record names the file it read, the entries it compared and the breaks it found.\n- [ ] A day with breaks does not appear in the revenue report.\n- [ ] Every break older than 30 days has a named owner.\n- [ ] A missing settlement file raises an alert within the run's own window.\n- [ ] Each break closed last month closed through a ledger correction."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/payments/standards/ledger/reconciliation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/standards/ledger/reconciliation.md"
   }
 }

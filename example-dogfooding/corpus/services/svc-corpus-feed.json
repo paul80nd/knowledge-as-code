@@ -1,0 +1,28 @@
+{
+  "type": "services",
+  "path": "services/corpus-feed.md",
+  "fields": {
+    "id": "svc-corpus-feed",
+    "title": "Corpus package feed",
+    "status": "live",
+    "platform": "static",
+    "criticality": "important",
+    "repo": "knowledge-as-code",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": null,
+    "tags": [
+      "github-packages",
+      "nuget"
+    ]
+  },
+  "sections": {
+    "What it does": "One publisher, four packages: `example-libraries`, `example-engineering`, `example-payments` and `example-dogfooding`.\nA package id is the `corpus:` value in the descriptor and the version is `content-version`. Taken from\n`docs/cli/pack.md`.\n\n`publish-corpus.yml` runs on a push to `main` that touched one of the corpora. A `verify` job holding no write\npermission validates, exports and packs all four. A second job rebuilds the same package and pushes it. Taken from the\nheader comment in `.github/workflows/publish-corpus.yml`.\n\nA step called **Decide whether this version is new** asks the registry which versions it already holds, and the push\nstep is skipped where this one is among them. A registry keeps a published version forever, so a correction is a new\n`content-version` and never a second push of this one.\n\nPublishing these corpora is how this repository proves the pack-and-push half of its own tool against a real registry, and how somebody deciding whether to adopt it can pull one and look.",
+    "Where it lives": "* **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `examples`, published by\n  `.github/workflows/publish-corpus.yml`\n* **Platform**: a NuGet package holding a sealed export, with no runtime\n* **Deployed as**: four packages on the GitHub Packages NuGet feed",
+    "Dependencies": "None in this catalogue. A package is a file the registry serves, and it calls nothing.\n\n[svc-kac] seals every one of them, which is a build-time dependency rather than a call, so it is not an edge here.",
+    "Data": "Each package carries a sealed export of one corpus, and nothing else. Three of the four describe an invented estate,\nand `example-dogfooding` describes this repository. A package's own description says which of the two a reader has.\n`.corpus.yaml` states that description and `kac pack` writes it into the envelope.\n\nA restored package is not the consumer's to keep. `kac restore` writes what it takes into `.imports/`, which [std-CONFIG] keeps untracked."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/services/corpus-feed.md"
+  }
+}

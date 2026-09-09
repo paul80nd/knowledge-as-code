@@ -1,0 +1,31 @@
+{
+  "type": "services",
+  "path": "services/catalogue-api.md",
+  "fields": {
+    "id": "svc-catalogue-api",
+    "title": "Catalogue API",
+    "status": "live",
+    "platform": "dotnet-api",
+    "criticality": "critical",
+    "repo": "platform",
+    "depends-on": [
+      "svc-lending"
+    ],
+    "data-stores": null,
+    "facets": [
+      "internal"
+    ],
+    "tags": [
+      "holdings"
+    ]
+  },
+  "sections": {
+    "What it does": "Publishes a simplified API to [svc-catalogue-web]. It aggregates across the services behind it, so the site makes one call where it would otherwise make four.\n\n**Two capabilities are compiled into this application.** Account management and loan history both live under\n`src/Services` in the monorepo. Nothing deploys either one on its own, so both are part of this service. The `platform`\nrepository therefore yields three services in this catalogue, though its solution file shows five components.",
+    "Where it lives": "* **Repository**: [`platform`](https://git.example.com/example-libraries/platform), at `src/ApiGateways/Catalogue`\n* **Platform**: ASP.NET Core Web API (.NET 10)\n* **Deployed as**: App Service `app-catalogue-api-<env>`\n\nThe `platform` release pipeline deploys it as the `api` app, from the `Catalogue.ApiGateway.zip` package.",
+    "Dependencies": "Taken from the application settings the infrastructure declares for the app service.\n\n* [svc-lending] serves loans, holds and borrower records. It is configured as `Apis__Lending__Url`, with a matching\n  `Apis__Lending__Key`.\n\nThe same settings carry the identity provider's authority and the bibliographic data supplier's API. Neither is a service in this catalogue.",
+    "Data": "Holds a database connection, configured as `ConnectionStrings__Catalogue`. The account-management and loan-history capabilities are compiled into this application, so that connection is how their stores are reached.\n\n**What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this catalogue was built from establishes it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/catalogue-api.md"
+  }
+}

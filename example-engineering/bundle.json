@@ -1,15 +1,17 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.11.0",
+    "contentVersion": "0.12.0",
     "types": [
+      "adrs",
       "glossary",
       "policies",
+      "reports",
       "standards"
     ]
   },

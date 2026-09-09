@@ -1,0 +1,35 @@
+{
+  "type": "deviations",
+  "path": "deviations/no-screen-reader-pass.md",
+  "fields": {
+    "id": "dev-no-screen-reader-pass",
+    "title": "Nobody has read either surface with a screen reader",
+    "status": "active",
+    "departs-from": [
+      "eng:pol-A11Y.ASSIST"
+    ],
+    "owner": "human:paul.law",
+    "accepted-on": "2026-09-07",
+    "review-by": "2027-03-07",
+    "closed-on": null,
+    "applies-to": [
+      "svc-docs-site",
+      "svc-kac"
+    ],
+    "tags": [
+      "accessibility",
+      "documentation",
+      "screen-reader"
+    ]
+  },
+  "sections": {
+    "What we are doing instead": "[std-A11Y] holds a Markdown author to heading order, link text, table structure and image alternatives, and a reviewer checks those in the pull request. Material for MkDocs owns contrast, focus order and keyboard reach, and [tol-mkdocs-material] records what its assessment found. `kac` repeats in words whatever it says in colour.\n\nEvery one of those is a rule somebody reads the diff against. None of them is a run with the software a blind reader would use.",
+    "Why we need it": "`eng:pol-A11Y.ASSIST` asks for a test with the assistive technology people actually use. This repository has one\nmaintainer, who has neither a screen reader configured nor the practice to read a page with one. A pass run badly is\nworse than no pass, because it reports a result somebody would believe.",
+    "What compensates": "* [std-A11Y] reaches the structure a screen reader depends on, which is most of what a content author can get wrong.\n* The site is Markdown rendered by a widely used theme, so a fault in the chrome would be a fault thousands of sites\n  carry.\n* [tol-mkdocs-material] and [tol-spectre-console] each name what their assessment found short, so a known shortfall is\n  written down rather than assumed away.",
+    "How it closes": "Somebody reads the site's navigation, one command page and one framework page with NVDA or VoiceOver, and runs `kac validate` on a corpus with the same reader open. What that finds becomes issues, and this record closes on the day they are raised.\n\nWhere nobody can run that pass by the review date, the honest close is the accessibility statement [std-A11Y] asks for. That statement says neither surface has been tested.",
+    "Scope": "Both surfaces [std-A11Y] governs: the documentation site MkDocs builds from `docs/`, and the `kac` command line."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/deviations/no-screen-reader-pass.md"
+  }
+}

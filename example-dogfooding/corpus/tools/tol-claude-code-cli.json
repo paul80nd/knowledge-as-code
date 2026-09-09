@@ -1,0 +1,29 @@
+{
+  "type": "tools",
+  "path": "tools/build/claude-code-cli.md",
+  "fields": {
+    "id": "tol-claude-code-cli",
+    "title": "Claude Code CLI",
+    "status": "approved",
+    "category": "build",
+    "versions": null,
+    "licence": "LicenseRef-Anthropic-Terms-of-Service",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "claude-code",
+      "plugin",
+      "validation"
+    ]
+  },
+  "sections": {
+    "What we use it for": "`claude plugin validate --strict` runs against every assembled bundle and against the marketplace beside it. It is the\nlast thing between a broken bundle and the people who have it installed.\n\nA clean run prints one line whatever it looked at, and a plugin holding no component passes it, so two shell guards in the same step close that gap. Taken from the comments in `.github/workflows/kac.yml`.\n\n`versions` is bare because CI installs `@latest` on purpose. The bundle has to be valid against the CLI a reader runs,\nand nothing in `.github/dependabot.yml` would move an npm pin. That is why the install sits in a job holding no write\npermission, where a moved tag cannot reach a push.",
+    "Status": "**approved** since 2026-08-18.",
+    "Licence and obligations": "`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and that README carries no\nlicence section. The `LICENSE.md` shipped in the same package reserves all rights to Anthropic PBC, and grants use\nunder the [legal agreements](https://code.claude.com/docs/en/legal-and-compliance) Anthropic publishes. The Commercial\nTerms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro and Max\nones.\n\nThe licence grants no right to copy, change or redistribute the package. CI installs the published binary with\n`npm install -g` and runs it untouched. The CLI sits outside the working tree, and the plugin bundle it validates\ncarries no part of it.\n\nAnthropic puts further conditions on preinstalling or running the CLI inside a product offered to other people. Nothing here does that, so those conditions do not reach this repository.",
+    "Where it is used": "* [svc-marketplace] is validated with it, in `kac.yml` and again in `publish-plugin.yml`."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/build/claude-code-cli.md"
+  }
+}

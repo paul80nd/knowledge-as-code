@@ -1,0 +1,31 @@
+{
+  "type": "services",
+  "path": "services/payment-api.md",
+  "fields": {
+    "id": "svc-payment-api",
+    "title": "Payment API",
+    "status": "live",
+    "platform": "dotnet-api",
+    "criticality": "critical",
+    "repo": "payment-api",
+    "depends-on": [
+      "svc-payment-ledger"
+    ],
+    "data-stores": null,
+    "facets": null,
+    "tags": [
+      "authorisation",
+      "cards",
+      "psp"
+    ]
+  },
+  "sections": {
+    "What it does": "Accepts a request naming an order, an amount and a card token, calls the PSP to authorise it, and writes the outcome to [svc-payment-ledger]. Capture and refund follow the same path.\n\n**The token comes from the browser rather than from here.** The checkout page collects the card details in a frame the PSP serves, and the browser posts them to the PSP directly. What reaches this service is the token the PSP returned. Taken from the application settings, which carry the PSP's publishable key and no card storage of any kind.",
+    "Where it lives": "* **Repository**: [`payment-api`](https://git.example.com/example-payments/payment-api)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-payment-api-<env>`",
+    "Dependencies": "* **[svc-payment-ledger]**: every authorisation, capture and refund is written there before this service answers its\n  caller. Configured as `Services__Ledger`.\n\nThe PSP is not in this catalogue. It is a third party, reached at `api.psp.example.com` and configured as `Psp__BaseUrl`.",
+    "Data": "None of its own, and that is the point. It holds a card token for the life of one request and stores nothing. What happened to a payment is [svc-payment-ledger]'s."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/services/payment-api.md"
+  }
+}

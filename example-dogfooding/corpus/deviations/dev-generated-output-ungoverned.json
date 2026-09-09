@@ -1,0 +1,38 @@
+{
+  "type": "deviations",
+  "path": "deviations/generated-output-ungoverned.md",
+  "fields": {
+    "id": "dev-generated-output-ungoverned",
+    "title": "No standard governs what kac generate computes",
+    "status": "active",
+    "departs-from": [
+      "eng:pol-DERV.CHECK",
+      "eng:pol-DERV.EXPECT",
+      "eng:pol-DERV.FAILED",
+      "eng:pol-DERV.LINEAGE",
+      "eng:pol-DERV.RUNLOG"
+    ],
+    "owner": "human:paul.law",
+    "accepted-on": "2026-09-07",
+    "review-by": "2027-03-07",
+    "closed-on": null,
+    "applies-to": [
+      "svc-kac"
+    ],
+    "tags": [
+      "derived-data",
+      "generate",
+      "verification"
+    ]
+  },
+  "sections": {
+    "What we are doing instead": "`kac generate --check` regenerates every block and index and compares the result against what is committed. ctl-0007\nruns it on each pull request, and a stale file fails the gate. That is an expectation stated and checked, and it is\nimplemented in the tool rather than written in a standard.\n\nA generated block names the generator that wrote it and nothing else. It does not name the records it was computed from, and no run keeps its inputs beside its output.",
+    "Why we need it": "The behaviour already exists and it is right. What is missing is the record saying it must stay right, which is work whose only payoff is that somebody could cite it. Nothing has gone wrong here yet for want of that citation.\n\nLineage is the exception, and it is real work: a block would have to carry the ids it read, and every generator would have to emit them.",
+    "What compensates": "* `generate --check` fails the branch where any generated file is stale, so drift never reaches `main`.\n* The golden fixtures run `generate` over a corpus and compare the result, so the check has a test behind it.\n* The generated block markers name the generator, so a reader can tell which command owns the text.\n* Every input is a committed file in the same repository, so the run's inputs are recoverable from the commit it ran\n  on.",
+    "How it closes": "A standard states what a generated file is, that it is regenerated and compared on every pull request, and that a stale one is unusable rather than merely out of date. It cites ctl-0007. That closes four of the five clauses.\n\nLineage closes separately, when a generated block names the record ids it was computed from.",
+    "Scope": "Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, and the export `kac export` writes."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/deviations/generated-output-ungoverned.md"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "tools",
+  "path": "tools/lint/actionlint.md",
+  "fields": {
+    "id": "tol-actionlint",
+    "title": "actionlint",
+    "status": "approved",
+    "category": "lint",
+    "versions": "1.7.x",
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "github-actions",
+      "linting",
+      "workflows"
+    ]
+  },
+  "sections": {
+    "What we use it for": "It reads a workflow as a workflow: the expression syntax, the job graph, the action inputs, and the shell in every\n`run:` block. The runner carries shellcheck, so actionlint puts each of those blocks through it as well.\n\nIt is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job carries the version instead, and the header comment in that file says where to look.",
+    "Status": "**approved** since 2026-09-02.",
+    "Licence and obligations": "MIT. Nothing follows for anything this repository publishes.",
+    "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/lint/actionlint.md"
+  }
+}

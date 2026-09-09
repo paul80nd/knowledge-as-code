@@ -1,0 +1,31 @@
+{
+  "type": "services",
+  "path": "services/search.md",
+  "fields": {
+    "id": "svc-search",
+    "title": "Search",
+    "status": "live",
+    "platform": "typescript",
+    "criticality": "important",
+    "repo": "search",
+    "depends-on": null,
+    "data-stores": null,
+    "facets": [
+      "event-driven",
+      "internal"
+    ],
+    "tags": [
+      "discovery",
+      "indexing"
+    ]
+  },
+  "sections": {
+    "What it does": "Maintains the search index over the collection and answers queries against it: free-text search, faceted browse, and the type-ahead on the catalogue's search box.\n\n**No database feeds the index.** It is built from events. Every change to an item, a holding or a branch's stock arrives on the message bus and is applied incrementally. A full rebuild is available on demand. That is what makes this service the estate's clearest example of heavy coupling with no dependency edge.",
+    "Where it lives": "* **Repository**: [`search`](https://git.example.com/example-libraries/search)\n* **Platform**: Node.js with TypeScript, on a container image\n* **Deployed as**: Container App `ca-search-<env>`",
+    "Dependencies": "**None, and the graph is right.** This service cannot function without the events [svc-catalogue-api] and [svc-lending]\npublish. It is coupled to both as tightly as anything in the estate. Neither is a strict dependency, though:\n`depends-on` records calls, and a bus message is not a call. See [Services](../services.md).\n\nSo the graph shows this service as unconnected. Operational notes below list what it consumes, and that is where the coupling lives.",
+    "Data": "The index itself, held in the search engine's own storage and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/library/services/search.md"
+  }
+}

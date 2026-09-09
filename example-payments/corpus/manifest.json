@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.8.3",
+  "contentVersion": "0.9.0",
   "mechanismVersion": 10,
-  "commit": "a8decabef67229a1ac93960008d559168c2923f6",
+  "commit": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda",
   "dirty": false,
-  "generatedAt": "2026-09-09T07:46:51Z",
+  "generatedAt": "2026-09-09T09:08:30Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,26 +18,64 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+    "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.11.0",
+      "contentVersion": "0.12.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+        "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
       }
     }
   ],
   "types": [
+    {
+      "type": "nfrs",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "nfrs",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Target": "full",
+        "How it is measured": "full",
+        "If it is breached": "full",
+        "Constraints": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "services",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "services",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Where it lives": "full",
+        "Dependencies": "full",
+        "Data": "full"
+      },
+      "frameworksFile": null
+    },
     {
       "type": "standards",
       "shapeVersion": 1,
@@ -52,6 +90,24 @@
       "sections": {
         "Summary": "full",
         "Conformance checklist": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "adrs",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "adrs",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Context": "summary",
+        "Decision": "full",
+        "Consequences": "full"
       },
       "frameworksFile": null
     },
@@ -87,6 +143,20 @@
         "Scope": "full",
         "Exceptions": "full"
       },
+      "frameworksFile": null
+    },
+    {
+      "type": "reports",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "reports",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {},
       "frameworksFile": null
     }
   ]

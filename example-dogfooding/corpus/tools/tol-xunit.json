@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/testing/xunit.md",
+  "fields": {
+    "id": "tol-xunit",
+    "title": "xUnit.net",
+    "status": "approved",
+    "category": "testing",
+    "versions": "3.1.x",
+    "licence": "Apache-2.0",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "testing",
+      "unit-tests"
+    ]
+  },
+  "sections": {
+    "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature\ndocuments through the same runner, so one `dotnet test` command covers either project.\n\n`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` sit beside it in both projects. Neither is a choice of its\nown: they are what makes `dotnet test` find and run the tests.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program comparing `kac` output against committed goldens, and it reports its own results.",
+    "Status": "**approved** since 2026-08-04.",
+    "Licence and obligations": "Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it: the packages are test-only and no published artefact carries them.",
+    "Where it is used": "* [svc-kac] is tested with it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/testing/xunit.md"
+  }
+}

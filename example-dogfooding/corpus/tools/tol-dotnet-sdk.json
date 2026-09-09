@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/build/dotnet-sdk.md",
+  "fields": {
+    "id": "tol-dotnet-sdk",
+    "title": ".NET SDK",
+    "status": "approved",
+    "category": "build",
+    "versions": "10.0.x",
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "dotnet",
+      "sdk"
+    ]
+  },
+  "sections": {
+    "What we use it for": "Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program, with no project around it.\n\n`actions/setup-dotnet` installs `10.0.x` in every job of every workflow here.",
+    "Status": "**approved** since 2026-08-03.",
+    "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
+    "Where it is used": "* [svc-kac] is built, tested and packed with it.\n\nThe docs site and the marketplace branch are built by other toolchains, so neither carries it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/build/dotnet-sdk.md"
+  }
+}

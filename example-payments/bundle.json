@@ -1,16 +1,20 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.8.3",
+    "contentVersion": "0.9.0",
     "types": [
+      "nfrs",
+      "services",
       "standards",
+      "adrs",
       "glossary",
-      "policies"
+      "policies",
+      "reports"
     ]
   },
   "included": [

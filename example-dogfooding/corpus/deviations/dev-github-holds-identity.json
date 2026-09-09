@@ -1,0 +1,37 @@
+{
+  "type": "deviations",
+  "path": "deviations/github-holds-identity.md",
+  "fields": {
+    "id": "dev-github-holds-identity",
+    "title": "GitHub decides who anybody here is",
+    "status": "active",
+    "departs-from": [
+      "eng:pol-ACCS.AUTHN",
+      "eng:pol-ACCS.NAMED"
+    ],
+    "owner": "human:paul.law",
+    "accepted-on": "2026-09-07",
+    "review-by": "2027-09-07",
+    "closed-on": null,
+    "applies-to": [
+      "svc-docs-site",
+      "svc-kac",
+      "svc-marketplace"
+    ],
+    "tags": [
+      "access",
+      "github",
+      "identity"
+    ]
+  },
+  "sections": {
+    "What we are doing instead": "A change arrives under a named GitHub account, and the commit carries that account's name and address. A workflow acts as a token GitHub mints for one run. Both satisfy the clauses in practice, and both are GitHub's arrangement rather than one this repository states.\n\nNothing here sets a password rule, a second-factor rule or a session length. The maintainer's account carries a passkey and a hardware key because GitHub offers them, not because a record asks for them.",
+    "Why we need it": "Writing a standard for authentication means writing rules this repository cannot enforce. GitHub owns the login screen, and a rule about it would be a wish with no check behind it. [std-CI] states what a workflow's identity may do, which is the half that is ours to hold.",
+    "What compensates": "* Every commit, review and merge is attributable to a GitHub account, and the history shows it.\n* [std-CI] gives each workflow the least permission it needs, so a compromised account reaches only what its job\n  declares.\n* Publishing to nuget.org waits for an approval on a named environment, so a stolen session still meets a person.\n* The repository is public and holds nothing private, so a lost account costs the history's integrity rather than its\n  confidentiality.",
+    "How it closes": "Somebody writes down what this repository requires of an account reaching it: a second factor, a hardware key for the maintainer, and what happens when either is lost. That belongs in a standard, and the standard closes this record.\n\nWhere the answer stays \"whatever GitHub does\", say so in a standard rather than in this record, and close it that way.",
+    "Scope": "Every account and token reaching the repository, its packages, its pages and its marketplace branch."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/deviations/github-holds-identity.md"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "tools",
+  "path": "tools/build/spectre-console.md",
+  "fields": {
+    "id": "tol-spectre-console",
+    "title": "Spectre.Console",
+    "status": "approved",
+    "category": "build",
+    "versions": "Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x",
+    "licence": "MIT",
+    "decided-in": null,
+    "replaces": "tol-system-commandline",
+    "successor": null,
+    "tags": [
+      "cli",
+      "console",
+      "terminal"
+    ]
+  },
+  "sections": {
+    "What we use it for": "`Program.cs` wires `Spectre.Console.Cli` to each verb, and every option and exit code is declared there.\n`Spectre.Console` is referenced by `kac.core`, where the reporters build what a run prints.\n\nOne library reads a command line and asks a question, rather than two. That is why the parser moved here in 0.2.1. Taken from the entry for that version in `tooling/kac/CHANGELOG.md`.",
+    "Status": "**approved** since 2026-08-21.",
+    "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
+    "Where it is used": "* [svc-kac] carries both packages."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/build/spectre-console.md"
+  }
+}

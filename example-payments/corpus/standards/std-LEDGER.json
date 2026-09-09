@@ -6,6 +6,7 @@
     "title": "A ledger entry is written once and corrected by another entry",
     "category": "ledger",
     "status": "active",
+    "derived-from": null,
     "implements": [
       "eng:pol-DERV.EXPECT",
       "eng:pol-DERV.LINEAGE"
@@ -25,6 +26,6 @@
     "Conformance checklist": "- [ ] Every amount column is an integer type, and every entry carries a currency code.\n- [ ] The database grants the service no UPDATE or DELETE on the entries table.\n- [ ] Summing debits and credits across the whole table returns zero.\n- [ ] Every correction in the last month appears as a reversal naming the entry it reverses.\n- [ ] Each entry names an order, a PSP reference and an idempotency key.\n- [ ] A payment's history can be rebuilt from the entries with no other source."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/payments/standards/ledger/entries.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/payments/standards/ledger/entries.md"
   }
 }

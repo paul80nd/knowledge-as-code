@@ -1,0 +1,34 @@
+{
+  "type": "deviations",
+  "path": "deviations/trusted-publishing-unstated.md",
+  "fields": {
+    "id": "dev-trusted-publishing-unstated",
+    "title": "No standard says this repository holds no static key",
+    "status": "active",
+    "departs-from": [
+      "eng:pol-SCRT.ZEROSEC"
+    ],
+    "owner": "human:paul.law",
+    "accepted-on": "2026-09-07",
+    "review-by": "2027-03-07",
+    "closed-on": null,
+    "applies-to": [
+      "svc-kac"
+    ],
+    "tags": [
+      "publishing",
+      "secrets",
+      "workload-identity"
+    ]
+  },
+  "sections": {
+    "What we are doing instead": "The publish workflow authenticates to nuget.org by exchanging a GitHub OIDC token, so no API key exists in a secret store or anywhere else. [std-CI] states that a workflow holds no credential of its own, and cites the clauses about storing and rotating a secret.\n\n`eng:pol-SCRT.ZEROSEC` is the clause asking for a secretless path where one is available. No rule here names it, so\nsomebody adding a second publish target could reach for an API key without failing a check.",
+    "Why we need it": "The rule and the practice arrived together, and the practice was easier to write. [std-CI] grew from what the workflows already did, and a clause about a credential that does not exist reads as a clause about nothing.",
+    "What compensates": "* The workflows hold no key. Nothing checks that: ctl-0003 says actionlint reports nothing about a credential\n  written in the wrong place.\n* [std-CI] already refuses a workflow that carries a credential of its own, which reaches the same outcome from the\n  other side.\n* Publishing waits for an approval on the `nuget.org` environment, so a token exchange still needs a person.\n* [tol-gh] and the publish workflow are the only things that reach nuget.org, and both are in the repository.",
+    "How it closes": "[std-CI] gains a rule saying a publish authenticates by workload identity where the registry offers it, and cites\n`eng:pol-SCRT.ZEROSEC` on its `Covers` line. That is one rule and one line, and this record closes on it.",
+    "Scope": "The publish workflows, and any registry this repository publishes to."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/deviations/trusted-publishing-unstated.md"
+  }
+}

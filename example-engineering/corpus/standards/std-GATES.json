@@ -6,6 +6,7 @@
     "title": "A failing check blocks the merge",
     "category": "common",
     "status": "draft",
+    "derived-from": null,
     "implements": [
       "pol-AUTV.BLOCK",
       "pol-AUTV.BYPASS",
@@ -31,6 +32,6 @@
     "Conformance checklist": "- [ ] A push triggers the build with no manual step.\n- [ ] Branch policy lists the build and the test suite as required checks.\n- [ ] The build passes from a clean clone on a fresh agent.\n- [ ] Every skipped, excluded or suppressed check names a deviation.\n- [ ] Every such deviation is open, owned by an individual, and inside its review date.\n- [ ] The last defect fix in this repository carries a test that fails without the fix."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/standards/common/build-gates.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/standards/common/build-gates.md"
   }
 }

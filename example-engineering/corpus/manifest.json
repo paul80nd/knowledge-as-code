@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-engineering",
   "shortcode": "eng",
-  "contentVersion": "0.11.0",
+  "contentVersion": "0.12.0",
   "mechanismVersion": 10,
-  "commit": "a8decabef67229a1ac93960008d559168c2923f6",
+  "commit": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda",
   "dirty": false,
-  "generatedAt": "2026-09-09T07:46:47Z",
+  "generatedAt": "2026-09-09T09:08:28Z",
   "about": {
     "displayName": "Example Engineering",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented governance layer of a fictional engineering organisation. Its policies bind nobody, and no organisation is certified against anything it records.",
@@ -18,13 +18,31 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a8decabef67229a1ac93960008d559168c2923f6/examples/engineering/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/engineering/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/engineering",
-    "ref": "a8decabef67229a1ac93960008d559168c2923f6"
+    "ref": "c223650b0b398e759f7cfcb912f5dc08d4aa5eda"
   },
   "sources": [],
   "types": [
+    {
+      "type": "adrs",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "adrs",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Context": "summary",
+        "Decision": "full",
+        "Consequences": "full"
+      },
+      "frameworksFile": null
+    },
     {
       "type": "glossary",
       "shapeVersion": 1,
@@ -58,6 +76,20 @@
         "Exceptions": "full"
       },
       "frameworksFile": "policies/frameworks.jsonl"
+    },
+    {
+      "type": "reports",
+      "shapeVersion": 1,
+      "records": 1,
+      "parts": 0,
+      "dir": "reports",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {},
+      "frameworksFile": null
     },
     {
       "type": "standards",

@@ -1,0 +1,29 @@
+{
+  "type": "tools",
+  "path": "tools/testing/reqnroll.md",
+  "fields": {
+    "id": "tol-reqnroll",
+    "title": "Reqnroll",
+    "status": "approved",
+    "category": "testing",
+    "versions": "3.3.x",
+    "licence": "BSD-3-Clause",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "bdd",
+      "gherkin",
+      "testing"
+    ]
+  },
+  "sections": {
+    "What we use it for": "Each feature document states what a verb does in the words a reader of the documentation would use, and Reqnroll binds each step to a method. A step that no longer matches fails the build, so the feature documents cannot describe a command surface the tool has stopped offering.",
+    "Status": "**approved** since 2026-08-04.",
+    "Licence and obligations": "BSD-3-Clause. It asks that the copyright notice travel with a redistribution, and forbids using the project's name to endorse anything built on it. Nothing here redistributes it.",
+    "Where it is used": "* [svc-kac] is tested with it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/testing/reqnroll.md"
+  }
+}

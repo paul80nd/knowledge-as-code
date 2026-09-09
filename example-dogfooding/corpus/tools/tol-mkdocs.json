@@ -1,0 +1,28 @@
+{
+  "type": "tools",
+  "path": "tools/docs/mkdocs.md",
+  "fields": {
+    "id": "tol-mkdocs",
+    "title": "MkDocs",
+    "status": "approved",
+    "category": "docs",
+    "versions": "1.6.x",
+    "licence": "BSD-2-Clause",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "documentation",
+      "static-site"
+    ]
+  },
+  "sections": {
+    "What we use it for": "MkDocs is here because it is what tool documentation uses. The site documents `kac`, and it is not a corpus:\n`publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.\n\n`strict: true` in `mkdocs.yml` turns a dead link into a failed build. A page the navigation does not list is only\nreported at INFO, so `NavigationTests` in `kac.tests` holds that half instead.",
+    "Status": "**approved** since 2026-08-24.",
+    "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output rather than a redistribution of the generator, so nothing follows for what is published.",
+    "Where it is used": "* [svc-docs-site] is built with it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c223650b0b398e759f7cfcb912f5dc08d4aa5eda/examples/dog-fooding/tools/docs/mkdocs.md"
+  }
+}
