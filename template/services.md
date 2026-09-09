@@ -29,9 +29,9 @@ independently deployed apps gets three documents. A capability spanning six serv
 [capability](capabilities.md) document that links to all six.
 
 **Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
-unit.** A feed of six packages, built from six folders by one workflow, is one document. The artefacts are the same
-build run over different content, so splitting it would repeat one repository, one owner and one platform six times.
-Six codebases published by one pipeline are still six services.
+unit.** A feed of six packages, built from six folders by one workflow, is one document. Its artefacts are one build
+run over different content, so splitting it would repeat one repository, one owner and one platform six times. Where
+each artefact is built from source of its own, they are separate services however few pipelines publish them.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 

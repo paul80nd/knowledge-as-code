@@ -26,8 +26,9 @@ links to all six.
 
 **Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
 unit.** [svc-marketplace] is one branch holding four plugins, and [svc-corpus-feed] is one workflow pushing four
-packages. Their artefacts are the same build run over different content, so splitting either would repeat one
-repository, one owner and one platform four times. Four codebases published by one pipeline are still four services.
+packages. Their artefacts are one build run over different content, so splitting either would repeat one repository,
+one owner and one platform four times. Where each artefact is built from source of its own, they are separate services
+however few pipelines publish them.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
@@ -112,7 +113,9 @@ The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this c
 catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
 the list does.
 
-This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`.
+This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`. `static`
+covers anything generated and served as it was built, which reaches the documentation site, the marketplace branch and
+a sealed corpus package alike.
 
 ### Deriving the facet vocabulary
 

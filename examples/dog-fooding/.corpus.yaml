@@ -72,8 +72,8 @@ types:
   - standards
   - tools
 
-# What a service here is built on. This repository publishes a dotnet tool and static sites, so those are
-# the values. `services.md` says how they were reached.
+# What a service here is built on. This repository publishes a dotnet tool, and everything else it ships is
+# generated and served as built. `services.md` says how the values were reached.
 enums:
   platform: [dotnet-tool, static]
 
