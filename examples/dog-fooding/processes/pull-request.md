@@ -3,7 +3,7 @@ id: prc-pull-request
 type: process
 tier: procedural
 status: active
-applies-to: [ svc-docs-site, svc-kac, svc-marketplace ]
+applies-to: [ svc-corpus-feed, svc-docs-site, svc-kac, svc-marketplace ]
 last-rehearsed: "2026-09-07"
 rehearsal-frequency:
 requires-access:

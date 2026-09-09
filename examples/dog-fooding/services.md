@@ -21,9 +21,14 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets
-a capability
-document that links to all six.
+independently deployed apps gets three documents. A capability spanning six services gets a capability document that
+links to all six.
+
+**Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
+unit.** [svc-marketplace] is one branch holding four plugins, and [svc-corpus-feed] is one workflow pushing four
+packages. Their artefacts are one build run over different content, so splitting either would repeat one repository,
+one owner and one platform four times. Where each artefact is built from source of its own, they are separate services
+however few pipelines publish them.
 
 A service document is **descriptive**: it mirrors what is actually deployed. It is not the place for:
 
@@ -108,7 +113,9 @@ The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this c
 catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
 the list does.
 
-This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`.
+This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`. `static`
+covers anything generated and served as it was built, which reaches the documentation site, the marketplace branch and
+a sealed corpus package alike.
 
 ### Deriving the facet vocabulary
 
@@ -188,3 +195,6 @@ words worth keeping are the ones thrown away.
 | `drift-against-repos` | The catalogue against the real repository list, in both directions. |
 
 <!-- END GENERATED: checks-services -->
+
+[svc-corpus-feed]: services/corpus-feed.md
+[svc-marketplace]: services/marketplace.md

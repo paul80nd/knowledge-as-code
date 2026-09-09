@@ -54,8 +54,8 @@ cell says the corpus was read and it was not.
 A report is wrong the moment the corpus moves, and `report-stale` says so once `sources` falls behind.
 
 **Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, raise the
-`sources` version by hand and add a `confirmed` entry. That says somebody checked. Where the coverage itself moved,
-run the report again and merge.
+`sources` version by hand and leave `confirmed` alone. A version the corpus moved for something else is no reason to
+claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `confirmed` entry.
 
 **The merge, in order:**
 

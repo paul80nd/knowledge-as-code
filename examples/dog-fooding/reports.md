@@ -63,8 +63,8 @@ checked that it still holds.
 4. Set `sources` to the `content-version` of each corpus the run read, and add a `confirmed` entry naming yourself.
 
 **Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
-moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and add a `confirmed` entry
-instead: that says somebody checked, and it saves re-reading every verdict.
+moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `confirmed` alone.
+A version the corpus moved for something else is no reason to claim a fresh read.
 
 ## What CI checks
 
