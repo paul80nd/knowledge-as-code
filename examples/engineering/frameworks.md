@@ -50,6 +50,7 @@ elsewhere in the management system, whole or in part:
 |----------------------------------------------------------|-------------------------------------------|
 | Physical controls: `A.7.1`–`A.7.14` entire               | Facilities                                |
 | People controls: `A.6.1`–`A.6.7`, since `A.6.8` is ours  | HR, with the security awareness programme |
+| Management direction: `A.5.4`                            | HR and line management                    |
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
 | Compliance review, inside `A.5.36`                       | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |

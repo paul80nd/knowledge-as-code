@@ -90,7 +90,7 @@ and an empty cell says so.
 | A.5.5 | `pol-INCR.NOTIFY` | `pol-INCR` | The control asks that contact with the relevant authorities be established and kept up. `NOTIFY` answers the statutory breach instance. The rest of the control is one of the organisational-reach controls `frameworks.md` places with Legal and the ISMS owner. |
 | A.5.7 | `pol-VURM.DISCLOS` | `pol-VURM` | The control collects external threat information to inform our own risk decisions. `DISCLOS` is the route for people outside the organisation to report a vulnerability to us. Nothing in this corpus produces or consumes threat intelligence as the control describes. |
 | A.5.8 | `pol-SECD.REQS`, `pol-SECD.ACTIONS` | `pol-SECD` | |
-| A.5.9 | `pol-DATA.LOCATE` | `pol-DATA` | |
+| A.5.9 | `pol-DATA.INVENT` | `pol-DATA` | |
 | A.5.12 | `pol-DATA.CLASS` | `pol-DATA` | |
 | A.5.14 | `pol-DATA.CRYPTO`, `pol-DATA.XBORDER`, `pol-DATA.SHARE` | `pol-DATA` | |
 | A.5.15 | `pol-ACCS.LEAST` | `pol-ACCS` | |
@@ -209,7 +209,7 @@ and an empty cell says so.
 | Art.6 | `pol-DATA.LAWFUL` | `pol-DATA` | |
 | Art.25 | `pol-DATA.UNMASK` | `pol-DATA` | Article 25 is the duty to build data protection in by design and by default. `UNMASK` answers one instance of it, masking below production. `pol-SECD.REQS` states the same idea and carries no citation to this article. |
 | Art.28 | `pol-DATA.SHARE` | `pol-DATA` | Article 28 governs the controller-to-processor relationship. The written processing agreement `SHARE` requires is that instrument. Sharing with an independent controller is a case no clause here reaches. |
-| Art.30 | `pol-DATA.LOCATE` | `pol-DATA` | Article 30 requires a documented record of processing activities: purposes, categories of data and of subjects, recipients, retention and security measures. `LOCATE` requires knowing where the data lives, which is one field of that record. No clause requires the record itself. |
+| Art.30 | `pol-DATA.INVENT` | `pol-DATA` | Article 30 requires a documented record of processing activities: purposes, categories of data and of subjects, recipients, retention and security measures. `LOCATE` requires knowing where the data lives, which is one field of that record. No clause requires the record itself. |
 | Art.32 | `pol-DATA.CRYPTO`, `pol-DATA.RETIRE` | `pol-DATA` | Article 32(1)(c) requires the ability to restore access to personal data in good time. `pol-RECV.RTORPO`, `BACKUP` and `RESTORE` are that ability, and no clause of `pol-RECV` carries a UK GDPR citation. |
 | Art.32(1)(a) | `pol-DATA.CLEAR` | `pol-DATA` | |
 | Art.32(1)(d) | `pol-VURM.SCAN` | `pol-VURM` | |
