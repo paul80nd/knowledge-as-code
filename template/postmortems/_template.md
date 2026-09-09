@@ -26,7 +26,7 @@ and how it is reviewed. What is below is only what a postmortem adds to that.
 * **`occurred-on` / `detected-on`**: separate quoted dates. The gap between them is often the finding.
 * **`severity`**: `sev1` · `sev2` · `sev3`.
 * **`affected`**: service or capability ids.
-* **`prompted`**: the ADRs, runbooks, NFRs and FAQs this incident caused to be written.
+* **`prompted`**: the ADRs, runbooks, NFRs and fixes this incident caused to be written.
 * **`status`**: `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
   published**. A materially different understanding becomes a new document that references this one.
 

@@ -42,7 +42,7 @@ consumes:
     shortcode: eng
     version: ^0.12.0
     source: ../engineering/.dist/package
-    resolved: "0.12.0"
+    resolved: "0.12.1"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.
@@ -51,7 +51,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 10
+  template-version: 11
   taken-on: "2026-08-24"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.

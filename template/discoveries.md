@@ -29,7 +29,7 @@ deliberate: an observation nobody has needed in three months was probably situat
 
 Boundaries:
 
-* **[FAQ](faqs.md)**: confirmed, general, current, and carries authority. That is what a discovery is promoted *to*.
+* **[Fix](fixes.md)**: confirmed, general, current, and carries authority. That is what a discovery is promoted *to*.
 * **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
 * **A bug.** If it is broken and should be fixed, raise a work item. A discovery records something surprising, not
   something owed.
@@ -51,7 +51,7 @@ Boundaries:
 | `expires` *    | date                                    | Quoted. Ninety days from capture, a convention the template carries.                                                              |
 | `provenance`   | string                                  | A reference back to the session and passage, so review is a check rather than an act of faith. Required when `source == dreamed`. |
 | `applies-to`   | list                                    | Service ids this observation concerns.                                                                                            |
-| `promoted-to`  | id                                      | The FAQ or standard this became. Required when `status == promoted`.                                                              |
+| `promoted-to`  | id                                      | The fix or standard this became. Required when `status == promoted`.                                                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -62,15 +62,15 @@ Boundaries:
 
 Low ceremony on purpose. Copy [`_template.md`](discoveries/_template.md) and fill in a title, what you saw, the context
 you were in, and why it might matter. Leave `confidence: unverified` unless you've genuinely proven it. Don't tidy it
-up, don't verify it first, and don't write it as an FAQ.
+up, don't verify it first, and don't write it as a fix.
 
-## Promoting a discovery to an FAQ
+## Promoting a discovery to a fix
 
 The one flow that crosses tiers. Where the observation turns out to be a rule people should follow, promote it to a
 **standard** instead, and that needs an ADR first.
 
 1. A human confirms the observation is real, general, and still current.
-2. Create the FAQ with `promoted-from`, and a `confirmed` entry naming who confirmed it and when.
+2. Create the fix with `promoted-from`, and a `confirmed` entry naming who confirmed it and when.
 3. Set the discovery's `status: promoted` and `promoted-to`.
 
 Nothing proposes a promotion automatically

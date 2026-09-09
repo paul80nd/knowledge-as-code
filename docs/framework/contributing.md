@@ -69,7 +69,7 @@ decision, write a new one that supersedes it.
 An agent proposing knowledge has an identity of its own: a service account that can open pull requests and cannot merge
 them. A human accepts what it proposes, and a branch policy enforces that so nobody has to remember.
 
-What an agent may write follows from that. It captures a discovery rather than an FAQ, because it cannot confirm its
+What an agent may write follows from that. It captures a discovery rather than a fix, because it cannot confirm its
 own observations. Where a Decided record is wrong, it proposes the record that supersedes it. And it asks where a
 record goes, because a record in the wrong folder is never found by the search that needed it.
 

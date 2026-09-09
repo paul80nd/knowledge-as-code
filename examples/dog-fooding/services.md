@@ -11,7 +11,7 @@ what the component is for, where its code lives, what it runs on, what it depend
 
 ## Why we use them
 
-Services are the **anchor** the rest of the corpus points at. An NFR, a control and an FAQ each name the service they
+Services are the **anchor** the rest of the corpus points at. An NFR, a control and a fix each name the service they
 concern, and a capability names the services that implement it. Nobody can check those references, or write them the
 same way twice, without one canonical list of what a service is and what it is called.
 

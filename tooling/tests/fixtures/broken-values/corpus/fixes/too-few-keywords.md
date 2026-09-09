@@ -1,6 +1,6 @@
 ---
-id: faq-0001
-type: faq
+id: fix-0001
+type: fix
 tier: normative
 status: active
 symptom-keywords: [timeout, upload]
@@ -12,7 +12,7 @@ owner: human:alex.doe
 
 # Too few keywords
 
-`FAQ: faq-0001` `ACTIVE`
+`Fix: fix-0001` `ACTIVE`
 
 ## Symptom
 
@@ -24,6 +24,6 @@ list that neither `list` nor `field-pattern` asks: both read the entries that ar
 The floor is reported against the field rather than against an entry, because no entry is at fault — what is wrong is
 how few of them there are.
 
-## Fix
+## Resolution
 
 A third keyword. The two present are well-formed, so nothing else here fires and the golden is one finding.

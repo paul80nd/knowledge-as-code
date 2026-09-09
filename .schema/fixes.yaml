@@ -1,17 +1,17 @@
 # yaml-language-server: $schema=./meta/type.schema.json
 
-type: faq
-label: FAQ
-label-plural: FAQs
-folder: faqs
-page: faqs.md
+type: fix
+label: Fix
+label-plural: Fixes
+folder: fixes
+page: fixes.md
 tier: normative
 lifecycle: living
-summary: A problem with a confirmed fix, promoted from a discovery once a human has verified it.
-goes-here: A problem with a known, confirmed fix
+summary: A problem with a confirmed resolution, promoted from a discovery once a human has verified it.
+goes-here: A problem with a known, confirmed resolution
 detail: >
-  It carries provenance back to the observation it came from, so the reader can see how far the fix has been
-  taken on trust.
+  It carries provenance back to the observation it came from, so the reader can see how far the resolution has
+  been taken on trust.
 
 lineage:
   prior-art: "ITIL Problem Management, the *known error* construct"
@@ -22,7 +22,7 @@ lineage:
     verification, from anything noticed
 
 id:
-  prefix: faq
+  prefix: fix
   style: numbered
   width: 4
 
@@ -52,7 +52,7 @@ fields:
     type: list
     of: id
     ref: services
-    description: Service ids this answer concerns.
+    description: Service ids this fix concerns.
 
   promoted-from:
     required: false
@@ -66,10 +66,10 @@ fields:
     type: list
     of: object
     shape: event
-    description: Every confirmation this answer has had, oldest first, one line each.
+    description: Every confirmation this fix has had, oldest first, one line each.
     notes: >
-      An FAQ nobody confirmed is a discovery, and this field is what separates the two tiers. The list
-      keeps every confirmation the answer has had, so a reader sees when it was last checked, by whom,
+      A fix nobody confirmed is a discovery, and this field is what separates the two tiers. The list
+      keeps every confirmation the fix has had, so a reader sees when it was last checked, by whom,
       and who checked it before that. One confirmation is one entry, so the moment and the person are
       edited together.
 
@@ -83,7 +83,7 @@ fields:
     description: Quoted. The date by which someone confirms this is still true.
 
 sections:
-  required: [Symptom, Cause, Fix]
+  required: [Symptom, Cause, Resolution]
   optional: [Why it happens, How we found it, Related]
 
 index:
@@ -102,9 +102,9 @@ rules:
       named after the post changes hands.
 
   - id: one-problem-per-document
-    description: One Symptom section, because an FAQ is found by its symptom.
+    description: One Symptom section, because a fix is found by its symptom.
     severity: warning
     expr: "section_count('Symptom') <= 1"
     message: >
-      This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a
+      This carries more than one Symptom section, so it is more than one fix. Someone arriving with a
       symptom matches on the first one and never reads the second. Split it.

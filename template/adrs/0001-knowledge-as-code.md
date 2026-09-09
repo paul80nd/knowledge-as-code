@@ -54,7 +54,7 @@ We treat knowledge as code. Concretely:
 * **Types are grouped into tiers by behaviour**: decided, normative, descriptive, procedural and observed. The tier, not
   the type, determines the review bar, the validation rules and the lifecycle.
 * **A cheap-capture, deliberate-promotion path exists** for observed knowledge. Unverified discoveries are recorded with
-  no review and expire by default; promotion to an FAQ or a standard requires a human.
+  no review and expire by default; promotion to a fix or a standard requires a human.
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships, and **generates**
   indexes, reports and an always-loaded rules digest.
 * **The mechanism is separable from the content.** The schema and the framework's own documentation carry no

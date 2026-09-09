@@ -86,11 +86,11 @@
       "message": "A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
     },
     {
-      "file": "faqs/two-symptoms-one-page.md",
+      "file": "fixes/two-symptoms-one-page.md",
       "line": 1,
       "severity": "warning",
       "check": "one-problem-per-document",
-      "message": "This carries more than one Symptom section, so it is more than one FAQ. Someone arriving with a symptom matches on the first one and never reads the second. Split it."
+      "message": "This carries more than one Symptom section, so it is more than one fix. Someone arriving with a symptom matches on the first one and never reads the second. Split it."
     },
     {
       "file": "glossary/out-of-order.md",

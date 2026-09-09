@@ -76,7 +76,7 @@ fields:
     required: false
     type: list
     of: id
-    ref: [adrs, runbooks, nfrs, faqs, standards]
+    ref: [adrs, runbooks, nfrs, fixes, standards]
     notes: What this incident caused to be written.
 
 sections:

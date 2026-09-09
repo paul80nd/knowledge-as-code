@@ -15,7 +15,7 @@ shortcode: lib
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.2.0"
+content-version: "0.2.1"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -43,7 +43,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 10
+  template-version: 11
   taken-on: "2026-08-24"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.

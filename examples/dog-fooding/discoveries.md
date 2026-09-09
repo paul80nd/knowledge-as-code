@@ -32,7 +32,7 @@ deliberate: an observation nobody has needed in three months was probably situat
 Boundaries:
 
 * **A standard**: checked, general, current, and carries authority. That is what a discovery here is promoted *to*.
-  This corpus declined the FAQ type, so a standard is the only promotion target it has.
+  This corpus declined the fix type, so a standard is the only promotion target it has.
 * **Session state**: where a piece of work got to. That is personal handover and is **not stored in this repository**.
 * **A bug.** Where something is broken and somebody should fix it, raise a GitHub issue. A discovery records something
   surprising, and claims nothing is owed.
@@ -54,7 +54,7 @@ Boundaries:
 | `expires` *    | date                                    | Quoted. Ninety days from capture, a convention the template carries.                                                              |
 | `provenance`   | string                                  | A reference back to the session and passage, so review is a check rather than an act of faith. Required when `source == dreamed`. |
 | `applies-to`   | list                                    | Service ids this observation concerns.                                                                                            |
-| `promoted-to`  | id                                      | The FAQ or standard this became. Required when `status == promoted`.                                                              |
+| `promoted-to`  | id                                      | The fix or standard this became. Required when `status == promoted`.                                                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

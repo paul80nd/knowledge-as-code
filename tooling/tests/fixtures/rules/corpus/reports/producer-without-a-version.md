@@ -19,4 +19,4 @@ confirmed:
 output changed reads exactly like one whose output did not, which is what `generated-by-a-producer` reports.
 
 The `event` shape leaves `by` a plain string, because what counts as an actor differs by what the event is. This type
-holds it to a producer and its version, and the FAQ type holds the same key to a person.
+holds it to a producer and its version, and the fix type holds the same key to a person.

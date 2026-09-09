@@ -25,7 +25,7 @@ column for your row.
 | A description of what a deployable component is and does             | [Services](../services.md)         |
 | A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
 | A narrative of how something works or why it's shaped that way       | [Explanations](../explanations.md) |
-| A problem with a known, confirmed fix                                | [FAQs](../faqs.md)                 |
+| A problem with a known, confirmed resolution                         | [Fixes](../fixes.md)               |
 | A rule people must follow when building                              | [Standards](../standards.md)       |
 | A step-by-step for a planned task                                    | [Processes](../processes.md)       |
 | A step-by-step for when something is broken                          | [Runbooks](../runbooks.md)         |
@@ -73,8 +73,9 @@ honest state and the number worth watching.
 is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
 nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
 
-**[FAQs](../faqs.md).** A problem with a confirmed fix, promoted from a discovery once a human has verified it. It
-carries provenance back to the observation it came from, so the reader can see how far the fix has been taken on trust.
+**[Fixes](../fixes.md).** A problem with a confirmed resolution, promoted from a discovery once a human has verified it.
+It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
+on trust.
 
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
@@ -161,7 +162,7 @@ graph LR;
   t_deviations[Deviation];
   t_discoveries[Discovery];
   t_explanations[Explanation];
-  t_faqs[FAQ];
+  t_fixes[Fix];
   t_glossary[Glossary];
   t_integrations[Integration];
   t_nfrs[NFR];
@@ -186,11 +187,11 @@ graph LR;
   t_deviations -- departs-from --> t_policies;
   t_deviations -- departs-from --> t_standards;
   t_discoveries -- applies-to --> t_services;
-  t_discoveries -- promoted-to --> t_faqs;
+  t_discoveries -- promoted-to --> t_fixes;
   t_discoveries -- promoted-to --> t_standards;
   t_explanations -- explains --> t_services;
   t_explanations -- explains --> t_capabilities;
-  t_faqs -- applies-to --> t_services;
+  t_fixes -- applies-to --> t_services;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_nfrs -- applies-to --> t_services;
@@ -201,7 +202,7 @@ graph LR;
   t_postmortems -- prompted --> t_adrs;
   t_postmortems -- prompted --> t_runbooks;
   t_postmortems -- prompted --> t_nfrs;
-  t_postmortems -- prompted --> t_faqs;
+  t_postmortems -- prompted --> t_fixes;
   t_postmortems -- prompted --> t_standards;
   t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
@@ -235,16 +236,16 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Deviation   | `applies-to`     | Service                          |                 |
 | Deviation   | `departs-from`   | Policy, Standard                 |                 |
 | Discovery   | `applies-to`     | Service                          |                 |
-| Discovery   | `promoted-to`    | FAQ, Standard                    | `promoted-from` |
+| Discovery   | `promoted-to`    | Fix, Standard                    | `promoted-from` |
 | Explanation | `explains`       | Service, Capability              |                 |
-| FAQ         | `applies-to`     | Service                          |                 |
-| FAQ         | `promoted-from`  | Discovery                        | `promoted-to`   |
+| Fix         | `applies-to`     | Service                          |                 |
+| Fix         | `promoted-from`  | Discovery                        | `promoted-to`   |
 | Glossary    | `narrows`        | Glossary                         |                 |
 | Integration | `used-by`        | Service                          |                 |
 | NFR         | `applies-to`     | Service, Capability              |                 |
 | NFR         | `constrained-by` | Integration                      |                 |
 | Postmortem  | `affected`       | Service, Capability              |                 |
-| Postmortem  | `prompted`       | ADR, Runbook, NFR, FAQ, Standard |                 |
+| Postmortem  | `prompted`       | ADR, Runbook, NFR, Fix, Standard |                 |
 | Process     | `applies-to`     | Service                          |                 |
 | Runbook     | `applies-to`     | Service                          |                 |
 | Service     | `data-stores`    | Data                             |                 |
@@ -294,9 +295,9 @@ the ADR and change the rule.
 **Deviation vs Policy.** The policy is the commitment. The deviation is one named, dated departure from it, and it
 changes nothing the policy says. A departure everyone takes is a policy that needs rewriting.
 
-**Discovery vs FAQ.** A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a
-human and carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion do
-the work.
+**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been confirmed by a human
+and carries authority. Never write straight to a fix from a session. Capture the discovery and let promotion do the
+work.
 
 **Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.

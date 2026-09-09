@@ -32,7 +32,7 @@
 .schema/deviations.yaml
 .schema/discoveries.yaml
 .schema/explanations.yaml
-.schema/faqs.yaml
+.schema/fixes.yaml
 .schema/glossary.yaml
 .schema/integrations.yaml
 .schema/meta/type.schema.json
@@ -69,9 +69,9 @@ discoveries/_template.md
 explanations.md
 explanations/_index.md
 explanations/_template.md
-faqs.md
-faqs/_index.md
-faqs/_template.md
+fixes.md
+fixes/_index.md
+fixes/_template.md
 frameworks.md
 glossary.md
 glossary/_index.md

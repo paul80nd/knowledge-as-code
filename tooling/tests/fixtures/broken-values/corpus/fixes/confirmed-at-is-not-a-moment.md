@@ -1,6 +1,6 @@
 ---
-id: faq-0003
-type: faq
+id: fix-0003
+type: fix
 tier: normative
 status: active
 symptom-keywords: [calendar, moment, timestamp]
@@ -13,7 +13,7 @@ owner: human:alex.doe
 
 # A confirmation moment the calendar does not have
 
-`FAQ: faq-0003` `ACTIVE`
+`Fix: fix-0003` `ACTIVE`
 
 ## Symptom
 
@@ -25,7 +25,7 @@ has never had. The second is written as a day, which is not a moment at all.
 Shape and calendar are two questions about one string, and they report under one id because both leave the author
 with the same thing to do. The message is what tells them which they wrote.
 
-## Fix
+## Resolution
 
 Write each `at` as `YYYY-MM-DDThh:mm:ssZ`, in UTC. The two entries read in order, so `list-order` stays quiet and
 each finding is about the moment beneath it.

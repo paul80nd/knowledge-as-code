@@ -14,9 +14,9 @@ detail: >
   that "the build fails silently if X" has somewhere to go the moment it is noticed.
 
 versus:
-  faqs: >
-    A discovery is unverified and might be wrong or already fixed. An FAQ has been confirmed by a human and
-    carries authority. Never write straight to an FAQ from a session. Capture the discovery and let promotion
+  fixes: >
+    A discovery is unverified and might be wrong or already fixed. A fix has been confirmed by a human and
+    carries authority. Never write straight to a fix from a session. Capture the discovery and let promotion
     do the work.
 
 lineage:
@@ -86,9 +86,9 @@ fields:
     required: false
     required-when: 'status == promoted'
     type: id
-    ref: [faqs, standards]
+    ref: [fixes, standards]
     reciprocal: promoted-from
-    description: The FAQ or standard this became.
+    description: The fix or standard this became.
 
 sections:
   required: [What I saw, Context, Why it might matter]

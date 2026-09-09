@@ -13,13 +13,13 @@ public class RuleExprTests
     [Fact]
     public void Entries_match_reads_every_object_in_a_list()
         => Assert.False(Eval("entries_match('confirmed', 'by', '^human:')",
-            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            "id: fix-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
             + "  - { at: 2026-06-13T09:00:00Z, by: role:head-of-engineering }\n"));
 
     [Fact]
     public void Entries_match_is_true_where_every_object_matches()
         => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')",
-            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
+            "id: fix-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
 
     // One mapping is one object, so a field declaring `type: object` is asked the same question.
     [Fact]
@@ -32,12 +32,12 @@ public class RuleExprTests
     // on top of this reports one fault once.
     [Fact]
     public void Entries_match_is_true_where_the_field_is_absent()
-        => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')", "id: faq-0001"));
+        => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')", "id: fix-0001"));
 
     [Fact]
     public void Entries_match_is_true_where_an_object_does_not_carry_the_key()
         => Assert.True(Eval("entries_match('confirmed', 'by', '^human:')",
-            "id: faq-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z }\n"));
+            "id: fix-0001\nconfirmed:\n  - { at: 2026-06-12T09:00:00Z }\n"));
 
     private static Facts FactsFor(string frontmatter, string body, DateOnly? today = null)
     {

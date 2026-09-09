@@ -193,7 +193,7 @@ checks:
     description: A list field carries at least the `min-items:` its schema declares.
     notes: >
       Reported against the field rather than an entry, because no entry is at fault. For the field whose
-      value is its breadth: a FAQ's `symptom-keywords` is the one the schema tells authors to over-fill.
+      value is its breadth: a fix's `symptom-keywords` is the one the schema tells authors to over-fill.
 
   min-records:
     severity: warning

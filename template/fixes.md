@@ -1,45 +1,45 @@
-# FAQs
+# Fixes
 
-Problems we have hit before, with the fix that worked.
+Problems we have hit before, with the resolution that worked.
 
-**[→ Index](faqs/_index.md)**
+**[→ Index](fixes/_index.md)**
 
-## What is an FAQ?
+## What is a fix?
 
-One document per problem: the symptom as you would encounter it, what causes it, how to fix it, and why it happens. A
-human has confirmed it, so an FAQ carries authority.
+One document per problem: the symptom as you would encounter it, what causes it, how to resolve it, and why it happens.
+A human has confirmed it, so a fix carries authority.
 
 Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
 
 ## Why we use them
 
-The same problems come back, and the next person to hit one pays the cost again. An FAQ turns two hours of debugging
+The same problems come back, and the next person to hit one pays the cost again. A fix turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-A [discovery](discoveries.md) can also become an FAQ. A human promotes it once the observation proves real, general and
+A [discovery](discoveries.md) can also become a fix. A human promotes it once the observation proves real, general and
 current.
 
 ## Scope
 
-An FAQ is **confirmed**. A human has verified that the problem is real, that the fix works, and that both are still
-current. A [discovery](discoveries.md) arrives with none of that verification: nobody reviews one, and it might be wrong
-or already fixed.
+A fix is **confirmed**. A human has verified that the problem is real, that the resolution works, and that both are
+still current. A [discovery](discoveries.md) arrives with none of that verification: nobody reviews one, and it might
+be wrong or already fixed.
 
-**Never write straight to an FAQ from a session.** An agent cannot confirm its own observations, so capture a discovery
+**Never write straight to a fix from a session.** An agent cannot confirm its own observations, so capture a discovery
 and let a human confirm it at promotion.
 
 Other boundaries:
 
-* **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. An FAQ has one known
-  fix.
-* **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the fix is
-  a rule, and that needs an [ADR](adrs.md) first.
+* **[Runbook](runbooks.md).** If it needs a diagnosis tree and an escalation path, it is a runbook. A fix has one known
+  resolution.
+* **[Standard](standards.md).** If the real answer is "people should stop doing the thing that causes this", the
+  resolution is a rule, and that needs an [ADR](adrs.md) first.
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 
 ## Metadata
 
-<!-- BEGIN GENERATED: schema-faqs -->
+<!-- BEGIN GENERATED: schema-fixes -->
 
 | Field                | Value                                  | Notes                                                                                       |
 |----------------------|----------------------------------------|---------------------------------------------------------------------------------------------|
@@ -50,35 +50,35 @@ Other boundaries:
 | `owner` *†           | string                                 | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
 | `tags` †             | list                                   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                            |
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
-| `applies-to`         | list                                   | Service ids this answer concerns.                                                           |
+| `applies-to`         | list                                   | Service ids this fix concerns.                                                              |
 | `promoted-from`      | id                                     | The discovery this was promoted from.                                                       |
-| `confirmed` *        | list                                   | Every confirmation this answer has had, oldest first, one line each.                        |
+| `confirmed` *        | list                                   | Every confirmation this fix has had, oldest first, one line each.                           |
 | `review-by` *        | date                                   | Quoted. The date by which someone confirms this is still true.                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
 
-<!-- END GENERATED: schema-faqs -->
+<!-- END GENERATED: schema-fixes -->
 
-## Adding an FAQ
+## Adding a fix
 
-1. Copy [`_template.md`](faqs/_template.md) to `<slug>.md`, named for the symptom rather than the cause. That is what
+1. Copy [`_template.md`](fixes/_template.md) to `<slug>.md`, named for the symptom rather than the cause. That is what
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Add a `confirmed` line naming who verified the fix and the moment they did it.
-5. Set `review-by`. A fix goes stale when the thing it fixes gets rewritten.
+4. Add a `confirmed` line naming who verified the resolution and the moment they did it.
+5. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.
 
 **Conventions**
 
-* **Symptom first, cause second, fix third.** The reader arrives with a symptom and nothing else.
-* **Record how you found it**, not just what it was. The diagnostic route is often more reusable than the fix.
-* **If the root cause is still open**, say so, and raise it somewhere it can be tracked. An FAQ is not a place to park
+* **Symptom first, cause second, resolution third.** The reader arrives with a symptom and nothing else.
+* **Record how you found it**, not just what it was. The diagnostic route is often more reusable than the resolution.
+* **If the root cause is still open**, say so, and raise it somewhere it can be tracked. A fix is not a place to park
   unowned work.
 
 ## What CI checks
 
-<!-- BEGIN GENERATED: checks-faqs -->
+<!-- BEGIN GENERATED: checks-fixes -->
 
 | Check                       | Level   | What it verifies                                                                                                |
 |-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
@@ -111,6 +111,6 @@ Other boundaries:
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `confirmed-by-a-person`     | error   | A confirmation names the person who made it.                                                                    |
-| `one-problem-per-document`  | warning | One Symptom section, because an FAQ is found by its symptom.                                                    |
+| `one-problem-per-document`  | warning | One Symptom section, because a fix is found by its symptom.                                                     |
 
-<!-- END GENERATED: checks-faqs -->
+<!-- END GENERATED: checks-fixes -->
