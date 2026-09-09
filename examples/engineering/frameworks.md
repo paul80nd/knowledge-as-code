@@ -44,16 +44,22 @@ nothing genuinely maps, the control is absent from the corpus and that absence i
 
 **What this corpus is responsible for.** Annex A has 93 controls and the Statement of Applicability covers all of them;
 this corpus is the engineering function's share and no more. Roughly a third of Annex A is deliberately answered
-elsewhere in the management system:
+elsewhere in the management system, whole or in part:
 
 | Area                                                     | Owned by                                  |
 |----------------------------------------------------------|-------------------------------------------|
 | Physical controls: `A.7.1`–`A.7.14` entire               | Facilities                                |
-| People controls: `A.6.1`–`A.6.7`                         | HR, with the security awareness programme |
+| People controls: `A.6.1`–`A.6.7`, since `A.6.8` is ours  | HR, with the security awareness programme |
+| Management direction: `A.5.4`                            | HR and line management                    |
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
+| Compliance review, inside `A.5.36`                       | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
+| Forensic custody, inside `A.5.28`                        | Legal                                     |
+| Our own intellectual property, inside `A.5.32`           | Legal                                     |
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
+| Retention schedules, inside `A.5.33`                     | The business data owner / DPO             |
 | Supplier contracting: `A.5.20`                           | Procurement and legal                     |
+| Network service agreements, inside `A.8.21`              | Procurement and legal                     |
 | Corporate IT: `A.8.1`, `A.8.23`, `A.8.34`                | IT operations                             |
 
 Without saying so, a reader who takes the rule above at face value counts every uncited control as a finding, and most
@@ -72,6 +78,16 @@ the duty. The practical difference is who can waive it: an Annex A control is ou
 justification, and an article is not. A recorded deviation ([pol-DEVI]) against one of these clauses is a decision to
 break the law rather than a risk to accept.
 
+Not all of it is engineering's. Deciding whether a data subject's request is valid, and answering the person within the
+month Article 12 allows, belongs to the DPO, and so does judging how long a purpose makes a retention necessary. What
+engineering owes is the capability those answers rest on: finding, exporting, correcting, deleting and restricting one
+person's data in every store that holds it, and holding it no longer than the period set.
+
+Three more sit outside this corpus for the same reason. The Article 9 condition that permits special category data is a
+legal judgement rather than an engineering one, though the glossary defines that class and `MASK` covers handling it. An
+Article 26 arrangement is between organisations. The privacy notice Article 5(1)(a) requires is written by product and
+legal, and engineering keeps it true as the processing changes.
+
 ### PSBAR 2018
 
 **Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
@@ -83,6 +99,11 @@ applications. That duty includes publishing an accessibility statement and keepi
 **Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
 expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
 AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
+
+`§9` is web content, `§10` the documents an application produces and `§11` software that is not a web page, and
+[pol-A11Y] verifies against all three. The rest is not ours. `§12.2` is what a support service tells somebody about an
+accessibility feature, which the support function answers. `§13` binds ICT carrying two-way voice or reaching emergency
+services, and we build none.
 
 ## Self-obligated
 

@@ -5,7 +5,9 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.5.29, A.5.30, A.8.13, A.8.14 ]
+    clauses: [ A.5.30, A.8.13, A.8.14 ]
+  - framework: UK GDPR
+    clauses: [ Art.32(1)(d) ]
 review-by: "2027-08-04"
 owner: human:paul.law
 tags: [ backup, continuity, recovery, resilience ]
@@ -46,12 +48,13 @@ recover._
 |-----------|--------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | `RTORPO`  | **MUST** define recovery-time and recovery-point objectives for critical systems, and design to meet them                      | [ISO 27001:2022].A.5.30, [Azure WAF].reliability                          |
 | `BACKUP`  | **MUST** back up critical data on a schedule that matches those objectives                                                     | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
-| `RESTORE` | **MUST** test restoration periodically                                                                                         | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `RESTORE` | **MUST** test restoration periodically                                                                                         | [ISO 27001:2022].A.8.13, [Azure WAF].reliability, [UK GDPR].Art.32(1)(d)  |
 | `OFFSITE` | **MUST** keep at least one copy of critical data outside the failure domain of its source                                      | [ISO 27001:2022].A.8.13, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
 | `TIMEOUT` | **MUST** bound every outbound call in time, so a slow dependency cannot become an unbounded wait                               | [Azure WAF].reliability                                                   |
-| `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it             | [ISO 27001:2022].A.5.29, [ISO 27001:2022].A.8.14, [Azure WAF].reliability |
+| `DEGRADE` | **MUST** design so that the failure of one dependency degrades function rather than taking the system down with it             | [ISO 27001:2022].A.8.14, [Azure WAF].reliability                          |
 | `IDEMPOT` | **MUST** make operations that may be retried safe to re-run                                                                    | [Azure WAF].reliability                                                   |
 | `UNTEST`  | **MUST NOT** rely on a backup that has never been test-restored                                                                | [ISO 27001:2022].A.8.13, [Azure WAF].reliability                          |
+| `FAILOVR` | **MUST NOT** rely on a failover that has never been tested                                                                     | [ISO 27001:2022].A.8.14                                                   |
 | `RETRY`   | **MUST NOT** retry indefinitely, without limit or backoff, against a failing dependency                                        | [Azure WAF].reliability                                                   |
 | `REDUND`  | SHOULD run critical services across more than one failure domain                                                               | [ISO 27001:2022].A.8.14                                                   |
 | `SHED`    | SHOULD shed or slow work deliberately when load exceeds capacity, turning some requests away rather than failing unpredictably | [Azure WAF].reliability                                                   |
@@ -69,3 +72,4 @@ deviation under [pol-DEVI], owned by whoever will answer for the downtime.
 [pol-INCR]: ../operations/incr-incident-response.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
+[UK GDPR]: ../../frameworks.md#uk-gdpr

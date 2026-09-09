@@ -58,9 +58,15 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
 computation was correct. The [Azure WAF] pillars do not reach it either. Reliability is about a workload staying
 available and recovering. `RUNLOG` cites Operational Excellence for its run record, and no clause here cites
-Reliability. `CHECK` cites the accuracy principle, which reaches the personal data this policy computes over and not
-the rest of it, so that citation covers part of the clause rather than all of it. `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as well would
-overstate what this policy adds.
+Reliability.
+
+`CHECK` cites the accuracy principle, and neither reaches the whole of the other. The principle reaches the personal
+data this policy computes over and not the rest of it, so the citation covers part of the clause. The clause reaches
+computed data alone, where the principle also binds what a user gave us. That principle's second limb, that inaccurate
+data be erased or rectified without delay, is answered by no clause here.
+
+`A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as well would overstate what
+this policy adds.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-DATA]: ../security/data-data-protection.md
