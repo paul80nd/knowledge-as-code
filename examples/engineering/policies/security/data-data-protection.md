@@ -41,6 +41,7 @@ data itself requires, in whichever environment it sits._
 | Id        | Clause                                                                                                                        | Alignment                                                          |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
 | `CLASS`   | **MUST** classify data by sensitivity and handle each class according to that classification                                  | [ISO 27001:2022].A.5.12, [ISO 27001:2022].A.8.3                    |
+| `MASK`    | **MUST** mask, pseudonymise or anonymise personal data wherever the full value is not needed to do the work                   | [ISO 27001:2022].A.8.11                                            |
 | `CRYPTO`  | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms                  | [ISO 27001:2022].A.5.14, [ISO 27001:2022].A.8.24, [UK GDPR].Art.32 |
 | `RETIRE`  | **MUST** retire a cryptographic algorithm as it weakens                                                                       | [ISO 27001:2022].A.8.24, [UK GDPR].Art.32                          |
 | `LAWFUL`  | **MUST** handle personal data on a lawful basis                                                                               | [ISO 27001:2022].A.5.34, [UK GDPR].Art.6                           |

@@ -42,6 +42,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | `LICENCE` | **MUST** screen a component's licence for terms we cannot accept before we adopt it                                                          | [ISO 27001:2022].A.5.32                       |
 | `OBLIGE`  | **MUST** honour the terms of a licence for as long as we ship what it covers                                                                 | [ISO 27001:2022].A.5.32                       |
 | `MALWARE` | **MUST** scan the artefacts we build for malicious content before we release them                                                            | [ISO 27001:2022].A.8.7                        |
+| `RUNMAL`  | **MUST** protect the systems we run from malicious code, and act on what is found                                                            | [ISO 27001:2022].A.8.7                        |
 | `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4 |
 | `CLOUD`   | **MUST** establish which security responsibilities we hold and which the provider holds, before adopting a service                           | [ISO 27001:2022].A.5.23                       |
 | `EXIT`    | **MUST** know how we would leave a service before we depend on it                                                                            | [ISO 27001:2022].A.5.23                       |

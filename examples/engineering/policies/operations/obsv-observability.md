@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.8.15, A.8.16, A.8.17 ]
+    clauses: [ A.8.6, A.8.15, A.8.16, A.8.17 ]
 review-by: "2027-08-04"
 owner: human:paul.law
 tags: [ alerting, logging, monitoring, observability ]
@@ -38,6 +38,7 @@ into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 | `CLOCKS`  | **MUST** synchronise system clocks to a single approved time source, so events can be correlated into one timeline           | [ISO 27001:2022].A.8.17, [Azure WAF].operational-excellence |
 | `RETAIN`  | **MUST** retain telemetry for a defined period: long enough to investigate, no longer than justified                         | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
 | `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
+| `USAGE`   | **MUST** monitor resource use against the capacity a system has, and act before it runs out                                  | [ISO 27001:2022].A.8.6                                      |
 | `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     | [ISO 27001:2022].A.8.16                                     |
 | `ALERTS`  | **MUST** treat alerts as something to be acted on, and keep them few enough and meaningful enough that they still are        | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
 | `BLIND`   | **MUST NOT** run a production system with no monitoring and no alerting                                                      | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
