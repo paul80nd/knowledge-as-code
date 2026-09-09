@@ -203,7 +203,7 @@ and an empty cell says so.
 | Reference | Clauses | Policies | Note |
 |-----------|---------|----------|------|
 | Art.5(1)(c) | `pol-DATA.MINIMAL` | `pol-DATA` | |
-| Art.5(1)(d) | `pol-DERV.CHECK` | `pol-DERV` | |
+| Art.5(1)(d) | `pol-DERV.CHECK` | `pol-DERV` | The principle binds all personal data, and `pol-DERV`'s scope excludes what a user gave us, so the citation reaches computed data alone. Its second limb, erasure or rectification without delay, is reached by no clause. |
 | Art.5(1)(e) | `pol-DATA.DELETE`, `pol-DATA.LINGER` | `pol-DATA` | |
 | Art.5(1)(f) | `pol-DATA.LOGS` | `pol-DATA` | |
 | Art.6 | `pol-DATA.LAWFUL` | `pol-DATA` | |
