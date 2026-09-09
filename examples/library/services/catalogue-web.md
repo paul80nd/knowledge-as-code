@@ -10,7 +10,6 @@ depends-on:
   - svc-catalogue-api
   - svc-covers-cdn
   - svc-search
-data-stores:
 owner: human:robin.hale
 facets: [ public ]
 tags: [ discovery ]

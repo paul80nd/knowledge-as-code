@@ -4,7 +4,6 @@ type: gizmo
 tier: descriptive
 status: live
 owner:
-depends-on:
 ---
 
 # {{Title}}

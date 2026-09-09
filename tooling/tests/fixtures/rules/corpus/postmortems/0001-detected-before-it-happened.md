@@ -8,7 +8,6 @@ detected-on: "2026-06-11"
 duration: 40 minutes
 severity: sev2
 affected: [svc-catalogue]
-prompted:
 owner: human:alex.doe
 tags: [expressions]
 ---

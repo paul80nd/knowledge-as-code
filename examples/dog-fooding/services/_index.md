@@ -2,8 +2,9 @@
 
 # Service Index (SVC)
 
-| ID              | Title                                | Platform | Criticality | Status | Owner          |
-|-----------------|--------------------------------------|----------|-------------|--------|----------------|
-| svc-docs-site   | [Documentation site](docs-site.md)   | static   | important   | live   | human:paul.law |
-| svc-kac         | [kac](kac.md)                        | mixed    | critical    | live   | human:paul.law |
-| svc-marketplace | [Plugin marketplace](marketplace.md) | static   | important   | live   | human:paul.law |
+| ID              | Title                                 | Platform    | Criticality | Status | Owner          |
+|-----------------|---------------------------------------|-------------|-------------|--------|----------------|
+| svc-corpus-feed | [Corpus package feed](corpus-feed.md) | static      | important   | live   | human:paul.law |
+| svc-docs-site   | [Documentation site](docs-site.md)    | static      | important   | live   | human:paul.law |
+| svc-kac         | [kac](kac.md)                         | dotnet-tool | critical    | live   | human:paul.law |
+| svc-marketplace | [Plugin marketplace](marketplace.md)  | static      | important   | live   | human:paul.law |

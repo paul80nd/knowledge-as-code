@@ -7,7 +7,6 @@ source: session
 confidence: unverified
 expires: "2026-12-07"
 provenance: An agent session editing .editorconfig from a shell while the developer had the repository open in Rider.
-applies-to:
 promoted-to:
 owner: human:paul.law
 tags: [ editorconfig, formatting, rider ]

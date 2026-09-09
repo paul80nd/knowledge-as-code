@@ -8,7 +8,6 @@ platform: dotnet-api
 criticality: critical
 depends-on:
   - svc-payment-ledger
-data-stores:
 owner: human:paul.law
 tags: [ authorisation, cards, psp ]
 ---

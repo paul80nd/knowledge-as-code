@@ -87,6 +87,7 @@ Related but different:
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
+| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `int-format`                | error   | Int fields, and the entries of an `of: int` list, are whole numbers.                                            |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
@@ -103,7 +104,7 @@ Related but different:
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `hub-not-specification`     | warning | A capability's prose stays proportionate to its links, because it is a hub.                                     |

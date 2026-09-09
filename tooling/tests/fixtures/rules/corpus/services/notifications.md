@@ -7,7 +7,6 @@ repo: notifications
 platform: azure-function
 criticality: important
 depends-on: [svc-catalogue]
-data-stores:
 owner: human:alex.doe
 ---
 

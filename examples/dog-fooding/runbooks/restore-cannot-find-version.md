@@ -3,10 +3,8 @@ id: rbk-restore-cannot-find-version
 type: runbook
 tier: procedural
 status: active
-applies-to:
 severity: sev3
 last-rehearsed: "never"
-rehearsal-frequency:
 requires-access:
   - A .NET 10 SDK and a checkout of this repository
   - Write access to the branch the fix lands on

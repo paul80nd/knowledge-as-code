@@ -3,7 +3,6 @@ id: pol-{{MNEM}}
 type: policy
 tier: normative
 status: draft
-aligns-with:
 review-by:
 owner:
 tags: [ a, b ]
@@ -49,6 +48,10 @@ and how it is reviewed. What is below is only what a policy adds to that.
 
 A policy names no implementers. A standard points up at the policy it puts into practice, and a downstream corpus
 inherits these policies to write its own standards against. What implements this is not knowable from here.
+
+**Fields this template leaves out.** `category` and `aligns-with` are optional, so the frontmatter above carries none of
+them. Add a key where you have a value for it, and leave it out where you do not. [The type
+page](../policies.md#metadata) says what each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

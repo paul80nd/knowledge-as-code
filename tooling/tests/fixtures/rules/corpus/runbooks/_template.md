@@ -3,11 +3,7 @@ id: rbk-{{slug}}
 type: runbook
 tier: procedural
 status: draft
-applies-to:
-severity:
 last-rehearsed:
-rehearsal-frequency:
-requires-access:
 owner:
 tags: [ a, b ]
 ---

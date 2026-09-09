@@ -138,6 +138,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
+| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
@@ -155,7 +156,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `mirrors-citations`         | error   | A field that mirrors a label reconciles with the citations the labelled lines gather.                           |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |

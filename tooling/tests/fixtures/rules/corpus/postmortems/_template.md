@@ -8,7 +8,6 @@ detected-on:
 duration:
 severity:
 affected:
-prompted:
 owner:
 tags: [ a, b ]
 ---

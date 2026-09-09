@@ -6,7 +6,6 @@ status: draft
 applies-to:
 target:
 measured-by:
-constrained-by:
 review-by:
 owner:
 tags: [ a, b ]
@@ -29,6 +28,10 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 * **`target`**: a concrete figure, such as `99.5% monthly`, `p95 < 400ms` or `RTO 4h`.
 * **`measured-by`**: required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
 * **`constrained-by`**: integration ids whose own SLA caps this.
+
+**Fields this template leaves out.** `constrained-by` is optional, so the frontmatter above does not carry it. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../nfrs.md#metadata) says what each
+one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

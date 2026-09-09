@@ -3,10 +3,7 @@ id: prc-{{slug}}
 type: process
 tier: procedural
 status: draft
-applies-to:
 last-rehearsed:
-rehearsal-frequency:
-requires-access:
 owner:
 tags: [ a, b ]
 ---

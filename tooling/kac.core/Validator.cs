@@ -97,6 +97,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
+        CheckCorpusEnums(schema, corpus.Docs, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
 
@@ -382,6 +383,63 @@ public static class Validator
                     + "the corpus holds it. Adopt it, or delete what was built."));
         }
     }
+
+    // Whether the corpus has written the ranges the schema leaves to it. See docs/corpus-descriptor.md.
+    //
+    // Reported once, against the descriptor, rather than against each record carrying the field. Nobody who
+    // wrote a record can fix this, and a corpus with thirty services would otherwise meet thirty copies of
+    // one setup mistake, each pointing at the wrong file.
+    //
+    // Asked of the types the corpus holds a record of rather than of the types it declared. A corpus that
+    // stood the folder up and wrote nothing into it has no estate to derive a list from, so the question
+    // arrives with the first record.
+    //
+    // A value spelled wrong is the same fault as a list nobody wrote, because no record can satisfy either.
+    // The casing is what a corpus reaches first: `enum-lowercase` refuses the value in the record, so a
+    // range holding `Dotnet-Web` refuses `dotnet-web` from one side and `Dotnet-Web` from the other. Both
+    // findings would name the record, and the file to edit is this one.
+    private static void CheckCorpusEnums(
+        Schema schema, IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
+    {
+        var types = docs.Select(d => d.Type).OfType<TypeSchema>()
+            .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal).ToList();
+        if (types.Count == 0) return;
+
+        // A universal field reaches every type, so it is asked once and its message names no page.
+        foreach (var field in Reachable(schema.Universal.Values))
+            Ask(field, $"'{field.Name}'", "");
+
+        foreach (var t in types)
+        foreach (var field in Reachable(t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal)
+                     .Select(kv => kv.Value)))
+            Ask(field, $"'{field.Name}' on a {t.TypeName}", $" {t.Page} says how to reach them.");
+
+        void Ask(FieldSpec field, string said, string page)
+        {
+            if (field.CorpusEnum is not { } name) return;
+
+            if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+            {
+                Report($"{said} is judged against a list this corpus states, and it states none. Write the "
+                       + $"values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
+                return;
+            }
+
+            foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
+                Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
+                       + "value is lower case, so no record can satisfy this one.");
+
+            return;
+
+            void Report(string message) => f.Add(new Finding(
+                Corpus.Descriptor, null, Sev.Error, new CheckId("corpus-enum-undeclared"), message));
+        }
+    }
+
+    // Every field a declaration reaches, including the keys of an object entry. A `shape:` is resolved into
+    // `Entry` at load, so a shape's keys arrive here without a walk of their own.
+    private static IEnumerable<FieldSpec> Reachable(IEnumerable<FieldSpec> fields) =>
+        fields.SelectMany(field => new[] { field }.Concat(Reachable(field.Entry ?? [])));
 
     // The shorthand another corpus cites this one by, held to a spelling a citation can carry.
     // `.schema/_checks.yaml` argues each part of that spelling under `shortcode`.

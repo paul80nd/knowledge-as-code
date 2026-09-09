@@ -63,8 +63,8 @@ checked that it still holds.
 4. Set `sources` to the `content-version` of each corpus the run read, and add a `confirmed` entry naming yourself.
 
 **Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
-moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and add a `confirmed` entry
-instead: that says somebody checked, and it saves re-reading every verdict.
+moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `confirmed` alone.
+A version the corpus moved for something else is no reason to claim a fresh read.
 
 ## What CI checks
 
@@ -77,6 +77,7 @@ instead: that says somebody checked, and it saves re-reading every verdict.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
+| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `timestamp-format`          | error   | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                                |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
@@ -95,7 +96,7 @@ instead: that says somebody checked, and it saves re-reading every verdict.
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `report-stale`              | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `confirmed-by-a-person`     | error   | A confirmation names the person who made it.                                                                    |

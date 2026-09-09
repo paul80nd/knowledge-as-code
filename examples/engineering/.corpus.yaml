@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 1
+descriptor-version: 2
 
 corpus: example-engineering
 
@@ -43,7 +43,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 9
+  template-version: 10
   taken-on: "2026-09-08"
 
 # A seed is this corpus's own words, so an update leaves the ones already written.

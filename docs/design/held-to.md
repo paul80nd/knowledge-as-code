@@ -109,6 +109,17 @@ reports it nowhere. What catches it is a test over the authored `.schema/`, held
 framework, where every type is present. This repository runs one. A fork writing its own framework schema needs its own,
 and the shape to copy is `tooling/kac.tests/SchemaReferenceTests.cs`.
 
+## `values: $corpus.x` is answered by the corpus, not by the schema
+
+`$enums.x` draws a field's range from `_enums.yaml`, and a name declared nowhere is a schema fault, because the
+declaration says the values are written down and they are not. `$corpus.x` draws it from `enums:` in `.corpus.yaml`
+instead, for a field whose range is the estate's rather than the framework's. What a service is built on is one list in
+a library and another in a payments platform, so one `.schema/` above both can state neither.
+
+A name the corpus answers nothing to is outside this pass. The schema is right and the corpus has not written its list
+yet, so `validate` reports `corpus-enum-undeclared` once against `.corpus.yaml`, from the first record carrying the
+field. [The descriptor reference](../corpus-descriptor.md) carries what to write there.
+
 ## A rule may declare no `severity:`, but not one nothing answers
 
 A rule you have not built yet keeps its `description:`, drops its `severity:`, and renders on the type page under

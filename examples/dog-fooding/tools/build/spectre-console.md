@@ -5,9 +5,7 @@ tier: descriptive
 status: approved
 versions: Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x
 licence: MIT
-decided-in:
 replaces: tol-system-commandline
-successor:
 owner: human:paul.law
 tags: [ cli, console, terminal ]
 ---

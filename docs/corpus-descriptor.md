@@ -242,6 +242,38 @@ without adopting it is a defect [`validate`](cli/validate.md) reports.
 They move the name and the type's files together. Editing the list by hand leaves the corpus holding a type it does not
 claim, or claiming one it does not hold.
 
+## `enums:` states the ranges the schema leaves to you
+
+```yaml
+enums:
+  platform: [dotnet-tool, static]
+```
+
+Some fields hold a value the framework cannot know. What a service is built on is one list in a library and another in
+a payments platform, so `.schema/services.yaml` declares `values: $corpus.platform` and states no values of its own.
+The range is what you write here, and `kac validate` holds every record to it.
+
+Walk your own deployables, group them by the runtime and framework a contributor has to know, and close the list on
+what you found. The type page carries the method in full, and each corpus's copy records the values it reached.
+
+### The first record is when you are asked
+
+A corpus created by [`new`](cli/new.md) receives the key with nothing under it, because a corpus with no records has no
+estate to derive a range from. Write a record carrying such a field before you write the range and
+[`validate`](cli/validate.md) reports `corpus-enum-undeclared` once, against `.corpus.yaml`. Nobody who wrote a record
+can fix that, so it is reported where the person who can fix it works.
+
+### A value outside the range is an ordinary `enum` failure
+
+From the record's side the fault is the same either way: a value the field's range does not hold. The message quotes
+the values your descriptor states, so an author reads back the list they are being held to.
+
+### Write each value in lower case
+
+An enum value is a grep target first and prose second, so a range carrying `Dotnet-Web` refuses `dotnet-web` from one
+side and `Dotnet-Web` from the other. No record can satisfy it, which is the same state as a range you never wrote, so
+`corpus-enum-undeclared` reports it the same way.
+
 ## `export.exclude:` drops a record from the output
 
 ```yaml

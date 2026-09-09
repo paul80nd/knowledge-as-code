@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` warns where an optional field is written with no value.** `empty-optional-key` reports a
+  bare key on a field the schema does not require, because it says exactly what leaving the key out says. A
+  required field is the other case, and `required-field` still reports that one. A field declaring
+  `required-when:` is exempt. The templates a corpus starts from now carry the required fields alone, and each
+  one names the optional fields it leaves out. Take those with `kac update --from <template>`.
 - **A plugin component can declare itself standalone.** `metadata.components` in `plugin.json` takes
   `"standalone": true` on a component whose `requires` is empty. `kac bundle` trims an empty-`requires` component when
   every component reading a type has gone, because such a component exists to support those. A standalone one supports
@@ -30,6 +35,29 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   a `deviations` record needs, and leaves `owner` and `accepted-on` to the reply, because no export carries a record's
   owner. It files inside the organisation holding the plugin and nowhere else, and it asks before it files. Take it with
   `kac update --from <template>`.
+- **A control travels in an export.** `.schema/controls.yaml` declares an `export:` block at shape 1, so `kac export`
+  writes one JSON per control carrying `verifies`, `mechanism`, `frequency`, `evidence` and the three sections a
+  control holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
+  `kac update --from <template>`.
+- **`controls-lookup`, the skill that says what proves a rule.** It answers what checks a standard, where the evidence
+  lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. It
+  reads each `verifies` entry to see whether the control named a record or one rule inside it, and refuses a per-rule
+  figure where only records were named. Take it with `kac update --from <template>`.
+- **A corpus states the ranges the framework cannot know.** A field declaring `values: $corpus.<name>` in `.schema/`
+  draws its range from `enums:` in `.corpus.yaml`, so one schema above several catalogues stands behind the list each
+  of them wrote. `services.platform` is the first field to use it: what a service is built on is one list in a library
+  and another in a payments platform. `kac validate` reports `corpus-enum-undeclared` once against `.corpus.yaml` where
+  a corpus holds a record carrying such a field and has stated a range no record can satisfy, meaning none at all or
+  one carrying a value that is not lower case. An out-of-range value stays an ordinary `enum` failure quoting the
+  corpus's own values. `kac new` opens the block and leaves it empty. Take it with `kac update --from <template>`.
+
+### Changed
+
+- **`.corpus.yaml` is at descriptor format 2, and `services.platform` no longer carries a range of its own.** A corpus
+  holding services states `enums.platform` in its descriptor before `kac validate` passes. Derive the values from your
+  own deployables and close the list on what you found, which is what the type's page has always asked for. There is no
+  migration: `kac update` stamps the format and writes no values, because only the corpus can say what its estate runs
+  on.
 
 ### Fixed
 
@@ -41,6 +69,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `reciprocal: promoted-from`, but only `faqs` carried that field, so promoting to a standard failed `reciprocal` and
   adding the key to the standard failed `unknown-key`. `standards` now declares `promoted-from` as well, optional and
   pointing back at the discovery. Take it with `kac update --from <template>`, which brings the schema down with it.
+- **`label-canonical` catches a shortcut label that leads to a record it does not name.** The check compared a label
+  against the canonical spelling of its own id, so `[std-BOGUS]` defined as `../standards/workflows.md` passed:
+  `link-resolves` was happy with the path, and the reader was shown an id no record carries. `kac validate` now holds a
+  label to the id in the frontmatter of the record it resolves to, which reaches a label the id styles do not
+  recognise at all. A template is exempt, since its definitions demonstrate the form under labels nobody has chosen
+  yet. The row this check gets on a type page is reworded to match, so run `kac generate` after upgrading.
 
 ## 0.24.0 - 2026-09-08
 

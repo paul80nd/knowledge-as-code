@@ -4,7 +4,6 @@ type: policy
 tier: normative
 category: security
 status: draft
-aligns-with:
 review-by:
 owner:
 tags: [ a, b ]

@@ -6,8 +6,6 @@ status: live
 repo: thumbnailer
 platform: dotnet-web
 criticality: critical
-depends-on:
-data-stores:
 owner: human:dev.raman
 tags: [ internal ]
 ---

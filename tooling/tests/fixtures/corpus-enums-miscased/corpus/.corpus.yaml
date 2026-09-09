@@ -1,0 +1,5 @@
+corpus: fixture-corpus
+
+# `Dotnet-Web` is the fault. No record can carry it, because an enum value is lower case.
+enums:
+  platform: [Dotnet-Web]

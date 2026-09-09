@@ -4,9 +4,6 @@ type: capability
 tier: descriptive
 status: planned
 implemented-by:
-ado-epics:
-feature-files:
-nfrs:
 owner:
 tags: [ a, b ]
 ---

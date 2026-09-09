@@ -572,11 +572,15 @@
           "$ref": "#/$defs/name"
         },
         "values": {
-          "description": "An enum's range: written inline, or drawn from `_enums.yaml` as `$enums.<name>`.",
+          "description": "An enum's range: written inline, drawn from `_enums.yaml` as `$enums.<name>`, or left to the corpus as `$corpus.<name>`, which reads `enums:` in `.corpus.yaml`.",
           "oneOf": [
             {
               "type": "string",
               "pattern": "^\\$enums\\.[a-z][a-z0-9-]*$"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\$corpus\\.[a-z][a-z0-9-]*$"
             },
             {
               "type": "array",

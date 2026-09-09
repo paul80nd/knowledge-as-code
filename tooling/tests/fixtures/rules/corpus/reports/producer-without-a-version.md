@@ -9,7 +9,6 @@ sources:
   - { resource: fixture-corpus, version: "0.2.0" }
 confirmed:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
-tags:
 ---
 
 # A producer named without its version

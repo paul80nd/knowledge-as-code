@@ -3,7 +3,6 @@ id: pol-DEVI
 type: policy
 tier: normative
 status: draft
-aligns-with:
 review-by: "2027-08-23"
 owner: human:paul.law
 tags: [ exceptions, governance, risk-acceptance ]

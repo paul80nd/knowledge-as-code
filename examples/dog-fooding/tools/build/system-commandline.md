@@ -3,10 +3,7 @@ id: tol-system-commandline
 type: tool
 tier: descriptive
 status: deprecated
-versions:
 licence: MIT
-decided-in:
-replaces:
 successor: tol-spectre-console
 owner: human:paul.law
 tags: [ cli, parser ]

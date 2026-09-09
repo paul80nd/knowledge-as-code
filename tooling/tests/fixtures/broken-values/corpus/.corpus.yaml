@@ -1,0 +1,5 @@
+# The range `platform` draws on, which the schema leaves to the corpus. Stated so that the service
+# below reports the value faults this fixture is about and nothing else. Everything else stays at its
+# default, as an absent descriptor would leave it.
+enums:
+  platform: [azure-function]

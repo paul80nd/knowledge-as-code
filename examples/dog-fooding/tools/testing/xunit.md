@@ -5,9 +5,6 @@ tier: descriptive
 status: approved
 versions: 3.1.x
 licence: Apache-2.0
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ testing, unit-tests ]
 ---

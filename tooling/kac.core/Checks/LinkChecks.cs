@@ -68,18 +68,38 @@ public static class LinkChecks
         // A shortcut label doubles as its own display text, so it is read as an id and must be written
         // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
         // resolves: nothing else would catch it.
+        //
+        // Two ways a label shows the reader an id nothing carries, and the second is asked only where
+        // the first passed. A label recognisable as an id and spelled wrongly is told the spelling.
+        // Anything else is held against the id the document it leads to carries. Asking both of a
+        // mis-cased label would report one fault twice, under two different ids.
+        //
+        // A template is exempt from the second, as it is from every other question about a bracket: its
+        // definitions are exemplars, written under labels nobody has chosen yet.
+        var ids = new Dictionary<string, string?>(StringComparer.Ordinal); // see Misnamed
+        var cite = kind != DocKind.Template;
+
         foreach (var link in d.Links)
         {
             if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
             if (IdChecks.TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
                 report.Err(new CheckId("label-canonical"),
                     $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
+            else if (cite && Misnamed(link.Label, link.Target, d.Rel, schema, tree, ids) is { } led)
+                report.Err(new CheckId("label-canonical"),
+                    $"reference '[{link.Label}]' leads to '{led.Page}', whose id is '{led.Id}'.", link.Line);
         }
 
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))
+        {
             if (IdChecks.TryCanonicalId(label, schema, out var canonical) && label != canonical)
                 report.Err(new CheckId("label-canonical"),
                     $"link definition '[{label}]' should be written as the id '{canonical}'.");
+            else if (cite && Misnamed(label, d.DefinedTargets.GetValueOrDefault(label, ""), d.Rel, schema,
+                         tree, ids) is { } led)
+                report.Err(new CheckId("label-canonical"),
+                    $"link definition '[{label}]' leads to '{led.Page}', whose id is '{led.Id}'.");
+        }
 
         // unused definitions. A template's definitions are exemplars, the block existing to show where
         // definitions go and how they sort, so one that nothing references is the point of it.
@@ -88,6 +108,36 @@ public static class LinkChecks
                 if (!d.UsedLabels.Contains(label))
                     report.Warn(new CheckId("unused-definition"),
                         $"link definition '[{label}]' is never referenced.");
+    }
+
+    // The record a label leads to and the id it carries, where the label is not that id. Null wherever
+    // there is nothing to compare: the target leaves the corpus, or names a page rather than a record.
+    //
+    // This is the half `link-resolves` cannot see. That check passes as soon as the path is real, so a
+    // label naming one document and pointing at another gets through it, and the reader is shown an id
+    // no document has. The id is read from the target's frontmatter rather than from its filename,
+    // because a type may declare `filename.carries-id: false` and keep its id nowhere else.
+    //
+    // A part is addressed as `<record>.<part>`, so the half before the dot is what has to be the id.
+    //
+    // `ids` is what each target answered, so a document reaching one record from several labels reads
+    // it once. Reading a record means parsing it whole, which is what makes that worth keeping.
+    private static (string Id, string Page)? Misnamed(
+        string? label, string target, string fromRel, Schema schema, Tree tree,
+        Dictionary<string, string?> ids)
+    {
+        if (string.IsNullOrEmpty(label) || string.IsNullOrEmpty(target) || IsExternal(target)) return null;
+
+        var file = Resolve(tree, fromRel, target);
+        if (file is null || !file.EndsWith(".md", StringComparison.OrdinalIgnoreCase)) return null;
+
+        if (!ids.TryGetValue(file, out var found))
+            ids[file] = found = Doc.Parse(file, tree.Read(file), schema)?.FrontScalar("id");
+        if (found is null) return null;
+
+        var dot = label.IndexOf('.');
+        var named = dot > 0 ? label[..dot] : label;
+        return string.Equals(named, found, StringComparison.Ordinal) ? null : (found, file);
     }
 
     public static bool IsExternal(string t)

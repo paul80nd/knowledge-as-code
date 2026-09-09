@@ -29,6 +29,10 @@ and how it is reviewed. What is below is only what an ADR adds to that.
 * **`owner`**: who is answerable for the decision, as `human:alex.doe` or `role:head-of-engineering`. Never a team
   alias.
 
+**Fields this template leaves out.** `tags`, `supersedes` and `deciders` are optional, so the frontmatter above carries
+none of them. Add a key where you have a value for it, and leave it out where you do not. [The type
+page](../adrs.md#metadata) says what each one holds.
+
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 

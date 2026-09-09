@@ -47,7 +47,7 @@ of the catalogue as well, because it deploys services.
 | `owner` *†      | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
 | `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
 | `repo` *        | string                                                                   | Where the code lives.                                                               |
-| `platform` *    | `dotnet-web` `dotnet-api` `azure-function` `static` `typescript` `mixed` | What it is built on. Drives which standards apply.                                  |
+| `platform` *    | `azure-function` `dotnet-api` `dotnet-web` `mixed` `static` `typescript` | What it is built on. Drives which standards apply.                                  |
 | `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                       |
 | `depends-on`    | list                                                                     | What this service calls, downward only.                                             |
 | `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                |
@@ -85,9 +85,9 @@ of the catalogue as well, because it deploys services.
   application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not an
   edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
   event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
-* **A bare field means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
-  third-party integration or anything else outside this catalogue carries a bare `depends-on`. None of those is an edge.
-  The same holds for `data-stores`. The field records what is here.
+* **A field left out means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
+  third-party integration or anything else outside this catalogue writes no `depends-on` at all. None of those is an
+  edge. The same holds for `data-stores`. The field records what is here, and the body records the rest.
 * **Sourcing.** Say where a claim came from. "Taken from the application settings the infrastructure declares" weighs
   differently from "the README says", and the reader needs to know which one they have. Where you cannot establish
   something, write it down as an open question. Nobody reading later can tell your guess from a fact.
@@ -99,11 +99,16 @@ say what deploys it: a service deployed by Terraform is not a Terraform service,
 this catalogue entirely.
 
 **Derive the values from the estate you have, then close the list.** Walk the deployables, group them by the runtime and
-framework a contributor would need to know, and let that be the enum. Do not inherit a list from elsewhere. A value no
-service can carry reaches an author at exactly the moment they are least able to judge it. A value the estate needs and
-the enum lacks sends someone to `mixed` who does not belong there.
+framework a contributor would need to know, and let that be the range. Do not inherit a list from elsewhere. A value no
+service can carry reaches an author at exactly the moment they are least able to judge it.
 
-The values in `.schema/services.yaml` are the example estate's, reached that way. Replace them with your own.
+The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this catalogue's own file.
+`.schema/services.yaml` declares `values: $corpus.platform` and states no values, so one schema can sit above several
+catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
+the list does.
+
+**`mixed` means several of the other values in one deployable, and never *none of the above*.** A service released as
+a function and a workflow app together carries it. Where the estate grows something no value names, add the value.
 
 ### Deriving the facet vocabulary
 
@@ -115,7 +120,7 @@ One **exposure**, then zero or more **traits**:
 
 | Facet          | Means                                                                                          |
 |----------------|------------------------------------------------------------------------------------------------|
-| `public`       | Has an inbound surface a customer or member of the public can reach. Exactly one of these two. |
+| `public`       | Has an inbound surface a customer or member of the public can reach. At most one of these two. |
 | `internal`     | Inbound only from staff or from other services in this catalogue.                              |
 | `event-driven` | Publishes to or consumes from the message bus.                                                 |
 | `scheduled`    | Runs on a timer as well as, or instead of, on request.                                         |
@@ -123,12 +128,15 @@ One **exposure**, then zero or more **traits**:
 Two rules keep the vocabulary small enough to browse, and they are the transferable part:
 
 1. **Exposure describes the inbound surface.** A staff portal on the public internet is `internal`, because only staff
-   are meant to reach it.
+   are meant to reach it. A service reached by nobody carries neither value, and a command line tool somebody installs
+   and runs is one.
 2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it. There is no `monorepo`
    facet, because `repo` says it. A value that duplicates a field can only ever disagree with it.
 
 Membership stays a judgement. The floor holds the shape of the vocabulary (that every value in it groups), and no
 declaration anywhere says which words this estate chose. That is the corpus's to decide and this page's to record.
+`platform` states its list in `.corpus.yaml` instead, because a value nothing recognises there detaches a service from
+its standards. A facet nobody else carries only costs a grouping, and `min-records` reports it.
 
 ### What a tag is for instead
 
@@ -152,6 +160,7 @@ words worth keeping are the ones thrown away.
 | `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
 | `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
+| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
@@ -168,7 +177,7 @@ words worth keeping are the ones thrown away.
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
+| `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `dependency-cycle`          | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |

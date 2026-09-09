@@ -5,9 +5,6 @@ tier: descriptive
 status: approved
 versions: 1.38.x
 licence: GPL-3.0-or-later
-decided-in:
-replaces:
-successor:
 owner: human:paul.law
 tags: [ linting, yaml ]
 ---

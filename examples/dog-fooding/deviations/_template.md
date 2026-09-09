@@ -7,7 +7,6 @@ departs-from:
 accepted-on:
 review-by:
 closed-on:
-applies-to:
 owner:
 tags: [ a, b ]
 ---
@@ -36,6 +35,10 @@ and how it is reviewed. What is below is only what a deviation adds to that.
   `closed`.
 * **`owner`**: who accepts the risk, and has the authority to accept it. Write `human:alex.doe`, or
   `role:head-of-engineering` where the authority belongs to the post. Never a team.
+
+**Fields this template leaves out.** `applies-to` is optional, so the frontmatter above does not carry it. Add a key
+where you have a value for it, and leave it out where you do not. [The type page](../deviations.md#metadata) says what
+each one holds.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

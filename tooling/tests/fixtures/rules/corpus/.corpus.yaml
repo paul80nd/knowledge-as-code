@@ -2,3 +2,8 @@
 # report's `sources` against. Everything else stays at its default, as an absent descriptor would leave it.
 corpus: fixture-corpus
 content-version: 0.2.0
+
+# The range `platform` draws on, which the schema leaves to the corpus. Stated so that the services
+# below report the rules this fixture is about and nothing else.
+enums:
+  platform: [azure-function, dotnet-web]

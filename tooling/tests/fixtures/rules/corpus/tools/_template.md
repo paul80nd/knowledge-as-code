@@ -3,11 +3,6 @@ id: tol-{{slug}}
 type: tool
 tier: descriptive
 status: trial
-versions:
-licence:
-decided-in:
-replaces:
-successor:
 owner:
 tags: [ a, b ]
 ---

@@ -4,12 +4,9 @@ type: service
 tier: descriptive
 status: live
 repo: knowledge-as-code
-platform: mixed
+platform: dotnet-tool
 criticality: critical
-depends-on:
-data-stores:
 owner: human:paul.law
-facets:
 tags: [ cli, dotnet-tool, nuget ]
 ---
 
@@ -60,11 +57,8 @@ corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` r
 
 ## Operational notes
 
-* **`platform` carries `mixed` because the enum has no value for a command line tool.** The values in
-  `.schema/services.yaml` are the library estate's, and every corpus in this repository reads that one schema rather
-  than holding its own. Nothing here is built on the web, API, function or static runtimes the enum names.
-* **`facets` is bare for the same reason.** An exposure facet describes an inbound surface, and a downloaded command
-  has none. The two values the vocabulary offers, `public` and `internal`, both claim one.
+* **`facets` is left out because a downloaded command has no inbound surface.** An exposure facet describes the
+  surface a service is reached on, and `kac` is reached by nothing: it runs on the machine that installed it.
 * **A published version cannot be replaced, only followed.** `publish-tool.yml` reads `<Version>` in `kac.csproj` and
   publishes where nuget.org does not already hold that version, so the version moves by hand before the merge.
 * **Runbooks**: [rbk-nuget-404-on-publish] covers the window in which nuget.org answers 404 for a version it has
