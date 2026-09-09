@@ -109,10 +109,12 @@ export:
     something a reader recognises. `What it does` and `Where it lives` are both short, and together they
     say which deployable this is and where its code sits.
 
-    `depends-on` and `data-stores` carry the estate's own graph, and they are the reason this type
-    exports at all. A consumer holding the catalogue walks the edges without opening a record.
-    `Dependencies` and `Data` travel beside them, because an edge says which service and the prose says
-    what the call is for.
+    `depends-on` carries the estate's own graph, and it is the reason this type exports at all. A consumer
+    holding the catalogue walks the edges without opening a record. `Dependencies` travels beside it,
+    because an edge says which service and the prose says what the call is for.
+
+    `data-stores` travels as ids that a consumer cannot follow, because a data record travels nowhere.
+    `Data` is what that consumer reads instead, and it says in words what the service owns.
 
     `platform`, `criticality` and `facets` are the three keys an agent filters on. A question about the
     estate is usually a question about a slice of it.

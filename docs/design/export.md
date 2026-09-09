@@ -37,8 +37,9 @@ held back carries the reason in its own schema file, where the next person to as
 Which types travel is therefore a fact about `.schema/` rather than about the tool. A corpus adopting a type receives
 what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
 
-A few types declare no block yet, and none of them is held back on purpose. No corpus in this repository holds a record
-of one, so nothing here could prove the block was written right.
+`discoveries` is the type held back, and `.schema/discoveries.yaml` carries the reason. A few others declare no block
+either, and none of those is a decision: no corpus in this repository holds a record of one, so nothing here could prove
+the block was written right.
 
 ### A type declaring no sections travels as frontmatter
 

@@ -529,7 +529,8 @@ public static class Exporter
     // however the record wrote it, so `depends-on: svc-a` and `depends-on: [svc-a]` both reach a consumer
     // as an array of one entry. A field declared as an object is an object, carrying the keys its
     // `shape:` or `entry:` block names. Everything else is the scalar, which is what `string`, `date`,
-    // `timestamp`, `enum` and `id` all come to here.
+    // `timestamp`, `enum`, `id` and `int` all come to here. An `int` therefore reaches a consumer as the
+    // string the record wrote, and no type declares one.
     //
     // The declaration decides the shape because a consumer holds the declaration and reads one key one
     // way. A shape read off the document would vary record by record. `docs/design/export.md` states it.

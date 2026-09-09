@@ -92,15 +92,15 @@ export:
     consumer filters and sorts on, and the sections are what somebody building against the number reads.
 
     `Constraints` travels because a target read without what limits it reads as a stronger promise than
-    the estate made. `constrained-by` names the same limits as ids, for a consumer that holds the records
-    behind them.
+    the estate made. It carries the limits in words, which is what a consumer can act on: `constrained-by`
+    names integrations, and an integration travels nowhere.
 
     `Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export
     carries no way to say how old it has since become. A consumer acting on a stale figure is worse off
     than one who fetched the record.
 
-    `applies-to` names what the target binds, and it resolves for a consumer that also holds the
-    catalogue.
+    `applies-to` names what the target binds. A service in it resolves for a consumer holding the
+    catalogue, and a capability does not, because capabilities travel nowhere.
 
 index:
   columns: [id, title, applies-to, target, status, review-by]
