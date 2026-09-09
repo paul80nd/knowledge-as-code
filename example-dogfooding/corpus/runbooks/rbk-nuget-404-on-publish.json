@@ -25,6 +25,6 @@
     "Symptoms": "* `dotnet tool install --global KnowledgeAsCode.Tool --version <version>` fails with a 404, minutes after the release\n  for that version appeared on GitHub.\n* The package page on nuget.org does not list the version, and the tag and the release both exist.\n* A re-run of `publish-tool.yml` prints `version <version> is not on nuget.org — it will be published`, for a version\n  the earlier run already pushed.\n\nWhat you are not seeing: any failure in the run that published. The push step reported success and the release step wrote the tag."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b442c94d367f3f0209cbe3e2d58270e7d34a1b40/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/dog-fooding/runbooks/nuget-404-on-publish.md"
   }
 }

@@ -4,9 +4,9 @@
   "shortcode": "pay",
   "contentVersion": "0.10.0",
   "mechanismVersion": 11,
-  "commit": "b442c94d367f3f0209cbe3e2d58270e7d34a1b40",
+  "commit": "380626abfd3523814e85d551dfb77dade032206d",
   "dirty": false,
-  "generatedAt": "2026-09-09T16:27:39Z",
+  "generatedAt": "2026-09-09T21:09:51Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b442c94d367f3f0209cbe3e2d58270e7d34a1b40/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "b442c94d367f3f0209cbe3e2d58270e7d34a1b40"
+    "ref": "380626abfd3523814e85d551dfb77dade032206d"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.13.1",
+      "contentVersion": "0.14.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b442c94d367f3f0209cbe3e2d58270e7d34a1b40/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "b442c94d367f3f0209cbe3e2d58270e7d34a1b40"
+        "ref": "380626abfd3523814e85d551dfb77dade032206d"
       }
     }
   ],
@@ -150,7 +150,7 @@
       "type": "policies",
       "shapeVersion": 2,
       "records": 22,
-      "parts": 207,
+      "parts": 226,
       "dir": "policies",
       "partsFile": "policies/clauses.jsonl",
       "recordKey": "record",
