@@ -5,7 +5,7 @@ tier: normative
 status: draft
 aligns-with:
   - framework: ISO 27001:2022
-    clauses: [ A.5.9, A.5.12, A.5.14, A.5.33, A.5.34, A.8.10, A.8.11, A.8.12, A.8.24 ]
+    clauses: [ A.5.9, A.5.12, A.5.14, A.5.33, A.5.34, A.8.3, A.8.10, A.8.11, A.8.12, A.8.24 ]
   - framework: UK GDPR
     clauses: [ Art.5(1)(c), Art.5(1)(e), Art.5(1)(f), Art.6, Art.25, Art.28, Art.30, Art.32, Art.32(1)(a),
                Art.44, Ch.III ]
@@ -40,7 +40,7 @@ data itself requires, in whichever environment it sits._
 
 | Id        | Clause                                                                                                                        | Alignment                                                          |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| `CLASS`   | **MUST** classify data by sensitivity and handle each class according to that classification                                  | [ISO 27001:2022].A.5.12                                            |
+| `CLASS`   | **MUST** classify data by sensitivity and handle each class according to that classification                                  | [ISO 27001:2022].A.5.12, [ISO 27001:2022].A.8.3                    |
 | `CRYPTO`  | **MUST** protect sensitive data in transit and at rest using current, well-regarded cryptographic algorithms                  | [ISO 27001:2022].A.5.14, [ISO 27001:2022].A.8.24, [UK GDPR].Art.32 |
 | `RETIRE`  | **MUST** retire a cryptographic algorithm as it weakens                                                                       | [ISO 27001:2022].A.8.24, [UK GDPR].Art.32                          |
 | `LAWFUL`  | **MUST** handle personal data on a lawful basis                                                                               | [ISO 27001:2022].A.5.34, [UK GDPR].Art.6                           |

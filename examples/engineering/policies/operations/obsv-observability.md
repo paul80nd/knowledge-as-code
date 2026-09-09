@@ -35,7 +35,7 @@ into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 | Id        | Clause                                                                                                                       | Alignment                                                   |
 |-----------|------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
 | `CENTRAL` | **MUST** emit operational and security-relevant telemetry to a central store that the emitting system cannot alter or delete | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
-| `CLOCKS`  | **MUST** keep timestamps consistent across systems, so events can be correlated into one timeline                            | [ISO 27001:2022].A.8.17, [Azure WAF].operational-excellence |
+| `CLOCKS`  | **MUST** synchronise system clocks to a single approved time source, so events can be correlated into one timeline           | [ISO 27001:2022].A.8.17, [Azure WAF].operational-excellence |
 | `RETAIN`  | **MUST** retain telemetry for a defined period: long enough to investigate, no longer than justified                         | [ISO 27001:2022].A.8.15, [Azure WAF].operational-excellence |
 | `HEALTH`  | **MUST** monitor the availability and health of production systems, and alert an accountable owner when they degrade         | [ISO 27001:2022].A.8.16, [Azure WAF].operational-excellence |
 | `SECMON`  | **MUST** monitor for security-relevant events, not only for availability                                                     | [ISO 27001:2022].A.8.16                                     |
