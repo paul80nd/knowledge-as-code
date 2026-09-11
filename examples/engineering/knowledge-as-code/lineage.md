@@ -21,15 +21,15 @@ A type with no useful ancestor says so, and claiming one would be worse than adm
 
 <!-- BEGIN GENERATED: types-lineage -->
 
-| Type                        | Nearest prior art                                                                                                                                                                                                                           | Alignment                                                                                                                                                | Divergence                                                                                                                                                                                   |
-|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [ADR](../adrs.md)           | [Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)                                                                                                             | Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten                                             | Nygard scopes decisions to one codebase. Ours must affect more than one repository. Mandatory *Alternatives* is ours, not his                                                                |
-| [Control](../controls.md)   | [NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct                                                                                                                               | Objective, method and expected evidence, bound to the requirement it tests                                                                               | 800-53A procedures assess a federal catalogue inside an authorisation boundary. Ours verify internal standards, with no catalogue and no accreditation                                       |
-| [Glossary](../glossary.md)  | Evans, *Domain-Driven Design*: ubiquitous language                                                                                                                                                                                          | A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically within it                                    | Evans' language is spoken as much as written, and lives in the model and the code. Ours is a set of documents, and nothing holds the code to agreeing with them                              |
-| [Policy](../policies.md)    | [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Policy layer                                                                         | Non-prescriptive statements of intent, with the mandatory language pushed down to the layer below                                                        | HCGF policy is security-scoped and externally driven. Ours is inward-facing engineering intent, and states its obligations as an addressable clause table rather than as prose               |
-| [Report](../reports.md)     | [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys                                                                                        | `generated` names the producer and the moment, in OKF's `<producer>/<version>` form, and `sources` names each body of knowledge the document answers for | OKF carries no version on a source. Ours does, because the fact a reader needs is which content the report is true of. We also require a `verified` entry, which OKF leaves to the publisher |
-| [Standard](../standards.md) | [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer, and [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar | Granular and prescriptive requirements, the RFC 2119 keyword set, and the all-capitals rule                                                              | We compose standards by union across the folders that apply. HCGF has no composition model                                                                                                   |
-| [Tool](../tools.md)         | [Thoughtworks Technology Radar](https://www.thoughtworks.com/radar)                                                                                                                                                                         | Named technologies sorted by stance, with rejections recorded as first-class content                                                                     | The Radar is industry opinion, published periodically and explicitly non-binding. Ours is an internal register with binding version ranges                                                   |
+| Type                        | Nearest prior art                                                                                                                                                                                                                           | Alignment                                                                                                                                             | Divergence                                                                                                                                                                                  |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [ADR](../adrs.md)           | [Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)                                                                                                             | Context / Decision / Consequences, and the rule that a reversed decision is superseded and left standing                                              | Nygard scopes a decision to one codebase. An ADR here affects more than one repository, and the mandatory *Alternatives Considered* section is an addition to his shape                     |
+| [Control](../controls.md)   | [NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct                                                                                                                               | Objective, method and expected evidence, bound to the requirement it tests                                                                            | 800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an internal standard, with no catalogue and no accreditation                        |
+| [Glossary](../glossary.md)  | Evans, *Domain-Driven Design*: ubiquitous language                                                                                                                                                                                          | A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically within it                                 | Evans' language is spoken as much as written, and lives in the model and the code. A glossary here is a set of documents, and nothing checks the code against them                          |
+| [Policy](../policies.md)    | [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Policy layer                                                                         | Statements of intent, with the mandatory language pushed down to the layer below                                                                      | HCGF policy is security-scoped and externally driven. A policy here states inward-facing engineering intent, and puts its obligations in a clause table, so each row can be cited           |
+| [Report](../reports.md)     | [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys                                                                                        | `generated` states the producer and the moment, in OKF's `<producer>/<version>` form. `sources` lists each body of knowledge the document answers for | OKF puts no version on a source. This type does, because a reader needs to know which content the report is true of. It also requires a `verified` entry, which OKF leaves to the publisher |
+| [Standard](../standards.md) | [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer, and [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar | Granular and prescriptive requirements, the RFC 2119 keyword set, and the all-capitals rule                                                           | Standards here compose by union across the folders that apply. HCGF has no composition model                                                                                                |
+| [Tool](../tools.md)         | [Thoughtworks Technology Radar](https://www.thoughtworks.com/radar)                                                                                                                                                                         | Named technologies sorted by stance, with rejections recorded beside adoptions                                                                        | The Radar is industry opinion, published periodically and explicitly non-binding. This type is an internal register with binding version ranges                                             |
 
 <!-- END GENERATED: types-lineage -->
 
@@ -42,36 +42,36 @@ severe, the type's own root page repeats the warning, because a reader who never
 
 ### Control
 
-**The most dangerous word in the taxonomy.** In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final),
-ISO/IEC 27001 Annex A, ISO/IEC 27002 and ComplianceForge, a *control* **is the safeguard itself**: the technical,
-administrative or physical measure that reduces risk. Here, a control is the **verification that a rule is being
-followed**, which those frameworks call an assessment procedure, a test, or a metric.
+In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC 27002 and
+ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or physical measure that reduces
+risk. Here, a control is the **verification that a rule is being followed**, which those frameworks call an assessment
+procedure, a test, or a metric.
 
-A reader with a governance background will misread this type on sight, and will read a coverage report as claiming
-safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word crosses into a
-compliance conversation.
+A reader with a governance background will misread this type on sight, and will read a coverage report as a claim that
+safeguards exist. It claims only that checks exist. Say which sense you mean wherever the word crosses into a compliance
+conversation.
 
 ### Policy
 
-In ISO/IEC 27001 an information security policy is a mandatory, auditable artefact. Here, a policy is the deliberately
-**non-binding** layer: it states intent, and the standard beneath it carries the obligation. A reader arriving from an
-information security management system will read our policies as binding and be wrong about it.
+In ISO/IEC 27001 an information security policy is a mandatory, auditable artefact. Here a policy is the deliberately
+**non-binding** layer: it states intent, and the standard beneath it states the obligation. A reader arriving from an
+information security management system will read a policy here as binding, and be wrong.
 
 ### Report
 
-A report reads like an explanation, and the two are told apart by what deleting the corpus would do to them. An
-explanation survives it and a report has nothing left to say.
+A report reads like an explanation, and a reader skimming one will file it as the other. An explanation survives every
+record being deleted. A report does not.
 
 ### Standard
 
 In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an IEEE, an RFC. Here
-it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take the layering from have
-the same problem, but it is worth saying aloud.
+it is an internal rulebook. The governance frameworks this layering comes from have the same collision, so no name
+avoids it. Say which sense you mean where both are in play.
 
 The grammar is worth being precise about too. The keyword set comes from **BCP 14**, which is
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) *and* [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) together.
-RFC 8174 establishes that the keywords carry their normative meaning **only when written in capitals**, and that is the
-rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
+RFC 8174 is what makes the keywords normative **only when written in capitals**, and that is the rule this type depends
+on. Cite BCP 14, because RFC 2119 alone leaves it unsupported.
 
 <!-- END GENERATED: types-collisions -->
 

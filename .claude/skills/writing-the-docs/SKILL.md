@@ -17,8 +17,6 @@ or the repository. They decide in the first paragraph whether to keep reading.
 `docs/design/discovery.md` is the model. Match its voice, its section length and its headings. Where a page and the
 model differ, change the page.
 
-<!-- Replace the model with the first page rewritten under the new floor, once one exists. -->
-
 ## What this page overrides in the floor
 
 * **"we".** Never, on a public page. Say "you", or name `kac`, the framework or the corpus. Write: "`kac` builds each
@@ -69,11 +67,13 @@ The page has fixed sections in a fixed order.
 * **Examples** sit at `###`, one per example, each with the output the command printed. Take the output from a run.
 * **Known limits** states what the command does not do, and the exit code for each refusal.
 * Put the rule before the reason in every section.
+* An example heading is a noun phrase naming the case: "A first restore", "A refusal".
 
 ## Headings and sections
 
-* A heading names its topic: the command, the key, the file, the check. It is not a sentence and not a slogan. Test it
-  on its own. A reader who has read nothing else on the page can tell whether their answer is under it.
+* A heading names its topic: the command, the key, the file, the check. A noun phrase or a question that names the
+  topic passes: "What discovery excludes", "`from: sub-path`". A claim fails: "The fallback walk honours nothing".
+  Test it on its own. A reader who has read nothing else on the page can tell whether their answer is under it.
 * Keep a section under about 120 words, unless it is a list or a table.
 * Use a numbered list for steps, a table for values, and bullets for parallel items.
 * Write a list of three or more things as a list, not as a sentence.

@@ -38,19 +38,19 @@ exceptions to the plural-folder rule.
 
 <!-- BEGIN GENERATED: schema-data -->
 
-| Field              | Value                                                            | Notes                                                                                                                                                         |
-|--------------------|------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id` *†            | string                                                           | Stable, unique across the corpus, never reused. Format set by the type.                                                                                       |
-| `type` *†          | string                                                           | The type's singular name. Fixed for the type. CI checks it matches the folder.                                                                                |
-| `tier` *†          | `descriptive`                                                    | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                                                           |
-| `status` *†        | `active` `deprecated`                                            | Whether the store is current or on its way out.                                                                                                               |
-| `owner` *†         | string                                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                        |
-| `sources` †        | list                                                             | Where the content came from, one entry per source.                                                                                                            |
-| `tags` †           | list                                                             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                                              |
-| `owned-by` *       | id                                                               | A single service. Shared ownership means nobody is answerable.                                                                                                |
-| `classification` * | `public` `internal` `confidential` `personal` `special-category` | Drives handling. `personal` and `special-category` pull in retention.                                                                                         |
-| `retention`        | string                                                           | The actual retention, not the policy's. Where they differ, record both. The gap is the point. Required when `classification in [personal, special-category]`. |
-| `flows-to`         | list                                                             | Data leaving the estate is the part that matters most.                                                                                                        |
+| Field              | Value                                                            | Notes                                                                                                                                                   |
+|--------------------|------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                                           | Stable, unique across the corpus, never reused, in the format the type sets.                                                                            |
+| `type` *†          | string                                                           | The singular name of the type, which CI checks against the folder.                                                                                      |
+| `tier` *†          | `descriptive`                                                    | The record's trust level, fixed for the type and checked against the folder.                                                                            |
+| `status` *†        | `active` `deprecated`                                            | Whether this data is current or deprecated.                                                                                                             |
+| `owner` *†         | string                                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                  |
+| `sources` †        | list                                                             | Where the content came from, one entry per source.                                                                                                      |
+| `tags` †           | list                                                             | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                           |
+| `owned-by` *       | id                                                               | Id of the service that owns this data.                                                                                                                  |
+| `classification` * | `public` `internal` `confidential` `personal` `special-category` | How sensitive the data is. `personal` and `special-category` make `retention` required.                                                                 |
+| `retention`        | string                                                           | How long the data is kept in practice. Where that differs from the policy, record both. Required when `classification in [personal, special-category]`. |
+| `flows-to`         | list                                                             | Ids of the services and integrations this data is sent to.                                                                                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -107,8 +107,8 @@ exceptions to the plural-folder rule.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                | What it would verify                                      |
-|---------------------|-----------------------------------------------------------|
-| `store-has-service` | Every store named resolves to a service in the catalogue. |
+| Rule                | What it would verify                                           |
+|---------------------|----------------------------------------------------------------|
+| `store-has-service` | Every store named here resolves to a service in the catalogue. |
 
 <!-- END GENERATED: checks-data -->

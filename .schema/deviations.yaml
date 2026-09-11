@@ -10,17 +10,17 @@ lifecycle: living
 summary: A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed.
 goes-here: A departure from a rule that somebody agreed to
 detail: >
-  The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
-  nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
+  The record says what is being done instead, why that was worth accepting, and what limits the risk meanwhile.
+  A year later, nobody can tell an unwritten departure from ignorance of the rule.
 
 versus:
   adrs: >
-    An ADR decides how something is built, and the decision stays true. A deviation says we are knowingly
-    not following a rule, and is written to be closed. If the estate is meant to look like this from now
-    on, write the ADR and change the rule.
+    An ADR decides how something is built, and the decision stays true. A deviation records a rule knowingly
+    broken, and is written to be closed. If the estate is meant to look like this from now on, write the ADR
+    and change the rule.
   policies: >
-    The policy is the commitment. The deviation is one named, dated departure from it, and it changes
-    nothing the policy says. A departure everyone takes is a policy that needs rewriting.
+    A policy is the commitment. A deviation is one named, dated departure from it, and changes nothing the
+    policy says. A departure everyone takes is a policy that needs rewriting.
 
 lineage:
   prior-art: "[NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final), the plan of action and milestones a named official accepts risk against"
@@ -31,14 +31,14 @@ lineage:
     deviation here departs from one internal rule, and nothing accredits it
 
 collision: >
-  In audit and quality practice a **deviation** is found rather than granted. An auditor records a
-  departure from a procedure after it happened, and what is agreed in advance is called a waiver, an
-  exception or a concession. Here the record *is* the agreement, written before the departure or
-  immediately after one an incident left no time for.
+  In audit and quality practice a **deviation** is a finding. An auditor records a departure from a procedure
+  after it happened, and a departure agreed in advance is called a waiver, an exception or a concession. Here
+  the record *is* the agreement, written before the departure, or straight after one an incident left no time
+  for.
 
-  A reader arriving from that background will read this folder as a list of findings against us, and a
-  growing count as the estate getting worse. The count measures how much of the estate somebody wrote
-  down. Say which sense is meant wherever the word crosses into an audit conversation.
+  A reader arriving from that background will read this folder as a list of findings against the estate, and a
+  growing count as the estate getting worse. The count says how much of the estate somebody wrote down. Say
+  which sense you mean wherever the word crosses into an audit conversation.
 
 id:
   prefix: dev
@@ -56,8 +56,7 @@ fields:
     values: [active, draft, closed]
     description: Whether the deviation is in force, still being agreed, or closed.
     notes: >
-      A deviation whose review date has passed is still `active`. Letting it stand is the failure, so the
-      status says what is true rather than what should have happened.
+      A deviation whose review date has passed stays `active`. Nothing moves it, and `expiry` warns instead.
 
   departs-from:
     required: true
@@ -68,17 +67,10 @@ fields:
     allow-literal: [none]
     description: Policy or standard clause ids this departs from, as `pol-TRUS.SCREEN`, or `none`.
     notes: >
-      Clause by clause, and a bare policy or standard id is refused. A deviation departs from a clause or
-      two, and almost never from every clause a rule carries. A bare id claims that wider departure, and
-      a coverage report reads the field rather than the prose.
-
-      No `mirrors-citations:` goes with it. A standard names each clause again on the `Covers` line
-      closing the rule that discharges it. A deviation holds one departure and no per-clause sections, so
-      it has nothing to reconcile a line against.
-
-      A shortcut that breaks no rule is technical debt: recorded here, owned by somebody, and closed the
-      same way. `none` is what such a record puts in the field, and it is a literal, so nothing looks it
-      up.
+      The field takes no `mirrors-citations:`. A deviation states one departure and writes no per-clause
+      section, so there is no `Covers` line to check it against. Use `none` for a departure that breaks no
+      stated rule, such as technical debt nobody wrote a clause about. `none` is a literal, and nothing looks
+      it up.
 
   accepted-on:
     required: false
@@ -89,13 +81,13 @@ fields:
   review-by:
     required: true
     type: date
-    description: The day this is looked at again. Every deviation carries one.
+    description: The day the deviation is looked at again.
 
   closed-on:
     required: false
     required-when: 'status == closed'
     type: date
-    description: The day the gap was fixed, or the risk consciously re-accepted.
+    description: The day the gap was fixed, or the risk knowingly re-accepted.
 
   applies-to:
     required: false
@@ -119,24 +111,9 @@ export:
     How it closes: full
     Scope: full
   notes: >
-    A deviation travels whole. The people who carry the risk of a departure are usually outside the team
-    that raised it, and a register they cannot read is one that surfaces nothing. This is the one type
-    whose whole purpose is to be read by somebody else.
-
-    The five sections are the whole of the argument: what we do instead, why, what holds the risk down
-    meanwhile, what ends it, and how far it reaches. A consumer reading four of them reads a smaller
-    departure than the one we took.
-
-    `owner` travels. A deviation names the individual who accepted the risk, and a register that says what
-    was excused without saying who excused it is not a register.
-
-    `accepted-on`, `review-by` and `closed-on` say whether a departure is live, overdue or over. They
-    travel beside `status`, which stays `active` past its review date, so the two accounts of the same
-    record can be compared.
-
-    `departs-from` names the rule departed from. It resolves for exactly the consumer that also holds the
-    corpus stating that rule, which is the consumer asking the question.
-
+    `owner` travels here, and this is the only type where it does.
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#deviations> says what else travels, and
+    what stays behind.
 index:
   columns: [id, title, status, departs-from, review-by, owner]
   sort: review-by
@@ -147,25 +124,22 @@ rules:
     severity: error
     expr: "present('accepted-on') and present('review-by') implies field('review-by') > field('accepted-on')"
     message: >
-      This deviation is reviewed on or before the day it was accepted, so it expired as it was written.
-      Set `review-by` to the day somebody has to look at this again.
+      `review-by` falls on or before `accepted-on`, so this deviation expired as it was written. Set
+      `review-by` to the day somebody has to look at this again.
   - id: not-open-ended
     description: The record does not claim the departure is permanent or open-ended.
     severity: warning
     expr: >-
       not matches('(?i)\b(permanent(ly)?|indefinite(ly)?|no expiry|until further notice)\b')
     message: >
-      A deviation is a bounded departure, and this one reads as a standing one. Say what has to be true
-      for it to close, and put the date in `review-by`. A departure meant to last is a rule that needs
-      rewriting.
-  # A warning. A passed date says the review is late, and the record itself is still correct. An error
-  # would make deleting the record the cheapest way back to a green branch. `draft` and `closed` are
-  # silent: neither is a departure anybody owes a review on.
+      this record reads as a standing departure. Say what has to be true for it to close, and put the date
+      in `review-by`.
   - id: expiry
-    description: An active deviation is still inside the review date it carries.
+    description: An active deviation is still inside its review date.
+    # Warning severity, because an error would make deleting the record the cheapest way back to green.
     severity: warning
     expr: >-
       field('status') == 'active' and present('review-by') implies field('review-by') >= today()
     message: >
-      This deviation is still active and its `review-by` has passed, so nobody has looked at it on the
-      day it said they would. Close it, or set a new date and say in the record what was re-accepted.
+      this deviation is still active and its `review-by` has passed. Close it, or set a new date and say
+      in the record what was re-accepted.

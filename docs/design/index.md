@@ -19,6 +19,8 @@ These pages are the specification `kac` is built to. Where a page and the tool d
   may ask about a record.
 * **[What the schema is held to](held-to.md)** says what `kac` refuses when it loads the schema, and why a declaration
   the tool ignores counts as a defect.
+* **[Shaping a type](shaping-a-type.md)** says why each type the framework ships chose the fields, sections and export
+  it did.
 * **[Generation](generation.md)** says what a corpus derives from its own records, where each derived thing lands, and
   why generation writes into hand-written files.
 * **[The export format](export.md)** is the contract an export answers to: what each file holds, what a type decides

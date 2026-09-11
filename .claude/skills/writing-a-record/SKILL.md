@@ -12,13 +12,13 @@ where this page says it overrides the floor.
 
 Read `tier` in the frontmatter. Find its row below and follow that section. Ignore the other four.
 
-| Tier            | Write it as                                                                              |
-|-----------------|------------------------------------------------------------------------------------------|
-| **Procedural**  | One action per step. Imperative. Condition before the action. No reason inside a step.   |
-| **Normative**   | One obligation per clause. Testable. Keyword first. The reason goes in Purpose.          |
-| **Descriptive** | Indicative, present tense. State what is.                                                |
-| **Decided**     | Prose. Constrain the structure and the length, not the words.                            |
-| **Observed**    | Symptom, cause, why it might matter. Three sentences.                                    |
+| Tier            | Write it as                                                                            |
+|-----------------|----------------------------------------------------------------------------------------|
+| **Procedural**  | One action per step. Imperative. Condition before the action. No reason inside a step. |
+| **Normative**   | One obligation per clause. Testable. Keyword first. The reason goes in Purpose.        |
+| **Descriptive** | Indicative, present tense. State what is.                                              |
+| **Decided**     | Prose. Constrain the structure and the length, not the words.                          |
+| **Observed**    | Symptom, cause, why it might matter. Three sentences.                                  |
 
 ### Procedural: runbooks and processes
 
@@ -46,8 +46,8 @@ The reader acts on a clause without checking it. Make it checkable.
 * State the whole obligation in the clause. A cross-reference points at the other side of a shared obligation. It does
   not finish the sentence.
 * Use no contractions in a clause. Purpose and Scope may use them.
-* Do not hedge the commitment. Do name a risk as a risk. Write: "a mistake in development risks becoming an incident
-  in production."
+* Do not hedge the commitment. Do name a risk as a risk. Write: "a mistake in development risks becoming an incident in
+  production."
 * Never claim a compliance posture in a policy. Certification and audit status belong in `frameworks.md`.
   `posture-belongs-to-frameworks` warns.
 * A control, an NFR and a fix carry no clause table, no Purpose and no keywords. State what the reader will act on.
@@ -76,8 +76,8 @@ The reader acts on a clause without checking it. Make it checkable.
 
 ## What this page overrides in the floor
 
-* **Present tense.** A postmortem's timeline is past tense. A Decided record's consequences may use "will", because
-  they have not happened yet. Facts about the estate today stay in the present.
+* **Present tense.** A postmortem's timeline is past tense. A Decided record's consequences may use "will", because they
+  have not happened yet. Facts about the estate today stay in the present.
 * **Gloss a term on first use.** The corpus has a glossary. Link the entry instead of restating it.
 * **Clause wording.** You may repair punctuation inside a clause. You may not change a word, because a citation quotes
   the row. Report a passive or a compound obligation you find there, and leave it.
@@ -88,8 +88,8 @@ The reader acts on a clause without checking it. Make it checkable.
   records to match this page.
 * **`kac checks`** for the type you are writing. Each text rule is declared on one type. An absent check is not
   permission.
-* **`kac generate`**, run last. The H1 and the frontmatter are copied into generated files. If you cannot run it,
-  leave the H1 and the frontmatter as they are and say so.
+* **`kac generate`**, run last. The H1 and the frontmatter are copied into generated files. If you cannot run it, leave
+  the H1 and the frontmatter as they are and say so.
 
 ## Keep the administration out
 
@@ -98,9 +98,9 @@ Information about a record lives in the frontmatter, a generated block, or git. 
 * No review section. `owner` and `review-by` are frontmatter. The history is in git.
 * No placeholder prose. "No implementing standard exists yet" describes an absent edge. Say nothing.
 * No frontmatter restated in the body. The generator renders it where a reader needs it.
-* No unbuilt work. Send it to the issue tracker. One exception: a rule the type declares that nothing implements.
-  Write it as declared and not running. Write: "`feature-file-orphans` is declared and does not run." Never claim an
-  unbuilt check works. That is the commonest defect here.
+* No unbuilt work. Send it to the issue tracker. One exception: a rule the type declares that nothing implements. Write
+  it as declared and not running. Write: "`feature-file-orphans` is declared and does not run." Never claim an unbuilt
+  check works. That is the commonest defect here.
 
 ## Frontmatter
 
@@ -117,8 +117,8 @@ Information about a record lives in the frontmatter, a generated block, or git. 
       clauses: [ A.5.17, A.8.24 ]
   ```
 
-* Name in `aligns-with` only a framework that `frameworks.md` files under **Obliged** or **Self-obligated**. A
-  framework under **Inspiration** may be cited in a clause, and stays out of the roll-up.
+* Name in `aligns-with` only a framework that `frameworks.md` files under **Obliged** or **Self-obligated**. A framework
+  under **Inspiration** may be cited in a clause, and stays out of the roll-up.
 * Sort every list alphabetically. Numbers compare as numbers, so `A.8.7` comes before `A.8.29`.
 * A tag is a word a reader searches for. It never repeats another field.
 
@@ -165,8 +165,8 @@ carries the type, the id exactly as the frontmatter spells it, and the status in
 
 ## A type root page
 
-`<type>.md` has no frontmatter and no tier. Hold it to the floor. The generated block says what a field means. The
-prose says what an author does about it. Cut prose that repeats the block.
+`<type>.md` has no frontmatter and no tier. Hold it to the floor. The generated block says what a field means. The prose
+says what an author does about it. Cut prose that repeats the block.
 
 ## A `_template.md`
 
@@ -175,5 +175,23 @@ prose says what an author does about it. Cut prose that repeats the block.
 * A placeholder cannot sit in a flow sequence. Write `related:` as a block sequence.
 * Quote a placeholder that opens a value: `review-by: "{{date}}"`. Unquoted, YAML reads it as a mapping and the field
   arrives empty.
-* The text inside the braces, and the guidance between `DELETE FROM HERE` and `DELETE TO HERE`, is prose. The floor
-  and the tier apply to it.
+* The text inside the braces, and the guidance between `DELETE FROM HERE` and `DELETE TO HERE`, is prose. The floor and
+  the tier apply to it.
+
+## Schema values
+
+Each key in `.schema/` has one reader. Write to that reader.
+
+| Key                                                     | Reader                                 | Shape                                                                                                                 |
+|---------------------------------------------------------|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `description:`                                          | the record author, in a table cell     | One sentence, under 120 characters. What the value is. Not why.                                                       |
+| `message:`                                              | the record author, at the terminal     | What is wrong, then what to write instead. Two sentences. Opens lower case, like every message `kac` prints.          |
+| `summary`, `goes-here`, `detail`, `versus`, `collision` | the corpus reader, on a generated page | Plain. `goes-here` is a decision-table cell, so under 12 words. These are the only schema prose a corpus reader sees. |
+| `notes:`                                                | a schema maintainer, in the file       | A comment. One paragraph. What the code cannot show: a boundary, a case it skips, a form it borrows.                  |
+| `# comment`                                             | a schema maintainer                    | One line. One short paragraph above a block such as `parts:` or `export:`.                                            |
+
+* Do not argue in a `notes:`. Put the reason on a design page and cite the URL. End the `notes:` with the URL alone, or
+  with "See <URL>." Do not write "<URL> says why".
+* Say a thing once. Not in a comment, a `notes:` and `export.notes` as well.
+* A `notes:` over one paragraph is a design page in the wrong place. Move it.
+* A design page that takes moved reasoning is a docs page. Load `writing-the-docs` and write it to the model page.

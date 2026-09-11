@@ -11,16 +11,16 @@
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                           | Tier        | What it holds                                                                                            |
-|--------------------------------|-------------|----------------------------------------------------------------------------------------------------------|
-| [ADR](adrs.md)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it. |
-| [Capability](capabilities.md)  | descriptive | What we offer a customer and why, as a hub linking to what implements, tests and constrains it.          |
-| [Data](data.md)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.  |
-| [Glossary](glossary.md)        | descriptive | The ubiquitous language. Terms whose meaning is specific to us, or which are easily confused.            |
-| [Integration](integrations.md) | descriptive | An external system we depend on: the contract, the auth, the failure modes, their SLA and our fallback.  |
-| [Process](processes.md)        | procedural  | A planned procedure followed deliberately (releasing, onboarding, provisioning, rotating a secret).      |
-| [Runbook](runbooks.md)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.        |
-| [Service](services.md)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.       |
+| Type                           | Tier        | What it holds                                                                                                |
+|--------------------------------|-------------|--------------------------------------------------------------------------------------------------------------|
+| [ADR](adrs.md)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.     |
+| [Capability](capabilities.md)  | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.             |
+| [Data](data.md)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.      |
+| [Glossary](glossary.md)        | descriptive | The ubiquitous language. Terms with a meaning specific to the organisation, or easily confused with another. |
+| [Integration](integrations.md) | descriptive | An external system the estate depends on: its contract, auth, failure modes, SLA and fallback.               |
+| [Process](processes.md)        | procedural  | A planned procedure (releasing, onboarding, provisioning, rotating a secret).                                |
+| [Runbook](runbooks.md)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.            |
+| [Service](services.md)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.           |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.

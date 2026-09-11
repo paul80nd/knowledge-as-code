@@ -38,19 +38,19 @@ A process is also not:
 
 <!-- BEGIN GENERATED: schema-processes -->
 
-| Field                 | Value                              | Notes                                                                                          |
-|-----------------------|------------------------------------|------------------------------------------------------------------------------------------------|
-| `id` *†               | string                             | Stable, unique across the corpus, never reused. Format set by the type.                        |
-| `type` *†             | string                             | The type's singular name. Fixed for the type. CI checks it matches the folder.                 |
-| `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.            |
-| `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                                        |
-| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                         |
-| `sources` †           | list                               | Where the content came from, one entry per source.                                             |
-| `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                               |
-| `applies-to`          | list                               | Service ids this process concerns.                                                             |
-| `last-rehearsed` *    | date                               | Quoted date or `"never"`. Set when someone follows it end to end, not when the page is edited. |
-| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often it should be exercised.                                                              |
-| `requires-access`     | list                               | Systems or roles needed before step 1.                                                         |
+| Field                 | Value                              | Notes                                                                         |
+|-----------------------|------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†               | string                             | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†             | string                             | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†             | `procedural`                       | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                       |
+| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †           | list                               | Where the content came from, one entry per source.                            |
+| `tags` †              | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `applies-to`          | list                               | Service ids this process concerns.                                            |
+| `last-rehearsed` *    | date                               | Quoted. The day somebody last followed the process end to end, or `"never"`.  |
+| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often to rehearse the process.                                            |
+| `requires-access`     | list                               | The systems or roles the reader needs before step 1.                          |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -109,8 +109,8 @@ A process is also not:
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule        | What it would verify                                                                                    |
-|-------------|---------------------------------------------------------------------------------------------------------|
-| `staleness` | Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`. |
+| Rule        | What it would verify                                                                                 |
+|-------------|------------------------------------------------------------------------------------------------------|
+| `staleness` | Scheduled. Reports a process past its rehearsal frequency, or one whose `last-rehearsed` is `never`. |
 
 <!-- END GENERATED: checks-processes -->

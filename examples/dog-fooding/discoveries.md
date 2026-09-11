@@ -41,21 +41,21 @@ Boundaries:
 
 <!-- BEGIN GENERATED: schema-discoveries -->
 
-| Field          | Value                                   | Notes                                                                                                                             |
-|----------------|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `id` *†        | string                                  | Stable, unique across the corpus, never reused. Format set by the type.                                                           |
-| `type` *†      | string                                  | The type's singular name. Fixed for the type. CI checks it matches the folder.                                                    |
-| `tier` *†      | `observed`                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                                               |
-| `status` *†    | `open` `promoted` `expired` `rejected`  | Open until promoted, expired or rejected.                                                                                         |
-| `owner` *†     | string                                  | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                            |
-| `sources` †    | list                                    | Where the content came from, one entry per source.                                                                                |
-| `tags` †       | list                                    | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                                  |
-| `source` *     | `human` `session` `dreamed`             | Who or what observed it. `dreamed` means proposed by an agent.                                                                    |
-| `confidence` * | `unverified` `corroborated` `confirmed` | Starts at `unverified`, and stays there unless genuinely proven.                                                                  |
-| `expires` *    | date                                    | Quoted. Ninety days from capture, a convention the template carries.                                                              |
-| `provenance`   | string                                  | A reference back to the session and passage, so review is a check rather than an act of faith. Required when `source == dreamed`. |
-| `applies-to`   | list                                    | Service ids this observation concerns.                                                                                            |
-| `promoted-to`  | id                                      | The fix or standard this became. Required when `status == promoted`.                                                              |
+| Field          | Value                                   | Notes                                                                                                              |
+|----------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `id` *†        | string                                  | Stable, unique across the corpus, never reused, in the format the type sets.                                       |
+| `type` *†      | string                                  | The singular name of the type, which CI checks against the folder.                                                 |
+| `tier` *†      | `observed`                              | The record's trust level, fixed for the type and checked against the folder.                                       |
+| `status` *†    | `open` `promoted` `expired` `rejected`  | Open until promoted, expired or rejected.                                                                          |
+| `owner` *†     | string                                  | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                             |
+| `sources` †    | list                                    | Where the content came from, one entry per source.                                                                 |
+| `tags` †       | list                                    | Free-form, lowercase and hyphenated. A reader searches on these across types.                                      |
+| `source` *     | `human` `session` `dreamed`             | Who or what observed it. `dreamed` means an agent proposed it.                                                     |
+| `confidence` * | `unverified` `corroborated` `confirmed` | Starts at `unverified`, and moves only when somebody proves it.                                                    |
+| `expires` *    | date                                    | Quoted. The day the observation lapses, ninety days from capture.                                                  |
+| `provenance`   | string                                  | A reference back to the session and passage, so a reviewer can check the claim. Required when `source == dreamed`. |
+| `applies-to`   | list                                    | Service ids this observation concerns.                                                                             |
+| `promoted-to`  | id                                      | The fix or standard this became. Required when `status == promoted`.                                               |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -118,12 +118,12 @@ reason the field exists.
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `low-ceremony`              | warning | A discovery stays within the length its tier is for.                                                            |
+| `low-ceremony`              | warning | A discovery stays within the length a capture needs.                                                            |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule           | What it would verify                                                                                   |
-|----------------|--------------------------------------------------------------------------------------------------------|
-| `expiry-sweep` | Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted. |
+| Rule           | What it would verify                                                                               |
+|----------------|----------------------------------------------------------------------------------------------------|
+| `expiry-sweep` | Scheduled. A discovery past `expires` with no promotion is set to `expired` with a note, and kept. |
 
 <!-- END GENERATED: checks-discoveries -->

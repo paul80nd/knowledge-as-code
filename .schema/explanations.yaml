@@ -8,11 +8,11 @@ page: explanations.md
 tier: descriptive
 lifecycle: living
 summary: Narrative that helps you understand how something works, or why it is shaped the way it is.
-goes-here: A narrative of how something works or why it's shaped that way
+goes-here: How something works, or why it is shaped that way
 detail: >
-  Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates:
-  an overview points at the documents holding the detail instead of repeating them. One that starts accumulating
-  facts of its own has become a maintenance liability.
+  Architecture overviews, conceptual walkthroughs, and how the pieces fit together. An explanation points at the
+  documents with the detail and does not repeat it. One that accumulates facts of its own falls out of date as
+  soon as those facts move.
 
 versus:
   standards: >
@@ -33,8 +33,8 @@ lineage:
   alignment: >
     Name for name. Understanding-oriented, discursive, gives background and considers alternatives
   divergence: >
-    Diátaxis constrains explanation only against its three siblings. We also forbid it being normative or a
-    catalogue entry, because we have types for those
+    Diátaxis constrains explanation only against tutorial, how-to and reference. This framework also forbids an
+    explanation being normative or a catalogue entry, because separate types cover both
 
 id:
   prefix: exp
@@ -50,27 +50,27 @@ fields:
     required: true
     type: enum
     values: [draft, active, stale]
-    description: '`stale` is an honest state: say so rather than let the page quietly rot.'
+    description: '`draft` while it is written, `active` once it is right, `stale` where it has fallen behind.'
 
   explains:
     required: true
     type: list
     of: id
     ref: [services, capabilities]
-    description: Service or capability ids this explains.
+    description: Ids of the services and capabilities this explains.
 
   review-by:
     required: true
     type: date
-    description: The field that stops this type rotting. Explanations need the tightest staleness discipline.
-    notes: Explanations are the residual category, which is what makes the discipline tightest here.
+    description: Quoted. The date by which someone confirms this is still true.
+    notes: An explanation is the residual category, so the review date does more work here than on other types.
 
 sections:
   required: [Where the detail lives]
   optional: []
   notes: >
-    Body sections are free-form: an explanation is narrative and its shape follows its subject. Only the
-    outbound links section is required, because linking rather than restating is what defines the type.
+    Body sections are free-form, because an explanation is narrative and its shape follows its subject.
+    `Where the detail lives` is the one required section, because linking out is what defines the type.
 
 index:
   columns: [id, title, explains, status, review-by]
@@ -78,24 +78,22 @@ index:
 
 rules:
   - id: links-rather-than-restates
-    description: An explanation's prose stays proportionate to its links, rather than restating their facts.
+    description: An explanation's prose stays proportionate to the links it makes.
     severity: warning
-    # The ratio `capabilities` sets, arrived at separately: prose outgrowing its links is restating
-    # whatever the type. Moving it there asks the question here.
+    # A ratio, so an explanation that links to nothing fails at any length.
     expr: "words() <= links() * 40"
     message: >
-      Prose has outgrown the links. Each fact restated here is a second copy to keep true. Link to the
-      document that owns it instead.
+      prose has outgrown the links. Link to the document that owns each fact instead of restating it
+      here.
   - id: not-normative
     description: No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.
     severity: warning
-    # Bold is how a clause table states an obligation, so it is the bold that separates an explanation
-    # quoting the word from one binding with it.
+    # Bold is what binds under BCP 14, so a keyword in plain text is a quotation.
     expr: >-
       not matches('\*\*(MUST NOT|MUST|SHOULD NOT|SHOULD|MAY)\*\*')
     message: >
-      A bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and
-      link to it from here.
+      a bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard
+      and link to it from here.
   - id: not-load-bearing
     description: No decided-tier document cites an explanation as the authority for a constraint.
-    # The decided tier is an ADR or a postmortem. Immutable records should not derive from mutable ones.
+    # The decided tier is an ADR or a postmortem, and an immutable record may not rest on a mutable one.

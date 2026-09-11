@@ -16,15 +16,15 @@ Carried by every document in the taxonomy.
 
 <!-- BEGIN GENERATED: schema-universal -->
 
-| Field      | Value                                                       | Notes                                                                               |
-|------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `id` *     | string                                                      | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *   | string                                                      | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` * | enum                                                        | Values vary by type.                                                                |
-| `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `sources`  | list                                                        | Where the content came from, one entry per source.                                  |
-| `tags`     | list                                                        | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
+| Field      | Value                                                       | Notes                                                                         |
+|------------|-------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *     | string                                                      | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *   | string                                                      | The singular name of the type, which CI checks against the folder.            |
+| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` * | enum                                                        | The record's current state, from the values this type sets.                   |
+| `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources`  | list                                                        | Where the content came from, one entry per source.                            |
+| `tags`     | list                                                        | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 
 \* Field is required
 

@@ -16,18 +16,18 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                    | It goes in                       |
-|--------------------------------------------------------------|----------------------------------|
-| A check that proves a rule is being followed                 | [Controls](../controls.md)       |
-| A departure from a rule that somebody agreed to              | [Deviations](../deviations.md)   |
-| A description of what a deployable component is and does     | [Services](../services.md)       |
-| A problem with a known, verified resolution                  | [Fixes](../fixes.md)             |
-| A rule people must follow when building                      | [Standards](../standards.md)     |
-| A step-by-step for a planned task                            | [Processes](../processes.md)     |
-| A step-by-step for when something is broken                  | [Runbooks](../runbooks.md)       |
-| A tool or package we've approved, rejected, or are trialling | [Tools](../tools.md)             |
-| An answer about the corpus that no single record holds       | [Reports](../reports.md)         |
-| Something surprising you noticed and haven't verified        | [Discoveries](../discoveries.md) |
+| You have…                                              | It goes in                       |
+|--------------------------------------------------------|----------------------------------|
+| A check that proves a rule is being followed           | [Controls](../controls.md)       |
+| A departure from a rule that somebody agreed to        | [Deviations](../deviations.md)   |
+| A problem with a known, verified resolution            | [Fixes](../fixes.md)             |
+| A rule people must follow when building                | [Standards](../standards.md)     |
+| A step-by-step for a planned task                      | [Processes](../processes.md)     |
+| A step-by-step for when something is broken            | [Runbooks](../runbooks.md)       |
+| A tool or package approved, rejected, or on trial      | [Tools](../tools.md)             |
+| An answer about the corpus no single record states     | [Reports](../reports.md)         |
+| Something surprising you noticed and have not verified | [Discoveries](../discoveries.md) |
+| What a deployable component is and does                | [Services](../services.md)       |
 
 <!-- END GENERATED: types-placement -->
 
@@ -45,56 +45,52 @@ type's own page.
 ### Normative: living, owned, reviewed
 
 **[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
-leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
-honest state and the number worth watching.
+leaves. Every control lists the rules it verifies. A rule nothing checks gets a control whose mechanism is
+`not-enforced`, so the gap is written down.
 
 **[Deviations](../deviations.md).** A knowing departure from a rule, the person who accepted the risk, and the date it
-is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
-nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
+is reviewed. The record says what is being done instead, why that was worth accepting, and what limits the risk
+meanwhile. A year later, nobody can tell an unwritten departure from ignorance of the rule.
 
 **[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
-It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
-on trust.
+Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
 
 **[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
-of work are the union of the layers that apply to it.
+checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
+the union of the folders that apply to it.
 
 ### Descriptive: living, must mirror reality
 
-These are the types CI can check against the estate rather than merely against themselves, which matters because they
-rot faster than anything else.
+CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
-added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
-the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
-answered them.
+**[Reports](../reports.md).** A question about the corpus, answered across every record, with the judgement a person
+added. Which clauses nothing implements, which framework references have only one citation. `kac report` fills every
+cell the corpus states, and leaves the judgement cells open. A report becomes a record here once somebody has answered
+them.
 
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
-stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
-**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
-we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
-evaluation.
+**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version range
+for each. Knowing what was turned down, and why, saves the next person the evaluation.
 
 ### Procedural: living, must be rehearsed
 
 Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
-**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
-rotating a secret). Written to be followed by someone who has not done it before.
+**[Processes](../processes.md).** A planned procedure (releasing, onboarding, provisioning, rotating a secret). Write
+each one for somebody who has not done it before.
 
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
-decision tree. Disaster recovery and estate rebuild live here.
+decision tree. Disaster recovery and estate rebuild are runbooks.
 
 ### Observed: perishable, unreviewed until promoted
 
-The tier carrying the least authority is the one a corpus most depends on, because capture that is not free does not
-happen.
+The tier with the least authority is the one a corpus most depends on. Capture has to be cheap, or it does not happen.
 
 **[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
-unless promoted. Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence
-level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
+unless promoted. A title, an observation, why it might matter, and a confidence level. "The build fails silently if X"
+then has somewhere to go the moment somebody notices it.
 
 <!-- END GENERATED: types-detail -->
 
@@ -180,9 +176,9 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody
-who checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery and let
-promotion do the work.
+**Discovery vs Fix.** A discovery is unverified, and might be wrong or already fixed. A fix has been checked by
+somebody, so it has authority. Never write straight to a fix from a session. Capture the discovery and let promotion do
+the work.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
@@ -190,9 +186,9 @@ Broken is a runbook.
 **Report vs Discovery.** A report is a walk over the corpus, repeatable and dated. A discovery is something somebody
 noticed once. If nothing would reproduce it, it is a discovery.
 
-**Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
-from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
-control.
+**Standard vs Control.** The standard says what to do. The control says how anybody can tell it happened. "Secrets
+**MUST** come from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build,
+it is a control.
 
 <!-- END GENERATED: types-versus -->
 

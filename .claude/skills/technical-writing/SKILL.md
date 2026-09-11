@@ -13,13 +13,15 @@ say what that means in practice, and where this repository differs from Microsof
 These do most of the work.
 
 * **Lead with the point.** State the rule or the fact first. Put the reason after it, or leave the reason out.
-* **Use the plain verb.** A command *lists*, *checks*, *writes*, *reports*, *creates*, *rejects*. It does not *hold to*,
-  *carry*, *name*, *answer*, *reach*, *stand up* or *seal*.
+* **Use the plain verb.** A command *lists*, *checks*, *writes*, *reports*, *creates*, *rejects*. It does not *hold
+  to*, *carry*, *name*, *answer*, *reach*, *stand up* or *seal*. "holds" has four plain replacements: *has*,
+  *contains*, *keeps*, *checks*. Pick by sense.
 * **Talk to the reader.** Say "you". Write an instruction as a command. Use the active voice and the present tense.
 * **One idea per sentence.** Keep a sentence under about 20 words. A sentence joining two steps with "and" is two
   sentences.
-* **Make it scannable.** Keep paragraphs short. Use a list for parallel items and a table for values. A heading names
-  its topic, so a reader arriving from search knows what is under it.
+* **Make it scannable.** Keep paragraphs short. Use a list for parallel items. Use a table when three or more things
+  each have the same two or three facts: a key and its meaning, an option and its effect, a value and what it selects.
+  A heading names its topic, so a reader arriving from search knows what is under it.
 
 ## Where this repository differs from Microsoft
 
@@ -71,8 +73,7 @@ list.
 ## Before you finish
 
 1. Search for "holds", "carries", "names", "answers", "reaches", "seals". Replace each with the literal verb.
-2. Search for "rather than", "the two", "the three", "both", "either", "neither". Rewrite the sentence, or name the
-   things.
+2. Search for "rather than", "the two", "the three", "the four". Rewrite the sentence, or name the things.
 3. Read each heading on its own. It names a topic.
 4. Read the first sentence of each section. It is the rule, not the reason.
 5. Read the longest sentence aloud. If you run out of breath, split it.

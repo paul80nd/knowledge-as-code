@@ -37,17 +37,17 @@ checked that it still holds.
 
 <!-- BEGIN GENERATED: schema-reports -->
 
-| Field         | Value                    | Notes                                                                               |
-|---------------|--------------------------|-------------------------------------------------------------------------------------|
-| `id` *†       | string                   | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†     | string                   | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†     | `descriptive`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` `stale` | `stale` is an honest state: a report nobody has run since the corpus moved says so. |
-| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `sources` *†  | list                     | Every corpus this report answers for, and the version of each it is true of.        |
-| `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `generated` * | object                   | What produced the content and when.                                                 |
-| `verified` *  | list                     | Every verification this report has had, oldest first, one line each.                |
+| Field         | Value                    | Notes                                                                         |
+|---------------|--------------------------|-------------------------------------------------------------------------------|
+| `id` *†       | string                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†     | string                   | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†     | `descriptive`            | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†   | `draft` `active` `stale` | Whether the report is drafted, current, or behind the corpus.                 |
+| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` *†  | list                     | Every corpus this report answers for, and the version of each it is true of.  |
+| `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `generated` * | object                   | What produced the content and when.                                           |
+| `verified` *  | list                     | Every verification this report has had, oldest first, one line each.          |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -100,7 +100,7 @@ A version the corpus moved for something else is no reason to claim a fresh read
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `report-stale`              | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `self-verification`         | error   | A report's `verified` list does not name the producer that `generated.by` names.                                |
-| `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
-| `generated-by-a-producer`   | error   | `generated.by` names what produced the content, in OKF's `<producer>/<version>` form.                           |
+| `verified-by-a-known-actor` | error   | A verification states a person or a producer, and never a `role:`.                                              |
+| `generated-by-a-producer`   | error   | `generated.by` states what produced the content, in OKF's `<producer>/<version>` form.                          |
 
 <!-- END GENERATED: checks-reports -->

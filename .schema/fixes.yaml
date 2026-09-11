@@ -10,16 +10,16 @@ lifecycle: living
 summary: A problem with a verified resolution, promoted from a discovery once somebody has checked it.
 goes-here: A problem with a known, verified resolution
 detail: >
-  It carries provenance back to the observation it came from, so the reader can see how far the resolution has
-  been taken on trust.
+  Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
 
 lineage:
   prior-art: "ITIL Problem Management, the *known error* construct"
   alignment: >
-    A problem whose cause is understood and whose fix is documented, and the observed → analysed → promoted lifecycle
+    A problem whose cause is understood and whose fix is documented, along with the observed → analysed → promoted
+    lifecycle
   divergence: >
-    ITIL binds a known error to a formal problem record and an owning practice. Ours is promoted by any
-    verification, from anything noticed
+    ITIL binds a known error to a formal problem record and an owning practice. A fix here is promoted by any
+    verification, from anything somebody noticed
 
 id:
   prefix: fix
@@ -29,7 +29,9 @@ id:
 filename:
   pattern: '^[a-z0-9-]+\.md$'
   slug-max: 30
-  notes: Named for the symptom, not the cause. That is what people search for.
+  notes: >
+    The pattern accepts any slug, so the symptom is a convention. Build the slug from the symptom, because that is
+    what somebody searches for.
 
 fields:
 
@@ -45,7 +47,6 @@ fields:
     of: string
     min-items: 3
     description: 'Over-fill it: error text, service names, and what someone types before they know the cause.'
-    notes: This is the field that makes the document findable.
 
   applies-to:
     required: false
@@ -68,24 +69,10 @@ fields:
     shape: event
     description: Every verification this fix has had, oldest first, one line each.
     notes: >
-      A fix nobody verified is a discovery, and this field is what separates the two tiers. The list
-      keeps every verification the fix has had, so a reader sees when it was last checked, by whom, and
-      who checked it before that. One verification is one entry, so the moment and the actor are edited
-      together.
-
-      Any actor may verify, bar a post. An agent that reproduced the symptom and ran the resolution has
-      checked something real, and refusing the entry leaves that work nowhere to go. A `role:` is
-      refused because a post cannot read an answer, and `verified-by-a-known-actor` below is where both
-      halves of that are asked.
-
-      How far the fix has been taken on trust is read off this list. Entries by agents alone leave it
-      machine-confirmed, and one `human:` entry makes it human-reviewed. Those are the Open Knowledge
-      Format's words for the same reading, and the export carries it as `trust`.
-      <https://paul80nd.github.io/knowledge-as-code/design/export/> says why that tier is derived here.
-
-      A verification is an actor doing something at a point in time, so the keys come from the `event`
-      shape rather than being written out here. `verified` is the name the Open Knowledge Format gives
-      the same list, and taking it lets a reader who knows that format read this one.
+      A fix nobody verified is still a discovery, which is why this field is required. The entries take the same
+      shape as a report's.
+      <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter> gives that shape,
+      the actors it refuses, and the trust tier derived from the list.
 
   review-by:
     required: true
@@ -105,37 +92,9 @@ export:
     Resolution: full
     Why it happens: full
   notes: >
-    `symptom-keywords` is what a lookup searches on, and a fix arriving without it is one nobody
-    downstream can find. It is the field this type exports for.
-
-    `Symptom`, `Cause` and `Resolution` travel whole. A reader matches on the symptom, checks the cause
-    is theirs, and then acts, so a resolution arriving without its cause is half an answer. All three
-    are short, because this type holds one problem per document.
-
-    `Why it happens` travels with them. `Cause` says what went wrong this time and `Why it happens` says
-    what class it belongs to, so a consumer meeting the next variant of the symptom recognises it as one.
-
-    `verified` travels, and `trust` is derived from it. This type exists to say how far a resolution has
-    been taken on trust, and a consumer that cannot read the list weighs the answer by its wording
-    alone.
-
-    `status` and `review-by` say whether the answer still holds. `fixed-upstream` is the value that
-    earns them both: the cause is gone, so a consumer following the resolution repairs something its
-    own estate no longer has.
-
-    `applies-to` names services, and a service travels, so a consumer holding the catalogue follows each
-    id to the record.
-
-    `How we found it` stays behind, for the reason `Rationale and provenance` stays behind on a
-    standard. The route is often the more reusable half of a fix, and it is reusable to somebody who can
-    run the commands it names. A consumer holds a copy and can run none of them, so the answer is what
-    reaches them and the record is a fetch away through `links.human`.
-
-    `promoted-from` names a discovery, and a discovery travels nowhere, so the id would reach nothing.
-
-    `owner` stays behind. Who answers for a fix is a fact about this corpus, and whoever holds a copy
-    has nobody to ask.
-
+    `symptom-keywords` is what a lookup searches on, and the field this type exports for.
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#fixes> says what else travels, and what stays
+    behind.
 index:
   columns: [id, title, applies-to, status, review-by]
   sort: id
@@ -146,26 +105,19 @@ rules:
     severity: error
     expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      A verification here names neither a person nor a producer. Write `human:alex.doe`, or name an
-      agent the way a tool names itself, as `symptom-sweep/1.4.0`. `role:` is refused: a post cannot
-      read an answer, and the person who did read it stays named after the post changes hands.
+      the `by` in this verification is neither a person nor a producer. Write `human:alex.doe` for a person, or
+      `symptom-sweep/1.4.0` for an agent.
 
   - id: raiser-does-not-verify
     description: An agent does not verify a fix it raised.
     notes: >
-      Verifying your own work confirms nothing, and it is the one thing accepting any actor opens up.
-      Nothing on a fix names who raised it: `owner` names the person answerable for it now, and the
-      discovery it was promoted from is another record a rule reading one document cannot open. So this
-      is declared and does not run.
-
-      A report asks the narrower question its own frontmatter can answer, and `no-self-verification`
-      there is built: `generated.by` names the producer, so the one actor that may not verify is on the
-      record already.
+      Nothing on a fix states who raised it. `owner` gives the person answerable for it now, and `promoted-from`
+      points at a discovery, which a rule reading one document cannot open. The rule is declared and does not run.
 
   - id: one-problem-per-document
-    description: One Symptom section, because a fix is found by its symptom.
+    description: A fix has one Symptom section, and a record with two is two fixes.
     severity: warning
     expr: "section_count('Symptom') <= 1"
     message: >
-      This carries more than one Symptom section, so it is more than one fix. Someone arriving with a
-      symptom matches on the first one and never reads the second. Split it.
+      this record has more than one Symptom section, so it describes more than one fix. Split it, one fix per
+      symptom.

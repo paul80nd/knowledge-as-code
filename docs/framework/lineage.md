@@ -29,8 +29,8 @@ a type with no ancestor has the first alone. The ADR is the clearest to read:
 **`alignment`**, which is what the framework took: "Context / Decision / Consequences, and the rule that a reversed
 decision is superseded rather than rewritten".
 
-**`divergence`**, which is where it parted company: "Nygard scopes decisions to one codebase. Ours must affect more than
-one repository. Mandatory *Alternatives* is ours, not his".
+**`divergence`**, which is where it parted company: "Nygard scopes a decision to one codebase. An ADR here affects more
+than one repository, and the mandatory *Alternatives Considered* section is an addition to his shape".
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens

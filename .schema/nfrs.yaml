@@ -10,16 +10,15 @@ lifecycle: living
 summary: A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 goes-here: A target for speed, uptime, or recovery
 detail: >
-  Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
+  Capacity assumptions belong here too. A target nobody measures is an aspiration.
 
 lineage:
   prior-art: "[ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html) product quality model"
   alignment: >
-    Quality characteristics that exist to be specified, measured and evaluated. The measurement obligation is
-    25010's premise
+    Quality characteristics written so that each one can be specified, measured and evaluated
   divergence: >
-    25010 is a taxonomy of characteristics, not a document type. RPO and RTO come from continuity practice, and
-    per-service budgets from SLO practice
+    25010 lists the characteristics and stops. This type is a document. RPO and RTO come from continuity practice,
+    and per-service budgets from SLO practice
 
 id:
   prefix: nfr
@@ -36,27 +35,28 @@ fields:
     required: true
     type: enum
     values: [draft, agreed, retired]
-    description: '`agreed` is a commitment someone accepted, not an aspiration.'
-    notes: Stay in `draft` until someone has accepted it.
+    description: '`agreed` means somebody accepted the commitment.'
+    notes: Nothing checks the move out of `draft`. An author sets `agreed` once somebody has accepted the number.
 
   applies-to:
     required: true
     type: list
     of: id
     ref: [services, capabilities]
-    description: Estate-wide targets are almost always wrong. Scope them.
-    notes: A marketing page and the booking flow do not deserve the same budget.
+    description: The service or capability ids this target binds.
+    notes: >
+      A target listing every service must meet the strictest case among them. Write a second NFR where one service
+      needs a stricter number than the rest.
 
   target:
     required: true
     type: string
-    notes: Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window.
+    description: 'The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`.'
 
   measured-by:
     required: true
     type: string
-    notes: >
-      An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.
+    description: The instrument that reports the number, and where to read it.
 
   constrained-by:
     required: false
@@ -64,7 +64,6 @@ fields:
     of: id
     ref: integrations
     description: Integrations whose own SLA caps this target.
-    notes: A target exceeding what a dependency promises is a hope rather than a commitment.
 
   review-by:
     required: true
@@ -84,38 +83,22 @@ export:
     If it is breached: full
     Constraints: full
   notes: >
-    An NFR is normative, and a reader may act on it without opening anything else. So the three required
-    sections travel whole: what the target is, how anybody tells whether it was met, and what happens
-    where it is missed.
-
-    `target` and `measured-by` say as fields what those sections say at length. The fields are what a
-    consumer filters and sorts on, and the sections are what somebody building against the number reads.
-
-    `Constraints` travels because a target read without what limits it reads as a stronger promise than
-    the estate made. It carries the limits in words, which is what a consumer can act on: `constrained-by`
-    names integrations, and an integration travels nowhere.
-
-    `Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export
-    carries no way to say how old it has since become. A consumer acting on a stale figure is worse off
-    than one who fetched the record.
-
-    `applies-to` names what the target binds. A service in it resolves for a consumer holding the
-    catalogue, and a capability does not, because capabilities travel nowhere.
-
+    An NFR is normative, and a reader may act on it without opening anything else.
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#nfrs> says what else travels, and what stays
+    behind.
 index:
   columns: [id, title, applies-to, target, status, review-by]
   sort: id
 
 rules:
   - id: target-is-measurable
-    description: '`measured-by` names an instrument, not a hedge: "monitored", "as needed", "where practical".'
+    description: '`measured-by` states an instrument. A hedge such as "monitored" or "where practical" fails.'
     severity: warning
     expr: >-
       not field_matches('measured-by',
       '(?i)\b(monitored|manually|as needed|as required|where practical|where possible|if possible|ad hoc|periodically)\b')
     message: >
-      `measured-by` hedges rather than measures. Name the instrument and the number it reports. An NFR
-      measured "where practical" is one nobody has to meet.
+      `measured-by` is hedged. Write the dashboard, query or report that gives the number.
   - id: constraint-consistency
     description: >
-      Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it.
+      Every integration in `constrained-by` states a `their-sla` at least as strong as this target.

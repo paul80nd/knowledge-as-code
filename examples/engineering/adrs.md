@@ -37,20 +37,20 @@ its id.
 
 <!-- BEGIN GENERATED: schema-adrs -->
 
-| Field           | Value                                           | Notes                                                                                                             |
-|-----------------|-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| `id` *†         | string                                          | Stable, unique across the corpus, never reused. Format set by the type.                                           |
-| `type` *†       | string                                          | The type's singular name. Fixed for the type. CI checks it matches the folder.                                    |
-| `tier` *†       | `decided`                                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.                               |
-| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Immutable once `accepted`. Supersede rather than rewrite.                                                         |
-| `owner` *†      | string                                          | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                            |
-| `sources` †     | list                                            | Where the content came from, one entry per source.                                                                |
-| `tags` †        | list                                            | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                                  |
-| `decided-on`    | date                                            | The acceptance date. Bare key until accepted. Required when `status == accepted`.                                 |
-| `supersedes`    | id                                              | The ADR this replaces.                                                                                            |
-| `superseded-by` | id                                              | CI reconciles both directions, so a one-sided supersession fails the build. Required when `status == superseded`. |
-| `deciders`      | list                                            | The people who agreed it, each as `human:alex.doe`.                                                               |
-| `related`       | list                                            | Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.                  |
+| Field           | Value                                           | Notes                                                                         |
+|-----------------|-------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†         | string                                          | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†       | string                                          | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†       | `decided`                                       | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Where the decision stands.                                                    |
+| `owner` *†      | string                                          | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †     | list                                            | Where the content came from, one entry per source.                            |
+| `tags` †        | list                                            | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `decided-on`    | date                                            | The day the decision was accepted. Required when `status == accepted`.        |
+| `supersedes`    | id                                              | The ADR this one replaces.                                                    |
+| `superseded-by` | id                                              | The ADR that replaces this one. Required when `status == superseded`.         |
+| `deciders`      | list                                            | The people who agreed it, each as `human:alex.doe`.                           |
+| `related`       | list                                            | Other ADRs worth reading beside this one, matching the `## Related` section.  |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

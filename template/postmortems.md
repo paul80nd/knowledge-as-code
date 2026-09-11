@@ -42,21 +42,21 @@ postmortem means something.
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field           | Value                | Notes                                                                               |
-|-----------------|----------------------|-------------------------------------------------------------------------------------|
-| `id` *†         | string               | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†       | string               | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†       | `decided`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem.          |
-| `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `sources` †     | list                 | Where the content came from, one entry per source.                                  |
-| `tags` †        | list                 | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `occurred-on` * | date                 | Quoted. When the incident began, not when it was noticed.                           |
-| `detected-on` * | date                 | Separate from `occurred-on`, because the gap between them is often the finding.     |
-| `duration` *    | string               | How long it lasted, in whatever unit reads honestly.                                |
-| `severity` *    | `sev1` `sev2` `sev3` | The severity it was handled at.                                                     |
-| `affected` *    | list                 | Service and capability ids that suffered.                                           |
-| `prompted`      | list                 | What this incident caused to be written.                                            |
+| Field           | Value                | Notes                                                                                      |
+|-----------------|----------------------|--------------------------------------------------------------------------------------------|
+| `id` *†         | string               | Stable, unique across the corpus, never reused, in the format the type sets.               |
+| `type` *†       | string               | The singular name of the type, which CI checks against the folder.                         |
+| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.               |
+| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem citing this one. |
+| `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                     |
+| `sources` †     | list                 | Where the content came from, one entry per source.                                         |
+| `tags` †        | list                 | Free-form, lowercase and hyphenated. A reader searches on these across types.              |
+| `occurred-on` * | date                 | Quoted. When the incident began.                                                           |
+| `detected-on` * | date                 | Quoted. When somebody noticed the incident.                                                |
+| `duration` *    | string               | How long the incident lasted, in whatever unit fits.                                       |
+| `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                  |
+| `affected` *    | list                 | Service and capability ids the incident affected.                                          |
+| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -116,10 +116,10 @@ postmortem means something.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                                                   |
-|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `immutable-after-published` | Once status is `published`, content changes are limited to typo fixes. Same rule as ADRs.                              |
-| `blameless`                 | Flags personal names inside the Timeline, Root cause and Contributing factors sections. Roles and systems, not people. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems, the highest-signal output in the corpus.                  |
+| Rule                        | What it would verify                                                                                             |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `immutable-after-published` | Once `status` is `published`, only a typo is fixed in place. ADRs work the same way.                             |
+| `blameless`                 | Flags a personal name in the Timeline, Root cause or Contributing factors sections. Name the role or the system. |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                                     |
 
 <!-- END GENERATED: checks-postmortems -->

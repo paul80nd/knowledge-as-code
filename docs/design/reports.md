@@ -56,7 +56,9 @@ verified:
 ```
 
 `generated` gives what produced the content and when. `by` takes OKF's `<producer>/<version>` form, so a report an agent
-extended names the agent the same way the tool names itself.
+extended names the agent the same way the tool names itself. It records one event, where `verified` keeps a list. A
+regeneration replaces the content, so the moment before it describes a document that has gone. A verification is added
+to the document instead, which is why every one of them is kept.
 
 `sources` is a field every record may have, and a report refines it. Elsewhere it says where content came from, as a URL
 or as a description of what was read. Here it gives each corpus the report answers for. OKF puts no version on a source,
@@ -66,8 +68,8 @@ corpus already keeps.
 `verified` holds every verification the report has had, oldest first, and the fix type has the same field. An actor is a
 person as `human:alex.doe`, or an agent named with its version as `coverage-sweep/1.0.0`. Two values are refused. A
 `role:` is out, because a post cannot read an answer, and the person who did stays named after the post changes hands.
-The producer that `generated.by` names is out too, because a run cannot sign off its own output. `no-self-verification`
-is the check.
+The producer that `generated.by` names is out too, because a run cannot sign off its own output.
+`no-self-verification` is the rule, and it reports as `self-verification`.
 
 Who is in that list decides the report's trust tier, which is OKF's word for how much weight an answer carries. A list
 of agents alone is machine-confirmed. One `human:` entry makes it human-reviewed. `kac` derives the tier rather than

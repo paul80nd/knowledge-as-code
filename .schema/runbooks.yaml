@@ -10,25 +10,25 @@ lifecycle: living
 summary: "An incident-time procedure read under pressure: terse, imperative, structured as a decision tree."
 goes-here: A step-by-step for when something is broken
 detail: >
-  Disaster recovery and estate rebuild live here.
+  Disaster recovery and estate rebuild are runbooks.
 
 lineage:
   prior-art: "[Google SRE](https://sre.google/sre-book/introduction/), the playbook"
   alignment: >
-    Recording the response ahead of time rather than improvising it. Google measures roughly a threefold
-    improvement in mean time to recovery
+    Writing the response down before the incident. Google measures roughly a threefold improvement in mean
+    time to recovery
   divergence: >
-    Google specifies no form. We mandate one: terse, imperative, structured as a decision tree
+    Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree
 
 collision: >
-  The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material uses the latter. We use
-  *runbook* because *playbook* also names an executable artefact in configuration-management tooling, and a word
-  that means both a document and a program is a word that will be misread in a repository holding both.
+  The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material says *playbook*. This
+  framework says *runbook*, because *playbook* also means an executable artefact in configuration-management
+  tooling. A word meaning both a document and a program gets misread in a repository holding both.
 
 id:
   prefix: rbk
   style: slug
-  notes: Named for the failure, not the fix. That is what someone searches for at 2am.
+  notes: Named for the failure a reader is seeing, which is what somebody searches for.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -59,20 +59,23 @@ fields:
     required: true
     type: date
     allow-literal: [never]
-    description: '`"never"` is permitted, and is worth knowing before the incident rather than during it.'
+    description: Quoted. The day somebody last followed the runbook end to end, or `"never"`.
+    notes: >
+      Editing the page does not move this date. A runbook showing `"never"` is worth finding before the
+      incident, while there is still time to rehearse it.
 
   rehearsal-frequency:
     required: false
     type: enum
     values: $enums.rehearsal-frequency
-    description: How often it should be exercised.
+    description: How often to rehearse the runbook.
 
   requires-access:
     required: false
     type: list
     of: string
-    notes: >
-      Must be complete. Discovering you lack a permission mid-incident is its own outage.
+    description: The systems or roles the reader needs before starting.
+    notes: List every one. A permission found missing mid-incident extends the outage.
 
 sections:
   required: [Symptoms, Immediate actions, Diagnosis, Resolution, Escalation]
@@ -84,37 +87,23 @@ export:
   sections:
     Symptoms: full
   notes: >
-    A runbook is followed whole and in order, so its steps travel nowhere. That is the answer `processes`
-    gives, for the same reason: a step lifted out of its sequence is one a reader can act on alone, and
-    acting on it alone is how an incident gets worse.
-
-    `Symptoms` is the one section that travels. A reader arrives holding a symptom and no id, so a
-    consumer grepping the export for what it is seeing finds the record and then fetches it. That is the
-    job `symptoms-first` already holds the section to.
-
-    `requires-access` decides whether a reader may start at all, which is a question asked before the
-    record is opened. `severity` is what an agent sorts on where several runbooks match.
-
-    `last-rehearsed` and `rehearsal-frequency` travel together, as they do on a process. A date says
-    nothing about staleness without the cadence it is read against, and an unrehearsed procedure is a
-    hypothesis whoever follows it should be told about.
-
+    The steps are left out on purpose.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#runbooks>.
 index:
   columns: [id, title, severity, status, last-rehearsed]
   sort: [severity, id]
 
 rules:
   - id: symptoms-first
-    description: Symptoms is the first section after the H1. That is how the reader finds the document.
+    description: Symptoms is the first section after the H1.
     severity: error
     expr: "first_section() == 'Symptoms'"
     message: >
-      Symptoms must be the first section. Someone reaching for this at 2am matches on what they are
-      seeing, not on what the document is called.
+      the first section here is not `Symptoms`. Move `## Symptoms` above the others, so a reader who arrives
+      with a symptom finds it first.
   - id: escalation-required
-    description: Every diagnosis branch ends in a resolution or an escalation, never a dead end.
-    # `sections` requires the heading. The shape beneath it is what this adds, and only reading the tree finds a dead
-    # end.
+    description: Every diagnosis branch ends in a resolution or an escalation.
+    # `sections` requires the heading. This rule checks the branches under it.
   - id: staleness-loud
-    description: Rehearsal staleness, reported more prominently than a process's.
-    # Scheduled. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
+    description: Rehearsal staleness, reported more loudly than a process's.
+    # Scheduled. An unrehearsed runbook is followed during an incident.

@@ -77,17 +77,17 @@ nothing runs the rule and the limit is yours to keep.
 
 <!-- BEGIN GENERATED: schema-glossary -->
 
-| Field         | Value            | Notes                                                                               |
-|---------------|------------------|-------------------------------------------------------------------------------------|
-| `id` *†       | string           | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†     | string           | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†     | `descriptive`    | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                         |
-| `owner` *†    | string           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `sources` †   | list             | Where the content came from, one entry per source.                                  |
-| `tags` †      | list             | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `narrows`     | id               | The more general glossary this one narrows, where one sits above it.                |
-| `review-by` * | date             | Quoted. A glossary is reviewed whole, rather than a term at a time.                 |
+| Field         | Value            | Notes                                                                         |
+|---------------|------------------|-------------------------------------------------------------------------------|
+| `id` *†       | string           | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†     | string           | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†     | `descriptive`    | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                   |
+| `owner` *†    | string           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †   | list             | Where the content came from, one entry per source.                            |
+| `tags` †      | list             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `narrows`     | id               | Id of the more general glossary this one narrows.                             |
+| `review-by` * | date             | Quoted. The date by which the whole glossary is reviewed.                     |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -130,13 +130,13 @@ nothing runs the rule and the limit is yours to keep.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                                                   |
-|--------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| `redefinitions-are-reciprocal` | Where one glossary redefines a term another holds, each entry links to the other entry's anchor.                       |
-| `carried-in-full-by-digest`    | No entry runs beyond one paragraph, and this corpus's digest takes the glossaries in the order the export writes them. |
-| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                                    |
-| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                                 |
-| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                                   |
+| Rule                           | What it would verify                                                                                     |
+|--------------------------------|----------------------------------------------------------------------------------------------------------|
+| `redefinitions-are-reciprocal` | Where one glossary redefines a term another defines, each entry links to the other entry's anchor.       |
+| `carried-in-full-by-digest`    | No entry runs beyond one paragraph. The digest takes the glossaries in the order the export writes them. |
+| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                      |
+| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                   |
+| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                     |
 
 <!-- END GENERATED: checks-glossary -->
 

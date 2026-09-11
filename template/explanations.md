@@ -40,17 +40,17 @@ plausibly be an explanation *or* something else, it is the something else.
 
 <!-- BEGIN GENERATED: schema-explanations -->
 
-| Field         | Value                    | Notes                                                                                        |
-|---------------|--------------------------|----------------------------------------------------------------------------------------------|
-| `id` *†       | string                   | Stable, unique across the corpus, never reused. Format set by the type.                      |
-| `type` *†     | string                   | The type's singular name. Fixed for the type. CI checks it matches the folder.               |
-| `tier` *†     | `descriptive`            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.          |
-| `status` *†   | `draft` `active` `stale` | `stale` is an honest state: say so rather than let the page quietly rot.                     |
-| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                       |
-| `sources` †   | list                     | Where the content came from, one entry per source.                                           |
-| `tags` †      | list                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                             |
-| `explains` *  | list                     | Service or capability ids this explains.                                                     |
-| `review-by` * | date                     | The field that stops this type rotting. Explanations need the tightest staleness discipline. |
+| Field         | Value                    | Notes                                                                                       |
+|---------------|--------------------------|---------------------------------------------------------------------------------------------|
+| `id` *†       | string                   | Stable, unique across the corpus, never reused, in the format the type sets.                |
+| `type` *†     | string                   | The singular name of the type, which CI checks against the folder.                          |
+| `tier` *†     | `descriptive`            | The record's trust level, fixed for the type and checked against the folder.                |
+| `status` *†   | `draft` `active` `stale` | `draft` while it is written, `active` once it is right, `stale` where it has fallen behind. |
+| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
+| `sources` †   | list                     | Where the content came from, one entry per source.                                          |
+| `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
+| `explains` *  | list                     | Ids of the services and capabilities this explains.                                         |
+| `review-by` * | date                     | Quoted. The date by which someone confirms this is still true.                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -95,7 +95,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `label-canonical`            | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`               | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`          | warning | A link definition that nothing references.                                                                      |
-| `links-rather-than-restates` | warning | An explanation's prose stays proportionate to its links, rather than restating their facts.                     |
+| `links-rather-than-restates` | warning | An explanation's prose stays proportionate to the links it makes.                                               |
 | `not-normative`              | warning | No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.                   |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.

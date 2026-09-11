@@ -7,36 +7,27 @@ folder: capabilities
 page: capabilities.md
 tier: descriptive
 lifecycle: living
-summary: What we offer a customer and why, as a hub linking to what implements, tests and constrains it.
-goes-here: A description of what we offer a customer, and why
+summary: What the organisation offers a customer, and why, with links to the services and NFRs behind it.
+goes-here: What the organisation offers a customer, and why
 detail: >
-  A hub, sitting above the epic layer: it links to the work items that detail it, the services that implement
-  it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
-  detail of its own has stopped being one.
+  A capability sits above the epic layer. It links to the work items that detail it, the services that implement
+  it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its
+  own has stopped being one.
 
 versus:
   services: >
-    A capability is what a customer gets. A service is a thing we deploy. One capability typically spans several
-    services. One service often contributes to several capabilities.
+    A capability is what a customer gets. A service is something the organisation deploys. One capability usually
+    spans several services. One service usually contributes to several capabilities.
 
 lineage:
   prior-art: "None that fits. See [Capability](#capability) below"
 
 collision: >
-  **The weakest row in the set, and the one carrying two collisions at once.**
-
-  [ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) defines a
-  capability as an *ability an organisation possesses*. Ours is what the organisation *offers a customer*,
-  which in ArchiMate's own vocabulary is a Product, a Business Service, or a Value Stream. The concepts are
-  adjacent but not the same, and ArchiMate's Value Stream is the closer fit.
-
-  [SAFe](https://framework.scaledagile.com/features-and-capabilities) defines a capability as large solution
-  functionality spanning multiple trains within a programme increment, which sits **below** an epic. Ours sits
-  **above** the epic layer. The hierarchy is inverted relative to the framework in which most engineering
-  organisations will have met the word.
-
-  Neither mapping holds. This type is best read as unrelated to both, and the name is a live question rather
-  than a settled one.
+  [ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) uses the word for an
+  ability an organisation possesses, and [SAFe](https://framework.scaledagile.com/features-and-capabilities) uses
+  it for solution functionality that sits below an epic. Here a capability is what the organisation offers a
+  customer, and it sits above the epic layer. Say which sense you mean wherever the word crosses into an
+  architecture conversation.
 
 id:
   prefix: cap
@@ -52,39 +43,39 @@ fields:
     required: true
     type: enum
     values: [planned, building, live, deprecated]
-    description: Lifecycle of the capability, not of the services behind it.
+    description: Lifecycle of the capability itself, which may differ from the lifecycle of its services.
 
   implemented-by:
     required: true
     type: list
     of: id
     ref: services
-    description: Service ids. A capability no service implements is a plan.
+    description: Ids of the services that implement this capability.
 
   ado-epics:
     required: false
     type: list
     of: int
+    description: Azure DevOps work item ids, as whole numbers.
     notes: >
-      ADO work item ids. Each entry is held to being a whole number and nothing resolves it against ADO, so the
-      field is here for humans and for the reverse harvest.
+      The only `of: int` field in the taxonomy. `int-format` checks that each entry is a whole number, and
+      nothing resolves an id against Azure DevOps.
 
   feature-files:
     required: false
     type: list
     of: string
-    description: Repo-relative paths. Nothing resolves them today.
+    description: Repository-relative paths to the feature files that test this capability.
     notes: >
-      No check reads them: the field carries plain strings rather than references, so `ref-resolves` never
-      sees it, and `feature-file-orphans` is declared and does not run. A path that goes stale here goes
-      stale silently.
+      Plain strings, so `ref-resolves` never sees them, and nothing checks a path until
+      `feature-file-orphans` runs.
 
   nfrs:
     required: false
     type: list
     of: id
     ref: nfrs
-    description: NFR ids, the targets this capability is held to.
+    description: Ids of the NFRs this capability must meet.
 
 sections:
   required: [What it does, Why it exists, Where the detail lives]
@@ -96,16 +87,14 @@ index:
 
 rules:
   - id: hub-not-specification
-    description: A capability's prose stays proportionate to its links, because it is a hub.
+    description: A capability's prose stays proportionate to the links it makes.
     severity: warning
-    # A capability linking to nothing is a specification however short it is, which is why the
-    # allowance is a ratio rather than a ceiling. `explanations` sets the same one, so moving it here
-    # asks the question there.
+    # A ratio, so a capability that links to nothing fails at any length.
     expr: "words() <= links() * 40"
     message: >
-      Prose has outgrown the links. A capability is a hub. Move the detail into the documents it should
-      be pointing at, and link to them from here.
+      prose has outgrown the links. Move the detail into the documents this points at, and link to them
+      from here.
   - id: feature-file-orphans
     description: >
-      Scheduled. Reports feature files in the code repositories claimed by no capability, and paths here
-      that no longer exist.
+      Scheduled. Reports feature files in the code repositories no capability claims, and paths here that
+      no longer exist.

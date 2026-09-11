@@ -16,27 +16,27 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                            | It goes in                         |
-|----------------------------------------------------------------------|------------------------------------|
-| A check that proves a rule is being followed                         | [Controls](../controls.md)         |
-| A commitment about how we engineer, at principle level               | [Policies](../policies.md)         |
-| A decision that affects more than one repo, and its reasoning        | [ADRs](../adrs.md)                 |
-| A departure from a rule that somebody agreed to                      | [Deviations](../deviations.md)     |
-| A description of what a deployable component is and does             | [Services](../services.md)         |
-| A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
-| A narrative of how something works or why it's shaped that way       | [Explanations](../explanations.md) |
-| A problem with a known, verified resolution                          | [Fixes](../fixes.md)               |
-| A rule people must follow when building                              | [Standards](../standards.md)       |
-| A step-by-step for a planned task                                    | [Processes](../processes.md)       |
-| A step-by-step for when something is broken                          | [Runbooks](../runbooks.md)         |
-| A target for speed, uptime, or recovery                              | [NFRs](../nfrs.md)                 |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](../glossary.md)       |
-| A third-party or external system we depend on                        | [Integrations](../integrations.md) |
-| A tool or package we've approved, rejected, or are trialling         | [Tools](../tools.md)               |
-| An account of an incident and what caused it                         | [Postmortems](../postmortems.md)   |
-| An answer about the corpus that no single record holds               | [Reports](../reports.md)           |
-| Something surprising you noticed and haven't verified                | [Discoveries](../discoveries.md)   |
-| Where data lives, how long we keep it, and how sensitive it is       | [Data](../data.md)                 |
+| You have…                                                          | It goes in                         |
+|--------------------------------------------------------------------|------------------------------------|
+| A check that proves a rule is being followed                       | [Controls](../controls.md)         |
+| A decision affecting more than one repository, and its reasoning   | [ADRs](../adrs.md)                 |
+| A departure from a rule that somebody agreed to                    | [Deviations](../deviations.md)     |
+| A principle-level commitment about how software is engineered here | [Policies](../policies.md)         |
+| A problem with a known, verified resolution                        | [Fixes](../fixes.md)               |
+| A rule people must follow when building                            | [Standards](../standards.md)       |
+| A step-by-step for a planned task                                  | [Processes](../processes.md)       |
+| A step-by-step for when something is broken                        | [Runbooks](../runbooks.md)         |
+| A target for speed, uptime, or recovery                            | [NFRs](../nfrs.md)                 |
+| A term whose meaning is local, or not obvious                      | [Glossaries](../glossary.md)       |
+| A third-party or external system the estate depends on             | [Integrations](../integrations.md) |
+| A tool or package approved, rejected, or on trial                  | [Tools](../tools.md)               |
+| An account of an incident and what caused it                       | [Postmortems](../postmortems.md)   |
+| An answer about the corpus no single record states                 | [Reports](../reports.md)           |
+| How something works, or why it is shaped that way                  | [Explanations](../explanations.md) |
+| Something surprising you noticed and have not verified             | [Discoveries](../discoveries.md)   |
+| What a deployable component is and does                            | [Services](../services.md)         |
+| What the organisation offers a customer, and why                   | [Capabilities](../capabilities.md) |
+| Where data lives, how long it is kept, and its sensitivity         | [Data](../data.md)                 |
 
 <!-- END GENERATED: types-placement -->
 
@@ -53,96 +53,95 @@ type's own page.
 
 ### Decided: immutable once accepted
 
-Superseded rather than rewritten, so what was thought at the time survives being wrong.
+Superseded, never rewritten, so what was thought at the time survives being wrong.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
-behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
-by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
+behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
+later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
-**[Postmortems](../postmortems.md).** What actually happened during an incident (timeline, impact, root cause,
-contributing factors, actions). Blameless, and immutable once published. The honest counterpart to the decision log: an
-ADR records what was intended, a postmortem what the estate did about it.
+**[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
+factors, actions). Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
+outcome.
 
 ### Normative: living, owned, reviewed
 
 **[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
-leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
-honest state and the number worth watching.
+leaves. Every control lists the rules it verifies. A rule nothing checks gets a control whose mechanism is
+`not-enforced`, so the gap is written down.
 
 **[Deviations](../deviations.md).** A knowing departure from a rule, the person who accepted the risk, and the date it
-is reviewed. The record says what we are doing instead, why it was worth accepting, and what compensates. A departure
-nobody wrote down is erosion: a year later nobody can tell it from never having known the rule.
+is reviewed. The record says what is being done instead, why that was worth accepting, and what limits the risk
+meanwhile. A year later, nobody can tell an unwritten departure from ignorance of the rule.
 
 **[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
-It carries provenance back to the observation it came from, so the reader can see how far the resolution has been taken
-on trust.
+Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
 
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
-Capacity assumptions belong here too. An NFR with no measurement method is an aspiration, not a requirement.
+Capacity assumptions belong here too. A target nobody measures is an aspiration.
 
-**[Policies](../policies.md).** A high-level engineering commitment: the what and the why, largely stack-agnostic and
-changing rarely. Alignment to an external framework is stated clause by clause, as alignment rather than certification.
+**[Policies](../policies.md).** A high-level engineering commitment, independent of any stack and rarely changed.
+Alignment to an external framework is stated clause by clause. A standing such as certification belongs in
+`frameworks.md`.
 
 **[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
-of work are the union of the layers that apply to it.
+checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
+the union of the folders that apply to it.
 
 ### Descriptive: living, must mirror reality
 
-These are the types CI can check against the estate rather than merely against themselves, which matters because they
-rot faster than anything else.
+CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Capabilities](../capabilities.md).** What we offer a customer and why, as a hub linking to what implements, tests and
-constrains it. A hub, sitting above the epic layer: it links to the work items that detail it, the services that
-implement it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
-detail of its own has stopped being one.
+**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
+NFRs behind it. A capability sits above the epic layer. It links to the work items that detail it, the services that
+implement it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of
+its own has stopped being one.
 
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
-flows. Organised by data domain rather than by processing activity. An engineer can use it; a regulator cannot.
+flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
+in, the service that owns them, how sensitive they are, and how long they are kept.
 
 **[Explanations](../explanations.md).** Narrative that helps you understand how something works, or why it is shaped the
-way it is. Architecture overviews, conceptual walkthroughs, how the pieces fit together. It links rather than restates:
-an overview points at the documents holding the detail instead of repeating them. One that starts accumulating facts of
-its own has become a maintenance liability.
+way it is. Architecture overviews, conceptual walkthroughs, and how the pieces fit together. An explanation points at
+the documents with the detail and does not repeat it. One that accumulates facts of its own falls out of date as soon as
+those facts move.
 
-**[Glossaries](../glossary.md).** The ubiquitous language. Terms whose meaning is specific to us, or which are easily
-confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
-time it appears belongs in the most general glossary that admits it, and everything else links to it.
+**[Glossaries](../glossary.md).** The ubiquitous language. Terms with a meaning specific to the organisation, or easily
+confused with another. One glossary per bounded context, each small enough to read end to end. A term that needs
+explaining every time it appears belongs in the most general glossary that admits it, and the narrower glossaries link
+to that entry.
 
-**[Integrations](../integrations.md).** An external system we depend on: the contract, the auth, the failure modes,
-their SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires
-both. It also names who to call when the system is down.
+**[Integrations](../integrations.md).** An external system the estate depends on: its contract, auth, failure modes, SLA
+and fallback. One document per external system. It records the contract, how a caller authenticates, what happens when
+the system is down, and who to call about it.
 
-**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
-added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
-the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
-answered them.
+**[Reports](../reports.md).** A question about the corpus, answered across every record, with the judgement a person
+added. Which clauses nothing implements, which framework references have only one citation. `kac report` fills every
+cell the corpus states, and leaves the judgement cells open. A report becomes a record here once somebody has answered
+them.
 
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
-stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
-**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
-we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
-evaluation.
+**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version range
+for each. Knowing what was turned down, and why, saves the next person the evaluation.
 
 ### Procedural: living, must be rehearsed
 
 Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
-**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
-rotating a secret). Written to be followed by someone who has not done it before.
+**[Processes](../processes.md).** A planned procedure (releasing, onboarding, provisioning, rotating a secret). Write
+each one for somebody who has not done it before.
 
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
-decision tree. Disaster recovery and estate rebuild live here.
+decision tree. Disaster recovery and estate rebuild are runbooks.
 
 ### Observed: perishable, unreviewed until promoted
 
-The tier carrying the least authority is the one a corpus most depends on, because capture that is not free does not
-happen.
+The tier with the least authority is the one a corpus most depends on. Capture has to be cheap, or it does not happen.
 
 **[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
-unless promoted. Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence
-level, so that "the build fails silently if X" has somewhere to go the moment it is noticed.
+unless promoted. A title, an observation, why it might matter, and a confidence level. "The build fails silently if X"
+then has somewhere to go the moment somebody notices it.
 
 <!-- END GENERATED: types-detail -->
 
@@ -281,23 +280,23 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**ADR vs Standard.** The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept
-current. If you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
-that is a standard. Most substantial changes produce both.
+**ADR vs Standard.** An ADR is the decision and its reasoning, frozen. A standard is the rule that follows, kept
+current. Recording that an option was weighed and turned down is an ADR. Recording "you **MUST** do Y" is a standard.
+Most substantial changes produce an ADR and a standard.
 
-**Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
-typically spans several services. One service often contributes to several capabilities.
+**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
+capability usually spans several services. One service usually contributes to several capabilities.
 
-**Deviation vs ADR.** An ADR decides how something is built, and the decision stays true. A deviation says we are
-knowingly not following a rule, and is written to be closed. If the estate is meant to look like this from now on, write
-the ADR and change the rule.
+**Deviation vs ADR.** An ADR decides how something is built, and the decision stays true. A deviation records a rule
+knowingly broken, and is written to be closed. If the estate is meant to look like this from now on, write the ADR and
+change the rule.
 
-**Deviation vs Policy.** The policy is the commitment. The deviation is one named, dated departure from it, and it
-changes nothing the policy says. A departure everyone takes is a policy that needs rewriting.
+**Deviation vs Policy.** A policy is the commitment. A deviation is one named, dated departure from it, and changes
+nothing the policy says. A departure everyone takes is a policy that needs rewriting.
 
-**Discovery vs Fix.** A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody
-who checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery and let
-promotion do the work.
+**Discovery vs Fix.** A discovery is unverified, and might be wrong or already fixed. A fix has been checked by
+somebody, so it has authority. Never write straight to a fix from a session. Capture the discovery and let promotion do
+the work.
 
 **Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
@@ -311,9 +310,9 @@ deployable component. If it is about a single component, it is a service.
 **Explanation vs Standard.** An explanation helps you understand. A standard tells you what to do. If it says you
 **MUST** do something, it is a standard however much context surrounds it.
 
-**Policy vs Standard.** A policy is true regardless of stack, framework or year: "we do not store secrets in source
-control". A standard is specific enough to check: "read secrets from the vault via workload identity". If it would still
-be true after replacing the entire technology estate, it is a policy.
+**Policy vs Standard.** A policy stays true whatever the stack, the framework or the year: "we do not store secrets in
+source control". A standard is specific enough to check: "read secrets from the vault via workload identity". If a
+statement would survive replacing the whole technology estate, it is a policy.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
@@ -322,14 +321,14 @@ Broken is a runbook.
 noticed once. If nothing would reproduce it, it is a discovery.
 
 **Report vs Explanation.** A report answers a question about the corpus itself. An explanation says how something in the
-estate works. If it would still be true with every record deleted, it is an explanation.
+estate works. If the answer would still be true with every record deleted, it is an explanation.
 
-**Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
-from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
-control.
+**Standard vs Control.** The standard says what to do. The control says how anybody can tell it happened. "Secrets
+**MUST** come from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build,
+it is a control.
 
-**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-reasoning. The register carries the current state and the version range. Small, uncontroversial adoptions need only the
+**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR records the
+reasoning. The register records the current state and the version range. Small, uncontroversial adoptions need only the
 register.
 
 <!-- END GENERATED: types-versus -->

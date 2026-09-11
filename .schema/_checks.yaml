@@ -1,26 +1,6 @@
-# Every check the validator implements, defined once.
-#
-# A type's own `rules:` block declares the checks that belong to one type. This file declares the rest:
-# the checks that run against every document, whatever folder it sits in, and the ones that read the
-# schema or the corpus rather than a record.
-#
-# `description` says what the check proves correct, in the words a reader meets. `kac checks` prints
-# it. It is held to the same 120 characters a rule's description is, and for the same reason: it lands
-# in a table cell whose column is padded to its widest row.
-#
-# `notes` is the reasoning, the boundary and the mechanics, which belong here where there is room for
-# them. Why a check exists, what it deliberately does not cover, when it is skipped. What the code does
-# to answer the question stays beside the code.
-#
-# `severity` is what the check reports at, and neither `warning` nor `info` fails the build. A warning is
-# something to act on. An info reports a decision the corpus already made, or a question this run could
-# not put, and reporting either as a problem teaches a reader to skim. `on-type-page: false`
-# withholds it from the table generated onto a type page, for a check whose subject is the schema, a
-# template or the page itself rather than a record somebody wrote.
-#
-# A check id a rule class reports under and this file does not declare fails `schema-dispatch` when the
-# schema loads. The other way round is the coverage gate's to answer: every other check reports through
-# a literal written where the check is, so an entry nothing reports is found by no fixture reaching it.
+# Every check the validator reports. A type's own rules are declared beside the type, in `.schema/<type>.yaml`.
+# <https://paul80nd.github.io/knowledge-as-code/design/checks/> says what each key means and when to add an entry.
+# `description` is one sentence under 120 characters. It renders into a table cell.
 
 checks:
 
@@ -29,68 +9,52 @@ checks:
   schema-unknown-key:
     severity: error
     on-type-page: false
-    description: Every key in these files is one the loader reads.
+    description: Every key in a schema file is one the loader reads.
     notes: >
-      `notes:` is the exception, admitted at every level as commentary. There is no list of permitted
-      keys anywhere: the loader records what it asks each mapping for and the remainder is reported, so
-      a key gains its meaning and its admission in one edit, and a key that stops being read stops being
-      admitted without anyone having to remember.
+      `notes:` is the exception, admitted at every level as commentary. No list of permitted keys exists anywhere.
+      See <https://paul80nd.github.io/knowledge-as-code/design/held-to/#whether-code-acts-on-the-value>.
 
   schema-unreadable:
     severity: error
     on-type-page: false
-    description: A declaration the loader can read as written.
+    description: Every declaration in a schema file is one the loader can read as written.
     notes: >
-      An `expr:` that will not compile or names no `severity:` or `message:`, a `required-when:` outside
-      its three forms, `values: $enums.x` naming an enum `_enums.yaml` does not declare.
+      An `expr:` that will not compile arrives here, along with the other unreadable declarations listed at
+      <https://paul80nd.github.io/knowledge-as-code/design/held-to/#what-the-pass-reports>.
 
   schema-dispatch:
     severity: error
     on-type-page: false
-    description: A declared value is one the tool acts on.
+    description: Every value the schema declares is one the tool has code to act on.
     notes: >
-      The question is whether code acts on the value, not whether it is spelled correctly: `style:
-      mnemonic` would pass a spelling test, and what makes it sound is the branch that reads it. Covers
-      a `type:` or an `of:` naming something no check reads, a rule id claiming a `severity:` nothing
-      answers, `values:` on anything but an enum, `min-items:` on anything but a list, and an unknown
-      `id.style` or `index.order`.
-
-      A `ref:` and a `versus:` are outside it, because each names a type and a corpus adopts as many
-      types as it has use for. One naming a type this corpus declined is asked nothing, and adopting the
-      type later starts it with no edit here.
-
-      It runs the other way too: a check id a rule class reports under that this file does not declare.
-      A check declared here and reported by nothing is the coverage gate's to catch, by failing on a
-      check no fixture can reach.
+      A `ref:` and a `versus:` sit outside this pass, since either may name a type the corpus declined. The opposite
+      fault, a check declared here that nothing reports, is the coverage gate's to fail. See
+      <https://paul80nd.github.io/knowledge-as-code/design/held-to/#ref-and-versus>.
 
   schema-shape:
     severity: error
     on-type-page: false
     description: A type's declarations are well-formed and agree with one another.
     notes: >
-      Where `schema-dispatch` asks whether code acts on a value, this asks whether a second declaration in the
-      same file agrees with it. A type declaring no `folder:` has nowhere for its records to live, and one
-      naming a folder other than the file's own name hides every record it holds, because the lookup from
-      folder to schema is by file name. A `mirrors-section:` names a section the `sections:` block must also
-      declare. A `description:` past 120 characters widens every row of the table it lands in.
+      The lookup from folder to schema goes by file name, so a type naming any other folder hides every record
+      beneath it. See <https://paul80nd.github.io/knowledge-as-code/design/held-to/#what-schema-shape-asks>.
 
   # ── frontmatter ──────────────────────────────────────────────────────────────
 
   type:
     severity: error
     on-type-page: false
-    description: The document's folder maps to a type schema.
+    description: The document's folder maps to a type the schema declares.
     notes: >
-      Discovery excludes any folder that maps to no type, so no discovered document reaches this. It
-      guards the callers that hand a document in directly, and the coverage gate lists it as
-      unreachable rather than demanding a fixture for it.
+      Discovery skips a folder that maps to no type, so no discovered document arrives here. This guards the
+      callers that hand a document in directly, and the coverage gate lists it as unreachable.
 
   frontmatter-parses:
     severity: error
-    description: The frontmatter block is present and is a valid YAML mapping.
+    description: The frontmatter block is present and parses as a YAML mapping.
     notes: >
-      Reported and stopped: nothing below it can be judged, and a document whose frontmatter did not
-      parse would otherwise report every field in it as missing.
+      Reported once, and the pass stops there. Nothing below unparsed frontmatter can be judged, and every field in
+      it would otherwise report as missing.
 
   unknown-key:
     severity: error
@@ -98,90 +62,80 @@ checks:
 
   derived-key:
     severity: error
-    description: A field the type derives from where the record sits is absent from frontmatter.
+    description: A field the type derives from the record's folders is left out of frontmatter.
     notes: >
-      A derived field is declared, so `unknown-key` admits it. Its value is the folders between the
-      type's own folder and the file, and a written value is a second answer the two can disagree over.
-
-      A record saved straight into its type folder gets an empty value, which is a normal state.
-
-      Asked of a template too, because a template carrying the key teaches every record copied from it
-      to carry one.
+      A derived field is declared, so `unknown-key` admits it and this check reports the written value instead. A
+      template is asked the same, since a template writing the key teaches every copy to write one. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#a-derived-field> and
+      <https://paul80nd.github.io/knowledge-as-code/design/discovery/#from-sub-path>.
 
   key-order:
     severity: error
     description: Key order is a topological extension of the schema's declared field orders.
     notes: >
-      Every pair the schema orders must hold, and a genuinely unconstrained pair is free. A total order
-      would make the schema's field sequence a second obligation on every document, where what is
-      actually wanted is that the universal keys precede the type's.
+      A document is read against both declared orders at once, so a pair neither order states is free. See
+      <https://paul80nd.github.io/knowledge-as-code/design/checks/#the-key-order-rule>.
 
   required-field:
     severity: error
     description: Every required field is present, and every `required-when` field whose condition holds.
     notes: >
-      Where the field a `required-when:` names is absent the condition does not hold, `!=` included:
-      that absence is already being reported, and requiring a second field on top of it would report one
-      omission as two.
+      A `required-when:` whose named field is absent does not hold, `!=` included. That absence is already
+      reported, so no second field is demanded on top of it.
 
   bare-key:
     severity: error
     description: An absent value is a bare key, never `null`, `~`, `""`, `''`, an em dash or an unquoted `{{…}}`.
     notes: >
-      One spelling of absence, so a search for a required field nobody has filled in finds all of them.
-      Every other spelling reads as a value to something, and `owner: {{owner}}` is the one that reads
-      as a value to nobody: YAML parses it as a mapping, so the field arrives holding nothing. An
-      optional field is left out rather than written empty, which `empty-optional-key` holds you to.
+      One spelling of absence, so a search for a required field nobody has filled in finds all of them. Every other
+      spelling reads as a value to something, and an unquoted `owner: {{owner}}` is the trap: YAML parses it as a
+      mapping, and the field arrives empty. An optional field with nothing to say is left out, and
+      `empty-optional-key` reports one written with no value.
 
   empty-optional-key:
     severity: warning
-    description: An optional field is filled in or left out, rather than written with no value.
+    description: An optional field is filled in or left out, never written with no value.
     notes: >
-      A bare optional key says what leaving the key out says, so it is a line a reader scans past. A
-      required field is the other case: there the empty key is a state worth seeing, and
-      `required-field` is what reports it. A field declaring `required-when:` is exempt, because
-      whether it is optional depends on another field's value.
+      A bare optional key says what leaving the key out says, so it is a line a reader scans past. An empty
+      required key is `required-field`'s to report, and there the empty key is a state worth seeing. A field
+      declaring `required-when:` is exempt, since another field's value decides whether it is optional.
 
   date-quoted:
     severity: error
     description: A date field is a quoted string.
     notes: >
-      Unquoted, YAML reads it as a datetime and Azure DevOps renders it with a locale format and a
-      timezone shift, so the page shows a date the file does not carry.
+      Unquoted, YAML reads a date as a datetime. Azure DevOps then renders it in a local format and shifts the
+      timezone, so the page shows a day the file never stated.
 
   date-format:
     severity: error
-    description: A date field is `YYYY-MM-DD` and names a day the calendar has.
+    description: A date field is `YYYY-MM-DD` and states a day the calendar has.
 
   timestamp-format:
     severity: error
-    description: A timestamp field is `YYYY-MM-DDThh:mm:ssZ` and names a moment the calendar has.
+    description: A timestamp field is `YYYY-MM-DDThh:mm:ssZ` and states a moment the calendar has.
     notes: >
-      A moment rather than a day, in UTC and to the second. Fractional seconds and an offset other than
-      `Z` are refused, so two records name one instant one way.
-
-      Style is not read, where a date is held to being quoted. An unquoted date is reread as a datetime
-      and shifted into whichever zone the reader sits in, which shows a day the file does not carry. A
-      `Z` instant names the same moment either way, so the house form is unquoted and nothing checks it.
+      A moment, in UTC and to the second. A fractional second and an offset other than `Z` are refused, so two
+      records write one instant one way. Quoting goes unchecked here, though `date-quoted` asks it of a date. An
+      unquoted date is reread as a datetime and shifted into the reader's zone, and a `Z` instant means the same
+      moment either way. The house form is unquoted.
 
   int-format:
     severity: error
     description: An int field, and each entry of an int list, is a whole number the tool can read.
     notes: >
-      Plain decimal, with an optional leading sign. A separator and a base prefix are
-      refused rather than decoded: YAML reads `1_000` and `0x1f` as numbers of its own, and an author
-      should not have to know which spellings the parser admits before writing one down. A run of digits
-      past what a 64-bit number holds is reported under the same id, because the author has the same
-      thing to do about either.
+      Plain decimal, with an optional leading sign. A separator such as `1_000` and a base prefix such as `0x1f`
+      are refused, though YAML reads both as numbers. A run of digits past what a 64-bit number takes reports under
+      the same id.
 
   enum:
     severity: error
-    description: An enum value is a scalar the field's declared range carries.
+    description: An enum value is a scalar the field's declared range admits.
 
   enum-lowercase:
     severity: error
     description: An enum value is lowercase.
-    notes: Enums are grep targets first and prose second, and two casings of one value are two values to search for.
+    notes: An enum value is a grep target first and prose second, and two casings of it are two things to search for.
 
   list:
     severity: error
@@ -190,19 +144,18 @@ checks:
 
   min-items:
     severity: error
-    description: A list field carries at least the `min-items:` its schema declares.
+    description: A list field has at least as many entries as its `min-items:` declares.
     notes: >
-      Reported against the field rather than an entry, because no entry is at fault. For the field whose
-      value is its breadth: a fix's `symptom-keywords` is the one the schema tells authors to over-fill.
+      Reported against the field, since no one entry is at fault. Declare it on a field whose value is its
+      breadth, such as a fix's `symptom-keywords`.
 
   min-records:
     severity: warning
-    description: Each entry of a grouping field is carried by at least as many records as its floor.
+    description: Each value of a grouping field is used by at least as many records as its floor.
     notes: >
-      The opposite count to `min-items`: how many records carry each value, rather than how many values
-      one record carries. It is what a field says when its values divide the type into groups worth
-      browsing. A value carried by one record divides nothing, and belongs in a field free to be unique.
-      Counted per type, case-insensitively, once per record however often one repeats a value.
+      This counts records per value, where `min-items` counts values per record. Declare it on a field whose values
+      divide the type into groups worth browsing: a value one record uses divides nothing, and belongs in a field
+      free to be unique. Counted per type, case-insensitively, once per record however often one repeats a value.
 
   field-pattern:
     severity: error
@@ -212,9 +165,9 @@ checks:
     severity: warning
     description: A list field's entries read in alphabetical order, with digit runs compared as numbers.
     notes: >
-      No list field's sequence carries meaning, so alphabetical is the order that scan-reads and the one
-      two authors agree on without discussion. Numbers compare as numbers, so `A.8.7` precedes `A.8.29`.
-      Only the first pair out of order is reported.
+      No list field's order means anything, so alphabetical is the order that scan-reads and the one any two
+      authors agree on. Digit runs compare as numbers, so `A.8.7` precedes `A.8.29`. Only the first pair out of
+      order is reported.
 
   type-matches-folder:
     severity: error
@@ -226,19 +179,19 @@ checks:
 
   id-prefix:
     severity: error
-    description: "`id` carries the type's prefix."
+    description: "`id` starts with the type's prefix."
 
   id-format:
     severity: error
     description: The id's discriminator has the shape the type's `id.style` declares.
     notes: >
-      The record alone. A citation may open on a producer's shortcode and close on a part. Each of those
-      is spelled by whatever it names, so a policy's clause is a mnemonic and a standard's rule is a
-      heading slug. Whether the part exists is `ref-resolves`.
+      The record's own id, and nothing around it. A citation may open with a producer's shortcode and close with a
+      part. Each of those is spelled to suit what it points at, so a policy's clause is a mnemonic and a standard's
+      rule is a heading slug. Whether the part exists is `ref-resolves`.
 
   id-matches-filename:
     severity: error
-    description: The id's discriminator matches the filename's, so both name the same document.
+    description: The id's discriminator is the same string as the filename's.
 
   # ── identity ─────────────────────────────────────────────────────────────────
 
@@ -250,20 +203,20 @@ checks:
     severity: error
     description: The slug (the filename minus any `NNNN-` or mnemonic prefix) is within `slug-max`.
     notes: >
-      A filename is a handle and the H1 carries the title. A slug that will not go under the limit is
-      usually a document doing two things, so narrowing the scope beats abbreviating harder.
+      A filename is a handle and the H1 is the title. A slug that will not come under the limit usually means a
+      document doing two things, so narrow the scope before you abbreviate harder.
 
   h1:
     severity: error
-    description: The document has an H1. Its text is the title, and nothing constrains it.
+    description: The document has an H1, and nothing constrains its text.
 
   identity:
     severity: error
     description: "An identity line of two code spans follows the H1: `` `Type: id` `STATUS` ``."
     notes: >
-      A reader arrives at a record from a citation, so the top of the page answers what kind of document
-      this is, which one, and whether it is in force. Frontmatter answers all three and renders as a
-      table a reader may never look at.
+      The top of the page states what kind of document this is, which one, and whether it is in force. A reader
+      arriving from a citation needs all three. Frontmatter states them too, and renders as a table a reader may
+      never open.
 
   identity-type:
     severity: error
@@ -277,8 +230,8 @@ checks:
     severity: error
     description: The identity line's status is the frontmatter's, upper-cased.
     notes: >
-      Lower-case in frontmatter because a machine reads it, upper-case on the line because a person
-      reads it as a stamp. A document cannot go active and leave the line saying DRAFT.
+      Lower-case in frontmatter for a machine, upper-case on the line for a person. A document cannot go active and
+      leave the line reading DRAFT.
 
   required-section:
     severity: error
@@ -286,92 +239,76 @@ checks:
 
   empty-section:
     severity: error
-    description: A section the type declares carries something under its heading.
+    description: A section the type declares has something under its heading.
     notes: >
-      An author with nothing to say cannot delete a required heading, so what they leave is a blank
-      beneath it. A template's sections stand empty for the copy to fill. The section a type keeps its
-      parts in is left to the checks that read them.
+      An author with nothing to say cannot delete a required heading, so what they leave behind is a blank. A
+      template is exempt, its sections standing empty for the copy to fill. So is the section a type keeps its
+      parts in, which the checks that read the parts cover.
 
   placeholder-left:
     severity: error
     description: No `{{…}}` from the template survives into a record, outside code.
     notes: >
-      Easy to do and easy to miss: the file has an id, a title and every section, so every other check
-      passes and it reads as complete until someone follows a link to `{{a}}.md`. Reported once, naming
-      the first. An unfinished copy holds a dozen.
+      Reported once, naming the first placeholder, since an unfinished copy has a dozen. The file has an id, a
+      title and every section, so every other check passes and it reads as complete until someone follows a link to
+      `{{a}}.md`.
 
   # ── the parts of a record ────────────────────────────────────────────────────
 
   part-id-unique:
     severity: error
-    description: No two parts of a record share an address, so a citation names one of them.
+    description: No two parts of one record share an address.
     notes: >
-      Asked of every source, so two glossary headings differing only in punctuation collide here and
-      never reach the published anchors. Compared ordinally: two ids differing only in case are not two
-      parts a reader could tell apart either.
+      Asked of every source, so two glossary headings differing only in punctuation collide here and never make it
+      to the published anchors. Compared ordinally: two ids differing only in case are not parts a reader could
+      tell apart either.
 
   part-none:
     severity: error
-    description: A section declared to hold parts written as headings holds at least one.
+    description: A section that takes its parts from headings has at least one heading under it.
     notes: >
-      What `clause-table`'s empty-table arm asks of the other source. A record promising parts and
-      carrying none says nothing where it undertook to say something.
-
-      Nothing else reports it. `required-section` is answered by the heading existing, and
-      `empty-section` passes the parts section over. This check quotes the section, the word the type
-      calls its parts, and the heading level to write them at.
-
-      Reported and stopped, for the reason a broken table is: the checks after it read parts.
+      The heading-sourced counterpart to `clause-table`'s empty-table arm. Nothing else reports it: the section
+      heading existing satisfies `required-section`, and `empty-section` passes the parts section over.
 
   part-empty:
     severity: error
-    description: A part declared by a heading carries something under it.
+    description: A part declared by a heading has something under it.
     notes: >
-      A heading is an address and a container both. An empty entry passes everything a reader can check
-      from outside: a title, a working anchor and a citation that resolves. An export then carries it as
-      a part holding no words and counts it among the rest. The table source needs no equivalent, since
-      `clause-modal` stops a row with an empty clause cell first.
-
-      The check hangs off the source, so anything declaring `source: headings` inherits it. It quotes
-      the heading, because a glossary holds twenty entries and "one of these is empty" is not something
-      anyone can act on. It reads the source as written, so a horizontal rule or an em dash standing in
-      for the words counts as nothing written.
-
-      An error, and `status: draft` is no exemption. Draft says the terms are still settling, and a
-      heading with nothing under it is not a state to publish from.
+      Reported at every status, `draft` included. The source is read as written, so a horizontal rule standing
+      in for the words counts as nothing. A table source needs no equivalent, since `clause-modal` stops a row with
+      an empty cell first.
 
   clause-table:
     severity: error
-    description: The declared section holds a table headed with the block's `columns`, and at least one row.
+    description: The declared section has a table headed with the block's `columns`, and at least one row.
     notes: >
-      A missing table, a mis-headed one and an empty one are three faults the parser tells apart. Each
-      is reported and stops the pass, because nothing beneath a broken table can be judged. A missing
-      section is `required-section`'s to report, and saying it twice would make one fault look like two.
+      A missing table, a mis-headed one and an empty one are three faults under this id. Each is reported and stops
+      the pass, since nothing beneath a broken table can be judged. A missing section belongs to
+      `required-section`, which reports it instead.
 
   clause-id-format:
     severity: error
     description: Each clause id is a single code span matching the block's `id-pattern`.
-    notes: A code span because an id is a handle rather than a word, and flattened text cannot tell the two apart.
+    notes: A code span, since flattened text cannot tell an id from a word beside it.
 
   clause-modal:
     severity: error
     description: Each clause opens with a declared modal, bold where it binds and plain where it does not.
     notes: >
-      Bold carries the binding level visually, and a reader skimming a long table reads the weight
-      before the words. A binding modal written plain reads as advice. An advisory one written bold
-      reads as an obligation.
+      Bold shows the binding level, which a reader skimming a long table takes in before the words. A binding modal
+      written plain reads as advice, and an advisory one written bold reads as an obligation.
 
   clause-order:
     severity: warning
     description: Clause rows are grouped by binding level, in the order the type declares.
     notes: >
-      Reported once, against the first row that breaks the grouping: a table sorted wholly the wrong way
-      would otherwise report every row after the first.
+      Reported once, against the first row that breaks the grouping. A table sorted the wrong way throughout would
+      otherwise report every row after the first.
 
   clause-compound:
     severity: warning
-    description: A clause carries one obligation, not two sharing an id.
-    notes: A second modal in a row means a citation of that id can only ever name half of what it means.
+    description: Each clause states a single obligation under its own id.
+    notes: A second modal in a row means a citation of that id can only ever pick out half of what the row says.
 
   # ── links ────────────────────────────────────────────────────────────────────
 
@@ -379,17 +316,17 @@ checks:
     severity: error
     description: Every internal link resolves, in any of the forms the wiki accepts.
     notes: >
-      Repo-relative, wiki-root-absolute (a leading `/` is the repo root), inline, reference and shortcut
-      reference links, with the `.md` optional because Azure DevOps resolves both. External
-      `http(s)`, `mailto` and `tel` links are skipped.
+      Repo-relative and wiki-root-absolute paths, where a leading `/` is the repo root. Inline, reference and
+      shortcut reference links all count, and the `.md` is optional because Azure DevOps resolves both spellings.
+      An external `http(s)`, `mailto` or `tel` link is skipped.
 
   fragment-resolves:
     severity: error
-    description: A link's `#fragment` names a heading in the document it points at.
+    description: A link's `#fragment` matches a heading in the document it points at.
     notes: >
-      The anchor is the heading lower-cased, spaces hyphenated and punctuation dropped, which is the one
-      form every renderer agrees on. Azure DevOps percent-encodes what GitHub discards, so a heading
-      carrying `/`, `:` or `.` has two anchors. It fails here rather than only in the published wiki.
+      The anchor is the heading lower-cased, with spaces hyphenated and punctuation dropped, the one form every
+      renderer agrees on. Azure DevOps percent-encodes what GitHub discards, so a heading with `/`, `:` or `.` in
+      it has two anchors and fails here, before the wiki publishes it.
 
   undefined-label:
     severity: error
@@ -399,89 +336,58 @@ checks:
     severity: error
     description: A shortcut label is the id of the record it leads to, written canonically.
     notes: >
-      Prefix lower-case, mnemonic upper-case, slug lower-case. A label spelled canonically, and a label
-      no id style recognises at all, are both then held against the id in the frontmatter of the record
-      the definition resolves to. The frontmatter is what carries the id of a type keeping it out of the
-      filename. The label is its own display text, so either fault shows the reader an id nothing has.
-      Markdown matches a reference to its definition case-insensitively, and link-resolves passes as
-      soon as the path is real, so nothing else would catch either. A template is exempt, since its
-      definitions demonstrate the form under labels nobody has chosen yet.
+      Prefix lower-case, mnemonic upper-case, slug lower-case. A label spelled canonically, and a label no id style
+      recognises at all, are both then held against the id in the frontmatter of the record the definition resolves
+      to. That frontmatter is where a type keeping the id out of the filename states it. The label is its own
+      display text, so either fault shows the reader an id nothing has. A template is exempt, its definitions
+      demonstrating the form under labels nobody has chosen yet.
 
   part-ref:
     severity: error
-    description: A part reference names a document that exists and carries that part.
+    description: A part reference points at a document that exists and has that part.
     notes: >
-      Written `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, and checked wherever it appears,
-      since any type may cite a part.
-
-      Every form the corpus writes is read: a code span, a link carrying the citation as its text or as
-      its label, and a link naming the record with the part id against its closing bracket, as
-      `[pol-VURM].TIMEBOX`. That third form needs one link definition however many parts of the record a
-      document cites. The id has to touch the bracket, so a full stop closing a sentence after a link
-      stays a full stop.
-
-      Three ways it fails, each reported in the words that fit: the document does not exist, its type
-      keeps no parts at all, or the part is not one it carries. A colon where the dot belongs is
-      reported here too, naming the form to write.
-
-      A citation may carry a producer's shortcode, as `eng:pol-VURM.TIMEBOX`, and then resolves against
-      what `kac restore` unpacked under `.imports/`. An imported record may be cited whole that way, and
-      a record this corpus holds never is.
-
-      Three more ways it fails, each about the spelling rather than the record: a bare id naming a
-      record this corpus imports, a scoped id naming one it holds, and a shortcode it consumes nothing
-      under. The first two say the spelling to write instead. A citation into an import that has not
-      been restored reports nothing here, and `import-restored` says it once instead.
+      Checked wherever it appears, since any type may cite a part. The message fits the case: the document does not
+      exist, its type keeps no parts, the part is not one it has, a colon sits where the dot belongs, a bare id
+      points at an imported record, a scoped id points at one this corpus keeps, or the shortcode picks out a
+      corpus this one consumes nothing from. A citation into an unrestored import reports nothing here, and
+      `import-restored` states it once instead. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#referring-to-an-id> and
+      <https://paul80nd.github.io/knowledge-as-code/design/imports/#spelling-a-citation>.
 
   ref-resolves:
     severity: error
-    description: An id in a field declaring a `ref:` names a document that exists, of a type the `ref:` names.
+    description: An id in a field declaring a `ref:` points at a document that exists, of a type the `ref:` admits.
     notes: >
       Both halves are asked, of a scalar and a list alike, and whether or not the field also declares a
-      `reciprocal:`. The wrong type is the quieter fault: it lands on a real page, so it reads as
-      intentional and whatever walks the edge afterwards takes it at its word. A literal the field
-      admits, such as `applies-to: [all]`, is not an id and is skipped.
-
-      A field may reach a part and may carry a scope, as `implements: eng:pol-VURM.TIMEBOX`. Both halves
-      of a part-level id are asked. The spelling faults `part-ref` reports across a boundary are
-      reported here too, in the same words.
-
-      A field declaring `part-required:` is held to the part as well, so the record named whole is
-      refused there.
+      `reciprocal:`. A literal the field admits, such as `applies-to: [all]`, is no id and is skipped. A field
+      declaring `part-required:` is asked for the part as well, and the spelling faults `part-ref` reports across a
+      corpus boundary are reported here in the same words.
 
   reciprocal:
     severity: error
     description: A field declaring a `reciprocal:` agrees with its counterpart in both directions.
     notes: >
-      Whether the target exists, and whether it is of a type the field may point at, are `ref-resolves`,
-      so a dangling or wrong-type reference is reported once rather than twice.
+      Whether the target exists, and whether its type is one the field may point at, belong to `ref-resolves`, so a
+      dangling or wrong-type reference is reported once.
 
   related-matches-section:
     severity: error
     description: A field declaring a `mirrors-section:` reconciles with the ids that section links to.
     notes: >
-      In both directions and case-insensitively, in a bullet or in prose alike. Both directions is the
-      part to weigh before declaring one: a section mentioning an id the field does not carry is a
-      finding as much as the reverse, so the field has to be the whole truth about what the section
-      names.
+      In both directions and case-insensitively, in a bullet or in prose alike. A section mentioning an id the
+      field omits is as much a finding as a field entry the section never mentions. Declare this only where the
+      field states the whole truth about what the section links to.
 
   mirrors-citations:
     severity: error
     description: A field declaring a `mirrors-citations:` reconciles with the lines carrying its label.
     notes: >
-      The line is a footnote, written in italic with the label bold, and closing the section whose
-      citations it gathers. A section covering nothing carries none. A line that is bold alone is the
-      labelled prose a glossary writes its `Not` in, and is passed over.
-
-      What reconciles is the union of the lines against the field, in both directions and
-      case-insensitively. The field stays the whole truth about what the document answers, and the lines
-      divide that truth between the sections.
-
-      Four faults sit on a line: it is not italic, it closes no section, it gathers no citation the
-      field could carry, or it names a record whole where the field declares `part-required:`. Each is
-      reported against the line, once, however many ids the line named. The first three leave the
-      citations counting toward the union. The fourth withholds the id, which no edit to the field could
-      admit. Not italic is reported and stopped, the rest being questions about a footnote.
+      A line that is bold alone is the labelled prose a glossary writes its `Not` in, and is passed over. Four
+      faults sit on a line: it is not italic, it closes no section, it cites nothing the field could admit, or it
+      cites a record whole where the field declares `part-required:`. Each is reported against the line once,
+      however many ids that line wrote. The first three leave those ids counting toward the union, and the fourth
+      withholds the id. Not italic stops the pass, the rest being questions about a footnote. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#referring-to-an-id>.
 
   id-unique:
     severity: error
@@ -496,235 +402,185 @@ checks:
     on-type-page: false
     description: A `[...]` left in prose that reads as a reference has a definition behind it.
     notes: >
-      A heuristic sibling of `undefined-label`, for the bracket that never became a link at all. Where the
-      brackets sit decides a checkbox: `- [ ]` opening a list item is a marker, and the same brackets
-      mid-sentence still warn. Use an inline link where the brackets are deliberate.
+      A heuristic sibling of `undefined-label`, for a bracket that never became a link at all. Position decides a
+      checkbox: `- [ ]` opening a list item is a marker, and the same brackets mid-sentence still warn. Write an
+      inline link where the brackets are deliberate.
 
   type-setup:
     severity: error
     on-type-page: false
-    description: A type the schema declares is stood up as both a page and a folder, or as neither.
+    description: A type the schema declares has both a page and a folder, or has neither.
     notes: >
-      A declared type nobody has built yet is silent; half of one is not.
+      A type nobody has built yet reports nothing. Half of one reports here.
 
   corpus-enum-undeclared:
     severity: error
     on-type-page: false
-    description: A field whose range the corpus states is judged against a list the corpus can satisfy.
+    description: A field whose range the corpus states is judged against a list the corpus has written.
     notes: >
-      A field declaring `values: $corpus.<name>` takes its range from `enums:` in `.corpus.yaml`. Two
-      faults arrive under this id and both mean the same thing, that no record can satisfy the field: a
-      range the corpus never wrote, and one carrying a value that is not lower case.
-
-      Reported once, against the descriptor, because nobody who wrote a record can fix either and a
-      corpus with thirty services would otherwise meet thirty copies of one setup mistake. Asked of the
-      types the corpus holds a record of, so the question arrives with the first record.
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/> carries the block to write.
+      Two faults arrive under this id, and both leave the field impossible to satisfy: a range the corpus never
+      wrote, and one with a value that is not lower case. Reported once against the descriptor, since nobody
+      writing a record can fix either. See
+      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#enums>.
 
   shortcode:
     severity: error
     on-type-page: false
     description: The shortcode a corpus declares for itself can be written before a colon, and is no type's prefix.
     notes: >
-      A shortcode is two to eight characters, lower case, opens on a letter, and carries letters and
-      digits alone. It is what another corpus writes before the colon, as the `eng` in
-      `eng:pol-VURM.TIMEBOX`. <https://paul80nd.github.io/knowledge-as-code/framework/metadata/> carries
-      the notation.
-
-      No hyphen, because the citation parser reads a hyphen before a colon as an id: a shortcode
-      carrying one turns a scoped reference into a citation written with the wrong separator.
-
-      Not a type prefix either, whatever the schema declares: `std:pol-VURM` reads as a standard. The
-      prefixes come from the schema, so there is no list here to keep in step. Case is ignored for that
-      comparison alone, so `STD` is told both that it is miscased and that the spelling underneath is
-      taken.
-
-      A corpus that declares no shortcode is not asked any of this.
+      A corpus declaring no shortcode is asked none of this. The type prefixes come from the schema, so there is no
+      list here to keep in step. Case is ignored for that comparison alone: `STD` is told both that it is miscased
+      and that the spelling underneath is taken. See
+      <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#the-shortcode>.
 
   import-restored:
     severity: error
     on-type-page: false
     description: Every corpus this one declares in `consumes:` has been restored into `.imports/`.
     notes: >
-      An error rather than a skip. A citation into a corpus that has not arrived is the one reference
-      nothing else can answer for. A green local run would otherwise let a broken reference reach the
-      default branch. The message names `kac restore`.
-
-      Reported once against `.corpus.yaml`, and every citation into that shortcode then stays quiet.
+      An unrestored import is an error, and every citation into it stays quiet once this is reported. See
+      <https://paul80nd.github.io/knowledge-as-code/design/imports/#a-missing-restore>.
 
   import-behind:
     severity: warning
     on-type-page: false
     description: Every corpus in `consumes:` is locked at the newest version its own range admits.
     notes: >
-      The corpus said it would take that version and has not. `restore` keeps a lock its range still
-      admits, so two restores of an unchanged descriptor write the same bytes. Asking is `validate`'s,
-      once per run.
-
-      A warning rather than an error. A version behind is not a broken corpus, and `kac restore` is what
-      moves it.
+      Asked once per `validate` run, and reported against the source. See
+      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
 
   import-capped:
     severity: info
     on-type-page: false
-    description: A newer version of a consumed corpus is published, and this corpus's range holds it back.
+    description: A newer version of a consumed corpus is published, and this corpus's range keeps it out.
     notes: >
-      Reported apart from `import-behind` because it is somebody's decision rather than their oversight.
-      A range capping a corpus at a major is doing what it was written to do. The reader's choice is to
-      widen it or to leave it alone.
+      Reported apart from `import-behind`, since somebody chose the range. See
+      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
 
   import-unreachable:
     severity: info
     on-type-page: false
     description: A lock in `consumes:` could not be checked against what its source publishes.
     notes: >
-      A run behind a firewall, without the token a private feed wants, or against a folder that is not
-      there cannot tell a current lock from a stale one. Saying so is the alternative to reporting every
-      import as current, which would read as an assurance.
-
-      A source answering with no versions at all reports here too, rather than as a lock that is
-      current. A registry answers a private feed's anonymous reader exactly as it answers a package
-      nobody has published.
-
-      Information rather than a warning. The corpus is not at fault and no edit to it would help.
+      A source replying with no versions at all reports here, and never as a lock that is current: a registry
+      replies to a private feed's anonymous reader exactly as it replies about a package nobody has published. See
+      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
 
   framework-names-types:
     severity: error
     on-type-page: false
-    description: The framework's own documents name a type rather than linking to one.
+    description: The framework's own documents name a type and never link to one.
     notes: >
-      And never link a record inside a type's folder. Those files are byte-identical in every corpus, so
-      a link resolving here says nothing about where it is read: a corpus that never adopted standards
-      has no `/standards` page to open. Generated blocks are exempt, being written from the types the
-      corpus stood up.
+      The same goes for a record inside a type's folder. These files are byte-identical in every corpus, so a link
+      that resolves here says nothing about where it is read: a corpus that never adopted standards has no
+      `/standards` page to open. A generated block is exempt, being written from the types the corpus adopted.
 
   template-fields:
     severity: error
     on-type-page: false
-    description: A type's template carries the fields a copy of it needs, usably, and no key the type does not declare.
+    description: A type's template has every field a copy needs, usably, and no key the type does not declare.
     notes: >
-      A placeholder opening a value has to be quoted, or YAML reads `review-by: {{date}}` as a mapping
-      rather than as text. A defect here belongs to every future document and is found by the next
-      author rather than the last.
+      A placeholder opening a value has to be quoted, or YAML reads `review-by: {{date}}` as a mapping and the
+      field arrives empty. A defect here lands in every document copied from the template, and the next author
+      finds it.
 
   generated-block:
     severity: error
     on-type-page: false
-    description: Every file `kac generate` writes a block into still carries both of that block's markers.
+    description: Every file `kac generate` writes a block into still has both of that block's markers.
     notes: >
-      A block whose markers have gone is written by nothing and, without this, reported by nothing:
-      `generate --check` compares a file against what the generator would produce, and for a file it can
-      find no marker in that is the file as it stands. The corpus's own `README.md` is the exception,
-      where deleting the markers is how a corpus declines the block.
+      A block whose markers have gone is written by nothing and, without this check, reported by nothing.
+      `generate --check` compares a file against what the generator would produce, and where it finds no marker
+      that is the file as it stands. The corpus's own `README.md` is the exception, where deleting the markers is
+      how a corpus declines the block.
 
   page-frontmatter:
     severity: error
     on-type-page: false
-    description: A type page carries no frontmatter of its own.
+    description: A type page has no frontmatter of its own.
     notes: >
-      A page describes the records beneath it and is not one, so it has no id, tier or status. Nothing
-      else would say so, because a page is forked and a forked file is never compared against upstream.
+      A page describes the records beneath it and is not one, so it has no id, tier or status. Nothing else reports
+      it: a page is forked, and a forked file is never compared against upstream.
 
   # ── content ──────────────────────────────────────────────────────────────────
-  #
-  # The four whose question needs more than the expression grammar can ask. Each is a class in
-  # `kac.core/Rules/`, dispatched by the rule id its type declares, and reports under the id here.
 
   y-statement:
     severity: warning
     description: A Y-statement block-quote follows the H1, states all six moves, and is within `max-words`.
     notes: >
-      The message names the move that is absent, which is why this is a class: an expression could
-      report only that the block-quote is not a Y-statement, and that is the one thing its author
-      already knows.
+      The message states the move that is absent. An expression could report only that the block-quote is no
+      Y-statement, which is the one thing its author already knows, so this is written as a rule class.
 
   alternatives-verdict:
     severity: warning
     description: Each *Alternatives Considered* bullet states an outcome.
     notes: >
-      Heuristic: an explicit verdict word, or a contrastive or negative-outcome cue. An option listed
-      only to be dismissed in a clause was not genuinely considered.
+      A heuristic, matching an explicit verdict word or a contrastive or negative-outcome cue. An option a bullet
+      dismisses in one clause was never genuinely considered.
 
   entry-shape:
     severity: error
     description: Each entry of a list whose entries are objects is a mapping.
     notes: >
-      The field's `entry:` block says what one holds, and a scalar written where a mapping belongs
-      carries none of it. Reported against the entry, so a list with one bad line among ten names the
-      line.
+      The field's `entry:` block says what an entry contains, and a scalar written where a mapping belongs supplies
+      none of it. Reported against the entry, so one bad line among ten is the line the message quotes.
 
   entry-key:
     severity: error
-    description: An object entry carries the keys its field declares, and every key it declares as required.
+    description: An object entry has the keys its field declares, and every key it declares as required.
     notes: >
-      Both faults under one id, because they are the same mistake read from either end: a key the shape
-      does not declare, and a required key the entry omits. The message quotes the entry by whatever its
-      naming key holds, and falls back to the line where that key is the one missing.
+      Two faults under one id: a key the shape does not declare, and a required key the entry omits. The message
+      quotes the entry by its naming key, and falls back to the line number where that key is the one missing.
 
   alignment-rollup:
     severity: error
-    description: A policy's `aligns-with` and its `Alignment` column carry the same framework references.
+    description: A policy's `aligns-with` and its `Alignment` column state the same framework references.
     notes: >
-      Both directions, and the message names the reference and the side it is missing from. A reference
-      in a cell and not in the roll-up leaves the generated index under-reporting what the policy
-      covers. A reference in the roll-up and not in any cell is a claim of coverage no clause can show.
-
-      A framework cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in
-      a cell answers an `aligns-with` entry carrying no `clauses:`.
+      Checked in both directions, and the message states the reference and the side it is missing from. A framework
+      cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in a cell matches an
+      `aligns-with` entry with no `clauses:`. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
 
   framework-posture:
     severity: error
     description: A framework a clause cites is placed on the corpus's framework register.
     notes: >
-      The register says whether we are obliged to a framework, self-obligated to it, or borrowing from
-      it. `alignment-rollup` reads that standing to decide which references its roll-up carries, so a
-      framework the register does not place would be left out with nothing saying so.
-
-      Reported once per framework rather than once per clause citing it.
+      Reported once per framework, however many clauses cite it. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
 
   framework-uncited:
     severity: error
     description: A framework on the corpus's framework register is cited by at least one clause.
     notes: >
-      The register is the list of frameworks this estate has taken a standing against, so an entry no
-      clause reaches is a standing nothing acts on and reads to an auditor as coverage.
-
-      The register is found by following a clause's own link to it, so a corpus whose clauses cite
-      nothing has no register in view and reports nothing. Reported against the policy that reached the
-      page, because the register carries no frontmatter and is no record; the message names the page.
+      The register is found by following a clause's own link to it, so a corpus whose clauses cite nothing has no
+      register in view and reports nothing. Reported against the policy that linked to the page, since the register
+      has no frontmatter and is no record, and the message states the page instead. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
 
   report-stale:
     severity: warning
-    description: A report answers for the version of each corpus that is in front of the reader now.
+    description: Each corpus a report lists in `sources` is still at the version the report states.
     notes: >
-      Every other record is about the estate, so a corpus that moved leaves it as true as it was. A
-      report is about the corpus, and the same change can make it wrong with nothing in the record
-      showing it.
-
-      A warning, because the report may well still hold. Whoever owns it either confirms that and raises
-      the version by hand, or runs the report again, and only a person can tell which. A `resource` this
-      corpus does not read is skipped rather than reported.
+      A `resource` this corpus does not read is skipped, and reports nothing. See
+      <https://paul80nd.github.io/knowledge-as-code/design/reports/#moving-the-version-without-regenerating>.
 
   self-verification:
     severity: error
-    description: A report's `verified` list does not name the producer that generated it.
+    description: A report's `verified` list leaves out the producer that generated it.
     notes: >
-      Any actor may verify a report, which is what lets an agent's check count for something. The one
-      actor that cannot is the producer named in `generated.by`, because a run confirming its own output
-      adds nothing a reader can weigh.
-
-      Reported against the entry rather than the field, so the message names the line to delete. The
-      comparison is exact, so `kac/0.25.0` verifying a report `kac/0.24.0` generated stands: a later
-      version reading the corpus again is a second look.
+      Reported against the entry, so the message points at the line to delete. The comparison is exact, so
+      `kac/0.25.0` verifying a report `kac/0.24.0` generated stands: a later version reading the corpus again is a
+      second look.
+      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.
-    notes: Compared without regard to casing, and the message names the entry that moved.
+    notes: Compared without regard to casing, and the message states the entry that moved.
 
   dependency-cycle:
     severity: warning
     description: The records' `depends-on` edges form no loop.
     notes: >
-      A loop lives in the set of edges and no single record holds it, so the message names the route it
+      No one record shows the loop, which is a property of the edges together, so the message states the route it
       runs through. Reported once per loop, against the lowest id on it.

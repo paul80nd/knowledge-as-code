@@ -85,6 +85,27 @@ So `kac` checks a document against both chains at once, rather than against a si
 schema does order must hold. A pair it leaves alone, such as `owner` against `decided-on`, is free. Genuine disorder
 still fails: `tags` before `id`, or `related` before `status`.
 
+### Which check reports a fault
+
+One fault is reported once, by whichever check owns it. `required-field` reports an absent field, so a `required-when:`
+naming that field asks for nothing further. `reciprocal` leaves a dangling or wrong-type reference to `ref-resolves`.
+`clause-table` reports a broken table and stops the pass, because nothing under it can be judged, and a missing section
+belongs to `required-section`. `int-format` reports a run of digits past 64 bits under the same id as a separator or a
+base prefix, because the author rewrites the value either way.
+
+### Faults nothing else would catch
+
+Three checks exist because what they refuse looks correct to everything around it.
+
+A part declared by a heading with nothing under it has a title, a working anchor, and a citation that resolves.
+`kac export` then ships it as a part of no words. `part-empty` is what refuses it.
+
+A shortcut label spelled `[ADR-0013]` resolves. Markdown matches a label to its definition case-insensitively, and
+`link-resolves` passes as soon as the path is real. `label-canonical` compares the label with the id instead.
+
+An id pointing at a record of the wrong type lands on a real page, so it reads as intentional, and whatever walks the
+edge afterwards takes it at its word. `ref-resolves` asks the type as well as the path.
+
 ## Decisions
 
 **A rule is data wherever it can be.** Wiring a rule as C# means a class, a registry line, unit tests, an entry in
@@ -96,6 +117,13 @@ OPA/Rego was the obvious alternative and is the wrong shape. It would replace on
 pipeline, leaving all the markdown and frontmatter extraction untouched. It would add a language to learn and a runtime
 dependency to the tool. The one property worth having is new rules as data, and a small hand-rolled evaluator buys it at
 a fraction of that cost. `RuleExpr.cs` says when that judgement expires.
+
+**A number is written the plain way.** `int-format` takes plain decimal with an optional leading sign. YAML reads
+`1_000` and `0x1f` as numbers too, and both are refused rather than decoded. An author should not have to learn which
+spellings the parser admits before writing a number down.
+
+**A list the schema asks an author to fill takes a floor.** `min-items:` sets it. Without one, a field whose whole point
+is more than one entry is satisfied by a single entry.
 
 Where a rule needs C# rather than an expression, it is written in the tool rather than in a corpus.
 [`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md) is where that is done.

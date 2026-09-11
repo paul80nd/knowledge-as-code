@@ -10,26 +10,25 @@ lifecycle: living
 summary: "How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves."
 goes-here: A check that proves a rule is being followed
 detail: >
-  Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
-  honest state and the number worth watching.
+  Every control lists the rules it verifies. A rule nothing checks gets a control whose mechanism is
+  `not-enforced`, so the gap is written down.
 
 lineage:
   prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
   alignment: >
     Objective, method and expected evidence, bound to the requirement it tests
   divergence: >
-    800-53A procedures assess a federal catalogue inside an authorisation boundary. Ours verify internal
-    standards, with no catalogue and no accreditation
+    800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
+    internal standard, with no catalogue and no accreditation
 
 collision: >
-  **The most dangerous word in the taxonomy.** In [NIST SP
-  800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC 27002 and
-  ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or physical measure
-  that reduces risk. Here, a control is the **verification that a rule is being followed**, which those
-  frameworks call an assessment procedure, a test, or a metric.
+  In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
+  27002 and ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or
+  physical measure that reduces risk. Here, a control is the **verification that a rule is being followed**,
+  which those frameworks call an assessment procedure, a test, or a metric.
 
-  A reader with a governance background will misread this type on sight, and will read a coverage report as
-  claiming safeguards exist when it claims only that checks exist. Say which sense is meant whenever the word
+  A reader with a governance background will misread this type on sight, and will read a coverage report as a
+  claim that safeguards exist. It claims only that checks exist. Say which sense you mean wherever the word
   crosses into a compliance conversation.
 
 id:
@@ -55,17 +54,15 @@ fields:
     of: id
     ref: standards
     reciprocal: verified-by
-    notes: >
-      Standard ids, ideally rule-level anchors. A control that names no rule is not a control.
+    description: The standard ids this control checks, as rule-level anchors where possible.
 
   mechanism:
     required: true
     type: enum
     values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
-    description: How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.
+    description: How the check runs, or `not-enforced` where nothing checks the rule.
     notes: >
-      `not-enforced` is what the coverage report is for: it turns an aspiration into a visible number. Do not
-      invent a mechanism to avoid using it.
+      The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it.
 
   frequency:
     required: false
@@ -77,7 +74,7 @@ fields:
   evidence:
     required: false
     type: string
-    notes: Where the proof lives (the build log, the audit note, the dashboard).
+    description: 'Where the proof lives: the build log, the audit note, or the dashboard.'
 
   applies-to:
     required: false
@@ -99,24 +96,8 @@ export:
     How it works: full
     Coverage and gaps: full
   notes: >
-    A control travels whole. It runs to a few hundred words, and a consumer reading what a check promises
-    without reading what it misses reads a stronger check than the one we built. `What it checks` names the
-    rules in the author's words, `How it works` says what performs the check, and `Coverage and gaps` says
-    where it stops.
-
-    `mechanism` and `frequency` are the two keys an agent filters on. `not-enforced` travels like any other
-    value, so a consumer reading one learns that a rule is written and that nobody looks. Withholding those
-    records would publish a coverage figure this corpus cannot show.
-
-    `evidence` is the only key answering where the proof lives, so it travels beside them.
-
-    `verifies` reaches a whole standard or one rule inside it, and a consumer reads the value to tell which.
-    Where a control names the record, it vouches for that whole document whatever it checks inside it, and no
-    per-rule figure can be had from it.
-
-    `owner` stays behind. Who stewards a control is a fact about this corpus, and whoever holds a vendored
-    copy has no standing to ask.
-
+    Every section of a control travels, `not-enforced` records included. See
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#controls>.
 index:
   columns: [id, title, mechanism, frequency, verifies, status]
   sort: id
@@ -124,13 +105,13 @@ index:
 rules:
   - id: mechanism-has-evidence
     description: >
-      A control whose mechanism is not `not-enforced` names where its evidence can be found.
+      A running control says where its evidence can be found.
     severity: warning
     expr: "field('mechanism') != 'not-enforced' implies present('evidence')"
     message: >
-      This control claims to run and does not say where the proof of it lives. Set `evidence` to the build
-      log, the audit note or the dashboard. An unevidenced control is an assertion, and `not-enforced` is
-      the honest value for one.
+      this control claims to run and does not say where the proof lives. Set `evidence` to the build log,
+      the audit note or the dashboard.
   - id: coverage-report
     description: The share of MUST / MUST NOT rules in active standards claimed by an enforced control.
-    # Enforced meaning a mechanism other than `not-enforced`. Generated, rather than checked per document.
+    # Enforced means any mechanism other than `not-enforced`. The figure is generated for the corpus, and no
+    # single document fails it.
