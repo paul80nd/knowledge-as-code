@@ -15,18 +15,18 @@ kac checks [--json] [--no-color]
 
 ## What it does
 
-`checks` prints every check the validator can report against your corpus. Use it to see what CI will hold that corpus
+`checks` prints every check the validator can report against your corpus. Read it to see what CI will hold that corpus
 to, and to find out whether the check you were about to add already exists.
 
-The list is read from that corpus's own `.schema/`, so there is no second catalogue to keep in step. A corpus that
-declares a type of its own sees that type's checks here without the tool changing.
+`kac` reads the list from that corpus's own `.schema/`, so there is no second catalogue to keep in step. A corpus that
+declares a type of its own sees that type's checks here without any change to the tool.
 [Checks](../design/checks.md) says where a check comes from.
 
-`checks` opens no record and reports no fault in one. [`validate`](validate.md) is what fires these against documents.
+`checks` opens no record and reports no fault in one. [`validate`](validate.md) runs these against documents.
 
 ## Examples
 
-### List what CI will hold your corpus to
+### The catalogue
 
 ```bash
 kac checks
@@ -40,38 +40,42 @@ One check to a line, with the severity it reports at and what it proves, and a t
   error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
   warning  deprecated-has-successor       A deprecated tool names what replaces it, or the entry is just a complaint.
 
-92 checks: 65 error(s), 25 warning(s), 2 info.
+103 checks: 74 error(s), 27 warning(s), 2 info.
 ```
 
-Neither a **warning** nor an **info** fails the build. A warning is something to act on. An info reports something
-true that is nobody's fault, such as a version your own range holds back.
+Only an error fails the build. A warning is something to act on. An info reports something true that is nobody's fault,
+such as a version your own range holds back.
 
-### Read the catalogue as data
+### The catalogue as data
 
 ```bash
 kac checks --json
 ```
 
-One object per check, and nothing else on stdout. The tool's own test suite reads this form, and holds every reachable
-check to having a fixture that trips it.
+One object per check, and nothing else on stdout. The tool's own test suite reads this form, and checks that every
+reachable check has a fixture that trips it.
 
-### Find out whether a check already exists
+### A search for an existing check
 
 ```bash
 kac checks | grep -i expiry
 ```
 
-The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`.
+The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`:
+
+```text
+  warning  expiry                         An active deviation is still inside the review date it carries.
+```
 
 ## Known limits
 
-**A run also compares the catalogue against the rows the generator would write onto a type page**, and a mismatch is
-named on stderr and exits `1`. That happens whether or not you asked for `--json`, so a drift there fails this command
-even though nothing is wrong with the catalogue itself. Those rows are hand-worded for whoever writes a record, and
-several catalogue ids fold into one of them, so the two lists are compared and neither is built from the other.
+**A run also compares the catalogue against the rows the generator would write onto a type page.** `kac` reports a
+mismatch on stderr and exits `1`, whether or not you asked for `--json`. A drift there fails this command even though
+nothing is wrong with the catalogue itself. Those rows are worded by hand for whoever writes a record, and several
+catalogue ids fold into one row, so `kac` compares the two lists and builds neither from the other.
 
 **A rule with no compiled `expr:` does not appear under its own rule id.** A rule with no severity is an intention, and
-the type page renders it under *Declared, not yet enforced*. A rule implemented in C# reports under the check id it
-emits instead, which the catalogue does carry.
+the type page renders it under **Declared, not yet enforced**. A rule implemented in C# reports under the check id it
+emits instead, and the catalogue does list that one.
 
 [Checks](../design/checks.md) is the page for adding a check, and says why a rule is data wherever it can be.

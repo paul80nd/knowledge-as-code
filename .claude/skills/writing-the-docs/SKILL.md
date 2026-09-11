@@ -77,6 +77,7 @@ The page has fixed sections in a fixed order.
 * Keep a section under about 120 words, unless it is a list or a table.
 * Use a numbered list for steps, a table for values, and bullets for parallel items.
 * Write a list of three or more things as a list, not as a sentence.
+* Renaming a heading breaks every link to its anchor. Search the whole repository before you rename one.
 
 ## Facts
 

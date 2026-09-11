@@ -25,19 +25,19 @@ kac update [--add-type <TYPE>] [--check] [--drop-type <TYPE>] [--from <URL|PATH>
 `update` takes a newer framework into a corpus that already has one. It is also where a corpus adopts a type or gives
 one up.
 
-It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what
-the corpus receives, writes it, and records what it took. **It leaves every change in the working tree and commits
+It reads where the corpus took its framework from, fetches that template again at its ref, decides file by file what the
+corpus receives, writes it, and records what it took. **It leaves every change in the working tree and commits
 nothing.** Git is the review step, so run it on a clean tree and read the diff.
 
-[Layers](../design/layers.md) says how each file is decided. It is not a merge tool: where the result is wrong, the
-answer is `git checkout` on the file, or a `skip:` entry saying the corpus owns it.
+[Layers](../design/layers.md) says how each file is decided. `update` is not a merge tool. Where the result is wrong,
+run `git checkout` on the file, or add a `skip:` entry saying the corpus owns it.
 
 `update` moves the framework's files. `dotnet tool update KnowledgeAsCode.Tool` moves `kac` itself. The two halves move
 independently.
 
 ## Examples
 
-### Take the newer framework
+### A newer framework
 
 ```bash
 kac update
@@ -45,19 +45,19 @@ kac update
 
 Run it on a clean tree. Everything it writes then shows up in `git status` as its own diff.
 
-### Ask what would change, and write nothing
+### A check that writes nothing
 
 ```bash
 kac update --check
 ```
 
-It computes the plan, prints it, and exits non-zero if anything would change. `--check` writes nothing, so it runs over
+`--check` computes the plan, prints it, and exits non-zero if anything would change. It writes nothing, so it runs over
 a tree in any state:
 
 ```text
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
-update: withheld 61 file(s) for types this corpus has not adopted.
-update: withheld 1 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
+update: withheld 34 file(s) for types this corpus has not adopted.
+update: withheld 2 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
 this corpus is behind its framework. these would change:
 WRITE, framework files this corpus holds differently:
   .schema/adrs.yaml
@@ -67,12 +67,12 @@ run:  kac update
 A corpus already in step says so and exits `0`:
 
 ```text
-update: in step, 40 file(s) compared.
+update: in step, 38 file(s) compared.
 ```
 
 Run this in CI to find out that a corpus has fallen behind. It never pushes.
 
-### Adopt a type, or give one up
+### A type adopted, or given up
 
 ```bash
 kac update --add-type policies
@@ -80,22 +80,22 @@ kac update --drop-type tools
 ```
 
 Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving page
-links to the types the corpus already holds. The pages already there name the new type without linking to it, because
-each was written while the type was still declined, and the run says so:
+links to the types the corpus already has. The pages already there name the new type without linking to it, because each
+was written while the type was still declined. The run says so:
 
 ```text
 update: policies arrives linking to the types this corpus holds. the pages already here name policies without linking
 to it, and they are yours to change.
 ```
 
-Dropping is the asymmetric half, and it refuses while the folder still holds records:
+Dropping is the asymmetric half. `update` refuses while the folder still holds records:
 
 ```text
 update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
 again, or leave 'tools' adopted.
 ```
 
-The message names the count and the two ways forward. Deleting records is yours to do deliberately.
+The message gives the count and the two ways forward. Deleting records is yours to do deliberately.
 
 Where the folder is empty, dropping asks first. The page is about to go, and every page still naming it keeps a link
 that no longer resolves:
@@ -107,14 +107,14 @@ update: a reference it cannot parse is reported by nobody. search the corpus for
 find.
 ```
 
-The question that follows takes no for an answer by default, because the run deletes files. Pass `--yes` to answer it
-in advance. A run with no terminal and no `--yes` refuses rather than guessing:
+That question takes no for an answer by default, because the run deletes files. Pass `--yes` to answer it in advance. A
+run with no terminal and no `--yes` refuses rather than guessing:
 
 ```text
 update: giving up tools needs an answer, and there is no terminal to ask on. pass --yes to give it up anyway.
 ```
 
-### Refresh the seed files too
+### The seed files refreshed
 
 ```bash
 kac update --policy full
@@ -129,15 +129,14 @@ kac update --policy full
 everything you wrote. `--check` is the exception and runs over a tree in any state.
 
 **A type this corpus has not adopted is reported, not adopted.** The run names it and the `--add-type` that would take
-it. It cannot tell a type the framework has just added from one declined at creation, so it names both and lets you
-decide.
+it. `update` cannot tell a type the framework has just added from one declined at creation, so it names both and lets
+you decide.
 
 **The descriptor's own shape is stamped, not migrated.** `update` writes `descriptor-version` to the format this tool
-produces and compares nothing. A file a newer `kac` wrote is stamped back, and nothing reports that it was. A key that
-has since been renamed is the one shape question the run does answer. It stops, names both spellings, and leaves the
-file alone.
+produces, and compares nothing. It stamps back a file a newer `kac` wrote, and nothing reports that it did. A renamed
+key is the one shape question the run does answer. It stops, gives both spellings, and leaves the file alone.
 
-**The template has no changelog.** What changed in a framework is read from the diff `update` leaves behind.
+**The template has no changelog.** To find out what changed in a framework, read the diff `update` leaves behind.
 
 **It is not [`validate`](validate.md).** A corpus can be perfectly in step with its framework and full of bad records.
 
