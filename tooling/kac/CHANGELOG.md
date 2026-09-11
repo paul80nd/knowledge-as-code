@@ -26,6 +26,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   names commands a consumer cannot run, `promoted-from`, which names a discovery that travels nowhere, and `owner`.
   Take the schema with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
 
+- **`kac report --out <path>` writes the report to a file.** Without it the report still goes to standard output, so
+  a caller piping one loses nothing. With it `kac` writes the file after it has read the corpus, which is what keeps
+  a run off the console encoding and out of the way of a shell holding the same path open. A path a file already
+  occupies is refused and nothing is written, because a finished report holds verdicts somebody wrote.
+
 - **Every record can say where its content came from.** `.schema/_universal.yaml` declares `sources`, an optional list
   whose entries carry a required `resource`. A `resource` names something a reader can follow, such as a ticket URL, or
   the population the content was drawn from. `sources` is what the [Open Knowledge
@@ -84,6 +89,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`kac report` calls a fresh report a draft.** The schema requires `status` and no run wrote it, so every generated
   report failed `kac validate` until somebody added the field by hand. The frontmatter now carries `status: draft`.
+
+- **An unhandled fault goes to stderr.** Spectre's own handler wrote one to stdout, so `kac report coverage > out.md`
+  put the message inside the report and left the console silent. Every verb's own refusal already went to stderr, and
+  this joins them.
+
+- **The `report` page taught a filename that does not validate.** Its example wrote `reports/rpt-clause-coverage.md`,
+  and a record whose filename repeats the id prefix fails `id-matches-filename`. The filename carries the question the
+  report answers, and the prefix belongs to the `id`.
 
 - **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two
   or three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets

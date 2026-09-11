@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Text;
 using kac.core;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 // Windows gives a process whatever code page the machine was installed with, and .NET encodes stdout with
@@ -39,6 +40,15 @@ app.Configure(config =>
     // Without this an option the verb does not declare is dropped in silence, and a mistyped flag
     // reads as a clean run.
     config.UseStrictParsing();
+
+    // Spectre writes an unhandled fault to stdout, so a caller redirecting a report into a file gets the
+    // message inside the report. Every verb's own refusal goes to stderr through `Commands.Fail`, and
+    // this joins them.
+    config.SetExceptionHandler((ex, _) =>
+    {
+        Out.ErrMarkup($"[red]kac: {ex.Message.EscapeMarkup()}[/]");
+        return 1;
+    });
 
     config.AddCommand<NewCommand>("new")
         .WithDescription("Turn the folder you are in into a corpus.");
@@ -289,21 +299,26 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
-// `report` prints markdown to stdout, so the caller decides where it lands. The mechanical half fills
-// what the corpus states and leaves every judgement open, which is what lets a skill complete it and a
-// human confirm the result. `docs/cli/report.md` carries the division.
+// `report` prints markdown to stdout, and `--out` writes it to a file instead. Either way the caller
+// decides where it lands. The mechanical half fills what the corpus states and leaves every judgement
+// open, which is what lets a skill complete it and a human confirm the result. `docs/cli/report.md`
+// carries the division.
 internal sealed class ReportSettings : KacSettings
 {
     [CommandArgument(0, "<NAME>")]
     [Description("Which report to print.")]
     public string Name { get; init; } = "";
+
+    [CommandOption("--out <PATH>")]
+    [Description("Write the report to this file instead of printing it. Refuses a path something holds.")]
+    public string? OutPath { get; init; }
 }
 
 internal sealed class ReportCommand : Command<ReportSettings>
 {
     protected override int Execute(CommandContext context, ReportSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Report(corpus, settings.Name, Cli.Version,
-            DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")));
+            DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), settings.OutPath));
 }
 
 // `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a

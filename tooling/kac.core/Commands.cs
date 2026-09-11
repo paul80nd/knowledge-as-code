@@ -637,10 +637,11 @@ public static class Commands
 
     // Print one report over this corpus and everything it imports.
     //
-    // Markdown to stdout, so the caller pipes it into a record, a pull request or a terminal. The run
-    // stamps what produced it and which content version it answers for, because only the tool knows
-    // both. `docs/cli/report.md` says what each report carries and what it leaves open.
-    public static int Report(string corpusRoot, string name, string toolVersion, string at)
+    // Markdown to stdout, so the caller pipes it into a record, a pull request or a terminal, or to the
+    // file `--out` names. The run stamps what produced it and which content version it answers for,
+    // because only the tool knows both. `docs/cli/report.md` says what each report carries and what it
+    // leaves open.
+    public static int Report(string corpusRoot, string name, string toolVersion, string at, string? outPath)
     {
         if (!Reports.Names.Contains(name, StringComparer.Ordinal))
             return Fail($"report: there is no report called '{name}'. "
@@ -664,7 +665,29 @@ public static class Commands
         var plan = Reports.Plan(name, corpus, inherited, ReportStamp.ForTool(toolVersion, at, sources));
         if (plan is null) return Fail($"report: '{name}' named no report this build can write.");
 
-        Out.Line(plan.Text);
+        if (outPath is null)
+        {
+            Out.Line(plan.Text);
+            return 0;
+        }
+
+        // Relative to where the command was typed, as a shell's own redirection is. The corpus root is
+        // what `kac` walked up to find, and a caller standing in a subfolder did not mean that one.
+        var full = Path.GetFullPath(outPath);
+
+        // A finished report holds verdicts and notes somebody wrote, and the run cannot tell one from a
+        // file it wrote itself a minute ago. `writing-a-report` merges the two by hand, and refusing here
+        // is what leaves something to merge.
+        if (File.Exists(full))
+            return Fail($"report: {outPath} already exists, so nothing was written. A report holds verdicts "
+                        + "somebody wrote. Write this run somewhere else, and merge the two by hand.");
+
+        var folder = Path.GetDirectoryName(full);
+        if (folder is not null && !Directory.Exists(folder))
+            return Fail($"report: there is nowhere to put {outPath}. Create the folder first.");
+
+        File.WriteAllText(full, plan.Text);
+        Out.Markup(Wrote(outPath));
         return 0;
     }
 
