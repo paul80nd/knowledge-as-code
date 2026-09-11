@@ -98,6 +98,11 @@ coverage when that clause stops citing it, and nothing else in the corpus report
 `Standing` is read from the corpus's own register of frameworks, which says whether the corpus is obliged to a
 framework, self-obligated to it, or borrowing from it. A framework the register does not place leaves the cell empty.
 
+Each framework then gets a section of its own. The line under the heading repeats that standing and links the register
+entry behind it, so a reader working down one table never scrolls back for it. The table gives one row per reference,
+and its `Citations` count says how many clauses reach that reference. A count of `1` is one of the rows `Cited once`
+counted.
+
 ### Keep a report as a record
 
 ```sh

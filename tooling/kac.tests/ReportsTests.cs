@@ -49,9 +49,27 @@ public class ReportsTests
     public void A_report_states_the_corpus_it_read()
         => Assert.Contains("This reads `test-corpus` and what it imports.", Coverage());
 
+    // Each report writes its own. A control vouching for a whole standard is a fact about coverage, and
+    // over a framework report it would answer a question nobody reading that page had asked.
     [Fact]
-    public void A_report_states_that_no_column_says_a_clause_is_verified()
+    public void A_coverage_report_states_that_no_column_says_a_clause_is_verified()
         => Assert.Contains("No column here says a clause is verified.", Coverage());
+
+    [Fact]
+    public void A_framework_report_states_that_no_column_says_a_clause_meets_what_it_cites()
+    {
+        var body = Plan("frameworks").Body;
+
+        Assert.Contains("No column here says a clause meets the reference it cites.", body);
+        Assert.DoesNotContain("No column here says a clause is verified.", body);
+    }
+
+    // The `Alignment` cell an export leaves behind, which is what makes this report local-only and is
+    // stated nowhere else a reader of the page would meet it.
+    [Fact]
+    public void A_framework_report_states_that_it_counts_the_citations_written_here()
+        => Assert.Contains("the citations counted below are the ones written here",
+            Plan("frameworks").Body);
 
     // The stamp is the tool's, because only the tool knows both halves of it.
     [Fact]
@@ -115,12 +133,25 @@ public class ReportsTests
     // control six clauses cite is one row.
     [Fact]
     public void A_framework_reference_two_clauses_cite_is_one_row()
-        => Assert.Contains("| A.5.17 | `pol-SCRT.STORE`, `pol-SCRT.ROTATE` | `pol-SCRT` | |",
+        => Assert.Contains("| A.5.17 | 2 | `pol-SCRT.STORE`, `pol-SCRT.ROTATE` | `pol-SCRT` | |",
             Plan("frameworks").Body);
 
     [Fact]
     public void A_framework_report_names_the_standing_the_register_files_it_under()
         => Assert.Contains("| ISO 27001:2022 | Obliged | 1 | 0 |", Plan("frameworks").Body);
+
+    // The standing again over the table it governs, and a link to the entry that placed it. A reader
+    // works down one framework at a time and the totals table is by then off the screen.
+    [Fact]
+    public void A_framework_section_repeats_the_standing_and_links_the_register_entry()
+        => Assert.Contains("Filed under `Obliged` in [`frameworks.md`](../frameworks.md#iso-27001).",
+            Plan("frameworks").Body);
+
+    // The count beside the clauses, so a reference one clause cites reads as `1` without counting the
+    // cell next to it. `Cited once` in the totals is the same question asked of the whole framework.
+    [Fact]
+    public void A_reference_carries_the_number_of_clauses_citing_it()
+        => Assert.Contains("| A.5.17 | 2 |", Plan("frameworks").Body);
 
     private static string Coverage() => Plan("coverage").Body;
 

@@ -41,6 +41,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`kac report frameworks` says more beside each framework's table.** Every reference row carries a `Citations` count,
+  so a reference one clause cites reads as `1` without counting the cell next to it. Each framework's section opens on
+  the standing the register files it under, linked to the register entry that placed it, which is the line a reader
+  would otherwise scroll back to the totals table for.
+
+- **Each report writes its own `## Limits`.** Both printed one wording, written for a reading of clause coverage.
+  `frameworks` now says that an `Alignment` cell stays in the corpus that wrote it, so it counts the citations written
+  here, and that a citation records the naming rather than a clause meeting what it cites.
+
 - **The five lookup skills drop their search procedure.** `kac new`, `kac update` and `kac bundle` send skills that
   name no search tool and no search flags. A trial ran three variants of `policy-lookup` over five questions: the
   skill as it shipped, one without the tool name, and one without the search section at all. Every variant found and

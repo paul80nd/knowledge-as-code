@@ -186,7 +186,11 @@ public static class Reports
             pairs.GetValueOrDefault(c.Id))).ToList();
 
         var body = new StringBuilder();
-        Limits(body, corpus, inherited);
+        Limits(body, corpus, inherited,
+            "A clause uncovered here may well be covered in a corpus consuming this one, and every "
+            + "consumer answers for its own coverage.",
+            "No column here says a clause is verified. A control names a standard and not a rule, so it "
+            + "vouches for a whole document whatever it checks inside it.");
         CoverageTotals(body, rows);
         CoverageSections(body, rows);
         Judgement(body, "The tool prints two verdicts and a person writes the rest.",
@@ -203,7 +207,13 @@ public static class Reports
         var rows = FrameworkRows(corpus, inherited);
 
         var body = new StringBuilder();
-        Limits(body, corpus, inherited);
+        Limits(body, corpus, inherited,
+            "An `Alignment` cell stays in the corpus that wrote it, so the citations counted below are "
+            + "the ones written here. A reference an imported policy cites belongs to that producer's "
+            + "own report.",
+            "No column here says a clause meets the reference it cites. A citation records that the "
+            + "clause named it. Whoever confirms this report decides whether the clause covers that "
+            + "control or one corner of it.");
         FrameworkTotals(body, rows);
         FrameworkSections(body, rows);
         Judgement(body, "A reference on one clause is one citation from losing its coverage.",
@@ -367,18 +377,18 @@ public static class Reports
         return sb.ToString();
     }
 
-    // What the report can and cannot see, stated in the report rather than left to a reader. A producer
-    // publishing policies cannot see what implements them elsewhere, so an uncovered clause here means
-    // uncovered here.
+    // What the report can and cannot see, stated in the report rather than left to a reader. Each report
+    // passes its own two paragraphs: the two ask opposite questions of the same clause tables, and a limit
+    // written for one answers a question the other's reader never asked.
     private static void Limits(
-        StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
+        StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
+        string reach, string closing)
     {
         var name = corpus.Descriptor.Name ?? "this corpus";
 
         body.AppendLine("## Limits");
         body.AppendLine();
-        body.AppendLine($"This reads `{name}` and what it imports. A clause uncovered here may well be covered in a "
-                        + "corpus consuming this one, and every consumer answers for its own coverage.");
+        body.AppendLine($"This reads `{name}` and what it imports. {reach}");
         body.AppendLine();
 
         if (inherited.Count > 0)
@@ -391,8 +401,7 @@ public static class Reports
             body.AppendLine();
         }
 
-        body.AppendLine("No column here says a clause is verified. A control names a standard and not a rule, so it "
-                        + "vouches for a whole document whatever it checks inside it.");
+        body.AppendLine(closing);
         body.AppendLine();
     }
 
@@ -464,15 +473,37 @@ public static class Reports
         {
             body.AppendLine($"### {group.Key}");
             body.AppendLine();
-            body.AppendLine("| Reference | Clauses | Policies | Note |");
-            body.AppendLine("|-----------|---------|----------|------|");
+            body.AppendLine(Filed(group.First()));
+            body.AppendLine();
+            body.AppendLine("| Reference | Citations | Clauses | Policies | Note |");
+            body.AppendLine("|-----------|-----------|---------|----------|------|");
 
             foreach (var row in group)
-                body.AppendLine($"| {row.Reference ?? "the framework entire"} | {Cite(row.Clauses)} "
-                                + $"| {Cite(row.Records)} | |");
+                body.AppendLine($"| {row.Reference ?? "the framework entire"} | {row.Clauses.Count} "
+                                + $"| {Cite(row.Clauses)} | {Cite(row.Records)} | |");
 
             body.AppendLine();
         }
+    }
+
+    // Where the register files a framework, said again above its own table. The standing decides how hard
+    // a reader looks at the rows beneath it, and somebody working down one framework has the totals table
+    // off the screen by then.
+    //
+    // The link climbs one folder because a report is a record in `reports/`, and the register page is
+    // addressed from the corpus root. `Standing` is non-null only where an anchor placed it, so the
+    // second form covers a framework the register links and files under no heading.
+    private static string Filed(FrameworkRow row)
+    {
+        if (row.Path is not { } path || row.Anchor is not { } anchor)
+            return "The register places this framework nowhere, so it carries no standing.";
+
+        var rel = path.Replace('\\', '/');
+        var link = $"[`{rel[(rel.LastIndexOf('/') + 1)..]}`](../{rel}#{anchor})";
+
+        return row.Standing is { Length: > 0 } standing
+            ? $"Filed under `{standing}` in {link}."
+            : $"{link} holds this framework under no standing.";
     }
 
     // What the report leaves open, said once at the foot so nobody takes an empty column for an answer.
