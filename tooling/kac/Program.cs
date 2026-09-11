@@ -3,8 +3,27 @@
 
 using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using kac.core;
 using Spectre.Console.Cli;
+
+// Windows gives a process whatever code page the machine was installed with, and .NET encodes stdout with
+// it. A clause citing `§9` then reaches the reader damaged, while the same text written to a file is
+// intact. UTF-8 makes what a command prints agree with what the corpus holds.
+//
+// The setter reaches the console handle, so it throws where the process has none. Nothing is lost there:
+// a host holding no console takes the bytes as written.
+if (OperatingSystem.IsWindows())
+{
+    try
+    {
+        Console.OutputEncoding = new UTF8Encoding(false);
+    }
+    catch (IOException)
+    {
+        // No console to re-encode for.
+    }
+}
 
 var app = new CommandApp();
 app.Configure(config =>

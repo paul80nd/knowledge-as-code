@@ -72,17 +72,27 @@ public class ReportsTests
     public void The_stamp_takes_a_version_with_no_build_metadata_whole()
         => Assert.Equal("kac/0.24.0", ReportStamp.ForTool("0.24.0", "2026-08-08T10:00:00Z", []).By);
 
-    // Left empty rather than guessed. A report is a record somebody owns and somebody verifies, and the
-    // tool can answer for neither. `verified` is empty as well because the run writing it is the one
-    // actor `no-self-verification` refuses.
     [Fact]
-    public void The_frontmatter_leaves_the_owner_and_the_verification_open()
+    public void The_frontmatter_leaves_the_id_the_owner_and_the_verification_open()
     {
         var plan = Plan("coverage");
 
-        Assert.Contains("id: rpt-\n", plan.Frontmatter);
-        Assert.Contains("owner: human:\n", plan.Frontmatter);
-        Assert.Contains("verified: []\n", plan.Frontmatter);
+        Assert.StartsWith("id:\n", plan.Frontmatter);
+        Assert.Contains("\nowner:\n", plan.Frontmatter);
+        Assert.Contains("\nverified:\n", plan.Frontmatter);
+    }
+
+    [Fact]
+    public void The_frontmatter_calls_a_fresh_report_a_draft()
+        => Assert.Contains("\nstatus: draft\n", Plan("coverage").Frontmatter);
+
+    [Fact]
+    public void The_frontmatter_parses_as_a_yaml_mapping()
+    {
+        var parsed = Yaml.Load(Plan("coverage").Frontmatter);
+
+        Assert.Equal("report", Yaml.Str(Yaml.Get(parsed, "type")));
+        Assert.Null(Yaml.Str(Yaml.Get(parsed, "owner")));
     }
 
     // The one thing the tool refuses to print. `Gap` and `Out of scope` are judgements about an estate,

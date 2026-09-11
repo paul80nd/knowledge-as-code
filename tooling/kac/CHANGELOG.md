@@ -73,6 +73,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`kac` prints UTF-8 on Windows.** Standard output took whatever code page the machine was installed with, so a
+  clause citing `§9` reached the reader as a replacement character while the same text in the record was intact.
+  Every command writes through the same stream. `kac report` is where it showed, because a report quotes citation text
+  back.
+
+- **`kac report` writes frontmatter a parser accepts.** `owner: human:` is not valid YAML, so a generated report met
+  `frontmatter-parses` over the whole document rather than a message naming what to fill in. `id`, `owner` and
+  `verified` now arrive empty, and `kac validate` reports `required-field` against each one.
+
+- **`kac report` calls a fresh report a draft.** The schema requires `status` and no run wrote it, so every generated
+  report failed `kac validate` until somebody added the field by hand. The frontmatter now carries `status: draft`.
+
 - **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two
   or three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets
   nothing back.

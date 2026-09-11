@@ -340,20 +340,30 @@ public static class Reports
         return found;
     }
 
+    // What the tool can answer, and a blank for everything else. The id names the question somebody
+    // chose, and who owns a record is a fact about people. The run writing the content cannot sign it
+    // off either, which is what `no-self-verification` refuses.
+    //
+    // `status` is the one judgement left to the tool: a report nobody has read is a draft.
+    //
+    // Every blank is a YAML null rather than half a value. `owner: human:` does not parse, so somebody
+    // filling in one field meets `frontmatter-parses` over the whole document instead of `required-field`
+    // naming what is still missing.
     private static string Frontmatter(ReportStamp stamp)
     {
         var sb = new StringBuilder();
-        sb.Append("id: rpt-\n");
+        sb.Append("id:\n");
         sb.Append("type: report\n");
         sb.Append("tier: descriptive\n");
-        sb.Append("owner: human:\n");
+        sb.Append("status: draft\n");
+        sb.Append("owner:\n");
         sb.Append($"generated: {{ at: {stamp.At}, by: {stamp.By} }}\n");
         sb.Append("sources:\n");
 
         foreach (var source in stamp.Sources)
             sb.Append($"  - {{ resource: {source.Resource}, version: \"{source.Version ?? ""}\" }}\n");
 
-        sb.Append("verified: []\n");
+        sb.Append("verified:\n");
         return sb.ToString();
     }
 

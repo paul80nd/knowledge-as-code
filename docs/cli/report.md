@@ -42,10 +42,12 @@ reading one corpus get one report, and the argument on top of it is written once
 ### Every run stamps what produced it
 
 The frontmatter carries `generated`, naming the tool and version that wrote the report and the moment it ran. It also
-carries `sources`, naming this corpus and each corpus it imports, with the `content-version` each answered at.
+carries `sources`, naming this corpus and each corpus it imports, with the `content-version` each answered at. Only the
+tool knows those, so it writes them rather than leaving a reader to work them out. It writes `status: draft` as well,
+because a report nobody has read yet is a draft.
 
-Only the tool knows both, so it writes both rather than leaving a reader to work them out. The frontmatter arrives with
-`id`, `owner` and `verified` left empty, because a report is a record somebody owns and somebody else verifies.
+`id`, `owner` and `verified` arrive empty, because a report is a record somebody owns and somebody else verifies. Fill
+all three in before you commit the file. `kac validate` names any you miss.
 
 ## Examples
 
