@@ -1,4 +1,4 @@
-example-dogfooding 0.22.1 travels with this session as data, exported 2026-09-09.
+example-dogfooding 0.22.2 travels with this session as data, exported 2026-09-11.
 controls. 10 records: A merge waits for the validate job, Every job in kac.yml sits behind the gate, Every workflow passes actionlint, Every YAML file passes yamllint, Every corpus holds the file the template sends it and 5 more.
 deviations. 18 records: Branch size and a red main are habits here, The reasoning behind a decision lives in the commit that made it, No standard here says how a deviation is handled, A consumer of the export gets no notice period, No standard governs what kac generate computes and 13 more.
 fixes. 2 records: pip cannot find the yamllint version the lint job pins and An .editorconfig key edited from a shell changes nothing in the IDE.
@@ -11,6 +11,6 @@ standards. 43 entries across 6 records: The documentation site and kac are usabl
 standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, A container image is pinned by digest and runs as a non-root user, C# follows the runtime team's conventions, and the compiler enforces them, One artefact is built once and promoted to production, A dependency is pinned, screened and named in the inventory and 7 more.
 tools. 13 records: actionlint, Claude Code CLI, .NET SDK, GitHub CLI, Markdig and 8 more.
 adrs (from eng). 1 record: Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to.
-glossary (from eng). 25 entries across 2 records: Engineering and Knowledge as code.
-policies (from eng). 226 entries across 22 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 17 more.
+glossary (from eng). 30 entries across 2 records: Engineering and Knowledge as code.
+policies (from eng). 243 entries across 23 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 18 more.
 Ask the glossary-lookup skill before you answer from what you already know.

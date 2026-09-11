@@ -15,6 +15,6 @@
     "Exceptions": "An emergency change to restore service may bypass the normal path where the pipeline is itself unavailable or the delay would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back into version control before the incident is closed. Otherwise, the fix becomes the next outage."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
   }
 }

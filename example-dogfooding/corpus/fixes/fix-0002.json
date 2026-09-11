@@ -36,6 +36,6 @@
     "Why it happens": "An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` layers a second over it, and `template/` holds its own with `root = true`. So a key that looks inert may be overridden rather than unread, and the control above is what separates the two."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
   }
 }

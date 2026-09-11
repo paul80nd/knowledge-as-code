@@ -1,33 +1,37 @@
 {
   "type": "reports",
   "path": "reports/clause-coverage.md",
-  "trust": "human-reviewed",
+  "trust": "machine-confirmed",
   "fields": {
     "id": "rpt-clause-coverage",
     "title": "Clause coverage",
     "status": "active",
     "generated": {
-      "at": "2026-09-08T15:51:13Z",
-      "by": "kac/0.24.0"
+      "at": "2026-09-11T09:42:20Z",
+      "by": "kac/0.25.0"
     },
     "sources": [
       {
         "resource": "example-dogfooding",
-        "version": "0.19.0"
+        "version": "0.22.2"
       },
       {
         "resource": "example-engineering",
-        "version": "0.12.0"
+        "version": "0.15.0"
       }
     ],
     "verified": [
       {
-        "at": "2026-09-08T13:41:31Z",
-        "by": "human:paul.law"
+        "at": "2026-09-09T21:30:00Z",
+        "by": "coverage-sweep/1.0.0"
       },
       {
-        "at": "2026-09-08T15:57:57Z",
-        "by": "human:paul.law"
+        "at": "2026-09-11T08:25:00Z",
+        "by": "coverage-sweep/1.0.0"
+      },
+      {
+        "at": "2026-09-11T09:10:00Z",
+        "by": "coverage-sweep/1.0.0"
       }
     ],
     "tags": [
@@ -37,6 +41,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/dog-fooding/reports/clause-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/reports/clause-coverage.md"
   }
 }

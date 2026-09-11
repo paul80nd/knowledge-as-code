@@ -15,6 +15,6 @@
     "Exceptions": "Low-severity events are handled through routine work rather than the full process. The severity classification decides which, and we apply it deliberately rather than letting whoever wants the least paperwork set it. There is no exception to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/engineering/policies/operations/incr-incident-response.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/policies/operations/incr-incident-response.md"
   }
 }

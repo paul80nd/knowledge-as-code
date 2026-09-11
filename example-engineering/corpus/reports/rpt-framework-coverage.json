@@ -7,13 +7,13 @@
     "title": "Framework coverage",
     "status": "active",
     "generated": {
-      "at": "2026-09-09T21:00:27Z",
+      "at": "2026-09-11T09:41:49Z",
       "by": "kac/0.25.0"
     },
     "sources": [
       {
         "resource": "example-engineering",
-        "version": "0.14.0"
+        "version": "0.15.0"
       }
     ],
     "verified": [
@@ -24,6 +24,14 @@
       {
         "at": "2026-09-09T18:29:19Z",
         "by": "coverage-sweep/1.0.0"
+      },
+      {
+        "at": "2026-09-11T08:20:00Z",
+        "by": "coverage-sweep/1.0.0"
+      },
+      {
+        "at": "2026-09-11T09:05:00Z",
+        "by": "coverage-sweep/1.0.0"
       }
     ],
     "tags": [
@@ -33,6 +41,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/engineering/reports/framework-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/reports/framework-coverage.md"
   }
 }

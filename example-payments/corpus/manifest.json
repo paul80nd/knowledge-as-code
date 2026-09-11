@@ -4,9 +4,9 @@
   "shortcode": "pay",
   "contentVersion": "0.10.0",
   "mechanismVersion": 11,
-  "commit": "380626abfd3523814e85d551dfb77dade032206d",
+  "commit": "9f18f32ecef55b45911bd1e5d53b2236e26f562e",
   "dirty": false,
-  "generatedAt": "2026-09-09T21:09:51Z",
+  "generatedAt": "2026-09-11T09:49:32Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "380626abfd3523814e85d551dfb77dade032206d"
+    "ref": "9f18f32ecef55b45911bd1e5d53b2236e26f562e"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.14.0",
+      "contentVersion": "0.15.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "380626abfd3523814e85d551dfb77dade032206d"
+        "ref": "9f18f32ecef55b45911bd1e5d53b2236e26f562e"
       }
     }
   ],
@@ -134,7 +134,7 @@
       "type": "glossary",
       "shapeVersion": 1,
       "records": 2,
-      "parts": 25,
+      "parts": 30,
       "dir": "glossary",
       "partsFile": "glossary/terms.jsonl",
       "recordKey": "record",
@@ -149,8 +149,8 @@
     {
       "type": "policies",
       "shapeVersion": 2,
-      "records": 22,
-      "parts": 226,
+      "records": 23,
+      "parts": 243,
       "dir": "policies",
       "partsFile": "policies/clauses.jsonl",
       "recordKey": "record",

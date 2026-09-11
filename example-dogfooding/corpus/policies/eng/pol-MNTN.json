@@ -1,0 +1,20 @@
+{
+  "type": "policies",
+  "path": "policies/delivery/mntn-maintainability.md",
+  "trust": null,
+  "fields": {
+    "id": "pol-MNTN",
+    "title": "Software stays easy to change",
+    "category": "delivery",
+    "status": "draft",
+    "review-by": "2027-09-11"
+  },
+  "sections": {
+    "Purpose": "How hard our software is to change is a property we measure and own, the way we own what it costs to run and how fast it responds. We watch it move, and we act when it moves the wrong way.",
+    "Scope": "Everything we author and keep: application code, infrastructure definitions, database schema and pipeline definitions. A system small enough to skip is the one that outlives the team that wrote it, so it is in scope too. What good looks like for each measure is recorded as an NFR, and this policy commits us to having the measures.\n\n_Boundary: [pol-COST] owns what a system costs to run and [pol-PERF] owns how fast it responds. This policy owns what it costs to change. A shortcut somebody took knowingly is [pol-DEVI]'s, under its own `DEBT`._",
+    "Exceptions": "A prototype written to answer a question and then deleted is exempt, and the deletion is what earns the exemption. A prototype that ships is not a prototype. Keeping a component we can no longer afford to change is a recorded deviation under [pol-DEVI], naming who accepts the slower delivery that follows."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/policies/delivery/mntn-maintainability.md"
+  }
+}

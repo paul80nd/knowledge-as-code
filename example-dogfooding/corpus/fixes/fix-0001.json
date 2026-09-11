@@ -39,6 +39,6 @@
     "Why it happens": "The `lint` job sets Python up at 3.13 before it installs, so CI never meets this. `.github/requirements.txt` records what that job takes rather than what a laptop can run. Dependabot moves the pin, so the floor rises again whenever yamllint drops a Python version."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/380626abfd3523814e85d551dfb77dade032206d/examples/dog-fooding/fixes/pip-cannot-install-yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/fixes/pip-cannot-install-yamllint.md"
   }
 }
