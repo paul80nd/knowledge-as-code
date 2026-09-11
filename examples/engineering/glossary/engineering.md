@@ -95,9 +95,10 @@ is maturing rather than in breach.
 
 ### We
 
-The engineering function, working as one technology team within its roles. A clause binds the function, so whoever
-answers it is the person holding that role rather than whoever is reading. Adherence is joint: you may not be the one
-doing the work but you are still the one who says so when it is missing or broken.
+The engineering function, working as one technology team within its roles. A clause binds the function rather than any
+one team. It reaches a person through whoever owns the thing it governs, and a thing nobody owns is the gap that clause
+has just found. Adherence is joint: you may not be the one doing the work but you are still the one who says so when it
+is missing or broken.
 
 **Not:** the team that happens to be reading. A platform, a shared service or a specialist answers some clauses on
 everybody's behalf, and none of that makes an unanswered clause somebody else's problem.
