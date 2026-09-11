@@ -1,11 +1,11 @@
 # The framework
 
-Knowledge as Code is a way of holding engineering knowledge: plain Markdown in git, where every document carries a type
-and every type declares a schema. `kac` is the tool that holds a corpus to that schema. This section is the framework
+Knowledge as Code is a way of keeping engineering knowledge: plain Markdown in git, where every document has a type and
+every type declares a schema. `kac` is the tool that checks a corpus against that schema. This section is the framework
 itself, meaning the ideas the tool serves rather than the commands serving them.
 
-A **corpus** is one repository of knowledge records, with the schema it runs. Every corpus takes the same framework
-and fills it with its own knowledge.
+A **corpus** is one repository of knowledge records, with the schema it runs. Every corpus takes the same framework and
+fills it with its own knowledge.
 
 ## The pages here
 
@@ -14,20 +14,20 @@ and fills it with its own knowledge.
 * **[Taxonomy](taxonomy.md)** says what a type and a tier are, what the five tiers ask, and the shape a type takes on
   disk.
 * **[The default types](types.md)** introduces every type that ships, grouped by tier, one line each.
-* **[Metadata](metadata.md)** says what a record carries in frontmatter, how ids are formed, and how a citation reaches
-  a part of one.
+* **[Metadata](metadata.md)** says what a record has in frontmatter, how ids are formed, and how a citation reaches a
+  part of one.
 * **[Contributing](contributing.md)** says how knowledge is added, reviewed and merged, and where the rules for the
   words themselves live.
 * **[Automation](automation.md)** says what a pipeline does for a corpus, and what it leaves alone.
 * **[Lineage](lineage.md)** says how the types relate to their prior art, and on what terms.
 
-## What a corpus holds beside these
+## What a corpus has beside these
 
-Four pages travel with each corpus as well. Three of them carry tables generated from the types that corpus adopted. A
-corpus that took five of the framework's types therefore gets five rows, each linking to a page it holds. Contributing
-carries no generated block: it is the way in, and what a corpus adds locally.
+Four pages travel with each corpus as well. Three of them have tables generated from the types that corpus adopted, so a
+corpus that took five of the framework's types gets five rows, each linking to a page it holds. Contributing has no
+generated block. It is the way in, and what a corpus adds locally.
 
-| In the corpus | Answers                                                              |
+| In the corpus | What it answers                                                      |
 |---------------|----------------------------------------------------------------------|
 | Taxonomy      | which types this corpus adopted, and where a record goes             |
 | Metadata      | which fields this corpus's own types carry                           |

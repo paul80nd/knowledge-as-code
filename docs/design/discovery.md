@@ -48,8 +48,7 @@ A field declaring `from: sub-path` takes its value from them. So `policies/secur
 
 Nest those folders as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus
 that files everything at the top of each type folder declares nothing and reads no differently.
-[Metadata](../framework/metadata.md#a-field-the-schema-derives-which-you-never-write) explains what an author does about
-it.
+[Metadata](../framework/metadata.md#a-derived-field) explains what an author does about it.
 
 ## Frontmatter
 

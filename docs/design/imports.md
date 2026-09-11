@@ -55,9 +55,7 @@ sit on one entry, so `.corpus.yaml` stays the single description of what a corpu
 
 `restore` refuses two entries claiming one shortcode, because a shortcode names one corpus and both would unpack into
 one folder. It also refuses a package whose stamped shortcode disagrees with the entry that fetched it. The producer
-owns that spelling, and
-[A shortcode is the half before the colon](../framework/metadata.md#a-shortcode-is-the-half-before-the-colon) says why
-it never changes.
+owns that spelling, and [The shortcode](../framework/metadata.md#the-shortcode) says why it never changes.
 
 ## A missing restore
 

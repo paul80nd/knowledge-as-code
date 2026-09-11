@@ -4,17 +4,17 @@ Frontmatter is what makes a corpus machine-readable. The validator checks it, th
 an agent greps it to find things. What each type declares is the type's own business. This page is the model every type
 answers to.
 
-## What a record carries
+## What goes in a record
 
 A record holds three kinds of thing, and each has one home.
 
 **Frontmatter is metadata about the record**: what identifies it, places it in the taxonomy, and describes it as a
-whole. A field carries one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
+whole. A field holds one value, or a set of them. An index sorts on it, a citation resolves against it, and an agent
 greps it.
 
-**The body carries the record's parts**, where a part needs a rule or an address of its own. What counts as a part is
-the type's business, declared under `parts:` in its schema. The declaration names the section holding them, and says
-whether they are rows of a table or headings beneath it. The validator reads them out of the body and holds them to it.
+**The body holds the record's parts**, where a part needs a rule or an address of its own. What counts as a part is the
+type's business, declared under `parts:` in its schema. The declaration names the section holding them, and says whether
+they are rows of a table or headings beneath it. The validator reads them out of the body and checks them.
 
 Two shapes are in use, and they differ in where the address comes from. A policy's obligations are rows. `## Clauses`
 holds one per obligation with an id written beside it, which a standard or a control cites as `pol-VURM.TIMEBOX`. A
@@ -35,14 +35,14 @@ A field costs every record of its type a column, because a wiki renders frontmat
 So a field is a decision about the reader as much as about the schema.
 
 **Title is the H1. Creation and modification dates come from git.** Neither belongs in frontmatter. What does belong is
-what is semantically the record's own: `decided-on` is a real fact about a decision, where the file's last-modified date
+what is semantically the record's own. `decided-on` is a real fact about a decision, where the file's last-modified date
 is git's business.
 
 `type` and `tier` are the deliberate exceptions. The folder gives a record its type, the type gives it its tier, and
-both are written down anyway. A record read away from its folder still says what kind of thing it is and how much
-weight to give it, and the validator holds each field to the value the schema derives. `type` is also the only key the
-[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) always requires,
-so every record here satisfies that format's one rule about a document's frontmatter.
+both are written down anyway. A record read away from its folder still says what kind of thing it is and how much weight
+to give it, and the validator checks each field against the value the schema derives. `type` is also the only key
+the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) always
+requires, so every record here satisfies that format's one rule about a document's frontmatter.
 
 Three fields are deliberately absent, and the reasoning is the same each time.
 
@@ -52,15 +52,15 @@ Three fields are deliberately absent, and the reasoning is the same each time.
 | `created` / `updated` | Git knows, and will not forget to update it      |
 | `lifecycle`           | Follows from tier. A second field could disagree |
 
-### A field the schema derives, which you never write
+### A derived field
 
-A type can also take a field's value from the folder a record is saved in. A field declaring `from: sub-path` carries
-the folders between the type's own folder and the file. So a policy at `policies/security/accs-access-by-identity.md`
-carries `category: security` with no line of frontmatter saying so. Folders can nest, so
-`standards/platform/node/testing.md` carries `platform/node`.
+A type can also take a field's value from the folder a record is saved in. A field declaring `from: sub-path` takes the
+folders between the type's own folder and the file. So a policy at `policies/security/accs-access-by-identity.md` gets
+`category: security` with no line of frontmatter saying so. Folders can nest, so `standards/platform/dotnet/testing.md`
+gets `platform/dotnet`.
 
-Save a record straight into its type folder and the field is empty. That is a normal state, not a gap. You start
-using categories by making a folder, and you choose the folders yourself.
+Save a record straight into its type folder and the field is empty. That is a normal state, not a gap. You start using
+categories by making a folder, and you choose the folders yourself.
 
 The value reaches everything that reads the field: the generated index, its sort, and `kac export`. Writing the key by
 hand is an error, reported as `derived-key`, because the folder and the line could then say different things.
@@ -77,7 +77,7 @@ and a corpus has one `glossary/` held in several files, one per bounded context.
 An id is `<type-prefix>-<discriminator>`. **The prefix is singular**, since an id names a single record: `adr-0017`,
 `std-SECRET`. The discriminator names the document, and its shape is the type's `id.style`.
 
-Numeric discriminators are zero-padded, allocated sequentially, and **never reused**: where a record is withdrawn before
+Numeric discriminators are zero-padded, allocated sequentially, and **never reused**. Where a record is withdrawn before
 acceptance, its number is retired. Mnemonics are allocated by meaning rather than in sequence, so there is no next one
 to take. A slug is the thing's own name.
 
@@ -90,37 +90,37 @@ whose meaning has moved that far is replaced and the old one retired.
 The schema sets one per type, and `id.width` says how long the discriminator runs.
 
 *Numbered* (`adr-0017`) suits anything chronological. The id records the order things happened, which is information
-none of the others can carry.
+none of the others can give.
 
 *Slug* (`svc-billing-api`) suits anything with a natural stable name, where a number would be an arbitrary handle for
 something already well identified.
 
 *Mnemonic* (`pol-VURM`) suits a small, long-lived set that other records cite constantly. The id is what a reader meets
-most often, so it should say something. A mnemonic makes a claim a number never does, so draw it from the concept
-rather than the current wording.
+most often, so it should say something. A mnemonic makes a claim a number never does, so draw it from the concept rather
+than the current wording.
 
 **`id.width` is an exact count or a span.** `width: 4` gives every policy a four-character handle. A span, written as
 `min:` and `max:`, lets the length follow the concept. Standards set `min: 2` and `max: 7`, so `std-PR` and
 `std-SECRET` are both well formed. A slug reads neither.
 
-## What the filename carries
+## What the filename says
 
 **`filename.carries-id` says whether the filename opens with the discriminator.** A policy's does, so `pol-VURM` is
 filed as `vurm-vulnerability-remediation.md`. The mnemonic is upper-case in the id and lower-case in the filename, and
 its first letter matches the slug's so the folder still reads alphabetically.
 
-A standard's filename carries nothing of the id. It is a topical slug under a category folder, and the mnemonic lives
-in frontmatter alone. A span of widths needs that, because one filename cannot say which of several lengths its opening
+A standard's filename takes nothing of the id. It is a topical slug under a category folder, and the mnemonic lives in
+frontmatter alone. A span of widths needs that, because one filename cannot say which of several lengths its opening
 segment is.
 
-**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix where the filename carries one.
-The filename is a handle and the H1 carries the full descriptive title. A slug you cannot get under 30 characters is
-often a signal the record is doing two things: `internal-services-backing-public-surfaces` was one idea too many.
-Splitting or narrowing the scope beats abbreviating harder.
+**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix where the filename has one. The
+filename is a handle and the H1 gives the full descriptive title. A slug you cannot get under 30 characters is often a
+signal the record is doing two things. `internal-services-backing-public-surfaces` was one idea too many. Splitting or
+narrowing the scope beats abbreviating harder.
 
 ## Referring to an id
 
-Two separators reach past an id, each with one job.
+Two separators extend an id. `.` selects a part. `:` selects a corpus.
 
 **`.` addresses a part of a record.** `pol-VURM.TIMEBOX` names the policy, then the clause inside it.
 `gls-knowledge-as-code.corpus` names the glossary, then the term. Each citation resolves against the record it names, so
@@ -139,18 +139,18 @@ The default branch is protected. See [pol-VURM].TIMEBOX, and the window in [pol-
 [pol-VURM]: vurm-a-title.md#clauses
 ```
 
-The third form is the cheapest. It needs one link definition however many clauses of that policy the document goes on
-to cite. Where the reader lands is the definition's to decide, so point it at the section holding the parts. The part
-id has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
+The third form is the cheapest. It needs one link definition however many clauses of that policy the document goes on to
+cite. Where the reader lands is the definition's to decide, so point it at the section holding the parts. The part id
+has to touch the bracket, so `See [pol-VURM]. The policy...` stays a full stop and a sentence.
 
 A field may require the part rather than admit it. A standard's `implements:` names the clauses it puts into practice,
 and a deviation's `departs-from:` names the clauses it breaks. `kac validate` refuses a bare id in either field, and on
 a `Covers` line too. The whole policy is shorter to write than the list it stands for, and it reads to anything counting
 coverage as every clause covered.
 
-A field may also be held to what the prose cites. `implements:` declares `mirrors-citations: Covers`, so each rule
-closes on a footnote naming the clauses it discharges, and `kac validate` holds the union of those lines equal to the
-field:
+A field may also be checked against what the prose cites. `implements:` declares `mirrors-citations: Covers`, so each
+rule closes on a footnote naming the clauses it discharges, and `kac validate` holds the union of those lines equal to
+the field:
 
 ```markdown
 ### Nowhere else holds a secret
@@ -161,10 +161,10 @@ field:
 _**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
 ```
 
-The line is written in italic with the label bold, and it closes the section it covers. A section covering nothing
-carries no line. A line falling short of the form is reported where it sits: not italic, naming no clause, or naming a
-policy whole. Both directions are checked, so the field stays the whole truth about which obligations the standard
-answers, and each rule says which of them it answers.
+The line is written in italic with the label bold, and it closes the section it covers. A section covering nothing has
+no line. A line falling short of the form is reported where it sits: not italic, naming no clause, or naming a policy
+whole. Both directions are checked, so the field stays the whole truth about which obligations the standard answers, and
+each rule says which of them it answers.
 
 One line at the foot of a rule is what the obligations under it would otherwise each carry. The reader who came for the
 rule reads the rule, and the reader who came for the coverage reads the footnote or the field.
@@ -172,31 +172,32 @@ rule reads the rule, and the reader who came for the coverage reads the footnote
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus holds is cited bare, and qualifying one is an error, because two spellings of a single
 obligation defeat search. `kac validate` resolves a scoped reference against the corpus `kac restore` unpacked under
-`.imports/`, and holds it to carrying the part named.
+`.imports/`, and checks that it has the part named.
 
-### A shortcode is the half before the colon
+### The shortcode
 
-A corpus declares its shortcode as `shortcode:` in [`.corpus.yaml`](../corpus-descriptor.md#identity). The producer
-declares it, and a corpus citing that one writes what the producer chose. A consumer picking an alias of its own would
-put two consumers on two spellings of one obligation, which the colon exists to prevent.
+It is the half before the colon. A corpus declares it as `shortcode:` in
+[`.corpus.yaml`](../corpus-descriptor.md#identity). The producer declares it, and a corpus citing that one writes what
+the producer chose. A consumer picking an alias of its own would put two consumers on two spellings of one obligation,
+which the colon exists to prevent.
 
 **A shortcode is immutable**, for the reason an id is and more strictly. A rename invalidates citations in repositories
 its owner cannot edit. So a corpus declares one when something is about to cite it, rather than at creation.
 [`kac new`](../cli/new.md) writes the key bare and leaves the value to you.
 
-**It is two to eight characters, lower case, opening on a letter and carrying letters and digits after it.** No hyphen.
-The parser reads a hyphen before a colon as an id, and would take the reference for a citation written with the wrong
+**It is two to eight characters, lower case, opening on a letter with letters and digits after it.** No hyphen. The
+parser reads a hyphen before a colon as an id, and would take the reference for a citation written with the wrong
 separator. No type's prefix either, since `std:pol-VURM` reads as a standard. `kac validate` refuses both, and
 [`kac export`](../cli/export.md) states the declared shortcode in its manifest.
 
 ## Adding a field
 
-First ask whether the content belongs in frontmatter at all. [What a record carries](#what-a-record-carries) answers
+First ask whether the content belongs in frontmatter at all. [What goes in a record](#what-goes-in-a-record) answers
 that. Then check that git, the folder, the H1 or an existing link does not already hold the fact.
 
 Where the field is new, declare it in the type's `.schema/<folder>.yaml` and add it to that type's `_template.md`. A
-field every type carries goes in `.schema/_universal.yaml` instead, and a type file may refine it with a declaration
-of its own. Then run [`kac generate`](../cli/generate.md) so the generated tables carry it. The validator reads the
-schema, so it needs no change of its own.
+field every type has goes in `.schema/_universal.yaml` instead, and a type file may refine it with a declaration of its
+own. Then run [`kac generate`](../cli/generate.md) so the generated tables pick it up. The validator reads the schema,
+so it needs no change of its own.
 
 [Taxonomy](taxonomy.md) is the page for deciding which type a new field belongs to.

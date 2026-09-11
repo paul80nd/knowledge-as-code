@@ -4,7 +4,7 @@ Why the framework is shaped the way it is. A corpus's own taxonomy page says wha
 they are for, and what the design will not trade away.
 
 These are meant to outlast the implementation. Each describes how the framework works today. The
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what's to come.
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) says what is to come.
 
 ## Behaviour before subject
 
@@ -13,7 +13,7 @@ page keys off that.
 
 An ADR and a postmortem have nothing in common as subject matter. As behaviour they are identical: both are accounts
 that were true at a moment, both become misleading if edited afterwards, and both are superseded rather than corrected.
-So they share a **tier**, meaning the group a type belongs to by how it behaves. The tier carries the rules: the review
+So they share a **tier**, meaning the group a type belongs to by how it behaves. The tier sets the rules: the review
 bar, the validation, the language, and the expectation of immutability.
 
 The taxonomy therefore grows without new machinery.
@@ -37,7 +37,7 @@ The authoritative form of a record is structured. Prose renders it.
 
 `kac` generates an index from frontmatter. It validates every cross-reference on every build, and derives a type's
 schema table from the schema file that table documents. Where a machine could derive something and a person maintains it
-instead, the person's copy is the one that goes stale, and nothing will say so.
+instead, the person's copy is the one that goes stale, and nothing says so.
 
 This is also why adding a knowledge type means adding a YAML file rather than editing the tool. A corpus grows its
 taxonomy without waiting on a change to the code.
@@ -47,7 +47,7 @@ taxonomy without waiting on a change to the code.
 Repositories and folders are storage. The relationships are the knowledge.
 
 A policy is implemented by a standard, verified by a control, applied to a service, contributing to a capability. That
-chain is meaningful whichever folder each record sits in, and it carries the value. A service document is a fact. A
+chain is meaningful whichever folder each record sits in, and it is where the value is. A service document is a fact. A
 service document that can tell you which standards bind it is an answer.
 
 The graph is also the part that breaks silently. So reciprocal edges must agree in both directions, and a one-sided link
@@ -58,9 +58,9 @@ fails the build.
 Every record has exactly one home. Where two places need the same knowledge, the second links to the first rather than
 copying it.
 
-A copy does not stay in step. Someone updates one and not the other, and afterwards nobody can tell which is current,
-so a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none, because a
-gap is visible and a contradiction is not.
+A copy does not stay in step. Someone updates one and not the other, and afterwards nobody can tell which is current, so
+a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none, because a gap
+is visible and a contradiction is not.
 
 ## Cheap capture, deliberate promotion
 
@@ -68,16 +68,16 @@ Capture has to be nearly free or it does not happen. Nobody writes up a gotcha i
 and two reviewers. So you record an observation with no review at all and mark it unverified, and it expires on its own
 if nothing promotes it.
 
-The rigour lives at promotion. A discovery becomes a fix when a human confirms it, and the fix carries provenance back
-to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
+The rigour lives at promotion. A discovery becomes a fix when a human confirms it, and the fix records its provenance
+back to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
 
 ## Trust is what a corpus is for
 
 The failure mode of a wiki is not too little content. It is content nobody believes.
 
-Every mechanism here serves that. A generated index cannot be stale, a validated link cannot rot quietly, an immutable
-decision cannot be rewritten, and a rule with no control is recorded as unenforced rather than assumed. Each of those
-makes a record harder to add, and that is the trade this framework takes.
+Every mechanism here serves that. A generated index cannot be stale, a dead link fails the build, an immutable decision
+cannot be rewritten, and a rule with no control is recorded as unenforced rather than assumed. Each of those makes a
+record harder to add, and that is the trade this framework takes.
 
 ## What you own, and what you install
 
@@ -89,7 +89,7 @@ What comes from upstream is `kac` itself, installed as a versioned tool and pinn
 newer one is a version they choose to take.
 
 The cost is **drift** in the half they own, meaning a file that no longer matches the upstream it came from. A manifest
-and a descriptor answer it. A corpus records which version of the shared layer it is on, and which divergences it has
+and a descriptor record it. A corpus states which version of the shared layer it is on, and which divergences it has
 deliberately accepted. A necessary deviation therefore does not look like an accident.
 
 ## Readable and writable by agents

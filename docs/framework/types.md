@@ -1,7 +1,7 @@
 # The default types
 
 Nineteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
-[`.corpus.yaml`](../corpus-descriptor.md). A declined type's schema file is never written, so nothing arrives to be
+[`.corpus.yaml`](../corpus-descriptor.md). `kac` never writes a declined type's schema file, so nothing arrives to be
 ignored.
 
 Adopting all of them is not expected. A corpus running one product might stand up four and never want the rest. It can
@@ -45,7 +45,7 @@ Living, and must mirror reality. Verifiable against the estate.
 | **Tools**        | `tools/`        | The approved-software register: what is chosen, rejected or deprecated, and the version ranges you stand behind |
 | **Glossaries**   | `glossary/`     | The ubiquitous language. Terms whose meaning is specific to you, or which are easily confused                   |
 | **Explanations** | `explanations/` | Narrative that helps you understand how something works, or why it is shaped the way it is                      |
-| **Reports**      | `reports/`      | A question about the corpus answered over the whole of it, with the judgement a person added                   |
+| **Reports**      | `reports/`      | A question about the corpus answered over the whole of it, with the judgement a person added                    |
 
 ## Procedural
 
@@ -67,12 +67,12 @@ Perishable. Unreviewed until promoted, and it expires by default.
 ## The pairs that look alike
 
 Several of these sit close enough to be confused, and the schema declares the distinction on the type it belongs to. An
-ADR is the decision and its reasoning, frozen. A standard is the rule that results, kept current. A process is read at
-a desk, and a runbook at three in the morning. A discovery is cheap and unverified, and a fix is what it becomes once
+ADR is the decision and its reasoning, frozen. A standard is the rule that results, kept current. A process is read at a
+desk, and a runbook at three in the morning. A discovery is cheap and unverified, and a fix is what it becomes once
 somebody confirms it.
 
-A corpus's own taxonomy page renders every such pair it holds both sides of. The distinctions you meet are therefore
-the ones your own types actually raise.
+A corpus's own taxonomy page renders every such pair it holds both sides of. The distinctions you meet are therefore the
+ones your own types actually raise.
 
 ## Adding one of your own
 

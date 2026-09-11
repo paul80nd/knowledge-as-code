@@ -1,14 +1,14 @@
 # Contributing
 
-A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI
-session can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the
-same whichever is holding the keyboard.
+A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI session
+can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the same
+whichever is holding the keyboard.
 
 This page is the model. The rules for the words themselves are skills. An agent loads one beside the work at the moment
 of writing, so a session that writes no prose pays nothing for them. A person contributing by hand reads them as the
 full rule list.
 
-| The skill           | Carries                                                                 |
+| The skill           | What it covers                                                          |
 |---------------------|-------------------------------------------------------------------------|
 | `technical-writing` | the floor: how to build a sentence, and how to write a commit message   |
 | `writing-a-record`  | what a corpus adds to the floor, and what each tier asks on top of that |
@@ -21,8 +21,8 @@ Four sources of rules, in this order.
 1. **The schema and the validator.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report. These are
    executable. So they are the authority on anything mechanical: required sections, clause modals, id and filename
    formats, link forms, and the text rules a type declares.
-2. **The type's own pages.** `<type>.md` for what the type holds, and `<type>/_template.md` for the sections a record of
-   it must have.
+2. **The type's own pages.** `<type>.md` for what the type covers, and `<type>/_template.md` for the sections a record
+   of it must have.
 3. **The corpus's own contributing page**, for the conventions it sets locally.
 4. **The skills**, for the prose.
 
@@ -42,13 +42,12 @@ a corpus while claiming the rulebook's authority.
    tier rules are why a runbook step and an ADR paragraph are held to different constraints.
 6. Open a pull request. What review it needs follows the tier.
 
-Nobody edits generated content by hand. Where an index looks wrong, the frontmatter it was built from is wrong.
+Do not edit generated content by hand. Where an index looks wrong, the frontmatter it was built from is wrong.
 
-## Review follows the tier
+## Review by tier
 
 The bar below follows what a record *is*, and never who wrote it. It is what each tier asks for. How much rigour a
-corpus actually requires is that corpus's to set, and its own contributing page carries the branch policy it starts
-from.
+corpus actually requires is that corpus's to set, and its own contributing page has the branch policy it starts from.
 
 | Tier            | Review required                    | Merge criteria                                                                   |
 |-----------------|------------------------------------|----------------------------------------------------------------------------------|
@@ -64,14 +63,15 @@ from.
 **Decided content is immutable after merge.** Corrections are limited to typos and status transitions. To change a
 decision, write a new one that supersedes it.
 
-## An agent contributes, and a human accepts
+## What an agent may write
 
-An agent proposing knowledge has an identity of its own: a service account that can open pull requests and cannot merge
-them. A human accepts what it proposes, and a branch policy enforces that so nobody has to remember.
+An agent proposes and a human accepts. An agent proposing knowledge has an identity of its own: a service account that
+can open pull requests and cannot merge them. A human accepts what it proposes, and a branch policy enforces that so
+nobody has to remember.
 
-What an agent may write follows from that. It captures a discovery rather than a fix, because it cannot confirm its
-own observations. Where a Decided record is wrong, it proposes the record that supersedes it. And it asks where a
-record goes, because a record in the wrong folder is never found by the search that needed it.
+What an agent may write follows from that. It captures a discovery rather than a fix, because it cannot confirm its own
+observations. Where a Decided record is wrong, it proposes the record that supersedes it. And it asks where a record
+goes, because a record in the wrong folder is never found by the search that needed it.
 
 ## What a pipeline will not do
 
@@ -82,7 +82,7 @@ unanswerable.
 ## What does not belong in a corpus
 
 * Content duplicated from a work item. Link to it instead.
-* Anything holding secrets, connection strings, tokens or customer data. A corpus is broadly readable.
+* Anything with secrets, connection strings, tokens or customer data in it. A corpus is broadly readable.
 * Raw session logs. Distilled discoveries only.
 * Speculative documentation for work not yet started. That belongs in the backlog.
 * A record that fits no type. Raise the gap: a missing type is a taxonomy conversation.

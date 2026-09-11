@@ -15,14 +15,14 @@ governance or agile background, which is a defect the register exists to close.
 Naming a framework in a lineage row says the thinking is near theirs. It does not claim conformance, certification, or
 that a record would satisfy an assessment against theirs.
 
-A corpus may also have a *standing* against an external framework, meaning obligations it accepts and is measured on.
-It records that in its own `frameworks.md` and nowhere else. The two registers are kept apart deliberately, because
+A corpus may also have a *standing* against an external framework, meaning obligations it accepts and is measured on. It
+records that in its own `frameworks.md` and nowhere else. The two registers are kept apart deliberately, because
 standing belongs wholly to the corpus holding it.
 
 ## What a row says
 
-A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most carry three parts, and
-a type with no ancestor carries the first alone. The ADR is the clearest to read:
+A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most have three parts, and
+a type with no ancestor has the first alone. The ADR is the clearest to read:
 
 **`prior-art`.** [Nygard, *Documenting Architecture Decisions*][nygard] (2011).
 
@@ -32,9 +32,9 @@ decision is superseded rather than rewritten".
 **`divergence`**, which is where it parted company: "Nygard scopes decisions to one codebase. Ours must affect more than
 one repository. Mandatory *Alternatives* is ours, not his".
 
-A type carrying a fourth part, `collision`, means the word already denotes something else to a reader arriving from
-another framework. Five of them do. Where the collision is severe the type's own root page repeats the warning, because
-a reader who never opens the lineage page still needs it.
+A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
+framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens
+the lineage page still needs it.
 
 **The rows themselves live in the corpus, not here.** Each corpus's lineage page renders them from the schema it holds,
 so it shows the types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too. It owns
@@ -58,37 +58,21 @@ The split exists because the two are written differently, rehearsed differently,
 
 ## Where the language rules come from
 
-The `technical-writing` skill, and the tier rules in `writing-a-record`, draw on two bodies of work.
+The `technical-writing` skill, and the tier rules in `writing-a-record`, follow the
+[Microsoft Writing Style Guide][mswsg] with a short list of local changes. It is the base because it is public,
+complete, and known in depth by the models that write here. `std-PROSE` in this repository's own corpus is the record
+that states the same rules for the estate.
 
-### ASD-STE100
+The rules are written in this framework's own words and set at its own limits. They are not an implementation of the
+Microsoft guide, and no output of a corpus is described as conforming to it.
 
-**[Simplified Technical English][ste]**, Issue 9 (2025), published by the Aerospace, Security and Defence Industries
-Association of Europe and maintained by its Simplified Technical English Maintenance Group. A controlled language for
-aerospace maintenance documentation. It is a closed dictionary of approved words, each carrying one meaning and one
-part of speech. Beside the dictionary sit writing rules covering sentence length, one instruction per sentence,
-permitted verb forms and noun-cluster length. Its influence here is direct, and heaviest on the procedural tier, which
-is the material it was built for.
+## What a licence permits
 
-### ISO 24495-1
+[Diátaxis][diataxis] is licensed CC BY-SA, and that share-alike condition does not sit comfortably with this
+repository's MIT licence. It is linked and attributed, and not quoted at length.
 
-**[ISO 24495-1:2023][iso24495]**, plain language governing principles: that readers get what they need, can find it, can
-understand it, and can use it. These are principles, and no machine can check them. They are still the right statement
-of what the mechanics are for.
-
-### What the licences permit
-
-ASD-STE100 is free to obtain and is not freely licensed. Reproduction or publication in whole or in part requires
-written authority from ASD, unauthorised redistribution is prohibited, and ASD does not endorse third-party compliance
-claims. ISO 24495-1 is sold and is likewise all rights reserved.
-
-So this framework cites both, learns from both, and reproduces neither. The authoring rules are written in its own words
-and set at its own limits. They are not an implementation of either document, and no output of a corpus is described as
-STE-compliant or as conforming to ISO 24495-1. A corpus wanting genuine conformance should obtain the specifications
-directly. This is [Alignment, not compliance](#alignment-not-compliance) again, applied to the one framework that also
-constrains how it may be quoted.
-
-The same care applies to [Diátaxis][diataxis] above, licensed CC BY-SA, whose share-alike condition does not sit
-comfortably with this repository's MIT licence. It is linked and attributed, and not quoted at length.
+The same care applies to every row of the register. This framework cites its prior art, learns from it, and reproduces
+none of it. That is [Alignment, not compliance](#alignment-not-compliance) again, read as a rule about quoting.
 
 ## What is not verified
 
@@ -97,18 +81,13 @@ primary source, except these:
 
 * **ITIL** publications are paywalled, so the known-error definition behind the fix row rests on the publisher's own
   summary.
-* **ISO standards** are paywalled, so 25010's characteristics and 24495-1's principles come from the issuing body's
-  public descriptions.
+* **ISO standards** are paywalled, so 25010's characteristics come from the issuing body's public descriptions.
 * **ArchiMate** is licence-gated beyond its public specification pages.
-* **ASD-STE100's** licensing terms and issue details come from the specification's own front matter and the maintenance
-  group's published material. The numeric writing rules are corroborated from specialist secondary sources rather than
-  from the rule text, so the framework states its own limits instead of quoting theirs.
 
 Where a claim is later found wrong, correct the row. Do not soften it.
 
 [The default types](types.md) is the page for what each type actually holds, once you know where its name came from.
 
 [diataxis]: https://diataxis.fr/
+[mswsg]: https://learn.microsoft.com/style-guide/welcome/
 [nygard]: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
-[iso24495]: https://www.iso.org/standard/78907.html
-[ste]: https://www.asd-ste100.org/
