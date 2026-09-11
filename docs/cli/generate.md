@@ -73,6 +73,6 @@ Give the job read-only permission. [Running it in CI](../ci.md) has the whole wo
 
 **The types graph is written for the narrowest renderer.** Every corpus gets the same Mermaid subset an Azure DevOps
 wiki can render, whatever it publishes to.
-[Generation](../design/generation.md#the-graph-is-written-to-the-narrowest-renderer) says why.
+[Generation](../design/generation.md#the-mermaid-subset) says why.
 
 [`validate`](validate.md) checks that every file this writes into still has both markers of each block.

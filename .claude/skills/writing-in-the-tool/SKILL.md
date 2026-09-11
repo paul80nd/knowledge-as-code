@@ -42,6 +42,8 @@ Load `technical-writing` first. This page adds the shape of prose in the tool.
 * The second sentence of a split message opens lower case too. An interpolated path or id keeps its own case. Write:
   `the index is stale. {path} changed after it was built.`
 * A message names a change to the corpus the reader holds. It does not name a template or a transform they never saw.
+* Changing what a command prints makes its docs page stale. `docs/cli/<verb>.md` quotes real output. Re-read it,
+  run the command, and paste what it printed now.
 
 ## Say it once
 

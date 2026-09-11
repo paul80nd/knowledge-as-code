@@ -121,7 +121,7 @@ kac update --policy full
 ```
 
 `cautious` is the default and writes a seed file only where the corpus has none. `full` writes them all.
-[Layers](../design/layers.md#a-seed-is-the-corpuss-own-words) says why a seed is left alone by default.
+[Layers](../design/layers.md#seed-files) says why a seed is left alone by default.
 
 ## Known limits
 

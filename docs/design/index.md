@@ -1,11 +1,11 @@
 # Design
 
 Why `kac` works the way it does. Each page here takes one part of the tool and sets out the design behind it: what that
-part decides, what it refuses, and what the choice costs. Read one when a command page has told you what happens and
-you need to know why, or when you are about to change the part it covers.
+part decides, what it refuses, and what the choice costs. Read one when a command page has told you what happens and you
+need to know why, or when you are about to change the part it covers.
 
-A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, carrying
-YAML frontmatter above its prose.
+A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, with YAML
+frontmatter above its prose.
 
 These pages are the specification `kac` is built to. Where a page and the tool disagree, one of the two is a defect.
 
@@ -25,27 +25,26 @@ These pages are the specification `kac` is built to. Where a page and the tool d
   about its own records, and which version number moves when either changes.
 * **[The plugin bundle](plugin.md)** says how an export becomes something a consumer can install, and what decides which
   parts of it ship.
-* **[Imports](imports.md)** says how one corpus cites records another corpus published, what each step of the
-  round trip decides, and what a check may ask across the boundary.
+* **[Imports](imports.md)** says how one corpus cites records another corpus published, what each step of the round trip
+  decides, and what a check may ask across the boundary.
 * **[Layers](layers.md)** says which files in a corpus belong to the framework, which belong to the corpus, and what
   happens to each when a newer framework arrives.
 
 ## The schema
 
-`kac` holds every record in a corpus to a schema, and the corpus carries its own. The schema is a folder of YAML files
-named `.schema/`, sitting at or above the corpus. One file declares one **type**, meaning one kind of record: what its
-records are called, where they live, what fields they carry, and what CI holds them to. Four shared files sit beside
-those.
+`kac` checks every record in a corpus against a schema, and the corpus carries its own. The schema is a folder of YAML
+files named `.schema/`, sitting at or above the corpus. One file declares one **type**, meaning one kind of record:
+what its records are called, where they live, what fields they have, and what CI checks them for. Four shared files sit
+beside those.
 
 Nothing here is hard-coded in the tool. A corpus that adds a type file gets a validated type, and a corpus that adds a
 rule to one gets a check, with no release of `kac` in between.
 
-### The keys a type file may carry
+### The keys a type file may take
 
-They are described in
-[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json). Each
-type file opens with a modeline pointing at it, so an editor with YAML language-server support offers the keys,
-describes each one on hover, and marks a wrong one as you type:
+[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json)
+describes them. Each type file opens with a modeline pointing at it, so an editor with YAML language-server support
+offers the keys, describes each one on hover, and marks a wrong one as you type:
 
 ```yaml
 # yaml-language-server: $schema=./meta/type.schema.json
@@ -56,9 +55,8 @@ same checks as one written in it.
 
 ### What each file in `.schema/` holds
 
-Which file holds what, and what the generator writes from each, is
-[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md). It travels with the
-schema, so a corpus reads its own copy.
+[`.schema/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/README.md) says which file holds
+what, and what the generator writes from each. It travels with the schema, so a corpus reads its own copy.
 
 ## Where to go next
 

@@ -26,7 +26,7 @@ unchanged.
 
 **A package includes what its corpus consumes**, because [`export`](export.md) does and this zips what that wrote. A
 corpus consuming yours inherits the corpora you inherited, so you republish their records under your own name and
-version. [Imports](../design/imports.md#what-a-corpus-publishes-it-republishes) says why that is the design.
+version. [Imports](../design/imports.md#what-an-export-inherits) says why that is the design.
 
 The version is `content-version` from [`.corpus.yaml`](../corpus-descriptor.md), the number a corpus moves by hand when
 its records change meaning. The package must also state a `shortcode`, because that is the word a consuming corpus will

@@ -1,92 +1,102 @@
 # Discovery
 
-Which files `kac` opens, which of those it judges as records, and which it reads for something narrower. Every command
-answering a question about a corpus starts here, so a file this pass leaves out is a file no check reaches.
+Discovery decides which files `kac` reads. It lists every file in the corpus (one repository of knowledge records kept
+in git), selects the records from that list, and passes the rest to the link checks. Every command that asks a question
+about a corpus starts here. No check runs against a file that discovery leaves out.
 
-A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, filed
-under a type and carrying YAML frontmatter above its prose. A **type** is one kind of record, such as a policy or a
-runbook, declared in the corpus's own `.schema/`.
+```sh
+git ls-files --cached --others --exclude-standard   # the listing kac starts from
+```
 
-## `git ls-files` decides what exists
+A record is one Markdown document with YAML frontmatter above its prose. Each record sits in the folder of its type,
+such as `policies/` or `runbooks/`. A type is one kind of record, and the corpus's own `.schema/` declares which types
+it has.
 
-`kac` lists a corpus with `git ls-files --cached --others --exclude-standard`, so `.gitignore`, `.git/info/exclude`
-and your global excludes all count. `.git/` is never walked. A file git does not list is a file no command sees.
+## What `git ls-files` lists
 
-The listing carries every file, not only the Markdown. Records are the Markdown in it, and the rest is what a link
-resolves against.
+The listing obeys `.gitignore`, `.git/info/exclude` and your global excludes. It never includes `.git/`. A file git does
+not list is a file no command sees.
 
-This is why [Running it in CI](../ci.md) asks you to check the repository out with git rather than download an archive.
+The listing includes every file, not only the Markdown. The records come from the Markdown in it. The other files are
+what a link resolves against.
 
-## What the listing then drops
+This is why [Running it in CI](../ci.md) asks you to check the repository out with git. An archive download has no git
+repository, so `kac` falls back to [the fallback walk](#the-fallback-walk) instead, and that walk lists Markdown alone.
 
-Five rules narrow that listing, and a file matching any of them is not a record.
+## What discovery excludes
 
-* **Anything on a path with a `_`-prefixed segment.** The underscore is reserved for the framework's own artefacts, so
-  it covers `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is
-  discovered as no record and is still checked, under `template-fields`.
-* **`knowledge-as-code/`**, which holds the framework's own documentation. It is excluded as a *record* only, and the
-  pass below still reads it.
-* **`.git/`, `.idea/` and `.claude/` at the corpus root.** Nothing reads these at all. The rule tests the first segment
-  of the path, so a `.claude/` nested inside a type folder is not caught by it.
+Five rules narrow the listing. A file matching any of them is not a record.
+
+* **A path with a `_`-prefixed segment.** The underscore is reserved for the framework's own files, so the rule covers
+  `**/_index.md` and `**/_template.md` as well as `_plan/` and `_reports/`. A type's `_template.md` is not a record, and
+  `template-fields` still checks it.
+* **`knowledge-as-code/`.** This folder contains the framework's own documentation. The rule excludes it as a record
+  only. [The framework's own documentation](#the-frameworks-own-documentation) below still reads it.
+* **`.git/`, `.idea/` and `.claude/` at the corpus root.** Nothing reads these. The rule tests the first segment of the
+  path, so discovery still reads a `.claude/` inside a type folder.
 * **A root `README.md` and a root `CLAUDE.md`.** Both are orientation pages.
-* **Anything outside a folder that maps to a type.** A record lives in its type's folder, so those folders are the whole
-  of what is read.
+* **Anything outside a folder that maps to a type.** A record lives in its type's folder, and discovery reads those
+  folders and nothing else.
 
-[Automation](../framework/automation.md#what-is-not-a-record) says why each path is named rather than globbed.
+[Automation](../framework/automation.md#what-is-not-a-record) explains why each path is named instead of globbed.
 
-## `from: sub-path` reads a field's value out of the folders
+## `from: sub-path`
 
-The first folder in a record's path decides its type. The folders below that one are yours to arrange, and `kac` reads
-them too. A field declaring `from: sub-path` takes its value from them, so
-`policies/security/accs-access-by-identity.md` carries `category: security` and `standards/platform/node/testing.md`
-carries `platform/node`.
+The first folder in a record's path decides its type. You arrange the folders below that one, and `kac` reads them too.
+A field declaring `from: sub-path` takes its value from them. So `policies/security/accs-access-by-identity.md` gets
+`category: security`, and `standards/platform/dotnet/testing.md` gets `category: platform/dotnet`.
 
-Folders can go as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus that
-files everything at the top of each type folder declares nothing and reads no differently.
-[Metadata](../framework/metadata.md#a-field-the-schema-derives-which-you-never-write) says what an author does about it.
+Nest those folders as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus
+that files everything at the top of each type folder declares nothing and reads no differently.
+[Metadata](../framework/metadata.md#a-field-the-schema-derives-which-you-never-write) explains what an author does about
+it.
 
-## Frontmatter is how a document opts in
+## Frontmatter
 
-A document is validated only if it carries a YAML frontmatter block. A file sitting in a type folder without one is
-counted in the summary as skipped without frontmatter, and does not fail the run.
+`kac` validates a document only if it has a YAML frontmatter block. It counts a file that sits in a type folder without
+one as skipped without frontmatter, reports that count in the summary, and does not fail the run.
 
-## The framework's own documentation gets a pass of its own
+## The framework's own documentation
 
-`knowledge-as-code.md` and the documents beneath it are not records, and discovery leaves them out. They are still
-Markdown that links to things, so they are read for link and fragment resolution, the way a type page is, and for
-`framework-names-types`. Generated blocks are emptied first, because `generate --check` answers for those and the links
-inside them are written from this corpus rather than from the framework.
+`knowledge-as-code.md` and the documents below it are not records, and discovery excludes them. They are still Markdown
+with links in it. So `kac` reads them for link and fragment resolution, the way it reads a type page, and for
+`framework-names-types`.
 
-The framework's own glossary sits in that set and is also a record, filed under a type and validated like any other. It
-takes the naming rule and not a second link pass, which would report every dead link in it twice.
+`kac` empties the generated blocks before it reads. `generate --check` checks those blocks instead. Their links are
+written from this corpus, not from the framework.
 
-## A type page gets a pass of its own
+The framework's own glossary sits in that set and is also a record, filed under a type and validated like any other.
+`kac` applies the naming rule to it, and not a second link pass. A second pass would report every dead link in it twice.
 
-A type page such as `adrs.md` or `services.md` is not a record and carries no frontmatter, so the structural checks do
-not apply. It is checked for link resolution, undefined and non-canonical labels, unused definitions, and frontmatter it
-should not be carrying at all.
+## Type pages
 
-## A generated block is held to its markers
+A type page such as `adrs.md` or `services.md` is not a record and has no frontmatter, so the structural checks do not
+apply to it. `kac` checks it for link resolution, undefined labels, non-canonical labels, unused definitions, and
+frontmatter it should not have at all.
 
-A type page and the framework's own pages alike are held to still carrying both markers of every block `generate`
-writes into them. The list of blocks is the one `generate` writes from.
+## Generated block markers
 
-A block whose markers have gone is written by nothing, and without this pass nothing would report it. `generate --check`
-compares a file against what the generator would produce, and what the generator produces for a file it finds no marker
-in is that file as it stands. [Generation](generation.md) says what each block is built from.
+`kac` checks that every type page and every framework document still has both markers of each block `generate` writes
+into it. The list of blocks is the one `generate` writes from.
 
-## The fallback walk honours nothing
+If a block loses its markers, `generate` no longer writes it. This check is the only thing that reports the loss.
+`generate --check` compares a file against what the generator would produce. For a file with no marker in it, that is
+the file as it stands. [Generation](generation.md) explains what each block is built from.
 
-A tree that is not a repository, or one where git cannot be run, is walked for `*.md` instead. That walk skips `.git`,
-`.idea` and `.claude` at the root and honours no exclude file.
+## The fallback walk
 
-Two things change, and the second is the one that bites. A Markdown file the corpus had ignored is discovered and
-validated. And the walk lists Markdown alone where `git ls-files` lists everything, so a link to an image or a YAML
-file resolves against nothing and fails `link-resolves`.
+`kac` walks the tree for `*.md` when the tree is not a repository, or when git cannot be run. The walk skips `.git`,
+`.idea` and `.claude` at the root. It obeys no exclude file.
 
-The tool's own test harness assembles such a tree deliberately. A corpus outside version control meets it without
-asking, which is why nothing is proved on this path.
+Two things change, and the second one is easy to miss:
+
+* A Markdown file the corpus had ignored is discovered and validated.
+* The walk lists Markdown alone, where `git ls-files` lists everything. A link to an image or a YAML file then resolves
+  against nothing and fails `link-resolves`.
+
+The tool's own test harness builds such a tree on purpose. A corpus outside version control meets the walk without
+asking for it. The walk is the fallback, so do not rely on it.
 
 ## Where to go next
 
-[`validate`](../cli/validate.md) is the command that runs this pass and reports what it finds.
+[`validate`](../cli/validate.md) runs this pass and reports what it finds.

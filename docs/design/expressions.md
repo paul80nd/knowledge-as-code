@@ -5,11 +5,11 @@ expression, `kac` evaluates it against every record of that type, and the fault 
 Adding a check is adding YAML rather than editing the tool.
 
 An expression asks a small, fixed set of questions about one record. It has no variables, no loops and no way to reach
-another record. That boundary is the point: a rule that stays this small can be read by whoever trips it.
+another record. That boundary is the point: a rule this small can be read by whoever trips it.
 
-## A rule fires when its expression is false
+## How a rule is declared
 
-Write the expression as the condition that ought to hold, not as the fault:
+A rule fires when its expression is false. Write the expression as the condition that ought to hold, not as the fault:
 
 ```yaml
 rules:
@@ -22,19 +22,19 @@ rules:
       seeing, not on what the document is called.
 ```
 
-`description:` is what the rule means, and it is rendered into the generated checks table on the type's page. `message:`
-is what an author is told when the rule fires. One is a definition and the other is a diagnosis, so do not write the
-same sentence twice.
+`description:` is what the rule means, and the generated checks table on the type's page renders it. `message:` is what
+an author is told when the rule fires. One is a definition and the other is a diagnosis, so do not write the same
+sentence twice.
 
-A rule carrying an `expr:` must also declare a **severity**, meaning the level it reports at, and a message. A rule that
-claims to be finished is held to being able to report.
+A rule with an `expr:` must also declare a **severity**, meaning the level it reports at, and a message. A rule that
+claims to be finished must be able to report.
 
 A rule with no `expr:` keeps its `id` and `description`, declares no severity, and renders as an **intention**: a
 behaviour written down that no code answers to yet.
 
-## The grammar is frozen
+## The grammar
 
-Extend it only on a deliberate decision, and never for convenience.
+It is frozen. Extend it only on a deliberate decision, and never for convenience.
 
 ```
 expr    := implies
@@ -57,14 +57,14 @@ call    := IDENT "(" ( expr ("," expr)* )? ")"
 * **A comparison is not chainable.** `1 < words() < 40` is a sentence rather than a condition, and the parser declines
   it instead of choosing an associativity nobody asked for.
 * **Dates compare as ISO strings**, so `field('a') >= field('b')` works without a date type.
-* **Division by zero yields zero.** Nothing in the default types divides, and the operator exists because the grammar is
+* **Division by zero gives zero.** Nothing in the default types divides, and the operator exists because the grammar is
   frozen. A rule that trips over it reads as a threshold nobody meets.
 * **No variables, user-defined functions, quantifiers or collections.**
 
 An expression is written as a string. Several rules are conditionals or ratios, and those read cleanly on one line and
 badly as a tree of nested YAML objects.
 
-## An absent field makes a comparison false
+## An absent field
 
 `field(...)` returns either a string or nothing. A comparison where either side is absent is **false**, and `!=` is the
 negation of `==`, so `!=` is true. That is one rule for every operator.
@@ -79,11 +79,11 @@ expr: "present('detected-on') and present('occurred-on') implies field('detected
 This is why a written rule runs longer than a first sketch of it. The alternative is each operator guessing which way
 silence should fall, which trades one visible guard for a table of special cases nobody remembers.
 
-## Every expression is checked when the schema loads
+## When an expression is checked
 
-`kac` parses and type-checks each expression before it opens a single record, and anything wrong stops the load naming
-the rule. That covers a syntax error, an unknown fact, the wrong number of arguments and a number too large to hold.
-It also covers a comparison between a number and text, arithmetic on text, and a whole expression that is not a
+`kac` parses and type-checks each expression before it opens a single record, and anything wrong stops the load and
+names the rule. That covers a syntax error, an unknown fact, the wrong number of arguments and a number too large to
+hold. It also covers a comparison between a number and text, arithmetic on text, and a whole expression that is not a
 yes/no question.
 
 Without it, `words() == 'three'` compiles and then evaluates false for the life of the schema. That is a check which
@@ -92,36 +92,36 @@ appears wired up and never fires, the exact failure this layer exists to end.
 ## The facts an expression can ask for
 
 These are the whole callable surface. Each reads what the parse pass already produced, so the evaluator never re-parses
-markdown, and `today()` is the last row because it is the one that reads nothing about the record.
+markdown. `today()` is the last row because it is the one that reads nothing about the record.
 
 | Function                         | Returns | Reads                                                                                                                |
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
 | `field('name')`                  | string? | a frontmatter scalar                                                                                                 |
-| `present('name')`                | bool    | whether that field carries anything, scalar or list. False for a bare key and an empty list as for a missing one     |
+| `present('name')`                | bool    | whether that field has anything, scalar or list. False for a bare key and an empty list as for a missing one         |
 | `field_matches('name', 're')`    | bool    | that scalar against a pattern. False where absent, and the one pattern fact that sees frontmatter                    |
-| `entries_match('n', 'k', 're')`  | bool    | key `k` of every object under field `n` against a pattern. True where the field is absent or holds no such key       |
+| `entries_match('n', 'k', 're')`  | bool    | key `k` of every object under field `n` against a pattern. True where the field is absent or has no such key         |
 | `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                 |
 | `section_count('Title')`         | int     | how many times it appears. `section()` asks whether, this asks how many                                              |
 | `first_section()`                | string  | the first H2, or empty where there is none                                                                           |
-| `links()`                        | int     | how many links the body carries                                                                                      |
+| `links()`                        | int     | how many links the body has                                                                                          |
 | `words()`                        | int     | every heading and paragraph the record **renders**. Frontmatter and fenced code carry no inline content and fall out |
 | `matches('re')`                  | bool    | the body **as written**, code fences, link targets and markdown syntax included. Frontmatter is not read             |
-| `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the record holds no such section                                   |
+| `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the record has no such section                                     |
 | `today()`                        | string  | the day the run happens, as an ISO date, so a rule compares it against a date field                                  |
 
-**`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has
-gone by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first
-record and its last the same answer.
+**`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has gone
+by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first record
+and its last the same answer.
 
 **`words()` and `matches()` deliberately see different documents.** One walks the rendered text and the other the
 source. That is what lets `matches()` find a credential pasted into a fenced block, the case those rules exist for. It
 also finds `**MUST**`, an obligation the rendered text would have flattened into an ordinary word.
 
-## Reach for a fact, not for the grammar
+## Adding a fact
 
-Adding a fact means one method on the tool's `Facts` class, one row in its function table, and one row in the table
-above. A test holds this page's table against that function table, so the page and the tool cannot come apart quietly.
-The grammar never changes.
+Reach for a fact, not for the grammar. Adding one means one method on the tool's `Facts` class, one row in its function
+table, and one row in the table above. A test holds this page's table against that function table, so the page and the
+tool cannot come apart quietly. The grammar never changes.
 
 `section_count()` and `field_matches()` each serve a single rule today, and each answers a question the next corpus will
 ask again. That is the usual shape of a new fact, and the reason reaching for the grammar instead is almost always the

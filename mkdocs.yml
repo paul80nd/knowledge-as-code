@@ -19,6 +19,11 @@ copyright: MIT licensed.
 # Strict mode fails a dead link. A page the nav does not list is only reported at INFO, so `NavigationTests` has it.
 strict: true
 
+# A dead anchor is otherwise INFO, which strict does not promote. This key takes no `error`, so `warn` fails the build.
+validation:
+  links:
+    anchors: warn
+
 # The pins the workflow installs from. It sits beside the pages so Dependabot finds one directory, and the
 # site is not a place to serve it from.
 exclude_docs: |
