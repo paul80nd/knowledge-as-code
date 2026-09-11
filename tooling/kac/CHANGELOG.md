@@ -90,6 +90,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac report` calls a fresh report a draft.** The schema requires `status` and no run wrote it, so every generated
   report failed `kac validate` until somebody added the field by hand. The frontmatter now carries `status: draft`.
 
+- **`id-matches-filename` names the two things that disagree.** It printed the whole id where it meant the id's own
+  slug, so a record filed as `reports/rpt-clause-coverage.md` was told that `rpt-clause-coverage` does not match
+  `rpt-clause-coverage`. It now reads `id 'rpt-clause-coverage' carries slug 'clause-coverage', and the filename
+  carries 'rpt-clause-coverage'.` The number and the mnemonic branches take the same wording.
+
 - **An unhandled fault goes to stderr.** Spectre's own handler wrote one to stdout, so `kac report coverage > out.md`
   put the message inside the report and left the console silent. Every verb's own refusal already went to stderr, and
   this joins them.

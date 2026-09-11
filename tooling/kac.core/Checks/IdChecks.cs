@@ -52,7 +52,7 @@ public static class IdChecks
                         $"id '{id}' must be '{expectPrefix}' followed by {t.IdWidth} digits.", line);
                 else if (carried is not null && rest != carried)
                     report.Err(new CheckId("id-matches-filename"),
-                        $"id '{id}' number does not match filename number '{carried}'.", line);
+                        $"id '{id}' carries number '{rest}', and the filename carries '{carried}'.", line);
                 break;
 
             // The id carries the mnemonic upper-case (pol-VURM); the filename carries it lower-case
@@ -65,7 +65,7 @@ public static class IdChecks
                         + "characters beginning with a letter.", line);
                 else if (carried is not null && !rest.Equals(carried, StringComparison.OrdinalIgnoreCase))
                     report.Err(new CheckId("id-matches-filename"),
-                        $"id '{id}' mnemonic does not match filename mnemonic '{carried}'.", line);
+                        $"id '{id}' carries mnemonic '{rest}', and the filename carries '{carried}'.", line);
                 break;
 
             // A slug is not a fixed-width discriminator cut from the front of the filename: it is the
@@ -78,7 +78,7 @@ public static class IdChecks
                         line);
                 else if (carried is not null && rest != carried)
                     report.Err(new CheckId("id-matches-filename"),
-                        $"id '{id}' slug does not match filename slug '{carried}'.", line);
+                        $"id '{id}' carries slug '{rest}', and the filename carries '{carried}'.", line);
                 break;
         }
     }

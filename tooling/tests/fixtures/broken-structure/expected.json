@@ -27,7 +27,7 @@
       "line": 1,
       "severity": "error",
       "check": "id-matches-filename",
-      "message": "id 'adr-0009' number does not match filename number '0004'."
+      "message": "id 'adr-0009' carries number '0009', and the filename carries '0004'."
     },
     {
       "file": "adrs/0005-no-h1.md",
@@ -202,7 +202,7 @@
       "line": 1,
       "severity": "error",
       "check": "id-matches-filename",
-      "message": "id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'."
+      "message": "id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'."
     },
     {
       "file": "policies/recv-identity-id.md",
@@ -237,7 +237,7 @@
       "line": 1,
       "severity": "error",
       "check": "id-matches-filename",
-      "message": "id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'."
+      "message": "id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'."
     },
     {
       "file": "tools/site-server.md",
