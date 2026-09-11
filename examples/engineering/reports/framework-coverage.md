@@ -4,14 +4,15 @@ type: report
 tier: descriptive
 status: active
 owner: human:alex.doe
-generated: { at: 2026-09-11T09:41:49Z, by: kac/0.25.0 }
+generated: { at: 2026-09-11T10:07:34Z, by: kac/0.25.0 }
 sources:
-  - { resource: example-engineering, version: "0.15.0" }
+  - { resource: example-engineering, version: "0.16.0" }
 verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
   - { at: 2026-09-09T18:29:19Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:20:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T09:05:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T10:10:00Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, frameworks ]
 ---
 
@@ -47,20 +48,19 @@ and an empty cell says so.
 
 ## Totals
 
-| Framework       | Standing       | References | Cited once |
-|-----------------|----------------|------------|------------|
-| Azure WAF       | Inspiration    | 4          | 0          |
-| DORA metrics    | Inspiration    | 4          | 1          |
-| EN 301 549      | Obliged        | 3          | 2          |
-| ISO 27001:2022  | Obliged        | 58         | 15         |
-| NIST AI RMF 1.0 | Inspiration    | 4          | 1          |
-| NIST SSDF 1.1   | Inspiration    | 15         | 1          |
-| OWASP ASVS 4.0  | Inspiration    | 5          | 3          |
-| PSBAR 2018      | Obliged        | 2          | 1          |
-| SLSA 1.1        | Inspiration    | 2          | 2          |
-| UK GDPR         | Obliged        | 23         | 16         |
-| WCAG 2.2 AA     | Self-obligated | 1          | 0          |
-| **Total**       |                | **121**    | **42**     |
+| Framework         | Standing       | References | Cited once |
+|-------------------|----------------|------------|------------|
+| Azure WAF         | Inspiration    | 4          | 0          |
+| DORA metrics      | Inspiration    | 4          | 1          |
+| Equality Act 2010 | Obliged        | 4          | 3          |
+| ISO 27001:2022    | Obliged        | 58         | 14         |
+| NIST AI RMF 1.0   | Inspiration    | 4          | 1          |
+| NIST SSDF 1.1     | Inspiration    | 15         | 1          |
+| OWASP ASVS 4.0    | Inspiration    | 5          | 3          |
+| SLSA 1.1          | Inspiration    | 2          | 2          |
+| UK GDPR           | Obliged        | 23         | 16         |
+| WCAG 2.2 AA       | Self-obligated | 1          | 0          |
+| **Total**         |                | **120**    | **41**     |
 
 ## References
 
@@ -82,13 +82,14 @@ and an empty cell says so.
 | lead-time           | `pol-AUTV.INTEG`, `pol-AUTV.LEVELS`, `pol-AUTV.OFTEN`, `pol-AUTV.FLOW`, `pol-MNTN.SLIP`, `pol-MNTN.HARDER` | `pol-AUTV`, `pol-MNTN` | `pol-MNTN` cites this as a claim that acting on a maintainability measure moves lead time, rather than as a control it satisfies. Its `TREND` carries no citation, because measuring something moves nothing. `pol-AUTV.FLOW` is the clause committing to look at the measure at all. |
 | recovery-time       | `pol-PIPE.REVERT`, `pol-PIPE.PROGDEL`                                                                      | `pol-PIPE`             |                                                                                                                                                                                                                                                                                       |
 
-### EN 301 549
+### Equality Act 2010
 
-| Reference | Clauses                               | Policies   | Note                                                                                                                  |
-|-----------|---------------------------------------|------------|-----------------------------------------------------------------------------------------------------------------------|
-| §9        | `pol-A11Y.CONFORM`, `pol-A11Y.VENDOR` | `pol-A11Y` | Incorporates WCAG 2.1 level AA by reference, for web content. `WCAG 2.2 AA` is the later version and the bar we hold. |
-| §10       | `pol-A11Y.CONFORM`                    | `pol-A11Y` |                                                                                                                       |
-| §11       | `pol-A11Y.CONFORM`                    | `pol-A11Y` |                                                                                                                       |
+| Reference | Clauses                               | Policies   | Note                                                                                                                                            |
+|-----------|---------------------------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| s.20      | `pol-A11Y.CONFORM`, `pol-A11Y.VENDOR` | `pol-A11Y` | The duty itself, which `s.29` and `s.39` apply. `VENDOR` cites it because a component we adopt becomes part of the service the duty is owed on. |
+| s.29      | `pol-A11Y.CONFORM`                    | `pol-A11Y` |                                                                                                                                                 |
+| s.39      | `pol-A11Y.CONFORM`                    | `pol-A11Y` | The employment duty, reaching the internal tools `pol-A11Y` brings into scope. No clause is about staff alone, so `CONFORM` carries it.         |
+| Sch.2     | `pol-A11Y.UPFRONT`                    | `pol-A11Y` | The duty is anticipatory: we owe it before anybody asks. `UPFRONT` is what puts the requirement at design time rather than in a backlog.        |
 
 ### ISO 27001:2022
 
@@ -191,13 +192,6 @@ and an empty cell says so.
 | V4        | `pol-INTC.EXPOSE`, `pol-ACCS.LEAST`, `pol-MEXP.DENY`  | `pol-INTC`, `pol-ACCS`, `pol-MEXP` |      |
 | V5        | `pol-INTC.SECURE`                                     | `pol-INTC`                         |      |
 | V13       | `pol-INTC.SECURE`                                     | `pol-INTC`                         |      |
-
-### PSBAR 2018
-
-| Reference | Clauses                                                   | Policies   | Note                                                                                                                                                                                          |
-|-----------|-----------------------------------------------------------|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| reg.4     | `pol-A11Y.CONFORM`                                        | `pol-A11Y` |                                                                                                                                                                                               |
-| reg.8     | `pol-A11Y.PUBLISH`, `pol-A11Y.REPORT`, `pol-A11Y.CURRENT` | `pol-A11Y` | Obliged in law in the markets we serve. The statement must be published, kept current, and carry a route for somebody to report a barrier. `PUBLISH`, `CURRENT` and `REPORT` are those three. |
 
 ### SLSA 1.1
 

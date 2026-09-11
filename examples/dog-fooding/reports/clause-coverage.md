@@ -6,12 +6,13 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-11T09:42:20Z, by: kac/0.25.0 }
 sources:
-  - { resource: example-dogfooding, version: "0.22.2" }
-  - { resource: example-engineering, version: "0.15.0" }
+  - { resource: example-dogfooding, version: "0.22.3" }
+  - { resource: example-engineering, version: "0.16.0" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:25:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T09:10:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T10:30:00Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, governance ]
 ---
 
@@ -89,11 +90,11 @@ where the two differ.
 | `CONFORM` | MUST     | `std-A11Y` |                             |          |                       | Covered      | WCAG 2.2 AA is the measure, and a reviewer applies it. No check does.                                  |
 | `VENDOR`  | MUST     | `std-A11Y` |                             |          |                       | Covered      | `tol-mkdocs-material` and `tol-spectre-console` each carry an assessment.                              |
 | `RECORD`  | MUST     |            |                             |          | `eng:pol-DEVI.RECORD` | Gap          | Both third-party components carry an assessment in `tools/`, and no standard says one is owed.         |
-| `PUBLISH` | MUST     | `std-A11Y` |                             |          |                       | Covered      | A statement is owed where a law or a contract asks. PSBAR 2018 binds neither.                          |
-| `REPORT`  | MUST     |            |                             |          | `eng:pol-INCR.REPORT` | Gap          | GitHub issues take a barrier report from anybody, and no standard names that route.                    |
+| `PUBLISH` | MUST     | `std-A11Y` |                             |          |                       | Covered      | A statement is owed where a law or a contract asks. Neither asks for these two surfaces.               |
 | `CURRENT` | MUST     |            |                             |          |                       | Out of scope | `PUBLISH` records that no law or contract asks for a statement here, so there is none to keep current. |
 | `FIX`     | MUST     |            |                             |          |                       | Gap          | An accessibility defect becomes an issue on project 3, and nothing sets a timeframe by severity.       |
 | `WORSE`   | MUST NOT | `std-A11Y` |                             |          |                       | Covered      | A change knowingly reducing either surface needs a recorded deviation.                                 |
+| `REPORT`  | SHOULD   |            |                             |          | `eng:pol-INCR.REPORT` | Gap          | GitHub issues take a barrier report from anybody, and no standard names that route.                    |
 | `ASSIST`  | SHOULD   |            | `dev-no-screen-reader-pass` |          |                       | Gap          | Neither surface has been read with a screen reader.                                                    |
 | `INCLUDE` | COULD    |            |                             |          |                       | Out of scope | There is no user research here for anybody to take part in.                                            |
 
