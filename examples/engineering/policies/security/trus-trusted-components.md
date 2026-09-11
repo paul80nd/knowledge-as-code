@@ -38,6 +38,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | Id        | Clause                                                                                                                                       | Alignment                                     |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
 | `INVENT`  | **MUST** maintain an inventory of what each solution depends on, naming each component and the version in use                                | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
+| `PINNED`  | **MUST** hold the exact versions a build resolved in version control, so two builds of the same source take the same components              | [ISO 27001:2022].A.5.21                       |
 | `SCREEN`  | **MUST** screen a component for known vulnerabilities before we adopt it                                                                     | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
 | `LICENCE` | **MUST** screen a component's licence for terms we cannot accept before we adopt it                                                          | [ISO 27001:2022].A.5.32                       |
 | `OBLIGE`  | **MUST** honour the terms of a licence for as long as we ship what it covers                                                                 | [ISO 27001:2022].A.5.32                       |
