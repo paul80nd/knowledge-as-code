@@ -149,9 +149,9 @@ header row, so a screen reader announces "validate" as the column heading over t
 
 ## Rationale and provenance
 
-`eng:pol-A11Y` reaches this repository whole, and none of its seven clauses had a standard beneath it. Five of them
-bind, and they land on two surfaces: the documentation site and the command line. Those two surfaces divide
-differently, so each takes its own rules.
+`eng:pol-A11Y` reaches this repository whole, and no standard sat beneath any of its clauses. The clauses that bind
+land on two surfaces: the documentation site and the command line. Those two surfaces divide differently, so each
+takes its own rules.
 
 **The site divides between the author and the theme.** A Markdown page contributes headings, links, tables, images and
 words. Everything a browser needs beyond that comes from Material for MkDocs: the contrast of the two schemes, the
