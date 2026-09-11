@@ -15,9 +15,9 @@ Scenario: A document with no H1 is an error, and its missing Y-statement is a wa
 Scenario: An id disagreeing with its filename is flagged on the id alone
   When I validate the corpus
   Then the findings for "adrs/0004-missing-consequences.md" are exactly:
-    | line | check               | message                                                     |
-    |      | required-section    | missing required section '## Consequences'.                 |
-    | 1    | id-matches-filename | id 'adr-0009' number does not match filename number '0004'. |
+    | line | check               | message                                                               |
+    |      | required-section    | missing required section '## Consequences'.                           |
+    | 1    | id-matches-filename | id 'adr-0009' carries number '0009', and the filename carries '0004'. |
 
 Scenario: An empty section is reported, and the wording follows what the author can do about it
   When I validate the corpus
@@ -35,8 +35,8 @@ Scenario: A mnemonic id is checked for shape, case and agreement with the filena
     | line | check     | message                                                                                                |
     |    1 | id-format | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |
   And the findings for "policies/pipe-id-disagrees.md" are exactly:
-    | line | check               | message                                                         |
-    |    1 | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'. |
+    | line | check               | message                                                                 |
+    |    1 | id-matches-filename | id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'. |
 
 Scenario: A slug id is checked for its alphabet and for agreement with the whole filename
   When I validate the corpus
@@ -44,8 +44,8 @@ Scenario: A slug id is checked for its alphabet and for agreement with the whole
     | line | check     | message                                                                                 |
     |    1 | id-format | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens. |
   And the findings for "tools/id-disagrees.md" are exactly:
-    | line | check               | message                                                                       |
-    |    1 | id-matches-filename | id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'. |
+    | line | check               | message                                                                                                 |
+    |    1 | id-matches-filename | id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'. |
 
 Scenario: An identity line is required beneath the H1, and is reported once when malformed
   When I validate the corpus
@@ -118,7 +118,7 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/cats-category-written.md                            | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
     | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.               |
     | adrs/0004-missing-consequences.md                           | error    |      | required-section    | missing required section '## Consequences'.                                                            |
-    | adrs/0004-missing-consequences.md                           | error    | 1    | id-matches-filename | id 'adr-0009' number does not match filename number '0004'.                                            |
+    | adrs/0004-missing-consequences.md                           | error    | 1    | id-matches-filename | id 'adr-0009' carries number '0009', and the filename carries '0004'.                                  |
     | adrs/0005-no-h1.md                                          | warning  | 0    | y-statement         | no Y-statement block-quote follows the H1.                                                             |
     | adrs/0005-no-h1.md                                          | error    | 1    | h1                  | document has no H1.                                                                                    |
     | adrs/0006-bad-id-prefix.md                                  | error    | 1    | id-prefix           | id 'xyz-0006' must start with 'adr-'.                                                                  |
@@ -142,10 +142,10 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.       |
     | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                         |
     | policies/obsv-no-identity-line.md                           | error    |  10 | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                       |
-    | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' mnemonic does not match filename mnemonic 'pipe'.                                        |
+    | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'.                                |
     | policies/recv-identity-id.md                                | error    | 12   | identity-id         | identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'.                               |
     | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |
     | policies/trus-identity-type.md                              | error    | 12   | identity-type       | identity line says 'Standard', but this is a Policy.                                                   |
     | policies/vurm-bad-id-width.md                               | error    | 1    | id-format           | id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.   |
-    | tools/id-disagrees.md                                       | error    | 1    | id-matches-filename | id 'tol-names-another-tool' slug does not match filename slug 'id-disagrees'.                          |
+    | tools/id-disagrees.md                                       | error    | 1    | id-matches-filename | id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'. |
     | tools/site-server.md                                        | error    | 1    | id-format           | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens.                |

@@ -3,16 +3,17 @@
 <!-- BEGIN GENERATED: usage-report -->
 
 ```text
-kac report <NAME> [--no-color]
+kac report <NAME> [--no-color] [--out <PATH>]
 ```
 
 | Argument | What it does           |
 |----------|------------------------|
 | `<NAME>` | Which report to print. |
 
-| Option       | What it does                                                |
-|--------------|-------------------------------------------------------------|
-| `--no-color` | Turn colour off. NO_COLOR in the environment does the same. |
+| Option         | What it does                                                                          |
+|----------------|---------------------------------------------------------------------------------------|
+| `--no-color`   | Turn colour off. NO_COLOR in the environment does the same.                           |
+| `--out <PATH>` | Write the report to this file instead of printing it. Refuses a path something holds. |
 
 <!-- END GENERATED: usage-report -->
 
@@ -42,10 +43,21 @@ reading one corpus get one report, and the argument on top of it is written once
 ### Every run stamps what produced it
 
 The frontmatter carries `generated`, naming the tool and version that wrote the report and the moment it ran. It also
-carries `sources`, naming this corpus and each corpus it imports, with the `content-version` each answered at.
+carries `sources`, naming this corpus and each corpus it imports, with the `content-version` each answered at. Only the
+tool knows those, so it writes them rather than leaving a reader to work them out. It writes `status: draft` as well,
+because a report nobody has read yet is a draft.
 
-Only the tool knows both, so it writes both rather than leaving a reader to work them out. The frontmatter arrives with
-`id`, `owner` and `verified` left empty, because a report is a record somebody owns and somebody else verifies.
+`id`, `owner` and `verified` arrive empty, because a report is a record somebody owns and somebody else verifies. Fill
+all three in before you commit the file. `kac validate` names any you miss.
+
+### `--out` writes the file, and refuses a path something holds
+
+Without the flag the report goes to standard output, and you send it wherever you want it. With it `kac` writes the
+file, at the path you name, relative to where you typed the command.
+
+A path a file already occupies is refused, and nothing is written. A finished report holds verdicts and notes
+somebody wrote, and a run cannot tell those from output of its own. Write this run somewhere else, and merge the two by
+hand. [Reports](../design/reports.md) says what a merge carries forward.
 
 ## Examples
 
@@ -86,11 +98,23 @@ coverage when that clause stops citing it, and nothing else in the corpus report
 `Standing` is read from the corpus's own register of frameworks, which says whether the corpus is obliged to a
 framework, self-obligated to it, or borrowing from it. A framework the register does not place leaves the cell empty.
 
+Each framework then gets a section of its own. The line under the heading repeats that standing and links the register
+entry behind it, so a reader working down one table never scrolls back for it. The table gives one row per reference,
+and its `Citations` count says how many clauses reach that reference. A count of `1` is one of the rows `Cited once`
+counted.
+
 ### Keep a report as a record
 
 ```sh
-kac report coverage > reports/rpt-clause-coverage.md
+kac report coverage --out reports/clause-coverage.md
 ```
+
+```text
+wrote reports/clause-coverage.md
+```
+
+The filename carries the question the report answers. The `rpt-` prefix belongs to the `id` alone, and a filename
+repeating it fails `id-matches-filename`.
 
 Fill in `id`, `owner` and the verdicts, then confirm it. `validate` warns once the corpus moves past the
 `content-version` the report names, so a stale report says so on the page.
@@ -105,6 +129,10 @@ whatever it checks inside it. No column claims a clause is verified.
 
 **A pair candidate is a candidate.** Where one obligation is written from both sides, this corpus gives both clauses the
 same key. `report` names the match and never decides it: two policies may reach for one word by coincidence.
+
+**A redirect into `reports/` can collide with the run.** `kac` reads every file in that folder, including the one a
+shell has just opened for the redirect. On Windows the two hold one file and the run stops. `--out` has no such trap,
+because the file is written after the corpus has been read.
 
 **A framework reference does not travel to a consumer.** The `Alignment` column stays in the corpus that wrote it, so
 `frameworks` reports on local clauses alone. [Export](../design/export.md) says why.

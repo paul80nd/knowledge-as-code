@@ -26,6 +26,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   names commands a consumer cannot run, `promoted-from`, which names a discovery that travels nowhere, and `owner`.
   Take the schema with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
 
+- **`kac report --out <path>` writes the report to a file.** Without it the report still goes to standard output, so
+  a caller piping one loses nothing. With it `kac` writes the file after it has read the corpus, which is what keeps
+  a run off the console encoding and out of the way of a shell holding the same path open. A path a file already
+  occupies is refused and nothing is written, because a finished report holds verdicts somebody wrote.
+
 - **Every record can say where its content came from.** `.schema/_universal.yaml` declares `sources`, an optional list
   whose entries carry a required `resource`. A `resource` names something a reader can follow, such as a ticket URL, or
   the population the content was drawn from. `sources` is what the [Open Knowledge
@@ -35,6 +40,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `version` each corpus was at. Take the field with `kac update --from <template>`.
 
 ### Changed
+
+- **`kac report frameworks` says more beside each framework's table.** Every reference row carries a `Citations` count,
+  so a reference one clause cites reads as `1` without counting the cell next to it. Each framework's section opens on
+  the standing the register files it under, linked to the register entry that placed it, which is the line a reader
+  would otherwise scroll back to the totals table for.
+
+- **Each report writes its own `## Limits`.** Both printed one wording, written for a reading of clause coverage.
+  `frameworks` now says that an `Alignment` cell stays in the corpus that wrote it, so it counts the citations written
+  here, and that a citation records the naming rather than a clause meeting what it cites.
 
 - **The five lookup skills drop their search procedure.** `kac new`, `kac update` and `kac bundle` send skills that
   name no search tool and no search flags. A trial ran three variants of `policy-lookup` over five questions: the
@@ -72,6 +86,31 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `validate` names every line of them still saying FAQ.
 
 ### Fixed
+
+- **`kac` prints UTF-8 on Windows.** Standard output took whatever code page the machine was installed with, so a
+  clause citing `§9` reached the reader as a replacement character while the same text in the record was intact.
+  Every command writes through the same stream. `kac report` is where it showed, because a report quotes citation text
+  back.
+
+- **`kac report` writes frontmatter a parser accepts.** `owner: human:` is not valid YAML, so a generated report met
+  `frontmatter-parses` over the whole document rather than a message naming what to fill in. `id`, `owner` and
+  `verified` now arrive empty, and `kac validate` reports `required-field` against each one.
+
+- **`kac report` calls a fresh report a draft.** The schema requires `status` and no run wrote it, so every generated
+  report failed `kac validate` until somebody added the field by hand. The frontmatter now carries `status: draft`.
+
+- **`id-matches-filename` names the two things that disagree.** It printed the whole id where it meant the id's own
+  slug, so a record filed as `reports/rpt-clause-coverage.md` was told that `rpt-clause-coverage` does not match
+  `rpt-clause-coverage`. It now reads `id 'rpt-clause-coverage' carries slug 'clause-coverage', and the filename
+  carries 'rpt-clause-coverage'.` The number and the mnemonic branches take the same wording.
+
+- **An unhandled fault goes to stderr.** Spectre's own handler wrote one to stdout, so `kac report coverage > out.md`
+  put the message inside the report and left the console silent. Every verb's own refusal already went to stderr, and
+  this joins them.
+
+- **The `report` page taught a filename that does not validate.** Its example wrote `reports/rpt-clause-coverage.md`,
+  and a record whose filename repeats the id prefix fails `id-matches-filename`. The filename carries the question the
+  report answers, and the prefix belongs to the `id`.
 
 - **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two
   or three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets

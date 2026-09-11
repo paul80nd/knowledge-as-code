@@ -106,6 +106,9 @@ foreach (var scenario in scenarios)
             case "new":
                 RunNewScenario(name, scenario);
                 break;
+            case "report":
+                RunReportScenario(name, scenario, corpusDir);
+                break;
             default:
                 failures.Add(name);
                 Console.WriteLine($"ERROR  {name}: unknown mode '{mode}'");
@@ -118,6 +121,68 @@ foreach (var scenario in scenarios)
         Console.WriteLine($"ERROR  {name}\n       {ex.Message}");
     }
 }
+
+// `report --out` is the one thing about a report that no unit test reaches: it writes a file, and it
+// refuses a path something already holds. What it writes has to be the report and nothing else, which is
+// asserted against the same run printed to stdout rather than against a golden, because the frontmatter
+// carries the moment the run happened.
+void RunReportScenario(string name, string scenario, string corpusDir)
+{
+    var temp = AssembleTemp(schemaDir, corpusDir);
+    try
+    {
+        var target = Path.Combine("reports", "clause-coverage.md");
+        var full = Path.Combine(temp, target);
+
+        var (printed, _, printExit) = Run(temp, "dotnet", kac, "report", "coverage");
+        var (wroteOut, _, writeExit) = Run(temp, "dotnet", kac, "report", "coverage", "--out", target);
+        var written = File.Exists(full) ? File.ReadAllText(full) : "";
+        var (_, refuseErr, refuseExit) = Run(temp, "dotnet", kac, "report", "coverage", "--out", target);
+        var after = File.Exists(full) ? File.ReadAllText(full) : "";
+
+        var problems = new List<string>();
+        if (printExit != 0) problems.Add($"printing to stdout exited {printExit}");
+        if (writeExit != 0) problems.Add($"--out exited {writeExit}, and said: {wroteOut.Trim()}");
+        if (!File.Exists(full)) problems.Add($"--out wrote no {target}");
+        if (!wroteOut.Contains(target.Replace('\\', '/'), StringComparison.Ordinal))
+            problems.Add($"--out did not name what it wrote: {wroteOut.Trim()}");
+
+        // The stamp moves between two runs a second apart, so it is dropped from both sides. Everything
+        // else the file holds is what stdout held, which is what says the flag changes the destination
+        // and nothing about the document. The console closes on a blank line and a record does not, so
+        // the end of each is trimmed and the file's own ending is asserted below.
+        if (Stamped(written) != Stamped(printed))
+            problems.Add("the file --out wrote is not what the same report printed");
+        if (!written.EndsWith("\n", StringComparison.Ordinal) || written.EndsWith("\n\n", StringComparison.Ordinal))
+            problems.Add("the file does not end on one newline, as every other record here does");
+        if (!written.Contains("| `WRITTEN` | MUST | `std-COVER` |", StringComparison.Ordinal))
+            problems.Add("the covered clause did not reach the file");
+
+        if (refuseExit != 1) problems.Add($"a second --out over the same path exited {refuseExit}, not 1");
+        if (!refuseErr.Contains("already exists", StringComparison.Ordinal))
+            problems.Add($"the refusal did not say the path is taken: {refuseErr.Trim()}");
+        if (after != written) problems.Add("the refused run changed the file it refused to write");
+
+        if (problems.Count > 0)
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var problem in problems) Console.WriteLine($"         {problem}");
+            return;
+        }
+
+        Console.WriteLine($"ok     {name}  (wrote {target}, refused the second run)");
+    }
+    finally
+    {
+        Directory.Delete(temp, true);
+    }
+}
+
+// A report's text with its `generated:` line taken out, which is the one line two runs disagree on.
+static string Stamped(string report) => string.Join('\n',
+    report.Replace("\r\n", "\n").TrimEnd('\n').Split('\n')
+        .Where(l => !l.StartsWith("generated:", StringComparison.Ordinal)));
 
 void RunValidateScenario(string name, string scenario, string corpusDir)
 {

@@ -69,7 +69,7 @@
       "line": 1,
       "severity": "error",
       "check": "id-matches-filename",
-      "message": "id 'adr-0002' number does not match filename number '0003'."
+      "message": "id 'adr-0002' carries number '0002', and the filename carries '0003'."
     },
     {
       "file": "adrs/0003-third.md",
