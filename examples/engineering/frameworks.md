@@ -88,30 +88,31 @@ legal judgement rather than an engineering one, though the glossary defines that
 Article 26 arrangement is between organisations. The privacy notice Article 5(1)(a) requires is written by product and
 legal, and engineering keeps it true as the processing changes.
 
-### PSBAR 2018
+### Equality Act 2010
 
-**Obliged in law**, in the markets we serve. The Public Sector Bodies (Websites and Mobile Applications) (No. 2)
-Accessibility Regulations 2018, SI 2018/952, set the accessibility duty on public sector websites and mobile
-applications. That duty includes publishing an accessibility statement and keeping it current.
+**Obliged in law**, wherever we put software in front of a person. Section 20 sets the duty to make reasonable
+adjustments for a disabled person. Section 29 applies that duty to the services we offer the public, and section 39
+applies it to the software our own staff work in. Schedule 2 makes the service duty anticipatory: we owe it to disabled
+people generally, before any one of them asks.
 
-### EN 301 549
+That anticipatory duty is why [pol-A11Y] establishes accessibility requirements during design. A barrier a user finds
+after release was already a breach on the day we shipped it.
 
-**Obliged in law**, as the harmonised European standard the accessibility regulations point at. It is the technical
-expression of the duty [PSBAR 2018] creates. Version 3.2.1 is the one in force, and its §9 incorporates WCAG 2.1 level
-AA by reference for web content. [WCAG 2.2 AA] is the later version, and the bar [pol-A11Y] verifies against.
+The Act names no technical standard. What counts as reasonable is judged case by case, against what we knew and what a
+fix would have cost. [WCAG 2.2 AA] is the bar we set ourselves, and a conformance record is what we would show.
 
-`§9` is web content, `§10` the documents an application produces and `§11` software that is not a web page, and
-[pol-A11Y] verifies against all three. The rest is not ours. `§12.2` is what a support service tells somebody about an
-accessibility feature, which the support function answers. `§13` binds ICT carrying two-way voice or reaching emergency
-services, and we build none.
+A contract may oblige us to a named standard, most often EN 301 549 or a stated WCAG version. That happens where the
+client is a public sector body passing on a duty of its own. Such a term reaches engineering as a requirement on the
+work it covers. This register does not carry it. A standing we hold everywhere and a term we agreed for one engagement
+are different commitments.
 
 ## Self-obligated
 
 ### WCAG
 
-**Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. We target level AA because the policy says we do, not because
-a particular market has yet required that version of it. Where law obliges an older or narrower target, this is the
-higher bar and the one we hold.
+**Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. Level AA is the bar because the policy sets it, and no law
+we answer to names a version. [Equality Act 2010] obliges the outcome and leaves the measure to us. Where a contract
+names an older version, this is the higher bar and the one we hold.
 
 ## Inspiration
 
@@ -227,5 +228,5 @@ goes when the last citation goes, and the commit removing it is where the reason
 [pol-DEVI]: policies/governance/devi-deviations-are-recorded.md
 [pol-ENVS]: policies/security/envs-environment-separation.md
 [pol-TRUS]: policies/security/trus-trusted-components.md
-[PSBAR 2018]: #psbar-2018
+[Equality Act 2010]: #equality-act-2010
 [WCAG 2.2 AA]: #wcag

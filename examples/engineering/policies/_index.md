@@ -17,12 +17,12 @@
 
 ## Governance
 
-| ID       | Title                                                                                                     | Status | Aligns with                         | Review by  |
-|----------|-----------------------------------------------------------------------------------------------------------|--------|-------------------------------------|------------|
-| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                               | draft  | EN 301 549, PSBAR 2018, WCAG 2.2 AA | 2027-08-04 |
-| pol-AGNT | [Agents propose, people decide](governance/agnt-agents-propose-people-decide.md)                          | draft  | ISO 27001:2022                      | 2027-08-05 |
-| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations-are-recorded.md)               | draft  | ISO 27001:2022                      | 2027-08-04 |
-| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-knowledge-is-written-down.md) | draft  | ISO 27001:2022                      | 2027-08-04 |
+| ID       | Title                                                                                                     | Status | Aligns with                    | Review by  |
+|----------|-----------------------------------------------------------------------------------------------------------|--------|--------------------------------|------------|
+| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                               | draft  | Equality Act 2010, WCAG 2.2 AA | 2027-08-04 |
+| pol-AGNT | [Agents propose, people decide](governance/agnt-agents-propose-people-decide.md)                          | draft  | ISO 27001:2022                 | 2027-08-05 |
+| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations-are-recorded.md)               | draft  | ISO 27001:2022                 | 2027-08-04 |
+| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-knowledge-is-written-down.md) | draft  | ISO 27001:2022                 | 2027-08-04 |
 
 ## Operations
 
