@@ -4,13 +4,14 @@ type: report
 tier: descriptive
 status: active
 owner: human:paul.law
-generated: { at: 2026-09-11T08:18:35Z, by: kac/0.25.0 }
+generated: { at: 2026-09-11T09:42:20Z, by: kac/0.25.0 }
 sources:
   - { resource: example-dogfooding, version: "0.22.2" }
   - { resource: example-engineering, version: "0.15.0" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:25:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T09:10:00Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, governance ]
 ---
 
@@ -56,27 +57,27 @@ where the two differ.
 | `eng:pol-A11Y` | 11      | 5       | 6         |
 | `eng:pol-ACCS` | 13      | 2       | 11        |
 | `eng:pol-AGNT` | 8       | 8       | 0         |
-| `eng:pol-AUTV` | 14      | 9       | 5         |
+| `eng:pol-AUTV` | 15      | 9       | 6         |
 | `eng:pol-COST` | 9       | 0       | 9         |
 | `eng:pol-DATA` | 21      | 0       | 21        |
 | `eng:pol-DERV` | 5       | 0       | 5         |
 | `eng:pol-DEVI` | 9       | 5       | 4         |
 | `eng:pol-ENVS` | 10      | 7       | 3         |
 | `eng:pol-EVER` | 9       | 7       | 2         |
-| `eng:pol-INCR` | 16      | 0       | 16        |
+| `eng:pol-INCR` | 17      | 0       | 17        |
 | `eng:pol-INTC` | 9       | 7       | 2         |
 | `eng:pol-KNOW` | 8       | 4       | 4         |
 | `eng:pol-MEXP` | 11      | 1       | 10        |
 | `eng:pol-MNTN` | 4       | 0       | 4         |
-| `eng:pol-OBSV` | 12      | 9       | 3         |
+| `eng:pol-OBSV` | 13      | 9       | 4         |
 | `eng:pol-PERF` | 5       | 0       | 5         |
 | `eng:pol-PIPE` | 11      | 9       | 2         |
 | `eng:pol-RECV` | 13      | 0       | 13        |
 | `eng:pol-SCRT` | 8       | 5       | 3         |
 | `eng:pol-SECD` | 8       | 2       | 6         |
 | `eng:pol-TRUS` | 17      | 8       | 9         |
-| `eng:pol-VURM` | 8       | 4       | 4         |
-| **Total**      | **239** | **92**  | **147**   |
+| `eng:pol-VURM` | 9       | 4       | 5         |
+| **Total**      | **243** | **92**  | **151**   |
 
 ## Clauses
 
@@ -129,22 +130,23 @@ where the two differ.
 
 ### eng:pol-AUTV
 
-| Clause    | Level    | Covered by                              | Deviations                   | Controls                                                                                                               | Pair candidate         | Verdict | Note                                                              |
-|-----------|----------|-----------------------------------------|------------------------------|------------------------------------------------------------------------------------------------------------------------|------------------------|---------|-------------------------------------------------------------------|
-| `INTEG`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                              | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                        | Covered | Every job runs on a pull request into `main`.                     |
-| `BLOCK`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                              | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                        | Covered | The branch rule names `validate` as the check a merge waits for.  |
-| `REPRO`   | MUST     |                                         | `dev-no-reproducible-build`  |                                                                                                                        |                        | Gap     | Any clone builds the tool, and no standard states the rule.       |
-| `LEVELS`  | MUST     | `eng:std-NETTST`, `eng:std-TEST`        |                              | `ctl-0009`                                                                                                             |                        | Covered | Unit, behaviour and golden layers each catch a different fault.   |
-| `REGRESS` | MUST     | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             | `eng:pol-VURM.REGRESS` | Covered | A fixed defect keeps the test that catches it.                    |
-| `BROKEN`  | MUST     |                                         | `dev-branch-habits-unstated` |                                                                                                                        |                        | Gap     | Nothing says a red `main` comes before other work.                |
-| `BYPASS`  | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | A merge over a failing check needs a deviation nobody can record. |
-| `DISABLE` | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | `std-CI` adds that no job may declare `continue-on-error`.        |
-| `MACHINE` | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | Each matrix cell is a fresh runner holding its own checkout.      |
-| `OFTEN`   | SHOULD   |                                         | `dev-branch-habits-unstated` |                                                                                                                        |                        | Gap     | Branch size is a habit here rather than a rule.                   |
-| `WARN`    | SHOULD   | `eng:std-CSSTY`                         |                              |                                                                                                                        |                        | Covered | The analysers decide, and a suppression is local and says why.    |
-| `COVER`   | SHOULD   | `eng:std-NETTST`, `eng:std-TEST`        |                              | `ctl-0009`                                                                                                             |                        | Covered | `kac-tests.cs` carries the coverage gate.                         |
-| `BITWISE` | COULD    |                                         | `dev-no-reproducible-build`  |                                                                                                                        |                        | Gap     | Nothing asks two builds of the tool to produce the same bytes.    |
-| `FAULTS`  | COULD    |                                         |                              |                                                                                                                        |                        | Gap     | No suite here is checked by breaking the code it covers.          |
+| Clause    | Level    | Covered by                              | Deviations                   | Controls                                                                                                               | Pair candidate         | Verdict | Note                                                                                                         |
+|-----------|----------|-----------------------------------------|------------------------------|------------------------------------------------------------------------------------------------------------------------|------------------------|---------|--------------------------------------------------------------------------------------------------------------|
+| `INTEG`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                              | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                        | Covered | Every job runs on a pull request into `main`.                                                                |
+| `BLOCK`   | MUST     | `std-CONFIG`, `std-CI`, `eng:std-GATES` |                              | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010` |                        | Covered | The branch rule names `validate` as the check a merge waits for.                                             |
+| `REPRO`   | MUST     |                                         | `dev-no-reproducible-build`  |                                                                                                                        |                        | Gap     | Any clone builds the tool, and no standard states the rule.                                                  |
+| `LEVELS`  | MUST     | `eng:std-NETTST`, `eng:std-TEST`        |                              | `ctl-0009`                                                                                                             |                        | Covered | Unit, behaviour and golden layers each catch a different fault.                                              |
+| `REGRESS` | MUST     | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             | `eng:pol-VURM.REGRESS` | Covered | A fixed defect keeps the test that catches it.                                                               |
+| `BROKEN`  | MUST     |                                         | `dev-branch-habits-unstated` |                                                                                                                        |                        | Gap     | Nothing says a red `main` comes before other work.                                                           |
+| `BYPASS`  | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | A merge over a failing check needs a deviation nobody can record.                                            |
+| `DISABLE` | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | `std-CI` adds that no job may declare `continue-on-error`.                                                   |
+| `MACHINE` | MUST NOT | `eng:std-GATES`                         |                              | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`                                                             |                        | Covered | Each matrix cell is a fresh runner holding its own checkout.                                                 |
+| `OFTEN`   | SHOULD   |                                         | `dev-branch-habits-unstated` |                                                                                                                        |                        | Gap     | Branch size is a habit here rather than a rule.                                                              |
+| `FLOW`    | SHOULD   |                                         |                              |                                                                                                                        |                        | Gap     | A push to `main` publishes, and nothing records how long a change took to get there or how often one failed. |
+| `WARN`    | SHOULD   | `eng:std-CSSTY`                         |                              |                                                                                                                        |                        | Covered | The analysers decide, and a suppression is local and says why.                                               |
+| `COVER`   | SHOULD   | `eng:std-NETTST`, `eng:std-TEST`        |                              | `ctl-0009`                                                                                                             |                        | Covered | `kac-tests.cs` carries the coverage gate.                                                                    |
+| `BITWISE` | COULD    |                                         | `dev-no-reproducible-build`  |                                                                                                                        |                        | Gap     | Nothing asks two builds of the tool to produce the same bytes.                                               |
+| `FAULTS`  | COULD    |                                         |                              |                                                                                                                        |                        | Gap     | No suite here is checked by breaking the code it covers.                                                     |
 
 ### eng:pol-COST
 
@@ -259,6 +261,7 @@ where the two differ.
 | `DRILL`   | MUST     |            | `dev-no-incident-process`         |          |                        | Gap          | The publish path is first exercised for real, every time.                           |
 | `ADHOC`   | MUST NOT |            | `dev-no-incident-process`         |          |                        | Gap          | Nothing here has to be handled formally, so everything is handled informally.       |
 | `TOOSOON` | MUST NOT |            | `dev-nothing-learns-from-a-fault` |          |                        | Gap          | Nothing holds an incident open until the learning is written down.                  |
+| `BUILDER` | SHOULD   |            |                                   |          |                        | Out of scope | One maintainer, who built it and answers for it.                                    |
 
 ### eng:pol-INTC
 
@@ -328,6 +331,7 @@ where the two differ.
 | `ESTATE`  | SHOULD   |               |            |          |                | Gap          | Four service records name what runs here, and no standard asks for them.                          |
 | `SLO`     | SHOULD   | `eng:std-OBS` |            |          |                | Covered      | What good looks like is written down and watched.                                                 |
 | `CORREL`  | SHOULD   | `eng:std-OBS` |            |          |                | Covered      | One id ties a request together across systems.                                                    |
+| `LOOP`    | SHOULD   |               |            |          |                | Out of scope | One maintainer, who builds and watches. There is nobody for telemetry to reach past.              |
 
 ### eng:pol-PERF
 
@@ -433,6 +437,7 @@ where the two differ.
 | `SHIP`    | MUST NOT | `eng:std-DEPS` |                                    |          |                        | Covered             | A release with an open critical finding needs a recorded deviation.        |
 | `OVERDUE` | MUST NOT |                | `dev-vulnerability-route-unstated` |          |                        | Gap                 | No standard names who is accountable past the window.                      |
 | `INDEP`   | SHOULD   |                |                                    |          |                        | Out of scope        | One maintainer, and nobody else to test what they built.                   |
+| `BLAME`   | SHOULD   |                |                                    |          |                        | Out of scope        | One maintainer, so every finding is about their own code.                  |
 
 ## What this leaves open
 

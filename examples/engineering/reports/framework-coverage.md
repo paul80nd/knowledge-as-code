@@ -4,13 +4,14 @@ type: report
 tier: descriptive
 status: active
 owner: human:alex.doe
-generated: { at: 2026-09-11T08:16:58Z, by: kac/0.25.0 }
+generated: { at: 2026-09-11T09:41:49Z, by: kac/0.25.0 }
 sources:
   - { resource: example-engineering, version: "0.15.0" }
 verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
   - { at: 2026-09-09T18:29:19Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:20:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T09:05:00Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, frameworks ]
 ---
 
@@ -74,12 +75,12 @@ and an empty cell says so.
 
 ### DORA metrics
 
-| Reference           | Clauses                                                                                   | Policies               | Note                                                                                                                                                                                                          |
-|---------------------|-------------------------------------------------------------------------------------------|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| change-failure-rate | `pol-AUTV.BLOCK`, `pol-AUTV.REGRESS`                                                      | `pol-AUTV`             |                                                                                                                                                                                                               |
-| deploy-frequency    | `pol-PIPE.DEPLOY`                                                                         | `pol-PIPE`             |                                                                                                                                                                                                               |
-| lead-time           | `pol-AUTV.INTEG`, `pol-AUTV.LEVELS`, `pol-AUTV.OFTEN`, `pol-MNTN.SLIP`, `pol-MNTN.HARDER` | `pol-AUTV`, `pol-MNTN` | `pol-MNTN` cites this as a claim that acting on a maintainability measure moves lead time, rather than as a control it satisfies. Its `TREND` carries no citation, because measuring something moves nothing. |
-| recovery-time       | `pol-PIPE.REVERT`, `pol-PIPE.PROGDEL`                                                     | `pol-PIPE`             |                                                                                                                                                                                                               |
+| Reference           | Clauses                                                                                                    | Policies               | Note                                                                                                                                                                                                                                                                                  |
+|---------------------|------------------------------------------------------------------------------------------------------------|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| change-failure-rate | `pol-AUTV.BLOCK`, `pol-AUTV.REGRESS`, `pol-AUTV.FLOW`                                                      | `pol-AUTV`             |                                                                                                                                                                                                                                                                                       |
+| deploy-frequency    | `pol-PIPE.DEPLOY`                                                                                          | `pol-PIPE`             |                                                                                                                                                                                                                                                                                       |
+| lead-time           | `pol-AUTV.INTEG`, `pol-AUTV.LEVELS`, `pol-AUTV.OFTEN`, `pol-AUTV.FLOW`, `pol-MNTN.SLIP`, `pol-MNTN.HARDER` | `pol-AUTV`, `pol-MNTN` | `pol-MNTN` cites this as a claim that acting on a maintainability measure moves lead time, rather than as a control it satisfies. Its `TREND` carries no citation, because measuring something moves nothing. `pol-AUTV.FLOW` is the clause committing to look at the measure at all. |
+| recovery-time       | `pol-PIPE.REVERT`, `pol-PIPE.PROGDEL`                                                                      | `pol-PIPE`             |                                                                                                                                                                                                                                                                                       |
 
 ### EN 301 549
 
