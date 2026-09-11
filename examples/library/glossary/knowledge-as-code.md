@@ -58,6 +58,13 @@ A local edit to a file the framework owns, which `kac update --check` reports an
 **Not:** a change to a seed file. A seed is the corpus's own from the moment it lands, and nothing holds it to the
 template.
 
+### Export
+
+The corpus written out as data by `kac export`, for a consumer that reads it without cloning the repository. Each type
+decides which of its fields, sections and parts travel.
+
+**Not:** the package or the plugin. Both are built from an export.
+
 ### Framework
 
 The shared mechanism a corpus runs: the schema, the tooling and the documentation that travel between corpora.
@@ -103,6 +110,19 @@ drift, and the next update takes it back.
 A type's root page, carrying no frontmatter of its own. It says what the type holds, what it is not, and how to add one.
 
 **Not:** a record. It describes the records rather than being one, so nothing gives it an id or an identity line.
+
+### Package
+
+An export zipped by `kac pack` into a versioned file a registry stores, and another corpus fetches with `kac restore`.
+
+**Not:** the plugin. A package is read by a corpus. A plugin is installed by an agent.
+
+### Plugin
+
+An export and the skills and hooks under `.plugin/`, assembled by `kac bundle` into something an agent installs. A
+skill in it answers from the export it travelled with.
+
+**Not:** the corpus. A plugin is a frozen copy, so an agent writes back by raising an issue.
 
 ### Record
 
