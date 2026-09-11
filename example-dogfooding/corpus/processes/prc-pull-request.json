@@ -24,6 +24,6 @@
     "Prerequisites": "* A branch off `main`, carrying the change as commits.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --`, which is the tool this branch holds."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/processes/pull-request.md"
   }
 }

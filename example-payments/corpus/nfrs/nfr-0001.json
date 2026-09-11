@@ -26,6 +26,6 @@
     "Constraints": "The PSP's contract promises a p95 of 500ms on its authorisation endpoint. The 800ms here is that plus what [svc-payment-api] spends on either side of the call, so a faster target needs a conversation with the PSP rather than a change to our code. The `integrations` type is not adopted here, so `constrained-by` carries no id and the cap is recorded in these words."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/payments/nfrs/0001-authorisation-latency.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/payments/nfrs/0001-authorisation-latency.md"
   }
 }

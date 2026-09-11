@@ -27,6 +27,6 @@
     "Coverage and gaps": "actionlint reports nothing about a permission a job holds and never uses, a credential written in the wrong place, or\n`.azuredevops/kac.yml` drifting from its GitHub twin. A reviewer is what catches those three, and they are most of\nwhat [std-CI] states: its permission, credential, pinning and publishing rules have no check here.\n\nactionlint ships no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/controls/0003-actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0003-actionlint.md"
   }
 }

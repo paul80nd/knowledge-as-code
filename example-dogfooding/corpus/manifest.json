@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.22.2",
+  "contentVersion": "0.22.3",
   "mechanismVersion": 11,
-  "commit": "9f18f32ecef55b45911bd1e5d53b2236e26f562e",
+  "commit": "c17b029c9ea65a73e6fceff42cb83c28add3b381",
   "dirty": false,
-  "generatedAt": "2026-09-11T09:49:37Z",
+  "generatedAt": "2026-09-11T10:35:49Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,22 +18,22 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "9f18f32ecef55b45911bd1e5d53b2236e26f562e"
+    "ref": "c17b029c9ea65a73e6fceff42cb83c28add3b381"
   },
   "sources": [
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.15.0",
+      "contentVersion": "0.16.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/9f18f32ecef55b45911bd1e5d53b2236e26f562e/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "9f18f32ecef55b45911bd1e5d53b2236e26f562e"
+        "ref": "c17b029c9ea65a73e6fceff42cb83c28add3b381"
       }
     }
   ],
