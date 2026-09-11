@@ -46,6 +46,7 @@ into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 | `ESTATE`  | SHOULD keep a list of the production systems we run, so a system with no monitoring can be found                             |                                                             |
 | `SLO`     | SHOULD express what good looks like as service-level objectives, and monitor against them                                    | [Azure WAF].reliability                                     |
 | `CORREL`  | SHOULD emit telemetry that can be correlated across systems by a shared identifier, not only by time                         | [ISO 27001:2022].A.8.15                                     |
+| `LOOP`    | SHOULD put production telemetry in front of the people who build a system, and not only in front of whoever operates it      |                                                             |
 
 ## Exceptions
 
