@@ -42,7 +42,8 @@ route in. If you are here because a build broke, you want a [runbook](../runbook
 5. Run the test layers your change touches, one `kac` invocation at a time. Where you are unsure, run all four.
 6. Write each commit message to `technical-writing`. The subject says what changed. The body says why.
 7. Put a behaviour change in a commit of its own, apart from any refactor.
-8. Write the pull request body to carry the why and the evidence. Name what you measured and what it said.
+8. Write the pull request body to state the reason and the evidence. Name each test layer you ran and what it
+   reported. Do not retell the diff.
 9. Open the pull request. Say what you did not do, and why.
 
 ## Verification

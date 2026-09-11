@@ -1,109 +1,62 @@
 ---
 name: writing-in-the-tool
-description: How to write inside `tooling/`. Covers C# comments, XML doc comments, test names, the feature documents, `tests/README.md` and the changelog. Load it after `technical-writing` whenever you write or change a comment, or any prose under `tooling/`.
+description: The shape of prose inside `tooling/`. Covers C# comments, XML doc comments, test names, the feature documents, `tests/README.md`, the messages the tool prints, and the changelog. Load it after `technical-writing` whenever you write or change a comment or any prose under `tooling/`.
 ---
 
 # Writing in the tool
 
-Load `technical-writing` first. Everything below either adds to it or says plainly which of its rules it overrides.
+Load `technical-writing` first. This page adds the shape of prose in the tool.
 
-**The code says what it does. A comment says why it is that way.** A comment restating the line below it has spent a
-reader's attention and given nothing back.
+## What this page overrides in the floor
 
-**A comment sits at a different level of detail than the code beneath it.** Higher, to say what the code is for. Lower,
-to state a fact the code cannot carry: what a foreign library does, what a null means, which order two calls have to
-keep. A comment at the same level as the code is a restatement, whatever words it dresses it in. Apply that test first.
-It settles most of them, and it settles them without an argument.
+* **Present tense.** A comment often describes something that does not exist yet, so "will" is ordinary. Write:
+  `// The plugin manifest as it will travel.`
+* **Gloss a term on first use.** The reader maintains this tool. Write DOM, AST and idempotent plainly.
+* **"we" and "you", headings and bold labels.** These are for pages. A comment has none of them.
 
-## What the floor does not reach here
+## Comments
 
-Headings, bold labels, numbered lists and the "we" and "you" rule are for pages. They have no meaning in a comment, so
-do not go looking for them.
+* The code says what it does. A comment says why it is that way.
+* A comment sits at a different level from the code under it. Higher, to say what the code is for. Lower, to state a
+  fact the code cannot show: what a library does, what a null means, which order two calls must keep. A comment at the
+  same level as the code repeats it. Delete it.
+* Read the code under every comment you touch. Fix a comment that has drifted. A wrong comment is worse than none,
+  because it is believed.
+* Keep a comment to one line where one line does.
+* Use no banner and no `#region`. A region collapses by default and hides structure. StyleCop bans it under `SA1124`.
+* A file that wants section headings wants splitting.
+* Do not apologise. Cut `hacky`, `sorry` and `for now`. Name the constraint instead.
 
-The floor's label rule already covers a comment above a declaration. Read it there.
+## `///` and `//`
 
-## What this overrides
+* `///` is read by a caller. The IDE shows it beside the call. Write what a caller must know to use the member
+  correctly: what a null means, what it throws, an order two calls must keep, a cost. A member whose name and signature
+  already say it needs none.
+* `//` is read by a maintainer. Write why the implementation is the way it is, inside a body or above a private member.
+* Keep the two apart. A caller must not have to open the file to learn what a method promises.
 
-* **"Write in the present tense. Keep 'will' for something that genuinely happens later."** A comment often describes
-  something that does not exist yet, so "will" is ordinary here. Write: `// The plugin manifest as it will travel.`
-* **"Gloss a precise term on first use."** A comment is addressed to whoever maintains this tool, so a term the trade
-  knows needs no gloss. Write DOM, AST and idempotent plainly.
-* **Nothing else.** Where the floor and this page appear to disagree anywhere below, the floor wins.
+## Messages the tool prints
 
-## Check the claim is still true
-
-**A comment that misdescribes the code is worse than no comment, because it is believed.** Read the code under every
-comment you touch, and fix what has drifted.
-
-A sweep in #253 found sixteen of these. Two would have cost somebody real time: a field called unread that another class
-refuses an export over, and a duplicate id said to replace the first where the code keeps it.
-
-Every one of them was true when it was written.
-
-## Keep it to a line where a line does
-
-**Summarise in one line, or give the context the code cannot.** There is nothing in between worth the space.
-
-**A comment pays a line where a page pays a word.** Its margin is 120 columns minus its indentation, so a repair that
-costs a page three words costs a nested comment a whole line. Where two repairs are equally clear, take the shorter.
-Clarity still outranks brevity, exactly as the floor says.
-
-**No banners, and no `#region`.** A title fenced in hyphens is decoration, and the fence usually wraps a shorter
-version of the comment below it. A region is worse. It collapses by default, so it hides the structure a heading exists
-to show, and it is invisible to a grep, to a diff and to the file viewer on a pull request. StyleCop bans regions under
-`SA1124` for that reason.
-
-**A file wanting section headings is a file wanting splitting.** Eight headings are eight arguments for four files.
-Split it, and the parts need no headings at all.
-
-**No apologising.** Not `hacky`, `sorry`, `for now`. A constraint is worth naming and an apology for it is not.
-
-## Two kinds of comment, in two different marks
-
-**A caller reads `///`. A maintainer reads `//`.** An IDE renders the first beside the call and never shows the second,
-so which mark a comment takes decides who ever reads it.
-
-**`///` carries what a caller must know to use the member correctly.** What a null means, what it throws, an order two
-calls have to keep, a cost worth knowing about. Write one wherever a caller outside the file has a decision to make. A
-member whose name and signature already answer it needs none.
-
-**`//` carries why the implementation is the way it is**, inside a body or above a private member. A caller never needs
-it, and putting it in `///` puts the inside of the class on the outside.
-
-Keeping the two apart is what lets a class stand on its own. A caller who has to open the file to learn what a method
-promises has been handed an implementation where an interface was owed.
-
-## The words the tool prints
-
-**A message opens lower case and closes with a full stop.** A reader meets it as the tail of the command they ran.
-Write: `id 'adr-7' must start with 'adr-'.`
-
-**The second sentence of a split message opens lower case too.** An interpolated path or id opening it keeps the case of
-the value itself. Write: `the index is stale. {path} changed after it was built.`
+* A message opens lower case and closes with a full stop. The reader meets it at the tail of the command they ran.
+  Write: `id 'adr-7' must start with 'adr-'.`
+* The second sentence of a split message opens lower case too. An interpolated path or id keeps its own case. Write:
+  `the index is stale. {path} changed after it was built.`
+* A message names a change to the corpus the reader holds. It does not name a template or a transform they never saw.
 
 ## Say it once
 
-**Before writing a sentence you have written before, grep a phrase from it.** An explanation here tends to land in three
-places at once: the comment, the feature document and the README.
-
-* [`docs/`](../../../docs/) is the reference for what a command does, published at
-  <https://paul80nd.github.io/knowledge-as-code/>.
-* [`tests/README.md`](../../../tooling/tests/README.md) is the reference for what a scenario asserts.
-
-Where the argument already sits in one of those, link it and stop.
-
-**Name the path, and never summarise what it says.** A citation carrying its own precis of the page goes stale the day
-the page moves on, and nothing reports it. A citation naming the path alone breaks where a reader can see it, because
-`CommentCitationTests` fails a `.md` path no file answers to.
-
-**A sibling source file is a citation target too.** Name the file, or the method that holds the reasoning. Write:
-`// Through the source generator rather than reflection. See Json.cs.`
-
-**Let a test say what it proves, and nothing more.** Why the code is shaped that way belongs at the source. A test
-repeating it gives a reader two places to keep in step and no reason to trust either.
+* Before you write a sentence you have written before, grep a phrase from it. An explanation lands in the comment, the
+  feature document and the README at once.
+* [`docs/`](../../../docs/) is the reference for what a command does.
+  [`tests/README.md`](../../../tooling/tests/README.md) is the reference for what a scenario asserts. Where the
+  explanation is already in one of those, link it and stop.
+* Name the path. Do not summarise what it says. `CommentCitationTests` fails a `.md` path no file answers to, so a
+  bare path breaks where you can see it. A summary goes stale where you cannot.
+* A sibling source file is a citation too. Write: `// Through the source generator, not reflection. See Json.cs.`
+* A test says what it proves. Why the code is shaped that way belongs at the source.
 
 ## The changelog
 
-**One entry per behaviour a reader can observe.** A refactor nobody can see from outside does not get an entry.
-
-**Name the verb and the flag, not the class.** `kac export --json` is what a reader has; `Exporter.WriteJson` is not.
+* Write one entry per behaviour a reader can observe. A refactor nobody can see from outside gets no entry.
+* Name the verb and the flag, not the class. Write `kac export --json`. Not `Exporter.WriteJson`.
+* Write the entry under `## Unreleased`. Moving the version is a separate decision.

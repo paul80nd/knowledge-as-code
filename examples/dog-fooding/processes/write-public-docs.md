@@ -35,9 +35,7 @@ reader has installed nothing and has nobody here to ask, and that is the whole d
 3. Open on what the reader gets. A definition answers a question nobody has asked yet.
 4. Put each fact where its reader meets it. A flag met while running the tool belongs at `--help` and in the reference.
    A page somebody reads before installing carries what decides them.
-5. Measure the prose alone, with code blocks and tables excluded, before and after. `writing-the-docs` carries the two
-   figures to aim under, and they are tighter here than [std-PROSE] asks of prose anywhere else. The measurement is a
-   prompt to look, never the diagnosis.
+5. Answer [std-PROSE]'s conformance checklist against every page you changed.
 6. Answer [std-A11Y]'s conformance checklist against every page you changed.
 7. Pack the package where you touched the package page. `dotnet pack tooling/kac/kac.csproj` proves it still renders as
    the readme nuget.org receives.
@@ -47,15 +45,15 @@ reader has installed nothing and has nobody here to ask, and that is the whole d
 
 ## Verification
 
-The build reports no dead link, every box on the accessibility checklist is ticked, the measured figures sit inside
-both targets, and a reader who has installed nothing can say what the thing is after the first paragraph.
+The build reports no dead link, every box on both conformance checklists is ticked, and a reader who has installed
+nothing can say what the thing is after the first paragraph.
 
-Close by naming what changed and why, the figures before and after, and every claim you checked against the source.
+Close by naming what changed and why, every claim you checked against the source, and every rule you left behind.
 
 ## Related
 
 * [std-A11Y] carries what a page owes a reader who cannot see it. Step 6 is where you answer it.
-* [std-PROSE] carries the writing rules this page answers to.
+* [std-PROSE] states the writing rules every page here follows. Step 5 is where you answer it.
 * [svc-docs-site] is what publishes the site.
 * [prc-pull-request] is how the change lands.
 
