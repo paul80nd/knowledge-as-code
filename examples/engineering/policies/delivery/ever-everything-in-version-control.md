@@ -43,6 +43,7 @@ Secrets are the deliberate exception. See [pol-SCRT].
 | `PARITY`  | **MUST** subject changes to infrastructure, schema and configuration to the same review as changes to application code                           | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PW.7 |
 | `ORPHAN`  | **MUST NOT** allow an asset that is necessary to reproduce a system to exist only on an individual's machine, in a console, or in a shared drive | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
 | `SHARED`  | **MUST NOT** accept shared or generic accounts that make a change unattributable. See [pol-ACCS]                                                 | [NIST SSDF 1.1].PS.1                                                   |
+| `DRIFT`   | SHOULD notice where a running system has diverged from its definition in version control, and bring the two back together                        |                                                                        |
 | `SIGNED`  | COULD prove the authorship of a change cryptographically, rather than trusting what it claims                                                    | [NIST SSDF 1.1].PS.1                                                   |
 
 ## Exceptions

@@ -11,6 +11,7 @@
 | pol-DERV | [Derived data is verified before it is trusted](delivery/derv-derived-data-is-verified.md)            | draft  | UK GDPR        | 2027-08-09 |
 | pol-EVER | [Everything is in version control](delivery/ever-everything-in-version-control.md)                    | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-INTC | [Interfaces are contracts we honour](delivery/intc-interface-contracts.md)                            | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-MNTN | [Software stays easy to change](delivery/mntn-maintainability.md)                                     | draft  |                | 2027-09-11 |
 | pol-PERF | [Performance targets are stated and verified](delivery/perf-performance-targets.md)                   | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-PIPE | [Changes reach production through the pipeline](delivery/pipe-pipeline-to-production.md)              | draft  | ISO 27001:2022 | 2027-08-04 |
 
