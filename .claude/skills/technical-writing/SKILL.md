@@ -15,7 +15,9 @@ These do most of the work.
 * **Lead with the point.** State the rule or the fact first. Put the reason after it, or leave the reason out.
 * **Use the plain verb.** A command *lists*, *checks*, *writes*, *reports*, *creates*, *rejects*. It does not *hold
   to*, *carry*, *name*, *answer*, *reach*, *stand up* or *seal*. "holds" has four plain replacements: *has*,
-  *contains*, *keeps*, *checks*. Pick by sense.
+  *contains*, *keeps*, *checks*. "carries" has four more: *has*, *contains*, *includes*, *states*. Pick by sense.
+  The ban is on one of these standing in for a plain verb, not on the word. *Name* a thing, *cite* a record, and let a
+  service *return* what a caller asked for.
 * **Talk to the reader.** Say "you". Write an instruction as a command. Use the active voice and the present tense.
 * **One idea per sentence.** Keep a sentence under about 20 words. A sentence joining two steps with "and" is two
   sentences.
@@ -42,7 +44,7 @@ Microsoft writes US English about Microsoft products. Apply these changes.
 
 * An identifier, a path, a flag, a command, or the output a command printed.
 * A heading you may not rename, and the H1 of a record.
-* The wording of a clause. A citation quotes it.
+* A clause id, and any word of a clause that carries the obligation. `writing-a-record` states the test.
 * Anything between a `BEGIN GENERATED` marker and its `END GENERATED`. Change the source and run `kac generate`.
 
 Say in your reply which of these you left alone, and where.
@@ -72,8 +74,12 @@ list.
 
 ## Before you finish
 
-1. Search for "holds", "carries", "names", "answers", "reaches", "seals". Replace each with the literal verb.
-2. Search for "rather than", "the two", "the three", "the four". Rewrite the sentence, or name the things.
-3. Read each heading on its own. It names a topic.
-4. Read the first sentence of each section. It is the rule, not the reason.
-5. Read the longest sentence aloud. If you run out of breath, split it.
+1. Search for "holds", "carries", "names", "answers", "reaches", "seals". Replace each one standing in for a plain
+   verb. Leave the ones that are the plain verb.
+2. Search for "rather than" and "instead of". Keep the contrast only where the reader already holds the wrong idea.
+   Delete it everywhere else. Inside a clause it stays: it names what the clause forbids, so cutting it drops an
+   obligation.
+3. Search for "the two", "the three", "the four". Name the things, unless the sentence already named them.
+4. Read each heading on its own. It names a topic.
+5. Read the first sentence of each section. It is the rule, not the reason.
+6. Read the longest sentence aloud. If you run out of breath, split it.

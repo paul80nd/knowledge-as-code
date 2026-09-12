@@ -130,6 +130,10 @@ validated. [Discovery](../design/discovery.md#the-fallback-walk) says what else 
 each source in `consumes:` what it publishes. A source that does not answer within twenty seconds reports
 `import-unreachable`, and the run continues. A corpus with no `consumes:` block opens no connection at all.
 
+**A quotation of an imported clause is not checked.** `clause-quoted-faithfully` compares a quoted span against the
+clause the same line cites. An export sends a record's ids and its fields, not its wording, so the words of an imported
+clause are not here to compare against and the check passes over the citation.
+
 **`immutable-after-accepted` is declared and does not run.** Whether the content of an accepted document changed is a
 question about a diff, and this command reads a working tree.
 

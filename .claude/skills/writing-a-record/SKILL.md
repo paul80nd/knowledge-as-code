@@ -79,8 +79,13 @@ The reader acts on a clause without checking it. Make it checkable.
 * **Present tense.** A postmortem's timeline is past tense. A Decided record's consequences may use "will", because they
   have not happened yet. Facts about the estate today stay in the present.
 * **Gloss a term on first use.** The corpus has a glossary. Link the entry instead of restating it.
-* **Clause wording.** You may repair punctuation inside a clause. You may not change a word, because a citation quotes
-  the row. Report a passive or a compound obligation you find there, and leave it.
+* **Clause wording.** You may repair punctuation inside a clause. You may reword one where the obligation is
+  identical: the same subject, the same modal, the same threshold, the same list, the same exception and the same
+  cross-reference. A "rather than" tail naming a prohibited alternative is part of the obligation, so it stays.
+  A clause id never changes, because a citation quotes it. Report a passive or a compound obligation you find there,
+  and leave it.
+* **A control quotes a clause word for word.** Reword the clause and you have to reword every quotation of it in the
+  same change. `clause-quoted-faithfully` reports a quotation that no longer matches.
 
 ## What outranks this page
 

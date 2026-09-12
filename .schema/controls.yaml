@@ -111,6 +111,10 @@ rules:
     message: >
       this control claims to run and does not say where the proof lives. Set `evidence` to the build log,
       the audit note or the dashboard.
+  - id: clause-quoted-faithfully
+    description: >
+      A quoted span beside a clause citation is still in the clause it cites.
+    severity: error
   - id: coverage-report
     description: The share of MUST / MUST NOT rules in active standards claimed by an enforced control.
     # Enforced means any mechanism other than `not-enforced`. The figure is generated for the corpus, and no

@@ -518,6 +518,15 @@ checks:
       A heuristic, matching an explicit verdict word or a contrastive or negative-outcome cue. An option a bullet
       dismisses in one clause was never genuinely considered.
 
+  clause-quoted-faithfully:
+    severity: error
+    description: A quoted span beside a clause citation is still in the clause it cites.
+    notes: >
+      Only a citation into this corpus is checked. An imported record arrives as ids and fields, so its clause text
+      is not here to compare against, and a scoped citation reports nothing. The quoted span is matched against the
+      clause as it renders and as it is written, with whitespace collapsed on both sides, so a quotation wrapped
+      across two lines still compares equal. A quoted span on a line carrying no citation is left alone.
+
   entry-shape:
     severity: error
     description: Each entry of a list whose entries are objects is a mapping.

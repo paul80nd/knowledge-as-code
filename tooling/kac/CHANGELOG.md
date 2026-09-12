@@ -19,6 +19,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` checks that a quoted clause still says what it is quoted as saying.** A control quotes the clause it
+  verifies, and nothing until now compared the two. `clause-quoted-faithfully` takes every double-quoted span on a line
+  that also cites a clause, and reports it as an error where the cited clause no longer contains those words.
+  Whitespace is collapsed on both sides, so a quotation wrapped across two lines is read whole. A quoted span on a line
+  citing nothing is left alone, and so is a citation into a corpus you consume: an export sends a record's ids and
+  fields, not its wording. `.schema/controls.yaml` declares the rule, so take it with
+  `kac update --from <template>`.
+
 - **A fix travels in an export.** `.schema/fixes.yaml` declares an `export:` block at shape 1, so `kac export` writes
   one JSON per fix. The record carries `symptom-keywords`, which is what a lookup searches on. It carries Symptom,
   Cause, Resolution and Why it happens whole, because a resolution read without its cause is half an answer. It carries

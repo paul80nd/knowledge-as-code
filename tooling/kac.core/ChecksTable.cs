@@ -97,6 +97,10 @@ public static class ChecksTable
         ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
             "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
             + "it names.", t => t.Parts is not null),
+        // Shown wherever the rule is declared, which `Applies` decides from the registry. A record of
+        // any type may quote a clause, and the type page is where its author reads what is asked of one.
+        ("clause-quoted-faithfully", [new("clause-quoted-faithfully")],
+            "A span quoted beside a clause citation is still in the clause it cites.", null),
         ("link-resolves", [new("link-resolves"), new("fragment-resolves")],
             "Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.",
             null),

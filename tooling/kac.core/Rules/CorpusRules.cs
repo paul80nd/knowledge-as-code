@@ -8,6 +8,7 @@ public static class CorpusRules
     [
         new NoDependencyCycles(),
         new AlignmentRollup(),
+        new ClauseQuotedFaithfully(),
         new ReportStale()
     ];
 

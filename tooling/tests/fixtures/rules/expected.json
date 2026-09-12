@@ -3,7 +3,7 @@
     "validated": 31,
     "templates": 18,
     "skipped": 0,
-    "errors": 18,
+    "errors": 19,
     "warnings": 17,
     "infos": 0
   },
@@ -28,6 +28,13 @@
       "severity": "warning",
       "check": "mechanism-has-evidence",
       "message": "this control claims to run and does not say where the proof lives. Set `evidence` to the build log, the audit note or the dashboard."
+    },
+    {
+      "file": "controls/0002-evidence-not-named.md",
+      "line": 24,
+      "severity": "error",
+      "check": "clause-quoted-faithfully",
+      "message": "'std-ERRORS.a-failure-says-what-happened' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
     },
     {
       "file": "data/borrower-records.md",
