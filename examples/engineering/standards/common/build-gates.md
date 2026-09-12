@@ -18,8 +18,8 @@ tags: [ continuous-integration, quality-gates, testing ]
 
 ## Summary
 
-Every push builds and tests automatically, and a check that fails stops the change. Turning a check off is a recorded
-deviation with a named owner.
+Every push builds the code and runs the test suite automatically. A check that fails stops the change. Turning a check
+off takes a recorded deviation with a named owner.
 
 ## Rules
 
@@ -37,7 +37,7 @@ _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].MACHINE, [pol-AUTV].REGRESS_
 - A team **MUST NOT** merge over a failing check without a recorded deviation.
 - A team **MUST NOT** skip, silence or suppress a check without a recorded deviation.
 - A deviation covering a suppressed check **MUST** name the individual who accepts the risk.
-- That deviation **MUST** carry a review date.
+- That deviation **MUST** have a review date.
 
 _**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].BYPASS, [pol-AUTV].DISABLE, [pol-DEVI].EXPIRY, [pol-DEVI].OWNER_
 
@@ -52,7 +52,7 @@ Avoid
   test.skip("retries on 503")
 ```
 
-Both stop the test running. The first leaves a name, a reason and a date, so somebody comes back to it. Nobody comes
+Both stop the test running. The first records a name, a reason and a date, so somebody comes back to it. Nobody comes
 back to the second until the retry path breaks in production.
 
 ## Conformance checklist
@@ -62,16 +62,16 @@ back to the second until the retry path breaks in production.
 - [ ] The build passes from a clean clone on a fresh agent.
 - [ ] Every skipped, excluded or suppressed check names a deviation.
 - [ ] Every such deviation is open, owned by an individual, and inside its review date.
-- [ ] The last defect fix in this repository carries a test that fails without the fix.
+- [ ] The last defect fix in this repository has a test that fails without the fix.
 
 ## Rationale and provenance
 
-A check that can be waived quietly stops being a gate and becomes a report. Recording the waiver keeps the exception
-visible and gives it an end date.
+A check anybody can waive without a record blocks nothing. Recording the waiver keeps the exception visible and gives
+it an end date.
 
 ## Sources and further reading
 
-- **Informative.** [SLSA build levels] cover what a build platform guarantees before a gate running on it means
+- **Informative.** [SLSA build levels] describe what a build platform guarantees before a gate running on it means
   anything: a clean checkout, an agent defined in the repository, and provenance for what the build produced.
 
 [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses

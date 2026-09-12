@@ -18,16 +18,16 @@ tags: [ alerting, logging, tracing ]
 
 ## Summary
 
-Every service emits structured logs, traces and metrics to the central platform, stamped with a UTC timestamp and a
-trace id that follows the request across services. An alert names an owner and asks for an action.
+Every service emits structured logs, traces and metrics to the central platform. Each record has a UTC timestamp and a
+trace id that follows the request across services. An alert names an owner and the first action to take.
 
 ## Rules
 
 ### Everything lands in the central store
 
 - A service **MUST** emit its logs, traces and metrics to the central platform.
-- A service **MUST NOT** hold the only copy of a log, so that losing the host still leaves the evidence.
-- A service **MUST NOT** reach production without health monitoring and at least one alert on it.
+- A service **MUST NOT** keep the only copy of a log, so that losing the host still leaves the evidence.
+- A service **MUST NOT** go into production without health monitoring and at least one alert on it.
 
 _**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 
@@ -36,16 +36,16 @@ _**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 - A service **MUST** stamp every record with a UTC timestamp taken from a synchronised clock.
 - A service **MUST** accept an inbound `traceparent`.
 - A service **MUST** pass that `traceparent` to everything it calls.
-- A log line **MUST** carry the trace id, so a search on one request returns every service that touched it.
-- A service **MUST** emit structured fields rather than a formatted sentence, so a search can filter on a value.
+- A log line **MUST** include the trace id, so a search on one request returns every service that handled it.
+- A service **MUST** emit structured fields, not a formatted sentence, so a search can filter on a value.
 
 _**Covers:** [pol-OBSV].CLOCKS, [pol-OBSV].CORREL_
 
 ### Telemetry carries no personal data
 
 - A service **MUST** redact unmasked personal data before the record is written.
-- A service **MUST** hold a credential or a token to [std-SECRET.nowhere-else-holds-a-secret], which says where a secret
-  may appear.
+- A service **MUST** keep every secret, credential and token out of a log line, a trace attribute and a metric label.
+  [std-SECRET.nowhere-else-holds-a-secret] states where a secret may appear.
 
 _**Covers:** [pol-OBSV].SECRETS_
 
@@ -54,7 +54,7 @@ _**Covers:** [pol-OBSV].SECRETS_
 - A service **MUST** publish availability and latency objectives.
 - A service **MUST** alert when it is on course to miss one of those objectives.
 - An alert **MUST** name the accountable owner and the first action to take.
-- A team **MUST** delete or fix an alert nobody acts on, rather than leaving it to be filtered.
+- A team **MUST** delete or fix an alert nobody acts on, and not leave it to be filtered.
 - A team **MUST** retain telemetry for the period the repository records against the service.
 
 _**Covers:** [pol-OBSV].ALERTS, [pol-OBSV].HEALTH, [pol-OBSV].RETAIN, [pol-OBSV].SLO_
@@ -70,7 +70,7 @@ Avoid
   2026-08-31 09:14:02 WARN psp took 1840ms
 ```
 
-The avoided line has a local timestamp, no trace id and one string to search, so correlating it with the request that
+The avoided line has a local timestamp, no trace id and one string to search. Correlating it with the request that
 caused it means reading by eye.
 
 ## Conformance checklist
@@ -84,14 +84,14 @@ caused it means reading by eye.
 
 ## Rationale and provenance
 
-An incident is answered from what was already being recorded. Adding a log line during the incident tells you about the
+An incident is answered from what was already being recorded. A log line added during the incident tells you about the
 next one.
 
 ## Sources and further reading
 
 - **Normative.** [W3C Trace Context] defines the `traceparent` header this standard passes between services.
-- **Informative.** [Google SRE, Service Level Objectives] covers how an objective is chosen, which this standard
-  requires and does not teach.
+- **Informative.** [Google SRE, Service Level Objectives] covers how an objective is chosen. This standard requires an
+  objective and does not teach how to pick one.
 
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/

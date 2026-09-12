@@ -18,21 +18,21 @@ tags: [ agents, code-review, pull-requests ]
 
 ## Summary
 
-Every change to the default branch arrives as a pull request that says what it does and why, and a named person other
-than the author approves it before it merges.
+Every change to the default branch arrives as a pull request that says what it does and why. A named person other than
+the author approves it before it merges.
 
 ## Rules
 
 ### A change arrives as a pull request
 
-- A pull request **MUST** merge into the default branch rather than reaching it by direct push.
+- A change **MUST** arrive on the default branch as a merged pull request, not as a direct push.
 - A pull request description **MUST** link the work item that asked for the change.
 
 _**Covers:** [pol-EVER].BRANCH, [pol-EVER].INTENT_
 
 ### Somebody other than the author approves it
 
-- A pull request **MUST** carry at least one approval from somebody other than the author before it merges.
+- A pull request **MUST** have at least one approval from somebody other than the author before it merges.
 - A reviewer **MUST** check the change against the standards that apply to it, and not read for style alone.
 - A reviewer **MUST** state what they checked when they approve.
 
@@ -40,8 +40,9 @@ _**Covers:** [pol-SECD].CODEREV_
 
 ### Agent-produced work says what produced it
 
-- A pull request holding agent-produced work **MUST** name the agent, the model and the prompt or task that produced it.
-- Agent-produced work **MUST** carry the approval of a named person, who owns the change afterwards.
+- A pull request containing agent-produced work **MUST** name the agent, the model and the prompt or task that
+  produced it.
+- Agent-produced work **MUST** have the approval of a named person, who owns the change afterwards.
 - A reviewer **MUST NOT** accept an agent's own summary of a change as evidence that the change is correct.
 - Branch policy **MUST** apply to agent-produced work unchanged, with no exemption and no second route in.
 - The identity that opened an agent-produced pull request **MUST NOT** approve or merge it.
@@ -80,12 +81,12 @@ agent's own account in place of a check.
 - [ ] Auto-merge, where it is enabled, cannot complete a pull request that no other identity has approved.
 - [ ] The description links a work item.
 - [ ] Where an agent produced any part of the change, the description names the agent, the model and the task.
-- [ ] The reviewer states what they checked, rather than restating what the change claims.
+- [ ] The reviewer states what they checked, and does not restate what the change claims.
 
 ## Rationale and provenance
 
-A review is the last point at which a person sees the change before it becomes ours. An agent can produce a change far
-faster than it can be checked, so the record of what produced it is what a reviewer works from.
+A review is the last point at which a person sees the change before it becomes ours. An agent produces a change faster
+than anyone can check it, so a reviewer works from the record of what produced it.
 
 ## Sources and further reading
 

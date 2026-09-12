@@ -18,8 +18,8 @@ tags: [ dependencies, licences, supply-chain ]
 
 ## Summary
 
-Every third-party package a build pulls in is pinned to a version, comes from a feed we control, and is screened for
-vulnerabilities and licence terms before anyone adopts it. A critical finding stops the release.
+Every third-party package a build pulls in is pinned to a version and comes from a feed we control. Somebody screens it
+for vulnerabilities and licence terms before anyone adopts it. A critical finding stops the release.
 
 ## Rules
 
@@ -77,7 +77,7 @@ A reviewer can weigh the first against writing the code. The second gives them n
 ## Conformance checklist
 
 - [ ] Every package source configured in the repository points at the organisation's feed.
-- [ ] The lockfile is committed, and CI installs from it rather than resolving afresh.
+- [ ] The lockfile is committed, and CI installs from it without resolving afresh.
 - [ ] The dependency scan runs on every build, and its results are visible without opening the tool.
 - [ ] No critical finding is open past 7 days without a recorded deviation.
 - [ ] Every licence in the tree appears on the allowed list.
@@ -85,12 +85,12 @@ A reviewer can weigh the first against writing the code. The second gives them n
 
 ## Rationale and provenance
 
-Most of the code we ship was written by somebody else. A pinned tree tells us exactly whose code that is, which is what
-makes an advisory answerable in minutes rather than in a survey of every repository.
+Most of the code we ship was written by somebody else. A pinned tree records exactly whose code that is, so a new
+advisory can be answered in minutes.
 
 ## Sources and further reading
 
-- **Informative.** [OWASP Dependency-Check] and [OSV] cover the advisory data the scan is run against.
+- **Informative.** [OWASP Dependency-Check] and [OSV] describe the advisory data the scan runs against.
 
 [OSV]: https://osv.dev/
 [OWASP Dependency-Check]: https://owasp.org/www-project-dependency-check/

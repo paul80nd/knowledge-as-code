@@ -17,7 +17,7 @@ tags: [ cards, pci-dss, tokenisation ]
 
 ## Summary
 
-The browser sends card details to the payment service provider (PSP) and receives a token. Our services handle the
+The browser sends card details to the payment service provider (PSP) and receives a token. Our services work with the
 token. No card number, expiry date or security code crosses a boundary we own.
 
 ## Rules
@@ -34,14 +34,14 @@ _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
 
 ### Nothing we own stores a card
 
-- A datastore **MUST NOT** hold a card number, an expiry date or a security code, in any column, document or blob.
-- A support tool **MUST NOT** offer a field that accepts a card number, so that a customer reading one out over the
-  telephone has nowhere for it to land.
-- A token **MAY** be stored and reused, because it is worthless to anyone but us and the PSP.
+- A datastore **MUST NOT** keep a card number, an expiry date or a security code, in any column, document or blob.
+- A support tool **MUST NOT** offer a field that accepts a card number, even where a customer reads one out over the
+  telephone.
+- A token **MAY** be stored and reused, because only we and the PSP can use it.
 
 ### The split of responsibility is written down
 
-- The PSP contract **MUST** name which PCI DSS requirements the PSP answers for and which we do.
+- The PSP contract **MUST** state which PCI DSS requirements the PSP answers for and which we do.
 - A change to how the checkout collects a card **MUST** be reviewed against that split before it ships.
 
 _**Covers:** `eng:pol-TRUS.CLOUD`_
@@ -59,22 +59,22 @@ Avoid
   payment-api  --card-->   api.psp.example.com
 ```
 
-The avoided form puts a card number in our request logs, our memory dumps and our PCI DSS scope, and the token it
-eventually gets is no safer for the detour.
+The avoided form puts a card number in our request logs, our memory dumps and our PCI DSS scope. The token it receives
+at the end of the detour is no safer.
 
 ## Conformance checklist
 
 - [ ] The checkout page posts card fields to a PSP hostname, confirmed in the browser's network trace.
-- [ ] No request body reaching our estate carries a field named for a card number, expiry or security code.
+- [ ] No request body sent to our estate has a field named for a card number, expiry or security code.
 - [ ] A search of every schema in the estate for a card-number column returns nothing.
 - [ ] The support tool has no free-text field a card number could be typed into.
 - [ ] The PSP contract's responsibility matrix is current, and someone here has read it this year.
 
 ## Rationale and provenance
 
-A card number we never receive is one we cannot leak, cannot be asked to produce, and cannot leave in a log. It also
-keeps us to the smallest PCI DSS assessment available to a merchant, because the systems in scope are the systems that
-touch card data.
+A card number we never receive cannot leak, cannot be demanded from us, and cannot be left in a log. It also keeps us
+to the smallest PCI DSS assessment a merchant can take, because the systems in scope are the systems that handle card
+data.
 
 ## Changelog
 

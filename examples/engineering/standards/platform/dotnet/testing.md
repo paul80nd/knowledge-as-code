@@ -17,19 +17,19 @@ tags: [ csharp, testcontainers, xunit ]
 
 ## Summary
 
-C# tests are written with xUnit. A unit test touches no process boundary, and an integration test starts the
-dependencies it needs in containers of its own.
+C# tests are written with xUnit. A unit test crosses no process boundary. An integration test starts the dependencies
+it needs in containers of its own.
 
 ## Rules
 
-This standard adds the .NET shape to [std-TEST], which says which level a test belongs at. Read that one first.
+This standard adds the .NET detail to [std-TEST], which says which level a test belongs at. Read [std-TEST] first.
 
 ### The framework and the project layout
 
 - A test project **MUST** use xUnit, so one runner reports every suite in the estate.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** assert with `Assert` or with FluentAssertions.
-- A project **MUST** keep to the one it picked.
+- A project **MUST** use one assertion style throughout its tests, either `Assert` or FluentAssertions.
 
 _**Covers:** [pol-AUTV].LEVELS_
 
@@ -38,7 +38,7 @@ _**Covers:** [pol-AUTV].LEVELS_
 - A unit test **MUST NOT** open a socket, read the filesystem, or start a container.
 - A test **MUST NOT** call `Thread.Sleep` or `Task.Delay` to wait for something.
 - A test **MUST** take its time from an injected clock.
-- A test **MUST** await every asynchronous call, so a failure surfaces in the test that caused it.
+- A test **MUST** await every asynchronous call, so the test that caused a failure is the test that reports it.
 
 _**Covers:** [pol-AUTV].LEVELS_
 
@@ -69,8 +69,8 @@ Avoid
   public async void TestAuthorise()
 ```
 
-The avoided signature is `async void`, so xUnit cannot await it and an exception thrown after the first await kills the
-run rather than failing the test.
+The avoided signature is `async void`, so xUnit cannot await it. An exception thrown after the first await ends the
+whole run, and the test is never reported as failed.
 
 ```
 Good
@@ -80,8 +80,8 @@ Avoid
   var db = "Server=sql-test-01;Database=covers_tests;";
 ```
 
-The avoided form shares one database with everybody else's run, so a failure means reading the other suites before your
-own.
+The avoided form shares one database with every other run, so diagnosing a failure means reading the other suites
+before your own.
 
 ## Conformance checklist
 
@@ -94,15 +94,15 @@ own.
 
 ## Rationale and provenance
 
-An integration suite that shares a database fails for reasons that belong to somebody else, and a suite people cannot
-trust stops being read. Starting the dependency per run costs a few seconds and buys a result that means something.
+Starting the dependency per run costs a few seconds and gives a result you can act on. A suite that shares a database
+fails for reasons that belong to somebody else's run, and people stop reading a suite they cannot trust.
 
 ## Sources and further reading
 
-- **Normative.** [xUnit.net documentation] is the framework these rules are written against.
+- **Normative.** [xUnit.net documentation] describes the framework these rules are written against.
 - **Informative.** [Testcontainers for .NET] covers the container lifecycle an integration test depends on.
 
 [Testcontainers for .NET]: https://dotnet.testcontainers.org/
-[std-TEST]: ../../common/testing.md
 [xUnit.net documentation]: https://xunit.net/docs/getting-started/v3/getting-started
 [pol-AUTV]: ../../../policies/delivery/autv-automated-verification.md#clauses
+[std-TEST]: ../../common/testing.md

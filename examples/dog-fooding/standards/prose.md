@@ -19,8 +19,8 @@ tags: [ documentation, prose, writing ]
 
 Every word this repository publishes follows the Microsoft Writing Style Guide, with the changes below. That covers
 records, README files, code comments, schema descriptions, documentation pages, commit messages and pull request
-bodies. The writing skills under `.claude/skills/` state the same rules for an agent, and each surface adds its own
-shape on top.
+bodies. The writing skills under `.claude/skills/` state the same rules for an agent. Each surface then adds its own
+shape on top of them.
 
 ## Rules
 
@@ -28,9 +28,12 @@ shape on top.
 
 - Prose **MUST** follow the Microsoft Writing Style Guide, except where a clause below changes it.
 - A sentence **MUST** state the rule or the fact before the reason.
-- A verb **MUST** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*. It does not *hold to*,
-  *carry*, *name*, *answer*, *reach* or *seal*.
-- A sentence **MUST** carry one idea, and an instruction **MUST** carry one step.
+- A verb **MUST** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*. *Hold to*, *carry*,
+  *name*, *answer*, *reach* and *seal* **MUST NOT** stand in for one. *Holds* has four plain replacements: *has*,
+  *contains*, *keeps* and *checks*. *Carries* has *has*, *contains*, *includes* and *states*.
+- A word on that list **MAY** appear where it is itself the plain verb. A heading *names* a topic, a standard *cites*
+  a clause, and a service *returns* what a caller asked for.
+- A sentence **MUST** state one idea, and an instruction **MUST** give one step.
 - A heading **MUST** name its topic, in sentence case.
 - Three or more parallel items **MUST** be a list or a table.
 
@@ -43,16 +46,22 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
 - Prose **MUST** wrap at 120 columns, counted in characters. A table row and a link definition **MUST NOT** wrap.
 - *We* **MUST** appear only in a commitment in a policy or a standard. Everywhere else the text **MUST** say *you*, or
   name the tool, the framework or the corpus.
-- A framework term (corpus, record, type, tier, layer, export, plugin) **MUST** carry a gloss on its first use on each
+- A framework term (corpus, record, type, tier, layer, export, plugin) **MUST** have a gloss on its first use on each
   page.
 - A figure of speech **MUST NOT** appear.
-- A claim **MUST** carry at most one reason.
-- One thing **MUST** carry one name everywhere.
+- A claim **MUST** give at most one reason.
+- A contrast (*rather than*, *instead of*) **MUST** appear only where the reader already holds the wrong idea. A
+  contrast inside a clause **MUST** stay, because it names what the clause forbids.
+- One thing **MUST** have one name everywhere.
 
 ### What prose must not change
 
 - You **MUST** leave alone an identifier, a path, a flag, a command, and the output a command printed.
-- You **MUST** leave alone a heading you may not rename, the H1 of a record, and the wording of a clause.
+- You **MUST** leave alone a heading you may not rename, the H1 of a record, and every clause id.
+- You **MAY** reword a clause where the obligation is identical: the same subject, the same modal, the same threshold,
+  the same list, the same exception and the same cross-reference.
+- Rewording a clause **MUST** reword every quotation of it in the same change. `clause-quoted-faithfully` reports a
+  quotation that no longer matches.
 - You **MUST** leave alone the span between a `BEGIN GENERATED` marker and its `END GENERATED`. To move it, change the
   schema or the frontmatter and run `kac generate`.
 - Where this standard and `.schema/` disagree, the schema **MUST** win, and you **MUST** report the contradiction.
@@ -64,13 +73,13 @@ _**Covers:** `eng:pol-KNOW.AGENTS`_
 - A schema rule the tool does not implement **MUST** be written as declared and not running.
 - A count **MUST** name the command or the test that reports it, unless a decision fixes the set.
 - Reasoning that lives elsewhere **MUST** be cited, not restated.
-- Adding a fact to existing prose **MUST** rewrite the whole block with the fact in it.
+- You **MUST** rewrite the whole block when you add a fact to existing prose.
 
 ### Commit messages and pull requests
 
 - A subject line **MUST** say what changed, in the imperative, with no full stop.
 - The body **MUST** say why. It is the one place that may describe what used to be true.
-- A pull request body **MUST** carry the reason and the evidence, and **MUST NOT** retell the diff.
+- A pull request body **MUST** give the reason and the evidence, and **MUST NOT** retell the diff.
 
 ## Examples
 
@@ -90,13 +99,18 @@ Two separators reach past an id, each with one job.
 Click Delete to remove the document.
 ```
 
-Each avoided line costs the reader a second pass. The figurative verb hides the action. The maxim hides the rule. The
-condition after the step is read after the step is taken.
+Each line under ❌ Avoid makes the reader read it twice.
+
+- A figurative verb hides the action.
+- A generalisation about the design says nothing the reader can act on.
+- A sentence saying what a thing is not never says what it is.
+- A step written before its purpose is acted on before the purpose is read.
 
 ## Conformance checklist
 
-- [ ] Every verb is literal. No "holds", "carries", "names", "answers", "reaches" or "seals" stands for a plain verb.
+- [ ] Every verb is literal. No "holds", "carries", "names", "answers", "reaches" or "seals" replaces a plain verb.
 - [ ] Every section opens on the rule or the fact, not the reason.
+- [ ] Every contrast left standing is one a reader needs, and every clause kept the one it had.
 - [ ] Every heading names a topic.
 - [ ] No em dash survives. Spelling is British.
 - [ ] Every line of prose outside a table or a link definition is under 120 characters.
@@ -108,11 +122,11 @@ condition after the step is read after the step is taken.
 
 Markdown outnumbers code in this repository, so how a sentence reads is a property of the product. The Microsoft
 Writing Style Guide is the base because it is public, complete, and known in depth by the models that write here. A
-short list of local changes beats a long local restatement, because a model imitates a known guide better than it
-follows a rulebook.
+short list of local changes works better than a long local restatement, because a model imitates a known guide more
+closely than it follows a rulebook.
 
-The writing skills under `.claude/skills/` state the same rules for an agent and name no record, so a skill works in a
-checkout that holds no corpus. This standard is the record the estate cites.
+The writing skills under `.claude/skills/` state the same rules for an agent and cite no record, so a skill works in a
+checkout with no corpus in it. This standard is the record the estate cites.
 
 ## Sources and further reading
 

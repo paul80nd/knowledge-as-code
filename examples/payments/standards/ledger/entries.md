@@ -18,15 +18,15 @@ tags: [ append-only, double-entry, ledger ]
 ## Summary
 
 Every movement of money is a balanced pair of entries, written once and never amended. A mistake is corrected by a
-further pair, so the sequence finance read on the day is the sequence they read a year later.
+further pair. The sequence finance read on the day is the sequence they read a year later.
 
 ## Rules
 
 ### An entry is a balanced pair
 
 - The ledger **MUST** write a movement of money as a debit and a credit of the same amount.
-- An entry **MUST** carry the amount in minor units as an integer, with its ISO 4217 currency code.
-- An entry **MUST NOT** carry an amount in a floating-point type, at rest or in transit.
+- An entry **MUST** state the amount in minor units as an integer, with its ISO 4217 currency code.
+- An entry **MUST NOT** use a floating-point type for an amount, at rest or in transit.
 - The ledger **MUST** write a pair of entries in one transaction, so no reader ever sees one half.
 
 _**Covers:** `eng:pol-DERV.EXPECT`_
@@ -34,20 +34,20 @@ _**Covers:** `eng:pol-DERV.EXPECT`_
 ### Nothing amends an entry
 
 - The ledger **MUST** refuse an update or a delete on a written entry.
-- The ledger **MUST** record a correction as a reversing pair followed by the intended pair, each naming the entry it
+- The ledger **MUST** record a correction as a reversing pair followed by the intended pair, each stating the entry it
   corrects.
-- An entry **MUST** carry the time the event happened and the time it was written, where the two differ.
+- An entry **MUST** record the time the event happened and the time it was written, where the two differ.
 
 _**Covers:** `eng:pol-DERV.LINEAGE`_
 
 ### An entry says what produced it
 
-- An entry **MUST** name the order, the PSP reference and the idempotency key from
+- An entry **MUST** record the order, the PSP reference and the idempotency key from
   [std-IDEM.the-caller-chooses-the-key].
-- An entry **MUST** name the event that produced it: an authorisation, a capture, a refund or a chargeback.
+- An entry **MUST** record the event that produced it: an authorisation, a capture, a refund or a chargeback.
 - An entry for an authorisation **MUST** record the authentication outcome from
   [std-SCA.the-outcome-travels-with-the-payment], and who bears the liability for a chargeback.
-- The ledger **MUST** be able to answer a payment's full history from its entries alone.
+- The ledger **MUST** be able to reproduce a payment's full history from its entries alone.
 
 _**Covers:** `eng:pol-DERV.LINEAGE`_
 
@@ -64,16 +64,16 @@ Avoid
   UPDATE entries SET amount = 2499 WHERE id = 90114
 ```
 
-The avoided statement leaves no record that the figure ever was 2599, so the reconciliation that already matched the
-old figure now disagrees with the ledger and nothing explains why.
+The avoided statement leaves no record that the figure was ever 2599. The reconciliation that already matched the old
+figure now disagrees with the ledger, and nothing explains why.
 
 ## Conformance checklist
 
-- [ ] Every amount column is an integer type, and every entry carries a currency code.
+- [ ] Every amount column is an integer type, and every entry has a currency code.
 - [ ] The database grants the service no UPDATE or DELETE on the entries table.
 - [ ] Summing debits and credits across the whole table returns zero.
-- [ ] Every correction in the last month appears as a reversal naming the entry it reverses.
-- [ ] Each entry names an order, a PSP reference and an idempotency key.
+- [ ] Every correction in the last month appears as a reversal stating the entry it reverses.
+- [ ] Each entry records an order, a PSP reference and an idempotency key.
 - [ ] A payment's history can be rebuilt from the entries with no other source.
 
 ## Rationale and provenance

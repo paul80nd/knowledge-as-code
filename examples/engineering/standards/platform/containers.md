@@ -17,16 +17,16 @@ tags: [ base-images, containers, runtime ]
 
 ## Summary
 
-An image is built from a base pinned by digest, tagged with the version it will keep forever, and started as a
-non-root user with no port open beyond the one the service answers on.
+An image is built from a base pinned by digest. The pipeline tags it with the build's own version. That tag never
+moves. The container runs as a non-root user and opens one port, the one the service listens on.
 
 ## Rules
 
 ### The base image is chosen and pinned
 
-- A Dockerfile **MUST** name its base image from the organisation's registry.
+- A Dockerfile **MUST** take its base image from the organisation's registry.
 - A Dockerfile **MUST** pin the base image by digest rather than by a moving tag.
-- A repository **MUST** rebuild against a refreshed base at least monthly, so a patched base reaches the running
+- A repository **MUST** rebuild against a refreshed base at least monthly, so a patched base is deployed to the running
   service.
 
 _**Covers:** [pol-ENVS].BASELIN, [pol-TRUS].SOURCE_
@@ -62,27 +62,27 @@ Avoid
   EXPOSE 8080 5000 22
 ```
 
-The avoided form ships a compiler and an SSH port to production, and `latest` means a rebuild next week produces a
-different image from the same Dockerfile.
+The avoided form ships a compiler and an SSH port to production. `latest` pins nothing, so a rebuild next week produces
+a different image from the same Dockerfile.
 
 ## Conformance checklist
 
-- [ ] Every `FROM` in the repository carries a digest.
+- [ ] Every `FROM` in the repository has a digest.
 - [ ] The base image digest was refreshed within the last month.
 - [ ] `docker inspect` on the running image reports a non-root user.
 - [ ] The deployment manifest names an image digest rather than a tag.
 - [ ] The registry refuses a second push to a tag that already exists.
-- [ ] The container exposes one port, and it is the one the service answers on.
+- [ ] The container exposes one port, and it is the one the service listens on.
 
 ## Rationale and provenance
 
-A tag is a name somebody can repoint, and a digest is the bytes. Deploying by digest is what makes the image we tested
-and the image running the same object.
+Deploying by digest means the image that runs is the image you tested. A tag is a name somebody can repoint. A digest is
+a hash of the bytes.
 
 ## Sources and further reading
 
 - **Normative.** [OCI Image Format Specification] defines the digest these rules pin to.
-- **Informative.** [NIST SP 800-190] covers the container risks this standard answers a few of.
+- **Informative.** [NIST SP 800-190] lists the container risks. This standard covers some of them.
 
 [NIST SP 800-190]: https://csrc.nist.gov/pubs/sp/800/190/final
 [OCI Image Format Specification]: https://github.com/opencontainers/image-spec/blob/main/spec.md

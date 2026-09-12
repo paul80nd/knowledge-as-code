@@ -26,14 +26,14 @@ name and address stay out of every log, trace and error report.
 ### What a log line may carry
 
 - A log line **MUST** identify a payment by its order reference, its PSP reference, or both.
-- A log line **MUST NOT** carry a card token, in a message, a property or a structured field.
-- A log line **MUST NOT** carry a customer's name, address, email address or telephone number.
+- A log line **MUST NOT** include a card token, in a message, a property or a structured field.
+- A log line **MUST NOT** include a customer's name, address, email address or telephone number.
 
 _**Covers:** `eng:pol-DATA.LOGS`, `eng:pol-SCRT.LOGS`_
 
 ### The redaction runs before the sink
 
-- A service **MUST** redact against a list of field names held in code and covered by a test, rather than against a
+- A service **MUST** redact against a list of field names kept in code and covered by a test, rather than against a
   pattern applied where the log is read.
 - A service **MUST** redact a request or response body before it is written.
 - A service **MUST NOT** leave redaction to the log platform, which sees the line only after every copy of it exists.
@@ -58,31 +58,31 @@ Avoid
 ```
 
 The avoided line puts a customer's name, a reusable token and a live secret key into every place the logs are shipped,
-searched and backed up. Rotating the key does not reach any of those copies.
+searched and backed up. Rotating the key leaves all of those copies as they are.
 
 ## Conformance checklist
 
 - [ ] The redaction field list is in the repository and a test asserts each entry is removed.
 - [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.
 - [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.
-- [ ] Error reports carry a request id and no request body.
+- [ ] Error reports include a request id and no request body.
 - [ ] The PSP key resolves from the managed store at start-up, and appears in no configuration file.
 
 ## Rationale and provenance
 
-Logs are shipped, searched, exported and kept longer than anything else we run. A token written into one is a token in
-every copy of it, and a copy is not covered by rotating the token at the PSP.
+Logs are shipped, searched, exported and kept longer than anything else we run. A token written into one log is a token
+in every copy of that log, and rotating the token at the PSP changes none of those copies.
 
-`eng:pol-SCRT` binds every secret and this standard says what its prohibition on logging means for a payment. That
-obligation is discharged twice on purpose: `eng:pol-SCRT.LOGS` reaches the whole estate through the governance layer's
-own secret-handling standard, and reaches a PSP key and a card token through this one.
+`eng:pol-SCRT` binds every secret, and this standard says what its prohibition on logging means for a payment. Two
+standards implement that obligation on purpose: the governance layer's own secret-handling standard applies
+`eng:pol-SCRT.LOGS` across the estate, and this standard applies it to a PSP key and a card token.
 
 ## Sources and further reading
 
-- **Normative.** [OpenTelemetry semantic conventions] name the attributes a span and a log record carry. This standard
+- **Normative.** [OpenTelemetry semantic conventions] define the attributes a span and a log record use. This standard
   says which of them a payment may fill, and renames none of them.
-- **Informative.** [The OpenTelemetry logs data model] covers the fields a log record holds, which is what the
-  redaction list is written against.
+- **Informative.** [The OpenTelemetry logs data model] describes the fields a log record has. The redaction list is
+  written against those fields.
 
 ## Changelog
 

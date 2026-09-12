@@ -17,14 +17,14 @@ tags: [ analyzers, code-style, csharp ]
 
 ## Summary
 
-C# in this estate is written to the .NET runtime team's own coding style, expressed as an `.editorconfig` in the
-repository. Analysers run as part of the build, and a warning is a defect.
+C# in this estate is written to the .NET runtime team's own coding style, set out as an `.editorconfig` in the
+repository. Analysers run as part of the build. A warning is a defect.
 
 ## Rules
 
 ### The conventions come from one file
 
-- A repository holding C# **MUST** carry an `.editorconfig` at its root, taken from the .NET runtime team's own.
+- A repository holding C# **MUST** have an `.editorconfig` at its root, taken from the .NET runtime team's own.
 - A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the build checks the style.
 - A project **MUST** enable nullable reference types.
 - Code **MUST NOT** silence a nullability warning with `!`.
@@ -34,7 +34,7 @@ _**Covers:** [pol-AUTV].WARN, [pol-SECD].CODING_
 
 ### A suppression is local and says why
 
-- A suppression **MUST** sit on the member it applies to, with a `Justification` naming the reason.
+- A suppression **MUST** sit on the member it applies to, with a `Justification` giving the reason.
 - A repository **MUST NOT** disable a rule in `.editorconfig` to clear a warning in one file.
 
 _**Covers:** [pol-AUTV].WARN_
@@ -61,8 +61,8 @@ Avoid
   <NoWarn>CA1848;CS8600;CS8602</NoWarn>
 ```
 
-The avoided line turns three rules off for the whole project. Two of them are nullability, so every reference in the
-project stops being checked to clear the file that first complained.
+The avoided line turns three rules off for the whole project. Two of them are nullability rules. Silencing those stops
+every reference in the project being checked, to clear the one file that first complained.
 
 ```
 Good
@@ -73,28 +73,28 @@ Avoid
   #pragma warning disable CA1848
 ```
 
-The first names the member, the rule and the reason. The second reaches everything below it in the file, including code
-written next year.
+The first form states the member, the rule and the reason. The second applies to everything below it in the file,
+including code written next year.
 
 ## Conformance checklist
 
-- [ ] The repository root holds an `.editorconfig`, and it matches the upstream one apart from documented departures.
+- [ ] The repository root has an `.editorconfig`, and it matches the upstream one apart from documented departures.
 - [ ] A build with a style violation fails.
 - [ ] `<NoWarn>` is empty in every project file.
-- [ ] Every `SuppressMessage` in the repository carries a `Justification` a reader can act on.
+- [ ] Every `SuppressMessage` in the repository has a `Justification` a reader can act on.
 - [ ] The solution builds with zero warnings from a clean checkout.
 - [ ] No `!` appears in the repository outside a test asserting a null argument is refused.
 
 ## Rationale and provenance
 
-C# has a house style already, written by the people who write the language's own libraries. Taking theirs means a
-reviewer argues about the change instead of the braces, and a newcomer has read the rules before they arrive.
+C# already has a house style, written by the people who write the language's own libraries. Adopting it means a reviewer
+argues about the change, not about the braces. It also means a newcomer has read these rules before they arrive.
 
 ## Sources and further reading
 
-- **Normative.** [dotnet/runtime coding style] is the style this standard adopts. The departures are the analyser
-  settings above, and nothing else.
-- **Normative.** [Common C# code conventions] carries the naming and layout rules the `.editorconfig` encodes.
+- **Normative.** [dotnet/runtime coding style] is the style this standard adopts. The only departures are the analyser
+  settings above.
+- **Normative.** [Common C# code conventions] states the naming and layout rules the `.editorconfig` encodes.
 - **Informative.** [Code quality analysis rules] lists the rules the build turns into errors.
 
 [Code quality analysis rules]: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/

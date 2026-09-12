@@ -18,7 +18,7 @@ tags: [ erasure, retention, tokens ]
 
 ## Summary
 
-The ledger keeps its entries for seven years because tax law asks for them. Everything around a payment goes sooner:
+The ledger keeps its entries for seven years because tax law requires them. Everything around a payment goes sooner:
 tokens at 13 months, logs at 90 days, and the customer's contact details when the order closes.
 
 ## Rules
@@ -28,7 +28,7 @@ tokens at 13 months, logs at 90 days, and the customer's contact details when th
 - The ledger **MUST** keep an entry for seven years from the date it was written.
 - A service **MUST** delete a card token 13 months after its last use.
 - The telemetry platform **MUST** delete a payment record after 90 days.
-- A store **MUST NOT** hold personal data with no stated period against it.
+- A store **MUST NOT** keep personal data with no stated period against it.
 
 _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 
@@ -37,7 +37,7 @@ _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 - A scheduled job **MUST** delete data that has passed its period.
 - That job **MUST** run at least weekly.
 - The job **MUST** record what it deleted, by store and by count.
-- A backup policy **MUST** age a backup out on the same period as the store it came from.
+- A backup policy **MUST** expire a backup on the same period as the store it came from.
 
 _**Covers:** `eng:pol-DATA.DELETE`_
 
@@ -65,25 +65,25 @@ Avoid
   telemetry     -
 ```
 
-The avoided table states one period and leaves two stores keeping everything forever, which is the state a store
-reaches when nobody chooses.
+The avoided table states one period. `card_tokens` and `telemetry` are left blank, so they keep everything forever,
+which is what a store does when nobody chooses a period for it.
 
 ## Conformance checklist
 
-- [ ] Every store holding payment data has a period written against it in the repository.
+- [ ] Every store keeping payment data has a period written against it in the repository.
 - [ ] The retention job has run in the last week, and its record says what it deleted.
 - [ ] A query for tokens last used over 13 months ago returns nothing.
 - [ ] The telemetry platform is configured to 90 days.
 - [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.
-- [ ] Backup lifecycle rules match the periods of the stores they hold.
+- [ ] Backup lifecycle rules match the periods of the stores they back up.
 
 ## Rationale and provenance
 
 Data we no longer need is data we can still lose. Seven years covers the six-year tax record with a year in hand. The
-chargeback window sets 13 months, and an investigation rarely reaches past 90 days.
+chargeback window sets 13 months, and an investigation rarely needs more than 90 days.
 
-A ledger entry survives an erasure request because a tax record is a legal obligation, and the order reference is
-enough to keep the books without keeping the name.
+A ledger entry survives an erasure request because a tax record is a legal obligation. The order reference is enough
+to keep the books without keeping the name.
 
 ## Sources and further reading
 
