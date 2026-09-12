@@ -18,13 +18,13 @@ tags: [ documentation, knowledge-management ]
 ## Purpose
 
 The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept next to the
-thing it describes. It is not held in someone's head, and not in a chat history nobody can search. Agents read the same
-documentation people do.
+thing it describes. It does not sit in someone's head, or in a chat history nobody can search. Agents read the
+same documentation people do.
 
 If one person is the only one who knows how a system recovers, the system is one resignation away from being
-unrecoverable. Running two of everything does not help. Keeping the documentation next to the code helps, because a
-change that makes the documentation wrong is then reviewed alongside the change itself. Undocumented work is unfinished
-work.
+unrecoverable. Redundant infrastructure does not help with that. Keeping the documentation next to the code does help,
+because a change that makes the documentation wrong is then reviewed alongside the change itself. Undocumented work is
+unfinished work.
 
 ## Scope
 

@@ -19,27 +19,27 @@ tags: [ backup, continuity, recovery, resilience ]
 
 ## Purpose
 
-We know how quickly each critical system must come back, and how much data we can afford to lose. We can demonstrate
-that we can meet those objectives. Our systems degrade rather than collapse when something they depend on fails.
+We know how quickly each critical system has to come back, and how much data we can afford to lose. We can show that we
+meet those objectives. When a dependency fails, our systems lose some function but keep running.
 
-Resilience that has never been exercised is an assumption. A backup that has never been restored is not a backup, and a
-dependency with no failure path is a future outage waiting for its trigger.
+Resilience that has never been exercised is an assumption. A backup nobody has restored is not a backup. A dependency
+with no failure path takes the system down when it fails.
 
 ## Scope
 
-All systems we operate and the data they hold, with depth set by how critical the system is. It covers both designed-in
+All systems we operate and the data they contain, with depth set by how critical the system is. It covers designed-in
 fault tolerance and the ability to recover after failure.
 
 A failure domain is the set of things that fail together: a disk, a rack, a data centre, a region.
 
-Proving a restore needs the data the backup actually holds, so it runs in a controlled restore environment held at
-production tier: the same access controls, the same data handling, and not an environment below production. Masked or
-synthesised data would prove the mechanism rather than the restore. [pol-DATA] and [pol-ENVS] bind that environment as
-production, rather than excepting it.
+Proving a restore needs the data the backup actually contains, so it runs in a controlled restore environment at
+production tier: the same access controls and the same data handling as production, and not an environment below
+production. Masked or synthesised data proves the mechanism and not the restore. [pol-DATA] and [pol-ENVS] bind that
+environment as production, and it is not an exception to either.
 
-_Boundary: [pol-ENVS] governs separation between environments and [pol-DATA] governs the handling of the data they hold.
-The restore environment sits at production tier, so their rules about lower environments do not reach it. [pol-INCR]
-owns the response to an outage, which is deciding to invoke a recovery and running it. This policy owns being able to
+_Boundary: [pol-ENVS] governs separation between environments, and [pol-DATA] governs the handling of the data they
+contain. The restore environment is at production tier, so their rules about lower environments do not apply to it.
+[pol-INCR] owns the response to an outage: deciding to invoke a recovery and running it. This policy owns being able to
 recover._
 
 ## Clauses
@@ -62,9 +62,9 @@ recover._
 
 ## Exceptions
 
-Systems holding no state that cannot be regenerated from source need no data backup, but their recovery path is still
-defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded
-deviation under [pol-DEVI], owned by whoever will answer for the downtime.
+A system whose whole state can be regenerated from source needs no data backup. Its recovery path is still defined and
+still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded deviation
+under [pol-DEVI], owned by whoever will answer for the downtime.
 
 [pol-DATA]: ../security/data-data-protection.md
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md

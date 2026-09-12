@@ -20,14 +20,14 @@ tags: [ continuous-integration, quality-gates, testing ]
 We build and check every change automatically before it joins the default branch or moves towards production. A failed
 check stops it. Quality checks are gates.
 
-A check that warns but does not block is a check that will eventually be ignored. Keeping the default branch releasable
-is worth more than any single gate in it. Gating every change is only affordable because machines do the checking. A
-check somebody has to remember to run is a check we do not have.
+A check that warns but does not block is eventually ignored. Gating every change is only affordable because machines do
+the checking. A check somebody has to remember to run is a check we do not have. Keeping the default branch releasable
+is worth more than any single gate in it.
 
 ## Scope
 
 Every change to any solution we build or operate: application code, infrastructure definitions, database schema,
-configuration, data pipelines and the documentation held with them.
+configuration, data pipelines and the documentation kept with them.
 
 ## Clauses
 
@@ -52,7 +52,7 @@ configuration, data pipelines and the documentation held with them.
 ## Exceptions
 
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
-recorded as a deviation under [pol-DEVI], and the gate is satisfied afterwards rather than waived.
+recorded as a deviation under [pol-DEVI]. The gate is satisfied afterwards, not waived.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-VURM]: ../security/vurm-vulnerability-remediation.md

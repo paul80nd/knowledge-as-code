@@ -19,20 +19,20 @@ tags: [ secure-coding, secure-design, threat-modelling ]
 
 ## Purpose
 
-We decide security and privacy at design time, and carry that decision through into how the code is written.
+We decide security and privacy at design time, and apply that decision in how the code is written.
 
-Retrofitted security is expensive and shallow. A flaw in a design is inherited by every line of code that implements it.
-Scanning finds the symptoms afterwards. Half an hour of threat modelling at the start removes the cause.
+Retrofitted security is expensive and shallow. Every line of code that implements a flawed design inherits the flaw.
+Scanning finds the symptoms afterwards. Threat modelling at the start removes the cause.
 
 ## Scope
 
-New systems, new features and significant changes to existing ones. The depth is proportionate to risk: a high-risk or
-externally exposed change warrants more than a routine internal one, but neither warrants none.
+New systems, new features and significant changes to existing ones. The depth is proportionate to risk. A high-risk or
+externally exposed change gets more attention than a routine internal one. Every change in scope gets some.
 
 _Boundary: this policy owns the security decisions we make while building: the requirements, the design, the threats we
-work through, and how the code is written. Finding weaknesses in what is already built is [pol-VURM]'s. Running the
-checks that look for them on every change is [pol-AUTV]'s. `ACTIONS` is shared with [pol-INCR]: findings become tracked
-work whether they came from threat modelling here or from an incident review there._
+work through, and how the code is written. [pol-VURM] owns finding weaknesses in what is already built. [pol-AUTV] owns
+running the checks that look for them on every change. `ACTIONS` is shared with [pol-INCR]: findings become tracked
+work whether threat modelling here or an incident review there produced them._
 
 ## Clauses
 
@@ -49,10 +49,10 @@ work whether they came from threat modelling here or from an incident review the
 
 ## Exceptions
 
-Low-risk changes to systems that hold no sensitive data and have no external exposure need no separate threat
-consideration. The secure-design principles and the coding standard still apply. A high-risk change may have to proceed
-before its security work is complete. That is a recorded deviation under [pol-DEVI], not a judgement call made in the
-moment.
+A low-risk change to a system that contains no sensitive data and has no external exposure needs no separate threat
+consideration. The secure-design principles and the coding standard still apply. A high-risk change sometimes has to
+proceed before its security work is complete. That is a recorded deviation under [pol-DEVI], not a judgement call made
+in the moment.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md

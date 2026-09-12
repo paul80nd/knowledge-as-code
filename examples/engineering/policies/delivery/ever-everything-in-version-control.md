@@ -17,9 +17,9 @@ tags: [ change-management, source-control, traceability ]
 
 ## Purpose
 
-We hold everything needed to build, configure, deploy, run and recover a solution in version control, with a complete
+We keep everything needed to build, configure, deploy, run and recover a solution in version control, with a complete
 and attributable history. If one asset needed to rebuild the system is not versioned, we cannot claim the system is
-reproducible. A schema migration and an application change differ in medium, not in the rigour they get.
+reproducible. A schema migration gets the same rigour as an application change.
 
 Almost every other policy here assumes there is one authoritative copy of everything. Review, traceability, reproducible
 builds, controlled release and recovery all rest on it.
@@ -36,7 +36,7 @@ Secrets are the deliberate exception. See [pol-SCRT].
 
 | Id        | Clause                                                                                                                                           | Alignment                                                              |
 |-----------|--------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| `ASSETS`  | **MUST** hold every asset needed to build, deploy, run and recover a solution in version control                                                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
+| `ASSETS`  | **MUST** keep every asset needed to build, deploy, run and recover a solution in version control                                                 | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PS.1                           |
 | `HISTORY` | **MUST** preserve a complete change history that attributes each change to an individual                                                         | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1                          |
 | `INTENT`  | **MUST** link each change to the work that asked for it                                                                                          | [ISO 27001:2022].A.8.32                                                |
 | `BRANCH`  | **MUST** protect the default branch, so changes arrive by reviewed merge rather than direct push                                                 | [ISO 27001:2022].A.8.4, [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.1  |
@@ -48,8 +48,8 @@ Secrets are the deliberate exception. See [pol-SCRT].
 
 ## Exceptions
 
-Vendor-supplied binaries and third-party assets we cannot hold in source are referenced by version and provenance
-instead. See [pol-TRUS]. Any other asset held outside version control requires a recorded deviation under [pol-DEVI],
+Vendor-supplied binaries and third-party assets we cannot keep in source are referenced by version and provenance
+instead. See [pol-TRUS]. Any other asset kept outside version control requires a recorded deviation under [pol-DEVI],
 naming the asset, the reason and the recovery plan if it is lost.
 
 [pol-ACCS]: ../security/accs-access-by-identity.md

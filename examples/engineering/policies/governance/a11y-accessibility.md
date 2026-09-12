@@ -18,12 +18,12 @@ tags: [ accessibility, inclusive-design, legal-obligation ]
 
 ## Purpose
 
-The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA]. It does that because
-we designed it that way, not because we corrected it afterwards.
+The software we put in front of users works for people with disabilities, and meets [WCAG 2.2 AA]. We design it that
+way from the start.
 
-The [Equality Act 2010] requires this of us, and it requires us to anticipate: we owe the adjustment before anybody
-asks. Accessibility is also the difference between software that serves its users and software that serves *most* of
-them. Building it in costs a fraction of fixing it later.
+The [Equality Act 2010] requires this of us, and it requires us to anticipate: we make the adjustment before anybody
+asks. Software that is not accessible serves most of its users but not all of them. Building accessibility in costs a
+fraction of fixing it later.
 
 ## Scope
 
@@ -55,8 +55,8 @@ is acceptable; concealing it is not.
 
 ## Notes
 
-What drives this policy is legal obligation rather than an information-security framework, so it carries no ISO/IEC
-27001 reference. See [Policies](../../policies.md#why-we-use-them).
+This policy comes from a legal obligation and not from an information-security framework, so it has no ISO/IEC 27001
+reference. See [Policies](../../policies.md#why-we-use-them).
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [Equality Act 2010]: ../../frameworks.md#equality-act-2010

@@ -17,14 +17,14 @@ tags: [ data-quality, integrity, provenance ]
 
 ## Purpose
 
-Where our code computes a result, rather than storing what it was given, we check that result before anyone relies on
-it. A run that finished is not evidence that what it produced is right.
+Where our code computes a result from other data, we check that result before anyone relies on it. A run that finished
+is not evidence that what it produced is right.
 
 Everywhere else here, verifying the code is enough. The code determines the output, so a test that exercises the code
 exercises the answer. That stops being true when correctness depends on data we did not author. A transformation can be
-exactly right and still produce a wrong answer, because a source arrived truncated or changed meaning without telling
-us. No test catches it, because the thing that varied is not in the test. The failure is silent, and the cost lands on
-whoever acted on the number.
+exactly right and still produce a wrong answer, because a source arrived truncated or its meaning changed since the
+transformation was written. No test catches that, because the thing that varied is not in the test. The failure is
+silent, and whoever acted on the number pays for it.
 
 ## Scope
 
@@ -32,8 +32,8 @@ Any process that produces data by computing over other data rather than recordin
 transformations, aggregations, extracts, and report and feature builds. It binds once the output leaves the process that
 made it.
 
-_Boundary: [pol-AUTV] verifies the code of such a process and [pol-PIPE] governs how it reaches production. This policy
-is about its output. Protecting that data, rather than checking it, is [pol-DATA]'s._
+_Boundary: [pol-AUTV] verifies the code of such a process, and [pol-PIPE] governs how it reaches production. This policy
+covers its output. [pol-DATA] owns protecting that data, rather than checking it._
 
 ## Clauses
 
@@ -56,14 +56,14 @@ accepts a wrong answer reaching a decision. "The numbers have always looked abou
 ## Notes
 
 [ISO 27001:2022] treats integrity as protection against unauthorised alteration, and no Annex A control asks whether a
-computation was correct. The [Azure WAF] pillars do not reach it either. Reliability is about a workload staying
+computation was correct. The [Azure WAF] pillars do not cover it either. Reliability is about a workload staying
 available and recovering. `RUNLOG` cites Operational Excellence for its run record, and no clause here cites
 Reliability.
 
-`CHECK` cites the accuracy principle, and neither reaches the whole of the other. The principle reaches the personal
-data this policy computes over and not the rest of it, so the citation covers part of the clause. The clause reaches
-computed data alone, where the principle also binds what a user gave us. That principle's second limb, that inaccurate
-data be erased or rectified without delay, is answered by no clause here.
+`CHECK` cites the accuracy principle, and neither covers the whole of the other. The principle covers the personal data
+this policy computes over and not the rest of it, so the citation covers part of the clause. The clause covers computed
+data alone, where the principle also binds what a user gave us. No clause here covers that principle's second limb,
+that inaccurate data be erased or rectified without delay.
 
 `A.8.15` covers the logging behind `RUNLOG` and is claimed by [pol-OBSV]. Citing it here as well would overstate what
 this policy adds.

@@ -17,20 +17,20 @@ tags: [ environments, production-data, separation ]
 
 ## Purpose
 
-We separate production from every environment below it, by access, by network and by credential. That way a change is
-checked before it reaches customers, and nothing outside production can reach production's data or its identity.
+We separate production from every environment below it, by access, by network and by credential. A change is checked
+before customers see it, and nothing outside production has access to production's data or its identity.
 
-A developer can only experiment freely because the boundary holds. Where it is soft, a mistake in development risks
-becoming an incident in production. Every copy of production data held below production widens how far a breach reaches,
-and protects nothing.
+A developer can experiment freely because the separation is enforced. Where it is weak, a mistake in development risks
+becoming an incident in production. Every copy of production data kept below production widens a breach and protects
+nothing.
 
 ## Scope
 
 All environments hosting systems we build or operate, from a developer's machine through to production, including
 temporary and on-demand environments.
 
-_Boundary: this policy says which environments stand apart and what may not cross between them. The network
-segmentation enforcing that is [pol-MEXP]'s, under `SEGMENT`._
+_Boundary: this policy states which environments are separated and what is prohibited from crossing between them.
+[pol-MEXP] owns the network segmentation that enforces it, under `SEGMENT`._
 
 ## Clauses
 
@@ -51,7 +51,7 @@ segmentation enforcing that is [pol-MEXP]'s, under `SEGMENT`._
 
 Not every solution needs a full set of tiers. A reduced set is acceptable where the rationale is recorded and the
 production boundary itself is unaffected. Diagnosing a live incident in production is incident response, not
-development, and [pol-INCR] governs it. `CREDS` and `REUSE` carry a secrets prohibition that [pol-SCRT] owns and that
+development, and [pol-INCR] governs it. `CREDS` and `REUSE` state a secrets prohibition that [pol-SCRT] owns and that
 admits no exception. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-DATA]: ../security/data-data-protection.md

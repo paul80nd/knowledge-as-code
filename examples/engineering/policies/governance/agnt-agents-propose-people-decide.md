@@ -17,12 +17,12 @@ tags: [ ai-agents, knowledge-management, provenance ]
 
 ## Purpose
 
-An agent can write code, change configuration, draft documentation, or report something it noticed about a system. None
-of it carries any authority until a person reads it and accepts it. Not just any person: someone whose job it is to say
-yes to work of that kind.
+Work an agent produces has no authority until a person reads it and accepts it. That person is someone whose job it is
+to approve work of that kind. An agent can write code, change configuration, draft documentation, or report something
+it noticed about a system. All of it waits for that acceptance.
 
-An agent is fast, and it sounds just as confident when it is wrong. A guess and a checked answer look the same on the
-page. A reader who cannot tell them apart soon trusts neither. So we keep the speed and add two things: a record of what
+An agent is fast, and its output sounds just as confident when it is wrong. A guess and a checked answer look the same
+on the page. A reader who cannot tell them apart soon trusts neither. So we keep the speed and add a record of what
 produced the work, and a person who puts their name on it. Where the agent was only guessing, we say so.
 
 ## Scope
@@ -31,21 +31,22 @@ Anything an agent contributes to the systems we run or the documentation we keep
 recorded observation. This applies whether a person told the agent what to do or it ran on a schedule with nobody
 watching.
 
-_Boundary: [pol-ACCS] governs who the agent logs in as, and [pol-SCRT] the credentials it holds. This policy is about
-the authority of what it produces. `DUTIES` is shared with [pol-ACCS], which owns separation of duties for everyone._
+_Boundary: [pol-ACCS] governs who the agent logs in as, and [pol-SCRT] governs the credentials it uses. This policy
+covers the authority of what it produces. `DUTIES` is shared with [pol-ACCS], which owns separation of duties for
+everyone._
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                                                      | Alignment                                         |
-|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
-| `PROV`    | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                   | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
-| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                       | [NIST AI RMF 1.0].GOVERN                          |
-| `EQUAL`   | **MUST** hold agent-produced changes to every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
-| `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                      | [NIST AI RMF 1.0].MEASURE                         |
-| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                          | [NIST AI RMF 1.0].MEASURE                         |
-| `DUTIES`  | **MUST NOT** approve or merge an agent-authored change under the identity that opened or accepted it. See [pol-ACCS]                                                        | [ISO 27001:2022].A.5.3, [NIST AI RMF 1.0].MANAGE  |
-| `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it                                                                                                     | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
-| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                          | [NIST AI RMF 1.0].MANAGE                          |
+| Id        | Clause                                                                                                                                                                          | Alignment                                         |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| `PROV`    | **MUST** record where an agent-produced contribution came from, in enough detail that reviewing it is a check rather than an act of faith                                       | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
+| `ACCEPT`  | **MUST** require a person to accept agent-produced work before it carries any authority, and that person owns it afterwards as if they had written it                           | [NIST AI RMF 1.0].GOVERN                          |
+| `EQUAL`   | **MUST** put agent-produced changes through every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
+| `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                          | [NIST AI RMF 1.0].MEASURE                         |
+| `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                              | [NIST AI RMF 1.0].MEASURE                         |
+| `DUTIES`  | **MUST NOT** approve or merge an agent-authored change under the identity that opened or accepted it. See [pol-ACCS]                                                            | [ISO 27001:2022].A.5.3, [NIST AI RMF 1.0].MANAGE  |
+| `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it                                                                                                         | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
+| `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                              | [NIST AI RMF 1.0].MANAGE                          |
 
 ## Exceptions
 
@@ -53,9 +54,9 @@ There is no exception to a person accepting the work. Being in a hurry does not 
 does a recorded deviation. If some agent output had authority and some did not, nobody could tell which they were
 reading.
 
-How much accepting takes depends on what is being accepted. Putting an agent's change up for review is enough. Turning
-one of its observations into a standard takes the person who owns that standard. Neither is an exception. They are the
-same rule at different sizes.
+How much scrutiny acceptance takes depends on what is being accepted. Putting an agent's change up for review is
+enough. Turning one of its observations into a standard takes the person who owns that standard. Neither is an
+exception. They are the same rule at different scales.
 
 An incident is not an exception either. If an agent proposes a fix during one, the person who applies it has thereby
 accepted it. [pol-PIPE] governs putting that fix back into version control afterwards.
@@ -63,7 +64,7 @@ accepted it. [pol-PIPE] governs putting that fix back into version control after
 ## Notes
 
 [adr-0001] decides how an observation here becomes something anyone relies on. An observation goes in as a discovery. A
-discovery names its source, says how confident we are, and expires unless someone confirms it. It cannot confirm
+discovery records its source, states how confident we are, and expires unless someone confirms it. It cannot confirm
 itself. It becomes a fix or a [standard](../../standards) only when a person promotes it. [adr-0001] says what we lose
 if that promotion step is skipped.
 

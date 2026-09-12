@@ -19,19 +19,20 @@ tags: [ access-control, identity, least-privilege ]
 
 ## Purpose
 
-We grant access to a named person or a named workload, never to a shared login. Each of them gets no more than the
-work needs.
+We grant access to a named person or a named workload, never to a shared login. Each identity gets no more access than
+the work needs.
 
-If we cannot tell who did something, we cannot hold anyone to any rule below. A shared account converts an audit trail
-into a guess. Standing privilege that nobody needs is a breach waiting for an attacker to find the credential.
+Where we cannot tell who did something, we cannot enforce any clause below against anyone. A shared account leaves an
+audit trail nobody can attribute. Standing privilege nobody needs gives an attacker who finds the credential more access
+than the work required.
 
 ## Scope
 
 All systems, environments, source repositories, pipelines and data stores we build or operate, for people and for
-machine identities alike. Applies to routine and privileged access.
+machine identities alike. It applies to routine and to privileged access.
 
 _Boundary: [pol-AGNT] governs the authority of what an agent produces. A person who accepts agent work becomes its
-author, not its approver, so `DUTIES` still requires a second person to release it._
+author and not its approver, so `DUTIES` still requires a second person to release it._
 
 ## Clauses
 
@@ -41,21 +42,21 @@ author, not its approver, so `DUTIES` still requires a second person to release 
 | `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3, [ISO 27001:2022].A.8.4, [OWASP ASVS 4.0].V4, [UK GDPR].Art.5(1)(f) |
 | `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it. See [pol-AGNT]         | [ISO 27001:2022].A.5.3                                                                                              |
 | `AUTHN`   | **MUST** require more than one factor wherever a person authenticates to our systems, our code or our data            | [ISO 27001:2022].A.8.5, [OWASP ASVS 4.0].V2                                                                         |
-| `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it reaches, before it is made                | [ISO 27001:2022].A.5.18                                                                                             |
+| `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it gives access to, before it is made        | [ISO 27001:2022].A.5.18                                                                                             |
 | `RECERT`  | **MUST** review access rights on a defined cycle, confirming each grant is still needed                               | [ISO 27001:2022].A.5.18                                                                                             |
 | `REVOKE`  | **MUST** remove access promptly when a role changes or a person leaves                                                | [ISO 27001:2022].A.5.18                                                                                             |
 | `ADMIN`   | **MUST** control and record the use of privileged administrative tooling                                              | [ISO 27001:2022].A.8.2                                                                                              |
 | `UTILS`   | **MUST** limit tooling that can override a system's own controls to people whose work requires it                     | [ISO 27001:2022].A.8.18                                                                                             |
 | `SHARED`  | **MUST NOT** operate shared or generic privileged accounts where individual attribution is lost. See [pol-EVER]       | [ISO 27001:2022].A.8.2                                                                                              |
 | `PERSIST` | **MUST NOT** leave standing production access in place beyond what the role genuinely requires                        | [ISO 27001:2022].A.8.2                                                                                              |
-| `DIRECT`  | SHOULD hold identity in a single directory, so that access granted or removed once takes effect everywhere            | [ISO 27001:2022].A.5.16                                                                                             |
-| `ZERO`    | COULD hold no standing privilege at all, granting privileged access on request and only for as long as the work takes | [ISO 27001:2022].A.8.2                                                                                              |
+| `DIRECT`  | SHOULD keep identity in a single directory, so that access granted or removed once takes effect everywhere            | [ISO 27001:2022].A.5.16                                                                                             |
+| `ZERO`    | COULD keep no standing privilege at all, granting privileged access on request and only for as long as the work takes | [ISO 27001:2022].A.8.2                                                                                              |
 
 ## Exceptions
 
 Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is
-allowed where a person cannot otherwise act. The account is still attributable, its use raises an alert and is recorded,
-and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
+allowed where a person cannot otherwise act. The account is still attributable. Its use raises an alert and is
+recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md

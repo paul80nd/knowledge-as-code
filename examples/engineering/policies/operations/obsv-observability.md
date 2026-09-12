@@ -17,18 +17,19 @@ tags: [ alerting, logging, monitoring, observability ]
 
 ## Purpose
 
-Our systems tell us what they're doing, in telemetry (logs, metrics and traces) they emit as they run. Somebody is
-watching what they say.
+Our systems emit telemetry (logs, metrics and traces) as they run, and somebody watches it.
 
-Telemetry nobody watches is storage, and monitoring without adequate telemetry is guesswork. Both halves are needed.
+A failure recorded in telemetry nobody watches goes unnoticed. Monitoring with too little telemetry cannot explain a
+failure. We need both.
 
 ## Scope
 
-All production systems we operate, and the lower environments where behaviour must be understood to validate a change.
+All production systems we operate, and the lower environments where validating a change means understanding how it
+behaves.
 
-_Boundary: this policy sets how long telemetry is kept to stay useful (which is long enough to investigate). Where that
-telemetry contains personal data, [pol-DATA] sets the lifetime and the shorter of the two governs. What may be written
-into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
+_Boundary: this policy sets how long telemetry is kept, which is long enough to investigate. Where telemetry contains
+personal data, [pol-DATA] sets the lifetime and the shorter of the two applies. [pol-DATA] and [pol-SCRT] govern what
+is written into telemetry at all._
 
 ## Clauses
 
@@ -50,8 +51,8 @@ into telemetry at all is [pol-DATA]'s and [pol-SCRT]'s._
 
 ## Exceptions
 
-The depth of monitoring is proportionate to how critical the system is; the commitment to have some is not. A system too
-unimportant to monitor is a system to question the existence of.
+The depth of monitoring is proportionate to how critical the system is. The commitment to monitor at all is not. Where
+a system seems too unimportant to monitor, question whether it should exist.
 
 [pol-DATA]: ../security/data-data-protection.md
 [pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md

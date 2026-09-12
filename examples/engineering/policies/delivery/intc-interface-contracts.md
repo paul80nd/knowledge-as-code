@@ -19,9 +19,9 @@ tags: [ api, contracts, interoperability, versioning ]
 
 An interface we publish is a promise to whoever depends on it. We define it explicitly and secure it by default.
 
-Every integration is built against the behaviour an interface had on the day it was written. Change it without warning
-and we save ourselves an afternoon while costing someone else a day. That cost lands the hardest on the consumers least
-able to respond quickly.
+Every integration is built against the behaviour an interface had on the day it was written. Changing that behaviour
+without warning saves us an afternoon and costs a consumer a day. The consumers least able to respond quickly pay the
+most.
 
 ## Scope
 
@@ -48,8 +48,8 @@ An interface with a single consumer inside the team that owns it falls outside t
 excepted. It comes into scope the moment anyone beyond that team builds against it. Teams are usually wrong about who is
 already calling them.
 
-A security fix may break a contract where leaving it intact would leave data exposed. That is a recorded deviation under
-[pol-DEVI], and consumers are told as soon as it is safe to tell them.
+A security fix may break a contract where keeping the contract intact would leave data exposed. That is a recorded
+deviation under [pol-DEVI], and consumers are told as soon as it is safe to tell them.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
