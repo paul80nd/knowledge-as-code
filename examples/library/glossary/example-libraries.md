@@ -16,32 +16,32 @@ The words the consortium uses across its systems.
 
 ## Scope
 
-Vocabulary every team here shares: readers, the things they borrow, and the places they borrow them from. A word one
-system uses differently belongs in that system's glossary, and the entry for that word points there.
+The vocabulary every team here shares: readers, what they borrow, and where they borrow it from. A word one system
+uses differently belongs in that system's glossary, and the entry here points at it.
 
 ## Terms
 
 ### Borrower
 
-A person holding a library card, which one branch issues and every branch honours.
+A person with a library card. One branch issues the card and every branch accepts it.
 
-**Not:** a reader. Anyone may read in a branch, and the card is for borrowing.
+**Not:** a reader. Anyone may read in a branch without a card.
 
 ### Branch
 
 One physical library building, with its own opening hours, staff and shelves.
 
-**Not:** a branch in source control. Both appear in the same sentence often enough to be worth separating.
+**Not:** a branch in source control. Both senses appear in the same sentence often enough to need separating.
 
 ### Item
 
-One physical copy of a title, with its own barcode, living on one branch's shelves.
+One physical copy of a title, with its own barcode, shelved at one branch.
 
-**Not:** a title. A popular title is one work and thirty items, and only an item can be lent.
+**Not:** a title. A popular title is one work and thirty items. Only an item can be lent.
 
 ### Record
 
-The bibliographic description of a title (author, edition, subject headings) held once and shared by every branch.
+The bibliographic description of a title (author, edition, subject headings), stored once and used by every branch.
 
 **Not:** a knowledge record in this repository, which is a document filed under a type. See
 [gls-knowledge-as-code.record].
@@ -50,7 +50,7 @@ Owned by [svc-catalogue-api].
 
 ### Title
 
-A work the consortium holds, as catalogued, distinct from the copies of it on the shelves.
+A work the consortium has catalogued. The copies of it on the shelves are items.
 
 **Not:** the indexed field of the same name. See [gls-search.title].
 
