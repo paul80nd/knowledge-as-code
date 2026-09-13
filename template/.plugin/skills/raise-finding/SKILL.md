@@ -33,8 +33,8 @@ you write goes out under their name, onto a repository other people read, and th
 
 ## Check whether the corpus already says it
 
-**Search the fixes before you file anything about a problem.** Seven sessions meeting one wall should not open seven
-issues, and a problem somebody already wrote down is answered in the export beside you.
+**Search the fixes before you file anything about a problem.** Seven sessions meeting the same problem should not open
+seven issues, and a problem somebody already wrote down is answered in the export beside you.
 
 **Load the `fix-lookup` skill and give it your symptom.** It searches `symptom-keywords`, which is filled with the
 words a reader arrives with. Where it returns a fix, follow the resolution and file nothing.

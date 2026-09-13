@@ -6,7 +6,7 @@ status: active
 owner: human:alex.doe
 generated: { at: 2026-09-11T12:02:45Z, by: kac/0.25.0 }
 sources:
-  - { resource: example-engineering, version: "0.16.1" }
+  - { resource: example-engineering, version: "0.16.2" }
 verified:
   - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
   - { at: 2026-09-09T18:29:19Z, by: coverage-sweep/1.0.0 }

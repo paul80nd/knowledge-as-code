@@ -83,7 +83,9 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 - The export inside a plugin **MUST** be the bytes `kac export` wrote.
 - A skill **MUST NOT** write to any file under `${CLAUDE_PLUGIN_ROOT}`.
 - A skill **MUST** report a `status` its type does not treat as in force, under every such value that type declares.
-- A skill **MUST** report a `reviewBy` that has passed, where its type exports one.
+- A skill **MUST** report a review date that has passed, where its type exports one.
+- A skill **MUST** name that date under the key its type's export writes: `reviewBy` on a part line, and
+  `review-by` from a record's frontmatter.
 - A skill **MUST** quote `generatedAt` from `manifest.json` alongside either.
 - A skill **MUST** quote the wording the export contains, and link the record for the rest.
 - The words a skill quotes **MUST** come from the export, and never from a second copy kept for agents.
@@ -350,6 +352,10 @@ Both skills write the platform mechanics out in full, and neither cites the othe
 bundle that kept `raise-finding` may have dropped the other, so a citation across would sometimes point at a file the
 reader does not have. The cost is that a mistake in one of them has to be corrected twice.
 
+A skill may still send a reader to one the bundle can trim, and `raise-finding` sends one to `fix-lookup` before it
+files anything about a problem. What the rule above refuses is the silent version. The citation says which type the
+absent skill needed, so a reader who does not have it reads that as an answer instead of a broken instruction.
+
 The organisation boundary is the one rule here that no clause states. A deviation register is what one organisation
 keeps about itself, and a request names the rule being broken, the service it is in and how long the gap lasts. Filed
 on a public corpus's repository, that is an organisation's engineering published to anyone watching, and the maintainer
@@ -369,6 +375,8 @@ this build never opens, so both shapes survive only as long as the skills writin
 
 ## Changelog
 
+- 2026-09-13: a skill names the review date under the key its own type's export writes, and one skill may cite another
+  the bundle can trim, so long as it says what the absence means.
 - 2026-09-13: the staleness rules read the type rather than a fixed list. A skill reports every `status` its own type
   declares, and reports `reviewBy` only where that type exports one.
 - 2026-09-09: a skill leaves the choice of search tool to the session, and names no tool of its own.

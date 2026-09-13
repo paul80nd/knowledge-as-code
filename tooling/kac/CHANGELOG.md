@@ -26,9 +26,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `corpus/fixes/` and the record is the unit. It ships in every corpus's `plugin.json` and leaves the bundle wherever
   the export carries no fix. Take it with `kac update --from <template>`.
 
-- **`raise-finding` searches the fixes before it files anything about a problem.** Seven sessions meeting one wall
-  should not open seven issues. Where the plugin carries no `fix-lookup`, the corpus declined the `fixes` type and the
-  finding is the only route. Take it with `kac update --from <template>`.
+- **`raise-finding` searches the fixes before it files anything about a problem.** Seven sessions meeting the same
+  problem should not open seven issues. Where the plugin has no `fix-lookup`, the corpus declined the `fixes` type and
+  the finding is the only route. Take it with `kac update --from <template>`.
 
 ## 0.26.0 - 2026-09-13
 

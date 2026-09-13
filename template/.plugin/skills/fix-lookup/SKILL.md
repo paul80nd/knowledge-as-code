@@ -22,8 +22,8 @@ rather than in the repository you are working in. A path you build relative to t
 
 ## A fix is one problem with one resolution
 
-**Search here first, and debug second.** A fix exists because the problem cost somebody real time. The whole point of
-the type is that the second person to meet it pays a search instead.
+**Search here first, and debug second.** A fix exists because the problem cost somebody real time. The second person
+to meet it searches for a minute instead of debugging for an hour.
 
 **Are you looking at a symptom, or running a procedure?** A symptom is a fix. A planned task is a process, and an
 incident with a diagnosis tree is a runbook. Both are different types that may not have travelled at all.
@@ -57,7 +57,7 @@ three keys `Symptom`, `Cause` and `Resolution` are always in `sections`, because
 | `fields.applies-to`       | list of strings, or null | the service ids the problem concerns                     |
 | `fields.verified`         | list of objects          | one entry per verification, oldest first                 |
 | `fields.review-by`        | string                   | the date by which somebody re-checks this is still true  |
-| `fields.tags`             | list of strings, or null | the word a reader arrives with                           |
+| `fields.tags`             | list of strings, or null | the record's own subject words, searched across types    |
 | `trust`                   | string                   | how far the fix has been taken on trust, from `verified` |
 | `sections.Symptom`        | string of markdown       | what you see, in the author's own words                  |
 | `sections.Cause`          | string of markdown       | what produces it                                         |
@@ -73,6 +73,9 @@ test for the key before you read it.
 
 **Each entry of `verified` is an object of two keys.** `at` is a UTC timestamp, as `2026-09-02T17:27:31Z`. `by` names a
 person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`.
+
+**Report Symptom, Cause and Resolution together.** A resolution read without its cause is half an answer, and a
+reader who cannot see the cause cannot tell whether the steps apply to them.
 
 **A bracketed id inside a section is a cross-reference.** The export drops the link definitions at the foot of the
 record, so `[std-IDEM]` arrives as the id alone. The id is the address, so search it rather than reporting broken
@@ -140,6 +143,19 @@ fetch the file through the client that authenticates to that platform, and what 
 
 **Bring it the record's `path`.** A fix has no anchor of its own, because the whole record is the unit. The record's
 `links.human` is the URL to quote to a person.
+
+## Say when the fix is about a different problem
+
+A hit that is not yours is common here, because `symptom-keywords` is deliberately over-filled. `pip` and `macos` reach
+a fix about a linter and a fix about a build alike. Answer that case in three steps:
+
+1. **Say the export describes no fix for your symptom**, in the words you searched.
+2. **Name the nearest fix, and say what problem it is about.** Quote its `Symptom` as the author wrote it.
+3. **Leave its resolution alone.** A resolution is verified against the cause its own record states, and yours is a
+   different cause.
+
+Handing over a resolution without saying it was written for something else is worse than handing over nothing. It
+arrives verified, and the verification does not reach your case.
 
 ## Say when there is nothing
 
