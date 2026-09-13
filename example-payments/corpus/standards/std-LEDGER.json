@@ -27,6 +27,6 @@
     "Conformance checklist": "- [ ] Every amount column is an integer type, and every entry has a currency code.\n- [ ] The database grants the service no UPDATE or DELETE on the entries table.\n- [ ] Summing debits and credits across the whole table returns zero.\n- [ ] Every correction in the last month appears as a reversal stating the entry it reverses.\n- [ ] Each entry records an order, a PSP reference and an idempotency key.\n- [ ] A payment's history can be rebuilt from the entries with no other source."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/payments/standards/ledger/entries.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/19e3b8a5be0c5b2d1869b193816bc3df367a05c5/examples/payments/standards/ledger/entries.md"
   }
 }
