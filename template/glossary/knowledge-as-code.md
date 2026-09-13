@@ -105,19 +105,19 @@ The framework's files as they appear in one corpus: the half that travels.
 A file identical in every corpus running the framework, owned by the framework and not by the corpus. An edit to one is
 drift, and the next update overwrites it.
 
-### Page
-
-A type's root page, with no frontmatter of its own. It states what the type contains, what it excludes, and how to add
-a record.
-
-**Not:** a record. It describes the records, so it has no id and no identity line.
-
 ### Package
 
 An export that `kac pack` zips into a versioned file. A registry stores it, and another corpus fetches it with
 `kac restore`.
 
 **Not:** the plugin. A package is read by a corpus. A plugin is installed by an agent.
+
+### Page
+
+A type's root page, with no frontmatter of its own. It states what the type contains, what it excludes, and how to add
+a record.
+
+**Not:** a record. It describes the records, so it has no id and no identity line.
 
 ### Plugin
 
