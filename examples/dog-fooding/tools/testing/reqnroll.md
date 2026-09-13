@@ -13,14 +13,14 @@ tags: [ bdd, gherkin, testing ]
 
 `Tool: tol-reqnroll` `APPROVED`
 
-The framework that turns the Gherkin feature documents in `kac.features` into tests, bound to [tol-xunit] by the
-`Reqnroll.xunit.v3` package.
+The framework that turns the Gherkin feature documents in `kac.features` into tests. The `Reqnroll.xunit.v3` package
+binds it to [tol-xunit].
 
 ## What we use it for
 
-Each feature document states what a verb does in the words a reader of the documentation would use, and Reqnroll binds
-each step to a method. A step that no longer matches fails the build, so the feature documents cannot describe a
-command surface the tool has stopped offering.
+Each feature document states what a verb does, in the words a reader of the documentation would use. Reqnroll binds
+each step to a method. A step that no longer matches fails the build, so a feature document cannot describe a command
+surface the tool has stopped offering.
 
 ## Status
 
@@ -36,8 +36,8 @@ None recorded.
 
 ## Licence and obligations
 
-BSD-3-Clause. It asks that the copyright notice travel with a redistribution, and forbids using the project's name to
-endorse anything built on it. Nothing here redistributes it.
+BSD-3-Clause. It asks that the copyright notice travel with a redistribution. It also forbids using the project's name
+to endorse anything built on it. Nothing here redistributes it.
 
 ## Related
 

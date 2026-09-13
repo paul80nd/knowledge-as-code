@@ -18,11 +18,11 @@ repository root.
 
 ## What we use it for
 
-MkDocs is here because it is what tool documentation uses. The site documents `kac`, and it is not a corpus:
+The site documents `kac`, and MkDocs is here because it is what tool documentation uses. The site is not a corpus, so
 `publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.
 
-`strict: true` in `mkdocs.yml` turns a dead link into a failed build. A page the navigation does not list is only
-reported at INFO, so `NavigationTests` in `kac.tests` holds that half instead.
+`strict: true` in `mkdocs.yml` turns a dead link into a failed build. MkDocs reports a page the navigation does not
+list at INFO only, so `NavigationTests` in `kac.tests` covers that case instead.
 
 ## Status
 
@@ -38,8 +38,8 @@ None recorded.
 
 ## Licence and obligations
 
-BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output rather than
-a redistribution of the generator, so nothing follows for what is published.
+BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output and not a
+redistribution of the generator, so nothing follows for what is published.
 
 ## Related
 
