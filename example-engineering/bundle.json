@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.16.1",
+    "contentVersion": "0.16.2",
     "types": [
       "adrs",
       "glossary",
@@ -67,6 +67,13 @@
         "controls@1"
       ],
       "reason": "the export carries no controls"
+    },
+    {
+      "path": "skills/fix-lookup",
+      "requires": [
+        "fixes@1"
+      ],
+      "reason": "the export carries no fixes"
     },
     {
       "path": "skills/process-lookup",

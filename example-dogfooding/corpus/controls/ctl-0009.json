@@ -8,7 +8,8 @@
     "status": "active",
     "verifies": [
       "eng:std-GATES",
-      "eng:std-TEST"
+      "eng:std-TEST",
+      "std-PLUGIN"
     ],
     "mechanism": "ci",
     "frequency": "per-pr",
@@ -22,11 +23,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* `eng:std-TEST.pick-the-level-from-the-fault` says a team \"**MUST** cover a rule about one unit's behaviour with a\n  test on that unit alone\".\n* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push \"**MUST** trigger a build and the test\n  suite, without anyone asking for it\".",
+    "What it checks": "* `eng:std-TEST.pick-the-level-from-the-fault` says a team \"**MUST** cover a rule about one unit's behaviour with a\n  test on that unit alone\".\n* `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push \"**MUST** trigger a build and the test\n  suite, without anyone asking for it\".\n* `std-PLUGIN.the-bundle-carries-a-frozen-export-and-nothing-writes-to-it` says a skill \"**MUST** report a `status`\n  its type does not treat as in force\" and \"**MUST** report a review date that has passed, where its type exports\n  one\". `PluginSkillStalenessTests` holds each lookup skill to both, deriving what it owes from the schema, down to\n  the key each type's export writes the date under.",
     "How it works": "The `tool` job runs three commands:\n\n* `dotnet test tooling/kac.tests` for the unit layer.\n* `dotnet test tooling/kac.features` for the Reqnroll behaviour specs.\n* `dotnet run tooling/kac-tests.cs` for the golden fixtures.\n\n`tooling/README.md` says what each layer covers.\n\nThe golden suite adds two checks of its own. It fails a reachable check id that no fixture exercises. It fails a type page whose generated checks table has drifted from the catalogue. Each fixture is built over the real `.schema/`, copied in on each run, so a schema change that alters behaviour shows up in the run that made it.",
     "Coverage and gaps": "No layer reports line coverage, which `eng:std-TEST.know-what-the-suite-reaches` asks for. The golden suite measures the share of check ids a fixture exercises, and the two figures answer different questions.\n\nThe suite runs on a pull request into `main`. A push to a branch with no pull request open triggers nothing, so the answer arrives when the work is offered for merge."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0009-tool-test-layers.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/dog-fooding/controls/0009-tool-test-layers.md"
   }
 }

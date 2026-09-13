@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.2.3",
+    "contentVersion": "0.2.5",
     "types": [
       "adrs",
       "glossary",
@@ -51,6 +51,13 @@
         "controls@1"
       ],
       "reason": "the export carries no controls"
+    },
+    {
+      "path": "skills/fix-lookup",
+      "requires": [
+        "fixes@1"
+      ],
+      "reason": "the export carries no fixes"
     },
     {
       "path": "skills/policy-lookup",

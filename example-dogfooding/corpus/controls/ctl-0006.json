@@ -27,6 +27,6 @@
     "Coverage and gaps": "These tests cover the section for the version in front of them. A reviewer judges whether that section describes the change, and a reader would notice it in the published release.\n\nNothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already has passes here, and its publish finishes green having published nothing."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-payments",
   "displayName": "Example Payments",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
   "author": {
     "name": "Paul Law",
@@ -48,6 +48,13 @@
         "path": "skills/request-deviation",
         "requires": [],
         "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
+      },
+      {
+        "path": "skills/fix-lookup",
+        "requires": [
+          "fixes@1"
+        ],
+        "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
       },
       {
         "path": "skills/policy-lookup",

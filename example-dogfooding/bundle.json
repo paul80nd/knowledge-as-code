@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.23.0",
+    "contentVersion": "0.24.0",
     "types": [
       "controls",
       "deviations",
@@ -51,6 +51,13 @@
         "controls@1"
       ],
       "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+    },
+    {
+      "path": "skills/fix-lookup",
+      "requires": [
+        "fixes@1"
+      ],
+      "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
     },
     {
       "path": "skills/policy-lookup",
