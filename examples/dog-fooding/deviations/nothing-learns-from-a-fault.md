@@ -20,7 +20,7 @@ tags: [ incidents, learning, postmortems ]
 
 `Deviation: dev-nothing-learns-from-a-fault` `ACTIVE`
 
-This corpus adopted no type that holds an incident record, so nothing keeps evidence, nothing asks what let the fault
+This corpus adopted no type for an incident record, so nothing keeps evidence, nothing asks what let the fault
 through, and nothing tracks what was agreed afterwards.
 
 ## What we are doing instead
@@ -34,23 +34,23 @@ pull request review is agreed in a comment thread, and closes when somebody reme
 ## Why we need it
 
 The `postmortems` type exists in the framework and this corpus declined it, because nothing here has run an incident
-worth one. Adopting a type to hold records nobody has written is scaffolding, and this repository has deleted invented
+worth one. Adopting a type for records nobody has written is scaffolding, and this repository has deleted invented
 records before.
 
 ## What compensates
 
 * A fixed defect keeps the test that catches it, so the same fault does not return unnoticed.
 * Every fix is a pull request, and the commit message says why, so the reasoning is recoverable from git.
-* The issue tracker holds agreed work, and an issue closes on the day it lands.
-* [dev-decisions-live-in-commits] records the same weakness for a decision rather than for a fault.
+* The issue tracker records agreed work, and an issue closes on the day the work lands.
+* [dev-decisions-live-in-commits] records the same weakness for a decision.
 
 ## How it closes
 
-Adopting `postmortems` gives an incident somewhere to go, and a standard says when one is written and what it holds. A
-security action gets the same treatment: an issue on the tracker, labelled, with an owner.
+Adopting `postmortems` gives an incident somewhere to go, and a standard says when one is written and what it
+contains. A security action gets the same treatment: an issue on the tracker, labelled, with an owner.
 
 The honest trigger is the first incident worth writing up. This record closes when that happens and a record is
-written, or at the review date when the answer is still that nothing has.
+written, or at the review date where no incident has happened by then.
 
 ## Scope
 
@@ -58,7 +58,7 @@ Every fault in `kac`, in the documentation site, in the workflows or in the plug
 
 ## Related
 
-* [dev-no-incident-process] carries what happens before the fix.
+* [dev-no-incident-process] covers what happens before the fix.
 * [dev-decisions-live-in-commits] is the same weakness for a decision.
 
 [dev-decisions-live-in-commits]: decisions-live-in-commits.md

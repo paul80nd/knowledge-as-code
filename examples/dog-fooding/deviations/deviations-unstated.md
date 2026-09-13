@@ -27,11 +27,11 @@ review date passes.
 
 ## What we are doing instead
 
-Every departure this corpus knows about is written here, with an owner and a review date, and the schema holds each
-record to the sections the type declares. That much is the type's doing rather than a standard's.
+Every departure this corpus knows about is written here, with an owner and a review date. The schema requires each
+record to have the sections the type declares. The type gives that much, and no standard here does.
 
 Nothing here says a deviation is written before the departure. Nothing tests a long-standing habit against the policy
-it breaks. That is how this register came to be written in one sitting rather than one departure at a time.
+it breaks. That is why the whole register was written in one sitting.
 
 ## Why we need it
 
@@ -43,15 +43,14 @@ governs them. Writing the standard at the same time would have stated a process 
 * The schema requires an owner, a review date and four sections, and `kac validate` fails a record missing any of them.
 * `review-after-acceptance` fails a record that would expire as it was written.
 * `expiry` warns on an active record whose `review-by` has gone by, so every run reports a review nobody has done.
-* The register is a folder in a public repository, so anybody reading the corpus meets it.
+* The register is a folder in a public repository, so anybody reading the corpus finds it.
 
 ## How it closes
 
-A standard states what this repository owes a deviation: written before the departure where there was time, what the
-record has to say, who may accept the risk, and what closing means. It cites `expiry` as the check standing behind the
-review date.
+A standard states what a deviation here has to say, who may accept the risk, and what closing means. It requires the
+record to be written before the departure, where there was time. It cites `expiry` as the check behind the review
+date.
 
 ## Scope
 
 Every record in this folder, and every departure this repository takes from a clause `../engineering/` states.
-

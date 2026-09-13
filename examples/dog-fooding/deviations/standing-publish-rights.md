@@ -20,14 +20,13 @@ tags: [ access, publishing, standing-grant ]
 
 `Deviation: dev-standing-publish-rights` `ACTIVE`
 
-The one maintainer holds admin on the repository, on the nuget.org package and on the pages site, and nothing takes any
+The one maintainer has admin on the repository, on the nuget.org package and on the pages site, and nothing takes any
 of it back.
 
 ## What we are doing instead
 
-Publishing `kac` waits for an approval on the `nuget.org` environment, so a release is two acts rather than one. The
-rights behind that approval are held all the time, by the person who also writes the change and approves the pull
-request.
+Publishing `kac` waits for an approval on the `nuget.org` environment, so a release takes two acts. The rights behind
+that approval are held all the time, by the person who also writes the change and approves the pull request.
 
 Nothing grants those rights for a window and removes them afterwards, and nothing reviews whether they are still
 needed.
@@ -41,8 +40,8 @@ person, so the grant is a form filled in by whoever wanted it.
 
 * The `nuget.org` environment approval is a deliberate second act, recorded against the run that asked for it.
 * Trusted publishing means no long-lived key exists to steal, so the rights are useless without the account.
-* Every publish leaves a workflow run naming the commit it built, and that log is public.
-* nuget.org refuses a second push to a version it already holds, so a stolen session cannot replace what shipped.
+* Every publish leaves a workflow run recording the commit it built, and that log is public.
+* nuget.org refuses a second push to a version it already has, so a stolen session cannot replace what shipped.
 
 ## How it closes
 
@@ -50,7 +49,7 @@ A second maintainer makes just-in-time access mean something: one person asks, a
 This record closes on the pull request that writes that down.
 
 Where this repository still has one maintainer at the review date, the question is what the machinery costs. Nothing
-here holds anybody's data, and the repository is public already.
+here stores anybody's data, and the repository is public already.
 
 ## Scope
 
@@ -58,6 +57,6 @@ The GitHub organisation, the nuget.org package, the pages site and the marketpla
 
 ## Related
 
-* [dev-one-maintainer] is the condition underneath it.
+* [dev-one-maintainer] is the condition this rests on.
 
 [dev-one-maintainer]: one-maintainer.md

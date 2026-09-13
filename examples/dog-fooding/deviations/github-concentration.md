@@ -21,13 +21,13 @@ tags: [ exit, github, supplier ]
 
 `Deviation: dev-github-concentration` `ACTIVE`
 
-GitHub holds the source, the issues, the workflows, the pages site and the marketplace branch. No record divides the
+GitHub stores the source, the issues, the workflows, the pages site and the marketplace branch. No record divides the
 responsibility, and none says what leaving would take.
 
 ## What we are doing instead
 
 The repository, the runners, the package registry approval, the published site and the plugin's marketplace branch are
-all GitHub's. nuget.org holds the published tool, and it is the one thing outside.
+all GitHub's. nuget.org hosts the published tool, and that is the one thing outside.
 
 Nothing states which failures are GitHub's to handle and which are this repository's. Nothing has been written about
 moving elsewhere.
@@ -36,10 +36,9 @@ moving elsewhere.
 
 Every corpus here is Markdown in git and the tool is a .NET project, so the content and the code move to any git host
 by pushing them. What does not move is the workflow syntax, the pages publish and the plugin marketplace. Writing down
-that third of the problem is the whole of the work, and nobody has needed it.
+that third of the problem is all the work there is, and nobody has needed it.
 
-Nothing here earns revenue or holds anybody's data, so the loss on the day GitHub stops is a rebuild rather than an
-outage.
+Nothing here makes money or stores anybody's data. On the day GitHub stops, the cost is a rebuild.
 
 ## What compensates
 
@@ -51,7 +50,7 @@ outage.
 ## How it closes
 
 A record says what this repository depends on GitHub for, which of those has an alternative, and what a move would
-cost. That is a page rather than a project, and this record closes on it.
+cost. That is a page of work, and this record closes on it.
 
 ## Scope
 
