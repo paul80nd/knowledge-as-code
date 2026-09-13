@@ -16,15 +16,15 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                            | It goes in                   |
-|----------------------------------------------------------------------|------------------------------|
-| A check that proves a rule is being followed                         | [Controls](../controls.md)   |
-| A commitment about how we engineer, at principle level               | [Policies](../policies.md)   |
-| A decision that affects more than one repo, and its reasoning        | [ADRs](../adrs.md)           |
-| A rule people must follow when building                              | [Standards](../standards.md) |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](../glossary.md) |
-| A tool or package we've approved, rejected, or are trialling         | [Tools](../tools.md)         |
-| An answer about the corpus that no single record holds               | [Reports](../reports.md)     |
+| You have…                                                          | It goes in                   |
+|--------------------------------------------------------------------|------------------------------|
+| A check that proves a rule is being followed                       | [Controls](../controls.md)   |
+| A decision affecting more than one repository, and its reasoning   | [ADRs](../adrs.md)           |
+| A principle-level commitment about how software is engineered here | [Policies](../policies.md)   |
+| A rule people must follow when building                            | [Standards](../standards.md) |
+| A term whose meaning is local, or not obvious                      | [Glossaries](../glossary.md) |
+| A tool or package approved, rejected, or on trial                  | [Tools](../tools.md)         |
+| An answer about the corpus no single record states                 | [Reports](../reports.md)     |
 
 <!-- END GENERATED: types-placement -->
 
@@ -41,42 +41,42 @@ type's own page.
 
 ### Decided: immutable once accepted
 
-Superseded rather than rewritten, so what was thought at the time survives being wrong.
+Superseded, never rewritten, so what was thought at the time survives being wrong.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
-behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
-by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
+behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
+later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
 ### Normative: living, owned, reviewed
 
 **[Controls](../controls.md).** How a standard's rules are verified: the mechanism, the frequency, and the evidence it
-leaves. Every control names the rules it covers. A rule no control claims is recorded as `not-enforced`, which is the
-honest state and the number worth watching.
+leaves. Every control lists the rules it verifies. A rule nothing checks gets a control whose mechanism is
+`not-enforced`, so the gap is written down.
 
-**[Policies](../policies.md).** A high-level engineering commitment: the what and the why, largely stack-agnostic and
-changing rarely. Alignment to an external framework is stated clause by clause, as alignment rather than certification.
+**[Policies](../policies.md).** A high-level engineering commitment, independent of any stack and rarely changed.
+Alignment to an external framework is stated clause by clause. A standing such as certification belongs in
+`frameworks.md`.
 
 **[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
-of work are the union of the layers that apply to it.
+checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
+the union of the folders that apply to it.
 
 ### Descriptive: living, must mirror reality
 
-These are the types CI can check against the estate rather than merely against themselves, which matters because they
-rot faster than anything else.
+CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Glossaries](../glossary.md).** The ubiquitous language. Terms whose meaning is specific to us, or which are easily
-confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
-time it appears belongs in the most general glossary that admits it, and everything else links to it.
+**[Glossaries](../glossary.md).** The ubiquitous language. Terms with a meaning specific to the organisation, or easily
+confused with another. One glossary per bounded context, each small enough to read end to end. A term that needs
+explaining every time it appears belongs in the most general glossary that admits it, and the narrower glossaries link
+to that entry.
 
-**[Reports](../reports.md).** A question about the corpus answered over the whole of it, with the judgement a person
-added. Which clauses nothing implements, which framework references hang on one citation. `kac report` fills every cell
-the corpus states and leaves the judgement cells open, and this is where the finished document lives once somebody has
-answered them.
+**[Reports](../reports.md).** A question about the corpus, answered across every record, with the judgement a person
+added. Which clauses nothing implements, which framework references have only one citation. `kac report` fills every
+cell the corpus states, and leaves the judgement cells open. A report becomes a record here once somebody has answered
+them.
 
-**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version ranges
-we stand behind. Rejections are first-class content. Knowing what was turned down, and why, saves the next person the
-evaluation.
+**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version range
+for each. Knowing what was turned down, and why, saves the next person the evaluation.
 
 <!-- END GENERATED: types-detail -->
 
@@ -149,20 +149,20 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**ADR vs Standard.** The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept
-current. If you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
-that is a standard. Most substantial changes produce both.
+**ADR vs Standard.** An ADR is the decision and its reasoning, frozen. A standard is the rule that follows, kept
+current. Recording that an option was weighed and turned down is an ADR. Recording "you **MUST** do Y" is a standard.
+Most substantial changes produce an ADR and a standard.
 
-**Policy vs Standard.** A policy is true regardless of stack, framework or year: "we do not store secrets in source
-control". A standard is specific enough to check: "read secrets from the vault via workload identity". If it would still
-be true after replacing the entire technology estate, it is a policy.
+**Policy vs Standard.** A policy stays true whatever the stack, the framework or the year: "we do not store secrets in
+source control". A standard is specific enough to check: "read secrets from the vault via workload identity". If a
+statement would survive replacing the whole technology estate, it is a policy.
 
-**Standard vs Control.** The standard says what to do. The control says how we know it happened. "Secrets **MUST** come
-from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
-control.
+**Standard vs Control.** The standard says what to do. The control says how anybody can tell it happened. "Secrets
+**MUST** come from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build,
+it is a control.
 
-**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR carries the
-reasoning. The register carries the current state and the version range. Small, uncontroversial adoptions need only the
+**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR records the
+reasoning. The register records the current state and the version range. Small, uncontroversial adoptions need only the
 register.
 
 <!-- END GENERATED: types-versus -->

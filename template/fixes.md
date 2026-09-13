@@ -48,13 +48,13 @@ Other boundaries:
 
 | Field                | Value                                  | Notes                                                                                       |
 |----------------------|----------------------------------------|---------------------------------------------------------------------------------------------|
-| `id` *†              | string                                 | Stable, unique across the corpus, never reused. Format set by the type.                     |
-| `type` *†            | string                                 | The type's singular name. Fixed for the type. CI checks it matches the folder.              |
-| `tier` *†            | `normative`                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.         |
+| `id` *†              | string                                 | Stable, unique across the corpus, never reused, in the format the type sets.                |
+| `type` *†            | string                                 | The singular name of the type, which CI checks against the folder.                          |
+| `tier` *†            | `normative`                            | The record's trust level, fixed for the type and checked against the folder.                |
 | `status` *†          | `active` `superseded` `fixed-upstream` | `fixed-upstream` means the cause is gone. The entry stays for whoever searches for it.      |
 | `owner` *†           | string                                 | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
 | `sources` †          | list                                   | Where the content came from, one entry per source.                                          |
-| `tags` †             | list                                   | Free-form, lowercase, hyphenated. Used for cross-cutting search.                            |
+| `tags` †             | list                                   | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
 | `applies-to`         | list                                   | Service ids this fix concerns.                                                              |
 | `promoted-from`      | id                                     | The discovery this was promoted from.                                                       |
@@ -117,7 +117,7 @@ Other boundaries:
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
-| `one-problem-per-document`  | warning | One Symptom section, because a fix is found by its symptom.                                                     |
+| `one-problem-per-document`  | warning | A fix has one Symptom section, and a record with two is two fixes.                                              |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

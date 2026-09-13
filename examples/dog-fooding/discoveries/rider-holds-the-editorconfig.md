@@ -23,11 +23,11 @@ A key edited in `.editorconfig` from the terminal changed nothing about how Ride
 
 ## Context
 
-Seen once, on one machine, and the Rider version was not recorded. This repository holds three `.editorconfig`
-files. The four corpora under `examples/` read the one at the root, `tooling/` layers a second over it, and
-`template/` holds its own with `root = true`.
+Seen once, on one machine, and the Rider version was not recorded. This repository has three `.editorconfig` files.
+The four corpora under `examples/` read the one at the root, `tooling/` adds a second over it, and `template/` has its
+own with `root = true`.
 
 ## Why it might matter
 
-A session changes `.editorconfig`, sees no difference in the IDE, and concludes the edit did nothing. The next move is
-usually to change something else that was already right.
+A session changes `.editorconfig`, sees no difference in the IDE, and concludes the edit did nothing. The next change
+is usually to something else that was already right.

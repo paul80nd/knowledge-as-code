@@ -18,7 +18,7 @@ tags: [ 3ds, checkout, strong-customer-authentication ]
 ## Summary
 
 Every authorisation goes through the payment service provider's (PSP) 3-D Secure flow. The PSP decides whether the
-cardholder is challenged, and our services carry the outcome rather than deciding it.
+cardholder is challenged, and our services pass the outcome on.
 
 ## Rules
 
@@ -34,9 +34,9 @@ _**Covers:** `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
 
 ### The outcome travels with the payment
 
-- An authorisation request **MUST** carry the PSP's authentication reference.
+- An authorisation request **MUST** include the PSP's authentication reference.
 - A service **MUST** pass the authentication outcome to the ledger, which [std-LEDGER.an-entry-says-what-produced-it]
-  holds to recording it.
+  requires to record it.
 - A service **MUST NOT** retry a declined authorisation with the authentication step left out.
 
 _**Covers:** `eng:pol-INTC.SECURE`, `eng:pol-SECD.DESIGN`, `eng:pol-SECD.REQS`_
@@ -63,12 +63,12 @@ Avoid
   payment-api --> psp          authorise, no authentication reference
 ```
 
-The avoided flow asks the PSP to move money without telling it who checked the cardholder. The PSP either declines it
-or accepts it with the liability on us.
+The avoided flow asks the PSP to move money without telling it who checked the cardholder. The PSP either declines the
+payment or accepts it with the liability on us.
 
 ## Conformance checklist
 
-- [ ] Every authorisation request our services send carries a PSP authentication reference.
+- [ ] Every authorisation request our services send includes a PSP authentication reference.
 - [ ] An authorisation with no authentication outcome is declined, confirmed by a test.
 - [ ] The challenge page in the browser's network trace is served by the PSP.
 - [ ] No page we serve has a field for a one-time passcode.
@@ -77,8 +77,8 @@ or accepts it with the liability on us.
 
 ## Rationale and provenance
 
-Authentication decides who pays when a payment turns out to be fraudulent. The PSP holds the card scheme's rules and
-the issuer's response, so a decision we make here would be a second, worse copy of theirs.
+Authentication decides who pays when a payment turns out to be fraudulent. The PSP has the card scheme's rules and the
+issuer's response, so a decision made here would be a second, worse copy of the PSP's.
 
 ## Sources and further reading
 

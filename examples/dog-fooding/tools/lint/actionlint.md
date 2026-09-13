@@ -13,16 +13,16 @@ tags: [ github-actions, linting, workflows ]
 
 `Tool: tol-actionlint` `APPROVED`
 
-The linter every workflow in `.github/workflows/` answers to, run by the `lint` job after yamllint has read the same
+The linter that checks every workflow in `.github/workflows/`. The `lint` job runs it after yamllint has read the same
 files as plain YAML.
 
 ## What we use it for
 
-It reads a workflow as a workflow: the expression syntax, the job graph, the action inputs, and the shell in every
-`run:` block. The runner carries shellcheck, so actionlint puts each of those blocks through it as well.
+It checks the expression syntax, the job graph, the action inputs, and the shell in every `run:` block. The runner has
+shellcheck installed, so actionlint puts each of those blocks through shellcheck as well.
 
 It is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job
-carries the version instead, and the header comment in that file says where to look.
+states the version, and the header comment in that file says where to look.
 
 ## Status
 

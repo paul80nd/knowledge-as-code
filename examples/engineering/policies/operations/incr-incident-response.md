@@ -19,22 +19,22 @@ tags: [ incident-response, learning, postmortem ]
 
 ## Purpose
 
-When something goes wrong, we have a defined way to respond. Someone is in charge and severity decides how large the
-response is. We record what happened, and we can show we are better for having been through it.
+When something goes wrong, we have a defined way to respond. Someone is in charge, and the severity sets how large the
+response is. We record what happened, and we can show we are better for it.
 
-Respond well and an incident ends in a recovery. Respond badly and it becomes a second failure on top of the first.
-Review it afterwards and we do not pay for it twice.
+An undefined response costs time while people work out who decides. A review finds the conditions that allowed the
+incident, so the next one is less likely.
 
 ## Scope
 
 Security and operational incidents affecting systems we build or operate, including those reported to us from outside
-the organisation. A personal data breach is a security incident and is in scope here. What the data itself requires of
-us is [pol-DATA]'s.
+the organisation. A personal data breach is a security incident and is in scope here. [pol-DATA] states what the data
+itself requires of us.
 
-_Boundary: [pol-RECV] owns being able to recover, and that covers the objectives, the backups, and the proof that a
-restore works. This policy owns deciding to recover and doing it, held to the objectives [pol-RECV] set. `ACTIONS` is
-shared with [pol-SECD]: findings become tracked work whether they came from an incident review here or from threat
-modelling there._
+_Boundary: [pol-RECV] owns being able to recover: the objectives, the backups and the proof that a restore works. This
+policy owns the decision to recover and the recovery itself, against the objectives [pol-RECV] sets. `ACTIONS` is
+shared with [pol-SECD]: findings become tracked work whether an incident review here or threat modelling there
+produced them._
 
 ## Clauses
 
@@ -45,7 +45,7 @@ modelling there._
 | `TRIAGE`  | **MUST** classify incidents by severity, and escalate according to it                                                                              |                                                 |
 | `COMMS`   | **MUST** communicate an incident's status to those it affects, at the cadence its severity sets                                                    | [ISO 27001:2022].A.5.26                         |
 | `RECOVER` | **MUST** invoke the recovery path defined for the affected system rather than improvising one                                                      |                                                 |
-| `HOLD`    | **MUST** keep security controls in force during an incident, or record what stands in for one that is set aside                                    | [ISO 27001:2022].A.5.29                         |
+| `HOLD`    | **MUST** keep security controls in force during an incident, or record what compensates for one that is set aside                                  | [ISO 27001:2022].A.5.29                         |
 | `EVIDENC` | **MUST** preserve evidence and produce a record for every significant incident, and for every personal data breach whether or not it is notifiable | [ISO 27001:2022].A.5.26, [UK GDPR].Art.33(5)    |
 | `FREEZE`  | **MUST** preserve the state an incident is investigated from, before recovery destroys it                                                          | [ISO 27001:2022].A.5.28                         |
 | `NOTIFY`  | **MUST** notify the supervisory authority of a personal data breach within the statutory window                                                    | [ISO 27001:2022].A.5.5, [UK GDPR].Art.33        |
@@ -60,10 +60,10 @@ modelling there._
 
 ## Exceptions
 
-Low-severity events are handled through routine work rather than the full process. The severity classification decides
-which, and we apply it deliberately rather than letting whoever wants the least paperwork set it. There is no exception
-to recording a significant incident, and none at all to recording a personal data breach. `EVIDENC` binds at every
-severity. Deciding that a breach was not notifiable is itself a decision we have to be able to show.
+Routine work handles a low-severity event, in place of the full process. The severity classification decides which
+events those are, and we apply it deliberately: convenience does not set it. Recording a significant incident has no
+exception, and recording a personal data breach has none. `EVIDENC` binds at every severity. A decision that a breach
+was not notifiable is itself a decision we have to be able to show.
 
 [pol-DATA]: ../security/data-data-protection.md
 [pol-RECV]: ../operations/recv-recoverability.md

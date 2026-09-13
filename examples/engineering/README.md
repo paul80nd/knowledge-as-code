@@ -27,15 +27,15 @@
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                     | Tier        | What it holds                                                                                                   |
-|--------------------------|-------------|-----------------------------------------------------------------------------------------------------------------|
-| [ADR](adrs.md)           | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.        |
-| [Control](controls.md)   | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.                  |
-| [Glossary](glossary.md)  | descriptive | The ubiquitous language. Terms whose meaning is specific to us, or which are easily confused.                   |
-| [Policy](policies.md)    | normative   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely.          |
-| [Report](reports.md)     | descriptive | A question about the corpus answered over the whole of it, with the judgement a person added.                   |
-| [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                         |
-| [Tool](tools.md)         | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version ranges we stand behind. |
+| Type                     | Tier        | What it holds                                                                                                |
+|--------------------------|-------------|--------------------------------------------------------------------------------------------------------------|
+| [ADR](adrs.md)           | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.     |
+| [Control](controls.md)   | normative   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves.               |
+| [Glossary](glossary.md)  | descriptive | The ubiquitous language. Terms with a meaning specific to the organisation, or easily confused with another. |
+| [Policy](policies.md)    | normative   | A high-level engineering commitment, independent of any stack and rarely changed.                            |
+| [Report](reports.md)     | descriptive | A question about the corpus, answered across every record, with the judgement a person added.                |
+| [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                      |
+| [Tool](tools.md)         | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version range for each.      |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.

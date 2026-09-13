@@ -37,20 +37,20 @@ look like processes. You open the document on a day when the estate is already d
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                 | Value                              | Notes                                                                                   |
-|-----------------------|------------------------------------|-----------------------------------------------------------------------------------------|
-| `id` *†               | string                             | Stable, unique across the corpus, never reused. Format set by the type.                 |
-| `type` *†             | string                             | The type's singular name. Fixed for the type. CI checks it matches the folder.          |
-| `tier` *†             | `procedural`                       | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.     |
-| `status` *†           | `active` `draft` `retired`         | Whether the runbook is current, drafted, or stood down.                                 |
-| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                  |
-| `sources` †           | list                               | Where the content came from, one entry per source.                                      |
-| `tags` †              | list                               | Free-form, lowercase, hyphenated. Used for cross-cutting search.                        |
-| `applies-to`          | list                               | Service ids this runbook covers.                                                        |
-| `severity`            | `sev1` `sev2` `sev3`               | The severity this runbook is written for.                                               |
-| `last-rehearsed` *    | date                               | `"never"` is permitted, and is worth knowing before the incident rather than during it. |
-| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often it should be exercised.                                                       |
-| `requires-access`     | list                               | Must be complete. Discovering you lack a permission mid-incident is its own outage.     |
+| Field                 | Value                              | Notes                                                                         |
+|-----------------------|------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†               | string                             | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†             | string                             | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†             | `procedural`                       | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†           | `active` `draft` `retired`         | Whether the runbook is current, drafted, or stood down.                       |
+| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †           | list                               | Where the content came from, one entry per source.                            |
+| `tags` †              | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `applies-to`          | list                               | Service ids this runbook covers.                                              |
+| `severity`            | `sev1` `sev2` `sev3`               | The severity this runbook is written for.                                     |
+| `last-rehearsed` *    | date                               | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
+| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often to rehearse the runbook.                                            |
+| `requires-access`     | list                               | The systems or roles the reader needs before starting.                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -105,13 +105,13 @@ look like processes. You open the document on a day when the estate is already d
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `symptoms-first`            | error   | Symptoms is the first section after the H1. That is how the reader finds the document.                          |
+| `symptoms-first`            | error   | Symptoms is the first section after the H1.                                                                     |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                  | What it would verify                                                            |
-|-----------------------|---------------------------------------------------------------------------------|
-| `escalation-required` | Every diagnosis branch ends in a resolution or an escalation, never a dead end. |
-| `staleness-loud`      | Rehearsal staleness, reported more prominently than a process's.                |
+| Rule                  | What it would verify                                          |
+|-----------------------|---------------------------------------------------------------|
+| `escalation-required` | Every diagnosis branch ends in a resolution or an escalation. |
+| `staleness-loud`      | Rehearsal staleness, reported more loudly than a process's.   |
 
 <!-- END GENERATED: checks-runbooks -->

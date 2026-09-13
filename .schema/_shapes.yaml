@@ -2,13 +2,9 @@
 # A shape used by exactly one type lives in that type's file, as an `entry:` block.
 
 notes: >
-  A shape declares the keys of one object, in the order they are written. A field naming it takes those
-  keys whole: nothing narrows a shape at the point of use, so every record writing this shape writes the
-  same keys with the same types. Where one type has to hold its own key to a narrower value, it writes a
-  rule with an `expr:`, which reports against the record rather than against the declaration.
-
-  Which types draw on a shape is not recorded here. A list would be a second place to keep in step. Grep
-  the shape's name to find them.
+  A shape declares the keys of one object, in the order they are written. A field taking a shape takes
+  all of them, because nothing narrows a shape at the point of use. A type that needs a narrower value
+  writes a rule with an `expr:`, and the failure then appears on the record.
 
 shapes:
 
@@ -21,15 +17,9 @@ shapes:
       by:
         required: true
         type: string
-        description: Who or what acted. A type holding this to a kind of actor writes a rule.
+        description: Who or what acted. A type that limits this to one kind of actor writes a rule.
     notes: >
       An actor doing something at a point in time: a person verifying an answer, a tool generating a
-      report. The two keys are the whole of it, because anything else is about the act rather than about
-      who did it and when.
-
-      `at` leads the entry, and a list of these sorts on its first key. A history then reads oldest
-      first, and the last line is the one somebody asking about trust reads.
-
-      `by` is a plain string here and carries no pattern. What counts as an actor differs by what the
-      event is: a verification takes a person or an agent, where a generation is a tool naming its own
-      version. The type that knows which writes the rule.
+      report. The shape gives the actor and the moment, and says nothing about the act itself. `at`
+      leads the entry, so a list of these sorts oldest first on its first key. `by` takes any string,
+      because a verification gives a person or an agent where a generation gives a tool and its version.

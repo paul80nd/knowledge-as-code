@@ -18,16 +18,17 @@ tags: [ change-management, repositories, source-control ]
 
 ## Summary
 
-One repository holds everything that builds, deploys, runs and recovers a service, and every change to it arrives by
+One repository contains everything that builds, deploys, runs and recovers a service. Every change to it arrives by
 reviewed merge from an identified author.
 
 ## Rules
 
 ### The repository holds everything the service needs
 
-- A repository **MUST** hold the source, the build definition, the infrastructure definition, the configuration
+- A repository **MUST** contain the source, the build definition, the infrastructure definition, the configuration
   templates and the recovery scripts for the services it owns.
-- A repository **MUST NOT** depend on an asset held only on a workstation, in a cloud portal or in an unversioned share.
+- A repository **MUST NOT** depend on an asset kept only on a workstation, in a cloud portal or in an unversioned
+  share.
 - Infrastructure, schema and configuration changes **MUST** go through the same review as application code.
 
 _**Covers:** [pol-EVER].ASSETS, [pol-EVER].ORPHAN, [pol-EVER].PARITY_
@@ -36,7 +37,7 @@ _**Covers:** [pol-EVER].ASSETS, [pol-EVER].ORPHAN, [pol-EVER].PARITY_
 
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
 - A commit subject **MUST** name the work item that asked for the change, written as `#<id>`.
-- A commit **MUST** carry the author's own verified identity.
+- A commit **MUST** be made under the author's own verified identity.
 - A commit **MUST NOT** be authored by a shared or generic account.
 
 _**Covers:** [pol-EVER].BRANCH, [pol-EVER].HISTORY, [pol-EVER].INTENT, [pol-EVER].SHARED_
@@ -51,7 +52,7 @@ Avoid
   fixes
 ```
 
-A subject naming no work item leaves the next reader with the diff and nothing else. Git records what changed and the
+A subject naming no work item leaves the next reader with the diff and nothing else. Git records what changed, and the
 work item records what asked for it.
 
 ```
@@ -67,14 +68,14 @@ The second cannot be rebuilt from the repository, so the recovery path runs thro
 ## Conformance checklist
 
 - [ ] The repository builds from a clean clone on a machine that has never seen this service.
-- [ ] The infrastructure definition sits in the repository, and the running estate matches it.
+- [ ] The infrastructure definition is in the repository, and the running estate matches it.
 - [ ] Branch protection is on, and it blocks direct pushes to the default branch.
 - [ ] Recent commit subjects each name a work item.
-- [ ] No commit in the last release carries a shared account as its author.
+- [ ] No commit in the last release has a shared account as its author.
 
 ## Rationale and provenance
 
 A team that can rebuild a service from source follows a recovery procedure. A team missing one asset investigates
-instead. We also cannot ask an author about a change a year later if we cannot tell who made it.
+first. An unattributed change also leaves nobody to ask about it a year later.
 
 [pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses

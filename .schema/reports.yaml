@@ -7,17 +7,17 @@ folder: reports
 page: reports.md
 tier: descriptive
 lifecycle: living
-summary: A question about the corpus answered over the whole of it, with the judgement a person added.
-goes-here: An answer about the corpus that no single record holds
+summary: A question about the corpus, answered across every record, with the judgement a person added.
+goes-here: An answer about the corpus no single record states
 detail: >
-  Which clauses nothing implements, which framework references hang on one citation. `kac report` fills
-  every cell the corpus states and leaves the judgement cells open, and this is where the finished
-  document lives once somebody has answered them.
+  Which clauses nothing implements, which framework references have only one citation. `kac report` fills
+  every cell the corpus states, and leaves the judgement cells open. A report becomes a record here once
+  somebody has answered them.
 
 versus:
   explanations: >
     A report answers a question about the corpus itself. An explanation says how something in the estate
-    works. If it would still be true with every record deleted, it is an explanation.
+    works. If the answer would still be true with every record deleted, it is an explanation.
   discoveries: >
     A report is a walk over the corpus, repeatable and dated. A discovery is something somebody noticed
     once. If nothing would reproduce it, it is a discovery.
@@ -25,15 +25,15 @@ versus:
 lineage:
   prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys"
   alignment: >
-    `generated` names the producer and the moment, in OKF's `<producer>/<version>` form, and `sources`
-    names each body of knowledge the document answers for
+    `generated` states the producer and the moment, in OKF's `<producer>/<version>` form. `sources` lists
+    each body of knowledge the document answers for
   divergence: >
-    OKF carries no version on a source. Ours does, because the fact a reader needs is which content the
-    report is true of. We also require a `verified` entry, which OKF leaves to the publisher
+    OKF puts no version on a source. This type does, because a reader needs to know which content the report
+    is true of. It also requires a `verified` entry, which OKF leaves to the publisher
 
 collision: >
-  A report reads like an explanation, and the two are told apart by what deleting the corpus would do to
-  them. An explanation survives it and a report has nothing left to say.
+  A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
+  survives every record being deleted. A report does not.
 
 id:
   prefix: rpt
@@ -50,7 +50,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, stale]
-    description: '`stale` is an honest state: a report nobody has run since the corpus moved says so.'
+    description: Whether the report is drafted, current, or behind the corpus.
 
   generated:
     required: true
@@ -58,12 +58,8 @@ fields:
     shape: event
     description: What produced the content and when.
     notes: >
-      `by` takes OKF's `<producer>/<version>` form, so a report an agent extended names the agent the
-      same way the tool names itself. `generated-by-a-producer` below is what holds it to that form.
-
-      One event rather than a list. A regeneration replaces the content, so the moment before it is a
-      fact about a document that no longer exists. `verified` is the field with a history, because a
-      verification is added to the document rather than replacing it.
+      A regeneration overwrites this event, and `verified` is the field that keeps a history.
+      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
   sources:
     required: true
@@ -81,16 +77,8 @@ fields:
     min-items: 1
     description: Every corpus this report answers for, and the version of each it is true of.
     notes: >
-      The universal `sources` is optional and carries a `resource` alone. A report is a walk over a corpus,
-      so the field is required here, and each entry adds the `version` it answers for.
-
-      `resource` names the corpus rather than a path, because a consumer reads the same report about a
-      corpus it holds under a shortcode of its own.
-
-      A reviewer moves a `version` by hand, and that is the point of it. A corpus moves its
-      `content-version` whenever what it knows changes, and most of those changes touch no report.
-      Somebody who has checked that the report still holds raises the version and adds a `verified`
-      entry, rather than running it again and re-reading every verdict.
+      A consumer installs the corpus under a shortcode of its own, so `resource` states the corpus and never
+      a path.
 
   verified:
     required: true
@@ -100,46 +88,24 @@ fields:
     min-items: 1
     description: Every verification this report has had, oldest first, one line each.
     notes: >
-      A report nobody verified is output. The judgement cells are what make it a record, and this field
-      is what says somebody answered them.
-
-      Any actor may verify, and who is in the list is what says how much the answer is worth: entries by
-      agents alone make the report machine-confirmed, and one `human:` entry makes it human-reviewed.
-      The export ships that answer as `trust`, so the prefix is load-bearing rather than decorative and
-      `verified-by-a-known-actor` below holds it to a person or a producer.
-
-      Two actors are refused. A post cannot read an answer, so `role:` is out. The producer that wrote
-      the content cannot sign it off, which `no-self-verification` asks.
-
-      A verification is an actor doing something at a point in time, so the keys come from the `event`
-      shape. `verified` is the name the Open Knowledge Format gives the same list, and taking it lets a
-      reader who knows that format read this one.
+      The keys come from the `event` shape, and `verified` is the name the Open Knowledge Format gives the
+      same list. The `by` prefix decides the exported `trust` tier, so `verified-by-a-known-actor` below
+      limits an entry to a person or a producer.
+      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
 sections:
   required: []
   optional: []
   notes: >
-    Free-form throughout. A report's headings follow the question it answers, and `kac report` writes
-    them, so declaring any of them here would hold every future report to the shape of the first two.
+    Free-form throughout. `kac report` writes the headings the question needs.
+    See <https://paul80nd.github.io/knowledge-as-code/design/export/#a-type-declaring-no-sections>.
 
 export:
   version: 2
   fields: [id, title, status, generated, sources, verified, tags]
   notes: >
-    A report declares no sections, for the reason `sections:` above gives. So the frontmatter is the whole
-    of what travels, and the body is a fetch away through the record's own `links`.
-
-    The frontmatter answers the one question a consumer asks of a report it cannot read: whether the
-    answer still holds. `sources` names each corpus the report answers for and the `content-version` it
-    was true of, so a consumer at a later version knows the answer has moved on. `verified` carries every
-    verification the report has had, oldest first, and `trust` is the tier derived from it, which is how a
-    reader sees how much weight the verdicts carry.
-
-    `generated` travels as an object carrying `at` and `by`, which is the `event` shape the field
-    declares. A consumer reads the two keys directly.
-
-    `owner` stays behind. Who stewards a report is a fact about this corpus.
-
+    The body never travels, and a reader follows the record's own links for it.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#reports>.
 index:
   columns: [id, title, status]
   sort: id
@@ -150,26 +116,22 @@ rules:
     severity: warning
 
   - id: verified-by-a-known-actor
-    description: A verification names a person or a producer, and never a post.
+    description: A verification states a person or a producer, and never a `role:`.
     severity: error
     expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      A verification here names neither a person nor a producer. Write `human:alex.doe`, or name an
-      agent the way the tool names itself, as `coverage-sweep/1.2.0`. `role:` is refused: a post cannot
-      read an answer, and the person who did read it stays named after the post changes hands. The
-      prefix is what the exported `trust` tier reads, so a value outside these two forms weighs the
-      answer wrongly rather than only reading oddly.
+      this verification states neither a person nor a producer. Write `human:alex.doe`, or an agent with
+      its version, as `coverage-sweep/1.2.0`.
 
   - id: no-self-verification
     description: A report is not verified by the producer that generated it.
     severity: error
 
   - id: generated-by-a-producer
-    description: '`generated.by` names what produced the content, in OKF''s `<producer>/<version>` form.'
+    description: '`generated.by` states what produced the content, in OKF''s `<producer>/<version>` form.'
     severity: error
-    # A slash and something after it is the whole of the form. What produced a report is a tool or an
-    # agent, and neither has a naming scheme this corpus is entitled to narrow further.
+    # The form is a slash with something after it. Producers version themselves however they like.
     expr: "entries_match('generated', 'by', '^[a-z0-9.-]+/[^ ]+$')"
     message: >
-      `generated.by` names a producer and its version together, as `kac/0.24.0`. A bare name leaves a
-      reader unable to tell which version of the producer wrote this.
+      `generated.by` is not in `<producer>/<version>` form. Write the producer and its version together,
+      as `kac/0.24.0`, so a reader can tell which version wrote this.

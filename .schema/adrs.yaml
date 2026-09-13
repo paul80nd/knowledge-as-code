@@ -8,25 +8,24 @@ page: adrs.md
 tier: decided
 lifecycle: immutable
 summary: An architecturally significant decision affecting more than one repository, and the reasoning behind it.
-goes-here: A decision that affects more than one repo, and its reasoning
+goes-here: A decision affecting more than one repository, and its reasoning
 detail: >
-  The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded by
-  a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it,
-  not here.
+  The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
+  later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
 versus:
   standards: >
-    The ADR is the decision and its reasoning, frozen. The standard is the rule that results, kept current. If
-    you are writing "we considered X and rejected it", that is an ADR. If you are writing "you **MUST** do Y",
-    that is a standard. Most substantial changes produce both.
+    An ADR is the decision and its reasoning, frozen. A standard is the rule that follows, kept current.
+    Recording that an option was weighed and turned down is an ADR. Recording "you **MUST** do Y" is a
+    standard. Most substantial changes produce an ADR and a standard.
 
 lineage:
   prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)"
   alignment: >
-    Context / Decision / Consequences, and the rule that a reversed decision is superseded rather than rewritten
+    Context / Decision / Consequences, and the rule that a reversed decision is superseded and left standing
   divergence: >
-    Nygard scopes decisions to one codebase. Ours must affect more than one repository. Mandatory *Alternatives*
-    is ours, not his
+    Nygard scopes a decision to one codebase. An ADR here affects more than one repository, and the mandatory
+    *Alternatives Considered* section is an addition to his shape
 
 id:
   prefix: adr
@@ -43,20 +42,20 @@ fields:
     required: true
     type: enum
     values: [proposed, accepted, deprecated, superseded]
-    description: Immutable once `accepted`. Supersede rather than rewrite.
+    description: Where the decision stands.
 
   decided-on:
     required: false
     required-when: 'status == accepted'
     type: date
-    notes: The acceptance date. Bare key until accepted.
+    description: The day the decision was accepted.
 
   supersedes:
     required: false
     type: id
     ref: adrs
     reciprocal: superseded-by
-    notes: The ADR this replaces.
+    description: The ADR this one replaces.
 
   superseded-by:
     required: false
@@ -64,7 +63,7 @@ fields:
     type: id
     ref: adrs
     reciprocal: supersedes
-    notes: CI reconciles both directions, so a one-sided supersession fails the build.
+    description: The ADR that replaces this one.
 
   deciders:
     required: false
@@ -73,8 +72,8 @@ fields:
     pattern: '^human:[a-z0-9.-]+$'
     description: The people who agreed it, each as `human:alex.doe`.
     notes: >
-      A post cannot agree a decision, so `role:` is refused here. The people in the room agreed it, and
-      they stay named after any of them moves on.
+      A role cannot agree a decision, so a `role:` identifier is refused here. A person who agreed it stays
+      named after they move on.
 
   related:
     required: false
@@ -82,8 +81,8 @@ fields:
     of: id
     ref: adrs
     mirrors-section: Related
-    notes: >
-      Must match the ids named in the `## Related` section. CI reconciles the two, case-insensitively.
+    description: Other ADRs worth reading beside this one, matching the `## Related` section.
+    notes: The match against the section is case-insensitive.
 
 sections:
   required: [Context, Decision, Alternatives Considered, Consequences]
@@ -97,23 +96,9 @@ export:
     Decision: full
     Consequences: full
   notes: >
-    A standard cites the decision its authority comes from, and `derived-from` resolves only where the
-    ADR travelled too. So a consumer inheriting a rule can read what was decided behind it.
-
-    `Decision` travels whole, because the decision sentence is the record. `Consequences` travels whole
-    beside it: a consumer reading what a decision bought and not what it cost reads a better decision
-    than the one we took. `Context` travels as its opening paragraph, which is where an ADR says what
-    problem it was answering.
-
-    `Alternatives Considered` stays behind. It is the longest section an ADR holds, it argues against
-    options this estate weighed, and the record is a fetch away for a reader who wants the weighing.
-
-    `supersedes` and `superseded-by` travel together. A superseded decision still binds whatever was
-    built under it, so a consumer meeting one needs the id that replaced it.
-
-    `deciders` and `owner` stay behind. Both name people, and whoever holds a vendored copy has no
-    standing to ask them anything.
-
+    `Context` travels as its opening paragraph, where an ADR states the problem it answered.
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#adrs> says what else travels, and what
+    stays behind.
 index:
   columns: [id, title, status, decided-on]
   sort: id
@@ -121,11 +106,10 @@ index:
 rules:
   - id: immutable-after-accepted
     description: Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed.
-    # A substantive edit fails with a pointer to the supersession process.
+    # Declared and not running. Telling a substantive edit from a typo needs git history, which `kac` does not read.
   - id: y-statement-present
     description: A block-quote below the H1 states all six Y-statement moves, within `max-words`.
-    # The six: in the context of / facing / we decided / rather than / to achieve / accepting. Naming the absent one is
-    # what needs code rather than an expression.
+    # The six moves: in the context of / facing / we decided / rather than / to achieve / accepting.
     max-words: 60
     severity: warning
   - id: alternatives-have-verdicts

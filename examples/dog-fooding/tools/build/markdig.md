@@ -17,8 +17,8 @@ The Markdown reader `kac` uses for the body of a record: its headings, its links
 
 ## What we use it for
 
-`kac.core` references it. The checks that read a document rather than its frontmatter run on what it produces, so
-`h1`, `identity`, `sections`, `link-resolves` and `undefined-label` all read the same parse.
+`kac.core` references it. The checks that read a document body run on what it produces, so `h1`, `identity`,
+`sections`, `link-resolves` and `undefined-label` all read the same parse.
 
 ## Status
 
@@ -26,7 +26,7 @@ The Markdown reader `kac` uses for the body of a record: its headings, its links
 
 ## Where it is used
 
-* [svc-kac] carries it.
+* [svc-kac] uses it.
 
 ## Alternatives considered
 
@@ -34,7 +34,7 @@ None. It reads CommonMark with the extensions a record uses, and the checks were
 
 ## Licence and obligations
 
-BSD-2-Clause. It asks that the copyright notice travel with source and binary redistributions. A NuGet package carries
+BSD-2-Clause. It asks that the copyright notice travel with source and binary redistributions. A NuGet package states
 the licence expression in its own metadata, so publishing `kac` needs nothing further.
 
 ## Related

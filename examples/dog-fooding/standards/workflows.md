@@ -21,10 +21,10 @@ tags: [ continuous-integration, github-actions, publishing ]
 
 ## Summary
 
-One workflow gates a pull request. The others publish what landed: the tool to nuget.org, each corpus to GitHub
-Packages, the plugins to the `marketplace` branch, and the site to GitHub Pages. A job says what it may do before it
-does it, pins the actions it runs, and holds no credential of its own. Those three are [OpenSSF Scorecard]'s
-`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks, and [actionlint] holds the rest of how a
+One workflow gates a pull request. The others publish what has merged: the tool to nuget.org, each corpus to GitHub
+Packages, the plugins to the `marketplace` branch, and the site to GitHub Pages. A job declares what it may do before
+it does it, pins the actions it runs, and stores no credential of its own. Those three rules are [OpenSSF Scorecard]'s
+`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks. [actionlint] decides the rest of how a
 workflow is written.
 
 ## Rules
@@ -48,7 +48,7 @@ _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.BRANCH`, 
 - A workflow **MUST** declare `permissions: contents: read` at its top level, which is what [OpenSSF Scorecard]'s
   `Token-Permissions` check asks for.
 - A job needing wider access **MUST** declare that permission on itself.
-- A job **MUST NOT** hold a permission no step in it uses.
+- A job **MUST NOT** declare a permission no step in it uses.
 - A workflow **MUST NOT** commit to a branch a person edits.
 
 _**Covers:** `eng:pol-ACCS.LEAST`_
@@ -57,10 +57,10 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 - A step in `.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s
   `Pinned-Dependencies` check asks for.
-- A pinned step **MUST** carry the released version in a trailing comment, as `# v7.0.1`.
+- A pinned step **MUST** state the released version in a trailing comment, as `# v7.0.1`.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
-- A job holding a write permission **MUST NOT** install a tool at a moving version.
-- A workflow needing a tool at `latest` **MUST** install it in a job holding `contents: read`.
+- A job with a write permission **MUST NOT** install a tool at a moving version.
+- A workflow needing a tool at `latest` **MUST** install it in a job with `contents: read`.
 
 _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 
@@ -69,7 +69,7 @@ _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 - A workflow **MUST** take every credential from GitHub's secret store or from an identity it exchanged.
 - A publish to nuget.org **MUST** authenticate through a trusted publishing policy naming this repository, this
   workflow file and the `nuget.org` environment.
-- A job **MUST** exchange its own identity for a short-lived key in the step before the one that spends it.
+- A job **MUST** exchange its own identity for a short-lived key in the step before the one that uses it.
 - A workflow calling GitHub's own API **MUST** take `github.token`.
 - A step **MUST** pass a secret to a script through `env:`.
 - A step **MUST NOT** interpolate a secret into a script body.
@@ -79,8 +79,8 @@ _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `
 
 ### One job holds the write permission
 
-- A publishing workflow **MUST** hold its write permission on one job.
-- A workflow publishing a package or a branch **MUST** declare `needs:` on a job holding `contents: read`.
+- A publishing workflow **MUST** declare its write permission on one job.
+- A workflow publishing a package or a branch **MUST** declare `needs:` on a job with `contents: read`.
 - A workflow publishing a package or a branch **MUST** run its checks again against the merge commit.
 - The publishing job **MUST** build what it publishes from that commit.
 - The publishing job **MUST** declare `timeout-minutes`.
@@ -136,54 +136,54 @@ jobs:
       - uses: actions/checkout@v7
 ```
 
-`write-all` hands every scope to every job in the file, including the ones that only read. A job with no `needs:`
-publishes whatever the checkout holds, proved by nothing. A job with no `timeout-minutes` holds its concurrency group
-for six hours when a push hangs. A tag moves, so `@v7` is a different action tomorrow.
+`write-all` gives every scope to every job in the file, including the ones that only read. A job with no `needs:`
+publishes whatever the checkout contains, verified by nothing. A job with no `timeout-minutes` keeps its concurrency
+group for six hours when a push hangs. A tag moves, so `@v7` is a different action tomorrow.
 
 ## Conformance checklist
 
 - [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
-- [ ] Every `uses:` names a commit SHA and carries its released version in a trailing comment.
+- [ ] Every `uses:` names a commit SHA and states its released version in a trailing comment.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
-- [ ] Every job holding a write permission has a step that uses it.
+- [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
-- [ ] The version this pull request ships has moved, and the changelog carries its section.
+- [ ] The version this pull request ships has moved, and the changelog has its section.
 - [ ] Every corpus whose records changed has moved its `content-version`.
 
 ## Rationale and provenance
 
-Read-only permission is what keeps CI out of the files a person edits. `generate --check` reports a stale generated
-file and names the command to run locally, so no job needs to write one back.
+Read-only permission keeps CI out of the files a person edits. `generate --check` reports a stale generated file and
+names the command to run locally, so no job needs to write one back.
 
-A version that has not moved publishes nothing and says nothing, so an edited record reaches no reader and the
-published copy drifts from `main` with no build reporting it. What each of these numbers means, and what a producer's
-move obliges of the corpora consuming it, are [std-VERS]'s. This standard reaches when a number moves in the delivery
-flow, and how a workflow publishes it.
+A version that has not moved publishes nothing, so no reader sees the edited record and the published copy drifts
+from `main` with no build reporting it. What each of these numbers means, and what a producer's move obliges of the
+corpora consuming it, are [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a
+workflow publishes it.
 
-`WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name, and its header comment says why a
-job outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. What neither answers is a
-permission nobody uses, a credential in the wrong place, or `.azuredevops/kac.yml` drifting from its GitHub twin, so a
-reader is what catches those.
+`WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
+outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. Neither checks a permission nobody
+uses, a credential in the wrong place, or `.azuredevops/kac.yml` drifting from its GitHub counterpart. A reviewer
+catches those.
 
-The timeout rule reaches the publishing jobs, where a hang parks a concurrency group and the next merge queues behind
-it. `ChangelogTests` fails a version with no section, which is what makes a release body available to the tag step.
+The timeout rule covers the publishing jobs, where a hang keeps a concurrency group and the next merge queues behind
+it. `ChangelogTests` fails a version with no section, so the tag step always has a release body to publish.
 
-The tool's publish runs the three test layers again against the merge commit, because the gate saw the pull request's
-head and `main` moved beneath it.
+The tool's publish runs the three test layers again against the merge commit, because the gate read the pull request's
+head and `main` moved after that.
 
-The pinning rule reaches `.github/workflows/`. The starter at `template/.github/workflows/kac.yml` is a seed that
-belongs to whichever corpus receives it, and it names `actions/checkout@v4` today.
+The pinning rule covers `.github/workflows/`. The starter at `template/.github/workflows/kac.yml` belongs to whichever
+corpus receives it, and it names `actions/checkout@v4` today.
 
 ## Sources and further reading
 
 - **Normative.** [OpenSSF Scorecard] defines `Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow`, the
-  three checks the permission and pinning rules above answer.
+  three checks the permission and pinning rules above satisfy.
 - **Normative.** [actionlint] sets how a workflow is written. It runs with its own defaults here, and this standard
   adds what a linter reading one file cannot see.
 - **Normative.** [Security hardening for GitHub Actions] is what Scorecard's three checks operationalise, and it
-  carries the reasoning behind each.
+  gives the reasoning behind each.
 - **Normative.** [Trusted publishing on nuget.org] defines the policy this repository's publish authenticates against.
 
 ## Changelog

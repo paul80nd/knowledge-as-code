@@ -19,12 +19,12 @@ is the account finance reconciles against.
 
 ## What it does
 
-Writes one immutable entry per event on a payment, and answers queries about a payment's history. Nothing here amends an
-entry: a correction is a further entry, so the reconciliation a month later reads the same sequence finance read on the
-day.
+Writes one immutable entry per event on a payment. Returns a payment's history to a caller that asks for it. An entry
+is never amended. A correction is a further entry, so the reconciliation a month later reads the same sequence finance
+read on the day.
 
-It also runs the nightly reconciliation against the PSP's settlement file, and raises a discrepancy where the two
-disagree. Its own README says the file arrives by SFTP at 02:00.
+It also runs the nightly reconciliation against the PSP's settlement file, and reports a break where the file and
+the ledger disagree. The repository's README says the file arrives by SFTP at 02:00.
 
 ## Where it lives
 
@@ -46,15 +46,15 @@ None in this catalogue. It reads the PSP's settlement file and writes to its own
 
 ## Data
 
-Owns the ledger database, `sql-payment-ledger-<env>`, configured as `ConnectionStrings__Ledger`. An entry holds the
-order, the amount, the PSP's reference and the token, and no card number reaches it. The `data` type is not adopted
-here, so nothing in this corpus describes the schema. The repository's own migrations do.
+Owns the ledger database, `sql-payment-ledger-<env>`, configured as `ConnectionStrings__Ledger`. An entry contains the
+order, the amount, the PSP's reference and the token. No card number is written to it. The `data` type is not adopted
+here, so nothing in this corpus describes the schema. The repository's own migrations describe it.
 
 ## Operational notes
 
-* **Criticality**: `critical`. [svc-payment-api] writes here before it answers, so a ledger that is down stops payment
-  as surely as the PSP being down does.
-* **NFRs**: [nfr-0002] holds how much of the ledger a recovery may lose.
+* **Criticality**: `critical`. [svc-payment-api] writes here before it replies, so a ledger that is down stops payment.
+  A PSP that is down has the same effect.
+* **NFRs**: [nfr-0002] states how much of the ledger a recovery may lose.
 
 [nfr-0002]: ../nfrs/0002-ledger-recovery-point.md
 [svc-payment-api]: payment-api.md

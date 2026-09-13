@@ -18,7 +18,7 @@ tags: [ ledger, reconciliation, settlement ]
 ## Summary
 
 A daily run matches the PSP's settlement file against the ledger, entry by entry. Anything that does not match is a
-break, and a break is owned by somebody until it closes.
+break. A break has a named owner until it closes.
 
 ## Rules
 
@@ -37,9 +37,9 @@ _**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-DERV.FAILED`, `eng:pol-DERV.RUNLOG`_
 
 - The run **MUST** classify each break: in the file and not the ledger, in the ledger and not the file, or matched with
   a different amount.
-- The run **MUST** raise one alert naming the count and the total value of the breaks.
+- The run **MUST** raise one alert stating the count and the total value of the breaks.
 - The run **MUST NOT** raise an alert for each break.
-- The run **MUST** escalate a break over 30 days old to the finance owner it names in its configuration.
+- The run **MUST** escalate a break over 30 days old to the finance owner set in its configuration.
 
 _**Covers:** `eng:pol-DERV.CHECK`, `eng:pol-OBSV.ALERTS`_
 
@@ -55,21 +55,21 @@ _**Covers:** `eng:pol-DERV.FAILED`_
 
 ```
 Good
-  2026-08-30  file 1,284 rows  ledger 1,284 entries  matched 1,282  breaks 2  £51.98
+  2026-08-30  file 1,284 rows  ledger 1,283 entries  matched 1,282  breaks 2  £51.98
   break  ch_9Kx2  in file, not in ledger    £25.99
-  break  ch_7Pm4  amounts differ 2599/2499  £25.98 vs £24.99
+  break  ch_7Pm4  amounts differ 2599/2499  £25.99 vs £24.99
 
 Avoid
   2026-08-30  reconciliation complete
 ```
 
-The avoided line says a run happened. It does not say what it compared or whether anything matched, so nobody can tell
-a clean day from an empty file.
+The avoided line says a run happened. It does not say what the run compared or whether anything matched, so nobody can
+tell a clean day from an empty file.
 
 ## Conformance checklist
 
 - [ ] The run has completed for every day in the last month.
-- [ ] Each run's record names the file it read, the entries it compared and the breaks it found.
+- [ ] Each run's record states the file it read, the entries it compared and the breaks it found.
 - [ ] A day with breaks does not appear in the revenue report.
 - [ ] Every break older than 30 days has a named owner.
 - [ ] A missing settlement file raises an alert within the run's own window.
@@ -77,8 +77,8 @@ a clean day from an empty file.
 
 ## Rationale and provenance
 
-The PSP's file is what the money actually did. The ledger is what we believe it did, and a daily comparison is what
-turns a slow drift between the two into a finding somebody sees the next morning.
+The PSP's file records what the money actually did. The ledger records what we believe it did. A daily comparison
+turns a slow drift between the file and the ledger into a break somebody sees the next morning.
 
 ## Changelog
 

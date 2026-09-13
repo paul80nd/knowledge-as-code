@@ -17,232 +17,128 @@ tags: [ documentation, prose, writing ]
 
 ## Summary
 
-Every word this repository publishes answers to one set of writing rules: records, README files, code comments, schema
-descriptions, documentation pages, commit messages and pull request bodies. The rules say how a sentence reads. What a
-particular surface adds on top is that surface's own business.
+Every word this repository publishes follows the Microsoft Writing Style Guide, with the changes below. That covers
+records, README files, code comments, schema descriptions, documentation pages, commit messages and pull request
+bodies. The writing skills under `.claude/skills/` state the same rules for an agent. Each surface then adds its own
+shape on top of them.
 
 ## Rules
 
-### The rules reach prose and stop where prose stops
+### The base style
 
-- Every word written for a reader **MUST** answer to this standard, whoever or whatever wrote it.
-- You **MUST** leave alone a heading you may not rename, an identifier, a clause whose wording is the record of an
-  obligation, a fixed form such as an ADR's decision sentence, and a transcript quoting what a program printed.
-- You **MUST** leave alone the span between a `BEGIN GENERATED` marker and its `END GENERATED`.
-- To move what that span holds, you **MUST** change the schema or the frontmatter and run `kac generate`.
-- You **MUST** name in your reply every rule you left behind on one of those grounds.
-- A comment inside a fenced code block counts as prose, and you **MUST NOT** touch the command, its flags or its
-  output.
-- A message in a string literal or a schema `message:` value counts as prose, and a transcript quoting that message
-  back **MUST NOT** count as prose.
-- Where two rules pull against each other, the one leaving the reader fewer readings **MUST** win, and where they tie
-  you **MAY** take either answer.
-- Where this standard and `.schema/` disagree, the schema **MUST** win.
-- You **MUST** report that contradiction, and **MUST NOT** edit a record to match this standard instead.
+- Prose **MUST** follow the Microsoft Writing Style Guide, except where a clause below changes it.
+- A sentence **MUST** state the rule or the fact before the reason.
+- A verb **MUST** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*. *Hold to*, *carry*,
+  *name*, *answer*, *reach* and *seal* **MUST NOT** stand in for one. *Holds* has four plain replacements: *has*,
+  *contains*, *keeps* and *checks*. *Carries* has *has*, *contains*, *includes* and *states*.
+- A word on that list **MAY** appear where it is itself the plain verb. A heading *names* a topic, a standard *cites*
+  a clause, and a service *returns* what a caller asked for.
+- A sentence **MUST** state one idea, and an instruction **MUST** give one step.
+- A heading **MUST** name its topic, in sentence case.
+- Three or more parallel items **MUST** be a list or a table.
 
 _**Covers:** `eng:pol-KNOW.AGENTS`_
 
-### Build the sentence
+### Where this repository differs from Microsoft
 
-- The person or system a sentence already claims acted **MUST** be its subject, in the active voice.
-- You **MUST** keep the passive where the text claims nobody, because the actor may be unknown, beside the point, or
-  named somewhere this sentence should not name it.
-- A passive that softens an obligation **MUST NOT** stand.
-- Prose **MUST** run in the present tense, and *will* **MUST** wait for something that genuinely happens later.
-- An instruction **MUST** read as a command.
-- A commitment **MUST** say *we*, and anything addressed to somebody **MUST** say *you*.
-- The common case **MUST** come first and the exception after it.
-- A heading **MUST** carry the point, in sentence case.
+- Spelling **MUST** be British.
+- An em dash **MUST NOT** appear. A full stop, a comma or a colon replaces it.
+- Prose **MUST** wrap at 120 columns, counted in characters. A table row and a link definition **MUST NOT** wrap.
+- *We* **MUST** appear only in a commitment in a policy or a standard. Everywhere else the text **MUST** say *you*, or
+  name the tool, the framework or the corpus.
+- A framework term (corpus, record, type, tier, layer, export, plugin) **MUST** have a gloss on its first use on each
+  page.
+- A figure of speech **MUST NOT** appear.
+- A claim **MUST** give at most one reason.
+- A contrast (*rather than*, *instead of*) **MUST** appear only where the reader already holds the wrong idea. A
+  contrast inside a clause **MUST** stay, because it names what the clause forbids.
+- One thing **MUST** have one name everywhere.
 
-### Carry one thing at a time
+### What prose must not change
 
-- A sentence **MUST** carry one idea, and an instruction **MUST** carry one step.
-- A sentence holding both an obligation and its justification **MUST** split in two, and two steps joined by *and*
-  **MUST** split too.
-- An instruction **SHOULD** stay under about 20 words and other prose under about 25.
-- An interrupting aside **MUST NOT** count toward that length.
-- A condition **MUST** come before the step it guards.
-- Every article **MUST** stay.
-- A paragraph **SHOULD** stay under about six sentences.
-- Sentence length **SHOULD** vary on purpose, so a short sentence lands a point and a longer one carries a fact with
-  its condition.
+- You **MUST** leave alone an identifier, a path, a flag, a command, and the output a command printed.
+- You **MUST** leave alone a heading you may not rename, the H1 of a record, and every clause id.
+- You **MAY** reword a clause where the obligation is identical: the same subject, the same modal, the same threshold,
+  the same list, the same exception and the same cross-reference.
+- Rewording a clause **MUST** reword every quotation of it in the same change. `clause-quoted-faithfully` reports a
+  quotation that no longer matches.
+- You **MUST** leave alone the span between a `BEGIN GENERATED` marker and its `END GENERATED`. To move it, change the
+  schema or the frontmatter and run `kac generate`.
+- Where this standard and `.schema/` disagree, the schema **MUST** win, and you **MUST** report the contradiction.
+- You **MUST** name in your reply every rule you left behind on one of these grounds.
 
-### Leave one reading, not two
+### What stays true
 
-- *Only* and *not* **MUST** sit against the word they govern.
-- A pronoun **MUST** point at a noun, and you **MUST** repeat the noun where the referent is not obvious.
-- You **MUST** leave a pronoun alone where its referent is obvious, because the repair costs a manufactured subject and
-  a run of them reads as a tic.
-- *One*, *this*, *that* and *it* count as pronouns under that rule, and a definition **MUST NOT** open on a pronoun.
-- Every clause **MUST** carry its own verb.
-- A noun string **MUST NOT** run longer than three words.
-- A sentence an *and* or an *or* can group two ways **MUST** say which parts it joins, and *both...and* and
-  *either...or* cost nothing.
-
-### Take the mark that states the relation
-
-- An em dash **MUST NOT** survive, because a dash separates without saying how the two parts relate.
-- You **MUST** replace it with the mark that states the relation, and the sentence **MAY** read best with the mark
-  simply gone.
-- An interrupting aside holding its own commas **MUST** take parentheses, and you **SHOULD** use parentheses sparingly.
-- A colon **MUST** point forward, so that what follows completes what precedes: a list, an example, a reason, a
-  consequence, a count or a definition.
-- A colon standing in for a verb or a conjunction **MUST NOT** stand.
-- An en dash **MUST** mark a range or a pair, as in `35–45 words` and `client–server`.
-- A full stop **MUST** replace a semicolon that offers itself, a second mark where the sentence already carries a
-  colon, and any mark the container reserves.
-- One semicolon **MAY** survive: the pair joining a statement to its exact negation, sharing the verb it negates.
-- You **MUST** write an alternative out, so *a, b, or both* replaces *and/or*.
-- Anything in parentheses **MUST** be a whole grammatical unit, and a plural written *(s)* never is.
-- A contraction **SHOULD** appear where speech would use one, and the surface a document sits on decides how formal it
-  is.
-- Quotes **MUST** be straight.
-
-### Use the real words
-
-- You **MUST** write the real symbol, path, flag or command name, because the codebase is the word list.
-- You **SHOULD** swap a category for the things inside it, cutting nothing and simplifying nothing.
-- A figure of speech **MUST** say something the plain word does not, or go.
-- The short everyday word **MUST** win, so *use* beats *utilize* and *help* beats *facilitate*.
-- One thing **MUST** carry one name everywhere, because two names read as two things.
-- A precise term such as *idempotent* or *trust boundary* **MUST** carry a gloss on first use.
-
-### Cut what the sentence survives without
-
-- You **MUST** cut any word the sentence survives without, and keep any word that disambiguates.
-- *Simply*, *of course*, *seamless*, *robust*, *comprehensive*, *leverage*, *delve into*, *a tapestry of*, *pivotal*,
-  *cutting-edge*, *serves as* and *it is worth mentioning* **MUST** go on sight.
-- A hedge stack and an adverb propping up a weak verb **MUST** go, and an adverb carrying its own meaning **MUST** stay.
-- A claim **MUST** carry one reason and no second clause explaining the first.
-- You **MUST** say what you found, so *three broken links* beats *a number of issues*.
-- A sentence that could appear unchanged in another project's documentation **MUST** go, because it says nothing about
-  this one.
-
-### Watch the shape
-
-- A sentence **MUST** rest on a contrast only where the reader would otherwise take the wrong reading.
-- You **MUST** count the contrasts before you finish, over `rather than`, `, not ` and `, never `, and they **SHOULD**
-  come under 5 per 1000 words of prose.
-- Examples **MUST** run to the honest number: two where two will do, four where four is true.
-- A section **MUST** end on a fact, and a paragraph **MUST** too.
-- A last sentence restating the paragraph in a better-sounding shape **MUST** go.
-- A bold lead-in **MUST** open a list item or a paragraph with new detail following it, and a bold span **MUST NOT**
-  close inside a sentence.
-- A label **MAY** be a verbless phrase, and **MUST** take a colon before a value and a full stop before sentences.
-- A link label opening a line **MUST** carry a value of two words or more, because Markdown reads `[pol-AGNT]: gate` as
-  a link reference definition and the line disappears from the page.
-- A footnote closing a section **MUST** be a whole line in italic opening on a bold label, wrapped in underscores.
-- A bold lead-in **MAY** carry two steps, because splitting it moves half the instruction outside the emphasis.
-- Bold inside a paragraph **MUST** fall on the term and **MUST NOT** fall on the claim.
-- Italics **MAY** mark the word a speaker would stress, written with asterisks, and a page of emphasis emphasises
-  nothing.
-- An emoji **MUST NOT** decorate prose, and a tick or a cross marking a good-and-bad pair counts as a label.
-- A numbered list **MUST** appear only where the order carries meaning.
-- A list **SHOULD** open on a sentence saying what the items are, with the items parallel, and **MAY** open without a
-  stem where the items speak for themselves.
-- Markdown prose **MUST** wrap at 120 columns, which `.editorconfig` states and no check enforces.
-- A table row and a link reference definition **MUST NOT** wrap, because a URL cannot be broken.
-- A sweep for an over-long line **MUST** count characters, because a byte count reports a violation that is not there.
-
-### Write what stays true
-
-- Prose **MUST** describe what is, and **MUST NOT** read as a correction of what was.
-- Prose **MUST** describe what exists today, and agreed but unbuilt work **MUST** go to the issue tracker instead.
+- Prose **MUST** describe what exists today. Agreed but unbuilt work **MUST** go to the issue tracker.
 - A schema rule the tool does not implement **MUST** be written as declared and not running.
-- Change history **MUST** stay in the commit message and the changelog, which are the two documents whose subject is
-  change.
-- A released changelog entry **MUST** keep the tense it shipped with.
-- A count **MUST** name the command that reports it, unless decision rather than accumulation fixes the set.
-- A count that grows as the codebase grows **MUST** give way to that command, and **MUST NOT** stand beside it.
-- A number making an argument about cost **MUST NOT** read as a count.
-- Reasoning that lives elsewhere **MUST** carry a citation and not a restatement, because nobody updates a copy.
-- A paragraph belonging in two documents **MUST** be written once, in `knowledge-as-code/`, and cited from both.
-
-### Rewrite the block, not the diff
-
-- You **MUST** carry a fact into prose that already exists by writing the whole block again with that fact in it.
-- A reader **MUST NOT** be able to point at the sentence you added, because a sentence anyone can point at was appended.
-- You **MUST** read a block whole and write it again where its diff holds only added lines.
-- A fact belonging to a list the block already carries **MUST** join that list, and **MUST NOT** open a paragraph of
-  its own.
+- A count **MUST** name the command or the test that reports it, unless a decision fixes the set.
+- Reasoning that lives elsewhere **MUST** be cited, not restated.
+- You **MUST** rewrite the whole block when you add a fact to existing prose.
 
 ### Commit messages and pull requests
 
-- A subject line **MUST** say what changed, imperative and with no full stop.
-- The body **MUST** say why, and it is the one place where describing what used to be true is correct.
-- A pull request body **MUST** carry the why and the evidence, and **MUST NOT** retell the diff.
-- A review **MUST** address the change and not the person, **SHOULD** ask rather than assert where the reviewer might
-  be wrong, and **SHOULD** say what would change their mind.
-
-### Rules that bind nothing here
-
-- You **MAY** split an infinitive.
-- A sentence **MAY** open with *and* or *but*, and **MAY** end on a preposition.
-- A word **MAY** repeat rather than give way to a synonym.
+- A subject line **MUST** say what changed, in the imperative, with no full stop.
+- The body **MUST** say why. It is the one place that may describe what used to be true.
+- A pull request body **MUST** give the reason and the evidence, and **MUST NOT** retell the diff.
 
 ## Examples
 
 ```
 ✅ Good
-We cannot hold anyone to a rule if we cannot tell who acted.
-The validator reports a missing id.
-Remove the packet from the box.
+`validate` reports a missing marker.
+Only an error fails the build.
+`pack` zips `.dist/export/` into a `.nupkg` under `.dist/package/`.
+Two separators extend an id. `.` selects a part. `:` selects a corpus.
 To delete the document, click Delete.
-The index is stale: three records changed.
-An agent can write code, change configuration, draft documentation, or report something it noticed.
-Building it in costs a fraction of fixing it later.
-**Schema in TypeScript.** Tables live in one file.
-[pol-AGNT] sets the acceptance gate.
 
 ❌ Avoid
-Attribution is what makes this enforceable.
-The validator will report a missing id.
-The packet should be removed from the box.
+`validate` holds a corpus to carrying the markers this writes between.
+Failing rather than warning is the whole of the trade.
+A directory is not something another repository can depend on.
+Two separators reach past an id, each with one job.
 Click Delete to remove the document.
-If you are coming from automation: you describe conditions.
-Work produced by an AI agent enters our estate as a proposal.
-Building it in costs a fraction of fixing it later, because the expensive failures are structural.
-**Performance:** Performance improved.
-[pol-AGNT]: gate
 ```
 
-The avoided lines each cost the reader a second pass. The passive hides who acted, the future tense describes a
-validator that runs today, the trailing condition is read after the step it guards, the colon completes nothing, the
-category names no members, the second reason explains what the first already did, the bold label repeats itself, and
-the last line is a link reference definition that disappears from the page.
+Each line under ❌ Avoid makes the reader read it twice.
+
+- A figurative verb hides the action.
+- A generalisation about the design says nothing the reader can act on.
+- A sentence saying what a thing is not never says what it is.
+- A step written before its purpose is acted on before the purpose is read.
 
 ## Conformance checklist
 
-- [ ] The longest sentence can be read aloud in one breath.
-- [ ] No more than one crafted line closes two sections in a row.
-- [ ] Reading the draft cold, you cannot tell which paragraph was written last.
-- [ ] No em dash survives, and every semicolon joins a statement to its exact negation.
-- [ ] Contrasts counted over `rather than`, `, not ` and `, never ` come under 5 per 1000 words of prose.
-- [ ] Every instruction is a command, under about 20 words, with its condition first.
-- [ ] Every count names the command that reports it.
-- [ ] Every line of prose outside a table or a link definition is under 120 columns, counted in characters.
-- [ ] No hand edit sits between a `BEGIN GENERATED` marker and its `END GENERATED`.
-- [ ] Every rule left behind on a prose-stops-here ground is named in the reply.
+- [ ] Every verb is literal. No "holds", "carries", "names", "answers", "reaches" or "seals" replaces a plain verb.
+- [ ] Every section opens on the rule or the fact, not the reason.
+- [ ] Every contrast left standing is one a reader needs, and every clause kept the one it had.
+- [ ] Every heading names a topic.
+- [ ] No em dash survives. Spelling is British.
+- [ ] Every line of prose outside a table or a link definition is under 120 characters.
+- [ ] No hand edit sits inside a generated block.
+- [ ] Every count names what reports it.
+- [ ] Every rule left behind is named in the reply.
 
 ## Rationale and provenance
 
-Markdown outnumbers code in this repository, and `git ls-files` run against `.md` and against `.cs` reports by how
-much. How a sentence reads is therefore a property of the product rather than a matter of taste.
+Markdown outnumbers code in this repository, so how a sentence reads is a property of the product. The Microsoft
+Writing Style Guide is the base because it is public, complete, and known in depth by the models that write here. A
+short list of local changes works better than a long local restatement, because a model imitates a known guide more
+closely than it follows a rulebook.
 
-The rules an agent follows here reach it through the writing skills under `.claude/skills/`, which stand on their own
-and name no record. This standard states the same rules as a record, so the estate can see what those skills were
-written against and cite it the way it cites any other rule. The two are kept independent on purpose: a skill has to
-work in a checkout that holds no corpus.
+The writing skills under `.claude/skills/` state the same rules for an agent and cite no record, so a skill works in a
+checkout with no corpus in it. This standard is the record the estate cites.
 
 ## Sources and further reading
 
-- **Normative.** [RFC 8174] gives an RFC 2119 keyword its meaning only in capitals, so a lower-case *must* above binds
-  nobody.
+- **Normative.** [Microsoft Writing Style Guide] is the base style.
+- **Normative.** [RFC 8174] gives an RFC 2119 keyword its meaning only in capitals.
 
 ## Changelog
 
+- 2026-09-11: replaced the restated rulebook with the Microsoft Writing Style Guide as the base, plus the local changes.
 - 2026-09-06: took the wrapping, generated-block, write-what-exists and schema-precedence rules that `CLAUDE.md` had
   been stating a second time.
 - 2026-09-02: initial version.
 
+[Microsoft Writing Style Guide]: https://learn.microsoft.com/style-guide/welcome/
 [RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174

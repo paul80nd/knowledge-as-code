@@ -16,11 +16,11 @@ tags: [ commits, provenance, version-control ]
 
 `Deviation: dev-unsigned-commits` `ACTIVE`
 
-No commit in this repository carries a signature, and nothing rejects one that does not.
+No commit in this repository is signed, and nothing rejects one that is not.
 
 ## What we are doing instead
 
-A commit carries the name and address git was configured with, and GitHub shows the account that pushed it. A merge
+A commit records the name and address git was configured with, and GitHub shows the account that pushed it. A merge
 into `main` goes through a pull request, so the account behind a change is recorded twice: on the commit and on the
 merge.
 
@@ -30,14 +30,14 @@ no more verifiable than the author line above it.
 ## Why we need it
 
 Signing means a key on the maintainer's machine, a key in every agent's environment, and a branch rule that rejects an
-unsigned push. The middle one is the problem: much of this repository is written by agents running in sandboxes, and
-handing each a signing key spreads the key rather than protecting the history.
+unsigned push. The middle one is the problem. Much of this repository is written by agents running in sandboxes.
+Handing each one a signing key spreads the key and does not protect the history.
 
 ## What compensates
 
 * Every merge into `main` is a pull request from a named account, and the branch rule refuses a direct push.
-* GitHub records the account that pushed each commit, separately from the author line the commit carries.
-* The repository is public, so a rewritten history is visible to anybody holding a clone.
+* GitHub records the account that pushed each commit, separately from the author line in the commit.
+* The repository is public, so a rewritten history is visible to anybody with a clone.
 * Nothing here is deployed from a checkout. What ships is built by a workflow from the commit on `main`.
 
 ## How it closes

@@ -1,7 +1,7 @@
 # Running it in CI
 
-Two commands hold a corpus to its schema on every pull request, so a broken cross-reference fails CI. A corpus is one
-repository of knowledge records kept in git, and a record is one Markdown document in it, filed under a type. Both
+Two commands check a corpus against its schema on every pull request, so a broken cross-reference fails CI. A corpus is
+one repository of knowledge records kept in git, and a record is one Markdown document in it, filed under a type. Both
 commands run from inside the corpus.
 
 | Command                | Fails when                                                                  |
@@ -10,8 +10,8 @@ commands run from inside the corpus.
 | `kac generate --check` | a generated file no longer matches the records and schema it was built from |
 
 [Checks](design/checks.md) is the page for adding a check. A corpus that ships an agent plugin adds
-[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks the export or the bundle
-fails the pull request. [Automation](framework/automation.md) says what the checks are for.
+[`export`](cli/export.md) and [`bundle`](cli/bundle.md) beside the two, so a change that breaks either one fails the
+pull request. [Automation](framework/automation.md) says what the checks are for.
 
 ## Pin the tool first
 
@@ -23,17 +23,17 @@ dotnet new tool-manifest
 dotnet tool install KnowledgeAsCode.Tool
 ```
 
-That writes `.config/dotnet-tools.json` and names the version in it. CI restores from that file, so every
-machine runs the same `kac`.
+That writes `.config/dotnet-tools.json` with the version in it. CI restores from that file, so every machine runs the
+same `kac`.
 
 ```bash
 dotnet tool restore
 dotnet tool run kac validate
 ```
 
-## CI never commits, and checks out with git
+## Read-only permission
 
-**CI never commits.** `generate --check` recomputes every generated file, names the ones that differ, and exits `1`. It
+**CI never commits.** `generate --check` recomputes every generated file, lists the ones that differ, and exits `1`. It
 writes nothing. Give the job read-only permission. Run `kac generate` on your own machine and commit what it writes.
 
 ```text
@@ -42,9 +42,11 @@ generated files are stale. These differ from the schema/frontmatter:
 run:  kac generate
 ```
 
-**Check out with git, not a tarball.** `kac` lists a corpus with `git ls-files`, so `.gitignore` and the other exclude
-files are honoured. A working tree with no `.git/` falls back to a directory walk, which honours none of them. Every
-standard checkout action is fine. A downloaded archive is not.
+## Checking out with git
+
+Check out with git, not a tarball. `kac` lists a corpus with `git ls-files`, so `.gitignore` and the other exclude files
+count. A working tree with no `.git/` falls back to a directory walk, which obeys none of them. Every standard checkout
+action is fine. A downloaded archive is not.
 
 ## GitHub Actions
 
@@ -131,11 +133,11 @@ validated:
 dotnet tool run kac restore     # each consumed corpus, into .imports/<shortcode>/
 ```
 
-`.imports/` is not committed, so a fresh checkout holds none of it. Run [`restore`](cli/restore.md) as the first step
-of the job, exactly as a build restores packages.
+`.imports/` is not committed, so a fresh checkout holds none of it. Run [`restore`](cli/restore.md) as the first step of
+the job, exactly as a build restores packages.
 
 A private feed needs a token, which the job reads from `KAC_REGISTRY_TOKEN`. In GitHub Actions the built-in
-`github.token` reaches GitHub Packages in the same organisation, and it needs `packages: read`.
+`github.token` reaches GitHub Packages in the same organisation, and the job needs `packages: read`.
 
 A `source:` naming a folder rather than a registry needs no token, and the producer has to have packed into that folder
 before this step runs. Two corpora in one repository take that form: build the producer's package first, in its own
@@ -153,9 +155,9 @@ dotnet tool run kac export      # the corpus as data, into .dist/export/
 dotnet tool run kac bundle      # that export plus .plugin/, into .dist/plugin/
 ```
 
-Each replaces its own directory under `.dist/` and leaves the other alone, so a `.gitignore` holding `.dist/` keeps both
-out of the tree. Running them in CI proves the corpus still exports and still assembles. It publishes nothing:
-pushing the result anywhere is a separate job, and one that needs credentials this one should not have.
+Each replaces its own directory under `.dist/` and leaves the other alone, so a `.gitignore` listing `.dist/` keeps both
+out of the tree. Running them in CI proves the corpus still exports and still assembles. It publishes nothing. Pushing
+the result anywhere is a separate job, and one that needs credentials this one should not have.
 
 [`bundle`](cli/bundle.md) validates nothing it assembles, so validate both the plugin and the marketplace above it. The
 Claude Code CLI has to be on the runner first:
@@ -174,15 +176,15 @@ A corpus another corpus consumes runs one more command, and it reads the same ex
 dotnet tool run kac pack       # the export, sealed into .dist/package/
 ```
 
-[`pack`](cli/pack.md) writes a `.nupkg`, which is a zip a registry stores under the corpus name and
-`content-version`. Both GitHub Packages and Azure DevOps Artifacts take one. Nothing that reads the result needs a
-NuGet client.
+[`pack`](cli/pack.md) writes a `.nupkg`, which is a zip a registry stores under the corpus name and its
+`content-version`. Both GitHub Packages and Azure DevOps Artifacts take one. Nothing that reads the result needs a NuGet
+client.
 
-Run `pack` in the gate, where it proves the corpus can still be packaged. Push it from a separate job, because that
-job needs a credential the gate should not hold.
+Run `pack` in the gate, where it proves the corpus can still be packaged. Push it from a separate job, because that job
+needs a credential the gate should not hold.
 
-A published version is never replaced, so pushing one the registry already holds fails rather than overwriting it.
-That failure means a `content-version` somebody forgot to bump:
+A published version is never replaced, so pushing one the registry already holds fails rather than overwriting it. That
+failure means a `content-version` somebody forgot to bump:
 
 ```bash
 VERSION=$(jq -r '.contentVersion' .dist/export/manifest.json)

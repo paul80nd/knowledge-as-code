@@ -24,9 +24,9 @@ workflows already have.
 
 ## What we are doing instead
 
-The workflows fail closed and deny by default: a job declares the permission it needs, and holds none it did not ask
-for. `.github/SECURITY.md` says how CI contains what it runs, and names what is in scope for a report. Both are
-accurate and neither is named by a standard.
+The workflows fail closed and deny by default: a job declares the permission it needs, and has none it did not ask
+for. `.github/SECURITY.md` says how CI contains what it runs, and states what is in scope for a report. Both are
+accurate, and no standard cites either.
 
 A security requirement arrives as a comment on a pull request, from the maintainer who also wrote the change. Nothing
 identifies a change as higher risk before the work starts.
@@ -34,15 +34,15 @@ identifies a change as higher risk before the work starts.
 ## Why we need it
 
 Threat modelling a documentation tool that reads a repository and writes files back into it produces a short list, and
-`.github/SECURITY.md` already carries it. Turning that into a standard, a risk triage and a design review is real work.
-One person holding all three roles gets little from the separation.
+`.github/SECURITY.md` already contains it. Turning that into a standard, a risk triage and a design review is real
+work. One person in all three roles gets little from the separation.
 
 ## What compensates
 
-* [std-CI] holds each job to the least permission it needs. ctl-0003 says actionlint checks no such thing, so a
+* [std-CI] limits each job to the least permission it needs. [ctl-0003] says actionlint checks no such thing, so a
   reviewer does.
 * `.github/SECURITY.md` is public, so a reader can see what CI contains and where a report is in scope.
-* `eng:std-CSSTY` turns the analysers on, so the security rules they carry fail a build rather than a reviewer.
+* `eng:std-CSSTY` turns the analysers on, so their security rules fail a build without a reviewer looking.
 
 ## How it closes
 
@@ -57,8 +57,9 @@ The `kac` tool, the workflows, and the documentation site's build.
 
 ## Related
 
-* [dev-one-maintainer] is why one person holds the author, reviewer and approver roles.
-* [std-CI] carries the permission rules a standard would cite.
+* [dev-one-maintainer] is why one person fills the author, reviewer and approver roles.
+* [std-CI] states the permission rules a standard would cite.
 
+[ctl-0003]: ../controls/0003-actionlint.md
 [dev-one-maintainer]: one-maintainer.md
 [std-CI]: ../standards/workflows.md

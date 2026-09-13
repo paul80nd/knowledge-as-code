@@ -13,67 +13,68 @@ tags: [ data-protection, dependencies, obligation-levels, privacy, secrets ]
 
 `Glossary: gls-engineering` `DRAFT`
 
-The words this estate uses about itself, which the records here assume.
+The words this estate uses about itself. The records here assume these meanings.
 
 ## Scope
 
-The estate: what our systems are built from, what they hold, and what we owe the people that data describes. A word
-about the framework this corpus runs on belongs to the framework's own glossary, which every corpus shares.
+This glossary covers the estate: what our systems are built from, what data they store, and our obligations to the
+people that data describes. A word about the framework this corpus runs on belongs in the framework's own glossary,
+which every corpus shares.
 
-An entry here may cite a record, which the shared glossary may not. Where a policy turns on a word, the entry names the
-clause that owns the detail.
+An entry here may cite a record; the shared glossary may not. Where a policy depends on a word, the entry cites the
+clause that states the detail.
 
 ## Terms
 
 ### Component
 
 A third-party or open-source part of a system we did not write: a library, a base image, a build tool, or a service we
-call. Most reach us through a package manager such as npm or NuGet, and the whole route in is the supply chain
-[pol-TRUS] governs.
+call. Most arrive through a package manager such as npm or NuGet. That route in is the supply chain [pol-TRUS]
+governs.
 
-**Not:** a service we build. A component is admitted from outside and screened before we adopt it ([pol-TRUS].SCREEN).
+**Not:** a service we build. A component comes from outside, and is screened before we adopt it ([pol-TRUS].SCREEN).
 
 ### Could
 
-The weakest of the four levels a clause carries. It names something we would like and have not committed to. A team
-asking to pick one up under continuous improvement is told yes, and the honest answer on how much time is a little.
+The weakest obligation level a clause takes, below `SHOULD`, `MUST` and `MUST NOT`. It marks something we would like and
+have not committed to. A team asking to take one on under continuous improvement is told yes, and that it is worth a
+little time.
 
-**Not:** RFC 2119's MAY, which expresses no preference either way. A `COULD` here leans towards yes.
+**Not:** RFC 2119's MAY, which expresses no preference either way. A `COULD` here expresses a preference for doing it.
 
 ### Must
 
-The level a clause carries where a framework we are obliged to requires it, or where not doing it would be reckless. No
-team negotiates one down, and departing from one is a recorded deviation ([pol-DEVI]).
+The level a clause takes where a framework we are obliged to requires it, or where not doing it would be reckless. No
+team negotiates one down. Departing from one is a recorded deviation ([pol-DEVI]).
 
-**Not:** everything we would like. A `MUST` is what we are held to, and the three levels below it are where good
-practice lives.
+**Not:** everything we would like. A `MUST` binds us. `SHOULD` and `COULD` state good practice.
 
 ### Must not
 
-A `MUST` written as a prohibition, carrying the same weight and answering the same test. Some admit no deviation at all,
-and the Exceptions section of the policy carrying one says which.
+A `MUST` written as a prohibition, with the same weight and the same test. Some prohibitions admit no deviation at all.
+A policy lists those in its Exceptions section.
 
-**Not:** a firmly worded `SHOULD`. Softening a prohibition in practice is how a policy stops being one.
+**Not:** a firmly worded `SHOULD`. A policy whose prohibition is softened in practice is no longer a policy.
 
 ### Personal data
 
-Information about a living person who is identified, or who could be identified from it together with anything else we
-hold. PII is the same thing under another name.
+Information about a living person who is identified, or who could be identified from it combined with anything else we
+store. PII is another name for the same thing.
 
-**Not:** sensitive personal data, which is a narrow set inside it. A name, a postal address and an email address are
+**Not:** sensitive personal data, which is a narrower set inside it. A name, a postal address and an email address are
 personal data, and none of them is sensitive.
 
 ### Secret
 
-A value that grants access and would let somebody in if it leaked: a password, an API key, a session token, a
-certificate private key, a connection string. [pol-SCRT] says where one is held.
+A value that grants access, so a leak lets somebody in: a password, an API key, a session token, a certificate private
+key, a connection string. [pol-SCRT] states where one is stored.
 
 **Not:** sensitive data. A secret protects data. It is not the data it protects.
 
 ### Sensitive data
 
 Data whose exposure would cause harm, whether or not it describes a person: an unpublished figure, a security finding,
-a customer list. [pol-DATA].CLASS owns the classes and decides which data falls in which.
+a customer list. [pol-DATA].CLASS defines the classes and states which data belongs to each.
 
 **Not:** sensitive personal data. A security finding is sensitive and describes nobody, so no rights attach to it.
 
@@ -81,27 +82,26 @@ a customer list. [pol-DATA].CLASS owns the classes and decides which data falls 
 
 The special categories [UK GDPR] sets apart: health, sex life, sexual orientation, racial or ethnic origin, political
 opinion, religious belief, trade union membership, genetic data, and biometric data used to identify someone. This
-estate handles criminal offence data the same way.
+estate treats criminal offence data the same way.
 
 **Not:** personal data, which is the wider class. [pol-DATA].LOGS bars only this narrower set from a log line.
 
 ### Should
 
-The level a clause carries where a capable engineering function would do this, and we would actively spend time
-reaching it. A team asking to pick one up under continuous improvement is told yes, and it is worth real time.
+The level a clause takes where a capable engineering function would do this, and we would spend time to meet it. A team
+asking to take one on under continuous improvement is told yes, and that it is worth real time.
 
-**Not:** a `MUST` we are being polite about. Nothing obliges us to a `SHOULD`, and a team that has not reached one yet
-is maturing rather than in breach.
+**Not:** a `MUST` we are being polite about. Nothing obliges us to a `SHOULD`. A team that has not met one yet is
+maturing, and is not in breach.
 
 ### We
 
-The engineering function, working as one technology team within its roles. A clause binds the function rather than any
-one team. It reaches a person through whoever owns the thing it governs, and a thing nobody owns is the gap that clause
-has just found. Adherence is joint: you may not be the one doing the work but you are still the one who says so when it
-is missing or broken.
+The engineering function, working as one technology team within its roles. A clause binds the function, not any one
+team. It applies to a person through whoever owns the thing it governs, and a thing nobody owns is a gap that clause has
+found. Adherence is joint: somebody else might do the work but you still say so when it is missing or broken.
 
-**Not:** the team that happens to be reading. A platform, a shared service or a specialist answers some clauses on
-everybody's behalf, and none of that makes an unanswered clause somebody else's problem.
+**Not:** the team that happens to be reading. A platform, a shared service or a specialist meets some clauses on
+everybody's behalf, and an unanswered clause is still not somebody else's problem.
 
 [pol-DATA]: ../policies/security/data-data-protection.md#clauses
 [pol-DEVI]: ../policies/governance/devi-deviations-are-recorded.md#clauses

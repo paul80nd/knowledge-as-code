@@ -20,8 +20,8 @@ tags: [ dependencies, provenance, supply-chain ]
 We know what our software is made of, and where every artefact we ship came from.
 
 Most of what we ship, we did not write. When a vulnerability is disclosed, the first question is whether we use the
-affected component. A dependency we cannot list is a question we cannot answer. An artefact whose origin we cannot
-establish is one we are trusting on faith.
+affected component. A dependency missing from the inventory leaves that question open. Where we cannot establish an
+artefact's origin, we have no evidence of what is in it.
 
 ## Scope
 
@@ -29,16 +29,16 @@ All third-party and open-source components used by systems we build or operate, 
 images and build-time tooling. It also covers the third-party and cloud services those systems depend on, and every
 artefact we deploy, whether we built it or obtained it from someone else.
 
-_Boundary: this policy governs what we admit into the estate and what we can prove about it. Finding, prioritising and
-closing the vulnerabilities in what we have admitted is [pol-VURM]'s, including whether a finding blocks a release. The
-route an artefact takes into production, and the approval behind it, is [pol-PIPE]'s._
+_Boundary: this policy governs what we admit into the estate and what we can prove about it. [pol-VURM] owns finding,
+prioritising and closing the vulnerabilities in what we have admitted, including whether a finding blocks a release.
+[pol-PIPE] owns the route an artefact takes into production and the approval behind it._
 
 ## Clauses
 
 | Id        | Clause                                                                                                                                       | Alignment                                     |
 |-----------|----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
 | `INVENT`  | **MUST** maintain an inventory of what each solution depends on, naming each component and the version in use                                | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
-| `PINNED`  | **MUST** hold the exact versions a build resolved in version control, so two builds of the same source take the same components              | [ISO 27001:2022].A.5.21                       |
+| `PINNED`  | **MUST** keep the exact versions a build resolved in version control, so two builds of the same source take the same components              | [ISO 27001:2022].A.5.21                       |
 | `SCREEN`  | **MUST** screen a component for known vulnerabilities before we adopt it                                                                     | [ISO 27001:2022].A.5.21, [NIST SSDF 1.1].PW.4 |
 | `LICENCE` | **MUST** screen a component's licence for terms we cannot accept before we adopt it                                                          | [ISO 27001:2022].A.5.32                       |
 | `OBLIGE`  | **MUST** honour the terms of a licence for as long as we ship what it covers                                                                 | [ISO 27001:2022].A.5.32                       |
@@ -47,7 +47,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 | `SOURCE`  | **MUST** obtain components from sources we have reason to trust                                                                              | [ISO 27001:2022].A.5.19, [NIST SSDF 1.1].PW.4 |
 | `CLOUD`   | **MUST** establish which security responsibilities we hold and which the provider holds, before adopting a service                           | [ISO 27001:2022].A.5.23                       |
 | `EXIT`    | **MUST** know how we would leave a service before we depend on it                                                                            | [ISO 27001:2022].A.5.23                       |
-| `REPO`    | **MUST** hold build artefacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
+| `REPO`    | **MUST** keep build artefacts in a managed repository, versioned and retained so a release can be identified, rolled back and examined later | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.3 |
 | `TRACE`   | **MUST** be able to trace a deployed artefact to the change and the build that produced it. See [pol-PIPE]                                   | [ISO 27001:2022].A.5.21, [SLSA 1.1].build-L1  |
 | `REVIEW`  | **MUST** review the components and services we depend on periodically, not only when we adopt them                                           | [ISO 27001:2022].A.5.22                       |
 | `SUPCHG`  | **MUST** notice when a component or service we depend on changes under us, and decide what it means for us                                   | [ISO 27001:2022].A.5.22                       |
@@ -57,7 +57,7 @@ route an artefact takes into production, and the approval behind it, is [pol-PIP
 
 ## Exceptions
 
-A component that can no longer be sourced or maintained may be retained under a recorded deviation ([pol-DEVI]). The
+A component that can no longer be sourced or maintained is kept only under a recorded deviation ([pol-DEVI]). The
 deviation names the risk owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md

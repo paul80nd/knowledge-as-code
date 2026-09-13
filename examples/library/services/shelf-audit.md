@@ -21,11 +21,11 @@ A nightly outside-in check that every branch's catalogue pages respond, reported
 
 ## What it does
 
-Once a night it walks the list of branch catalogue URLs and checks each one. The check confirms that both the bare and
+Once a night it reads the list of branch catalogue URLs and checks each one. The check confirms that both the bare and
 `www` forms respond over HTTPS. It collates the results and emails them.
 
-It is the estate's only outside-in check that the catalogue is reachable. Nothing consumes its output except a mailbox.
-Whether an unread nightly email is the right home for that signal is the question behind its deprecation.
+It is the estate's only outside-in check that the catalogue is reachable. A mailbox is the only consumer of its output.
+Its deprecation rests on one question: whether an unread nightly email is the right place for that signal.
 
 ## Where it lives
 
@@ -33,7 +33,7 @@ Whether an unread nightly email is the right home for that signal is the questio
 * **Platform**: a PowerShell function and a workflow app, deployed together
 * **Deployed as**: both, by Terraform from within the same repository
 
-**It is deployed unlike anything else in the estate.** There is no release pipeline. The repository holds its own
+**Its deployment is unlike anything else in the estate.** There is no release pipeline. The repository contains its own
 Terraform configuration, which somebody applies from a workstation against a dedicated workspace. It runs in a
 pay-as-you-go subscription, while the rest of the estate uses a subscription per environment.
 
@@ -61,6 +61,6 @@ reader would.
 
 * **Schedule**: nightly.
 * **Output**: an email. Nothing else reads the result, and no alert is raised from it.
-* **Criticality**: `supporting`. Nothing a reader touches depends on it. Where it stops, the only loss is the signal
-  itself. It is also the check that would notice the catalogue being down, so its own silence is indistinguishable from
-  good news.
+* **Criticality**: `supporting`. Nothing a reader touches depends on it. If it stops, the only loss is the signal
+  itself. It is also the check that would notice the catalogue being down, so its own failure looks the same as a night
+  with nothing to report.

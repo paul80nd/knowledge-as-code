@@ -20,15 +20,15 @@ tags: [ comments, csharp, review ]
 
 ## What I saw
 
-A new method landed between an existing comment and the method that comment described. The comment then read as
+A new method was added between an existing comment and the method that comment described. The comment then read as
 documentation for the new method, and the old method had none. It happened twice in one sitting.
 
 ## Context
 
-Seen in `tooling/kac.core`, where the house style puts a plain `//` comment above a declaration. The compiler never
-inspects one of those, and `Exporter.cs` is the only file here using `/// <summary>` at all.
+Seen in `tooling/kac.core`, where the house style puts a plain `//` comment above a declaration. The compiler does not
+check a plain comment. Only `Exporter.cs` and `Reports.cs` use `/// <summary>`.
 
 ## Why it might matter
 
-Nothing reports it: a comment binds to whatever declaration follows it, and that is valid C#. The build stays green,
-both methods look documented, and a reader trusts a comment describing the wrong code.
+Nothing reports the move. A plain comment describes whatever declaration follows it, and that is valid C#. The build
+stays green, both methods look documented, and a reader trusts a comment that describes the wrong code.

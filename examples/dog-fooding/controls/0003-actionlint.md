@@ -26,18 +26,23 @@ A workflow can be valid YAML and still not run.
 
 ## How it works
 
-The `lint` job installs actionlint at `v1.7.12` with `go install`, then runs it with no arguments. It walks every file
-under `.github/workflows/` and reads the syntax, the expressions and the inputs each action declares. The runner
-carries shellcheck, so actionlint hands it each `run:` block as well. actionlint runs on its own defaults, and this
-repository holds no configuration for it.
+The `lint` job installs actionlint at `v1.7.12` with `go install`, then runs it with no arguments. actionlint reads
+every file under `.github/workflows/`: the syntax, the expressions and the inputs each action declares. The runner has
+shellcheck installed, so actionlint passes each `run:` block to it as well. actionlint runs on its own defaults, and
+this repository has no configuration file for it.
 
 ## Coverage and gaps
 
-actionlint reports nothing about a permission a job holds and never uses, a credential written in the wrong place, or
-`.azuredevops/kac.yml` drifting from its GitHub twin. A reviewer is what catches those three, and they are most of
-what [std-CI] states: its permission, credential, pinning and publishing rules have no check here.
+actionlint reports nothing about these three faults:
 
-actionlint ships no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job.
+* a permission a job declares and never uses
+* a credential written in the wrong place
+* `.azuredevops/kac.yml` drifting from its GitHub counterpart
+
+A reviewer catches all three. Those faults are most of what [std-CI] states: its permission, credential, pinning and
+publishing rules have no check here.
+
+actionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job.
 
 [std-CI]: ../standards/workflows.md
 [std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main

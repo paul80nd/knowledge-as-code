@@ -17,15 +17,15 @@ tags: [ credentials, key-management, secrets ]
 
 ## Summary
 
-A service reads every secret from the managed store when it starts or when it needs one, using an identity granted to
-that service in that environment. Nothing else holds a secret.
+A service reads every secret from the managed store, at start-up or when it needs one. It authenticates with an
+identity granted to that service in that environment. Nothing else keeps a secret.
 
 ## Rules
 
 ### A secret comes from the store
 
 - A service **MUST** read every secret from the managed store, through an identity granted to the workload.
-- An environment below production **MUST** hold its own secrets, distinct from production's.
+- An environment below production **MUST** have its own secrets, distinct from production's.
 
 _**Covers:** [pol-ENVS].REUSE, [pol-SCRT].STORE_
 
@@ -33,7 +33,7 @@ _**Covers:** [pol-ENVS].REUSE, [pol-SCRT].STORE_
 
 - A repository **MUST NOT** contain a secret, in source, in a configuration file, in a pipeline definition or in a test
   fixture.
-- A build **MUST NOT** bake a secret into an artefact or an image.
+- A build **MUST NOT** embed a secret in an artefact or an image.
 - A service **MUST NOT** write a secret to a log, to a console, to an error message or to a support ticket.
 - A pipeline **MUST** run a secret scanner over the repository and its history, and fail on a finding.
 
@@ -65,20 +65,20 @@ writes the value into the image, so rotating it costs a rebuild and a redeploy.
 
 - [ ] The service starts with no secret in its repository and no secret in its image.
 - [ ] Every secret it reads resolves from the store through a workload identity.
-- [ ] Each secret in the store carries a rotation period, and the last rotation is within it.
+- [ ] Each secret in the store has a rotation period, and the last rotation is within it.
 - [ ] The pipeline runs a secret scanner over the repository and its history.
 - [ ] The production secrets are unreachable from any environment below production.
 - [ ] A search of the last 30 days of logs for each secret returns nothing.
 
 ## Rationale and provenance
 
-A secret in a repository is a secret in every clone, every fork and every backup of that repository, and rotating it
-does not reach any of them. Reading from the store at run time keeps rotation to one place.
+A secret in a repository is also in every clone, every fork and every backup of that repository. Rotating the copy in
+the repository changes none of them. Reading from the store at run time keeps rotation in one place.
 
 ## Sources and further reading
 
 - **Normative.** [NIST SP 800-57 Part 1 Rev. 5] sets the cryptoperiod a key's rotation period comes from. This standard
-  requires a period against every secret and names none.
+  requires a period against every secret, and states no figure.
 - **Informative.** [OWASP Secrets Management Cheat Sheet] covers the storage, distribution and detection practices
   these rules assume.
 

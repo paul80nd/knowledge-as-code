@@ -4,8 +4,8 @@
 where one publishes what the organisation is bound by and the others consume it. This page says which one to reach for,
 and what the second costs.
 
-A **corpus** is one repository of knowledge records kept in git, and a **record** is one Markdown document in it
-carrying YAML frontmatter above its prose.
+A **corpus** is one repository of knowledge records kept in git, and a **record** is one Markdown document in it with
+YAML frontmatter above its prose.
 
 ## Start with one corpus
 
@@ -42,11 +42,11 @@ Two of the three is not enough. A large corpus with one owner stays one corpus.
 
 ## What the split costs
 
-**The producer publishes and the consumer restores.** `kac export` and `kac pack` seal a version, and `kac restore`
+**The producer publishes and the consumer restores.** `kac export` and `kac pack` build a version, and `kac restore`
 fetches it. A pipeline that ran one command now runs three, and a fresh clone validates nothing until it has restored.
 
 **A version sits between the two corpora.** The consumer names a range and records what it resolved to, so a governance
-change reaches a team when that team takes it. That delay is the point, and it is still a thing to keep an eye on.
+change reaches a team when that team takes it. That delay is the point, and it is still worth watching.
 
 **A shortcode never changes.** The producer picks the word every downstream citation is written against, and renaming it
 would break repositories the producer cannot edit.
@@ -86,5 +86,5 @@ keep.
 
 ## Where to go next
 
-Staying with one corpus, read [Getting started](getting-started.md). Splitting, read
-[Imports](design/imports.md), which says how the mechanism works once you have chosen.
+Staying with one corpus? Read [Getting started](getting-started.md). Splitting? Read [Imports](design/imports.md), which
+says how the mechanism works once you have chosen.

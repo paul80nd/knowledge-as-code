@@ -21,11 +21,11 @@ The test framework two of the three test layers run on: the unit tests in `kac.t
 `kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature
 documents through the same runner, so one `dotnet test` command covers either project.
 
-`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` sit beside it in both projects. Neither is a choice of its
-own: they are what makes `dotnet test` find and run the tests.
+`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` are referenced beside it in both projects. They are what
+makes `dotnet test` find and run the tests, and neither was chosen on its own.
 
-The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program comparing `kac` output against
-committed goldens, and it reports its own results.
+The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output
+against committed goldens, and reports its own results.
 
 ## Status
 
@@ -37,12 +37,12 @@ committed goldens, and it reports its own results.
 
 ## Alternatives considered
 
-None. `kac.features` needs a runner Reqnroll binds to, and xUnit was already carrying the unit tests.
+None. `kac.features` needs a runner Reqnroll binds to, and xUnit already ran the unit tests.
 
 ## Licence and obligations
 
 Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it:
-the packages are test-only and no published artefact carries them.
+the packages are test-only, and no published artefact includes them.
 
 ## Related
 

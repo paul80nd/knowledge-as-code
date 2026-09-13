@@ -15,20 +15,20 @@ tags: [ github-pages, mkdocs ]
 
 `Service: svc-docs-site` `LIVE`
 
-The public documentation for `kac` and for the framework around it. MkDocs builds it from `docs/`, and GitHub Pages
-serves it.
+The documentation site is the public documentation for `kac` and for the framework around it. MkDocs builds it from
+`docs/`, and GitHub Pages serves it.
 
 ## What it does
 
-The site is where somebody who has installed nothing reads what this is and how to use it. It carries a page for each
+The site is where somebody who has installed nothing reads what `kac` is and how to use it. It has a page for each
 `kac` verb, the framework pages, the corpus descriptor reference and the tool's changelog.
 
-A page's content need not come from the file holding the page. `docs/changelog.md` is a snippet of
-`tooling/kac/CHANGELOG.md`, so a release moves the site without any file under `docs/` changing. Taken from the header
-comment in `.github/workflows/publish-docs.yml`.
+A page's content can come from outside `docs/`. `docs/changelog.md` is a snippet of `tooling/kac/CHANGELOG.md`, so a
+release changes the site without any file under `docs/` changing. Taken from the header comment in
+`.github/workflows/publish-docs.yml`.
 
-`docs/` holds every page and nothing else does. The site is not a corpus, and `publishing-target: mkdocs` in a corpus
-descriptor is a separate thing this build does not exercise. Taken from the header comment in `mkdocs.yml`.
+Every page lives under `docs/`. The site is not a corpus: `publishing-target: mkdocs` in a corpus descriptor is a
+separate feature, and this build does not exercise it. Taken from the header comment in `mkdocs.yml`.
 
 ## Where it lives
 
@@ -47,7 +47,7 @@ descriptor is a separate thing this build does not exercise. Taken from the head
 
 ## Dependencies
 
-None in this catalogue. The site is static HTML and calls nothing.
+None in this catalogue. The site is static HTML. It calls nothing.
 
 The packages that build it are in the tool register: [tol-mkdocs] and [tol-mkdocs-material].
 
@@ -58,11 +58,11 @@ None of its own. Every page is built from a file in the repository.
 ## Operational notes
 
 * **`strict: true` in `mkdocs.yml` turns a dead link into a failed build.** A page the navigation does not list is
-  reported at INFO instead, which strict mode does not catch, so `NavigationTests` in `kac.tests` holds that half.
+  reported at INFO, which strict mode does not catch. `NavigationTests` in `kac.tests` checks for that instead.
 * **The Pages source is set to GitHub Actions in the repository settings**, so nothing pushes a branch. No file in this
-  repository holds that setting.
-* **The publish concurrency group cancels a superseded run.** There is one live site, so a newer push takes over from
-  an older one rather than queueing behind it.
+  repository stores that setting.
+* **The publish concurrency group cancels a superseded run.** There is one live site, so a newer push cancels a run
+  already under way.
 
 [tol-mkdocs]: ../tools/docs/mkdocs.md
 [tol-mkdocs-material]: ../tools/docs/mkdocs-material.md

@@ -1,11 +1,11 @@
 # knowledge-as-code
 
-Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions both read from and contribute to. It's
-plain Markdown in git, reviewed by pull request. But every document carries a type, and every type declares a schema.
+Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions both read from and contribute to. It is
+plain Markdown in git, reviewed by pull request. But every document has a type, and every type declares a schema.
 
-`kac` is the tool that holds each document to the schema its type declares. It reports every fault against the file that
-caused it. A broken cross-reference fails CI rather than rotting quietly. `kac` writes the indexes and tables nobody
-should be keeping by hand. It also writes the documents out as an **export**: data an agent can read.
+`kac` is the tool that checks each document against the schema its type declares. It reports every fault against the
+file that caused it. A broken cross-reference fails CI. `kac` writes the indexes and tables nobody should be keeping by
+hand. It also writes the documents out as an **export**: data an agent can read.
 
 A repository of those documents, with the schema it runs, is a **corpus**. A document filed under a type is a
 **record**. A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads the export,
@@ -17,7 +17,7 @@ see it.
 ## A type declares its own schema
 
 A **type** is a category such as a policy, a runbook or a glossary. Its **schema** is the machine-readable statement of
-what a record of that type carries. The schema travels inside the corpus, in `.schema/`, so adding a type is adding a
+what a record of that type has in it. The schema travels inside the corpus, in `.schema/`, so adding a type is adding a
 YAML file rather than changing the tool.
 
 ## What this site is
@@ -26,11 +26,11 @@ The reference for KaC: what a corpus holds, and what `kac` does to one.
 
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
 * **[The framework](framework/index.md)** is the ideas the tool serves: what a type and a tier are, the types that ship,
-  what a record carries, and how knowledge is contributed.
+  what a record has in it, and how knowledge is contributed.
 * **[Running it in CI](ci.md)** wires the two commands that answer for a corpus into a pull request, on GitHub Actions
   or Azure Pipelines.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
-  leaves alone. The overview charts the order the commands run in, and carries the exit codes and the options every
+  leaves alone. The overview charts the order the commands run in, and lists the exit codes and the options every
   command takes.
 * **[Troubleshooting](troubleshooting.md)** is what `kac` prints when something is wrong, and what to do about it.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
@@ -53,9 +53,9 @@ covers building `kac`, its three test layers, and what bites you while editing a
 [nuget.org](https://www.nuget.org/packages/KnowledgeAsCode.Tool) sits below `1.0.0` because the commands may still
 change shape.
 
-This site is built from `main`, so it can describe a `kac` no release carries yet. Ask your own copy what it is with
+This site is built from `main`, so it can describe a `kac` no release includes yet. Ask your own copy what it is with
 `kac --version`, and read the [changelog](changelog.md) for what each published version brought. Where the two disagree,
 the site is ahead.
 
 Every page here describes what exists today. The
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) holds what has been considered and not yet built.
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) says what has been considered and not yet built.

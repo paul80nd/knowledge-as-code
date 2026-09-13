@@ -19,12 +19,12 @@ The catalogue search index, rebuilt from bus events and queried by the catalogue
 
 ## What it does
 
-Maintains the search index over the collection and answers queries against it: free-text search, faceted browse, and the
+Maintains the search index over the collection and serves queries against it: free-text search, faceted browse, and the
 type-ahead on the catalogue's search box.
 
-**No database feeds the index.** It is built from events. Every change to an item, a holding or a branch's stock arrives
-on the message bus and is applied incrementally. A full rebuild is available on demand. That is what makes this service
-the estate's clearest example of heavy coupling with no dependency edge.
+**Events build the index, and no database feeds it.** Every change to an item, a holding or a branch's stock arrives on
+the message bus and is applied incrementally. A full rebuild runs on demand. This service is therefore the estate's
+clearest example of heavy coupling with no dependency edge.
 
 ## Where it lives
 
@@ -48,16 +48,16 @@ the estate's clearest example of heavy coupling with no dependency edge.
 ## Dependencies
 
 **None, and the graph is right.** This service cannot function without the events [svc-catalogue-api] and [svc-lending]
-publish. It is coupled to both as tightly as anything in the estate. Neither is a strict dependency, though:
-`depends-on` records calls, and a bus message is not a call. See [Services](../services.md).
+publish, and it is coupled to both as tightly as anything in the estate. Neither is a strict dependency: `depends-on`
+records calls, and a bus message is not a call. See [Services](../services.md).
 
-So the graph shows this service as unconnected. Operational notes below list what it consumes, and that is where the
-coupling lives.
+The graph therefore shows this service as unconnected. Operational notes below list what it consumes, and that is where
+the coupling is recorded.
 
 ## Data
 
-The index itself, held in the search engine's own storage and rebuildable from the bus. Nothing here is a system of
-record. A lost index is rebuilt, and no other service reads it.
+The index itself, stored by the search engine and rebuildable from the bus. Nothing here is a system of record. A lost
+index is rebuilt, and no other service reads it.
 
 ## Operational notes
 

@@ -38,21 +38,21 @@ of the catalogue as well, because it deploys services.
 
 <!-- BEGIN GENERATED: schema-services -->
 
-| Field           | Value                                                                    | Notes                                                                               |
-|-----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.             |
-| `type` *†       | string                                                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.      |
-| `tier` *†       | `descriptive`                                                            | Fixed for the type. A trust signal for the reader. CI checks it matches the folder. |
-| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                                   |
-| `owner` *†      | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.              |
-| `sources` †     | list                                                                     | Where the content came from, one entry per source.                                  |
-| `tags` †        | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                    |
-| `repo` *        | string                                                                   | Where the code lives.                                                               |
-| `platform` *    | `azure-function` `dotnet-api` `dotnet-web` `mixed` `static` `typescript` | What it is built on. Drives which standards apply.                                  |
-| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                       |
-| `depends-on`    | list                                                                     | What this service calls, downward only.                                             |
-| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                                |
-| `facets`        | list                                                                     | Slices the catalogue. One exposure, then any traits. Each value groups services.    |
+| Field           | Value                                                                    | Notes                                                                         |
+|-----------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†         | string                                                                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†       | string                                                                   | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†       | `descriptive`                                                            | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†     | `live` `building` `deprecated` `retired`                                 | Where the service is in its life.                                             |
+| `owner` *†      | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †     | list                                                                     | Where the content came from, one entry per source.                            |
+| `tags` †        | list                                                                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `repo` *        | string                                                                   | Where the code lives.                                                         |
+| `platform` *    | `azure-function` `dotnet-api` `dotnet-web` `mixed` `static` `typescript` | What it is built on. Drives which standards apply.                            |
+| `criticality` * | `critical` `important` `supporting`                                      | Judged by what a customer experiences when it is unavailable.                 |
+| `depends-on`    | list                                                                     | What this service calls, downward only.                                       |
+| `data-stores`   | list                                                                     | Data ids this service owns or reads.                                          |
+| `facets`        | list                                                                     | Slices the catalogue: one exposure value, then any traits.                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -185,8 +185,8 @@ words worth keeping are the ones thrown away.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                  | What it would verify                                                |
-|-----------------------|---------------------------------------------------------------------|
-| `drift-against-repos` | The catalogue against the real repository list, in both directions. |
+| Rule                  | What it would verify                                                         |
+|-----------------------|------------------------------------------------------------------------------|
+| `drift-against-repos` | Every service has a repository, and every repository has a service document. |
 
 <!-- END GENERATED: checks-services -->

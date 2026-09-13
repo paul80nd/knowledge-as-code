@@ -12,12 +12,12 @@ tags: [ schema, taxonomy ]
 
 `Process: prc-add-a-type` `ACTIVE`
 
-Declare a new type in `.schema/`, and stand up the three files a corpus needs beside it.
+Declare a new type in `.schema/`, and write the root page and the `_template.md` a corpus needs for it.
 
 ## When to use this
 
-An existing type will not hold the records you have. A type with a schema and no folder counts as absent, and one with
-a folder and no page fails `type-setup`.
+No existing type will take the records you have. A type with a schema and no folder counts as absent. A type with a
+folder and no page fails `type-setup`.
 
 ## Prerequisites
 
@@ -26,36 +26,38 @@ a folder and no page fails `type-setup`.
 
 ## Steps
 
-1. Argue the type belongs. [Taxonomy](../knowledge-as-code/taxonomy.md) carries the types that exist and what each is
-   not.
-2. Pick the tier before the fields. The tier fixes how records are written and what the review bar is, and several
-   types share one.
+1. Argue the type belongs. [Taxonomy](../knowledge-as-code/taxonomy.md) lists the types that exist and what each one
+   excludes.
+2. Pick the tier before the fields. The tier fixes how records are written and what the review bar is. Several types
+   share one tier.
 3. Write the type's schema file. Run [prc-change-the-schema] for the rules governing it.
-4. Write the root page and the `_template.md` beside it. Both are `seed`, so nothing holds the two trees equal and the
-   copy across is yours. Where either names another type, link that type's page and give the link the type's own noun,
-   because `kac new` drops the link for a corpus that declined that type and the noun is what carries the sentence
-   afterwards. Never link into another type's folder, which `TemplateLinkTests` refuses.
-5. Record the lineage. The schema's `lineage:` and `collision:` blocks are read into
+4. Write the type's root page.
+5. Write the type's `_template.md`.
+6. Where either page mentions another type, link that type's root page and use the type's own noun as the link text.
+   Never link into another type's folder. `TemplateLinkTests` rejects that.
+7. Copy both files into every other tree by hand. Both are `seed`, so nothing keeps the trees equal.
+8. Record the lineage. The schema's `lineage:` and `collision:` blocks are read into
    [lineage](../knowledge-as-code/lineage.md).
-6. Add the type to `types:` in `.corpus.yaml`. Generation and validation cover the types a corpus adopted and no
-   others.
-7. Write at least one record. Most type folders here hold none, so their rules have never run, and a throwaway record
-   is how you find out whether the schema says what you meant.
-8. Run `kac generate` and `kac validate` in every corpus that adopted it, then the golden suite.
-9. Run [prc-pull-request].
+9. Add the type to `types:` in `.corpus.yaml`. Generation and validation cover only the types a corpus adopted.
+10. Write at least one record. Most type folders here contain none, so their rules have never run. A throwaway record
+    shows whether the schema says what you meant.
+11. Run `kac generate` in every corpus that adopted the type.
+12. Run `kac validate` in each of those corpora.
+13. Run the golden suite.
+14. Run [prc-pull-request].
 
 ## Verification
 
 Every corpus that adopted the type validates clean, and the golden suite passes.
 
-Close by naming what the type holds, what it is not, which existing type it was nearly, and what the first record
-found.
+Close by stating what the type contains and what it excludes. Name the existing type it came closest to, and what the
+first record found.
 
 ## Related
 
-* [prc-change-the-schema] carries the schema half of this.
+* [prc-change-the-schema] covers the schema half of this.
 * [prc-add-a-record] is how the first record is written.
-* [prc-pull-request] is how the type lands.
+* [prc-pull-request] merges the type.
 
 [prc-add-a-record]: add-a-record.md
 [prc-change-the-schema]: change-the-schema.md

@@ -17,20 +17,20 @@ tags: [ capacity, non-functional-requirements, performance ]
 
 ## Purpose
 
-Where performance matters, we say what "fast enough" means before we build, and we check against it before we release
-rather than discovering the answer from customers.
+Where performance matters, we say what "fast enough" means before we build. We check against that target before we
+release, so a customer is never the first to tell us.
 
-An unstated performance target is met by definition, right up to the point where it is not. Stating it converts an
-argument about whether something feels slow into a measurement, and makes a regression something the pipeline catches.
+An unstated performance target is met by definition, right up to the point where it is not. Stating it turns an argument
+about whether something feels slow into a measurement. It also lets the pipeline catch a regression.
 
 ## Scope
 
 Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most
-customer-facing systems and many internal ones. Targets themselves are recorded as NFRs. This policy commits us to
+customer-facing systems and many internal ones. Targets themselves are recorded as NFRs, and this policy commits us to
 having them.
 
-_Boundary: this policy checks a target before a release. Noticing that a live system has stopped meeting one is
-[pol-OBSV]'s, and `DEFECT` says what we do once it has._
+_Boundary: this policy checks a target before a release. [pol-OBSV] owns noticing that a live system has stopped
+meeting one, and `DEFECT` says what we do once it has._
 
 ## Clauses
 
@@ -39,14 +39,14 @@ _Boundary: this policy checks a target before a release. Noticing that a live sy
 | `TARGETS` | **MUST** state performance and capacity targets for systems where performance matters, in terms that can be measured                          | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `MEASURE` | **MUST** validate against those targets before significant releases, under conditions representative of real load rather than convenient load | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `DEFECT`  | **MUST** treat a target we no longer meet as a defect, not as a new baseline                                                                  | [Azure WAF].performance-efficiency                         |
-| `PEAK`    | **MUST** understand behaviour at peak and under sustained load, not only at the average case on a quiet afternoon                             | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
+| `PEAK`    | **MUST** understand behaviour at peak and under sustained load, not only at the average case                                                  | [ISO 27001:2022].A.8.6, [Azure WAF].performance-efficiency |
 | `NOTEST`  | **MUST NOT** release a significant change to a performance-sensitive system with no performance validation at all                             | [Azure WAF].performance-efficiency                         |
 
 ## Exceptions
 
-Systems where performance is genuinely not a concern (low-volume internal tooling with no user waiting on it) need no
-targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that
-has since acquired users.
+Systems where performance is genuinely not a concern, such as low-volume internal tooling with no user waiting on it,
+need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system
+that has since acquired users.
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-OBSV]: ../operations/obsv-observability.md

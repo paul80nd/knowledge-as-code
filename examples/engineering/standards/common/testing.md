@@ -17,8 +17,8 @@ tags: [ test-data, test-levels, testing ]
 
 ## Summary
 
-A team writes each test at the cheapest level that can fail on the fault it is looking for, and runs the whole suite on
-data that was never a real customer's.
+A team writes each test at the cheapest level that can fail on the fault it looks for. The whole suite runs on data
+that was never a real customer's.
 
 ## Rules
 
@@ -44,7 +44,7 @@ _**Covers:** [pol-AUTV].COVER_
 
 ### The data is never a real customer's
 
-- A test **MUST** run against generated data, or against production data a masking step has already been through.
+- A test **MUST** run against generated data, or against production data that a masking step has already processed.
 - A team **MUST NOT** copy unmasked production data into a test fixture, a seed script or a local database.
 - A team **MUST NOT** run a test, a script or a debugger against production.
 
@@ -61,7 +61,8 @@ Avoid
   TestRetries
 ```
 
-The first two name the subject and the expected outcome, so a red build says what broke before anyone opens the file.
+The first two name the subject and the expected outcome, so a failed build says what broke before anyone opens the
+file.
 
 ```
 Good
@@ -71,8 +72,8 @@ Avoid
   // seeded from a Tuesday export of the production customers table
 ```
 
-The avoided fixture puts real names on every laptop that clones the repository, and a masking step run later does not
-reach the clones.
+The avoided fixture puts real names on every laptop that clones the repository. Masking the data later does not change
+those clones.
 
 ## Conformance checklist
 
@@ -86,7 +87,7 @@ reach the clones.
 ## Rationale and provenance
 
 A fault caught by a unit test costs the minute it takes to read the failure. The same fault caught by an end-to-end
-test costs a triage, and caught in production it costs an incident.
+test costs a triage. Caught in production, it costs an incident.
 
 [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 [pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses

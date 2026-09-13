@@ -1,13 +1,8 @@
-# The tiers, in the order a reader meets them: what each is called on a page, and how a document of that
-# tier behaves.
-#
-# The vocabulary itself belongs to `tier` in `_universal.yaml`, the field every record carries. This file
-# carries the label and the meaning a generated page needs, which a frontmatter enum has no room for. The
-# two are held against each other when the schema loads.
+# The tiers, in the order a reader meets them, with the label and the behaviour a generated page needs.
 
 notes: >
-  Order is load-bearing. Every generated list of types is grouped by tier in the order declared here,
-  running from what has been decided through to what has only been noticed.
+  Order is load-bearing. Every generated list of types groups by tier in the order declared here, from
+  what has been decided to what has only been noticed.
 
 tiers:
 
@@ -15,7 +10,7 @@ tiers:
     label: Decided
     behaviour: immutable once accepted
     note: >
-      Superseded rather than rewritten, so what was thought at the time survives being wrong.
+      Superseded, never rewritten, so what was thought at the time survives being wrong.
 
   normative:
     label: Normative
@@ -25,19 +20,18 @@ tiers:
     label: Descriptive
     behaviour: living, must mirror reality
     note: >
-      These are the types CI can check against the estate rather than merely against themselves, which
-      matters because they rot faster than anything else.
+      CI can check these against the estate itself. They also fall out of date fastest.
 
   procedural:
     label: Procedural
     behaviour: living, must be rehearsed
     note: >
-      Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook
-      is dangerous.
+      Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed
+      runbook is dangerous.
 
   observed:
     label: Observed
     behaviour: perishable, unreviewed until promoted
     note: >
-      The tier carrying the least authority is the one a corpus most depends on, because capture that is
-      not free does not happen.
+      The tier with the least authority is the one a corpus most depends on. Capture has to be cheap,
+      or it does not happen.

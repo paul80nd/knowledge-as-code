@@ -37,20 +37,20 @@ deliver.
 
 <!-- BEGIN GENERATED: schema-nfrs -->
 
-| Field            | Value                      | Notes                                                                                             |
-|------------------|----------------------------|---------------------------------------------------------------------------------------------------|
-| `id` *†          | string                     | Stable, unique across the corpus, never reused. Format set by the type.                           |
-| `type` *†        | string                     | The type's singular name. Fixed for the type. CI checks it matches the folder.                    |
-| `tier` *†        | `normative`                | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.               |
-| `status` *†      | `draft` `agreed` `retired` | `agreed` is a commitment someone accepted, not an aspiration.                                     |
-| `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                            |
-| `sources` †      | list                       | Where the content came from, one entry per source.                                                |
-| `tags` †         | list                       | Free-form, lowercase, hyphenated. Used for cross-cutting search.                                  |
-| `applies-to` *   | list                       | Estate-wide targets are almost always wrong. Scope them.                                          |
-| `target` *       | string                     | Concrete and arguable (`99.5% monthly`, `p95 < 400ms`, `RTO 4h`). Include the measurement window. |
-| `measured-by` *  | string                     | An NFR you cannot measure is a wish. "We'd notice" is not a measurement method.                   |
-| `constrained-by` | list                       | Integrations whose own SLA caps this target.                                                      |
-| `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                                    |
+| Field            | Value                      | Notes                                                                                    |
+|------------------|----------------------------|------------------------------------------------------------------------------------------|
+| `id` *†          | string                     | Stable, unique across the corpus, never reused, in the format the type sets.             |
+| `type` *†        | string                     | The singular name of the type, which CI checks against the folder.                       |
+| `tier` *†        | `normative`                | The record's trust level, fixed for the type and checked against the folder.             |
+| `status` *†      | `draft` `agreed` `retired` | `agreed` means somebody accepted the commitment.                                         |
+| `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
+| `sources` †      | list                       | Where the content came from, one entry per source.                                       |
+| `tags` †         | list                       | Free-form, lowercase and hyphenated. A reader searches on these across types.            |
+| `applies-to` *   | list                       | The service or capability ids this target binds.                                         |
+| `target` *       | string                     | The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`. |
+| `measured-by` *  | string                     | The instrument that reports the number, and where to read it.                            |
+| `constrained-by` | list                       | Integrations whose own SLA caps this target.                                             |
+| `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                           |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -102,12 +102,12 @@ deliver.
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `target-is-measurable`      | warning | `measured-by` names an instrument, not a hedge: "monitored", "as needed", "where practical".                    |
+| `target-is-measurable`      | warning | `measured-by` states an instrument. A hedge such as "monitored" or "where practical" fails.                     |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                     | What it would verify                                                                                 |
-|--------------------------|------------------------------------------------------------------------------------------------------|
-| `constraint-consistency` | Where `constrained-by` names an integration whose `their-sla` is weaker than this target, report it. |
+| Rule                     | What it would verify                                                                          |
+|--------------------------|-----------------------------------------------------------------------------------------------|
+| `constraint-consistency` | Every integration in `constrained-by` states a `their-sla` at least as strong as this target. |
 
 <!-- END GENERATED: checks-nfrs -->

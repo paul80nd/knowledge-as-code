@@ -8,24 +8,24 @@ page: services.md
 tier: descriptive
 lifecycle: living
 summary: "One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner."
-goes-here: A description of what a deployable component is and does
+goes-here: What a deployable component is and does
 detail: >
-  The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+  The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 lineage:
   prior-art: "[Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`"
   alignment: >
-    A deployable unit carrying owner, dependencies and consumed APIs, acting as the hub of the entity graph
+    A deployable unit with its owner, dependencies and consumed APIs, at the centre of the entity graph
   divergence: >
-    Backstage models APIs, resources, systems and domains as separate kinds. We fold dependencies, data stores and
-    environments into the service document
+    Backstage models APIs, resources, systems and domains as separate kinds. This type folds dependencies, data
+    stores and environments into one service document
 
 id:
   prefix: svc
   style: slug
   notes: >
-    Names the deployable, not the repository it lives in. A repository shipping three app services yields three ids,
-    and none of them is the repository's name. The repository is carried by `repo`.
+    The id identifies the deployable. A repository shipping three services gets three ids, and `repo` is where the
+    repository goes.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -50,10 +50,8 @@ fields:
     values: $corpus.platform
     description: What it is built on. Drives which standards apply.
     notes: >
-      The range is the estate's, so `.corpus.yaml` states it under `enums:` and this file states none. A corpus
-      walks its own deployables, groups them by the runtime and framework a contributor has to know, and closes
-      the list on what it found. The type page records how it reached them, and
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/> carries the block.
+      The range belongs to the estate, so `.corpus.yaml` states it under `enums:` and this file states none.
+      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/> describes that block.
 
   criticality:
     required: true
@@ -68,9 +66,9 @@ fields:
     ref: services
     description: What this service calls, downward only.
     notes: >
-      An edge means this service is configured to reach that one. Messages over a bus are not an edge, because
-      the publisher does not know its consumers. One-directional on purpose: the reverse view is a reader's
-      question rather than a second field to keep in step.
+      An edge means this service is configured to call that one. A message over a bus is not an edge, because the
+      publisher does not know its consumers. The field records outward calls only. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
 
   data-stores:
     required: false
@@ -85,12 +83,11 @@ fields:
     of: string
     pattern: '^[a-z0-9-]+$'
     min-records: 2
-    description: Slices the catalogue. One exposure, then any traits. Each value groups services.
+    description: 'Slices the catalogue: one exposure value, then any traits.'
     notes: >
-      A facet divides the catalogue into groups worth browsing, so a value means something only once several
-      services share it. `internal` answers "which of these is reachable from outside". A word describing one
-      service answers nothing and belongs in `tags`. The floor holds the shape of a vocabulary and never its
-      membership, which the type page records for this estate.
+      A facet divides the catalogue into groups worth browsing, so `min-records: 2` refuses a value only one service
+      uses. The `pattern` fixes the shape of a value, and each corpus records its own values on its type page. A
+      word describing one service belongs in `tags`.
 
 sections:
   required: [What it does, Where it lives, Environments]
@@ -105,40 +102,18 @@ export:
     Dependencies: full
     Data: full
   notes: >
-    A service id is cited from every other type, so what travels is what makes that id resolve to
-    something a reader recognises. `What it does` and `Where it lives` are both short, and together they
-    say which deployable this is and where its code sits.
-
-    `depends-on` carries the estate's own graph, and it is the reason this type exports at all. A consumer
-    holding the catalogue walks the edges without opening a record. `Dependencies` travels beside it,
-    because an edge says which service and the prose says what the call is for.
-
-    `data-stores` travels as ids that a consumer cannot follow, because a data record travels nowhere.
-    `Data` is what that consumer reads instead, and it says in words what the service owns.
-
-    `platform`, `criticality` and `facets` are the three keys an agent filters on. A question about the
-    estate is usually a question about a slice of it.
-
-    `Environments` stays behind. It is a table of addresses that mean something to whoever operates the
-    service, and a consumer holding a copy can reach none of them. `Operational notes` stays behind with
-    it, because both describe running the thing rather than depending on it.
-
-    `owner` stays behind. Who runs a service is a fact about this corpus, and whoever holds a vendored
-    copy has no standing to ask them anything.
-
+    `depends-on` is the estate's own graph, and the reason this type exports at all.
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services> says what else travels, and what
+    stays behind.
 index:
   columns: [id, title, platform, criticality, status, owner]
   sort: id
 
 rules:
-  # A loop lives in the set of edges and no one document holds it, so this is a corpus rule rather than an
-  # expression. It warns rather than fails: two services calling each other is a fact about the estate, and
-  # the message names the services the loop runs through.
+  # Two services calling each other is a fact about the estate.
   - id: no-dependency-cycles
-    description: A cycle in the dependency graph, naming the services the loop runs through.
+    description: A cycle in the dependency graph, with every service the loop runs through.
     severity: warning
-  # The state this compares against lives outside the repository, so it can never run in the per-PR pass
-  # every other rule here runs in.
   - id: drift-against-repos
-    description: The catalogue against the real repository list, in both directions.
-    # Scheduled, not per-PR. Reports services documented but deleted, and repositories with no service document.
+    description: Every service has a repository, and every repository has a service document.
+    # Runs on a schedule. Reports a service whose repository is gone, and a repository with no service document.

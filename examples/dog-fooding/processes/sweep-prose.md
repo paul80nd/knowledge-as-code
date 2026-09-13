@@ -16,8 +16,8 @@ Apply the writing rules to every file in a folder, one agent per folder.
 
 ## When to use this
 
-A folder's prose has to answer to the current rules and nobody has read it against them. Testing a rule is a different
-job, and it does not belong here.
+A folder's prose has to follow the current rules, and nobody has read it against them. Testing a rule is a different
+job.
 
 ## Prerequisites
 
@@ -27,38 +27,40 @@ job, and it does not belong here.
 
 ## Steps
 
-1. Count first, from the files. A folder nobody listed is a folder nobody swept. Count the type templates and the
-   glossary as files rather than as folders.
-2. Put a version check at the top of the prompt. Name three or four lines only the current skills carry, and tell the
-   agent to stop where any is missing. Have it load the skills with the Read tool, because the Skill tool has served a
-   stale render.
-3. Name the trap for that batch. A schema sweep meets plain YAML scalars where a colon is a parse error. A type page
-   meets generated regions. A policy meets the clause override. A named trap has never fired.
+1. List every file in the folder first. A folder nobody listed is a folder nobody swept. List a type template and the
+   glossary as files, not as folders.
+2. Put a version check at the top of the prompt. Quote three or four lines only the current skills contain, and tell
+   the agent to stop where any is missing. Tell it to load the skills with the Read tool, because the Skill tool has
+   served a stale render.
+3. State the trap for that batch. A trap named in advance catches nobody out.
+   * A schema sweep meets plain YAML scalars, where a colon is a parse error.
+   * A type page meets generated regions.
+   * A policy meets the clause override.
 4. Say which files belong to somebody else, including a human reading a folder right now.
 5. Forbid `kac` and `dotnet` while agents run in parallel. They build the same project and contend over its output.
-6. Verify from the files rather than from the report. Count the marks, then diff headings, frontmatter and generated
-   regions against `HEAD`.
-7. Read each whole file rather than the diff. A sweep leaving a document in two voices has failed even where every rule
-   was obeyed.
-8. Copy the overlay files across. A root page and a `_template.md` are `seed`, so nothing catches drift and the copy is
-   yours.
+6. Verify from the files, not from the report. Count the words in each file, then diff headings, frontmatter and
+   generated regions against `HEAD`.
+7. Read each whole file, not the diff. A sweep leaving a document in two voices has failed, even where every rule was
+   obeyed.
+8. Copy the overlay files across. A root page and a `_template.md` are `seed`, so nothing catches drift and you copy
+   them by hand.
 9. Ask the agents where a rule failed them. A rule two readers understand differently is a defect, however good either
    result looks.
 10. Run [prc-pull-request].
 
 ## Verification
 
-`kac validate` and `kac generate --check` both report clean in every corpus you touched, and
-`kac update --check --from ../../` reports the overlay files in step.
+`kac validate` and `kac generate --check` both report clean in every corpus you touched.
+`kac update --check --from ../../` reports every overlay copy equal to its template.
 
-Close by naming the count before and after per file, what you deliberately left and the rule exempting it, and every
-place a rule did not decide it.
+Close by stating each file's word count before and after. Name what you deliberately left, and the rule exempting it.
+Name every place a rule did not decide the answer.
 
 ## Related
 
-* [std-PROSE] carries the rules a sweep applies.
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says what step 8 owes you.
-* [prc-pull-request] is how the sweep lands.
+* [std-PROSE] states the rules a sweep applies.
+* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what step 8 requires of you.
+* [prc-pull-request] merges the sweep.
 
 [prc-pull-request]: pull-request.md
 [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved

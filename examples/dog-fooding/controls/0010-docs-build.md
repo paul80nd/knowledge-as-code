@@ -17,7 +17,7 @@ tags: [ documentation, mkdocs ]
 
 `Control: ctl-0010` `ACTIVE`
 
-The site is built the way `publish-docs.yml` builds it, before it publishes.
+CI builds the site the way `publish-docs.yml` builds it, before it publishes.
 
 ## What it checks
 
@@ -30,14 +30,14 @@ The `docs` job installs what `docs/requirements.txt` pins and runs `mkdocs build
 so a dead link or an unreachable page exits non-zero.
 
 `NavigationTests` in `tooling/kac.tests` covers two faults the build lets through. It fails a page under `docs/` that
-`mkdocs.yml` does not list, which the build mentions at INFO and exits 0 on. It also fails a CLI reference reading in
-an order the parser does not declare, which the build says nothing about. `DocumentationTests` holds two tables on
-the site to the names the code carries.
+`mkdocs.yml` does not list, which the build reports at INFO and exits 0 on. It fails a nav listing the CLI reference
+pages in an order the parser does not declare, which the build says nothing about. `DocumentationTests` compares two
+tables on the site against the names in the code.
 
 ## Coverage and gaps
 
-`strict: true` reads links inside the site. Nothing fetches an external URL, so a link to a page that has moved stays
-green.
+`strict: true` checks links inside the site. Nothing fetches an external URL, so a link to a page that has moved still
+passes.
 
-Whether a page is accurate is a reader's judgement. A published page describing behaviour the tool no longer has
-passes every check here.
+A reader judges whether a page is accurate. A published page describing behaviour the tool no longer has passes every
+check here.

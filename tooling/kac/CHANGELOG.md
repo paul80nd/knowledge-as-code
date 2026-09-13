@@ -15,9 +15,17 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.26.0 - 2026-09-13
 
 ### Added
+
+- **`kac validate` checks that a quoted clause still says what it is quoted as saying.** A control quotes the clause it
+  verifies, and nothing until now compared the two. `clause-quoted-faithfully` takes every double-quoted span on a line
+  that also cites a clause, and reports it as an error where the cited clause no longer contains those words.
+  Whitespace is collapsed on both sides, so a quotation wrapped across two lines is read whole. A quoted span on a line
+  citing nothing is left alone, and so is a citation into a corpus you consume: an export sends a record's ids and
+  fields, not its wording. `.schema/controls.yaml` declares the rule, so take it with
+  `kac update --from <template>`.
 
 - **A fix travels in an export.** `.schema/fixes.yaml` declares an `export:` block at shape 1, so `kac export` writes
   one JSON per fix. The record carries `symptom-keywords`, which is what a lookup searches on. It carries Symptom,
@@ -40,6 +48,30 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `version` each corpus was at. Take the field with `kac update --from <template>`.
 
 ### Changed
+
+- **The prose in `.schema/` is rewritten to the writing rules.** Every `description:`, `notes:`, `message:` and comment
+  in the schema was rewritten against them. A record author reads a shorter field description in the `## Metadata`
+  table, and a plainer sentence from `kac checks` and from a rule that fails. No check id, severity, `expr:`, pattern,
+  threshold or export shape changed. Reasoning that had grown into a `notes:` now sits on the design site, under
+  [Checks](https://paul80nd.github.io/knowledge-as-code/design/checks/),
+  [Shaping a type](https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/) and
+  [Reports](https://paul80nd.github.io/knowledge-as-code/design/reports/), and the `notes:` cites it. Run
+  `kac generate` after taking the schema with `kac update --from <template>`.
+
+- **The `## Metadata` table says what a field is, where it used to describe the schema.** A field declaring only
+  `notes:` fell back to them for its table cell, so maintainer commentary was published to whoever writes a record.
+  Every field now declares a `description:`. An ADR's `superseded-by` reads "The ADR that replaces this one." where it
+  read "CI reconciles both directions, so a one-sided supersession fails the build." Run `kac generate` after taking
+  the schema with `kac update --from <template>`.
+
+- **Every check message opens lower case.** Twenty-three rule messages in `.schema/` opened with a capital, where
+  `kac` prints a message mid-line after the check id. Several also ran to four or five sentences. Each now opens lower
+  case and states what is wrong, then what to write instead.
+
+- **`.schema/` states the reasoning local to a field and cites the site for the rest.** A `notes:` had grown into a
+  multi-paragraph design argument in forty-six places, and much of it repeated a documentation page. The prose in
+  `.schema/` is a third shorter. The per-type export choices and the framework-register rules now sit at
+  <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/>, which each type file cites.
 
 - **`kac report frameworks` says more beside each framework's table.** Every reference row carries a `Citations` count,
   so a reference one clause cites reads as `1` without counting the cell next to it. Each framework's section opens on
@@ -67,14 +99,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list. It no
   longer refuses an agent: a session that reproduced a symptom and ran the resolution has checked something real, and
   `verified-by-a-known-actor` admits it, named with its version the way the tool names itself. That rule still refuses
-  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file now ships as `trust`:
-  an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is `human-reviewed`. A
-  type whose export does not name `verified` carries `trust` as `null`. One actor is still refused, and
-  `no-self-verification` is the new check: a report may not be verified by the producer its `generated.by` names. A
-  fix declares `raiser-does-not-verify` and nothing runs it, because nothing on a fix names who raised it. `kac
-  report` writes `verified: []` where it wrote `confirmed: []`. A corpus that adopted either type renames the key in
-  every record and in its `_template.md`, and takes the new schema with `kac update --from <template>`. The `reports`
-  type's `shapeVersion` moves to 2, so a consumer reading records of that type reads the new key.
+  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file
+  now ships as `trust`: an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is
+  `human-reviewed`. A type whose export does not name `verified` carries `trust` as `null`. One actor is still
+  refused, and `no-self-verification` is the new rule and reports as `self-verification`: a report may not be verified
+  by the producer its `generated.by` names. A fix declares `raiser-does-not-verify` and nothing runs it, because
+  nothing on a fix names who raised it. `kac report` writes `verified: []` where it wrote `confirmed: []`. A corpus
+  that adopted either type renames the key in every record and in its `_template.md`, and takes the new schema with
+  `kac update --from <template>`. The `reports` type's `shapeVersion` moves to 2, so a consumer reading records of
+  that type reads the new key.
 
 - **The `faq` type is now `fix`, and its `Fix` section is now `Resolution`.** A record lands in `fixes/` as
   `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and

@@ -19,13 +19,13 @@ tags: [ editorconfig, formatting, rider ]
 ## Symptom
 
 A key edited in `.editorconfig` from the terminal makes no difference to how Rider formats a file. Reformatting the
-file, and reopening it, both leave the old behaviour in place. Nothing is reported: the edit is valid and the IDE
-carries on with the settings it already had.
+file, and reopening it, both leave the old behaviour in place. Nothing is reported. The edit is valid, and Rider keeps
+using the settings it already read.
 
 ## Cause
 
-Rider reads an `.editorconfig` when the file is opened in the IDE, and a write it never saw leaves the cached settings
-standing.
+Rider reads an `.editorconfig` when the file is opened in the IDE. A write it never saw leaves the cached settings in
+place.
 
 ## Resolution
 
@@ -33,19 +33,20 @@ standing.
 2. Reformat a file the key governs.
 3. Check the result changed.
 
-Where the result is unchanged, flip a key with an obvious effect as a control. `max_line_length` is one, because a
-reformat rewraps the paragraph in front of you.
+Where the result is unchanged, flip a key with an obvious effect as a control. `max_line_length` works well, because a
+reformat rewraps the paragraph you are looking at.
 
 ## Why it happens
 
-An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` layers a
-second over it, and `template/` holds its own with `root = true`. So a key that looks inert may be overridden rather
-than unread, and the control above is what separates the two.
+An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` adds a
+second over it, and `template/` has its own with `root = true`. A key that looks inert therefore has two possible
+causes: another file overrides it, or Rider has not read the edit. The control above tells an override apart from a
+cached setting.
 
 ## How we found it
 
 A session edited the file from a shell while the developer had the repository open in Rider, and the two then
-disagreed about the same key. That disagreement is the give-away, and the question settling it is which of them has
+disagreed about the same key. That disagreement is the signal. The question that settles it is which of them has
 opened `.editorconfig` since the edit.
 
 ## Related

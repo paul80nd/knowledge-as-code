@@ -16,16 +16,16 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                            | It goes in                         |
-|----------------------------------------------------------------------|------------------------------------|
-| A decision that affects more than one repo, and its reasoning        | [ADRs](../adrs.md)                 |
-| A description of what a deployable component is and does             | [Services](../services.md)         |
-| A description of what we offer a customer, and why                   | [Capabilities](../capabilities.md) |
-| A step-by-step for a planned task                                    | [Processes](../processes.md)       |
-| A step-by-step for when something is broken                          | [Runbooks](../runbooks.md)         |
-| A term whose meaning isn't obvious, or that we use in a specific way | [Glossaries](../glossary.md)       |
-| A third-party or external system we depend on                        | [Integrations](../integrations.md) |
-| Where data lives, how long we keep it, and how sensitive it is       | [Data](../data.md)                 |
+| You have…                                                        | It goes in                         |
+|------------------------------------------------------------------|------------------------------------|
+| A decision affecting more than one repository, and its reasoning | [ADRs](../adrs.md)                 |
+| A step-by-step for a planned task                                | [Processes](../processes.md)       |
+| A step-by-step for when something is broken                      | [Runbooks](../runbooks.md)         |
+| A term whose meaning is local, or not obvious                    | [Glossaries](../glossary.md)       |
+| A third-party or external system the estate depends on           | [Integrations](../integrations.md) |
+| What a deployable component is and does                          | [Services](../services.md)         |
+| What the organisation offers a customer, and why                 | [Capabilities](../capabilities.md) |
+| Where data lives, how long it is kept, and its sensitivity       | [Data](../data.md)                 |
 
 <!-- END GENERATED: types-placement -->
 
@@ -42,45 +42,46 @@ type's own page.
 
 ### Decided: immutable once accepted
 
-Superseded rather than rewritten, so what was thought at the time survives being wrong.
+Superseded, never rewritten, so what was thought at the time survives being wrong.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
-behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
-by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
+behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
+later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
 ### Descriptive: living, must mirror reality
 
-These are the types CI can check against the estate rather than merely against themselves, which matters because they
-rot faster than anything else.
+CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Capabilities](../capabilities.md).** What we offer a customer and why, as a hub linking to what implements, tests and
-constrains it. A hub, sitting above the epic layer: it links to the work items that detail it, the services that
-implement it, the feature files that test it, and the NFRs that constrain it. A capability that starts accumulating
-detail of its own has stopped being one.
+**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
+NFRs behind it. A capability sits above the epic layer. It links to the work items that detail it, the services that
+implement it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of
+its own has stopped being one.
 
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
-flows. Organised by data domain rather than by processing activity. An engineer can use it; a regulator cannot.
+flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
+in, the service that owns them, how sensitive they are, and how long they are kept.
 
-**[Glossaries](../glossary.md).** The ubiquitous language. Terms whose meaning is specific to us, or which are easily
-confused. One glossary per bounded context, each small enough to read end to end. A term that needs explaining every
-time it appears belongs in the most general glossary that admits it, and everything else links to it.
+**[Glossaries](../glossary.md).** The ubiquitous language. Terms with a meaning specific to the organisation, or easily
+confused with another. One glossary per bounded context, each small enough to read end to end. A term that needs
+explaining every time it appears belongs in the most general glossary that admits it, and the narrower glossaries link
+to that entry.
 
-**[Integrations](../integrations.md).** An external system we depend on: the contract, the auth, the failure modes,
-their SLA and our fallback. Every integration point needs a deliberate failure mode and a fallback, so the type requires
-both. It also names who to call when the system is down.
+**[Integrations](../integrations.md).** An external system the estate depends on: its contract, auth, failure modes, SLA
+and fallback. One document per external system. It records the contract, how a caller authenticates, what happens when
+the system is down, and who to call about it.
 
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
-stores, owner. The anchor most other types point at. Without it, a cross-reference has nothing to resolve against.
+stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 ### Procedural: living, must be rehearsed
 
 Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed runbook is dangerous.
 
-**[Processes](../processes.md).** A planned procedure followed deliberately (releasing, onboarding, provisioning,
-rotating a secret). Written to be followed by someone who has not done it before.
+**[Processes](../processes.md).** A planned procedure (releasing, onboarding, provisioning, rotating a secret). Write
+each one for somebody who has not done it before.
 
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
-decision tree. Disaster recovery and estate rebuild live here.
+decision tree. Disaster recovery and estate rebuild are runbooks.
 
 <!-- END GENERATED: types-detail -->
 
@@ -159,8 +160,8 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**Capability vs Service.** A capability is what a customer gets. A service is a thing we deploy. One capability
-typically spans several services. One service often contributes to several capabilities.
+**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
+capability usually spans several services. One service usually contributes to several capabilities.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.

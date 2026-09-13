@@ -4,7 +4,7 @@ What `kac` prints when something is wrong, and what to do about it. Most heading
 search this page for the words on your screen. The rest name the situation you are in.
 
 A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, filed
-under a type and carrying YAML frontmatter above its prose.
+under a type, with YAML frontmatter above its prose.
 
 ## `kac: command not found`
 
@@ -18,7 +18,7 @@ kac --version
 A global install puts `kac` in `~/.dotnet/tools`, which your shell has to know about. If the install worked and the
 command still does not, add that folder to `PATH` and open a new shell.
 
-Inside a repository pinning the tool, run it through the manifest instead:
+Inside a repository that pins the tool, run it through the manifest instead:
 
 ```bash
 dotnet tool restore
@@ -31,8 +31,8 @@ dotnet tool run kac validate
 kac: could not locate a corpus (no .corpus.yaml above the cwd).
 ```
 
-Every command but `new` answers a question about a corpus, and finds one by walking up from the working directory.
-You are outside one. The exit code is `2`, which means no corpus rather than a fault in one.
+Every command but `new` answers a question about a corpus, and finds one by walking up from the working directory. You
+are outside one. The exit code is `2`, which means no corpus rather than a fault in one.
 
 `cd` into your corpus and run it again. If you meant to create a corpus, [`new`](cli/new.md) is the command.
 
@@ -113,13 +113,13 @@ kac checks | grep required-field
 
 The five you are most likely to meet:
 
-| Check            | What it means                                                       |
-|------------------|---------------------------------------------------------------------|
-| `required-field` | The type's schema declares a field this record does not carry.      |
-| `id-format`      | The id does not match the style its type declares.                  |
-| `link-resolves`  | An internal link points at a file that is not there.                |
-| `identity-id`    | The id in the identity line disagrees with the one in frontmatter.  |
-| `unknown-key`    | A frontmatter key is not one the schema declares.                   |
+| Check            | What it means                                                      |
+|------------------|--------------------------------------------------------------------|
+| `required-field` | The type's schema declares a field this record does not have.      |
+| `id-format`      | The id does not match the style its type declares.                 |
+| `link-resolves`  | An internal link points at a file that is not there.               |
+| `identity-id`    | The id in the identity line disagrees with the one in frontmatter. |
+| `unknown-key`    | A frontmatter key is not one the schema declares.                  |
 
 [Checks](design/checks.md) is the page for adding a check of your own.
 
@@ -131,11 +131,12 @@ The summary counts it:
 validated 13 document(s) and 8 template(s), skipped 1 without frontmatter. 0 error(s), 0 warning(s)
 ```
 
-A document is validated only if it carries a YAML frontmatter block. Frontmatter is how a document opts into its
-type's schema. Add one, or accept that the file is prose the corpus does not judge.
+A document is validated only if it has a YAML frontmatter block. Frontmatter is how a document opts into its type's
+schema. Add one, or accept that the file is prose the corpus does not judge.
 
-A file that is not counted at all was never discovered. [Discovery](design/discovery.md) lists the five rules that drop
-a file from the listing, and a `_` anywhere in its path is the usual answer.
+A file that is not counted at all was never discovered.
+[Discovery](design/discovery.md#what-discovery-excludes) lists the five rules that drop a file from the listing, and a
+`_` anywhere in its path is the usual answer.
 
 ## A new corpus does not validate
 
@@ -144,27 +145,27 @@ glossary.md
   error  [link-resolves]  link target 'services.md' does not resolve.  (glossary.md:36)
 ```
 
-You declined some types, and the type pages cross-reference each other. Those pages are yours from the moment they
-land, so edit the links out. [`new`](cli/new.md#known-limits) says why they arrive that way.
+You declined some types, and the type pages cross-reference each other. Those pages are yours from the moment they land,
+so edit the links out. [`new`](cli/new.md#known-limits) says why they arrive that way.
 
 ## Findings appear that a `.gitignore` should have hidden
 
-`kac` lists a corpus with `git ls-files`, so your exclude files count. A tree that is not a repository, or one where
-git cannot be run, falls back to a directory walk that honours none of them.
+`kac` lists a corpus with `git ls-files`, so your exclude files count. A tree that is not a repository, or one where git
+cannot be run, falls back to a directory walk that obeys none of them.
 
 Check you are in a repository, and that CI checks out with git rather than downloading an archive.
-[Running it in CI](ci.md#ci-never-commits-and-checks-out-with-git) covers that.
+[Running it in CI](ci.md#checking-out-with-git) covers that.
 
 ## Something else
 
 The exit code narrows it:
 
-| Code | Meaning                                                     |
-|------|-------------------------------------------------------------|
-| `0`  | No errors. Warnings may still have been printed.            |
-| `1`  | A corpus error, or a bad invocation.                        |
-| `2`  | No corpus found.                                            |
+| Code | Meaning                                          |
+|------|--------------------------------------------------|
+| `0`  | No errors. Warnings may still have been printed. |
+| `1`  | A corpus error, or a bad invocation.             |
+| `2`  | No corpus found.                                 |
 
 If the tool is wrong rather than your corpus, the
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) is where to say so. `kac --version` names the
+[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) is where to say so. `kac --version` prints the
 release and the commit it was built from, which is the first thing worth putting in the report.

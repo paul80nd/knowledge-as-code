@@ -1,42 +1,42 @@
-# Fields carried by every document in the taxonomy.
+# Fields every document in the taxonomy has.
 # A type file may refine a field here, and may declare fields of its own.
 
 notes: >
-  What is deliberately not a field here. `title` is the H1. `created` and `updated` are what git knows.
-  `lifecycle` follows from `tier`, and a second field could disagree with the first.
+  Some fields are absent on purpose. `title` is the H1. Git supplies `created` and `updated`.
+  `lifecycle` follows from `tier`.
 
 fields:
 
   id:
     required: true
     type: string
-    description: Stable, unique across the corpus, never reused. Format set by the type.
+    description: Stable, unique across the corpus, never reused, in the format the type sets.
     notes: >
-      The anchor every cross-reference resolves against, so a filename may be corrected and an id may not.
-      Format and width are set by the type's `id` block.
+      Every cross-reference resolves against the id. Correct a filename freely. Never change an id.
+      The type's `id` block also sets the width.
 
   type:
     required: true
     type: string
-    description: The type's singular name. Fixed for the type. CI checks it matches the folder.
+    description: The singular name of the type, which CI checks against the folder.
     notes: >
-      Derivable from the folder, and stated in frontmatter anyway: a record read away from its folder
-      still says what kind of thing it is.
+      The folder already gives this. The frontmatter states it anyway, so a record read away from
+      its folder still says what kind of thing it is.
 
   tier:
     required: true
     type: enum
     values: [decided, normative, descriptive, procedural, observed]
-    description: Fixed for the type. A trust signal for the reader. CI checks it matches the folder.
+    description: The record's trust level, fixed for the type and checked against the folder.
     notes: >
-      Derivable from the folder, and stated in frontmatter anyway: "observed" at the top of a page tells the
-      reader how much weight to give it.
+      The folder already gives this. The frontmatter states it anyway, so "observed" at the top of
+      a page tells a reader how much weight to give the record.
 
   status:
     required: true
     type: enum
     values: []          # supplied by each type
-    description: Values vary by type.
+    description: The record's current state, from the values this type sets.
 
   owner:
     required: true
@@ -44,11 +44,10 @@ fields:
     pattern: '^(human|role):[a-z0-9.-]+$'
     description: A person as `human:alex.doe`, or a post as `role:head-of-engineering`.
     notes: >
-      Someone has to be answerable, and a team alias leaves that open. The prefix says which kind of
-      actor the value names, so a reader never infers it from the spelling. `human:` is the Open
-      Knowledge Format's actor form for a person, taken unchanged. `role:` is ours, because OKF names a
-      person, a process or a producer and has no form for a post. Exactly one person holds a post, so
-      `role:` keeps answerability with one human and stays right on the day the post changes hands.
+      The pattern admits a person and a post, and no team alias. The prefix states which kind of
+      actor the value is, so a reader never infers it from the spelling. `human:` is the Open
+      Knowledge Format's actor form for a person, taken unchanged. `role:` is this framework's own,
+      because OKF describes a person, a process or a producer and has no form for a post.
 
   sources:
     required: false
@@ -61,25 +60,19 @@ fields:
         description: A work item, a page, a path, or the population the content was drawn from.
     description: Where the content came from, one entry per source.
     notes: >
-      Where a record came from, kept for whoever maintains it. An exported record has to stand up without
-      the work item that raised it, so this field stays behind. `reports` exports its own refinement of
-      it, which names corpora rather than tickets.
-
-      `resource` is the Open Knowledge Format's one required key on a source, taken unchanged. We leave
-      out OKF's optional `id`, `title`, `author`, `usage_count` and `last_modified` until something here
-      reads one.
-
-      Write one entry per source, so two agents finding the same thing leave two entries.
+      `resource` is the Open Knowledge Format's one required key on a source, taken unchanged. OKF's
+      optional `id`, `title`, `author`, `usage_count` and `last_modified` are left out until
+      something here reads one. `reports` is the only type that exports this field, and it refines
+      it into a list of corpora.
 
   tags:
     required: false
     type: list
     of: string
     pattern: '^[a-z0-9-]+$'
-    description: Free-form, lowercase, hyphenated. Used for cross-cutting search.
+    description: Free-form, lowercase and hyphenated. A reader searches on these across types.
 
-# Keys the validator admits and reads nothing from. Azure DevOps uses them to label a page in wiki
-# navigation, which is a rendering concern rather than document metadata.
+# The validator accepts these keys and reads nothing from them. Azure DevOps labels a wiki page with them.
 reserved:
   - title
   - allowTitleToDifferFromFilename

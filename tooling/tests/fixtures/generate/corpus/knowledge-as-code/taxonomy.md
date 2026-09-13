@@ -4,9 +4,9 @@
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                                     | It goes in         |
-|---------------------------------------------------------------|--------------------|
-| A decision that affects more than one repo, and its reasoning | [ADRs](../adrs.md) |
+| You have…                                                        | It goes in         |
+|------------------------------------------------------------------|--------------------|
+| A decision affecting more than one repository, and its reasoning | [ADRs](../adrs.md) |
 
 <!-- END GENERATED: types-placement -->
 
@@ -16,11 +16,11 @@
 
 ### Decided: immutable once accepted
 
-Superseded rather than rewritten, so what was thought at the time survives being wrong.
+Superseded, never rewritten, so what was thought at the time survives being wrong.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
-behind it. The context, the choice, the alternatives weighed, the consequences. Immutable once accepted and superseded
-by a new ADR rather than rewritten. A decision local to a single repository belongs in the repo that holds it, not here.
+behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
+later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
 <!-- END GENERATED: types-detail -->
 

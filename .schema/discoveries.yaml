@@ -8,28 +8,25 @@ page: discoveries.md
 tier: observed
 lifecycle: perishable
 summary: Something noticed during work and not yet verified, captured cheaply and expiring unless promoted.
-goes-here: Something surprising you noticed and haven't verified
+goes-here: Something surprising you noticed and have not verified
 detail: >
-  Deliberately low-ceremony (a title, an observation, why it might matter) and carrying a confidence level, so
-  that "the build fails silently if X" has somewhere to go the moment it is noticed.
+  A title, an observation, why it might matter, and a confidence level. "The build fails silently if X" then
+  has somewhere to go the moment somebody notices it.
 
 versus:
   fixes: >
-    A discovery is unverified and might be wrong or already fixed. A fix has been verified by somebody who
-    checked it, and carries authority. Never write straight to a fix from a session. Capture the discovery
-    and let promotion do the work.
+    A discovery is unverified, and might be wrong or already fixed. A fix has been checked by somebody, so it
+    has authority. Never write straight to a fix from a session. Capture the discovery and let promotion do
+    the work.
 
 lineage:
   prior-art: "None. See [What has no precedent](https://paul80nd.github.io/knowledge-as-code/framework/lineage/#what-has-no-precedent)"
 
 notes: >
-  This type declares no `export:` block, so nothing it holds travels. A discovery is unverified, expires by
-  default, and is often true of one machine on one branch. A corpus inheriting another corpus's discoveries
-  would merge notes it cannot act on into its own view.
-
-  What a corpus's own agents should be able to read is a different question, and one `export:` block cannot
-  answer both. <https://paul80nd.github.io/knowledge-as-code/design/export/> says why a type travels by
-  default, and holding one back is what needs the reason.
+  This type declares no `export:` block, so nothing in it travels. A discovery is unverified, expires by
+  default, and is often true of one machine on one branch. Inheriting another corpus's discoveries would mix
+  observations you cannot act on into your own view.
+  See <https://paul80nd.github.io/knowledge-as-code/design/export/>.
 
 id:
   prefix: dsc
@@ -51,28 +48,28 @@ fields:
     required: true
     type: enum
     values: [human, session, dreamed]
-    description: Who or what observed it. `dreamed` means proposed by an agent.
+    description: Who or what observed it. `dreamed` means an agent proposed it.
 
   confidence:
     required: true
     type: enum
     values: [unverified, corroborated, confirmed]
-    description: Starts at `unverified`, and stays there unless genuinely proven.
+    description: Starts at `unverified`, and moves only when somebody proves it.
     notes: An agent cannot confirm its own observation.
 
   expires:
     required: true
     type: date
-    description: Quoted. Ninety days from capture, a convention the template carries.
+    description: Quoted. The day the observation lapses, ninety days from capture.
     notes: >
-      The template carries the ninety days, because nothing here writes a document's frontmatter. An
-      observation nobody has needed in three months was probably situational.
+      Nothing here writes a document's frontmatter, so the ninety days is the template's to set. An
+      observation nobody has needed in ninety days was probably situational.
 
   provenance:
     required: false
     required-when: 'source == dreamed'
     type: string
-    description: A reference back to the session and passage, so review is a check rather than an act of faith.
+    description: A reference back to the session and passage, so a reviewer can check the claim.
     notes: An unverifiable proposal is a rejected proposal.
 
   applies-to:
@@ -100,12 +97,12 @@ index:
 
 rules:
   - id: low-ceremony
-    description: A discovery stays within the length its tier is for.
+    description: A discovery stays within the length a capture needs.
     severity: warning
     expr: "words() <= 200"
     message: >
-      This is longer than a capture should be. If it needs this much explaining it has outgrown the tier.
-      Promote it rather than expanding it here.
+      this is longer than a capture should be. Promote it into a fix or a standard, and write the detail
+      there.
   - id: expiry-sweep
     description: >
-      Scheduled. Discoveries past `expires` with no promotion are set to `expired` with a note, not deleted.
+      Scheduled. A discovery past `expires` with no promotion is set to `expired` with a note, and kept.

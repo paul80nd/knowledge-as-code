@@ -29,13 +29,13 @@ The versions it offers stop one release short of the pin.
 
 ## Cause
 
-macOS ships `/usr/bin/python3` at 3.9, and yamllint 1.38.0 needs Python 3.10 or newer. pip narrows the index to the
-releases the running interpreter can take, so the pinned one is on PyPI and invisible from here. The error quotes the
-pin because that is what it was asked for, and says nothing about the interpreter.
+macOS ships `/usr/bin/python3` at 3.9, and yamllint 1.38.0 needs Python 3.10 or newer. pip filters the index down to
+the releases the running interpreter supports, so the pinned release is on PyPI and invisible from here. The error
+quotes the pin it was given, and says nothing about the interpreter.
 
 ## Resolution
 
-1. Install both linters from Homebrew, which brings a Python of its own.
+1. Install both linters from Homebrew, which installs a Python of its own.
 
    ```sh
    brew install yamllint actionlint
@@ -48,23 +48,23 @@ pin because that is what it was asked for, and says nothing about the interprete
    actionlint --version  # 1.7.12
    ```
 
-Homebrew serves the pinned yamllint and the pinned actionlint together. The `lint` job takes actionlint from a
-`go install` line instead, so `.github/requirements.txt` never names it.
+Homebrew installs the pinned yamllint and the pinned actionlint together. The `lint` job installs actionlint with a
+`go install` line, so `.github/requirements.txt` does not list it.
 
 ## Why it happens
 
-The `lint` job sets Python up at 3.13 before it installs, so CI never meets this. `.github/requirements.txt` records
-what that job takes rather than what a laptop can run. Dependabot moves the pin, so the floor rises again whenever
-yamllint drops a Python version.
+The `lint` job installs Python 3.13 before it installs the requirements, so CI never sees this failure.
+`.github/requirements.txt` records what that job installs, not what a laptop can run. Dependabot moves the pin, so the
+minimum Python version rises again whenever yamllint drops an old one.
 
 ## How we found it
 
-Read the version list under the message rather than the message itself. Check the pinned release on PyPI, because a
-list stopping short of a release that exists is the interpreter filtering the index. `/usr/bin/python3 --version` is
-the next command.
+A session installing the linters on this Mac read the list of versions in the error rather than the message above it.
+The list stopped one release short of a release PyPI does have, and that gap is the signal.
+`/usr/bin/python3 --version` reported 3.9, which the error never mentions.
 
 ## Related
 
-* [std-CI] carries what a workflow here owes, and the `lint` job is one of its checks.
+* [std-CI] states the rules a workflow here follows, and the `lint` job is one of its checks.
 
 [std-CI]: ../standards/workflows.md

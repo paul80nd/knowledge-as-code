@@ -41,20 +41,20 @@ several rules, and one rule may need several controls.
 
 <!-- BEGIN GENERATED: schema-controls -->
 
-| Field         | Value                                                                    | Notes                                                                                    |
-|---------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| `id` *†       | string                                                                   | Stable, unique across the corpus, never reused. Format set by the type.                  |
-| `type` *†     | string                                                                   | The type's singular name. Fixed for the type. CI checks it matches the folder.           |
-| `tier` *†     | `normative`                                                              | Fixed for the type. A trust signal for the reader. CI checks it matches the folder.      |
-| `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                                 |
-| `owner` *†    | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
-| `sources` †   | list                                                                     | Where the content came from, one entry per source.                                       |
-| `tags` †      | list                                                                     | Free-form, lowercase, hyphenated. Used for cross-cutting search.                         |
-| `verifies` *  | list                                                                     | Standard ids, ideally rule-level anchors. A control that names no rule is not a control. |
-| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check happens. `not-enforced` is first-class. An honest gap beats a fiction.     |
-| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs. Required when `mechanism != not-enforced`.                            |
-| `evidence`    | string                                                                   | Where the proof lives (the build log, the audit note, the dashboard).                    |
-| `applies-to`  | list                                                                     | Service ids, or `all`.                                                                   |
+| Field         | Value                                                                    | Notes                                                                         |
+|---------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†       | string                                                                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†     | string                                                                   | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†     | `normative`                                                              | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                      |
+| `owner` *†    | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †   | list                                                                     | Where the content came from, one entry per source.                            |
+| `tags` †      | list                                                                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `verifies` *  | list                                                                     | The standard ids this control checks, as rule-level anchors where possible.   |
+| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check runs, or `not-enforced` where nothing checks the rule.          |
+| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs. Required when `mechanism != not-enforced`.                 |
+| `evidence`    | string                                                                   | Where the proof lives: the build log, the audit note, or the dashboard.       |
+| `applies-to`  | list                                                                     | Service ids, or `all`.                                                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -101,13 +101,14 @@ several rules, and one rule may need several controls.
 | `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
+| `clause-quoted-faithfully`  | error   | A span quoted beside a clause citation is still in the clause it cites.                                         |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `mechanism-has-evidence`    | warning | A control whose mechanism is not `not-enforced` names where its evidence can be found.                          |
+| `mechanism-has-evidence`    | warning | A running control says where its evidence can be found.                                                         |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

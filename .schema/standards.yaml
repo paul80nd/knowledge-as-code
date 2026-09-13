@@ -10,36 +10,34 @@ lifecycle: living
 summary: The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.
 goes-here: A rule people must follow when building
 detail: >
-  Imperative throughout: **MUST**, **SHOULD**, **MAY**. Composed rather than read alone: the rules for a piece
-  of work are the union of the layers that apply to it.
+  Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work
+  are the union of the folders that apply to it.
 
 versus:
   controls: >
-    The standard says what to do. The control says how we know it happened. "Secrets **MUST** come from the
-    vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build, it is a
-    control.
+    The standard says what to do. The control says how anybody can tell it happened. "Secrets **MUST**
+    come from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can
+    fail a build, it is a control.
 
 lineage:
   prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer, and [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
   alignment: >
     Granular and prescriptive requirements, the RFC 2119 keyword set, and the all-capitals rule
   divergence: >
-    We compose standards by union across the folders that apply. HCGF has no composition model
+    Standards here compose by union across the folders that apply. HCGF has no composition model
 
 collision: >
-  In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an IEEE,
-  an RFC. Here it is an internal rulebook. The collision is unavoidable, since the governance frameworks we take
-  the layering from have the same problem, but it is worth saying aloud.
+  In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an
+  IEEE, an RFC. Here it is an internal rulebook. The governance frameworks this layering comes from have
+  the same collision, so no name avoids it. Say which sense you mean where both are in play.
 
   The grammar is worth being precise about too. The keyword set comes from **BCP 14**, which is [RFC
   2119](https://www.rfc-editor.org/rfc/rfc2119) *and* [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)
-  together. RFC 8174 establishes that the keywords carry their normative meaning **only when written in
-  capitals**, and that is the rule this type depends on. Citing RFC 2119 alone leaves it unsupported.
+  together. RFC 8174 is what makes the keywords normative **only when written in capitals**, and that is
+  the rule this type depends on. Cite BCP 14, because RFC 2119 alone leaves it unsupported.
 
-# A mnemonic drawn from the concept the standard governs, two to seven characters. Standards are cited
-# constantly from controls and from other standards, so the id is what a reader meets most often and it
-# should say something. The length follows the word rather than a column: std-PR and std-SECRET are each
-# as long as the thing they name. The filename carries none of it, which is what `carries-id:` says.
+# A mnemonic of two to seven characters, drawn from the concept the standard governs. `carries-id: false`
+# below keeps it out of the filename.
 id:
   prefix: std
   style: mnemonic
@@ -52,11 +50,8 @@ filename:
   carries-id: false
   slug-max: 30
   notes: >
-    A standard is named for the rule area alone and carries no part of its id. The category folder and
-    the topical slug already say what the file holds, and prefixing the mnemonic gives
-    `common/secr-secret-handling.md`. The mnemonic lives in frontmatter. A repeated area name is the
-    composition model made concrete, so `common/testing.md` and `platform/node/testing.md` are one
-    topic written at two altitudes.
+    Two standards may share a filename under different folders. `common/testing.md` and
+    `platform/node/testing.md` are one topic written at two levels of generality.
 
 fields:
 
@@ -66,20 +61,16 @@ fields:
     values: [draft, active, deprecated, superseded]
     description: Plain values only. Enforcement notes belong in `verified-by`.
     notes: >
-      A status of "until ADR-NNNN is accepted" is derivable from `derived-from` plus that ADR's own status.
+      Nothing needs a status such as "until ADR-NNNN is accepted". `derived-from` and that ADR's own
+      status already give it.
 
   category:
     type: string
     from: sub-path
     description: The folder the standard is filed under, below `standards/`.
     notes: >
-      Standards compose: the rule-set that binds a piece of work is the union of the folders that apply
-      to it. So a folder groups the standards a reader goes looking for together, and a rule is written
-      at the most general folder where it is still true.
-
-      Where you save the file is what sets it. Folders can nest, so `platform/node` is a category and
-      `platform` is the category above it. A standard saved straight into `standards/` has no category.
-      You choose the folders.
+      A folder groups the standards a reader goes looking for together. Write a rule at the most
+      general folder where it is still true.
 
   derived-from:
     required: false
@@ -88,8 +79,7 @@ fields:
     ref: adrs
     description: The ADRs this standard distils. Provenance may come from `implements` instead.
     notes: >
-      `provenance-required` below is what enforces it. `implements` satisfies it where the standard descends
-      from a policy rather than a decision.
+      `provenance-required` below enforces this.
 
   implements:
     required: false
@@ -100,25 +90,10 @@ fields:
     mirrors-citations: Covers
     description: Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.
     notes: >
-      Each rule closes on a `Covers` line naming the clauses it discharges, and CI holds the union of
-      those lines equal to this field. The frontmatter says which obligations the standard answers, and
-      each rule says which of them it answers, so a reader wanting the rule behind `pol-SCRT.ROTATE`
-      finds it without reading the whole document.
-
-      The obligations under a rule carry no clause citation of their own. One line at the foot of the
-      rule says what the rule discharges, where an id on every bullet buries the obligation a reader
-      came for.
-
-      Clause by clause, and a bare policy id is refused, in the field and on a `Covers` line alike. A
-      standard discharges some of a policy's clauses and seldom all of them, so a bare id is one
-      keystroke shorter than the honest list and reads to anything counting coverage as every clause
-      covered. A standard that does cover every clause lists every clause. The policies it relates to
-      are readable from the clause ids, so no second field carries them.
-
-      One-way, and pointed upward. A standard names the clause it puts into practice. The policy does not
-      name its standards. Policies are the layer a downstream corpus inherits and a standard is the layer it
-      writes for itself, so the set of implementers is unknowable from where the policy sits. A policy
-      with no implementer named is the normal state, not a gap.
+      The citation points one way, upward. A standard cites the clause it puts into practice, and the
+      policy lists no standards back. A policy that no standard cites is a normal state. No second
+      field lists the policies, because the clause ids already give them.
+      See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
 
   verified-by:
     required: false
@@ -135,10 +110,10 @@ fields:
     reciprocal: promoted-to
     description: The discovery this was promoted from.
     notes: >
-      A discovery that turns out to be a rule people should follow is promoted here rather than to a fix,
-      and a fix carries the same field for the problems it takes. A standard reached this way still needs
-      the provenance `provenance-required` asks for, because a promotion says where the observation came
-      from and not which decision or clause the rule stands on.
+      A discovery that turns out to be a rule people should follow is promoted here. A fix declares the
+      same field for a discovery that turns out to be a problem. A standard reached this way still needs
+      the provenance `provenance-required` asks for, because a promotion says only where the observation
+      came from.
 
   applies-to:
     required: true
@@ -157,20 +132,14 @@ sections:
   required: [Summary, Rules, Examples, Conformance checklist, Rationale and provenance]
   optional: [Sources and further reading, Changelog]
 
-# Where a standard keeps the parts something else can cite. A rule is an H3 under `Rules`, holding the
-# obligations that answer to it, and its address is the anchor the heading slugs to. So
-# `std-IDEM.the-caller-chooses-the-key` names the rule a link to that fragment would land on.
-#
-# The heading is the part rather than the bullet under it. A bullet carries no id of its own, and a
-# standard composes by union across the folders that apply, so the smallest thing worth citing is the
-# run of obligations one heading gathers.
+# A rule is an H3 under `Rules`, addressed by the anchor its heading slugs to. The heading is the part, so
+# a citation addresses one heading's run of obligations and never a single bullet.
 parts:
   source: headings
   section: Rules
   noun: rule
 
-# What a standard contributes to a published export, and how much of each piece travels. `Rules` is
-# absent from the sections because the headings under it are parts, and `parts:` above carries them.
+# `Rules` is absent from the export's `sections:` because its headings are parts, and `parts:` exports them.
 export:
   version: 1
   fields: [id, title, category, status, derived-from, implements, applies-to, review-by, tags]
@@ -193,42 +162,8 @@ export:
       path: record.path
       anchor: part.anchor
   notes: >
-    A rule travels as the heading and the obligations beneath it, in the markdown the standard wrote
-    them in. The bold **MUST** is what makes a line binding under BCP 14, so flattening the markdown
-    would leave an agent reading an obligation as advice.
-
-    `Summary` says what the standard is for in the author's own words, and a rule read without it binds
-    more than the standard does. `Conformance checklist` travels because it is the same rules written as
-    a test, and an agent asking what it has to do here can answer from the checklist alone.
-
-    `Examples` and `Rationale and provenance` both stay behind, and both are a fetch away for a reader who
-    wants them. `Examples` is the longest section a standard holds, and it is written against one stack.
-    `Rationale and provenance` argues the rule where the rest of the record states it, and a consumer
-    acts on what the rule says.
-
-    `derived-from` travels, so the ADR a standard was decided in resolves for a consumer holding that
-    corpus's ADRs as well.
-
-    `implements` travels, and `covers` carries the same edge one rule at a time. The clauses a rule
-    discharges are named on its `Covers` line, and the exporter drops that line before it takes the
-    obligations, so a rule carrying nothing else travels with no obligations rather than with the
-    footnote standing where they belong. The ids reach the line instead.
-
-    Both are there so a consumer can count its own coverage. A corpus inheriting the policies it answers
-    to also inherits the standards discharging them, and without this edge it can see only what its own
-    standards cover. A clause id such as `eng:pol-RECV.IDEMPOT` resolves for exactly the consumer that
-    holds that corpus, which is the one asking the question.
-
-    `seeAlso` carries the rules of other standards this one points at. A standard composes by union, so
-    one rule commonly leans on another, and a link's target is stripped out of the words: an agent
-    reading "under [std-LEDGER.nothing-amends-an-entry]" is handed a bracket it cannot follow. It never
-    carries a policy clause, because a clause is cited as `[pol-INTC].HOLDS` and the link ends at the
-    policy.
-
-    The rules of one standard reach a consumer sorted on the heading, because that is what a
-    heading-sourced type does. The order the author grouped them in is a fact about the page, and a
-    reader who wants it opens the record.
-
+    A rule travels as its heading and the obligations beneath it, in the Markdown the standard wrote them
+    in. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
 index:
   columns: [id, title, category, status, derived-from, review-by]
   sort: id
@@ -239,15 +174,16 @@ rules:
     severity: error
     expr: "present('derived-from') or present('implements')"
     message: >
-      A standard cites where its authority comes from: an ADR in `derived-from`, a policy clause in
-      `implements`, or both. With neither this is guidance, and guidance is an explanation.
+      neither `derived-from` nor `implements` is set, so this standard does not say where its authority
+      comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the
+      document as an explanation.
   - id: rules-have-controls
     description: >
-      Every MUST / MUST NOT rule is claimed by a control, or the standard declares the gap explicitly.
+      Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.
   - id: changelog-begins-at-active
     description: Changelog entries are material changes only, and begin when status becomes `active`.
-    # Material means a rule added, removed or changed in effect. Wording, examples, link fixes and typos are not. Git
-    # has those.
+    # Material means a rule added, removed or changed in effect. Git covers wording, examples, link
+    # fixes and typos.
   - id: changelog-on-material-change
     description: >
-      If the Rules section changed and status is `active`, a new changelog entry is required in the same commit.
+      A change to the Rules section of an `active` standard needs a changelog entry in the same commit.

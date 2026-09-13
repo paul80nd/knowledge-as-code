@@ -20,8 +20,9 @@ tags: [ exceptions, governance, risk-acceptance ]
 Sometimes we knowingly break one of these policies, or a standard beneath it. When we do, we write down what we did,
 name the person accepting the risk, and set a date to look at it again.
 
-The same holds for a shortcut that breaks no rule: skipping the retry logic to ship on Friday, knowing someone else will
-have to add it. That is technical debt. Nothing here forbids it, but the debt is real, so we record it the same way.
+The same applies to a shortcut that breaks no rule: skipping the retry logic to ship on Friday, knowing someone else
+will have to add it. That is technical debt. Nothing here forbids it, but the debt is real, so we record it the same
+way.
 
 Almost every policy here leaves a way out, in the words "without a recorded deviation". Those words point here. A
 departure someone decided on, wrote down and gave a review date is risk management. The same departure taken quietly is
@@ -62,11 +63,11 @@ Some commitments admit no deviation at all, and no record makes any of them acce
 
 ## Notes
 
-No standard implements this directly. Standards cite it wherever they carry an exception clause, and so do the
+No standard implements this directly. Standards cite it wherever they have an exception clause, and so do the
 [controls](../../controls.md) that check those clauses are honoured.
 
-This policy says nothing about where a deviation is recorded. That belongs to the process that carries it, so that
-changing where we file deviations does not change what we committed to.
+This policy says nothing about where a deviation is recorded. That belongs to the process that records it, so changing
+where we file deviations does not change what we committed to.
 
 [pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md#clauses
 [pol-DATA]: ../security/data-data-protection.md#clauses

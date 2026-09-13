@@ -19,12 +19,13 @@ tags: [ accessibility, documentation, screen-reader ]
 
 `Deviation: dev-no-screen-reader-pass` `ACTIVE`
 
-The documentation site and the `kac` command line are reviewed by eye. No assistive technology has been near either.
+The documentation site and the `kac` command line are reviewed by eye. Nobody has run either with assistive
+technology.
 
 ## What we are doing instead
 
-[std-A11Y] holds a Markdown author to heading order, link text, table structure and image alternatives, and a reviewer
-checks those in the pull request. Material for MkDocs owns contrast, focus order and keyboard reach, and
+[std-A11Y] sets rules for a Markdown author on heading order, link text, table structure and image alternatives, and a
+reviewer checks those in the pull request. Material for MkDocs provides contrast, focus order and keyboard reach, and
 [tol-mkdocs-material] records what its assessment found. `kac` repeats in words whatever it says in colour.
 
 Every one of those is a rule somebody reads the diff against. None of them is a run with the software a blind reader
@@ -38,17 +39,17 @@ worse than no pass, because it reports a result somebody would believe.
 
 ## What compensates
 
-* [std-A11Y] reaches the structure a screen reader depends on, which is most of what a content author can get wrong.
-* The site is Markdown rendered by a widely used theme, so a fault in the chrome would be a fault thousands of sites
-  carry.
-* [tol-mkdocs-material] and [tol-spectre-console] each name what their assessment found short, so a known shortfall is
-  written down rather than assumed away.
+* [std-A11Y] covers the structure a screen reader depends on, which is most of what a content author can get wrong.
+* The site is Markdown rendered by a widely used theme, so a fault in the chrome would be one thousands of sites
+  share.
+* [tol-mkdocs-material] and [tol-spectre-console] each list where that tool falls short, so a known gap is written
+  down.
 
 ## How it closes
 
-Somebody reads the site's navigation, one command page and one framework page with NVDA or VoiceOver, and runs `kac
-validate` on a corpus with the same reader open. What that finds becomes issues, and this record closes on the day they
-are raised.
+Somebody reads the site's navigation, one command page and one framework page with NVDA or VoiceOver, and runs
+`kac validate` on a corpus with the same reader open. What that finds becomes issues, and this record closes on the day
+they are raised.
 
 Where nobody can run that pass by the review date, the honest close is the accessibility statement [std-A11Y] asks
 for. That statement says neither surface has been tested.
@@ -59,7 +60,7 @@ Both surfaces [std-A11Y] governs: the documentation site MkDocs builds from `doc
 
 ## Related
 
-* [std-A11Y] is the standard that reaches everything else in that policy.
+* [std-A11Y] covers everything else in that policy.
 
 [std-A11Y]: ../standards/accessibility.md
 [tol-mkdocs-material]: ../tools/docs/mkdocs-material.md

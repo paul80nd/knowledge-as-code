@@ -18,8 +18,8 @@ manifest, and the frontmatter block at the top of a record.
 
 ## What we use it for
 
-`kac.core` references it. Four kinds of file reach it, and a record's frontmatter is the one a reader meets: the
-`frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.
+`kac.core` references it. It parses four kinds of file, and a reader meets one of them: the frontmatter of a record.
+The `frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.
 
 ## Status
 
@@ -27,11 +27,11 @@ manifest, and the frontmatter block at the top of a record.
 
 ## Where it is used
 
-* [svc-kac] carries it.
+* [svc-kac] uses it.
 
 ## Alternatives considered
 
-None. It arrived with the first parser and nothing has pushed against it.
+None. It arrived with the first parser, and nothing since has given a reason to change.
 
 ## Licence and obligations
 

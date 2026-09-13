@@ -30,10 +30,10 @@ dotnet tool install --global KnowledgeAsCode.Tool
 kac --version
 ```
 
-`--version` names the release and the commit it was built from:
+`--version` prints the release and the commit it was built from:
 
 ```text
-0.13.0+c622cab6719a1880656c68171d9fb420dc91f724
+0.25.0+037426e8e60b7756f6883f307334a3368b80779d
 ```
 
 If the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to your `PATH` and open a new shell.
@@ -42,8 +42,8 @@ If the shell cannot find `kac` after a global install, add `~/.dotnet/tools` to 
 ## Start a corpus
 
 `kac new` turns the folder you are standing in into a **corpus**: one repository of knowledge records kept in git. It
-takes the framework from the knowledge-as-code repository, writes the files that framework says a corpus receives,
-and writes the two no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
+takes the framework from the knowledge-as-code repository, writes the files that framework says a corpus receives, and
+writes the two no template can supply: `.corpus.yaml`, which names your corpus, and a `README.md` to rewrite.
 
 ```bash
 mkdir my-corpus && cd my-corpus
@@ -51,17 +51,17 @@ kac new
 ```
 
 It asks what the corpus is called, which types it adopts, where it publishes and what builds it, with a default for
-each. Name a publishing target and it asks two more: where a person reads a record, and where an agent fetches one.
-Answer nothing at all and you still end with a corpus that validates, holding every type the framework declares. `--yes`
-takes every default and asks nothing, which is what a pipeline runs.
+each. Name a publishing target and it asks one more: the URL a person opens to browse the corpus. Answer nothing at all
+and you still end with a corpus that validates, holding every type the framework declares. `--yes` takes every default
+and asks nothing, which is what a pipeline runs.
 
 The folder does not have to be a repository yet. `new` offers to run `git init` where there is none. It finishes by
 running `generate`, then `validate`, then `git add -A`:
 
 ```text
-new: wrote 108 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
-updated 1 of 40 generated file(s).
-validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
+new: wrote 116 file(s) for my-corpus, taken from https://github.com/paul80nd/knowledge-as-code at 3b812bb.
+updated 1 of 42 generated file(s).
+validated 3 document(s) and 19 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
 new: staged. `git status` shows everything this wrote, and the first commit is yours.
 ```
 
@@ -80,8 +80,8 @@ You arrive with ignore rules, editor conventions and a wiki ordering. Name a CI 
 too. `new` writes that one system's and no other, so a corpus is never handed a workflow for a host it does not build
 on. [`new`](cli/new.md) covers every flag, the order it asks in, and what stops it.
 
-If you declined some types, the run ends by naming links the type pages carry to types you did not take. Those pages
-are yours from here, so edit the links out.
+If you declined some types, the run ends by naming links the type pages make to types you did not take. Those pages are
+yours from here, so edit the links out.
 
 ## Run the tool against your corpus
 
@@ -95,7 +95,7 @@ kac validate            # frontmatter, links, structure, clauses and the graph
 kac generate            # rewrite the indexes and the tables inside the markers
 ```
 
-A clean `validate` names the counts and exits `0`:
+A clean `validate` prints the counts and exits `0`:
 
 ```text
 validated 13 document(s) and 8 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)
@@ -118,9 +118,9 @@ Every command takes the same few options, and each answers with one of three exi
 
 ## Add your first record
 
-Your corpus arrives holding a few records. The ADR under `adrs/` and the policy under `policies/` are there to show the
-shape, and yours go beside them. The glossary under `glossary/` is the framework's own vocabulary, inherited word for
-word: write your own glossaries beside it and leave that one as it is.
+Your corpus arrives with a few records in it. The ADR under `adrs/` and the policy under `policies/` are there to show
+the shape, and yours go beside them. The glossary under `glossary/` is the framework's own vocabulary, inherited word
+for word. Write your own glossaries beside it and leave that one as it is.
 
 1. **Pick the type.** `knowledge-as-code/taxonomy.md` in your own corpus has a decision table saying where a record
    goes, covering the types that corpus adopted. [The default types](framework/types.md) introduces every one of them.

@@ -19,22 +19,22 @@ tags: [ exposure, network-security, segmentation ]
 
 ## Purpose
 
-A system is reachable only from where it needs to be reachable, and it can reach only what it needs. We deny traffic
-crossing a trust boundary unless we have deliberately allowed it.
+We make a system reachable only from where it needs to be reachable, and we let it call only what it needs. We deny
+traffic crossing a trust boundary unless we have deliberately allowed it.
 
-Connectivity that exists because nobody removed it is the path an attacker takes after the first foothold. If every
-route has to be asked for, an attacker who gets into one system finds nothing else it can reach.
+Connectivity that exists because nobody removed it gives an attacker a route onward from the first system they enter.
+Where every route is asked for, that attacker finds nothing else to call.
 
 ## Scope
 
 All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic
 arriving at our systems, traffic between them, and traffic leaving them.
 
-A trust boundary is the line between two things that have no automatic right to talk to each other: the public internet
-and our estate, or two of our own systems with no business calling one another.
+A trust boundary is the line between two things that have no automatic right to call each other: the public internet
+and our estate, or two of our own systems with no reason to call one another.
 
-_Boundary: this policy governs what may cross a boundary, and by what route. Which environments a boundary stands
-between is [pol-ENVS]'s. Watching what actually crossed it is [pol-OBSV]'s, under `SECMON`._
+_Boundary: this policy governs what may cross a boundary, and by what route. [pol-ENVS] states which environments a
+boundary separates. [pol-OBSV] owns watching what crossed it, under `SECMON`._
 
 ## Clauses
 
@@ -54,9 +54,9 @@ between is [pol-ENVS]'s. Watching what actually crossed it is [pol-OBSV]'s, unde
 
 ## Exceptions
 
-Some services are meant to be reached by anyone. They are in scope for the rest of this policy rather than exempt from
-it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a
-recorded deviation under [pol-DEVI].
+Some services are meant to be reached by anyone. The rest of this policy still applies to them. They are exposed
+through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation
+under [pol-DEVI].
 
 [pol-DEVI]: ../governance/devi-deviations-are-recorded.md
 [pol-ENVS]: ../security/envs-environment-separation.md
