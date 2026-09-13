@@ -26,6 +26,6 @@
     "Data": "**The legacy database**, which this service maps and does not own. Any data document describing it has to record more than one writer: the legacy library management system still writes to it directly."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/library/services/lending.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/library/services/lending.md"
   }
 }

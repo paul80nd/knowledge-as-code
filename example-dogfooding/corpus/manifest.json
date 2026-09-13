@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.24.0",
+  "contentVersion": "0.25.0",
   "mechanismVersion": 12,
-  "commit": "94320b7f40f0cfd3caeac6d96212994611b3bf30",
+  "commit": "92e111bec3e3754e878c93372124e52c0cf3b532",
   "dirty": false,
-  "generatedAt": "2026-09-13T18:09:24Z",
+  "generatedAt": "2026-09-13T18:47:18Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "94320b7f40f0cfd3caeac6d96212994611b3bf30"
+    "ref": "92e111bec3e3754e878c93372124e52c0cf3b532"
   },
   "sources": [
     {
@@ -30,10 +30,10 @@
       "contentVersion": "0.16.2",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "94320b7f40f0cfd3caeac6d96212994611b3bf30"
+        "ref": "92e111bec3e3754e878c93372124e52c0cf3b532"
       }
     }
   ],
@@ -98,7 +98,7 @@
     {
       "type": "processes",
       "shapeVersion": 1,
-      "records": 7,
+      "records": 8,
       "parts": 0,
       "dir": "processes",
       "partsFile": null,

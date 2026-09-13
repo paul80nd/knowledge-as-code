@@ -28,6 +28,6 @@
     "Data": "* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.\n* A blob container storing message bodies too large for the bus.\n\nBoth are in the shared storage account."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/library/services/notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/library/services/notices.md"
   }
 }

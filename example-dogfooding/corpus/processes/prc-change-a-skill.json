@@ -1,0 +1,27 @@
+{
+  "type": "processes",
+  "path": "processes/change-a-skill.md",
+  "trust": null,
+  "fields": {
+    "id": "prc-change-a-skill",
+    "title": "Change a skill or a hook",
+    "status": "active",
+    "applies-to": [
+      "svc-marketplace"
+    ],
+    "last-rehearsed": "never",
+    "rehearsal-frequency": null,
+    "tags": [
+      "plugin",
+      "skills",
+      "versioning"
+    ]
+  },
+  "sections": {
+    "When to use this": "You are editing a file under `template/.plugin/`, or one of this repository's own skills under `.claude/skills/`. Every corpus here names `plugin.from` in its descriptor, so a skill under `template/.plugin/` is authored once and shipped in four plugins. A change to it moves more version stamps than any other file here. A skill under `.claude/skills/` moves none.",
+    "Prerequisites": "* [std-PLUGIN], which states the rules a bundled skill follows. It states no order, so this page supplies one.\n* [std-VERS], which states what a move of each version stamp means.\n* `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.\n* A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/dog-fooding/processes/change-a-skill.md"
+  }
+}

@@ -28,6 +28,6 @@
     "Coverage and gaps": "`validate` checks a corpus against the schema. It reports a broken reference, a missing section, an unreciprocated\nedge or a field out of range. It reads no standard, so a record that obeys the schema and none of [std-PROSE] passes.\n\n`generate --check` reports stale output and prints the command to run locally. It writes nothing back, because the job\nhas `contents: read`.\n\n`validate` asks each consumed source what it publishes now, once per run. It fails an import that was never restored,\nwarns where a newer version sits inside the declared range, and reports where one sits outside it. It cannot see\nanother pull request, so a lock moved in a later one passes here.\n\nMost of the types the schema declares have no record in any corpus here, and a rule declared on an empty folder has never run against content. `kac validate` passes a corpus whose types are empty."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/94320b7f40f0cfd3caeac6d96212994611b3bf30/examples/dog-fooding/controls/0007-corpus-validation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/92e111bec3e3754e878c93372124e52c0cf3b532/examples/dog-fooding/controls/0007-corpus-validation.md"
   }
 }
