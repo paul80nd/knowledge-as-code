@@ -3,7 +3,7 @@ id: ctl-0009
 type: control
 tier: normative
 status: active
-verifies: [ eng:std-GATES, eng:std-TEST ]
+verifies: [ eng:std-GATES, eng:std-TEST, std-PLUGIN ]
 mechanism: ci
 frequency: per-pr
 evidence: The `tool` job's log on the pull request, under its three test steps.
@@ -25,6 +25,9 @@ Each layer asserts something different about the same corpus.
   test on that unit alone".
 * `eng:std-GATES.every-change-is-built-and-tested-automatically` says a push "**MUST** trigger a build and the test
   suite, without anyone asking for it".
+* `std-PLUGIN.the-bundle-carries-a-frozen-export-and-nothing-writes-to-it` says a skill "**MUST** report a `status`
+  its type does not treat as in force" and "**MUST** report a `reviewBy` that has passed, where its type exports
+  one". `PluginSkillStalenessTests` holds each lookup skill to both, deriving what it owes from the schema.
 
 ## How it works
 

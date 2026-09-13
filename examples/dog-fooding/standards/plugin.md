@@ -6,7 +6,7 @@ status: active
 implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER,
   eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY, eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM,
   eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
-verified-by: [ ctl-0008 ]
+verified-by: [ ctl-0008, ctl-0009 ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -82,8 +82,8 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 
 - The export inside a plugin **MUST** be the bytes `kac export` wrote.
 - A skill **MUST NOT** write to any file under `${CLAUDE_PLUGIN_ROOT}`.
-- A skill **MUST** report a `status` of `draft`, `deprecated` or `superseded` on the record it quotes.
-- A skill **MUST** report a `reviewBy` that has passed.
+- A skill **MUST** report a `status` its type does not treat as in force, under every such value that type declares.
+- A skill **MUST** report a `reviewBy` that has passed, where its type exports one.
 - A skill **MUST** quote `generatedAt` from `manifest.json` alongside either.
 - A skill **MUST** quote the wording the export contains, and link the record for the rest.
 - The words a skill quotes **MUST** come from the export, and never from a second copy kept for agents.
@@ -369,6 +369,8 @@ this build never opens, so both shapes survive only as long as the skills writin
 
 ## Changelog
 
+- 2026-09-13: the staleness rules read the type rather than a fixed list. A skill reports every `status` its own type
+  declares, and reports `reviewBy` only where that type exports one.
 - 2026-09-09: a skill leaves the choice of search tool to the session, and names no tool of its own.
 - 2026-09-08: added the shape a deviation request carries, and the boundary that keeps one inside its own
   organisation.

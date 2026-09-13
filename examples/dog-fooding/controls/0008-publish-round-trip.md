@@ -46,7 +46,8 @@ and that the standalone skill survived. No job installs that plugin.
 `dog-fooding` is left out of `round-trip`, because it is the same shape as `payments`.
 
 `round-trip` reads one sentence of each skill. It greps `SKILL.md` for the parts file the component requires, and
-fails a skill that names another type's. Nothing else `std-PLUGIN` asks of the wording is checked here.
+fails a skill that names another type's. Nothing else `std-PLUGIN` asks of the wording is checked here. Two of its
+rules are checked by [ctl-0009] instead, which is where the unit tests that read a skill's prose run.
 
 The component list comes from `bundle.json`, which records what the manifest declared. So a skill or hook directory
 somebody forgot to declare stays undeclared and fails nothing.
@@ -56,3 +57,5 @@ Packages or the `marketplace` branch accepts either is answered after the merge.
 
 The Claude Code CLI installs at `latest` in every one of these jobs, so a release of it can fail the gate with no
 change here.
+
+[ctl-0009]: 0009-tool-test-layers.md
