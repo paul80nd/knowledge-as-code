@@ -40,21 +40,31 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
 2. Where `kac` changed, write the changelog entry on this branch. An entry written after the merge is too late.
 3. Where `kac` changed, put the release call to the branch owner and recommend an answer. Recommend releasing where the
    change is useful on its own. Recommend holding where it is one part of a group that is no use apart.
-4. Run `kac update --check --from ../../` inside each corpus under `examples/` that you changed. Where you changed an
+4. Move `content-version` in each corpus whose records changed, and in each one whose bundled skills changed what they
+   tell a reader to do. [std-VERS] says which component moves.
+5. Move the `resolved:` lock of every consumer of a corpus you moved in step 4. Move its `version:` range as well where
+   that producer is below 1.0.0 and its minor moved.
+6. Prove each lock the way CI will. Delete `.imports/` in `examples/payments` and `examples/dog-fooding`, repack each
+   producer, then run `kac restore` in each consumer and read what it reports. `.imports/` is untracked, so a restore
+   over a folder you kept proves nothing.
+7. Run `kac update --check --from ../../` inside each corpus under `examples/` that you changed. Where you changed an
    overlay file in `template/`, or a rule in `manifest.yaml`, run it inside every one of them instead.
-5. Run the test layers your change touches, one `kac` invocation at a time. Where you are unsure, run all four.
-6. Load `technical-writing` before you write each commit message. The subject says what changed. The body says why.
-7. Put a behaviour change in a commit of its own, apart from any refactor.
-8. Write the pull request body to state the reason and the evidence. List each test layer you ran and what it
-   reported. Do not retell the diff.
-9. Open the pull request. Say what you did not do, and why.
+8. Bring each report whose `sources:` names a corpus you moved in step 4 up to date. Load `writing-a-report`. It says
+   when to raise `sources:` by hand, and when to run the report again and merge.
+   * Read every one of them. `report-stale` says nothing until step 4 moves the version.
+9. Run the test layers your change touches, one `kac` invocation at a time. Where you are unsure, run all four.
+10. Load `technical-writing` before you write each commit message. The subject says what changed. The body says why.
+11. Put a behaviour change in a commit of its own, apart from any refactor.
+12. Write the pull request body to state the reason and the evidence. List each test layer you ran and what it
+    reported. Do not retell the diff.
+13. Open the pull request. Say what you did not do, and why.
 
 ## Verification
 
 Every layer you ran reports zero errors, and `gh pr view` shows the request open against `main`.
 
-Close the session by stating the branch, what each commit contains, which layers you ran and what each one reported,
-and what you left undone.
+Close the session by stating the branch, what each commit contains, which corpora moved their `content-version`,
+which layers you ran and what each one reported, and what you left undone.
 
 ## If it goes wrong
 
@@ -64,14 +74,18 @@ accepted cannot be replaced. Fix a release that shipped wrong in the next patch.
 ## Related
 
 * [std-CI.a-version-moves-by-hand-and-publishes-once] states the changelog entry, the `<Version>` move and the
-  `content-version` each corpus needs. Steps 2 and 3 say where those fall in the order.
+  `content-version` each corpus needs. Steps 2, 3 and 4 say where those fall in the order.
+* [std-VERS.what-a-move-of-each-stamp-means] states what a move of the major, the minor and the patch of
+  `content-version` means. Step 4 is where you pick one.
 * [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request] states the lock and the range every
-  consumer needs, and what proves them before the merge, not in CI.
+  consumer needs, and what proves them before the merge, not in CI. Steps 5 and 6 say where those fall in the order.
 * [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] states what you must do for a file two trees
-  contain. Step 4 is where you prove it.
+  contain. Step 7 is where you prove it.
 * [svc-kac] is what a release publishes.
 
 [std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
 [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved
+[std-VERS]: ../standards/versioning.md
 [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
+[std-VERS.what-a-move-of-each-stamp-means]: ../standards/versioning.md#what-a-move-of-each-stamp-means
 [svc-kac]: ../services/kac.md
