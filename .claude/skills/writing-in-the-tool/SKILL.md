@@ -16,23 +16,32 @@ Load `technical-writing` first. This page adds the shape of prose in the tool.
 
 ## Comments
 
-* The code says what it does. A comment says why it is that way.
-* A comment sits at a different level from the code under it. Higher, to say what the code is for. Lower, to state a
-  fact the code cannot show: what a library does, what a null means, which order two calls must keep. A comment at the
-  same level as the code repeats it. Delete it.
-* Read the code under every comment you touch. Fix a comment that has drifted. A wrong comment is worse than none,
-  because it is believed.
-* Keep a comment to one line where one line does.
-* Use no banner and no `#region`. A region collapses by default and hides structure. StyleCop bans it under `SA1124`.
-* A file that wants section headings wants splitting.
-* Do not apologise. Cut `hacky`, `sorry` and `for now`. Name the constraint instead.
+Write comments to John Ousterhout's *A Philosophy of Software Design*, chapters 12 to 16. You know it. The rules
+below say where this repository differs.
+
+* **Comment every constraint a maintainer could break by tidying the code.** Where deleting a line would still
+  compile and still pass the tests, say why it is there. That is the comment most often missing, and the one that
+  pays for itself.
+* **State the constraint. Do not argue for it.** A comment that defends a choice against the alternatives is a
+  design page in the wrong place. The reasoning goes under `docs/design/`, and the comment cites the path.
+* **Keep a comment to one paragraph.** A longer one is a design page in the wrong place too. Move it and cite the
+  path.
+* **A comment at the same level as the code repeats it. Delete it.**
+* **Describe the design as it stands.** A comment never says what the code used to do. The commit message holds
+  that.
+* **Read the code under every comment you touch.** Fix a comment that has drifted. A wrong comment is worse than
+  none, because it is believed.
+* **Use no banner and no `#region`.** A region collapses by default and hides structure. StyleCop bans it under
+  `SA1124`. A file that wants section headings wants splitting.
+* **Do not apologise.** Cut `hacky`, `sorry` and `for now`. Name the constraint instead.
 
 ## `///` and `//`
 
 * `///` is read by a caller. The IDE shows it beside the call. Write what a caller must know to use the member
   correctly: what a null means, what it throws, an order two calls must keep, a cost. A member whose name and signature
   already say it needs none.
-* `//` is read by a maintainer. Write why the implementation is the way it is, inside a body or above a private member.
+* `//` is read by a maintainer. Write the constraint the implementation answers to, inside a body or above a
+  private member.
 * Keep the two apart. A caller must not have to open the file to learn what a method promises.
 
 ## Messages the tool prints
