@@ -29,6 +29,6 @@
     "Conformance checklist": "- [ ] The redaction field list is in the repository and a test asserts each entry is removed.\n- [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.\n- [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.\n- [ ] Error reports include a request id and no request body.\n- [ ] The PSP key resolves from the managed store at start-up, and appears in no configuration file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/12f6579053c22a400016689168c8209e687736af/examples/payments/standards/operations/payment-telemetry.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ff242aa1bd6b45a6afef2f92a4be2460bdbfc367/examples/payments/standards/operations/payment-telemetry.md"
   }
 }
