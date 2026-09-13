@@ -18,12 +18,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-08-21, and no project references it today.",
-    "Status": "**deprecated** since 2026-08-21. [tol-spectre-console] replaced it in `kac` 0.2.1, and the reference is gone rather than pending.\n\nEvery verb, option and exit code answered as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped standing for `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
+    "What we use it for": "Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-08-21. No project references it today.",
+    "Status": "**deprecated** since 2026-08-21. [tol-spectre-console] replaced it in `kac` 0.2.1, and the package reference is already gone.\n\nEvery verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
     "Licence and obligations": "MIT. Nothing followed for a package this repository published.",
-    "Where it is used": "Nowhere. No service in this catalogue carries it."
+    "Where it is used": "Nowhere. No service in this catalogue uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/build/system-commandline.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/build/system-commandline.md"
   }
 }

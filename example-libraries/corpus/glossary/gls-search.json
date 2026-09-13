@@ -13,9 +13,9 @@
     ]
   },
   "sections": {
-    "Scope": "How a reader's words reach a catalogue record: what is typed, what is matched, and what orders the results. The things being searched for belong to the whole estate, so they sit in its glossary rather than here."
+    "Scope": "How a reader's words find a catalogue record: what is typed, what is matched, and what orders the results. The things being searched for belong to the whole estate, so its glossary defines them."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/library/glossary/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/library/glossary/search.md"
   }
 }

@@ -26,13 +26,13 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "The repository, the runners, the package registry approval, the published site and the plugin's marketplace branch are all GitHub's. nuget.org holds the published tool, and it is the one thing outside.\n\nNothing states which failures are GitHub's to handle and which are this repository's. Nothing has been written about moving elsewhere.",
-    "Why we need it": "Every corpus here is Markdown in git and the tool is a .NET project, so the content and the code move to any git host by pushing them. What does not move is the workflow syntax, the pages publish and the plugin marketplace. Writing down that third of the problem is the whole of the work, and nobody has needed it.\n\nNothing here earns revenue or holds anybody's data, so the loss on the day GitHub stops is a rebuild rather than an outage.",
+    "What we are doing instead": "The repository, the runners, the package registry approval, the published site and the plugin's marketplace branch are all GitHub's. nuget.org hosts the published tool, and that is the one thing outside.\n\nNothing states which failures are GitHub's to handle and which are this repository's. Nothing has been written about moving elsewhere.",
+    "Why we need it": "Every corpus here is Markdown in git and the tool is a .NET project, so the content and the code move to any git host by pushing them. What does not move is the workflow syntax, the pages publish and the plugin marketplace. Writing down that third of the problem is all the work there is, and nobody has needed it.\n\nNothing here makes money or stores anybody's data. On the day GitHub stops, the cost is a rebuild.",
     "What compensates": "* Everything is in git, so any clone is a complete copy of the content and the code.\n* The MIT licence lets anybody continue the work from that clone.\n* Published versions of `kac` stay on nuget.org, which is not GitHub.\n* [std-CI] keeps the CI logic in workflow files in the repository, so what would need rewriting is visible.",
-    "How it closes": "A record says what this repository depends on GitHub for, which of those has an alternative, and what a move would cost. That is a page rather than a project, and this record closes on it.",
+    "How it closes": "A record says what this repository depends on GitHub for, which of those has an alternative, and what a move would cost. That is a page of work, and this record closes on it.",
     "Scope": "The repository, its issues, its workflows, the documentation site and the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/deviations/github-concentration.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/deviations/github-concentration.md"
   }
 }

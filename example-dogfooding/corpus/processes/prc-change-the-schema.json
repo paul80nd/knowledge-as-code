@@ -15,10 +15,10 @@
     ]
   },
   "sections": {
-    "When to use this": "You are changing what a type declares. A schema edit on its own leaves every corpus stale, because each type page carries generated blocks derived from these files.",
-    "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which carries the closed key space and the field-order trap.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite at step 8 and the behaviour specs at step 9."
+    "When to use this": "You are changing what a type declares. A schema edit on its own leaves every corpus stale. Each type page has generated blocks derived from these files.",
+    "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which states the closed key space and the field-order trap.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite at step 8 and the behaviour specs at step 9."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/processes/change-the-schema.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/processes/change-the-schema.md"
   }
 }

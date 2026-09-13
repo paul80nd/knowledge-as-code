@@ -23,10 +23,10 @@
   },
   "sections": {
     "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main] says the branch rule on `main` \"**MUST** name `validate` as\n  the check a merge waits for\".\n* `eng:std-GATES.a-failing-check-stops-the-change` says branch policy \"**MUST** block a merge while any required check\n  is failing\".",
-    "How it works": "`kac.yml` declares a `validate` job whose `needs:` names `corpora`, `tool`, `lint`, `docs`, `round-trip` and\n`import-round-trip`. The job itself runs one `echo`. GitHub reports it once every job it needs has passed, so the\nbranch rule can require that one name.\n\nThree of the jobs it gathers are matrices. `corpora` reports as `corpora (library)` and three more, so a branch rule naming the matrix would wait for a check that never arrives.",
-    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository holds it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] holds the other half of the same promise: whether `validate` still reaches every job."
+    "How it works": "`kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and\n`import-round-trip`. The job itself runs one `echo`. GitHub reports `validate` once every job in that list has passed,\nso the branch rule requires one check name.\n\nThree of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)` and three more. A branch rule naming the matrix would wait for a check that never arrives.",
+    "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] checks the other half: whether `validate` still needs every job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0001-merge-gate.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0001-merge-gate.md"
   }
 }

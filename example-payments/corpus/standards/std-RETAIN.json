@@ -26,10 +26,10 @@
     ]
   },
   "sections": {
-    "Summary": "The ledger keeps its entries for seven years because tax law asks for them. Everything around a payment goes sooner: tokens at 13 months, logs at 90 days, and the customer's contact details when the order closes.",
-    "Conformance checklist": "- [ ] Every store holding payment data has a period written against it in the repository.\n- [ ] The retention job has run in the last week, and its record says what it deleted.\n- [ ] A query for tokens last used over 13 months ago returns nothing.\n- [ ] The telemetry platform is configured to 90 days.\n- [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.\n- [ ] Backup lifecycle rules match the periods of the stores they hold."
+    "Summary": "The ledger keeps its entries for seven years because tax law requires them. Everything around a payment goes sooner: tokens at 13 months, logs at 90 days, and the customer's contact details when the order closes.",
+    "Conformance checklist": "- [ ] Every store keeping payment data has a period written against it in the repository.\n- [ ] The retention job has run in the last week, and its record says what it deleted.\n- [ ] A query for tokens last used over 13 months ago returns nothing.\n- [ ] The telemetry platform is configured to 90 days.\n- [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.\n- [ ] Backup lifecycle rules match the periods of the stores they back up."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/payments/standards/operations/data-retention.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/payments/standards/operations/data-retention.md"
   }
 }

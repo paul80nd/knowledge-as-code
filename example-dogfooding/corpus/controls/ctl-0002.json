@@ -22,10 +22,10 @@
   },
   "sections": {
     "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main] says `kac.yml` \"**MUST** name every one of its jobs in the\n  `needs:` of its `validate` job\".",
-    "How it works": "`WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It\nthen compares that set against `validate`'s `needs:` with `validate` itself added back. The `tool` job runs it under\n`dotnet test tooling/kac.tests`.\n\nComparing sets catches both faults. A job added without a line in `needs:` fails, and so does a `needs:` entry naming a job the file no longer declares.",
-    "Coverage and gaps": "It reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list holding no jobs, so this fault cannot arise there. Whether that file still runs the same steps in the same order is a reader's to confirm.\n\nWhether the branch rule still names `validate` is outside the repository, and [ctl-0001] says what covers it."
+    "How it works": "`WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It\ncompares that set against `validate`'s `needs:` plus `validate` itself. The `tool` job runs it under\n`dotnet test tooling/kac.tests`.\n\nComparing sets catches two faults. A job added with no line in `needs:` fails. A `needs:` entry listing a job the file no longer declares fails as well.",
+    "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list with no jobs, so this fault cannot arise there. A reader confirms whether that file still runs the same steps in the same order.\n\nThe branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
   }
 }

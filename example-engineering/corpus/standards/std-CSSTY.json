@@ -23,10 +23,10 @@
     ]
   },
   "sections": {
-    "Summary": "C# in this estate is written to the .NET runtime team's own coding style, expressed as an `.editorconfig` in the repository. Analysers run as part of the build, and a warning is a defect.",
-    "Conformance checklist": "- [ ] The repository root holds an `.editorconfig`, and it matches the upstream one apart from documented departures.\n- [ ] A build with a style violation fails.\n- [ ] `<NoWarn>` is empty in every project file.\n- [ ] Every `SuppressMessage` in the repository carries a `Justification` a reader can act on.\n- [ ] The solution builds with zero warnings from a clean checkout.\n- [ ] No `!` appears in the repository outside a test asserting a null argument is refused."
+    "Summary": "C# in this estate is written to the .NET runtime team's own coding style, set out as an `.editorconfig` in the repository. Analysers run as part of the build. A warning is a defect.",
+    "Conformance checklist": "- [ ] The repository root has an `.editorconfig`, and it matches the upstream one apart from documented departures.\n- [ ] A build with a style violation fails.\n- [ ] `<NoWarn>` is empty in every project file.\n- [ ] Every `SuppressMessage` in the repository has a `Justification` a reader can act on.\n- [ ] The solution builds with zero warnings from a clean checkout.\n- [ ] No `!` appears in the repository outside a test asserting a null argument is refused."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/standards/platform/dotnet/code-style.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/standards/platform/dotnet/code-style.md"
   }
 }

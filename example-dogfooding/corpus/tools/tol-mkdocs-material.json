@@ -18,12 +18,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "The `features:` and `palette:` blocks in `mkdocs.yml` are this theme's. They put each section's index page behind the section name, offer an edit pencil on every page, and let the reader's own light or dark setting decide, with a toggle either way.\n\nIt is pinned beside MkDocs in `docs/requirements.txt`, so a theme release changes the site when we take it rather than on its own.",
+    "What we use it for": "The `features:` and `palette:` blocks in `mkdocs.yml` are this theme's. They put each section's index page behind the section name, and they add an edit pencil to every page. They also let the reader's own light or dark setting choose the colour scheme, with a toggle either way.\n\nIt is pinned beside MkDocs in `docs/requirements.txt`. A theme release changes the site only when the pin moves.",
     "Status": "**approved** since 2026-08-24.",
     "Licence and obligations": "MIT for the community edition, which is what `docs/requirements.txt` installs. The sponsor-only edition is a separate package and nothing here uses it.",
     "Where it is used": "* [svc-docs-site] is built with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/docs/mkdocs-material.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/docs/mkdocs-material.md"
   }
 }

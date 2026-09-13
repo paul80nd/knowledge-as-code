@@ -18,12 +18,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature\ndocuments through the same runner, so one `dotnet test` command covers either project.\n\n`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` sit beside it in both projects. Neither is a choice of its\nown: they are what makes `dotnet test` find and run the tests.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program comparing `kac` output against committed goldens, and it reports its own results.",
+    "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature\ndocuments through the same runner, so one `dotnet test` command covers either project.\n\n`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` are referenced beside it in both projects. They are what\nmakes `dotnet test` find and run the tests, and neither was chosen on its own.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output against committed goldens, and reports its own results.",
     "Status": "**approved** since 2026-08-04.",
-    "Licence and obligations": "Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it: the packages are test-only and no published artefact carries them.",
+    "Licence and obligations": "Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it: the packages are test-only, and no published artefact includes them.",
     "Where it is used": "* [svc-kac] is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/testing/xunit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/testing/xunit.md"
   }
 }

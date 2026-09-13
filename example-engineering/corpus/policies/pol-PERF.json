@@ -10,11 +10,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "Where performance matters, we say what \"fast enough\" means before we build, and we check against it before we release rather than discovering the answer from customers.",
-    "Scope": "Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most customer-facing systems and many internal ones. Targets themselves are recorded as NFRs. This policy commits us to having them.\n\n_Boundary: this policy checks a target before a release. Noticing that a live system has stopped meeting one is [pol-OBSV]'s, and `DEFECT` says what we do once it has._",
-    "Exceptions": "Systems where performance is genuinely not a concern (low-volume internal tooling with no user waiting on it) need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that has since acquired users."
+    "Purpose": "Where performance matters, we say what \"fast enough\" means before we build. We check against that target before we release, so a customer is never the first to tell us.",
+    "Scope": "Systems where throughput, latency, concurrency or capacity affect whether the system does its job, which is most customer-facing systems and many internal ones. Targets themselves are recorded as NFRs, and this policy commits us to having them.\n\n_Boundary: this policy checks a target before a release. [pol-OBSV] owns noticing that a live system has stopped meeting one, and `DEFECT` says what we do once it has._",
+    "Exceptions": "Systems where performance is genuinely not a concern, such as low-volume internal tooling with no user waiting on it, need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system that has since acquired users."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/policies/delivery/perf-performance-targets.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/policies/delivery/perf-performance-targets.md"
   }
 }

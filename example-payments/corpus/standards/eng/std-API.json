@@ -28,10 +28,10 @@
     ]
   },
   "sections": {
-    "Summary": "Every interface we publish has a machine-readable contract committed beside the code. The build checks the implementation against it, and a change that consumers cannot absorb ships as a new version.",
-    "Conformance checklist": "- [ ] The repository holds the contract, and a reviewer can read the diff to it in the pull request.\n- [ ] The build fails when a route, a field or a status code drifts from the contract.\n- [ ] Every path carries a version segment, and the previous version still answers.\n- [ ] Each endpoint rejects an unauthenticated call, confirmed by a test.\n- [ ] A request carrying an unknown or malformed field is refused rather than accepted and ignored.\n- [ ] Each deprecated version answers with a removal date in the response headers."
+    "Summary": "Every interface we publish has a machine-readable contract, committed beside the code. The build checks the implementation against that contract. A change a consumer cannot absorb ships as a new version.",
+    "Conformance checklist": "- [ ] The repository contains the contract, and a reviewer can read the diff to it in the pull request.\n- [ ] The build fails when a route, a field or a status code drifts from the contract.\n- [ ] Every path has a version segment, and the previous version still responds.\n- [ ] Each endpoint rejects an unauthenticated call, confirmed by a test.\n- [ ] A request with an unknown or malformed field is refused, not accepted and ignored.\n- [ ] Each deprecated version returns a removal date in its response headers."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/standards/common/api-contracts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/standards/common/api-contracts.md"
   }
 }

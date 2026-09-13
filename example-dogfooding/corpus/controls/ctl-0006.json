@@ -23,10 +23,10 @@
   },
   "sections": {
     "What it checks": "* [std-CI.a-version-moves-by-hand-and-publishes-once] says the release notes \"**MUST** be that version's section of\n  `tooling/kac/CHANGELOG.md`\".",
-    "How it works": "`ChangelogTests` in `tooling/kac.tests` reads the `<Version>` element from `tooling/kac/kac.csproj` and looks for a\n`## <version> - <date>` heading in `tooling/kac/CHANGELOG.md`. A second test fails that heading where nothing sits\nunder it, which is the section added to satisfy the first and left empty. A third reads `docs/index.md`, which tells\na reader the tool is early because it has not reached 1.0.0, and fails that sentence once the version does.\n\nThe `tool` job runs all three under `dotnet test tooling/kac.tests`.",
-    "Coverage and gaps": "The reach is the section for the version in front of it. Whether that section describes the change is a reviewer's judgement, and the release it becomes is where a reader would notice.\n\nNothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already holds passes here, and its publish finishes green having published nothing."
+    "How it works": "`ChangelogTests` in `tooling/kac.tests` runs three tests:\n\n* The first reads the `<Version>` element from `tooling/kac/kac.csproj` and looks for a `## <version> - <date>`\n  heading in `tooling/kac/CHANGELOG.md`.\n* The second fails a heading with nothing under it, which is a section added to satisfy the first test and left empty.\n* The third reads `docs/index.md`, which tells a reader the tool is early because it has not reached 1.0.0. It fails\n  that sentence once the version reaches 1.0.0.\n\nThe `tool` job runs all three under `dotnet test tooling/kac.tests`.",
+    "Coverage and gaps": "These tests cover the section for the version in front of them. A reviewer judges whether that section describes the change, and a reader would notice it in the published release.\n\nNothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already has passes here, and its publish finishes green having published nothing."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }

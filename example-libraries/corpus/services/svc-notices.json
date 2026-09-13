@@ -22,12 +22,12 @@
     ]
   },
   "sections": {
-    "What it does": "Sends templated emails on behalf of the library to a reader. It runs on a schedule and reacts to events. Timers sweep for loans falling due and for loans already overdue. Three bus topics carry the events that need an immediate message.\n\nThe message bodies live with the mail provider as templates, selected by event type. Changing the wording is a provider change and takes no deployment. The trade is deliberate: the people accountable for the wording can change it without a developer, and the wording is not in version control.",
+    "What it does": "Sends templated emails to a reader on behalf of the library. It runs on a schedule and reacts to events. Timers sweep for loans falling due and for loans already overdue. Three bus topics deliver the events that need an immediate message.\n\nThe message bodies are templates stored with the mail provider, selected by event type. Changing the wording is a provider change and needs no deployment. The trade is deliberate: the people accountable for the wording can change it without a developer, and the wording is outside version control.",
     "Where it lives": "* **Repository**: [`notices`](https://git.example.com/example-libraries/notices), at `src/Notices.FunctionApp`\n* **Platform**: Azure Functions, .NET isolated worker\n* **Deployed as**: Function App `func-notices-<env>`",
-    "Dependencies": "None. It consumes from the bus and calls the mail provider. We do not deploy that provider, so it is an integration.",
-    "Data": "* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.\n* A blob container carrying message bodies too large to travel on the bus.\n\nBoth are in the shared storage account."
+    "Dependencies": "None. It consumes from the bus and calls the mail provider. The library does not deploy that provider, so it is an integration.",
+    "Data": "* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.\n* A blob container storing message bodies too large for the bus.\n\nBoth are in the shared storage account."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/library/services/notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/library/services/notices.md"
   }
 }

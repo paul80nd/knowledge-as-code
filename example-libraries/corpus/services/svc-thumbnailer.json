@@ -17,12 +17,12 @@
     ]
   },
   "sections": {
-    "What it does": "Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It holds no state and caches nothing itself. Caching is the edge's job.\n\n**It is not reached directly.** [svc-covers-cdn] forwards to it as its origin, so every request arrives through the edge, and the edge caches the resized result.",
+    "What it does": "Reads a jacket image from blob storage and returns it at the dimensions and quality the request asks for. It stores no state and caches nothing. The edge does the caching.\n\n**Every request arrives through the edge.** [svc-covers-cdn] forwards to this service as its origin, and the edge caches the resized result. Nothing calls this service directly.",
     "Where it lives": "* **Repository**: [`thumbnailer`](https://git.example.com/example-libraries/thumbnailer)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-thumbnailer-<env>`",
     "Dependencies": "None. It reads blob storage and returns an image.",
-    "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It reads the container and owns nothing in it: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn] records both."
+    "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It owns nothing in that container: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn] records both."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/library/services/thumbnailer.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/library/services/thumbnailer.md"
   }
 }

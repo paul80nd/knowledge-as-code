@@ -19,12 +19,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "`publish-tool.yml` calls it twice in one step: once to ask whether the release already exists, and once to create it\nwith the changelog section for that version as the body. The tag arrives as a consequence of publishing rather than as\na second thing to remember.\n\nIt is also how issues are reached. `.claude/agents-config/issue-tracker.md` names `gh` as the way an agent reads and raises them on this repository.",
+    "What we use it for": "`publish-tool.yml` calls it twice in one step. The first call asks whether the release already exists. The second\ncreates the release, with the changelog section for that version as the body. Publishing creates the tag, so nobody\nhas a second step to remember.\n\nIt is also how issues are read and raised. `.claude/agents-config/issue-tracker.md` states that an agent uses `gh` for issues on this repository.",
     "Status": "**approved** since 2026-08-20.",
     "Licence and obligations": "MIT. Nothing follows for anything this repository publishes.",
-    "Where it is used": "* [svc-kac] is tagged and released with it.\n\n`versions` is bare because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer\ntakes whatever their package manager offers."
+    "Where it is used": "* [svc-kac] is tagged and released with it.\n\n`versions` is bare because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer\ninstalls whatever their package manager offers."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/release/gh.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/release/gh.md"
   }
 }

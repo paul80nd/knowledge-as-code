@@ -22,10 +22,10 @@
   },
   "sections": {
     "What it checks": "* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says you \"**MUST** run\n  `kac update --check --from ../../` in every corpus after that copy\".",
-    "How it works": "The `corpora` job runs `dotnet run --project ../../tooling/kac -- update --check --from ../../` in each of the four corpora under `examples/`. `manifest.yaml` at the root names the files the check reaches, and each of its rules says which layer those files sit in.\n\nThe check answers in both directions. It reports a copy whose content differs from the template's, and a file a corpus holds that the template sends nothing to. Either exits non-zero.",
-    "Coverage and gaps": "The matrix covers `examples/`. `template/` is where these files are authored, so nothing holds it to a copy of itself.\n\n`.schema/` and `template/.plugin/` sit outside the manifest, because a corpus reads both where they are authored\nrather than taking a copy. A corpus created elsewhere receives its own `.editorconfig`, and each corpus here declares\nthat file under `skip:`."
+    "How it works": "The `corpora` job runs `dotnet run --project ../../tooling/kac -- update --check --from ../../` in each of the four corpora under `examples/`. `manifest.yaml` at the root lists the files the check covers, and each of its rules states which layer those files belong to.\n\nThe check reports two faults: a copy whose content differs from the template's, and a file in a corpus that the template sends nothing to. Either one exits non-zero.",
+    "Coverage and gaps": "The matrix covers `examples/`. These files are authored in `template/`, and nothing compares `template/` against a copy of itself.\n\n`manifest.yaml` covers `.schema/` and `template/.plugin/`, and neither reaches a corpus here as a copy. `.schema/`\nlands on the path it was read from. Every corpus names `plugin.from`, so it reads the plugin tree from `template/`. A\ncorpus created elsewhere gets its own `.editorconfig`, and each corpus here declares that file under `skip:`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0005-update-check.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0005-update-check.md"
   }
 }

@@ -20,12 +20,12 @@
     ]
   },
   "sections": {
-    "What it does": "Exposes loans, holds and borrower records as a RESTful API. It fronts the legacy library management system, and overrides the routes it replaces as it gains functionality. That is the strangler pattern, and it is deliberate.\n\n**It maps onto the legacy database and owns no schema of its own.** This is the estate's one deliberate exception to service-owned data. The legacy system still writes to that same database, and this service migrates none of it. Its object-relational mapping is a mapper over pre-existing tables that this service did not design.\n\n**It is therefore the only way to reach legacy-only data.** Anything that exists only in that database is reachable only by asking this service. A service that needs such data calls this one. The branch opening calendars are the worked example.",
+    "What it does": "Exposes loans, holds and borrower records as a RESTful API. It fronts the legacy library management system, and overrides the routes it replaces as it gains functionality. That is the strangler pattern, applied deliberately.\n\n**It maps onto the legacy database and owns no schema of its own.** This is the estate's one deliberate exception to service-owned data. The legacy system still writes to that same database, and this service migrates none of it. Its object-relational mapping runs over pre-existing tables that this service did not design.\n\n**It is therefore the only route to legacy-only data.** A service that needs data kept only in that database calls this one. The branch opening calendars are the worked example.",
     "Where it lives": "* **Repository**: [`lending`](https://git.example.com/example-libraries/lending)\n* **Platform**: ASP.NET Core Web API (.NET 10)\n* **Deployed as**: App Service `app-lending-<env>`",
-    "Dependencies": "No service in this catalogue, which is why the record carries no `depends-on`. Its downward dependencies are all legacy:\n\n* The **legacy database**, configured as `ConnectionStrings__Legacy`.\n* The **legacy circulation API**, reached through a reverse-proxy cluster. That API is the unreplaced half of the\n  strangler.",
+    "Dependencies": "None in this catalogue, so this record has no `depends-on` field. Its downward dependencies are all legacy:\n\n* The **legacy database**, configured as `ConnectionStrings__Legacy`.\n* The **legacy circulation API**, called through a reverse-proxy cluster. That API is the unreplaced half of the\n  strangler.",
     "Data": "**The legacy database**, which this service maps and does not own. Any data document describing it has to record more than one writer: the legacy library management system still writes to it directly."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/library/services/lending.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/library/services/lending.md"
   }
 }

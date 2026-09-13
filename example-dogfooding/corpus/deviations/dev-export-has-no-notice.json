@@ -23,13 +23,13 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "[std-VERS] states the stamps: `formatVersion` for the export as a whole, and a `shapeVersion` for each type. A reader meeting a number it does not know leaves that type alone and reads the rest. That is graceful, and it is not notice.\n\nNothing says how long a shape stays readable after a new one ships, and nothing announces a change before it lands.",
-    "Why we need it": "The only consumers of an export today are the corpora in this repository and the plugin `kac bundle` builds from one. Both are rebuilt on the same commit, so a change reaches them and their producer together. A notice period would be a promise to nobody.",
-    "What compensates": "* [std-VERS] holds every stamp to a shape, and a reader meeting an unknown one degrades rather than breaks.\n* `kac bundle` refuses an export whose `formatVersion` is not the one that build reads.\n* The changelog carries every change a user can observe, and ctl-0006 fails a version with no section.\n* Consumers are named in this repository, so a shape change is a change to files a pull request already touches.",
+    "What we are doing instead": "[std-VERS] states the stamps: `formatVersion` for the export as a whole, and a `shapeVersion` for each type. A reader meeting a number it does not know leaves that type alone and reads the rest. That is graceful degradation. It is not notice.\n\nNothing says how long a shape stays readable after a new one ships, and nothing announces a change before it lands.",
+    "Why we need it": "The only consumers of an export today are the corpora in this repository and the plugin `kac bundle` builds from one. Both are rebuilt on the same commit, so a change arrives for them and for their producer at once. A notice period would be a promise to nobody.",
+    "What compensates": "* [std-VERS] gives each shape a stamp, so a reader meeting an unknown stamp keeps working on the rest of the export.\n* `kac bundle` refuses an export whose `formatVersion` is not the one that build reads.\n* The changelog records every change a user can observe, and [ctl-0006] fails a version with no section.\n* Every consumer is in this repository, so a shape change is a change to files a pull request already touches.",
     "How it closes": "Somebody outside this repository reads an export. The standard then states how long a shape keeps answering after its successor ships, and how a change is announced. This record closes on that standard.",
-    "Scope": "The export `kac export` writes, the package `kac pack` seals, and the plugin `kac bundle` assembles."
+    "Scope": "The export `kac export` writes, the package `kac pack` zips, and the plugin `kac bundle` assembles."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/deviations/export-has-no-notice.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/deviations/export-has-no-notice.md"
   }
 }

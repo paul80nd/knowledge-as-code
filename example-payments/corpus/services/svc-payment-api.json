@@ -21,12 +21,12 @@
     ]
   },
   "sections": {
-    "What it does": "Accepts a request naming an order, an amount and a card token, calls the PSP to authorise it, and writes the outcome to [svc-payment-ledger]. Capture and refund follow the same path.\n\n**The token comes from the browser rather than from here.** The checkout page collects the card details in a frame the PSP serves, and the browser posts them to the PSP directly. What reaches this service is the token the PSP returned. Taken from the application settings, which carry the PSP's publishable key and no card storage of any kind.",
+    "What it does": "Accepts a request with an order, an amount and a card token. Calls the PSP to authorise it. Writes the outcome to [svc-payment-ledger]. Capture and refund follow the same path.\n\n**The browser sends the card details to the PSP.** The checkout page collects them in a frame the PSP serves, and the browser posts them to the PSP directly. This service receives the token the PSP returned. The application settings show the PSP's publishable key and no card storage of any kind.",
     "Where it lives": "* **Repository**: [`payment-api`](https://git.example.com/example-payments/payment-api)\n* **Platform**: ASP.NET Core (.NET 10)\n* **Deployed as**: App Service `app-payment-api-<env>`",
-    "Dependencies": "* **[svc-payment-ledger]**: every authorisation, capture and refund is written there before this service answers its\n  caller. Configured as `Services__Ledger`.\n\nThe PSP is not in this catalogue. It is a third party, reached at `api.psp.example.com` and configured as `Psp__BaseUrl`.",
-    "Data": "None of its own, and that is the point. It holds a card token for the life of one request and stores nothing. What happened to a payment is [svc-payment-ledger]'s."
+    "Dependencies": "* **[svc-payment-ledger]**: every authorisation, capture and refund is written there before this service replies to its\n  caller. Configured as `Services__Ledger`.\n\nThe PSP is not in this catalogue. It is a third party, called at `api.psp.example.com` and configured as `Psp__BaseUrl`.",
+    "Data": "None of its own. It keeps a card token for one request and stores nothing. [svc-payment-ledger] records what happened to a payment."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/payments/services/payment-api.md"
   }
 }

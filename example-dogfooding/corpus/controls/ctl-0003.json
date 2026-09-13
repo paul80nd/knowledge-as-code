@@ -23,10 +23,10 @@
   },
   "sections": {
     "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main] says a workflow \"**MUST** pass `actionlint`, which also puts\n  every `run:` block through shellcheck\".",
-    "How it works": "The `lint` job installs actionlint at `v1.7.12` with `go install`, then runs it with no arguments. It walks every file under `.github/workflows/` and reads the syntax, the expressions and the inputs each action declares. The runner carries shellcheck, so actionlint hands it each `run:` block as well. actionlint runs on its own defaults, and this repository holds no configuration for it.",
-    "Coverage and gaps": "actionlint reports nothing about a permission a job holds and never uses, a credential written in the wrong place, or\n`.azuredevops/kac.yml` drifting from its GitHub twin. A reviewer is what catches those three, and they are most of\nwhat [std-CI] states: its permission, credential, pinning and publishing rules have no check here.\n\nactionlint ships no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job."
+    "How it works": "The `lint` job installs actionlint at `v1.7.12` with `go install`, then runs it with no arguments. actionlint reads every file under `.github/workflows/`: the syntax, the expressions and the inputs each action declares. The runner has shellcheck installed, so actionlint passes each `run:` block to it as well. actionlint runs on its own defaults, and this repository has no configuration file for it.",
+    "Coverage and gaps": "actionlint reports nothing about these three faults:\n\n* a permission a job declares and never uses\n* a credential written in the wrong place\n* `.azuredevops/kac.yml` drifting from its GitHub counterpart\n\nA reviewer catches all three. Those faults are most of what [std-CI] states: its permission, credential, pinning and publishing rules have no check here.\n\nactionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/controls/0003-actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/controls/0003-actionlint.md"
   }
 }

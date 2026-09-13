@@ -10,11 +10,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "A system is reachable only from where it needs to be reachable, and it can reach only what it needs. We deny traffic crossing a trust boundary unless we have deliberately allowed it.",
-    "Scope": "All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic arriving at our systems, traffic between them, and traffic leaving them.\n\nA trust boundary is the line between two things that have no automatic right to talk to each other: the public internet and our estate, or two of our own systems with no business calling one another.\n\n_Boundary: this policy governs what may cross a boundary, and by what route. Which environments a boundary stands between is [pol-ENVS]'s. Watching what actually crossed it is [pol-OBSV]'s, under `SECMON`._",
-    "Exceptions": "Some services are meant to be reached by anyone. They are in scope for the rest of this policy rather than exempt from it. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
+    "Purpose": "We make a system reachable only from where it needs to be reachable, and we let it call only what it needs. We deny traffic crossing a trust boundary unless we have deliberately allowed it.",
+    "Scope": "All networks, services and interfaces belonging to systems we build or operate, in every environment. It covers traffic arriving at our systems, traffic between them, and traffic leaving them.\n\nA trust boundary is the line between two things that have no automatic right to call each other: the public internet and our estate, or two of our own systems with no reason to call one another.\n\n_Boundary: this policy governs what may cross a boundary, and by what route. [pol-ENVS] states which environments a boundary separates. [pol-OBSV] owns watching what crossed it, under `SECMON`._",
+    "Exceptions": "Some services are meant to be reached by anyone. The rest of this policy still applies to them. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/policies/security/mexp-minimised-exposure.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/policies/security/mexp-minimised-exposure.md"
   }
 }

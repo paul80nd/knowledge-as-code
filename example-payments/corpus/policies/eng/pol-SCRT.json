@@ -10,11 +10,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "Secrets (credentials, keys, tokens and certificates) live in a store we control, which limits who can reach them and records who did. They never live in the thing that uses them.",
-    "Scope": "All secrets used by any system we build or operate, in every environment, including those used by pipelines, agents and machine identities.\n\n_Boundary: this policy owns the exception posture for every clause binding secrets, [pol-ENVS]'s included. Who may reach a secret is [pol-ACCS]'s, and what a secret protects is [pol-DATA]'s._",
-    "Exceptions": "`EMBED`, `REUSE` and `LOGS` admit none, and no recorded deviation makes them acceptable. A leaked secret does not care\nwhy it was written down. They do not bend for expediency, prototypes or \"temporary\" work. A secret that has reached\nsource control is treated as compromised and rotated, not deleted and forgotten. [pol-ENVS] binds the same prohibition\non production credentials below production through its own `CREDS` and `REUSE`. The posture stated here covers those\ntoo.\n\n`STORE`, `ROTATE`, `KEYS` and `LEAKED` bend where they have to. A vendor-issued certificate only the vendor can rotate\nis the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the risk, what compensates for\nit and when it is revisited."
+    "Purpose": "We keep secrets (credentials, keys, tokens and certificates) in a store we control. The store limits who can read a secret and records who did. A secret is never embedded in the thing that uses it.",
+    "Scope": "All secrets used by any system we build or operate, in every environment, including those used by pipelines, agents and machine identities.\n\n_Boundary: this policy owns the exception posture for every clause that binds secrets, including [pol-ENVS]'s. [pol-ACCS] governs who can read a secret, and [pol-DATA] governs what a secret protects._",
+    "Exceptions": "`EMBED`, `REUSE` and `LOGS` admit no exception, and no recorded deviation makes them acceptable. Expediency, a\nprototype and \"temporary\" work are not exceptions either. A secret committed to source control is treated as\ncompromised and rotated, and deleting the file is not enough. [pol-ENVS] states the same prohibition on production\ncredentials below production, in its own `CREDS` and `REUSE`, and the posture stated here covers those too.\n\n`STORE`, `ROTATE`, `KEYS` and `LEAKED` admit an exception where one is unavoidable. A vendor-issued certificate only\nthe vendor can rotate is the ordinary case, and it is a recorded deviation under [pol-DEVI] naming who accepts the\nrisk, what compensates for it and when it is revisited."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/policies/security/scrt-secrets-are-never-embedded.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/policies/security/scrt-secrets-are-never-embedded.md"
   }
 }

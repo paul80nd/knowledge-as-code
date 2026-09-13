@@ -17,10 +17,10 @@
     ]
   },
   "sections": {
-    "When to use this": "A check that is a predicate over frontmatter, sections, links or length is an `expr:` on a rule, and costs the YAML and a fixture. Come here where the question needs C#, or where the command itself changes.",
-    "Prerequisites": "* The tool guidance at `tooling/CLAUDE.md`, which carries the test for expression against class and the two rule\n  interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` rather than a `kac` on your path.\n* The fact table in `docs/design/expressions.md`, which says what an expression can already reach."
+    "When to use this": "The question needs C#, or the command itself changes. A check that is a predicate over frontmatter, sections, links or length is an `expr:` on a rule, and costs the YAML and a fixture.",
+    "Prerequisites": "* The tool guidance at `tooling/CLAUDE.md`, which states the test for expression against class and the two rule\n  interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.\n* The fact table in `docs/design/expressions.md`, which lists what an expression can already read."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/processes/change-the-tool.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/processes/change-the-tool.md"
   }
 }

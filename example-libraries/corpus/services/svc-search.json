@@ -21,12 +21,12 @@
     ]
   },
   "sections": {
-    "What it does": "Maintains the search index over the collection and answers queries against it: free-text search, faceted browse, and the type-ahead on the catalogue's search box.\n\n**No database feeds the index.** It is built from events. Every change to an item, a holding or a branch's stock arrives on the message bus and is applied incrementally. A full rebuild is available on demand. That is what makes this service the estate's clearest example of heavy coupling with no dependency edge.",
+    "What it does": "Maintains the search index over the collection and serves queries against it: free-text search, faceted browse, and the type-ahead on the catalogue's search box.\n\n**Events build the index, and no database feeds it.** Every change to an item, a holding or a branch's stock arrives on the message bus and is applied incrementally. A full rebuild runs on demand. This service is therefore the estate's clearest example of heavy coupling with no dependency edge.",
     "Where it lives": "* **Repository**: [`search`](https://git.example.com/example-libraries/search)\n* **Platform**: Node.js with TypeScript, on a container image\n* **Deployed as**: Container App `ca-search-<env>`",
-    "Dependencies": "**None, and the graph is right.** This service cannot function without the events [svc-catalogue-api] and [svc-lending]\npublish. It is coupled to both as tightly as anything in the estate. Neither is a strict dependency, though:\n`depends-on` records calls, and a bus message is not a call. See [Services](../services.md).\n\nSo the graph shows this service as unconnected. Operational notes below list what it consumes, and that is where the coupling lives.",
-    "Data": "The index itself, held in the search engine's own storage and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
+    "Dependencies": "**None, and the graph is right.** This service cannot function without the events [svc-catalogue-api] and [svc-lending] publish, and it is coupled to both as tightly as anything in the estate. Neither is a strict dependency: `depends-on` records calls, and a bus message is not a call. See [Services](../services.md).\n\nThe graph therefore shows this service as unconnected. Operational notes below list what it consumes, and that is where the coupling is recorded.",
+    "Data": "The index itself, stored by the search engine and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/library/services/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/library/services/search.md"
   }
 }

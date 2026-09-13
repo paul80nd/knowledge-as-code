@@ -20,12 +20,12 @@
     ]
   },
   "sections": {
-    "What it does": "The branch holds one directory per plugin, a `.claude-plugin/marketplace.json` offering all of them, and a generated\n`README.md` telling a browser where the source is. `publish-plugin.yml` builds it by running `kac export` and\n`kac bundle` in each corpus, then copying each bundle onto an emptied worktree.\n\n`kac bundle` runs in one corpus and knows only that corpus's own, so the marketplace listing every plugin is assembled\nby the workflow rather than by the tool. Taken from the header comment in `.github/workflows/publish-plugin.yml`.\n\nA reader installs from it with `/plugin marketplace add paul80nd/knowledge-as-code@marketplace`.",
+    "What it does": "The branch has one directory per plugin, a `.claude-plugin/marketplace.json` listing all of them, and a generated\n`README.md` that tells a browser where the source is. `publish-plugin.yml` builds it by running `kac export` and\n`kac bundle` in each corpus, then copying each bundle onto an emptied worktree.\n\n`kac bundle` runs in one corpus and knows only that corpus's own plugin. The workflow assembles the marketplace that\nlists every plugin. Taken from the header comment in `.github/workflows/publish-plugin.yml`.\n\nA reader installs from it with `/plugin marketplace add paul80nd/knowledge-as-code@marketplace`.",
     "Where it lives": "* **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), on the `marketplace` branch,\n  built from `examples/*` and `template/.plugin`\n* **Platform**: generated JSON and Markdown, with no runtime\n* **Deployed as**: a git branch, fetched by the Claude Code CLI",
-    "Dependencies": "None in this catalogue. The branch is fetched by the Claude Code CLI and calls nothing.\n\n[svc-kac] builds every file on it, which is a build-time dependency rather than a call, so it is not an edge here.",
-    "Data": "Each plugin carries a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so an agent that finds a record wrong raises an issue rather than editing one."
+    "Dependencies": "None in this catalogue. The Claude Code CLI fetches the branch, and the branch calls nothing.\n\n[svc-kac] builds every file on it. That is a build-time dependency, so it is not an edge here.",
+    "Data": "Each plugin contains a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so an agent that finds a record wrong raises an issue."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/services/marketplace.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/services/marketplace.md"
   }
 }

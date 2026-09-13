@@ -10,11 +10,11 @@
     "review-by": "2027-08-04"
   },
   "sections": {
-    "Purpose": "The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept next to the thing it describes. It is not held in someone's head, and not in a chat history nobody can search. Agents read the same documentation people do.",
+    "Purpose": "The knowledge needed to build, run, decide about and recover a system is written down, versioned, and kept next to the thing it describes. It does not sit in someone's head, or in a chat history nobody can search. Agents read the same documentation people do.",
     "Scope": "All solutions we build or operate. That covers what a feature is meant to do, setup and build instructions, operational runbooks, and architecturally significant decisions. It also covers the reference material a person or an agent needs to work on the system safely.",
     "Exceptions": "None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to write down what is needed does not vary."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/policies/governance/know-knowledge-is-written-down.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/policies/governance/know-knowledge-is-written-down.md"
   }
 }

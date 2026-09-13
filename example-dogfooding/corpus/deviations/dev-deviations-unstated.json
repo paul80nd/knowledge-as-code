@@ -27,13 +27,13 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "Every departure this corpus knows about is written here, with an owner and a review date, and the schema holds each record to the sections the type declares. That much is the type's doing rather than a standard's.\n\nNothing here says a deviation is written before the departure. Nothing tests a long-standing habit against the policy it breaks. That is how this register came to be written in one sitting rather than one departure at a time.",
+    "What we are doing instead": "Every departure this corpus knows about is written here, with an owner and a review date. The schema requires each record to have the sections the type declares. The type gives that much, and no standard here does.\n\nNothing here says a deviation is written before the departure. Nothing tests a long-standing habit against the policy it breaks. That is why the whole register was written in one sitting.",
     "Why we need it": "The type arrived first and the register was written against a coverage map, so the records exist before the rule that governs them. Writing the standard at the same time would have stated a process nobody had run yet.",
-    "What compensates": "* The schema requires an owner, a review date and four sections, and `kac validate` fails a record missing any of them.\n* `review-after-acceptance` fails a record that would expire as it was written.\n* `expiry` warns on an active record whose `review-by` has gone by, so every run reports a review nobody has done.\n* The register is a folder in a public repository, so anybody reading the corpus meets it.",
-    "How it closes": "A standard states what this repository owes a deviation: written before the departure where there was time, what the record has to say, who may accept the risk, and what closing means. It cites `expiry` as the check standing behind the review date.",
+    "What compensates": "* The schema requires an owner, a review date and four sections, and `kac validate` fails a record missing any of them.\n* `review-after-acceptance` fails a record that would expire as it was written.\n* `expiry` warns on an active record whose `review-by` has gone by, so every run reports a review nobody has done.\n* The register is a folder in a public repository, so anybody reading the corpus finds it.",
+    "How it closes": "A standard states what a deviation here has to say, who may accept the risk, and what closing means. It requires the record to be written before the departure, where there was time. It cites `expiry` as the check behind the review date.",
     "Scope": "Every record in this folder, and every departure this repository takes from a clause `../engineering/` states."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/deviations/deviations-unstated.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/deviations/deviations-unstated.md"
   }
 }

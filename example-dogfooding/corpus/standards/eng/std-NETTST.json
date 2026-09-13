@@ -23,10 +23,10 @@
     ]
   },
   "sections": {
-    "Summary": "C# tests are written with xUnit. A unit test touches no process boundary, and an integration test starts the dependencies it needs in containers of its own.",
+    "Summary": "C# tests are written with xUnit. A unit test crosses no process boundary. An integration test starts the dependencies it needs in containers of its own.",
     "Conformance checklist": "- [ ] Every test project references xUnit and no second test framework.\n- [ ] No unit test project references Testcontainers or a database driver.\n- [ ] A search for `Thread.Sleep` and `async void` across the test projects returns nothing.\n- [ ] The integration suite passes on a machine with no services running but Docker.\n- [ ] Running the integration suite twice in a row passes both times.\n- [ ] The build publishes a coverage report, and the test projects are excluded from it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/engineering/standards/platform/dotnet/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/engineering/standards/platform/dotnet/testing.md"
   }
 }

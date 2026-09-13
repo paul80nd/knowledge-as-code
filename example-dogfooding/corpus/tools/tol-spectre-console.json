@@ -19,12 +19,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "`Program.cs` wires `Spectre.Console.Cli` to each verb, and every option and exit code is declared there.\n`Spectre.Console` is referenced by `kac.core`, where the reporters build what a run prints.\n\nOne library reads a command line and asks a question, rather than two. That is why the parser moved here in 0.2.1. Taken from the entry for that version in `tooling/kac/CHANGELOG.md`.",
+    "What we use it for": "`Program.cs` wires `Spectre.Console.Cli` to each verb, and every option and exit code is declared there. `kac.core`\nreferences `Spectre.Console`, and its reporters build what a run prints.\n\nOne library now reads the command line and asks a question. `System.CommandLine` read the command line and\n`Spectre.Console` asked the question, so the parser moved here in 0.2.1. Taken from the entry for that version in\n`tooling/kac/CHANGELOG.md`.",
     "Status": "**approved** since 2026-08-21.",
     "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
-    "Where it is used": "* [svc-kac] carries both packages."
+    "Where it is used": "* [svc-kac] uses both packages."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/build/spectre-console.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/build/spectre-console.md"
   }
 }

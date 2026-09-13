@@ -20,10 +20,10 @@
     ]
   },
   "sections": {
-    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only route in. If you are here because a build broke, you want a [runbook](../runbooks.md) instead.",
-    "Prerequisites": "* A branch off `main`, carrying the change as commits.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --`, which is the tool this branch holds."
+    "When to use this": "You have finished a change on a branch and committed it. A push to `main` is rejected, so a pull request is the only way in. Where a build broke, read a [runbook](../runbooks.md).",
+    "Prerequisites": "* A branch off `main`, with the change committed to it.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --` from the repository root, and as\n  `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`. Both build the tool on this\n  branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/processes/pull-request.md"
   }
 }

@@ -19,12 +19,12 @@
     ]
   },
   "sections": {
-    "What we use it for": "It reads a workflow as a workflow: the expression syntax, the job graph, the action inputs, and the shell in every\n`run:` block. The runner carries shellcheck, so actionlint puts each of those blocks through it as well.\n\nIt is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job carries the version instead, and the header comment in that file says where to look.",
+    "What we use it for": "It checks the expression syntax, the job graph, the action inputs, and the shell in every `run:` block. The runner has shellcheck installed, so actionlint puts each of those blocks through shellcheck as well.\n\nIt is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job states the version, and the header comment in that file says where to look.",
     "Status": "**approved** since 2026-09-02.",
     "Licence and obligations": "MIT. Nothing follows for anything this repository publishes.",
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/tools/lint/actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/tools/lint/actionlint.md"
   }
 }

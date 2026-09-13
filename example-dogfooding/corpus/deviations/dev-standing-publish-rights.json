@@ -25,13 +25,13 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "Publishing `kac` waits for an approval on the `nuget.org` environment, so a release is two acts rather than one. The rights behind that approval are held all the time, by the person who also writes the change and approves the pull request.\n\nNothing grants those rights for a window and removes them afterwards, and nothing reviews whether they are still needed.",
+    "What we are doing instead": "Publishing `kac` waits for an approval on the `nuget.org` environment, so a release takes two acts. The rights behind that approval are held all the time, by the person who also writes the change and approves the pull request.\n\nNothing grants those rights for a window and removes them afterwards, and nothing reviews whether they are still needed.",
     "Why we need it": "A just-in-time grant needs somebody to grant it. With one maintainer, the approver and the requester are the same person, so the grant is a form filled in by whoever wanted it.",
-    "What compensates": "* The `nuget.org` environment approval is a deliberate second act, recorded against the run that asked for it.\n* Trusted publishing means no long-lived key exists to steal, so the rights are useless without the account.\n* Every publish leaves a workflow run naming the commit it built, and that log is public.\n* nuget.org refuses a second push to a version it already holds, so a stolen session cannot replace what shipped.",
-    "How it closes": "A second maintainer makes just-in-time access mean something: one person asks, another grants, and the grant expires. This record closes on the pull request that writes that down.\n\nWhere this repository still has one maintainer at the review date, the question is what the machinery costs. Nothing here holds anybody's data, and the repository is public already.",
+    "What compensates": "* The `nuget.org` environment approval is a deliberate second act, recorded against the run that asked for it.\n* Trusted publishing means no long-lived key exists to steal, so the rights are useless without the account.\n* Every publish leaves a workflow run recording the commit it built, and that log is public.\n* nuget.org refuses a second push to a version it already has, so a stolen session cannot replace what shipped.",
+    "How it closes": "A second maintainer makes just-in-time access mean something: one person asks, another grants, and the grant expires. This record closes on the pull request that writes that down.\n\nWhere this repository still has one maintainer at the review date, the question is what the machinery costs. Nothing here stores anybody's data, and the repository is public already.",
     "Scope": "The GitHub organisation, the nuget.org package, the pages site and the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c17b029c9ea65a73e6fceff42cb83c28add3b381/examples/dog-fooding/deviations/standing-publish-rights.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8f512ea3ff81d7d312d028619e0c69708b57d9bd/examples/dog-fooding/deviations/standing-publish-rights.md"
   }
 }
