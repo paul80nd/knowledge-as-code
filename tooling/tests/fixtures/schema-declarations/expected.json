@@ -48,7 +48,7 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "type 'widgets' declares 'tier: experimental', and '_tiers.yaml' declares no such tier. Tier decides how a document behaves and is written into the frontmatter of every record of the type; the tiers are 'decided', 'normative', 'descriptive', 'procedural', 'observed'."
+      "message": "type 'widgets' declares 'tier: experimental', and '_tiers.yaml' declares no such tier. Tier decides how a document behaves and is written into the frontmatter of every record of the type; the tiers are 'decided', 'normative', 'descriptive', 'procedural'."
     },
     {
       "file": ".schema/widgets.yaml",

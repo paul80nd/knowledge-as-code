@@ -18,9 +18,6 @@ versus:
   explanations: >
     A report answers a question about the corpus itself. An explanation says how something in the estate
     works. If the answer would still be true with every record deleted, it is an explanation.
-  discoveries: >
-    A report is a walk over the corpus, repeatable and dated. A discovery is something somebody noticed
-    once. If nothing would reproduce it, it is a discovery.
 
 lineage:
   prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys"

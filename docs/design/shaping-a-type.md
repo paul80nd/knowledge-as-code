@@ -28,11 +28,10 @@ you read it against.
 ## What each type sends
 
 One section per type that declares an `export:` block, in tier order. A tier is the level of authority a type sits at,
-and [Taxonomy](../framework/taxonomy.md#the-five-tiers) lists the five.
+and [Taxonomy](../framework/taxonomy.md#the-four-tiers) lists the four.
 
-Six types declare no block. Only `discoveries` decided that, and `.schema/discoveries.yaml` gives its reason. For
-`postmortems`, `capabilities`, `integrations`, `data` and `explanations` the block is unwritten rather than refused, and
-[A type held back](export.md#a-type-held-back) says why nothing here could prove one right.
+No type is deliberately held back. Where a block is unwritten rather than refused, that type has no section below.
+[A type held back](export.md#a-type-held-back) names those types and says why nothing here could prove one right.
 
 ### adrs
 
@@ -133,8 +132,7 @@ trust. `status` and `review-by` say whether the answer is still true, and `fixed
 both.
 
 `How we found it` stays behind. The route is often the more reusable half of a fix, and it is reusable to somebody who
-can run the commands it lists. A reader holding a copy can run none of them. `promoted-from` stays behind too, because
-it points at a discovery, and discoveries travel nowhere.
+can run the commands it lists. A reader holding a copy can run none of them.
 
 ### services
 

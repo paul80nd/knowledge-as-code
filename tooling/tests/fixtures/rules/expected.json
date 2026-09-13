@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 31,
-    "templates": 18,
+    "validated": 30,
+    "templates": 17,
     "skipped": 0,
     "errors": 19,
-    "warnings": 17,
+    "warnings": 16,
     "infos": 0
   },
   "findings": [
@@ -70,13 +70,6 @@
       "severity": "warning",
       "check": "expiry",
       "message": "this deviation is still active and its `review-by` has passed. Close it, or set a new date and say in the record what was re-accepted."
-    },
-    {
-      "file": "discoveries/pool-exhaustion-under-load.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "low-ceremony",
-      "message": "this is longer than a capture should be. Promote it into a fix or a standard, and write the detail there."
     },
     {
       "file": "explanations/how-holds-are-queued.md",

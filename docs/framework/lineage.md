@@ -42,12 +42,7 @@ the sourcing behind it exactly as the framework owns the sourcing below.
 
 ## What has no precedent
 
-Three things here have no useful ancestor, and claiming one would be worse than admitting none.
-
-**Discovery.** Nothing established defines a document type that is low-ceremony, explicitly unverified,
-confidence-scored and self-expiring, with a defined promotion path into a reviewed type. A lab notebook, a fleeting note
-and an agile spike each share the provisional quality and none of the rest. The combination of an expiry and a
-confidence level is the most novel thing in this taxonomy.
+Two things here have no useful ancestor, and claiming one would be worse than admitting none.
 
 **The Process / Runbook split.** No framework found here divides its procedural layer by *reading conditions*: planned
 and deliberate against incident-time and under pressure. Both HCGF and [Diátaxis][diataxis] have one procedural type.

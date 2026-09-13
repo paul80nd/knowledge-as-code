@@ -141,7 +141,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 <!-- END GENERATED: types-edges -->
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`promoted-from` / `promoted-to`. A one-sided link fails the build. Read that off the last column above. An empty cell
+`replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
 means nobody answers that edge, and nobody has to keep it in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. Policies
@@ -173,4 +173,4 @@ Broken is a runbook.
 Not all types are proven. Where that matters, this corpus's own `README.md` records which have met real content.
 
 [taxonomy]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/
-[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers

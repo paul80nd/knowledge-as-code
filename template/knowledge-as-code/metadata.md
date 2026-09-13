@@ -16,15 +16,15 @@ Carried by every document in the taxonomy.
 
 <!-- BEGIN GENERATED: schema-universal -->
 
-| Field      | Value                                                       | Notes                                                                         |
-|------------|-------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *     | string                                                      | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *   | string                                                      | The singular name of the type, which CI checks against the folder.            |
-| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` * | enum                                                        | The record's current state, from the values this type sets.                   |
-| `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources`  | list                                                        | Where the content came from, one entry per source.                            |
-| `tags`     | list                                                        | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| Field      | Value                                            | Notes                                                                         |
+|------------|--------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *     | string                                           | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *   | string                                           | The singular name of the type, which CI checks against the folder.            |
+| `tier` *   | `decided` `normative` `descriptive` `procedural` | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` * | enum                                             | The record's current state, from the values this type sets.                   |
+| `owner` *  | string                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources`  | list                                             | Where the content came from, one entry per source.                            |
+| `tags`     | list                                             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 
 \* Field is required
 
@@ -41,12 +41,11 @@ what they need without leaving it, and there is still one definition.
 <!-- BEGIN GENERATED: types-metadata -->
 
 [ADR](../adrs.md#metadata) · [Capability](../capabilities.md#metadata) · [Control](../controls.md#metadata) ·
-[Data](../data.md#metadata) · [Deviation](../deviations.md#metadata) · [Discovery](../discoveries.md#metadata) ·
-[Explanation](../explanations.md#metadata) · [Fix](../fixes.md#metadata) · [Glossary](../glossary.md#metadata) ·
-[Integration](../integrations.md#metadata) · [NFR](../nfrs.md#metadata) · [Policy](../policies.md#metadata) ·
-[Postmortem](../postmortems.md#metadata) · [Process](../processes.md#metadata) · [Report](../reports.md#metadata) ·
-[Runbook](../runbooks.md#metadata) · [Service](../services.md#metadata) · [Standard](../standards.md#metadata) ·
-[Tool](../tools.md#metadata)
+[Data](../data.md#metadata) · [Deviation](../deviations.md#metadata) · [Explanation](../explanations.md#metadata) ·
+[Fix](../fixes.md#metadata) · [Glossary](../glossary.md#metadata) · [Integration](../integrations.md#metadata) ·
+[NFR](../nfrs.md#metadata) · [Policy](../policies.md#metadata) · [Postmortem](../postmortems.md#metadata) ·
+[Process](../processes.md#metadata) · [Report](../reports.md#metadata) · [Runbook](../runbooks.md#metadata) ·
+[Service](../services.md#metadata) · [Standard](../standards.md#metadata) · [Tool](../tools.md#metadata)
 
 <!-- END GENERATED: types-metadata -->
 

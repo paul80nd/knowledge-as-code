@@ -4,11 +4,12 @@ type: fix
 tier: normative
 status: active
 symptom-keywords: [ editorconfig, formatting, ide, indent, reformat, rider, wrapping ]
-promoted-from: dsc-rider-holds-the-editorconfig
 verified:
   - { at: 2026-09-09T08:14:30Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law
+sources:
+  - { resource: paul80nd/knowledge-as-code#406 }
 tags: [ editorconfig, formatting, rider ]
 ---
 
@@ -48,9 +49,3 @@ cached setting.
 A session edited the file from a shell while the developer had the repository open in Rider, and the two then
 disagreed about the same key. That disagreement is the signal. The question that settles it is which of them has
 opened `.editorconfig` since the edit.
-
-## Related
-
-* [dsc-rider-holds-the-editorconfig] is the observation this was promoted from.
-
-[dsc-rider-holds-the-editorconfig]: ../discoveries/rider-holds-the-editorconfig.md

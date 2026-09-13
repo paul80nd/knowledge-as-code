@@ -56,7 +56,7 @@ a tree in any state:
 
 ```text
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
-update: withheld 34 file(s) for types this corpus has not adopted.
+update: withheld 31 file(s) for types this corpus has not adopted.
 update: withheld 2 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
 this corpus is behind its framework. these would change:
 WRITE, framework files this corpus holds differently:

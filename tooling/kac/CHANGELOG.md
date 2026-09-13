@@ -39,6 +39,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `applies-to` and `tags` are unchanged, and so are the body's three headings. Take it with
   `kac update --from <template>`.
 
+### Removed
+
+- **The `discoveries` type and the `observed` tier.** A corpus no longer keeps an unverified observation. One goes
+  into whatever tracker that corpus already uses, and what the corpus keeps is the answer somebody settled and
+  verified. `kac new` writes one type fewer, and `kac validate` counts one template fewer. `fixes` and `standards`
+  drop `promoted-from`, so a record that still has that key fails `unknown-key`; `sources` states where the content
+  came from instead. A `schema-shape` message naming the tiers now offers four. Take it with
+  `kac update --from <template>`, which deletes `discoveries.md`, the folder and the schema file.
+
 ## 0.26.0 - 2026-09-13
 
 ### Added

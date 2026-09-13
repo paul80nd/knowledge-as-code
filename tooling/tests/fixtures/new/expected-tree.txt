@@ -31,7 +31,6 @@
 .schema/controls.yaml
 .schema/data.yaml
 .schema/deviations.yaml
-.schema/discoveries.yaml
 .schema/explanations.yaml
 .schema/fixes.yaml
 .schema/glossary.yaml
@@ -64,9 +63,6 @@ data/_template.md
 deviations.md
 deviations/_index.md
 deviations/_template.md
-discoveries.md
-discoveries/_index.md
-discoveries/_template.md
 explanations.md
 explanations/_index.md
 explanations/_template.md
