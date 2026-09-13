@@ -20,18 +20,18 @@ tags: [ citations, clauses, conventions ]
 
 ## What I saw
 
-The policy template says a shared obligation is signposted from both sides, closing each clause with
-`. See [pol-OTHR]`. Eighteen clauses in Example Engineering do that. Sixteen of them form eight pairs, and each pair
-carries one id on both sides. Two point one way: `eng:pol-ENVS.CREDS` names `eng:pol-SCRT`, and `eng:pol-OBSV.SECRETS`
-names `eng:pol-SCRT` and `eng:pol-DATA`. Neither target holds a clause of that id.
+The policy template says a shared obligation is marked on both sides, closing each clause with `. See [pol-OTHR]`.
+Eighteen clauses in Example Engineering do that. Sixteen of them form eight pairs, and each pair uses one id on both
+sides. Two are one-way: `eng:pol-ENVS.CREDS` cites `eng:pol-SCRT`, and `eng:pol-OBSV.SECRETS` cites `eng:pol-SCRT`
+and `eng:pol-DATA`. Neither target has a clause with that id.
 
 ## Context
 
-Read while adopting this type in this corpus. The policy template states the convention, in both trees that hold a
+Read while adopting this type in this corpus. The policy template states the convention, in both trees that have a
 copy of it. `kac checks` lists nothing that enforces it.
 
 ## Why it might matter
 
-A citation names a clause id. Where one side of a pair renames its clause, the pair splits and both sides still read
-as correct. The two one-way references may be deliberate, because telemetry and a log are not obviously one
-obligation. Nobody has said which.
+A citation is built from a clause id. Where one side of a pair renames its clause, the pair splits and both sides
+still read as correct. The two one-way references may be deliberate, because telemetry and a log are not obviously one
+obligation. Nobody has confirmed either way.
