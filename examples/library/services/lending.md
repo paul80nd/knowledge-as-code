@@ -16,20 +16,19 @@ tags: [ legacy, loans ]
 `Service: svc-lending` `LIVE`
 
 Loans, returns and holds: a strangler wrapper over the legacy library management system, and the only route to the data
-that still lives there.
+still in it.
 
 ## What it does
 
 Exposes loans, holds and borrower records as a RESTful API. It fronts the legacy library management system, and
-overrides the routes it replaces as it gains functionality. That is the strangler pattern, and it is deliberate.
+overrides the routes it replaces as it gains functionality. That is the strangler pattern, applied deliberately.
 
 **It maps onto the legacy database and owns no schema of its own.** This is the estate's one deliberate exception to
 service-owned data. The legacy system still writes to that same database, and this service migrates none of it. Its
-object-relational mapping is a mapper over pre-existing tables that this service did not design.
+object-relational mapping runs over pre-existing tables that this service did not design.
 
-**It is therefore the only way to reach legacy-only data.** Anything that exists only in that database is reachable only
-by asking this service. A service that needs such data calls this one. The branch opening calendars are the worked
-example.
+**It is therefore the only route to legacy-only data.** A service that needs data kept only in that database calls this
+one. The branch opening calendars are the worked example.
 
 ## Where it lives
 
@@ -50,16 +49,15 @@ example.
 [test](https://app-lending-test.example.net/openapi/v1.json) ·
 [prod](https://app-lending-prd.example.net/openapi/v1.json).
 
-Callers reach it over the private network wherever possible. The hostnames exist because the platform assigns them, and
-nothing is meant to call them.
+Callers use the private network wherever possible. The platform assigns these hostnames, and nothing is meant to call
+them.
 
 ## Dependencies
 
-No service in this catalogue, which is why the record carries no `depends-on`. Its downward dependencies are all
-legacy:
+None in this catalogue, so this record has no `depends-on` field. Its downward dependencies are all legacy:
 
 * The **legacy database**, configured as `ConnectionStrings__Legacy`.
-* The **legacy circulation API**, reached through a reverse-proxy cluster. That API is the unreplaced half of the
+* The **legacy circulation API**, called through a reverse-proxy cluster. That API is the unreplaced half of the
   strangler.
 
 ## Data
@@ -69,8 +67,8 @@ than one writer: the legacy library management system still writes to it directl
 
 ## Operational notes
 
-* **Authentication.** Callers present an API key, configured as `Api__Key`. Each caller holds its own.
-* **Consumers.** [svc-catalogue-api] and [svc-reservations] are each configured to reach it. Nothing checks this line,
+* **Authentication.** Callers present an API key, configured as `Api__Key`. Each caller has its own.
+* **Consumers.** [svc-catalogue-api] and [svc-reservations] are each configured to call it. Nothing checks this line,
   so it goes stale.
 * **Criticality**: `critical`. It is the estate's only route to loan data, and nothing degrades gracefully without it.
 

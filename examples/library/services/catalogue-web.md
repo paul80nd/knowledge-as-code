@@ -24,7 +24,8 @@ The public catalogue: the site a reader visits to browse the collection, search 
 ## What it does
 
 Serves the reader-facing catalogue: search results, item pages, and a reader's own loans and holds. It renders no
-staff-facing screens and holds no data of its own. Everything it shows arrives through [svc-catalogue-api].
+staff-facing screens and stores no data of its own. Item pages, loans and holds arrive through [svc-catalogue-api],
+search results through [svc-search], and jacket imagery through [svc-covers-cdn].
 
 It delegates authentication to the identity provider at `id.example.com`, which issues the tokens the gateway validates.
 The branch terminals run the same application in a kiosk profile, so no second service exists for them.
@@ -56,8 +57,8 @@ It runs locally on port 5100.
 
 Taken from the application settings the infrastructure declares for the app service.
 
-* [svc-catalogue-api] is the gateway, configured as `Urls__CatalogueApi`. Everything the site reads and writes goes
-  through it.
+* [svc-catalogue-api] is the gateway, configured as `Urls__CatalogueApi`. Item pages, loans and holds are read and
+  written through it.
 * [svc-search] serves the search box and faceted browse, configured as `Urls__Search`.
 * [svc-covers-cdn] serves jacket imagery for result lists and item pages.
 
@@ -67,7 +68,7 @@ grading is recorded on [svc-search].
 
 ## Data
 
-No database connection is configured for this app service. It reaches data through the gateway.
+No database connection is configured for this app service. It reads and writes data through the gateway.
 
 [svc-catalogue-api]: catalogue-api.md
 [svc-covers-cdn]: covers-cdn.md
