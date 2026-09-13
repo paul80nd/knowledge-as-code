@@ -3,11 +3,12 @@ using kac.core;
 
 // The staleness section of each lookup skill, held to the fields its type actually exports.
 //
-// A skill is the whole of what a consumer is told about the export, so a skill that never names `reviewBy` leaves a
-// reader quoting a policy that passed its review date without saying so. The fields differ by type: `controls` and
-// `processes` carry no `reviewBy` at all, and a skill naming one would send a reader to a key that is not on the
-// line. Deriving the expectation from the schema is what keeps a rule stated once from binding the types it does not
-// reach.
+// A skill is the whole of what a consumer is told about the export, so a skill silent about the review date leaves a
+// reader quoting a policy that passed it. Which fields there are differs by type: `controls` and `processes` export no
+// review date at all, and a skill naming one would send a reader to a key that is not there. The spelling differs too.
+// A type declaring parts writes `reviewBy` on the line, and a type without them exports `review-by` under the schema's
+// own name. Deriving the expectation from the schema is what keeps a rule stated once from binding the types it does
+// not reach.
 
 namespace kac.tests;
 
@@ -21,7 +22,7 @@ public class PluginSkillStalenessTests
     private const string Opens = "## Say when ";
     private const string Closes = " is unsettled";
 
-    // Quoted beside a bad `status` or a passed `reviewBy`, because an export reads the same however old it is.
+    // Quoted beside a bad `status` or a passed review date, because an export reads the same however old it is.
     private const string Taken = "generatedAt";
 
     // Which type each skill reads, taken from the plugin manifest. `requires` is what the bundler trims a component
@@ -97,6 +98,7 @@ public class PluginSkillStalenessTests
     private static readonly Dictionary<string, string> InForce = new(StringComparer.Ordinal)
     {
         ["controls"] = "active",
+        ["fixes"] = "active",
         ["glossary"] = "active",
         ["policies"] = "active",
         ["processes"] = "active",
@@ -124,7 +126,8 @@ public class PluginSkillStalenessTests
         var fields = type.DeclaredExport.Fields.ToHashSet(StringComparer.Ordinal);
 
         if (line.Contains("status") || fields.Contains("status")) yield return "status";
-        if (line.Contains("reviewBy") || fields.Contains("review-by")) yield return "reviewBy";
+        if (line.Contains("reviewBy")) yield return "reviewBy";
+        else if (fields.Contains("review-by")) yield return "review-by";
     }
 
     // The text under the staleness heading, up to the next heading of the same level.

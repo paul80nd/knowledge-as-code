@@ -12,6 +12,7 @@
 .plugin/hooks/hooks.json
 .plugin/skills/controls-lookup/SKILL.md
 .plugin/skills/corpus-retrieval/SKILL.md
+.plugin/skills/fix-lookup/SKILL.md
 .plugin/skills/glossary-lookup/SKILL.md
 .plugin/skills/policy-lookup/SKILL.md
 .plugin/skills/process-lookup/SKILL.md
