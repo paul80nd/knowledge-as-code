@@ -45,6 +45,12 @@ public class PluginSkillStalenessTests
             // published source, which is the current file rather than the copy this section is about.
             if (requires.Count == 0) continue;
 
+            // One skill writes one staleness section, so a second type would put its values somewhere this test
+            // does not read. `PluginSkillFieldTests` refuses the same shape for the same reason.
+            if (requires.Count != 1)
+                throw new InvalidOperationException(
+                    $"'{path}' requires {requires.Count} types, and one skill holds one staleness section.");
+
             data.Add(path["skills/".Length..], requires[0].Split('@')[0]);
         }
 
@@ -84,12 +90,31 @@ public class PluginSkillStalenessTests
             $"{skill} reads {type} and its staleness section never names status {string.Join(", ", missing)}.");
     }
 
-    // The states a record of this type can be in other than in force. `active` is the settled one in every type, and
-    // a type declaring no `status` values at all leaves nothing to report.
-    private static IEnumerable<string> Unsettled(TypeSchema type) =>
-        (type.Fields.GetValueOrDefault("status")?.Values ?? [])
-        .Where(v => !string.Equals(v, "active", StringComparison.Ordinal))
-        .Order(StringComparer.Ordinal);
+    // The value each type treats as in force. Nothing in `.schema/` declares it, and it is not `active` across the
+    // set: `adrs` settles at `accepted`, `nfrs` at `agreed`, `services` at `live`, `tools` at `approved`. A type with
+    // no answer here throws rather than defaulting, so a lookup skill written for a sixth type forces the decision
+    // instead of silently obliging its skill to report an in-force record as unsettled.
+    private static readonly Dictionary<string, string> InForce = new(StringComparer.Ordinal)
+    {
+        ["controls"] = "active",
+        ["glossary"] = "active",
+        ["policies"] = "active",
+        ["processes"] = "active",
+        ["standards"] = "active"
+    };
+
+    // The states a record of this type can be in other than in force.
+    private static IEnumerable<string> Unsettled(TypeSchema type)
+    {
+        if (!InForce.TryGetValue(type.Folder, out var settled))
+            throw new InvalidOperationException(
+                $"'{type.Folder}' has a lookup skill and no in-force status here. Add it, and say in that skill's "
+                + "staleness section what every other value of its `status` means.");
+
+        return (type.Fields.GetValueOrDefault("status")?.Values ?? [])
+            .Where(v => !string.Equals(v, settled, StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal);
+    }
 
     // The staleness keys one type puts on the line a skill reads. A type declaring parts writes the line's own keys,
     // and one without them exports the record's frontmatter under the schema's names.

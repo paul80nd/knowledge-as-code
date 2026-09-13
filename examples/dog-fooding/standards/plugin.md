@@ -6,7 +6,7 @@ status: active
 implements: [ eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER,
   eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY, eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM,
   eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
-verified-by: [ ctl-0008 ]
+verified-by: [ ctl-0008, ctl-0009 ]
 applies-to:
   - all
 review-by: "2027-09-07"
@@ -82,7 +82,7 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 
 - The export inside a plugin **MUST** be the bytes `kac export` wrote.
 - A skill **MUST NOT** write to any file under `${CLAUDE_PLUGIN_ROOT}`.
-- A skill **MUST** report a `status` other than `active` on the record it quotes, under every value its type declares.
+- A skill **MUST** report a `status` its type does not treat as in force, under every such value that type declares.
 - A skill **MUST** report a `reviewBy` that has passed, where its type exports one.
 - A skill **MUST** quote `generatedAt` from `manifest.json` alongside either.
 - A skill **MUST** quote the wording the export contains, and link the record for the rest.
