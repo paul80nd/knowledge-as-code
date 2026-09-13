@@ -38,8 +38,8 @@ type's own page.
 
 ### Normative: living, owned, reviewed
 
-**[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
-Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
+**[Fixes](../fixes.md).** A problem with a resolution somebody has verified. Each fix lists its verifications, so a
+reader can see how far the resolution has been taken on trust.
 
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. A target nobody measures is an aspiration.
@@ -93,7 +93,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 <!-- END GENERATED: types-edges -->
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`promoted-from` / `promoted-to`. A one-sided link fails the build. Read that off the last column above. An empty cell
+`replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
 means nobody answers that edge, and nobody has to keep it in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. Policies
@@ -118,4 +118,4 @@ this corpus holds both sides of it.
 Not all types are proven. Where that matters, this corpus's own `README.md` records which have met real content.
 
 [taxonomy]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/
-[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers

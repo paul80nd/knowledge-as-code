@@ -38,6 +38,6 @@ should follow.
 * Path-scoped automatically-included reviewers raise the bar on Decided and Normative content (`adrs/*`, `standards/*`,
   `policies/*`) without raising it everywhere. This is how the tier model is enforced in practice. Azure DevOps sets a
   minimum reviewer count per branch and scopes required reviewers per path, which is the pairing this needs.
-* `discoveries/*` has no path rule and merges on a green build.
+* Every other path has no rule and merges on a green build.
 
 [contributing]: https://paul80nd.github.io/knowledge-as-code/framework/contributing/

@@ -16,22 +16,22 @@ Add one when an investigation cost real time. You will hit the same problem agai
 The same problems come back, and the next person to hit one pays the cost again. A fix turns two hours of debugging
 into a thirty-second search, provided the words that person searches for are in `symptom-keywords`.
 
-A [discovery](discoveries.md) can also become a fix. A human promotes it once the observation proves real, general and
-current.
+An observation nobody has verified belongs in the tracker. Write a fix from it once somebody has checked that the
+problem and the resolution are both real.
 
 ## Scope
 
 A fix is **verified**. Somebody has checked that the problem is real, that the resolution works, and that both are
-still current. A [discovery](discoveries.md) arrives with none of that: nobody reviews one, and it might be wrong or
-already fixed.
+still current. An unchecked observation has none of that, so it stays in the tracker until somebody does the
+checking.
 
 **Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
 resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
 see how far the fix has been taken: agents alone leave it machine-confirmed, and one `human:` line makes it
 human-reviewed. An export carries that reading as `trust`, derived from the list so that one place names who checked.
 
-**Never write straight to a fix from a session.** An agent cannot verify its own observation, so capture a discovery
-and let somebody else check it at promotion.
+**Never write straight to a fix from a session.** An agent cannot verify its own observation. File it in the tracker
+and let somebody else check it.
 
 Other boundaries:
 
@@ -57,7 +57,6 @@ Other boundaries:
 | `tags` †             | list                                   | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
 | `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
 | `applies-to`         | list                                   | Service ids this fix concerns.                                                              |
-| `promoted-from`      | id                                     | The discovery this was promoted from.                                                       |
 | `verified` *         | list                                   | Every verification this fix has had, oldest first, one line each.                           |
 | `review-by` *        | date                                   | Quoted. The date by which someone verifies this is still true.                              |
 
@@ -114,7 +113,6 @@ Other boundaries:
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
-| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
 | `one-problem-per-document`  | warning | A fix has one Symptom section, and a record with two is two fixes.                                              |

@@ -152,8 +152,8 @@ The file a contributor copies to start a record, checked against the fields its 
 
 ### Tier
 
-What a record's type states about how far it may be trusted and how it is written: decided, normative, descriptive,
-procedural or observed.
+What a record's type states about how far it may be trusted and how it is written: decided, normative, descriptive
+or procedural.
 
 **Not:** type. Several types share a tier, and the writing rules and the review bar follow the tier.
 

@@ -103,18 +103,6 @@ fields:
     reciprocal: verifies
     description: Control ids that check it.
 
-  promoted-from:
-    required: false
-    type: id
-    ref: discoveries
-    reciprocal: promoted-to
-    description: The discovery this was promoted from.
-    notes: >
-      A discovery that turns out to be a rule people should follow is promoted here. A fix declares the
-      same field for a discovery that turns out to be a problem. A standard reached this way still needs
-      the provenance `provenance-required` asks for, because a promotion says only where the observation
-      came from.
-
   applies-to:
     required: true
     type: list

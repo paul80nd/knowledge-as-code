@@ -1,6 +1,6 @@
 # The default types
 
-Nineteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
+Eighteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
 [`.corpus.yaml`](../corpus-descriptor.md). `kac` never writes a declined type's schema file, so nothing arrives to be
 ignored.
 
@@ -8,7 +8,7 @@ Adopting all of them is not expected. A corpus running one product might stand u
 also declare a type of its own that the framework has never heard of. What follows is what you get without deciding
 anything.
 
-They are grouped by [tier](taxonomy.md#the-five-tiers), because tier is what sets the rules each one answers to.
+They are grouped by [tier](taxonomy.md#the-four-tiers), because tier is what sets the rules each one answers to.
 
 ## Decided
 
@@ -30,7 +30,7 @@ Living and owned. Edited in place, with a changelog.
 | **Controls**   | `controls/`   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
 | **Deviations** | `deviations/` | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed        |
 | **NFRs**       | `nfrs/`       | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |
-| **Fixes**      | `fixes/`      | A problem with a verified resolution, promoted from a discovery once somebody has checked it          |
+| **Fixes**      | `fixes/`      | A problem with a resolution somebody has verified, and the record of who verified it                  |
 
 ## Descriptive
 
@@ -56,20 +56,11 @@ Living, and must be rehearsed to stay true.
 | **Processes** | `processes/` | A planned procedure followed deliberately: releasing, onboarding, provisioning, rotating a secret |
 | **Runbooks**  | `runbooks/`  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree  |
 
-## Observed
-
-Perishable. Unreviewed until promoted, and it expires by default.
-
-| Type            | Folder         | What it holds                                                                                     |
-|-----------------|----------------|---------------------------------------------------------------------------------------------------|
-| **Discoveries** | `discoveries/` | Something noticed during work and not yet verified, captured cheaply and expiring unless promoted |
-
 ## The pairs that look alike
 
 Several of these sit close enough to be confused, and the schema declares the distinction on the type it belongs to. An
 ADR is the decision and its reasoning, frozen. A standard is the rule that results, kept current. A process is read at a
-desk, and a runbook at three in the morning. A discovery is cheap and unverified, and a fix is what it becomes once
-somebody confirms it.
+desk, and a runbook at three in the morning.
 
 A corpus's own taxonomy page renders every such pair it holds both sides of. The distinctions you meet are therefore the
 ones your own types actually raise.

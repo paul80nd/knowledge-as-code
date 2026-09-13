@@ -51,10 +51,10 @@ We treat knowledge as code:
   for that type.
 * **Every document has YAML frontmatter** conforming to a [schema](../knowledge-as-code/metadata.md). A wiki that
   renders frontmatter as a metadata table replaces metadata in prose. A person reads it and automation uses it.
-* **We group types into tiers by behaviour**: decided, normative, descriptive, procedural and observed. The tier
-  decides the review bar, the validation rules and the lifecycle.
-* **Observed knowledge is cheap to capture and deliberate to promote.** A session records an unverified discovery with
-  no review. The discovery expires by default. Promotion to a fix or a standard needs a human.
+* **We group types into tiers by behaviour**: decided, normative, descriptive and procedural. The tier decides the
+  review bar, the validation rules and the lifecycle.
+* **Cheap capture happens in the tracker.** A session files an observation as a work item, with no review. It becomes a
+  fix or a standard only when a person verifies it.
 * **CI validates** schema conformance, ID uniqueness, link resolution and bidirectional relationships. It generates
   the indexes, the reports and an always-loaded rules digest.
 * **The mechanism is separable from the content.** The schema and the framework's own documentation contain no
@@ -103,15 +103,15 @@ We treat knowledge as code:
   metadata.
 * **The generator will own every index.** It marks each region it owns, and CI fails when a marked region is stale. A
   table can no longer disagree with its source unnoticed.
-* **Agent-written content will enter the corpus**, at a lower authority tier and with an explicit promotion path. The
-  value of the whole exercise depends on the promotion gate working. If the gate fails, the corpus fills with
+* **Agent-written content will enter the corpus**, through the tracker and with an explicit promotion path. The value
+  of the whole exercise depends on the promotion gate working. If the gate fails, the corpus fills with
   plausible, unverified assertions, and trust in everything else falls with them.
 * **The corpus will grow from a few dozen documents towards several hundred** as the taxonomy fills. A generated index
   matters at that size, so we automate the indexes before the growth.
 * **A rules digest will be generated into the repository root** and read by every AI session. It has a fixed size
   budget. Once that budget is reached, the rules are triaged rather than the budget raised.
 * **Session logs will stay out of this corpus.** They routinely contain credentials and customer data. We commit only
-  distilled, reviewed discoveries.
+  distilled, reviewed records.
 * **The mechanism will be reusable elsewhere.** Keeping the schema, the validators and the skills free of organisation
   specifics takes discipline, and makes the approach portable to another estate.
 

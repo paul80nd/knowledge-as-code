@@ -10,7 +10,7 @@ where this page says it overrides the floor.
 
 ## The tier decides how a record is written
 
-Read `tier` in the frontmatter. Find its row below and follow that section. Ignore the other four.
+Read `tier` in the frontmatter. Find its row below and follow that section. Ignore the other three.
 
 | Tier            | Write it as                                                                            |
 |-----------------|----------------------------------------------------------------------------------------|
@@ -18,7 +18,6 @@ Read `tier` in the frontmatter. Find its row below and follow that section. Igno
 | **Normative**   | One obligation per clause. Testable. Keyword first. The reason goes in Purpose.        |
 | **Descriptive** | Indicative, present tense. State what is.                                              |
 | **Decided**     | Prose. Constrain the structure and the length, not the words.                          |
-| **Observed**    | Symptom, cause, why it might matter. Three sentences.                                  |
 
 ### Procedural: runbooks and processes
 
@@ -67,12 +66,6 @@ The reader acts on a clause without checking it. Make it checkable.
 * Include the unwelcome consequences.
 * Attribute a cause to a system, not to a person.
 * Contractions are fine in Context and Alternatives. Not in the decision sentence or a consequence.
-
-### Observed: discoveries
-
-* Write the symptom, the cause if known, and why it might matter. `low-ceremony` warns past 200 words.
-* Say what you do not know. "Unconfirmed" and "seen once" are honest here.
-* Do not tidy a discovery into authority. Promotion is where certainty is added.
 
 ## What this page overrides in the floor
 

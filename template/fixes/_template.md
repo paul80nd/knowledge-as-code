@@ -25,8 +25,7 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`verified`**: one line per verification, oldest first. A fix nobody verified is a
-  [discovery](../discoveries.md).
+* **`verified`**: one line per verification, oldest first. A fix nobody verified is an observation for the tracker.
 
   ```yaml
   verified:
@@ -84,7 +83,5 @@ will be different, but the way in may be the same.
 ## Related
 
 * [svc-{{a}}] is the service affected.
-* [dsc-{{a}}] is the observation this was promoted from.
 
-[dsc-{{a}}]: ../discoveries/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

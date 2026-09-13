@@ -11,7 +11,7 @@ fills it with its own knowledge.
 
 * **[Principles](principles.md)** says why the framework is shaped the way it is, and what the design will not trade
   away.
-* **[Taxonomy](taxonomy.md)** says what a type and a tier are, what the five tiers ask, and the shape a type takes on
+* **[Taxonomy](taxonomy.md)** says what a type and a tier are, what the four tiers ask, and the shape a type takes on
   disk.
 * **[The default types](types.md)** introduces every type that ships, grouped by tier, one line each.
 * **[Metadata](metadata.md)** says what a record has in frontmatter, how ids are formed, and how a citation reaches a

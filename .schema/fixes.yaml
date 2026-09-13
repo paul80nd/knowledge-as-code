@@ -7,7 +7,7 @@ folder: fixes
 page: fixes.md
 tier: normative
 lifecycle: living
-summary: A problem with a verified resolution, promoted from a discovery once somebody has checked it.
+summary: A problem with a resolution somebody has verified.
 goes-here: A problem with a known, verified resolution
 detail: >
   Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
@@ -15,11 +15,10 @@ detail: >
 lineage:
   prior-art: "ITIL Problem Management, the *known error* construct"
   alignment: >
-    A problem whose cause is understood and whose fix is documented, along with the observed → analysed → promoted
-    lifecycle
+    A problem whose cause is understood and whose resolution is documented
   divergence: >
-    ITIL binds a known error to a formal problem record and an owning practice. A fix here is promoted by any
-    verification, from anything somebody noticed
+    ITIL binds a known error to a formal problem record and an owning practice. A fix here is written from anything
+    somebody noticed, and any verification gives it authority
 
 id:
   prefix: fix
@@ -55,13 +54,6 @@ fields:
     ref: services
     description: Service ids this fix concerns.
 
-  promoted-from:
-    required: false
-    type: id
-    ref: discoveries
-    reciprocal: promoted-to
-    description: The discovery this was promoted from.
-
   verified:
     required: true
     type: list
@@ -69,8 +61,8 @@ fields:
     shape: event
     description: Every verification this fix has had, oldest first, one line each.
     notes: >
-      A fix nobody verified is still a discovery, which is why this field is required. The entries take the same
-      shape as a report's.
+      An unverified resolution belongs in the tracker as an observation, which is why this field is required. The
+      entries take the same shape as a report's.
       <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter> gives that shape,
       the actors it refuses, and the trust tier derived from the list.
 
@@ -111,8 +103,8 @@ rules:
   - id: raiser-does-not-verify
     description: An agent does not verify a fix it raised.
     notes: >
-      Nothing on a fix states who raised it. `owner` gives the person answerable for it now, and `promoted-from`
-      points at a discovery, which a rule reading one document cannot open. The rule is declared and does not run.
+      Nothing on a fix states who raised it. `owner` gives the person answerable for it now, and `sources` points
+      outside the corpus, which a rule reading one document cannot follow. The rule is declared and does not run.
 
   - id: one-problem-per-document
     description: A fix has one Symptom section, and a record with two is two fixes.

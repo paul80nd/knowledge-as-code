@@ -56,16 +56,14 @@
         "decided",
         "normative",
         "descriptive",
-        "procedural",
-        "observed"
+        "procedural"
       ]
     },
     "lifecycle": {
-      "description": "How a record ages: `immutable` is superseded, `living` is kept current, `perishable` goes stale until something promotes it.",
+      "description": "How a record ages: `immutable` is superseded, `living` is kept current.",
       "enum": [
         "immutable",
-        "living",
-        "perishable"
+        "living"
       ]
     },
     "summary": {

@@ -6,8 +6,8 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-13T09:40:48Z, by: kac/0.26.0 }
 sources:
-  - { resource: example-dogfooding, version: "0.27.1" }
-  - { resource: example-engineering, version: "0.16.3" }
+  - { resource: example-dogfooding, version: "0.28.0" }
+  - { resource: example-engineering, version: "0.17.0" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:25:00Z, by: coverage-sweep/1.0.0 }
@@ -122,7 +122,7 @@ where the rule and the practice differ.
 | `PROV` | MUST | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | A commit trailer records what produced a change. A finding an agent files records the agent, the repository and the commit it read. |
 | `ACCEPT` | MUST | `eng:std-PR` |  |  |  | Covered | The approval is what makes the work somebody's. |
 | `EQUAL` | MUST | `eng:std-PR` |  |  |  | Covered | A change arrives as a pull request, whoever wrote the branch. |
-| `CONFID` | MUST | `std-PLUGIN` |  | `ctl-0008`, `ctl-0009` |  | Covered | A skill dates the export and reports an unsettled record. A finding states its confidence, and a discovery here states a confidence and an expiry date. Nothing runs `expiry-sweep`, so no observation expires. |
+| `CONFID` | MUST | `std-PLUGIN` |  | `ctl-0008`, `ctl-0009` |  | Covered | A skill dates the export and reports an unsettled record, and a finding states its confidence. This corpus keeps no unverified observation, so letting one lapse is the tracker's business. Nothing here checks that it does. |
 | `SELFVER` | MUST NOT | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | The approver reads the change itself. A session filing a finding cannot call its own observation corroborated. |
 | `DUTIES` | MUST NOT | `eng:std-PR` |  |  | `eng:pol-ACCS.DUTIES` | Covered | Somebody other than the author approves it. One maintainer does both here. |
 | `UNPROV` | MUST NOT | `std-PLUGIN` |  | `ctl-0008`, `ctl-0009` |  | Covered | A skill states the record an answer came from. No proposal states the run that produced it. |

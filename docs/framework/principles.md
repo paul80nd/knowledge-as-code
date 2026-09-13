@@ -65,11 +65,11 @@ is visible and a contradiction is not.
 ## Cheap capture, deliberate promotion
 
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so needs a template, an owner
-and two reviewers. So you record an observation with no review at all and mark it unverified, and it expires on its own
-if nothing promotes it.
+and two reviewers. So you file the observation in the tracker the corpus already uses, with no review and no record
+written for it.
 
-The rigour lives at promotion. A discovery becomes a fix when a human confirms it, and the fix records its provenance
-back to the observation. That gradient lets a corpus grow without its average trustworthiness falling.
+The rigour lives at promotion. An observation becomes a fix once somebody verifies it, and the fix names where the
+content came from in `sources`. That gradient lets a corpus grow without its average trustworthiness falling.
 
 ## Trust is what a corpus is for
 

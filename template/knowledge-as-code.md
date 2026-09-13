@@ -68,8 +68,8 @@ stands obliged by is recorded in [`frameworks.md`](frameworks.md) and nowhere el
 determines the rules. Every validation rule, review expectation, language rule and generated report keys off the tier
 rather than the type, so a new kind of knowledge needs a tier and no new machinery.
 
-The five are **Decided**, **Normative**, **Descriptive**, **Procedural** and **Observed**.
-[The five tiers][tiers] says what each one asks, and [principles][principles-behaviour] says why that is the
+The four are **Decided**, **Normative**, **Descriptive** and **Procedural**.
+[The four tiers][tiers] says what each one asks, and [principles][principles-behaviour] says why that is the
 load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/taxonomy.md).
 
 ## What this is not
@@ -79,7 +79,7 @@ load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/
 * **Not a document dump.** Every document has a type, a tier, an owner and a reason to exist. Content that fits no type
   is a prompt to discuss the taxonomy, not to create a `misc/` folder.
 * **Not certified compliance.** See the note on alignment above.
-* **Not automatically true.** Documents carry a status and, in the Observed tier, a confidence level. Read them.
+* **Not automatically true.** Every document has a status. Read it.
 
 ---
 
@@ -90,4 +90,4 @@ taxonomy and carry no taxonomy frontmatter. The constitution is not one of the l
 [automation]: https://paul80nd.github.io/knowledge-as-code/framework/automation/
 [principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
 [principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
-[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers

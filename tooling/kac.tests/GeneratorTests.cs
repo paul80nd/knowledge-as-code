@@ -385,8 +385,7 @@ public class GeneratorTests
         new("decided", "Decided", "immutable once accepted", ""),
         new("normative", "Normative", "living, owned, reviewed", "The rules, and what verifies them."),
         new("descriptive", "Descriptive", "living, must mirror reality", ""),
-        new("procedural", "Procedural", "living, must be rehearsed", ""),
-        new("observed", "Observed", "perishable, unreviewed until promoted", "")
+        new("procedural", "Procedural", "living, must be rehearsed", "")
     ];
 
     private static TypeSchema[] Four() =>
@@ -458,7 +457,6 @@ public class GeneratorTests
 
         Assert.Contains("### Decided", catalogue);
         Assert.DoesNotContain("### Descriptive", catalogue);
-        Assert.DoesNotContain("### Observed", catalogue);
     }
 
     [Fact]
@@ -586,7 +584,7 @@ public class GeneratorTests
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
-        var table = Generator.LineageTable([Ancestor("Discovery", "discoveries", new LineageSpec("None.", "", ""))],
+        var table = Generator.LineageTable([Ancestor("Capability", "capabilities", new LineageSpec("None.", "", ""))],
             "../");
 
         Assert.Contains("| None.", table);

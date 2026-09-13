@@ -46,7 +46,7 @@ public sealed class FieldSpec
         Entry?.FirstOrDefault(k => string.Equals(k.Name, name, StringComparison.Ordinal));
 
     // The folders an id in this field may belong to. A list, because several fields point at more than
-    // one type: a discovery is promoted to a fix or a standard. A scalar `ref:` is the one-entry case
+    // one type: a deviation departs from a policy or a standard. A scalar `ref:` is the one-entry case
     // rather than a separate shape.
     public IReadOnlyList<string> Refs { get; init; } = [];
 

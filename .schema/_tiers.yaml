@@ -2,7 +2,7 @@
 
 notes: >
   Order is load-bearing. Every generated list of types groups by tier in the order declared here, from
-  what has been decided to what has only been noticed.
+  what has been decided to what has to be rehearsed.
 
 tiers:
 
@@ -28,10 +28,3 @@ tiers:
     note: >
       Each records when it was last rehearsed. An unrehearsed process is annoying. An unrehearsed
       runbook is dangerous.
-
-  observed:
-    label: Observed
-    behaviour: perishable, unreviewed until promoted
-    note: >
-      The tier with the least authority is the one a corpus most depends on. Capture has to be cheap,
-      or it does not happen.

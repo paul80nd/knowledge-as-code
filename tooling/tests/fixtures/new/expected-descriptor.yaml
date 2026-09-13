@@ -30,7 +30,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 12
+  template-version: 13
   taken-on: <today>
 
 # How far an update goes. `cautious` writes a seed only where this corpus has none.
@@ -43,7 +43,6 @@ types:
   - controls
   - data
   - deviations
-  - discoveries
   - explanations
   - fixes
   - glossary

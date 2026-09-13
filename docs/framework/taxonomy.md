@@ -8,7 +8,7 @@ Every validation rule, review expectation, language rule and generated report ke
 knowledge needs a tier and nothing else. [Principles](principles.md#behaviour-before-subject) argues why that is the
 split to make.
 
-## The five tiers
+## The four tiers
 
 | Tier            | Behaviour                                                         |
 |-----------------|-------------------------------------------------------------------|
@@ -16,14 +16,14 @@ split to make.
 | **Normative**   | Living. Owned. Edited in place with a changelog                   |
 | **Descriptive** | Living. Must mirror reality, and is verifiable against the estate |
 | **Procedural**  | Living. Must be rehearsed to stay true                            |
-| **Observed**    | Perishable. Unreviewed until promoted, and expires by default     |
 
 [Contributing](contributing.md#review-by-tier) says what review each tier asks for.
 
-**Observed is the row that surprises people.** The tier with the least authority is the one a corpus most depends on.
+**Cheap capture has no tier.** An observation nobody has verified goes into the tracker the corpus already uses, and
+never into the corpus itself.
 [Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument lives.
 
-**No record states its lifecycle.** Immutable, living and perishable are readable off the table above. A record
+**No record states its lifecycle.** Immutable and living are readable off the table above. A record
 therefore states `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.
 
 ## Which types a corpus holds
@@ -39,7 +39,7 @@ sometimes the adoption of a type the corpus declined. A `misc/` folder is a fail
 
 **Session state is the one thing with no type.** Where a piece of work got to, for handover between sessions, stays
 local and never reaches a corpus. Session logs routinely hold stack traces, connection strings and customer identifiers.
-Only distilled, reviewed discoveries travel.
+Only a distilled, reviewed record travels.
 
 ## The shape on disk
 

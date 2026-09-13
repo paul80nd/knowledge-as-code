@@ -26,10 +26,10 @@ fields:
   tier:
     required: true
     type: enum
-    values: [decided, normative, descriptive, procedural, observed]
+    values: [decided, normative, descriptive, procedural]
     description: The record's trust level, fixed for the type and checked against the folder.
     notes: >
-      The folder already gives this. The frontmatter states it anyway, so "observed" at the top of
+      The folder already gives this. The frontmatter states it anyway, so "decided" at the top of
       a page tells a reader how much weight to give the record.
 
   status:

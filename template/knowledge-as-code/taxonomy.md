@@ -33,7 +33,6 @@ column for your row.
 | An account of an incident and what caused it                       | [Postmortems](../postmortems.md)   |
 | An answer about the corpus no single record states                 | [Reports](../reports.md)           |
 | How something works, or why it is shaped that way                  | [Explanations](../explanations.md) |
-| Something surprising you noticed and have not verified             | [Discoveries](../discoveries.md)   |
 | What a deployable component is and does                            | [Services](../services.md)         |
 | What the organisation offers a customer, and why                   | [Capabilities](../capabilities.md) |
 | Where data lives, how long it is kept, and its sensitivity         | [Data](../data.md)                 |
@@ -73,8 +72,8 @@ leaves. Every control lists the rules it verifies. A rule nothing checks gets a 
 is reviewed. The record says what is being done instead, why that was worth accepting, and what limits the risk
 meanwhile. A year later, nobody can tell an unwritten departure from ignorance of the rule.
 
-**[Fixes](../fixes.md).** A problem with a verified resolution, promoted from a discovery once somebody has checked it.
-Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
+**[Fixes](../fixes.md).** A problem with a resolution somebody has verified. Each fix lists its verifications, so a
+reader can see how far the resolution has been taken on trust.
 
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. A target nobody measures is an aspiration.
@@ -135,14 +134,6 @@ each one for somebody who has not done it before.
 **[Runbooks](../runbooks.md).** An incident-time procedure read under pressure: terse, imperative, structured as a
 decision tree. Disaster recovery and estate rebuild are runbooks.
 
-### Observed: perishable, unreviewed until promoted
-
-The tier with the least authority is the one a corpus most depends on. Capture has to be cheap, or it does not happen.
-
-**[Discoveries](../discoveries.md).** Something noticed during work and not yet verified, captured cheaply and expiring
-unless promoted. A title, an observation, why it might matter, and a confidence level. "The build fails silently if X"
-then has somewhere to go the moment somebody notices it.
-
 <!-- END GENERATED: types-detail -->
 
 ## How the types relate
@@ -159,7 +150,6 @@ graph LR;
   t_controls[Control];
   t_data[Data];
   t_deviations[Deviation];
-  t_discoveries[Discovery];
   t_explanations[Explanation];
   t_fixes[Fix];
   t_glossary[Glossary];
@@ -185,9 +175,6 @@ graph LR;
   t_deviations -- applies-to --> t_services;
   t_deviations -- departs-from --> t_policies;
   t_deviations -- departs-from --> t_standards;
-  t_discoveries -- applies-to --> t_services;
-  t_discoveries -- promoted-to --> t_fixes;
-  t_discoveries -- promoted-to --> t_standards;
   t_explanations -- explains --> t_services;
   t_explanations -- explains --> t_capabilities;
   t_fixes -- applies-to --> t_services;
@@ -234,11 +221,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Data        | `owned-by`       | Service                          |                 |
 | Deviation   | `applies-to`     | Service                          |                 |
 | Deviation   | `departs-from`   | Policy, Standard                 |                 |
-| Discovery   | `applies-to`     | Service                          |                 |
-| Discovery   | `promoted-to`    | Fix, Standard                    | `promoted-from` |
 | Explanation | `explains`       | Service, Capability              |                 |
 | Fix         | `applies-to`     | Service                          |                 |
-| Fix         | `promoted-from`  | Discovery                        | `promoted-to`   |
 | Glossary    | `narrows`        | Glossary                         |                 |
 | Integration | `used-by`        | Service                          |                 |
 | NFR         | `applies-to`     | Service, Capability              |                 |
@@ -252,7 +236,6 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Standard    | `applies-to`     | Service                          |                 |
 | Standard    | `derived-from`   | ADR                              |                 |
 | Standard    | `implements`     | Policy                           |                 |
-| Standard    | `promoted-from`  | Discovery                        | `promoted-to`   |
 | Standard    | `verified-by`    | Control                          | `verifies`      |
 | Tool        | `decided-in`     | ADR                              |                 |
 | Tool        | `replaces`       | Tool                             | `successor`     |
@@ -261,7 +244,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 <!-- END GENERATED: types-edges -->
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`promoted-from` / `promoted-to`. A one-sided link fails the build. Read that off the last column above. An empty cell
+`replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
 means nobody answers that edge, and nobody has to keep it in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. Policies
@@ -294,10 +277,6 @@ change the rule.
 **Deviation vs Policy.** A policy is the commitment. A deviation is one named, dated departure from it, and changes
 nothing the policy says. A departure everyone takes is a policy that needs rewriting.
 
-**Discovery vs Fix.** A discovery is unverified, and might be wrong or already fixed. A fix has been checked by
-somebody, so it has authority. Never write straight to a fix from a session. Capture the discovery and let promotion do
-the work.
-
 **Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
 
@@ -317,9 +296,6 @@ statement would survive replacing the whole technology estate, it is a policy.
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.
 
-**Report vs Discovery.** A report is a walk over the corpus, repeatable and dated. A discovery is something somebody
-noticed once. If nothing would reproduce it, it is a discovery.
-
 **Report vs Explanation.** A report answers a question about the corpus itself. An explanation says how something in the
 estate works. If the answer would still be true with every record deleted, it is an explanation.
 
@@ -338,4 +314,4 @@ register.
 Not all types are proven. Where that matters, this corpus's own `README.md` records which have met real content.
 
 [taxonomy]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/
-[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-five-tiers
+[tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers

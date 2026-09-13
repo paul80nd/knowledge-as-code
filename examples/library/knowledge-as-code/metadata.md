@@ -16,15 +16,15 @@ Carried by every document in the taxonomy.
 
 <!-- BEGIN GENERATED: schema-universal -->
 
-| Field      | Value                                                       | Notes                                                                         |
-|------------|-------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *     | string                                                      | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *   | string                                                      | The singular name of the type, which CI checks against the folder.            |
-| `tier` *   | `decided` `normative` `descriptive` `procedural` `observed` | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` * | enum                                                        | The record's current state, from the values this type sets.                   |
-| `owner` *  | string                                                      | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources`  | list                                                        | Where the content came from, one entry per source.                            |
-| `tags`     | list                                                        | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| Field      | Value                                            | Notes                                                                         |
+|------------|--------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *     | string                                           | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *   | string                                           | The singular name of the type, which CI checks against the folder.            |
+| `tier` *   | `decided` `normative` `descriptive` `procedural` | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` * | enum                                             | The record's current state, from the values this type sets.                   |
+| `owner` *  | string                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources`  | list                                             | Where the content came from, one entry per source.                            |
+| `tags`     | list                                             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 
 \* Field is required
 

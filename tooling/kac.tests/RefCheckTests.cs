@@ -25,12 +25,12 @@ public class RefCheckTests
 
     [Fact]
     public void A_declaration_naming_several_types_admits_each_of_them()
-        => Assert.Empty(Refs(Field("promoted-to", "adrs", "services"), "svc-catalogue"));
+        => Assert.Empty(Refs(Field("departs-from", "adrs", "services"), "svc-catalogue"));
 
     [Fact]
     public void A_declaration_naming_several_types_offers_them_all_when_none_matches()
-        => Assert.Equal("'promoted-to' points at 'dat-borrowers', which is Data, not an ADR or a Service.",
-            Assert.Single(Refs(Field("promoted-to", "adrs", "services"), "dat-borrowers")).Message);
+        => Assert.Equal("'departs-from' points at 'dat-borrowers', which is Data, not an ADR or a Service.",
+            Assert.Single(Refs(Field("departs-from", "adrs", "services"), "dat-borrowers")).Message);
 
     [Fact]
     public void A_type_whose_label_is_a_mass_noun_is_named_without_an_article()

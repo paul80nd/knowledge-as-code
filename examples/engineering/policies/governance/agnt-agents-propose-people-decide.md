@@ -63,10 +63,10 @@ accepted it. [pol-PIPE] governs putting that fix back into version control after
 
 ## Notes
 
-[adr-0001] decides how an observation here becomes something anyone relies on. An observation goes in as a discovery. A
-discovery records its source, states how confident we are, and expires unless someone confirms it. It cannot confirm
-itself. It becomes a fix or a [standard](../../standards) only when a person promotes it. [adr-0001] says what we lose
-if that promotion step is skipped.
+[adr-0001] decides how an observation here becomes something anyone relies on. An observation goes into the tracker as
+a work item. It records its source and states how confident we are, and it stays there until somebody settles it. It
+cannot confirm itself. It becomes a fix or a [standard](../../standards) only when a person verifies it. [adr-0001] says
+what we lose if that step is skipped.
 
 [adr-0001]: ../../adrs/0001-knowledge-as-code.md
 [pol-ACCS]: ../security/accs-access-by-identity.md

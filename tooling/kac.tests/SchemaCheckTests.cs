@@ -44,7 +44,7 @@ public class SchemaCheckTests
 
     // The tiers a type may claim, and the field that admits them, as a sound schema carries them. So a
     // case declaring nothing about tiers reports nothing about them. CheckTiers has its own cases below.
-    private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural", "observed"];
+    private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural"];
 
     // What `_checks.yaml` carries in a sound schema: an entry for every id the rule classes report
     // under. Defaulted here for the same reason the tiers are: a case about a field should not also
@@ -148,8 +148,8 @@ public class SchemaCheckTests
     public void A_list_ref_naming_an_adopted_type_and_a_declined_one_is_left_alone()
         => Assert.Empty(Check(Widgets(fields:
         [
-            ("promoted-to",
-                new FieldSpec { Name = "promoted-to", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
+            ("departs-from",
+                new FieldSpec { Name = "departs-from", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
         ])));
 
     // Only an enum's range is applied, so a vocabulary declared anywhere else enforces nothing.
@@ -340,7 +340,6 @@ public class SchemaCheckTests
     [InlineData("normative")]
     [InlineData("descriptive")]
     [InlineData("procedural")]
-    [InlineData("observed")]
     public void Every_declared_tier_passes(string tier)
         => Assert.Empty(Check(Widgets(tier: tier)));
 
@@ -376,7 +375,7 @@ public class SchemaCheckTests
     public void A_tier_with_nothing_to_head_its_section_is_reported()
     {
         var schema = WithTiers();
-        var tiers = schema.Tiers.Select(t => t.Name == "observed" ? t with { Label = "" } : t).ToList();
+        var tiers = schema.Tiers.Select(t => t.Name == "procedural" ? t with { Label = "" } : t).ToList();
 
         var finding = Assert.Single(Check(new Schema
         {

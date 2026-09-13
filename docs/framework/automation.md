@@ -38,8 +38,7 @@ link resolves. A reciprocal pair agrees in both directions, so a one-sided link 
 reciprocal. It points up from a standard to a policy clause, and a policy clause cannot list what implements it.
 
 **Does the record do what its tier asks?** The checks follow the tier, because the tier is what sets how a record must
-be written. A standard cites what it derives from. A procedural record states when it was last rehearsed. An observed
-record states when it expires, because a record that never expires is not observed.
+be written. A standard cites what it derives from. A procedural record states when it was last rehearsed.
 
 **Is it safe to publish?** A corpus is broadly readable, so nothing in it may read as a credential or as real data. The
 rule is declared on the types where the risk sits, which today means integrations and data records.

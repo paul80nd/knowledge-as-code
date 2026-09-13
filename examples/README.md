@@ -48,7 +48,7 @@ the inheritance visible: there is nothing here that `engineering` already says. 
 `standards`, and declines the rest.
 
 **[`dog-fooding`](dog-fooding/README.md) takes the same shape and its estate is this repository.** It consumes
-`engineering` as `payments` does, and it adopts `controls`, `deviations`, `discoveries`, `processes`, `reports`,
+`engineering` as `payments` does, and it adopts `controls`, `deviations`, `fixes`, `processes`, `reports`,
 `runbooks`, `services`, `standards` and `tools`.
 
 ## What they share

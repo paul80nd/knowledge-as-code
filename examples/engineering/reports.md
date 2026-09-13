@@ -26,7 +26,7 @@ argument written on top of the numbers is written once, and the next reader star
 A report is **not**:
 
 * **An explanation.** If it would still be true with every record deleted, it is an explanation.
-* **A discovery.** If nothing would reproduce it, it is a discovery.
+* **A one-off observation.** If nothing would reproduce it, it belongs in the tracker.
 * **Raw output.** If nobody has answered the judgement cells, it is a command's output and belongs in a pipe.
 
 **A report is stale the moment the corpus moves.** That is the price of keeping it, and the frontmatter is what keeps
