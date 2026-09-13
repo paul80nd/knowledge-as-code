@@ -86,6 +86,9 @@ Read these before you hand anybody a procedure, and tell them what you saw:
 * **`status: draft`** — it was not agreed when the export was taken.
 * **`status: retired`** — it has been stood down. Find what replaced it before you follow it.
 
+An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
+`manifest.json` say when it was taken, and are worth quoting alongside any of the four.
+
 ## Say when there is nothing
 
 Where no process matches, say nothing in this export describes a procedure for the task, and name the corpus and every
