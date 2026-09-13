@@ -170,4 +170,4 @@ written for one reader who arrived with one of them.
 have solved it last week and told nobody.
 
 **What you solve next is worth filing.** A fix is verified, and a session cannot verify its own work, so what you
-noticed goes back as a discovery for somebody else to check. Load the `raise-finding` skill and let it write the issue.
+noticed goes back as a finding for somebody else to check. Load the `raise-finding` skill and let it write the issue.
