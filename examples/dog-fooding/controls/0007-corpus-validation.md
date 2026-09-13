@@ -17,7 +17,7 @@ tags: [ corpus, schema, validation ]
 
 `Control: ctl-0007` `ACTIVE`
 
-Every corpus in this repository is judged against `.schema/` on every pull request.
+Every pull request checks each corpus in this repository against `.schema/`.
 
 ## What it checks
 
@@ -30,25 +30,25 @@ Every corpus in this repository is judged against `.schema/` on every pull reque
 
 The `corpora` job runs `kac validate` and then `kac generate --check` in each of `examples/library`,
 `examples/engineering`, `examples/payments` and `examples/dog-fooding`. The `tool` job runs the same pair in
-`template/`, and again in a corpus `kac new` stood up from the packed tool.
+`template/`, and again in a corpus `kac new` created from the packed tool.
 
-Each matrix cell is a fresh runner holding its own checkout, and each corpus declares a different `types:`. Running
-all of them is what proves the framework holds for a corpus that adopted a subset. `payments` and `dog-fooding` pack
-`engineering` and restore it first, because `.imports/` is not committed.
+Each matrix cell is a fresh runner with its own checkout, and each corpus declares a different `types:`. Running all
+of them proves the framework works for a corpus that adopted a subset. `payments` and `dog-fooding` pack `engineering`
+and restore it first, because `.imports/` is not committed.
 
 ## Coverage and gaps
 
-`validate` judges a corpus against the schema, so it reports a broken reference, a missing section, an unreciprocated
-edge or a field out of range. It reads no standard, so a record obeying the schema and none of [std-PROSE] passes.
+`validate` checks a corpus against the schema. It reports a broken reference, a missing section, an unreciprocated
+edge or a field out of range. It reads no standard, so a record that obeys the schema and none of [std-PROSE] passes.
 
-`generate --check` reports staleness and names the command to run locally. It writes nothing back, because the job
-holds `contents: read`.
+`generate --check` reports stale output and prints the command to run locally. It writes nothing back, because the job
+has `contents: read`.
 
 `validate` asks each consumed source what it publishes now, once per run. It fails an import that was never restored,
-warns where a newer version sits inside the declared range, and reports where one sits outside it. What it cannot see
-is a pull request, so a lock moved in a later one passes here.
+warns where a newer version sits inside the declared range, and reports where one sits outside it. It cannot see
+another pull request, so a lock moved in a later one passes here.
 
-Most of the types the schema declares hold no record in any corpus here, and a rule declared on an empty folder has
+Most of the types the schema declares have no record in any corpus here, and a rule declared on an empty folder has
 never run against content. `kac validate` passes a corpus whose types are empty.
 
 [std-PROSE]: ../standards/prose.md

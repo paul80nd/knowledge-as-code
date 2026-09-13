@@ -17,7 +17,7 @@ tags: [ continuous-integration, github-actions ]
 
 `Control: ctl-0002` `ACTIVE`
 
-A job the gate does not name runs, reports, and blocks nothing.
+A job the gate does not list still runs and reports. It blocks no merge.
 
 ## What it checks
 
@@ -27,19 +27,19 @@ A job the gate does not name runs, reports, and blocks nothing.
 ## How it works
 
 `WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It
-then compares that set against `validate`'s `needs:` with `validate` itself added back. The `tool` job runs it under
+compares that set against `validate`'s `needs:` plus `validate` itself. The `tool` job runs it under
 `dotnet test tooling/kac.tests`.
 
-Comparing sets catches both faults. A job added without a line in `needs:` fails, and so does a `needs:` entry naming
-a job the file no longer declares.
+Comparing sets catches two faults. A job added with no line in `needs:` fails. A `needs:` entry listing a job the file
+no longer declares fails as well.
 
 ## Coverage and gaps
 
-It reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list holding no
-jobs, so this fault cannot arise there. Whether that file still runs the same steps in the same order is a reader's
-to confirm.
+The test reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list with no
+jobs, so this fault cannot arise there. A reader confirms whether that file still runs the same steps in the same
+order.
 
-Whether the branch rule still names `validate` is outside the repository, and [ctl-0001] says what covers it.
+The branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`.
 
 [ctl-0001]: 0001-merge-gate.md
 [std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main

@@ -28,18 +28,18 @@ A failing job in `kac.yml` stops the merge.
 
 ## How it works
 
-`kac.yml` declares a `validate` job whose `needs:` names `corpora`, `tool`, `lint`, `docs`, `round-trip` and
-`import-round-trip`. The job itself runs one `echo`. GitHub reports it once every job it needs has passed, so the
-branch rule can require that one name.
+`kac.yml` declares a `validate` job whose `needs:` lists `corpora`, `tool`, `lint`, `docs`, `round-trip` and
+`import-round-trip`. The job itself runs one `echo`. GitHub reports `validate` once every job in that list has passed,
+so the branch rule requires one check name.
 
-Three of the jobs it gathers are matrices. `corpora` reports as `corpora (library)` and three more, so a branch rule
-naming the matrix would wait for a check that never arrives.
+Three of those jobs are matrices. A matrix job reports one check per cell: `corpora` reports as `corpora (library)`
+and three more. A branch rule naming the matrix would wait for a check that never arrives.
 
 ## Coverage and gaps
 
-The branch rule lives in GitHub's repository settings, and no file in this repository holds it. Nothing in CI reads
-it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] holds the other half of the
-same promise: whether `validate` still reaches every job.
+The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI
+reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] checks the other
+half: whether `validate` still needs every job.
 
 [ctl-0002]: 0002-workflow-gate-tests.md
 [std-CI.the-gate-runs-on-every-pull-request-into-main]: ../standards/workflows.md#the-gate-runs-on-every-pull-request-into-main

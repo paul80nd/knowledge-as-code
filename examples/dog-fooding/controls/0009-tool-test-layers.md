@@ -28,18 +28,22 @@ Each layer asserts something different about the same corpus.
 
 ## How it works
 
-The `tool` job runs `dotnet test tooling/kac.tests` for the unit layer, `dotnet test tooling/kac.features` for the
-Reqnroll behaviour specs, and `dotnet run tooling/kac-tests.cs` for the golden fixtures. `tooling/README.md` says what
-each layer covers.
+The `tool` job runs three commands:
 
-The golden suite carries two gates of its own. It fails a reachable check id that no fixture exercises, and it fails a
-type page whose generated checks table has drifted from the catalogue. Each fixture is assembled over the real
-`.schema/`, copied in per run, so a schema change that alters behaviour surfaces in the run that made it.
+* `dotnet test tooling/kac.tests` for the unit layer.
+* `dotnet test tooling/kac.features` for the Reqnroll behaviour specs.
+* `dotnet run tooling/kac-tests.cs` for the golden fixtures.
+
+`tooling/README.md` says what each layer covers.
+
+The golden suite adds two checks of its own. It fails a reachable check id that no fixture exercises. It fails a type
+page whose generated checks table has drifted from the catalogue. Each fixture is built over the real `.schema/`,
+copied in on each run, so a schema change that alters behaviour shows up in the run that made it.
 
 ## Coverage and gaps
 
-No layer reports line coverage, which is what `eng:std-TEST.know-what-the-suite-reaches` asks for. What the golden
-suite measures is the share of check ids a fixture reaches, and the two figures answer different questions.
+No layer reports line coverage, which `eng:std-TEST.know-what-the-suite-reaches` asks for. The golden suite measures
+the share of check ids a fixture exercises, and the two figures answer different questions.
 
 The suite runs on a pull request into `main`. A push to a branch with no pull request open triggers nothing, so the
-answer arrives when the work is offered rather than when it is written.
+answer arrives when the work is offered for merge.

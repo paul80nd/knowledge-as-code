@@ -17,7 +17,7 @@ tags: [ linting, yaml ]
 
 `Control: ctl-0004` `ACTIVE`
 
-The shape of a YAML file is settled by a linter and not by a reviewer.
+yamllint settles the shape of every YAML file in this repository.
 
 ## What it checks
 
@@ -27,19 +27,20 @@ The shape of a YAML file is settled by a linter and not by a reviewer.
 ## How it works
 
 The `lint` job installs yamllint at the version `.github/requirements.txt` pins, then runs `yamllint --strict .` from
-the root. `.yamllint` extends yamllint's `default` ruleset and carries the four places this repository departs from
-it. `--strict` fails the build on `comments`, `comments-indentation` and `truthy`, which the default ruleset reports
-as warnings.
+the root. `.yamllint` extends yamllint's `default` ruleset and sets the four rules this repository changes. `--strict`
+fails the build on `comments`, `comments-indentation` and `truthy`, which the default ruleset reports as warnings.
 
-`.yamllint` reads `.gitignore`, so the walk covers the files a fresh checkout holds and nothing the tool rebuilds.
+`.yamllint` reads `.gitignore`, so the run covers the files a fresh checkout has and skips anything the tool rebuilds.
 
 ## Coverage and gaps
 
-yamllint reads shape. Whether a value is correct, whether a comment gives a reason, and whether that reason is true
-are all a reviewer's to judge.
+yamllint checks shape. A reviewer judges three things: whether a value is correct, whether a comment gives a reason,
+and whether that reason is true.
 
-The other four rules [std-CONFIG] states have no check of their own. Dependabot moves the pin in
-`.github/requirements.txt`, so a yamllint release arrives as a pull request.
+yamllint covers one of the five rules [std-CONFIG] states, and [ctl-0005] covers a second. The other three have no
+check of their own. Dependabot moves the pin in `.github/requirements.txt`, so a yamllint release arrives as a pull
+request.
 
+[ctl-0005]: 0005-update-check.md
 [std-CONFIG]: ../standards/configuration.md
 [std-CONFIG.the-shape-of-a-yaml-file-is-yamllints-to-decide]: ../standards/configuration.md#the-shape-of-a-yaml-file-is-yamllints-to-decide
