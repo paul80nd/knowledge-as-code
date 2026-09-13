@@ -24,6 +24,6 @@
     "Symptoms": "* `dotnet run tooling/kac-tests.cs` exits 1 and prints one of:\n  * `FAIL <name>: committed generated files do not match the generator.`\n  * `the export no longer writes <path>: what a consumer reads has changed`\n  * `no expectation for <what> at <file>. run with --update, then read the diff`\n* One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.\n* The branch is green on your machine and red in CI."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ff242aa1bd6b45a6afef2f92a4be2460bdbfc367/examples/dog-fooding/runbooks/goldens-disagree.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/dog-fooding/runbooks/goldens-disagree.md"
   }
 }

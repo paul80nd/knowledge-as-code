@@ -25,6 +25,6 @@
     "Where it is used": "* [svc-kac] is tagged and released with it.\n\n`versions` is bare because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer\ninstalls whatever their package manager offers."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ff242aa1bd6b45a6afef2f92a4be2460bdbfc367/examples/dog-fooding/tools/release/gh.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/dog-fooding/tools/release/gh.md"
   }
 }

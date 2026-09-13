@@ -30,6 +30,6 @@
     "Conformance checklist": "- [ ] Every `FROM` in the repository has a digest.\n- [ ] The base image digest was refreshed within the last month.\n- [ ] `docker inspect` on the running image reports a non-root user.\n- [ ] The deployment manifest names an image digest rather than a tag.\n- [ ] The registry refuses a second push to a tag that already exists.\n- [ ] The container exposes one port, and it is the one the service listens on."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ff242aa1bd6b45a6afef2f92a4be2460bdbfc367/examples/engineering/standards/platform/containers.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/engineering/standards/platform/containers.md"
   }
 }

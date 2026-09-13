@@ -127,11 +127,9 @@ in words.
 `services` is not in it, the ids in `applies-to` name records that did not travel, and you can report the ids and no
 more.
 
-Three things stay behind whatever `types` says:
+Two things stay behind whatever `types` says:
 
 * **Who stewards the fix.** `owner` is a fact about the corpus that wrote it.
-* **The discovery it was promoted from.** `promoted-from` does not travel, so this export cannot say what was noticed
-  first or who noticed it.
 * **How the author found it, and what it relates to.** A fix may have a `How we found it` section and a `Related`
   section, and neither is exported. The diagnostic route is often the reusable part, so fetch the record where the
   resolution does not fit your case.
