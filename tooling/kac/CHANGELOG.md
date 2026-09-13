@@ -30,6 +30,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   problem should not open seven issues. Where the plugin has no `fix-lookup`, the corpus declined the `fixes` type and
   the finding is the only route. Take it with `kac update --from <template>`.
 
+### Changed
+
+- **A finding `raise-finding` files is the observation, and proposes no record.** Its `kac-finding` block drops `id`
+  and `expires`, which were a proposed discovery's own fields, and gains `looks-like`. That key takes the type the
+  observation resembles, `framework` where what was noticed is the tool, the schema or a skill, or `none`. Whoever
+  triages the issue gets the hint and keeps the decision. `corpus`, `source`, `confidence`, `provenance`,
+  `applies-to` and `tags` are unchanged, and so are the body's three headings. Take it with
+  `kac update --from <template>`.
+
 ## 0.26.0 - 2026-09-13
 
 ### Added

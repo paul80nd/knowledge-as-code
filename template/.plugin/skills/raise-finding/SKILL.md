@@ -90,6 +90,8 @@ the body, and ask whoever is with you where it should go. Do not invent a reposi
 
 ## Write the body
 
+The issue is the observation. It proposes no record, because triage decides where the observation lands.
+
 The body opens with a fenced block a person can read and a later run can copy without rereading the prose. Then three
 headings, in this order and nothing between them and the block.
 
@@ -98,10 +100,9 @@ Title: Rider does not re-read an .editorconfig changed from a shell
 
 ```yaml kac-finding
 corpus: example-dogfooding
-id: dsc-rider-holds-the-editorconfig
 source: session
 confidence: unverified
-expires: "2026-12-07"
+looks-like: fixes
 provenance: >
   Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, in paul80nd/knowledge-as-code at 24dcea21,
   editing .editorconfig from a shell while the developer had the repository open in Rider.
@@ -130,15 +131,13 @@ observation about Rider" names the subject and says nothing.
 Each key of the block, and what to put in it:
 
 * **`corpus`** is the name from the block you picked above.
-* **`id`** is `dsc-` and a short slug of the title. You cannot see what ids that corpus already holds, so treat this as
-  a suggestion and keep it plain. Whoever writes the record settles it.
 * **`source`** is `session`.
 * **`confidence`** is `unverified`. Write `corroborated` only where something outside your own session confirmed it: a
   second run, a failing check, a colleague who saw it too. Your own account of your own work is not confirmation.
-* **`expires`** is the day this stops being worth reading unchallenged, quoted. Ninety days from today is the
-  default, because most of what a session notices is tied to a version, a machine or a moment, and an observation
-  nobody dated stays on unchallenged. Give a longer life to something anybody can re-check from the repository itself,
-  and say in `## Context` what you chose and why.
+* **`looks-like`** says what the observation resembles, and decides nothing. Write a name from `types[].type` in
+  `manifest.json`, which is the list of types this corpus adopted. Write `framework` where what you saw is about the
+  framework itself: `kac`, the schema, the plugin or a skill. Write `none` for anything else, and wherever you would
+  be guessing. A corpus this one consumes may hold types that list does not show, so guess none of them.
 * **`provenance`** names the agent, the session it ran in, the repository you were working in, the commit you were at,
   and what you were doing. Add `manifest.json`'s own `commit` where the finding is about the corpus, because that says
   which export you read. **Name any of those you cannot reach**, rather than leaving it out. A reviewer needs to know

@@ -102,22 +102,23 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
 _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 
-### A finding an agent files carries the shape a discovery takes
+### A finding an agent files is an observation, and proposes no record
 
 - A finding **MUST** open its body with a fenced block whose info string is `yaml kac-finding`.
 - That block **MUST** open on `corpus`, naming the corpus the finding is about.
-- The block **MUST** then contain `id`, `source`, `confidence`, `expires` and `provenance`, under the names and in the
-  order the `discoveries` template writes them.
+- The block **MUST** then contain `source`, `confidence`, `looks-like` and `provenance`, in that order.
 - The block **MAY** contain `applies-to` and `tags` after those.
-- The block **MUST NOT** contain any other key.
+- The block **MUST NOT** contain any other key, and **MUST NOT** propose an id for a record.
 - `source` **MUST** be `session`.
 - `confidence` **MUST** be `unverified` where the filing session's own account is the only evidence.
+- `looks-like` **MUST** name a type the export declares, `framework`, or `none`.
+- `looks-like` **MUST** be `framework` where the finding reports the framework rather than a record.
 - `provenance` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
   doing.
 - Where the agent cannot reach one of those, `provenance` **MUST** name it as unreached.
 - The body **MUST** contain `## What I saw`, `## Context` and `## Why it might matter`, in that order.
 - A finding **MUST NOT** put anything between the block and the first of those headings.
-- The title **MUST** be the observation in one line, written as the record's H1 would be.
+- The title **MUST** be the observation in one line.
 - A skill **MUST** mark the issue `kac:finding`, using whatever the platform calls a label.
 - Where the platform refuses a mark it does not already have, a skill **MUST** file the finding unmarked.
 - A skill **MUST** say that it filed one unmarked.
@@ -185,8 +186,8 @@ names a tool the session may not have, so a reader without it must choose betwee
 stopping. The avoided table states no type at all, so a reader iterates a string of markdown one character at a time.
 It says a field with no value is absent, so a reader testing for the key finds it every time and reads nothing.
 
-A finding is the whole of an issue body. `dsc-rider-holds-the-editorconfig` was written straight into the corpus,
-and this is the finding it would have arrived as.
+A finding is the whole of an issue body. `fix-0002` settled what a session first noticed about Rider, and this is the
+finding that observation would have arrived as.
 
 `````
 ✅ Good
@@ -194,10 +195,9 @@ Title: Rider does not re-read an .editorconfig changed from a shell
 
 ```yaml kac-finding
 corpus: example-dogfooding
-id: dsc-rider-holds-the-editorconfig
 source: session
 confidence: unverified
-expires: "2026-12-07"
+looks-like: fixes
 provenance: >
   Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, in paul80nd/knowledge-as-code at 24dcea21,
   editing .editorconfig from a shell while the developer had the repository open in Rider.
@@ -226,8 +226,8 @@ While working on the wrap width I noticed that Rider seems to cache `.editorconf
 looking into. Fairly confident about this one. Raised by an agent session.
 `````
 
-The avoided body states the same observation and gives a harvester nothing to copy. There is no id to write the
-filename from, no `expires` to let the claim lapse, and no commit anybody can read. Its title gives the subject alone,
+The avoided body states the same observation and gives whoever triages it nothing to act on. There is no commit
+anybody can read, and no `looks-like` saying which type the observation would fit. Its title gives the subject alone,
 so a reader scanning the issue list learns nothing. "Fairly confident" is not a value `confidence` takes, and a
 session vouching for itself is what `eng:pol-AGNT.SELFVER` refuses.
 
@@ -280,8 +280,8 @@ broke it.
       supports the components that do.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
 - [ ] `bundle.json` names every component that left, and the type that left it out.
-- [ ] Every finding opens on a `yaml kac-finding` block containing `corpus`, then the `discoveries` keys the rule
-      names, and nothing else.
+- [ ] Every finding opens on a `yaml kac-finding` block containing `corpus`, then the keys the rule names, and nothing
+      else.
 - [ ] Every finding's `provenance` names the agent, the session, the repository, the commit and what it was doing, or
       names which of those it could not reach.
 - [ ] Every deviation request opens on a `yaml kac-deviation` block containing `corpus`, then the `deviations` keys
@@ -320,16 +320,14 @@ ship a skill nothing can call. `raise-finding` reads no export and serves whoeve
 with no record at all is the one a session most needs a route to report. Declaring it standalone keeps that route open.
 `docs/design/plugin.md` describes how `kac bundle` acts on all of them.
 
-A finding is a discovery nobody has written into a corpus yet. An observation is worth the same whether a session
-writes it into a corpus it can edit or files it against one it cannot. So the issue states the fields the record will
-need, under the names the type gives them. A harvester copies the block into frontmatter, and the three headings into
-sections. Every key it would otherwise read out of prose is a key it would sometimes read wrongly. `expires` is the one
-that costs most, because an observation nobody dated stays on unchallenged, and `eng:pol-AGNT.CONFID` exists to stop
-that.
+A finding is an observation, and it proposes no record. A session cannot see what the receiving corpus already
+contains, so an id it invents and an expiry it guesses are decisions taken by the wrong reader. The block states what
+only the filer knows: which corpus this is about, who observed it, how far they can vouch for it, and what they were
+doing. `confidence` is the part `eng:pol-AGNT.CONFID` asks for, because a session vouching for itself is not evidence.
 
-One required field never travels. `owner` says who is answerable for a record, and the receiving corpus decides that. A
-filer on somebody else's repository would be guessing. So the harvester fills `owner` in, along with the keys the type
-fixes.
+`looks-like` gives triage a starting point. An agent can see which type an observation resembles, and says so in one
+word. Whoever receives the issue decides where it belongs, and writes the record from it with every field the type
+needs. `framework` is there for what no type holds: the tool, the schema, the plugin and the skills themselves.
 
 The label is how a person filters, and never what a harvester selects on. `gh issue create` refuses a label the target
 repository does not have. A corpus published from somebody else's repository has whatever labels its maintainer chose.
@@ -375,6 +373,8 @@ this build never opens, so both shapes survive only as long as the skills writin
 
 ## Changelog
 
+- 2026-09-13: a finding states the observation and proposes no record. It drops the `id` and `expires` a discovery
+  needed, and takes `looks-like` for the type it resembles.
 - 2026-09-13: a skill names the review date under the key its own type's export writes, and one skill may cite another
   the bundle can trim, so long as it says what the absence means.
 - 2026-09-13: the staleness rules read the type rather than a fixed list. A skill reports every `status` its own type
