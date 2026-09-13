@@ -31,6 +31,20 @@ you write goes out under their name, onto a repository other people read, and th
 
 **One finding, one issue.** Two things you noticed are two findings. A single issue carrying both gets half-closed.
 
+## Check whether the corpus already says it
+
+**Search the fixes before you file anything about a problem.** Seven sessions meeting the same problem should not open
+seven issues, and a problem somebody already wrote down is answered in the export beside you.
+
+**Load the `fix-lookup` skill and give it your symptom.** It searches `symptom-keywords`, which is filled with the
+words a reader arrives with. Where it returns a fix, follow the resolution and file nothing.
+
+**Where this plugin has no `fix-lookup`, the corpus declined the `fixes` type.** `types` in `manifest.json` says so.
+There is nothing to search, and the finding is the only route.
+
+**A fix that is wrong is still a finding.** So is one whose resolution no longer works, and one you could not find
+under the words you searched. Say in `## What I saw` which fix you read and which words missed it.
+
 ## Decide what is actually a finding
 
 **A finding is something you observed that the corpus does not already say.** A record that contradicts the estate. A

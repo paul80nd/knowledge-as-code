@@ -15,6 +15,21 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **`fix-lookup`, the skill that says whether a problem has already been solved here.** It searches
+  `symptom-keywords`, which a fix over-fills with error text and the words somebody arrives with, then reports the
+  Symptom, Cause and Resolution the corpus settled. It states the record's derived `trust` on every answer, so a
+  caller can tell a resolution a person checked from one an agent ran. A fix declares no part, so the skill searches
+  `corpus/fixes/` and the record is the unit. It ships in every corpus's `plugin.json` and leaves the bundle wherever
+  the export carries no fix. Take it with `kac update --from <template>`.
+
+- **`raise-finding` searches the fixes before it files anything about a problem.** Seven sessions meeting the same
+  problem should not open seven issues. Where the plugin has no `fix-lookup`, the corpus declined the `fixes` type and
+  the finding is the only route. Take it with `kac update --from <template>`.
+
 ## 0.26.0 - 2026-09-13
 
 ### Added

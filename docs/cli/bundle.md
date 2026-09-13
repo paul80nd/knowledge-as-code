@@ -44,10 +44,11 @@ wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
 wrote .dist/plugin/skills/request-deviation/SKILL.md
 bundle: trimmed skills/controls-lookup: the export carries no controls.
+bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 16 file(s) to .dist/plugin/ as example-libraries 0.2.2. 5 component(s) included, 4 trimmed.
+bundle: wrote 26 file(s) to .dist/plugin/ as example-libraries 0.2.4. 5 component(s) included, 5 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -74,7 +75,7 @@ their own. Adoption is not the test. `example-engineering` adopted `controls` an
 trimmed alongside the type it never carried. The closing line counts what survived:
 
 ```text
-bundle: wrote 57 file(s) to .dist/plugin/ as example-engineering 0.16.0. 7 component(s) included, 2 trimmed.
+bundle: wrote 57 file(s) to .dist/plugin/ as example-engineering 0.16.1. 7 component(s) included, 3 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -84,7 +85,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:

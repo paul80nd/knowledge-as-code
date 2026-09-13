@@ -66,11 +66,11 @@ to have, and `kac validate` holds each corpus to standing up everything it decla
 plugins. That is how this repository proves the publishing half of its own tool against a real registry, and how
 somebody deciding whether to adopt the framework can install one and ask it questions.
 
-A plugin carries the export and whatever is in the plugin's tree can read it, so what each one does follows from the
-types that reach its export. `library` ships the glossary lookup alone. Every other corpus here ships every lookup,
-because `engineering` adopts every type those skills read, and a corpus consuming `engineering` carries its records
-into its own export. A skill whose type reaches neither the corpus nor its imports is trimmed, and `bundle.json` inside
-the plugin names every component that was dropped and the type it needed.
+A plugin includes the export, and whatever is in the plugin's tree can read it, so what each one ships follows from the
+types that reach its export. `library` ships the glossary lookup alone. `engineering` adds the policy and standards
+lookups. `payments` adds the fix lookup to those three, because a corpus consuming `engineering` takes its records into
+its own export. `dog-fooding` adopts the rest and ships all six. A skill whose type reaches neither the corpus nor its
+imports is trimmed, and `bundle.json` inside the plugin names every component that was dropped and the type it needed.
 
 Each corpus says in its own `description` what it is. `kac pack` and `kac bundle` write that into the package and the
 plugin from [`.corpus.yaml`](library/.corpus.yaml), so no reader meets an invented estate without being told.

@@ -6,8 +6,8 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-13T09:40:48Z, by: kac/0.26.0 }
 sources:
-  - { resource: example-dogfooding, version: "0.23.1" }
-  - { resource: example-engineering, version: "0.16.1" }
+  - { resource: example-dogfooding, version: "0.24.0" }
+  - { resource: example-engineering, version: "0.16.2" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:25:00Z, by: coverage-sweep/1.0.0 }
