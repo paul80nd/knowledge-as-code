@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.26.0 - 2026-09-13
 
 ### Added
 
@@ -99,16 +99,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list. It no
   longer refuses an agent: a session that reproduced a symptom and ran the resolution has checked something real, and
   `verified-by-a-known-actor` admits it, named with its version the way the tool names itself. That rule still refuses
-  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record
-  file now ships as `trust`: an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:`
-  actor is `human-reviewed`. A
-  type whose export does not name `verified` carries `trust` as `null`. One actor is still refused, and
-  `no-self-verification` is the new rule and reports as `self-verification`: a report may not be verified by the
-  producer its `generated.by` names. A
-  fix declares `raiser-does-not-verify` and nothing runs it, because nothing on a fix names who raised it. `kac
-  report` writes `verified: []` where it wrote `confirmed: []`. A corpus that adopted either type renames the key in
-  every record and in its `_template.md`, and takes the new schema with `kac update --from <template>`. The `reports`
-  type's `shapeVersion` moves to 2, so a consumer reading records of that type reads the new key.
+  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file
+  now ships as `trust`: an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is
+  `human-reviewed`. A type whose export does not name `verified` carries `trust` as `null`. One actor is still
+  refused, and `no-self-verification` is the new rule and reports as `self-verification`: a report may not be verified
+  by the producer its `generated.by` names. A fix declares `raiser-does-not-verify` and nothing runs it, because
+  nothing on a fix names who raised it. `kac report` writes `verified: []` where it wrote `confirmed: []`. A corpus
+  that adopted either type renames the key in every record and in its `_template.md`, and takes the new schema with
+  `kac update --from <template>`. The `reports` type's `shapeVersion` moves to 2, so a consumer reading records of
+  that type reads the new key.
 
 - **The `faq` type is now `fix`, and its `Fix` section is now `Resolution`.** A record lands in `fixes/` as
   `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and
