@@ -41,7 +41,10 @@ The `tool` job runs all three under `dotnet test tooling/kac.tests`.
 These tests cover the section for the version in front of them. A reviewer judges whether that section describes the
 change, and a reader would notice it in the published release.
 
-Nothing checks that `<Version>` moved at all. A pull request shipping a tool change under a version nuget.org already
-has passes here, and its publish finishes green having published nothing.
+The first test also covers the rename. A `<Version>` that moved without a section of its own fails, so a release
+cannot ship with its entries still under `## Unreleased`.
+
+Nothing checks that a change to `kac` took its line under `## Unreleased`, and nothing checks that the branch owner
+decided to release before `<Version>` moved. A reviewer catches both.
 
 [std-CI.a-version-moves-by-hand-and-publishes-once]: ../standards/workflows.md#a-version-moves-by-hand-and-publishes-once
