@@ -59,6 +59,10 @@ A report is wrong the moment the corpus moves, and `report-stale` says so once `
 `sources` version by hand and leave `verified` alone. A version the corpus moved for something else is no reason to
 claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `verified` entry.
 
+**The hand-raise is a trade.** It leaves `generated` naming a run older than the version `sources` now lists, and no
+run read that pairing. The alternative is running the report again for output nobody expects to differ, and moving a
+version stamp through every consumer of the corpus to carry it.
+
 **The merge, in order:**
 
 1. Run `kac report <name>` and keep the output beside the record.
