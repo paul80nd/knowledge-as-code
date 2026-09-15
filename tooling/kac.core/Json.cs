@@ -50,8 +50,16 @@ public record ExportManifest(
     string GeneratedAt,
     ExportAbout About,
     ExportPublishing Publishing,
+    ExportFramework Framework,
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<ExportedType> Types);
+
+// Where to report a problem with the framework this corpus took: `kac`, the schema, the template or a
+// skill, rather than with the corpus's own records. A reader that meets this export as an installed
+// plugin has no descriptor to open, so an address it is not given here is one it invents. `Target` names
+// the client that opens the issue, as it does on `ExportPublishing`, and `Base` is null where the corpus
+// named no tracker.
+public record ExportFramework(string Target, string? Base);
 
 // One corpus this export inherited, and where that corpus publishes.
 //

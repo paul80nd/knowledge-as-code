@@ -183,6 +183,33 @@ public class ManifestTests
         Assert.Null(descriptor.TemplateVersion);
     }
 
+    [Fact]
+    public void A_descriptor_reads_where_a_problem_with_the_framework_is_reported()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
+            "corpus: sample\nframework:\n  target: github\n  base: https://github.com/example/framework\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Equal(Publishing.GitHub, descriptor.FrameworkTarget);
+        Assert.Equal("https://github.com/example/framework", descriptor.FrameworkBase);
+    }
+
+    // `upstream.url` is where the template was copied from and is often a folder, so a corpus that has
+    // named no tracker has to read as having named none rather than as naming that.
+    [Fact]
+    public void A_descriptor_naming_no_framework_tracker_reports_none()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\nupstream:\n  url: ../../\n");
+
+        var descriptor = CorpusDescriptor.Load(dir);
+
+        Assert.Equal(Publishing.None, descriptor.FrameworkTarget);
+        Assert.Null(descriptor.FrameworkBase);
+    }
+
     // A corpus that never chose is never handed three dozen rewritten seed files by an update it did not
     // ask for.
     [Fact]

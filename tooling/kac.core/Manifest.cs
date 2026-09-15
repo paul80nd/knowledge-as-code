@@ -133,7 +133,7 @@ public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
     // newer tool writes, so an update stamps this alongside what it took.
-    public const int Format = 2;
+    public const int Format = 3;
 
     // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
     // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.
@@ -249,6 +249,14 @@ public class CorpusDescriptor
     public string? PublishingTarget;
     public string? Base;
 
+    // Where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
+    // Kept apart from `upstream:` because `upstream.url` is where the template was copied from and is
+    // often a folder, and this is always a tracker. `Target` names the client that opens the issue and
+    // takes the same values `PublishingTarget` does, and is `none` where the descriptor states none.
+    // `docs/corpus-descriptor.md` sets the two blocks side by side.
+    public string FrameworkTarget = Publishing.None;
+    public string? FrameworkBase;
+
     // Where the corpus root sits inside the published repository, where it is not the root itself.
     //
     // A corpus kept in a subdirectory cannot say this through its base. The commit the links resolve
@@ -333,6 +341,9 @@ public class CorpusDescriptor
         var publishing = Yaml.Get(root, "publishing");
         descriptor.Base = Yaml.Str(Yaml.Get(publishing, "base"));
         descriptor.PathPrefix = Yaml.Str(Yaml.Get(publishing, "path-prefix"));
+        var framework = Yaml.Get(root, "framework");
+        descriptor.FrameworkTarget = Blank(Yaml.Str(Yaml.Get(framework, "target"))) ?? Publishing.None;
+        descriptor.FrameworkBase = Blank(Yaml.Str(Yaml.Get(framework, "base")));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
         descriptor.PluginFrom = Blank(Yaml.Str(Yaml.Get(Yaml.Get(root, "plugin"), "from")));
 

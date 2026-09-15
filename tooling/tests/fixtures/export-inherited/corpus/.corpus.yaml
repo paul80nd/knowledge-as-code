@@ -13,4 +13,11 @@ consumes:
 
 upstream:
   url:
+
+# Stated, so the golden manifest proves a tracker travels. The other export fixtures state none, and
+# theirs proves the absence is written down rather than left out.
+framework:
+  target: github
+  base: https://github.com/example/framework
+
 skip: []

@@ -206,6 +206,39 @@ follow and no commit to resolve.
 Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
 best placed to fix it. A change is settled once the repository serving the template accepts it.
 
+## `framework:`
+
+```yaml
+framework:
+  target: github
+  base: https://github.com/paul80nd/knowledge-as-code
+```
+
+`framework:` says where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
+[`export`](cli/export.md) writes both keys into the manifest, so an agent that meets your corpus as an installed plugin
+has the address. Without the block, the only address that agent has is your own `publishing.base`.
+
+| Key      | What it states                                   | Written by |
+|----------|--------------------------------------------------|------------|
+| `target` | the client that opens an issue on the tracker    | you        |
+| `base`   | the repository or project the tracker belongs to | you        |
+
+`target` is one of `github`, `azure-devops` or `none`. Write `github` for a tracker on github.com, and `azure-devops`
+for one on Azure Boards. Write `none`, or leave the block out, where you know of no tracker. The other two values
+[`publishing-target`](#values-of-publishing-target) takes, `azure-devops-wiki` and `mkdocs`, address no tracker, so
+neither belongs here.
+
+### What `new` writes in this block
+
+[`new`](cli/new.md) writes both keys when the corpus is created. It takes `base` from `--from` where that named a
+repository, and from the framework's own repository where it named a folder. It reads `target` from the host, and writes
+`none` for a host that neither `gh` nor `az boards` serves.
+
+### `framework:` and `upstream:`
+
+These are two different addresses. `upstream.url` says where `kac` copied the template from, and it is often a folder on
+the same disk. `framework.base` says where to report a problem with what arrived, and it is always a tracker.
+
 ## `update-policy:`
 
 ```yaml

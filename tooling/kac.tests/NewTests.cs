@@ -260,6 +260,49 @@ public class NewTests
         Assert.Contains("publishing:\n  base: https://github.com/acme/corpus\n", yaml);
     }
 
+    [Fact]
+    public void The_descriptor_names_the_framework_tracker_from_the_repository_it_took_from()
+    {
+        var yaml = New.Descriptor(Answers(), Taken());
+
+        Assert.Contains($"framework:\n  target: {Publishing.GitHub}\n"
+                        + "  base: https://github.com/paul80nd/knowledge-as-code\n", yaml);
+    }
+
+    // A folder resolves no commit, and nobody files against a path on one disk, so the framework's own
+    // repository is what a corpus created from a local template starts with.
+    [Fact]
+    public void A_corpus_taking_from_a_folder_is_pointed_at_the_frameworks_own_tracker()
+    {
+        var yaml = New.Descriptor(Answers(), new Upstream("../../", null, null, null, 4, "2026-08-24"));
+
+        Assert.Contains($"framework:\n  target: {Publishing.GitHub}\n  base: {Asking.DefaultFrom}\n", yaml);
+    }
+
+    // `TemplateSource.Read` clones anything that is not a folder, so an ssh remote is a repository and
+    // its owners are who a finding about their fork belongs to.
+    [Fact]
+    public void A_corpus_taking_from_an_ssh_remote_is_pointed_at_that_remote()
+    {
+        var yaml = New.Descriptor(Answers(),
+            new Upstream("git@github.com:acme/framework.git", null, null, "5fa039b0", 4, "2026-08-24"));
+
+        Assert.Contains($"framework:\n  target: {Publishing.GitHub}\n"
+                        + "  base: git@github.com:acme/framework.git\n", yaml);
+    }
+
+    // The client that files the issue is read off the host, because `gh` cannot open one on Azure. A host
+    // neither client serves is written as `none` rather than guessed at.
+    [Theory]
+    [InlineData("https://dev.azure.com/acme/kac/_git/framework", Publishing.AzureDevOps)]
+    [InlineData("https://git.acme.example/framework", Publishing.None)]
+    public void The_framework_target_follows_the_tracker_host(string from, string expected)
+    {
+        var yaml = New.Descriptor(Answers(), new Upstream(from, null, null, "5fa039b0", 4, "2026-08-24"));
+
+        Assert.Contains($"framework:\n  target: {expected}\n  base: {from}\n", yaml);
+    }
+
     [Theory]
     [InlineData("no", "corpus: \"no\"\n")]
     [InlineData("1.5", "corpus: \"1.5\"\n")]

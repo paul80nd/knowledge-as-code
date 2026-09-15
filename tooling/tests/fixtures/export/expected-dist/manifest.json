@@ -20,6 +20,10 @@
     "pathPrefix": null,
     "ref": null
   },
+  "framework": {
+    "target": "none",
+    "base": null
+  },
   "sources": [],
   "types": [
     {

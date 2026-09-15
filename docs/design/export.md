@@ -289,6 +289,22 @@ Every field is `null` where the corpus said nothing, and `kac` fills nothing in 
 nobody named and a licence nobody chose are claims about a person, and a template supplying them is how a corpus comes
 to publish under somebody else's name.
 
+### `framework`
+
+It says where to report a problem with the framework the corpus took, rather than with the corpus's own records.
+
+```json
+"framework": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code" }
+```
+
+A reader that meets the export as an installed plugin has no repository to walk and no descriptor to open. The manifest
+is the only place it can read this address.
+
+`kac` builds no issues address from the pair. It writes both keys as the descriptor states them, and the client that
+files an issue works out its own platform's address from them. `target` is `none` and `base` is `null` where the
+corpus states no tracker, which is the same absence `publishing` spells.
+[`.corpus.yaml`](../corpus-descriptor.md#framework) is where a corpus states one.
+
 ### `corpus` and `shortcode`
 
 `corpus` is what the corpus calls itself, which tells one export from another. `shortcode` is what a citation writes
