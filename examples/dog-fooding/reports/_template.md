@@ -43,8 +43,8 @@ is run again.
   what produced it. `by` names a producer and its version together, so a report an agent extended names the agent the
   same way the tool names itself.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
-  version by hand where a corpus moved and nothing in this report changed, and add a `verified` entry saying you
-  checked.
+  version by hand where a corpus moved and nothing in this report changed, and leave `verified` alone. A version
+  somebody moved for another reason is not a fresh read of this report.
 * **`verified`**: every verification this report has had, oldest first. A report nobody verified is output. Write a
   person as `human:alex.doe`, or an agent with its version as `coverage-sweep/1.2.0`. Two actors are refused: a
   `role:`, because a post cannot read an answer, and the producer in `generated.by`, because a run cannot sign off
