@@ -16,6 +16,6 @@
     "Scope": "This glossary covers the mechanism: corpora, types, records, the layers a file travels in, and what the tool does to them. A word about the estate a corpus describes belongs in that corpus's own glossary, however often it appears here.\n\nA type's name is not defined here. Each type states what it contains in its own schema file. The framework renders that onto the type's page, into the taxonomy, and into the list of collisions where the name already means something else to a reader. A second, hand-written account would go stale.\n\nEvery corpus shares this file. An entry cites no record, and names a type instead of linking to one. A corpus that adopted three types reads the same page as one that adopted them all."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/33bbcd289cd40675c86200a129725a0033c99269/examples/engineering/glossary/knowledge-as-code.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/967a2023e65438123d6b4b776d712919d148ebfb/examples/engineering/glossary/knowledge-as-code.md"
   }
 }
