@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.11.2",
+  "contentVersion": "0.12.0",
   "mechanismVersion": 13,
-  "commit": "c1834c6d24aeeabc486f03cad5ab81e52da67288",
+  "commit": "43a0cf6b5eb8ac62c6d89179798d63de0216150d",
   "dirty": false,
-  "generatedAt": "2026-09-13T20:26:48Z",
+  "generatedAt": "2026-09-15T09:59:13Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,20 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "c1834c6d24aeeabc486f03cad5ab81e52da67288"
+    "ref": "43a0cf6b5eb8ac62c6d89179798d63de0216150d"
+  },
+  "tracker": {
+    "target": "github",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "id": "github:github.com/paul80nd/knowledge-as-code"
+  },
+  "framework": {
+    "target": "github",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "id": "github:github.com/paul80nd/knowledge-as-code"
   },
   "sources": [
     {
@@ -30,17 +40,22 @@
       "contentVersion": "0.17.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "c1834c6d24aeeabc486f03cad5ab81e52da67288"
+        "ref": "43a0cf6b5eb8ac62c6d89179798d63de0216150d"
+      },
+      "tracker": {
+        "target": "github",
+        "base": "https://github.com/paul80nd/knowledge-as-code",
+        "id": "github:github.com/paul80nd/knowledge-as-code"
       }
     }
   ],
   "types": [
     {
       "type": "fixes",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 1,
       "parts": 0,
       "dir": "fixes",

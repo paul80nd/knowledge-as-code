@@ -55,7 +55,7 @@
     {
       "path": "skills/fix-lookup",
       "requires": [
-        "fixes@1"
+        "fixes@2"
       ],
       "reason": "the export carries no fixes"
     },

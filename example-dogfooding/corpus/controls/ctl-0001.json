@@ -27,6 +27,6 @@
     "Coverage and gaps": "The branch rule lives in GitHub's repository settings, and no file in this repository has a copy of it. Nothing in CI reads it, so a rule renamed, relaxed or turned off shows nowhere on the pull request. [ctl-0002] checks the other half: whether `validate` still needs every job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/dog-fooding/controls/0001-merge-gate.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/dog-fooding/controls/0001-merge-gate.md"
   }
 }

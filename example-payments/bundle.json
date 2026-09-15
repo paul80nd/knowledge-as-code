@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.11.2",
+  "version": "0.12.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.11.2",
+    "contentVersion": "0.12.0",
     "types": [
       "fixes",
       "nfrs",
@@ -44,7 +44,7 @@
     {
       "path": "skills/fix-lookup",
       "requires": [
-        "fixes@1"
+        "fixes@2"
       ],
       "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
     },

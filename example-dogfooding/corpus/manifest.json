@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.28.0",
+  "contentVersion": "0.29.0",
   "mechanismVersion": 13,
-  "commit": "c1834c6d24aeeabc486f03cad5ab81e52da67288",
+  "commit": "43a0cf6b5eb8ac62c6d89179798d63de0216150d",
   "dirty": false,
-  "generatedAt": "2026-09-13T20:26:52Z",
+  "generatedAt": "2026-09-15T09:59:17Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,20 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "c1834c6d24aeeabc486f03cad5ab81e52da67288"
+    "ref": "43a0cf6b5eb8ac62c6d89179798d63de0216150d"
+  },
+  "tracker": {
+    "target": "github",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "id": "github:github.com/paul80nd/knowledge-as-code"
+  },
+  "framework": {
+    "target": "github",
+    "base": "https://github.com/paul80nd/knowledge-as-code",
+    "id": "github:github.com/paul80nd/knowledge-as-code"
   },
   "sources": [
     {
@@ -30,10 +40,15 @@
       "contentVersion": "0.17.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c1834c6d24aeeabc486f03cad5ab81e52da67288/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "c1834c6d24aeeabc486f03cad5ab81e52da67288"
+        "ref": "43a0cf6b5eb8ac62c6d89179798d63de0216150d"
+      },
+      "tracker": {
+        "target": "github",
+        "base": "https://github.com/paul80nd/knowledge-as-code",
+        "id": "github:github.com/paul80nd/knowledge-as-code"
       }
     }
   ],
@@ -78,7 +93,7 @@
     },
     {
       "type": "fixes",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 2,
       "parts": 0,
       "dir": "fixes",
