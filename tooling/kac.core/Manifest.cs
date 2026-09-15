@@ -133,7 +133,7 @@ public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
     // newer tool writes, so an update stamps this alongside what it took.
-    public const int Format = 3;
+    public const int Format = 4;
 
     // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
     // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.

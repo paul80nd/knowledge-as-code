@@ -27,7 +27,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `manifest.json` states a tracker three times: for the corpus, for the framework, and for every entry in `sources`.
   Each one gains an `id`, which is the target and the base normalised, so a caller comparing two of them compares two
   strings and never parses a URL. `base` and `id` are both `null` wherever a block addresses no backlog, so a base is
-  never written beside a target that cannot use it. No skill reads the key yet.
+  never written beside a target that cannot use it. `descriptor-version` moves to 4, and `kac update` stamps it. No
+  skill reads the key yet.
 
 - **`.corpus.yaml` states where to report a problem with the framework, under a new `framework:` key.** It takes a
   `target` and a `base`, the same pair `publishing-target` and `publishing.base` take. `kac export` writes the block
