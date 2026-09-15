@@ -14,6 +14,7 @@ somewhere that keeps its answer current.
 | what CI will hold it to                   | `kac checks`, run in this corpus                      |
 | how a contribution is reviewed and merged | [Contributing][contributing]                          |
 | what to do with a finding somebody filed  | the `harvest-findings` skill, described below         |
+| where an unchecked observation goes       | the tracker this corpus uses, not a record here       |
 
 **The rules for the words are skills rather than pages.** `technical-writing` states the floor, and every surface
 answers to it. `writing-a-record` states what this corpus adds and what a record's tier asks on top: the link forms CI

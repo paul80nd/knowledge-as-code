@@ -62,11 +62,29 @@ A copy does not stay in step. Someone updates one and not the other, and afterwa
 a reader believes whichever they found first. A corpus with two answers is worse than a corpus with none, because a gap
 is visible and a contradiction is not.
 
+## In through the tracker, out through the export
+
+Knowledge arrives as a work item and leaves as a record. Each route has its own bar.
+
+Inbound is the tracker the corpus already uses. You file what you noticed in a line or two, with no template, no owner
+and no review. It is not a record yet, so nothing in the corpus has to stand behind it.
+
+Outbound is what `kac` formalises: the **export**, meaning the machine-readable copy of a corpus that another
+repository installs, and the agent skills that read it. An observation joins that route once somebody settles the
+question and verifies the answer.
+
+Separating the routes is what lets the bar on each differ. Capture stays free, and what reaches the export stays worth
+believing.
+
 ## Cheap capture, deliberate promotion
 
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so needs a template, an owner
-and two reviewers. So you file the observation in the tracker the corpus already uses, with no review and no record
-written for it.
+and two reviewers.
+
+**Observed knowledge** is what somebody noticed and nobody has checked: a gotcha, a symptom, a claim about the estate
+that may not survive contact. The framework describes it and gives it no tier, because a corpus keeps answers. Handle
+it in the tracker the corpus already uses. File it cheaply, gate nothing, and triage the queue rather than reviewing
+each entry.
 
 The rigour lives at promotion. An observation becomes a fix once somebody verifies it, and the fix names where the
 content came from in `sources`. That gradient lets a corpus grow without its average trustworthiness falling.

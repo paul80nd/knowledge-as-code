@@ -27,8 +27,9 @@ Both gate the branch, so a clean local run is what a pull request expects rather
   then run `kac generate`. A schema edit without a regeneration fails CI.
 * **Wrap Markdown prose at 120 columns.** Tables and link definitions are exempt: a URL cannot be broken.
   `.editorconfig` says so and no check enforces it.
-* **Write what exists today.** Agreed and unbuilt work goes to the issue tracker. One exception: a schema rule the tool
-  does not implement, where prose says the rule is declared and does not run, and the generated checks table carries it.
+* **Write what exists today.** Unbuilt work and an observation nobody has checked both go to the issue tracker. One
+  exception: a schema rule the tool does not implement, where prose says the rule is declared and does not run, and the
+  generated checks table lists it.
 * **Keep comments and documentation timeless.** Describe the design as it stands. The history of a change belongs in its
   commit message.
 * **Leave a whole document, not a diff.** Fold new material into what is there and delete what it supersedes, so the

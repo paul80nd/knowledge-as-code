@@ -33,7 +33,7 @@ Boundaries:
   did.
 * **[Fix](fixes.md)**: a reusable resolution, which an incident often produces as a by-product. A postmortem is the
   account of the incident itself.
-* **A work item.** Actions belong in ADO. The postmortem links to them and tracks nothing itself.
+* **A work item.** Each action is an ADO item. The postmortem links to it and tracks nothing itself.
 
 Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
 postmortem means something.
