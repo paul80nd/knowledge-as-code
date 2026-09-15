@@ -84,9 +84,10 @@ We treat knowledge as code:
   and no conflict handling, and memcrate itself is pre-release. The underlying ideas are good and we adopt them:
   human-readable Markdown, and the explicit promotion of an insight. The dependency itself is not worth taking.
 
-* **Keep knowledge in ADO work items.** Functional detail already lives there, and ADO has real search. Rejected: a work
-  item is a delivery artefact whose lifecycle ends at "done". Durable knowledge outlives the work that produced it. A
-  standard, a decision and a runbook have no natural home in a backlog. We link to ADO and do not duplicate it.
+* **Keep knowledge in ADO work items.** Functional detail already lives there, and ADO has real search. Adopted for
+  capture, rejected as the store. A work item is a delivery artefact whose lifecycle ends at "done". Durable knowledge
+  outlives the work that produced it. A standard, a decision and a runbook have no natural home in a backlog. The
+  corpus keeps the answer somebody settled. It links the ADO work item and does not duplicate it.
 
 ## Consequences
 
