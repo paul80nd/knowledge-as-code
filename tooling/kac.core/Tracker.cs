@@ -13,6 +13,11 @@ public static class Tracker
     // nowhere are the rest of what `publishing-target` takes, and none of them has a backlog to file on.
     public static readonly IReadOnlyList<string> Targets = [Publishing.AzureDevOps, Publishing.GitHub];
 
+    // Every value a descriptor may write for a tracker's target, which is the pair above and `none` for
+    // a corpus that has no tracker. `validate` holds `tracker:` and `framework:` to this list.
+    public static readonly IReadOnlyList<string> Stated =
+        [Publishing.AzureDevOps, Publishing.GitHub, Publishing.None];
+
     // What stands between a project and the repository or wiki inside it. Azure DevOps addresses both
     // under the project, so the project is what comes before either segment.
     private static readonly string[] Inside = ["/_git/", "/_wiki/"];

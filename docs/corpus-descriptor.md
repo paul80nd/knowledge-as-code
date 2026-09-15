@@ -149,7 +149,8 @@ and many repositories, so a repository URL does not address the backlog.
 | `base`   | the repository or project the backlog belongs to | you        |
 
 `target` is one of `github`, `azure-devops` or `none`, the same three values [`framework:`](#framework) takes. Write
-`none` where the corpus has no tracker at all.
+`none` where the corpus has no tracker at all. [`validate`](cli/validate.md) refuses any other value, and names the
+three in the message.
 
 Write the project URL for `azure-devops`, as `https://dev.azure.com/{org}/{project}`. A URL naming a repository or a
 wiki inside the project is cut back to the project, because that is where the backlog is.

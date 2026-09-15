@@ -19,6 +19,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac validate` refuses a target the descriptor names and the tool cannot act on**, under a new
+  `descriptor-target` check. `publishing-target` takes the five values the link rules are written for. `tracker.target`
+  and `framework.target` take `github`, `azure-devops` or `none`, because a wiki and a documentation site publish
+  records and hold no backlog. The message names the key, the value and the list it takes. Only `kac new` held its
+  flags to these lists before, and every one of the keys is written by hand after that, so a misspelling read as a
+  corpus that publishes nowhere and files nowhere.
+
 - **`.corpus.yaml` states where work about its records is filed, under a new `tracker:` key.** It takes a `target` and
   a `base`, the same pair `framework:` takes. A corpus that states no block gets the tracker its `publishing:` block
   implies, so a corpus on GitHub configures nothing: a repository there has an issue list of its own. State the block
