@@ -19,6 +19,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **The documentation site lists every skill, under [Skills](https://paul80nd.github.io/knowledge-as-code/skills/).**
+  Sixteen of them across three trees, and which tree a skill lives in decides who can read it and what moving it
+  costs. The three tables are generated from the files that already decide the split: `plugin.json` for what travels
+  inside a plugin, `manifest.yaml` for what travels into a corpus, and the `.claude/skills/` directory for what stays
+  here. `SkillReferenceTests` fails a stale table, so the page cannot drift from the manifests the way a hand-written
+  one would. Nothing about `kac` changed.
+
 - **`kac new` and `kac update` send a corpus the `writing-a-report` skill.** It joins `technical-writing` and
   `writing-a-record` in the overlay, under one rule: a writing skill travels where it governs a surface a corpus
   holds. A corpus can adopt `reports`, so the skill that says how to fill a report's judgement cells travels with it.

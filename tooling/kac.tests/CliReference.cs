@@ -33,10 +33,6 @@ internal static partial class CliReference
     [GeneratedRegex(@"^# `(?<verb>[a-z]+)` (?<does>.+)$")]
     private static partial Regex PageHeading();
 
-    // The first heading of a page, under which a missing marker pair is inserted.
-    [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
-    private static partial Regex Heading();
-
     // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
 
@@ -116,30 +112,6 @@ internal static partial class CliReference
     // would freeze where it stood. Writing a second pair above it is worse again: the orphan and the
     // content under it stay on the page, and `Markers.Authored` reads everything past an unmatched
     // marker as prose somebody wrote. Which of the two markers went is a question for whoever deleted one.
-    internal static string Replaced(string page, string name, string body)
-    {
-        var begin = Markers.Begin(name);
-        var end = Markers.End(name);
-        var from = page.IndexOf(begin, StringComparison.Ordinal);
-
-        if (from >= 0 && page.IndexOf(end, from, StringComparison.Ordinal) < 0)
-            throw new XunitException(
-                $"kac.tests: the block '{name}' opens and never closes. Put its '{end}' line back, or "
-                + $"delete its '{begin}' line and let the block be written again.");
-
-        if (from < 0)
-        {
-            var heading = Heading().Match(page);
-            if (!heading.Success)
-                throw new XunitException(
-                    $"kac.tests: the page carrying '{name}' has no heading to put a generated block under.");
-
-            var at = heading.Index + heading.Length;
-            page = page[..at] + $"\n\n{begin}\n{end}" + page[at..];
-        }
-
-        return Markers.SpliceBlock(page, name, body);
-    }
 
     private static IReadOnlyList<Verb> Read()
     {
