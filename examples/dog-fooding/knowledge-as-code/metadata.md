@@ -23,7 +23,7 @@ Carried by every document in the taxonomy.
 | `tier` *   | `decided` `normative` `descriptive` `procedural` | The record's trust level, fixed for the type and checked against the folder.  |
 | `status` * | enum                                             | The record's current state, from the values this type sets.                   |
 | `owner` *  | string                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources`  | list                                             | Where the content came from, one entry per source.                            |
+| `sources`  | list                                             | Where this record's content came from, one entry per source.                  |
 | `tags`     | list                                             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 
 \* Field is required
@@ -31,7 +31,8 @@ Carried by every document in the taxonomy.
 <!-- END GENERATED: schema-universal -->
 
 `id` is the anchor for every cross-reference. Each type sets its own `status` values, and lists its own fields on its
-own page.
+own page. Two fields answer neighbouring questions: `sources` says where one record's content came from, and
+[lineage](lineage.md) says what the whole type is modelled on.
 
 ## Per-type fields
 

@@ -117,6 +117,12 @@ Information about a record lives in the frontmatter, a generated block, or git. 
 
 * Name in `aligns-with` only a framework that `frameworks.md` files under **Obliged** or **Self-obligated**. A framework
   under **Inspiration** may be cited in a clause, and stays out of the roll-up.
+* Fill `sources` where this record's content came from outside the corpus: a specification, a vendor page, a
+  regulation, or the ticket it was written from. Write one entry per source.
+* Leave `sources` out where the record states the estate's own facts. A service, a control, a process and a runbook
+  usually name none.
+* Never name a framework in a policy's `sources`. `aligns-with` is the field for that.
+* What the type is modelled on is `lineage:` in the schema, and never a record's `sources`.
 * Sort every list alphabetically. Numbers compare as numbers, so `A.8.7` comes before `A.8.29`.
 * A tag is a word a reader searches for. It never repeats another field.
 

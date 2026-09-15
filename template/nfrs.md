@@ -44,7 +44,7 @@ deliver.
 | `tier` *†        | `normative`                | The record's trust level, fixed for the type and checked against the folder.             |
 | `status` *†      | `draft` `agreed` `retired` | `agreed` means somebody accepted the commitment.                                         |
 | `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
-| `sources` †      | list                       | Where the content came from, one entry per source.                                       |
+| `sources` †      | list                       | Where this record's content came from, one entry per source.                             |
 | `tags` †         | list                       | Free-form, lowercase and hyphenated. A reader searches on these across types.            |
 | `applies-to` *   | list                       | The service or capability ids this target binds.                                         |
 | `target` *       | string                     | The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`. |

@@ -65,6 +65,33 @@ categories by making a folder, and you choose the folders yourself.
 The value reaches everything that reads the field: the generated index, its sort, and `kac export`. Writing the key by
 hand is an error, reported as `derived-key`, because the folder and the line could then say different things.
 
+## Filling `sources`
+
+`sources` is a universal optional field. It states where a record's content came from, one entry per source, each
+naming something a reader can follow: a specification, a vendor page, a ticket, or the population the content was drawn
+from.
+
+The test is whether a reader could check the record against something the corpus does not hold. Where they could, name
+it. Where the record states the estate's own facts, leave the field out. `reports` is the one type that refines the
+field, and it requires an entry.
+
+| Type                                                     | What `sources` holds                                                                                        |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| Data, Glossary, Integration, NFR, Standard, Tool         | the published document the record restates: a specification, a regulation, a vendor page, a contract        |
+| ADR, Capability, Deviation, Explanation, Fix, Postmortem | the material the record was written from: a benchmark, a ticket, a thread, an incident channel              |
+| Control, Process, Runbook, Service                       | usually nothing. These records state the estate's own facts, and cite the repository or rule behind them    |
+| Policy                                                   | the minute or the opinion the commitment was written from, and never a framework, which `aligns-with` names |
+| Report                                                   | each corpus the report answers for, and the `content-version` it was true of                                |
+
+### `sources` and `lineage`
+
+`sources` sits on the record. `lineage` sits on the type, in `.schema/<type>.yaml`, and states what that kind of record
+is modelled on.
+
+One document can belong in either, and what you took from it decides which. Take the form, meaning the sections, the
+fields, or the rule about superseding, and it belongs to the type's [lineage](lineage.md). Take the content, meaning a
+threshold, a definition, or a list, and it belongs to this record's `sources`.
+
 ## Naming a type
 
 **A type name is singular** and its folder and page are plural: an *ADR* in `adrs/`, a *standard* in `standards/`. The

@@ -45,7 +45,7 @@ Not the place for:
 | `tier` *†       | `descriptive`                       | The record's trust level, fixed for the type and checked against the folder.  |
 | `status` *†     | `active` `trial` `retired`          | Whether the integration is active, on trial, or retired.                      |
 | `owner` *†      | string                              | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †     | list                                | Where the content came from, one entry per source.                            |
+| `sources` †     | list                                | Where this record's content came from, one entry per source.                  |
 | `tags` †        | list                                | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 | `vendor` *      | string                              | Who supplies the system.                                                      |
 | `used-by` *     | list                                | Ids of the services that call this integration.                               |

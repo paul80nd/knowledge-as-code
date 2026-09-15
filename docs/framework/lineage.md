@@ -40,6 +40,10 @@ the lineage page still needs it.
 so it shows the types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too. It owns
 the sourcing behind it exactly as the framework owns the sourcing below.
 
+**Lineage is not a record's `sources`.** A row says where the type came from. The `sources` field on a record says where
+that one record's content came from. [Filling `sources`](metadata.md#filling-sources) says which of them a document
+belongs in.
+
 ## What has no precedent
 
 Two things here have no useful ancestor, and claiming one would be worse than admitting none.
