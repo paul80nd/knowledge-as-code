@@ -47,7 +47,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `tier` *†     | `descriptive`            | The record's trust level, fixed for the type and checked against the folder.                |
 | `status` *†   | `draft` `active` `stale` | `draft` while it is written, `active` once it is right, `stale` where it has fallen behind. |
 | `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
-| `sources` †   | list                     | Where the content came from, one entry per source.                                          |
+| `sources` †   | list                     | Where this record's content came from, one entry per source.                                |
 | `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
 | `explains` *  | list                     | Ids of the services and capabilities this explains.                                         |
 | `review-by` * | date                     | Quoted. The date by which someone confirms this is still true.                              |

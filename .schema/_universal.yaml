@@ -58,12 +58,14 @@ fields:
         required: true
         type: string
         description: A work item, a page, a path, or the population the content was drawn from.
-    description: Where the content came from, one entry per source.
+    description: Where this record's content came from, one entry per source.
     notes: >
-      `resource` is the Open Knowledge Format's one required key on a source, taken unchanged. OKF's
-      optional `id`, `title`, `author`, `usage_count` and `last_modified` are left out until
-      something here reads one. `reports` is the only type that exports this field, and it refines
-      it into a list of corpora.
+      This field sits on the record. `lineage:` sits on the type and states what that kind of record
+      is modelled on, so a framework a type takes its shape from goes there. `resource` is the Open
+      Knowledge Format's one required key on a source, taken unchanged. OKF's optional `id`, `title`,
+      `author`, `usage_count` and `last_modified` are left out until something here reads one.
+      `reports` refines this field into a list of corpora, and is the only type that exports it.
+      See <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#filling-sources>.
 
   tags:
     required: false

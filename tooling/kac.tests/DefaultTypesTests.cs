@@ -1,11 +1,12 @@
 using System.Text.RegularExpressions;
 using kac.core;
 
-// `docs/framework/types.md` introduces the types that ship with the framework, one line each, for somebody
-// deciding whether to adopt it. The lines are hand-written: the schema's own `summary:` is the same altitude,
-// and a page that generated them would be a second copy of a sentence the schema already owns.
+// Two pages of the framework documentation name every type by hand. `docs/framework/types.md` introduces each
+// one for somebody deciding whether to adopt the framework, and `docs/framework/metadata.md` says what a source
+// is for each. The lines are hand-written: the schema's own `summary:` is the same altitude, and a page that
+// generated them would be a second copy of a sentence the schema already owns.
 //
-// So what is held here are the names and the tier each sits under, and the wording is left alone. That is the
+// So what is held here are the names, and the tier each sits under, and the wording is left alone. That is the
 // stance `DocumentationTests` takes for the schema reference, and it catches the faults that matter: a type
 // added, retired, renamed or moved between tiers, on a page nobody opens while doing any of those.
 
@@ -16,6 +17,9 @@ public partial class DefaultTypesTests
 {
     private static readonly string Page =
         File.ReadAllText(Path.Combine(Repo.Root, "docs", "framework", "types.md"));
+
+    private static readonly string MetadataPage =
+        File.ReadAllText(Path.Combine(Repo.Root, "docs", "framework", "metadata.md"));
 
     // A tier's own H2, then every folder named in the table beneath it: `| **ADRs** | `adrs/` | …`.
     [GeneratedRegex(@"^## (?<tier>\w+)$", RegexOptions.Multiline)]
@@ -31,6 +35,25 @@ public partial class DefaultTypesTests
                 .Select(t => (t.Tier, t.Folder))
                 .OrderBy(x => x, Comparer<(string, string)>.Default),
             Listed().OrderBy(x => x, Comparer<(string, string)>.Default));
+
+    // The table under `## Filling `sources`` lists each type against what a source is for it. A type is named by
+    // the schema's own `label:`, between the pipe opening its cell and the comma or pipe closing it.
+    [Fact]
+    public void Every_type_the_schema_declares_is_listed_against_what_a_source_is()
+    {
+        var section = MetadataPage[MetadataPage.IndexOf("## Filling `sources`", StringComparison.Ordinal)..];
+        var table = section[..section.IndexOf("\n## ", StringComparison.Ordinal)];
+
+        var missing = Schema.Load(Repo.Root).ByFolder.Values
+            .Select(t => t.Label)
+            .Where(label => !Regex.IsMatch(table, $@"[|,] {Regex.Escape(label)}[,|\s]"))
+            .Order(StringComparer.Ordinal)
+            .ToList();
+
+        Assert.True(missing.Count == 0,
+            "docs/framework/metadata.md says what a source is for each type, and these are not in that table:\n  "
+            + string.Join("\n  ", missing));
+    }
 
     // The count the page opens on, spelled as prose spells it. A type added moves this, and nothing else on the
     // file may state it: `framework/index.md` and `getting-started.md` both carried a copy, and a copy is what

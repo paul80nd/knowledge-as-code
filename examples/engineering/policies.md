@@ -71,7 +71,7 @@ Accessibility under governance is the clearest of them.
 | `tier` *†     | `normative`                        | The record's trust level, fixed for the type and checked against the folder.                      |
 | `status` *†   | `draft` `active` `retired`         | Whether the policy is being agreed, in force, or retired. Retire a policy instead of deleting it. |
 | `owner` *†    | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                            |
-| `sources` †   | list                               | Where the content came from, one entry per source.                                                |
+| `sources` †   | list                               | Where this record's content came from, one entry per source.                                      |
 | `tags` †      | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types.                     |
 | `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                                          |
 | `aligns-with` | list                               | The binding frameworks this policy's clauses map to, grouped with the references they cite.       |

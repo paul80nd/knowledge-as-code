@@ -62,7 +62,7 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `tier` *†        | `normative`               | The record's trust level, fixed for the type and checked against the folder.                    |
 | `status` *†      | `active` `draft` `closed` | Whether the deviation is in force, still being agreed, or closed.                               |
 | `owner` *†       | string                    | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                          |
-| `sources` †      | list                      | Where the content came from, one entry per source.                                              |
+| `sources` †      | list                      | Where this record's content came from, one entry per source.                                    |
 | `tags` †         | list                      | Free-form, lowercase and hyphenated. A reader searches on these across types.                   |
 | `departs-from` * | list                      | Policy or standard clause ids this departs from, as `pol-TRUS.SCREEN`, or `none`.               |
 | `accepted-on`    | date                      | The day the named owner accepted the risk. Required when `status != draft`.                     |

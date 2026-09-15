@@ -97,7 +97,7 @@
       }
     },
     "lineage": {
-      "description": "Where the type's name came from, and where the framework parts company with it. This is the framework's own debt, and it reads the same in every corpus. What one corpus does about an external framework belongs in `frameworks.md`.",
+      "description": "Where the type's name came from, and where the framework parts company with it. This is the framework's own debt, and it reads the same in every corpus. What one corpus does about an external framework belongs in `frameworks.md`, and where one record's content came from belongs in that record's `sources` field.",
       "type": "object",
       "additionalProperties": false,
       "required": [

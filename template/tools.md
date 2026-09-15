@@ -46,7 +46,7 @@ the evaluation we already did.
 | `tier` *†    | `descriptive`                              | The record's trust level, fixed for the type and checked against the folder.           |
 | `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` applies to new work. Existing use of a tool with any other status is drift. |
 | `owner` *†   | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                 |
-| `sources` †  | list                                       | Where the content came from, one entry per source.                                     |
+| `sources` †  | list                                       | Where this record's content came from, one entry per source.                           |
 | `tags` †     | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.          |
 | `category`   | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                    |
 | `versions`   | string                                     | The version range approved for new work.                                               |

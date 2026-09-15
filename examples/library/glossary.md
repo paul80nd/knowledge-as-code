@@ -84,7 +84,7 @@ nothing runs the rule and the limit is yours to keep.
 | `tier` *†     | `descriptive`    | The record's trust level, fixed for the type and checked against the folder.  |
 | `status` *†   | `draft` `active` | `draft` while the terms are still settling.                                   |
 | `owner` *†    | string           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †   | list             | Where the content came from, one entry per source.                            |
+| `sources` †   | list             | Where this record's content came from, one entry per source.                  |
 | `tags` †      | list             | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 | `narrows`     | id               | Id of the more general glossary this one narrows.                             |
 | `review-by` * | date             | Quoted. The date by which the whole glossary is reviewed.                     |
