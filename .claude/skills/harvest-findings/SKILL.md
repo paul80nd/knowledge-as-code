@@ -216,7 +216,8 @@ routed. The third is not work. You need it to spot a duplicate of something sett
 gh issue list --repo <owner>/<repo> --state open --limit 200 \
   --search "label:kac:finding -label:kac:triaged" --json number,title,body,createdAt
 gh issue list --repo <owner>/<repo> --state open --limit 200 \
-  --search "kac-finding in:body -label:kac:finding" --json number,title,body,createdAt
+  --search "kac-finding in:body -label:kac:finding" --json number,title,body,createdAt \
+  --jq '[.[] | select(.body | contains("```yaml kac-finding"))]'
 gh issue list --repo <owner>/<repo> --state all --limit 200 \
   --search "label:kac:triaged" --json number,title,labels
 ```
@@ -232,8 +233,10 @@ az boards work-item show --org https://dev.azure.com/<org> --id <id>
 ```
 
 **A finding may have arrived with no mark at all.** `raise-finding` files one unmarked where the platform refuses a
-mark it does not have, so the second GitHub search looks for the block in the body instead. Azure creates a tag it does
-not hold, so an Azure backlog has no unmarked case. Mark what the search finds `kac:finding` before you triage it.
+mark it does not have, so the second GitHub search looks for the block in the body instead. That search returns
+candidates and not findings. GitHub reads `kac-finding` as two words, so it returns any issue that discusses a finding.
+The `--jq` filter keeps only a body with the opening fence in it. Azure creates a tag it does not hold, so an Azure
+backlog has no unmarked case. Mark what survives the filter `kac:finding` before you triage it.
 
 **Read every one before you classify any of them.** Duplicates are only visible against the whole queue, and two
 findings that are halves of one problem read as two unrelated tickets on their own.
