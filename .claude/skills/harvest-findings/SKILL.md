@@ -424,6 +424,18 @@ One issue, one pull request.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
 
+**Refuse a finding that already has a pull request, open or merged.** The record it asked for is written, and a
+second one would answer the same observation twice. Read that alongside the labels:
+
+```bash
+gh issue view <issue> --repo <owner>/<repo> --json state,closedByPullRequestsReferences
+```
+
+`closedByPullRequestsReferences` names every pull request that closes this issue, from the moment one opens. Name it
+and stop. On Azure DevOps the linked pull requests are on the work item.
+
+**Refuse a closed finding as well.** Somebody closed it by hand, so the observation is settled and no record is owed.
+
 ### 2. Check where the pull request goes
 
 The records are in front of you, so what is left is the repository the branch goes to. The tracker and the repository
@@ -441,13 +453,27 @@ A finding routed here asks for one of two things: an edit to a record that alrea
 written. Read it and decide which.
 
 **An edit: read the record, and change the words the finding is about.** Leave everything else alone. Add an entry to
-the record's `## Changelog` where it has one, newest first.
+the record's `## Changelog` where it has one, newest first, naming the issue.
 
 **A new record: start from the type's `_template.md`.** It sits in the folder the record goes in, and states every field
 that type needs and what each one takes. Follow it rather than copying a neighbouring record.
 
 **Load `technical-writing`, then `writing-a-record`.** Both travel into a corpus, so both are beside this one under
 `.claude/skills/`. A record written in some other voice reads as an import.
+
+**Name the issue in `sources`.** Every type accepts the field. The entry gives a reviewer the observation to check
+the record against. Write the short form on GitHub, and the work item's URL on Azure DevOps.
+
+```yaml
+sources:
+  - { resource: <owner>/<repo>#<issue> }
+```
+
+**An edit keeps the entries the record already has**, and adds this one under them.
+
+**A `reports` record is the exception.** Its `sources` names the corpora the report answers for and the version of
+each, and it keeps no changelog. So the pull request body is the only trace a report drafted from a finding keeps.
+`writing-a-report` says how to regenerate one.
 
 **Write `status: draft` where the type takes it.** A record an agent wrote has been accepted by nobody, and a type that
 verifies its records refuses one an agent claims to have verified. The type's `_template.md` says which fields a draft
@@ -464,13 +490,20 @@ has.
 
 ### 4. Open the pull request
 
-Branch, commit and open it. Put the issue number in the body, so the pull request and the finding link to each other.
+Branch, commit and open it. The body closes the finding and names the record.
 
 ```bash
 gh pr create --repo <owner>/<repo> --title "<the record, in one line>" --body-file <path>
 ```
 
-On Azure DevOps the command is `az repos pr create`, against the repository inside the project.
+**Write `Closes #<issue>` in the body.** GitHub closes the finding when somebody merges the pull request, and leaves
+the link to it on the issue. Closing it yourself would settle an observation nobody has accepted.
+
+On Azure DevOps the command is `az repos pr create`, against the repository inside the project. `--work-items <id>`
+links the finding, and `--transition-work-items true` moves it on when somebody completes the pull request.
+
+**Name the record's id and its path in the body.** The finding closes with a link to the pull request, so the body is
+where a reader arriving from the observation learns which record answered it.
 
 **Say in the body that an agent wrote it, from which finding.** The reviewer is deciding whether the observation is
 true, which triage did not.
@@ -483,8 +516,9 @@ After `triage`, say how many findings you read, how many you labelled, and the c
 `kac:route-unclear` row and what a person has to decide about it. Where you drafted an upstream body, say which issue it
 is a comment on and which tracker it is for.
 
-After `draft`, name the pull request and its URL, and the issue it answers. Say which fields you left empty, and that
-the record is a draft until somebody accepts it.
+After `draft`, name the pull request and its URL, and the issue it answers. Say that the record names that issue in
+`sources`, and that merging the pull request closes it. Say which fields you left empty, and that the record is a
+draft until somebody accepts it.
 
 **Say what you could not do.** A missing client, a label you could not create, an issue the tracker refused to update. A
 finding you read out to somebody is worth more than one lost to a missing tool.

@@ -26,8 +26,9 @@ skill answers from the export beside it, using no more than a session's ability 
 did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue on the
 repository the export came from: a finding where the corpus is wrong, and a request where the work is about to depart
 from a clause that is right. Back at that repository, a skill in the corpus's own working tree triages those issues,
-marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request. That
-skill ships in no plugin, because it writes to the tracker and to the records.
+marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request. The
+record cites the issue it came from, and the pull request cites the record. Merging it closes the issue. That skill
+ships in no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -184,8 +185,16 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 - That record **MUST** name an `owner` the person running the skill supplied, and the skill **MUST NOT** invent one.
 - That record **MUST** carry a `status` its type treats as unsettled, wherever the type declares one.
 - That record **MUST** arrive as a pull request, and the skill **MUST NOT** approve or merge it.
+- That record **MUST** name the issue it was drafted from in `sources`, or in its changelog entry where its type
+  refines `sources` into something else.
+- Where the type takes neither, the pull request body **MUST** state that trace.
+- That pull request **MUST** name the record's id.
+- That pull request **MUST** link the issue, so that merging it settles the finding.
+- A skill **MUST NOT** close the issue itself.
+- A skill **MUST NOT** draft a record from an issue already closed, or from one a pull request already answers.
 
-_**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.SELFVER`_
+_**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`,
+`eng:pol-AGNT.UNPROV`_
 
 ### A framework finding travels stripped, and only by hand
 
@@ -346,6 +355,11 @@ broke it.
 - [ ] Every record drafted from a finding came from a `kac:route-record` issue, and arrived as a pull request nobody
       approved.
 - [ ] Every drafted record names an `owner` a person supplied, and carries the status its type treats as unsettled.
+- [ ] Every drafted record names the issue it came from, or its pull request body does where the type takes neither a
+      source nor a changelog.
+- [ ] Every pull request for a drafted record names it, and closes its issue on merge.
+- [ ] No skill closed a finding itself, and none drafted a record from a finding already closed or already answered by
+      a pull request.
 - [ ] No framework finding was filed outside the organisation holding the plugin.
 - [ ] Every upstream body states the framework version and identifies neither the filer nor the corpus.
 
@@ -392,6 +406,18 @@ corpus published from somebody else's repository has whatever labels its maintai
 unmarked rather than lost, and triage searches the body for the block as well as the backlog for the mark. The block is
 the contract either way, which is why a platform calling a label something else costs nothing: an Azure tag and a
 GitHub label mean the same thing, and the shape in the body is what both of them point at.
+
+A drafted record names the issue it came from because a reviewer is being asked to accept something an agent wrote.
+`eng:pol-AGNT.PROV` wants that review to be a check rather than an act of faith, and `eng:pol-AGNT.UNPROV` refuses a
+proposal nobody can trace back to what produced it. The issue closing on merge is the same link from the other end.
+It points at the pull request rather than the file, so that body names the record. The skill closes nothing itself,
+because closing a finding would settle an observation nobody has accepted.
+
+A pull request answers a finding from the moment it opens, and the issue stays open until somebody merges it. Reading
+the state alone would leave that window, and a second run would write the record a reviewer is already holding. So the
+check is the pull requests linked to the issue rather than whether the issue is closed. A `reports` record keeps its
+trace in the pull request body alone: its `sources` states corpora and versions, and it has no changelog for an issue
+to go in.
 
 A deviation request uses the same mechanism to ask a different question. A finding says the corpus is wrong. A request
 says the rule is right and the work is about to break it, so somebody has to accept that risk. One skill doing both
@@ -482,6 +508,9 @@ standard.
 
 ## Changelog
 
+- 2026-09-15: a record drafted from a finding cites that finding, and its pull request cites the record and closes
+  the issue. A reviewer can check the record against the observation, and the finding points back at the record. No
+  record is drafted from a finding a pull request already answers.
 - 2026-09-15: triage travels into a corpus's working tree and ships in no plugin. It writes to the tracker and to the
   records, so the reader is the maintainer holding the source.
 - 2026-09-15: added the triage marks a filed finding is routed by, the checkout triage runs from, and the conditions a
