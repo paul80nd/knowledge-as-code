@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.13.0",
-  "mechanismVersion": 15,
-  "commit": "86ad6429c669c3b8d5ddd8c1d01114225383f002",
+  "contentVersion": "0.14.0",
+  "mechanismVersion": 16,
+  "commit": "33bbcd289cd40675c86200a129725a0033c99269",
   "dirty": false,
-  "generatedAt": "2026-09-15T13:23:06Z",
+  "generatedAt": "2026-09-15T14:22:09Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/86ad6429c669c3b8d5ddd8c1d01114225383f002/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/33bbcd289cd40675c86200a129725a0033c99269/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "86ad6429c669c3b8d5ddd8c1d01114225383f002"
+    "ref": "33bbcd289cd40675c86200a129725a0033c99269"
   },
   "tracker": {
     "target": "github",
@@ -37,13 +37,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.18.0",
+      "contentVersion": "0.19.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/86ad6429c669c3b8d5ddd8c1d01114225383f002/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/33bbcd289cd40675c86200a129725a0033c99269/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "86ad6429c669c3b8d5ddd8c1d01114225383f002"
+        "ref": "33bbcd289cd40675c86200a129725a0033c99269"
       },
       "tracker": {
         "target": "github",

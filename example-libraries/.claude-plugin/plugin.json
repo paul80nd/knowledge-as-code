@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "example-libraries",
   "displayName": "Example Libraries",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
   "author": {
     "name": "Paul Law",
@@ -38,12 +38,6 @@
         "requires": [],
         "standalone": true,
         "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
-      },
-      {
-        "path": "skills/harvest-findings",
-        "requires": [],
-        "standalone": true,
-        "note": "Triages the findings filed on this corpus's tracker and drafts the record one of them asks for, reading corpus/manifest.json for the tracker, the framework and the publishing addresses. It names no type, so it travels with every bundle."
       },
       {
         "path": "skills/request-deviation",
