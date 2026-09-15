@@ -257,6 +257,14 @@ public class CorpusDescriptor
     public string FrameworkTarget = Publishing.None;
     public string? FrameworkBase;
 
+    // Where work about this corpus's own records is filed. Kept apart from `publishing:` because a
+    // published form and a backlog are not one address everywhere: GitHub gives one repository one issue
+    // list, and Azure DevOps gives one project one backlog and many repositories, so a repository URL
+    // does not address it. Both are null where the descriptor states no block, and `Tracker.Own` derives
+    // the pair from `publishing:` instead.
+    public string? TrackerTarget;
+    public string? TrackerBase;
+
     // Where the corpus root sits inside the published repository, where it is not the root itself.
     //
     // A corpus kept in a subdirectory cannot say this through its base. The commit the links resolve
@@ -344,6 +352,9 @@ public class CorpusDescriptor
         var framework = Yaml.Get(root, "framework");
         descriptor.FrameworkTarget = Blank(Yaml.Str(Yaml.Get(framework, "target"))) ?? Publishing.None;
         descriptor.FrameworkBase = Blank(Yaml.Str(Yaml.Get(framework, "base")));
+        var tracker = Yaml.Get(root, "tracker");
+        descriptor.TrackerTarget = Blank(Yaml.Str(Yaml.Get(tracker, "target")));
+        descriptor.TrackerBase = Blank(Yaml.Str(Yaml.Get(tracker, "base")));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
         descriptor.PluginFrom = Blank(Yaml.Str(Yaml.Get(Yaml.Get(root, "plugin"), "from")));
 

@@ -128,6 +128,55 @@ Set `path-prefix` where the repository contains more than the corpus. Do not app
 `export` inserts the commit between `base` and the record's path, so there is no room for it there. Leave the key out
 where the corpus is the repository, which is the ordinary case.
 
+## `tracker:`
+
+```yaml
+tracker:
+  target: azure-devops
+  base: https://dev.azure.com/acme/Standards
+```
+
+`tracker:` says where work about this corpus's records is filed. Leave the block out where the backlog belongs to what
+`publishing:` already names, and [`export`](cli/export.md) derives the address from that block instead. A corpus
+published on GitHub therefore states nothing: a repository there has an issue list of its own.
+
+State the block where the backlog and the published form are two places. One Azure DevOps project holds one backlog
+and many repositories, so a repository URL does not address the backlog.
+
+| Key      | What it states                                   | Written by |
+|----------|--------------------------------------------------|------------|
+| `target` | the client that opens a ticket on the tracker    | you        |
+| `base`   | the repository or project the backlog belongs to | you        |
+
+`target` is one of `github`, `azure-devops` or `none`, the same three values [`framework:`](#framework) takes. Write
+`none` where the corpus has no tracker at all.
+
+Write the project URL for `azure-devops`, as `https://dev.azure.com/{org}/{project}`. A URL naming a repository or a
+wiki inside the project is cut back to the project, because that is where the backlog is.
+
+### What `export` derives
+
+Write `base` alone where your backlog moved inside the platform you publish on, and the client follows from
+`publishing-target`. Write `target` alone where the corpus has no tracker, and nothing states a base.
+
+| `publishing-target` | The tracker derived from `base`             |
+|---------------------|---------------------------------------------|
+| `github`            | the repository, which is its own issue list |
+| `azure-devops`      | the project holding the repository          |
+| `azure-devops-wiki` | the project holding the wiki                |
+| `mkdocs` and `none` | none                                        |
+
+**State both keys where you state a target `publishing-target` does not imply.** A base is taken from the publishing
+block only where the two targets agree. A corpus published on GitHub and filing on Azure Boards is filing somewhere
+only it knows, so `export` writes no base rather than the repository it publishes from.
+
+### `tracker:` and `framework:`
+
+Both name a tracker, and they name two different ones. `tracker.base` is where a problem with one of your records goes.
+[`framework.base`](#framework) is where a problem with `kac`, the schema, the template or a skill goes. A corpus whose
+records and framework are maintained by the same team writes one address twice, and
+[the export format](design/export.md#tracker) says how a reader tells that case from the other.
+
 ## `consumes:`
 
 ```yaml

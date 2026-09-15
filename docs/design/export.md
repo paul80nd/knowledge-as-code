@@ -204,19 +204,23 @@ the last place anyone would see it.
 
 ### `sources`
 
-It is the one thing a merge cannot merge. Each entry holds the publishing block its producer wrote: its target, its
-base, its path prefix and its commit. A record of `eng` is read at eng's commit, under eng's path prefix, in eng's
-repository, and the consuming corpus's own block gets all three wrong.
+It is the one thing a merge cannot merge. Each entry has both blocks its producer wrote. `publishing` says where a
+record of theirs is read: at eng's commit, under eng's path prefix, in eng's repository, and the consuming corpus's own
+block gets all three wrong. `tracker` says where a problem with that record is filed, which is eng's backlog and not
+this corpus's.
 
 ```json
 "sources": [
   { "shortcode": "eng", "corpus": "example-engineering", "contentVersion": "0.7.4",
-    "publishing": { "target": "github", "ref": "133ebc79…", "pathPrefix": "examples/engineering" } }
+    "publishing": { "target": "github", "ref": "133ebc79…", "pathPrefix": "examples/engineering" },
+    "tracker": { "target": "github", "base": "https://github.com/example/engineering",
+                 "id": "github:github.com/example/engineering" } }
 ]
 ```
 
-`publishing` stays what this corpus says about itself, so a reader holding an export that inherits nothing reads it
-exactly as before.
+The two blocks at the root stay what this corpus says about itself, so a reader holding an export that inherits nothing
+reads them exactly as before. An entry written by a producer that predates `tracker` is derived from the `publishing`
+beside it, by the rule [`tracker`](#tracker) below states.
 
 ## The manifest
 
@@ -289,20 +293,57 @@ Every field is `null` where the corpus said nothing, and `kac` fills nothing in 
 nobody named and a licence nobody chose are claims about a person, and a template supplying them is how a corpus comes
 to publish under somebody else's name.
 
-### `framework`
+### `tracker`
 
-It says where to report a problem with the framework the corpus took, rather than with the corpus's own records.
+It says where work about this corpus's own records is filed.
 
 ```json
-"framework": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code" }
+"tracker": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code",
+             "id": "github:github.com/paul80nd/knowledge-as-code" }
 ```
 
 A reader that meets the export as an installed plugin has no repository to walk and no descriptor to open. The manifest
-is the only place it can read this address.
+is the only place it can read this address. `publishing.base` is not it: a published form and a backlog are one address
+on GitHub and two on Azure DevOps, where one project holds a backlog and many repositories.
 
-`kac` builds no issues address from the pair. It writes both keys as the descriptor states them, and the client that
-files an issue works out its own platform's address from them. `target` is `none` and `base` is `null` where the
-corpus states no tracker, which is the same absence `publishing` spells.
+`kac` builds no issues URL from the block. It writes the target as the descriptor states it, and the client that files
+a ticket works out its own platform's address from the pair. A corpus that
+[states no `tracker:`](../corpus-descriptor.md#tracker) gets the block its `publishing:` implies, so a GitHub corpus
+configures nothing.
+
+`base` is the address of the backlog, so an `azure-devops` base is cut back to the project holding it. That holds for a
+base the corpus stated as well as one `kac` derived: the segment below a project names a repository or a wiki, and no
+ticket is filed on either.
+
+`base` and `id` are `null` together wherever the block addresses no backlog: a `target` of `none`, a target that files
+nowhere, or a base the corpus never supplied. A base standing beside a target that cannot use it would read as an
+address, so it is not written at all.
+
+### `id`, and the trackers it compares
+
+`id` is `target` and `base` normalised, and it is how two blocks are told apart. Compare two `id` strings. Do not parse
+either base.
+
+A manifest states three trackers: this corpus's under `tracker`, the framework's under `framework`, and each producer's
+under `sources`. All three can name one backlog, and a caller that cannot tell sends somebody to file a ticket where
+that ticket already is.
+
+The normalisation drops every part of the base that never told two backlogs apart: the scheme, a `www.` prefix, a
+`.git` suffix, a trailing `/`, and upper case. `base` is already the project on `azure-devops`, so a corpus published
+in a wiki and one published in a repository of that project compare equal. `id` is `null` wherever `base` is.
+
+### `framework`
+
+It says where to report a problem with the framework the corpus took, rather than with one of the corpus's own records.
+
+```json
+"framework": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code",
+               "id": "github:github.com/paul80nd/knowledge-as-code" }
+```
+
+It is the same three keys `tracker` takes, written the same way, and it is stated or absent. Nothing derives it: where
+the corpus publishes says nothing about who maintains `kac`. `target` is `none` and `base` is `null` where the corpus
+states no framework tracker, which is the same absence `publishing` spells.
 [`.corpus.yaml`](../corpus-descriptor.md#framework) is where a corpus states one.
 
 ### `corpus` and `shortcode`

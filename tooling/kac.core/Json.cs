@@ -50,16 +50,25 @@ public record ExportManifest(
     string GeneratedAt,
     ExportAbout About,
     ExportPublishing Publishing,
-    ExportFramework Framework,
+    ExportTracker Tracker,
+    ExportTracker Framework,
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<ExportedType> Types);
 
-// Where to report a problem with the framework this corpus took: `kac`, the schema, the template or a
-// skill, rather than with the corpus's own records. A reader that meets this export as an installed
-// plugin has no descriptor to open, so an address it is not given here is one it invents. `Target` names
-// the client that opens the issue, as it does on `ExportPublishing`, and `Base` is null where the corpus
-// named no tracker.
-public record ExportFramework(string Target, string? Base);
+// Where work is filed, which a manifest states three times: once for this corpus's own records under
+// `tracker`, once for the framework it took under `framework`, and once for each corpus it inherited.
+// A reader that meets this export as an installed plugin has no descriptor to open, so an address it is
+// not given here is one it invents.
+//
+// `Target` names the client that opens the ticket, as it does on `ExportPublishing`, and is written as
+// the corpus stated it. `Base` is the address of the backlog, which on Azure DevOps is the project and
+// never the repository or wiki inside it. `Tracker.cs` states what each one is written from.
+//
+// `Id` is the pair normalised, and it is the whole of how two blocks are told apart. A caller routing a
+// finding compares two `Id` strings and files where they differ, rather than parsing a URL itself and
+// reading `Example/Repo.git` and `example/repo` as two backlogs. `Base` and `Id` are null together,
+// wherever the block addresses no backlog.
+public record ExportTracker(string Target, string? Base, string? Id);
 
 // One corpus this export inherited, and where that corpus publishes.
 //
@@ -70,11 +79,16 @@ public record ExportFramework(string Target, string? Base);
 //
 // `Corpus` and `ContentVersion` are what the producer called itself and the version it published at.
 // They say which knowledge arrived, which a shortcode alone does not.
+//
+// `Tracker` is the producer's own too, and is the address a problem with one of their records goes to.
+// A consumer holding it can tell an import's backlog from its own rather than filing everything on
+// whichever tracker it happens to have.
 public record ExportSource(
     string Shortcode,
     string? Corpus,
     string? ContentVersion,
-    ExportPublishing Publishing);
+    ExportPublishing Publishing,
+    ExportTracker Tracker);
 
 // What a corpus says about itself, for a reader who meets it as a package or as an installed plugin
 // rather than as a repository.

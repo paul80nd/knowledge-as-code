@@ -20,9 +20,15 @@
     "pathPrefix": null,
     "ref": null
   },
+  "tracker": {
+    "target": "none",
+    "base": null,
+    "id": null
+  },
   "framework": {
     "target": "none",
-    "base": null
+    "base": null,
+    "id": null
   },
   "sources": [],
   "types": [

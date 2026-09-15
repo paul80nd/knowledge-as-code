@@ -521,6 +521,91 @@ public class ExporterTests
         Assert.Null(manifest.Framework.Base);
     }
 
+    // The corpus's own backlog, beside the two addresses already in the manifest. A caller holding only
+    // `publishing` would file a problem with a record wherever that corpus happens to be read.
+    [Fact]
+    public void The_manifest_carries_where_work_about_this_corpus_is_filed()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        corpus.Descriptor.TrackerTarget = Publishing.AzureDevOps;
+        corpus.Descriptor.TrackerBase = "https://dev.azure.com/acme/Standards";
+
+        var tracker = JsonDocument.Parse(Single(Plan(corpus), Exporter.ManifestFile).Content).RootElement
+            .GetProperty("tracker");
+
+        Assert.Equal("azure-devops", tracker.GetProperty("target").GetString());
+        Assert.Equal("https://dev.azure.com/acme/Standards", tracker.GetProperty("base").GetString());
+        Assert.Equal("azure-devops:dev.azure.com/acme/standards", tracker.GetProperty("id").GetString());
+    }
+
+    // A corpus stating no tracker gets the one its publishing block implies, which is what leaves a
+    // GitHub corpus nothing to configure.
+    [Fact]
+    public void A_corpus_stating_no_tracker_files_where_it_publishes()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        corpus.Descriptor.PublishingTarget = Publishing.GitHub;
+        corpus.Descriptor.Base = "https://github.com/example/corpus";
+
+        var tracker = JsonDocument.Parse(Single(Plan(corpus), Exporter.ManifestFile).Content).RootElement
+            .GetProperty("tracker");
+
+        Assert.Equal("https://github.com/example/corpus", tracker.GetProperty("base").GetString());
+        Assert.Equal("github:github.com/example/corpus", tracker.GetProperty("id").GetString());
+    }
+
+    // A record of theirs is filed on their backlog, for the reason it is read at their commit. A
+    // consumer holding one address would send every finding to whichever corpus it happened to be.
+    [Fact]
+    public void An_inherited_corpus_carries_its_own_tracker_into_sources()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Consumed("eng", TheirLine));
+
+        var tracker = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("sources").EnumerateArray().Single().GetProperty("tracker");
+
+        Assert.Equal("https://example.com/eng", tracker.GetProperty("base").GetString());
+        Assert.Equal("github:example.com/eng", tracker.GetProperty("id").GetString());
+    }
+
+    // An export written before the key existed still has to answer, and the block beside it says where
+    // that corpus is read. Deriving from it is what a consumer would otherwise do by hand, differently.
+    [Fact]
+    public void A_manifest_short_of_a_tracker_block_files_where_it_publishes()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "publishing": { "target": "github", "base": "https://github.com/example/corpus" },
+                "sources": [
+                  { "shortcode": "eng",
+                    "publishing": { "target": "github", "base": "https://github.com/example/upstream" } }
+                ]
+              }
+              """);
+
+        Assert.Equal("github:github.com/example/corpus", manifest.Tracker.Id);
+        Assert.Equal("github:github.com/example/upstream", manifest.Sources.Single().Tracker.Id);
+    }
+
+    // The framework's is stated or absent. A corpus taking the template from a folder publishes nowhere
+    // near whoever maintains it, so the block beside it answers a different question.
+    [Fact]
+    public void A_manifest_short_of_a_framework_block_derives_no_tracker_from_where_it_publishes()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}},
+                "publishing": { "target": "github", "base": "https://github.com/example/corpus" }
+              }
+              """);
+
+        Assert.Equal(Publishing.None, manifest.Framework.Target);
+        Assert.Null(manifest.Framework.Id);
+    }
+
     [Fact]
     public void A_section_carried_at_summary_keeps_its_opening_block_and_drops_the_rest()
     {
@@ -748,6 +833,7 @@ public class ExporterTests
         new(shortcode, Exporter.FormatVersion, $"{shortcode}-corpus", "1.0.0",
             new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
                 $"https://example.com/{shortcode}", null, "beefbeef"),
+            Tracker.For(Publishing.GitHub, $"https://example.com/{shortcode}"),
             [],
             [
                 new InheritedType("glossary", 1, "glossary", "glossary/terms.jsonl",
@@ -821,7 +907,8 @@ public class ExporterTests
             [
                 new ExportSource("gp", "gp-corpus", "0.2.0",
                     new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
-                        "https://example.com/gp", null, "cafecafe"))
+                        "https://example.com/gp", null, "cafecafe"),
+                    Tracker.For(Publishing.GitHub, "https://example.com/gp"))
             ]
         };
 
@@ -843,7 +930,8 @@ public class ExporterTests
         static ExportSource At(string version) =>
             new("gp", "gp-corpus", version,
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
-                    "https://example.com/gp", null, version));
+                    "https://example.com/gp", null, version),
+                Tracker.For(Publishing.GitHub, "https://example.com/gp"));
 
         var plan = Merged(
             Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
@@ -853,6 +941,26 @@ public class ExporterTests
         Assert.Empty(plan.Files);
         Assert.Contains("0.2.0", Assert.Single(plan.Refused));
         Assert.Contains("0.3.0", plan.Refused[0]);
+    }
+
+    // A producer whose export predates the tracker key has one derived from its publishing block, and a
+    // corpus that states its own has one that differs. Neither account moves where a line resolves, so
+    // refusing here would stop an export over a key nothing reads at a citation.
+    [Fact]
+    public void Two_accounts_of_one_corpus_differing_only_in_where_it_files_still_merge()
+    {
+        static ExportSource Filing(string tracker) =>
+            new("gp", "gp-corpus", "0.2.0",
+                new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
+                    "https://example.com/gp", null, "cafecafe"),
+                Tracker.For(Publishing.GitHub, tracker));
+
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirLine) with { Sources = [Filing("https://example.com/gp")] },
+            Consumed("ops", TheirLine) with { Sources = [Filing("https://example.com/tickets")] });
+
+        Assert.Empty(plan.Refused);
     }
 
     // Two corpora can name one record, so an inherited file is filed under the corpus that wrote it. The

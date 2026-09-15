@@ -20,4 +20,10 @@ framework:
   target: github
   base: https://github.com/example/framework
 
+# Stated rather than derived, and stated as a repository inside a project, so the golden manifest proves
+# both: a corpus files where it says, and an Azure DevOps backlog is the project holding the repository.
+tracker:
+  target: azure-devops
+  base: https://dev.azure.com/acme/Standards/_git/corpus
+
 skip: []
