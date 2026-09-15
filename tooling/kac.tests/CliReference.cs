@@ -33,10 +33,6 @@ internal static partial class CliReference
     [GeneratedRegex(@"^# `(?<verb>[a-z]+)` (?<does>.+)$")]
     private static partial Regex PageHeading();
 
-    // The first heading of a page, under which a missing marker pair is inserted.
-    [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
-    private static partial Regex Heading();
-
     // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
 
@@ -103,42 +99,6 @@ internal static partial class CliReference
             ]));
 
         return tables.Count == 0 ? usage : $"{usage}\n\n{string.Join("\n\n", tables)}";
-    }
-
-    // The page carrying `body` in the block called `name`. `Markers.SpliceBlock` writes it, so a page of
-    // the documentation and a page a corpus holds are filled by one piece of code.
-    //
-    // A page that has never carried the block is given an empty pair of markers under its first heading,
-    // which is what a command page added to `docs/cli/` arrives as.
-    //
-    // A block that opens and never closes stops the run instead. `SpliceBlock` hands back a page it could
-    // not splice untouched, and an untouched page is what the caller reads as up to date, so the block
-    // would freeze where it stood. Writing a second pair above it is worse again: the orphan and the
-    // content under it stay on the page, and `Markers.Authored` reads everything past an unmatched
-    // marker as prose somebody wrote. Which of the two markers went is a question for whoever deleted one.
-    internal static string Replaced(string page, string name, string body)
-    {
-        var begin = Markers.Begin(name);
-        var end = Markers.End(name);
-        var from = page.IndexOf(begin, StringComparison.Ordinal);
-
-        if (from >= 0 && page.IndexOf(end, from, StringComparison.Ordinal) < 0)
-            throw new XunitException(
-                $"kac.tests: the block '{name}' opens and never closes. Put its '{end}' line back, or "
-                + $"delete its '{begin}' line and let the block be written again.");
-
-        if (from < 0)
-        {
-            var heading = Heading().Match(page);
-            if (!heading.Success)
-                throw new XunitException(
-                    $"kac.tests: the page carrying '{name}' has no heading to put a generated block under.");
-
-            var at = heading.Index + heading.Length;
-            page = page[..at] + $"\n\n{begin}\n{end}" + page[at..];
-        }
-
-        return Markers.SpliceBlock(page, name, body);
     }
 
     private static IReadOnlyList<Verb> Read()

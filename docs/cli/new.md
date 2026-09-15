@@ -72,7 +72,7 @@ missing answer exits rather than waiting, because a hung pipeline is worse than 
 
 ```text
 new: did not write azure-pipelines.yml: this corpus is built by github.
-new: wrote 113 file(s) for my-corpus, taken from /path/to/template.
+new: wrote 115 file(s) for my-corpus, taken from /path/to/template.
 wrote README.md
 updated 1 of 40 generated file(s).
 validated 3 document(s) and 18 template(s), skipped 0 without frontmatter. 0 error(s), 0 warning(s)

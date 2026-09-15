@@ -1,12 +1,13 @@
-// Where a generated block goes in a page, over pages built for the purpose. `CliReferenceTests` asks the
-// same method about the real documentation, and can only report the answer the pages happen to give.
+// Where a generated block goes in a page, over pages built for the purpose. `CliReferenceTests` and
+// `SkillReferenceTests` ask the same method about the real documentation, and can only report the answer the
+// pages happen to give.
 
 using kac.core;
 using Xunit.Sdk;
 
 namespace kac.tests;
 
-public class CliBlockTests
+public class GeneratedPageTests
 {
     private const string Name = "usage-validate";
 
@@ -15,7 +16,7 @@ public class CliBlockTests
     {
         var page = $"# `validate` check a corpus\n\n{Markers.Begin(Name)}\n\nold\n\n{Markers.End(Name)}\n\nAfter.\n";
 
-        var written = CliReference.Replaced(page, Name, "new");
+        var written = GeneratedPage.Replaced(page, Name, "new");
 
         Assert.Equal(
             $"# `validate` check a corpus\n\n{Markers.Begin(Name)}\n\nnew\n\n{Markers.End(Name)}\n\nAfter.\n",
@@ -27,7 +28,7 @@ public class CliBlockTests
     {
         var page = "# `validate` check a corpus\n\nAfter.\n";
 
-        var written = CliReference.Replaced(page, Name, "new");
+        var written = GeneratedPage.Replaced(page, Name, "new");
 
         Assert.Equal(
             $"# `validate` check a corpus\n\n{Markers.Begin(Name)}\n\nnew\n\n{Markers.End(Name)}\n\nAfter.\n",
@@ -42,7 +43,7 @@ public class CliBlockTests
     {
         var page = $"# `validate` check a corpus\n\n{Markers.Begin(Name)}\n\nfrozen\n\nAfter.\n";
 
-        var thrown = Assert.Throws<XunitException>(() => CliReference.Replaced(page, Name, "new"));
+        var thrown = Assert.Throws<XunitException>(() => GeneratedPage.Replaced(page, Name, "new"));
 
         Assert.Contains(Name, thrown.Message, StringComparison.Ordinal);
     }
@@ -50,8 +51,20 @@ public class CliBlockTests
     [Fact]
     public void A_page_with_no_heading_to_put_a_block_under_says_so()
     {
-        var thrown = Assert.Throws<XunitException>(() => CliReference.Replaced("Nothing but prose.\n", Name, "new"));
+        var thrown = Assert.Throws<XunitException>(() => GeneratedPage.Replaced("Nothing but prose.\n", Name, "new"));
 
         Assert.Contains(Name, thrown.Message, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void A_page_already_carrying_a_block_is_not_given_a_second_one_under_its_heading()
+    {
+        var page = "# Title\n\nSome prose.\n\n## A section\n\n"
+                   + Markers.Begin("other") + "\n" + Markers.End("other") + "\n";
+
+        var thrown = Assert.Throws<XunitException>(() => GeneratedPage.Replaced(page, Name, "new"));
+
+        Assert.Contains("none of them is", thrown.Message, StringComparison.Ordinal);
+    }
+
 }

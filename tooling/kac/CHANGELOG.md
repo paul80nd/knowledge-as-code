@@ -19,6 +19,35 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **The documentation site lists every skill, under [Skills](https://paul80nd.github.io/knowledge-as-code/skills/).**
+  Sixteen of them across three trees, and which tree a skill lives in decides who can read it and what moving it
+  costs. The three tables are generated from the files that already decide the split: `plugin.json` for what travels
+  inside a plugin, `manifest.yaml` for what travels into a corpus, and the `.claude/skills/` directory for what stays
+  here. `SkillReferenceTests` fails a stale table, so the page cannot drift from the manifests the way a hand-written
+  one would. Nothing about `kac` changed.
+
+- **`kac new` and `kac update` send a corpus the `writing-a-report` skill.** It joins `technical-writing` and
+  `writing-a-record` in the overlay, under one rule: a writing skill travels where it governs a surface a corpus
+  holds. A corpus can adopt `reports`, so the skill that says how to fill a report's judgement cells travels with it.
+  `writing-in-the-tool` and `writing-the-docs` describe C# and a documentation site no corpus has, and `i-want-to`
+  routes to this repository's own processes where a corpus reads its own through `process-lookup`, so all three stay
+  behind. `reports/_template.md` gains the four verdicts as well, for an author who opens the template and loads no
+  skill. Before this the words `Covered`, `Covered by its pair`, `Gap` and `Out of scope` were stated in one file that
+  never left this repository, so a corpus adopting `reports` was told to answer the judgement cells and nowhere told
+  with what. `manifest.yaml` moves to 15, and `kac update` stamps `upstream.template-version`.
+
+- **`harvest-findings`, the skill that triages filed findings and drafts the record one asks for.** `raise-finding`
+  files an observation as an issue and stops, so nothing moves it afterwards. `triage` reads every finding without a
+  `kac:triaged` label, sorts each into one of five routes, shows a person the table and writes nothing until they
+  agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull request carrying the record. It reads the
+  `tracker` and `framework` blocks this release adds to `manifest.json`, and the `publishing` block that was already
+  there, for the backlog, for where the tool is reported and for where the record lives. Both invocations refuse unless
+  the session is in a checkout of the repository the corpus publishes from, because a consumer's installed plugin
+  addresses the publisher's backlog and not their own. A framework finding whose `framework.id` differs from
+  `tracker.id` is drafted as a comment and copied by hand, because an Azure DevOps user has no GitHub account. The
+  skill declares `requires` empty and `"standalone": true`, so it ships in every bundle. Take it with
+  `kac update --from <template>`.
+
 - **`kac validate` refuses a target the descriptor names and the tool cannot act on**, under a new
   `descriptor-target` check. `publishing-target` takes the five values the link rules are written for. `tracker.target`
   and `framework.target` take `github`, `azure-devops` or `none`, because a wiki and a documentation site publish

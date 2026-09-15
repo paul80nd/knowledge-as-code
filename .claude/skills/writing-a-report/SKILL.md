@@ -37,10 +37,9 @@ coverage sits on. Where the verdict is obvious from the row, leave the cell empt
 
 ## Writing the first one
 
-1. Run `kac report <name>` from inside the corpus, with `dotnet run --project ../../tooling/kac -- report <name>`.
-2. Copy [`_template.md`](../../../template/reports/_template.md) to a filename naming the question, and paste the
-   output under its frontmatter. Keep the `## Limits` section: a reader meets the numbers without the command beside
-   them.
+1. Run `kac report <name>` from inside the corpus.
+2. Copy `reports/_template.md` to a filename naming the question, and paste the output under its frontmatter. Keep the
+   `## Limits` section: a reader meets the numbers without the command beside them.
 3. Fill `id`, `owner` and `status`. `generated` and `sources` arrive filled in.
 4. Answer every `Verdict` cell, and every `Note` that earns one.
 5. Add a `verified` entry naming whoever read it. A person is `human:alex.doe`, and you ask them rather than writing a
@@ -59,6 +58,10 @@ A report is wrong the moment the corpus moves, and `report-stale` says so once `
 **Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, raise the
 `sources` version by hand and leave `verified` alone. A version the corpus moved for something else is no reason to
 claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `verified` entry.
+
+**The hand-raise is a trade.** It leaves `generated` naming a run older than the version `sources` now lists, and no
+run read that pairing. The alternative is running the report again for output nobody expects to differ, and moving a
+version stamp through every consumer of the corpus to carry it.
 
 **The merge, in order:**
 

@@ -48,7 +48,7 @@ public partial class CliReferenceTests
         {
             var path = Path.Combine(CliReference.Cli, verb.Name + ".md");
             var page = File.ReadAllText(path);
-            var wanted = CliReference.Replaced(page, "usage-" + verb.Name, CliReference.Render(verb));
+            var wanted = GeneratedPage.Replaced(page, "usage-" + verb.Name, CliReference.Render(verb));
 
             if (page == wanted) continue;
 
@@ -155,7 +155,7 @@ public partial class CliReferenceTests
     public void The_overview_indexes_every_page()
     {
         var page = File.ReadAllText(CliReference.Index);
-        var wanted = CliReference.Replaced(page, "command-table", CliReference.CommandTable());
+        var wanted = GeneratedPage.Replaced(page, "command-table", CliReference.CommandTable());
 
         if (page == wanted) return;
 

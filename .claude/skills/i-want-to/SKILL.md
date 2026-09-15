@@ -35,6 +35,7 @@ than an order.
 | add a knowledge type                                     | [prc-add-a-type](../../../examples/dog-fooding/processes/add-a-type.md)               |
 | apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)             |
 | publish a report, or bring one up to date                | [writing-a-report](../writing-a-report/SKILL.md)                                      |
+| triage the findings filed here, or draft one             | `harvest-findings`, in the plugin                                                     |
 | write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md) |
 | change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)       |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)           |

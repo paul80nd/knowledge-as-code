@@ -110,6 +110,8 @@ on, so a clone has it without anyone adding a marketplace by hand. These skills 
 * **`fix-lookup`** says whether somebody here has already solved a problem. Ask it before you debug anything, and
   before you file a finding about a problem you just met.
 * **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
+* **`harvest-findings`** triages the findings already filed, and drafts the record one of them asks for. Ask it before
+  you plan a session's work here, because a finding nobody triaged is work nobody has seen.
 * **`request-deviation`** asks the owner of a clause to accept a departure from it. Reach for it before you build
   something that breaks one of the inherited clauses in `examples/engineering`.
 

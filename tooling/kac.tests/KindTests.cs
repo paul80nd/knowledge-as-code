@@ -17,13 +17,16 @@ public partial class KindTests
 {
     // Files that read the repository and are not repository guards.
     //
-    // `Repo` and `CliReference` are helpers rather than test classes. `ManifestTests`, `NewTests` and
+    // `Repo`, `CliReference` and `SkillReference` are helpers rather than test classes. `ManifestTests`, `NewTests` and
     // `UpdateTests` stand the real template up and ask what `kac` makes of it, which is the tool's
     // behaviour over the only corpus that ships with it. A fixture could not answer for the template,
     // because the template is the thing under test. `CommandsTests` copies a golden fixture under the
     // real schema and runs a verb over it, which is what the golden suite does in another assembly.
     private static readonly string[] ReadTheRepositoryToExerciseTheTool =
-        ["Repo.cs", "CliReference.cs", "ManifestTests.cs", "NewTests.cs", "UpdateTests.cs", "CommandsTests.cs"];
+    [
+        "Repo.cs", "CliReference.cs", "SkillReference.cs", "ManifestTests.cs", "NewTests.cs", "UpdateTests.cs",
+        "CommandsTests.cs",
+    ];
 
     [GeneratedRegex(@"\bRepo\.Root\b")]
     private static partial Regex ReadsTheRepository();
