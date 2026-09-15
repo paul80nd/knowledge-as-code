@@ -36,7 +36,8 @@ Knowledge is treated as code:
   corpus.
 * **Reviewed through pull requests**, at a rigour proportionate to what the document is. See [tiers][tiers].
 * **Published as a wiki**, so it stays readable by anyone without a terminal or IDE.
-* **Readable and writable by agents.** Sessions consult it before working and contribute back what they learn.
+* **Readable and writable by agents.** A session reads the corpus before it works. What it learned goes to the work
+  tracker, and reaches the corpus once somebody verifies it.
 
 The last point changes the character of the thing. A wiki only humans write grows at the rate humans remember to write.
 A wiki that sessions can also write to grows at the rate work happens. So the review model matters more here than it
@@ -74,8 +75,9 @@ load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/
 
 ## What this is not
 
-* **Not a replacement for the work tracker.** Work items own delivery. This corpus owns durable knowledge. Where they
-  overlap, this corpus links to the work item.
+* **Not a replacement for the work tracker.** The tracker owns delivery, and it is also the way in: you file an
+  observation there, where nothing gates it. This corpus keeps the answer somebody settled, and links the work item
+  rather than copying it. [Principles][principles-routes] says why the routes are separate.
 * **Not a document dump.** Every document has a type, a tier, an owner and a reason to exist. Content that fits no type
   is a prompt to discuss the taxonomy, not to create a `misc/` folder.
 * **Not certified compliance.** See the note on alignment above.
@@ -90,4 +92,5 @@ taxonomy and carry no taxonomy frontmatter. The constitution is not one of the l
 [automation]: https://paul80nd.github.io/knowledge-as-code/framework/automation/
 [principles]: https://paul80nd.github.io/knowledge-as-code/framework/principles/
 [principles-behaviour]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#behaviour-before-subject
+[principles-routes]: https://paul80nd.github.io/knowledge-as-code/framework/principles/#in-through-the-tracker-out-through-the-export
 [tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers

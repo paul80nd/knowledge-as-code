@@ -21,7 +21,8 @@ split to make.
 
 **Cheap capture has no tier.** An observation nobody has verified goes into the tracker the corpus already uses, and
 never into the corpus itself.
-[Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument lives.
+[In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) is where
+that argument lives.
 
 **No record states its lifecycle.** Immutable and living are readable off the table above. A record
 therefore states `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.

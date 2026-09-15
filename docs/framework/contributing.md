@@ -54,8 +54,10 @@ corpus actually requires is that corpus's to set, and its own contributing page 
 | **Descriptive** | One reviewer                       | Cross-references resolve. Content matches the estate as it actually is           |
 | **Procedural**  | One reviewer who has done the task | Someone who has never done it can follow the steps. Rollback stated              |
 
-**Cheap capture happens outside the corpus.** An observation goes into the tracker, where nobody gates it.
-[Cheap capture, deliberate promotion](principles.md#cheap-capture-deliberate-promotion) is where that argument lives.
+**The table covers what the corpus keeps.** An observation nobody has checked goes to the tracker instead, where
+nothing gates it and somebody triages it later. It becomes a record once somebody settles the question and verifies the
+answer. [In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export)
+is where that argument lives.
 
 **Decided content is immutable after merge.** Corrections are limited to typos and status transitions. To change a
 decision, write a new one that supersedes it.
@@ -66,9 +68,10 @@ An agent proposes and a human accepts. An agent proposing knowledge has an ident
 can open pull requests and cannot merge them. A human accepts what it proposes, and a branch policy enforces that so
 nobody has to remember.
 
-What an agent may write follows from that. It files an observation in the tracker rather than writing a fix, because it
-cannot confirm its own observations. Where a Decided record is wrong, it proposes the record that supersedes it. And it
-asks where a record goes, because a record in the wrong folder is never found by the search that needed it.
+What an agent may write follows from that. An observation goes to the tracker, because an agent cannot verify its own
+observations. A pull request goes to the corpus, for a record a human will accept. Where a Decided record is wrong, the
+agent proposes the record that supersedes it. And it asks where a record goes, because a record in the wrong folder is
+never found by the search that needed it.
 
 ## What a pipeline will not do
 
@@ -82,6 +85,7 @@ unanswerable.
 * Anything with secrets, connection strings, tokens or customer data in it. A corpus is broadly readable.
 * Raw session logs. Distilled, reviewed records only.
 * Speculative documentation for work not yet started. That belongs in the backlog.
+* An observation nobody has verified. That belongs in the tracker.
 * A record that fits no type. Raise the gap: a missing type is a taxonomy conversation.
 
 [Taxonomy](taxonomy.md#which-types-a-corpus-holds) is the page for working out where a record goes, and for the case
