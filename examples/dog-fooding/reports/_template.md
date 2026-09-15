@@ -22,6 +22,21 @@ and how it is reviewed. What is below is only what a report adds to that.
 cells it left open. Keep the section it prints about its own limits: a reader meets the numbers without the command
 beside them.
 
+**The four verdicts.** Every row takes exactly one. `kac report` prints `covered` and `uncovered` and stops, because
+it cannot tell a rule nobody has got to from a rule about something this organisation does not have. Those are the
+cells you answer.
+
+| Verdict               | When                                                                    |
+|-----------------------|-------------------------------------------------------------------------|
+| `Covered`             | The `Covered by` column names something. Copy the verdict, not the ids. |
+| `Covered by its pair` | The `Pair candidate` is covered, and the two state one obligation.      |
+| `Gap`                 | Nothing covers it, and the thing it governs exists here.                |
+| `Out of scope`        | Nothing covers it, and the thing it governs does not exist here.        |
+
+A gap is a fact rather than a task. A `Note` says what the verdict does not, and stays empty where the row already
+says it. The `writing-a-report` skill states the rest, including the merge that keeps your judgement when the report
+is run again.
+
 **Frontmatter**
 
 * **`generated`**: `{ at: "{{2026-09-08T10:00:00Z}}", by: kac/{{0.24.0}} }`. The moment the content was produced and
