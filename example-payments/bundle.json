@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.12.0",
+    "contentVersion": "0.13.0",
     "types": [
       "fixes",
       "nfrs",
@@ -35,6 +35,11 @@
       "path": "skills/raise-finding",
       "requires": [],
       "note": "Files an observation about the corpus as an issue on the repository that published it, reading corpus/manifest.json for the address. It names no type, so it travels with every bundle."
+    },
+    {
+      "path": "skills/harvest-findings",
+      "requires": [],
+      "note": "Triages the findings filed on this corpus's tracker and drafts the record one of them asks for, reading corpus/manifest.json for the tracker, the framework and the publishing addresses. It names no type, so it travels with every bundle."
     },
     {
       "path": "skills/request-deviation",

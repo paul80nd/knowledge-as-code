@@ -18,10 +18,10 @@
     ]
   },
   "sections": {
-    "When to use this": "You are editing a file under `template/.plugin/`, or one of this repository's own skills under `.claude/skills/`. Every corpus here names `plugin.from` in its descriptor, so a skill under `template/.plugin/` is authored once and shipped in four plugins. A change to it moves more version stamps than any other file here. A skill under `.claude/skills/` moves none.",
+    "When to use this": "You are editing a file under `template/.plugin/`, or one of the skills under `.claude/skills/`. Three trees, and what\na change costs depends on which one. Every corpus here names `plugin.from` in its descriptor, so a skill under\n`template/.plugin/` is authored once and shipped in four plugins, and a change to it moves more version stamps than any\nother file here. A skill under `.claude/skills/` that `manifest.yaml` sends to a corpus moves `version:` there and the\nstamp in every descriptor. One nothing sends moves nothing.",
     "Prerequisites": "* [std-PLUGIN], which states the rules a bundled skill follows. It states no order, so this page supplies one.\n* [std-VERS], which states what a move of each version stamp means.\n* `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.\n* A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43a0cf6b5eb8ac62c6d89179798d63de0216150d/examples/dog-fooding/processes/change-a-skill.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/86ad6429c669c3b8d5ddd8c1d01114225383f002/examples/dog-fooding/processes/change-a-skill.md"
   }
 }
