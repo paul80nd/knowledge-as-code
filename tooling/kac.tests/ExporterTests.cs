@@ -477,6 +477,50 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("ref").ValueKind);
     }
 
+    // A reader that meets this export as an installed plugin has no descriptor to open, so a tracker it
+    // is not handed here is one it has to invent.
+    [Fact]
+    public void The_manifest_carries_where_a_problem_with_the_framework_is_reported()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        corpus.Descriptor.FrameworkTarget = Publishing.GitHub;
+        corpus.Descriptor.FrameworkBase = "https://github.com/example/framework";
+
+        var framework = JsonDocument.Parse(Single(Plan(corpus), Exporter.ManifestFile).Content).RootElement
+            .GetProperty("framework");
+
+        Assert.Equal("github", framework.GetProperty("target").GetString());
+        Assert.Equal("https://github.com/example/framework", framework.GetProperty("base").GetString());
+    }
+
+    // Stated rather than left out, so a reader tests the value and never the key.
+    [Fact]
+    public void A_corpus_naming_no_framework_tracker_states_the_absence()
+    {
+        var framework = JsonDocument
+            .Parse(Single(Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))),
+                Exporter.ManifestFile).Content).RootElement
+            .GetProperty("framework");
+
+        Assert.Equal("none", framework.GetProperty("target").GetString());
+        Assert.Equal(JsonValueKind.Null, framework.GetProperty("base").ValueKind);
+    }
+
+    // An export written before the key existed is one a reader still has to settle.
+    [Fact]
+    public void A_manifest_short_of_a_framework_block_reads_as_naming_no_tracker()
+    {
+        var manifest = Required.Manifest(
+            $$"""
+              {
+                "formatVersion": {{Exporter.FormatVersion}}
+              }
+              """);
+
+        Assert.Equal(Publishing.None, manifest.Framework.Target);
+        Assert.Null(manifest.Framework.Base);
+    }
+
     [Fact]
     public void A_section_carried_at_summary_keeps_its_opening_block_and_drops_the_rest()
     {

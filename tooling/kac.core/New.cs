@@ -345,6 +345,15 @@ public static class New
         sb.Append($"  template-version: {upstream.TemplateVersion}\n");
         sb.Append($"  taken-on: \"{upstream.TakenOn}\"\n\n");
 
+        sb.Append("# Where to report a problem with the framework itself: `kac`, the schema, the"
+                  + " template or a skill.\n");
+        sb.Append("# This is a tracker rather than a folder, so it is asked separately from"
+                  + " `upstream.url` above.\n");
+        var tracker = Tracker(upstream);
+        sb.Append("framework:\n");
+        sb.Append($"  target: {Target(tracker)}\n");
+        sb.Append($"  base: {Scalar(tracker)}\n\n");
+
         sb.Append("# How far an update goes. `cautious` writes a seed only where this corpus has none.\n");
         sb.Append($"update-policy: {CorpusDescriptor.Cautious}\n\n");
 
@@ -412,6 +421,25 @@ public static class New
     // reads as absent, so the key is there to fill in rather than there holding an empty string.
     private static string Optional(string key, string? value) =>
         value is { Length: > 0 } ? $"  {key}: {Scalar(value)}\n" : $"  {key}:\n";
+
+    // The tracker a new corpus starts with. A `--from` naming a repository is the framework a finding
+    // belongs on, fork or not. A `--from` naming a folder is a path on one disk, so the framework's own
+    // repository stands in and the corpus edits the line where that is wrong.
+    //
+    // A null commit is what tells the two apart, because `TemplateSource.Read` resolves one for a clone
+    // and none for a folder. Reading the URL here instead would call an ssh remote a folder and point
+    // that corpus's findings at a repository its owners do not hold.
+    private static string Tracker(Upstream upstream) =>
+        upstream.Commit is { Length: > 0 } ? upstream.Url : Asking.DefaultFrom;
+
+    // Which client files against that tracker, read off the host. `gh` and `az boards` are the two a
+    // skill can reach, so any other host is written as `none` for the corpus to answer. A guess here
+    // would send a finding through a client that cannot see the repository.
+    private static string Target(string tracker) =>
+        tracker.Contains("github.com", StringComparison.OrdinalIgnoreCase) ? Publishing.GitHub
+        : tracker.Contains("dev.azure.com", StringComparison.OrdinalIgnoreCase)
+        || tracker.Contains("visualstudio.com", StringComparison.OrdinalIgnoreCase) ? Publishing.AzureDevOps
+        : Publishing.None;
 
     // The words a YAML reader takes for a boolean or for nothing at all, rather than for a name. Held
     // wider than the 1.2 core schema, which reads only the first pair: a folder called `no` or `off` is a

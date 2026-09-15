@@ -3,7 +3,7 @@
 # https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means.
 
 # The format of this file, which the tool owns rather than the corpus.
-descriptor-version: 2
+descriptor-version: 3
 
 # What this corpus calls itself, and the version of what it knows. Move `content-version` by hand.
 corpus: acme-corpus
@@ -32,6 +32,12 @@ upstream:
   commit:
   template-version: 13
   taken-on: <today>
+
+# Where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
+# This is a tracker rather than a folder, so it is asked separately from `upstream.url` above.
+framework:
+  target: github
+  base: https://github.com/paul80nd/knowledge-as-code
 
 # How far an update goes. `cautious` writes a seed only where this corpus has none.
 update-policy: cautious

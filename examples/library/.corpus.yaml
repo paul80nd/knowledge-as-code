@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 2
+descriptor-version: 3
 
 corpus: example-libraries
 
@@ -45,6 +45,12 @@ upstream:
   commit:
   template-version: 13
   taken-on: "2026-08-24"
+
+# Where to report a problem with the framework itself. This repository authors it, so a finding about
+# `kac`, the schema or a skill goes to the same tracker as one about a record here.
+framework:
+  target: github
+  base: https://github.com/paul80nd/knowledge-as-code
 
 # A seed is this corpus's own words, so an update leaves the ones already written.
 update-policy: cautious

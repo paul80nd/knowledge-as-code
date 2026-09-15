@@ -19,6 +19,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`.corpus.yaml` states where to report a problem with the framework, under a new `framework:` key.** It takes a
+  `target` and a `base`, the same pair `publishing-target` and `publishing.base` take. `kac export` writes both into
+  `manifest.json`, so the address travels to whoever installs the corpus as a plugin. Before this, the only address an
+  export carried was the corpus's own `publishing.base`. `upstream.url` was never one: it says where the template was
+  copied from, and that is often a folder. `kac new` writes the block, taking the base from `--from` where that names a
+  repository and from the framework's own repository where it names a folder. `descriptor-version` moves to 3, and
+  `kac update` stamps it. No skill reads the key yet.
+
 - **`fix-lookup`, the skill that says whether a problem has already been solved here.** It searches
   `symptom-keywords`, which a fix over-fills with error text and the words somebody arrives with, then reports the
   Symptom, Cause and Resolution the corpus settled. It states the record's derived `trust` on every answer, so a

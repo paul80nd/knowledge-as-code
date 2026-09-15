@@ -149,6 +149,7 @@ public static class Exporter
                 run.GeneratedAt,
                 About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
+                Framework(corpus.Descriptor),
                 Sources(consumed),
                 types))));
 
@@ -931,6 +932,12 @@ public static class Exporter
             publishing?.PathPrefix, publishing?.Ref);
     }
 
+    // Where to report a problem with the framework, written through as the descriptor states it. No
+    // issues address is built here, for the reason no record link is built onto a part line: whoever
+    // files reads the target and the base and reaches its own platform. See docs/design/export.md.
+    private static ExportFramework Framework(CorpusDescriptor descriptor) =>
+        new(descriptor.FrameworkTarget, descriptor.FrameworkBase);
+
     private static ExportLinks? Links(string? link) =>
         link is null ? null : new ExportLinks(link);
 
@@ -975,6 +982,7 @@ public static class Exporter
     {
         About = Read(m.About) ?? new ExportAbout(null, null, null, null),
         Publishing = Sound(m.Publishing),
+        Framework = Sound(m.Framework),
         Sources =
         [
             .. (Read(m.Sources) ?? []).Where(s => Read(s)?.Shortcode is { Length: > 0 })
@@ -985,6 +993,14 @@ public static class Exporter
 
     private static ExportPublishing Sound(ExportPublishing? p) =>
         Read(p) is not { } stated ? new ExportPublishing(Publishing.None, null, null, null, null)
+        : Read(stated.Target) is null ? stated with { Target = Publishing.None }
+        : stated;
+
+    // An export written before this key existed carries no framework block, and one written by a corpus
+    // that named no tracker carries a target of `none`. Both mean the same thing to a reader, so both
+    // arrive as the same record rather than as a null it has to test for.
+    private static ExportFramework Sound(ExportFramework? f) =>
+        Read(f) is not { } stated ? new ExportFramework(Publishing.None, null)
         : Read(stated.Target) is null ? stated with { Target = Publishing.None }
         : stated;
 

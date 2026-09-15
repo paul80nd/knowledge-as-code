@@ -20,6 +20,10 @@
     "pathPrefix": null,
     "ref": null
   },
+  "framework": {
+    "target": "github",
+    "base": "https://github.com/example/framework"
+  },
   "sources": [
     {
       "shortcode": "eng",

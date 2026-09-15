@@ -206,6 +206,39 @@ follow and no commit to resolve.
 Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
 best placed to fix it. A change is settled once the repository serving the template accepts it.
 
+## `framework:`
+
+```yaml
+framework:
+  target: github
+  base: https://github.com/paul80nd/knowledge-as-code
+```
+
+`framework:` says where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
+`export` writes both keys into the manifest, so the address reaches a session that meets your corpus as an installed
+plugin. Without the block, the only address that session has is your own `publishing.base`.
+
+| Key      | What it states                                   |
+|----------|--------------------------------------------------|
+| `target` | the client that opens an issue on the tracker    |
+| `base`   | the repository or project the tracker belongs to |
+
+`target` is one of three values. Write `github` for a tracker on github.com, and `azure-devops` for one on Azure
+Boards. Write `none`, or leave the block out, where you know of no tracker. The names are the ones
+[`publishing-target`](#values-of-publishing-target) uses, and the two values that address no tracker are not among them.
+
+`kac` derives no address from either key. It writes the pair into the manifest and stops, the way it writes
+`publishing.base` and leaves the client to reach it.
+
+### `framework:` and `upstream:`
+
+These answer two questions. `upstream.url` says where `kac` copied the template from, and it is often a folder on the
+same disk. `framework.base` says where to report a problem with what arrived, and it is always a tracker.
+
+`new` writes both. It takes `framework.base` from `--from` where that names a repository, and from the framework's own
+repository where it names a folder. It reads `target` off the host, and writes `none` for a host neither `gh` nor
+`az boards` serves.
+
 ## `update-policy:`
 
 ```yaml
