@@ -2,9 +2,8 @@
 name: harvest-findings
 description: Triage the findings filed against this corpus, and draft the record one of them asks for. Use when
   someone says "triage the findings", "harvest the findings", "what findings are open", "turn that finding into a
-  record", or gives you an issue number and asks for the record behind it. Both invocations write to the corpus's own
-  tracker, so both need a checkout of the repository that publishes it, and neither runs unasked. `raise-finding` files
-  an observation and stops there. This is what moves it.
+  record", or gives you an issue number and asks for the record behind it. Both invocations write to this corpus's
+  tracker, and neither runs unasked. `raise-finding` files an observation and stops there. This is what moves it.
 ---
 
 # Triaging findings, and drafting what they ask for
@@ -19,15 +18,13 @@ This skill has two invocations. Each is run by a person who agrees what it is ab
 * **`draft <issue>`** takes one triaged finding and writes the record it asks for, as a pull request.
 
 ```text
-${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, and where work about each one is filed
+.corpus.yaml   # which corpus this is, and where work about it is filed
 ```
 
-Use that path exactly as it appears. It is already absolute. An installed plugin sits in a cache of its own rather than
-in the repository you are working in.
+Walk up from where you are to find it. This skill travels into a corpus, so the file is above you.
 
-**Both invocations need this corpus checked out, and the client that already signs in to the tracker.** `draft` needs
-that checkout to be the repository the records live in as well, which the section on it covers. Where a client is
-missing, print what you produced and say which invocation you could not finish.
+**Both invocations need the client that already signs in to the tracker.** Where it is missing, print what you produced
+and say which invocation you could not finish.
 
 ## Never write unasked
 
@@ -42,21 +39,23 @@ first.
 
 ## Only the corpus's own maintainer runs this
 
-Every other skill here answers from the export and writes nothing. This one writes to a tracker, so it has a boundary
-the others do not need.
+A lookup skill answers from a frozen export and writes nothing. This one writes to a tracker, so it has a boundary the
+others do not need. The boundary is the working tree: a session holding a corpus's source is its maintainer, and a
+session holding the export alone is not.
 
-**Check that you are in a checkout of this corpus, before either invocation.** Walk up for a `.corpus.yaml` and read
-its `corpus:`. It is a checkout of this corpus where that name equals `corpus` in `manifest.json`. An installed plugin
-sits in a consumer's cache, and `tracker.base` there addresses the backlog of whoever published the corpus, so
-labelling and commenting on it from a consumer's session is writing on somebody else's repository.
+**Find `.corpus.yaml` before either invocation.** Walk up from where you are. Its `corpus:` names the corpus you are
+about to triage, and its tracker address names the backlog you are about to write on. Say both in your reply before
+you write anything.
+
+**Where one repository has several corpora, the walk-up decides which one you get.** Start from a file inside the
+corpus you mean.
 
 **Test the corpus, never the publishing address.** A corpus publishes where it is read and files where work is
 tracked, and the two are different places. One published as a wiki or a documentation site has no repository in
-`publishing.base` a checkout could ever match, and its maintainer still has a tracker and still has the source.
+`publishing.base`, and its maintainer still has a tracker and still has the source.
 
-**Refuse where you find no `.corpus.yaml`, or where the one you find names another corpus.** Say which corpus this
-plugin is for, and that triage belongs to whoever maintains it. A consumer with something to report uses
-`raise-finding`, which files one issue and asks first.
+**Refuse where you find no `.corpus.yaml`.** You are outside a corpus, and there is nothing to triage. Somebody
+holding an export alone uses `raise-finding`, which files one issue and asks first.
 
 **Refuse where you were not asked.** Neither invocation starts on its own.
 
@@ -73,41 +72,35 @@ agent wrote. So a verdict says where the observation belongs, never whether it i
 
 ## Read the addresses
 
-`manifest.json` describes this corpus at the top level and every corpus it consumes under `sources`. Three blocks say
-where work is filed, and they are different addresses.
+`.corpus.yaml` describes this corpus. Three blocks say where work is filed, and they are different addresses.
 
-| Field                   | Type            | What it contains                                                  |
-|-------------------------|-----------------|-------------------------------------------------------------------|
-| `corpus`                | string          | the name of this corpus, as `example-payments`                    |
-| `tracker`               | object          | where work about this corpus's own records is filed               |
-| `tracker.target`        | string          | one of `github`, `azure-devops`, `none`                           |
-| `tracker.base`          | string or null  | the backlog to file against                                       |
-| `tracker.id`            | string or null  | that pair normalised, which is how you tell two backlogs apart    |
-| `framework`             | object          | where a problem with `kac`, the schema or a skill is reported     |
-| `framework.target`      | string          | the same three values                                             |
-| `framework.base`        | string or null  | the framework's backlog                                           |
-| `framework.id`          | string or null  | that pair normalised                                              |
-| `publishing`            | object          | where this corpus is read, which is where a record is written     |
-| `publishing.target`     | string          | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
-| `publishing.base`       | string or null  | the repository holding the records                                |
-| `publishing.pathPrefix` | string or null  | the folder inside it the corpus sits in                           |
-| `sources`               | list of objects | one entry per corpus this one consumes                            |
-| `sources[].corpus`      | string          | that corpus's name                                                |
-| `sources[].shortcode`   | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV` |
-| `sources[].tracker`     | object          | that corpus's own backlog, with the same keys as the block above  |
-| `types`                 | list of objects | the types this corpus adopted                                     |
-| `types[].type`          | string          | the name of one adopted type, as `fixes`                          |
+| Key                    | What it contains                                                       |
+|------------------------|------------------------------------------------------------------------|
+| `corpus`               | the name of this corpus, as `example-payments`                         |
+| `tracker.target`       | one of `github`, `azure-devops`, `none`                                |
+| `tracker.base`         | the backlog to file against                                            |
+| `framework.target`     | the same three values                                                  |
+| `framework.base`       | where a problem with `kac`, the schema or a skill is reported          |
+| `publishing-target`    | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
+| `publishing.base`      | the repository holding the records                                     |
+| `consumes[].corpus`    | the name of one corpus this one consumes                               |
+| `consumes[].shortcode` | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`      |
+| `types`                | the types this corpus adopted, one name per line                       |
 
-**`base` may be present and `null`.** Test the value rather than the key. `base` and `id` are null together, and a
-`target` of `none` means that corpus files nowhere this export can address.
+**A corpus stating no `tracker:` block derives one from `publishing`.** Where `publishing-target` is `github` or
+`azure-devops`, the tracker is `publishing.base`. Where it is `azure-devops-wiki`, `mkdocs` or `none`, that corpus
+states no tracker at all.
 
-**Compare `id`, never a URL.** `github:github.com/Example/Repo` and `https://github.com/example/repo.git` are one
-backlog written two ways, and `id` is the pair already normalised.
+**A key may be present and empty.** Test the value, not the key.
 
-**A `sources` entry has no `framework` block.** The framework this corpus took is stated once, at the top level.
+**Normalise an address before you compare it.** `https://github.com/Example/Repo.git` and
+`https://github.com/example/repo` are one backlog written two ways. Drop the scheme, drop a `.git` suffix, drop a
+trailing slash, and lowercase what is left.
 
-**Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be.
-That is itself worth a finding.
+**A `consumes:` entry states no framework.** The framework this corpus took is stated once, at the top level.
+
+**Where `.corpus.yaml` is missing or will not parse, stop and say so.** You are either outside a corpus or in a broken
+one, and neither is something to triage.
 
 ## Two label axes
 
@@ -117,13 +110,13 @@ has it, so every finding ever filed stays one query away.
 `kac:triaged` plus one route label says what triage decided. The queue is `kac:finding` without `kac:triaged`, so
 nothing is triaged twice.
 
-| Label                 | What it means                                                               |
-|-----------------------|-----------------------------------------------------------------------------|
-| `kac:route-framework` | the finding reports `kac`, the schema, a skill or the plugin. No record.    |
-| `kac:route-record`    | a record in this corpus is wrong, or one is missing                         |
-| `kac:route-misfiled`  | this belongs to a corpus under `sources`, and the ticket is on this backlog |
-| `kac:route-none`      | a duplicate, or a record here already covers it                             |
-| `kac:route-unclear`   | triaged, and a person has to decide                                         |
+| Label                 | What it means                                                                 |
+|-----------------------|-------------------------------------------------------------------------------|
+| `kac:route-framework` | the finding reports `kac`, the schema, a skill or the plugin. No record.      |
+| `kac:route-record`    | a record in this corpus is wrong, or one is missing                           |
+| `kac:route-misfiled`  | this belongs to a corpus under `consumes:`, and the ticket is on this backlog |
+| `kac:route-none`      | a duplicate, or a record here already covers it                               |
+| `kac:route-unclear`   | triaged, and a person has to decide                                           |
 
 **Apply exactly one route label.** A finding matching two routes is `kac:route-unclear`, and the comment says which two.
 
@@ -240,16 +233,21 @@ issue it duplicates.
 
 ### 4. Ask whether a record already covers it
 
-**Load the `fix-lookup` skill and give it the symptom**, for a finding that reports something going wrong. It searches
-the words a reader arrives with. Where it returns a fix whose resolution answers the finding, the route is
-`kac:route-none`.
+**Search this corpus's own records.** They are in the working tree, one folder per type. `types` in `.corpus.yaml`
+lists the types it adopted. Search the words a reader would arrive with, not an id.
 
-**Where this plugin has no `fix-lookup`, this corpus declined the `fixes` type.** `types` in `manifest.json` says which
-types it took. There is nothing to search, so say so and classify from the body.
+| The finding is about        | Search       |
+|-----------------------------|--------------|
+| something going wrong       | `fixes/`     |
+| a rule you have to build to | `standards/` |
+| what the estate allows      | `policies/`  |
+| an order of work            | `processes/` |
+| what proves a rule          | `controls/`  |
 
-**Use whichever other lookup skill this plugin has**, chosen by what the finding is about. A finding about a rule is a
-question for `standards-lookup`, one about what is allowed for `policy-lookup`, one about an order of work for
-`process-lookup`. A bundle trimmed the ones whose types this corpus declined, so use what is here.
+**A type this corpus declined has no folder.** Say so and classify from the body.
+
+**Where the corpus consumes another one, search `.imports/<shortcode>/` as well.** A rule it inherits still answers a
+finding. That folder exists only after `kac restore`, so say so where it is missing.
 
 **A record that is wrong is not a record that covers it.** `kac:route-none` is for a finding the corpus already answers.
 A finding saying the answer is wrong is `kac:route-record`.
@@ -259,7 +257,7 @@ A finding saying the answer is wrong is `kac:route-record`.
 Work down this list and take the first that fits.
 
 1. **It duplicates another finding, or a record here already answers it.** `kac:route-none`.
-2. **Its `corpus` names an entry under `sources`, or its subject is a record with that entry's shortcode.**
+2. **Its `corpus` names an entry under `consumes:`, or its subject is a record with that entry's shortcode.**
    `kac:route-misfiled`.
 3. **It reports `kac`, the schema, the template, the plugin or a skill.** `kac:route-framework`. `looks-like:
    framework` says so where the block has it.
@@ -363,8 +361,8 @@ Seen with `kac` 0.28.0, against template version 14. Reproduced twice.
 A consumer restores the export and follows a citation into a corpus it does not have.
 `````
 
-**Name the framework version, and nothing that identifies the filer.** `mechanismVersion` in `manifest.json` is the
-template version, and the `kac` version is what the session ran.
+**Name the framework version, and nothing that identifies the filer.** `upstream.template-version` in `.corpus.yaml`
+is the template version, and the `kac` version is what the session ran.
 
 ## `draft <issue>`
 
@@ -380,18 +378,18 @@ One issue, one pull request.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
 
-### 2. Check you are in the right checkout
+### 2. Check where the pull request goes
 
-`publishing.base` is the repository the records live in, and `publishing.pathPrefix` is the folder inside it. The
-tracker and the repository are two addresses, and on Azure DevOps they are two different things.
+The records are in front of you, so what is left is the repository the branch goes to. The tracker and the repository
+are two addresses, and on Azure DevOps they are two different things.
 
-**Read `publishing.target` first.** Only `github` and `azure-devops` address a repository a pull request can open
-against. `azure-devops-wiki` addresses a wiki, `mkdocs` a documentation site, and `none` nothing at all. Refuse the
-last three, print the record, and say where the corpus is published from instead.
+**Read `publishing-target` first.** Where it is `github` or `azure-devops`, `publishing.base` names that repository.
 
-**Refuse where the checkout is a different repository.** Say which repository the record belongs in.
+**Where it is `azure-devops-wiki`, `mkdocs` or `none`, `.corpus.yaml` states no repository.** A wiki, a documentation
+site and a corpus published nowhere are all read from a checkout that still has a remote. Use the remote this checkout
+has, and name it in your reply.
 
-**Refuse where you have no checkout.** Print what the record should say and stop.
+**Refuse where the checkout has no remote.** Print what the record should say and stop.
 
 ### 3. Write the record, or the edit
 
@@ -404,8 +402,8 @@ the record's `## Changelog` where it has one, newest first.
 **A new record: start from the type's `_template.md`.** It sits in the folder the record goes in, and states every field
 that type needs and what each one takes. Follow it rather than copying a neighbouring record.
 
-**Load the `writing-a-record` skill where this checkout has it**, and `technical-writing` before it. A record written in
-some other voice reads as an import.
+**Load `technical-writing`, then `writing-a-record`.** Both travel into a corpus, so both are beside this one under
+`.claude/skills/`. A record written in some other voice reads as an import.
 
 **Write `status: draft` where the type takes it.** A record an agent wrote has been accepted by nobody, and a type that
 verifies its records refuses one an agent claims to have verified. The type's `_template.md` says which fields a draft

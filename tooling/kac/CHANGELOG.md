@@ -36,17 +36,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   never left this repository, so a corpus adopting `reports` was told to answer the judgement cells and nowhere told
   with what. `manifest.yaml` moves to 15, and `kac update` stamps `upstream.template-version`.
 
-- **`harvest-findings`, the skill that triages filed findings and drafts the record one asks for.** `raise-finding`
-  files an observation as an issue and stops, so nothing moves it afterwards. `triage` reads every finding without a
-  `kac:triaged` label, sorts each into one of five routes, shows a person the table and writes nothing until they
-  agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull request carrying the record. It reads the
-  `tracker` and `framework` blocks this release adds to `manifest.json`, and the `publishing` block that was already
-  there, for the backlog, for where the tool is reported and for where the record lives. Both invocations refuse unless
-  the session is in a checkout of the repository the corpus publishes from, because a consumer's installed plugin
-  addresses the publisher's backlog and not their own. A framework finding whose `framework.id` differs from
-  `tracker.id` is drafted as a comment and copied by hand, because an Azure DevOps user has no GitHub account. The
-  skill declares `requires` empty and `"standalone": true`, so it ships in every bundle. Take it with
-  `kac update --from <template>`.
+- **`kac new` and `kac update` send a corpus the `harvest-findings` skill, which triages filed findings and drafts the
+  record one asks for.** `raise-finding` files an observation as an issue and stops, so nothing moves it afterwards.
+  `triage` reads every finding without a `kac:triaged` label, sorts each into one of five routes, shows a person the
+  table and writes nothing until they agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull
+  request carrying the record. Both invocations write: to the tracker, and to the records themselves. So the reader is
+  the corpus's own maintainer, and the skill lands in the corpus's working tree under `.claude/skills/`, beside the
+  writing skills. No plugin ships it, because a consumer holds a frozen export and not the source. It reads the
+  `tracker`, `framework` and `publishing` blocks of `.corpus.yaml` for the backlog, for where the tool is reported and
+  for where the record lives. A framework finding filed on a tracker other than the framework's own is drafted as a
+  comment and copied by hand, because an Azure DevOps user has no GitHub account. `manifest.yaml` moves to 16, and
+  `kac update` stamps `upstream.template-version`.
 
 - **`kac validate` refuses a target the descriptor names and the tool cannot act on**, under a new
   `descriptor-target` check. `publishing-target` takes the five values the link rules are written for. `tracker.target`

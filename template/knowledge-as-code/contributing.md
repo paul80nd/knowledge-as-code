@@ -13,12 +13,17 @@ somewhere that keeps its answer current.
 | how to write the words                    | the writing skills, which the paragraph below lists   |
 | what CI will hold it to                   | `kac checks`, run in this corpus                      |
 | how a contribution is reviewed and merged | [Contributing][contributing]                          |
+| what to do with a finding somebody filed  | the `harvest-findings` skill, described below         |
 
 **The rules for the words are skills rather than pages.** `technical-writing` states the floor, and every surface
 answers to it. `writing-a-record` states what this corpus adds and what a record's tier asks on top: the link forms CI
 enforces, what a `_template.md` may say, and the constraints each tier brings. Where this corpus adopted `reports`,
 `writing-a-report` sits on both and states the four verdicts a person writes into the cells `kac report` leaves
 blank.
+
+**`harvest-findings` is about the backlog rather than the words.** An agent holding this corpus as a plugin (a
+read-only copy it installs) files what it noticed as an issue. That skill reads those issues, sorts each one into a
+route, and drafts the record a routed one asks for as a pull request. Run it here, where the records are.
 
 **The schema outranks all of it.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report, are executable
 where a page is not.

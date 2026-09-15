@@ -30,7 +30,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 15
+  template-version: 16
   taken-on: <today>
 
 # Where to report a problem with the framework itself: `kac`, the schema, the template or a skill.

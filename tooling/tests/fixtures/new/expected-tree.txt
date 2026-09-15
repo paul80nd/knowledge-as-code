@@ -1,3 +1,4 @@
+.claude/skills/harvest-findings/SKILL.md
 .claude/skills/technical-writing/SKILL.md
 .claude/skills/writing-a-record/SKILL.md
 .claude/skills/writing-a-report/SKILL.md
@@ -15,7 +16,6 @@
 .plugin/skills/corpus-retrieval/SKILL.md
 .plugin/skills/fix-lookup/SKILL.md
 .plugin/skills/glossary-lookup/SKILL.md
-.plugin/skills/harvest-findings/SKILL.md
 .plugin/skills/policy-lookup/SKILL.md
 .plugin/skills/process-lookup/SKILL.md
 .plugin/skills/raise-finding/SKILL.md

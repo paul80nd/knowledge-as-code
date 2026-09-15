@@ -14,7 +14,7 @@
 # created for one system and receives that system's rule alone.
 #
 # A file whose destination is its source is shared with the corpora in this repository rather than
-# copied into them: `.schema/` and the three skills below are read from this root by every corpus under
+# copied into them: `.schema/` and the four skills below are read from this root by every corpus under
 # `examples/` and by `template/` alike. A corpus created elsewhere receives its own copy of each.
 #
 # The rules are read in order and the first match wins, so a rule carving one file out of a folder is
@@ -22,7 +22,7 @@
 
 # The version of the template's shape. Increment when a corpus has to respond to the change: a file
 # added or removed, a file renamed, or a file moving between layers.
-version: 15
+version: 16
 
 # The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
 # package, so the two version independently. An older tool meeting a newer template stops on this and
@@ -113,14 +113,18 @@ rules:
       - ".claude/skills/technical-writing/**"
       - ".claude/skills/writing-a-record/**"
       - ".claude/skills/writing-a-report/**"
+      - ".claude/skills/harvest-findings/**"
     layer: overlay
     note: >
-      A writing skill travels where it governs a surface a corpus holds: the floor every surface answers
-      to, the voice for a record, and the verdicts a report adds on top of both. `writing-in-the-tool`
-      and `writing-the-docs` describe C# and a documentation site that no corpus has, and `i-want-to`
-      routes to this repository's own processes where a corpus reads its own through `process-lookup`.
-      The catch-all withholds those three. A skill is addressed the same way from any repository root,
-      so these land where they were read and need no `to:`.
+      A skill travels where it governs a surface a corpus holds. Three of these are the writing rules:
+      the floor every surface answers to, the voice for a record, and the verdicts a report adds on top
+      of both. `harvest-findings` is the fourth, and it governs the corpus's own backlog: it triages the
+      findings filed against the corpus and drafts the record one of them asks for, which is work only
+      the maintainer holding the source can do. `writing-in-the-tool` and `writing-the-docs` describe C#
+      and a documentation site that no corpus has, and `i-want-to` routes to this repository's own
+      processes where a corpus reads its own through `process-lookup`. The catch-all withholds those
+      three. A skill is addressed the same way from any repository root, so these land where they were
+      read and need no `to:`.
 
   # ── the plugin ─────────────────────────────────────────────────────────────
 

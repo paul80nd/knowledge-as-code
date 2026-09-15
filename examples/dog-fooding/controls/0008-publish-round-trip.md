@@ -39,7 +39,7 @@ skill in it the questions that skill describes. `import-round-trip` publishes fr
 
 The `tool` job adds the empty case. It bundles a corpus that adopted no type, then runs
 `claude plugin validate --strict` over the plugin and its marketplace. It asserts that nothing reading a type shipped,
-and that both standalone skills survived. No job installs that plugin.
+and that `raise-finding`, the one standalone skill, survived. No job installs that plugin.
 
 ## Coverage and gaps
 

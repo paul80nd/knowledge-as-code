@@ -25,8 +25,9 @@ Every corpus here publishes a Claude Code plugin: a frozen copy of its export, a
 skill answers from the export beside it, using no more than a session's ability to read a file, and states plainly what
 did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue on the
 repository the export came from: a finding where the corpus is wrong, and a request where the work is about to depart
-from a clause that is right. Back at that repository, a skill triages those issues, marks each one with the route it
-belongs on, and drafts the record a routed finding asks for as a pull request.
+from a clause that is right. Back at that repository, a skill in the corpus's own working tree triages those issues,
+marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request. That
+skill ships in no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -159,11 +160,11 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 
 ### Triage routes a finding with a label, and says why in a comment
 
-- A skill triaging findings **MUST** run only where the session is in a checkout of the corpus itself, found by
-  walking up for a `.corpus.yaml` whose `corpus:` is the one the export names.
+- A skill triaging findings **MUST** travel into a corpus's working tree, and **MUST NOT** be a component of a
+  plugin.
+- A skill triaging findings **MUST** read the corpus it is about from the `.corpus.yaml` it walks up to.
 - A skill **MUST NOT** test that checkout against the `publishing` block, because a corpus published as a wiki or a
   site has no repository there and its maintainer still has both a tracker and the source.
-- A skill **MUST NOT** triage, mark or comment on a tracker reached from an installed plugin alone.
 - A skill **MUST** select its queue as `kac:finding` without `kac:triaged`.
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
 - A skill **MUST** say where a query returned as many issues as its limit allows.
@@ -333,8 +334,9 @@ broke it.
       yet.
 - [ ] No deviation request is dropped, or held back, because the target has no `kac:deviation` label.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
-- [ ] Triage ran only in a checkout of the corpus the export names, tested against `.corpus.yaml` rather than against
+- [ ] Triage named the corpus from the `.corpus.yaml` it walked up to, tested against `corpus:` rather than against
       the `publishing` block.
+- [ ] No plugin declares a component that triages findings.
 - [ ] The queue read both the marked findings and the open issues whose body carries the block without the mark.
 - [ ] Every triaged issue keeps `kac:finding`, and gains `kac:triaged` and exactly one `kac:route-*` mark.
 - [ ] Every verdict was shown to a person and agreed before any mark or comment was written.
@@ -478,6 +480,8 @@ standard.
 
 ## Changelog
 
+- 2026-09-15: triage travels into a corpus's working tree and ships in no plugin. It writes to the tracker and to the
+  records, so the reader is the maintainer holding the source.
 - 2026-09-15: added the triage marks a filed finding is routed by, the checkout triage runs from, and the conditions a
   framework finding travels under. The label is what triage selects on, and the block in the body is what finds a
   finding the label never reached.
