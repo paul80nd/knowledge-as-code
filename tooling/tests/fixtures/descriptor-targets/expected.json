@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "validated": 0,
+    "templates": 1,
+    "skipped": 0,
+    "errors": 2,
+    "warnings": 0,
+    "infos": 0
+  },
+  "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "descriptor-target",
+      "message": "publishing-target 'gihtub' is not a target kac can publish to. write one of: azure-devops, azure-devops-wiki, github, mkdocs, none."
+    },
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "descriptor-target",
+      "message": "tracker.target 'azure-devops-wiki' is not a target kac can file on. write one of: azure-devops, github, none."
+    }
+  ]
+}

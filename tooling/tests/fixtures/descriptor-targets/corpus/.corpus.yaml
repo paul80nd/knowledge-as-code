@@ -1,0 +1,15 @@
+descriptor-version: 4
+corpus: test-descriptor-targets
+
+# A target nobody spelled right. `kac` publishes to five, and this is none of them.
+publishing-target: gihtub
+
+# A target the tool can publish to and cannot file on. A wiki holds pages, and a ticket goes to the
+# project holding it.
+tracker:
+  target: azure-devops-wiki
+  base: https://dev.azure.com/acme/Standards/_wiki/wikis/KaC
+
+upstream:
+  url:
+skip: []

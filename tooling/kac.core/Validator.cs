@@ -97,6 +97,7 @@ public static class Validator
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
+        CheckTargets(corpus.Descriptor, findings);
         CheckCorpusEnums(schema, corpus.Docs, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
@@ -470,6 +471,35 @@ public static class Validator
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("shortcode"),
                     $"shortcode '{shortcode}' is the id prefix of '{key}'. A citation opening '{t.IdPrefix}:' "
                     + "reads as that type rather than as this corpus. Pick a shorthand no type has taken."));
+    }
+
+    // Every target the descriptor names, held to the values the tool acts on. `.schema/_checks.yaml`
+    // argues both vocabularies under `descriptor-target`.
+    //
+    // Two vocabularies, because the keys answer two questions. `publishing-target` says how a record is
+    // read, so a wiki and a documentation site belong to it. A tracker target names the client that opens
+    // a ticket, and neither of those is one.
+    //
+    // `new` holds its own flags to the same lists, and every one of these keys is written by hand after
+    // that. A value nobody spelled right otherwise reads as a corpus that publishes nowhere and files
+    // nowhere, which is what a corpus with nothing to say reads as.
+    private static void CheckTargets(CorpusDescriptor descriptor, List<Finding> f)
+    {
+        Held("publishing-target", descriptor.PublishingTarget, Publishing.Targets, "publish to");
+        Held("tracker.target", descriptor.TrackerTarget, Tracker.Stated, "file on");
+        Held("framework.target", descriptor.FrameworkTarget, Tracker.Stated, "file on");
+
+        return;
+
+        void Held(string key, string? stated, IReadOnlyList<string> allowed, string verb)
+        {
+            if (string.IsNullOrWhiteSpace(stated)) return;
+            if (allowed.Contains(stated, StringComparer.Ordinal)) return;
+
+            f.Add(new Finding(".corpus.yaml", null, Sev.Error, new CheckId("descriptor-target"),
+                $"{key} '{stated}' is not a target kac can {verb}. write one of: "
+                + $"{string.Join(", ", allowed)}."));
+        }
     }
 
     // The documents describing the framework itself, wherever a corpus keeps them, as globs the listing

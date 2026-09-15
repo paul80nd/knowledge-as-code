@@ -149,7 +149,8 @@ public static class Exporter
                 run.GeneratedAt,
                 About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
-                Framework(corpus.Descriptor),
+                Tracker.Own(corpus.Descriptor),
+                Tracker.Framework(corpus.Descriptor),
                 Sources(consumed),
                 types))));
 
@@ -171,7 +172,8 @@ public static class Exporter
         foreach (var from in consumed)
         {
             found.TryAdd(from.Shortcode,
-                new ExportSource(from.Shortcode, from.Corpus, from.ContentVersion, from.Publishing));
+                new ExportSource(from.Shortcode, from.Corpus, from.ContentVersion, from.Publishing,
+                    from.Tracker));
 
             foreach (var theirs in from.Sources) found.TryAdd(theirs.Shortcode, theirs);
         }
@@ -226,15 +228,21 @@ public static class Exporter
         // records were never read at. One account or nothing.
         foreach (var source in consumed.SelectMany(c =>
                      c.Sources.Prepend(new ExportSource(
-                         c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing))))
+                         c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing, c.Tracker))))
         {
             if (seen.TryAdd(source.Shortcode, source)) continue;
-            if (seen[source.Shortcode] == source) continue;
+            if (Addressed(seen[source.Shortcode]) == Addressed(source)) continue;
 
             found.Add($"'{source.Shortcode}' arrives twice and differently: at "
                       + $"{seen[source.Shortcode].ContentVersion} and at {source.ContentVersion}. A line "
                       + "naming it could resolve either way.");
         }
+
+        // What the two accounts have to agree on, which is everything a line resolves through. The
+        // tracker is left out: it says where a problem with that corpus is filed, which no line resolves
+        // through, and an export written before the key existed derives one from the publishing block
+        // beside it instead of reading the producer's own.
+        static ExportSource Addressed(ExportSource source) => source with { Tracker = Tracker.None };
 
         foreach (var key in consumed.SelectMany(c => c.Types).Select(t => t.Type)
                      .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal))
@@ -932,12 +940,6 @@ public static class Exporter
             publishing?.PathPrefix, publishing?.Ref);
     }
 
-    // Where to report a problem with the framework, written through as the descriptor states it. No
-    // issues address is built here, for the reason no record link is built onto a part line: whoever
-    // files reads the target and the base and reaches its own platform. See docs/design/export.md.
-    private static ExportFramework Framework(CorpusDescriptor descriptor) =>
-        new(descriptor.FrameworkTarget, descriptor.FrameworkBase);
-
     private static ExportLinks? Links(string? link) =>
         link is null ? null : new ExportLinks(link);
 
@@ -978,31 +980,48 @@ public static class Exporter
     // and a block naming no publishing target publishes nowhere.
     //
     // The alternative is each reader defaulting for itself, which is the arrangement this replaced.
-    private static ExportManifest Sound(ExportManifest m) => m with
+    private static ExportManifest Sound(ExportManifest m)
     {
-        About = Read(m.About) ?? new ExportAbout(null, null, null, null),
-        Publishing = Sound(m.Publishing),
-        Framework = Sound(m.Framework),
-        Sources =
-        [
-            .. (Read(m.Sources) ?? []).Where(s => Read(s)?.Shortcode is { Length: > 0 })
-                .Select(s => s with { Publishing = Sound(s.Publishing) })
-        ],
-        Types = [.. (Read(m.Types) ?? []).Where(t => Read(t)?.Type is not null).Select(Sound)]
-    };
+        var publishing = Sound(m.Publishing);
+
+        return m with
+        {
+            About = Read(m.About) ?? new ExportAbout(null, null, null, null),
+            Publishing = publishing,
+            Tracker = Sound(m.Tracker, publishing),
+            Framework = Sound(m.Framework, null),
+            Sources =
+            [
+                .. (Read(m.Sources) ?? []).Where(s => Read(s)?.Shortcode is { Length: > 0 }).Select(Sound)
+            ],
+            Types = [.. (Read(m.Types) ?? []).Where(t => Read(t)?.Type is not null).Select(Sound)]
+        };
+    }
+
+    // One inherited corpus's own blocks, settled the way this corpus's are.
+    private static ExportSource Sound(ExportSource s)
+    {
+        var publishing = Sound(s.Publishing);
+
+        return s with { Publishing = publishing, Tracker = Sound(s.Tracker, publishing) };
+    }
 
     private static ExportPublishing Sound(ExportPublishing? p) =>
         Read(p) is not { } stated ? new ExportPublishing(Publishing.None, null, null, null, null)
         : Read(stated.Target) is null ? stated with { Target = Publishing.None }
         : stated;
 
-    // An export written before this key existed carries no framework block, and one written by a corpus
-    // that named no tracker carries a target of `none`. Both mean the same thing to a reader, so both
-    // arrive as the same record rather than as a null it has to test for.
-    private static ExportFramework Sound(ExportFramework? f) =>
-        Read(f) is not { } stated ? new ExportFramework(Publishing.None, null)
-        : Read(stated.Target) is null ? stated with { Target = Publishing.None }
-        : stated;
+    // A tracker block with every absence settled. An export written before these keys existed has no
+    // block at all, and one from a corpus that stated no tracker states a target of `none`. Both mean
+    // the same thing, so both arrive as one record instead of a null every reader tests for.
+    //
+    // `from` is the publishing block a missing tracker is derived from, and is null for the framework's,
+    // which is stated or absent. The identity is computed here instead of read from the document, so
+    // every block a reader compares was normalised by one rule.
+    private static ExportTracker Sound(ExportTracker? t, ExportPublishing? from) =>
+        Read(t) is { } stated ? Tracker.For(stated.Target, stated.Base)
+        : from is null ? Tracker.None
+        : Tracker.From(from);
 
     // A type is read under its own name where it named no directory, which is where the exporter writes
     // one that declares nothing else.

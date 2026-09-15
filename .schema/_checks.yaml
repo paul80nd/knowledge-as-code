@@ -433,6 +433,16 @@ checks:
       and that the spelling underneath is taken. See
       <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#the-shortcode>.
 
+  descriptor-target:
+    severity: error
+    on-type-page: false
+    description: Every target the corpus descriptor names is one kac can act on.
+    notes: >
+      Two vocabularies, because the keys answer two questions. `publishing-target` says how a record is read, so a
+      wiki and a documentation site belong to it. `tracker.target` and `framework.target` name the client that opens
+      a ticket, and neither of those is one. A key the descriptor leaves out is asked nothing. See
+      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#tracker>.
+
   import-restored:
     severity: error
     on-type-page: false

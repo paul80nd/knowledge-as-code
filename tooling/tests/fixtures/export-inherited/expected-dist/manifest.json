@@ -20,9 +20,15 @@
     "pathPrefix": null,
     "ref": null
   },
+  "tracker": {
+    "target": "azure-devops",
+    "base": "https://dev.azure.com/acme/Standards",
+    "id": "azure-devops:dev.azure.com/acme/standards"
+  },
   "framework": {
     "target": "github",
-    "base": "https://github.com/example/framework"
+    "base": "https://github.com/example/framework",
+    "id": "github:github.com/example/framework"
   },
   "sources": [
     {
@@ -35,6 +41,11 @@
         "base": "https://github.com/example/upstream",
         "pathPrefix": null,
         "ref": "1111111111111111111111111111111111111111"
+      },
+      "tracker": {
+        "target": "github",
+        "base": "https://github.com/example/upstream",
+        "id": "github:github.com/example/upstream"
       }
     },
     {
@@ -47,6 +58,11 @@
         "base": "https://github.com/example/grandparent",
         "pathPrefix": null,
         "ref": "2222222222222222222222222222222222222222"
+      },
+      "tracker": {
+        "target": "github",
+        "base": "https://github.com/example/grandparent",
+        "id": "github:github.com/example/grandparent"
       }
     }
   ],
