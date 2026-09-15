@@ -465,11 +465,12 @@ that type needs and what each one takes. Follow it rather than copying a neighbo
 `.claude/skills/`. A record written in some other voice reads as an import.
 
 **Name the issue in `sources`.** Every type accepts the field. The entry gives a reviewer the observation to check
-the record against. Write the short form on GitHub, and the work item's URL on Azure DevOps.
+the record against. Write the address, on either tracker. No type renders `sources`, so a short form such as
+`<owner>/<repo>#<issue>` is a link nowhere.
 
 ```yaml
 sources:
-  - { resource: <owner>/<repo>#<issue> }
+  - { resource: https://github.com/<owner>/<repo>/issues/<issue> }
 ```
 
 **An edit keeps the entries the record already has**, and adds this one under them.

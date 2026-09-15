@@ -9,7 +9,7 @@ verified:
 review-by: "2027-03-09"
 owner: human:paul.law
 sources:
-  - { resource: paul80nd/knowledge-as-code#406 }
+  - { resource: https://github.com/paul80nd/knowledge-as-code/issues/406 }
 tags: [ editorconfig, formatting, rider ]
 ---
 

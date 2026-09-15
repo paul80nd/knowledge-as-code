@@ -9,6 +9,8 @@ applies-to:
   - all
 review-by: "2027-09-07"
 owner: human:paul.law
+sources:
+  - { resource: https://github.com/paul80nd/knowledge-as-code/issues/616 }
 tags: [ compatibility, imports, versioning ]
 ---
 
@@ -44,6 +46,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 ### What a move of each stamp means
 
 - `content-version` **MUST** be read as a statement about what the corpus publishes rather than about the file.
+- What a corpus publishes **MUST** be read as its export, and never as the repository its records are readable in.
+- A change confined to a section a record's type leaves out of `export:` **MUST NOT** move `content-version`.
 - Its major **MUST** mark a meaning that changed or a published URL that broke, its minor a record or a rule added,
   and its patch a change of wording.
 - `content-version` **MUST** move where a skill in the bundle changes what it tells a reader to do. `kac bundle`
@@ -201,6 +205,7 @@ reads `<Version>` against what a user of `kac` can observe.
 
 ## Changelog
 
+- 2026-09-15: a change confined to a section the export leaves out moves no `content-version`.
 - 2026-09-09: `content-version` moves where a bundled skill changes what it tells a reader to do.
 - 2026-09-09: a field's value format, name, addition or removal moves the component the `export:` block decides.
 - 2026-09-07: initial version, taking the stamp semantics and the consumer-repointing rules from [std-CI].

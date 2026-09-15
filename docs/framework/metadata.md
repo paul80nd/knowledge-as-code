@@ -67,9 +67,10 @@ hand is an error, reported as `derived-key`, because the folder and the line cou
 
 ## Filling `sources`
 
-`sources` is a universal optional field. It states where a record's content came from, one entry per source, each
-naming something a reader can follow: a specification, a vendor page, a ticket, or the population the content was drawn
-from.
+`sources` is a universal optional field. It states where a record's content came from, one entry per source. An entry
+takes one of two forms: the address of something a reader can follow, such as a specification, a vendor page or a
+ticket, or a description of the population the content was drawn from. Write the address in full. No type renders
+`sources`, so a short form such as `owner/repo#123` is a link nowhere.
 
 The test is whether a reader could check the record against something the corpus does not hold. Where they could, name
 it. Where the record states the estate's own facts, leave the field out. `reports` is the one type that refines the
