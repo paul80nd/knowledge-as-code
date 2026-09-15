@@ -25,8 +25,9 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, and where w
 Use that path exactly as it appears. It is already absolute. An installed plugin sits in a cache of its own rather than
 in the repository you are working in.
 
-**Both invocations need the corpus checked out, and the client that already signs in to the tracker.** Where a client
-is missing, print what you produced and say which invocation you could not finish.
+**Both invocations need this corpus checked out, and the client that already signs in to the tracker.** `draft` needs
+that checkout to be the repository the records live in as well, which the section on it covers. Where a client is
+missing, print what you produced and say which invocation you could not finish.
 
 ## Never write unasked
 
@@ -44,12 +45,17 @@ first.
 Every other skill here answers from the export and writes nothing. This one writes to a tracker, so it has a boundary
 the others do not need.
 
-**Check that you are in a checkout of the repository `publishing.base` names, before either invocation.** An installed
-plugin sits in a consumer's cache, and `tracker.base` there addresses the backlog of whoever published the corpus.
-Labelling and commenting on that backlog from a consumer's session is writing on somebody else's repository.
+**Check that you are in a checkout of this corpus, before either invocation.** Walk up for a `.corpus.yaml` and read
+its `corpus:`. It is a checkout of this corpus where that name equals `corpus` in `manifest.json`. An installed plugin
+sits in a consumer's cache, and `tracker.base` there addresses the backlog of whoever published the corpus, so
+labelling and commenting on it from a consumer's session is writing on somebody else's repository.
 
-**Refuse where the checkout is a different repository, or where there is no checkout.** Name the repository this corpus
-publishes from, and say that triage belongs to whoever maintains it. A consumer with something to report uses
+**Test the corpus, never the publishing address.** A corpus publishes where it is read and files where work is
+tracked, and the two are different places. One published as a wiki or a documentation site has no repository in
+`publishing.base` a checkout could ever match, and its maintainer still has a tracker and still has the source.
+
+**Refuse where you find no `.corpus.yaml`, or where the one you find names another corpus.** Say which corpus this
+plugin is for, and that triage belongs to whoever maintains it. A consumer with something to report uses
 `raise-finding`, which files one issue and asks first.
 
 **Refuse where you were not asked.** Neither invocation starts on its own.

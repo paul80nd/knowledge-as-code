@@ -11,8 +11,12 @@ Every table below is written from the file that decides it, so none of them is a
 
 ## What travels inside a plugin
 
-These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export. Anybody who
-installs that plugin gets them, and they answer from the export rather than from a network call.
+These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export. They answer
+from that export rather than from a network call.
+
+**An install carries fewer than ten.** A skill reading a record type the corpus did not export is trimmed, so what
+somebody receives follows from what that corpus adopted. `example-libraries` ships five of these and
+`example-engineering` seven.
 
 `Requires` names the record types a skill opens a file of. A skill requiring none is one of two things.
 **`standalone`** reads no export and serves whoever is holding the plugin, so it ships whatever the corpus adopted.
@@ -47,8 +51,9 @@ repository.
 They are for whoever is writing records, which is a different reader from the one who installed a plugin. Nothing
 here reads an export.
 
-A change to one of these moves `version:` in `manifest.yaml`, and `upstream.template-version` in every corpus that
-took it.
+Adding, removing or renaming one of these moves `version:` in `manifest.yaml`, and `upstream.template-version` in
+every corpus that took it, because a corpus has to respond. Rewording one moves neither: `update` sends the new words
+and nothing about the corpus changes.
 
 <!-- BEGIN GENERATED: skills-in-a-corpus -->
 
@@ -80,8 +85,9 @@ change to one moves no version stamp at all.
 
 ## Reading one
 
-A skill is a Markdown file, and nothing stops you reading it. The bundled ten sit under `skills/` inside an installed
-plugin. The rest are in `.claude/skills/` of whichever repository holds them.
+A skill is a Markdown file, and nothing stops you reading it. Whichever of the bundled ones survived the trim sit
+under `skills/` inside an installed plugin, and `bundle.json` beside them names the ones that did not. The rest are in
+`.claude/skills/` of whichever repository holds them.
 
 A skill states its own rules in full rather than citing a standard, because it has to work in a checkout that holds no
 corpus. Where a corpus states the same rule, both say it, and the record is what a reviewer reads.

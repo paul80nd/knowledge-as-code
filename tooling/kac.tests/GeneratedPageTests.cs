@@ -55,4 +55,16 @@ public class GeneratedPageTests
 
         Assert.Contains(Name, thrown.Message, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void A_page_already_carrying_a_block_is_not_given_a_second_one_under_its_heading()
+    {
+        var page = "# Title\n\nSome prose.\n\n## A section\n\n"
+                   + Markers.Begin("other") + "\n" + Markers.End("other") + "\n";
+
+        var thrown = Assert.Throws<XunitException>(() => GeneratedPage.Replaced(page, Name, "new"));
+
+        Assert.Contains("none of them is", thrown.Message, StringComparison.Ordinal);
+    }
+
 }

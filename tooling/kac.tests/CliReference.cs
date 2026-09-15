@@ -101,18 +101,6 @@ internal static partial class CliReference
         return tables.Count == 0 ? usage : $"{usage}\n\n{string.Join("\n\n", tables)}";
     }
 
-    // The page carrying `body` in the block called `name`. `Markers.SpliceBlock` writes it, so a page of
-    // the documentation and a page a corpus holds are filled by one piece of code.
-    //
-    // A page that has never carried the block is given an empty pair of markers under its first heading,
-    // which is what a command page added to `docs/cli/` arrives as.
-    //
-    // A block that opens and never closes stops the run instead. `SpliceBlock` hands back a page it could
-    // not splice untouched, and an untouched page is what the caller reads as up to date, so the block
-    // would freeze where it stood. Writing a second pair above it is worse again: the orphan and the
-    // content under it stay on the page, and `Markers.Authored` reads everything past an unmatched
-    // marker as prose somebody wrote. Which of the two markers went is a question for whoever deleted one.
-
     private static IReadOnlyList<Verb> Read()
     {
         var xml = XDocument.Parse(XmlDoc());

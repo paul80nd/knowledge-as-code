@@ -14,7 +14,7 @@
 # created for one system and receives that system's rule alone.
 #
 # A file whose destination is its source is shared with the corpora in this repository rather than
-# copied into them: `.schema/` and the two skills below are read from this root by every corpus under
+# copied into them: `.schema/` and the three skills below are read from this root by every corpus under
 # `examples/` and by `template/` alike. A corpus created elsewhere receives its own copy of each.
 #
 # The rules are read in order and the first match wins, so a rule carving one file out of a folder is

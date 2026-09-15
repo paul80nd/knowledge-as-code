@@ -66,8 +66,8 @@ stamp in every descriptor. One nothing sends moves nothing.
       `new: wrote N file(s)` line in both `docs/cli/new.md` and `docs/getting-started.md`.
     * A standalone skill added or removed affects the loop naming them in `.github/workflows/kac.yml` and
       `.azuredevops/kac.yml`, and the prose describing that job in [ctl-0008].
-    * A skill a corpus receives affects `template/knowledge-as-code/contributing.md`, and the copy of it every corpus
-      under `examples/` holds.
+    * A skill a corpus receives affects `template/knowledge-as-code/contributing.md`, the copy of it every corpus
+      under `examples/` holds, and the overlay note in `manifest.yaml` that names them.
     * A change to what a skill does affects whichever of those describe it.
     * `docs/skills.md` needs no edit. Its three tables are generated from `plugin.json`, `manifest.yaml` and the
       `.claude/skills/` directory, and `SkillReferenceTests` fails a stale one. Never hand-edit a generated block.

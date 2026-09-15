@@ -159,8 +159,10 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 
 ### Triage routes a finding with a label, and says why in a comment
 
-- A skill triaging findings **MUST** run only where the session is in a checkout of the repository the corpus's
-  `publishing` block addresses.
+- A skill triaging findings **MUST** run only where the session is in a checkout of the corpus itself, found by
+  walking up for a `.corpus.yaml` whose `corpus:` is the one the export names.
+- A skill **MUST NOT** test that checkout against the `publishing` block, because a corpus published as a wiki or a
+  site has no repository there and its maintainer still has both a tracker and the source.
 - A skill **MUST NOT** triage, mark or comment on a tracker reached from an installed plugin alone.
 - A skill **MUST** select its queue as `kac:finding` without `kac:triaged`.
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
@@ -331,7 +333,8 @@ broke it.
       yet.
 - [ ] No deviation request is dropped, or held back, because the target has no `kac:deviation` label.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
-- [ ] Triage ran only in a checkout of the repository the `publishing` block addresses.
+- [ ] Triage ran only in a checkout of the corpus the export names, tested against `.corpus.yaml` rather than against
+      the `publishing` block.
 - [ ] The queue read both the marked findings and the open issues whose body carries the block without the mark.
 - [ ] Every triaged issue keeps `kac:finding`, and gains `kac:triaged` and exactly one `kac:route-*` mark.
 - [ ] Every verdict was shown to a person and agreed before any mark or comment was written.
@@ -436,9 +439,14 @@ Triage is the one skill here that writes to a tracker, so it is the one that nee
 it. A lookup answers from the copy beside it and writes nothing. `raise-finding` writes one issue and asks first.
 Triage writes marks and comments across a whole backlog, and in a consumer's installed plugin `tracker.base` addresses
 the backlog of whoever published the corpus. A consumer session running it would triage a stranger's repository. The
-checkout is the only signal available: a session holding the repository the `publishing` block addresses is the corpus's
-own maintainer, and every other session is not. `request-deviation` draws the same boundary by comparing two addresses,
-and has two to compare.
+checkout is the only signal available: a session holding the corpus's source is its maintainer, and every other session
+is not. `request-deviation` draws the same boundary by comparing two addresses, and has two to compare.
+
+The test is the corpus and not the publishing address, because a corpus files where its publishing block does not
+point. `Tracker.cs` derives a tracker from `publishing` only where that target has a backlog, which is why the
+descriptor states `tracker:` separately at all. A corpus published as a wiki or a documentation site has no repository
+in `publishing.base`, so a skill comparing a checkout against it would refuse that corpus's own maintainer for ever.
+`.corpus.yaml` is beside the records in every case.
 
 The verdict is a mark, and the reason is a comment. A route stated twice is two things that can disagree, so the
 comment argues and states no data. It is also the only part a person can push back on, which a mark on its own gives

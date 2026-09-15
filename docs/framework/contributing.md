@@ -8,11 +8,9 @@ This page is the model. The rules for the words themselves are skills. An agent 
 of writing, so a session that writes no prose pays nothing for them. A person contributing by hand reads them as the
 full rule list.
 
-| The skill           | What it covers                                                          |
-|---------------------|-------------------------------------------------------------------------|
-| `technical-writing` | the floor: how to build a sentence, and how to write a commit message   |
-| `writing-a-record`  | what a corpus adds to the floor, and what each tier asks on top of that |
-| `writing-the-docs`  | the upstream project's own public pages, which is this site             |
+[Skills](../skills.md) lists every one of them, what each answers, and which of them a corpus receives. Start with
+`technical-writing`, which is the floor under all the others, and load the one for the surface you are writing on top
+of it.
 
 ## What outranks what
 
