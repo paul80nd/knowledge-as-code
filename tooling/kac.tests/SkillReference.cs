@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using kac.core;
@@ -28,6 +27,10 @@ internal static partial class SkillReference
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
+
+    // Which skills the overlay sends, read once however many tests ask. `InThisRepository` asks as well, to
+    // subtract them, so an uncached read would parse `manifest.yaml` twice for every test that calls either.
+    private static readonly Lazy<IReadOnlyList<Skill>> Overlay = new(ReadOverlay);
 
     // The overlay rule's patterns name a skill directory each, as `.claude/skills/<name>/**`.
     [GeneratedRegex(@"^\.claude/skills/(?<name>[^/]+)/\*\*$")]
@@ -68,7 +71,9 @@ internal static partial class SkillReference
     }
 
     // The ones a corpus receives into its own working tree, named by the overlay rule that sends them.
-    internal static IReadOnlyList<Skill> InACorpus()
+    internal static IReadOnlyList<Skill> InACorpus() => Overlay.Value;
+
+    private static IReadOnlyList<Skill> ReadOverlay()
     {
         var manifest = Manifest.LoadFrom(Path.Combine(Repo.Root, "manifest.yaml"));
         var names = manifest.Rules
@@ -117,34 +122,23 @@ internal static partial class SkillReference
         return (stop < 0 ? described : described[..stop]).TrimEnd('.');
     }
 
-    // One table, rendered. A bundled table carries the third column and the other two do not.
+    // One table, rendered by the one renderer this repository has. `Gfm` states why the separator takes the form it
+    // does, and escaping a cell matters here because a summary is prose somebody wrote into a `description:`.
+    //
+    // A bundled table carries the third column and the other two do not.
     internal static string Table(IReadOnlyList<Skill> skills)
     {
-        var rows = skills.Select(skill => skill.Requires is null
-            ? new[] { $"`{skill.Name}`", skill.Summary }
-            : [$"`{skill.Name}`", skill.Summary, skill.Requires]).ToList();
+        var bundled = skills.Any(skill => skill.Requires is not null);
 
-        var headers = skills.Any(skill => skill.Requires is not null)
-            ? ["Skill", "What it answers", "Requires"]
-            : new[] { "Skill", "What it answers" };
+        List<string> headers = bundled ? ["Skill", "What it answers", "Requires"] : ["Skill", "What it answers"];
+        var rows = skills
+            .Select(skill => bundled
+                ? new List<string> { Cell($"`{skill.Name}`"), Cell(skill.Summary), Cell(skill.Requires ?? "") }
+                : [Cell($"`{skill.Name}`"), Cell(skill.Summary)])
+            .ToList();
 
-        var widths = headers
-            .Select((header, i) => rows.Select(row => row[i].Length).Append(header.Length).Max())
-            .ToArray();
-
-        var table = new StringBuilder();
-        table.Append(Row(headers, widths));
-        table.Append('|').AppendJoin('|', widths.Select(w => new string('-', w + 2))).Append("|\n");
-        foreach (var row in rows) table.Append(Row(row, widths));
-
-        return table.ToString().TrimEnd('\n');
+        return Gfm.RenderTable(headers, rows);
     }
 
-    private static string Row(IReadOnlyList<string> cells, IReadOnlyList<int> widths)
-    {
-        var line = new StringBuilder("|");
-        for (var i = 0; i < cells.Count; i++) line.Append(' ').Append(cells[i].PadRight(widths[i])).Append(" |");
-
-        return line.Append('\n').ToString();
-    }
+    private static string Cell(string text) => Gfm.Escape(text);
 }
