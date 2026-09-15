@@ -99,7 +99,7 @@ one answer repeated. Each skill reads its own directory, and `manifest.json` rep
 ### A component naming no type
 
 `requires` names the types a component reads. One naming none reads no export at all, so the trim above cannot reach it.
-Three skills are in that position, and `standalone` says which of two things each one is.
+Four skills are in that position, and `standalone` says which of two things each one is.
 
 `corpus-retrieval` and `request-deviation` support the lookups. The first reaches a record's published source, and the
 second asks the owner of a clause to accept a departure from it. Each needs a record a lookup found, and no single type
@@ -108,9 +108,12 @@ shipping either alone would carry a skill supporting nothing a reader can reach,
 component included where the run left nothing to answer a question. The trim names them too, at
 `no component it supports survived`.
 
-`raise-finding` supports nothing and serves whoever is holding the plugin, so it declares `"standalone": true` and the
-sweep leaves it alone. A corpus with no records at all is the one a session most needs a route to report. Trimming the
-skill would take that route away at exactly the wrong moment. Standalone says nothing about the trim above it. A
+`raise-finding` and `harvest-findings` support nothing and serve the reader, so each declares `"standalone": true` and
+the sweep leaves both alone. `raise-finding` files an observation as an issue, and any session may run it. A corpus with
+no records at all is the one a session most needs a route to report, so trimming that skill would take the route away at
+exactly the wrong moment. `harvest-findings` triages the issues already filed, and refuses unless the session is in a
+checkout of the repository the corpus publishes from. That reader is the corpus's own maintainer, installing their own
+plugin, and no build can tell in advance which install that will be. Standalone says nothing about the trim above it. A
 standalone component naming a type the export left out is trimmed like any other.
 
 **A file no component claims is the unconditional case**, and it needs no declaration. A README or a licence in the

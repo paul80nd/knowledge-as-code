@@ -41,6 +41,7 @@ wrote .dist/plugin/hooks/breadcrumb
 wrote .dist/plugin/hooks/hooks.json
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
+wrote .dist/plugin/skills/harvest-findings/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
 wrote .dist/plugin/skills/request-deviation/SKILL.md
 bundle: trimmed skills/controls-lookup: the export carries no controls.
@@ -48,16 +49,17 @@ bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 26 file(s) to .dist/plugin/ as example-libraries 0.2.4. 5 component(s) included, 5 trimmed.
+bundle: wrote 27 file(s) to .dist/plugin/ as example-libraries 0.4.0. 6 component(s) included, 5 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
 A trimmed component is not an error. It is a skill whose record type this corpus does not export.
 
-Three skills name no type at all, and who each one serves decides what happens to it. `corpus-retrieval` reaches the
+Four skills name no type at all, and who each one serves decides what happens to it. `corpus-retrieval` reaches the
 published source for whichever lookup skills are left, and `request-deviation` asks the owner of a clause a lookup
-found, so both follow the last lookup out. `raise-finding` is declared standalone and ships whatever the corpus adopted,
-because a corpus with no records is the one a session most needs a route to report.
+found, so both follow the last lookup out. `raise-finding` and `harvest-findings` are declared standalone and ship
+whatever the corpus adopted. A corpus with no records is the one a session most needs a route to report, and the one
+whose maintainer most needs the backlog read.
 
 ### An install
 
@@ -70,12 +72,12 @@ CI publishes.
 
 ### The components that shipped
 
-A corpus whose export includes three record types ships a lookup skill for each, beside the three that name no type of
+A corpus whose export includes three record types ships a lookup skill for each, beside the four that name no type of
 their own. Adoption is not the test. `example-engineering` adopted `controls` and has no record of one, so that skill is
 trimmed alongside the type it never carried. The closing line counts what survived:
 
 ```text
-bundle: wrote 57 file(s) to .dist/plugin/ as example-engineering 0.16.1. 7 component(s) included, 3 trimmed.
+bundle: wrote 58 file(s) to .dist/plugin/ as example-engineering 0.18.0. 8 component(s) included, 3 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -85,7 +87,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/fix-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/harvest-findings","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:

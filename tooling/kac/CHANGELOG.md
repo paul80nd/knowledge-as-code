@@ -19,6 +19,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`harvest-findings`, the skill that triages filed findings and drafts the record one asks for.** `raise-finding`
+  files an observation as an issue and stops, so nothing moves it afterwards. `triage` reads every finding without a
+  `kac:triaged` label, sorts each into one of five routes, shows a person the table and writes nothing until they
+  agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull request carrying the record. It reads the
+  `tracker` and `framework` blocks this release adds to `manifest.json`, and the `publishing` block that was already
+  there, for the backlog, for where the tool is reported and for where the record lives. Both invocations refuse unless
+  the session is in a checkout of the repository the corpus publishes from, because a consumer's installed plugin
+  addresses the publisher's backlog and not their own. A framework finding whose `framework.id` differs from
+  `tracker.id` is drafted as a comment and copied by hand, because an Azure DevOps user has no GitHub account. The
+  skill declares `requires` empty and `"standalone": true`, so it ships in every bundle. Take it with
+  `kac update --from <template>`.
+
 - **`kac validate` refuses a target the descriptor names and the tool cannot act on**, under a new
   `descriptor-target` check. `publishing-target` takes the five values the link rules are written for. `tracker.target`
   and `framework.target` take `github`, `azure-devops` or `none`, because a wiki and a documentation site publish

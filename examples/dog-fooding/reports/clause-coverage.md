@@ -4,16 +4,17 @@ type: report
 tier: descriptive
 status: active
 owner: human:paul.law
-generated: { at: 2026-09-13T09:40:48Z, by: kac/0.26.0 }
+generated: { at: 2026-09-15T10:09:00Z, by: kac/0.26.0 }
 sources:
-  - { resource: example-dogfooding, version: "0.29.0" }
-  - { resource: example-engineering, version: "0.17.0" }
+  - { resource: example-dogfooding, version: "0.30.0" }
+  - { resource: example-engineering, version: "0.18.0" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T08:25:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T09:10:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-11T10:30:00Z, by: coverage-sweep/1.0.0 }
   - { at: 2026-09-13T09:42:33Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-15T10:12:00Z, by: coverage-sweep/1.0.0 }
 tags: [ coverage, governance ]
 ---
 
@@ -27,7 +28,7 @@ This reads `example-dogfooding` and what it imports. A clause uncovered here may
 
 Imported:
 
-* `eng`, example-engineering, at 0.17.0.
+* `eng`, example-engineering, at 0.18.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document whatever it checks inside it.
 
@@ -120,8 +121,8 @@ where the rule and the practice differ.
 | Clause | Level | Covered by | Deviations | Controls | Pair candidate | Verdict | Note |
 |--------|-------|------------|------------|----------|----------------|---------|------|
 | `PROV` | MUST | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | A commit trailer records what produced a change. A finding an agent files records the agent, the repository and the commit it read. |
-| `ACCEPT` | MUST | `eng:std-PR` |  |  |  | Covered | The approval is what makes the work somebody's. |
-| `EQUAL` | MUST | `eng:std-PR` |  |  |  | Covered | A change arrives as a pull request, whoever wrote the branch. |
+| `ACCEPT` | MUST | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | The approval is what makes the work somebody's. A skill shows its verdicts and waits. |
+| `EQUAL` | MUST | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | A change arrives as a pull request, whoever wrote the branch. A record a skill drafted arrives the same way. |
 | `CONFID` | MUST | `std-PLUGIN` |  | `ctl-0008`, `ctl-0009` |  | Covered | A skill dates the export and reports an unsettled record, and a finding states its confidence. This corpus keeps no unverified observation, so letting one lapse is the tracker's business. Nothing here checks that it does. |
 | `SELFVER` | MUST NOT | `std-PLUGIN`, `eng:std-PR` |  | `ctl-0008`, `ctl-0009` |  | Covered | The approver reads the change itself. A session filing a finding cannot call its own observation corroborated. |
 | `DUTIES` | MUST NOT | `eng:std-PR` |  |  | `eng:pol-ACCS.DUTIES` | Covered | Somebody other than the author approves it. One maintainer does both here. |
