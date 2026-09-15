@@ -37,7 +37,7 @@
       {
         "path": "skills/fix-lookup",
         "requires": [
-          "fixes@1"
+          "fixes@2"
         ],
         "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
       },

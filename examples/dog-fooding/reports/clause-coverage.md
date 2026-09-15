@@ -6,7 +6,7 @@ status: active
 owner: human:paul.law
 generated: { at: 2026-09-13T09:40:48Z, by: kac/0.26.0 }
 sources:
-  - { resource: example-dogfooding, version: "0.28.0" }
+  - { resource: example-dogfooding, version: "0.29.0" }
   - { resource: example-engineering, version: "0.17.0" }
 verified:
   - { at: 2026-09-09T21:30:00Z, by: coverage-sweep/1.0.0 }
@@ -27,7 +27,7 @@ This reads `example-dogfooding` and what it imports. A clause uncovered here may
 
 Imported:
 
-* `eng`, example-engineering, at 0.16.3.
+* `eng`, example-engineering, at 0.17.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document whatever it checks inside it.
 

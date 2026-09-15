@@ -412,7 +412,9 @@ date has passed. Each record states its own status, so a consumer reads what the
 itself how far to trust it.
 
 Filter here and the corpus's own state becomes invisible downstream. Your consumer sees a smaller, tidier vocabulary and
-no sign that anything was withheld. The option is there for a corpus publishing to an audience it cannot warn.
+no sign that anything was withheld. Reach for it where you cannot warn the audience you publish to. Reach for it as well
+where a draft would be read as an answer: a `fix` in draft is a resolution nobody has checked, and `fix-lookup` hands
+one over as it would any other.
 
 Two values are accepted. `draft` drops a record whose status says so. `overdue` drops one whose `review-by` is in the
 past.

@@ -47,6 +47,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   repository where it names a folder. `descriptor-version` moves to 3, and `kac update` stamps it. No skill reads the
   key yet.
 
+- **A `fix` takes `status: draft`, and a draft states no verification.** `verified` is required of every other
+  status, so a session can write a fix from an observation nobody has checked and `kac validate` passes. The type's
+  export shape moves to `fixes@2`, because `verified` arrives as null on a draft. A corpus listing `draft` under
+  `export.exclude:` in `.corpus.yaml` withholds a draft, which is how an unchecked resolution stays out of
+  `fix-lookup`.
+
 - **`fix-lookup`, the skill that says whether a problem has already been solved here.** It searches
   `symptom-keywords`, which a fix over-fills with error text and the words somebody arrives with, then reports the
   Symptom, Cause and Resolution the corpus settled. It states the record's derived `trust` on every answer, so a

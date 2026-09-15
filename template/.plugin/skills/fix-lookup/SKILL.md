@@ -52,10 +52,10 @@ three keys `Symptom`, `Cause` and `Resolution` are always in `sections`, because
 |---------------------------|--------------------------|----------------------------------------------------------|
 | `fields.id`               | string                   | the address to cite the fix by                           |
 | `fields.title`            | string                   | the symptom in one line, as somebody meets it            |
-| `fields.status`           | string                   | `active`, `superseded` or `fixed-upstream`               |
+| `fields.status`           | string                   | `active`, `draft`, `superseded` or `fixed-upstream`      |
 | `fields.symptom-keywords` | list of strings          | the search terms. At least three, and never empty        |
 | `fields.applies-to`       | list of strings, or null | the service ids the problem concerns                     |
-| `fields.verified`         | list of objects          | one entry per verification, oldest first                 |
+| `fields.verified`         | list of objects, or null | one entry per verification, oldest first                 |
 | `fields.review-by`        | string                   | the date by which somebody re-checks this is still true  |
 | `fields.tags`             | list of strings, or null | the record's own subject words, searched across types    |
 | `trust`                   | string                   | how far the fix has been taken on trust, from `verified` |
@@ -102,6 +102,8 @@ whether the run that verified it resembles the one in front of them.
 
 Read `status` and `review-by` before you hand anybody a resolution, and tell them what you saw:
 
+* **`status: draft`.** Nobody has verified the resolution. Say so before you hand it over, and treat it as a
+  suggestion to test rather than an answer to follow.
 * **`status: superseded`.** Something replaced this. Find what, before you follow it.
 * **`status: fixed-upstream`.** The cause is gone. The entry stays for whoever searches for the symptom, so read it for
   the history and expect the resolution to be unnecessary. Meeting the symptom today means something else produces it.
@@ -109,7 +111,7 @@ Read `status` and `review-by` before you hand anybody a resolution, and tell the
   rewritten.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the three.
+`manifest.json` say when it was taken, and are worth quoting alongside any of these.
 
 ## Read the prefix on an id
 
