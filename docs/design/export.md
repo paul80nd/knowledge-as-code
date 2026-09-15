@@ -297,9 +297,12 @@ It says where to report a problem with the framework the corpus took, rather tha
 "framework": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code" }
 ```
 
-A reader that meets the export as an installed plugin has no repository to walk and no descriptor to open, so an
-address it is not given here is one it invents. `target` is `none` and `base` is `null` where the corpus states no
-tracker, which is the same absence `publishing` spells.
+A reader that meets the export as an installed plugin has no repository to walk and no descriptor to open. The manifest
+is the only place it can read this address.
+
+`kac` builds no issues address from the pair. It writes both keys as the descriptor states them, and the client that
+files an issue works out its own platform's address from them. `target` is `none` and `base` is `null` where the
+corpus states no tracker, which is the same absence `publishing` spells.
 [`.corpus.yaml`](../corpus-descriptor.md#framework) is where a corpus states one.
 
 ### `corpus` and `shortcode`

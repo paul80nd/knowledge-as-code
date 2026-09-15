@@ -215,29 +215,29 @@ framework:
 ```
 
 `framework:` says where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
-`export` writes both keys into the manifest, so the address reaches a session that meets your corpus as an installed
-plugin. Without the block, the only address that session has is your own `publishing.base`.
+[`export`](cli/export.md) writes both keys into the manifest, so an agent that meets your corpus as an installed plugin
+has the address. Without the block, the only address that agent has is your own `publishing.base`.
 
-| Key      | What it states                                   |
-|----------|--------------------------------------------------|
-| `target` | the client that opens an issue on the tracker    |
-| `base`   | the repository or project the tracker belongs to |
+| Key      | What it states                                   | Written by |
+|----------|--------------------------------------------------|------------|
+| `target` | the client that opens an issue on the tracker    | you        |
+| `base`   | the repository or project the tracker belongs to | you        |
 
-`target` is one of three values. Write `github` for a tracker on github.com, and `azure-devops` for one on Azure
-Boards. Write `none`, or leave the block out, where you know of no tracker. The names are the ones
-[`publishing-target`](#values-of-publishing-target) uses, and the two values that address no tracker are not among them.
+`target` is one of `github`, `azure-devops` or `none`. Write `github` for a tracker on github.com, and `azure-devops`
+for one on Azure Boards. Write `none`, or leave the block out, where you know of no tracker. The other two values
+[`publishing-target`](#values-of-publishing-target) takes, `azure-devops-wiki` and `mkdocs`, address no tracker, so
+neither belongs here.
 
-`kac` derives no address from either key. It writes the pair into the manifest and stops, the way it writes
-`publishing.base` and leaves the client to reach it.
+### What `new` writes in this block
+
+[`new`](cli/new.md) writes both keys when the corpus is created. It takes `base` from `--from` where that named a
+repository, and from the framework's own repository where it named a folder. It reads `target` from the host, and writes
+`none` for a host that neither `gh` nor `az boards` serves.
 
 ### `framework:` and `upstream:`
 
-These answer two questions. `upstream.url` says where `kac` copied the template from, and it is often a folder on the
-same disk. `framework.base` says where to report a problem with what arrived, and it is always a tracker.
-
-`new` writes both. It takes `framework.base` from `--from` where that names a repository, and from the framework's own
-repository where it names a folder. It reads `target` off the host, and writes `none` for a host neither `gh` nor
-`az boards` serves.
+These are two different addresses. `upstream.url` says where `kac` copied the template from, and it is often a folder on
+the same disk. `framework.base` says where to report a problem with what arrived, and it is always a tracker.
 
 ## `update-policy:`
 
