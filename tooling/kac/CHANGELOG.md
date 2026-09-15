@@ -60,6 +60,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`kac export` reports every reason it refuses in one run.** A type the corpus has not adopted, an `export-exclude`
+  key it cannot act on, a consumed corpus nothing is restored for, a consumed corpus at another export format and two
+  corpora disagreeing about a type are each one line, and all of them print before the run stops. A shape or fidelity
+  line now ends with what to do about it. Before, the first of them stopped the run on its own.
+
 - **A finding `raise-finding` files is the observation, and proposes no record.** Its `kac-finding` block drops `id`
   and `expires`, which were a proposed discovery's own fields, and gains `looks-like`. That key takes the type the
   observation resembles, `framework` where what was noticed is the tool, the schema or a skill, or `none`. Whoever

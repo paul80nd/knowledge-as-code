@@ -820,11 +820,52 @@ public class ExporterTests
     }
 
     [Fact]
-    public void Naming_a_type_narrows_what_is_written_and_leaves_the_rest_out()
+    public void Naming_a_type_the_corpus_has_not_adopted_refuses()
     {
         var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), null, "adrs", Run);
 
-        Assert.Equal([Exporter.ManifestFile], plan.Files.Select(f => f.Path));
+        Assert.Empty(plan.Files);
+        Assert.Contains("'adrs'", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void An_exclusion_the_export_cannot_act_on_refuses()
+    {
+        var corpus = Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"));
+        corpus.Descriptor.ExportExclude.Add("nonsense");
+
+        var plan = Exporter.Plan(corpus, null, null, Run);
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("nonsense", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_corpus_nothing_is_restored_for_refuses()
+    {
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), null, null, Run,
+            missing: ["eng"]);
+
+        Assert.Empty(plan.Files);
+        Assert.Contains("eng", Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void A_consumed_corpus_at_another_export_format_refuses()
+    {
+        var plan = Merged(Corpus(), Consumed("eng", TheirLine) with { FormatVersion = Exporter.FormatVersion + 1 });
+
+        Assert.Empty(plan.Files);
+        Assert.Contains($"format {Exporter.FormatVersion + 1}", Assert.Single(plan.Refused));
+    }
+
+    // One run says everything that has to change, so nobody fixes one and is then told about the next.
+    [Fact]
+    public void Every_refusal_is_listed_at_once()
+    {
+        var plan = Exporter.Plan(Corpus(), null, "adrs", Run, missing: ["eng"]);
+
+        Assert.Equal(2, plan.Refused.Count);
     }
 
     // A consumed corpus as `.imports/` states it. Every key a merge stamps is named here rather than

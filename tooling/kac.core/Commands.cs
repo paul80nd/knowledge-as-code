@@ -40,46 +40,17 @@ public static class Commands
     {
         // The corpus is loaded whole, whatever `type` names.
         var corpus = Corpus.Load(corpusRoot);
-
-        if (type is not null && corpus.Adopted.All(t => t.Key != type))
-            return Fail($"export: this corpus has not adopted a type called '{type}'. "
-                        + $"It holds {string.Join(", ", corpus.Adopted.Select(t => t.Key))}.");
-
-        var unknown = corpus.Descriptor.ExportExclude
-            .Where(e => !CorpusDescriptor.Excludable.Contains(e, StringComparer.Ordinal)).ToList();
-        if (unknown.Count > 0)
-            return Fail($"export: .corpus.yaml excludes {string.Join(", ", unknown)}, which an export cannot "
-                        + $"act on. It excludes {string.Join(" or ", CorpusDescriptor.Excludable)}.");
-
-        // What this corpus consumes travels with what it wrote, so a restore that has not run is a hole in
-        // the export rather than a smaller one. `docs/design/imports.md` makes the same argument for
-        // `validate`: an export missing its inherited layer installs, answers, and answers wrongly.
-        var (inherited, notRestored) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
-        if (notRestored.Count > 0)
-            return Fail($"export: nothing is restored for {string.Join(", ", notRestored)}, which this corpus "
-                        + "consumes and an export carries. Run kac restore.");
-
-        // A merge reads the producer's own key names out of its manifest, so an envelope this build does
-        // not know is one whose keys it cannot be sure of. `Bundler` refuses the same mismatch one step
-        // further on, and for the same reason.
-        var stale = inherited.Where(c => c.FormatVersion != Exporter.FormatVersion).ToList();
-        if (stale.Count > 0)
-            return Fail(
-                $"export: {string.Join(", ", stale.Select(c => $"{c.Shortcode} is at export format "
-                                                               + $"{c.FormatVersion}"))}, and this build reads "
-                + $"{Exporter.FormatVersion}. Re-export and re-pack it, then run kac restore.");
-
+        var (inherited, missing) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
         var publishing = Publishing.For(corpus.Descriptor, commit);
 
         var plan = Exporter.Plan(corpus, publishing, type,
             new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty),
-            inherited);
+            inherited, missing);
 
         if (plan.Refused.Count > 0)
         {
-            foreach (var reason in plan.Refused) Out.Line($"  {reason}");
-            return Fail("export: this corpus and one it consumes export a type differently, so nothing was "
-                        + "written. Bring the two to one shape, or drop the type from this corpus.");
+            foreach (var reason in plan.Refused) Stop($"export: {reason}");
+            return 1;
         }
 
         var written = Exporter.Write(corpusRoot, plan);

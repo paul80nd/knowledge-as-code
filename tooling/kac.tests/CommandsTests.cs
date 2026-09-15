@@ -32,6 +32,18 @@ public class CommandsTests
 
     // Three imports, each locked, so each is asked about once at the source its entry names. An import
     // with no lock is skipped before the registry is reached, which `Freshness.Read` says.
+    // A refusal is the plan's, and the verb writes nothing for it.
+    [Fact]
+    public void Export_writes_nothing_for_a_type_the_corpus_has_not_adopted()
+    {
+        var root = Fixture("export");
+
+        var exit = Commands.Export(root, "adrs", new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Utc), null, null);
+
+        Assert.Equal(1, exit);
+        Assert.False(Directory.Exists(Path.Combine(root, Dist.Export)));
+    }
+
     [Fact]
     public void Validate_asks_the_registry_it_is_given_about_each_locked_import()
     {
