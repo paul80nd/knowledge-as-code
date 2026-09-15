@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 30,
+    "validated": 32,
     "templates": 17,
     "skipped": 0,
-    "errors": 19,
+    "errors": 20,
     "warnings": 16,
     "infos": 0
   },
@@ -91,6 +91,13 @@
       "severity": "warning",
       "check": "one-problem-per-document",
       "message": "this record has more than one Symptom section, so it describes more than one fix. Split it, one fix per symptom."
+    },
+    {
+      "file": "fixes/verification-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'verified' (required when status != draft)."
     },
     {
       "file": "glossary/out-of-order.md",

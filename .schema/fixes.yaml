@@ -37,8 +37,11 @@ fields:
   status:
     required: true
     type: enum
-    values: [active, superseded, fixed-upstream]
-    description: '`fixed-upstream` means the cause is gone. The entry stays for whoever searches for it.'
+    values: [active, draft, superseded, fixed-upstream]
+    description: Whether the fix is current, unverified, replaced, or no longer needed.
+    notes: >
+      `draft` is a fix written from an observation that nobody has verified. `fixed-upstream` means the cause is
+      gone, and the entry stays for whoever searches for the symptom.
 
   symptom-keywords:
     required: true
@@ -55,14 +58,14 @@ fields:
     description: Service ids this fix concerns.
 
   verified:
-    required: true
+    required: false
+    required-when: 'status != draft'
     type: list
     of: object
     shape: event
     description: Every verification this fix has had, oldest first, one line each.
     notes: >
-      An unverified resolution belongs in the tracker as an observation, which is why this field is required. The
-      entries take the same shape as a report's.
+      A draft states no verification, and every other status must. The entries take the same shape as a report's.
       <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter> gives that shape,
       the actors it refuses, and the trust tier derived from the list.
 
@@ -76,7 +79,7 @@ sections:
   optional: [Why it happens, How we found it, Related]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, symptom-keywords, applies-to, verified, review-by, tags]
   sections:
     Symptom: full

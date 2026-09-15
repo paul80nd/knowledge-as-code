@@ -131,6 +131,11 @@ what went wrong this time, and `Why it happens` says what class it belongs to.
 trust. `status` and `review-by` say whether the answer is still true, and `fixed-upstream` is the value that earns them
 both.
 
+`status: draft` is the value an author writes before anybody checks the resolution. `verified` is required of every
+other status and not of a draft, because an agent writing a fix from a filed observation cannot name who will verify
+it. A corpus listing `draft` under `export.exclude:` withholds every draft it has, this type's included, so no
+unchecked resolution travels. The record still sits in git for a reviewer to read.
+
 `How we found it` stays behind. The route is often the more reusable half of a fix, and it is reusable to somebody who
 can run the commands it lists. A reader holding a copy can run none of them.
 

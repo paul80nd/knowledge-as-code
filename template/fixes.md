@@ -22,16 +22,17 @@ problem and the resolution are both real.
 ## Scope
 
 A fix is **verified**. Somebody has checked that the problem is real, that the resolution works, and that both are
-still current. An unchecked observation has none of that, so it stays in the tracker until somebody does the
-checking.
+still current. A `draft` is the exception, and says nobody has checked it yet. An observation with no resolution
+stays in the tracker.
 
 **Who did the checking is recorded, and a reader weighs it.** An agent that reproduced the symptom and ran the
 resolution has done real work, and `verified` names it with its version the way a tool names itself. Read the list to
 see how far the fix has been taken: agents alone leave it machine-confirmed, and one `human:` line makes it
 human-reviewed. An export carries that reading as `trust`, derived from the list so that one place names who checked.
 
-**Never write straight to a fix from a session.** An agent cannot verify its own observation. File it in the tracker
-and let somebody else check it.
+**A session never verifies its own fix.** An agent cannot check its own observation. Write the record as a `draft`,
+or file the observation in the tracker, and let somebody else check it. A corpus may withhold a draft from its
+export until the status moves.
 
 Other boundaries:
 
@@ -46,19 +47,19 @@ Other boundaries:
 
 <!-- BEGIN GENERATED: schema-fixes -->
 
-| Field                | Value                                  | Notes                                                                                       |
-|----------------------|----------------------------------------|---------------------------------------------------------------------------------------------|
-| `id` *†              | string                                 | Stable, unique across the corpus, never reused, in the format the type sets.                |
-| `type` *†            | string                                 | The singular name of the type, which CI checks against the folder.                          |
-| `tier` *†            | `normative`                            | The record's trust level, fixed for the type and checked against the folder.                |
-| `status` *†          | `active` `superseded` `fixed-upstream` | `fixed-upstream` means the cause is gone. The entry stays for whoever searches for it.      |
-| `owner` *†           | string                                 | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
-| `sources` †          | list                                   | Where the content came from, one entry per source.                                          |
-| `tags` †             | list                                   | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
-| `symptom-keywords` * | list                                   | Over-fill it: error text, service names, and what someone types before they know the cause. |
-| `applies-to`         | list                                   | Service ids this fix concerns.                                                              |
-| `verified` *         | list                                   | Every verification this fix has had, oldest first, one line each.                           |
-| `review-by` *        | date                                   | Quoted. The date by which someone verifies this is still true.                              |
+| Field                | Value                                          | Notes                                                                                              |
+|----------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `id` *†              | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.                       |
+| `type` *†            | string                                         | The singular name of the type, which CI checks against the folder.                                 |
+| `tier` *†            | `normative`                                    | The record's trust level, fixed for the type and checked against the folder.                       |
+| `status` *†          | `active` `draft` `superseded` `fixed-upstream` | Whether the fix is current, unverified, replaced, or no longer needed.                             |
+| `owner` *†           | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                             |
+| `sources` †          | list                                           | Where the content came from, one entry per source.                                                 |
+| `tags` †             | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types.                      |
+| `symptom-keywords` * | list                                           | Over-fill it: error text, service names, and what someone types before they know the cause.        |
+| `applies-to`         | list                                           | Service ids this fix concerns.                                                                     |
+| `verified`           | list                                           | Every verification this fix has had, oldest first, one line each. Required when `status != draft`. |
+| `review-by` *        | date                                           | Quoted. The date by which someone verifies this is still true.                                     |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -71,7 +72,8 @@ Other boundaries:
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Add a `verified` line naming who checked the resolution and the moment they did it.
+4. Add a `verified` line naming who checked the resolution and the moment they did it. Leave the key out on a
+   `draft`.
 5. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.
 
 **Conventions**
