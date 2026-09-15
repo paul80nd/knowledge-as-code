@@ -18,8 +18,9 @@ public sealed record ExportFile(string Path, string Content);
 // that built it is the last place anyone will see them.
 //
 // `Refused` holds the reasons an export cannot be written at all, and is empty for every export that
-// can. A plan carrying one carries no files: two corpora disagreeing about a type is not something to
-// write a smaller export around.
+// can. A plan carrying one carries no files: a consumed corpus that is not there, or two corpora
+// disagreeing about a type, is not something to write a smaller export around. Every reason is listed
+// at once, so one run says everything that has to change.
 public sealed record ExportPlan(
     IReadOnlyList<ExportFile> Files,
     IReadOnlyList<ExportedType> Types,
@@ -62,13 +63,12 @@ public static class Exporter
     // instead of learning which corpus wrote which rule. `docs/design/export.md` says what merging
     // settles and what it refuses.
     public static ExportPlan Plan(LoadedCorpus corpus, Publishing? publishing, string? type, ExportRun run,
-        IReadOnlyList<InheritedCorpus>? inherited = null)
+        IReadOnlyList<InheritedCorpus>? inherited = null, IReadOnlyList<string>? missing = null)
     {
         var consumed = Wanted(inherited ?? [], type);
 
-        // Nothing is written where two corpora disagree about a type. A merged file whose halves are
-        // shaped differently reads as one file and answers two ways.
-        var refused = Disagreements(corpus, consumed, type);
+        var refused = Refusals(corpus, inherited ?? [], missing ?? [], type);
+        refused.AddRange(Disagreements(corpus, consumed, type));
         if (refused.Count > 0) return new ExportPlan([], [], [], [], refused);
 
         var files = new List<ExportFile>();
@@ -212,6 +212,43 @@ public static class Exporter
         return keys;
     }
 
+    // What stops an export before a file is planned, each as a sentence a reader can act on.
+    //
+    // `missing` is what `consumes:` declares and nothing is restored for. What this corpus consumes travels
+    // with what it wrote, so a restore that has not run is a hole in the export rather than a smaller one.
+    // `docs/design/imports.md` makes the same argument for `validate`: an export missing its inherited
+    // layer installs, answers, and answers wrongly.
+    //
+    // A merge reads the producer's own key names out of its manifest, so an envelope this build does not
+    // know is one whose keys it cannot be sure of. `Bundler` refuses the same mismatch one step further
+    // on, and for the same reason.
+    private static List<string> Refusals(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
+        IReadOnlyList<string> missing, string? type)
+    {
+        var found = new List<string>();
+
+        if (type is not null && corpus.Adopted.All(t => t.Key != type))
+            found.Add($"this corpus has not adopted a type called '{type}'. "
+                      + $"It holds {string.Join(", ", corpus.Adopted.Select(t => t.Key))}.");
+
+        var unknown = corpus.Descriptor.ExportExclude
+            .Where(e => !CorpusDescriptor.Excludable.Contains(e, StringComparer.Ordinal)).ToList();
+        if (unknown.Count > 0)
+            found.Add($".corpus.yaml excludes {string.Join(", ", unknown)}, which an export cannot act on. "
+                      + $"It excludes {string.Join(" or ", CorpusDescriptor.Excludable)}.");
+
+        if (missing.Count > 0)
+            found.Add($"nothing is restored for {string.Join(", ", missing)}, which this corpus consumes "
+                      + "and an export carries. Run kac restore.");
+
+        var stale = inherited.Where(c => c.FormatVersion != FormatVersion).ToList();
+        if (stale.Count > 0)
+            found.Add($"{string.Join(", ", stale.Select(c => $"{c.Shortcode} is at export format {c.FormatVersion}"))}, "
+                      + $"and this build reads {FormatVersion}. Re-export and re-pack it, then run kac restore.");
+
+        return found;
+    }
+
     // What stops the run, in the words a person acts on. Two corpora exporting one type at two shapes,
     // and two carrying its sections at two fidelities.
     //
@@ -265,10 +302,12 @@ public static class Exporter
             {
                 if (shape != first.Shape)
                     found.Add($"'{key}' is exported at shape {first.Shape} by {first.Where} and at shape "
-                              + $"{shape} by {where}. A merged file cannot hold both.");
+                              + $"{shape} by {where}. A merged file cannot hold both. Bring both to one shape, "
+                              + "or drop the type from this corpus.");
                 else if (!Same(first.Sections, sections))
                     found.Add($"'{key}' carries its sections at one fidelity in {first.Where} and another in "
-                              + $"{where}. A merged file cannot promise both.");
+                              + $"{where}. A merged file cannot promise both. Bring both to one fidelity, or "
+                              + "drop the type from this corpus.");
             }
         }
 

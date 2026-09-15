@@ -81,8 +81,8 @@ Commit first where you are about to publish the result.
 
 ### A refusal
 
-Three things end the run with a reason and nothing written. Each would otherwise publish a file that reads as whole and
-answers two ways:
+Three things end the run with nothing written, and each prints one line saying why. Where more than one applies, the run
+lists every one. Each would otherwise publish a file that reads as whole and answers two ways:
 
 ```text
 export: nothing is restored for eng, which this corpus consumes and an export carries. Run kac restore.
