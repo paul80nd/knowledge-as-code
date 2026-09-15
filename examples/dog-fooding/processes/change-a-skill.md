@@ -39,7 +39,9 @@ stamp in every descriptor. One nothing sends moves nothing.
      out.
    * `.claude/skills/`, where nothing sends it, is this repository's own. No version stamp moves. Do steps 3, 11, 14
      and 15, and say why you left each of the others out.
-   * A skill moving between the second and the third is a change to `manifest.yaml`, so step 7 applies to it.
+   * A skill moving from one tree to another is a change to `manifest.yaml` or to `plugin.json` or to both, so step
+     7 applies to it. A move out of `template/.plugin/` is also a removal from every bundle, so step 8 applies as
+     well. Do every step of whichever tree the skill leaves, and of the one it arrives in.
 2. Read [std-PLUGIN]. Its rules bind a bundled skill, and its conformance checklist is what a reviewer reads.
 3. Load `technical-writing`. No second writing skill applies to a skill, a hook or a `plugin.json`.
 4. Write the file under `template/.plugin/`. Copy it nowhere. Every corpus under `examples/` names `plugin.from`, so

@@ -74,30 +74,47 @@ agent wrote. So a verdict says where the observation belongs, never whether it i
 
 `.corpus.yaml` describes this corpus. Three blocks say where work is filed, and they are different addresses.
 
-| Key                    | What it contains                                                       |
-|------------------------|------------------------------------------------------------------------|
-| `corpus`               | the name of this corpus, as `example-payments`                         |
-| `tracker.target`       | one of `github`, `azure-devops`, `none`                                |
-| `tracker.base`         | the backlog to file against                                            |
-| `framework.target`     | the same three values                                                  |
-| `framework.base`       | where a problem with `kac`, the schema or a skill is reported          |
-| `publishing-target`    | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
-| `publishing.base`      | the repository holding the records                                     |
-| `consumes[].corpus`    | the name of one corpus this one consumes                               |
-| `consumes[].shortcode` | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`      |
-| `types`                | the types this corpus adopted, one name per line                       |
+| Key                      | What it contains                                                       |
+|--------------------------|------------------------------------------------------------------------|
+| `corpus`                 | the name of this corpus, as `example-payments`                         |
+| `tracker.target`         | one of `github`, `azure-devops`, `none`                                |
+| `tracker.base`           | the backlog to file against                                            |
+| `framework.target`       | the same three values                                                  |
+| `framework.base`         | where a problem with `kac`, the schema or a skill is reported          |
+| `publishing-target`      | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
+| `publishing.base`        | the repository holding the records                                     |
+| `publishing.path-prefix` | the folder inside it the corpus sits in                                |
+| `consumes[].corpus`      | the name of one corpus this one consumes                               |
+| `consumes[].shortcode`   | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`      |
+| `types`                  | the types this corpus adopted, one name per line                       |
 
-**A corpus stating no `tracker:` block derives one from `publishing`.** Where `publishing-target` is `github` or
-`azure-devops`, the tracker is `publishing.base`. Where it is `azure-devops-wiki`, `mkdocs` or `none`, that corpus
-states no tracker at all.
+**Most corpora state no `tracker:` block, and derive one from `publishing` instead.** A repository on GitHub has an
+issue list of its own, so there is nothing to state. Read the block where it is there, and derive it where it is not.
+
+| `publishing-target` | The tracker it derives         |
+|---------------------|--------------------------------|
+| `github`            | `github`, at `publishing.base` |
+| `azure-devops`      | `azure-devops`, at the project |
+| `azure-devops-wiki` | `azure-devops`, at the project |
+| `mkdocs`            | none                           |
+| `none`              | none                           |
+
+**An Azure DevOps base is cut back to the project.** One project holds one backlog and many repositories, so the
+segment from `/_git/` or `/_wiki/` onwards names a repository or a wiki and no ticket is filed on either. Take
+`https://dev.azure.com/acme/Platform` out of `https://dev.azure.com/acme/Platform/_git/knowledge`.
 
 **A key may be present and empty.** Test the value, not the key.
 
 **Normalise an address before you compare it.** `https://github.com/Example/Repo.git` and
-`https://github.com/example/repo` are one backlog written two ways. Drop the scheme, drop a `.git` suffix, drop a
-trailing slash, and lowercase what is left.
+`https://www.github.com/example/repo` are one backlog written two ways. Drop the scheme, drop a leading `www.`, drop a
+`.git` suffix, drop a trailing slash, and lowercase what is left. Two addresses match only where their targets match
+as well, because one URL under two clients is two backlogs.
 
 **A `consumes:` entry states no framework.** The framework this corpus took is stated once, at the top level.
+
+**Where the corpus consumes another one, `.imports/<shortcode>/manifest.json` states that corpus's own tracker.**
+`kac restore` writes the folder, so it is missing until somebody runs it. A finding you route to another corpus needs
+that address, so say where you could not read one.
 
 **Where `.corpus.yaml` is missing or will not parse, stop and say so.** You are either outside a corpus or in a broken
 one, and neither is something to triage.
@@ -167,8 +184,8 @@ wants the two apart: the organisation is `base` up to and including `<org>`, and
 
 ### Where the platform runs no tracker
 
-`tracker.target` of `none`, or a `base` of `null`, means this corpus files nowhere. There is no queue to read. Say so,
-name the corpus, and ask whoever is with you where its findings go.
+A `tracker.target` of `none`, or a derivation that reaches none, means this corpus files nowhere. There is no queue to
+read. Say so, name the corpus, and ask whoever is with you where its findings go.
 
 ## `triage`
 
@@ -243,6 +260,9 @@ lists the types it adopted. Search the words a reader would arrive with, not an 
 | what the estate allows      | `policies/`  |
 | an order of work            | `processes/` |
 | what proves a rule          | `controls/`  |
+
+**The table is the common cases.** Where the subject fits none of them, search the folder of whichever adopted type
+it belongs to.
 
 **A type this corpus declined has no folder.** Say so and classify from the body.
 
@@ -322,7 +342,8 @@ thing that can disagree with the first.
 A framework finding describes the tool rather than the person who filed it, so it may travel. It travels under two
 conditions: a person reads every word first, and the body contains none of the filer's own provenance.
 
-**Compare `framework.id` with `tracker.id`.**
+**Compare the framework's address with this corpus's tracker address**, both normalised, and compare the targets
+too. They are equal where a problem with `kac` and a problem with a record are filed in the same place.
 
 **Every case here still gets `kac:triaged` and `kac:route-framework`, as step 7 applies them.** A finding left without
 `kac:triaged` stays in the queue and is re-read, re-commented and re-drafted on every run.
@@ -373,7 +394,8 @@ One issue, one pull request.
 **`draft` takes a `kac:route-record` finding and nothing else.** Refuse the others and say where each goes.
 
 * `kac:route-framework` has no record to write. Its upstream body is already a comment on the issue.
-* `kac:route-misfiled` belongs on another corpus's backlog. Refile it there.
+* `kac:route-misfiled` belongs on another corpus's backlog. `.imports/<shortcode>/manifest.json` names it. Refile it
+  there.
 * `kac:route-none` is settled.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
@@ -383,13 +405,11 @@ One issue, one pull request.
 The records are in front of you, so what is left is the repository the branch goes to. The tracker and the repository
 are two addresses, and on Azure DevOps they are two different things.
 
-**Read `publishing-target` first.** Where it is `github` or `azure-devops`, `publishing.base` names that repository.
+**Read `publishing-target` first.** Only `github` and `azure-devops` address a repository a pull request can open
+against, and `publishing.base` names it. `azure-devops-wiki` addresses a wiki, `mkdocs` a documentation site, and
+`none` nothing at all. Refuse the last three, print the record, and say where the corpus is published from instead.
 
-**Where it is `azure-devops-wiki`, `mkdocs` or `none`, `.corpus.yaml` states no repository.** A wiki, a documentation
-site and a corpus published nowhere are all read from a checkout that still has a remote. Use the remote this checkout
-has, and name it in your reply.
-
-**Refuse where the checkout has no remote.** Print what the record should say and stop.
+**`publishing.path-prefix` is the folder the corpus sits in**, where the repository holds more than the corpus.
 
 ### 3. Write the record, or the edit
 

@@ -52,6 +52,10 @@ rules are checked by [ctl-0009] instead, which is where the unit tests that read
 The component list comes from `bundle.json`, which records what the manifest declared. So a skill or hook directory
 somebody forgot to declare stays undeclared and fails nothing.
 
+`harvest-findings` travels into a corpus's working tree rather than into a plugin, so no job here reaches it. Every
+check above reads an assembled bundle, and that skill is in none. The clause saying no plugin may declare a component
+that triages findings has no control either.
+
 Nothing here runs the publishing workflows. CI proves that a package and a plugin assemble. Whether nuget.org, GitHub
 Packages or the `marketplace` branch accepts either is answered after the merge.
 

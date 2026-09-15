@@ -54,10 +54,10 @@ bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude
 
 A trimmed component is not an error. It is a skill whose record type this corpus does not export.
 
-Three skills name no type at all, and who each one serves decides what happens to it. `corpus-retrieval` reaches the
-published source for whichever lookup skills are left, and `request-deviation` asks the owner of a clause a lookup
-found, so both follow the last lookup out. `raise-finding` is declared standalone and ships whatever the corpus
-adopted. A corpus with no records is the one a session most needs a route to report.
+A skill naming no type at all is not reached by that trim, and who it serves decides what happens to it instead.
+`corpus-retrieval` reaches the published source for whichever lookup skills are left, and `request-deviation` asks the
+owner of a clause a lookup found, so both follow the last lookup out. `raise-finding` is declared standalone and ships
+whatever the corpus adopted. A corpus with no records is the one a session most needs a route to report.
 
 ### An install
 

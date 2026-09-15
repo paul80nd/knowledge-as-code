@@ -3,9 +3,8 @@
 A skill is a document an agent loads when it recognises the work in front of it. Every skill `kac` ships lives in one
 of three trees, and which tree it lives in decides who can read it and what moving it costs.
 
-The rule is one sentence. **A skill travels into a corpus (one repository of knowledge records kept in git) where it
-governs a surface that corpus holds.** A skill about C# or about this documentation site governs nothing a corpus has,
-so it stays here.
+**A skill travels into a corpus (one repository of knowledge records kept in git) where it governs a surface that
+corpus holds.** A skill about C# or about this documentation site governs nothing a corpus has, so it stays here.
 
 Every table below is written from the file that decides it, so none of them is a second answer that can drift.
 
@@ -14,7 +13,7 @@ Every table below is written from the file that decides it, so none of them is a
 These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export. They answer
 from that export rather than from a network call.
 
-**An install carries a subset of these.** A skill reading a record type the corpus did not export is trimmed, so what
+**An install gets a subset of these.** A skill reading a record type the corpus did not export is trimmed, so what
 somebody receives follows from what that corpus adopted. `bundle` prints what shipped and what it trimmed, and
 `bundle.json` inside the plugin lists both.
 

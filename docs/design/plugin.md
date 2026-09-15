@@ -99,7 +99,7 @@ one answer repeated. Each skill reads its own directory, and `manifest.json` rep
 ### A component naming no type
 
 `requires` names the types a component reads. One naming none reads no export at all, so the trim above cannot reach it.
-Three skills are in that position, and `standalone` says which of two things each one is.
+A skill in that position is one of two things, and `standalone` says which.
 
 `corpus-retrieval` and `request-deviation` support the lookups. The first reaches a record's published source, and the
 second asks the owner of a clause to accept a departure from it. Each needs a record a lookup found, and no single type
@@ -118,7 +118,7 @@ The other half of that round trip is not a component here. `harvest-findings` tr
 drafts the record one of them asks for, and both invocations write: to the tracker, and to the records themselves. The
 reader is the corpus's own maintainer, holding the source. So the skill travels into the corpus's working tree under
 `.claude/skills/`, where [`new`](../cli/new.md) writes it and [`update`](../cli/update.md) keeps it current, and no
-plugin ships it. A consumer install would carry a skill that can only refuse.
+plugin ships it. A consumer install would ship a skill that can only refuse.
 
 **A file no component claims is the unconditional case**, and it needs no declaration. A README or a licence in the
 plugin tree travels whatever the corpus adopted.

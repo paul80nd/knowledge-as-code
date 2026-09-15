@@ -115,8 +115,10 @@ on, so a clone has it without anyone adding a marketplace by hand. These skills 
 
 **`harvest-findings` is in the working tree, under
 [`.claude/skills/`](.claude/skills/harvest-findings/SKILL.md).** It triages the findings already filed and drafts the
-record one of them asks for, so it writes to the tracker and to the records. Only somebody holding this repository can
-run it. Ask it before you plan a session's work here, because a finding nobody triaged is work nobody has seen.
+record one of them asks for, so it writes to the tracker and to the records. Ask it before you plan a session's work
+here, because a finding nobody triaged is work nobody has seen. **Start it from inside a corpus**, as
+`examples/dog-fooding`: it walks up for a `.corpus.yaml` to learn which corpus it is triaging, and this root has
+none.
 
 **Use them, and then raise a finding where they let you down.** This is the one corpus whose subject is the repository
 you are working in, so a session here is the only reader who can tell what it is missing. Raise one for whichever of
