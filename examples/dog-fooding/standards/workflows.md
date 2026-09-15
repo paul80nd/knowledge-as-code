@@ -93,10 +93,12 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
 
 ### A version moves by hand and publishes once
 
-- `<Version>` in `tooling/kac/kac.csproj` **MUST** move in the pull request carrying the change it ships.
-- A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in
-  that same pull request.
-- A release **MUST** rename `## Unreleased` to the version and its date in the commit moving `<Version>`.
+- A change to `kac` a user can observe **MUST** take a line under `## Unreleased` in `tooling/kac/CHANGELOG.md`, in the
+  pull request making that change.
+- A pull request **MUST NOT** move `<Version>` in `tooling/kac/kac.csproj` unless the branch owner has decided to
+  release.
+- A pull request moving `<Version>` **MUST** rename `## Unreleased` to that version and its date, in the commit moving
+  `<Version>`.
 - `content-version` in a corpus's `.corpus.yaml` **MUST** move in the pull request changing what that corpus knows.
 - A publishing job **MUST** ask the registry whether it already holds the version in front of it.
 - Where the registry holds that version already, a publishing job **MUST** finish green.
@@ -149,7 +151,8 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 - [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
 - [ ] Every publishing job declares `timeout-minutes`, and every package publish sits behind a verifying job.
-- [ ] The version this pull request ships has moved, and the changelog has its section.
+- [ ] Every observable change to `kac` here has its line under `## Unreleased`.
+- [ ] A pull request moving `<Version>` has the branch owner's decision behind it, and has renamed `## Unreleased`.
 - [ ] Every corpus whose records changed has moved its `content-version`.
 
 ## Rationale and provenance
@@ -157,8 +160,10 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 Read-only permission keeps CI out of the files a person edits. `generate --check` reports a stale generated file and
 names the command to run locally, so no job needs to write one back.
 
-A version that has not moved publishes nothing, so no reader sees the edited record and the published copy drifts
-from `main` with no build reporting it. What each of these numbers means, and what a producer's move obliges of the
+A `content-version` that has not moved publishes nothing, so no reader sees the edited record and the published copy
+drifts from `main` with no build reporting it. Merging a move of `<Version>` publishes to nuget.org, and a published
+version cannot be replaced. So the branch owner decides whether to release before the pull request opens, and an entry
+waits under `## Unreleased` until they do. What each of these numbers means, and what a producer's move obliges of the
 corpora consuming it, are [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a
 workflow publishes it.
 
@@ -188,6 +193,8 @@ corpus receives it, and it names `actions/checkout@v4` today.
 
 ## Changelog
 
+- 2026-09-15: made the release the branch owner's decision, so an observable change takes its changelog entry under
+  `## Unreleased` without moving `<Version>`.
 - 2026-09-07: gave the stamp semantics and the consumer's lock and range to [std-VERS], keeping when a version moves,
   how a workflow publishes it, and the registry check that holds a published version in place.
 - 2026-09-06: took the changelog, semantic `content-version` and consumer-repointing rules that `CLAUDE.md` had been
