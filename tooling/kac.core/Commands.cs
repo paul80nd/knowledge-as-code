@@ -8,40 +8,37 @@ namespace kac.core;
 
 public static class Commands
 {
-    public static int Validate(string corpusRoot, bool json)
+    /// <summary>
+    /// Check the corpus and print the findings. <paramref name="today"/> is the day every record is judged
+    /// against, and <paramref name="registry"/> is where each import's source is read from. Both come from
+    /// the caller so a test can fix the day and answer for the registry without a network.
+    /// </summary>
+    public static int Validate(string corpusRoot, bool json, DateOnly today, Registry registry)
     {
         var corpus = Corpus.Load(corpusRoot);
-
-        // The day is read here and handed down, so every record in one run is judged against the same
-        // one. UTC, so two people in different places validating one commit agree on what has gone by.
-        var findings = Validator.CheckAll(corpus, DateOnly.FromDateTime(DateTime.UtcNow),
-            Standings(corpusRoot, corpus.Descriptor));
+        var findings = Validator.CheckAll(corpus, today, Standings(corpus.Descriptor, registry));
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
     // What each import's source publishes now. Null for a corpus consuming nothing, which is every corpus
-    // standing on its own: no client is built, no source is read, and the check costs it nothing.
+    // standing on its own: no source is read, and the check costs it nothing.
     //
     // This is the one place `validate` leaves the working tree. A `source:` names a folder as often as a
     // registry, and a folder is read from disk, so no network is involved there. Where the source is a
     // registry and the run cannot reach it, `import-unreachable` says so rather than reporting the lock
     // as current.
-    private static IReadOnlyList<ImportStanding>? Standings(string corpusRoot, CorpusDescriptor descriptor)
-    {
-        if (descriptor.Consumes.Count == 0) return null;
+    private static IReadOnlyList<ImportStanding>? Standings(CorpusDescriptor descriptor, Registry registry) =>
+        descriptor.Consumes.Count == 0 ? null : Freshness.Read(descriptor.Consumes, registry);
 
-        // Shorter than the two minutes `restore` allows itself. That one fetches packages and is run when
-        // somebody means to wait; this reads one small index per source, on a command run after every
-        // edit. A source that never answers costs each of its imports this and then reports
-        // `import-unreachable`, so the wait is bounded by the number of entries rather than by a hang.
-        using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
-        return Freshness.Read(descriptor.Consumes,
-            new Registry(Registry.Over(client), Registry.OnDisk(corpusRoot)));
-    }
-
-    // The corpus is loaded whole, whatever `type` names.
-    public static int Export(string corpusRoot, string? type)
+    /// <summary>
+    /// Write the corpus to <c>.dist/export/</c>. <paramref name="now"/>, <paramref name="commit"/> and
+    /// <paramref name="dirty"/> are stamped into the manifest as given. <paramref name="commit"/> is null where
+    /// git could not answer, and <paramref name="dirty"/> is null where the tree could not be asked, which the
+    /// manifest records as unknown rather than clean.
+    /// </summary>
+    public static int Export(string corpusRoot, string? type, DateTime now, string? commit, bool? dirty)
     {
+        // The corpus is loaded whole, whatever `type` names.
         var corpus = Corpus.Load(corpusRoot);
 
         if (type is not null && corpus.Adopted.All(t => t.Key != type))
@@ -72,10 +69,7 @@ public static class Commands
                                                                + $"{c.FormatVersion}"))}, and this build reads "
                 + $"{Exporter.FormatVersion}. Re-export and re-pack it, then run kac restore.");
 
-        var commit = Git.Head(corpusRoot);
-        var dirty = Git.Dirty(corpusRoot);
         var publishing = Publishing.For(corpus.Descriptor, commit);
-        var now = DateTime.UtcNow;
 
         var plan = Exporter.Plan(corpus, publishing, type,
             new ExportRun(now.ToString("yyyy-MM-ddTHH:mm:ssZ"), DateOnly.FromDateTime(now), commit, dirty),
@@ -208,7 +202,7 @@ public static class Commands
         // Generation writes the `_index.md` files and the generated blocks that validation then checks,
         // so it goes first. Staging goes last, so everything the command did is visible in one place.
         Generate(dir, check: false);
-        var validated = Validate(dir, json: false);
+        var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable);
         Stage(dir);
 
         if (validated == 0) return 0;
@@ -219,6 +213,13 @@ public static class Commands
              + "tool, and not in anything you answered. the files are written and staged.");
         return 1;
     }
+
+    // The registry the corpus this wrote is validated against. The template declares no `consumes:`, so
+    // nothing is ever asked of it. Should a template come to declare one, every import reports
+    // `import-unreachable` here rather than `new` fetching from a network nobody asked it to use.
+    private static readonly Registry Unreachable = new(
+        _ => new Fetched(null, 0, "new does not read a registry."),
+        new FolderFeed(_ => null, _ => null));
 
     // Offer `git init`, and answer with the refusal where there is one. Discovery reads the git listing,
     // so the choice is between running it and cancelling rather than carrying on without a repository.
@@ -432,7 +433,10 @@ public static class Commands
     // The corpus is never loaded, only its descriptor: what a restore has to decide is a fact about the
     // declarations and about what the registry holds, and loading a corpus before its imports have
     // arrived would ask the validator about a graph that is not assembled yet.
-    public static int Restore(string corpusRoot)
+    /// <summary>
+    /// Fetch what <c>consumes:</c> declares into <c>.imports/</c>, from <paramref name="registry"/>.
+    /// </summary>
+    public static int Restore(string corpusRoot, Registry registry)
     {
         var descriptor = CorpusDescriptor.Load(corpusRoot);
         if (descriptor.Consumes.Count == 0)
@@ -441,9 +445,7 @@ public static class Commands
             return 0;
         }
 
-        using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-        var plan = kac.core.Restore.Plan(descriptor.Consumes,
-            new Registry(Registry.Over(client), Registry.OnDisk(corpusRoot)),
+        var plan = kac.core.Restore.Plan(descriptor.Consumes, registry,
             shortcode => kac.core.Restore.Installed(corpusRoot, shortcode));
 
         if (plan.Problems.Count > 0)

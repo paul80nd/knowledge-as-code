@@ -1,5 +1,7 @@
 // The CLI surface: it wires Spectre.Console.Cli to `Commands` and finds the corpus each verb answers about.
-// Every verb's logic is in kac.core, and `tooling/CLAUDE.md` says which file answers what.
+// Every verb's logic is in kac.core, and `tooling/CLAUDE.md` says which file answers what. The clock, git
+// and the network are read here and passed down, so a test calls a verb with a fixed day and a registry
+// that answers from memory.
 
 using System.ComponentModel;
 using System.Reflection;
@@ -121,6 +123,11 @@ internal static class Cli
 
         return run(corpusRoot);
     }
+
+    // The registry a verb fetches from: the network through `client`, and the folders `.corpus.yaml` names
+    // as sources from disk. The caller owns the client, because the timeout is the caller's to choose.
+    public static Registry RegistryFor(string corpusRoot, HttpClient client) =>
+        new(Registry.Over(client), Registry.OnDisk(corpusRoot));
 }
 
 // What every verb takes, whatever else it declares.
@@ -217,7 +224,19 @@ internal sealed class ValidateSettings : KacSettings
 internal sealed class ValidateCommand : Command<ValidateSettings>
 {
     protected override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
-        Cli.InCorpus(settings, corpus => Commands.Validate(corpus, settings.Json));
+        Cli.InCorpus(settings, corpus =>
+        {
+            // Shorter than the two minutes `restore` allows itself. That one fetches packages and is run
+            // when somebody means to wait; this reads one small index per source, on a command run after
+            // every edit. A source that never answers costs each of its imports this and then reports
+            // `import-unreachable`, so the wait is bounded by the number of entries rather than by a hang.
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+
+            // One day for the whole run, so every record is judged against the same one. UTC, so two
+            // people in different places validating one commit agree on what has gone by.
+            return Commands.Validate(corpus, settings.Json, DateOnly.FromDateTime(DateTime.UtcNow),
+                Cli.RegistryFor(corpus, client));
+        });
 }
 
 internal sealed class GenerateSettings : KacSettings
@@ -240,7 +259,11 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 internal sealed class RestoreCommand : Command<CorpusSettings>
 {
     protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
-        Cli.InCorpus(settings, Commands.Restore);
+        Cli.InCorpus(settings, corpus =>
+        {
+            using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+            return Commands.Restore(corpus, Cli.RegistryFor(corpus, client));
+        });
 }
 
 // `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
@@ -256,7 +279,8 @@ internal sealed class ExportSettings : KacSettings
 internal sealed class ExportCommand : Command<ExportSettings>
 {
     protected override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
-        Cli.InCorpus(settings, corpus => Commands.Export(corpus, settings.Type));
+        Cli.InCorpus(settings, corpus =>
+            Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), Git.Dirty(corpus)));
 }
 
 // `bundle` assembles what `export` wrote, plus the `.plugin/` tree, into a plugin directory under
