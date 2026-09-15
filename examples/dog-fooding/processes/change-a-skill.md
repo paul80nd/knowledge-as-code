@@ -75,8 +75,10 @@ stamp in every descriptor. One nothing sends moves nothing.
       `.claude/skills/` directory, and `SkillReferenceTests` fails a stale one. Never hand-edit a generated block.
 12. Run `kac update --check --from ../../` inside every corpus under `examples/`. It withholds the plugin tree, so it
     proves the rest of the overlay and nothing about step 6.
-13. Regenerate each report whose `sources:` names a corpus you moved in step 8. Load `writing-a-report`, which has the
-    merge that keeps a person's judgement across a regeneration.
+13. Bring each report whose `sources:` names a corpus you moved in step 8 up to date. Load `writing-a-report`. It
+    says when to raise `sources:` by hand, and when to run the report again and merge. A skill change moves a version
+    stamp and changes no clause, so raise `sources:` by hand. Run the report again where the same pull request also
+    changed what a record states under `implements:`.
 14. Run the test layers, one `kac` invocation at a time. Adding or removing a file under `template/.plugin/` changes
     `expected-tree.txt`, and moving `manifest.yaml` changes `expected-descriptor.yaml`, so run the golden fixtures with
     `GITHUB_ACTIONS=true`.
