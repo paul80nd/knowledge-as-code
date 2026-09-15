@@ -19,6 +19,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`kac new` and `kac update` send a corpus the `writing-a-report` skill.** It joins `technical-writing` and
+  `writing-a-record` in the overlay, under one rule: a writing skill travels where it governs a surface a corpus
+  holds. A corpus can adopt `reports`, so the skill that says how to fill a report's judgement cells travels with it.
+  `writing-in-the-tool` and `writing-the-docs` describe C# and a documentation site no corpus has, and `i-want-to`
+  routes to this repository's own processes where a corpus reads its own through `process-lookup`, so all three stay
+  behind. `reports/_template.md` gains the four verdicts as well, for an author who opens the template and loads no
+  skill. Before this the words `Covered`, `Covered by its pair`, `Gap` and `Out of scope` were stated in one file that
+  never left this repository, so a corpus adopting `reports` was told to answer the judgement cells and nowhere told
+  with what. `manifest.yaml` moves to 15, and `kac update` stamps `upstream.template-version`.
+
 - **`harvest-findings`, the skill that triages filed findings and drafts the record one asks for.** `raise-finding`
   files an observation as an issue and stops, so nothing moves it afterwards. `triage` reads every finding without a
   `kac:triaged` label, sorts each into one of five routes, shows a person the table and writes nothing until they

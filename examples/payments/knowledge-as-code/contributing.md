@@ -10,13 +10,15 @@ somewhere that keeps its answer current.
 | where a record goes                       | [Taxonomy](taxonomy.md), which has the decision table |
 | what frontmatter it carries               | [Metadata](metadata.md)                               |
 | what this type asks of you                | the type's own page, and the `_template.md` beside it |
-| how to write the words                    | the `technical-writing` and `writing-a-record` skills |
+| how to write the words                    | the writing skills, which the paragraph below lists   |
 | what CI will hold it to                   | `kac checks`, run in this corpus                      |
 | how a contribution is reviewed and merged | [Contributing][contributing]                          |
 
-**The rules for the words are skills rather than pages.** `technical-writing` carries the floor. `writing-a-record`
-carries what this corpus adds and what a record's tier asks on top: the link forms CI enforces, what a `_template.md`
-may say, and the constraints each tier brings.
+**The rules for the words are skills rather than pages.** `technical-writing` states the floor, and every surface
+answers to it. `writing-a-record` states what this corpus adds and what a record's tier asks on top: the link forms CI
+enforces, what a `_template.md` may say, and the constraints each tier brings. Where this corpus adopted `reports`,
+`writing-a-report` sits on both and states the four verdicts a person writes into the cells `kac report` leaves
+blank.
 
 **The schema outranks all of it.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report, are executable
 where a page is not.
