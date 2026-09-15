@@ -89,9 +89,9 @@ We treat knowledge as code:
   promotion of an insight. The dependency itself is not worth taking.
 
 * **Keep knowledge in work items.** Functional detail already lives in the tracker, and the tracker has real search.
-  Rejected: a work item is a delivery artefact whose lifecycle ends at "done". Durable knowledge outlives the work that
-  produced it. A standard, a decision and a runbook have no natural home in a backlog. We link to the tracker and do
-  not duplicate it.
+  Adopted for capture, rejected as the store. A work item is a delivery artefact whose lifecycle ends at "done".
+  Durable knowledge outlives the work that produced it. A standard, a decision and a runbook have no natural home in a
+  backlog. The corpus keeps the answer somebody settled. It links the work item and does not duplicate it.
 
 ## Consequences
 
