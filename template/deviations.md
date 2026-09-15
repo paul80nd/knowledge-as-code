@@ -43,8 +43,8 @@ A deviation is also not:
   is written to be closed.
 * **An audit finding.** A finding is something an auditor noticed afterwards. A deviation is something we agreed to
   before, or immediately after an incident left no time.
-* **A backlog item.** A deviation starts as a request in the issue tracker, and becomes a record once a named person
-  accepts the risk. The record says what has to be true for it to close. The work that closes it stays in the tracker.
+* **A backlog item.** The record says what has to be true for a deviation to close, and the work that closes it stays
+  in the tracker. A request in the tracker is not a deviation either, until a named person accepts the risk.
 
 **A deviation sits in the corpus whose people accepted the risk.** It names the clause it departs from, wherever that
 clause was written. A corpus consuming a governance layer holds its own departures from that layer's policies. Nothing

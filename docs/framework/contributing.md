@@ -85,7 +85,7 @@ unanswerable.
 * Anything with secrets, connection strings, tokens or customer data in it. A corpus is broadly readable.
 * Raw session logs. Distilled, reviewed records only.
 * Speculative documentation for work not yet started. That belongs in the backlog.
-* An observation nobody has verified. File it in the tracker and promote it once somebody checks it.
+* An observation nobody has verified. That belongs in the tracker.
 * A record that fits no type. Raise the gap: a missing type is a taxonomy conversation.
 
 [Taxonomy](taxonomy.md#which-types-a-corpus-holds) is the page for working out where a record goes, and for the case

@@ -66,12 +66,11 @@ is visible and a contradiction is not.
 
 Knowledge arrives as a work item and leaves as a record. Each route has its own bar.
 
-Inbound is the tracker the corpus already uses. You file what you noticed in a line or two, with no template, no owner
-and no review. It is not a record yet, so nothing in the corpus has to stand behind it.
+Inbound is the tracker the corpus already uses. What you file there is not a record, so nothing in the corpus has to
+stand behind it.
 
 Outbound is what `kac` formalises: the **export**, meaning the machine-readable copy of a corpus that another
-repository installs, and the agent skills that read it. An observation joins that route once somebody settles the
-question and verifies the answer.
+repository installs, and the agent skills that read it. Only a record travels that way.
 
 Separating the routes is what lets the bar on each differ. Capture stays free, and what reaches the export stays worth
 believing.
