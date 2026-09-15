@@ -2,14 +2,16 @@
 id: adr-0001
 type: adr
 tier: decided
-status: proposed
-owner: human:paul.law
+status: accepted
+decided-on: "2026-08-05"
+owner: human:mira.okonjo
+deciders: [ human:alex.doe, human:mira.okonjo, human:robin.hale ]
 tags: [ documentation, knowledge-management, tooling ]
 ---
 
 # Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to
 
-`ADR: adr-0001` `PROPOSED`
+`ADR: adr-0001` `ACCEPTED`
 
 > **In the context of** knowledge split across the wiki, ADO and people's memory, **facing** AI sessions that cannot
 > find our standards or record findings, **we decided** to treat knowledge as code: Markdown with validated
