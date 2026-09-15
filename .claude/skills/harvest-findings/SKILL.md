@@ -34,6 +34,9 @@ answered for all of them. What you are about to write goes out under their name,
 **A silent no is a no.** Where nobody answers, print the table and stop. Do not label anything and mention it
 afterwards.
 
+**Creating a label is a write.** It changes the repository whether or not a finding ever gets it, so it waits for the
+same yes everything else waits for.
+
 **Show the record before you commit it.** `draft` writes a file, a branch and a pull request. The person sees the record
 first.
 
@@ -131,7 +134,7 @@ nothing is triaged twice.
 |-----------------------|-------------------------------------------------------------------------------|
 | `kac:route-framework` | the finding reports `kac`, the schema, a skill or the plugin. No record.      |
 | `kac:route-record`    | a record in this corpus is wrong, or one is missing                           |
-| `kac:route-misfiled`  | this belongs to a corpus under `consumes:`, and the ticket is on this backlog |
+| `kac:route-misfiled`  | a corpus under `consumes:` answers this, and the ticket was filed here        |
 | `kac:route-none`      | a duplicate, or a record here already covers it                               |
 | `kac:route-unclear`   | triaged, and a person has to decide                                           |
 
@@ -140,17 +143,30 @@ nothing is triaged twice.
 **`kac:route-unclear` is a verdict, not a failure.** Reach for it wherever choosing between the others would be a guess.
 An issue left untriaged is an issue nobody sees again.
 
-## Make the labels first
+## Making the labels
 
-A corpus that ran `kac new` last week has none of these. `gh issue edit` rejects the whole command when one label is
-missing, so create them before you triage anything, whether or not you think they are there.
+A corpus that ran `kac new` last week has none of these, and `gh issue edit` rejects the whole command when one label
+is missing. So every label you are about to apply has to exist before step 7 applies the first one.
 
-**Create `kac:finding` as well.** `raise-finding` files a finding unlabelled where the repository refuses the label,
+**List them before you triage, and create nothing yet.** Read what the repository already has, and count the missing
+ones into what you tell the person you are about to write.
+
+**Create the missing ones after they say yes**, immediately before you label the first issue.
+
+**Count `kac:finding` among them.** `raise-finding` files a finding unlabelled where the repository refuses the label,
 so making it is what stops the next one going missing.
 
 ### GitHub
 
 `tracker.target` is `github`, and `tracker.base` is the repository, as `https://github.com/<owner>/<repo>`.
+
+Read first:
+
+```bash
+gh label list --repo <owner>/<repo> --limit 100 --json name --jq '.[].name'
+```
+
+Then, once they have agreed:
 
 ```bash
 gh label create kac:finding --repo <owner>/<repo> --color 006B75 --force \
@@ -287,18 +303,25 @@ Work down this list and take the first that fits.
 **A finding asking for a type this corpus declined is `kac:route-unclear`.** Adopting a type is a decision a person
 takes, so say in the comment which type it would need.
 
+**A misfiled finding is not always on the wrong tracker.** Compare that corpus's tracker in
+`.imports/<shortcode>/manifest.json` with this corpus's. Where they differ, the ticket has to move, and the comment
+names the backlog it goes to. Where they are equal, one repository publishes both corpora, nothing is refiled, and
+what changes is which corpus answers. Say which of the two this is.
+
 ### 6. Show the table and wait
 
 Print one row per finding: the issue number, its title cut short, the route, and the reason in under a dozen words. Put
 the `kac:route-unclear` rows at the top, because those are the ones needing an answer.
 
-**Say what you are about to write.** One `kac:triaged` label, one route label and one comment on each issue.
+**Say what you are about to write.** Every label the repository is missing, and then one `kac:triaged` label, one
+route label and one comment on each issue.
 
 Then wait. A person who changes a row has answered for the table.
 
 ### 7. Label, and comment the reason
 
-Do these together, one issue at a time. An issue labelled with no comment is a verdict nobody can argue with.
+Create the labels the repository was missing first, as the section above them writes it. Then label and comment one
+issue at a time, doing the pair together. An issue labelled with no comment is a verdict nobody can argue with.
 
 #### GitHub
 
@@ -330,6 +353,7 @@ Three sentences is plenty. The route, why, and what happens next.
 * **Name the route in the first sentence**, in the words the label uses.
 * **Name the issue a duplicate duplicates**, and the record that already covers a finding you routed to
   `kac:route-none`.
+* **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
 * **Name both routes** where you chose `kac:route-unclear` because two fitted, and say what a person has to decide.
 * **Say nothing about whether the claim is true.** You did not check, and writing as though you did is the one thing
   this verdict must not do.
@@ -394,8 +418,8 @@ One issue, one pull request.
 **`draft` takes a `kac:route-record` finding and nothing else.** Refuse the others and say where each goes.
 
 * `kac:route-framework` has no record to write. Its upstream body is already a comment on the issue.
-* `kac:route-misfiled` belongs on another corpus's backlog. `.imports/<shortcode>/manifest.json` names it. Refile it
-  there.
+* `kac:route-misfiled` asks for a record in a corpus this one consumes, so its own maintainer drafts it. Where that
+  corpus files on another tracker, which `.imports/<shortcode>/manifest.json` says, refile the ticket there first.
 * `kac:route-none` is settled.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
