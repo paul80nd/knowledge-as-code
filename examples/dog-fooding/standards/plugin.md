@@ -25,8 +25,9 @@ Every corpus here publishes a Claude Code plugin: a frozen copy of its export, a
 skill answers from the export beside it, using no more than a session's ability to read a file, and states plainly what
 did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue on the
 repository the export came from: a finding where the corpus is wrong, and a request where the work is about to depart
-from a clause that is right. Back at that repository, a skill triages those issues, marks each one with the route it
-belongs on, and drafts the record a routed finding asks for as a pull request.
+from a clause that is right. Back at that repository, a skill in the corpus's own working tree triages those issues,
+marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request. That
+skill ships in no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -35,9 +36,9 @@ belongs on, and drafts the record a routed finding asks for as a pull request.
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
 - A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine.
-- A skill **MUST NOT** require a network call to answer from the export.
-- A skill **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}`.
-- Every path a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
+- A skill reading an export **MUST NOT** require a network call to answer from it.
+- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}`.
+- Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
 
@@ -159,11 +160,11 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 
 ### Triage routes a finding with a label, and says why in a comment
 
-- A skill triaging findings **MUST** run only where the session is in a checkout of the corpus itself, found by
-  walking up for a `.corpus.yaml` whose `corpus:` is the one the export names.
-- A skill **MUST NOT** test that checkout against the `publishing` block, because a corpus published as a wiki or a
-  site has no repository there and its maintainer still has both a tracker and the source.
-- A skill **MUST NOT** triage, mark or comment on a tracker reached from an installed plugin alone.
+- A skill triaging findings **MUST** travel into a corpus's working tree, and **MUST NOT** be a component of a
+  plugin.
+- A skill triaging findings **MUST** read the corpus it is about from the `.corpus.yaml` it walks up to.
+- A skill triaging findings **MUST NOT** decide which corpus it is in from the `publishing` block, because a corpus
+  published as a wiki or a site has no repository there and its maintainer still has both a tracker and the source.
 - A skill **MUST** select its queue as `kac:finding` without `kac:triaged`.
 - A skill **MUST** also find an open issue whose body has the `yaml kac-finding` block and no `kac:finding` mark.
 - A skill **MUST** say where a query returned as many issues as its limit allows.
@@ -188,10 +189,11 @@ _**Covers:** `eng:pol-AGNT.ACCEPT`, `eng:pol-AGNT.EQUAL`, `eng:pol-AGNT.SELFVER`
 
 ### A framework finding travels stripped, and only by hand
 
-- A skill **MUST** compare the `id` of the framework block with the `id` of the tracker block.
+- A skill **MUST** compare the framework block's address with the tracker block's, both targets and both bases
+  normalised.
 - Where the two are equal, a skill **MUST** mark the finding and copy nothing.
 - Where the two differ, a skill **MUST** post the upstream body as a comment on the issue and stop.
-- A skill **MUST NOT** file a finding on a tracker outside the organisation holding the plugin.
+- A skill **MUST NOT** file a finding on a tracker outside the organisation holding the corpus.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's
   commit, or the name of the corpus the finding was filed from.
 - The upstream body **MUST** state the version of the framework the session ran.
@@ -333,8 +335,9 @@ broke it.
       yet.
 - [ ] No deviation request is dropped, or held back, because the target has no `kac:deviation` label.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
-- [ ] Triage ran only in a checkout of the corpus the export names, tested against `.corpus.yaml` rather than against
-      the `publishing` block.
+- [ ] Triage named the corpus from the `corpus:` of the `.corpus.yaml` it walked up to, and never from the
+      `publishing` block.
+- [ ] No plugin declares a component that triages findings.
 - [ ] The queue read both the marked findings and the open issues whose body carries the block without the mark.
 - [ ] Every triaged issue keeps `kac:finding`, and gains `kac:triaged` and exactly one `kac:route-*` mark.
 - [ ] Every verdict was shown to a person and agreed before any mark or comment was written.
@@ -435,18 +438,19 @@ all. Every type requires it, so a record without one fails `kac validate`, and i
 the record, which is the one thing an agent may not decide. So the skill asks the person running it and writes what
 they say.
 
-Triage is the one skill here that writes to a tracker, so it is the one that needs a boundary the export cannot give
-it. A lookup answers from the copy beside it and writes nothing. `raise-finding` writes one issue and asks first.
-Triage writes marks and comments across a whole backlog, and in a consumer's installed plugin `tracker.base` addresses
-the backlog of whoever published the corpus. A consumer session running it would triage a stranger's repository. The
-checkout is the only signal available: a session holding the corpus's source is its maintainer, and every other session
-is not. `request-deviation` draws the same boundary by comparing two addresses, and has two to compare.
+Triage writes marks and comments across a whole backlog, so it is bounded by where it travels. A lookup answers from
+the copy beside it and writes nothing. `raise-finding` writes one issue and asks first. In a consumer's installed
+plugin `tracker.base` addresses the backlog of whoever published the corpus, so a consumer running triage would mark
+up a stranger's repository. Shipping triage in a plugin at all is therefore the thing to refuse. It travels into the
+corpus's working tree instead, where the only session that can load it is one holding the corpus's source, and that
+session is the maintainer. `request-deviation` draws its boundary by comparing two addresses, because it does ship in
+a plugin and has two to compare.
 
-The test is the corpus and not the publishing address, because a corpus files where its publishing block does not
-point. `Tracker.cs` derives a tracker from `publishing` only where that target has a backlog, which is why the
-descriptor states `tracker:` separately at all. A corpus published as a wiki or a documentation site has no repository
-in `publishing.base`, so a skill comparing a checkout against it would refuse that corpus's own maintainer for ever.
-`.corpus.yaml` is beside the records in every case.
+The corpus comes from `corpus:` and never from the publishing address, because a corpus files where its publishing
+block does not point. `Tracker.cs` derives a tracker from `publishing` only where that target has a backlog, which is
+why the descriptor states `tracker:` separately at all. A corpus published as a wiki or a documentation site has no
+repository in `publishing.base`, so a skill reading the corpus out of that block would refuse that corpus's own
+maintainer for ever. `.corpus.yaml` is beside the records in every case.
 
 The verdict is a mark, and the reason is a comment. A route stated twice is two things that can disagree, so the
 comment argues and states no data. It is also the only part a person can push back on, which a mark on its own gives
@@ -478,6 +482,8 @@ standard.
 
 ## Changelog
 
+- 2026-09-15: triage travels into a corpus's working tree and ships in no plugin. It writes to the tracker and to the
+  records, so the reader is the maintainer holding the source.
 - 2026-09-15: added the triage marks a filed finding is routed by, the checkout triage runs from, and the conditions a
   framework finding travels under. The label is what triage selects on, and the block in the body is what finds a
   finding the label never reached.

@@ -1,11 +1,10 @@
 # Skills
 
-A skill is a document an agent loads when it recognises the work in front of it. `kac` ships sixteen, and which of
-three trees each one lives in decides who can read it and what moving it costs.
+A skill is a document an agent loads when it recognises the work in front of it. Every skill `kac` ships lives in one
+of three trees, and which tree it lives in decides who can read it and what moving it costs.
 
-The rule is one sentence. **A writing skill travels into a corpus (one repository of knowledge records kept in git)
-where it governs a surface that corpus holds.** A skill about C# or about this documentation site governs nothing a
-corpus has, so it stays here.
+**A skill travels into a corpus (one repository of knowledge records kept in git) where it governs a surface that
+corpus holds.** A skill about C# or about this documentation site governs nothing a corpus has, so it stays here.
 
 Every table below is written from the file that decides it, so none of them is a second answer that can drift.
 
@@ -14,9 +13,9 @@ Every table below is written from the file that decides it, so none of them is a
 These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export. They answer
 from that export rather than from a network call.
 
-**An install carries fewer than ten.** A skill reading a record type the corpus did not export is trimmed, so what
-somebody receives follows from what that corpus adopted. `example-libraries` ships five of these and
-`example-engineering` seven.
+**An install gets a subset of these.** A skill reading a record type the corpus did not export is trimmed, so what
+somebody receives follows from what that corpus adopted. `bundle` prints what shipped and what it trimmed, and
+`bundle.json` inside the plugin lists both.
 
 `Requires` names the record types a skill opens a file of. A skill requiring none is one of two things.
 **`standalone`** reads no export and serves whoever is holding the plugin, so it ships whatever the corpus adopted.
@@ -32,7 +31,6 @@ A change to one of these moves the `content-version` of every corpus whose bundl
 | `corpus-retrieval`  | Reach the published source of a record this corpus export summarises, and build a link somebody can follow                                   | supporting    |
 | `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                                | `glossary@1`  |
 | `raise-finding`     | File something you noticed about this corpus as an issue on the repository that publishes it                                                 | standalone    |
-| `harvest-findings`  | Triage the findings filed against this corpus, and draft the record one of them asks for                                                     | standalone    |
 | `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the repository that publishes the corpus holding that clause | supporting    |
 | `controls-lookup`   | Find out what proves a rule here, in the controls that travel with this plugin                                                               | `controls@1`  |
 | `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                                    | `fixes@2`     |
@@ -48,8 +46,9 @@ These arrive in a corpus's own working tree, under `.claude/skills/`. [`new`](cl
 is created and [`update`](cli/update.md) keeps them current, so a corpus owns a copy rather than reading this
 repository.
 
-They are for whoever is writing records, which is a different reader from the one who installed a plugin. Nothing
-here reads an export.
+The writing skills are for whoever is writing records, which is a different reader from the one who installed a
+plugin. `harvest-findings` is for the corpus's maintainer: it triages the findings filed against the corpus and drafts
+the record one of them asks for, so it writes to the tracker and to the records. Nothing here reads an export.
 
 Adding, removing or renaming one of these moves `version:` in `manifest.yaml`, and `upstream.template-version` in
 every corpus that took it, because a corpus has to respond. Rewording one moves neither: `update` sends the new words
@@ -62,6 +61,7 @@ and nothing about the corpus changes.
 | `technical-writing` | The writing floor for every word in this repository                                           |
 | `writing-a-record`  | The shape of what a corpus holds                                                              |
 | `writing-a-report`  | Turn `kac report <name>` into a published report record, and bring an existing one up to date |
+| `harvest-findings`  | Triage the findings filed against this corpus, and draft the record one of them asks for      |
 
 <!-- END GENERATED: skills-in-a-corpus -->
 

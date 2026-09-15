@@ -192,13 +192,11 @@ jobs:
             exit 1
           fi
 
-          for standalone in skills/raise-finding skills/harvest-findings; do
-            if ! jq -e --arg s "$standalone" '[.included[].path] | index($s) != null' \
-              .dist/plugin/bundle.json > /dev/null; then
-              echo "$standalone was trimmed, so a corpus holding no record cannot report that"
-              exit 1
-            fi
-          done
+          if ! jq -e '[.included[].path] | index("skills/raise-finding") != null' \
+            .dist/plugin/bundle.json > /dev/null; then
+            echo "skills/raise-finding was trimmed, so a corpus holding no record cannot report that"
+            exit 1
+          fi
 
           # A skill supporting the lookups has nothing to support here, and leaves with the last of them.
           if ! jq -e '[.included[].path] | index("skills/request-deviation") == null' \

@@ -110,10 +110,15 @@ on, so a clone has it without anyone adding a marketplace by hand. These skills 
 * **`fix-lookup`** says whether somebody here has already solved a problem. Ask it before you debug anything, and
   before you file a finding about a problem you just met.
 * **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
-* **`harvest-findings`** triages the findings already filed, and drafts the record one of them asks for. Ask it before
-  you plan a session's work here, because a finding nobody triaged is work nobody has seen.
 * **`request-deviation`** asks the owner of a clause to accept a departure from it. Reach for it before you build
   something that breaks one of the inherited clauses in `examples/engineering`.
+
+**`harvest-findings` is in the working tree, under
+[`.claude/skills/`](.claude/skills/harvest-findings/SKILL.md).** It triages the findings already filed and drafts the
+record one of them asks for, so it writes to the tracker and to the records. Ask it before you plan a session's work
+here, because a finding nobody triaged is work nobody has seen. **Start it from inside a corpus**, as
+`examples/dog-fooding`: it walks up for a `.corpus.yaml` to learn which corpus it is triaging, and this root has
+none.
 
 **Use them, and then raise a finding where they let you down.** This is the one corpus whose subject is the repository
 you are working in, so a session here is the only reader who can tell what it is missing. Raise one for whichever of
