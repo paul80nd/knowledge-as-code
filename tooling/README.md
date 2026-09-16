@@ -123,13 +123,14 @@ Three layers, all run from the repository root and all run in CI, on GitHub thro
 
 ### The unit layer holds two kinds of thing
 
-Most of `kac.tests` asks whether `kac` behaves. A small tail asks whether **this repository** still holds
-together: whether a page states the usage the parser accepts, whether a comment cites a file that exists, whether
+Most of `kac.tests` asks whether `kac` behaves. A small tail asks whether **this repository** still holds together:
+whether a page states the usage the parser accepts, whether a comment cites a file that exists, whether
 `CHANGELOG.md` carries a section for the version `kac.csproj` names, whether a fixture's dates still sit clear of
-today, and whether a `fix` or a `report` whose prose changed was verified again. Those fail when content here drifts,
-when the calendar moves under it, or when a change goes in unread, and never when the tool's logic is wrong. No corpus
-consuming `kac` carries one, because none of it ships. The last of them reads git history, so the job running it checks
-out with `fetch-depth: 0`.
+today, whether a skill tells a reader to leave out a field every type requires, and whether a `fix` or a `report`
+whose prose changed was verified again. Those fail when content here drifts, when the calendar moves under it, or
+when a change goes in unread, and never when the tool's logic is wrong. No corpus consuming `kac` carries one,
+because none of it ships. The last of them reads git history, so the job running it checks out with
+`fetch-depth: 0`.
 
 A `Kind` trait separates them, so a tight loop can leave the second out:
 
