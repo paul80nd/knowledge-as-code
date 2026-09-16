@@ -12,7 +12,7 @@ They are grouped by [tier](taxonomy.md#the-four-tiers), because tier is what set
 
 ## Decided
 
-Immutable once accepted. Superseded, never rewritten.
+Immutable once accepted. What was decided is superseded, never rewritten.
 
 | Type            | Folder         | What it holds                                                                                           |
 |-----------------|----------------|---------------------------------------------------------------------------------------------------------|

@@ -91,7 +91,7 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      Once `status` is `published`, a new understanding is a new postmortem. Correct anything else in place.
+      Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place.
   - id: detected-not-before-occurred
     description: '`detected-on` is on or after `occurred-on`.'
     severity: error

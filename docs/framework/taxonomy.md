@@ -10,12 +10,12 @@ split to make.
 
 ## The four tiers
 
-| Tier            | Behaviour                                                         |
-|-----------------|-------------------------------------------------------------------|
-| **Decided**     | Immutable once accepted. Superseded, never rewritten              |
-| **Normative**   | Living. Owned. Edited in place with a changelog                   |
-| **Descriptive** | Living. Must mirror reality, and is verifiable against the estate |
-| **Procedural**  | Living. Must be rehearsed to stay true                            |
+| Tier            | Behaviour                                                                |
+|-----------------|--------------------------------------------------------------------------|
+| **Decided**     | Immutable once accepted. What was decided is superseded, never rewritten |
+| **Normative**   | Living. Owned. Edited in place with a changelog                          |
+| **Descriptive** | Living. Must mirror reality, and is verifiable against the estate        |
+| **Procedural**  | Living. Must be rehearsed to stay true                                   |
 
 [Contributing](contributing.md#review-by-tier) says what review each tier asks for.
 

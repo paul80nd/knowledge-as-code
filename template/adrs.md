@@ -69,9 +69,9 @@ its id.
 
 * **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability.** Once an ADR is accepted, change the decision only by writing a new ADR that supersedes it. Correct
-  everything else in place: a typo, a broken link, a status transition, or a sentence that no longer matches the
-  decision. The commit message says what you corrected.
+* **Immutability.** Once an ADR is accepted, change the decision only by writing a new ADR that supersedes it. Edit
+  everything else in place: a status transition, a typo, a broken link, or a sentence that no longer matches the
+  decision. The commit message says what you changed.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
 * **Prescriptive language.** An ADR that establishes a default or a policy may use
