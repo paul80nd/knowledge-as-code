@@ -894,7 +894,6 @@ public class SchemaCheckTests
     [InlineData("date")]
     [InlineData("enum")]
     [InlineData("id")]
-    [InlineData("int")]
     [InlineData("list")]
     [InlineData("string")]
     [InlineData("timestamp")]

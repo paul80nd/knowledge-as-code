@@ -6,7 +6,6 @@ status: live
 implemented-by:
   - svc-payment-api
   - svc-payment-ledger
-ado-epics: [ 2101, 2140 ]
 feature-files:
   - payment-api/features/authorise.feature
   - payment-api/features/capture.feature
@@ -40,18 +39,16 @@ The checkout page, and the payment frame the payment service provider serves ins
 
 ## Where the detail lives
 
-|                    |                                                       |
-|--------------------|-------------------------------------------------------|
-| **Implemented by** | [svc-payment-api], [svc-payment-ledger]               |
-| **Specified in**   | ADO epics #2101, #2140                                |
-| **Tested by**      | `authorise.feature`, `capture.feature`,               |
-|                    | `payment-history.feature`                             |
-| **Constrained by** | [nfr-0001]                                            |
+* **Implemented by**: [svc-payment-api], [svc-payment-ledger]
+* **Specified in**: [gh#2101], [gh#2140]
+* **Constrained by**: [nfr-0001]
 
 ## Known limitations
 
 A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001] does not cover that wait.
 
+[gh#2101]: https://git.example.com/example-payments/payment-api/issues/2101
+[gh#2140]: https://git.example.com/example-payments/payment-api/issues/2140
 [nfr-0001]: ../nfrs/0001-authorisation-latency.md
 [svc-payment-api]: ../services/payment-api.md
 [svc-payment-ledger]: ../services/payment-ledger.md

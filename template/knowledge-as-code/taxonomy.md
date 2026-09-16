@@ -91,9 +91,9 @@ the union of the folders that apply to it.
 CI can check these against the estate itself. They also fall out of date fastest.
 
 **[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
-NFRs behind it. A capability sits above the epic layer. It links to the work items that detail it, the services that
-implement it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of
-its own has stopped being one.
+NFRs behind it. A capability sits above the work items. It links to the ones that detail it, the services that implement
+it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own has
+stopped being one.
 
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
@@ -181,7 +181,6 @@ graph LR;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_nfrs -- applies-to --> t_services;
-  t_nfrs -- applies-to --> t_capabilities;
   t_nfrs -- constrained-by --> t_integrations;
   t_postmortems -- affected --> t_services;
   t_postmortems -- affected --> t_capabilities;
@@ -214,7 +213,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | ADR         | `superseded-by`  | ADR                              | `supersedes`    |
 | ADR         | `supersedes`     | ADR                              | `superseded-by` |
 | Capability  | `implemented-by` | Service                          |                 |
-| Capability  | `nfrs`           | NFR                              |                 |
+| Capability  | `nfrs`           | NFR                              | `applies-to`    |
 | Control     | `applies-to`     | Service                          |                 |
 | Control     | `verifies`       | Standard                         | `verified-by`   |
 | Data        | `flows-to`       | Service, Integration             |                 |
@@ -225,7 +224,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Fix         | `applies-to`     | Service                          |                 |
 | Glossary    | `narrows`        | Glossary                         |                 |
 | Integration | `used-by`        | Service                          |                 |
-| NFR         | `applies-to`     | Service, Capability              |                 |
+| NFR         | `applies-to`     | Service, Capability              | `nfrs`          |
 | NFR         | `constrained-by` | Integration                      |                 |
 | Postmortem  | `affected`       | Service, Capability              |                 |
 | Postmortem  | `prompted`       | ADR, Runbook, NFR, Fix, Standard |                 |
@@ -233,6 +232,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Runbook     | `applies-to`     | Service                          |                 |
 | Service     | `data-stores`    | Data                             |                 |
 | Service     | `depends-on`     | Service                          |                 |
+| Service     | `nfrs`           | NFR                              | `applies-to`    |
 | Standard    | `applies-to`     | Service                          |                 |
 | Standard    | `derived-from`   | ADR                              |                 |
 | Standard    | `implements`     | Policy                           |                 |

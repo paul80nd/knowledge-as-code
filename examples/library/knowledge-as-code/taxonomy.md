@@ -53,9 +53,9 @@ later ADR supersedes it. A decision that affects only one repository belongs in 
 CI can check these against the estate itself. They also fall out of date fastest.
 
 **[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
-NFRs behind it. A capability sits above the epic layer. It links to the work items that detail it, the services that
-implement it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of
-its own has stopped being one.
+NFRs behind it. A capability sits above the work items. It links to the ones that detail it, the services that implement
+it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own has
+stopped being one.
 
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live

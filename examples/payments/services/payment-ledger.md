@@ -6,6 +6,8 @@ status: live
 repo: payment-ledger
 platform: dotnet-api
 criticality: critical
+nfrs:
+  - nfr-0002
 owner: human:paul.law
 tags: [ audit, ledger, reconciliation ]
 ---

@@ -42,9 +42,6 @@ public static class ChecksTable
         ("timestamp-format", [new("timestamp-format")],
             "Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.",
             t => t.AnyField(f => f.Type == "timestamp") || t.AnyEntryKey(k => k.Type == "timestamp")),
-        ("int-format", [new("int-format")], "Int fields, and the entries of an `of: int` list, are whole numbers.",
-            t => t.AnyField(f => f.Type == "int" || f.Of == "int")
-                 || t.AnyEntryKey(k => k.Type == "int" || k.Of == "int")),
         ("enum", [new("enum"), new("enum-lowercase")], "Enum values are in range and lowercase.", null),
         ("field-pattern", [new("field-pattern")],
             "Values match the pattern their field declares (e.g. `tags`).", null),
@@ -139,7 +136,9 @@ public static class ChecksTable
             t => t.Rules.Any(r => r.Id == new RuleId("no-self-verification"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("dependency-cycle", [new("dependency-cycle")],
-            "A cycle in the dependency graph these records form, naming every record the loop runs through.", null)
+            "A cycle in the dependency graph these records form, naming every record the loop runs through.", null),
+        ("feature-file-repo", [new("feature-file-repo")],
+            "A feature file path begins with a repository one of the implementing services names.", null)
     ];
 
     // Which rule class reports under which check id, read from the registries rather than written out.

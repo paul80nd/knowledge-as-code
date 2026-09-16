@@ -2,8 +2,7 @@
 
 # Capability Index (CAP)
 
-| ID                 | Title                                              | Status | Implemented by                      |
-|--------------------|----------------------------------------------------|--------|-------------------------------------|
-| cap-card-payment   | [Pay for an order with a card](card-payment.md)    | live   | svc-payment-api, svc-payment-ledger |
-| cap-reconciliation | [Account for the day's takings](reconciliation.md) | live   | svc-payment-ledger                  |
-| cap-refund         | [Get money back for an order](refund.md)           | live   | svc-payment-api, svc-payment-ledger |
+| ID               | Title                                           | Status | Implemented by                      |
+|------------------|-------------------------------------------------|--------|-------------------------------------|
+| cap-card-payment | [Pay for an order with a card](card-payment.md) | live   | svc-payment-api, svc-payment-ledger |
+| cap-refund       | [Get money back for an order](refund.md)        | live   | svc-payment-api, svc-payment-ledger |

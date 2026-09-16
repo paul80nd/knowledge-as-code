@@ -77,6 +77,17 @@ fields:
     ref: data
     description: Data ids this service owns or reads.
 
+  nfrs:
+    required: false
+    type: list
+    of: id
+    ref: nfrs
+    reciprocal: applies-to
+    description: Ids of the NFRs this service must meet.
+    notes: >
+      A property of this one deployment, such as a recovery point. `nfrs.applies-to` says which records an
+      NFR may bind, and which of them this one named.
+
   facets:
     required: false
     type: list
@@ -95,7 +106,7 @@ sections:
 
 export:
   version: 1
-  fields: [id, title, status, platform, criticality, repo, depends-on, data-stores, facets, tags]
+  fields: [id, title, status, platform, criticality, repo, depends-on, data-stores, nfrs, facets, tags]
   sections:
     What it does: full
     Where it lives: full

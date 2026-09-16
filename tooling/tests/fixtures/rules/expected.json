@@ -4,7 +4,7 @@
     "templates": 17,
     "skipped": 0,
     "errors": 20,
-    "warnings": 16,
+    "warnings": 17,
     "infos": 0
   },
   "findings": [
@@ -14,6 +14,13 @@
       "severity": "warning",
       "check": "hub-not-specification",
       "message": "prose has outgrown the links. Move the detail into the documents this points at, and link to them from here."
+    },
+    {
+      "file": "capabilities/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "feature-file-repo",
+      "message": "'feature-files: qa-pack/features/overdue.feature' starts in 'qa-pack', which is no repository of a service this record implements. Those services are in: notifications."
     },
     {
       "file": "controls/0001-frequency-not-stated.md",

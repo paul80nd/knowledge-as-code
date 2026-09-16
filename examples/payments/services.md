@@ -52,6 +52,7 @@ of the catalogue as well, because it deploys services.
 | `criticality` * | `critical` `important` `supporting`      | Judged by what a customer experiences when it is unavailable.                 |
 | `depends-on`    | list                                     | What this service calls, downward only.                                       |
 | `data-stores`   | list                                     | Data ids this service owns or reads.                                          |
+| `nfrs`          | list                                     | Ids of the NFRs this service must meet.                                       |
 | `facets`        | list                                     | Slices the catalogue: one exposure value, then any traits.                    |
 
 \* Field is required  
@@ -179,6 +180,7 @@ words worth keeping are the ones thrown away.
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `dependency-cycle`          | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |
 

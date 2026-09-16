@@ -10,9 +10,9 @@ lifecycle: living
 summary: What the organisation offers a customer, and why, with links to the services and NFRs behind it.
 goes-here: What the organisation offers a customer, and why
 detail: >
-  A capability sits above the epic layer. It links to the work items that detail it, the services that implement
-  it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its
-  own has stopped being one.
+  A capability sits above the work items. It links to the ones that detail it, the services that implement it,
+  the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own
+  has stopped being one.
 
 versus:
   services: >
@@ -50,36 +50,45 @@ fields:
     type: list
     of: id
     ref: services
+    mirrors-section: Where the detail lives
     description: Ids of the services that implement this capability.
-
-  ado-epics:
-    required: false
-    type: list
-    of: int
-    description: Azure DevOps work item ids, as whole numbers.
-    notes: >
-      The only `of: int` field in the taxonomy. `int-format` checks that each entry is a whole number, and
-      nothing resolves an id against Azure DevOps.
 
   feature-files:
     required: false
     type: list
     of: string
-    description: Repository-relative paths to the feature files that test this capability.
+    description: Paths to the feature files that test this capability, each one beginning with its repository.
     notes: >
-      Plain strings, so `ref-resolves` never sees them, and nothing checks a path until
-      `feature-file-orphans` runs.
+      A path names the repository first, spelled as that repository's service spells `repo:`, then the path
+      inside it. `feature-file-repo` checks that first segment. The rest is a plain string, so
+      `ref-resolves` never sees it and nothing reads it until `feature-file-orphans` runs.
 
   nfrs:
     required: false
     type: list
     of: id
     ref: nfrs
+    reciprocal: applies-to
+    mirrors-section: Where the detail lives
     description: Ids of the NFRs this capability must meet.
 
 sections:
   required: [What it does, Why it exists, Where the detail lives]
   optional: [Surfaces, Known limitations]
+
+export:
+  version: 1
+  fields: [id, title, status, implemented-by, feature-files, nfrs, tags]
+  sections:
+    What it does: full
+    Why it exists: full
+    Surfaces: full
+    Where the detail lives: full
+    Known limitations: full
+  notes: >
+    Every section travels. `Where the detail lives` is the only place the work items are written, and no field
+    states them, so a consumer reads each one's label and not its address.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#capabilities>.
 
 index:
   columns: [id, title, status, implemented-by]
@@ -94,6 +103,10 @@ rules:
     message: >
       prose has outgrown the links. Move the detail into the documents this points at, and link to them
       from here.
+  # The only part of a feature file path this corpus can check without reading a code repository.
+  - id: feature-file-repo
+    description: A feature file path begins with a repository one of the implementing services names.
+    severity: warning
   - id: feature-file-orphans
     description: >
       Scheduled. Reports feature files in the code repositories no capability claims, and paths here that

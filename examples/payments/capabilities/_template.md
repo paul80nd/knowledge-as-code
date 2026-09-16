@@ -20,13 +20,20 @@ and how it is reviewed. What is below is only what a capability adds to that.
 **Frontmatter**
 
 * **`status`**: `planned` · `building` · `live` · `deprecated`.
-* **`implemented-by`**: service ids.
-* **`feature-files`**: repo-relative paths, checked in both directions. A path that doesn't exist fails, and a feature
-  file claimed by no capability is reported.
+* **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
+  `related-matches-section` reports either end naming one the other does not.
+* **`feature-files`**: each path names its repository first, spelled as that repository's service spells `repo:`, then
+  the path inside it. `feature-file-repo` warns where that first segment is no repository of a service you listed.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../capabilities.md#metadata) lists
 every field and says what each one holds.
+
+**The work items.** They live in the list and nowhere else. This estate plans in GitHub issues, so an issue is
+labelled `gh#2101`, with its link defined at the foot of the document.
+
+**The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` bullet. Both ends
+are checked against each other, and the NFR names this capability back in its own `applies-to`.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
@@ -41,8 +48,8 @@ The customer-visible behaviour, in customer terms. Two or three paragraphs at mo
 
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else here holds: the ADO epics describe *what* gets built,
-not *why the surface exists at all*.
+The problem it solves and who for. This is the part nothing else here holds: a work item says *what* gets built, not
+*why the surface exists at all*.
 
 ## Surfaces
 
@@ -50,23 +57,20 @@ Where a customer encounters this: the web UI, the admin screen, the API endpoint
 
 ## Where the detail lives
 
-|                    |                                |
-|--------------------|--------------------------------|
-| **Implemented by** | [svc-{{a}}], [svc-{{b}}]       |
-| **Specified in**   | ADO epics #{{epic}}, #{{epic}} |
-| **Tested by**      | `{{repo}}/{{path}}.feature`    |
-| **Constrained by** | [nfr-{{a}}]                    |
-| **Decided in**     | [adr-{{a}}]                    |
+* **Implemented by**: [svc-{{a}}], [svc-{{b}}]
+* **Specified in**: [gh#{{a}}], [gh#{{b}}]
+* **Constrained by**: [nfr-{{a}}]
 
-_(This table is the point of the document. If the prose above it grows longer than the links below it, ask whether what
-you are writing belongs in an ADO item instead.)_
+_(This list is the point of the document. If the prose above it grows longer than the links in it, ask whether what
+you are writing belongs in a work item instead.)_
 
 ## Known limitations
 
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
-[adr-{{a}}]: ../adrs/{{a}}.md
+[gh#{{a}}]: https://git.example.com/example-payments/payment-api/issues/{{a}}
+[gh#{{b}}]: https://git.example.com/example-payments/payment-api/issues/{{b}}
 [nfr-{{a}}]: ../nfrs/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md
 [svc-{{b}}]: ../services/{{b}}.md

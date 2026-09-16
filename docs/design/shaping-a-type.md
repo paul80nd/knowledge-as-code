@@ -159,6 +159,27 @@ state no range at all.
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
 
+### capabilities
+
+A capability answers what the estate offers a customer, which is the question a stranger asks first. Every section
+travels, because there is nothing in one to trim: `hub-not-specification` weighs the whole record against its outbound
+links and keeps it short.
+
+**`Where the detail lives` is the only place the work items are written.** The type declares no field for them: a
+tracker reference is a link a reader follows, not a value an agent filters on, and one estate's `ADO#1150` is another's
+`gh#2101`. The section travels at `full`, so a consumer reads the labels. It does not read the addresses: a section's
+link definitions sit outside it and `Exporter.Body` drops them, which is the same thing that turns a record id into a
+bare id a consumer looks up. A work item has nothing to look it up in, and an address into another estate's tracker
+would not open for them anyway.
+
+`implemented-by` and `nfrs` travel as ids, and both declare `mirrors-section:` against that same list. The record
+states each id twice, in the frontmatter an agent reads and in the list a person follows, and
+`related-matches-section` reports either end naming one the other does not.
+
+`feature-files` travels as written. A path names its repository first, so a consumer can tell which repository a test
+sits in without resolving the rest, and `feature-file-repo` holds that first segment to a repository one of the
+implementing services names.
+
 ### tools
 
 A tool register says what an estate builds on, which is the question an inventory exists to answer. An inventory nobody

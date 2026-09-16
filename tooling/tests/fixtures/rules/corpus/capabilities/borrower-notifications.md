@@ -5,6 +5,10 @@ tier: descriptive
 status: live
 owner: human:alex.doe
 implemented-by: [svc-notifications]
+feature-files:
+  - notifications/features/hold-available.feature
+  - qa-pack/features/overdue.feature
+nfrs: [nfr-0001]
 ---
 
 # Borrower notifications
@@ -23,5 +27,11 @@ A hold nobody collects is a book nobody reads, and a fine nobody expected is a c
 
 ## Where the detail lives
 
-Nowhere — which is the fault. This page carries no links at all, so every word above is prose the
-capability is specifying rather than pointing at.
+* **Implemented by**: [svc-notifications]
+* **Constrained by**: [nfr-0001]
+
+Two links against all the prose above, which is what `hub-not-specification` measures. The second feature
+file names a repository no service here claims, which is what `feature-file-repo` reports.
+
+[nfr-0001]: ../nfrs/0001-hedged-measurement.md
+[svc-notifications]: ../services/notifications.md

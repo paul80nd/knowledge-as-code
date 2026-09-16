@@ -24,6 +24,14 @@ public class ExportShapeTests
             Context: summary
             Decision: full
             Consequences: full
+        capabilities@1
+          fields: id, title, status, implemented-by, feature-files, nfrs, tags
+          sections:
+            What it does: full
+            Why it exists: full
+            Surfaces: full
+            Where the detail lives: full
+            Known limitations: full
         controls@1
           fields: id, title, status, verifies, mechanism, frequency, evidence, applies-to, tags
           sections:
@@ -99,7 +107,7 @@ public class ExportShapeTests
           sections:
             Symptoms: full
         services@1
-          fields: id, title, status, platform, criticality, repo, depends-on, data-stores, facets, tags
+          fields: id, title, status, platform, criticality, repo, depends-on, data-stores, nfrs, facets, tags
           sections:
             What it does: full
             Where it lives: full

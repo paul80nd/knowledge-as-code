@@ -9,26 +9,30 @@ What the product offers its customers, and why.
 One document per customer-visible surface of the product. It records what the surface does, why it exists, which
 services implement it, and where the detail lives.
 
-A capability is a **hub**. It links to the epics that specify it, the feature files that test it, the services that
-implement it and the NFRs that constrain it. It does not restate any of them.
+A capability is a **hub**. It links to the work items that specify it, the feature files that test it, the services
+that implement it and the NFRs that constrain it. It does not restate any of them.
 
 ## Why we use them
 
-Functional detail lives in ADO epics, features and stories. ADO holds nothing above the epic: no account of what the
-product offers a customer and why. It could not hold one without disturbing a work-item hierarchy that exists to run
-delivery.
+Functional detail lives in the consortium's Azure DevOps epics, features and stories. Azure DevOps has nothing above
+the epic: no account of what the product offers a customer and why. It could not keep one without disturbing a
+work-item hierarchy that exists to run delivery.
 
 Without that account, nobody can answer "what does the product do?" from one place, and everyone starting a significant
 piece of work rebuilds the same context.
 
 ## Scope
 
-One document per **customer-visible surface**, not per epic and not per service. One capability typically spans several
-services. One service often contributes to several capabilities.
+One document per **customer-visible surface**, not per work item and not per service. One capability typically spans
+several services. One service often contributes to several capabilities.
 
-**Capabilities link rather than restate.** A capability that specifies behaviour has begun to drift from the ADO items
+**A capability whose `implemented-by` names one service is a synonym for that service.** Write the service record
+instead. This type was first tried over an estate of four services where every capability mapped onto one of them, and
+each record restated the service beside it.
+
+**Capabilities link rather than restate.** A capability that specifies behaviour has begun to drift from the work items
 it should point at. The next session to read it will trust it anyway, which makes a drifted capability worse than none.
-Acceptance criteria go in ADO.
+Acceptance criteria go in Azure DevOps.
 
 Related but different:
 
@@ -42,19 +46,18 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-capabilities -->
 
-| Field              | Value                                    | Notes                                                                                    |
-|--------------------|------------------------------------------|------------------------------------------------------------------------------------------|
-| `id` *†            | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.             |
-| `type` *†          | string                                   | The singular name of the type, which CI checks against the folder.                       |
-| `tier` *†          | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.             |
-| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability itself, which may differ from the lifecycle of its services. |
-| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
-| `sources` †        | list                                     | Where this record's content came from, one entry per source.                             |
-| `tags` †           | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types.            |
-| `implemented-by` * | list                                     | Ids of the services that implement this capability.                                      |
-| `ado-epics`        | list                                     | Azure DevOps work item ids, as whole numbers.                                            |
-| `feature-files`    | list                                     | Repository-relative paths to the feature files that test this capability.                |
-| `nfrs`             | list                                     | Ids of the NFRs this capability must meet.                                               |
+| Field              | Value                                    | Notes                                                                                         |
+|--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------|
+| `id` *†            | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.                  |
+| `type` *†          | string                                   | The singular name of the type, which CI checks against the folder.                            |
+| `tier` *†          | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.                  |
+| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the capability itself, which may differ from the lifecycle of its services.      |
+| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                        |
+| `sources` †        | list                                     | Where this record's content came from, one entry per source.                                  |
+| `tags` †           | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types.                 |
+| `implemented-by` * | list                                     | Ids of the services that implement this capability.                                           |
+| `feature-files`    | list                                     | Paths to the feature files that test this capability, each one beginning with its repository. |
+| `nfrs`             | list                                     | Ids of the NFRs this capability must meet.                                                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -65,17 +68,22 @@ Related but different:
 
 1. Copy [`_template.md`](capabilities/_template.md) to `<slug>.md`. Capability ids are slugs: `cap-<name>`.
 2. Write the *what* and the *why* in prose. Two or three paragraphs is usually enough.
-3. Fill in `implemented-by`, `ado-epics` and `feature-files`. Those links make it a hub.
+3. Fill in `implemented-by` and `feature-files`, and link the work items from the list. Those links make it a hub.
 4. Do not explain how it works. Link to the services and explanations that already do.
 
 **Conventions**
 
 * **Hub, not specification.** `hub-not-specification` weighs the whole document against its outbound links, at roughly
   forty words each, so a capability that grows a section of its own trips it. Where a section runs longer than the links
-  around it, ask whether the detail belongs in ADO.
-* **Keep the feature file paths honest yourself.** Nothing resolves them: the field holds plain strings, so
-  `ref-resolves` never sees it, and `feature-file-orphans` is declared and does not run. A path that goes stale here
-  goes stale quietly.
+  around it, ask whether the detail belongs in a work item.
+* **The list and the frontmatter say the same thing, and CI checks it.** `related-matches-section` reconciles
+  `implemented-by` and `nfrs` against the ids the list names, in both directions. Write an id in one place and you
+  write it in both.
+* **Work items live in the list alone.** There is no field for them. Label an epic `ADO#1150`. A consumer reading an
+  export sees that label and not the address, because a section travels and its link definitions do not.
+* **Keep the rest of a feature file path honest yourself.** `feature-file-repo` checks the repository the path opens
+  with. Past that first segment the field is a plain string, `ref-resolves` never sees it, and `feature-file-orphans`
+  is declared and does not run. A path that goes stale there goes stale quietly.
 
 ## What CI checks
 
@@ -90,7 +98,6 @@ Related but different:
 | `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
 | `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
-| `int-format`                | error   | Int fields, and the entries of an `of: int` list, are whole numbers.                                            |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -106,8 +113,11 @@ Related but different:
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
+| `related-matches-section`   | error   | A field that mirrors a section reconciles with the ids in that section.                                         |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `feature-file-repo`         | warning | A feature file path begins with a repository one of the implementing services names.                            |
 | `hub-not-specification`     | warning | A capability's prose stays proportionate to the links it makes.                                                 |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.

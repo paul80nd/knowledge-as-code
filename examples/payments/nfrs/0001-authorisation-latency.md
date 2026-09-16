@@ -4,7 +4,7 @@ type: nfr
 tier: normative
 status: agreed
 applies-to:
-  - svc-payment-api
+  - cap-card-payment
 target: p95 under 800ms, measured over a rolling hour
 measured-by: Application Insights, on the server duration of POST /authorisations
 review-by: "2027-08-28"
