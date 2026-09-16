@@ -42,7 +42,7 @@ work whether threat modelling here or an incident review there produced them._
 | `DESIGN`  | **MUST** apply established secure-design principles: least privilege, defence in depth, secure defaults, and failing closed so that a failure denies rather than allows | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1, [NIST SSDF 1.1].PW.1                         |
 | `THREAT`  | **MUST** think through how a significant new system or high-risk change could be attacked, and record what we found                                                     | [ISO 27001:2022].A.8.27, [OWASP ASVS 4.0].V1, [NIST SSDF 1.1].PW.1                         |
 | `IMPACT`  | **MUST** assess the impact on people before starting processing likely to be high risk to them, and record what the assessment found                                    | [UK GDPR].Art.35                                                                           |
-| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document. See [pol-INCR]                                                                     | [ISO 27001:2022].A.5.8                                                                     |
+| `ACTIONS` | **MUST** turn the findings into tracked work rather than leaving them in a document ([pol-INCR].ACTIONS states the same for an incident review)                         | [ISO 27001:2022].A.5.8                                                                     |
 | `CODING`  | **MUST** write code to a documented secure-coding standard for the stack it is written in                                                                               | [ISO 27001:2022].A.8.28, [NIST SSDF 1.1].PW.5                                              |
 | `CODEREV` | **MUST** review code for security and correctness, not only for style                                                                                                   | [ISO 27001:2022].A.8.28, [NIST SSDF 1.1].PW.7                                              |
 | `HIRISK`  | **MUST NOT** take a high-risk change into build with no security requirements and no consideration of threat                                                            | [ISO 27001:2022].A.8.25, [ISO 27001:2022].A.8.26, [NIST SSDF 1.1].PO.1                     |
@@ -56,7 +56,7 @@ in the moment.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-DEVI]: ../governance/devi-deviations.md
-[pol-INCR]: ../operations/incr-incident-response.md
+[pol-INCR]: ../operations/incr-incident-response.md#clauses
 [pol-VURM]: ../security/vurm-vulnerability-remediation.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

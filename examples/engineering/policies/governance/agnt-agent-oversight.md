@@ -44,7 +44,7 @@ everyone._
 | `EQUAL`   | **MUST** put agent-produced changes through every gate that applies to our own: the same review, the same automated verification under [pol-AUTV], the same route to production | [ISO 27001:2022].A.8.25, [NIST AI RMF 1.0].MANAGE |
 | `CONFID`  | **MUST** state how confident we are in an observation, and let unverified ones expire rather than stay on unchallenged                                                          | [NIST AI RMF 1.0].MEASURE                         |
 | `SELFVER` | **MUST NOT** treat an agent's own account of its work as verification of that work                                                                                              | [NIST AI RMF 1.0].MEASURE                         |
-| `DUTIES`  | **MUST NOT** approve or merge an agent-authored change under the identity that opened or accepted it. See [pol-ACCS]                                                            | [ISO 27001:2022].A.5.3, [NIST AI RMF 1.0].MANAGE  |
+| `DUTIES`  | **MUST NOT** approve or merge an agent-authored change under the identity that opened or accepted it ([pol-ACCS].DUTIES states the general duty)                                | [ISO 27001:2022].A.5.3, [NIST AI RMF 1.0].MANAGE  |
 | `UNPROV`  | **MUST NOT** accept a proposal we cannot trace back to what produced it                                                                                                         | [ISO 27001:2022].A.8.30, [NIST AI RMF 1.0].MAP    |
 | `ACCESS`  | **MUST NOT** grant an agent access, privilege or a route to production that an individual doing the same work would not be granted                                              | [NIST AI RMF 1.0].MANAGE                          |
 
@@ -69,7 +69,7 @@ cannot confirm itself. It becomes a fix or a [standard](../../standards) only wh
 what we lose if that step is skipped.
 
 [adr-0001]: ../../adrs/0001-knowledge-as-code.md
-[pol-ACCS]: ../security/accs-access-by-identity.md
+[pol-ACCS]: ../security/accs-access-by-identity.md#clauses
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
 [pol-SCRT]: ../security/scrt-secrets-management.md

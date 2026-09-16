@@ -52,7 +52,7 @@ produced them._
 | `INFORM`  | **MUST** tell the people a personal data breach puts at high risk, without undue delay                                                             | [UK GDPR].Art.34                                |
 | `REPORT`  | **MUST** encourage anyone to report a suspected incident, and make it easy to do so                                                                | [ISO 27001:2022].A.6.8                          |
 | `LEARN`   | **MUST** review significant incidents afterwards, looking for the conditions that allowed them rather than for someone to blame                    | [ISO 27001:2022].A.5.27                         |
-| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work. See [pol-SECD]                                                                      | [ISO 27001:2022].A.5.27                         |
+| `ACTIONS` | **MUST** turn the findings of those reviews into tracked work ([pol-SECD].ACTIONS states the same for a security design review)                    | [ISO 27001:2022].A.5.27                         |
 | `DRILL`   | **MUST** rehearse the process rather than first exercising it for real                                                                             | [ISO 27001:2022].A.5.24, [UK GDPR].Art.32(1)(d) |
 | `ADHOC`   | **MUST NOT** handle a significant incident informally, with no record and no named owner                                                           | [ISO 27001:2022].A.5.26                         |
 | `TOOSOON` | **MUST NOT** close an incident before the learning from it is captured                                                                             | [ISO 27001:2022].A.5.27                         |
@@ -67,6 +67,6 @@ was not notifiable is itself a decision we have to be able to show.
 
 [pol-DATA]: ../security/data-data-protection.md
 [pol-RECV]: ../operations/recv-recoverability.md
-[pol-SECD]: ../security/secd-security-by-design.md
+[pol-SECD]: ../security/secd-security-by-design.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
