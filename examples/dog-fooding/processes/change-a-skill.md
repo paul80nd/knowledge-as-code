@@ -20,8 +20,9 @@ Add, change or remove a skill, a hook or a `plugin.json` entry.
 You are editing a file under `template/.plugin/`, or one of the skills under `.claude/skills/`. Three trees, and what
 a change costs depends on which one. Every corpus here names `plugin.from` in its descriptor, so a skill under
 `template/.plugin/` is authored once and shipped in four plugins, and a change to it moves more version stamps than any
-other file here. A skill under `.claude/skills/` that `manifest.yaml` sends to a corpus moves `version:` there and the
-stamp in every descriptor. One nothing sends moves nothing.
+other file here. A skill under `.claude/skills/` that `manifest.yaml` sends to a corpus travels into a working tree.
+Adding, removing or renaming one of those moves `version:` there and the stamp in every descriptor, and changing what
+one says moves neither. One nothing sends moves nothing.
 
 ## Prerequisites
 
@@ -34,9 +35,9 @@ stamp in every descriptor. One nothing sends moves nothing.
 
 1. Decide which tree holds the file. [Skills] names every skill and the tree it lives in.
    * `template/.plugin/` is bundled. It travels inside a plugin and moves `content-version`. Do every step.
-   * `.claude/skills/`, where `manifest.yaml` sends it to a corpus, travels into a working tree and moves
-     `version:` there. Do steps 3, 7, 11, 12, 14 and 15, and say in your task list why you left each of the others
-     out.
+   * `.claude/skills/`, where `manifest.yaml` sends it to a corpus, travels into a working tree. Step 7 says
+     whether `version:` in `manifest.yaml` moves with it. Do steps 3, 7, 11, 12, 14 and 15, and say in your task
+     list why you left each of the others out.
    * `.claude/skills/`, where nothing sends it, is this repository's own. No version stamp moves. Do steps 3, 11, 14
      and 15, and say why you left each of the others out.
    * A skill moving from one tree to another is a change to `manifest.yaml` or to `plugin.json` or to both, so step
