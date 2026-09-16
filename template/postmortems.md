@@ -77,8 +77,9 @@ postmortem means something.
 
 **Conventions**
 
-* **Immutable once published.** Corrections are limited to typos, and a materially different understanding is a new
-  postmortem that references this one.
+* **Immutable once published.** A new understanding is a new postmortem that references this one. Edit everything else
+  in place: a status transition, a typo, a broken link, or a sentence that no longer matches the timeline. The commit
+  message says what you changed.
 * **Measure the impact against the [NFRs](nfrs.md)** where targets exist. Where the incident breached one, say which.
   Where no target existed, that absence is itself a finding.
 
@@ -118,7 +119,7 @@ postmortem means something.
 
 | Rule                        | What it would verify                                                                                             |
 |-----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `immutable-after-published` | Once `status` is `published`, only a typo is fixed in place. ADRs work the same way.                             |
+| `immutable-after-published` | Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place.           |
 | `blameless`                 | Flags a personal name in the Timeline, Root cause or Contributing factors sections. Name the role or the system. |
 | `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                                     |
 

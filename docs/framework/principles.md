@@ -12,9 +12,9 @@ What a document is about and how it behaves are different things. Behaviour sets
 page keys off that.
 
 An ADR and a postmortem have nothing in common as subject matter. As behaviour they are identical: both are accounts
-that were true at a moment, both become misleading if edited afterwards, and both are superseded rather than corrected.
-So they share a **tier**, meaning the group a type belongs to by how it behaves. The tier sets the rules: the review
-bar, the validation, the language, and the expectation of immutability.
+that were true at a moment, both become misleading if their conclusion is edited afterwards, and both are superseded
+rather than corrected. So they share a **tier**, meaning the group a type belongs to by how it behaves. The tier sets
+the rules: the review bar, the validation, the language, and the expectation of immutability.
 
 The taxonomy therefore grows without new machinery.
 

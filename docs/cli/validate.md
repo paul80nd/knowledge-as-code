@@ -136,7 +136,7 @@ each source in `consumes:` what it publishes. A source that does not answer with
 clause the same line cites. An export sends a record's ids and its fields, not its wording, so the words of an imported
 clause are not here to compare against and the check passes over the citation.
 
-**`immutable-after-accepted` is declared and does not run.** Whether the content of an accepted document changed is a
-question about a diff, and this command reads a working tree.
+**`immutable-after-accepted` is declared and does not run.** Whether an accepted decision changed is a question about
+a diff, and this command reads a working tree.
 
 [`generate`](generate.md) writes the blocks this command checks a file still has.

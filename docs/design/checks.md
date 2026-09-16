@@ -130,5 +130,6 @@ Where a rule needs C# rather than an expression, it is written in the tool rathe
 
 ## Known limits
 
-**`immutable-after-accepted` is declared and does not run.** It asks that the content of an accepted document does not
-change. That needs git history, which the static validator has none of. It belongs in a CI step that can read a diff.
+**`immutable-after-accepted` is declared and does not run.** It asks that an accepted document's decision changes only
+by supersession. Telling that from a correction needs git history, which the static validator has none of. It belongs in
+a CI step that can read a diff.

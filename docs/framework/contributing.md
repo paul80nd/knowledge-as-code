@@ -59,8 +59,9 @@ nothing gates it and somebody triages it later. It becomes a record once somebod
 answer. [In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export)
 is where that argument lives.
 
-**Decided content is immutable after merge.** Corrections are limited to typos and status transitions. To change a
-decision, write a new one that supersedes it.
+**A decision is immutable after merge.** Change it only by writing a new record that supersedes it. Edit everything
+else in place: a status transition, a typo, a broken link, or a sentence that no longer matches the decision. The commit
+message says what you changed.
 
 ## What an agent may write
 

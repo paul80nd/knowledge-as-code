@@ -95,6 +95,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An accepted ADR is edited in place, and only a changed decision needs a superseding ADR.**
+  `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. That
+  list left out an edit changing no decision. A sentence that no longer matched the decision the ADR already stated
+  read as forbidden. The rule now asks whether the decision changed, and `adrs.md` says to name the edit in the commit
+  message. `immutable-after-published` takes the same shape for a postmortem, where a new understanding is a new
+  postmortem. Both are still declared and do not run, because telling a changed decision from a correction needs git
+  history. The Decided tier note in `_tiers.yaml` drops "never rewritten" for the same reason, so a corpus's
+  `knowledge-as-code/taxonomy.md` changes when you regenerate it. `kac update --from <template>` takes all three, and
+  `kac generate` rewrites the blocks under them. `adrs.md` and `postmortems.md` seed a corpus, so the Immutability
+  paragraph on each stays that corpus's own to reword.
+
 - **`kac export` reports every reason it refuses in one run.** A type the corpus has not adopted, an `export-exclude`
   key it cannot act on, a consumed corpus nothing is restored for, a consumed corpus at another export format and two
   corpora disagreeing about a type are each one line, and all of them print before the run stops. A shape or fidelity

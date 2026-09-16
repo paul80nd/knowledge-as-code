@@ -64,8 +64,8 @@ The type this corpus adopted. `generate` regenerates the two blocks below from t
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                       | What it would verify                                                                             |
-|----------------------------|--------------------------------------------------------------------------------------------------|
-| `immutable-after-accepted` | Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed. |
+| Rule                       | What it would verify                                                                                  |
+|----------------------------|-------------------------------------------------------------------------------------------------------|
+| `immutable-after-accepted` | Once status is `accepted`, the decision changes only by a superseding ADR, never by an edit in place. |
 
 <!-- END GENERATED: checks-adrs -->

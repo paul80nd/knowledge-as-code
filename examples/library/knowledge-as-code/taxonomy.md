@@ -42,7 +42,7 @@ type's own page.
 
 ### Decided: immutable once accepted
 
-Superseded, never rewritten, so what was thought at the time survives being wrong.
+What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
 behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
