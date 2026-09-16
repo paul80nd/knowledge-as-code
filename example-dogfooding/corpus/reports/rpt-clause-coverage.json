@@ -15,16 +15,20 @@
     "sources": [
       {
         "resource": "example-dogfooding",
-        "version": "0.35.0"
+        "version": "0.35.1"
       },
       {
         "resource": "example-engineering",
-        "version": "0.21.0"
+        "version": "0.22.0"
       }
     ],
     "verified": [
       {
         "at": "2026-09-15T21:06:12Z",
+        "by": "human:paul.law"
+      },
+      {
+        "at": "2026-09-16T11:52:59Z",
         "by": "human:paul.law"
       }
     ],
@@ -35,6 +39,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a28ba512e56410d6433367af766fffe5bfcb874c/examples/dog-fooding/reports/clause-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f91169c31764f7c6379cdfc076b6119e0bae6d7b/examples/dog-fooding/reports/clause-coverage.md"
   }
 }
