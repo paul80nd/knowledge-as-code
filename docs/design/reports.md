@@ -99,7 +99,12 @@ A reviewer edits `sources[].version` by hand. That is the point of it.
 
 A corpus moves its `content-version` whenever what it knows changes, and most of those changes touch no report. Adding a
 fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds raises
-the version and adds a `verified` entry, instead of running the report again and re-reading every verdict.
+the version by hand, instead of running the report again and re-reading every verdict.
+
+Which entry the reviewer raises decides what else they edit. `sources` lists the corpus the report answers for first,
+then one entry per corpus it imports. Raising the first entry edits frontmatter alone, and the `verified` list stays as
+it is. Raising an imported entry also means editing the `Imported:` bullet under `## Limits`, which repeats that
+version, and adding a `verified` entry for the body they changed. Nothing checks the bullet against the frontmatter.
 
 `validate` warns where the version falls behind the corpus. A report carried forward across several versions without a
 regeneration is one to run again. The export reads the same gap: a verification taken before `generated.at` read text a

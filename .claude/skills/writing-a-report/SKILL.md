@@ -63,13 +63,24 @@ status. A person is `human:alex.doe`, a process is `process:nightly-sweep`, and 
 
 A report is wrong the moment the corpus moves, and `report-stale` says so once `sources` falls behind.
 
-**Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, raise the
-`sources` version by hand and leave `verified` alone. A version the corpus moved for something else is no reason to
-claim a fresh read. Where the coverage itself moved, run the report again, merge, and name yourself in `generated`.
+**Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, run `kac report`
+and check that every mechanical cell still matches the record. Then raise the `sources` version by hand. Where the
+coverage itself moved, run the report again, merge, and write yourself into `generated`.
 
-**The hand-raise is a trade.** It leaves `generated` naming an edit older than the version `sources` now lists, and
-nobody read that pairing. The alternative is running the report again for output nobody expects to differ, and moving a
-version stamp through every consumer of the corpus to carry it.
+**A hand-raise leaves `generated` alone.** `generated.by` states who answered the judgement cells, and a raise answers
+none of them. So `generated` goes on stating an edit older than the version `sources` now lists. The alternative is
+running the report again for output nobody expects to differ, and moving a version stamp through every consumer of the
+corpus.
+
+**Which entry you raise decides what else you edit.** `sources` lists the corpus the report answers for first, then
+one entry per corpus it imports. `kac report` writes the imported entries into the `Imported:` bullet under
+`## Limits`, and nothing checks that bullet against the frontmatter. So raising an imported entry means editing the
+bullet to the same version by hand.
+
+**Sign the raise that changed the body.** Add a `verified` entry stating who checked the comparison.
+`no-self-verification` rejects the actor named in `generated.by`, so ask somebody else to check it and write their
+name. Raising the first entry edits frontmatter alone: the prose is exactly what the last verifier read, and the list
+stays as it is.
 
 **The merge, in order:**
 
