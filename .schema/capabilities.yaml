@@ -87,7 +87,7 @@ export:
     Known limitations: full
   notes: >
     Every section travels. `Where the detail lives` is the only place the work items are written, and no field
-    states them.
+    states them, so a consumer reads each one's label and not its address.
     See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#capabilities>.
 
 index:

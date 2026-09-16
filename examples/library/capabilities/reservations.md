@@ -37,19 +37,15 @@ Its own hostname, apart from the rest of the catalogue, and the same pages on th
 
 ## Where the detail lives
 
-|                    |                                                                                     |
-|--------------------|-------------------------------------------------------------------------------------|
-| **Implemented by** | [svc-reservations]                                                                  |
-|                    | [svc-lending]                                                                       |
-|                    | [svc-notices]                                                                       |
-|                    | [svc-catalogue-web]                                                                 |
-| **Specified in**   | [ADO#1455](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1455) |
-|                    | [ADO#1462](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1462) |
+* **Implemented by**: [svc-catalogue-web], [svc-lending], [svc-notices], [svc-reservations]
+* **Specified in**: [ADO#1455], [ADO#1462]
 
 ## Known limitations
 
 This capability is live in no environment above test. [svc-reservations] says what remains.
 
+[ADO#1455]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1455
+[ADO#1462]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1462
 [svc-catalogue-web]: ../services/catalogue-web.md
 [svc-lending]: ../services/lending.md
 [svc-notices]: ../services/notices.md

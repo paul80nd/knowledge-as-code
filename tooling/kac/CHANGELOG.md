@@ -38,7 +38,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`ado-epics` is gone from `capabilities`, and with it the `int` value type.** A work item id assumed one tracker,
   and a corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
-  `Where the detail lives` table, written inline so the address travels with the record. `ado-epics` was the only field
+  `Where the detail lives` list, labelled the way the corpus's own tracker labels them. `ado-epics` was the only field
   in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer
   values a schema may declare. `kac checks` prints one check fewer.
 
@@ -46,8 +46,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A capability's table and its frontmatter say the same thing, and `validate` checks it.** `implemented-by` and
   `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an
-  id the other does not. The table lost its `Tested by` row, which restated `feature-files` and had already drifted
-  from it, and its `Decided in` row, which no field ever backed.
+  id the other does not. That section is a bulleted list rather than a headerless table, which is the form `services`
+  already uses for the same shape and the one a screen reader can read. It lost its `Tested by` line, which restated
+  `feature-files` and had already drifted from it, and its `Decided in` line, which no field ever backed.
 
 - **`kac new` seeds a capability template and type page that name no tracker.** Both said functional detail lives in
   Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. The template ships link

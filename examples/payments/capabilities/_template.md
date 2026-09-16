@@ -20,7 +20,7 @@ and how it is reviewed. What is below is only what a capability adds to that.
 **Frontmatter**
 
 * **`status`**: `planned` · `building` · `live` · `deprecated`.
-* **`implemented-by`**: service ids. The `Where the detail lives` table links the same ids, and
+* **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
 * **`feature-files`**: each path names its repository first, spelled as that repository's service spells `repo:`, then
   the path inside it. `feature-file-repo` warns where that first segment is no repository of a service you listed.
@@ -29,8 +29,8 @@ and how it is reviewed. What is below is only what a capability adds to that.
 where you have a value for it, and leave it out where you do not. [The type page](../capabilities.md#metadata) lists
 every field and says what each one holds.
 
-**The work items.** They live in the table and nowhere else. This estate plans in GitHub issues, so an issue is
-written `gh#2101` as an inline link to the issue.
+**The work items.** They live in the list and nowhere else. This estate plans in GitHub issues, so an issue is
+labelled `gh#2101`, with its link defined at the foot of the document.
 
 **The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` row. Both ends are
 checked against each other, and the NFR names this capability back in its own `applies-to`.
@@ -57,14 +57,11 @@ Where a customer encounters this: the web UI, the admin screen, the API endpoint
 
 ## Where the detail lives
 
-|                    |                                          |
-|--------------------|------------------------------------------|
-| **Implemented by** | [svc-{{a}}], [svc-{{b}}]                 |
-| **Specified in**   | [gh#{{a}}](https://git.example.com/example-payments/payment-api/issues/{{a}}) |
-|                    | [gh#{{b}}](https://git.example.com/example-payments/payment-api/issues/{{b}}) |
-| **Constrained by** | [nfr-{{a}}]                              |
+* **Implemented by**: [svc-{{a}}], [svc-{{b}}]
+* **Specified in**: [gh#{{a}}], [gh#{{b}}]
+* **Constrained by**: [nfr-{{a}}]
 
-_(This table is the point of the document. If the prose above it grows longer than the links below it, ask whether what
+_(This list is the point of the document. If the prose above it grows longer than the links in it, ask whether what
 you are writing belongs in a work item instead.)_
 
 ## Known limitations
@@ -72,6 +69,8 @@ you are writing belongs in a work item instead.)_
 What it deliberately does not do, and anything a reader would otherwise assume works. Link to work items where a
 limitation is scheduled to change.
 
+[gh#{{a}}]: https://git.example.com/example-payments/payment-api/issues/{{a}}
+[gh#{{b}}]: https://git.example.com/example-payments/payment-api/issues/{{b}}
 [nfr-{{a}}]: ../nfrs/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md
 [svc-{{b}}]: ../services/{{b}}.md

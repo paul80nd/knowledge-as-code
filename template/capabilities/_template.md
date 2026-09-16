@@ -20,7 +20,7 @@ and how it is reviewed. What is below is only what a capability adds to that.
 **Frontmatter**
 
 * **`status`**: `planned` · `building` · `live` · `deprecated`.
-* **`implemented-by`**: service ids. The `Where the detail lives` table links the same ids, and
+* **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
 * **`feature-files`**: each path names its repository first, spelled as that repository's service spells `repo:`, then
   the path inside it. `feature-file-repo` warns where that first segment is no repository of a service you listed.
@@ -29,8 +29,8 @@ and how it is reviewed. What is below is only what a capability adds to that.
 where you have a value for it, and leave it out where you do not. [The type page](../capabilities.md#metadata) lists
 every field and says what each one holds.
 
-**The work items.** They live in the table and nowhere else. Write each one as an inline link to the item, labelled
-the way your tracker labels it. `ADO#1150` and `gh#412` both read well. The framework names no tracker.
+**The work items.** They live in the list and nowhere else. Label each one the way your tracker labels it, and define
+the link at the foot of the document. `ADO#1150` and `gh#412` both read well. The framework names no tracker.
 
 **The NFRs.** Where this corpus adopts `nfrs`, add a `Constrained by` row linking each id, and add the ids to an
 `nfrs:` key in the frontmatter. Both ends are checked against each other.
@@ -57,13 +57,10 @@ Where a customer encounters this: the web UI, the admin screen, the API endpoint
 
 ## Where the detail lives
 
-|                    |                                          |
-|--------------------|------------------------------------------|
-| **Implemented by** | [svc-{{a}}], [svc-{{b}}]                 |
-| **Specified in**   | [{{tracker}}#{{a}}]({{url}})             |
-|                    | [{{tracker}}#{{b}}]({{url}})             |
+* **Implemented by**: [svc-{{a}}], [svc-{{b}}]
+* **Specified in**: [{{tracker}}#{{a}}], [{{tracker}}#{{b}}]
 
-_(This table is the point of the document. If the prose above it grows longer than the links below it, ask whether what
+_(This list is the point of the document. If the prose above it grows longer than the links in it, ask whether what
 you are writing belongs in a work item instead.)_
 
 ## Known limitations
@@ -73,3 +70,5 @@ limitation is scheduled to change.
 
 [svc-{{a}}]: ../services/{{a}}.md
 [svc-{{b}}]: ../services/{{b}}.md
+[{{tracker}}#{{a}}]: {{url}}
+[{{tracker}}#{{b}}]: {{url}}

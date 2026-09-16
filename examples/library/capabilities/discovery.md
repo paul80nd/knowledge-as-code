@@ -39,19 +39,15 @@ The public catalogue at `catalogue.example.com`, and the same pages in the kiosk
 
 ## Where the detail lives
 
-|                    |                                                                                     |
-|--------------------|-------------------------------------------------------------------------------------|
-| **Implemented by** | [svc-catalogue-web]                                                                 |
-|                    | [svc-catalogue-api]                                                                 |
-|                    | [svc-search]                                                                        |
-|                    | [svc-covers-cdn]                                                                    |
-| **Specified in**   | [ADO#1204](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1204) |
-|                    | [ADO#1338](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1338) |
+* **Implemented by**: [svc-catalogue-api], [svc-catalogue-web], [svc-covers-cdn], [svc-search]
+* **Specified in**: [ADO#1204], [ADO#1338]
 
 ## Known limitations
 
 A title the supplier has sent no jacket image for renders a placeholder.
 
+[ADO#1204]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1204
+[ADO#1338]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1338
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-catalogue-web]: ../services/catalogue-web.md
 [svc-covers-cdn]: ../services/covers-cdn.md

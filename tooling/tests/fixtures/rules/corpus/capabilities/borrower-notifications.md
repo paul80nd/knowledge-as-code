@@ -27,10 +27,8 @@ A hold nobody collects is a book nobody reads, and a fine nobody expected is a c
 
 ## Where the detail lives
 
-|                    |                    |
-|--------------------|--------------------|
-| **Implemented by** | [svc-notifications]|
-| **Constrained by** | [nfr-0001]         |
+* **Implemented by**: [svc-notifications]
+* **Constrained by**: [nfr-0001]
 
 Two links against all the prose above, which is what `hub-not-specification` measures. The second feature
 file names a repository no service here claims, which is what `feature-file-repo` reports.

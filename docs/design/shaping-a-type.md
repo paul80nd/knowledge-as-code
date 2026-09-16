@@ -167,11 +167,13 @@ links and keeps it short.
 
 **`Where the detail lives` is the only place the work items are written.** The type declares no field for them: a
 tracker reference is a link a reader follows, not a value an agent filters on, and one estate's `ADO#1150` is another's
-`gh#412`. Each one is written as an inline link, because a shortcut reference leaves its definition behind when the
-section travels, and the section travels at `full` so a consumer reads the addresses out of it.
+`gh#412`. The section travels at `full`, so a consumer reads the labels. It does not read the addresses: a section's
+link definitions sit outside it and `Exporter.Body` drops them, which is the same thing that turns a record id into a
+bare id a consumer looks up. A work item has nothing to look it up in, and an address into another estate's tracker
+would not open for them anyway.
 
 `implemented-by` and `nfrs` travel as ids, and both declare `mirrors-section:` against that same table. The record
-states each id twice, in the frontmatter an agent reads and in the table a person follows, and
+states each id twice, in the frontmatter an agent reads and in the list a person follows, and
 `related-matches-section` reports either end naming one the other does not.
 
 `feature-files` travels as written. A path names its repository first, so a consumer can tell which repository a test

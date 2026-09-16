@@ -40,21 +40,17 @@ The counter and the self-service terminals in each branch, and the borrower's ow
 
 ## Where the detail lives
 
-|                    |                                                                                     |
-|--------------------|-------------------------------------------------------------------------------------|
-| **Implemented by** | [svc-catalogue-web]                                                                 |
-|                    | [svc-catalogue-api]                                                                 |
-|                    | [svc-lending]                                                                       |
-|                    | [svc-notices]                                                                       |
-| **Specified in**   | [ADO#1150](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1150) |
-|                    | [ADO#1287](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1287) |
-|                    | [ADO#1401](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1401) |
+* **Implemented by**: [svc-catalogue-api], [svc-catalogue-web], [svc-lending], [svc-notices]
+* **Specified in**: [ADO#1150], [ADO#1287], [ADO#1401]
 
 ## Known limitations
 
 A loan made at the counter while the legacy system is down is recorded on paper and keyed in afterwards.
 [svc-lending] is the only route to that system.
 
+[ADO#1150]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1150
+[ADO#1287]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1287
+[ADO#1401]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1401
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-catalogue-web]: ../services/catalogue-web.md
 [svc-lending]: ../services/lending.md
