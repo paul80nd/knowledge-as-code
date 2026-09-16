@@ -2,4 +2,8 @@
 
 # Capability Index (CAP)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID               | Title                                              | Status   | Implemented by                                                   |
+|------------------|----------------------------------------------------|----------|------------------------------------------------------------------|
+| cap-borrowing    | [Borrow and return an item](borrowing.md)          | live     | svc-catalogue-api, svc-catalogue-web, svc-lending, svc-notices   |
+| cap-discovery    | [Find a title in the collection](discovery.md)     | live     | svc-catalogue-api, svc-catalogue-web, svc-covers-cdn, svc-search |
+| cap-reservations | [Reserve an item and pay the fee](reservations.md) | building | svc-catalogue-web, svc-lending, svc-notices, svc-reservations    |

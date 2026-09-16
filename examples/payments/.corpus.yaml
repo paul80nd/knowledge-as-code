@@ -51,8 +51,8 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 16
-  taken-on: "2026-09-09"
+  template-version: 17
+  taken-on: "2026-09-16"
 
 # Where to report a problem with the framework itself. This repository authors it, so a finding about
 # `kac`, the schema or a skill goes to the same tracker as one about a record here.
@@ -65,6 +65,7 @@ update-policy: cautious
 
 # The types this corpus chose. A domain corpus holds the rules that are its own and inherits the rest.
 types:
+  - capabilities
   - fixes
   - nfrs
   - services
