@@ -125,6 +125,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   that producer's own producer meets one record twice, and writes and counts it once. `sources` already listed the
   grandparent, and still does.
 
+- **`kac validate` resolves a citation into a corpus reached through another.** `gp:pol-OLD` was reported as a
+  shortcode this corpus consumes nothing under, because the reader behind `validate` skipped the same folders and
+  filed what it did read under the corpus it arrived through. A record is now reached by the shortcode of the corpus
+  that wrote it, whether this corpus declared that corpus in `consumes:` or not. `eng:pol-OLD` correspondingly no
+  longer resolves, which is the spelling `ref-resolves` and `part-ref` already refuse for a record eng does not hold.
+
 ## 0.26.0 - 2026-09-13
 
 ### Added

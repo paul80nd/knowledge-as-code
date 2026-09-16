@@ -8,9 +8,14 @@ namespace kac.core;
 // producer's corpus is not here and never will be: what a consumer holds is the export, so a question
 // the export cannot answer is one no check may ask across a boundary.
 //
+// `Scope` is the shortcode a citation reaches this record by, which is the corpus that wrote it. It is
+// the import this corpus declared for that corpus's own records, and a corpus further up the chain for
+// the records that corpus inherited.
+//
 // `Parts` is empty for a type keeping none, and `KeepsParts` is what tells that apart from a record that
 // happens to carry none.
 public sealed record ImportedRecord(
+    string Scope,
     string Id,
     string Type,
     string Path,
@@ -56,11 +61,13 @@ public static class Imports
 {
     // Every declared import that is on disk, and the shortcode of each that is not.
     //
-    // `names` answers the file names directly inside one folder under `.imports/`, and null where there
-    // is no folder there. `read` answers one file's text, and null where there is no file.
+    // `names` lists the file names directly inside one folder under `.imports/`, `folders` lists the
+    // folder names inside one, and `read` returns one file's text. Each is null where there is nothing
+    // there.
     public static ImportGraph Load(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
         Func<string, string?> read)
     {
         var imports = new List<Import>();
@@ -79,7 +86,7 @@ public static class Imports
                 continue;
             }
 
-            if (Read(shortcode, names, read) is { } import) imports.Add(import);
+            if (Read(shortcode, names, folders, read) is { } import) imports.Add(import);
             else missing.Add(shortcode);
         }
 
@@ -89,7 +96,10 @@ public static class Imports
     // One folder read whole, or null where it holds no manifest. The manifest is the last file a restore
     // writes, so a folder carrying one carries the records it describes.
     private static Import? Read(
-        string shortcode, Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
+        string shortcode,
+        Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
+        Func<string, string?> read)
     {
         if (read($"{shortcode}/{Exporter.ManifestFile}") is not { } text) return null;
         if (JsonRead.Parse(text) is not { } manifest) return null;
@@ -115,7 +125,7 @@ public static class Imports
                     JsonRead.Str(type?["recordKey"]) ?? "record",
                     JsonRead.Str(type?["partKey"]) ?? "part");
 
-            records.AddRange(RecordsIn(shortcode, key, dir, partsFile, parts, names, read));
+            records.AddRange(RecordsIn(shortcode, key, dir, partsFile, parts, names, folders, read));
         }
 
         return new Import(
@@ -126,12 +136,18 @@ public static class Imports
             records);
     }
 
-    // Every record one type's folder holds. A record is a file named for its id, and the parts file
-    // sitting beside them is not one.
+    // Every record one type's folder contains, and the corpus each one is cited by. A record is a file
+    // named for its id, and the parts file sitting beside them is not one.
+    //
+    // The import's own records sit directly in the type's folder. The ones it inherited sit in a folder
+    // named for the corpus that wrote them, which is the shortcode a citation into them carries. See the
+    // chain section of docs/design/export.md.
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,
         Dictionary<string, List<string>> parts,
-        Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
+        Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
+        Func<string, string?> read)
     {
         var found = new List<ImportedRecord>();
 
@@ -139,21 +155,35 @@ public static class Imports
         // tells a record carrying none from a type that has none to carry.
         var keepsParts = partsFile is not null;
         var partsName = partsFile?[(partsFile.LastIndexOf('/') + 1)..];
+        var root = $"{shortcode}/{dir}";
 
-        foreach (var name in names($"{shortcode}/{dir}") ?? [])
-        {
-            if (!name.EndsWith(".json", StringComparison.Ordinal)) continue;
-            if (name == partsName) continue;
+        Take(shortcode, root);
 
-            var record = JsonRead.Parse(read($"{shortcode}/{dir}/{name}") ?? "");
-            if (JsonRead.Str(JsonRead.Object(record?["fields"])?["id"]) is not { } id) continue;
-
-            found.Add(new ImportedRecord(
-                id, type, JsonRead.Str(record?["path"]) ?? "", keepsParts,
-                parts.GetValueOrDefault(id, [])));
-        }
+        foreach (var scope in (folders(root) ?? []).OrderBy(n => n, StringComparer.Ordinal))
+            Take(scope, $"{root}/{scope}");
 
         return found;
+
+        void Take(string scope, string folder)
+        {
+            foreach (var name in (names(folder) ?? []).OrderBy(n => n, StringComparer.Ordinal))
+            {
+                if (!name.EndsWith(".json", StringComparison.Ordinal)) continue;
+                if (name == partsName) continue;
+
+                var record = JsonRead.Parse(read($"{folder}/{name}") ?? "");
+                if (JsonRead.Str(JsonRead.Object(record?["fields"])?["id"]) is not { } id) continue;
+
+                // A record file carries the id its own corpus wrote, and the parts file names an
+                // inherited record by the scoped id the export stamped. So the key is built the way the
+                // export built it, and a bare id is only bare for the corpus this one declared.
+                var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
+
+                found.Add(new ImportedRecord(
+                    scope, id, type, JsonRead.Str(record?["path"]) ?? "", keepsParts,
+                    parts.GetValueOrDefault(key, [])));
+            }
+        }
     }
 
     // The parts each record carries, in the order the file lists them. A parts file is one JSON object
@@ -187,6 +217,9 @@ public static class Imports
             declared,
             folder => Directory.Exists(At(folder))
                 ? [.. Directory.EnumerateFiles(At(folder)).Select(Path.GetFileName).OfType<string>()]
+                : null,
+            folder => Directory.Exists(At(folder))
+                ? [.. Directory.EnumerateDirectories(At(folder)).Select(Path.GetFileName).OfType<string>()]
                 : null,
             file => File.Exists(At(file)) ? Files.ReadLf(At(file)) : null);
 

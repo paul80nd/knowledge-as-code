@@ -47,6 +47,19 @@ public class ResolverTests
             + "'pol-LOCAL.HERE': two spellings of one id defeat every search anybody runs for it.",
             Assert.Single(Cite("`eng:pol-LOCAL.HERE`")).Message);
 
+    // A chain three corpora deep. `gp` is not in `consumes:` here, and its records arrive inside eng's
+    // export naming it, so the shortcode a citation writes is the one that wrote the record.
+    [Fact]
+    public void A_citation_into_a_corpus_reached_through_another_resolves()
+        => Assert.Empty(Cite("`gp:pol-OLD.KEEP`"));
+
+    // The scope is the record's and never the import's, so citing a grandparent's record through the
+    // corpus it arrived in reaches nothing.
+    [Fact]
+    public void A_grandparent_s_record_is_not_reachable_under_the_corpus_it_arrived_in()
+        => Assert.Equal("'eng:pol-OLD.KEEP' cites 'eng:pol-OLD', which does not exist.",
+            Assert.Single(Cite("`eng:pol-OLD.KEEP`")).Message);
+
     [Fact]
     public void A_shortcode_this_corpus_consumes_nothing_under_is_reported()
         => Assert.Equal(
@@ -138,8 +151,13 @@ public class ResolverTests
     private static ImportGraph Consuming() =>
         new([
             new Import("eng", "example-engineering", "0.1.0", null, [
-                new ImportedRecord("pol-SCRT", "policies", "policies/scrt.md", true, ["STORE", "ROTATE"]),
-                new ImportedRecord("svc-GATE", "services", "services/gate.md", false, [])
+                new ImportedRecord("eng", "pol-SCRT", "policies", "policies/scrt.md", true,
+                    ["STORE", "ROTATE"]),
+                new ImportedRecord("eng", "svc-GATE", "services", "services/gate.md", false, []),
+
+                // A record eng inherited, reached by the shortcode of the corpus that wrote it. This
+                // corpus declares no `gp:`, so the scope comes off the record and off nothing else.
+                new ImportedRecord("gp", "pol-OLD", "policies", "policies/old.md", true, ["KEEP"])
             ])
         ], [], []);
 

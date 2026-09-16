@@ -92,14 +92,19 @@ public sealed class Resolver
         {
             _shortcodes.Add(import.Shortcode);
 
+            // A record is filed under the corpus that wrote it, which is the import itself for that
+            // corpus's own records and a corpus further up the chain for the ones it inherited. So a
+            // citation into a grandparent resolves against the grandparent, and its scope is a
+            // shortcode this corpus never declared.
             foreach (var record in import.Records)
             {
-                _imported[$"{import.Shortcode}:{record.Id}"] = record;
+                _shortcodes.Add(record.Scope);
+                _imported[$"{record.Scope}:{record.Id}"] = record;
 
                 // Which import a bare id would have meant, so a citation missing its scope is told the
                 // spelling to write. The first import declaring an id wins, in the order `consumes:`
                 // lists them, which is the order a reader would resolve them in too.
-                _scopes.TryAdd(record.Id, import.Shortcode);
+                _scopes.TryAdd(record.Id, record.Scope);
             }
         }
     }
