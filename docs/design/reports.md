@@ -99,7 +99,11 @@ A reviewer edits `sources[].version` by hand. That is the point of it.
 
 A corpus moves its `content-version` whenever what it knows changes, and most of those changes touch no report. Adding a
 fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds raises
-the version and adds a `verified` entry, instead of running the report again and re-reading every verdict.
+the version by hand, instead of running the report again and re-reading every verdict.
+
+A raise that changes the prose gets a `verified` entry. `kac report` writes each imported corpus and its version into
+the `Imported:` bullet under `## Limits`, so raising `sources` on a report with that bullet edits the body too, and
+somebody answers for the new text. A report that imports nothing edits frontmatter alone and keeps the list it has.
 
 `validate` warns where the version falls behind the corpus. A report carried forward across several versions without a
 regeneration is one to run again. The export reads the same gap: a verification taken before `generated.at` read text a

@@ -45,8 +45,8 @@ is run again.
   `human:alex.doe`, and an agent states its version, as `coverage-sweep/1.2.0`. `report` states the report the run
   used, as `coverage`, and `tool` keeps the tool that wrote the mechanical half, as `kac/{{0.24.0}}`.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
-  version by hand where a corpus moved and nothing in this report changed, and leave `verified` alone. A version
-  somebody moved for another reason is not a fresh read of this report.
+  version by hand where a corpus moved and nothing in this report changed, and leave `generated` alone. Add a
+  `verified` entry where the raise also changes the `Imported:` bullet under `## Limits`.
 * **`verified`**: every verification this report has had, oldest first. A draft states none, and every other status
   states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with its version
   as `coverage-sweep/1.2.0`. Two actors are refused: a `role:`, because a post cannot read an answer, and the actor

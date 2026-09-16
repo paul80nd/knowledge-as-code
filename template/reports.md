@@ -60,11 +60,14 @@ checked that it still holds.
 2. Copy [`_template.md`](reports/_template.md) to a kebab-case filename naming the question, and paste the output under
    the frontmatter.
 3. Answer every judgement cell. A cell you cannot answer is a question for whoever owns the area, not a blank.
-4. Set `sources` to the `content-version` of each corpus the run read, and add a `verified` entry naming yourself.
+4. Set `sources` to the `content-version` of each corpus the run read, and write yourself into `generated.by`. Leave
+   `verified` empty and the status at `draft`: `no-self-verification` rejects a verification by whoever wrote the
+   content.
 
 **Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
-moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `verified` alone.
-A version the corpus moved for something else is no reason to claim a fresh read.
+moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `generated` alone.
+Add a `verified` entry where the raise changes the prose. A report stating an imported corpus and its version under
+`## Limits` repeats that version in the body, so raising `sources` edits the body too.
 
 ## What CI checks
 
