@@ -16,12 +16,13 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                   | It goes in                   |
-|---------------------------------------------|------------------------------|
-| A problem with a known, verified resolution | [Fixes](../fixes.md)         |
-| A rule people must follow when building     | [Standards](../standards.md) |
-| A target for speed, uptime, or recovery     | [NFRs](../nfrs.md)           |
-| What a deployable component is and does     | [Services](../services.md)   |
+| You have…                                        | It goes in                         |
+|--------------------------------------------------|------------------------------------|
+| A problem with a known, verified resolution      | [Fixes](../fixes.md)               |
+| A rule people must follow when building          | [Standards](../standards.md)       |
+| A target for speed, uptime, or recovery          | [NFRs](../nfrs.md)                 |
+| What a deployable component is and does          | [Services](../services.md)         |
+| What the organisation offers a customer, and why | [Capabilities](../capabilities.md) |
 
 <!-- END GENERATED: types-placement -->
 
@@ -52,6 +53,11 @@ the union of the folders that apply to it.
 
 CI can check these against the estate itself. They also fall out of date fastest.
 
+**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
+NFRs behind it. A capability sits above the epic layer. It links to the work items that detail it, the services that
+implement it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of
+its own has stopped being one.
+
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
 stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
@@ -66,12 +72,16 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 
 ```mermaid
 graph LR;
+  t_capabilities[Capability];
   t_fixes[Fix];
   t_nfrs[NFR];
   t_services[Service];
   t_standards[Standard];
+  t_capabilities -- implemented-by --> t_services;
+  t_capabilities -- nfrs --> t_nfrs;
   t_fixes -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_services;
+  t_nfrs -- applies-to --> t_capabilities;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
 ```
@@ -83,12 +93,14 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From     | Field        | Points at | Answered by |
-|----------|--------------|-----------|-------------|
-| Fix      | `applies-to` | Service   |             |
-| NFR      | `applies-to` | Service   |             |
-| Service  | `depends-on` | Service   |             |
-| Standard | `applies-to` | Service   |             |
+| From       | Field            | Points at           | Answered by |
+|------------|------------------|---------------------|-------------|
+| Capability | `implemented-by` | Service             |             |
+| Capability | `nfrs`           | NFR                 |             |
+| Fix        | `applies-to`     | Service             |             |
+| NFR        | `applies-to`     | Service, Capability |             |
+| Service    | `depends-on`     | Service             |             |
+| Standard   | `applies-to`     | Service             |             |
 
 <!-- END GENERATED: types-edges -->
 
@@ -111,6 +123,10 @@ The calls that are actually close. Each is written once, on the type its heading
 this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
+
+**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
+capability usually spans several services. One service usually contributes to several capabilities.
+
 <!-- END GENERATED: types-versus -->
 
 ## Status of this taxonomy
