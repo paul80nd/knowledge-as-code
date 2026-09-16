@@ -66,7 +66,7 @@ to the document instead, which is why every one of them is kept.
 ### Who `generated.by` names
 
 `kac report` writes itself there, and that is true while the output stands unedited. A report is half mechanical and
-half judgement, and somebody answers the verdict cells the tool left open. That person or agent wrote the content a
+half judgement, and somebody answers the judgement cells the tool left open. That person or agent wrote the content a
 reader now meets, so `by` names them instead.
 
 `report` and `tool` survive the handover. `report` states the report the run used, as `coverage`. That is the name
@@ -105,6 +105,9 @@ Which entry the reviewer raises decides what else they edit. `sources` lists the
 then one entry per corpus it imports. Raising the first entry edits frontmatter alone, and the `verified` list stays as
 it is. Raising an imported entry also means editing the `Imported:` bullet under `## Limits`, which repeats that
 version, and adding a `verified` entry for the body they changed. Nothing checks the bullet against the frontmatter.
+
+Neither raise moves `generated`. `at` dates the content's last meaningful change, and the bullet repeats a version
+`sources` already carries, so a verification taken before the raise vouches for the same fact it did before.
 
 `validate` warns where the version falls behind the corpus. A report carried forward across several versions without a
 regeneration is one to run again. The export reads the same gap: a verification taken before `generated.at` read text a
