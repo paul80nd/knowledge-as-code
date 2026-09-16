@@ -22,11 +22,13 @@ versus:
 lineage:
   prior-art: "[Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) v0.2, the generated-document provenance keys"
   alignment: >
-    `generated` states the producer and the moment, in OKF's `<producer>/<version>` form. `sources` lists
-    each body of knowledge the document answers for
+    `generated` states who wrote the content and when, in OKF's actor convention. `sources` lists each body
+    of knowledge the document answers for, and a report with no `verified` entry is OKF's unverified tier
   divergence: >
     OKF puts no version on a source. This type does, because a reader needs to know which content the report
-    is true of. It also requires a `verified` entry, which OKF leaves to the publisher
+    is true of. It also requires a `verified` entry once a report leaves `draft`, where OKF leaves
+    verification to the publisher. `generated.report` and `generated.tool` are additional keys, which OKF
+    permits and defines nothing of its own for
 
 collision: >
   A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
@@ -52,10 +54,27 @@ fields:
   generated:
     required: true
     type: object
-    shape: event
-    description: What produced the content and when.
+    entry:
+      at:
+        required: true
+        type: timestamp
+        description: The moment the content last changed, in UTC as `2026-09-07T20:18:00Z`.
+      by:
+        required: true
+        type: string
+        description: Who wrote the content as it stands, as a tool, an agent or a person.
+      report:
+        required: false
+        type: string
+        description: The report `kac report` was run under, as `coverage`.
+      tool:
+        required: false
+        type: string
+        description: The tool that wrote the mechanical half, as `kac/0.26.0`.
+    description: Who wrote the content as it stands, and when.
     notes: >
-      A regeneration overwrites this event, and `verified` is the field that keeps a history.
+      `by` passes to whoever edits the output, so a report an agent completed states the agent and not `kac`.
+      `report` and `tool` describe the run the content started from, and both stay absent where nobody ran one.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
   sources:
@@ -78,16 +97,16 @@ fields:
       a path.
 
   verified:
-    required: true
+    required: false
+    required-when: 'status != draft'
     type: list
     of: object
     shape: event
-    min-items: 1
     description: Every verification this report has had, oldest first, one line each.
     notes: >
-      The keys come from the `event` shape, and `verified` is the name the Open Knowledge Format gives the
-      same list. The `by` prefix decides the exported `trust` tier, so `verified-by-a-known-actor` below
-      limits an entry to a person or a producer.
+      A draft states no verification, and every other status must. The keys come from the `event` shape, and
+      `verified` is the name the Open Knowledge Format gives the same list. The `by` prefix decides the
+      exported `trust` tier, so `verified-by-a-known-actor` below limits an entry to a known actor.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
 sections:
@@ -113,22 +132,23 @@ rules:
     severity: warning
 
   - id: verified-by-a-known-actor
-    description: A verification states a person or a producer, and never a `role:`.
+    description: A verification states an actor the Open Knowledge Format defines, and never a `role:`.
     severity: error
-    expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
+    expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|process:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      this verification states neither a person nor a producer. Write `human:alex.doe`, or an agent with
-      its version, as `coverage-sweep/1.2.0`.
+      this verification states no known actor. Write `human:alex.doe`, `process:nightly-sweep`, or an agent
+      with its version, as `coverage-sweep/1.2.0`.
 
   - id: no-self-verification
-    description: A report is not verified by the producer that generated it.
+    description: A report is not verified by the actor named in `generated.by`.
     severity: error
 
-  - id: generated-by-a-producer
-    description: '`generated.by` states what produced the content, in OKF''s `<producer>/<version>` form.'
+  - id: generated-by-a-known-actor
+    description: '`generated.by` states an actor the Open Knowledge Format defines.'
     severity: error
-    # The form is a slash with something after it. Producers version themselves however they like.
-    expr: "entries_match('generated', 'by', '^[a-z0-9.-]+/[^ ]+$')"
+    # The same forms `verified` takes. A person writing the content is `human:`, which the Open Knowledge
+    # Format requires for hand-authored work.
+    expr: "entries_match('generated', 'by', '^(human:[a-z0-9.-]+|process:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      `generated.by` is not in `<producer>/<version>` form. Write the producer and its version together,
-      as `kac/0.24.0`, so a reader can tell which version wrote this.
+      `generated.by` states no known actor. Write `human:alex.doe`, `process:nightly-sweep`, or a tool or
+      agent with its version, as `kac/0.24.0`.

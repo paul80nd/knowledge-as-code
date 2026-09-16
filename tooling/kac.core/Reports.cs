@@ -10,8 +10,8 @@ public sealed record ReportSource(string Resource, string? Version);
 
 // What produced a report and when, as the frontmatter of the record it becomes.
 //
-// `By` takes OKF's `<producer>/<version>` form, so a later run by an agent names itself the same way the
-// tool does.
+// `By` takes any of OKF's actor forms, because a report passes from the run that printed it to whoever
+// answered its judgement cells. `docs/design/reports.md` carries that handover.
 public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSource> Sources)
 {
     /// <summary>This tool's stamp, from the version string the assembly was built with.</summary>
@@ -198,7 +198,8 @@ public static class Reports
             + "of scope is a judgement about this estate. That judgement, and the `Note` beside it, "
             + "belong to whoever confirms this report.");
 
-        return new ReportPlan(Coverage, "Clause coverage", Frontmatter(stamp), body.ToString().TrimEnd() + "\n");
+        return new ReportPlan(Coverage, "Clause coverage", Frontmatter(stamp, Coverage),
+            body.ToString().TrimEnd() + "\n");
     }
 
     private static ReportPlan FrameworksPlan(
@@ -221,7 +222,7 @@ public static class Reports
             + "whether an uncited reference should be removed from the register, belongs to whoever "
             + "confirms this report.");
 
-        return new ReportPlan(Frameworks, "Framework coverage", Frontmatter(stamp),
+        return new ReportPlan(Frameworks, "Framework coverage", Frontmatter(stamp, Frameworks),
             body.ToString().TrimEnd() + "\n");
     }
 
@@ -361,10 +362,14 @@ public static class Reports
     //
     // `status` is the one judgement left to the tool: a report nobody has read is a draft.
     //
+    // `generated.by` names this run, which is true while the output stands unedited. Whoever fills the
+    // judgement cells writes themselves there instead, and `tool` keeps the run that wrote the
+    // mechanical half. `docs/design/reports.md` carries that handover.
+    //
     // Every blank is a YAML null rather than half a value. `owner: human:` does not parse, so somebody
     // filling in one field meets `frontmatter-parses` over the whole document instead of `required-field`
     // naming what is still missing.
-    private static string Frontmatter(ReportStamp stamp)
+    private static string Frontmatter(ReportStamp stamp, string report)
     {
         var sb = new StringBuilder();
         sb.Append("id:\n");
@@ -372,7 +377,11 @@ public static class Reports
         sb.Append("tier: descriptive\n");
         sb.Append("status: draft\n");
         sb.Append("owner:\n");
-        sb.Append($"generated: {{ at: {stamp.At}, by: {stamp.By} }}\n");
+        sb.Append("generated:\n");
+        sb.Append($"  at: {stamp.At}\n");
+        sb.Append($"  by: {stamp.By}\n");
+        sb.Append($"  report: {report}\n");
+        sb.Append($"  tool: {stamp.By}\n");
         sb.Append("sources:\n");
 
         foreach (var source in stamp.Sources)

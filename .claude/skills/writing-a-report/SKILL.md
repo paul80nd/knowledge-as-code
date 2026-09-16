@@ -12,6 +12,10 @@ a report adds to them.
 rest blank. It prints `covered` and `uncovered` and stops, because it cannot tell a clause nobody has got to from a
 clause about something this organisation does not have. Those are the cells you fill.
 
+**The name is the question, not the record.** `rpt-clause-coverage` is the record and `coverage` is the run behind it,
+so `generated.report` states which report regenerates this one. Where a record states none, run `kac report` with any
+name: it refuses one it does not have and lists what it takes.
+
 **Never teach the tool your words.** `Gap` and `Out of scope` are verdicts about one estate at one moment. A tool
 printing either would be asserting something no record supports.
 
@@ -40,16 +44,20 @@ coverage sits on. Where the verdict is obvious from the row, leave the cell empt
 1. Run `kac report <name>` from inside the corpus.
 2. Copy `reports/_template.md` to a filename naming the question, and paste the output under its frontmatter. Keep the
    `## Limits` section: a reader meets the numbers without the command beside them.
-3. Fill `id`, `owner` and `status`. `generated` and `sources` arrive filled in.
+3. Fill `id` and `owner`. `generated`, `sources` and `status: draft` arrive filled in.
 4. Answer every `Verdict` cell, and every `Note` that earns one.
-5. Add a `verified` entry naming whoever read it. A person is `human:alex.doe`, and you ask them rather than writing a
-   name they have not given you. An agent is named with its version the way the tool names itself, as
-   `coverage-sweep/1.2.0`, and a report verified by agents alone stays machine-confirmed until a person adds a line.
-   Two actors are refused: a `role:`, and the producer in `generated.by`.
-6. Run `kac validate`, then `kac generate`.
+5. Write yourself into `generated.by`, and set `generated.at` to the moment you finished. The run wrote the table and
+   you wrote the verdicts, so the content is yours now. Leave `report` and `tool` as the run left them.
+6. Leave `verified` empty and leave the status at `draft`. Nobody has read this yet, and an entry written to fill the
+   field is worse than the blank it replaced.
+7. Run `kac validate`, then `kac generate`.
 
 **A verdict you cannot reach is a question, not a blank.** Ask whoever owns the area. A report published with an empty
 cell says the corpus was read and it was not.
+
+**Somebody else moves it off `draft`.** They read what you wrote, add a `verified` entry naming themselves, and set the
+status. A person is `human:alex.doe`, a process is `process:nightly-sweep`, and an agent states its version, as
+`coverage-sweep/1.2.0`. Two actors are refused: a `role:`, and the actor in `generated.by`.
 
 ## Bringing one up to date
 
@@ -57,10 +65,10 @@ A report is wrong the moment the corpus moves, and `report-stale` says so once `
 
 **Two ways forward, and the corpus decides which.** Where nothing that moved touches this report, raise the
 `sources` version by hand and leave `verified` alone. A version the corpus moved for something else is no reason to
-claim a fresh read. Where the coverage itself moved, run the report again, merge, and add a `verified` entry.
+claim a fresh read. Where the coverage itself moved, run the report again, merge, and name yourself in `generated`.
 
-**The hand-raise is a trade.** It leaves `generated` naming a run older than the version `sources` now lists, and no
-run read that pairing. The alternative is running the report again for output nobody expects to differ, and moving a
+**The hand-raise is a trade.** It leaves `generated` naming an edit older than the version `sources` now lists, and
+nobody read that pairing. The alternative is running the report again for output nobody expects to differ, and moving a
 version stamp through every consumer of the corpus to carry it.
 
 **The merge, in order:**
@@ -73,7 +81,8 @@ version stamp through every consumer of the corpus to carry it.
    note may have gone stale. A clause that lost one needs a fresh verdict.
 5. Carry forward every section the tool does not write. It writes `Limits`, `Totals`, the rows, and
    `What this leaves open`, and anything else on the page is yours.
-6. Take the new `generated` and `sources` whole, and add a `verified` entry.
+6. Take the new `sources` whole, and take `report` and `tool` from the run. Write yourself into `generated.by` with
+   the moment you finished the merge.
 
 **Nothing marks a cell as carried forward.** The judgement lives in the cell, so a merge is a read of two documents
 rather than a splice of one into the other. A marker would be a second thing to keep in step and the first thing to

@@ -18,22 +18,24 @@ verified:
 **Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
 and how it is reviewed. What is below is only what a report adds to that.
 
-**Everything under the H1 comes from `kac report <name>`.** Run it, paste what it printed, and answer the judgement
-cells it left open. Keep the section it prints about its own limits: a reader meets the numbers without the command
+**Everything under the H1 comes from `kac report <name>`.** The name is the question the report answers, not this
+record's id, and `generated.report` states the one this record came from. Run it, paste what it printed, and answer
+the judgement cells it left open. Keep the section it prints about its own limits: a reader meets the numbers without the command
 beside them.
 
 **Frontmatter**
 
-* **`generated`**: `{ at: "{{2026-09-08T10:00:00Z}}", by: kac/{{0.24.0}} }`. The moment the content was produced and
-  what produced it. `by` names a producer and its version together, so a report an agent extended names the agent the
-  same way the tool names itself.
+* **`generated`**: who wrote the content as it stands, and when. `kac report` writes itself into `by`, which is true
+  while the output stands unedited. Write yourself there once you answer a judgement cell: a person is
+  `human:alex.doe`, and an agent states its version, as `coverage-sweep/1.2.0`. `report` states the report the run
+  used, as `coverage`, and `tool` keeps the tool that wrote the mechanical half, as `kac/{{0.24.0}}`.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
   version by hand where a corpus moved and nothing in this report changed, and add a `verified` entry saying you
   checked.
-* **`verified`**: every verification this report has had, oldest first. A report nobody verified is output. Write a
-  person as `human:alex.doe`, or an agent with its version as `coverage-sweep/1.2.0`. Two actors are refused: a
-  `role:`, because a post cannot read an answer, and the producer in `generated.by`, because a run cannot sign off
-  its own output.
+* **`verified`**: every verification this report has had, oldest first. A draft states none, and every other status
+  states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with its version
+  as `coverage-sweep/1.2.0`. Two actors are refused: a `role:`, because a post cannot read an answer, and the actor
+  in `generated.by`, because nobody signs off their own writing.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../reports.md#metadata) lists every

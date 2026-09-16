@@ -19,7 +19,7 @@ shapes:
         type: string
         description: Who or what acted. A type that limits this to one kind of actor writes a rule.
     notes: >
-      An actor doing something at a point in time: a person verifying an answer, a tool generating a
-      report. The shape gives the actor and the moment, and says nothing about the act itself. `at`
-      leads the entry, so a list of these sorts oldest first on its first key. `by` takes any string,
-      because a verification gives a person or an agent where a generation gives a tool and its version.
+      An actor doing something at a point in time, as a person verifying an answer. The shape gives the
+      actor and the moment, and says nothing about the act itself. `at` leads the entry, so a list of
+      these sorts oldest first on its first key. `by` takes any string, because a verification gives a
+      person, a process or an agent, and a type that limits the set writes a rule.

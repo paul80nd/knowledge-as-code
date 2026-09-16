@@ -60,9 +60,10 @@ public class VerificationTests
             + string.Join("\n  ", unread));
 
         Assert.True(stale.Count == 0,
-            "the body of a verified record changed and its 'verified' list did not:\n  "
+            "the body of these records changed and nobody answered for it:\n  "
             + string.Join("\n  ", stale)
-            + "\nAdd an entry naming whoever read the new text, or leave the body alone.");
+            + "\nName yourself in 'generated' where you wrote the new text, or add a 'verified' entry "
+            + "naming whoever read it.");
     }
 
     // The commit this branch grew from, or null where git could not name one. `named` comes from

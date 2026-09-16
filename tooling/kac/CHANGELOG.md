@@ -95,6 +95,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A report's `generated` says who wrote the content, and authorship passes to whoever edits it.** `kac report` wrote
+  itself into `generated.by` and left it there, so a report an agent finished credited the tool with the agent's
+  verdicts. `by` now names whoever wrote the content a reader meets, which the Open Knowledge Format defines it as and
+  illustrates with a person. Two keys survive the handover: `report` states the report the run used, as `coverage`, so
+  a record says which `kac report` name regenerates it, and `tool` keeps the version that wrote the mechanical half.
+  Both are optional, and a report nobody produced with the tool states neither. `generated-by-a-producer` is renamed
+  `generated-by-a-known-actor` and admits all three actor forms, so `human:alex.doe` is now a legal author.
+
+- **A report states no verification until somebody reads it.** `verified` was required with at least one entry, so an
+  agent finishing a report had to name a verifier to get past `kac validate`, and the two worked corpora each named an
+  agent that does not exist. The field now follows `fixes`: a draft states none, and every other status states one.
+  A report with no entry is the Open Knowledge Format's unverified tier, which `kac export` already ships as `trust`.
+
 - **An accepted ADR is edited in place, and only a changed decision needs a superseding ADR.**
   `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. That
   list left out an edit changing no decision. A sentence that no longer matched the decision the ADR already stated

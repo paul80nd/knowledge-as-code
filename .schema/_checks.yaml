@@ -585,7 +585,7 @@ checks:
 
   self-verification:
     severity: error
-    description: A report's `verified` list leaves out the producer that generated it.
+    description: A report's `verified` list leaves out the actor named in `generated.by`.
     notes: >
       Reported against the entry, so the message points at the line to delete. The comparison is exact, so
       `kac/0.25.0` verifying a report `kac/0.24.0` generated stands: a later version reading the corpus again is a

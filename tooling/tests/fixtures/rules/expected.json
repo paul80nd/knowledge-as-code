@@ -208,22 +208,22 @@
       "file": "reports/producer-without-a-version.md",
       "line": 1,
       "severity": "error",
-      "check": "generated-by-a-producer",
-      "message": "`generated.by` is not in `<producer>/<version>` form. Write the producer and its version together, as `kac/0.24.0`, so a reader can tell which version wrote this."
+      "check": "generated-by-a-known-actor",
+      "message": "`generated.by` states no known actor. Write `human:alex.doe`, `process:nightly-sweep`, or a tool or agent with its version, as `kac/0.24.0`."
     },
     {
       "file": "reports/verified-by-a-post.md",
       "line": 1,
       "severity": "error",
       "check": "verified-by-a-known-actor",
-      "message": "this verification states neither a person nor a producer. Write `human:alex.doe`, or an agent with its version, as `coverage-sweep/1.2.0`."
+      "message": "this verification states no known actor. Write `human:alex.doe`, `process:nightly-sweep`, or an agent with its version, as `coverage-sweep/1.2.0`."
     },
     {
       "file": "reports/verified-by-its-own-producer.md",
       "line": 11,
       "severity": "error",
       "check": "self-verification",
-      "message": "'kac/0.24.0' generated this report and verifies it here. A run confirming its own output tells a reader nothing. Delete the entry, or have somebody else read the verdicts and name them."
+      "message": "'kac/0.24.0' wrote this report and verifies it here. Nobody confirms their own writing. Delete the entry, or have somebody else read the verdicts and name them."
     },
     {
       "file": "runbooks/database-connections-exhausted.md",

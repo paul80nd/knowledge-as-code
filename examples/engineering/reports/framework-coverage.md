@@ -4,15 +4,15 @@ type: report
 tier: descriptive
 status: active
 owner: human:alex.doe
-generated: { at: 2026-09-11T12:02:45Z, by: kac/0.25.0 }
+generated:
+  at: 2026-09-11T12:02:45Z
+  by: coverage-sweep/1.0.0
+  report: frameworks
+  tool: kac/0.25.0
 sources:
-  - { resource: example-engineering, version: "0.20.0" }
+  - { resource: example-engineering, version: "0.21.0" }
 verified:
-  - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }
-  - { at: 2026-09-09T18:29:19Z, by: coverage-sweep/1.0.0 }
-  - { at: 2026-09-11T08:20:00Z, by: coverage-sweep/1.0.0 }
-  - { at: 2026-09-11T09:05:00Z, by: coverage-sweep/1.0.0 }
-  - { at: 2026-09-11T10:10:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T12:30:00Z, by: human:alex.doe }
 tags: [ coverage, frameworks ]
 ---
 

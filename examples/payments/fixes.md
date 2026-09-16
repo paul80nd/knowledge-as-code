@@ -115,7 +115,7 @@ Other boundaries:
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `verified-by-a-known-actor` | error   | A verification names a person or a producer, and never a post.                                                  |
+| `verified-by-a-known-actor` | error   | A verification names an actor the Open Knowledge Format defines, and never a post.                              |
 | `one-problem-per-document`  | warning | A fix has one Symptom section, and a record with two is two fixes.                                              |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.

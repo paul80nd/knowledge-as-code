@@ -47,34 +47,51 @@ Three keys, following the
 for knowledge documents that a growing set of tools reads.
 
 ```yaml
-generated: { at: 2026-09-11T09:42:20Z, by: kac/0.25.0 }
+generated:
+  at: 2026-09-11T09:42:20Z
+  by: coverage-sweep/1.0.0
+  report: coverage
+  tool: kac/0.25.0
 sources:
   - { resource: example-dogfooding, version: "0.22.3" }
   - { resource: example-engineering, version: "0.16.0" }
 verified:
-  - { at: 2026-09-11T10:30:00Z, by: coverage-sweep/1.0.0 }
+  - { at: 2026-09-11T10:30:00Z, by: human:alex.doe }
 ```
 
-`generated` gives what produced the content and when. `by` takes OKF's `<producer>/<version>` form, so a report an agent
-extended names the agent the same way the tool names itself. It records one event, where `verified` keeps a list. A
+`generated` gives who wrote the content as it stands, and when. It records one event, where `verified` keeps a list. A
 regeneration replaces the content, so the moment before it describes a document that has gone. A verification is added
 to the document instead, which is why every one of them is kept.
+
+### Who `generated.by` names
+
+`kac report` writes itself there, and that is true while the output stands unedited. A report is half mechanical and
+half judgement, and somebody answers the verdict cells the tool left open. That person or agent wrote the content a
+reader now meets, so `by` names them instead.
+
+`report` and `tool` survive the handover. `report` states the report the run used, as `coverage`. That is the name
+`kac report` takes, and never this record's id, so a reader holding the record can regenerate it. `tool` keeps the
+tool that wrote the mechanical half, as `kac/0.25.0`. Both stay absent where nobody ran the tool.
+
+An actor takes one of OKF's three forms: a person as `human:alex.doe`, a process as `process:nightly-sweep`, or a tool
+or an agent with its version as `kac/0.25.0`. `generated-by-a-known-actor` is the rule.
 
 `sources` is a field every record may have, and a report refines it. Elsewhere it says where content came from, as a URL
 or as a description of what was read. Here it gives each corpus the report answers for. OKF puts no version on a source,
 and this one does. The fact a reader needs is which content the report is true of, and `content-version` is what the
 corpus already keeps.
 
-`verified` holds every verification the report has had, oldest first, and the fix type has the same field. An actor is a
-person as `human:alex.doe`, or an agent named with its version as `coverage-sweep/1.0.0`. Two values are refused. A
-`role:` is out, because a post cannot read an answer, and the person who did stays named after the post changes hands.
-The producer that `generated.by` names is out too, because a run cannot sign off its own output.
-`no-self-verification` is the rule, and it reports as `self-verification`.
+`verified` holds every verification the report has had, oldest first, and the fix type has the same field. A draft
+states none, and every other status states one. A report an agent wrote and nobody has read is a draft, and writing an
+entry to get past the schema is the one thing this field must never hold. Two values are refused. A `role:` is out,
+because a post cannot read an answer, and the person who did stays named after the post changes hands. The actor that
+`generated.by` names is out too, because nobody signs off their own writing. `no-self-verification` is the rule, and it
+reports as `self-verification`.
 
-Who is in that list decides the report's trust tier, which is OKF's word for how much weight an answer carries. A list
-of agents alone is machine-confirmed. One `human:` entry makes it human-reviewed. `kac` derives the tier rather than
-storing it, so a record has one place saying who checked it. The export ships the answer as `trust`, so a consumer that
-never opens the record still knows what it is reading.
+Who is in that list decides the report's trust tier, which is OKF's word for how much weight an answer carries. No
+entry at all is unverified. A list of agents alone is machine-confirmed. One `human:` entry makes it human-reviewed.
+`kac` derives the tier rather than storing it, so a record has one place saying who checked it. The export ships the
+answer as `trust`, so a consumer that never opens the record still knows what it is reading.
 
 ### Moving the version without regenerating
 
