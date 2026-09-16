@@ -72,6 +72,6 @@ what we lose if that step is skipped.
 [pol-ACCS]: ../security/accs-access-by-identity.md
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-SCRT]: ../security/scrt-secrets-management.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST AI RMF 1.0]: ../../frameworks.md#nist-ai-rmf

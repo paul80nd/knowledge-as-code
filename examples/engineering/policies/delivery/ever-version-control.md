@@ -53,8 +53,8 @@ instead. See [pol-TRUS]. Any other asset kept outside version control requires a
 naming the asset, the reason and the recovery plan if it is lost.
 
 [pol-ACCS]: ../security/accs-access-by-identity.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-DEVI]: ../governance/devi-deviations.md
+[pol-SCRT]: ../security/scrt-secrets-management.md
 [pol-TRUS]: ../security/trus-trusted-components.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

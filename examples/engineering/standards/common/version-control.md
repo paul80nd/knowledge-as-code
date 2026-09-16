@@ -78,4 +78,4 @@ The second cannot be rebuilt from the repository, so the recovery path runs thro
 A team that can rebuild a service from source follows a recovery procedure. A team missing one asset investigates
 first. An unattributed change also leaves nobody to ask about it a year later.
 
-[pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses
+[pol-EVER]: ../../policies/delivery/ever-version-control.md#clauses

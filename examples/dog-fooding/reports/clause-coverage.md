@@ -10,10 +10,11 @@ generated:
   report: coverage
   tool: kac/0.26.0
 sources:
-  - { resource: example-dogfooding, version: "0.35.0" }
-  - { resource: example-engineering, version: "0.21.0" }
+  - { resource: example-dogfooding, version: "0.35.1" }
+  - { resource: example-engineering, version: "0.22.0" }
 verified:
   - { at: 2026-09-15T21:06:12Z, by: human:paul.law }
+  - { at: 2026-09-16T11:52:59Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -27,7 +28,7 @@ This reads `example-dogfooding` and what it imports. A clause uncovered here may
 
 Imported:
 
-* `eng`, example-engineering, at 0.21.0.
+* `eng`, example-engineering, at 0.22.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document whatever it checks inside it.
 

@@ -54,8 +54,8 @@ An emergency change to restore service may bypass the normal path where the pipe
 the delay would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is
 reconciled back into version control before the incident is closed. Otherwise the fix becomes the next outage.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
-[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[pol-DEVI]: ../governance/devi-deviations.md
+[pol-EVER]: ../delivery/ever-version-control.md
 [pol-TRUS]: ../security/trus-trusted-components.md
 [DORA metrics]: ../../frameworks.md#dora-metrics
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

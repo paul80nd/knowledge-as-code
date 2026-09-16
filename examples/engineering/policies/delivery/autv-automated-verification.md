@@ -54,7 +54,7 @@ configuration, data pipelines and the documentation kept with them.
 An emergency fix to restore service may bypass a non-security gate where the delay would extend an outage. It is
 recorded as a deviation under [pol-DEVI]. The gate is satisfied afterwards, not waived.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-VURM]: ../security/vurm-vulnerability-remediation.md
 [DORA metrics]: ../../frameworks.md#dora-metrics
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

@@ -39,7 +39,7 @@ CONSUMER="$REPO/examples/payments"
 # It cites no external framework, and that is what keeps the rename below clean. `rpt-framework-coverage`
 # names every clause that cites one, so renaming any of those would break the producer's own report as
 # well, and the break would no longer be downstream alone.
-POLICY="$PRODUCER/policies/delivery/derv-derived-data-is-verified.md"
+POLICY="$PRODUCER/policies/delivery/derv-derived-data-verification.md"
 CLAUSE=LINEAGE
 RENAMED=ORIGIN
 CITATION="eng:pol-DERV.$CLAUSE"

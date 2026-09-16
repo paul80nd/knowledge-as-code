@@ -53,6 +53,6 @@ No framework on our register covers how easy software is to change, so this poli
 on either one moves that measure, and not as a control we satisfy.
 
 [pol-COST]: ../delivery/cost-cost-as-an-nfr.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-PERF]: ../delivery/perf-performance-targets.md
 [DORA metrics]: ../../frameworks.md#dora-metrics

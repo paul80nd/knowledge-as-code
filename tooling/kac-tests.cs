@@ -435,8 +435,8 @@ void RunUpdateScenario(string name, string scenario)
         // in step, and an update offering it again would leave two copies carrying one id.
         var filed = Path.Combine(temp, "policies", "governance");
         Directory.CreateDirectory(filed);
-        File.Move(Path.Combine(temp, "policies", "devi-deviations-are-recorded.md"),
-            Path.Combine(filed, "devi-deviations-are-recorded.md"));
+        File.Move(Path.Combine(temp, "policies", "devi-deviations.md"),
+            Path.Combine(filed, "devi-deviations.md"));
 
         Commit(temp, "drift");
 

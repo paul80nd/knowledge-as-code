@@ -94,6 +94,6 @@ than anyone can check it, so a reviewer works from the record of what produced i
   rules say who reviews and what they record, and leave the reading itself to that guide.
 
 [Google's Code Review Developer Guide]: https://google.github.io/eng-practices/review/
-[pol-AGNT]: ../../policies/governance/agnt-agents-propose-people-decide.md#clauses
-[pol-EVER]: ../../policies/delivery/ever-everything-in-version-control.md#clauses
+[pol-AGNT]: ../../policies/governance/agnt-agent-oversight.md#clauses
+[pol-EVER]: ../../policies/delivery/ever-version-control.md#clauses
 [pol-SECD]: ../../policies/security/secd-security-by-design.md#clauses

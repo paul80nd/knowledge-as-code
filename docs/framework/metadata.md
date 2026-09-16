@@ -141,10 +141,14 @@ A standard's filename takes nothing of the id. It is a topical slug under a cate
 frontmatter alone. A span of widths needs that, because one filename cannot say which of several lengths its opening
 segment is.
 
-**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix where the filename has one. The
-filename is a handle and the H1 gives the full descriptive title. A slug you cannot get under 30 characters is often a
-signal the record is doing two things. `internal-services-backing-public-surfaces` was one idea too many. Splitting or
-narrowing the scope beats abbreviating harder.
+**A filename slug names what the record is.** The H1 states what it commits to. So `pol-EVER` is titled `Everything is
+in version control` and filed as `ever-version-control.md`. A slug that repeats the H1 gives a reader scanning the
+folder the same sentence twice.
+
+**A filename slug is at most 30 characters**, excluding the `NNNN-` or `mnem-` prefix where the filename has one. A slug
+you cannot get under 30 characters is often a signal the record is doing two things.
+`internal-services-backing-public-surfaces` was one idea too many. Splitting or narrowing the scope beats abbreviating
+harder.
 
 ## Referring to an id
 

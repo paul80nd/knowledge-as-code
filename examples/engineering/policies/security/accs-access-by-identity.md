@@ -58,9 +58,9 @@ Incident response sometimes needs a break-glass account: one kept for emergencie
 allowed where a person cannot otherwise act. The account is still attributable. Its use raises an alert and is
 recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI].
 
-[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
-[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[pol-AGNT]: ../governance/agnt-agent-oversight.md
+[pol-DEVI]: ../governance/devi-deviations.md
+[pol-EVER]: ../delivery/ever-version-control.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
 [OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs

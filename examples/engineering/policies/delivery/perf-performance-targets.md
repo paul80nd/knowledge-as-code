@@ -48,7 +48,7 @@ Systems where performance is genuinely not a concern, such as low-volume interna
 need no targets. That judgement is a recorded deviation under [pol-DEVI], and its review date is what catches the system
 that has since acquired users.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-OBSV]: ../operations/obsv-observability.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

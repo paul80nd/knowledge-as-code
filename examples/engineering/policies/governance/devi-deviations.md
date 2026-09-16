@@ -69,9 +69,9 @@ No standard implements this directly. Standards cite it wherever they have an ex
 This policy says nothing about where a deviation is recorded. That belongs to the process that records it, so changing
 where we file deviations does not change what we committed to.
 
-[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md#clauses
+[pol-AGNT]: ../governance/agnt-agent-oversight.md#clauses
 [pol-DATA]: ../security/data-data-protection.md#clauses
 [pol-INCR]: ../operations/incr-incident-response.md#clauses
-[pol-KNOW]: ../governance/know-knowledge-is-written-down.md#clauses
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md#clauses
+[pol-KNOW]: ../governance/know-written-knowledge.md#clauses
+[pol-SCRT]: ../security/scrt-secrets-management.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

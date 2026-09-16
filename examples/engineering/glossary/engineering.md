@@ -104,7 +104,7 @@ found. Adherence is joint: somebody else might do the work but you still say so 
 everybody's behalf, and an unanswered clause is still not somebody else's problem.
 
 [pol-DATA]: ../policies/security/data-data-protection.md#clauses
-[pol-DEVI]: ../policies/governance/devi-deviations-are-recorded.md#clauses
-[pol-SCRT]: ../policies/security/scrt-secrets-are-never-embedded.md#clauses
+[pol-DEVI]: ../policies/governance/devi-deviations.md#clauses
+[pol-SCRT]: ../policies/security/scrt-secrets-management.md#clauses
 [pol-TRUS]: ../policies/security/trus-trusted-components.md#clauses
 [UK GDPR]: ../frameworks.md#uk-gdpr

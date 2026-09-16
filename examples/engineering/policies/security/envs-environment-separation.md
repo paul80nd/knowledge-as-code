@@ -55,9 +55,9 @@ development, and [pol-INCR] governs it. `CREDS` and `REUSE` state a secrets proh
 admits no exception. Any other departure requires a recorded deviation under [pol-DEVI].
 
 [pol-DATA]: ../security/data-data-protection.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-INCR]: ../operations/incr-incident-response.md
 [pol-MEXP]: ../security/mexp-minimised-exposure.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-SCRT]: ../security/scrt-secrets-management.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf

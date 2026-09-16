@@ -50,5 +50,5 @@ work on the system safely.
 None. The effort is proportionate: a small internal tool needs less than a customer-facing platform. The commitment to
 write down what is needed does not vary.
 
-[pol-AGNT]: ../governance/agnt-agents-propose-people-decide.md
+[pol-AGNT]: ../governance/agnt-agent-oversight.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
