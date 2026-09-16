@@ -66,7 +66,7 @@ to the document instead, which is why every one of them is kept.
 ### Who `generated.by` names
 
 `kac report` writes itself there, and that is true while the output stands unedited. A report is half mechanical and
-half judgement, and somebody answers the verdict cells the tool left open. That person or agent wrote the content a
+half judgement, and somebody answers the judgement cells the tool left open. That person or agent wrote the content a
 reader now meets, so `by` names them instead.
 
 `report` and `tool` survive the handover. `report` states the report the run used, as `coverage`. That is the name
@@ -100,6 +100,9 @@ A reviewer edits `sources[].version` by hand. That is the point of it.
 A corpus moves its `content-version` whenever what it knows changes, and most of those changes touch no report. Adding a
 fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds raises
 the version by hand, instead of running the report again and re-reading every verdict.
+
+A hand-raise moves neither key of `generated`. `at` dates the content's last meaningful change, and the `Imported:`
+bullet the raise rewrites is a line the tool restates from `sources`.
 
 Which entry the reviewer raises decides what else they edit. `sources` lists the corpus the report answers for first,
 then one entry per corpus it imports. Raising the first entry edits frontmatter alone, and the `verified` list stays as

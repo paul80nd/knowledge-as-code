@@ -58,7 +58,7 @@ fields:
       at:
         required: true
         type: timestamp
-        description: The moment the content last changed, in UTC as `2026-09-07T20:18:00Z`.
+        description: The moment the content last meaningfully changed, in UTC as `2026-09-07T20:18:00Z`.
       by:
         required: true
         type: string
@@ -75,6 +75,8 @@ fields:
     notes: >
       `by` passes to whoever edits the output, so a report an agent completed states the agent and not `kac`.
       `report` and `tool` describe the run the content started from, and both stay absent where nobody ran one.
+      A hand-raised `sources` version moves neither `at` nor `by`, and nor does the `Imported:` bullet the same
+      raise rewrites: the tool restates that line from `sources`, so no meaning moves with it.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
   sources:
