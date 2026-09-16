@@ -63,11 +63,14 @@ checked that it still holds.
 4. Set `sources` to the `content-version` of each corpus the run read, and write yourself into `generated.by`. Leave
    `verified` empty and the status at `draft`: `no-self-verification` rejects a verification by whoever wrote the
    content.
+5. Ask somebody else to read it. They add a `verified` entry naming themselves and set the status.
 
 **Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
 moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `generated` alone.
-Add a `verified` entry where the raise changes the prose. A report stating an imported corpus and its version under
-`## Limits` repeats that version in the body, so raising `sources` edits the body too.
+
+**Which `sources` entry you raise decides what else you edit.** The corpus the report answers for comes first, then one
+entry per corpus it imports. Raising the first entry edits frontmatter alone. Raising an imported entry also means
+editing the `Imported:` bullet under `## Limits` to match, and adding a `verified` entry for the body you changed.
 
 ## What CI checks
 

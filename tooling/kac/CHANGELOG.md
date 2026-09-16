@@ -20,10 +20,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Changed
 
 - **`kac new` seeds report guidance the schema accepts.** `reports.md` told you to verify a report you had just
-  written, which `no-self-verification` rejects. It now says to write yourself into `generated.by` and leave `verified`
-  empty. Both it and `reports/_template.md` also say to add a `verified` entry where a hand-raised `sources` version
-  edits the `Imported:` bullet under `## Limits`. The files seed, so an existing corpus keeps the wording it was
-  created with.
+  written, which `no-self-verification` rejects. It now says to write yourself into `generated.by`, leave `verified`
+  empty, and ask somebody else to read it. Both it and `reports/_template.md` also say which `sources` entry a
+  hand-raise touches: the corpus the report answers for comes first and its raise edits frontmatter alone, and raising
+  an imported entry also means editing the `Imported:` bullet under `## Limits` and adding a `verified` entry. The
+  files seed, so an existing corpus keeps the wording it was created with.
 
 - **`kac new` seeds the example policy as `policies/devi-deviations.md`.** The file was
   `devi-deviations-are-recorded.md`, which restated the record's title. A policy filename names what the policy is, and

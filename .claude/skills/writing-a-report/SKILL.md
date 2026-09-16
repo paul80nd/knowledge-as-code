@@ -72,13 +72,15 @@ none of them. So `generated` goes on stating an edit older than the version `sou
 running the report again for output nobody expects to differ, and moving a version stamp through every consumer of the
 corpus.
 
-**Sign a raise that changes the prose.** `kac report` writes each imported corpus and its version into the `Imported:`
-bullet under `## Limits`. Raising `sources` on a report with that bullet edits the bullet too, so add a `verified`
-entry stating who checked the comparison. `no-self-verification` rejects the actor named in `generated.by`. Where that
-is you, ask the report's owner to check it, and write their name.
+**Which entry you raise decides what else you edit.** `sources` lists the corpus the report answers for first, then
+one entry per corpus it imports. `kac report` writes the imported entries into the `Imported:` bullet under
+`## Limits`, and nothing checks that bullet against the frontmatter. So raising an imported entry means editing the
+bullet to the same version by hand.
 
-**A report that imports nothing keeps its `verified` list.** The raise changes frontmatter alone. The prose is exactly
-what the last verifier read, so nothing is asked of the list.
+**Sign the raise that changed the body.** Add a `verified` entry stating who checked the comparison.
+`no-self-verification` rejects the actor named in `generated.by`, so ask somebody else to check it and write their
+name. Raising the first entry edits frontmatter alone: the prose is exactly what the last verifier read, and the list
+stays as it is.
 
 **The merge, in order:**
 

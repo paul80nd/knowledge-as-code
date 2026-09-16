@@ -44,9 +44,10 @@ is run again.
   while the output stands unedited. Write yourself there once you answer a judgement cell: a person is
   `human:alex.doe`, and an agent states its version, as `coverage-sweep/1.2.0`. `report` states the report the run
   used, as `coverage`, and `tool` keeps the tool that wrote the mechanical half, as `kac/{{0.24.0}}`.
-* **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
-  version by hand where a corpus moved and nothing in this report changed, and leave `generated` alone. Add a
-  `verified` entry where the raise also changes the `Imported:` bullet under `## Limits`.
+* **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. This corpus
+  comes first, then one entry per corpus it imports. Raise a version by hand where a corpus moved and nothing in this
+  report changed, and leave `generated` alone. Raising an imported entry also means editing the `Imported:` bullet
+  under `## Limits` to match, and adding a `verified` entry for the body you changed.
 * **`verified`**: every verification this report has had, oldest first. A draft states none, and every other status
   states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with its version
   as `coverage-sweep/1.2.0`. Two actors are refused: a `role:`, because a post cannot read an answer, and the actor
