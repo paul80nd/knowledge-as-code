@@ -109,8 +109,12 @@ public static class Exporter
 
                 records += theirs.Records.Count;
 
+                // Filed under the corpus that wrote the record rather than the one it came through. A
+                // grandparent's record arrives in a folder of its own and keeps it, for the reason the
+                // part lines keep their shortcode: moving it sends every link for it to the wrong
+                // repository.
                 foreach (var record in theirs.Records)
-                    files.Add(new ExportFile($"{theirs.Dir}/{from.Shortcode}/{record.Name}", record.Content));
+                    files.Add(new ExportFile($"{theirs.Dir}/{record.Producer}/{record.Name}", record.Content));
 
                 lines.AddRange(theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)));
             }

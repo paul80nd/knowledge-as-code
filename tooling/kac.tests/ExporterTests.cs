@@ -881,7 +881,7 @@ public class ExporterTests
                     "record", "part", "id", "seeAlso",
                     new Dictionary<string, string>(StringComparer.Ordinal) { ["Scope"] = ExportSpec.Full },
                     lines,
-                    [new InheritedRecord("gls-theirs.json", "{\"type\": \"glossary\"}\n")])
+                    [new InheritedRecord(shortcode, "gls-theirs.json", "{\"type\": \"glossary\"}\n")])
             ]);
 
     private static ExportPlan Merged(LoadedCorpus corpus, params InheritedCorpus[] consumed) =>
@@ -1013,6 +1013,34 @@ public class ExporterTests
 
         Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
         Assert.Contains("glossary/gls-one.json", plan.Files.Select(f => f.Path));
+    }
+
+    // The record half of the promise a part line already keeps. `eng` filed `gp`'s record in a folder of
+    // its own, and the corpus below reads it from there and files it the same way. Filing it under `eng`
+    // would send every link for it to the wrong repository, and dropping it would leave `gp`'s part lines
+    // naming a file nobody received.
+    [Fact]
+    public void A_record_its_producer_inherited_keeps_the_folder_of_the_corpus_that_wrote_it()
+    {
+        var eng = Consumed("eng", TheirInheritedLine);
+        var theirs = eng.Types[0];
+
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            eng with
+            {
+                Types =
+                [
+                    theirs with
+                    {
+                        Records = [.. theirs.Records, new InheritedRecord("gp", "gls-old.json", "{}\n")]
+                    }
+                ]
+            });
+
+        Assert.Contains("glossary/gp/gls-old.json", plan.Files.Select(f => f.Path));
+        Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+        Assert.Equal(3, Assert.Single(plan.Types).Records);
     }
 
     // Two counts in one entry, because a consumer asks how much of a type there is and not how much of it

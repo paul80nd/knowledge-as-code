@@ -182,11 +182,12 @@ resolving to none.
 
 ### A chain of any depth
 
-It costs no code. A grandparent's records arrive inside its child's export already carrying the grandparent's shortcode,
-and they keep it. `kac` stamps only an unstamped line, so a value is prefixed once however many corpora it passes
-through.
+A grandparent's records arrive inside its child's export already naming the grandparent, and they keep that name. `kac`
+stamps only an unstamped line, so a value is prefixed once however many corpora it passes through. A record file says
+the same thing by the folder it sits in. A consumer reads those folders and files each record under the same corpus
+again, so an ancestor's records stay one level deep however long the chain.
 
-`sources` has the same property. A consumer publishes an entry for each corpus it consumes and for each corpus they
+`sources` works the same way. A consumer publishes an entry for each corpus it consumes and for each corpus they
 consumed in turn, so a line naming a grandparent finds the address its own producer published for it.
 
 ### What stops the run

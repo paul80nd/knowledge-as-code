@@ -1,0 +1,17 @@
+{
+  "type": "glossary",
+  "path": "glossary/old.md",
+  "fields": {
+    "id": "gls-old",
+    "title": "Old",
+    "narrows": null,
+    "status": "active",
+    "review-by": "2030-01-01"
+  },
+  "sections": {
+    "Scope": "The words the corpus above eng wrote."
+  },
+  "links": {
+    "human": "https://github.com/example/grandparent/blob/2222222222222222222222222222222222222222/glossary/old.md"
+  }
+}

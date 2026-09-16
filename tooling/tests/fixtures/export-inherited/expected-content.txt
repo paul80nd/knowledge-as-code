@@ -19,7 +19,7 @@
 # One entry per type, counting what this corpus wrote and what it inherited as one number. A consumer
 # asks how much of a type there is; which corpus wrote a record is a fact about the line.
 .dist/export/manifest.json :: "type": "glossary"
-.dist/export/manifest.json :: "records": 2
+.dist/export/manifest.json :: "records": 3
 .dist/export/manifest.json :: "parts": 3
 
 # A type this corpus never adopted, arriving whole because a record here may cite into it.
@@ -38,9 +38,11 @@
 .dist/export/glossary/terms.jsonl :: "seeAlso":["eng:gls-shared.store"]
 .dist/export/glossary/terms.jsonl :: "anchor":"record","shortcode":"eng"
 
-# A grandparent is labelled once. This line arrived inside eng's export already naming `gp`, and keeps
-# that name on both keys and on the line. Restamping it would file the record under the corpus this one
-# fetched it through and send every link for it to the wrong repository.
+# A grandparent is labelled once, on its line and on the folder its record file sits in. Both arrived
+# inside eng's export already naming `gp`, and both keep that name. Restamping either would file the
+# record under the corpus this one fetched it through and send every link for it to the wrong repository.
+# The record file keeps gp's own address for the same reason.
 .dist/export/glossary/terms.jsonl :: "id":"gp:gls-old.store"
 .dist/export/glossary/terms.jsonl :: "record":"gp:gls-old"
 .dist/export/glossary/terms.jsonl :: "anchor":"store","shortcode":"gp"
+.dist/export/glossary/gp/gls-old.json :: "human": "https://github.com/example/grandparent
