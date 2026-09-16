@@ -8,8 +8,8 @@ namespace kac.core;
 // producer's corpus is not here and never will be: what a consumer holds is the export, so a question
 // the export cannot answer is one no check may ask across a boundary.
 //
-// `Scope` is the shortcode a citation reaches this record by, which is the corpus that wrote it. It is
-// the import this corpus declared for that corpus's own records, and a corpus further up the chain for
+// `Scope` is the shortcode a citation writes for this record, which is the corpus that wrote it. It is
+// the import this corpus declared for that corpus's own records. It is a corpus further up the chain for
 // the records that corpus inherited.
 //
 // `Parts` is empty for a type keeping none, and `KeepsParts` is what tells that apart from a record that
@@ -139,9 +139,8 @@ public static class Imports
     // Every record one type's folder contains, and the corpus each one is cited by. A record is a file
     // named for its id, and the parts file sitting beside them is not one.
     //
-    // The import's own records sit directly in the type's folder. The ones it inherited sit in a folder
-    // named for the corpus that wrote them, which is the shortcode a citation into them carries. See the
-    // chain section of docs/design/export.md.
+    // The import's own records sit directly in the type's folder, and the ones it inherited sit in a
+    // folder named for the corpus that wrote them. See the chain section of docs/design/export.md.
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,
         Dictionary<string, List<string>> parts,
@@ -174,9 +173,9 @@ public static class Imports
                 var record = JsonRead.Parse(read($"{folder}/{name}") ?? "");
                 if (JsonRead.Str(JsonRead.Object(record?["fields"])?["id"]) is not { } id) continue;
 
-                // A record file carries the id its own corpus wrote, and the parts file names an
-                // inherited record by the scoped id the export stamped. So the key is built the way the
-                // export built it, and a bare id is only bare for the corpus this one declared.
+                // A record file states the id its own corpus wrote, and the parts file names an
+                // inherited record by the id the export scoped. A bare id is only bare for the corpus
+                // this one declared.
                 var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
 
                 found.Add(new ImportedRecord(

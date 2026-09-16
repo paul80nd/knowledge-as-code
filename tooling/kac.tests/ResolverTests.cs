@@ -73,6 +73,13 @@ public class ResolverTests
     public void A_citation_into_an_unrestored_import_reports_nothing_of_its_own()
         => Assert.Empty(Cite("`eng:pol-SCRT.STORE`", ImportGraph.None with { NotRestored = ["eng"] }));
 
+    // A chain introduces a shortcode this corpus never declared, so while a restore is outstanding the
+    // missing export is where an unknown one would have come from. "Declare it in `consumes:`" is the
+    // one thing a reader must not do about it.
+    [Fact]
+    public void An_unknown_shortcode_is_left_to_the_restore_while_one_is_outstanding()
+        => Assert.Empty(Cite("`gp:pol-OLD.KEEP`", ImportGraph.None with { NotRestored = ["eng"] }));
+
     // `implements: eng:pol-SCRT.STORE` names one clause rather than the whole policy, and a coverage
     // report has to walk which clause was discharged.
     [Fact]

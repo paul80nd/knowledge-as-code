@@ -14,9 +14,10 @@ public enum Landing
     NeedsNoScope,
     UnknownScope,
 
-    // The scope names an import this corpus declared and has not restored. `import-restored` reports
-    // that once, against the descriptor, so every citation into it stays quiet: a reader whose restore
-    // has not run wants one line telling them to run it, not one per reference.
+    // The scope names a corpus that is not on disk: an import this corpus declared and has not restored,
+    // or one a chain would have introduced from inside it. `import-restored` reports that once, against
+    // the descriptor, so every citation into it stays quiet: a reader whose restore has not run wants
+    // one line telling them to run it, not one per reference.
     NotRestored
 }
 
@@ -92,18 +93,17 @@ public sealed class Resolver
         {
             _shortcodes.Add(import.Shortcode);
 
-            // A record is filed under the corpus that wrote it, which is the import itself for that
-            // corpus's own records and a corpus further up the chain for the ones it inherited. So a
-            // citation into a grandparent resolves against the grandparent, and its scope is a
-            // shortcode this corpus never declared.
+            // The scope is the record's own and never the import's. A chain therefore introduces a
+            // shortcode `consumes:` never lists, which is how a citation into a grandparent resolves.
             foreach (var record in import.Records)
             {
                 _shortcodes.Add(record.Scope);
                 _imported[$"{record.Scope}:{record.Id}"] = record;
 
-                // Which import a bare id would have meant, so a citation missing its scope is told the
-                // spelling to write. The first import declaring an id wins, in the order `consumes:`
-                // lists them, which is the order a reader would resolve them in too.
+                // Which corpus a bare id would have meant, so a citation missing its scope is told the
+                // spelling to write. The first record declaring an id wins: the imports in the order
+                // `consumes:` lists them, and inside one import its own records before the ones it
+                // inherited.
                 _scopes.TryAdd(record.Id, record.Scope);
             }
         }
@@ -126,8 +126,13 @@ public sealed class Resolver
 
         if (_pending.Contains(scope)) return new Landed(Landing.NotRestored, null, null, scope);
 
+        // A shortcode nothing here knows, while a declared import is missing, may be a corpus inside
+        // that export: a chain introduces shortcodes this corpus never declared. Telling the reader to
+        // declare it would be wrong, and `import-restored` already names the one thing to do.
         if (!_shortcodes.Contains(scope))
-            return new Landed(Landing.UnknownScope, null, null, scope);
+            return _pending.Count > 0
+                ? new Landed(Landing.NotRestored, null, null, scope)
+                : new Landed(Landing.UnknownScope, null, null, scope);
 
         if (_imported.TryGetValue(citation.Whole, out var record))
             return new Landed(Landing.Imported, null, record, scope);

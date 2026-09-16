@@ -103,7 +103,7 @@ public class ImportsTests
     {
         var graph = Imports.Load(
             [new Consumed("example-engineering", null, "^0.1.0", null, "../engineering")],
-            _ => null, _ => null, _ => null);
+            names: _ => null, folders: _ => null, read: _ => null);
 
         Assert.Empty(graph.NotRestored);
         Assert.Equal(["'example-engineering'"], graph.Undeclared);
@@ -113,7 +113,8 @@ public class ImportsTests
     [Fact]
     public void An_entry_naming_neither_a_corpus_nor_a_shortcode_is_named_by_its_position()
         => Assert.Equal(["entry 1"], Imports
-            .Load([new Consumed(null, null, null, null, null)], _ => null, _ => null, _ => null).Undeclared);
+            .Load([new Consumed(null, null, null, null, null)],
+                names: _ => null, folders: _ => null, read: _ => null).Undeclared);
 
     [Theory]
     [InlineData("eng:pol-VURM.TIMEBOX", "eng", "pol-VURM", "TIMEBOX")]
