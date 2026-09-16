@@ -65,8 +65,9 @@ Where `.corpus.yaml` lists another corpus in `consumes:`, the run says which one
 export: carried example-engineering 0.16.0, which this corpus consumes. Their records travel merged with its own.
 ```
 
-Their records are filed under the shortcode of the corpus that wrote them, and their lines carry that shortcode too. A
-line with no shortcode is your own, which is the rule a citation already follows.
+Their records are filed under the shortcode of the corpus that wrote them, and their lines name that shortcode too. A
+line with no shortcode is your own, which is the rule a citation already follows. A record that reached them through a
+corpus of their own keeps the name of whoever wrote it, so each record is filed once however long the chain.
 
 ### A dirty tree
 

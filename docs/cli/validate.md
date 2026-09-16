@@ -34,7 +34,9 @@ local one would.
 **Run `restore` first.** A declared import that has not arrived is an error, and the message names the command to run.
 
 Each side keeps its own spelling. Cite a record your corpus owns bare, and cite an imported one with its producer's
-shortcode. `validate` refuses either written the other way, and says which spelling to use.
+shortcode. `validate` refuses either written the other way, and says which spelling to use. The producer is whoever
+wrote the record, so a corpus reached through another is cited by its own shortcode and not by the one in your
+`consumes:` block.
 [Imports](../design/imports.md) says why resolution works this way, and what a check may ask of an imported record.
 
 ### An import that has fallen behind
