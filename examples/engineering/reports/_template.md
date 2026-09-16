@@ -20,8 +20,8 @@ and how it is reviewed. What is below is only what a report adds to that.
 
 **Everything under the H1 comes from `kac report <name>`.** The name is the question the report answers, not this
 record's id, and `generated.report` states the one this record came from. Run it, paste what it printed, and answer
-the judgement cells it left open. Keep the section it prints about its own limits: a reader meets the numbers without the command
-beside them.
+the judgement cells it left open. Keep the section it prints about its own limits: a reader meets the numbers
+without the command beside them.
 
 **The four verdicts.** Every row takes exactly one. `kac report` prints `covered` and `uncovered` and stops, because
 it cannot tell a rule nobody has got to from a rule about something this organisation does not have. Those are the
