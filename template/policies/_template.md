@@ -101,16 +101,21 @@ every report that shows an id shows its clause text alongside. A CI failure or a
 still be guessable.
 
 **Shared ids.** Where two policies bind the same obligation from their own side, they take the same clause id and each
-signposts the other: `. See [pol-OTHR]` closing the clause, and a boundary line above saying which side owns what. The
-shared id is what makes the binding visible from either document instead of looking like an accident. The rule cuts both
-ways. Where two clauses mean different things, they take different ids however natural the same word felt, because one
-id carrying two meanings is what turns a diff into a false reading.
+signposts the other. The signpost closes the clause in brackets, addresses the other clause as `[pol-OTHR].ID`, and
+states what the reader gains there: `([pol-OTHR].ID states the same for secrets)`, `([pol-OTHR].ID states the agent
+case)`, or `([pol-OTHR].ID is wider, and owns the exceptions)`. The brackets keep the clause to one sentence.
+Addressing the policy alone leaves the reader to find the clause and guess the relationship. A boundary line above the
+table says which side owns what, and the link definition ends `#clauses` so the reader lands on the table. The shared
+id is what makes the binding visible from either document instead of looking like an accident. The rule cuts both ways.
+Where two clauses mean different things, they take different ids however natural the same word felt, because one id
+carrying two meanings is what turns a diff into a false reading.
 
 **Writing a clause.** Start with the modal verb. The subject is always us, so do not restate it. One obligation per
-clause. A clause needing an "and" that joins two different actions is two clauses. Keep them implementation-agnostic. A
-clause says what must be true and a standard says how, and if an engineer could action it without a standard beneath it,
-it has escaped downward and belongs in the standard instead. A clause no standard implements is an ordinary state and
-takes no annotation: the graph reports the gap, and Notes carries the explanation where one is owed.
+clause, written as one sentence with no closing full stop. A clause needing an "and" that joins two different actions
+is two clauses. Keep them implementation-agnostic. A clause says what must be true and a standard says how, and if an
+engineer could action it without a standard beneath it, it has escaped downward and belongs in the standard instead. A
+clause no standard implements is an ordinary state and takes no annotation: the graph reports the gap, and Notes
+carries the explanation where one is owed.
 
 **The evidenceability test.** Before writing a clause, ask what an auditor would ask to *see*. Where you cannot answer,
 the clause is unevidenceable and needs rewriting: "consider accessibility" fails, "establish accessibility requirements

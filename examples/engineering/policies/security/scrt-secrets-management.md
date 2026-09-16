@@ -41,8 +41,8 @@ _Boundary: this policy owns the exception posture for every clause that binds se
 | `KEYS`    | **MUST** protect the keys and certificates that protect our data through their full lifecycle: issue, storage, rotation, revocation          | [ISO 27001:2022].A.8.24                          |
 | `LEAKED`  | **MUST** actively look for secrets that have leaked into places they should never reach                                                      | [ISO 27001:2022].A.5.17                          |
 | `EMBED`   | **MUST NOT** commit a secret to version control, place one in a configuration file or pipeline definition, or bake one into a build artefact | [ISO 27001:2022].A.5.17                          |
-| `REUSE`   | **MUST NOT** use a production secret anywhere outside production. See [pol-ENVS]                                                             | [ISO 27001:2022].A.5.17                          |
-| `LOGS`    | **MUST NOT** write a secret to a log, a console, an error message or a support ticket. See [pol-DATA]                                        | [ISO 27001:2022].A.5.17, [ISO 27001:2022].A.8.15 |
+| `REUSE`   | **MUST NOT** use a production secret anywhere outside production ([pol-ENVS].REUSE narrows this to environments below production)            | [ISO 27001:2022].A.5.17                          |
+| `LOGS`    | **MUST NOT** write a secret to a log, a console, an error message or a support ticket ([pol-DATA].LOGS states the same for personal data)    | [ISO 27001:2022].A.5.17, [ISO 27001:2022].A.8.15 |
 | `ZEROSEC` | COULD operate with no static secret left to leak                                                                                             |                                                  |
 
 ## Exceptions
@@ -57,7 +57,7 @@ the vendor can rotate is the ordinary case, and it is a recorded deviation under
 risk, what compensates for it and when it is revisited.
 
 [pol-ACCS]: ../security/accs-access-by-identity.md
-[pol-DATA]: ../security/data-data-protection.md
+[pol-DATA]: ../security/data-data-protection.md#clauses
 [pol-DEVI]: ../governance/devi-deviations.md
-[pol-ENVS]: ../security/envs-environment-separation.md
+[pol-ENVS]: ../security/envs-environment-separation.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

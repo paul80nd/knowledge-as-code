@@ -34,19 +34,19 @@ what an artefact is made of, where it is kept and whether its origin can be prov
 
 ## Clauses
 
-| Id        | Clause                                                                                                                                             | Alignment                                                                      |
-|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                   | [ISO 27001:2022].A.8.19, [DORA metrics].deploy-frequency, [NIST SSDF 1.1].PO.3 |
-| `SAMEART` | **MUST** promote one artefact through the environments rather than rebuilding it for each stage                                                    | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
-| `CONFIG`  | **MUST** keep environment-specific configuration outside the artefact, so the artefact promoted between environments is the one that was built     | [ISO 27001:2022].A.8.9                                                         |
-| `TRACE`   | **MUST** be able to trace any production release to the change, the artefact and the approval behind it. See [pol-TRUS]                            | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.2                                  |
-| `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
-| `ASCODE`  | **MUST** keep the pipeline itself in version control under [pol-EVER], as a reviewed artefact like any other                                       | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
-| `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PO.4                                  |
-| `FLAGS`   | **MUST** treat a flag that changes production behaviour as a controlled, auditable change                                                          | [ISO 27001:2022].A.8.32                                                        |
-| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema, other than a flag change made under `FLAGS`              | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
-| `LOCAL`   | **MUST NOT** deploy an artefact built outside the pipeline                                                                                         | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
-| `PROGDEL` | COULD release progressively, promoting or reversing on live signals rather than on a decision made beforehand                                      | [DORA metrics].recovery-time                                                   |
+| Id        | Clause                                                                                                                                                             | Alignment                                                                      |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| `DEPLOY`  | **MUST** deploy to production only through an automated pipeline                                                                                                   | [ISO 27001:2022].A.8.19, [DORA metrics].deploy-frequency, [NIST SSDF 1.1].PO.3 |
+| `SAMEART` | **MUST** promote one artefact through the environments rather than rebuilding it for each stage                                                                    | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
+| `CONFIG`  | **MUST** keep environment-specific configuration outside the artefact, so the artefact promoted between environments is the one that was built                     | [ISO 27001:2022].A.8.9                                                         |
+| `TRACE`   | **MUST** be able to trace any production release to the change, the artefact and the approval behind it ([pol-TRUS].TRACE states the same for a deployed artefact) | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PS.2                                  |
+| `REVERT`  | **MUST** have a defined rollback or recovery path before a change goes to production                                                                               | [ISO 27001:2022].A.8.32, [DORA metrics].recovery-time                          |
+| `ASCODE`  | **MUST** keep the pipeline itself in version control under [pol-EVER], as a reviewed artefact like any other                                                       | [ISO 27001:2022].A.8.9, [NIST SSDF 1.1].PO.3                                   |
+| `GATES`   | **MUST** carry the safeguards that change approval exists to provide inside the pipeline, rather than treating automation as a reason to drop them                 | [ISO 27001:2022].A.8.32, [NIST SSDF 1.1].PO.4                                  |
+| `FLAGS`   | **MUST** treat a flag that changes production behaviour as a controlled, auditable change                                                                          | [ISO 27001:2022].A.8.32                                                        |
+| `MANUAL`  | **MUST NOT** hand-edit production, whether code, configuration, infrastructure or schema, other than a flag change made under `FLAGS`                              | [ISO 27001:2022].A.8.9, [ISO 27001:2022].A.8.32                                |
+| `LOCAL`   | **MUST NOT** deploy an artefact built outside the pipeline                                                                                                         | [ISO 27001:2022].A.8.19, [NIST SSDF 1.1].PS.2                                  |
+| `PROGDEL` | COULD release progressively, promoting or reversing on live signals rather than on a decision made beforehand                                                      | [DORA metrics].recovery-time                                                   |
 
 ## Exceptions
 
@@ -56,7 +56,7 @@ reconciled back into version control before the incident is closed. Otherwise th
 
 [pol-DEVI]: ../governance/devi-deviations.md
 [pol-EVER]: ../delivery/ever-version-control.md
-[pol-TRUS]: ../security/trus-trusted-components.md
+[pol-TRUS]: ../security/trus-trusted-components.md#clauses
 [DORA metrics]: ../../frameworks.md#dora-metrics
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [NIST SSDF 1.1]: ../../frameworks.md#nist-ssdf
