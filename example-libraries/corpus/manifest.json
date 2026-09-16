@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-libraries",
   "shortcode": "lib",
-  "contentVersion": "0.6.0",
+  "contentVersion": "0.7.0",
   "mechanismVersion": 16,
-  "commit": "3da916ba04262011db36a5f5a6b69bb8587e31f1",
+  "commit": "399a49faf8d94f228af7c23caacdeedddb011309",
   "dirty": false,
-  "generatedAt": "2026-09-16T15:49:16Z",
+  "generatedAt": "2026-09-16T21:05:51Z",
   "about": {
     "displayName": "Example Libraries",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/library/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/library/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/library",
-    "ref": "3da916ba04262011db36a5f5a6b69bb8587e31f1"
+    "ref": "399a49faf8d94f228af7c23caacdeedddb011309"
   },
   "tracker": {
     "target": "github",
@@ -50,6 +50,26 @@
         "Context": "summary",
         "Decision": "full",
         "Consequences": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "capabilities",
+      "shapeVersion": 1,
+      "records": 3,
+      "parts": 0,
+      "dir": "capabilities",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Why it exists": "full",
+        "Surfaces": "full",
+        "Where the detail lives": "full",
+        "Known limitations": "full"
       },
       "frameworksFile": null
     },

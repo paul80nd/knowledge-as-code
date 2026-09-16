@@ -1,0 +1,37 @@
+{
+  "type": "capabilities",
+  "path": "capabilities/borrowing.md",
+  "trust": null,
+  "fields": {
+    "id": "cap-borrowing",
+    "title": "Borrow and return an item",
+    "status": "live",
+    "implemented-by": [
+      "svc-catalogue-api",
+      "svc-catalogue-web",
+      "svc-lending",
+      "svc-notices"
+    ],
+    "feature-files": [
+      "lending/features/loan-lifecycle.feature",
+      "lending/features/renewal.feature",
+      "notices/features/overdue-sweep.feature",
+      "platform/tests/Catalogue.Acceptance/my-loans.feature"
+    ],
+    "nfrs": null,
+    "tags": [
+      "loans",
+      "renewals"
+    ]
+  },
+  "sections": {
+    "What it does": "One card borrows at every branch, and an item borrowed at one branch is returned at any other.\n\nWithin this capability [svc-notices] writes to the borrower at three moments: a loan approaching its due date, a loan already overdue, and a membership due for renewal.",
+    "Why it exists": "Lending is what the consortium is for. Every branch, every item and every card exists to support this one exchange.",
+    "Surfaces": "The counter and the self-service terminals in each branch, and the borrower's own loans page in the public catalogue.",
+    "Where the detail lives": "* **Implemented by**: [svc-catalogue-api], [svc-catalogue-web], [svc-lending], [svc-notices]\n* **Specified in**: [ADO#1150], [ADO#1287], [ADO#1401]",
+    "Known limitations": "A loan made at the counter while the legacy system is down is recorded on paper and keyed in afterwards. [svc-lending] is the only route to that system."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/library/capabilities/borrowing.md"
+  }
+}

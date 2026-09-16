@@ -11,6 +11,7 @@
     "repo": "lending",
     "depends-on": null,
     "data-stores": null,
+    "nfrs": null,
     "facets": [
       "internal"
     ],
@@ -26,6 +27,6 @@
     "Data": "**The legacy database**, which this service maps and does not own. Any data document describing it has to record more than one writer: the legacy library management system still writes to it directly."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/library/services/lending.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/library/services/lending.md"
   }
 }

@@ -1,0 +1,31 @@
+{
+  "type": "capabilities",
+  "path": "capabilities/refund.md",
+  "trust": null,
+  "fields": {
+    "id": "cap-refund",
+    "title": "Get money back for an order",
+    "status": "live",
+    "implemented-by": [
+      "svc-payment-api",
+      "svc-payment-ledger"
+    ],
+    "feature-files": [
+      "payment-api/features/refund.feature",
+      "payment-ledger/features/refund-entry.feature"
+    ],
+    "nfrs": null,
+    "tags": [
+      "refunds"
+    ]
+  },
+  "sections": {
+    "What it does": "The money goes back to the card that paid, and reaches at most what [svc-payment-api] captured.",
+    "Why it exists": "The card schemes require a route to a refund. A customer who doubts they can get the money back does not pay.",
+    "Where the detail lives": "* **Implemented by**: [svc-payment-api], [svc-payment-ledger]\n* **Specified in**: [gh#2188]",
+    "Known limitations": "A card that has expired since the payment cannot be refunded to it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/payments/capabilities/refund.md"
+  }
+}

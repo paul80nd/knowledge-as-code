@@ -15,6 +15,7 @@
       "svc-search"
     ],
     "data-stores": null,
+    "nfrs": null,
     "facets": [
       "public"
     ],
@@ -29,6 +30,6 @@
     "Data": "No database connection is configured for this app service. It reads and writes data through the gateway."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/library/services/catalogue-web.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/library/services/catalogue-web.md"
   }
 }

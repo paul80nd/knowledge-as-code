@@ -13,6 +13,7 @@
       "svc-lending"
     ],
     "data-stores": null,
+    "nfrs": null,
     "facets": [
       "internal"
     ],
@@ -27,6 +28,6 @@
     "Data": "This service has a database connection, configured as `ConnectionStrings__Catalogue`. The account-management and loan-history capabilities are compiled into this application, so their stores are read through it too.\n\n**What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this catalogue was built from states it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/library/services/catalogue-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/library/services/catalogue-api.md"
   }
 }

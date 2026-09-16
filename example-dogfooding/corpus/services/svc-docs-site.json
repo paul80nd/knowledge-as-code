@@ -11,6 +11,7 @@
     "repo": "knowledge-as-code",
     "depends-on": null,
     "data-stores": null,
+    "nfrs": null,
     "facets": [
       "public"
     ],
@@ -26,6 +27,6 @@
     "Data": "None of its own. Every page is built from a file in the repository."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/dog-fooding/services/docs-site.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/dog-fooding/services/docs-site.md"
   }
 }

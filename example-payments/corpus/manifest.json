@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.14.0",
-  "mechanismVersion": 16,
-  "commit": "3da916ba04262011db36a5f5a6b69bb8587e31f1",
+  "contentVersion": "0.15.0",
+  "mechanismVersion": 17,
+  "commit": "399a49faf8d94f228af7c23caacdeedddb011309",
   "dirty": false,
-  "generatedAt": "2026-09-16T15:49:25Z",
+  "generatedAt": "2026-09-16T21:06:00Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "3da916ba04262011db36a5f5a6b69bb8587e31f1"
+    "ref": "399a49faf8d94f228af7c23caacdeedddb011309"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.22.1",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "3da916ba04262011db36a5f5a6b69bb8587e31f1"
+        "ref": "399a49faf8d94f228af7c23caacdeedddb011309"
       },
       "tracker": {
         "target": "github",
@@ -53,6 +53,26 @@
     }
   ],
   "types": [
+    {
+      "type": "capabilities",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "capabilities",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Why it exists": "full",
+        "Surfaces": "full",
+        "Where the detail lives": "full",
+        "Known limitations": "full"
+      },
+      "frameworksFile": null
+    },
     {
       "type": "fixes",
       "shapeVersion": 2,

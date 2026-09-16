@@ -11,6 +11,9 @@
     "repo": "payment-ledger",
     "depends-on": null,
     "data-stores": null,
+    "nfrs": [
+      "nfr-0002"
+    ],
     "facets": null,
     "tags": [
       "audit",
@@ -25,6 +28,6 @@
     "Data": "Owns the ledger database, `sql-payment-ledger-<env>`, configured as `ConnectionStrings__Ledger`. An entry contains the order, the amount, the PSP's reference and the token. No card number is written to it. The `data` type is not adopted here, so nothing in this corpus describes the schema. The repository's own migrations describe it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3da916ba04262011db36a5f5a6b69bb8587e31f1/examples/payments/services/payment-ledger.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/payments/services/payment-ledger.md"
   }
 }
