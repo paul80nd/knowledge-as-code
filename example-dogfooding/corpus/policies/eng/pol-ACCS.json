@@ -15,6 +15,6 @@
     "Exceptions": "Incident response sometimes needs a break-glass account: one kept for emergencies, outside the normal grants. That is allowed where a person cannot otherwise act. The account is still attributable. Its use raises an alert and is recorded, and someone reviews that use afterwards. Any other departure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2bbbb1510bc69a515594d0970c61c1c8b21183d2/examples/engineering/policies/security/accs-access-by-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a28ba512e56410d6433367af766fffe5bfcb874c/examples/engineering/policies/security/accs-access-by-identity.md"
   }
 }

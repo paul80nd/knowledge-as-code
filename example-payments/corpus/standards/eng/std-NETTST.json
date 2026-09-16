@@ -27,6 +27,6 @@
     "Conformance checklist": "- [ ] Every test project references xUnit and no second test framework.\n- [ ] No unit test project references Testcontainers or a database driver.\n- [ ] A search for `Thread.Sleep` and `async void` across the test projects returns nothing.\n- [ ] The integration suite passes on a machine with no services running but Docker.\n- [ ] Running the integration suite twice in a row passes both times.\n- [ ] The build publishes a coverage report, and the test projects are excluded from it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2bbbb1510bc69a515594d0970c61c1c8b21183d2/examples/engineering/standards/platform/dotnet/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a28ba512e56410d6433367af766fffe5bfcb874c/examples/engineering/standards/platform/dotnet/testing.md"
   }
 }

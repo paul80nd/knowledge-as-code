@@ -24,6 +24,6 @@
     "Where it is used": "* [svc-kac] is built, tested and packed with it.\n\nThe docs site and the marketplace branch are built by other toolchains, so neither uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2bbbb1510bc69a515594d0970c61c1c8b21183d2/examples/dog-fooding/tools/build/dotnet-sdk.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a28ba512e56410d6433367af766fffe5bfcb874c/examples/dog-fooding/tools/build/dotnet-sdk.md"
   }
 }
