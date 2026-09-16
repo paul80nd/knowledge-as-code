@@ -39,14 +39,25 @@ public class VerificationTests
             + "renamed, or the types declaring it have gone.");
 
         var stale = new List<string>();
+        var unread = new List<string>();
 
-        foreach (var rel in Modified(before).Where(rel => IsRecord(rel, folders)))
+        foreach (var (was, now) in Changed(before).Where(pair => IsRecord(pair.Now, folders)))
         {
-            if (Git.Run(Repo.Root, $"show {before}:{rel}") is not { } was) continue;
+            // git answers nothing for a path it cannot spell as one argument, which is a path with a
+            // space in it. Reported rather than skipped: a record this guard silently passed over reads
+            // exactly like one it approved.
+            if (Git.Run(Repo.Root, $"show {before}:{was}") is not { } text)
+            {
+                unread.Add(was);
+                continue;
+            }
 
-            if (Verification.Unverified(was.Replace("\r\n", "\n"), Files.ReadLf(Path.Combine(Repo.Root, rel))))
-                stale.Add(rel);
+            if (Verification.Unverified(text, Files.ReadLf(Path.Combine(Repo.Root, now)))) stale.Add(now);
         }
+
+        Assert.True(unread.Count == 0,
+            $"git could not read these at {before}, so nothing was compared:\n  "
+            + string.Join("\n  ", unread));
 
         Assert.True(stale.Count == 0,
             "the body of a verified record changed and its 'verified' list did not:\n  "
@@ -64,16 +75,32 @@ public class VerificationTests
 
         return candidates
             .Select(candidate => Git.Run(Repo.Root, $"merge-base {candidate} HEAD")?.Trim())
-            .FirstOrDefault(sha => sha is { Length: 40 });
+            .FirstOrDefault(sha => sha is { Length: >= 40 });
     }
 
-    // Every tracked file the working tree has changed since `before`, so an edit nobody has committed yet
-    // is read the way CI reads a merged one. A rename is left out: git reports it as one path, and
-    // `git show` of the old one answers for a record this tree no longer has.
-    private static IEnumerable<string> Modified(string before) =>
-        (Git.Run(Repo.Root, $"diff --name-only --diff-filter=M {before} --") ?? "")
-        .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-        .Select(rel => rel.Replace('\\', '/'));
+    // Every tracked file the working tree has changed since `before`, as the path it had then and the
+    // path it has now. An edit nobody has committed yet is read the way CI reads a merged one. A rename
+    // is a change like any other, and the two paths differ only for one: a record renamed and rewritten
+    // in one pull request is what a guard reading the new path alone would pass over.
+    //
+    // `-z` separates every field with a NUL, so a path with a quote, a tab or a non-ASCII character in it
+    // arrives as git stored it. Without it git escapes such a path and this would ask for a file whose
+    // name it had just mangled.
+    private static IEnumerable<(string Was, string Now)> Changed(string before)
+    {
+        var fields = (Git.Run(Repo.Root, $"diff --name-status -M -z --diff-filter=MR {before} --") ?? "")
+            .Split('\0', StringSplitOptions.RemoveEmptyEntries);
+
+        for (var i = 0; i + 1 < fields.Length;)
+        {
+            // A rename carries both paths after its status, and a modification carries one.
+            var renamed = fields[i].StartsWith('R');
+            if (renamed && i + 2 >= fields.Length) yield break;
+
+            yield return renamed ? (fields[i + 1], fields[i + 2]) : (fields[i + 1], fields[i + 1]);
+            i += renamed ? 3 : 2;
+        }
+    }
 
     // A record of a type declaring the field, in any of the trees here. The folder is looked for anywhere
     // above the file, because a corpus may file its records in subfolders and a type reads them all.

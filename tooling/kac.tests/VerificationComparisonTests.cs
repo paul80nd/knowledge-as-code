@@ -46,6 +46,14 @@ public class VerificationComparisonTests
         => Assert.False(Verification.Unverified(Record("Restart the runner.", Paul, Alex),
             Record("Restart the runner.", Paul)));
 
+    // Rider rewraps markdown here from `.editorconfig`, in files a session never opened. The words are
+    // the ones somebody verified, so the entry beside them still answers for the record.
+    [Fact]
+    public void A_reflowed_paragraph_is_left_alone()
+        => Assert.False(Verification.Unverified(
+            Record("Clear the cache and restart the runner.", Paul),
+            Record("Clear the cache\nand restart the runner.", Paul)));
+
     [Fact]
     public void A_file_carrying_no_frontmatter_is_left_alone()
         => Assert.False(Verification.Unverified("# A page\n", "# A page rewritten\n"));

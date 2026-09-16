@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using kac.core;
 using YamlDotNet.RepresentationModel;
 
@@ -6,7 +7,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.tests;
 
-internal static class Verification
+internal static partial class Verification
 {
     // Whether the body differs and the `verified` list gained no entry. False where either side is not a
     // record, which is a file the validator reports on its own terms.
@@ -27,7 +28,13 @@ internal static class Verification
     // document itself, and neither reading asks the schema anything.
     private static Doc? Parse(string text) => Doc.Parse("record.md", text, new Schema());
 
-    private static string Body(Doc doc) => doc.Text[doc.BodyStart..];
+    // The prose, with every run of whitespace read as one space. Rider rewraps markdown in this
+    // repository from `.editorconfig`, in files a session never opened, and a reflow moves no word. A
+    // byte-exact comparison would ask somebody to read text again that says what it said before.
+    private static string Body(Doc doc) => Whitespace().Replace(doc.Text[doc.BodyStart..], " ").Trim();
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex Whitespace();
 
     // Each verification as the pair that identifies it, so an entry edited in place reads as a new one
     // and an entry the author only reordered does not.
