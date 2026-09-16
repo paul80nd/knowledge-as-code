@@ -101,13 +101,13 @@ A corpus moves its `content-version` whenever what it knows changes, and most of
 fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds raises
 the version by hand, instead of running the report again and re-reading every verdict.
 
-A hand-raise moves neither key of `generated`. `at` dates the content's last meaningful change, and the `Imported:`
-bullet the raise rewrites is a line the tool restates from `sources`.
-
 Which entry the reviewer raises decides what else they edit. `sources` lists the corpus the report answers for first,
 then one entry per corpus it imports. Raising the first entry edits frontmatter alone, and the `verified` list stays as
 it is. Raising an imported entry also means editing the `Imported:` bullet under `## Limits`, which repeats that
 version, and adding a `verified` entry for the body they changed. Nothing checks the bullet against the frontmatter.
+
+Neither raise moves `generated`. `at` dates the content's last meaningful change, and the bullet repeats a version
+`sources` already carries, so a verification taken before the raise vouches for the same fact it did before.
 
 `validate` warns where the version falls behind the corpus. A report carried forward across several versions without a
 regeneration is one to run again. The export reads the same gap: a verification taken before `generated.at` read text a

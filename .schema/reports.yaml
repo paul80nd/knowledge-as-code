@@ -75,8 +75,8 @@ fields:
     notes: >
       `by` passes to whoever edits the output, so a report an agent completed states the agent and not `kac`.
       `report` and `tool` describe the run the content started from, and both stay absent where nobody ran one.
-      A hand-raised `sources` version moves neither `at` nor `by`, and nor does the `Imported:` bullet the same
-      raise rewrites: the tool restates that line from `sources`, so no meaning moves with it.
+      A hand-raised `sources` version moves neither `at` nor `by`. Nor does rewriting the `Imported:` bullet an
+      imported entry's raise touches: the tool restates that line from `sources`, so no meaning moves with it.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
   sources:

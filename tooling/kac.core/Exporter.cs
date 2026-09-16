@@ -558,7 +558,8 @@ public static class Exporter
     private const string ActorKey = "by";
     private const string HumanPrefix = "human:";
 
-    // The field naming when the content last changed, and the key inside an event that gives a moment.
+    // The field naming when the content last meaningfully changed, and the key inside an event that gives
+    // a moment.
     // `reports` is the type declaring both fields today, and a type declaring only `verified` answers
     // null below and has every entry counted.
     private const string GeneratedField = "generated";

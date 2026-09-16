@@ -21,9 +21,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A report's `generated.at` dates the content's last meaningful change.** `.schema/reports.yaml` described it as
   "the moment the content last changed", dropping the qualifier [OKF v0.2] states, while the framework moves the stamp
-  for neither a hand-raised `sources` version nor the `Imported:` bullet that raise rewrites. The description and the
-  field's `notes:` are read by whoever maintains a corpus's schema, and `kac update` takes both down. No generated
-  block changes: the `schema-reports` table prints the description of `generated` itself and none of its entries.
+  for neither a hand-raised `sources` version nor the `Imported:` bullet an imported entry's raise rewrites. The
+  description and the field's `notes:` are read by whoever maintains a corpus's schema, and `kac update` takes both
+  down. No generated block changes: the `schema-reports` table prints the description of `generated` itself and none
+  of its entries.
 
 - **`kac new` seeds report guidance the schema accepts.** `reports.md` told you to verify a report you had just
   written, which `no-self-verification` rejects. It now says to write yourself into `generated.by`, leave `verified`
