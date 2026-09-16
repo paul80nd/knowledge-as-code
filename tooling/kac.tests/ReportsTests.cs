@@ -153,7 +153,49 @@ public class ReportsTests
     public void A_reference_carries_the_number_of_clauses_citing_it()
         => Assert.Contains("| A.5.17 | 2 |", Plan("frameworks").Body);
 
+    // A clause and the standard discharging it, both written two corpora up and both arriving inside
+    // eng's export. Each is scoped to gp, so the two halves of the edge meet and the clause reads
+    // covered. Scoping the record's ids to eng would file the standard against a clause id the parts
+    // file never wrote, and the report would call a discharged clause a gap.
+    [Fact]
+    public void A_clause_a_grandparent_s_standard_implements_reads_covered()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |  |  |  | covered | |", Inheriting());
+
     private static string Coverage() => Plan("coverage").Body;
+
+    private static string Inheriting()
+    {
+        var plan = Reports.Plan("coverage", Corpus(), [Grandparent], Stamp);
+        Assert.NotNull(plan);
+        return plan.Body;
+    }
+
+    // What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the
+    // bare ids gp wrote, in the folder eng filed it under.
+    private static readonly InheritedCorpus Grandparent =
+        new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
+            new ExportPublishing("github", null, null, null, null),
+            Tracker.None,
+            [],
+            [
+                new InheritedType("policies", 1, "policies", "policies/clauses.jsonl",
+                    "record", "part", "id", null,
+                    new Dictionary<string, string>(StringComparer.Ordinal),
+                    [
+                        """
+                        {"id":"gp:pol-OLD.HOLD","record":"gp:pol-OLD","part":"HOLD","level":"MUST",
+                        "clause":"Stay put."}
+                        """.ReplaceLineEndings("")
+                    ],
+                    []),
+                new InheritedType("standards", 1, "standards", null, null, null, null, null,
+                    new Dictionary<string, string>(StringComparer.Ordinal),
+                    [],
+                    [
+                        new InheritedRecord("gp", "std-OLD.json",
+                            """{"fields":{"id":"std-OLD","implements":["pol-OLD.HOLD"]}}""")
+                    ])
+            ]);
 
     private static ReportPlan Plan(string name)
     {

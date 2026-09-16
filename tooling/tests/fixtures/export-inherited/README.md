@@ -1,4 +1,5 @@
-A corpus that consumes another, with the import restored beside it.
+A corpus that consumes another, with the import restored beside it. That import consumed a third corpus in turn, so
+the chain here is three deep.
 
 The [`imports`](../imports/README.md) fixture is the other half of the pair. It declares the same thing with nothing
 restored, and `validate` reports that. This one declares it, holds it, and exports.
@@ -12,18 +13,18 @@ pinned.
 **One file per type, whoever wrote the records.** `glossary/terms.jsonl` holds this corpus's term and both of the ones
 it inherited. A consumer greps once for every term that reaches it.
 
-**A record file is filed under the corpus that wrote it.** `glossary/eng/gls-shared.json` sits beside
-`glossary/gls-local.json`. Two corpora can name one record, so a directory is what keeps them apart. A line needs no
-directory, because it says whose it is.
+**A record file is filed under the corpus that wrote it.** `glossary/eng/gls-shared.json` and
+`glossary/gp/gls-old.json` sit beside `glossary/gls-local.json`. Two corpora can name one record, so a directory is what
+keeps them apart. A line needs no directory, because it says whose it is.
 
 **A bare id is this corpus's own.** `gls-local.shelf` carries no prefix and no `shortcode`, which is the rule a
 citation already follows. `eng:gls-shared.record` carries both, and its `seeAlso` is stamped too: left bare it would
 point at whatever this corpus happens to call the same thing, and resolve to the wrong record rather than to none.
 
 **A grandparent is labelled once.** `gp:gls-old.store` arrived inside eng's export already naming `gp`, and keeps that
-name. Its `shortcode` stays `gp` rather than becoming `eng`, and `sources` carries `gp` alongside `eng`, each at its own
-commit. That is the whole of what makes a chain of any depth resolve, and it costs no code beyond carrying the list
-forward.
+name. Its `shortcode` stays `gp` rather than becoming `eng`. Its record file arrived in `glossary/gp/` and leaves in
+`glossary/gp/`, with the address gp published for it. `sources` lists `gp` beside `eng`, each at its own
+commit. Together these make a chain of any depth resolve.
 
 **A type this corpus never adopted travels whole.** `policies/` is eng's alone. It arrives because a record here may
 cite a clause of it, and an address resolves only where the thing it names travelled too.

@@ -80,6 +80,7 @@ public static class Exporter
         {
             var local = corpus.Adopted.FirstOrDefault(t => t.Key == key && t.Export is not null);
             var lines = new List<string>();
+            var filed = new HashSet<string>(StringComparer.Ordinal);
             var records = 0;
 
             if (local is { Export: { } export })
@@ -107,10 +108,21 @@ public static class Exporter
             {
                 if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
 
-                records += theirs.Records.Count;
-
+                // Filed under the corpus that wrote the record, not the one it came through. See the
+                // chain section of docs/design/export.md.
+                //
+                // One corpus can consume both a producer and that producer's own producer, which brings
+                // the second corpus's records in twice at one path. `Disagreements` has already refused
+                // two accounts of one corpus, so the second copy is the first, and counting it would
+                // claim more records than the export writes.
                 foreach (var record in theirs.Records)
-                    files.Add(new ExportFile($"{theirs.Dir}/{from.Shortcode}/{record.Name}", record.Content));
+                {
+                    var path = $"{theirs.Dir}/{record.Producer}/{record.Name}";
+                    if (!filed.Add(path)) continue;
+
+                    files.Add(new ExportFile(path, record.Content));
+                    records++;
+                }
 
                 lines.AddRange(theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)));
             }

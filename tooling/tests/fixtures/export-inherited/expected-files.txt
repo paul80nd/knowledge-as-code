@@ -4,3 +4,4 @@
 glossary/local.md
 .imports/eng/manifest.json
 .imports/eng/glossary/terms.jsonl
+.imports/eng/glossary/gp/gls-old.json

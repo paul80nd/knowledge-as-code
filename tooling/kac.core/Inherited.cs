@@ -21,8 +21,12 @@ public sealed record InheritedType(
     IReadOnlyList<string> PartLines,
     IReadOnlyList<InheritedRecord> Records);
 
-// One record file of a consumed corpus: the name it was published under, and its bytes.
-public sealed record InheritedRecord(string Name, string Content);
+// One record file of a consumed corpus: its writer, the name it was published under, and its bytes.
+//
+// `Producer` is the corpus this one consumes where the record is that corpus's own. It is a corpus
+// further up the chain where it is not. An export files a record under its writer, so a grandparent's
+// record arrives in a folder of its own.
+public sealed record InheritedRecord(string Producer, string Name, string Content);
 
 // One corpus this one consumes, read for what an export has to carry of it.
 //
@@ -53,20 +57,22 @@ public sealed record InheritedCorpus(
 // fact about ids. An export asks what to publish, which is the files themselves. One reader answering
 // both would hand each caller most of what it wanted and a little of what it did not.
 //
-// The reading is a pair of functions for the reason `Tree` and `Imports` take the same pair. What an
-// export comes to stays decidable from a set of strings.
+// The reading is a set of functions for the reason `Tree` and `Imports` take one. What an export comes
+// to stays decidable from a set of strings.
 public static class Inherited
 {
     // Every declared import that is on disk, and the shortcode of each that is not.
     //
-    // `names` answers the file names directly inside one folder under `.imports/`, and null where there
-    // is no folder there. `read` answers one file's text, and null where there is no file.
+    // `names` lists the file names directly inside one folder under `.imports/`, `folders` lists the
+    // folder names inside one, and `read` returns one file's text. Each is null where there is nothing
+    // there.
     //
     // An entry naming no shortcode is skipped rather than reported. It has no folder to look in, so
     // nothing could be read for it, and `validate` is what names a declaration that cannot resolve.
     public static (IReadOnlyList<InheritedCorpus> Carried, IReadOnlyList<string> Missing) Read(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
         Func<string, string?> read)
     {
         var carried = new List<InheritedCorpus>();
@@ -76,7 +82,7 @@ public static class Inherited
         {
             if (entry.Shortcode is not { } shortcode) continue;
 
-            if (One(shortcode, names, read) is { } corpus) carried.Add(corpus);
+            if (One(shortcode, names, folders, read) is { } corpus) carried.Add(corpus);
             else missing.Add(shortcode);
         }
 
@@ -86,7 +92,10 @@ public static class Inherited
     // One folder read whole, or null where it holds no manifest. The manifest is the last file a restore
     // writes, so a folder carrying one carries the files it describes.
     private static InheritedCorpus? One(
-        string shortcode, Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
+        string shortcode,
+        Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
+        Func<string, string?> read)
     {
         if (Exporter.ReadManifest(read($"{shortcode}/{Exporter.ManifestFile}")) is not { } manifest) return null;
 
@@ -104,7 +113,7 @@ public static class Inherited
                 declared.SeeAlsoKey,
                 declared.Sections,
                 Lines(declared.PartsFile is null ? null : read($"{shortcode}/{declared.PartsFile}")),
-                RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, read)));
+                RecordsIn(shortcode, declared.Dir, declared.PartsFile, names, folders, read)));
 
         return new InheritedCorpus(
             shortcode,
@@ -122,25 +131,40 @@ public static class Inherited
     private static List<string> Lines(string? text) =>
         text is null ? [] : [.. text.Split('\n').Where(l => l.Length > 0)];
 
-    // Every record file one type's folder holds. A record is a `.json` named for its id, and the parts
-    // file sitting beside them is not one.
+    // Every record file one type's folder contains, and which corpus wrote each one. A record is a
+    // `.json` named for its id, and the parts file sitting beside them is not one.
+    //
+    // The producer's own records sit directly in the type's folder. The ones it inherited sit in a folder
+    // named for the corpus that wrote them, one level deep however long the chain. See the chain section
+    // of docs/design/export.md.
     private static List<InheritedRecord> RecordsIn(
         string shortcode, string dir, string? partsFile,
-        Func<string, IReadOnlyList<string>?> names, Func<string, string?> read)
+        Func<string, IReadOnlyList<string>?> names,
+        Func<string, IReadOnlyList<string>?> folders,
+        Func<string, string?> read)
     {
         var found = new List<InheritedRecord>();
         var partsName = partsFile?[(partsFile.LastIndexOf('/') + 1)..];
+        var root = $"{shortcode}/{dir}";
 
-        foreach (var name in (names($"{shortcode}/{dir}") ?? []).OrderBy(n => n, StringComparer.Ordinal))
-        {
-            if (!name.EndsWith(".json", StringComparison.Ordinal)) continue;
-            if (name == partsName) continue;
-            if (read($"{shortcode}/{dir}/{name}") is not { } content) continue;
+        Take(shortcode, root);
 
-            found.Add(new InheritedRecord(name, content));
-        }
+        foreach (var producer in (folders(root) ?? []).OrderBy(n => n, StringComparer.Ordinal))
+            Take(producer, $"{root}/{producer}");
 
         return found;
+
+        void Take(string producer, string folder)
+        {
+            foreach (var name in (names(folder) ?? []).OrderBy(n => n, StringComparer.Ordinal))
+            {
+                if (!name.EndsWith(".json", StringComparison.Ordinal)) continue;
+                if (name == partsName) continue;
+                if (read($"{folder}/{name}") is not { } content) continue;
+
+                found.Add(new InheritedRecord(producer, name, content));
+            }
+        }
     }
 
     // How the folders are actually read, which nothing but a run against a real corpus uses.
@@ -153,6 +177,9 @@ public static class Inherited
             declared,
             folder => Directory.Exists(At(folder))
                 ? [.. Directory.EnumerateFiles(At(folder)).Select(Path.GetFileName).OfType<string>()]
+                : null,
+            folder => Directory.Exists(At(folder))
+                ? [.. Directory.EnumerateDirectories(At(folder)).Select(Path.GetFileName).OfType<string>()]
                 : null,
             file => File.Exists(At(file)) ? Files.ReadLf(At(file)) : null);
 

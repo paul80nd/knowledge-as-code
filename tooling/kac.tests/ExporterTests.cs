@@ -881,7 +881,7 @@ public class ExporterTests
                     "record", "part", "id", "seeAlso",
                     new Dictionary<string, string>(StringComparer.Ordinal) { ["Scope"] = ExportSpec.Full },
                     lines,
-                    [new InheritedRecord("gls-theirs.json", "{\"type\": \"glossary\"}\n")])
+                    [new InheritedRecord(shortcode, "gls-theirs.json", "{\"type\": \"glossary\"}\n")])
             ]);
 
     private static ExportPlan Merged(LoadedCorpus corpus, params InheritedCorpus[] consumed) =>
@@ -1014,6 +1014,48 @@ public class ExporterTests
         Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
         Assert.Contains("glossary/gls-one.json", plan.Files.Select(f => f.Path));
     }
+
+    // A record eng inherited keeps the folder it arrived in, the way its part lines keep their shortcode.
+    [Fact]
+    public void A_record_its_producer_inherited_keeps_the_folder_of_the_corpus_that_wrote_it()
+    {
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Carrying(Consumed("eng", TheirInheritedLine), Old));
+
+        Assert.Contains("glossary/gp/gls-old.json", plan.Files.Select(f => f.Path));
+        Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+        Assert.Equal(3, Assert.Single(plan.Types).Records);
+    }
+
+    // One corpus consuming both a producer and that producer's own producer meets gp's record twice at
+    // one path. A second copy written is harmless and a second copy counted is not: the manifest would
+    // claim more records than the export wrote.
+    [Fact]
+    public void A_record_arriving_by_two_routes_is_written_and_counted_once()
+    {
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Carrying(Consumed("eng", TheirInheritedLine), Old),
+            Holding(Consumed("gp"), Old));
+
+        Assert.Single(plan.Files, f => f.Path == "glossary/gp/gls-old.json");
+        Assert.Equal(3, Assert.Single(plan.Types).Records);
+    }
+
+    // gp's record as eng published it: filed under gp, because gp wrote it.
+    private static readonly InheritedRecord Old = new("gp", "gls-old.json", "{}\n");
+
+    // A consumed corpus with these records added to the ones `Consumed` gives it.
+    private static InheritedCorpus Carrying(InheritedCorpus corpus, params InheritedRecord[] records) =>
+        Records(corpus, [.. corpus.Types[0].Records, .. records]);
+
+    // A consumed corpus with these records in place of the ones `Consumed` gives it.
+    private static InheritedCorpus Holding(InheritedCorpus corpus, params InheritedRecord[] records) =>
+        Records(corpus, records);
+
+    private static InheritedCorpus Records(InheritedCorpus corpus, IReadOnlyList<InheritedRecord> records) =>
+        corpus with { Types = [corpus.Types[0] with { Records = records }] };
 
     // Two counts in one entry, because a consumer asks how much of a type there is and not how much of it
     // each corpus wrote. Which corpus wrote a record is a fact about the line.

@@ -115,6 +115,10 @@ Cite a record this corpus owns bare, and cite an imported one with its producer'
 way is an error, and the message gives the spelling to write. Two spellings of one obligation defeat every search
 anybody runs for it. [Referring to an id](../framework/metadata.md#referring-to-an-id) sets the notation out.
 
+**The producer is whoever wrote the record, not whoever this corpus fetched it from.** A record arriving through a chain
+keeps the shortcode of the corpus that wrote it, so `gp:pol-OLD` resolves in a corpus whose `consumes:` names only
+`eng:`. Citing the same record as `eng:pol-OLD` is the error, because eng has no record under that id.
+
 ## What a check may ask across the boundary
 
 An export carries each record's declared fields and sections, and a consumer republishes them untouched. What a check

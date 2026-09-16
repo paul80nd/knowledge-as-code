@@ -298,6 +298,11 @@ public static class Reports
     // Inherited records count. A corpus consuming the policies it answers to consumes the standards
     // discharging them, and a report reading only local records would call two thirds of its own
     // coverage a gap. `.schema/standards.yaml` says why the field travels.
+    //
+    // A record file keeps the ids its own corpus wrote, so both halves of an inherited edge are scoped
+    // to the corpus that wrote the record. Scoping them to the corpus it arrived through would file a
+    // grandparent's standard against a clause id nothing else in the report uses, and the join would
+    // miss on both sides.
     private static Dictionary<string, List<string>> Edges(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field)
     {
@@ -325,8 +330,8 @@ public static class Reports
 
             foreach (var target in targets)
                 if (JsonRead.Str(target) is { Length: > 0 } value)
-                    Add(Exporter.Scoped(value, source.Shortcode),
-                        Exporter.Scoped(id, source.Shortcode));
+                    Add(Exporter.Scoped(value, record.Producer),
+                        Exporter.Scoped(id, record.Producer));
         }
 
         return found;
