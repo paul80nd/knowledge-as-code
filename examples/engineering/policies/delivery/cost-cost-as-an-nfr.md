@@ -55,5 +55,5 @@ No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency, so `aligns-wi
 [Policies](../../policies.md#why-we-use-them). The [Azure WAF] Cost Optimization pillar is the only alignment this
 policy will ever have, because nothing external obliges an organisation to manage its own spend.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework

@@ -55,6 +55,6 @@ The depth of monitoring is proportionate to how critical the system is. The comm
 a system seems too unimportant to monitor, question whether it should exist.
 
 [pol-DATA]: ../security/data-data-protection.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-SCRT]: ../security/scrt-secrets-management.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

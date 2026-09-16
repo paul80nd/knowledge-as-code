@@ -8,8 +8,8 @@
 |----------|-------------------------------------------------------------------------------------------------------|--------|----------------|------------|
 | pol-AUTV | [Every change is verified automatically, and failures block](delivery/autv-automated-verification.md) | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-COST | [Cost is a non-functional requirement](delivery/cost-cost-as-an-nfr.md)                               | draft  |                | 2027-08-04 |
-| pol-DERV | [Derived data is verified before it is trusted](delivery/derv-derived-data-is-verified.md)            | draft  | UK GDPR        | 2027-08-09 |
-| pol-EVER | [Everything is in version control](delivery/ever-everything-in-version-control.md)                    | draft  | ISO 27001:2022 | 2027-08-04 |
+| pol-DERV | [Derived data is verified before it is trusted](delivery/derv-derived-data-verification.md)           | draft  | UK GDPR        | 2027-08-09 |
+| pol-EVER | [Everything is in version control](delivery/ever-version-control.md)                                  | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-INTC | [Interfaces are contracts we honour](delivery/intc-interface-contracts.md)                            | draft  | ISO 27001:2022 | 2027-08-04 |
 | pol-MNTN | [Software stays easy to change](delivery/mntn-maintainability.md)                                     | draft  |                | 2027-09-11 |
 | pol-PERF | [Performance targets are stated and verified](delivery/perf-performance-targets.md)                   | draft  | ISO 27001:2022 | 2027-08-04 |
@@ -17,12 +17,12 @@
 
 ## Governance
 
-| ID       | Title                                                                                                     | Status | Aligns with                    | Review by  |
-|----------|-----------------------------------------------------------------------------------------------------------|--------|--------------------------------|------------|
-| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                               | draft  | Equality Act 2010, WCAG 2.2 AA | 2027-08-04 |
-| pol-AGNT | [Agents propose, people decide](governance/agnt-agents-propose-people-decide.md)                          | draft  | ISO 27001:2022                 | 2027-08-05 |
-| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations-are-recorded.md)               | draft  | ISO 27001:2022                 | 2027-08-04 |
-| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-knowledge-is-written-down.md) | draft  | ISO 27001:2022                 | 2027-08-04 |
+| ID       | Title                                                                                             | Status | Aligns with                    | Review by  |
+|----------|---------------------------------------------------------------------------------------------------|--------|--------------------------------|------------|
+| pol-A11Y | [Software we build is usable by everyone](governance/a11y-accessibility.md)                       | draft  | Equality Act 2010, WCAG 2.2 AA | 2027-08-04 |
+| pol-AGNT | [Agents propose, people decide](governance/agnt-agent-oversight.md)                               | draft  | ISO 27001:2022                 | 2027-08-05 |
+| pol-DEVI | [Deviations are recorded, owned and time-bound](governance/devi-deviations.md)                    | draft  | ISO 27001:2022                 | 2027-08-04 |
+| pol-KNOW | [Knowledge is written down and kept with what it describes](governance/know-written-knowledge.md) | draft  | ISO 27001:2022                 | 2027-08-04 |
 
 ## Operations
 
@@ -40,7 +40,7 @@
 | pol-DATA | [Data is protected according to its sensitivity](security/data-data-protection.md)                             | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-ENVS | [Environments are separated, and production stays in production](security/envs-environment-separation.md)      | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
-| pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-are-never-embedded.md)                             | draft  | ISO 27001:2022          | 2027-08-04 |
+| pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-management.md)                                     | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-SECD | [Security is designed in, not added on](security/secd-security-by-design.md)                                   | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-TRUS | [We ship only components we know and trust](security/trus-trusted-components.md)                               | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-VURM | [Vulnerabilities are found, prioritised and closed to a timeframe](security/vurm-vulnerability-remediation.md) | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |

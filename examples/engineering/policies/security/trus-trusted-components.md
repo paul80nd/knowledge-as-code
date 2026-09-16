@@ -60,7 +60,7 @@ prioritising and closing the vulnerabilities in what we have admitted, including
 A component that can no longer be sourced or maintained is kept only under a recorded deviation ([pol-DEVI]). The
 deviation names the risk owner, the compensating controls and the plan to replace it. "It still works" is not a plan.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
 [pol-VURM]: ../security/vurm-vulnerability-remediation.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

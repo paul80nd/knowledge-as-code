@@ -70,9 +70,9 @@ hold overrides deletion, and is recorded when it does.
 `LAWFUL` admits no exception. A recorded deviation can answer where personal data is copied and for how long. It cannot
 answer whether we were entitled to hold that data at all.
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-ENVS]: ../security/envs-environment-separation.md
 [pol-INCR]: ../operations/incr-incident-response.md
-[pol-SCRT]: ../security/scrt-secrets-are-never-embedded.md
+[pol-SCRT]: ../security/scrt-secrets-management.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr

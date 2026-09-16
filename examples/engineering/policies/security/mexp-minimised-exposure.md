@@ -58,9 +58,9 @@ Some services are meant to be reached by anyone. The rest of this policy still a
 through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation
 under [pol-DEVI].
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-ENVS]: ../security/envs-environment-separation.md
-[pol-EVER]: ../delivery/ever-everything-in-version-control.md
+[pol-EVER]: ../delivery/ever-version-control.md
 [pol-OBSV]: ../operations/obsv-observability.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr

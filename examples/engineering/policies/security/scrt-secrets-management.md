@@ -58,6 +58,6 @@ risk, what compensates for it and when it is revisited.
 
 [pol-ACCS]: ../security/accs-access-by-identity.md
 [pol-DATA]: ../security/data-data-protection.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-ENVS]: ../security/envs-environment-separation.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

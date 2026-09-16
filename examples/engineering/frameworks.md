@@ -222,10 +222,10 @@ A framework nothing references does not belong here, and `kac validate` reports 
 goes when the last citation goes, and the commit removing it is where the reason for dropping the framework belongs.
 
 [pol-A11Y]: policies/governance/a11y-accessibility.md
-[pol-AGNT]: policies/governance/agnt-agents-propose-people-decide.md
+[pol-AGNT]: policies/governance/agnt-agent-oversight.md
 [pol-COST]: policies/delivery/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/security/data-data-protection.md
-[pol-DEVI]: policies/governance/devi-deviations-are-recorded.md
+[pol-DEVI]: policies/governance/devi-deviations.md
 [pol-ENVS]: policies/security/envs-environment-separation.md
 [pol-TRUS]: policies/security/trus-trusted-components.md
 [Equality Act 2010]: #equality-act-2010

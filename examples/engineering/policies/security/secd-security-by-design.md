@@ -55,7 +55,7 @@ proceed before its security work is complete. That is a recorded deviation under
 in the moment.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-INCR]: ../operations/incr-incident-response.md
 [pol-VURM]: ../security/vurm-vulnerability-remediation.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001

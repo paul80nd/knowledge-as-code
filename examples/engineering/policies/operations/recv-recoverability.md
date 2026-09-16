@@ -67,7 +67,7 @@ still exercised. Accepting a longer recovery objective than a system's criticali
 under [pol-DEVI], owned by whoever will answer for the downtime.
 
 [pol-DATA]: ../security/data-data-protection.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-ENVS]: ../security/envs-environment-separation.md
 [pol-INCR]: ../operations/incr-incident-response.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework

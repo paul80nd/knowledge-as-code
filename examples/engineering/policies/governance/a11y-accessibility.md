@@ -58,6 +58,6 @@ is acceptable; concealing it is not.
 This policy comes from a legal obligation and not from an information-security framework, so it has no ISO/IEC 27001
 reference. See [Policies](../../policies.md#why-we-use-them).
 
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [Equality Act 2010]: ../../frameworks.md#equality-act-2010
 [WCAG 2.2 AA]: ../../frameworks.md#wcag

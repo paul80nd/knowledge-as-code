@@ -70,7 +70,7 @@ this policy adds.
 
 [pol-AUTV]: ../delivery/autv-automated-verification.md
 [pol-DATA]: ../security/data-data-protection.md
-[pol-DEVI]: ../governance/devi-deviations-are-recorded.md
+[pol-DEVI]: ../governance/devi-deviations.md
 [pol-OBSV]: ../operations/obsv-observability.md
 [pol-PIPE]: ../delivery/pipe-pipeline-to-production.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
