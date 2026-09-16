@@ -128,7 +128,7 @@ public static class Breadcrumb
     // One line: whose records these are, how much of the type they make up, and which records hold them.
     //
     // Either count can be zero. A corpus that contributed part lines and no record file to a type has
-    // entries and nothing to count them across, and "across 0 records" would read as an export that lost
+    // entries and nothing to count them across. "across 0 records" would read as an export that lost
     // them on the way.
     private static string Line(string type, Contribution held)
     {

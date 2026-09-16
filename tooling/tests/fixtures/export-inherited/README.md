@@ -23,7 +23,7 @@ point at whatever this corpus happens to call the same thing, and resolve to the
 
 **A grandparent is labelled once.** `gp:gls-old.store` arrived inside eng's export already naming `gp`, and keeps that
 name. Its `shortcode` stays `gp` rather than becoming `eng`. Its record file arrived in `glossary/gp/` and leaves in
-`glossary/gp/`, still holding the address gp published for it. `sources` lists `gp` beside `eng`, each at its own
+`glossary/gp/`, with the address gp published for it. `sources` lists `gp` beside `eng`, each at its own
 commit. Together these make a chain of any depth resolve.
 
 **A type this corpus never adopted travels whole.** `policies/` is eng's alone. It arrives because a record here may

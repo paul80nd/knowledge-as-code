@@ -121,7 +121,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` publishes a grandparent's record files down a chain three corpora deep.** A consumer read only the
   record files sitting directly in an imported type's directory. The records its producer had inherited were dropped,
   and their part lines reached the next corpus naming files that never arrived. `kac` now reads the folders a producer
-  filed those records in, and files each record under the corpus that wrote it. `sources` already listed the
+  filed those records in, and files each record under the corpus that wrote it. A corpus consuming both a producer and
+  that producer's own producer meets one record twice, and writes and counts it once. `sources` already listed the
   grandparent, and still does.
 
 ## 0.26.0 - 2026-09-13
