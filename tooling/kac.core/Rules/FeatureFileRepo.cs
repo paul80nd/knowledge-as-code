@@ -44,7 +44,7 @@ public sealed class FeatureFileRepo : ICorpusRule
                 var first = path.Split('/')[0];
                 if (repos.Contains(first)) continue;
 
-                var known = string.Join(", ", repos.Order(StringComparer.Ordinal));
+                var known = string.Join(", ", repos.Order(StringComparer.OrdinalIgnoreCase));
                 ctx.Warn(doc, Reports,
                     $"'{Paths}: {path}' starts in '{first}', which is no repository of a service this "
                     + $"record implements. Those services are in: {known}.",

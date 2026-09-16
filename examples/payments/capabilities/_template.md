@@ -32,8 +32,8 @@ every field and says what each one holds.
 **The work items.** They live in the list and nowhere else. This estate plans in GitHub issues, so an issue is
 labelled `gh#2101`, with its link defined at the foot of the document.
 
-**The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` row. Both ends are
-checked against each other, and the NFR names this capability back in its own `applies-to`.
+**The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` bullet. Both ends
+are checked against each other, and the NFR names this capability back in its own `applies-to`.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.

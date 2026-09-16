@@ -85,8 +85,8 @@ fields:
     reciprocal: applies-to
     description: Ids of the NFRs this service must meet.
     notes: >
-      A property of this one deployment, such as a recovery point. A wait a customer feels binds a
-      capability instead, and the NFR's `applies-to` says which it named.
+      A property of this one deployment, such as a recovery point. `nfrs.applies-to` says which records an
+      NFR may bind, and which of them this one named.
 
   facets:
     required: false
