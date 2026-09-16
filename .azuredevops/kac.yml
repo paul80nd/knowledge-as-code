@@ -7,6 +7,8 @@
 #   * `$(...)` is an Azure macro, so no script here uses command substitution.
 #   * tooling/tests/round-trip.sh is left out. It fetches each record from raw.githubusercontent.com,
 #     and a commit that lives only in Azure Repos was never pushed there.
+#   * The unit test step sets no KAC_BASE_REF. `VerificationTests` then falls back to origin/main, and
+#     a base it cannot reach leaves it reading nothing instead of failing the build.
 #
 # Azure Pipelines finds no YAML by itself. Point the pipeline at this path when you create it:
 #   Pipelines -> New pipeline -> Azure Repos Git -> your repo -> Existing Azure Pipelines YAML file
@@ -42,6 +44,11 @@ variables:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 steps:
+  # `VerificationTests` reads each record a pull request changed against the base branch, which the
+  # default shallow fetch does not hold.
+  - checkout: self
+    fetchDepth: 0
+
   - task: UseDotNet@2
     displayName: Install .NET 10 SDK
     inputs:
