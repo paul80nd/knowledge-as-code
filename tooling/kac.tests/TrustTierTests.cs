@@ -49,15 +49,39 @@ public class TrustTierTests
         Assert.Equal(JsonValueKind.Null, record.GetProperty("trust").ValueKind);
     }
 
-    private static string? Trust(string entries, string? field = null)
+    // Authorship passes to whoever answers a report's judgement cells, so `generated.at` moves past
+    // every reading of the words before them. A tier counting one of those would tell a consumer that
+    // somebody read text that did not exist when they read it.
+    [Fact]
+    public void A_person_who_read_the_text_before_the_last_edit_does_not_reach_the_tier()
+        => Assert.Equal("unverified", Trust(
+            "  - { at: 2026-09-08T11:00:00Z, by: human:alex.doe }\n",
+            generated: "generated: { at: 2026-09-20T09:00:00Z, by: sweep/1.0.0 }\n"));
+
+    [Fact]
+    public void A_person_who_read_the_text_after_the_last_edit_reaches_the_tier()
+        => Assert.Equal("human-reviewed", Trust(
+            "  - { at: 2026-09-20T11:00:00Z, by: human:alex.doe }\n",
+            generated: "generated: { at: 2026-09-20T09:00:00Z, by: sweep/1.0.0 }\n"));
+
+    // `timestamp-format` reports a moment that is not one, against the record. Dropping the entry here
+    // as well would answer for the same fault twice, and the second answer is one nobody can see.
+    [Fact]
+    public void A_verification_whose_moment_will_not_parse_still_reaches_the_tier()
+        => Assert.Equal("human-reviewed", Trust(
+            "  - { at: whenever, by: human:alex.doe }\n",
+            generated: "generated: { at: 2026-09-20T09:00:00Z, by: sweep/1.0.0 }\n"));
+
+    private static string? Trust(string entries, string? field = null, string generated = "")
     {
         var front = field ?? $"verified:\n{entries}";
-        return Record(Page(front), ["id", "title", "status", "verified"]).GetProperty("trust").GetString();
+        return Record(Page(front, generated), ["id", "title", "status", "verified"])
+            .GetProperty("trust").GetString();
     }
 
-    private static string Page(string verified) =>
+    private static string Page(string verified, string generated = "") =>
         "---\nid: rpt-coverage\ntype: report\ntier: descriptive\nstatus: active\n"
-        + "owner: human:alex.doe\n" + verified + "---\n\n"
+        + "owner: human:alex.doe\n" + generated + verified + "---\n\n"
         + "# Clause coverage\n\n`Report: rpt-coverage` `ACTIVE`\n";
 
     private static JsonElement Record(string text, string[] fields)

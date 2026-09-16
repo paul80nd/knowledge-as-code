@@ -96,12 +96,12 @@ index:
 
 rules:
   - id: verified-by-a-known-actor
-    description: A verification names a person or a producer, and never a post.
+    description: A verification names an actor the Open Knowledge Format defines, and never a post.
     severity: error
-    expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
+    expr: "entries_match('verified', 'by', '^(human:[a-z0-9.-]+|process:[a-z0-9.-]+|[a-z0-9.-]+/[^ ]+)$')"
     message: >
-      the `by` in this verification is neither a person nor a producer. Write `human:alex.doe` for a person, or
-      `symptom-sweep/1.4.0` for an agent.
+      the `by` in this verification states no known actor. Write `human:alex.doe` for a person,
+      `process:nightly-sweep` for an automated process, or `symptom-sweep/1.4.0` for an agent.
 
   - id: raiser-does-not-verify
     description: An agent does not verify a fix it raised.

@@ -71,14 +71,23 @@ public class ReportsTests
         => Assert.Contains("the citations counted below are the ones written here",
             Plan("frameworks").Body);
 
-    // The stamp is the tool's, because only the tool knows both halves of it.
+    // The stamp is the tool's, because only the tool knows both halves of it. `by` names the run while the
+    // output stands unedited, and `tool` keeps that version once somebody takes the content over.
     [Fact]
     public void Every_run_stamps_what_produced_it_and_what_it_answered_for()
     {
         var plan = Plan("coverage");
 
-        Assert.Contains("generated: { at: 2026-08-08T10:00:00Z, by: kac/9.9.9 }", plan.Frontmatter);
+        Assert.Contains("generated:\n  at: 2026-08-08T10:00:00Z\n  by: kac/9.9.9\n", plan.Frontmatter);
         Assert.Contains("  - { resource: test-corpus, version: \"2.1.0\" }", plan.Frontmatter);
+    }
+
+    // The name a reader runs to regenerate the record, which the record states nowhere else.
+    [Fact]
+    public void Every_run_stamps_the_report_it_was_run_under_and_the_tool_that_wrote_it()
+    {
+        Assert.Contains("  report: coverage\n  tool: kac/9.9.9\n", Plan("coverage").Frontmatter);
+        Assert.Contains("  report: frameworks\n  tool: kac/9.9.9\n", Plan("frameworks").Frontmatter);
     }
 
     [Fact]

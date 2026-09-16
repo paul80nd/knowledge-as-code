@@ -9,19 +9,24 @@ namespace kac.tests;
 
 internal static partial class Verification
 {
-    // Whether the body differs and the `verified` list gained no entry. False where either side is not a
-    // record, which is a file the validator reports on its own terms.
+    // Whether the body differs and nobody answered for it. False where either side is not a record, which
+    // is a file the validator reports on its own terms.
     internal static bool Unverified(string was, string now)
     {
         if (Parse(was) is not { } before || Parse(now) is not { } after) return false;
+        if (Body(before) == Body(after)) return false;
 
         var verified = Verifications(before).ToList();
+        var reverified = Verifications(after).Except(verified).Any();
+
+        // A record stating `generated` names who wrote the content as it stands, so whoever rewrote the
+        // prose answers by writing themselves there. A verification answers as well, because a person
+        // confirming text they did not write moves that list and not this line.
+        if (Generation(before) is { } generated) return generated == Generation(after) && !reverified;
 
         // A record nobody had verified leaves nothing behind when its prose moves. A `fix` is written
         // `draft` for exactly that, and the schema asks for the list on every other status.
-        if (verified.Count == 0) return false;
-
-        return Body(before) != Body(after) && !Verifications(after).Except(verified).Any();
+        return verified.Count > 0 && !reverified;
     }
 
     // No type is resolved, and none is needed: the body and the `verified` list are read from the
@@ -43,6 +48,13 @@ internal static partial class Verification
             ? entries.Children.OfType<YamlMappingNode>()
                 .Select(entry => $"{Scalar(entry, "at")}|{Scalar(entry, "by")}")
             : [];
+
+    // Who wrote the content and when, as the pair that identifies one generation. Null where the document
+    // states no `generated`, which is every type but `reports`.
+    private static string? Generation(Doc doc) =>
+        doc.FrontNode("generated") is YamlMappingNode entry
+            ? $"{Scalar(entry, "at")}|{Scalar(entry, "by")}"
+            : null;
 
     private static string? Scalar(YamlMappingNode entry, string key) =>
         (Yaml.Get(entry, key) as YamlScalarNode)?.Value;

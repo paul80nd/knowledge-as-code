@@ -1,6 +1,6 @@
 using kac.core;
 
-// Any actor may verify a report, and one may not: the producer that generated it. The fixture turns the
+// Any actor may verify a report, and one may not: whoever `generated.by` names. The fixture turns the
 // id green; these are the branches a fixture would only duplicate.
 
 namespace kac.tests;
@@ -10,9 +10,8 @@ public class NoSelfVerificationTests
     [Fact]
     public void The_producer_verifying_its_own_report_is_reported()
         => Assert.Equal(
-            "'kac/0.24.0' generated this report and verifies it here. A run confirming its own output "
-            + "tells a reader nothing. Delete the entry, or have somebody else read the verdicts and "
-            + "name them.",
+            "'kac/0.24.0' wrote this report and verifies it here. Nobody confirms their own writing. "
+            + "Delete the entry, or have somebody else read the verdicts and name them.",
             Assert.Single(Run("kac/0.24.0", "kac/0.24.0")).Message);
 
     [Fact]

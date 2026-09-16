@@ -41,12 +41,17 @@ reading one corpus get one report, and the argument on top of it is written once
 
 ### The frontmatter a run stamps
 
-The frontmatter has `generated`, giving the tool and version that wrote the report and the moment it ran. It also has
-`sources`, listing this corpus and each corpus it imports, with the `content-version` each answered at. Only the tool
-knows those, so it writes them. It writes `status: draft` as well, because a report nobody has read yet is a draft.
+The frontmatter has `generated`, giving who wrote the content and when. A run writes itself into `by` and the report
+name into `report`, and keeps its own version in `tool`. It also has `sources`, listing this corpus and each corpus it
+imports, with the `content-version` each answered at. Only the tool knows those, so it writes them. It writes
+`status: draft` as well, because a report nobody has read yet is a draft.
 
-`id`, `owner` and `verified` arrive empty, because a report is a record somebody owns and somebody else verifies. Fill
-all three in before you commit the file. `kac validate` reports any you miss.
+Write yourself into `by` once you answer a judgement cell. The tool wrote the table, you wrote the verdicts, and `by`
+names whoever wrote the content a reader now meets. `report` and `tool` stay as the run left them.
+
+`id` and `owner` arrive empty, because a report is a record somebody owns. Fill both in before you commit the file.
+`kac validate` reports either one you miss. `verified` arrives empty too, and stays empty until somebody reads the
+report: a draft needs no verification, and every other status needs one.
 
 ### `--out`
 

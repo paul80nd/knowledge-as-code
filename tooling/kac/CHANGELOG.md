@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.27.0 - 2026-09-16
 
 ### Added
 
@@ -94,6 +94,25 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the finding is the only route. Take it with `kac update --from <template>`.
 
 ### Changed
+
+- **A verification taken before `generated.at` reaches no trust tier.** `kac export` derived `trust` from `verified`
+  alone, so a report somebody read in March still shipped as `human-reviewed` after an agent rewrote its verdicts in
+  September. Authorship now passes to whoever answers those cells, which moves `generated.at` past every reading of
+  the words before them, so the exporter leaves an older entry out. A moment that will not parse still counts, because
+  `timestamp-format` already reports it against the record.
+
+- **A report's `generated` says who wrote the content, and authorship passes to whoever edits it.** `kac report` wrote
+  itself into `generated.by` and left it there, so a report an agent finished credited the tool with the agent's
+  verdicts. `by` now names whoever wrote the content a reader meets, which the Open Knowledge Format defines it as and
+  illustrates with a person. Two keys survive the handover: `report` states the report the run used, as `coverage`, so
+  a record says which `kac report` name regenerates it, and `tool` keeps the version that wrote the mechanical half.
+  Both are optional, and a report nobody produced with the tool states neither. `generated-by-a-producer` is renamed
+  `generated-by-a-known-actor` and admits all three actor forms, so `human:alex.doe` is now a legal author.
+
+- **A report states no verification until somebody reads it.** `verified` was required with at least one entry, so an
+  agent finishing a report had to name a verifier to get past `kac validate`, and the two worked corpora each named an
+  agent that does not exist. The field now follows `fixes`: a draft states none, and every other status states one.
+  A report with no entry is the Open Knowledge Format's unverified tier, which `kac export` already ships as `trust`.
 
 - **An accepted ADR is edited in place, and only a changed decision needs a superseding ADR.**
   `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. That

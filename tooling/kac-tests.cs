@@ -179,10 +179,30 @@ void RunReportScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// A report's text with its `generated:` line taken out, which is the one line two runs disagree on.
-static string Stamped(string report) => string.Join('\n',
-    report.Replace("\r\n", "\n").TrimEnd('\n').Split('\n')
-        .Where(l => !l.StartsWith("generated:", StringComparison.Ordinal)));
+// A report's text with the moment it was stamped taken out, which is the one line two runs disagree on.
+// `generated:` opens a block, so the key and the `at:` indented under it both go, and the rest of the
+// block is compared like every other line.
+static string Stamped(string report)
+{
+    var kept = new List<string>();
+    var generated = false;
+
+    foreach (var line in report.Replace("\r\n", "\n").TrimEnd('\n').Split('\n'))
+    {
+        if (line.StartsWith("generated:", StringComparison.Ordinal))
+        {
+            generated = true;
+            continue;
+        }
+
+        if (generated && line.StartsWith("  at:", StringComparison.Ordinal)) continue;
+        if (!line.StartsWith("  ", StringComparison.Ordinal)) generated = false;
+
+        kept.Add(line);
+    }
+
+    return string.Join('\n', kept);
+}
 
 void RunValidateScenario(string name, string scenario, string corpusDir)
 {
