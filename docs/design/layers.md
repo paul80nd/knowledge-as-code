@@ -49,9 +49,9 @@ A seed belongs to the corpus once written, so retiring one is the corpus's own c
 
 ## A seeded record that moved
 
-The template seeds a record at the top of its type's folder, as `policies/devi-deviations-are-recorded.md`. A corpus is
+The template seeds a record at the top of its type's folder, as `policies/devi-deviations.md`. A corpus is
 free to file that record deeper, and a type may read the folder below it as the record's category, so
-`policies/governance/devi-deviations-are-recorded.md` is an ordinary place for it to end up.
+`policies/governance/devi-deviations.md` is an ordinary place for it to end up.
 
 Compared by path alone, that corpus reads as having no such seed. The update would offer a copy at the seeded path, and
 accepting it leaves two records with one id, which `kac validate` then fails on `id-unique`.

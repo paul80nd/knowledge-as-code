@@ -91,7 +91,7 @@ nfrs/_template.md
 policies.md
 policies/_index.md
 policies/_template.md
-policies/devi-deviations-are-recorded.md
+policies/devi-deviations.md
 postmortems.md
 postmortems/_index.md
 postmortems/_template.md

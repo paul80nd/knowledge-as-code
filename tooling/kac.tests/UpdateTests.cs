@@ -245,9 +245,9 @@ public class UpdateTests
     public void A_seeded_record_the_corpus_filed_under_a_category_is_already_held()
     {
         var plan = Plan(
-            Files("template/policies/devi-deviations-are-recorded.md"),
-            Files("policies/governance/devi-deviations-are-recorded.md"),
-            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-DEVI"));
+            Files("template/policies/devi-deviations.md"),
+            Files("policies/governance/devi-deviations.md"),
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations.md", "pol-DEVI"));
 
         Assert.Empty(plan.Seeded);
         Assert.Equal(1, plan.InStep);
@@ -259,22 +259,22 @@ public class UpdateTests
     public void A_seeded_record_the_corpus_has_none_of_is_still_written()
     {
         var plan = Plan(
-            Files("template/policies/devi-deviations-are-recorded.md"),
+            Files("template/policies/devi-deviations.md"),
             Files("policies/governance/know-knowledge-is-written-down.md"),
             ids: Carrying("pol-DEVI", "policies/governance/know-knowledge-is-written-down.md", "pol-KNOW"));
 
-        Assert.Equal(["policies/devi-deviations-are-recorded.md"], plan.Seeded.Select(f => f.To));
+        Assert.Equal(["policies/devi-deviations.md"], plan.Seeded.Select(f => f.To));
     }
 
     [Fact]
     public void A_record_of_the_same_id_outside_the_type_folder_is_not_that_seed()
     {
         var plan = Plan(
-            Files("template/policies/devi-deviations-are-recorded.md"),
-            Files("standards/devi-deviations-are-recorded.md"),
-            ids: Carrying("pol-DEVI", "standards/devi-deviations-are-recorded.md", "pol-DEVI"));
+            Files("template/policies/devi-deviations.md"),
+            Files("standards/devi-deviations.md"),
+            ids: Carrying("pol-DEVI", "standards/devi-deviations.md", "pol-DEVI"));
 
-        Assert.Equal(["policies/devi-deviations-are-recorded.md"], plan.Seeded.Select(f => f.To));
+        Assert.Equal(["policies/devi-deviations.md"], plan.Seeded.Select(f => f.To));
     }
 
     // `full` refreshes a seed against the template, and a record's relative links are written for the
@@ -283,10 +283,10 @@ public class UpdateTests
     public void A_moved_seed_is_left_alone_under_full_too()
     {
         var plan = Plan(
-            Files("template/policies/devi-deviations-are-recorded.md"),
-            Files("policies/governance/devi-deviations-are-recorded.md"),
+            Files("template/policies/devi-deviations.md"),
+            Files("policies/governance/devi-deviations.md"),
             policy: CorpusDescriptor.Full,
-            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-DEVI"));
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations.md", "pol-DEVI"));
 
         Assert.Empty(plan.Seeded);
         Assert.Equal(1, plan.InStep);
@@ -298,9 +298,9 @@ public class UpdateTests
     public void A_moved_seed_is_matched_however_the_corpus_cased_its_id()
     {
         var plan = Plan(
-            Files("template/policies/devi-deviations-are-recorded.md"),
-            Files("policies/governance/devi-deviations-are-recorded.md"),
-            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations-are-recorded.md", "pol-Devi"));
+            Files("template/policies/devi-deviations.md"),
+            Files("policies/governance/devi-deviations.md"),
+            ids: Carrying("pol-DEVI", "policies/governance/devi-deviations.md", "pol-Devi"));
 
         Assert.Empty(plan.Seeded);
         Assert.Equal(1, plan.InStep);

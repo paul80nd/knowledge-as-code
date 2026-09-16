@@ -81,7 +81,8 @@ Make the folders your own commitments need, and keep the set small enough to sca
 2. Choose a four-character mnemonic for the policy's *concept*: `VURM` for vulnerability remediation, `PIPE` for
    pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
 3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
-   upper-case. The H1 states the commitment in plain words. The identity line beneath it carries the id, written
+   upper-case. The slug names what the policy is, as `ever-version-control`. The H1 states the commitment in plain
+   words, as `Everything is in version control`. The identity line beneath it carries the id, written
    ``` `Policy: pol-MNEM` `DRAFT` ```, and CI checks it against the frontmatter.
 4. Save it under the category folder the commitment belongs to, or directly in `policies/` while the corpus is small
    enough to read as one list. If two folders fit, pick the one a reader looking for this policy would try first.

@@ -1501,7 +1501,7 @@ public class ExporterTests
 
         A finding may be accepted where [pol-DEVI] records who accepted it.
 
-        [pol-DEVI]: devi-deviations-are-recorded.md
+        [pol-DEVI]: devi-deviations.md
 
         """;
 

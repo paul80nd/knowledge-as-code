@@ -138,5 +138,5 @@ reader would otherwise raise. If a note is doing the job of a section, it belong
 
 Delete this heading if there is nothing to say. An empty section is worse than a missing one.
 
-[pol-DEVI]: devi-deviations-are-recorded.md
+[pol-DEVI]: devi-deviations.md
 [{{FRAMEWORK}}]: ../frameworks.md#{{framework}}

@@ -33,13 +33,14 @@ collision: >
   reader arriving from an information security management system will read a policy here as binding, and be
   wrong.
 
-# A four-character mnemonic, upper case in the id and lower case in the filename: pol-VURM is filed as
-# vurm-vulnerability-remediation.md.
+# A four-character mnemonic, upper case in the id and lower case in the filename.
 id:
   prefix: pol
   style: mnemonic
   width: 4
 
+# The slug names what the policy is. The H1 states the intent, so pol-EVER is titled `Everything is in
+# version control` and filed as ever-version-control.md.
 filename:
   pattern: '^[a-z][a-z0-9]{3}-[a-z0-9-]+\.md$'
   slug-max: 30

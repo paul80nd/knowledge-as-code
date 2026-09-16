@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac new` seeds the example policy as `policies/devi-deviations.md`.** The file was
+  `devi-deviations-are-recorded.md`, which restated the record's title. A policy filename names what the policy is, and
+  the H1 states the intent. `.schema/policies.yaml` and the `policies.md` type page both state the rule. The file
+  seeds, so an existing corpus keeps the name it was created with. The template version moves to 17, and `kac new`
+  stamps `template-version: 17`.
+
 ## 0.27.0 - 2026-09-16
 
 ### Added
