@@ -101,8 +101,9 @@ A corpus moves its `content-version` whenever what it knows changes, and most of
 fix does not alter which clauses a standard implements. So a reviewer who has checked that the report still holds raises
 the version and adds a `verified` entry, instead of running the report again and re-reading every verdict.
 
-`validate` warns where the version falls behind the corpus. The gap between `generated.at` and the newest `verified`
-entry is worth reading too. A report carried forward across several versions without a regeneration is one to run again.
+`validate` warns where the version falls behind the corpus. A report carried forward across several versions without a
+regeneration is one to run again. The export reads the same gap: a verification taken before `generated.at` read text a
+later edit replaced, so it counts toward no trust tier.
 
 ## Adding a report
 

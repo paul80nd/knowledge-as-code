@@ -95,6 +95,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A verification taken before `generated.at` reaches no trust tier.** `kac export` derived `trust` from `verified`
+  alone, so a report somebody read in March still shipped as `human-reviewed` after an agent rewrote its verdicts in
+  September. Authorship now passes to whoever answers those cells, which moves `generated.at` past every reading of
+  the words before them, so the exporter leaves an older entry out. A moment that will not parse still counts, because
+  `timestamp-format` already reports it against the record.
+
 - **A report's `generated` says who wrote the content, and authorship passes to whoever edits it.** `kac report` wrote
   itself into `generated.by` and left it there, so a report an agent finished credited the tool with the agent's
   verdicts. `by` now names whoever wrote the content a reader meets, which the Open Knowledge Format defines it as and

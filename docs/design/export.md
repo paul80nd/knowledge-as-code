@@ -57,7 +57,9 @@ then follows the record's own `links` for the body.
 A record carries one key its type never declares. `trust` says how far the record has been taken on trust, and the
 exporter derives it from the `verified` field. An empty list is `unverified`, agents alone are `machine-confirmed`, and
 one `human:` actor is `human-reviewed`. Only that prefix reads as a person, and each type declaring the field limits
-its entries to the actors that specification defines, so that nothing else can reach the tier. Those three tiers are the
+its entries to the actors that specification defines, so that nothing else can reach the tier. A verification taken
+before `generated.at` is left out, because authorship passes to whoever answers a report's judgement cells and that
+moment moves past every reading of the words before them. Those three tiers are the
 [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)'s, and a type
 gains them by taking that specification's field name.
 

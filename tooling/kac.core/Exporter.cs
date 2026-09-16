@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -557,6 +558,12 @@ public static class Exporter
     private const string ActorKey = "by";
     private const string HumanPrefix = "human:";
 
+    // The field naming when the content last changed, and the key inside an event that gives a moment.
+    // `reports` is the type declaring both fields today, and a type declaring only `verified` answers
+    // null below and has every entry counted.
+    private const string GeneratedField = "generated";
+    private const string MomentKey = "at";
+
     // How far a record has been taken on trust, in the Open Knowledge Format's three tiers: an empty
     // list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is
     // `human-reviewed`.
@@ -565,12 +572,18 @@ public static class Exporter
     // tier that disagrees with its own list. A type whose export declares no `verified` field answers
     // null, which is the absence every other key already spells.
     //
+    // A verification taken before `generated.at` read text a later edit replaced, so it is left out of
+    // the tier. Authorship passes to whoever answers a report's judgement cells, which moves that moment
+    // past every reading of the words before them. See docs/design/reports.md.
+    //
     // A field written as one mapping is the one-entry case, which is how `Value` reads a list as well.
     // `list` refuses that shape and `validate` reports it, so reading it the same way here keeps the
     // two accounts of one field together.
     private static string? Trust(Doc doc, ExportSpec export)
     {
         if (!export.Fields.Contains(VerifiedField, StringComparer.Ordinal)) return null;
+
+        var generated = Moment(doc.FrontNode(GeneratedField) as YamlMappingNode);
 
         IEnumerable<YamlNode> entries = doc.FrontNode(VerifiedField) switch
         {
@@ -584,6 +597,7 @@ public static class Exporter
         {
             if (item is not YamlMappingNode entry) continue;
             if (Yaml.Get(entry, ActorKey) is not YamlScalarNode { Value: { Length: > 0 } actor }) continue;
+            if (generated is { } at && Moment(entry) < at) continue;
 
             if (actor.StartsWith(HumanPrefix, StringComparison.Ordinal)) return "human-reviewed";
             verified = true;
@@ -591,6 +605,17 @@ public static class Exporter
 
         return verified ? "machine-confirmed" : "unverified";
     }
+
+    // The instant an event states, or null where it states none and where what it states is not one.
+    // A moment that will not parse counts, because `timestamp-format` reports it against the record and
+    // a tier quietly dropping the entry would answer for it twice.
+    private static DateTimeOffset? Moment(YamlMappingNode? entry) =>
+        entry is not null
+        && Yaml.Get(entry, MomentKey) is YamlScalarNode { Value: { Length: > 0 } moment }
+        && DateTimeOffset.TryParse(moment, CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var at)
+            ? at
+            : null;
 
     // A section's own words, with its link reference definitions taken out.
     //
