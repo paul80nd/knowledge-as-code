@@ -9,6 +9,7 @@ public static class CorpusRules
         new NoDependencyCycles(),
         new AlignmentRollup(),
         new ClauseQuotedFaithfully(),
+        new FeatureFileRepo(),
         new ReportStale()
     ];
 

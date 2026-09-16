@@ -90,8 +90,8 @@ still fails: `tags` before `id`, or `related` before `status`.
 One fault is reported once, by whichever check owns it. `required-field` reports an absent field, so a `required-when:`
 naming that field asks for nothing further. `reciprocal` leaves a dangling or wrong-type reference to `ref-resolves`.
 `clause-table` reports a broken table and stops the pass, because nothing under it can be judged, and a missing section
-belongs to `required-section`. `int-format` reports a run of digits past 64 bits under the same id as a separator or a
-base prefix, because the author rewrites the value either way.
+belongs to `required-section`. `date-format` reports a day the calendar does not have under the same id as a malformed
+one, because the author rewrites the value either way.
 
 ### Faults nothing else would catch
 
@@ -117,10 +117,6 @@ OPA/Rego was the obvious alternative and is the wrong shape. It would replace on
 pipeline, leaving all the markdown and frontmatter extraction untouched. It would add a language to learn and a runtime
 dependency to the tool. The one property worth having is new rules as data, and a small hand-rolled evaluator buys it at
 a fraction of that cost. `RuleExpr.cs` says when that judgement expires.
-
-**A number is written the plain way.** `int-format` takes plain decimal with an optional leading sign. YAML reads
-`1_000` and `0x1f` as numbers too, and both are refused rather than decoded. An author should not have to learn which
-spellings the parser admits before writing a number down.
 
 **A list the schema asks an author to fill takes a floor.** `min-items:` sets it. Without one, a field whose whole point
 is more than one entry is satisfied by a single entry.

@@ -58,7 +58,9 @@ to a payment.
 
 * **Criticality**: `critical`. A customer sees the failure at the moment they try to pay, and there is no second route
   to the PSP.
-* **NFRs**: [nfr-0001] states how long an authorisation may take.
+* **NFRs**: [nfr-0001] states how long an authorisation may take. It binds [cap-card-payment], and is measured on this
+  service's `POST /authorisations`.
 
+[cap-card-payment]: ../capabilities/card-payment.md
 [nfr-0001]: ../nfrs/0001-authorisation-latency.md
 [svc-payment-ledger]: payment-ledger.md

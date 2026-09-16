@@ -6,7 +6,6 @@ status: live
 implemented-by:
   - svc-payment-api
   - svc-payment-ledger
-ado-epics: [ 2101, 2140 ]
 feature-files:
   - payment-api/features/authorise.feature
   - payment-api/features/capture.feature
@@ -40,13 +39,13 @@ The checkout page, and the payment frame the payment service provider serves ins
 
 ## Where the detail lives
 
-|                    |                                                       |
-|--------------------|-------------------------------------------------------|
-| **Implemented by** | [svc-payment-api], [svc-payment-ledger]               |
-| **Specified in**   | ADO epics #2101, #2140                                |
-| **Tested by**      | `authorise.feature`, `capture.feature`,               |
-|                    | `payment-history.feature`                             |
-| **Constrained by** | [nfr-0001]                                            |
+|                    |                                                                             |
+|--------------------|-----------------------------------------------------------------------------|
+| **Implemented by** | [svc-payment-api]                                                           |
+|                    | [svc-payment-ledger]                                                        |
+| **Specified in**   | [gh#2101](https://git.example.com/example-payments/payment-api/issues/2101) |
+|                    | [gh#2140](https://git.example.com/example-payments/payment-api/issues/2140) |
+| **Constrained by** | [nfr-0001]                                                                  |
 
 ## Known limitations
 

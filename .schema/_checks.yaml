@@ -120,14 +120,6 @@ checks:
       unquoted date is reread as a datetime and shifted into the reader's zone, and a `Z` instant means the same
       moment either way. The house form is unquoted.
 
-  int-format:
-    severity: error
-    description: An int field, and each entry of an int list, is a whole number the tool can read.
-    notes: >
-      Plain decimal, with an optional leading sign. A separator such as `1_000` and a base prefix such as `0x1f`
-      are refused, though YAML reads both as numbers. A run of digits past what a 64-bit number takes reports under
-      the same id.
-
   enum:
     severity: error
     description: An enum value is a scalar the field's declared range admits.
@@ -596,6 +588,15 @@ checks:
     severity: warning
     description: A glossary's entries read in alphabetical order.
     notes: Compared without regard to casing, and the message states the entry that moved.
+
+  feature-file-repo:
+    severity: warning
+    description: A feature file path begins with a repository one of the implementing services names.
+    notes: >
+      The first segment alone, because the rest of the path is inside a repository this corpus cannot read.
+      A warning, since a regression pack can live in a repository no service claims. A capability whose
+      services state no repository between them is passed over, and so is an id `ref-resolves` has already
+      reported.
 
   dependency-cycle:
     severity: warning

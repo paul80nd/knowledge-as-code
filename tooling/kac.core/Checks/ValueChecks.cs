@@ -26,13 +26,13 @@ public static class ValueChecks
     // `ref:` is resolved against nothing, and no check here or there reports that. The rest are arms of
     // the switch.
     public static readonly IReadOnlyList<string> FieldTypes =
-        ["date", "enum", "id", "int", "list", "object", "string", "timestamp"];
+        ["date", "enum", "id", "list", "object", "string", "timestamp"];
 
     // What a list's entries may be, which is narrower. `Sequence` reads an entry through the field's
     // `of:` rather than through a declaration of the entry's own, so an entry reaches only the checks
-    // written into that walk: `object` sends it to `Entry`, `id` and `int` to their own checks, and
-    // `string` is the base a per-entry `pattern:` applies to.
-    public static readonly IReadOnlyList<string> EntryTypes = ["id", "int", "object", "string"];
+    // written into that walk: `object` sends it to `Entry`, `id` to its own check, and `string` is the
+    // base a per-entry `pattern:` applies to.
+    public static readonly IReadOnlyList<string> EntryTypes = ["id", "object", "string"];
 
     // One value, and every question the schema's declaration asks of it.
     //
@@ -104,7 +104,6 @@ public static class ValueChecks
             case "date": Date(name, node, frontStart, report); break;
             case "timestamp": Timestamp(name, node, frontStart, report); break;
             case "enum": Enumerated(name, node, spec, frontStart, report); break;
-            case "int": Integer(name, "value", node, frontStart, report); break;
             case "list": Sequence(name, node, spec, kind, frontStart, report); break;
 
             // Only a value that is not a mapping reaches here, because one that is was sent to `Entry`
@@ -203,34 +202,6 @@ public static class ValueChecks
         => v.Length == 20 && IsIsoShape(v[..10]) && v[10] == 'T' && v[13] == ':' && v[16] == ':' && v[19] == 'Z'
            && v[11..13].All(char.IsDigit) && v[14..16].All(char.IsDigit) && v[17..19].All(char.IsDigit);
 
-    // A whole number, and one the tool can read. Shape then range, under one id, on `Date` above's
-    // division and for its reason. `12a` is not written as a number at all, where a run of forty digits
-    // is written as one and names a value no `long` holds.
-    //
-    // `noun` distinguishes a scalar field's value from a list's entry in the message, as `Pattern` does:
-    // a field is `type: int` and a list of them is `of: int`, and both arrive here.
-    private static void Integer(string name, string noun, YamlNode node, int frontStart, Report report)
-    {
-        var v = Yaml.Raw(node) ?? "";
-        if (!IsWholeNumberShape(v))
-            report.Err(new CheckId("int-format"), $"'{name}' {noun} '{v}' is not a whole number.",
-                Yaml.LineOf(node, frontStart));
-        else if (!long.TryParse(v, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out _))
-            report.Err(new CheckId("int-format"),
-                $"'{name}' {noun} '{v}' carries more digits than a number can hold.",
-                Yaml.LineOf(node, frontStart));
-    }
-
-    // Written as a whole number, which is a question about the characters. Whether those characters name
-    // a value is `long`'s to answer. A separator and a base prefix are refused rather than decoded: YAML
-    // reads `1_000` and `0x1f` as numbers of its own, and a corpus author should not have to know which
-    // spellings the parser admits before they can write one down.
-    private static bool IsWholeNumberShape(string v)
-    {
-        var digits = v.Length > 0 && v[0] is '-' or '+' ? v[1..] : v;
-        return digits.Length > 0 && digits.All(char.IsAsciiDigit);
-    }
-
     // Named for what it judges rather than for the keyword, which the language has taken.
     private static void Enumerated(string name, YamlNode node, FieldSpec spec, int frontStart, Report report)
     {
@@ -280,7 +251,6 @@ public static class ValueChecks
             if (spec.Of == "id" && v is not null && !LooksLikeId(v))
                 report.Err(new CheckId("id-format"), $"'{name}' entry '{v}' is not a valid id.",
                     Yaml.LineOf(item, frontStart));
-            if (spec.Of == "int") Integer(name, "entry", item, frontStart, report);
             Pattern(name, "entry", item, spec, frontStart, report);
         }
 

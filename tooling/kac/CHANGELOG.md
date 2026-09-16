@@ -17,6 +17,45 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A capability travels to a consumer.** `.schema/capabilities.yaml` declares an `export:` block, so `kac export`
+  writes a file per capability record. Every section travels at `full`, because `Where the detail lives` is the only
+  place a capability states its work items and the rest of the record is short by design. `docs/design/export.md` no
+  longer lists `capabilities` among the types declaring no block.
+
+- **`feature-file-repo` warns where a feature file names a repository no implementing service does.** A path in
+  `feature-files` starts with its repository, spelled as that repository's service spells `repo:`. The check compares
+  that first segment against the services in `implemented-by` and names the ones it found. It warns rather than fails,
+  because a regression pack can live in a repository no service claims. Nothing reads the rest of the path until
+  `feature-file-orphans` runs.
+
+- **A service names the NFRs that bind it.** `.schema/services.yaml` declares `nfrs:`, and it travels in the services
+  export. `nfrs.applies-to` and both `nfrs:` fields declare `reciprocal:`, so an NFR and the record it binds each name
+  the other, and `validate` reports either end that does not.
+
+### Removed
+
+- **`ado-epics` is gone from `capabilities`, and with it the `int` value type.** A work item id assumed one tracker,
+  and a corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
+  `Where the detail lives` table, written inline so the address travels with the record. `ado-epics` was the only field
+  in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer
+  values a schema may declare. `kac checks` prints one check fewer.
+
+### Changed
+
+- **A capability's table and its frontmatter say the same thing, and `validate` checks it.** `implemented-by` and
+  `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an
+  id the other does not. The table lost its `Tested by` row, which restated `feature-files` and had already drifted
+  from it, and its `Decided in` row, which no field ever backed.
+
+- **`kac new` seeds a capability template and type page that name no tracker.** Both said functional detail lives in
+  Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. The template ships link
+  definitions for `services` alone, so a corpus that adopted neither `adrs` nor `nfrs` no longer receives a definition
+  pointing into a folder it does not have. The type page also states the floor the type has: a capability whose
+  `implemented-by` names one service is a synonym for that service. Both files seed, so an existing corpus keeps the
+  wording it was created with.
+
 ### Changed
 
 - **A report's `generated.at` dates the content's last meaningful change.** `.schema/reports.yaml` described it as

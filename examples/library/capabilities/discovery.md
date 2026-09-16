@@ -8,7 +8,6 @@ implemented-by:
   - svc-catalogue-web
   - svc-covers-cdn
   - svc-search
-ado-epics: [ 1204, 1338 ]
 feature-files:
   - platform/tests/Catalogue.Acceptance/browse.feature
   - platform/tests/Catalogue.Acceptance/item-page.feature
@@ -40,13 +39,14 @@ The public catalogue at `catalogue.example.com`, and the same pages in the kiosk
 
 ## Where the detail lives
 
-|                    |                                                           |
-|--------------------|-----------------------------------------------------------|
-| **Implemented by** | [svc-catalogue-web], [svc-catalogue-api], [svc-search],   |
-|                    | [svc-covers-cdn]                                          |
-| **Specified in**   | ADO epics #1204, #1338                                    |
-| **Tested by**      | `browse.feature`, `item-page.feature`,                    |
-|                    | `faceted-browse.feature`, `type-ahead.feature`            |
+|                    |                                                                                     |
+|--------------------|-------------------------------------------------------------------------------------|
+| **Implemented by** | [svc-catalogue-web]                                                                 |
+|                    | [svc-catalogue-api]                                                                 |
+|                    | [svc-search]                                                                        |
+|                    | [svc-covers-cdn]                                                                    |
+| **Specified in**   | [ADO#1204](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1204) |
+|                    | [ADO#1338](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1338) |
 
 ## Known limitations
 

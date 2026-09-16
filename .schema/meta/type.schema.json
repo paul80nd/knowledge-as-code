@@ -541,7 +541,6 @@
             "date",
             "enum",
             "id",
-            "int",
             "list",
             "object",
             "string",
@@ -552,7 +551,6 @@
           "description": "What each entry of a list is. `object` makes each entry a mapping, and `entry:` declares its keys.",
           "enum": [
             "id",
-            "int",
             "object",
             "string"
           ]

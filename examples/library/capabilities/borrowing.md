@@ -8,7 +8,6 @@ implemented-by:
   - svc-catalogue-web
   - svc-lending
   - svc-notices
-ado-epics: [ 1150, 1287, 1401 ]
 feature-files:
   - lending/features/loan-lifecycle.feature
   - lending/features/renewal.feature
@@ -41,13 +40,15 @@ The counter and the self-service terminals in each branch, and the borrower's ow
 
 ## Where the detail lives
 
-|                    |                                                      |
-|--------------------|------------------------------------------------------|
-| **Implemented by** | [svc-catalogue-web], [svc-catalogue-api],            |
-|                    | [svc-lending], [svc-notices]                         |
-| **Specified in**   | ADO epics #1150, #1287, #1401                        |
-| **Tested by**      | `loan-lifecycle.feature`, `renewal.feature`,         |
-|                    | `overdue-sweep.feature`, `my-loans.feature`          |
+|                    |                                                                                     |
+|--------------------|-------------------------------------------------------------------------------------|
+| **Implemented by** | [svc-catalogue-web]                                                                 |
+|                    | [svc-catalogue-api]                                                                 |
+|                    | [svc-lending]                                                                       |
+|                    | [svc-notices]                                                                       |
+| **Specified in**   | [ADO#1150](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1150) |
+|                    | [ADO#1287](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1287) |
+|                    | [ADO#1401](https://dev.azure.com/example-libraries/consortium/_workitems/edit/1401) |
 
 ## Known limitations
 

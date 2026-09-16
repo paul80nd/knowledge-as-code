@@ -6,7 +6,6 @@ status: live
 implemented-by:
   - svc-payment-api
   - svc-payment-ledger
-ado-epics: [ 2188 ]
 feature-files:
   - payment-api/features/refund.feature
   - payment-ledger/features/refund-entry.feature
@@ -30,11 +29,11 @@ The card schemes require a route to a refund. A customer who doubts they can get
 
 ## Where the detail lives
 
-|                    |                                           |
-|--------------------|-------------------------------------------|
-| **Implemented by** | [svc-payment-api], [svc-payment-ledger]   |
-| **Specified in**   | ADO epic #2188                            |
-| **Tested by**      | `refund.feature`, `refund-entry.feature`  |
+|                    |                                                                             |
+|--------------------|-----------------------------------------------------------------------------|
+| **Implemented by** | [svc-payment-api]                                                           |
+|                    | [svc-payment-ledger]                                                        |
+| **Specified in**   | [gh#2188](https://git.example.com/example-payments/payment-api/issues/2188) |
 
 ## Known limitations
 
