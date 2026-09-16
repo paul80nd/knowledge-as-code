@@ -95,6 +95,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An accepted ADR is corrected in place, and only a changed decision needs a superseding ADR.**
+  `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. An edit
+  changing no decision had nowhere to go: a sentence that no longer matched the decision the ADR already stated read
+  as forbidden, and supersession was the only route on offer. The rule now asks whether the decision changed, and
+  `immutable-after-published` takes the same shape for a postmortem, where a new understanding is a new postmortem.
+  Both are still declared and do not run, because telling a changed decision from a correction needs git history.
+  `kac update --from <template>` takes the rules, and `kac generate` rewrites the checks table under them. The
+  Immutability paragraph on `adrs.md` seeds a corpus, so that page stays the corpus's own to reword.
+
 - **`kac export` reports every reason it refuses in one run.** A type the corpus has not adopted, an `export-exclude`
   key it cannot act on, a consumed corpus nothing is restored for, a consumed corpus at another export format and two
   corpora disagreeing about a type are each one line, and all of them print before the run stops. A shape or fidelity

@@ -91,7 +91,7 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      Once `status` is `published`, only a typo is fixed in place. ADRs work the same way.
+      Once `status` is `published`, a new understanding is a new postmortem. Correct anything else in place.
   - id: detected-not-before-occurred
     description: '`detected-on` is on or after `occurred-on`.'
     severity: error

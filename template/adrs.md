@@ -69,8 +69,9 @@ its id.
 
 * **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
   number.
-* **Immutability.** Once an ADR is accepted, change nothing in it beyond its status and its typos. To change a decision,
-  write a new ADR that supersedes the old one.
+* **Immutability.** Once an ADR is accepted, change the decision only by writing a new ADR that supersedes it. Correct
+  everything else in place: a typo, a broken link, a status transition, or a sentence that no longer matches the
+  decision. The commit message says what you corrected.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
 * **Prescriptive language.** An ADR that establishes a default or a policy may use
@@ -119,8 +120,8 @@ applies to all Decided-tier documents.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                       | What it would verify                                                                             |
-|----------------------------|--------------------------------------------------------------------------------------------------|
-| `immutable-after-accepted` | Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed. |
+| Rule                       | What it would verify                                                                                  |
+|----------------------------|-------------------------------------------------------------------------------------------------------|
+| `immutable-after-accepted` | Once status is `accepted`, the decision changes only by a superseding ADR, never by an edit in place. |
 
 <!-- END GENERATED: checks-adrs -->

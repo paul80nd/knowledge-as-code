@@ -105,8 +105,8 @@ index:
 
 rules:
   - id: immutable-after-accepted
-    description: Once status is `accepted`, only typo fixes, link corrections and status transitions are allowed.
-    # Declared and not running. Telling a substantive edit from a typo needs git history, which `kac` does not read.
+    description: Once status is `accepted`, the decision changes only by a superseding ADR, never by an edit in place.
+    # Declared and not running. Telling a changed decision from a correction needs the git history `kac` does not read.
   - id: y-statement-present
     description: A block-quote below the H1 states all six Y-statement moves, within `max-words`.
     # The six moves: in the context of / facing / we decided / rather than / to achieve / accepting.
