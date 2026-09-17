@@ -42,6 +42,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A postmortem states when an incident began and when it was noticed, to the second.** `occurred-on` and
+  `detected-on` are now `occurred-at` and `detected-at`, and each takes a UTC timestamp as `2026-09-07T20:18:00Z`. The
+  gap between the pair is what the pair is for, and it is usually measured in minutes. `-on` names a date everywhere
+  else in the schema, so the names moved with the type. A corpus holding postmortem records renames both keys and
+  writes a time into each: `validate` reports the old spelling as `unknown-key`.
+
 - **`Where the detail lives` and the frontmatter say the same thing, and `validate` checks it.** `implemented-by` and
   `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an
   id the other does not. That section is a bulleted list rather than a headerless table, which is the form `services`

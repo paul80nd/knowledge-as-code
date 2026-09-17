@@ -3,8 +3,8 @@ id: pmt-0001
 type: postmortem
 tier: decided
 status: published
-occurred-on: "2026-06-03"
-detected-on: "2026-06-03"
+occurred-at: 2026-06-03T21:14:00Z
+detected-at: 2026-06-03T21:15:00Z
 duration: 12 minutes
 severity: sev1
 affected:

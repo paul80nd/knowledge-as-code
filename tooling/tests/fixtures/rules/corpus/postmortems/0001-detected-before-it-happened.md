@@ -3,8 +3,8 @@ id: pmt-0001
 type: postmortem
 tier: decided
 status: draft
-occurred-on: "2026-06-12"
-detected-on: "2026-06-11"
+occurred-at: 2026-06-12T09:00:00Z
+detected-at: 2026-06-11T09:00:00Z
 duration: 40 minutes
 severity: sev2
 affected: [svc-catalogue]
@@ -31,11 +31,11 @@ None — this document exists to be judged, not to describe an incident.
 
 ## Root cause
 
-`detected-on` is a day before `occurred-on`.
+`detected-at` is a day before `occurred-at`.
 
 ## Contributing factors
 
-Someone typed the dates from memory.
+Someone typed the moments from memory.
 
 ## What went well
 

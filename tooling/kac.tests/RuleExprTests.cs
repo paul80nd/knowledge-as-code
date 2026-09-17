@@ -149,12 +149,12 @@ public class RuleExprTests
     [Fact]
     public void A_guarded_rule_is_satisfied_when_the_field_it_guards_is_absent()
     {
-        const string rule = "present('detected-on') and present('occurred-on') "
-                            + "implies field('detected-on') >= field('occurred-on')";
+        const string rule = "present('detected-at') and present('occurred-at') "
+                            + "implies field('detected-at') >= field('occurred-at')";
 
         Assert.True(Eval(rule)); // neither present
-        Assert.True(Eval(rule, "id: adr-0001\ndetected-on: \"2026-06-12\"\noccurred-on: \"2026-06-11\""));
-        Assert.False(Eval(rule, "id: adr-0001\ndetected-on: \"2026-06-10\"\noccurred-on: \"2026-06-11\""));
+        Assert.True(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-12\"\noccurred-at: \"2026-06-11\""));
+        Assert.False(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-10\"\noccurred-at: \"2026-06-11\""));
     }
 
     // ISO dates order correctly as text, which is why the grammar carries no date type.

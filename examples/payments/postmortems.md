@@ -51,8 +51,8 @@ postmortem means something.
 | `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                     |
 | `sources` †     | list                 | Where this record's content came from, one entry per source.                               |
 | `tags` †        | list                 | Free-form, lowercase and hyphenated. A reader searches on these across types.              |
-| `occurred-on` * | date                 | Quoted. When the incident began.                                                           |
-| `detected-on` * | date                 | Quoted. When somebody noticed the incident.                                                |
+| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                           |
+| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                |
 | `duration` *    | string               | How long the incident lasted, in whatever unit fits.                                       |
 | `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                  |
 | `affected` *    | list                 | Service and capability ids the incident affected.                                          |
@@ -96,6 +96,7 @@ postmortem means something.
 | `bare-key`                     | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
 | `empty-optional-key`           | warning | An optional field is filled in or left out, rather than written with no value.                                  |
 | `date-quoted / date-format`    | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
+| `timestamp-format`             | error   | Timestamp fields name a moment the calendar has, in UTC: `YYYY-MM-DDThh:mm:ssZ`.                                |
 | `enum`                         | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`                | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                   | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
@@ -113,7 +114,7 @@ postmortem means something.
 | `label-canonical`              | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`                 | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`            | warning | A link definition that nothing references.                                                                      |
-| `detected-not-before-occurred` | error   | `detected-on` is on or after `occurred-on`.                                                                     |
+| `detected-not-before-occurred` | error   | `detected-at` is at or after `occurred-at`.                                                                     |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

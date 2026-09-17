@@ -43,16 +43,18 @@ fields:
     values: [draft, published]
     description: '`published` freezes the document. A new understanding is a new postmortem citing this one.'
 
-  occurred-on:
+  occurred-at:
     required: true
-    type: date
-    description: Quoted. When the incident began.
+    type: timestamp
+    description: The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.
 
-  detected-on:
+  detected-at:
     required: true
-    type: date
-    description: Quoted. When somebody noticed the incident.
-    notes: Separate from `occurred-on`, because the gap between them is often the finding.
+    type: timestamp
+    description: The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.
+    notes: >
+      Separate from `occurred-at`, because the gap between them is often the finding. A timestamp rather
+      than a date, because a detection gap is usually measured in minutes.
 
   duration:
     required: true
@@ -85,7 +87,7 @@ sections:
 
 export:
   version: 1
-  fields: [id, title, status, occurred-on, detected-on, duration, severity, affected, prompted, tags]
+  fields: [id, title, status, occurred-at, detected-at, duration, severity, affected, prompted, tags]
   sections:
     Summary: full
     Impact: summary
@@ -98,8 +100,8 @@ export:
     travels, and what stays behind.
 
 index:
-  columns: [id, title, occurred-on, severity, duration, affected]
-  sort: occurred-on
+  columns: [id, title, occurred-at, severity, duration, affected]
+  sort: occurred-at
   order: descending
 
 rules:
@@ -107,13 +109,13 @@ rules:
     description: >
       Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place.
   - id: detected-not-before-occurred
-    description: '`detected-on` is on or after `occurred-on`.'
+    description: '`detected-at` is at or after `occurred-at`.'
     severity: error
-    # Guarded, so a missing date is reported once, by `required-field`.
-    expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
+    # Guarded, so a missing timestamp is reported once, by `required-field`.
+    expr: "present('detected-at') and present('occurred-at') implies field('detected-at') >= field('occurred-at')"
     message: >
-      `detected-on` is before `occurred-on`, and an incident cannot be found before it began. If both
-      dates are right, the earlier one is `occurred-on`.
+      `detected-at` is before `occurred-at`, and an incident cannot be found before it began. If both
+      moments are right, the earlier one is `occurred-at`.
   - id: blameless
     description: >
       Flags a personal name in the Timeline, Root cause or Contributing factors sections. Name the role or

@@ -96,7 +96,7 @@ public class ExportShapeTests
             path: record.path
             anchor: part.anchor
         postmortems@1
-          fields: id, title, status, occurred-on, detected-on, duration, severity, affected, prompted, tags
+          fields: id, title, status, occurred-at, detected-at, duration, severity, affected, prompted, tags
           sections:
             Summary: full
             Impact: summary

@@ -69,11 +69,11 @@ badly as a tree of nested YAML objects.
 `field(...)` returns either a string or nothing. A comparison where either side is absent is **false**, and `!=` is the
 negation of `==`, so `!=` is true. That is one rule for every operator.
 
-The consequence is an idiom. `field('detected-on') >= field('occurred-on')` fires on a record missing a date, where
+The consequence is an idiom. `field('detected-at') >= field('occurred-at')` fires on a record missing a value, where
 `required-field` has already said so in better words. So a rule about a field that may be absent guards it:
 
 ```yaml
-expr: "present('detected-on') and present('occurred-on') implies field('detected-on') >= field('occurred-on')"
+expr: "present('detected-at') and present('occurred-at') implies field('detected-at') >= field('occurred-at')"
 ```
 
 This is why a written rule runs longer than a first sketch of it. The alternative is each operator guessing which way

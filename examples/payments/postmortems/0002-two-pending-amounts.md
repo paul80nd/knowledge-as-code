@@ -3,8 +3,8 @@ id: pmt-0002
 type: postmortem
 tier: decided
 status: published
-occurred-on: "2026-08-12"
-detected-on: "2026-08-13"
+occurred-at: 2026-08-12T18:05:00Z
+detected-at: 2026-08-13T09:30:00Z
 duration: 4 hours 20 minutes
 severity: sev2
 affected:

@@ -3,8 +3,8 @@ id: pmt-{{nnnn}}
 type: postmortem
 tier: decided
 status: draft
-occurred-on:
-detected-on:
+occurred-at:
+detected-at:
 duration:
 severity:
 affected:

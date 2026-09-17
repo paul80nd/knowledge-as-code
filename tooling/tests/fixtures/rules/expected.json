@@ -195,7 +195,7 @@
       "line": 1,
       "severity": "error",
       "check": "detected-not-before-occurred",
-      "message": "`detected-on` is before `occurred-on`, and an incident cannot be found before it began. If both dates are right, the earlier one is `occurred-on`."
+      "message": "`detected-at` is before `occurred-at`, and an incident cannot be found before it began. If both moments are right, the earlier one is `occurred-at`."
     },
     {
       "file": "processes/rotate-a-signing-key.md",

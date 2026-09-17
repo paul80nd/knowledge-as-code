@@ -57,7 +57,8 @@ that loss against this estate's own NFRs.
 `Timeline` and `Actions` stay behind. A timeline names one estate's clocks, alerts and systems. Each action is a link to
 a work item in a tracker the reader cannot open, which is the argument [fixes](#fixes) makes about `How we found it`.
 
-`occurred-on` and `detected-on` travel as a pair, because the gap between them is often the finding. `prompted` travels
+`occurred-at` and `detected-at` travel as a pair, because the gap between them is often the finding. Both are
+timestamps, because that gap is usually measured in minutes. `prompted` travels
 beside them, and its ids resolve wherever those records travelled too.
 
 ### policies

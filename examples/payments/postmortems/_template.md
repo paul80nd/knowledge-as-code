@@ -3,8 +3,8 @@ id: pmt-{{nnnn}}
 type: postmortem
 tier: decided
 status: draft
-occurred-on:
-detected-on:
+occurred-at:
+detected-at:
 duration:
 severity:
 affected:
@@ -23,7 +23,8 @@ and how it is reviewed. What is below is only what a postmortem adds to that.
 
 **Frontmatter**
 
-* **`occurred-on` / `detected-on`**: separate quoted dates. The gap between them is often the finding.
+* **`occurred-at` / `detected-at`**: separate UTC timestamps, as `2026-09-07T20:18:00Z`. The gap between them
+  is often the finding.
 * **`severity`**: `sev1` · `sev2` · `sev3`.
 * **`affected`**: service or capability ids.
 * **`prompted`**: the NFRs, fixes and standards this incident caused to be written.
