@@ -4,6 +4,7 @@ type: deviation
 tier: normative
 status: draft
 departs-from:
+risk:
 accepted-on:
 review-by:
 closed-on:
@@ -22,6 +23,8 @@ a template to, and nothing more.
 ## What we are doing instead
 
 ## Why we need it
+
+## What the risk is
 
 ## What compensates
 

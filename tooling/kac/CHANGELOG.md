@@ -45,6 +45,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   column. `region` covers the owning service, so a transfer out of the country is recorded beside the recipient that
   makes it, which is what GDPR Article 30(1)(e) asks about.
 
+- **A deviation rates the risk it leaves.** `risk` takes `high`, `medium` or `low`, and `kac validate` requires it.
+  The rating is the risk left once what compensates is working, and `high-risk-review-window` warns where a `high`
+  rating sets `review-by` more than six months after `accepted-on`.
+
+- **A deviation says what can still go wrong.** `What the risk is` is a required section, and it travels in the
+  export. The sections beside it said what limits the risk and never what remains of it.
+
+- **A deviation can name who does the work.** `assigned-to` takes a person or a post, and stays out of the export.
+  `owner` accepts the risk and this field closes it, which are one person in a small estate and two in a large one.
+
+- **A rule can measure a gap in days.** `days('a', 'b')` counts whole days between two date fields, where `span()`
+  answers in hours between two timestamps. `docs/design/expressions.md` is the reference.
+
 ### Changed
 
 - **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
@@ -65,6 +78,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the OSCAL assessment models and the CIS Controls Assessment Specification. `alignment` and `divergence` now name
   what the type took from each and where it parts from them. `kac generate` writes both into every adopting corpus's
   `knowledge-as-code/lineage.md`.
+
+- **A deviation's `owner` is a person, never a post.** The field takes `human:alex.doe` alone, where every other type
+  also admits `role:`. One individual accepts a risk and a post cannot. `kac validate` reports `field-pattern`
+  against a deviation still naming a role, and `assigned-to` is where a post belongs.
+
+- **`deviations` states what it takes from current practice.** `lineage` was measured against NIST SP 800-37 Rev. 2,
+  the PCI DSS v4.0 compensating controls worksheet and the FedRAMP POA&M template. `alignment` claimed a bounded
+  period and tracked remediation, which the type asks for nowhere. Both now name what the type takes and where it
+  parts from them. `kac generate` writes both into every adopting corpus's `knowledge-as-code/lineage.md`.
 
 ## 0.28.0 - 2026-09-17
 

@@ -8,6 +8,7 @@ departs-from:
   - eng:pol-SECD.HIRISK
   - eng:pol-SECD.REQS
   - eng:pol-SECD.THREAT
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -36,6 +37,12 @@ identifies a change as higher risk before the work starts.
 Threat modelling a documentation tool that reads a repository and writes files back into it produces a short list, and
 `.github/SECURITY.md` already contains it. Turning that into a standard, a risk triage and a design review is real
 work. One person in all three roles gets little from the separation.
+
+## What the risk is
+
+A change ships with a security fault that nobody sorted it for. The workflows deny by default and the analysers fail a
+build, so the arrangement is right and unstated. What slips through is a fault the same person misses twice, as author
+and as reviewer. A triage step filled in by that person would miss it a third time.
 
 ## What compensates
 

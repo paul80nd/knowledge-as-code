@@ -109,12 +109,18 @@ markdown. `today()` is the last row because it is the one that reads nothing abo
 | `matches('re')`                  | bool    | the body **as written**, code fences, link targets and markdown syntax included. Frontmatter is not read             |
 | `section_matches('Title', 're')` | bool    | the same, bounded to one section, and false where the record has no such section                                     |
 | `span('a', 'b')`                 | string  | the time between two timestamp fields, as an ISO 8601 duration in hours, minutes and seconds        |
+| `days('a', 'b')`                 | int     | the whole days between two date fields, so a rule can compare a gap against a threshold             |
 | `today()`                        | string  | the day the run happens, as an ISO date, so a rule compares it against a date field                                  |
 
 **`span()` answers in hours, never days.** ISO 8601 gives a day no fixed length, so `P1DT2H` and `PT26H` are one span
 written two ways, and a rule comparing the text would take one and refuse the other. It answers with the empty string
 where either field is absent, is not a moment, or where the second is before the first. Each of those is another
 check's to report, so a rule asking for a span guards on them rather than reporting the same fault twice.
+
+**`days()` reads date fields, where `span()` reads timestamps.** A date has no time of day to lose, so the count is
+exact and a rule compares it against a plain number. It answers zero where a field is absent, where a value is not a
+date, and where the second date is the earlier, so a rule asking for a gap guards on those the way one asking for a span
+does. A same-day gap is zero as well, and no caller here needs to tell the two apart.
 
 **`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has gone
 by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first record

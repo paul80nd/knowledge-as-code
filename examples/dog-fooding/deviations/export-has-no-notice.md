@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-INTC.DEPREC
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -33,6 +34,12 @@ Nothing says how long a shape stays readable after a new one ships, and nothing 
 The only consumers of an export today are the corpora in this repository and the plugin `kac bundle` builds from one.
 Both are rebuilt on the same commit, so a change arrives for them and for their producer at once. A notice period
 would be a promise to nobody.
+
+## What the risk is
+
+A consumer outside this repository takes a shape change with no warning and stops reading that type. No such consumer
+exists today, so the risk starts on the day somebody installs the package and is not told. The stamps limit what they
+lose to one type.
 
 ## What compensates
 

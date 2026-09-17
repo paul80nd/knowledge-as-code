@@ -61,8 +61,14 @@ The schema also declares rules that do not run. Each is an intention, with a `de
 type page renders it under **Declared, not yet enforced**. Naming a severity without running is the one arrangement this
 forbids, and `schema-dispatch` is what forbids it.
 
-A rule that counts words or links sets a ratio or a ceiling, and the number in it is a judgement. No corpus has yet had
-enough records of those types to calibrate one. Each number is pinned by a fixture, so moving it is visible.
+A rule that counts words, links or days sets a ratio, a ceiling or a window, and the number in it is a judgement. Most
+are uncalibrated, because no corpus has yet had enough records of those types to fix one. `high-risk-review-window` is
+the exception. [FedRAMP](https://www.fedramp.gov/legacy/playbook/csp/authorization/poam/) sets the window from the risk
+level and gives a higher rating a shorter one: 30 days for high, 90 for moderate, 180 for low. Those windows time the
+remediation of a vulnerability, where this one times the re-reading of an accepted risk, so the shape carries over and
+the numbers do not. Six months is this repository's own figure, written as 184 days because six calendar months runs
+from 181 days to 184.
+Each number is pinned by a fixture, so moving it is visible.
 
 A rule that matches text is a heuristic, and a heuristic gets tuned. Its pattern lives in `.schema/` for that reason.
 Tuning a regex there costs a schema edit. Moving it in the tool would cost a release every corpus has to take.

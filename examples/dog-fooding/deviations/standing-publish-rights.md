@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-ACCS.PERSIST
   - eng:pol-ACCS.ZERO
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -35,6 +36,12 @@ needed.
 
 A just-in-time grant needs somebody to grant it. With one maintainer, the approver and the requester are the same
 person, so the grant is a form filled in by whoever wanted it.
+
+## What the risk is
+
+A stolen session publishes a new version under the maintainer's name. It cannot replace what already shipped, and the
+run that pushed it is public, so the cost is one bad version and the time somebody takes to notice. Nothing takes the
+rights back between releases, so that window is open every day and not only on the days a release happens.
 
 ## What compensates
 

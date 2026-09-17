@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-KNOW.HEADS
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -31,6 +32,12 @@ agent can follow it, which is a weaker test than a human taking over.
 
 There is no second person to spread the knowledge to. Writing more of it down is the only option, and this repository
 does that continuously. A session that finds the guidance wanting is asked to say so in the reply that closes it.
+
+## What the risk is
+
+The maintainer stops, and the work stops with them. The repository is public and MIT licensed, so nothing is lost:
+what goes is continuity, and the answer to every question the guidance does not cover. That guidance has been read by
+agents and never by a person who then had to act on it alone.
 
 ## What compensates
 

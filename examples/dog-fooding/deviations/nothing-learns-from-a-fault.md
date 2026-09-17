@@ -9,6 +9,7 @@ departs-from:
   - eng:pol-INCR.LEARN
   - eng:pol-INCR.TOOSOON
   - eng:pol-SECD.ACTIONS
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -36,6 +37,12 @@ pull request review is agreed in a comment thread, and closes when somebody reme
 The `postmortems` type exists in the framework and this corpus declined it, because nothing here has run an incident
 worth one. Adopting a type for records nobody has written is scaffolding, and this repository has deleted invented
 records before.
+
+## What the risk is
+
+The same fault returns by a route the first fix did not cover. A fixed defect keeps its test, so the exact fault stays
+fixed, and nothing asks what let it through. An action agreed in a review thread closes when somebody remembers it, or
+never.
 
 ## What compensates
 

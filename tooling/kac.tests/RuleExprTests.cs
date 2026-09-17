@@ -202,6 +202,34 @@ public class RuleExprTests
     public void A_span_nothing_can_measure_is_empty(string? from, string? to)
         => Assert.Equal("", Instants.Span(from, to));
 
+    // Through the grammar, for the reason the span fact above is called through it.
+    [Fact]
+    public void A_gap_in_days_is_callable_from_an_expression()
+        => Assert.True(Eval("days('accepted-on', 'review-by') == 184",
+            "id: dev-a\naccepted-on: \"2026-03-07\"\nreview-by: \"2026-09-07\""));
+
+    // What `days()` promises a rule that calls it. Six calendar months runs from 181 days to 184, which
+    // is where `high-risk-review-window`'s threshold comes from.
+    [Theory]
+    [InlineData("2026-01-07", "2026-07-07", 181)]
+    [InlineData("2026-03-07", "2026-09-07", 184)]
+    [InlineData("2026-09-07", "2027-03-07", 181)]
+    [InlineData("2026-09-07", "2027-09-07", 365)]
+    [InlineData("2026-06-12", "2026-06-13", 1)]
+    public void A_gap_is_whole_days(string from, string to, int expected)
+        => Assert.Equal(expected, Instants.Days(from, to));
+
+    // Zero for a gap nothing can measure, and zero for a genuine same-day gap. A rule reading one as the
+    // other stays quiet, which is what every caller here wants: each of these is another check's to report.
+    [Theory]
+    [InlineData(null, "2026-06-12")]
+    [InlineData("2026-06-12", null)]
+    [InlineData("2026-06-12T09:00:00Z", "2026-06-13")]
+    [InlineData("2026-06-13", "2026-06-12")]
+    [InlineData("2026-06-12", "2026-06-12")]
+    public void A_gap_nothing_can_measure_is_zero(string? from, string? to)
+        => Assert.Equal(0, Instants.Days(from, to));
+
     // ISO dates order correctly as text, which is why the grammar carries no date type.
     [Fact]
     public void Iso_dates_order_as_text()

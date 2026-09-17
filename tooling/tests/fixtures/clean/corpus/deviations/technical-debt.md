@@ -5,9 +5,11 @@ tier: normative
 status: active
 departs-from:
   - none
+risk: low
 accepted-on: "2030-01-01"
 review-by: "2030-08-01"
-owner: role:head-of-engineering
+assigned-to: role:head-of-engineering
+owner: human:alex.doe
 tags: [ baseline ]
 ---
 
@@ -22,6 +24,10 @@ The importer makes each call once. A call that fails leaves the row unimported u
 ## Why we need it
 
 Retries were dropped to meet the date the branch libraries were told to expect the catalogue on.
+
+## What the risk is
+
+A row stays unimported for up to an hour, and a branch library sees yesterday's catalogue for that long.
 
 ## What compensates
 

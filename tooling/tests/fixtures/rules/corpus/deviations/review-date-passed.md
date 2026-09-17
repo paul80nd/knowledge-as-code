@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - std-ERRORS.a-failure-says-what-happened
+risk: low
 accepted-on: "2020-01-01"
 review-by: "2020-06-01"
 owner: human:alex.doe
@@ -23,6 +24,10 @@ standard names.
 
 The one caller reads the status code and discards the body, so shaping the body would have delayed the release for
 nobody's benefit.
+
+## What the risk is
+
+A failed run is explained from a log the caller cannot read, so diagnosing one costs the owner's time.
 
 ## What compensates
 

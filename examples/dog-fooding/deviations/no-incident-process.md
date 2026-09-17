@@ -10,6 +10,7 @@ departs-from:
   - eng:pol-INCR.PROCESS
   - eng:pol-INCR.RECOVER
   - eng:pol-INCR.REPORT
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -46,6 +47,12 @@ recovery is a new version, which [std-VERS] already governs. A declaration proce
 would be a form the maintainer fills in for themselves.
 
 The gap that costs a user is the silence, and that one is real.
+
+## What the risk is
+
+Somebody installs a broken version of `kac` and hears nothing. There is no announcement, no advisory and no page a
+user would check, so they find out when the next version ships or when they debug it themselves. The tool writes into
+a repository, so a bad release costs that user time and a revert.
 
 ## What compensates
 

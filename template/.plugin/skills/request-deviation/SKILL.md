@@ -124,8 +124,8 @@ rules you chose to take on, and a departure from one of them is yours to own. Re
 
 ## Write the body
 
-The body opens with a fenced block a person can read and a later run can copy. Then the four headings a deviation takes,
-in the order the type gives them, and `## Who is asking` last.
+The body opens with a fenced block a person can read and a later run can copy. Then the five headings a deviation
+takes, in the order the type gives them, and `## Who is asking` last.
 
 `````
 Title: Adopt the reconciliation client before it has been screened for vulnerabilities
@@ -135,6 +135,7 @@ corpus: example-payments
 id: dev-unscreened-recon-client
 status: draft
 departs-from: [ eng:pol-TRUS.SCREEN ]
+risk: medium
 review-by: "2026-11-07"
 applies-to: [ svc-payment-api ]
 tags: [ dependencies, vulnerabilities ]
@@ -150,6 +151,11 @@ dependency tree by hand and found nothing known against any of them.
 
 The settlement file format changes on 1 October, and this client is the only implementation of it. Writing
 our own costs three weeks, and the alternative is a month of reconciliation done by hand.
+
+## What the risk is
+
+A vulnerability in the client or its tree is live in the settlement path until the weekly re-read finds
+it. The container reaches no card data, so what an attacker gets is the settlement file and the run.
 
 ## What compensates
 
@@ -180,8 +186,11 @@ Each key of the block, and what to put in it:
 * **`status`** is `draft`. Nobody has accepted this yet, and that is the whole reason the issue exists.
 * **`departs-from`** is the clause ids, each one scoped exactly as you found it. A request names at least one, because
   a departure from no clause has nobody to ask.
+* **`risk`** is `high`, `medium` or `low`: how bad the risk is once what compensates is working, and never how bad the
+  clause's authors thought it was. Rate it from `## What the risk is`, and expect the owner to move it.
 * **`review-by`** is the day somebody looks at this again, quoted. Propose the earliest date the work makes possible,
-  and say in `## How it closes` what you based it on. The owner may move it, and is the only one who can.
+  and say in `## How it closes` what you based it on. A `high` rating brings that date inside six months, which the
+  corpus warns on.
 * **`applies-to`** and `tags` are optional, and go after `review-by` in that order. Nothing else belongs in the block.
 
 **`owner` and `accepted-on` are the answer, so the block leaves them out.** The individual accepting the risk is what
@@ -195,13 +204,14 @@ over.
 **Write nothing open-ended.** "Permanent", "indefinitely" and "until further notice" each describe a rule that needs
 rewriting rather than a deviation, and a corpus validating the record warns on all three.
 
-**Keep the four sections short, and write them as the record will read.** What happens instead, what it buys, what
-makes the risk survivable, and what has to be true for it to end. Where you cannot fill one honestly, say that in it. A
-departure with nothing compensating it is an unmanaged risk, and the owner has to know that before they accept it.
+**Keep the five sections short, and write them as the record will read.** What happens instead, what it buys, what can
+still go wrong, what makes that survivable, and what has to be true for it to end. Where you cannot fill one honestly,
+say that in it. A departure with nothing compensating it is an unmanaged risk, and the owner has to know that before
+they accept it.
 
 **`## Who is asking` names the agent, the session, the repository, the commit and the work.** Add `manifest.json`'s own
 `commit`, because that says which export you read the clause from. **Name any of those you cannot reach**, rather than
-leaving it out. The four sections above are what a deviation record takes, and this one is not, so whoever writes the
+leaving it out. The five sections above are what a deviation record takes, and this one is not, so whoever writes the
 record keeps it in the issue.
 
 ## File it

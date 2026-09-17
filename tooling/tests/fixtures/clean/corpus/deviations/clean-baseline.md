@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - pol-VURM.CLEAN
+risk: medium
 accepted-on: "2030-01-01"
 review-by: "2030-11-01"
 owner: human:alex.doe
@@ -22,6 +23,11 @@ The reporting service builds on the base image it shipped with, which carries tw
 ## Why we need it
 
 The newer image drops the font package the report renderer loads, and replacing the renderer is a quarter of work.
+
+## What the risk is
+
+Neither vulnerability is reachable today, and a change to the network path would make one reachable without anybody
+noticing.
 
 ## What compensates
 

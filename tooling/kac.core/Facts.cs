@@ -63,6 +63,10 @@ public sealed class Facts(Doc doc, DateOnly today)
     // duration the record states. Empty where nothing can be measured; see Instants.Span.
     public string Span(string from, string to) => Instants.Span(Field(from), Field(to));
 
+    // The whole days between two date fields, so a rule compares a gap against a threshold. Zero where
+    // nothing can be measured; see Instants.Days.
+    public int Days(string from, string to) => Instants.Days(Field(from), Field(to));
+
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
     // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which
     // rules need that. It is also what lets `\*\*MUST\*\*` find a bold modal that the rendered text

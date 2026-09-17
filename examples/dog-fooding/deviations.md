@@ -7,7 +7,7 @@ Where we knowingly break one of our own rules, who agreed to it, and when it is 
 ## What is a deviation?
 
 A written, owned, time-bound departure from a policy or a [standard](standards.md). It names the rule it departs from,
-says what we are doing instead and why, and gives a date somebody has to come back to it.
+says what we are doing instead and why, rates the risk it leaves, and gives a date somebody has to come back to it.
 
 It also covers a shortcut that breaks no rule. Skipping the retry logic to ship on Friday, knowing the next person has
 to add it, is technical debt. Nothing forbids it, and the debt is real, so it is recorded the same way. Such a record
@@ -61,13 +61,15 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `type` *†        | string                    | The singular name of the type, which CI checks against the folder.                              |
 | `tier` *†        | `normative`               | The record's trust level, fixed for the type and checked against the folder.                    |
 | `status` *†      | `active` `draft` `closed` | Whether the deviation is in force, still being agreed, or closed.                               |
-| `owner` *†       | string                    | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                          |
+| `owner` *†       | string                    | The individual who accepted the risk, as `human:alex.doe`.                                      |
 | `sources` †      | list                      | Where this record's content came from, one entry per source.                                    |
 | `tags` †         | list                      | Free-form, lowercase and hyphenated. A reader searches on these across types.                   |
 | `departs-from` * | list                      | Policy or standard clause ids this departs from, as `pol-TRUS.SCREEN`, or `none`.               |
+| `risk` *         | `high` `medium` `low`     | How bad the risk is while this stands, after what compensates for it.                           |
 | `accepted-on`    | date                      | The day the named owner accepted the risk. Required when `status != draft`.                     |
 | `review-by` *    | date                      | The day the deviation is looked at again.                                                       |
 | `closed-on`      | date                      | The day the gap was fixed, or the risk knowingly re-accepted. Required when `status == closed`. |
+| `assigned-to`    | string                    | Who does the work that closes this, as `human:alex.doe` or `role:head-of-engineering`.          |
 | `applies-to`     | list                      | Service ids, or `all`.                                                                          |
 
 \* Field is required  
@@ -80,17 +82,21 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 1. Copy [`_template.md`](deviations/_template.md) to `<slug>.md`. Deviations use slug ids: `dev-legacy-report-secrets`.
 2. Name each clause you are departing from in `departs-from`, one entry per clause. Write `none` for a shortcut that
    breaks no rule.
-3. Put the person who accepted the risk in `owner`. Someone with the authority to accept it, never a team.
+3. Put the person who accepted the risk in `owner`. One individual with the authority to accept it, never a team and
+   never a post. Where somebody else does the work that closes it, name them in `assigned-to`.
 4. Set `accepted-on` to the day they agreed.
-5. Set `review-by` to the day somebody has to look at this again.
-6. Say what compensates. A monitoring alert, a manual check, a smaller scope: something that makes the risk survivable.
+5. Say what the risk is, then rate it in `risk`. Rate what is left once what compensates is working.
+6. Set `review-by` to the day somebody has to look at this again. A `high` rating brings that date inside six months.
+7. Say what compensates. A monitoring alert, a manual check, a smaller scope: something that makes the risk survivable.
 
 **Conventions**
 
 * **Write it before you depart**, or immediately afterwards where an incident left no time.
 * **One deviation per departure.** A page collecting every exception to one policy loses the owner, the date and the id
   that a citation needs.
-* **Name the risk plainly.** A deviation that reads as a defence of the departure hides what the reviewer needs.
+* **Name the risk plainly.** A deviation that reads as a defence of the departure hides what the reviewer needs. The
+  rating and the risk section answer to each other, so a `low` beside a section describing a disaster is a record
+  nobody can weigh.
 * **Close it by fixing the gap, or by re-accepting the risk with the same scrutiny as the first time.** Set `closed-on`
   to the day that happened, and move the status with it.
 
@@ -127,5 +133,6 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `review-after-acceptance`   | error   | The review date falls after the day the risk was accepted.                                                      |
 | `not-open-ended`            | warning | The record does not claim the departure is permanent or open-ended.                                             |
 | `expiry`                    | warning | An active deviation is still inside its review date.                                                            |
+| `high-risk-review-window`   | warning | A deviation rated high is reviewed within six months of acceptance.                                             |
 
 <!-- END GENERATED: checks-deviations -->

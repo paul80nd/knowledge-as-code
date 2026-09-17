@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-ACCS.AUTHN
   - eng:pol-ACCS.NAMED
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -38,6 +39,12 @@ and a hardware key because GitHub offers them, not because a record asks for the
 Writing a standard for authentication means writing rules this repository cannot enforce. GitHub owns the login
 screen, so a rule about it would have no check behind it. [std-CI] states what a workflow's identity may do, which is
 the half this repository controls.
+
+## What the risk is
+
+The maintainer's GitHub account is taken, and no rule here would have refused the arrangement that let it happen. A
+weaker second factor would break nothing, because no record states what an account used here has to be. The repository
+stores nothing private, so what an attacker gets is the history and a route to the publish approval.
 
 ## What compensates
 

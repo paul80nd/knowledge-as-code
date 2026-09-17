@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-AUTV.BROKEN
   - eng:pol-AUTV.OFTEN
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -32,6 +33,12 @@ merge waits for. That stops a broken change landing. It says nothing about what 
 A rule about branch size needs a number, and nothing here has measured one. A rule about a red `main` needs somebody
 other than its author to notice, and there is nobody else. Writing either without the measurement or the second person
 would put a clause in a standard that no reviewer could fail a change against.
+
+## What the risk is
+
+A red `main` sits unfixed because nobody but its author notices it. The merge gate stops a broken change landing, so
+anything that reaches `main` red comes from a flake or from two branches that agreed separately. With one branch open
+at a time, that is rare and cheap to fix.
 
 ## What compensates
 

@@ -31,10 +31,11 @@ public class ExportShapeTests
             How it works: full
             Coverage and gaps: full
         deviations@1
-          fields: id, title, status, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags
+          fields: id, title, status, risk, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags
           sections:
             What we are doing instead: full
             Why we need it: full
+            What the risk is: full
             What compensates: full
             How it closes: full
             Scope: full

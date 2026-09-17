@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-KNOW.DECIDE
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -33,6 +34,12 @@ Finding the reasoning behind a design means reading `git log` and knowing what t
 `adrs/` in the corpora beside this one records the invented estate's decisions, and a decision about the tool would not
 belong among them. Adopting the type here means moving several years of reasoning out of the commit messages that
 already contain it. Nobody has needed it badly enough to do that.
+
+## What the risk is
+
+A decision gets reversed by somebody who never found the reasoning behind it. Nothing cites a commit, so finding the
+argument means knowing what to search `git log` for. The cost falls on the second person to work here, and on every
+session that rebuilds a decision from the code in front of it.
 
 ## What compensates
 

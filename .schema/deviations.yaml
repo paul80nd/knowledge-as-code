@@ -25,10 +25,12 @@ versus:
 lineage:
   prior-art: "[NIST SP 800-37 Rev. 2](https://csrc.nist.gov/pubs/sp/800/37/r2/final), the plan of action and milestones a named official accepts risk against"
   alignment: >
-    A named individual accepts a residual risk for a bounded period, and the remediation stays tracked
+    One named individual accepts the risk, and the record rates what is left of it. A review date returns the
+    departure to that person on a cadence, which is NIST's ongoing authorization rather than its termination date
   divergence: >
-    A plan of action and milestones sits inside a system authorisation and feeds an accreditation. A
-    deviation here departs from one internal rule, and nothing accredits it
+    A plan of action and milestones tracks a deficiency somebody means to fix, and NIST needs no entry once
+    the official accepts the risk as residual. Here the accepted risk is what gets the record, and nothing
+    accredits it
 
 collision: >
   In audit and quality practice a **deviation** is a finding. An auditor records a departure from a procedure
@@ -72,6 +74,15 @@ fields:
       stated rule, such as technical debt nobody wrote a clause about. `none` is a literal, and nothing looks
       it up.
 
+  risk:
+    required: true
+    type: enum
+    values: [high, medium, low]
+    description: How bad the risk is while this stands, after what compensates for it.
+    notes: >
+      The rating is what is left once the compensating control is working, and never the risk the rule was
+      written against. It bounds how far out `review-by` may fall, which `high-risk-review-window` checks.
+
   accepted-on:
     required: false
     required-when: 'status != draft'
@@ -89,6 +100,15 @@ fields:
     type: date
     description: The day the gap was fixed, or the risk knowingly re-accepted.
 
+  assigned-to:
+    required: false
+    type: string
+    pattern: '^(human|role):[a-z0-9.-]+$'
+    description: Who does the work that closes this, as `human:alex.doe` or `role:head-of-engineering`.
+    notes: >
+      Accepting a risk and closing it are one person in a small estate and two in a large one. Leave this
+      out where `owner` does both.
+
   applies-to:
     required: false
     type: list
@@ -97,16 +117,28 @@ fields:
     allow-literal: [all]
     description: Service ids, or `all`.
 
+  # Last in this block on purpose. `key-order` fixes the order of every pair within a type's chain, and
+  # a record writes `owner` after the fields above it.
+  owner:
+    required: true
+    type: string
+    pattern: '^human:[a-z0-9.-]+$'
+    description: The individual who accepted the risk, as `human:alex.doe`.
+    notes: >
+      The universal field also admits `role:`, and this type refuses it. `assigned-to` takes the work, and
+      admits both forms. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#deviations>.
+
 sections:
-  required: [What we are doing instead, Why we need it, What compensates, How it closes]
+  required: [What we are doing instead, Why we need it, What the risk is, What compensates, How it closes]
   optional: [Scope, Related]
 
 export:
   version: 1
-  fields: [id, title, status, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags]
+  fields: [id, title, status, risk, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags]
   sections:
     What we are doing instead: full
     Why we need it: full
+    What the risk is: full
     What compensates: full
     How it closes: full
     Scope: full
@@ -115,7 +147,7 @@ export:
     <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#deviations> says what else travels, and
     what stays behind.
 index:
-  columns: [id, title, status, departs-from, review-by, owner]
+  columns: [id, title, status, risk, departs-from, review-by, owner]
   sort: review-by
 
 rules:
@@ -143,3 +175,11 @@ rules:
     message: >
       this deviation is still active and its `review-by` has passed. Close it, or set a new date and say
       in the record what was re-accepted.
+  - id: high-risk-review-window
+    description: A deviation rated high is reviewed within six months of acceptance.
+    severity: warning
+    expr: >-
+      field('risk') == 'high' implies days('accepted-on', 'review-by') <= 184
+    message: >
+      this deviation is rated `high` and `review-by` falls more than six months after `accepted-on`. Bring
+      the date in, or rate the risk lower and say in the record what makes it lower.
