@@ -38,7 +38,7 @@ Living, and must mirror reality. Verifiable against the estate.
 
 | Type             | Folder          | What it holds                                                                                                   |
 |------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| **Offerings** | `offerings/` | What you offer a customer and why, as a hub linking to what implements, tests and constrains it                 |
+| **Offerings**    | `offerings/`    | What you offer a customer and why, as a hub linking to what implements, tests and constrains it                 |
 | **Services**     | `services/`     | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner               |
 | **Integrations** | `integrations/` | An external system you depend on: the contract, the auth, the failure modes, their SLA and your fallback        |
 | **Data**         | `data/`         | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows          |
