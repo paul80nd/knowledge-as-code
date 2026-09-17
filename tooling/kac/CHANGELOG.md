@@ -15,6 +15,29 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A control that never stops says so.** `frequency` takes `continuous`. A control whose `mechanism` is
+  `runtime-alert` has to carry a frequency, and none of `per-pr` through `annual` is true of an alert rule that
+  evaluates without stopping.
+
+- **A manual control says when it last ran.** `last-verified` takes the day, quoted, or `"never"`, and `kac validate`
+  requires it where `mechanism` is `manual`. An automated check leaves a run in its own logs, and a periodic human
+  check leaves nothing otherwise. It travels in the export, and `kac new` sends a `_template.md` naming it.
+
+### Changed
+
+- **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
+  cadence beside it. `kac validate` reports `enum` against a control still carrying the old value, and a corpus
+  rewrites it by hand.
+
+- **`controls` states what it takes from current practice.** `lineage` was measured against NIST SP 800-53A Rev. 5,
+  the OSCAL assessment models and the CIS Controls Assessment Specification. `alignment` and `divergence` now name
+  what the type took from each and where it parts from them. `kac generate` writes both into every adopting corpus's
+  `knowledge-as-code/lineage.md`.
+
 ## 0.28.0 - 2026-09-17
 
 ### Added

@@ -16,10 +16,19 @@ detail: >
 lineage:
   prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
   alignment: >
-    Objective, method and expected evidence, bound to the requirement it tests
+    800-53A ties a determination statement to the control item it tests, so a result traces back to the
+    requirement. `verifies` ties a control to the standard it checks, and `What it checks` quotes the rule.
+    800-53A puts the method, the expected evidence and the objects assessed beside that statement. Here
+    those are `mechanism`, `evidence` and `applies-to`. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an
+    assessment task `at-frequency`, and `frequency` states the same thing
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
-    internal standard, with no catalogue and no accreditation
+    internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own, and no source
+    has it. A control may exist to record that nothing checks the rule. The corpus keeps the plan and never the
+    result, where OSCAL has an assessment-results model. `verifies` binds both ways, where 800-53A traces one
+    direction. Nothing names an assessor, because the mechanism is usually code. Rigour is prose in `Coverage
+    and gaps`. 800-53A grades it as depth and coverage, and the [CIS Controls Assessment
+    Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
 
 collision: >
   In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
@@ -59,7 +68,7 @@ fields:
   mechanism:
     required: true
     type: enum
-    values: [ci, review-checklist, manual-periodic, runtime-alert, not-enforced]
+    values: [ci, review-checklist, manual, runtime-alert, not-enforced]
     description: How the check runs, or `not-enforced` where nothing checks the rule.
     notes: >
       The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it.
@@ -68,8 +77,18 @@ fields:
     required: false
     required-when: 'mechanism != not-enforced'
     type: enum
-    values: [per-pr, per-deploy, daily, monthly, quarterly, annual]
-    description: How often it runs.
+    values: [continuous, per-pr, per-deploy, daily, monthly, quarterly, annual]
+    description: How often it runs, or `continuous` where the check never stops.
+
+  last-verified:
+    required: false
+    required-when: 'mechanism == manual'
+    type: date
+    allow-literal: [never]
+    description: Quoted. The day somebody last ran this check, or `"never"`.
+    notes: >
+      An automated check leaves a run in its own logs. A periodic human check leaves nothing unless somebody
+      writes the day here.
 
   evidence:
     required: false
@@ -90,7 +109,7 @@ sections:
 
 export:
   version: 1
-  fields: [id, title, status, verifies, mechanism, frequency, evidence, applies-to, tags]
+  fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, tags]
   sections:
     What it checks: full
     How it works: full

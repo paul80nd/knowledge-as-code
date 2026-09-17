@@ -119,7 +119,8 @@ it misses sees a stronger check than the one you built.
 
 `mechanism` and `frequency` are the two keys an agent filters on. `not-enforced` travels like any other value, so a
 reader learns that a rule is written and that nobody looks. Withholding those records would publish a coverage figure
-this corpus cannot show. `evidence` travels beside them as the only key saying where the proof lives.
+this corpus cannot show. Two more keys travel beside them. `evidence` says where the proof lives. `last-verified` says
+when a manual check last ran, so a reader can tell a check that happened from one that was only planned.
 
 `verifies` points at a whole standard or one rule inside it, and you read the value to tell which. Where a control names
 the record, it vouches for that whole document whatever it checks inside it.

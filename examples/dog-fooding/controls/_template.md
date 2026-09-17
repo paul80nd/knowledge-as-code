@@ -23,10 +23,11 @@ and how it is reviewed. What is below is only what a control adds to that.
 
 * **`status`**: `active` · `planned` · `retired`.
 * **`verifies`**: standard ids, ideally rule-level anchors.
-* **`mechanism`**: `ci` · `review-checklist` · `manual-periodic` · `runtime-alert` · `not-enforced`. Pick the real one:
+* **`mechanism`**: `ci` · `review-checklist` · `manual` · `runtime-alert` · `not-enforced`. Pick the real one:
   `not-enforced` is a first-class value and the whole point of the coverage report, so do not invent a mechanism to
   avoid using it.
-* **`frequency`**: `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+* **`frequency`**: `continuous` · `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+* **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../controls.md#metadata) lists every

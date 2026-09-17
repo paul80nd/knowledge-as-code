@@ -41,20 +41,21 @@ several rules, and one rule may need several controls.
 
 <!-- BEGIN GENERATED: schema-controls -->
 
-| Field         | Value                                                                    | Notes                                                                         |
-|---------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†       | string                                                                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†     | string                                                                   | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†     | `normative`                                                              | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†   | `active` `planned` `retired`                                             | Whether the control is running, intended, or stood down.                      |
-| `owner` *†    | string                                                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †   | list                                                                     | Where this record's content came from, one entry per source.                  |
-| `tags` †      | list                                                                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `verifies` *  | list                                                                     | The standard ids this control checks, as rule-level anchors where possible.   |
-| `mechanism` * | `ci` `review-checklist` `manual-periodic` `runtime-alert` `not-enforced` | How the check runs, or `not-enforced` where nothing checks the rule.          |
-| `frequency`   | `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual`             | How often it runs. Required when `mechanism != not-enforced`.                 |
-| `evidence`    | string                                                                   | Where the proof lives: the build log, the audit note, or the dashboard.       |
-| `applies-to`  | list                                                                     | Service ids, or `all`.                                                        |
+| Field           | Value                                                                     | Notes                                                                                                      |
+|-----------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `id` *†         | string                                                                    | Stable, unique across the corpus, never reused, in the format the type sets.                               |
+| `type` *†       | string                                                                    | The singular name of the type, which CI checks against the folder.                                         |
+| `tier` *†       | `normative`                                                               | The record's trust level, fixed for the type and checked against the folder.                               |
+| `status` *†     | `active` `planned` `retired`                                              | Whether the control is running, intended, or stood down.                                                   |
+| `owner` *†      | string                                                                    | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                     |
+| `sources` †     | list                                                                      | Where this record's content came from, one entry per source.                                               |
+| `tags` †        | list                                                                      | Free-form, lowercase and hyphenated. A reader searches on these across types.                              |
+| `verifies` *    | list                                                                      | The standard ids this control checks, as rule-level anchors where possible.                                |
+| `mechanism` *   | `ci` `review-checklist` `manual` `runtime-alert` `not-enforced`           | How the check runs, or `not-enforced` where nothing checks the rule.                                       |
+| `frequency`     | `continuous` `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual` | How often it runs, or `continuous` where the check never stops. Required when `mechanism != not-enforced`. |
+| `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.           |
+| `evidence`      | string                                                                    | Where the proof lives: the build log, the audit note, or the dashboard.                                    |
+| `applies-to`    | list                                                                      | Service ids, or `all`.                                                                                     |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
