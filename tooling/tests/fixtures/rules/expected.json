@@ -34,7 +34,7 @@
       "line": 1,
       "severity": "error",
       "check": "required-field",
-      "message": "missing required field 'retention' (required when classification in [personal, special-category])."
+      "message": "missing required field 'retention' (required when personal-data in [personal, special-category])."
     },
     {
       "file": "data/reader-contact-list.md",

@@ -5,7 +5,9 @@ tier: descriptive
 status: active
 owned-by:
 classification:
+personal-data:
 retention:
+region:
 owner:
 tags: [ a, b ]
 ---
@@ -23,9 +25,12 @@ and how it is reviewed. What is below is only what a data document adds to that.
 
 * **`owned-by`**: a single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.
-* **`classification`**: `public` · `internal` · `confidential` · `personal` · `special-category`.
-* **`retention`**: required where classification is `personal` or `special-category`. "indefinitely" is an answer, and a
-  revealing one.
+* **`classification`**: `public` · `internal` · `confidential`. How widely the data may be shared, and nothing else.
+* **`personal-data`**: `none` · `personal` · `special-category`. A category of data, not a grade of sensitivity. Data
+  can be `confidential` and `none`, or `public` and `personal`.
+* **`retention`**: required where `personal-data` is `personal` or `special-category`. "indefinitely" is an answer, and
+  a revealing one.
+* **`region`**: where the owning service keeps the data, as a cloud region or a place.
 * **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that matters
   most.
 
@@ -40,6 +45,12 @@ what a reader arriving from a citation sees first, and CI checks all three again
 
 One sentence on what this domain covers.
 
+## Purpose
+
+What the estate does with this data, and why it holds it. One purpose per bullet.
+
+For `personal` or `special-category`: name the lawful basis beside the purpose it supports.
+
 ## Entities
 
 * **{{Entity}}**: what it represents.
@@ -53,13 +64,12 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 |--------------------|-------------------------------------------|
 | **Owning service** | [svc-{{a}}]                               |
 | **Store**          | {{SQL Server / blob / table storage / …}} |
-| **Region**         |                                           |
 
 ## Classification
 
 {{classification}}, because {{reason}}.
 
-For `personal` or `special-category`: what personal data is present, and the lawful basis for holding it.
+For `personal` or `special-category`: who the data is about, and what personal data is present.
 
 ## Retention
 
@@ -73,7 +83,8 @@ and the system does another, record both. That gap is the useful part.
 | [svc-{{a}}] |     |                |
 | [int-{{a}}] |     |                |
 
-_(Especially anything crossing outside the estate.)_
+_(Especially anything crossing outside the estate. Say where each recipient processes the data, because `region`
+covers the owning service alone.)_
 
 ## Related
 

@@ -5,12 +5,18 @@ tier: descriptive
 status: active
 owner: human:alex.doe
 owned-by: svc-catalogue
-classification: personal
+classification: confidential
+personal-data: personal
+region: UK South
 ---
 
 # Borrower records
 
 `Data: dat-borrower-records` `ACTIVE`
+
+## Purpose
+
+Issuing loans, and reaching a borrower about one.
 
 ## Entities
 
@@ -22,7 +28,8 @@ In the catalogue service's own store.
 
 ## Classification
 
-`personal`, which is what makes `retention` required — and it is absent, which is what this document is for.
+`personal-data` is `personal`, which is what makes `retention` required — and it is absent, which is
+what this document is for.
 
 ## Retention
 

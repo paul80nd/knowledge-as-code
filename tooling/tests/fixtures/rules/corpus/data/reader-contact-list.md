@@ -6,11 +6,18 @@ status: active
 owner: human:alex.doe
 owned-by: svc-catalogue
 classification: internal
+personal-data: personal
+retention: Until the reader opts out.
+region: UK South
 ---
 
 # Reader contact list
 
 `Data: dat-reader-contact-list` `ACTIVE`
+
+## Purpose
+
+Sending a notice to a reader who asked for one.
 
 ## Entities
 
@@ -22,9 +29,9 @@ In the catalogue service's own store.
 
 ## Classification
 
-`internal`, so no retention is required — this document is here for a different fault.
+`internal`, and `personal-data` is `personal` — this document is here for a different fault.
 
 ## Retention
 
-Not applicable. What is not applicable is the address below, which is a real one rather than a
-description of one: a.reader@notexample.org.
+Until the reader opts out. What is out of place is the address below, which is a real one rather than
+a description of one: a.reader@notexample.org.

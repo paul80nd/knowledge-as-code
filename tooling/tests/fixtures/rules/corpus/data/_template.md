@@ -5,7 +5,9 @@ tier: descriptive
 status: active
 owned-by:
 classification:
+personal-data:
 retention:
+region:
 owner:
 tags: [ a, b ]
 ---
@@ -17,6 +19,8 @@ tags: [ a, b ]
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
 a template to, and nothing more.
+
+## Purpose
 
 ## Entities
 
