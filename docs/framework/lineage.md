@@ -30,8 +30,8 @@ summary line under the title from [Zimmermann's Y-statement][ystatement].
 **`alignment`**, what the framework took. Nygard's Context / Decision / Consequences, his four status values, and the
 rule that a reversed decision is superseded and left standing.
 
-**`divergence`**, where it parted company. An ADR here spans more than one repository, *Alternatives Considered* is
-mandatory, and a fifth status, `rejected`, keeps a proposal the estate turned down.
+**`divergence`**, where it parted company. An ADR here spans more than one repository, every alternative states a
+verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens

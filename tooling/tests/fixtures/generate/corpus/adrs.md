@@ -65,8 +65,8 @@ byte-preserved.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                       | What it would verify                                                                                  |
-|----------------------------|-------------------------------------------------------------------------------------------------------|
-| `immutable-after-accepted` | Once status is `accepted`, the decision changes only by a superseding ADR, never by an edit in place. |
+| Rule                       | What it would verify                                                                                                |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `immutable-after-accepted` | Once status is `accepted` or `rejected`, the decision changes only by a superseding ADR, never by an edit in place. |
 
 <!-- END GENERATED: checks-adrs -->
