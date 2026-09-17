@@ -239,6 +239,15 @@ onto every term, because the flat file is what gets grepped and whoever grepped 
 taken a year ago reads exactly as it did on the day it was taken, so the date is the signal a vendored export otherwise
 lacks.
 
+### explanations
+
+`Where the detail lives` is the one section this type declares, so it is the only one that can travel. The rest of the
+body is free-form, because an explanation's shape follows its subject. An explanation points at the documents with the
+detail and does not repeat it, so the pointers are the part worth sending.
+
+A consumer receives each pointer as a bare id, because `Exporter.Body` drops a section's link definitions. That is the
+same reduction every other type gets, and the id is what a consumer looks the record up by.
+
 ### reports
 
 A report declares no sections, so the frontmatter is the whole of what travels and the body is one fetch away.

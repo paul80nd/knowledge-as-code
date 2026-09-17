@@ -77,7 +77,7 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | `standards`    | `engineering`, `dog-fooding`, `payments`   |
 | `tools`        | `engineering`, `dog-fooding`               |
 
-`library` is home to `explanations`, and has not adopted it yet.
+Every type above is adopted by the corpus that is home to it.
 
 Six adopted folders are still empty. `library` has no `data`, `integrations`, `processes` or `runbooks` record.
 `engineering` has no `controls` or `tools` record. An issue on this repository tracks each one.

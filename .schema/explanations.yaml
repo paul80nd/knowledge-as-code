@@ -72,6 +72,16 @@ sections:
     Body sections are free-form, because an explanation is narrative and its shape follows its subject.
     `Where the detail lives` is the one required section, because linking out is what defines the type.
 
+export:
+  version: 1
+  fields: [id, title, status, explains, review-by, tags]
+  sections:
+    Where the detail lives: full
+  notes: >
+    This type declares one heading, so it is the only one a consumer can be promised. It travels for the ids
+    in it, because what an explanation points at is what it offers a reader who cannot open the record.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#explanations>.
+
 index:
   columns: [id, title, explains, status, review-by]
   sort: id
