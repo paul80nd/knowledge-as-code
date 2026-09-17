@@ -31,19 +31,21 @@ record it links to.
 
 The consortium offers a [borrower](../glossary/example-libraries.md#borrower) three things. They find a title, they
 borrow it, and they reserve one held at another [branch](../glossary/example-libraries.md#branch). [cap-discovery],
-[cap-borrowing] and [cap-reservations] each list the services behind one of them. Read those before any service
-record, because a service on its own does not say what it is for.
+[cap-borrowing] and [cap-reservations] each list the services behind one of them. Reservations is still being built,
+and [cap-reservations] says what remains. Read all three before any service record, because a service on its own does
+not say what it is for.
 
 ## The public surfaces
 
-[svc-catalogue-web] and [svc-reservations] are the only services a borrower reaches directly. The branch terminals run
-those same applications, so no separate service exists for them.
+[svc-catalogue-web] and [svc-reservations] are the sites a borrower opens. The branch terminals run those same
+applications, so no separate service exists for them. [svc-covers-cdn] is public as well, and serves the jacket
+imagery on their pages rather than a page of its own.
 
 ## The gateway and the services behind it
 
 [svc-catalogue-api] is the route from the public site into the estate, and the services behind it stay off the public
-internet. Two services face outward beside the gateway. [svc-search] serves the search box and faceted browse.
-[svc-covers-cdn] serves jacket imagery from the edge, and [exp-covers-path] walks that path.
+internet. [svc-search] is the exception, because the catalogue calls it directly for the search box and faceted browse.
+[exp-covers-path] walks the imagery path.
 
 ## The legacy system
 

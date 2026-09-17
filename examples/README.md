@@ -36,7 +36,8 @@ between one corpus or tiering several, and says what the split costs.
 
 **[`library`](library/README.md) is the whole thing in one repository.** It holds its own vocabulary and its own service
 catalogue, and it takes nothing from outside. A first corpus arrives in this shape and most stay in it. It adopts
-`adrs`, `capabilities`, `data`, `glossary`, `integrations`, `processes`, `runbooks` and `services`.
+`adrs`, `capabilities`, `data`, `explanations`, `glossary`, `integrations`, `processes`, `runbooks` and
+`services`.
 
 **[`engineering`](engineering/README.md) is the governance layer.** Its policies are written to be principle-level and
 stack-agnostic, so they name no service and invent no estate. That is what lets them be published and read by a team
