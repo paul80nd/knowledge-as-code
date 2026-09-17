@@ -46,7 +46,7 @@ that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `po
 **[`payments`](payments/README.md) is a domain corpus, and it is thin on purpose.** It declares `engineering` in
 `consumes:`, so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes
 the inheritance visible: there is nothing here that `engineering` already says. It adopts `capabilities`, `fixes`,
-`nfrs`, `services` and `standards`, and declines the rest.
+`nfrs`, `postmortems`, `services` and `standards`, and declines the rest.
 
 **[`dog-fooding`](dog-fooding/README.md) takes the same shape and its estate is this repository.** It consumes
 `engineering` as `payments` does, and it adopts `controls`, `deviations`, `fixes`, `processes`, `reports`,
@@ -77,7 +77,7 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | `standards`    | `engineering`, `dog-fooding`, `payments`   |
 | `tools`        | `engineering`, `dog-fooding`               |
 
-`library` is home to `explanations` and `payments` is home to `postmortems`. Neither has adopted its type yet.
+`library` is home to `explanations`, and has not adopted it yet.
 
 Six adopted folders are still empty. `library` has no `data`, `integrations`, `processes` or `runbooks` record.
 `engineering` has no `controls` or `tools` record. An issue on this repository tracks each one.

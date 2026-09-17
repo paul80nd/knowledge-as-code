@@ -9,6 +9,7 @@ applies-to:
   - svc-payment-ledger
 verified:
   - { at: 2026-08-14T10:20:00Z, by: human:alex.doe }
+  - { at: 2026-08-17T09:05:00Z, by: human:alex.doe }
 review-by: "2027-03-09"
 owner: human:alex.doe
 tags: [ authorisation, idempotency, retries ]
@@ -51,10 +52,12 @@ caller problem. Two with the same key are a fault in these services.
 
 ## Related
 
+* [pmt-0002] is the incident this fix was written after.
 * [std-IDEM] is the rule the caller broke.
 * [std-LEDGER] says how the reversal is written.
 * [svc-payment-api] takes the authorisation request.
 
+[pmt-0002]: ../postmortems/0002-two-pending-amounts.md
 [std-IDEM]: ../standards/authorisation/idempotency.md
 [std-LEDGER]: ../standards/ledger/entries.md
 [svc-payment-api]: ../services/payment-api.md

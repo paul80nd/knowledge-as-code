@@ -21,6 +21,7 @@ column for your row.
 | A problem with a known, verified resolution      | [Fixes](../fixes.md)               |
 | A rule people must follow when building          | [Standards](../standards.md)       |
 | A target for speed, uptime, or recovery          | [NFRs](../nfrs.md)                 |
+| An account of an incident and what caused it     | [Postmortems](../postmortems.md)   |
 | What a deployable component is and does          | [Services](../services.md)         |
 | What the organisation offers a customer, and why | [Capabilities](../capabilities.md) |
 
@@ -36,6 +37,14 @@ above. The fuller account of a type, meaning what it looks like here and the rec
 type's own page.
 
 <!-- BEGIN GENERATED: types-detail -->
+
+### Decided: immutable once accepted
+
+What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong.
+
+**[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
+factors, actions). Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
+outcome.
 
 ### Normative: living, owned, reviewed
 
@@ -75,12 +84,18 @@ graph LR;
   t_capabilities[Capability];
   t_fixes[Fix];
   t_nfrs[NFR];
+  t_postmortems[Postmortem];
   t_services[Service];
   t_standards[Standard];
   t_capabilities -- implemented-by --> t_services;
   t_capabilities -- nfrs --> t_nfrs;
   t_fixes -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_services;
+  t_postmortems -- affected --> t_services;
+  t_postmortems -- affected --> t_capabilities;
+  t_postmortems -- prompted --> t_nfrs;
+  t_postmortems -- prompted --> t_fixes;
+  t_postmortems -- prompted --> t_standards;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
 ```
@@ -98,6 +113,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Capability | `nfrs`           | NFR                 | `applies-to` |
 | Fix        | `applies-to`     | Service             |              |
 | NFR        | `applies-to`     | Service, Capability | `nfrs`       |
+| Postmortem | `affected`       | Service, Capability |              |
+| Postmortem | `prompted`       | NFR, Fix, Standard  |              |
 | Service    | `depends-on`     | Service             |              |
 | Service    | `nfrs`           | NFR                 | `applies-to` |
 | Standard   | `applies-to`     | Service             |              |

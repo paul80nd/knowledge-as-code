@@ -43,7 +43,7 @@ the logs is written that way. Only `restored-at` before `occurred-at` is refused
   minutes and seconds, never days. `kac validate` prints the right value where yours disagrees.
 * **`severity`**: `sev1` · `sev2` · `sev3`.
 * **`affected`**: service or capability ids.
-* **`prompted`**: the ADRs, runbooks, NFRs and fixes this incident caused to be written.
+* **`prompted`**: the NFRs, fixes and standards this incident caused to be written.
 * **`status`**: `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
   published**. A materially different understanding becomes a new document that references this one.
 
@@ -117,22 +117,21 @@ have happened an hour later.)_
 
 ## Actions
 
-| Action | Work item | Owner |
-|--------|-----------|-------|
-|        | #{{item}} |       |
+| Action | Work item    | Owner |
+|--------|--------------|-------|
+|        | gh#{{item}}  |       |
 
-_(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
+_(Actions live in GitHub issues; this links to them. A postmortem is not a tracker.)_
 
 ## Related
 
-* [rbk-{{a}}] was written or revised as a result.
-* [adr-{{a}}] is the decision this prompted.
+* [fix-{{a}}] is the fix this incident produced.
+* [nfr-{{a}}] is the target this incident breached.
 
 ---
 
 _(**Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.)_
 
-[adr-{{a}}]: ../adrs/{{a}}.md
+[fix-{{a}}]: ../fixes/{{a}}.md
 [nfr-{{a}}]: ../nfrs/{{a}}.md
-[rbk-{{a}}]: ../runbooks/{{a}}.md

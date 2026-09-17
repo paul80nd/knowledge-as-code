@@ -45,6 +45,40 @@ record is one fetch away.
 `supersedes` and `superseded-by` travel as a pair. A superseded decision still binds whatever was built under it, so a
 reader meeting one needs the id that replaced it. `deciders` stays behind with `owner`.
 
+### postmortems
+
+`Root cause` and `Contributing factors` are what a reader elsewhere can act on, and most of the improvement lives in
+the factors. `Summary` travels above them, so a reader can decide in fifteen seconds whether the rest is theirs.
+`Resolution` travels beside them, because what ended an impairment is the half a reader facing the same one needs
+first.
+
+**The three lessons each take a heading of their own.** Google groups `What went well`, `What went wrong` and `Where we
+got lucky` under one `Lessons Learned`, and a group is a heading an author satisfies by writing under any part of it.
+Declared separately, each is asked for and a bare one is refused, which is what makes `Where we got lucky` get answered
+rather than skipped. All three travel: a copy carrying only what failed teaches half the lesson, and a copy carrying
+only what worked teaches the other half.
+
+`Impact` travels as its opening paragraph, where the record states what customers lost. The paragraphs under it measure
+that loss against this estate's own NFRs.
+
+`Timeline` and `Actions` stay behind. A timeline names one estate's clocks, alerts and systems. Each action is a link to
+a work item in a tracker the reader cannot open, which is the argument [fixes](#fixes) makes about `How we found it`.
+
+Three moments travel, and `duration` with them. `occurred-at` is when the impairment began, `detected-at` when
+somebody first knew, and `restored-at` when service was back for users. Each is a timestamp rather than a date,
+because the gap between the first two is usually measured in minutes.
+
+**`restored-at` is recovery, not resolution.** MTTR names four measures at once: time to respond, to repair, to
+recover and to resolve. This field is recovery, which is the span an availability budget counts and the one
+[DORA](https://dora.dev/guides/dora-metrics-four-keys/) asks about. An incident whose actions run for weeks still has
+a `restored-at` on the day. Nothing requires `restored-at` to follow `detected-at`: an incident can recover before
+anybody notices, and one found later in the logs is written that way.
+
+`duration` restates the span those moments already fix, so that an index can show it without computing one.
+`duration-matches-the-moments` fails a value the moments refuse, and its message carries the value to write.
+
+`prompted` travels beside them, and its ids resolve wherever those records travelled too.
+
 ### policies
 
 A clause travels with its level as a key of its own. `MUST` and `COULD` open the same shape of sentence, so reading the

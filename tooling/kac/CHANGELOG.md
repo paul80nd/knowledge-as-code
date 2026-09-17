@@ -19,6 +19,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A postmortem travels to a consumer.** `.schema/postmortems.yaml` declares an `export:` block, so `kac export`
+  writes a file per postmortem record. `Summary`, `Root cause`, `Contributing factors` and `What went well` travel at
+  `full`, and `Impact` as its opening paragraph. `Timeline` and `Actions` stay behind, because a timeline names one
+  estate's clocks and each action links a work item the reader cannot open. `docs/design/export.md` no longer lists
+  `postmortems` among the types declaring no block.
+
 - **A capability travels to a consumer.** `.schema/capabilities.yaml` declares an `export:` block, so `kac export`
   writes a file per capability record. Every section travels at `full`, because `Where the detail lives` is the only
   place a capability states its work items and the rest of the record is short by design. `docs/design/export.md` no
@@ -35,6 +41,31 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the other, and `validate` reports either end that does not.
 
 ### Changed
+
+- **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
+  sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.
+  Google SRE groups the three lessons under one `Lessons Learned` heading; each is declared on its own here, so
+  `required-section` asks for it and `empty-section` refuses a bare one. An existing postmortem gains three headings.
+
+- **A postmortem may name more than one root cause.** The template said "Resist listing several". Google SRE writes
+  `Root causes` in the plural and PagerDuty records contributing factors and no root cause at all, so the guidance now
+  says to name more than one where more than one stands out. Nothing about the section changes.
+
+- **A postmortem states when service came back, and `duration` is checked against it.** `restored-at` is a third
+  timestamp, required once a postmortem is published, and `duration` is now an ISO 8601 duration such as `PT4H20M`.
+  `duration-matches-the-moments` fails a value the two moments refuse, and its message carries the span they give, so
+  the fix is a paste. `restored-not-before-occurred` fails service coming back before it went. Nothing requires
+  `restored-at` to follow `detected-at`: an incident can recover before anybody notices it.
+
+- **A rule expression can ask for the time between two moments.** `span('occurred-at', 'restored-at')` answers with an
+  ISO 8601 duration in hours, minutes and seconds, and with nothing where either field is absent, is not a moment, or
+  where the second is the earlier. `docs/design/expressions.md` carries it in the table of what an expression may call.
+
+- **A postmortem states when an incident began and when it was noticed, to the second.** `occurred-on` and
+  `detected-on` are now `occurred-at` and `detected-at`, and each takes a UTC timestamp as `2026-09-07T20:18:00Z`. The
+  gap between the pair is what the pair is for, and it is usually measured in minutes. `-on` names a date everywhere
+  else in the schema, so the names moved with the type. A corpus holding postmortem records renames both keys and
+  writes a time into each: `validate` reports the old spelling as `unknown-key`.
 
 - **`Where the detail lives` and the frontmatter say the same thing, and `validate` checks it.** `implemented-by` and
   `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an

@@ -53,6 +53,10 @@ public sealed class Facts(Doc doc, DateOnly today)
     // against `field('review-by')` under the ordinary string comparison and needs no date type.
     public string Today() => today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
+    // The time between two timestamp fields, as an ISO 8601 duration, so a rule compares it against a
+    // duration the record states. Empty where nothing can be measured; see Instants.Span.
+    public string Span(string from, string to) => Instants.Span(Field(from), Field(to));
+
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
     // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which
     // rules need that. It is also what lets `\*\*MUST\*\*` find a bold modal that the rendered text

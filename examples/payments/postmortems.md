@@ -9,17 +9,17 @@ What actually happened, and why.
 A blameless account of one incident: when it began, what customers lost, what caused it, what worked, and the actions it
 left us with.
 
-Publishing one closes it, as with an [ADR](adrs.md): a postmortem holds what we understood at the time. Where we later
-understand the same incident differently, we write another one.
+Publishing one closes it. A postmortem states what we understood at the time. Where we later understand the same
+incident differently, we write another one.
 
 ## Why we use them
 
-The ADR log records what we intended. A postmortem records what the estate did instead, and the gap between the two is
-what we did not know on the day we decided.
+A standard says how a payment is meant to behave. A postmortem records what it did instead, and the gap between them
+is what we did not know when we wrote the rule.
 
-One incident routinely produces a [fix](fixes.md), a [runbook](runbooks.md), a revised [NFR](nfrs.md) and sometimes an
-[ADR](adrs.md). A root cause that recurs shows up in no single account, so read several postmortems together when you
-want to know what keeps breaking.
+One incident routinely produces a [fix](fixes.md), a revised [NFR](nfrs.md) and sometimes a new clause in a
+[standard](standards.md). A root cause that recurs shows up in no single account, so read several postmortems together
+when you want to know what keeps breaking.
 
 ## Scope
 
@@ -29,11 +29,11 @@ statements about decisions, conditions, systems and roles: "the deploy ran befor
 
 Boundaries:
 
-* **[Runbook](runbooks.md)**: instructions for an incident that might happen. A postmortem is an account of one that
-  did.
+* **[NFR](nfrs.md)**: the target a service is meant to meet. A postmortem says what happened on a day it was not
+  met.
 * **[Fix](fixes.md)**: a reusable resolution, which an incident often produces as a by-product. A postmortem is the
   account of the incident itself.
-* **A work item.** Each action is an ADO item. The postmortem links to it and tracks nothing itself.
+* **A work item.** Each action is a GitHub issue. The postmortem links to it and tracks nothing itself.
 
 Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
 postmortem means something.
