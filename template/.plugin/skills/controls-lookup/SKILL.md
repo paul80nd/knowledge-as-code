@@ -57,7 +57,8 @@ The three section keys are always present, because this type requires all three 
 | `fields.status`              | string                   | `active`, `planned` or `retired`                    |
 | `fields.verifies`            | list of strings          | a standard id, or a rule anchor in one. Never empty |
 | `fields.mechanism`           | string                   | how the check happens, in the five values below     |
-| `fields.frequency`           | string, or null          | how often it runs, in the six values below          |
+| `fields.frequency`           | string, or null          | how often it runs, in the seven values below        |
+| `fields.last-verified`       | string, or null          | the day a manual check last ran, or `never`         |
 | `fields.evidence`            | string, or null          | where the proof of a run lives                      |
 | `fields.applies-to`          | list of strings, or null | the service ids it covers, or the literal `all`     |
 | `fields.tags`                | list of strings, or null | the word a reader arrives with                      |
@@ -71,12 +72,12 @@ The three section keys are always present, because this type requires all three 
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
 * **`review-checklist`.** A person checks it while reviewing a change.
-* **`manual-periodic`.** Somebody runs it on the cadence `frequency` names.
+* **`manual`.** Somebody runs it on the cadence `frequency` names.
 * **`runtime-alert`.** A running system reports it.
 * **`not-enforced`.** The rule is written and nothing looks.
 
-**`frequency` takes one of six values**: `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or `annual`. It is set
-on every control whose mechanism is not `not-enforced`, because the schema requires it there.
+**`frequency` takes one of seven values**: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
+`annual`. It is set on every control whose mechanism is not `not-enforced`, because the schema requires it there.
 
 **Read `Coverage and gaps` before you tell anybody a rule is covered.** A control that runs may still miss the half of
 the rule that matters to the question in front of you, and that section is where the author says so.
