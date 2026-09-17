@@ -19,6 +19,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A postmortem travels to a consumer.** `.schema/postmortems.yaml` declares an `export:` block, so `kac export`
+  writes a file per postmortem record. `Summary`, `Root cause`, `Contributing factors` and `What went well` travel at
+  `full`, and `Impact` as its opening paragraph. `Timeline` and `Actions` stay behind, because a timeline names one
+  estate's clocks and each action links a work item the reader cannot open. `docs/design/export.md` no longer lists
+  `postmortems` among the types declaring no block.
+
 - **A capability travels to a consumer.** `.schema/capabilities.yaml` declares an `export:` block, so `kac export`
   writes a file per capability record. Every section travels at `full`, because `Where the detail lives` is the only
   place a capability states its work items and the rest of the record is short by design. `docs/design/export.md` no

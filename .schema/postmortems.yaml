@@ -83,6 +83,20 @@ sections:
   required: [Summary, Timeline, Impact, Root cause, Contributing factors, What went well, Actions]
   optional: [Related]
 
+export:
+  version: 1
+  fields: [id, title, status, occurred-on, detected-on, duration, severity, affected, prompted, tags]
+  sections:
+    Summary: full
+    Impact: summary
+    Root cause: full
+    Contributing factors: full
+    What went well: full
+  notes: >
+    `Timeline` and `Actions` stay behind, because both name this estate's own clocks, systems and work
+    items. <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#postmortems> says what else
+    travels, and what stays behind.
+
 index:
   columns: [id, title, occurred-on, severity, duration, affected]
   sort: occurred-on

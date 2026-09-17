@@ -95,6 +95,14 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+        postmortems@1
+          fields: id, title, status, occurred-on, detected-on, duration, severity, affected, prompted, tags
+          sections:
+            Summary: full
+            Impact: summary
+            Root cause: full
+            Contributing factors: full
+            What went well: full
         processes@1
           fields: id, title, status, applies-to, last-rehearsed, rehearsal-frequency, tags
           sections:

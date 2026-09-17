@@ -45,6 +45,21 @@ record is one fetch away.
 `supersedes` and `superseded-by` travel as a pair. A superseded decision still binds whatever was built under it, so a
 reader meeting one needs the id that replaced it. `deciders` stays behind with `owner`.
 
+### postmortems
+
+`Root cause` and `Contributing factors` are what a reader elsewhere can act on, and most of the improvement lives in the
+factors. `Summary` travels above them, so a reader can decide in fifteen seconds whether the rest is theirs. `What went
+well` travels too: a copy carrying only what failed teaches the half-lesson this type was written to prevent.
+
+`Impact` travels as its opening paragraph, where the record states what customers lost. The paragraphs under it measure
+that loss against this estate's own NFRs.
+
+`Timeline` and `Actions` stay behind. A timeline names one estate's clocks, alerts and systems. Each action is a link to
+a work item in a tracker the reader cannot open, which is the argument [fixes](#fixes) makes about `How we found it`.
+
+`occurred-on` and `detected-on` travel as a pair, because the gap between them is often the finding. `prompted` travels
+beside them, and its ids resolve wherever those records travelled too.
+
 ### policies
 
 A clause travels with its level as a key of its own. `MUST` and `COULD` open the same shape of sentence, so reading the
