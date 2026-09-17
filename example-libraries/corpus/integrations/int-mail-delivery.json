@@ -1,0 +1,27 @@
+{
+  "type": "integrations",
+  "path": "integrations/mail-delivery.md",
+  "trust": null,
+  "fields": {
+    "id": "int-mail-delivery",
+    "title": "Mail Delivery",
+    "status": "active",
+    "vendor": "Hartwell Mail",
+    "used-by": [
+      "svc-notices"
+    ],
+    "criticality": "important",
+    "their-sla": "99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds",
+    "tags": [
+      "email",
+      "templates"
+    ]
+  },
+  "sections": {
+    "What it does": "Accepts a message over an API and delivers it. [svc-notices] sends overdue reminders, hold-ready alerts and membership renewals through it, and no other service in this catalogue calls the vendor.\n\n**The vendor stores the message wording.** [svc-notices] selects a template by event type and sends the values that fill it. Changing what a borrower reads is therefore a change made in the vendor's console. That wording sits outside version control, so this corpus cannot tell you what a borrower received last month.",
+    "Failure modes": "| Failure                                            | How it presents                               | Our fallback                                     |\n|----------------------------------------------------|-----------------------------------------------|--------------------------------------------------|\n| The API returns 429 during the overdue sweep       | Notices arrive late                           | The queue keeps the work, and the sender retries |\n| A template is edited and will not render           | Every message of that type fails              | None. The vendor keeps no version history        |\n| A borrower's domain is put on the suppression list | The borrower gets nothing, and nothing errors | None. Somebody reads that list once a week       |"
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/library/integrations/mail-delivery.md"
+  }
+}

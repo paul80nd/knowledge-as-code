@@ -15,6 +15,6 @@
     "Exceptions": "Vendor-supplied binaries and third-party assets we cannot keep in source are referenced by version and provenance instead. See [pol-TRUS]. Any other asset kept outside version control requires a recorded deviation under [pol-DEVI], naming the asset, the reason and the recovery plan if it is lost."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c50a3ed3cf1c9804388ffa498426e8606684942b/examples/engineering/policies/delivery/ever-version-control.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/engineering/policies/delivery/ever-version-control.md"
   }
 }

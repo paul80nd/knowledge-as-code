@@ -1,0 +1,27 @@
+{
+  "type": "integrations",
+  "path": "integrations/card-payments.md",
+  "trust": null,
+  "fields": {
+    "id": "int-card-payments",
+    "title": "Card Payments",
+    "status": "trial",
+    "vendor": "Kestrel Payments",
+    "used-by": [
+      "svc-reservations"
+    ],
+    "criticality": "important",
+    "their-sla": "99.9% monthly availability on the hosted payment page",
+    "tags": [
+      "fees",
+      "payments"
+    ]
+  },
+  "sections": {
+    "What it does": "Takes one card payment on a page the vendor hosts. [svc-reservations] redirects the borrower there, the borrower pays, and the vendor returns them to the service against the hold reference. No card detail passes through any service this consortium deploys.\n\n**The status is `trial` because [cap-reservations] is still building.** Development and test run against the vendor's sandbox. Production points at the live endpoint and has taken no payment from a borrower yet.",
+    "Failure modes": "| Failure                         | How it presents                                      | Our fallback                              |\n|---------------------------------|------------------------------------------------------|-------------------------------------------|\n| The hosted page is unavailable  | The hold is created and stays unpaid                 | Branch staff take the payment at the desk |\n| The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |\n| The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |"
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/library/integrations/card-payments.md"
+  }
+}

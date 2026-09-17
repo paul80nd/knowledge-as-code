@@ -1,0 +1,27 @@
+{
+  "type": "integrations",
+  "path": "integrations/bibliographic-data.md",
+  "trust": null,
+  "fields": {
+    "id": "int-bibliographic-data",
+    "title": "Bibliographic Data",
+    "status": "active",
+    "vendor": "Pennine Bibliographic Data",
+    "used-by": [
+      "svc-catalogue-api"
+    ],
+    "criticality": "supporting",
+    "their-sla": "99.5% monthly availability on the API",
+    "tags": [
+      "cataloguing",
+      "jackets"
+    ]
+  },
+  "sections": {
+    "What it does": "Supplies the description of a title: author, edition, subject headings and a jacket image. That description is what this consortium calls a record. See [gls-example-libraries.record].\n\nTwo paths bring it in.\n\n* **The API.** [svc-catalogue-api] calls it when branch staff catalogue an item no other branch already holds.\n* **The nightly feed.** `covers-import` collects the jacket images and publishes them to the `covers` container.\n  [svc-thumbnailer] reads that container, and [svc-covers-cdn] serves what it returns. The pipeline is not a service\n  in this catalogue, so `used-by` omits it.\n\nThe public catalogue calls neither path. An API outage stops branch staff cataloguing, and a missed feed leaves a placeholder where a new title's jacket belongs.",
+    "Failure modes": "| Failure                               | How it presents                          | Our fallback                                 |\n|---------------------------------------|------------------------------------------|----------------------------------------------|\n| The API returns 503                   | Cataloguing a new item fails at the desk | Staff type a short description by hand       |\n| The nightly feed does not arrive      | A new title shows a placeholder jacket   | None. The catalogue serves the images it has |\n| A feed row names a title nobody holds | `covers-import` skips it and logs it     | Re-run the import after the vendor resends   |"
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/library/integrations/bibliographic-data.md"
+  }
+}

@@ -44,6 +44,6 @@
     "Why it happens": "A fresh UUID is the obvious way to fill a header that asks for a unique value. The request then passes every check the API makes: the header is present, well formed and unique. Only the caller can apply the rule that a retry reuses its key, and [svc-payment-api] cannot tell a retry from a new order."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c50a3ed3cf1c9804388ffa498426e8606684942b/examples/payments/fixes/duplicate-authorisation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/payments/fixes/duplicate-authorisation.md"
   }
 }
