@@ -24,6 +24,6 @@
     "Symptoms": "* `kac restore` prints `restore: ../engineering/.dist/package holds no package for example-engineering <version>.` and\n  exits 1.\n* `kac validate` fails in `examples/payments` or `examples/dog-fooding`, and says to run `kac restore` first.\n* The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`\n  and `engineering` consume nothing, so they pass.\n\nNothing failed in the producer. `examples/engineering` validates, exports and packs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
   }
 }

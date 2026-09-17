@@ -30,6 +30,6 @@
     "Data": "No database connection is configured for this app service. It reads and writes data through the gateway."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/library/services/catalogue-web.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/library/services/catalogue-web.md"
   }
 }

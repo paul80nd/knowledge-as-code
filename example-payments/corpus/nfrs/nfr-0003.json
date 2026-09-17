@@ -26,6 +26,6 @@
     "Constraints": "The PSP accepts a refund only against a captured payment, so a return accepted before capture waits for it. [ofr-card-payment] captures on shipment, which is why the hour is measured from acceptance of the return and not from the return itself."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/payments/nfrs/0003-refund-settlement.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/payments/nfrs/0003-refund-settlement.md"
   }
 }

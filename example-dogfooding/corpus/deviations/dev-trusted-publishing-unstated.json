@@ -30,6 +30,6 @@
     "Scope": "The publish workflows, and any registry this repository publishes to."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/dog-fooding/deviations/trusted-publishing-unstated.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/trusted-publishing-unstated.md"
   }
 }

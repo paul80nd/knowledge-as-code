@@ -25,6 +25,6 @@
     "If it is breached": "Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger has no entry for it. The repair is the PSP's settlement file, and until that runs the ledger understates what was taken."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/payments/nfrs/0002-ledger-recovery-point.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/payments/nfrs/0002-ledger-recovery-point.md"
   }
 }
