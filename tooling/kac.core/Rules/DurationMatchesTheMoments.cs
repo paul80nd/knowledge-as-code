@@ -10,7 +10,7 @@ namespace kac.core;
 // one timestamp from another by hand to find a value the tool already holds.
 //
 // Guarded on the order as well as on presence: a `restored-at` before `occurred-at` is one fault, and
-// `restored-not-before-detected` is the rule that names it.
+// `restored-not-before-occurred` is the rule that names it.
 public sealed class DurationMatchesTheMoments : IDocumentRule
 {
     public RuleId RuleId => new("duration-matches-the-moments");
@@ -31,7 +31,7 @@ public sealed class DurationMatchesTheMoments : IDocumentRule
         // A record short of any of the three is one `required-field` has already reported, and one
         // carrying a timestamp that is not a moment is `timestamp-format`'s.
         if (doc.FrontScalar(Duration) is not { Length: > 0 } stated) return;
-        if (Facts.Between(doc.FrontScalar(Occurred), doc.FrontScalar(Restored)) is not { Length: > 0 } span) return;
+        if (Instants.Span(doc.FrontScalar(Occurred), doc.FrontScalar(Restored)) is not { Length: > 0 } span) return;
         if (string.Equals(stated, span, StringComparison.Ordinal)) return;
 
         ctx.Report.Err(Mismatched,

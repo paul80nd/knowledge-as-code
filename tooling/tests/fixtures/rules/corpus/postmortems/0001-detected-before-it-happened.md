@@ -5,7 +5,7 @@ tier: decided
 status: draft
 occurred-at: 2026-06-12T09:00:00Z
 detected-at: 2026-06-11T09:00:00Z
-duration: 40 minutes
+duration: PT40M
 severity: sev2
 affected: [svc-catalogue]
 owner: human:alex.doe
@@ -27,7 +27,7 @@ Nothing happened, in the wrong order.
 
 ## Impact
 
-None — this document exists to be judged, not to describe an incident.
+None. This document exists to be judged, not to describe an incident.
 
 ## Root cause
 

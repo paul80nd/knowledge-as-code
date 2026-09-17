@@ -28,7 +28,7 @@ Nothing happened, and it finished before it started.
 
 ## Impact
 
-None — this document exists to be judged, not to describe an incident.
+None. This document exists to be judged, not to describe an incident.
 
 ## Root cause
 

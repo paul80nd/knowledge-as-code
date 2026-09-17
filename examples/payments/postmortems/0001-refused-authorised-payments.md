@@ -25,10 +25,11 @@ tags: [ failover, ledger, reconciliation ]
 
 ## Summary
 
-A maintenance failover moved the ledger database to a geo-replica that was 11 minutes behind. For 12 minutes [svc-payment-api] could not write to the ledger. It told
-86 customers their payment had failed, after the payment service provider (PSP) had already authorised it. The replica came up without the 214 entries written in the 11 minutes before the
-failover. The next morning's reconciliation found every missing entry, and the entries were rebuilt from the PSP's
-settlement file.
+A maintenance failover moved the ledger database to a geo-replica that was 11 minutes behind. For 12 minutes
+[svc-payment-api] could not write to the ledger. It told 86 customers their payment had failed, after the payment
+service provider (PSP) had already authorised it. The replica came up without the 214 entries written in the 11
+minutes before the failover. The next morning's reconciliation found every missing entry, and the entries were
+rebuilt from the PSP's settlement file.
 
 ## Timeline
 

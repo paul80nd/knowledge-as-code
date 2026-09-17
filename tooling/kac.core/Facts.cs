@@ -54,42 +54,8 @@ public sealed class Facts(Doc doc, DateOnly today)
     public string Today() => today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
     // The time between two timestamp fields, as an ISO 8601 duration, so a rule compares it against a
-    // duration the record states.
-    public string Span(string from, string to) => Between(Field(from), Field(to));
-
-    // Empty where either value is absent or is not a moment, and where the second is before the first:
-    // each of those is another check's to report, and a caller asking for a span guards on them rather
-    // than reporting the same fault twice.
-    //
-    // Hours, never days. ISO 8601 gives a day no fixed length, so `P1DT2H` and `PT26H` are the same span
-    // written two ways and a caller comparing the text would accept one and refuse the other.
-    //
-    // Public and static so that a rule written in C# answers the same question the same way. See
-    // DurationMatchesTheMoments.
-    public static string Between(string? from, string? to)
-    {
-        if (Instant(from) is not { } start || Instant(to) is not { } end) return "";
-        if (end < start) return "";
-
-        var gap = end - start;
-        if (gap == TimeSpan.Zero) return "PT0S";
-
-        var span = "PT";
-        if ((int)gap.TotalHours > 0) span += $"{(int)gap.TotalHours}H";
-        if (gap.Minutes > 0) span += $"{gap.Minutes}M";
-        if (gap.Seconds > 0) span += $"{gap.Seconds}S";
-
-        return span;
-    }
-
-    // The one shape `timestamp-format` admits, and nothing else, so a value that check has already
-    // refused reaches no rule as a moment.
-    private static DateTimeOffset? Instant(string? value) =>
-        value is not null
-        && DateTimeOffset.TryParseExact(value, "yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture,
-            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var moment)
-            ? moment
-            : null;
+    // duration the record states. Empty where nothing can be measured; see Instants.Span.
+    public string Span(string from, string to) => Instants.Span(Field(from), Field(to));
 
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
     // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which

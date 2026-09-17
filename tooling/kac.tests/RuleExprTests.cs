@@ -157,7 +157,14 @@ public class RuleExprTests
         Assert.False(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-10\"\noccurred-at: \"2026-06-11\""));
     }
 
-    // Hours and never days, so the one span has one spelling and a rule may compare the text.
+    // Through the grammar, which is the surface a schema rule calls it on. The theories below hold the
+    // arithmetic; this holds the row in RuleExpr's function table against it.
+    [Fact]
+    public void A_span_is_callable_from_an_expression()
+        => Assert.True(Eval("span('occurred-at', 'restored-at') == 'PT40M'",
+            "id: pmt-0001\noccurred-at: 2026-06-12T09:00:00Z\nrestored-at: 2026-06-12T09:40:00Z"));
+
+    // What `span()` promises a rule that calls it. docs/design/expressions.md says why never days.
     [Theory]
     [InlineData("2026-06-03T21:14:00Z", "2026-06-03T21:26:00Z", "PT12M")]
     [InlineData("2026-08-12T18:05:00Z", "2026-08-12T22:25:00Z", "PT4H20M")]
@@ -165,7 +172,7 @@ public class RuleExprTests
     [InlineData("2026-06-12T09:00:00Z", "2026-06-12T09:00:00Z", "PT0S")]
     [InlineData("2026-06-12T09:00:00Z", "2026-06-12T09:00:07Z", "PT7S")]
     public void A_span_is_hours_minutes_and_seconds(string from, string to, string expected)
-        => Assert.Equal(expected, Facts.Between(from, to));
+        => Assert.Equal(expected, Instants.Span(from, to));
 
     // Each of these is another check's to report, so the fact answers with nothing and the rule asking
     // for a span guards rather than reporting the same fault twice.
@@ -175,7 +182,7 @@ public class RuleExprTests
     [InlineData("2026-06-12", "2026-06-13T09:00:00Z")]
     [InlineData("2026-06-12T09:00:00Z", "2026-06-12T08:00:00Z")]
     public void A_span_nothing_can_measure_is_empty(string? from, string? to)
-        => Assert.Equal("", Facts.Between(from, to));
+        => Assert.Equal("", Instants.Span(from, to));
 
     // ISO dates order correctly as text, which is why the grammar carries no date type.
     [Fact]
