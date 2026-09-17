@@ -36,7 +36,8 @@ between one corpus or tiering several, and says what the split costs.
 
 **[`library`](library/README.md) is the whole thing in one repository.** It holds its own vocabulary and its own service
 catalogue, and it takes nothing from outside. A first corpus arrives in this shape and most stay in it. It adopts
-`adrs`, `capabilities`, `data`, `glossary`, `integrations`, `processes`, `runbooks` and `services`.
+`adrs`, `capabilities`, `data`, `explanations`, `glossary`, `integrations`, `processes`, `runbooks` and
+`services`.
 
 **[`engineering`](engineering/README.md) is the governance layer.** Its policies are written to be principle-level and
 stack-agnostic, so they name no service and invent no estate. That is what lets them be published and read by a team
@@ -77,7 +78,7 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | `standards`    | `engineering`, `dog-fooding`, `payments`   |
 | `tools`        | `engineering`, `dog-fooding`               |
 
-`library` is home to `explanations`, and has not adopted it yet.
+Every type above is adopted by the corpus that is home to it.
 
 Six adopted folders are still empty. `library` has no `data`, `integrations`, `processes` or `runbooks` record.
 `engineering` has no `controls` or `tools` record. An issue on this repository tracks each one.

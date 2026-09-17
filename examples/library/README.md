@@ -16,6 +16,7 @@
 | [ADR](adrs.md)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.     |
 | [Capability](capabilities.md)  | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.             |
 | [Data](data.md)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.      |
+| [Explanation](explanations.md) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                  |
 | [Glossary](glossary.md)        | descriptive | The ubiquitous language. Terms with a meaning specific to the organisation, or easily confused with another. |
 | [Integration](integrations.md) | descriptive | An external system the estate depends on: its contract, auth, failure modes, SLA and fallback.               |
 | [Process](processes.md)        | procedural  | A planned procedure (releasing, onboarding, provisioning, rotating a secret).                                |
@@ -59,8 +60,9 @@ comes from, and a service coupled to the whole estate with no dependency edges.
 ## Maturity
 
 **Services are the proven type here.** A consumer repository built a full catalogue against that schema and returned a
-run of findings, tracked as issues upstream. The other seven schemas have met little real content, and five of them hold
-none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
+run of findings, tracked as issues upstream. Every other schema here has met little real content, and `data`,
+`integrations`, `processes` and `runbooks` hold none at all. That is the honest limit: a schema is wrong in ways only
+real content reveals.
 
 ## What this corpus declares about itself
 
@@ -123,11 +125,12 @@ export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**This plugin carries one type.** `library/` adopts glossary and exports it, so `glossary-lookup` ships and the policy
-and standards skills are trimmed. What is agreed and unbuilt:
+**This plugin ships one lookup skill.** `library` exports `adrs`, `capabilities`, `explanations`, `glossary` and
+`services`, and `glossary-lookup` is the only skill that reads any of them. `kac bundle` trims the controls, fix,
+policy, process and standards skills, because this corpus holds none of those types. What is agreed and unbuilt:
 
-* **A type with no `export:` block.** `glossary`, `policies` and `standards` each declare one, so their records travel
-  and their parts reach a lookup skill. An ADR travels nowhere.
+* **A skill for a type that already travels.** An ADR, a capability, an explanation and a service each reach the plugin
+  as data, and nothing in it answers a question about one.
 * **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
   and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the
   first adopters, and it is a pipeline of its own rather than a translation of the GitHub one.

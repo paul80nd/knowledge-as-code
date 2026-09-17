@@ -15,7 +15,7 @@ shortcode: lib
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.7.0"
+content-version: "0.8.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -43,8 +43,8 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 16
-  taken-on: "2026-08-24"
+  template-version: 17
+  taken-on: "2026-09-17"
 
 # Where to report a problem with the framework itself. This repository authors it, so a finding about
 # `kac`, the schema or a skill goes to the same tracker as one about a record here.
@@ -60,6 +60,7 @@ types:
   - adrs
   - capabilities
   - data
+  - explanations
   - glossary
   - integrations
   - processes

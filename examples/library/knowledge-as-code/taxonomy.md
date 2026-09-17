@@ -23,6 +23,7 @@ column for your row.
 | A step-by-step for when something is broken                      | [Runbooks](../runbooks.md)         |
 | A term whose meaning is local, or not obvious                    | [Glossaries](../glossary.md)       |
 | A third-party or external system the estate depends on           | [Integrations](../integrations.md) |
+| How something works, or why it is shaped that way                | [Explanations](../explanations.md) |
 | What a deployable component is and does                          | [Services](../services.md)         |
 | What the organisation offers a customer, and why                 | [Capabilities](../capabilities.md) |
 | Where data lives, how long it is kept, and its sensitivity       | [Data](../data.md)                 |
@@ -61,6 +62,11 @@ stopped being one.
 flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
 in, the service that owns them, how sensitive they are, and how long they are kept.
 
+**[Explanations](../explanations.md).** Narrative that helps you understand how something works, or why it is shaped the
+way it is. Architecture overviews, conceptual walkthroughs, and how the pieces fit together. An explanation points at
+the documents with the detail and does not repeat it. One that accumulates facts of its own falls out of date as soon as
+those facts move.
+
 **[Glossaries](../glossary.md).** The ubiquitous language. Terms with a meaning specific to the organisation, or easily
 confused with another. One glossary per bounded context, each small enough to read end to end. A term that needs
 explaining every time it appears belongs in the most general glossary that admits it, and the narrower glossaries link
@@ -97,6 +103,7 @@ graph LR;
   t_adrs[ADR];
   t_capabilities[Capability];
   t_data[Data];
+  t_explanations[Explanation];
   t_glossary[Glossary];
   t_integrations[Integration];
   t_processes[Process];
@@ -108,6 +115,8 @@ graph LR;
   t_data -- flows-to --> t_services;
   t_data -- flows-to --> t_integrations;
   t_data -- owned-by --> t_services;
+  t_explanations -- explains --> t_services;
+  t_explanations -- explains --> t_capabilities;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_processes -- applies-to --> t_services;
@@ -131,6 +140,7 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Capability  | `implemented-by` | Service              |                 |
 | Data        | `flows-to`       | Service, Integration |                 |
 | Data        | `owned-by`       | Service              |                 |
+| Explanation | `explains`       | Service, Capability  |                 |
 | Glossary    | `narrows`        | Glossary             |                 |
 | Integration | `used-by`        | Service              |                 |
 | Process     | `applies-to`     | Service              |                 |
@@ -162,6 +172,15 @@ this corpus holds both sides of it.
 
 **Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
 capability usually spans several services. One service usually contributes to several capabilities.
+
+**Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
+shape, and is frozen at the moment of choosing.
+
+**Explanation vs Process.** An explanation says how something works. A process says how to perform a task. If a reader
+is meant to follow it step by step, it is a process.
+
+**Explanation vs Service.** An explanation covers how the pieces fit together. A service document describes one
+deployable component. If it is about a single component, it is a service.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.

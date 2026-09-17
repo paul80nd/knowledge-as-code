@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **An explanation travels to a consumer.** `.schema/explanations.yaml` declares an `export:` block, so `kac export`
+  writes a file per explanation record. `Where the detail lives` is the one section it declares, so it is the only one
+  that travels, at `full`. The rest of the body is free-form and no schema can name it. `docs/design/export.md` no
+  longer lists `explanations` among the types declaring no block.
+
 - **A postmortem travels to a consumer.** `.schema/postmortems.yaml` declares an `export:` block, so `kac export`
   writes a file per postmortem record. `Summary`, `Root cause`, `Contributing factors` and `What went well` travel at
   `full`, and `Impact` as its opening paragraph. `Timeline` and `Actions` stay behind, because a timeline names one
