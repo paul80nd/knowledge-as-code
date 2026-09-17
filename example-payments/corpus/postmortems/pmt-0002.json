@@ -1,0 +1,41 @@
+{
+  "type": "postmortems",
+  "path": "postmortems/0002-two-pending-amounts.md",
+  "trust": null,
+  "fields": {
+    "id": "pmt-0002",
+    "title": "One order left two pending amounts on the card",
+    "status": "published",
+    "occurred-at": "2026-08-12T18:05:00Z",
+    "detected-at": "2026-08-12T18:12:00Z",
+    "restored-at": "2026-08-12T22:25:00Z",
+    "duration": "PT4H20M",
+    "severity": "sev2",
+    "affected": [
+      "cap-card-payment",
+      "svc-payment-api",
+      "svc-payment-ledger"
+    ],
+    "prompted": [
+      "fix-0001"
+    ],
+    "tags": [
+      "authorisation",
+      "idempotency",
+      "psp"
+    ]
+  },
+  "sections": {
+    "Summary": "The payment service provider (PSP) slowed down for 4 hours 20 minutes, and authorisation calls began hitting their 5 second deadline. The checkout retried each timed-out call with a fresh idempotency key, so the PSP took the retry as a second payment. 31 orders ended with two authorisations. Nothing detected the duplicates, because both calls succeeded. A customer counted the holds on their statement the next morning, and the duplicates were released that afternoon.",
+    "Impact": "31 customers saw two pending amounts for one order, each for the basket value, for up to 20 hours. The duplicate holds totalled £1,847. Two customers rang to ask whether they had been charged twice.",
+    "Resolution": "Nothing the team did ended it. PSP latency returned to its usual range at 22:25, and the on-call engineer closed the incident on that. No mitigation was available: [std-PSPOUT] bounds a call and stops the retries once the failure rate passes its threshold, and neither shortens a slow PSP.\n\nThe repair came the next day. Matching ledger entries on the order reference found all 31 orders at 11:40, and the later authorisation on each was voided at 14:10, every void written as its own entry under [std-LEDGER].",
+    "Root cause": "The checkout generated a fresh idempotency key for each attempt at one payment. [std-IDEM] requires a key derived from the order and the operation, so that a retry arrives as the same payment. A fresh key makes every retry a new one.",
+    "Contributing factors": "* [svc-payment-api] cannot tell a retry from a new order. The header was present, well formed and unique, so every check\n  the service makes passed.\n* Nothing alerted on two authorisations against one order reference, and both calls returned `201`. The duplicates were\n  invisible until a customer counted the holds on their statement.\n* The page said latency, so the response was to watch the PSP recover. Nothing prompted anyone to ask what the retries\n  were doing while it was slow.",
+    "What went well": "The deadline [std-PSPOUT] sets worked. Every call stopped at 5 seconds, so no request hung and the checkout stayed usable at the slower speed.\n\nThe ledger made the duplicates findable. One immutable entry per event meant that matching on the order reference returned all 31 pairs in a single query. Each void went in as its own entry under [std-LEDGER].",
+    "What went wrong": "The page said latency and the response stopped there. For four hours nobody asked what the checkout was doing with the calls that timed out, and the ledger held the answer the whole time.\n\nThe incident was closed at 22:25 on the PSP recovering. The 31 duplicate authorisations were already written, and the first anybody knew of them was a customer counting holds on a statement fifteen hours later.",
+    "Where we got lucky": "No customer was charged twice, and nothing about this incident prevented it. Capture happens when an order ships, so each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the next day would have captured the second authorisation and taken the money.\n\nThe separation of authorisation and capture is in [cap-card-payment] for a different reason: an order that never ships is never charged. It absorbed this incident as a by-product."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0/examples/payments/postmortems/0002-two-pending-amounts.md"
+  }
+}

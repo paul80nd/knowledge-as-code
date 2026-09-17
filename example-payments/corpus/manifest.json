@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.15.0",
+  "contentVersion": "0.16.0",
   "mechanismVersion": 17,
-  "commit": "399a49faf8d94f228af7c23caacdeedddb011309",
+  "commit": "53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0",
   "dirty": false,
-  "generatedAt": "2026-09-16T21:06:00Z",
+  "generatedAt": "2026-09-17T09:52:45Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "399a49faf8d94f228af7c23caacdeedddb011309"
+    "ref": "53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.22.1",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/399a49faf8d94f228af7c23caacdeedddb011309/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "399a49faf8d94f228af7c23caacdeedddb011309"
+        "ref": "53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0"
       },
       "tracker": {
         "target": "github",
@@ -108,6 +108,29 @@
         "How it is measured": "full",
         "If it is breached": "full",
         "Constraints": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "postmortems",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "postmortems",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "Summary": "full",
+        "Impact": "summary",
+        "Resolution": "full",
+        "Root cause": "full",
+        "Contributing factors": "full",
+        "What went well": "full",
+        "What went wrong": "full",
+        "Where we got lucky": "full"
       },
       "frameworksFile": null
     },
