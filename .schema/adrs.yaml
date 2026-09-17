@@ -20,12 +20,18 @@ versus:
     standard. Most substantial changes produce an ADR and a standard.
 
 lineage:
-  prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011)"
+  prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011), with the summary line from [Zimmermann's Y-statement](https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html)"
   alignment: >
-    Context / Decision / Consequences, and the rule that a reversed decision is superseded and left standing
+    Nygard's Context / Decision / Consequences, his four status values, and the rule that a reversed decision is
+    superseded and left standing. The block-quote under the title states Zimmermann's six moves. A mandatory
+    *Alternatives Considered* section matches [MADR 4](https://adr.github.io/madr/), which also asks for the options
+    weighed
   divergence: >
-    Nygard scopes a decision to one codebase. An ADR here affects more than one repository, and the mandatory
-    *Alternatives Considered* section is an addition to his shape
+    Nygard scopes a decision to one codebase, and an ADR here affects more than one repository. Every alternative
+    states a verdict, *Consequences* is required where MADR leaves it optional, and a fifth status, `rejected`, keeps
+    a proposal the team turned down. A supersession is a pair of fields checked in both directions, not a phrase
+    inside the status. MADR's *Confirmation* is a separate type here: a standard cites the ADR it distils, and a
+    control checks the standard. MADR's `consulted` and `informed` are not kept
 
 id:
   prefix: adr
@@ -41,14 +47,16 @@ fields:
   status:
     required: true
     type: enum
-    values: [proposed, accepted, deprecated, superseded]
+    values: [proposed, rejected, accepted, deprecated, superseded]
     description: Where the decision stands.
+    notes: >
+      The other four values are Nygard's, and the order is the one MADR 4 lists.
 
   decided-on:
     required: false
-    required-when: 'status == accepted'
+    required-when: 'status in [accepted, rejected]'
     type: date
-    description: The day the decision was accepted.
+    description: The day the decision was settled.
 
   supersedes:
     required: false
@@ -105,7 +113,9 @@ index:
 
 rules:
   - id: immutable-after-accepted
-    description: Once status is `accepted`, the decision changes only by a superseding ADR, never by an edit in place.
+    description: >
+      Once status is `accepted` or `rejected`, the decision changes only by a superseding ADR, never by an
+      edit in place.
     # Declared and not running. Telling a changed decision from a correction needs the git history `kac` does not read.
   - id: y-statement-present
     description: A block-quote below the H1 states all six Y-statement moves, within `max-words`.

@@ -22,15 +22,16 @@ standing belongs wholly to the corpus holding it.
 ## What a row says
 
 A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most have three parts, and
-a type with no ancestor has the first alone. The ADR is the clearest to read:
+a type with no ancestor has the first alone. The ADR row reads:
 
-**`prior-art`.** [Nygard, *Documenting Architecture Decisions*][nygard] (2011).
+**`prior-art`**, what the type is nearest to. [Nygard, *Documenting Architecture Decisions*][nygard] (2011), with the
+summary line under the title from [Zimmermann's Y-statement][ystatement].
 
-**`alignment`**, which is what the framework took: "Context / Decision / Consequences, and the rule that a reversed
-decision is superseded rather than rewritten".
+**`alignment`**, what the framework took. Nygard's Context / Decision / Consequences, his four status values, and the
+rule that a reversed decision is superseded and left standing.
 
-**`divergence`**, which is where it parted company: "Nygard scopes a decision to one codebase. An ADR here affects more
-than one repository, and the mandatory *Alternatives Considered* section is an addition to his shape".
+**`divergence`**, where it parted company. An ADR here spans more than one repository, every alternative states a
+verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens
@@ -90,3 +91,4 @@ Where a claim is later found wrong, correct the row. Do not soften it.
 [diataxis]: https://diataxis.fr/
 [mswsg]: https://learn.microsoft.com/style-guide/welcome/
 [nygard]: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+[ystatement]: https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html

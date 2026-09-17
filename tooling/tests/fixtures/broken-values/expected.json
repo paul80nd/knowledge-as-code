@@ -13,7 +13,7 @@
       "line": 4,
       "severity": "error",
       "check": "enum",
-      "message": "'status' value 'Draft' is not one of: proposed, accepted, deprecated, superseded."
+      "message": "'status' value 'Draft' is not one of: proposed, rejected, accepted, deprecated, superseded."
     },
     {
       "file": "adrs/0001-bad-enum-value.md",
