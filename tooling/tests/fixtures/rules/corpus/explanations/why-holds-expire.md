@@ -12,6 +12,10 @@ review-by: "2026-12-31"
 
 `Explanation: exp-why-holds-expire` `ACTIVE`
 
+## What this covers
+
+Why a collectable hold does not wait for ever.
+
 ## Where the detail lives
 
 In [the notifications offering](/offerings/borrower-notifications.md), [the holds

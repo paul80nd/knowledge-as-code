@@ -20,9 +20,12 @@ and how it is reviewed. What is below is only what an explanation adds to that.
 **Frontmatter**
 
 * **`status`**: `draft` · `active` · `stale`. `stale` is an honest state. Say so rather than let the page quietly rot.
-* **`explains`**: the service or offering ids this explains.
+* **`explains`**: the ids of what this explains. A service, an offering, a standard, a process or an ADR.
 * **`review-by`**: a quoted date. Explanations are the residual category, so they need the tightest staleness
   discipline, not the loosest.
+
+**Required sections.** `What this covers` states what the record covers, and what it leaves to another record.
+`Where the detail lives` lists the records with the facts. Everything between them is yours to shape.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../explanations.md#metadata) lists
@@ -35,14 +38,18 @@ what a reader arriving from a citation sees first, and CI checks all three again
 
 One or two sentences on what this explains and who it's for.
 
+## What this covers
+
+{{What this record covers}}. Say what it leaves to another record, and name that record.
+
 ## {{Section}}
 
-Narrative. Link out to the services, offerings, ADRs and standards that hold the detail rather than restating them
-here.
+Narrative. Link out to the services, offerings, standards, processes and ADRs with the detail. Draw the subject as a
+mermaid diagram where it has a shape, and label it.
 
 ## Where the detail lives
 
-- [{{Service}}](../services/{{a}}.md) holds {{what it holds}}.
+- [{{Service}}](../services/{{a}}.md) describes {{what it describes}}.
 - [adr-{{a}}] records {{what it decided}}.
 
 [adr-{{a}}]: ../adrs/{{a}}.md

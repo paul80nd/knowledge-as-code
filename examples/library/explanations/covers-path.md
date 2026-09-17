@@ -20,6 +20,12 @@ tags: [ jackets ]
 The path one jacket image takes, from the container it is stored in to the result list a borrower sees. Each leg of it
 belongs to a different record.
 
+## What this covers
+
+The request path, the writers that fill the image container, and what a borrower sees when a leg of the path fails.
+The routes, the cache key and the container itself belong to the service records. Where the rest of the estate sits
+belongs to [exp-estate-overview].
+
 ## The request path
 
 A catalogue page asks [svc-covers-cdn] for an image at a size. The edge serves it from cache, or forwards to
