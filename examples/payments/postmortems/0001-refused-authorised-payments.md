@@ -5,7 +5,7 @@ tier: decided
 status: published
 occurred-on: "2026-06-03"
 detected-on: "2026-06-03"
-duration: 12 minutes of refused payments
+duration: 12 minutes
 severity: sev1
 affected:
   - cap-card-payment
@@ -24,9 +24,8 @@ tags: [ failover, ledger, reconciliation ]
 
 ## Summary
 
-A maintenance failover moved the ledger database to a geo-replica that was 11 minutes behind. For 12 minutes
-[svc-payment-api] could not write, so it told 86 customers their payment had failed after the payment service provider
-(PSP) had already authorised it. The replica came up without the 214 entries written in the 11 minutes before the
+A maintenance failover moved the ledger database to a geo-replica that was 11 minutes behind. For 12 minutes [svc-payment-api] could not write to the ledger. It told
+86 customers their payment had failed, after the payment service provider (PSP) had already authorised it. The replica came up without the 214 entries written in the 11 minutes before the
 failover. The next morning's reconciliation found every missing entry, and the entries were rebuilt from the PSP's
 settlement file.
 
@@ -62,8 +61,8 @@ acceptable. That absence is the finding that produced [nfr-0002].
 
 ## Root cause
 
-The failover promoted an asynchronous geo-replica, and nothing measured how far behind that replica was. Any entry
-written inside the replication lag was lost the moment the failover completed.
+The failover promoted an asynchronous geo-replica whose lag nothing measured. Any entry written inside that lag was
+lost the moment the failover completed.
 
 ## Contributing factors
 
@@ -76,9 +75,9 @@ written inside the replication lag was lost the moment the failover completed.
 
 ## What went well
 
-The reconciliation run found all 214 missing entries on the first pass after the incident, and classified them exactly
+The reconciliation run found all 214 missing entries on its first pass after the incident. It classified them exactly
 as [std-RECON] requires: in the file and not in the ledger. One alert stated the count and the total value, so the
-finance owner escalated a single figure rather than 214 of them.
+finance owner escalated a single figure.
 
 [std-LEDGER] made the repair safe. An entry is never amended, so the rebuild appended 214 entries and left the
 reconciliation reading the same sequence finance had read.
@@ -97,7 +96,7 @@ reconciliation reading the same sequence finance had read.
 
 * [nfr-0002] states the recovery point this incident caused to be written.
 * [std-RECON] is the daily run that found the lost entries.
-* [std-LEDGER] is why the rebuild appended rather than amended.
+* [std-LEDGER] is why the repair appended entries.
 
 ---
 

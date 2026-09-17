@@ -43,4 +43,9 @@ Payments taken inside the lost window are absent from the account finance reconc
 has no entry for it. The repair is the PSP's settlement file, and until that runs the ledger understates what was
 taken.
 
+## Related
+
+* [pmt-0001] records the incident this target was written after.
+
+[pmt-0001]: ../postmortems/0001-refused-authorised-payments.md
 [svc-payment-ledger]: ../services/payment-ledger.md

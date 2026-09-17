@@ -79,16 +79,16 @@ failures teaches half the lesson and makes the next one harder to write honestly
 
 ## Actions
 
-| Action | Work item | Owner |
-|--------|-----------|-------|
-|        | gh#{{item}} |     |
+| Action | Work item    | Owner |
+|--------|--------------|-------|
+|        | gh#{{item}}  |       |
 
 _(Actions live in GitHub issues; this links to them. A postmortem is not a tracker.)_
 
 ## Related
 
 * [fix-{{a}}] is the fix this incident produced.
-* [std-{{MNEM}}] is the rule the incident broke.
+* [nfr-{{a}}] is the target this incident breached.
 
 ---
 
@@ -97,4 +97,3 @@ completed", not "X deployed too early". The output is a system that fails less, 
 
 [fix-{{a}}]: ../fixes/{{a}}.md
 [nfr-{{a}}]: ../nfrs/{{a}}.md
-[std-{{MNEM}}]: ../standards/{{a}}.md

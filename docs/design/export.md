@@ -40,8 +40,8 @@ Which types travel is therefore a fact about `.schema/` rather than about the to
 what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
 
 The types declaring no block are `postmortems`, `integrations`, `data` and `explanations`. None of those is a decision,
-and nothing here is deliberately held back. No corpus in this repository has a record of one of them, so nothing here
-could prove the block was written right.
+and nothing here is deliberately held back. `examples/payments` holds two postmortems, and neither of them reaches a
+package or a plugin.
 
 ### A type declaring no sections
 

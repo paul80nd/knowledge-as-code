@@ -25,8 +25,9 @@ tags: [ authorisation, idempotency, psp ]
 
 The payment service provider (PSP) slowed down for 4 hours 20 minutes, and authorisation calls began hitting their 5
 second deadline. The checkout retried each timed-out call with a fresh idempotency key, so the PSP took the retry as a
-second payment. 31 orders ended with two authorisations. No customer was charged twice, and the duplicate holds were
-released the next afternoon.
+second payment. 31 orders ended with two authorisations. Nothing detected the duplicates, because both calls
+succeeded. A customer counted the holds on their statement the next morning, and the duplicates were released that
+afternoon.
 
 ## Timeline
 
@@ -35,16 +36,16 @@ released the next afternoon.
 | 2026-08-12 18:05 | PSP authorisation latency rose from a 240ms average to over 4 seconds.                                            |
 | 2026-08-12 18:12 | The p95 alert on [nfr-0001] fired and paged the on-call engineer.                                                 |
 | 2026-08-12 18:20 | Calls began timing out at the 5 second deadline [std-PSPOUT] sets. The checkout retried each one.                 |
-| 2026-08-12 18:20 | Each retry carried a new `Idempotency-Key`, so the PSP authorised it as a new payment. Both calls returned `201`. |
+| 2026-08-12 18:20 | Each retry used a new `Idempotency-Key`, so the PSP authorised it as a new payment. Both calls returned `201`. |
 | 2026-08-12 22:25 | PSP latency returned to its usual range. The on-call engineer closed the incident.                                |
 | 2026-08-13 09:30 | Two customers reported two pending amounts for one order.                                                         |
-| 2026-08-13 11:40 | Matching ledger entries on the order reference found 31 orders with more than one authorisation.                  |
+| 2026-08-13 11:40 | Matching ledger entries on the order reference found 31 orders with a second authorisation.                  |
 | 2026-08-13 14:10 | The later authorisation on each of the 31 orders was voided, and each void was written to the ledger.             |
 | 2026-08-14 10:20 | [fix-0001] was written and verified against the PSP sandbox.                                                      |
 
 ## Impact
 
-31 customers saw two pending amounts for one order, each for the basket value, for up to 21 hours. The duplicate holds
+31 customers saw two pending amounts for one order, each for the basket value, for up to 20 hours. The duplicate holds
 totalled £1,847. Two customers rang to ask whether they had been charged twice.
 
 No customer was charged twice. Capture happens when an order ships, and every duplicate authorisation was voided before
@@ -70,11 +71,10 @@ the order and the operation, so that a retry arrives as the same payment. A fres
 ## What went well
 
 The deadline [std-PSPOUT] sets worked. Every call stopped at 5 seconds, so no request hung and the checkout stayed
-usable. The breaker stopped calls to the PSP once the failure rate passed its threshold, which capped how many retries
-were made.
+usable at the slower speed.
 
-The ledger made the duplicates findable. One immutable entry per event meant matching on the order reference returned
-all 31 pairs in a single query, and each void went in as its own entry under [std-LEDGER].
+The ledger made the duplicates findable. One immutable entry per event meant that matching on the order reference
+returned all 31 pairs in a single query. Each void went in as its own entry under [std-LEDGER].
 
 ## Actions
 

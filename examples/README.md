@@ -46,7 +46,7 @@ that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `po
 **[`payments`](payments/README.md) is a domain corpus, and it is thin on purpose.** It declares `engineering` in
 `consumes:`, so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes
 the inheritance visible: there is nothing here that `engineering` already says. It adopts `capabilities`, `fixes`,
-`nfrs`, `services` and `standards`, and declines the rest.
+`nfrs`, `postmortems`, `services` and `standards`, and declines the rest.
 
 **[`dog-fooding`](dog-fooding/README.md) takes the same shape and its estate is this repository.** It consumes
 `engineering` as `payments` does, and it adopts `controls`, `deviations`, `fixes`, `processes`, `reports`,
