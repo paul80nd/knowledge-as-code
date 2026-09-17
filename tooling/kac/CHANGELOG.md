@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A rule expression can count a field's entries.** `entries('implemented-by')` answers how many, where
+  `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on
+  an absent field guards with `present()` first. `min-items:` states the same floor as an error, so reach for the
+  fact where the shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
+
 - **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
   writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
   and `Contacts` stay behind, because each describes owning the account. `docs/design/export.md` now lists `data` as

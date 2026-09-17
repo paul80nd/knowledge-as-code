@@ -98,6 +98,7 @@ markdown. `today()` is the last row because it is the one that reads nothing abo
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
 | `field('name')`                  | string? | a frontmatter scalar                                                                                                 |
 | `present('name')`                | bool    | whether that field has anything, scalar or list. False for a bare key and an empty list as for a missing one         |
+| `entries('name')`                | int     | how many entries that field carries. `present()` asks whether, this asks how many. Zero where the field is absent    |
 | `field_matches('name', 're')`    | bool    | that scalar against a pattern. False where absent, and the one pattern fact that sees frontmatter                    |
 | `entries_match('n', 'k', 're')`  | bool    | key `k` of every object under field `n` against a pattern. True where the field is absent or has no such key         |
 | `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                 |

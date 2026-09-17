@@ -32,6 +32,12 @@ public sealed class Facts(Doc doc, DateOnly today)
     // A bare key and an empty sequence are both absent, which is the same state `bare-key` reports on.
     public bool Present(string name) => doc.FrontList(name).Count > 0;
 
+    // How many entries the field carries. `present()` answers whether a field has any. This answers how
+    // many, which is a different question: a field whose value is its breadth says something by holding
+    // one entry rather than several. Zero where the field is absent, so guard on `present()` where that
+    // reading would be wrong.
+    public int Entries(string name) => doc.FrontList(name).Count;
+
     // Case-insensitive, matching required-section: a heading is prose a person wrote, and '## context'
     // is the section the schema means however it was capitalised.
     public bool Section(string title) =>
