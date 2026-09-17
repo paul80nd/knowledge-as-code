@@ -118,6 +118,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer
   values a schema may declare. `kac checks` prints one check fewer.
 
+### Fixed
+
+- **An index column heading spells an initialism in capitals.** `kac generate` headed the `their-sla` column Their sla,
+  because `id` was the only field name it read as an initialism. That column now heads Their SLA. Every other field
+  heads a column in sentence case, as it did.
+
 ## 0.27.0 - 2026-09-16
 
 ### Added

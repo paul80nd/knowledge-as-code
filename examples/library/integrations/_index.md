@@ -2,7 +2,7 @@
 
 # Integration Index (INT)
 
-| ID                     | Title                                       | Vendor                     | Criticality | Their sla                                                                            | Status  |
+| ID                     | Title                                       | Vendor                     | Criticality | Their SLA                                                                            | Status  |
 |------------------------|---------------------------------------------|----------------------------|-------------|--------------------------------------------------------------------------------------|---------|
 | int-bibliographic-data | [Bibliographic Data](bibliographic-data.md) | Pennine Bibliographic Data | supporting  | 99.5% monthly availability on the API                                                | active  |
 | int-card-payments      | [Card Payments](card-payments.md)           | Kestrel Payments           | important   | 99.9% monthly availability on the hosted payment page                                | trial   |

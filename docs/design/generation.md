@@ -34,6 +34,10 @@ folders below the type, and the index groups its rows on it.
 `standards/platform/dotnet/testing.md` joins the Platform table instead of opening one of its own. A type whose records
 all sit directly in its folder gets a single table and no headings.
 
+**A column heading is its field name in sentence case, with an initialism in capitals.** `review-by` heads Review by,
+and `their-sla` heads Their SLA. `kac` recognises `id` and `sla`. A field whose initialism is neither of those heads a
+column in sentence case, so open an issue on this repository where you declare one.
+
 **`kac` drops the derived column where the heading already gives it.** Every row under a heading of Security holds
 `security`, so the column says nothing the reader has not read. A record filed deeper keeps it: `platform/dotnet` under
 a heading of Platform is the one place `dotnet` is written down.

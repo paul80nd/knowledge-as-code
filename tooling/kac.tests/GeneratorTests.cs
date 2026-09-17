@@ -20,6 +20,26 @@ public class GeneratorTests
         Assert.DoesNotContain("| Id |", page); // …rather than a table with headers and no rows
     }
 
+    // A heading is the field name in sentence case. An initialism inside one is the exception, and `id` is
+    // not the only field that has one.
+    [Fact]
+    public void IndexPage_spells_a_column_heading_in_sentence_case_with_its_initialisms_in_capitals()
+    {
+        var t = new TypeSchema
+        {
+            Label = "Integration", IdPrefix = "int", IndexColumns = ["id", "their-sla", "review-by"]
+        };
+
+        var doc = Required.Parsed("integrations/mail.md",
+            "---\nid: int-mail\ntheir-sla: 99.9% monthly\nreview-by: \"2027-01-01\"\n---\n\n# Mail\n", new Schema());
+
+        var page = Generator.IndexPage(t, [doc]);
+
+        Assert.Contains("| ID ", page);
+        Assert.Contains("| Their SLA ", page);
+        Assert.Contains("| Review by ", page);
+    }
+
     [Fact]
     public void IndexPage_heading_drops_the_prefix_when_it_only_repeats_the_label()
     {
