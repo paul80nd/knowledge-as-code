@@ -28,8 +28,8 @@ which branch to collect from, and [svc-notices] tells them when the item gets th
 
 ## Who it is for
 
-Cardholders reaching for stock their own branch does not hold. One membership spans the consortium, so a
-hold is open to every cardholder at every branch.
+Cardholders who want stock their own branch does not have. One membership spans the consortium, so a hold
+is open to every cardholder at every branch.
 
 ## Why it exists
 

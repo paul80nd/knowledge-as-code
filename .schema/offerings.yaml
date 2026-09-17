@@ -24,9 +24,9 @@ lineage:
   alignment: >
     An offering is defined by the consumer group it serves, not by what delivers it. ITIL describes a
     service offering the same way, and places it above the services behind it. The GOV.UK Service Manual
-    asks that a service name describe a task the user recognises, which is how these records are titled,
-    and its second Service Standard point, solve a whole problem for users, is why one offering spans
-    several services
+    asks that a service name describe a task the user recognises, which is how these records are titled.
+    Its second Service Standard point, solve a whole problem for users, is why one offering spans several
+    services
   divergence: >
     ITIL keeps a service offering in a catalogue a tool serves. This type is a record in a repository, and
     CI validates it. ITIL also counts goods and access as part of an offering, where `implemented-by`

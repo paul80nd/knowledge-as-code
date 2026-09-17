@@ -40,7 +40,7 @@ rolling day, and the same query runs in the monthly service review.
 
 An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call
 engineer. A customer who has returned goods and seen nothing calls the contact centre on the second
-day, so a sustained breach reaches support before it reaches finance.
+day. Support learns of a sustained breach before finance does.
 
 ## Constraints
 

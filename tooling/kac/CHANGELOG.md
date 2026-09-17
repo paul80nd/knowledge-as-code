@@ -25,8 +25,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A rule expression can count a field's entries.** `entries('implemented-by')` answers how many, where
   `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on
-  an absent field guards with `present()` first. `min-items:` states the same floor as an error, so reach for the
-  fact where the shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
+  an absent field guards with `present()` first. `min-items:` states the same floor as an error. Use the fact where
+  the shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
 
 - **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
   writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
@@ -80,18 +80,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   it is `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and
   defines it by the consumer group it serves, which is what this type always meant. `Capability` meant something else
   to two of its likely readers: ArchiMate uses it for an ability an organisation possesses, and SAFe for functionality
-  below an epic. A corpus that adopted `capabilities` renames the folder and the page, changes each record's `type:`,
-  `id:` and identity line, rewrites every `cap-` reference in the records of other types, then writes `offerings` over
-  `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand. `kac update --drop-type capabilities`
+  below an epic. A corpus that adopted `capabilities` renames the folder and the page. It changes each record's
+  `type:`, `id:` and identity line, and rewrites every `cap-` reference in the records of other types. It then writes
+  `offerings` over `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand. `kac update --drop-type capabilities`
   refuses that last step, because the template no longer declares the name. The export is `offerings@1`, so a consumer
   sees `capabilities` stop and `offerings` start. The template version moves to 18, and `kac new` stamps
   `template-version: 18`.
 
 - **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only
-  types the corpus declined is dropped from the required pass, and a `required-when:` on such a field never fires.
-  Adopting one of those types starts the obligation with no edit to `.schema/`. A field with `allow-literal:` is
-  fillable without them, so it is still asked for. `ref-resolves` is unchanged: a value a record does write is held
-  to the same standard as before.
+  types nothing there supplies is dropped from the required pass, and a `required-when:` on such a field never fires.
+  A type an import publishes counts as supplied, so a standard citing a producer's policy clause is still asked for in
+  a corpus adopting no `policies` of its own. Adopting one of those types starts the obligation with no edit to
+  `.schema/`. A field with `allow-literal:` is fillable without them, so it is still asked for. `ref-resolves` is
+  unchanged: a value a record does write is held to the same standard as before.
 
 - **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
   sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.

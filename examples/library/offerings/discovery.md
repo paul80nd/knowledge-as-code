@@ -30,7 +30,7 @@ Search reaches the whole consortium. A borrower standing in one
 
 ## Who it is for
 
-Anyone. The catalogue answers a search without a card, so a person who has not joined yet still reaches
+Anyone. The catalogue answers a search without a card, so a person who has not joined yet still uses
 this.
 
 ## Why it exists

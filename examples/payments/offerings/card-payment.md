@@ -31,7 +31,7 @@ Authorisation and capture are separate steps for that reason. An order that neve
 
 ## Who it is for
 
-Anyone who reaches the checkout. Paying needs no account, so the group is every visitor with an order to
+Anyone at the checkout. Paying needs no account, so the group is every visitor with an order to
 settle.
 
 ## Why it exists
