@@ -49,9 +49,14 @@ generated blocks derived from these files.
    none of this.
 9. Run the golden suite. The fixtures validate against the real schema, so this edit can move expectations already
    committed there. Regenerate with `--update` after reading the diff.
-10. Repair by hand every pinned line in `tooling/kac.features/*.feature` that step 8 moved. Each one moves down by one
-    line, and no flag regenerates a feature file. A finding reported against the frontmatter stays at line 1, and a
-    document with no frontmatter keeps the numbers it had. Prove the repair with `dotnet test tooling/kac.features`.
+10. Repair by hand every expectation in `tooling/kac.features/*.feature` this edit broke. No flag regenerates a
+    feature file, so step 9's `--update` fixes the goldens and leaves these. Two things break one:
+    * **A message the schema decides.** A scenario quotes it in full. An enum's values, a field's pattern, a
+      threshold and a `message:` all appear in one. Adding a value to an enum rewrites the `enum` message.
+    * **A line number step 8 moved.** Each one moves down by one line. A finding reported against the frontmatter
+      stays at line 1, and a document with no frontmatter keeps the numbers it had.
+
+    Prove the repair with `dotnet test tooling/kac.features`.
 11. Copy no schema file. `.schema/` is authored once at the repository root, and every corpus reads it from there. A
     type page or a `_template.md` you also touched lives in every tree.
 12. Run [prc-pull-request].
@@ -61,8 +66,8 @@ generated blocks derived from these files.
 Every corpus that adopted the type validates clean, `generate --check` reports the generated blocks fresh, and the
 golden suite and the behaviour specs pass.
 
-Close by stating what the schema now declares, which pass would catch it being wrong, and any golden expectation or
-pinned line that moved.
+Close by stating what the schema now declares, which pass would catch it being wrong, and any golden or pinned
+expectation that moved.
 
 ## Related
 
