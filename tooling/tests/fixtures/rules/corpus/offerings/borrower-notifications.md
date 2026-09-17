@@ -21,6 +21,10 @@ Sends borrowers a message when a hold becomes available, when a loan is close to
 once it has. Each message is composed from a template, addressed through whichever channel the borrower
 has chosen, and recorded so that a later question about whether it was sent can be answered.
 
+## Who it is for
+
+Borrowers with a hold waiting or a loan running.
+
 ## Why it exists
 
 A hold nobody collects is a book nobody reads, and a fine nobody expected is a complaint.
@@ -31,7 +35,8 @@ A hold nobody collects is a book nobody reads, and a fine nobody expected is a c
 * **Constrained by**: [nfr-0001]
 
 Two links against all the prose above, which is what `hub-not-specification` measures. The second feature
-file names a repository no service here claims, which is what `feature-file-repo` reports.
+file names a repository no service here claims, which is what `feature-file-repo` reports. One service
+delivers the whole of this, which is what `spans-more-than-one-service` reports.
 
 [nfr-0001]: ../nfrs/0001-hedged-measurement.md
 [svc-notifications]: ../services/notifications.md

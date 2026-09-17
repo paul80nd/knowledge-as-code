@@ -82,6 +82,7 @@ public class ExportShapeTests
           fields: id, title, status, implemented-by, feature-files, nfrs, tags
           sections:
             What it does: full
+            Who it is for: full
             Why it exists: full
             Surfaces: full
             Where the detail lives: full

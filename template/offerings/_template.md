@@ -33,7 +33,8 @@ every field and says what each one holds.
 the link at the foot of the document. `ADO#1150` and `gh#2101` both read well. The framework names no tracker.
 
 **The NFRs.** Where this corpus adopts `nfrs`, add a `Constrained by` bullet linking each id, and add the ids to an
-`nfrs:` key in the frontmatter. Both ends are checked against each other.
+`nfrs:` key in the frontmatter. Both ends are checked against each other, and an offering at `status: live` must name
+at least one. A corpus that declined `nfrs` is not asked for any.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
@@ -46,10 +47,15 @@ One or two sentences on what a customer gets from this.
 
 The customer-visible behaviour, in customer terms. Two or three paragraphs at most.
 
+## Who it is for
+
+The group of customers this is designed for, named the way they would name themselves. An offering that serves two
+groups in two different ways is usually two offerings.
+
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else here holds: a work item says *what* gets built, not
-*why the surface exists at all*.
+The problem it solves. This is the part nothing else here holds: a work item says *what* gets built, not *why the
+surface exists at all*.
 
 ## Surfaces
 

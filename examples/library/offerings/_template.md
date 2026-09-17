@@ -43,10 +43,15 @@ One or two sentences on what a customer gets from this.
 
 The customer-visible behaviour, in customer terms. Two or three paragraphs at most.
 
+## Who it is for
+
+The group of customers this is designed for, named the way they would name themselves. An offering that serves two
+groups in two different ways is usually two offerings.
+
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else here holds: a work item says *what* gets built, not
-*why the surface exists at all*.
+The problem it solves. This is the part nothing else here holds: a work item says *what* gets built, not *why the
+surface exists at all*.
 
 ## Surfaces
 

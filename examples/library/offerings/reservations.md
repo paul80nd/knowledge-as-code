@@ -26,6 +26,11 @@ A borrower places a hold on an item held at another branch, pays the fee it attr
 A hold moves an item between branches, so the fee covers the transport the consortium pays for. The borrower chooses
 which branch to collect from, and [svc-notices] tells them when the item gets there.
 
+## Who it is for
+
+Cardholders reaching for stock their own branch does not hold. One membership spans the consortium, so a
+hold is open to every cardholder at every branch.
+
 ## Why it exists
 
 A consortium of branches is worth more than a single library only where a borrower can reach stock held elsewhere. The

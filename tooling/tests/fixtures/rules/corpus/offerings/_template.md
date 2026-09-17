@@ -18,6 +18,8 @@ a template to, and nothing more.
 
 ## What it does
 
+## Who it is for
+
 ## Why it exists
 
 ## Where the detail lives

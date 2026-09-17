@@ -33,7 +33,8 @@ every field and says what each one holds.
 labelled `gh#2101`, with its link defined at the foot of the document.
 
 **The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` bullet. Both ends
-are checked against each other, and the NFR names this offering back in its own `applies-to`.
+are checked against each other, and the NFR names this offering back in its own `applies-to`. An offering at
+`status: live` must name at least one: a customer already has it, and nothing else here says how well it has to work.
 
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
@@ -46,10 +47,15 @@ One or two sentences on what a customer gets from this.
 
 The customer-visible behaviour, in customer terms. Two or three paragraphs at most.
 
+## Who it is for
+
+The group of customers this is designed for, named the way they would name themselves. An offering that serves two
+groups in two different ways is usually two offerings.
+
 ## Why it exists
 
-The problem it solves and who for. This is the part nothing else here holds: a work item says *what* gets built, not
-*why the surface exists at all*.
+The problem it solves. This is the part nothing else here holds: a work item says *what* gets built, not *why the
+surface exists at all*.
 
 ## Surfaces
 

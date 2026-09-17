@@ -20,7 +20,21 @@ versus:
     spans several services. One service usually contributes to several offerings.
 
 lineage:
-  prior-art: "None that fits"
+  prior-art: "ITIL 4 Foundation (2019), 2.3.2: the service offering"
+  alignment: >
+    An offering is defined by the consumer group it serves, not by what delivers it. ITIL describes a
+    service offering the same way, and places it above the services behind it. The GOV.UK Service Manual
+    asks that a service name describe a task the user recognises, which is how these records are titled,
+    and its second Service Standard point, solve a whole problem for users, is why one offering spans
+    several services
+  divergence: >
+    ITIL keeps a service offering in a catalogue a tool serves. This type is a record in a repository, and
+    CI validates it. ITIL also counts goods and access as part of an offering, where `implemented-by`
+    admits service ids alone. Backstage's `System` groups components by the APIs they expose, which is this
+    shape read from the inside; an offering is read from the outside, so `Surfaces` names where a customer
+    meets it rather than the delivery channels ITIL would list. `feature-files` ties an offering to the
+    tests that prove it, and `spans-more-than-one-service` warns where one service delivers the whole of
+    it. Neither has a counterpart in any of the three sources
 
 id:
   prefix: ofr
@@ -58,15 +72,20 @@ fields:
 
   nfrs:
     required: false
+    required-when: "status == live"
     type: list
     of: id
     ref: nfrs
     reciprocal: applies-to
     mirrors-section: Where the detail lives
     description: Ids of the NFRs this offering must meet.
+    notes: >
+      Required once an offering is live, because a customer already has it and nothing else here says how
+      well it has to work. A corpus that declined `nfrs` is not asked, and adopting the type starts the
+      obligation with no edit to this file.
 
 sections:
-  required: [What it does, Why it exists, Where the detail lives]
+  required: [What it does, Who it is for, Why it exists, Where the detail lives]
   optional: [Surfaces, Known limitations]
 
 export:
@@ -74,6 +93,7 @@ export:
   fields: [id, title, status, implemented-by, feature-files, nfrs, tags]
   sections:
     What it does: full
+    Who it is for: full
     Why it exists: full
     Surfaces: full
     Where the detail lives: full
@@ -96,6 +116,14 @@ rules:
     message: >
       prose has outgrown the links. Move the detail into the documents this points at, and link to them
       from here.
+  - id: spans-more-than-one-service
+    description: An offering is delivered by more than one service.
+    severity: warning
+    # Guarded on the field, so a corpus that declined `services` is not warned about one it cannot fill.
+    expr: "present('implemented-by') implies entries('implemented-by') >= 2"
+    message: >
+      one service delivers the whole of this. Write the service record instead, or name the other
+      services the customer is getting.
   # The only part of a feature file path this corpus can check without reading a code repository.
   - id: feature-file-repo
     description: A feature file path begins with a repository one of the implementing services names.

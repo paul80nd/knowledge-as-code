@@ -19,6 +19,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **`spans-more-than-one-service` warns where one service delivers the whole of an offering.** An offering naming
+  one service in `implemented-by` restates the service record beside it. The rule is guarded on the field, so a
+  corpus that declined `services` is not warned about one it cannot fill.
+
 - **A rule expression can count a field's entries.** `entries('implemented-by')` answers how many, where
   `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on
   an absent field guards with `present()` first. `min-items:` states the same floor as an error, so reach for the
@@ -56,6 +60,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the other, and `validate` reports either end that does not.
 
 ### Changed
+
+- **An offering says who it is for.** `Who it is for` is a required section, and it travels in the export. ITIL 4
+  defines a service offering by the consumer group it serves, and that group is what decides where one offering ends
+  and the next begins. The `Why it exists` guidance in each `_template.md` no longer asks for the audience, because
+  the new section holds it. An existing offering gains one heading.
+
+- **An offering that is `live` states an NFR.** `nfrs` is required once the status reaches `live`: a customer
+  already has the offering, and nothing else on the record says how well it has to work. A corpus that declined
+  `nfrs` is not asked, and adopting the type starts the obligation with no edit to `.schema/offerings.yaml`.
+
+- **`offerings` names its prior art.** `lineage` said "None that fits" and left `alignment` and `divergence` empty.
+  It now names ITIL 4 Foundation 2.3.2, the service offering, and states what the type takes from ITIL, the GOV.UK
+  Service Manual and Backstage, and where it parts from each. Both values render into every adopting corpus's
+  `knowledge-as-code/lineage.md`. `docs/framework/lineage.md` records that ITIL is paywalled, beside the rows that
+  already were.
 
 - **The `capability` type is now `offering`.** A record lands in `offerings/` as `ofr-borrowing`, the page beside
   it is `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and

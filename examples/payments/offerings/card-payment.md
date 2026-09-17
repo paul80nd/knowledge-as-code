@@ -29,6 +29,11 @@ the customer sees one charge rather than two.
 
 Authorisation and capture are separate steps for that reason. An order that never ships is never charged.
 
+## Who it is for
+
+Anyone who reaches the checkout. Paying needs no account, so the group is every visitor with an order to
+settle.
+
 ## Why it exists
 
 Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.

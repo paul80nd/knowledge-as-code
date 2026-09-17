@@ -30,6 +30,10 @@ One card borrows at every branch, and an item borrowed at one branch is returned
 Within this offering [svc-notices] writes to the borrower at three moments: a loan approaching its due date, a loan
 already overdue, and a membership due for renewal.
 
+## Who it is for
+
+Cardholders of any library in the consortium, and the counter staff who borrow on their behalf.
+
 ## Why it exists
 
 Lending is what the consortium is for. Every branch, every item and every card exists to support this one exchange.

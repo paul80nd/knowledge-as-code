@@ -28,6 +28,11 @@ A borrower searches the consortium's collection, sees which branches hold a copy
 Search reaches the whole consortium. A borrower standing in one
 [branch](../glossary/example-libraries.md#branch) sees stock in every other, and may place a hold on any of it.
 
+## Who it is for
+
+Anyone. The catalogue answers a search without a card, so a person who has not joined yet still reaches
+this.
+
 ## Why it exists
 
 A borrower who cannot find a title does not borrow it. Discovery is the only surface most borrowers ever use, and every

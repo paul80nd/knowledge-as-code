@@ -211,6 +211,16 @@ An offering answers what the estate offers a customer, which is the question a s
 travels, because there is nothing in one to trim: `hub-not-specification` weighs the whole record against its outbound
 links and keeps it short.
 
+**The consumer group decides where one offering ends and the next begins.** `Who it is for` is required, and it names
+that group. ITIL 4 defines a service offering the same way, and the type takes the definition from there. It does not
+take ITIL's other tests: two groups served in two different ways are two offerings here, however much they share
+underneath. `spans-more-than-one-service` warns where one service delivers the whole of an offering, because a record
+that names one service restates the service record beside it.
+
+**`nfrs` is required once an offering is `live`.** A customer already has it, and no other field says how well it has
+to work. A corpus that declined `nfrs` is not asked, and adopting the type starts the obligation with no edit to
+`.schema/offerings.yaml`.
+
 **`Where the detail lives` is the only place the work items are written.** The type declares no field for them: a
 tracker reference is a link a reader follows, not a value an agent filters on, and one estate's `ADO#1150` is another's
 `gh#2101`. The section travels at `full`, so a consumer reads the labels. It does not read the addresses: a section's
