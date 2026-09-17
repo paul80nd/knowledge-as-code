@@ -365,7 +365,7 @@ public class GeneratorTests
                 ["retention"] = new()
                 {
                     Name = "retention", Description = "SHORT PROSE",
-                    RequiredWhen = "classification in [personal, special-category]"
+                    RequiredWhen = "personal-data in [personal, special-category]"
                 }
             }
         };
@@ -375,7 +375,7 @@ public class GeneratorTests
 
         // The condition is quoted exactly, and closes the note it qualifies rather than sitting in a
         // second table the reader has to look away to.
-        Assert.Contains("SHORT PROSE Required when `classification in [personal, special-category]`.", row);
+        Assert.Contains("SHORT PROSE Required when `personal-data in [personal, special-category]`.", row);
         Assert.DoesNotContain("**Conditionally required**", table);
     }
 

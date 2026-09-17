@@ -2,4 +2,9 @@
 
 # Data Index (DAT)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID            | Title                       | Owned by          | Classification | Personal data | Retention                                                            |
+|---------------|-----------------------------|-------------------|----------------|---------------|----------------------------------------------------------------------|
+| dat-borrowers | [Borrowers](borrowers.md)   | svc-lending       | confidential   | personal      | Six years after the membership lapses, then the row is anonymised.   |
+| dat-loans     | [Loans and Holds](loans.md) | svc-lending       | confidential   | personal      | The borrower link is cleared two years after the item comes back.    |
+| dat-payments  | [Payments](payments.md)     | svc-lending       | confidential   | personal      | Seven years from the end of the financial year the payment falls in. |
+| dat-catalogue | [Catalogue](catalogue.md)   | svc-catalogue-api | public         | none          |                                                                      |

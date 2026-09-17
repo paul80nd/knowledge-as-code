@@ -27,11 +27,39 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   requires it where `mechanism` is `manual`. An automated check leaves a run in its own logs, and a periodic human
   check leaves nothing otherwise. It travels in the export, and `kac new` sends a `_template.md` naming it.
 
+- **A data document says whether it holds personal data.** `personal-data` takes `none`, `personal` or
+  `special-category`, and `kac validate` requires it. `retention` is now required from this field rather than from
+  `classification`, so data that is confidential and personal is asked for a retention period.
+
+- **A data document says who the data is about.** `data-subjects` takes the categories of people, in the corpus's own
+  words, and `kac validate` requires it where `personal-data` is anything but `none`. GDPR Article 30(1)(c) asks for
+  the categories of data subjects, and the NIST Privacy Framework asks the same as ID.IM-P3.
+
+- **A data document says where the data is kept.** `region` takes a cloud region or a place, and `kac validate`
+  requires it. The `Where it lives` table asked for it and nothing read the answer.
+
+- **A data document says what the data is for.** `Purpose` is a required section. GDPR Article 30(1)(b) asks for the
+  purposes of the processing, and the NIST Privacy Framework asks the same as ID.IM-P5.
+
+- **The `Flows` table says where each recipient processes the data.** `kac new` sends a `_template.md` with the
+  column. `region` covers the owning service, so a transfer out of the country is recorded beside the recipient that
+  makes it, which is what GDPR Article 30(1)(e) asks about.
+
 ### Changed
 
 - **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
   cadence beside it. `kac validate` reports `enum` against a control still carrying the old value, and a corpus
   rewrites it by hand.
+
+- **`classification` grades confidentiality alone.** The field takes `public`, `internal` and `confidential`.
+  `personal` and `special-category` move to `personal-data`, because a category of data is not a grade of sensitivity.
+  `kac validate` reports `enum` against a data document still carrying either value in `classification`, and a corpus
+  rewrites it by hand.
+
+- **`data` states what it takes from current practice.** `lineage` was measured against GDPR Article 30, the NIST
+  Privacy Framework v1.0 and ISO/IEC 27002:2022. `alignment` claimed transfers and security measures, which the type
+  asks for nowhere. Both now name what the type takes and where it parts from them. `kac generate` writes both into
+  every adopting corpus's `knowledge-as-code/lineage.md`.
 
 - **`controls` states what it takes from current practice.** `lineage` was measured against NIST SP 800-53A Rev. 5,
   the OSCAL assessment models and the CIS Controls Assessment Specification. `alignment` and `divergence` now name

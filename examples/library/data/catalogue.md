@@ -1,0 +1,95 @@
+---
+id: dat-catalogue
+type: data
+tier: descriptive
+status: active
+owned-by: svc-catalogue-api
+classification: public
+personal-data: none
+region: UK South
+flows-to:
+  - svc-covers-cdn
+  - svc-search
+owner: human:robin.hale
+tags: [ bibliographic, catalogue ]
+---
+
+# Catalogue
+
+`Data: dat-catalogue` `ACTIVE`
+
+Every title the consortium lends, every physical copy of it, and where that copy is shelved.
+
+## Purpose
+
+* **Letting anyone find a title.** The public site and [svc-search] read these rows, and no sign-in is needed.
+* **Telling staff where a copy is.** A barcode, an owning branch and a shelf location are how an item is found or
+  traced.
+* **Recording what the consortium once held.** A withdrawn work stays in the catalogue, so a borrower learns the
+  answer rather than nothing.
+
+No lawful basis is recorded, and `data-subjects` is left out, because `personal-data` is `none`.
+
+## Entities
+
+* **Work**: a title, independent of edition. Author, subject headings and a short description.
+* **Edition**: one published form of a work. ISBN, publisher, year, format and language.
+* **Item**: one physical copy on one shelf. Barcode, owning branch, shelf location and condition.
+* **Branch**: a library building. Name, address, opening hours and the collections it keeps.
+
+_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
+
+## Where it lives
+
+|                    |                                             |
+|--------------------|---------------------------------------------|
+| **Owning service** | [svc-catalogue-api]                         |
+| **Store**          | Azure SQL, database `sqldb-catalogue-<env>` |
+
+This is the one domain in the estate that [svc-lending] does not map. [svc-catalogue-api] designed the schema and owns
+it outright.
+
+Cover images sit apart from the rows that describe them, in the blob storage [svc-covers-cdn] serves.
+
+## Classification
+
+`public`. The consortium publishes the catalogue and wants it read. Anyone can browse it without signing in, and the
+same rows answer the public site and the staff tools. `personal-data` is `none`: an author's name describes a work and
+names no living person the consortium processes data about.
+
+An item's condition note is the one field staff would rather not publish, and [svc-catalogue-api] returns it to
+signed-in staff only. That is a presentation rule and not a classification: the row itself is public.
+
+## Retention
+
+Kept indefinitely. A work stays in the catalogue after the last copy is withdrawn, because a borrower searching for it
+should learn that the consortium once held it.
+
+A withdrawn item keeps its barcode. Barcodes are never reused, so an old loan still resolves to the item it named.
+
+## Flows
+
+| Goes to          | Why                                   | What is shared                      | Where they process it |
+|------------------|---------------------------------------|-------------------------------------|-----------------------|
+| [svc-search]     | Building the search index             | Work, edition and item, in full     | UK South              |
+| [svc-covers-cdn] | Serving a cover image beside a result | ISBN and the cover image it selects | UK South              |
+
+Most of this domain arrives rather than leaves. [int-bibliographic-data] supplies the work and edition records, and the
+consortium adds the item and branch records to them. That direction is not recorded in `flows-to`, which lists
+recipients only.
+
+## Related
+
+* [svc-catalogue-api] owns this data.
+* [int-bibliographic-data] is where the work and edition records come from.
+
+---
+
+_(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
+readable.)_
+
+[int-bibliographic-data]: ../integrations/bibliographic-data.md
+[svc-catalogue-api]: ../services/catalogue-api.md
+[svc-covers-cdn]: ../services/covers-cdn.md
+[svc-lending]: ../services/lending.md
+[svc-search]: ../services/search.md

@@ -13,8 +13,8 @@ stores they live in. The rest of the record says how sensitive they are, how lon
 
 Two readers arrive with different questions. Someone building a feature wants to know where bookings actually live and
 which service owns them. Ask around and the answers disagree. Someone answering an auditor wants to know what personal
-data we hold and how long we keep it. Nobody should have to read a database schema to answer that. A data document
-answers the first question the same way every time, and gives the policy tier its evidence for the second.
+data we hold, why we hold it and how long we keep it. Nobody should have to read a database schema to answer that. A
+data document answers the first question the same way every time, and gives the policy tier its evidence for the second.
 
 An author filling in `owned-by` also finds the entities that two services both believe they own. That disagreement is a
 design problem worth finding on paper.
@@ -38,19 +38,22 @@ exceptions to the plural-folder rule.
 
 <!-- BEGIN GENERATED: schema-data -->
 
-| Field              | Value                                                            | Notes                                                                                                                                                   |
-|--------------------|------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id` *†            | string                                                           | Stable, unique across the corpus, never reused, in the format the type sets.                                                                            |
-| `type` *†          | string                                                           | The singular name of the type, which CI checks against the folder.                                                                                      |
-| `tier` *†          | `descriptive`                                                    | The record's trust level, fixed for the type and checked against the folder.                                                                            |
-| `status` *†        | `active` `deprecated`                                            | Whether this data is current or deprecated.                                                                                                             |
-| `owner` *†         | string                                                           | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                  |
-| `sources` †        | list                                                             | Where this record's content came from, one entry per source.                                                                                            |
-| `tags` †           | list                                                             | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                           |
-| `owned-by` *       | id                                                               | Id of the service that owns this data.                                                                                                                  |
-| `classification` * | `public` `internal` `confidential` `personal` `special-category` | How sensitive the data is. `personal` and `special-category` make `retention` required.                                                                 |
-| `retention`        | string                                                           | How long the data is kept in practice. Where that differs from the policy, record both. Required when `classification in [personal, special-category]`. |
-| `flows-to`         | list                                                             | Ids of the services and integrations this data is sent to.                                                                                              |
+| Field              | Value                                | Notes                                                                                                                                                  |
+|--------------------|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                               | Stable, unique across the corpus, never reused, in the format the type sets.                                                                           |
+| `type` *†          | string                               | The singular name of the type, which CI checks against the folder.                                                                                     |
+| `tier` *†          | `descriptive`                        | The record's trust level, fixed for the type and checked against the folder.                                                                           |
+| `status` *†        | `active` `deprecated`                | Whether this data is current or deprecated.                                                                                                            |
+| `owner` *†         | string                               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                 |
+| `sources` †        | list                                 | Where this record's content came from, one entry per source.                                                                                           |
+| `tags` †           | list                                 | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                          |
+| `owned-by` *       | id                                   | Id of the service that owns this data.                                                                                                                 |
+| `classification` * | `public` `internal` `confidential`   | How widely the data may be shared, from published to need-to-know.                                                                                     |
+| `personal-data` *  | `none` `personal` `special-category` | Whether the data identifies a living person, and whether GDPR Article 9 applies to it.                                                                 |
+| `data-subjects`    | list                                 | Categories of people the data is about, such as `borrowers` or `staff`. Required when `personal-data != none`.                                         |
+| `retention`        | string                               | How long the data is kept in practice. Where that differs from the policy, record both. Required when `personal-data in [personal, special-category]`. |
+| `region` *         | string                               | Where the data is stored and processed, as a cloud region or a place.                                                                                  |
+| `flows-to`         | list                                 | Ids of the services and integrations this data is sent to.                                                                                             |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -62,15 +65,23 @@ exceptions to the plural-folder rule.
 1. Copy [`_template.md`](data/_template.md) to `<slug>.md`. Data documents take slug ids, `dat-<name>`.
 2. Name the entities the domain covers and the one service that owns them. If two services claim the same entity,
    resolve the claim before you write the document.
-3. Classify honestly. Customer names, email addresses and payment histories are `personal`. Where the classification is
-   `special-category`, record the lawful basis for holding it.
-4. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
-5. Record `flows-to`: the services and [integrations](integrations.md) that receive this data.
+3. State what the estate does with the data under `Purpose`. Where `personal-data` is `personal` or
+   `special-category`, name the lawful basis beside the purpose it supports.
+4. Set `classification` from how widely the data may be shared, and `personal-data` from whether it identifies a living
+   person. The two answer different questions. A payment history is `confidential` and `personal`, and a published
+   catalogue is `public` and `none`.
+5. Name the `data-subjects`: the categories of people the data is about, such as `borrowers` or `staff`.
+6. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
+7. Record `region`: where the owning service keeps the data.
+8. Record `flows-to`: the services and [integrations](integrations.md) that receive this data, and say in the `Flows`
+   table where each one processes it.
 
 **Conventions**
 
-* **A `personal` or `special-category` classification requires a `retention`.** Leave it out and `required-field` fails
-  the build.
+* **A `personal` or `special-category` value in `personal-data` requires a `retention` and a `data-subjects`.** Leave
+  either out and `required-field` fails the build.
+* **`region` states where the owning service keeps the data, and never where a recipient processes it.** A recipient
+  abroad is recorded in the last column of the `Flows` table.
 * **Never put actual data here**: no sample records, no identifiers, no connection strings.
 
 ## What CI checks

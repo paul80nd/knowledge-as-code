@@ -292,7 +292,7 @@ public static class PartLineSource
 
 // A field's `required-when:` names the condition under which an otherwise optional field must be
 // filled in, as a test against one other field of the same document. A deliberately closed vocabulary:
-// `status == accepted`, `mechanism != not-enforced`, `classification in [personal, special-category]`.
+// `status == accepted`, `mechanism != not-enforced`, `personal-data in [personal, special-category]`.
 //
 // It is not the `expr:` language, and the difference is the point. A rule asks a question about a whole
 // document and may need to combine several. This asks one thing about one field, and stays legible in a
