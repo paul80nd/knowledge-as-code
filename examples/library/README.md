@@ -60,7 +60,7 @@ comes from, and a service coupled to the whole estate with no dependency edges.
 ## Maturity
 
 **Services are the proven type here.** A consumer repository built a full catalogue against that schema and returned a
-run of findings, tracked as issues upstream. `data` was measured next, and writing four documents against it found a
+run of findings, tracked as issues upstream. `data` was measured next, and writing documents against it found a
 `classification` field grading two different things at once. `processes` and `runbooks` hold no records at all, and
 every other schema here has met little real content. That is the honest limit: a schema is wrong in ways only real
 content reveals.

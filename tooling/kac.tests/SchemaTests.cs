@@ -82,9 +82,9 @@ public class SchemaTests
     [InlineData("status == accepted", "draft", false)]
     [InlineData("mechanism != not-enforced", "ci", true)]
     [InlineData("mechanism != not-enforced", "not-enforced", false)]
-    [InlineData("classification in [personal, special-category]", "personal", true)]
-    [InlineData("classification in [personal, special-category]", "special-category", true)]
-    [InlineData("classification in [personal, special-category]", "internal", false)]
+    [InlineData("personal-data in [personal, special-category]", "personal", true)]
+    [InlineData("personal-data in [personal, special-category]", "special-category", true)]
+    [InlineData("personal-data in [personal, special-category]", "none", false)]
     public void RequiredWhen_reads_every_form_the_schema_uses(string condition, string actual, bool expected)
     {
         var required = Schema.ParseRequiredWhen("f", condition);
@@ -97,7 +97,7 @@ public class SchemaTests
     [Theory]
     [InlineData("status == accepted")]
     [InlineData("mechanism != not-enforced")]
-    [InlineData("classification in [personal, special-category]")]
+    [InlineData("personal-data in [personal, special-category]")]
     public void RequiredWhen_does_not_hold_when_the_field_it_names_is_absent(string condition)
     {
         var required = Schema.ParseRequiredWhen("f", condition);

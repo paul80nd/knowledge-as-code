@@ -16,17 +16,18 @@ detail: >
 lineage:
   prior-art: "[GDPR Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj), records of processing activities"
   alignment: >
-    Article 30(1)'s purposes of the processing as `Purpose`, its categories of personal data as `Entities`, its
-    categories of recipients as `flows-to`, and its envisaged time limit for erasure as `retention`. `region` answers
-    the NIST Privacy Framework's ID.IM-P7, which asks where data is processed. Whether deletion actually runs is this
-    type's own question, and the NIST Privacy Framework asks it as CT.DM-P5
+    Article 30(1)'s purposes of the processing as `Purpose`, its categories of recipients as `flows-to`, and its
+    envisaged time limit for erasure as `retention`. `region` answers the NIST Privacy Framework's ID.IM-P7, which
+    asks where data is processed. Whether deletion actually runs is this type's own question, and the NIST Privacy
+    Framework asks it as CT.DM-P5
   divergence: >
     Article 30 is organised by processing activity and by controller. This type is organised by data domain. **A Data
     document is not a ROPA and does not satisfy Article 30**. It names no controller, no representative and no data
-    protection officer, and it records the security measures of Article 30(1)(g) on the service. Article 30(1)(c) also
-    asks for the categories of data subjects, and Article 30(1)(e) for a transfer to a third country. Both are prose
-    here and neither is a field. `classification` and `personal-data` split one question the sources ask separately:
-    ISO/IEC 27002:2022 5.12 grades confidentiality, and GDPR Article 9 names a category of data
+    protection officer, and it describes no security measures, where Article 30(1)(g) asks for a general description
+    of them. `Entities` lists the domain's objects and not the categories of personal data of Article 30(1)(c), whose
+    categories of data subjects are prose in `Classification`. Article 30(1)(e)'s transfer to a third country is prose
+    in `Flows`. `classification` and `personal-data` split one question the sources ask separately: ISO/IEC 27002:2022
+    5.12 grades confidentiality, and GDPR Article 9 names a category of data
 
 notes: >
   The folder is singular because English gives `data` no plural. `glossary/` is the other singular folder in the

@@ -20,7 +20,7 @@ tags: [ borrowers, membership ]
 
 `Data: dat-borrowers` `ACTIVE`
 
-Who holds a library card, how the consortium reaches them, and what their card entitles them to.
+Who holds a library card, how the consortium contacts them, and what their card entitles them to.
 
 ## Purpose
 

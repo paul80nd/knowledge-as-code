@@ -39,8 +39,8 @@ is already reading.
 Which types travel is therefore a fact about `.schema/` rather than about the tool. A corpus adopting a type receives
 what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
 
-The one type declaring no block is `data`. That is not a decision, and nothing here is deliberately held back. No
-corpus in this repository has a data record, so nothing here could prove the block was written right.
+The one type declaring no block is `data`. That is not a decision, and nothing here is deliberately held back.
+`examples/library` now has data records, so the block can be written and proved.
 
 ### A type declaring no sections
 

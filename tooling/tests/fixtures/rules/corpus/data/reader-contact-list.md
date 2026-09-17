@@ -29,7 +29,7 @@ In the catalogue service's own store.
 
 ## Classification
 
-`internal`, and `personal-data` is `personal` — this document is here for a different fault.
+`internal`, and `personal-data` is `personal`. This document is here for a different fault.
 
 ## Retention
 

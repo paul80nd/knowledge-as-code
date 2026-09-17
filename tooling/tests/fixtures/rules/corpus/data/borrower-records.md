@@ -28,8 +28,8 @@ In the catalogue service's own store.
 
 ## Classification
 
-`personal-data` is `personal`, which is what makes `retention` required — and it is absent, which is
-what this document is for.
+`personal-data` is `personal`, which is what makes `retention` required. It is absent, which is what
+this document is for.
 
 ## Retention
 
