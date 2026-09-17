@@ -6,6 +6,7 @@
     "id": "dev-nothing-learns-from-a-fault",
     "title": "A fix lands and nothing asks what allowed the fault",
     "status": "active",
+    "risk": "medium",
     "departs-from": [
       "eng:pol-INCR.ACTIONS",
       "eng:pol-INCR.EVIDENC",
@@ -27,11 +28,12 @@
   "sections": {
     "What we are doing instead": "A defect is fixed and the fix keeps the test that catches it, which `eng:std-GATES` asks for. The reasoning behind the fix lands in the commit message. Nothing else survives.\n\nThere is no place to record what happened, what it cost, or what would stop it happening again. An action agreed in a pull request review is agreed in a comment thread, and closes when somebody remembers it.",
     "Why we need it": "The `postmortems` type exists in the framework and this corpus declined it, because nothing here has run an incident worth one. Adopting a type for records nobody has written is scaffolding, and this repository has deleted invented records before.",
+    "What the risk is": "The same fault returns by a route the first fix did not cover. A fixed defect keeps its test, so the exact fault stays fixed, and nothing asks what let it through. An action agreed in a review thread closes when somebody remembers it, or never.",
     "What compensates": "* A fixed defect keeps the test that catches it, so the same fault does not return unnoticed.\n* Every fix is a pull request, and the commit message says why, so the reasoning is recoverable from git.\n* The issue tracker records agreed work, and an issue closes on the day the work lands.\n* [dev-decisions-live-in-commits] records the same weakness for a decision.",
     "How it closes": "Adopting `postmortems` gives an incident somewhere to go, and a standard says when one is written and what it contains. A security action gets the same treatment: an issue on the tracker, labelled, with an owner.\n\nThe honest trigger is the first incident worth writing up. This record closes when that happens and a record is written, or at the review date where no incident has happened by then.",
     "Scope": "Every fault in `kac`, in the documentation site, in the workflows or in the plugin, and every action agreed after one."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/nothing-learns-from-a-fault.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/nothing-learns-from-a-fault.md"
   }
 }

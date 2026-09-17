@@ -25,9 +25,9 @@ one and ask it questions. The estates they describe are invented and govern nobo
 
 | Plugin | Corpus content version |
 |---|---|
-| `example-libraries` | `0.10.1` |
-| `example-engineering` | `0.22.3` |
-| `example-payments` | `0.17.0` |
-| `example-dogfooding` | `0.37.0` |
+| `example-libraries` | `0.10.2` |
+| `example-engineering` | `0.22.4` |
+| `example-payments` | `0.17.1` |
+| `example-dogfooding` | `0.38.0` |
 
-Built from [`73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda`](https://github.com/paul80nd/knowledge-as-code/commit/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda).
+Built from [`2fe23ded7c004eef896fb1cd0f644ce2175b2e8b`](https://github.com/paul80nd/knowledge-as-code/commit/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b).

@@ -6,6 +6,7 @@
     "id": "dev-unsigned-commits",
     "title": "Commits are not signed",
     "status": "active",
+    "risk": "low",
     "departs-from": [
       "eng:pol-EVER.SIGNED"
     ],
@@ -23,11 +24,12 @@
   "sections": {
     "What we are doing instead": "A commit records the name and address git was configured with, and GitHub shows the account that pushed it. A merge into `main` goes through a pull request, so the account behind a change is recorded twice: on the commit and on the merge.\n\nAn agent-written commit adds a `Co-Authored-By` trailer and a session link. That says what wrote the change, and it is no more verifiable than the author line above it.",
     "Why we need it": "Signing means a key on the maintainer's machine, a key in every agent's environment, and a branch rule that rejects an unsigned push. The middle one is the problem. Much of this repository is written by agents running in sandboxes. Handing each one a signing key spreads the key and does not protect the history.",
+    "What the risk is": "An author line says somebody wrote a commit who did not. The branch rule refuses a direct push and GitHub records the account behind every merge, so forging that line means holding the account. Nothing here is deployed from a checkout, so a forged commit reaches a user only through a release the same account has to approve.",
     "What compensates": "* Every merge into `main` is a pull request from a named account, and the branch rule refuses a direct push.\n* GitHub records the account that pushed each commit, separately from the author line in the commit.\n* The repository is public, so a rewritten history is visible to anybody with a clone.\n* Nothing here is deployed from a checkout. What ships is built by a workflow from the commit on `main`.",
     "How it closes": "GitHub can sign on the merge, which puts one key in one place and asks nothing of an agent's machine. Turning that on and requiring signed commits on the branch rule closes this record.",
     "Scope": "Every commit in this repository, on `main` and on every branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/unsigned-commits.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/unsigned-commits.md"
   }
 }

@@ -6,6 +6,7 @@
     "id": "dev-decisions-live-in-commits",
     "title": "The reasoning behind a decision lives in the commit that made it",
     "status": "active",
+    "risk": "medium",
     "departs-from": [
       "eng:pol-KNOW.DECIDE"
     ],
@@ -23,11 +24,12 @@
   "sections": {
     "What we are doing instead": "A commit message here explains at length why the change was made, and says little about what changed. The pull request body gives the evidence. `tooling/CLAUDE.md` records the decisions a contributor has to know before they change the tool.\n\nNeither has an id. Nothing cites either from a record, and nothing supersedes one when the decision is reversed. Finding the reasoning behind a design means reading `git log` and knowing what to search for.",
     "Why we need it": "`adrs/` in the corpora beside this one records the invented estate's decisions, and a decision about the tool would not\nbelong among them. Adopting the type here means moving several years of reasoning out of the commit messages that\nalready contain it. Nobody has needed it badly enough to do that.",
+    "What the risk is": "A decision gets reversed by somebody who never found the reasoning behind it. Nothing cites a commit, so finding the argument means knowing what to search `git log` for. The cost falls on the second person to work here, and on every session that rebuilds a decision from the code in front of it.",
     "What compensates": "* A commit message here says why, which [std-PROSE] requires, and the history is public.\n* `tooling/CLAUDE.md` records the decisions a contributor meets, so the ones that matter daily are on a page.\n* A pull request body gives the evidence behind the change, and the branch rule means every change has one.\n* [dev-one-maintainer] is why this has cost nothing so far. It is also why it would cost a lot on the day a second\n  person arrives.",
     "How it closes": "This corpus adopts `adrs`, and the decisions worth citing move into it: only the ones a record needs to point at. This record closes on that.",
     "Scope": "Every decision about `kac`, the schema, the documentation site or the workflows."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/decisions-live-in-commits.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/decisions-live-in-commits.md"
   }
 }

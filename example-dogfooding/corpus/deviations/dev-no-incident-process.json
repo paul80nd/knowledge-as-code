@@ -6,6 +6,7 @@
     "id": "dev-no-incident-process",
     "title": "There is no incident process, so everything is handled informally",
     "status": "active",
+    "risk": "medium",
     "departs-from": [
       "eng:pol-INCR.ADHOC",
       "eng:pol-INCR.COMMS",
@@ -32,11 +33,12 @@
   "sections": {
     "What we are doing instead": "[`../runbooks/`](../runbooks/) has a runbook for each of three failures somebody has met. Outside those three, there is no declaration, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.\n\n`.github/SECURITY.md` gives the route in for a vulnerability, and says a report is acknowledged within about a week.\nNo record here points at that route, and nothing covers an ordinary failure a user meets.\n\nWhoever installed a bad version of `kac` hears nothing until the next version lands. There is no announcement, no advisory and no place a user would look.",
     "Why we need it": "`kac` is a command-line tool with no service behind it, so an incident here is a bad release, not an outage. The\nrecovery is a new version, which [std-VERS] already governs. A declaration procedure with one person to declare it to\nwould be a form the maintainer fills in for themselves.\n\nThe gap that costs a user is the silence, and that one is real.",
+    "What the risk is": "Somebody installs a broken version of `kac` and hears nothing. There is no announcement, no advisory and no page a user would check, so they find out when the next version ships or when they debug it themselves. The tool writes into a repository, so a bad release costs that user time and a revert.",
     "What compensates": "* A correction ships as a new version, which [std-VERS] governs, and a published version is never replaced.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so a `kac` that cannot run is caught before it ships.\n* `.github/SECURITY.md` gives a private route for a vulnerability, and GitHub security advisories keep the thread.",
     "How it closes": "Two pieces close this. A process record says what happens when a released version is found broken: who decides, what ships, and where users are told. A standard cites `.github/SECURITY.md` as the reporting route and states the acknowledgement the file already promises.\n\nTelling users means a GitHub release note, and a security advisory where the fault warrants one. This record closes when both exist.",
     "Scope": "`kac` as published to nuget.org, the documentation site, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/no-incident-process.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/no-incident-process.md"
   }
 }

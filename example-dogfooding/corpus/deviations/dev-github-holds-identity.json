@@ -6,6 +6,7 @@
     "id": "dev-github-holds-identity",
     "title": "GitHub decides who anybody here is",
     "status": "active",
+    "risk": "medium",
     "departs-from": [
       "eng:pol-ACCS.AUTHN",
       "eng:pol-ACCS.NAMED"
@@ -28,11 +29,12 @@
   "sections": {
     "What we are doing instead": "A change arrives under a named GitHub account, and the commit records that account's name and address. A workflow acts as a token GitHub issues for one run. Both satisfy the clauses in practice. Both are GitHub's arrangement, and no record here states them.\n\nNothing here sets a password rule, a second-factor rule or a session length. The maintainer's account has a passkey and a hardware key because GitHub offers them, not because a record asks for them.",
     "Why we need it": "Writing a standard for authentication means writing rules this repository cannot enforce. GitHub owns the login screen, so a rule about it would have no check behind it. [std-CI] states what a workflow's identity may do, which is the half this repository controls.",
+    "What the risk is": "The maintainer's GitHub account is taken, and no rule here would have refused the arrangement that let it happen. A weaker second factor would break nothing, because no record states what an account used here has to be. The repository stores nothing private, so what an attacker gets is the history and a route to the publish approval.",
     "What compensates": "* Every commit, review and merge is attributable to a GitHub account, and the history shows it.\n* [std-CI] gives each workflow the least permission it needs, so a compromised account gets only what its job\n  declares.\n* Publishing to nuget.org waits for an approval on a named environment, so a stolen session still needs a person.\n* The repository is public and stores nothing private, so a lost account threatens the history's integrity and nothing\n  else.",
     "How it closes": "Somebody writes down what this repository requires of an account used here: a second factor, a hardware key for the maintainer, and what happens when either is lost. That belongs in a standard, and the standard closes this record.\n\nWhere the answer stays \"whatever GitHub does\", write that in a standard and close this record on it.",
     "Scope": "Every account and token used on the repository, its packages, its pages and its marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/github-holds-identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/github-holds-identity.md"
   }
 }

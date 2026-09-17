@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.37.0",
+  "contentVersion": "0.38.0",
   "mechanismVersion": 16,
-  "commit": "73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda",
+  "commit": "2fe23ded7c004eef896fb1cd0f644ce2175b2e8b",
   "dirty": false,
-  "generatedAt": "2026-09-17T20:02:13Z",
+  "generatedAt": "2026-09-17T20:52:55Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda"
+    "ref": "2fe23ded7c004eef896fb1cd0f644ce2175b2e8b"
   },
   "tracker": {
     "target": "github",
@@ -37,13 +37,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.22.3",
+      "contentVersion": "0.22.4",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda"
+        "ref": "2fe23ded7c004eef896fb1cd0f644ce2175b2e8b"
       },
       "tracker": {
         "target": "github",
@@ -85,6 +85,7 @@
       "sections": {
         "What we are doing instead": "full",
         "Why we need it": "full",
+        "What the risk is": "full",
         "What compensates": "full",
         "How it closes": "full",
         "Scope": "full"

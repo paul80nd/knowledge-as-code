@@ -6,6 +6,7 @@
     "id": "dev-no-reproducible-build",
     "title": "Two builds of kac are never compared",
     "status": "active",
+    "risk": "low",
     "departs-from": [
       "eng:pol-AUTV.BITWISE",
       "eng:pol-AUTV.REPRO"
@@ -26,11 +27,12 @@
   "sections": {
     "What we are doing instead": "`dotnet run --project tooling/kac` builds from a checkout with the .NET SDK the repository pins, on a runner GitHub\ngives fresh for every job. That is a reproducible environment by construction, and no standard here says so.\n\nThe package published to nuget.org is built once, by the publish workflow, from the commit on `main`. Nobody has ever built the same commit twice and compared the two `.nupkg` files.",
     "Why we need it": "A byte-identical build needs `ContinuousIntegrationBuild`, a deterministic source path map and a source-link setup, and then a job that builds twice and diffs. That is real work against a threat this repository does not face: the package is built by a workflow whose run is public, from a commit anybody can read.",
+    "What the risk is": "The published package differs from the commit it claims, and nothing here would show it. One public workflow builds what ships, and nuget.org refuses to replace a version, so a substitution nobody catches needs that workflow itself to be compromised.",
     "What compensates": "* The publish workflow is the only thing that builds what ships, and its run log records the commit.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so what ships has been run.\n* [tol-dotnet-sdk] pins the SDK, and [std-CONFIG] requires that pin to be an exact version.\n* nuget.org never lets a published version be replaced, so a rebuild cannot overwrite what people already have.",
     "How it closes": "The publish workflow builds the package twice and fails where the two differ. A standard states the rule, and this record closes when both exist.\n\nWhere that is still not worth doing at the review date, the alternative is provenance. An attestation names the workflow, the commit and the runner. [dev-package-unscanned] asks for the same thing.",
     "Scope": "The `kac` package published to nuget.org, and the local builds a contributor runs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/no-reproducible-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/no-reproducible-build.md"
   }
 }

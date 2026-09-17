@@ -6,6 +6,7 @@
     "id": "dev-standing-publish-rights",
     "title": "The maintainer's publish rights never go away",
     "status": "active",
+    "risk": "medium",
     "departs-from": [
       "eng:pol-ACCS.PERSIST",
       "eng:pol-ACCS.ZERO"
@@ -27,11 +28,12 @@
   "sections": {
     "What we are doing instead": "Publishing `kac` waits for an approval on the `nuget.org` environment, so a release takes two acts. The rights behind that approval are held all the time, by the person who also writes the change and approves the pull request.\n\nNothing grants those rights for a window and removes them afterwards, and nothing reviews whether they are still needed.",
     "Why we need it": "A just-in-time grant needs somebody to grant it. With one maintainer, the approver and the requester are the same person, so the grant is a form filled in by whoever wanted it.",
+    "What the risk is": "A stolen session publishes a new version under the maintainer's name. It cannot replace what already shipped, and the run that pushed it is public, so the cost is one bad version and the time somebody takes to notice. Nothing takes the rights back between releases, so that window is open every day and not only on the days a release happens.",
     "What compensates": "* The `nuget.org` environment approval is a deliberate second act, recorded against the run that asked for it.\n* Trusted publishing means no long-lived key exists to steal, so the rights are useless without the account.\n* Every publish leaves a workflow run recording the commit it built, and that log is public.\n* nuget.org refuses a second push to a version it already has, so a stolen session cannot replace what shipped.",
     "How it closes": "A second maintainer makes just-in-time access mean something: one person asks, another grants, and the grant expires. This record closes on the pull request that writes that down.\n\nWhere this repository still has one maintainer at the review date, the question is what the machinery costs. Nothing here stores anybody's data, and the repository is public already.",
     "Scope": "The GitHub organisation, the nuget.org package, the pages site and the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/73f8b1560b0faee64f7c8cf8ece0cdd80d7d7bda/examples/dog-fooding/deviations/standing-publish-rights.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/standing-publish-rights.md"
   }
 }
