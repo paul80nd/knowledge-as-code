@@ -6,6 +6,7 @@ status: active
 owned-by:
 classification:
 personal-data:
+data-subjects:
 retention:
 region:
 owner:
@@ -28,6 +29,8 @@ and how it is reviewed. What is below is only what a data document adds to that.
 * **`classification`**: `public` · `internal` · `confidential`. How widely the data may be shared, and nothing else.
 * **`personal-data`**: `none` · `personal` · `special-category`. A category of data, not a grade of sensitivity. Data
   can be `confidential` and `none`, or `public` and `personal`.
+* **`data-subjects`**: required where `personal-data` is anything but `none`. The categories of people the data is
+  about, in the corpus's own words.
 * **`retention`**: required where `personal-data` is `personal` or `special-category`. "indefinitely" is an answer, and
   a revealing one.
 * **`region`**: where the owning service keeps the data, as a cloud region or a place.
@@ -69,7 +72,7 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 
 {{classification}}, because {{reason}}.
 
-For `personal` or `special-category`: who the data is about, and what personal data is present.
+For `personal` or `special-category`: what personal data is present. `data-subjects` already says who it is about.
 
 ## Retention
 
@@ -78,13 +81,13 @@ and the system does another, record both. That gap is the useful part.
 
 ## Flows
 
-| Goes to     | Why | What is shared |
-|-------------|-----|----------------|
-| [svc-{{a}}] |     |                |
-| [int-{{a}}] |     |                |
+| Goes to     | Why | What is shared | Where they process it |
+|-------------|-----|----------------|-----------------------|
+| [svc-{{a}}] |     |                |                       |
+| [int-{{a}}] |     |                |                       |
 
-_(Especially anything crossing outside the estate. Say where each recipient processes the data, because `region`
-covers the owning service alone.)_
+_(Especially anything crossing outside the estate. `region` covers the owning service alone, so the last column is
+where a transfer out of the country is recorded.)_
 
 ## Related
 

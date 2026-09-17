@@ -7,6 +7,8 @@ owner: human:alex.doe
 owned-by: svc-catalogue
 classification: confidential
 personal-data: personal
+data-subjects:
+  - borrowers
 region: UK South
 ---
 

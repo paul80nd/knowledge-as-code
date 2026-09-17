@@ -28,7 +28,7 @@ Every title the consortium lends, every physical copy of it, and where that copy
 * **Recording what the consortium once held.** A withdrawn work stays in the catalogue, so a borrower learns the
   answer rather than nothing.
 
-No lawful basis is recorded, because `personal-data` is `none`.
+No lawful basis is recorded, and `data-subjects` is left out, because `personal-data` is `none`.
 
 ## Entities
 
@@ -69,10 +69,10 @@ A withdrawn item keeps its barcode. Barcodes are never reused, so an old loan st
 
 ## Flows
 
-| Goes to          | Why                                   | What is shared                      |
-|------------------|---------------------------------------|-------------------------------------|
-| [svc-search]     | Building the search index             | Work, edition and item, in full     |
-| [svc-covers-cdn] | Serving a cover image beside a result | ISBN and the cover image it selects |
+| Goes to          | Why                                   | What is shared                      | Where they process it |
+|------------------|---------------------------------------|-------------------------------------|-----------------------|
+| [svc-search]     | Building the search index             | Work, edition and item, in full     | UK South              |
+| [svc-covers-cdn] | Serving a cover image beside a result | ISBN and the cover image it selects | UK South              |
 
 Most of this domain arrives rather than leaves. [int-bibliographic-data] supplies the work and edition records, and the
 consortium adds the item and branch records to them. That direction is not recorded in `flows-to`, which lists

@@ -7,6 +7,8 @@ owner: human:alex.doe
 owned-by: svc-catalogue
 classification: internal
 personal-data: personal
+data-subjects:
+  - readers
 retention: Until the reader opts out.
 region: UK South
 ---

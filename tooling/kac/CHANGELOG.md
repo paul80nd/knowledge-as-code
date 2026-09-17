@@ -31,11 +31,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `special-category`, and `kac validate` requires it. `retention` is now required from this field rather than from
   `classification`, so data that is confidential and personal is asked for a retention period.
 
+- **A data document says who the data is about.** `data-subjects` takes the categories of people, in the corpus's own
+  words, and `kac validate` requires it where `personal-data` is anything but `none`. GDPR Article 30(1)(c) asks for
+  the categories of data subjects, and the NIST Privacy Framework asks the same as ID.IM-P3.
+
 - **A data document says where the data is kept.** `region` takes a cloud region or a place, and `kac validate`
   requires it. The `Where it lives` table asked for it and nothing read the answer.
 
 - **A data document says what the data is for.** `Purpose` is a required section. GDPR Article 30(1)(b) asks for the
   purposes of the processing, and the NIST Privacy Framework asks the same as ID.IM-P5.
+
+- **The `Flows` table says where each recipient processes the data.** `kac new` sends a `_template.md` with the
+  column. `region` covers the owning service, so a transfer out of the country is recorded beside the recipient that
+  makes it, which is what GDPR Article 30(1)(e) asks about.
 
 ### Changed
 

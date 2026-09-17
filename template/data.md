@@ -51,6 +51,7 @@ exceptions to the plural-folder rule.
 | `owned-by` *       | id                                   | Id of the service that owns this data.                                                                                                                 |
 | `classification` * | `public` `internal` `confidential`   | How widely the data may be shared, from published to need-to-know.                                                                                     |
 | `personal-data` *  | `none` `personal` `special-category` | Whether the data identifies a living person, and whether GDPR Article 9 applies to it.                                                                 |
+| `data-subjects`    | list                                 | Categories of people the data is about, such as `borrowers` or `staff`. Required when `personal-data != none`.                                         |
 | `retention`        | string                               | How long the data is kept in practice. Where that differs from the policy, record both. Required when `personal-data in [personal, special-category]`. |
 | `region` *         | string                               | Where the data is stored and processed, as a cloud region or a place.                                                                                  |
 | `flows-to`         | list                                 | Ids of the services and integrations this data is sent to.                                                                                             |
@@ -70,16 +71,18 @@ exceptions to the plural-folder rule.
 4. Set `classification` from how widely the data may be shared, and `personal-data` from whether it identifies a living
    person. The two answer different questions. A payment history is `confidential` and `personal`, and a published
    catalogue is `public` and `none`.
-5. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
-6. Record `region`: where the owning service keeps the data.
-7. Record `flows-to`: the services and [integrations](integrations.md) that receive this data.
+5. Name the `data-subjects`: the categories of people the data is about, such as `borrowers` or `staff`.
+6. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
+7. Record `region`: where the owning service keeps the data.
+8. Record `flows-to`: the services and [integrations](integrations.md) that receive this data, and say in the `Flows`
+   table where each one processes it.
 
 **Conventions**
 
-* **A `personal` or `special-category` value in `personal-data` requires a `retention`.** Leave it out and
-  `required-field` fails the build.
+* **A `personal` or `special-category` value in `personal-data` requires a `retention` and a `data-subjects`.** Leave
+  either out and `required-field` fails the build.
 * **`region` states where the owning service keeps the data, and never where a recipient processes it.** A recipient
-  abroad is recorded in the `Flows` table.
+  abroad is recorded in the last column of the `Flows` table.
 * **Never put actual data here**: no sample records, no identifiers, no connection strings.
 
 ## What CI checks

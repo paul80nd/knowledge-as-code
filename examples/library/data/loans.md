@@ -6,6 +6,8 @@ status: active
 owned-by: svc-lending
 classification: confidential
 personal-data: personal
+data-subjects:
+  - borrowers
 retention: The borrower link is cleared two years after the item comes back.
 region: UK South
 flows-to:
@@ -56,8 +58,7 @@ The legacy circulation API writes here as well, so a counter issue and an API is
 `confidential`, and access to a historic loan is limited to the branch that issued the item. `personal-data` is
 `personal`, because a loan says what a named person read and when.
 
-The data is about borrowers. A loan arrives here as a card number, and [dat-borrowers] says who that number belongs
-to.
+A loan arrives here as a card number, and [dat-borrowers] says who that number belongs to.
 
 `personal-data` is `personal` and not `special-category`, and the field cannot express what sits between them. A
 borrowing record can reveal health, religion or sexuality without holding a single Article 9 field. The consortium
@@ -78,10 +79,10 @@ out against the database directly.
 
 ## Flows
 
-| Goes to            | Why                                | What is shared                       |
-|--------------------|------------------------------------|--------------------------------------|
-| [svc-notices]      | Overdue, due-soon and hold notices | Card number, title, due date, branch |
-| [svc-reservations] | Showing a queue position           | Card number, title, queue position   |
+| Goes to            | Why                                | What is shared                       | Where they process it |
+|--------------------|------------------------------------|--------------------------------------|-----------------------|
+| [svc-notices]      | Overdue, due-soon and hold notices | Card number, title, due date, branch | UK South              |
+| [svc-reservations] | Showing a queue position           | Card number, title, queue position   | UK South              |
 
 Nothing here leaves the estate. A notice that reaches a borrower by email includes the title, so the title crosses to
 [int-mail-delivery] through [dat-borrowers] and not through this domain.

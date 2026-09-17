@@ -6,6 +6,7 @@ status: active
 owned-by:
 classification:
 personal-data:
+data-subjects:
 retention:
 region:
 owner:

@@ -6,6 +6,9 @@ status: active
 owned-by: svc-lending
 classification: confidential
 personal-data: personal
+data-subjects:
+  - borrowers
+  - staff
 retention: Seven years from the end of the financial year the payment falls in.
 region: UK South
 flows-to:
@@ -57,11 +60,11 @@ code never enter the estate.
 `confidential`, because the finance team's access rule governs these rows and nobody else reads them. `personal-data`
 is `personal`, because a payment names a borrower through their library card number and says what they owed.
 
-The data is about borrowers. A refund also names the member of staff who authorised it, and that is the one place this
-domain holds data about somebody who is not a borrower.
+`data-subjects` names staff as well as borrowers, because a refund records who authorised it. That is the one place
+this domain keeps data about somebody who is not a borrower.
 
 The estate is the controller of these rows. [int-card-payments] is the processor for the card transaction itself, and
-holds the card details this domain never sees.
+keeps the card details this domain never sees.
 
 ## Retention
 
@@ -75,12 +78,12 @@ more than two years reads the payment rows alone.
 
 ## Flows
 
-| Goes to             | Why                        | What is shared                        |
-|---------------------|----------------------------|---------------------------------------|
-| [int-card-payments] | Taking and refunding money | Amount, payment reference, card token |
+| Goes to             | Why                        | What is shared                        | Where they process it |
+|---------------------|----------------------------|---------------------------------------|-----------------------|
+| [int-card-payments] | Taking and refunding money | Amount, payment reference, card token | UK and Ireland        |
 
-[int-card-payments] processes in the UK and the EU. The consortium never sends a borrower's name or address with a
-payment, so the transfer includes a pseudonymous reference and an amount.
+The consortium never sends a borrower's name or address with a payment, so what crosses to Ireland is a pseudonymous
+reference and an amount.
 
 ## Related
 

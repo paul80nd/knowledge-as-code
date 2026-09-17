@@ -6,6 +6,8 @@ status: active
 owned-by: svc-lending
 classification: confidential
 personal-data: personal
+data-subjects:
+  - borrowers
 retention: Six years after the membership lapses, then the row is anonymised.
 region: UK South
 flows-to:
@@ -62,8 +64,8 @@ A copy of the name and the email address also sits in the [int-identity] tenant,
 `confidential`, because a borrower's details are shown to the borrower and to the staff serving them, and to nobody
 else. `personal-data` is `personal`: a name, an address and a date of birth identify a living person on their own.
 
-The data is about borrowers. The consortium holds no staff or supplier data in this domain, and a staff member with a
-card appears here as a borrower.
+The consortium keeps no staff or supplier data in this domain, and a staff member with a card appears here as a
+borrower.
 
 Date of birth is held to set the category and to separate two borrowers with the same name. `personal-data` is not
 `special-category`: the housebound category records a delivery arrangement and never a medical reason.
@@ -81,14 +83,14 @@ system can create a borrower the job has not seen, and nothing reconciles the tw
 
 ## Flows
 
-| Goes to             | Why                                    | What is shared                          |
-|---------------------|----------------------------------------|-----------------------------------------|
-| [int-identity]      | Sign-in                                | Name, email address, card number        |
-| [svc-notices]       | Overdue and hold notices               | Name, email address, contact preference |
-| [int-mail-delivery] | Sending the notice [svc-notices] wrote | Name, email address                     |
+| Goes to             | Why                                    | What is shared                          | Where they process it |
+|---------------------|----------------------------------------|-----------------------------------------|-----------------------|
+| [int-identity]      | Sign-in                                | Name, email address, card number        | UK                    |
+| [svc-notices]       | Overdue and hold notices               | Name, email address, contact preference | UK South              |
+| [int-mail-delivery] | Sending the notice [svc-notices] wrote | Name, email address                     | Ireland               |
 
-[int-mail-delivery] is the only recipient outside the estate that receives an address. The vendor processes it in the
-EU, so a transfer outside the UK takes place on every notice sent.
+[int-mail-delivery] is the only recipient outside the estate that receives an address, and the only one processing
+outside the UK. A transfer out of the country takes place on every notice sent.
 
 ## Related
 
