@@ -12,8 +12,8 @@
     "duration": "PT12M",
     "severity": "sev1",
     "affected": [
-      "cap-card-payment",
-      "cap-refund",
+      "ofr-card-payment",
+      "ofr-refund",
       "svc-payment-api",
       "svc-payment-ledger"
     ],
@@ -28,7 +28,7 @@
   },
   "sections": {
     "Summary": "A maintenance failover moved the ledger database to a geo-replica that was 11 minutes behind. For 12 minutes [svc-payment-api] could not write to the ledger. It told 86 customers their payment had failed, after the payment service provider (PSP) had already authorised it. The replica came up without the 214 entries written in the 11 minutes before the failover. The next morning's reconciliation found every missing entry, and the entries were rebuilt from the PSP's settlement file.",
-    "Impact": "86 customers were told at the checkout that their payment had failed. The PSP held an authorisation against each of those cards, so those customers saw a pending amount for an order they believed had not gone through. Some paid a second time. [cap-card-payment] was unusable for the 12 minutes the ledger refused writes.",
+    "Impact": "86 customers were told at the checkout that their payment had failed. The PSP held an authorisation against each of those cards, so those customers saw a pending amount for an order they believed had not gone through. Some paid a second time. [ofr-card-payment] was unusable for the 12 minutes the ledger refused writes.",
     "Resolution": "The failover completed at 21:26 and the replica accepted writes, twelve minutes after it began. Nothing the on-call engineer did shortened that: the platform's own failover ran to completion and the database served again.\n\nThe repair took two days. The 86 authorisations the PSP held against no order were voided on 4 June. The 214 lost entries were rebuilt from the settlement file on 5 June, appended under [std-LEDGER] rather than amended, and the reconciliation then ran clean.",
     "Root cause": "The failover promoted an asynchronous geo-replica whose lag nothing measured. Any entry written inside that lag was lost the moment the failover completed.",
     "Contributing factors": "* [svc-payment-api] treats a failed ledger write as a failed payment, and the PSP has already authorised by that point.\n  The customer sees a refusal against a live hold.\n* No alert compared the replica's position with the source's, so the size of the lost window was unknown during the\n  incident.\n* The maintenance window was scheduled at 21:00, inside the evening peak for card payments.\n* The incident was closed as soon as writes recovered. Nothing prompted anyone to ask what the failover had cost.",
@@ -37,6 +37,6 @@
     "Where we got lucky": "The whole lost window fell inside one settlement file. The PSP sends one file a day, and the 11 minutes ran from 21:03 to 21:14 on 3 June, so every missing entry was in the file that arrived at 02:00 the next morning. A failover at 23:55 would have split the window across two days' files.\n\n[nfr-0002] states five minutes because a gap longer than one file needs the PSP's support desk, and no procedure covers that. Eleven minutes was repairable here, and nothing in the design made it so."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/payments/postmortems/0001-refused-authorised-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/postmortems/0001-refused-authorised-payments.md"
   }
 }

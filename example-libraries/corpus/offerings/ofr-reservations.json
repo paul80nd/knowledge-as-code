@@ -1,9 +1,9 @@
 {
-  "type": "capabilities",
-  "path": "capabilities/reservations.md",
+  "type": "offerings",
+  "path": "offerings/reservations.md",
   "trust": null,
   "fields": {
-    "id": "cap-reservations",
+    "id": "ofr-reservations",
     "title": "Reserve an item and pay the fee",
     "status": "building",
     "implemented-by": [
@@ -24,12 +24,13 @@
   },
   "sections": {
     "What it does": "A hold moves an item between branches, so the fee covers the transport the consortium pays for. The borrower chooses which branch to collect from, and [svc-notices] tells them when the item gets there.",
+    "Who it is for": "Cardholders who want stock their own branch does not have. One membership spans the consortium, so a hold is open to every cardholder at every branch.",
     "Why it exists": "A consortium of branches is worth more than a single library only where a borrower can reach stock held elsewhere. The hold is what makes the shared collection real.",
     "Surfaces": "Its own hostname, apart from the rest of the catalogue, and the same pages on the branch terminals.",
     "Where the detail lives": "* **Implemented by**: [svc-catalogue-web], [svc-lending], [svc-notices], [svc-reservations]\n* **Specified in**: [ADO#1455], [ADO#1462]",
-    "Known limitations": "This capability is live in no environment above test. [svc-reservations] says what remains."
+    "Known limitations": "This offering is live in no environment above test. [svc-reservations] says what remains."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/library/capabilities/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/library/offerings/reservations.md"
   }
 }

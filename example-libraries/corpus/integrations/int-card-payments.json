@@ -18,10 +18,10 @@
     ]
   },
   "sections": {
-    "What it does": "Takes one card payment on a page the vendor hosts. [svc-reservations] redirects the borrower there, the borrower pays, and the vendor returns them to the service against the hold reference. No card detail passes through any service this consortium deploys.\n\n**The status is `trial` because [cap-reservations] is still building.** Development and test run against the vendor's sandbox. Production points at the live endpoint and has taken no payment from a borrower yet.",
+    "What it does": "Takes one card payment on a page the vendor hosts. [svc-reservations] redirects the borrower there, the borrower pays, and the vendor returns them to the service against the hold reference. No card detail passes through any service this consortium deploys.\n\n**The status is `trial` because [ofr-reservations] is still building.** Development and test run against the vendor's sandbox. Production points at the live endpoint and has taken no payment from a borrower yet.",
     "Failure modes": "| Failure                         | How it presents                                      | Our fallback                              |\n|---------------------------------|------------------------------------------------------|-------------------------------------------|\n| The hosted page is unavailable  | The hold is created and stays unpaid                 | Branch staff take the payment at the desk |\n| The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |\n| The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/library/integrations/card-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/library/integrations/card-payments.md"
   }
 }

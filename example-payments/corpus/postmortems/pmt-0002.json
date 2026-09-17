@@ -12,7 +12,7 @@
     "duration": "PT4H20M",
     "severity": "sev2",
     "affected": [
-      "cap-card-payment",
+      "ofr-card-payment",
       "svc-payment-api",
       "svc-payment-ledger"
     ],
@@ -33,9 +33,9 @@
     "Contributing factors": "* [svc-payment-api] cannot tell a retry from a new order. The header was present, well formed and unique, so every check\n  the service makes passed.\n* Nothing alerted on two authorisations against one order reference, and both calls returned `201`. The duplicates were\n  invisible until a customer counted the holds on their statement.\n* The page said latency, so the response was to watch the PSP recover. Nothing prompted anyone to ask what the retries\n  were doing while it was slow.",
     "What went well": "The deadline [std-PSPOUT] sets worked. Every call stopped at 5 seconds, so no request hung and the checkout stayed usable at the slower speed.\n\nThe ledger made the duplicates findable. One immutable entry per event meant that matching on the order reference returned all 31 pairs in a single query. Each void went in as its own entry under [std-LEDGER].",
     "What went wrong": "The page said latency and the response stopped there. For four hours nobody asked what the checkout was doing with the calls that timed out, and the ledger held the answer the whole time.\n\nThe incident was closed at 22:25 on the PSP recovering. The 31 duplicate authorisations were already written, and the first anybody knew of them was a customer counting holds on a statement fifteen hours later.",
-    "Where we got lucky": "No customer was charged twice, and nothing about this incident prevented it. Capture happens when an order ships, so each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the next day would have captured the second authorisation and taken the money.\n\nThe separation of authorisation and capture is in [cap-card-payment] for a different reason: an order that never ships is never charged. It absorbed this incident as a by-product."
+    "Where we got lucky": "No customer was charged twice, and nothing about this incident prevented it. Capture happens when an order ships, so each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the next day would have captured the second authorisation and taken the money.\n\nThe separation of authorisation and capture is in [ofr-card-payment] for a different reason: an order that never ships is never charged. It absorbed this incident as a by-product."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/payments/postmortems/0002-two-pending-amounts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/postmortems/0002-two-pending-amounts.md"
   }
 }

@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-libraries",
   "shortcode": "lib",
-  "contentVersion": "0.9.1",
-  "mechanismVersion": 17,
-  "commit": "8d1517ff3dee105f5ae703cf103fe43a167d0789",
+  "contentVersion": "0.10.0",
+  "mechanismVersion": 18,
+  "commit": "68e944b630203aa0c880b2814da88d2191bff4e4",
   "dirty": false,
-  "generatedAt": "2026-09-17T12:45:43Z",
+  "generatedAt": "2026-09-17T14:29:00Z",
   "about": {
     "displayName": "Example Libraries",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented estate of a fictional public-library consortium. It is here to show what a corpus holds, and it governs nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/library/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/library/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/library",
-    "ref": "8d1517ff3dee105f5ae703cf103fe43a167d0789"
+    "ref": "68e944b630203aa0c880b2814da88d2191bff4e4"
   },
   "tracker": {
     "target": "github",
@@ -50,26 +50,6 @@
         "Context": "summary",
         "Decision": "full",
         "Consequences": "full"
-      },
-      "frameworksFile": null
-    },
-    {
-      "type": "capabilities",
-      "shapeVersion": 1,
-      "records": 3,
-      "parts": 0,
-      "dir": "capabilities",
-      "partsFile": null,
-      "recordKey": null,
-      "partKey": null,
-      "idKey": null,
-      "seeAlsoKey": null,
-      "sections": {
-        "What it does": "full",
-        "Why it exists": "full",
-        "Surfaces": "full",
-        "Where the detail lives": "full",
-        "Known limitations": "full"
       },
       "frameworksFile": null
     },
@@ -119,6 +99,27 @@
       "sections": {
         "What it does": "full",
         "Failure modes": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "offerings",
+      "shapeVersion": 1,
+      "records": 3,
+      "parts": 0,
+      "dir": "offerings",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Who it is for": "full",
+        "Why it exists": "full",
+        "Surfaces": "full",
+        "Where the detail lives": "full",
+        "Known limitations": "full"
       },
       "frameworksFile": null
     },

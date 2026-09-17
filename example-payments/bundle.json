@@ -1,16 +1,16 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.16.0",
+    "contentVersion": "0.17.0",
     "types": [
-      "capabilities",
       "fixes",
       "nfrs",
+      "offerings",
       "postmortems",
       "services",
       "standards",

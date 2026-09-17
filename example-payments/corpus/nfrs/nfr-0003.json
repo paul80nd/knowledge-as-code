@@ -1,0 +1,31 @@
+{
+  "type": "nfrs",
+  "path": "nfrs/0003-refund-settlement.md",
+  "trust": null,
+  "fields": {
+    "id": "nfr-0003",
+    "title": "A refund reaches the card scheme within the hour",
+    "status": "agreed",
+    "applies-to": [
+      "ofr-refund"
+    ],
+    "target": "95% of refunds submitted to the PSP within one hour of the return being accepted",
+    "measured-by": "Application Insights, on the gap between the return event and the refund request at [svc-payment-api]",
+    "constrained-by": null,
+    "review-by": "2027-08-28",
+    "tags": [
+      "psp",
+      "refunds",
+      "settlement"
+    ]
+  },
+  "sections": {
+    "Target": "95% of refunds within one hour, measured over a rolling day, from the return being accepted to [svc-payment-api] submitting the refund to the PSP.\n\nThe money arriving in the customer's account is not committed. The card scheme decides that, and it takes between three and five working days whatever this estate does.",
+    "How it is measured": "Application Insights records both moments against the payment id. The payments dashboard shows the rolling day, and the same query runs in the monthly service review.",
+    "If it is breached": "An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call engineer. A customer who has returned goods and seen nothing calls the contact centre on the second day. Support learns of a sustained breach before finance does.",
+    "Constraints": "The PSP accepts a refund only against a captured payment, so a return accepted before capture waits for it. [ofr-card-payment] captures on shipment, which is why the hour is measured from acceptance of the return and not from the return itself."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/nfrs/0003-refund-settlement.md"
+  }
+}

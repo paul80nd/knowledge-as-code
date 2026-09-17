@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.16.0",
-  "mechanismVersion": 17,
-  "commit": "8d1517ff3dee105f5ae703cf103fe43a167d0789",
+  "contentVersion": "0.17.0",
+  "mechanismVersion": 18,
+  "commit": "68e944b630203aa0c880b2814da88d2191bff4e4",
   "dirty": false,
-  "generatedAt": "2026-09-17T12:45:52Z",
+  "generatedAt": "2026-09-17T14:29:07Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "8d1517ff3dee105f5ae703cf103fe43a167d0789"
+    "ref": "68e944b630203aa0c880b2814da88d2191bff4e4"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.22.2",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "8d1517ff3dee105f5ae703cf103fe43a167d0789"
+        "ref": "68e944b630203aa0c880b2814da88d2191bff4e4"
       },
       "tracker": {
         "target": "github",
@@ -53,26 +53,6 @@
     }
   ],
   "types": [
-    {
-      "type": "capabilities",
-      "shapeVersion": 1,
-      "records": 2,
-      "parts": 0,
-      "dir": "capabilities",
-      "partsFile": null,
-      "recordKey": null,
-      "partKey": null,
-      "idKey": null,
-      "seeAlsoKey": null,
-      "sections": {
-        "What it does": "full",
-        "Why it exists": "full",
-        "Surfaces": "full",
-        "Where the detail lives": "full",
-        "Known limitations": "full"
-      },
-      "frameworksFile": null
-    },
     {
       "type": "fixes",
       "shapeVersion": 2,
@@ -95,7 +75,7 @@
     {
       "type": "nfrs",
       "shapeVersion": 1,
-      "records": 2,
+      "records": 3,
       "parts": 0,
       "dir": "nfrs",
       "partsFile": null,
@@ -108,6 +88,27 @@
         "How it is measured": "full",
         "If it is breached": "full",
         "Constraints": "full"
+      },
+      "frameworksFile": null
+    },
+    {
+      "type": "offerings",
+      "shapeVersion": 1,
+      "records": 2,
+      "parts": 0,
+      "dir": "offerings",
+      "partsFile": null,
+      "recordKey": null,
+      "partKey": null,
+      "idKey": null,
+      "seeAlsoKey": null,
+      "sections": {
+        "What it does": "full",
+        "Who it is for": "full",
+        "Why it exists": "full",
+        "Surfaces": "full",
+        "Where the detail lives": "full",
+        "Known limitations": "full"
       },
       "frameworksFile": null
     },

@@ -1,9 +1,9 @@
 {
-  "type": "capabilities",
-  "path": "capabilities/refund.md",
+  "type": "offerings",
+  "path": "offerings/refund.md",
   "trust": null,
   "fields": {
-    "id": "cap-refund",
+    "id": "ofr-refund",
     "title": "Get money back for an order",
     "status": "live",
     "implemented-by": [
@@ -14,18 +14,21 @@
       "payment-api/features/refund.feature",
       "payment-ledger/features/refund-entry.feature"
     ],
-    "nfrs": null,
+    "nfrs": [
+      "nfr-0003"
+    ],
     "tags": [
       "refunds"
     ]
   },
   "sections": {
     "What it does": "The money goes back to the card that paid, and reaches at most what [svc-payment-api] captured.",
+    "Who it is for": "Customers who have returned an order. Every one of them paid through [ofr-card-payment], so this group is part of that one.",
     "Why it exists": "The card schemes require a route to a refund. A customer who doubts they can get the money back does not pay.",
-    "Where the detail lives": "* **Implemented by**: [svc-payment-api], [svc-payment-ledger]\n* **Specified in**: [gh#2188]",
+    "Where the detail lives": "* **Implemented by**: [svc-payment-api], [svc-payment-ledger]\n* **Specified in**: [gh#2188]\n* **Constrained by**: [nfr-0003]",
     "Known limitations": "A card that has expired since the payment cannot be refunded to it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/payments/capabilities/refund.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/offerings/refund.md"
   }
 }

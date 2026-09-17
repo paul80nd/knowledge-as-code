@@ -1,9 +1,9 @@
 {
-  "type": "capabilities",
-  "path": "capabilities/card-payment.md",
+  "type": "offerings",
+  "path": "offerings/card-payment.md",
   "trust": null,
   "fields": {
-    "id": "cap-card-payment",
+    "id": "ofr-card-payment",
     "title": "Pay for an order with a card",
     "status": "live",
     "implemented-by": [
@@ -24,12 +24,13 @@
   },
   "sections": {
     "What it does": "The customer hears yes or no while the checkout page is still open. The money moves later, when the order ships, and the customer sees one charge rather than two.\n\nAuthorisation and capture are separate steps for that reason. An order that never ships is never charged.",
-    "Why it exists": "Nothing else in the business takes money. Every other capability here corrects or explains a payment this one took.",
+    "Who it is for": "Anyone at the checkout. Paying needs no account, so the group is every visitor with an order to settle.",
+    "Why it exists": "Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.",
     "Surfaces": "The checkout page, and the payment frame the payment service provider serves inside it.",
     "Where the detail lives": "* **Implemented by**: [svc-payment-api], [svc-payment-ledger]\n* **Specified in**: [gh#2101], [gh#2140]\n* **Constrained by**: [nfr-0001]",
     "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001] does not cover that wait."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/payments/capabilities/card-payment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/offerings/card-payment.md"
   }
 }

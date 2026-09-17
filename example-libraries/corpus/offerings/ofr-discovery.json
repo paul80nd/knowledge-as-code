@@ -1,9 +1,9 @@
 {
-  "type": "capabilities",
-  "path": "capabilities/discovery.md",
+  "type": "offerings",
+  "path": "offerings/discovery.md",
   "trust": null,
   "fields": {
-    "id": "cap-discovery",
+    "id": "ofr-discovery",
     "title": "Find a title in the collection",
     "status": "live",
     "implemented-by": [
@@ -25,12 +25,13 @@
   },
   "sections": {
     "What it does": "Search reaches the whole consortium. A borrower standing in one [branch](../glossary/example-libraries.md#branch) sees stock in every other, and may place a hold on any of it.",
-    "Why it exists": "A borrower who cannot find a title does not borrow it. Discovery is the only surface most borrowers ever use, and every other capability starts here.",
+    "Who it is for": "Anyone. The catalogue answers a search without a card, so a person who has not joined yet still uses this.",
+    "Why it exists": "A borrower who cannot find a title does not borrow it. Discovery is the only surface most borrowers ever use, and every other offering starts here.",
     "Surfaces": "The public catalogue at `catalogue.example.com`, and the same pages in the kiosk profile on the branch terminals.",
     "Where the detail lives": "* **Implemented by**: [svc-catalogue-api], [svc-catalogue-web], [svc-covers-cdn], [svc-search]\n* **Specified in**: [ADO#1204], [ADO#1338]",
     "Known limitations": "A title the supplier has sent no jacket image for renders a placeholder."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/library/capabilities/discovery.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/library/offerings/discovery.md"
   }
 }
