@@ -57,9 +57,20 @@ that loss against this estate's own NFRs.
 `Timeline` and `Actions` stay behind. A timeline names one estate's clocks, alerts and systems. Each action is a link to
 a work item in a tracker the reader cannot open, which is the argument [fixes](#fixes) makes about `How we found it`.
 
-`occurred-at` and `detected-at` travel as a pair, because the gap between them is often the finding. Both are
-timestamps, because that gap is usually measured in minutes. `prompted` travels
-beside them, and its ids resolve wherever those records travelled too.
+Three moments travel, and `duration` with them. `occurred-at` is when the impairment began, `detected-at` when
+somebody first knew, and `restored-at` when service was back for users. Each is a timestamp rather than a date,
+because the gap between the first two is usually measured in minutes.
+
+**`restored-at` is recovery, not resolution.** MTTR names four measures at once: time to respond, to repair, to
+recover and to resolve. This field is recovery, which is the span an availability budget counts and the one
+[DORA](https://dora.dev/guides/dora-metrics-four-keys/) asks about. An incident whose actions run for weeks still has
+a `restored-at` on the day. Nothing requires `restored-at` to follow `detected-at`: an incident can recover before
+anybody notices, and one found later in the logs is written that way.
+
+`duration` restates the span those moments already fix, so that an index can show it without computing one.
+`duration-matches-the-moments` fails a value the moments refuse, and its message carries the value to write.
+
+`prompted` travels beside them, and its ids resolve wherever those records travelled too.
 
 ### policies
 

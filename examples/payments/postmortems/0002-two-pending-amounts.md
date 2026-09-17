@@ -4,8 +4,9 @@ type: postmortem
 tier: decided
 status: published
 occurred-at: 2026-08-12T18:05:00Z
-detected-at: 2026-08-13T09:30:00Z
-duration: 4 hours 20 minutes
+detected-at: 2026-08-12T18:12:00Z
+restored-at: 2026-08-12T22:25:00Z
+duration: PT4H20M
 severity: sev2
 affected:
   - cap-card-payment

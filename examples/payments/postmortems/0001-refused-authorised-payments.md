@@ -5,7 +5,8 @@ tier: decided
 status: published
 occurred-at: 2026-06-03T21:14:00Z
 detected-at: 2026-06-03T21:15:00Z
-duration: 12 minutes
+restored-at: 2026-06-03T21:26:00Z
+duration: PT12M
 severity: sev1
 affected:
   - cap-card-payment
@@ -55,6 +56,9 @@ against any of them could not be traced until 5 June, so [cap-refund] was unavai
 
 The value of the baskets abandoned during the 12 minutes is not known. Nothing records an attempt that never reached the
 PSP.
+
+`restored-at` marks 21:26, when the checkout took payments again. The data repair ran on past it to 5 June. The
+outage lasted 12 minutes; the 214 orders were a defect behind a service that was already serving.
 
 No recovery-point target covered the ledger on the day, so nobody could say on the night whether losing 11 minutes was
 acceptable. That absence is the finding that produced [nfr-0002].

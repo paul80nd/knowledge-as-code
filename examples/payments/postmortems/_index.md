@@ -2,7 +2,7 @@
 
 # Postmortem Index (PMT)
 
-| ID       | Title                                                                                                | Occurred at          | Severity | Duration           | Affected                                                          |
-|----------|------------------------------------------------------------------------------------------------------|----------------------|----------|--------------------|-------------------------------------------------------------------|
-| pmt-0002 | [One order left two pending amounts on the card](0002-two-pending-amounts.md)                        | 2026-08-12T18:05:00Z | sev2     | 4 hours 20 minutes | cap-card-payment, svc-payment-api, svc-payment-ledger             |
-| pmt-0001 | [The checkout refused payments the card had already authorised](0001-refused-authorised-payments.md) | 2026-06-03T21:14:00Z | sev1     | 12 minutes         | cap-card-payment, cap-refund, svc-payment-api, svc-payment-ledger |
+| ID       | Title                                                                                                | Occurred at          | Severity | Duration | Affected                                                          |
+|----------|------------------------------------------------------------------------------------------------------|----------------------|----------|----------|-------------------------------------------------------------------|
+| pmt-0002 | [One order left two pending amounts on the card](0002-two-pending-amounts.md)                        | 2026-08-12T18:05:00Z | sev2     | PT4H20M  | cap-card-payment, svc-payment-api, svc-payment-ledger             |
+| pmt-0001 | [The checkout refused payments the card had already authorised](0001-refused-authorised-payments.md) | 2026-06-03T21:14:00Z | sev1     | PT12M    | cap-card-payment, cap-refund, svc-payment-api, svc-payment-ledger |

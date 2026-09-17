@@ -42,6 +42,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A postmortem states when service came back, and `duration` is checked against it.** `restored-at` is a third
+  timestamp, required once a postmortem is published, and `duration` is now an ISO 8601 duration such as `PT4H20M`.
+  `duration-matches-the-moments` fails a value the two moments refuse, and its message carries the span they give, so
+  the fix is a paste. `restored-not-before-occurred` fails service coming back before it went. Nothing requires
+  `restored-at` to follow `detected-at`: an incident can recover before anybody notices it.
+
+- **A rule expression can ask for the time between two moments.** `span('occurred-at', 'restored-at')` answers with an
+  ISO 8601 duration in hours, minutes and seconds, and with nothing where either field is absent, is not a moment, or
+  where the second is the earlier. `docs/design/expressions.md` carries it in the table of what an expression may call.
+
 - **A postmortem states when an incident began and when it was noticed, to the second.** `occurred-on` and
   `detected-on` are now `occurred-at` and `detected-at`, and each takes a UTC timestamp as `2026-09-07T20:18:00Z`. The
   gap between the pair is what the pair is for, and it is usually measured in minutes. `-on` names a date everywhere

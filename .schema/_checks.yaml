@@ -584,6 +584,14 @@ checks:
       second look.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
+  duration-matches-the-moments:
+    severity: error
+    description: A postmortem's `duration` is the span from `occurred-at` to `restored-at`.
+    notes: >
+      The message carries the span the moments give, so the fix is a paste rather than an arithmetic. Passed over
+      where either moment is absent, is not a moment, or where `restored-at` is the earlier: each is another
+      check's to report.
+
   terms-alphabetical:
     severity: warning
     description: A glossary's entries read in alphabetical order.

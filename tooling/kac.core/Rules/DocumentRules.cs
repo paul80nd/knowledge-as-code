@@ -10,7 +10,8 @@ public static class DocumentRules
         new YStatementPresent(),
         new AlternativesHaveVerdicts(),
         new TermsAreAlphabetical(),
-        new NoSelfVerification()
+        new NoSelfVerification(),
+        new DurationMatchesTheMoments()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =

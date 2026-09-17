@@ -5,6 +5,7 @@ tier: decided
 status: draft
 occurred-at:
 detected-at:
+restored-at:
 duration:
 severity:
 affected:
@@ -23,8 +24,23 @@ and how it is reviewed. What is below is only what a postmortem adds to that.
 
 **Frontmatter**
 
-* **`occurred-at` / `detected-at`**: separate UTC timestamps, as `2026-09-07T20:18:00Z`. The gap between them
-  is often the finding.
+**The three moments.** Each is a UTC timestamp, as `2026-09-07T20:18:00Z`, and each names a different point.
+
+| Field         | The moment to pick                                                              |
+|---------------|----------------------------------------------------------------------------------|
+| `occurred-at` | The impairment began. Not when the change that caused it shipped.                |
+| `detected-at` | A person or an alert first knew. The gap from `occurred-at` is often the finding. |
+| `restored-at` | Service was back for users. Not when the cause was fixed.                        |
+
+**`restored-at` is the one to get wrong.** MTTR names four different measures: time to respond, to repair, to recover
+and to resolve. This field is *recover*: service back for users, which is what an availability budget counts. An
+incident whose actions run for weeks still has a `restored-at` on the day.
+
+**`detected-at` may fall after `restored-at`.** An incident can recover before anybody notices, and one found later in
+the logs is written that way. Only `restored-at` before `occurred-at` is refused.
+
+* **`duration`**: the span from `occurred-at` to `restored-at`, as an ISO 8601 duration: `PT12M`, `PT4H20M`. Hours,
+  minutes and seconds, never days. `kac validate` prints the right value where yours disagrees.
 * **`severity`**: `sev1` · `sev2` · `sev3`.
 * **`affected`**: service or capability ids.
 * **`prompted`**: the NFRs, fixes and standards this incident caused to be written.

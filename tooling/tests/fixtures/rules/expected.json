@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 32,
+    "validated": 34,
     "templates": 17,
     "skipped": 0,
-    "errors": 20,
+    "errors": 22,
     "warnings": 17,
     "infos": 0
   },
@@ -196,6 +196,20 @@
       "severity": "error",
       "check": "detected-not-before-occurred",
       "message": "`detected-at` is before `occurred-at`, and an incident cannot be found before it began. If both moments are right, the earlier one is `occurred-at`."
+    },
+    {
+      "file": "postmortems/0002-restored-before-it-began.md",
+      "line": 1,
+      "severity": "error",
+      "check": "restored-not-before-occurred",
+      "message": "`restored-at` is before `occurred-at`, and service cannot come back before it went. If both moments are right, the earlier one is `occurred-at`."
+    },
+    {
+      "file": "postmortems/0003-a-duration-the-moments-refuse.md",
+      "line": 8,
+      "severity": "error",
+      "check": "duration-matches-the-moments",
+      "message": "'duration' is 'PT30M', and 'occurred-at' to 'restored-at' is 'PT40M'. Write 'PT40M', or correct whichever of the two moments is wrong."
     },
     {
       "file": "processes/rotate-a-signing-key.md",
