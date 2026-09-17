@@ -70,11 +70,13 @@ postmortem means something.
    than for the cause.
 2. Build the timeline from the evidence, before anyone starts theorising.
 3. State the impact as a customer would describe it.
-4. Separate the root cause from the contributing factors. There is usually one cause and several factors.
-5. Fill in **What went well**. An account listing only failures teaches half the lesson.
-6. Record each action as a link to its work item.
-7. Fill `prompted` with whatever this incident caused someone to write.
-8. Set `status: draft` while you assemble it, and `published` when it is finished.
+4. Say in **Resolution** what ended the impairment, and say so where nothing you did ended it.
+5. Separate the root cause from the contributing factors. Name more than one cause where more than one stands out.
+6. Fill in all three lessons. **What went well** and **What went wrong** are halves of one account, and **Where we
+   got lucky** names a control you do not have.
+7. Record each action as a link to its work item. Repair you have already done belongs in **Resolution**.
+8. Fill `prompted` with whatever this incident caused someone to write.
+9. Set `status: draft` while you assemble it, and `published` when it is finished.
 
 **Conventions**
 

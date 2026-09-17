@@ -30,6 +30,10 @@ Nothing happened, for forty minutes, recorded as thirty.
 
 None. This document exists to be judged, not to describe an incident.
 
+## Resolution
+
+Nothing resolved it. This document exists to be judged.
+
 ## Root cause
 
 `duration` is ten minutes short of the span between the two moments.
@@ -41,6 +45,14 @@ Someone subtracted by hand.
 ## What went well
 
 The message names the value to write, so the fix is a paste.
+
+## What went wrong
+
+The fixture was written to fail, which is what went wrong.
+
+## Where we got lucky
+
+Nothing depends on this document, so nobody was misled.
 
 ## Actions
 

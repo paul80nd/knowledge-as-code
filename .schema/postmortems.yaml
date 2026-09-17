@@ -16,12 +16,14 @@ detail: >
 lineage:
   prior-art: "[Google SRE, *Postmortem Culture*](https://sre.google/sre-book/postmortem-culture/)"
   alignment: >
-    The field set (impact, actions, root cause, follow-up), and blamelessness defined as naming causes
-    without naming people
+    The field set (impact, resolution, actions, root cause, follow-up), the three lessons Google groups as
+    *what went well*, *what went wrong* and *where we got lucky*, and blamelessness defined as naming
+    causes without naming people
   divergence: >
     Google reviews before publication and treats the document as living. This type freezes a postmortem once
-    it is published, separates root cause from contributing factors, and states the three moments of an
-    incident as fields, where Google leaves them in the timeline and the duration in prose
+    it is published, separates root cause from contributing factors, asks for each of the three lessons
+    under its own heading rather than grouping them, and states the three moments of an incident as
+    fields, where Google leaves them in the timeline and the duration in prose
 
 id:
   prefix: pmt
@@ -96,8 +98,22 @@ fields:
     ref: [adrs, runbooks, nfrs, fixes, standards]
     description: The ADRs, runbooks, NFRs, fixes and standards this incident caused.
 
+# The three lessons are H2s of their own rather than subheadings under one. Google groups them under
+# `Lessons Learned`, and a group is a heading an author can satisfy by writing under any part of it.
+# Declared separately, `required-section` asks for each and `empty-section` refuses a bare one, which is
+# what makes `Where we got lucky` get answered rather than skipped.
 sections:
-  required: [Summary, Timeline, Impact, Root cause, Contributing factors, What went well, Actions]
+  required:
+    - Summary
+    - Timeline
+    - Impact
+    - Resolution
+    - Root cause
+    - Contributing factors
+    - What went well
+    - What went wrong
+    - Where we got lucky
+    - Actions
   optional: [Related]
 
 export:
@@ -106,9 +122,12 @@ export:
   sections:
     Summary: full
     Impact: summary
+    Resolution: full
     Root cause: full
     Contributing factors: full
     What went well: full
+    What went wrong: full
+    Where we got lucky: full
   notes: >
     `Timeline` and `Actions` stay behind, because both name this estate's own clocks, systems and work
     items. <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#postmortems> says what else

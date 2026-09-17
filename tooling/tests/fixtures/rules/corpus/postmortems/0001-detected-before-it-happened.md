@@ -29,6 +29,10 @@ Nothing happened, in the wrong order.
 
 None. This document exists to be judged, not to describe an incident.
 
+## Resolution
+
+Nothing resolved it. This document exists to be judged.
+
 ## Root cause
 
 `detected-at` is a day before `occurred-at`.
@@ -40,6 +44,14 @@ Someone typed the moments from memory.
 ## What went well
 
 The rule caught it, which is what the fixture is asserting.
+
+## What went wrong
+
+The fixture was written to fail, which is what went wrong.
+
+## Where we got lucky
+
+Nothing depends on this document, so nobody was misled.
 
 ## Actions
 

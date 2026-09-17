@@ -42,6 +42,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
+  sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.
+  Google SRE groups the three lessons under one `Lessons Learned` heading; each is declared on its own here, so
+  `required-section` asks for it and `empty-section` refuses a bare one. An existing postmortem gains three headings.
+
+- **A postmortem may name more than one root cause.** The template said "Resist listing several". Google SRE writes
+  `Root causes` in the plural and PagerDuty records contributing factors and no root cause at all, so the guidance now
+  says to name more than one where more than one stands out. Nothing about the section changes.
+
 - **A postmortem states when service came back, and `duration` is checked against it.** `restored-at` is a third
   timestamp, required once a postmortem is published, and `duration` is now an ISO 8601 duration such as `PT4H20M`.
   `duration-matches-the-moments` fails a value the two moments refuse, and its message carries the span they give, so

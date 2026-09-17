@@ -30,6 +30,10 @@ Nothing happened, and it finished before it started.
 
 None. This document exists to be judged, not to describe an incident.
 
+## Resolution
+
+Nothing resolved it. This document exists to be judged.
+
 ## Root cause
 
 `restored-at` is an hour before `occurred-at`.
@@ -41,6 +45,14 @@ Someone typed the moments from memory.
 ## What went well
 
 Only the ordering rule fired, which is the half this fixture pins.
+
+## What went wrong
+
+The fixture was written to fail, which is what went wrong.
+
+## Where we got lucky
+
+Nothing depends on this document, so nobody was misled.
 
 ## Actions
 

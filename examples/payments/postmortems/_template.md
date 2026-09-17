@@ -77,10 +77,18 @@ consequence where it is known, and say so where it isn't.
 
 Measured against [nfr-{{a}}]: {{met / breached}}. _(If no NFR covered this, that is itself a finding.)_
 
+## Resolution
+
+What ended the impairment, and who did it. Name the mitigation and the repair separately where they were separate.
+
+_(Say so where nothing you did ended it. A system that recovered on its own is a system you cannot stop next time,
+and that is a finding rather than an absence.)_
+
 ## Root cause
 
-The one thing that, had it been different, would have prevented this. Resist listing several. Contributing factors are
-the next section.
+The condition that, had it been different, would most likely have prevented this. Name more than one where more than
+one stands out: a cause is selected rather than found, and the sources this type follows write *root causes* in the
+plural. Contributing factors are the next section.
 
 ## Contributing factors
 
@@ -93,6 +101,19 @@ lives.)_
 
 Genuinely. Detection that worked, a rollback that held, a runbook that was accurate. A postmortem that only lists
 failures teaches half the lesson and makes the next one harder to write honestly.
+
+## What went wrong
+
+The other half. What took too long, what nobody could see, what the runbook did not cover. Write about the system and
+the conditions, never about a person.
+
+## Where we got lucky
+
+What limited the damage and was not designed to. A queue that happened to be short, a batch that had not run yet, a
+customer who rang. Each one is a control you do not have, and next time the luck may not hold.
+
+_(Write "nothing" only when you have looked. A postmortem with no luck in it usually means nobody asked what would
+have happened an hour later.)_
 
 ## Actions
 

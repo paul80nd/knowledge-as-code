@@ -26,10 +26,22 @@ a template to, and nothing more.
 
 ## Impact
 
+## Resolution
+
+{{What ended the impairment, and who did it.}}
+
 ## Root cause
 
 ## Contributing factors
 
 ## What went well
+
+## What went wrong
+
+{{What took too long, and what nobody could see.}}
+
+## Where we got lucky
+
+{{What limited the damage and was not designed to.}}
 
 ## Actions

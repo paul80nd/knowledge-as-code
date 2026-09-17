@@ -47,9 +47,16 @@ reader meeting one needs the id that replaced it. `deciders` stays behind with `
 
 ### postmortems
 
-`Root cause` and `Contributing factors` are what a reader elsewhere can act on, and most of the improvement lives in the
-factors. `Summary` travels above them, so a reader can decide in fifteen seconds whether the rest is theirs. `What went
-well` travels too: a copy carrying only what failed teaches the half-lesson this type was written to prevent.
+`Root cause` and `Contributing factors` are what a reader elsewhere can act on, and most of the improvement lives in
+the factors. `Summary` travels above them, so a reader can decide in fifteen seconds whether the rest is theirs.
+`Resolution` travels beside them, because what ended an impairment is the half a reader facing the same one needs
+first.
+
+**The three lessons each take a heading of their own.** Google groups `What went well`, `What went wrong` and `Where we
+got lucky` under one `Lessons Learned`, and a group is a heading an author satisfies by writing under any part of it.
+Declared separately, each is asked for and a bare one is refused, which is what makes `Where we got lucky` get answered
+rather than skipped. All three travel: a copy carrying only what failed teaches half the lesson, and a copy carrying
+only what worked teaches the other half.
 
 `Impact` travels as its opening paragraph, where the record states what customers lost. The paragraphs under it measure
 that loss against this estate's own NFRs.

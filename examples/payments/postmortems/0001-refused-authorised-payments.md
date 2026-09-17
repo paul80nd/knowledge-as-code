@@ -44,6 +44,7 @@ rebuilt from the PSP's settlement file.
 | 2026-06-04 02:00 | The PSP's settlement file for 3 June arrived by SFTP.                                                 |
 | 2026-06-04 03:10 | The reconciliation run reported 214 breaks, all of them in the file and not in the ledger.            |
 | 2026-06-04 07:40 | The finance owner escalated the break alert, and the lost window was understood.                      |
+| 2026-06-04 09:15 | The 86 authorisations the PSP held against no order were voided.                                      |
 | 2026-06-05 16:20 | The 214 entries were rebuilt from the settlement file, and the reconciliation ran clean.              |
 
 ## Impact
@@ -63,6 +64,15 @@ outage lasted 12 minutes; the 214 orders were a defect behind a service that was
 
 No recovery-point target covered the ledger on the day, so nobody could say on the night whether losing 11 minutes was
 acceptable. That absence is the finding that produced [nfr-0002].
+
+## Resolution
+
+The failover completed at 21:26 and the replica accepted writes, twelve minutes after it began. Nothing the on-call
+engineer did shortened that: the platform's own failover ran to completion and the database served again.
+
+The repair took two days. The 86 authorisations the PSP held against no order were voided on 4 June. The 214 lost
+entries were rebuilt from the settlement file on 5 June, appended under [std-LEDGER] rather than amended, and the
+reconciliation then ran clean.
 
 ## Root cause
 
@@ -87,15 +97,30 @@ finance owner escalated a single figure.
 [std-LEDGER] made the repair safe. An entry is never amended, so the rebuild appended 214 entries and left the
 reconciliation reading the same sequence finance had read.
 
+## What went wrong
+
+The incident was closed at 22:40 with 214 entries missing and nobody aware of it. Recovered writes were read as the
+end of it, and nothing in the response asked what the failover had cost.
+
+The size of the lost window was unknown for ten hours. It was measured by the next morning's reconciliation rather
+than during the incident, so the response ran on a picture that was wrong.
+
+## Where we got lucky
+
+The whole lost window fell inside one settlement file. The PSP sends one file a day, and the 11 minutes ran from
+21:03 to 21:14 on 3 June, so every missing entry was in the file that arrived at 02:00 the next morning. A failover at
+23:55 would have split the window across two days' files.
+
+[nfr-0002] states five minutes because a gap longer than one file needs the PSP's support desk, and no procedure
+covers that. Eleven minutes was repairable here, and nothing in the design made it so.
+
 ## Actions
 
 | Action                                                    | Work item | Owner         |
 |-----------------------------------------------------------|-----------|---------------|
-| Void the 86 authorisations the PSP holds against no order | [gh#3310] | Payments team |
-| Rebuild the 214 lost entries from the settlement file     | [gh#3311] | Payments team |
-| Alert when replica lag passes the recovery point          | [gh#3312] | Platform team |
-| Hold the checkout open while a ledger write is retried    | [gh#3313] | Payments team |
-| Move platform maintenance out of the evening peak         | [gh#3314] | Platform team |
+| Alert when replica lag passes the recovery point       | [gh#3312] | Platform team |
+| Hold the checkout open while a ledger write is retried | [gh#3313] | Payments team |
+| Move platform maintenance out of the evening peak      | [gh#3314] | Platform team |
 
 ## Related
 
@@ -107,8 +132,6 @@ reconciliation reading the same sequence finance had read.
 
 [cap-card-payment]: ../capabilities/card-payment.md
 [cap-refund]: ../capabilities/refund.md
-[gh#3310]: https://git.example.com/example-payments/payment-api/issues/3310
-[gh#3311]: https://git.example.com/example-payments/payment-ledger/issues/3311
 [gh#3312]: https://git.example.com/example-payments/payment-ledger/issues/3312
 [gh#3313]: https://git.example.com/example-payments/payment-api/issues/3313
 [gh#3314]: https://git.example.com/example-payments/payment-ledger/issues/3314

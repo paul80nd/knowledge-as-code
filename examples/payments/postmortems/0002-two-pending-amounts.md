@@ -49,11 +49,19 @@ afternoon.
 31 customers saw two pending amounts for one order, each for the basket value, for up to 20 hours. The duplicate holds
 totalled £1,847. Two customers rang to ask whether they had been charged twice.
 
-No customer was charged twice. Capture happens when an order ships, and every duplicate authorisation was voided before
-any of the 31 orders reached despatch. [cap-card-payment] kept taking payments throughout, at the slower speed.
+No customer was charged twice. [cap-card-payment] kept taking payments throughout, at the slower speed.
 
 Measured against [nfr-0001]: breached. The p95 held at about 4.2 seconds against a target of 800ms, for 4 hours 20
 minutes.
+
+## Resolution
+
+Nothing the team did ended it. PSP latency returned to its usual range at 22:25, and the on-call engineer closed the
+incident on that. No mitigation was available: [std-PSPOUT] bounds a call and stops the retries once the failure rate
+passes its threshold, and neither shortens a slow PSP.
+
+The repair came the next day. Matching ledger entries on the order reference found all 31 orders at 11:40, and the
+later authorisation on each was voided at 14:10, every void written as its own entry under [std-LEDGER].
 
 ## Root cause
 
@@ -77,12 +85,28 @@ usable at the slower speed.
 The ledger made the duplicates findable. One immutable entry per event meant that matching on the order reference
 returned all 31 pairs in a single query. Each void went in as its own entry under [std-LEDGER].
 
+## What went wrong
+
+The page said latency and the response stopped there. For four hours nobody asked what the checkout was doing with the
+calls that timed out, and the ledger held the answer the whole time.
+
+The incident was closed at 22:25 on the PSP recovering. The 31 duplicate authorisations were already written, and the
+first anybody knew of them was a customer counting holds on a statement fifteen hours later.
+
+## Where we got lucky
+
+No customer was charged twice, and nothing about this incident prevented it. Capture happens when an order ships, so
+each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the
+next day would have captured the second authorisation and taken the money.
+
+The separation of authorisation and capture is in [cap-card-payment] for a different reason: an order that never ships
+is never charged. It absorbed this incident as a by-product.
+
 ## Actions
 
 | Action                                                             | Work item | Owner         |
 |--------------------------------------------------------------------|-----------|---------------|
 | Derive the checkout's idempotency key from the order and operation | [gh#3402] | Checkout team |
-| Void the 31 later authorisations                                   | [gh#3403] | Payments team |
 | Alert on a second authorisation against one order reference        | [gh#3404] | Payments team |
 | Write to the 31 customers explaining the second hold               | [gh#3405] | Payments team |
 
@@ -97,7 +121,6 @@ returned all 31 pairs in a single query. Each void went in as its own entry unde
 [cap-card-payment]: ../capabilities/card-payment.md
 [fix-0001]: ../fixes/duplicate-authorisation.md
 [gh#3402]: https://git.example.com/example-payments/payment-api/issues/3402
-[gh#3403]: https://git.example.com/example-payments/payment-api/issues/3403
 [gh#3404]: https://git.example.com/example-payments/payment-ledger/issues/3404
 [gh#3405]: https://git.example.com/example-payments/payment-api/issues/3405
 [nfr-0001]: ../nfrs/0001-authorisation-latency.md
