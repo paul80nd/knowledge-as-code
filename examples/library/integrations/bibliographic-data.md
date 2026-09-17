@@ -26,11 +26,12 @@ this consortium calls a record. See [gls-example-libraries.record].
 Two paths bring it in.
 
 * **The API.** [svc-catalogue-api] calls it when branch staff catalogue an item no other branch already holds.
-* **The nightly feed.** `covers-import` collects the jacket images and publishes them to the `covers` container, which
-  [svc-covers-cdn] serves. That pipeline is not a service in this catalogue, so `used-by` omits it.
+* **The nightly feed.** `covers-import` collects the jacket images and publishes them to the `covers` container.
+  [svc-thumbnailer] reads that container, and [svc-covers-cdn] serves what it returns. The pipeline is not a service
+  in this catalogue, so `used-by` omits it.
 
-Neither path is reached from the public catalogue. An outage stops branch staff cataloguing, and a borrower sees
-nothing different that day.
+The public catalogue calls neither path. An API outage stops branch staff cataloguing, and a missed feed leaves a
+placeholder where a new title's jacket belongs.
 
 ## Contract
 
@@ -53,8 +54,8 @@ Both credentials sit in the platform key vault, and the catalogue reads them at 
 
 ## Their SLA
 
-99.5% monthly availability on the API, measured by the vendor and reported monthly. A month below that earns a service
-credit against the next invoice.
+The vendor measures availability itself and reports it monthly. A month below the target earns a service credit
+against the next invoice.
 
 **The contract sets no target for the nightly feed.** A late feed breaches nothing, so a week of missing jackets earns
 no credit.
@@ -75,10 +76,11 @@ the account manager, whose number is in the contract. There is no out-of-hours c
 ## Related
 
 * [svc-catalogue-api] calls the API and owns what it returns.
-* [svc-covers-cdn] serves the jacket images the nightly feed publishes.
+* [svc-thumbnailer] reads the container the nightly feed writes to, and [svc-covers-cdn] serves the result.
 * [cap-discovery] records the placeholder a missing jacket leaves.
 
 [cap-discovery]: ../capabilities/discovery.md
 [gls-example-libraries.record]: ../glossary/example-libraries.md#record
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md
+[svc-thumbnailer]: ../services/thumbnailer.md

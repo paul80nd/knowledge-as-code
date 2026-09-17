@@ -6,7 +6,6 @@ status: active
 vendor: Hartwell Mail
 used-by:
   - svc-notices
-  - svc-shelf-audit
 criticality: important
 their-sla: 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds
 owner: human:mira.okonjo
@@ -17,16 +16,16 @@ tags: [ email, templates ]
 
 `Integration: int-mail-delivery` `ACTIVE`
 
-Every email the consortium sends a borrower, and the nightly report the shelf audit posts to a mailbox.
+Every email the consortium sends a borrower.
 
 ## What it does
 
 Accepts a message over an API and delivers it. [svc-notices] sends overdue reminders, hold-ready alerts and membership
-renewals through it. [svc-shelf-audit] sends its nightly report the same way.
+renewals through it, and no other service in this catalogue calls the vendor.
 
-**The vendor stores the message wording.** [svc-notices] selects a template by event type and sends the values to fill
-it, so changing what a borrower reads is a change made in the vendor's console. That wording is outside version
-control, and this corpus cannot tell you what a borrower received last month.
+**The vendor stores the message wording.** [svc-notices] selects a template by event type and sends the values that
+fill it. Changing what a borrower reads is therefore a change made in the vendor's console. That wording sits outside
+version control, so this corpus cannot tell you what a borrower received last month.
 
 ## Contract
 
@@ -34,10 +33,10 @@ control, and this corpus cannot tell you what a borrower received last month.
 |--------------|--------------------------------------------|
 | **Protocol** | REST over HTTPS, one call per message      |
 | **Endpoint** | `https://api.hartwell.example.com/v2/send` |
-| **Auth**     | A bearer token issued per sending service  |
+| **Auth**     | A bearer token issued to the sender        |
 | **Docs**     | <https://docs.hartwell.example.com/v2>     |
 
-Each service has a token of its own, and both sit in the platform key vault.
+The token sits in the platform key vault.
 
 ## Failure modes
 
@@ -49,8 +48,8 @@ Each service has a token of its own, and both sit in the platform key vault.
 
 ## Their SLA
 
-99.9% monthly availability on the sending API, and 95% of accepted messages delivered within 60 seconds. Delivery is
-measured to the receiving server, so a message a borrower's provider then files as junk counts as delivered.
+Delivery is measured to the receiving server. A message a borrower's own provider then files as junk counts as
+delivered, so the target says nothing about whether anybody read it.
 
 ## Commercials
 
@@ -62,13 +61,13 @@ measured to the receiving server, so a message a borrower's provider then files 
 
 ## Contacts
 
-Support is a portal, and a ticket gets a reply within one working day. Deliverability is a separate team, reached
-through the same portal, and a suppression question takes longer. There is no telephone escalation on this contract.
+Support is a portal, and a ticket gets a reply within one working day. Deliverability is a separate team on the same
+portal, and a suppression question takes longer. There is no telephone escalation on this contract.
 
 ## Related
 
 * [svc-notices] sends every borrower-facing message through this.
-* [svc-shelf-audit] sends its nightly report through it, and a mailbox is the only reader of that report.
+* [int-sms-notices] is the retired text-message vendor whose traffic moved here.
 
+[int-sms-notices]: sms-notices.md
 [svc-notices]: ../services/notices.md
-[svc-shelf-audit]: ../services/shelf-audit.md

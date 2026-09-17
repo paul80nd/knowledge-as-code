@@ -32,7 +32,7 @@ has issued a token, so an outage here stops all three.
 
 |              |                                                                                 |
 |--------------|---------------------------------------------------------------------------------|
-| **Protocol** | OpenID Connect, authorisation code flow with PKCE                               |
+| **Protocol** | OpenID Connect, code flow with PKCE                                             |
 | **Endpoint** | `https://id.example.com`, with discovery at `/.well-known/openid-configuration` |
 | **Auth**     | A client id per application, and a client secret for the gateway                |
 | **Docs**     | <https://docs.loxley.example.com/oidc>                                          |
@@ -49,8 +49,8 @@ The gateway's client secret sits in the platform key vault. [svc-catalogue-web] 
 
 ## Their SLA
 
-99.95% monthly availability on the sign-in endpoint. Planned maintenance runs on Sunday between 02:00 and 04:00 and is
-excluded from the measurement, so a Sunday morning outage in that window earns no credit.
+Planned maintenance runs on Sunday between 02:00 and 04:00 and is excluded from the measurement. A Sunday morning
+outage in that window earns no credit.
 
 **No target covers the administration console.** Branch staff unlock an account there, and the contract treats that as
 a separate product.
@@ -65,8 +65,8 @@ a separate product.
 
 ## Contacts
 
-A total outage goes to a 24-hour incident line named in the contract. Everything else goes to the portal, which answers
-within four working hours on a weekday.
+A total outage goes to a 24-hour incident line named in the contract. Everything else goes to the portal, and a ticket
+gets a reply within four working hours on a weekday.
 
 ## Related
 

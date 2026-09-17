@@ -75,9 +75,8 @@ export:
     What it does: full
     Failure modes: full
   notes: >
-    A consumer asks which external systems an estate depends on, and what happens when one of them is down.
-    `What it does` and `Failure modes` state both. The rest of the record describes holding the account, so it
-    stays behind. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#integrations>.
+    The sections left behind describe owning the account, which is the estate's own business and not a
+    consumer's. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#integrations>.
 
 index:
   columns: [id, title, vendor, criticality, their-sla, status]

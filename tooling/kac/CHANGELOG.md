@@ -20,10 +20,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
-  writes a file per integration record. `What it does` and `Failure modes` travel at `full`, because a consumer asks
-  which external systems an estate depends on and what breaks when one is down. `Contract`, `Commercials` and
-  `Contacts` stay behind, because an endpoint, a renewal date and a support line serve whoever owns the account and
-  nobody else. `docs/design/export.md` now lists `data` as the one type declaring no block.
+  writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
+  and `Contacts` stay behind, because each describes owning the account. `docs/design/export.md` now lists `data` as
+  the one type declaring no block.
 
 - **An explanation travels to a consumer.** `.schema/explanations.yaml` declares an `export:` block, so `kac export`
   writes a file per explanation record. `Where the detail lives` is the one section it declares, so it is the only one
