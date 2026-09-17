@@ -72,12 +72,16 @@ The three section keys are always present, because this type requires all three 
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
 * **`review-checklist`.** A person checks it while reviewing a change.
-* **`manual`.** Somebody runs it on the cadence `frequency` names.
+* **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says when they last did.
 * **`runtime-alert`.** A running system reports it.
 * **`not-enforced`.** The rule is written and nothing looks.
 
 **`frequency` takes one of seven values**: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
 `annual`. It is set on every control whose mechanism is not `not-enforced`, because the schema requires it there.
+
+**A `last-verified` of `never`, or a date long past, is a check that may not have run.** It is set on a `manual`
+control alone, because that is the one mechanism leaving no log of its own. Where you answer from such a record, give
+the date beside the answer.
 
 **Read `Coverage and gaps` before you tell anybody a rule is covered.** A control that runs may still miss the half of
 the rule that matters to the question in front of you, and that section is where the author says so.

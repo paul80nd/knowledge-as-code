@@ -18,20 +18,17 @@ lineage:
   alignment: >
     800-53A ties a determination statement to the control item it tests, so a result traces back to the
     requirement. `verifies` does the same with a rule-level anchor. 800-53A puts the method, the expected
-    evidence and the objects assessed beside that statement, which are `mechanism`, `evidence` and
-    `applies-to` here. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment task `at-frequency`,
-    and `frequency` states the same thing
+    evidence and the objects assessed beside that statement. Here those are `mechanism`, `evidence` and
+    `applies-to`. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment task `at-frequency`, and
+    `frequency` states the same thing
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
-    internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own: a control may
-    exist to record that nothing checks the rule, and the coverage report counts those records. The corpus keeps
-    the plan and never the result, so `status` says whether the check runs and not whether it passed, where
-    OSCAL has an assessment-results model of observations, findings and risks. `verifies` binds both ways, so a
-    standard lists what checks it, where 800-53A traces one direction. Nothing names an assessor or an
-    independence level, because the mechanism is usually code. 800-53A grades rigour as depth and coverage, each
-    basic, focused or comprehensive, and the [CIS Controls Assessment
-    Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard. Here `Coverage and
-    gaps` is prose, and the one figure is the corpus-wide coverage report
+    internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own, and no source
+    has it. A control may exist to record that nothing checks the rule. The corpus keeps the plan and never the
+    result, where OSCAL has an assessment-results model. `verifies` binds both ways, where 800-53A traces one
+    direction. Nothing names an assessor, because the mechanism is usually code. Rigour is prose in `Coverage
+    and gaps`. 800-53A grades it as depth and coverage, and the [CIS Controls Assessment
+    Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
 
 collision: >
   In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
@@ -74,8 +71,7 @@ fields:
     values: [ci, review-checklist, manual, runtime-alert, not-enforced]
     description: How the check runs, or `not-enforced` where nothing checks the rule.
     notes: >
-      A value names the method alone, because `frequency` states the cadence beside it. The coverage report
-      counts `not-enforced`. Do not invent a mechanism to avoid using it.
+      The coverage report counts `not-enforced`. Do not invent a mechanism to avoid using it.
 
   frequency:
     required: false
@@ -91,8 +87,8 @@ fields:
     allow-literal: [never]
     description: Quoted. The day somebody last ran this check, or `"never"`.
     notes: >
-      Asked of a manual control alone. An automated check leaves a run in its own logs, and a periodic human
-      check leaves nothing unless somebody writes the day here.
+      An automated check leaves a run in its own logs. A periodic human check leaves nothing unless somebody
+      writes the day here.
 
   evidence:
     required: false
