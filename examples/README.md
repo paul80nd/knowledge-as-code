@@ -40,16 +40,47 @@ catalogue, and it takes nothing from outside. A first corpus arrives in this sha
 
 **[`engineering`](engineering/README.md) is the governance layer.** Its policies are written to be principle-level and
 stack-agnostic, so they name no service and invent no estate. That is what lets them be published and read by a team
-that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `policies`, `standards` and `tools`.
+that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `policies`, `reports`, `standards` and
+`tools`.
 
 **[`payments`](payments/README.md) is a domain corpus, and it is thin on purpose.** It declares `engineering` in
 `consumes:`, so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes
-the inheritance visible: there is nothing here that `engineering` already says. It adopts `nfrs`, `services` and
-`standards`, and declines the rest.
+the inheritance visible: there is nothing here that `engineering` already says. It adopts `capabilities`, `fixes`,
+`nfrs`, `services` and `standards`, and declines the rest.
 
 **[`dog-fooding`](dog-fooding/README.md) takes the same shape and its estate is this repository.** It consumes
 `engineering` as `payments` does, and it adopts `controls`, `deviations`, `fixes`, `processes`, `reports`,
 `runbooks`, `services`, `standards` and `tools`.
+
+## Which corpus is home to each type
+
+Every type the schema defines has a home. A type with no home is a set of rules nothing has tested.
+
+| Type           | Home                                       |
+|----------------|--------------------------------------------|
+| `adrs`         | `library`, `engineering`                   |
+| `capabilities` | `library`, `payments`                      |
+| `controls`     | `engineering`, `dog-fooding`               |
+| `data`         | `library`                                  |
+| `deviations`   | `dog-fooding`                              |
+| `explanations` | `library`                                  |
+| `fixes`        | `dog-fooding`, `payments`                  |
+| `glossary`     | `library`, `engineering`                   |
+| `integrations` | `library`                                  |
+| `nfrs`         | `payments`                                 |
+| `policies`     | `engineering`                              |
+| `postmortems`  | `payments`                                 |
+| `processes`    | `library`, `dog-fooding`                   |
+| `reports`      | `engineering`, `dog-fooding`               |
+| `runbooks`     | `library`, `dog-fooding`                   |
+| `services`     | `library`, `dog-fooding`, `payments`       |
+| `standards`    | `engineering`, `dog-fooding`, `payments`   |
+| `tools`        | `engineering`, `dog-fooding`               |
+
+`library` is home to `explanations` and `payments` is home to `postmortems`. Neither has adopted its type yet.
+
+Six adopted folders are still empty. `library` has no `data`, `integrations`, `processes` or `runbooks` record.
+`engineering` has no `controls` or `tools` record. An issue on this repository tracks each one.
 
 ## What they share
 
