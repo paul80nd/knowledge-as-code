@@ -35,7 +35,6 @@
 | [Policy](policies.md)    | normative   | A high-level engineering commitment, independent of any stack and rarely changed.                            |
 | [Report](reports.md)     | descriptive | A question about the corpus, answered across every record, with the judgement a person added.                |
 | [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                      |
-| [Tool](tools.md)         | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version range for each.      |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.
@@ -81,8 +80,8 @@ references beside it.
 
 ## Maturity
 
-**Policies and standards are the proven types here.** The other four schemas have met little real content, and two of
-them hold none at all. That is the honest limit: a schema is wrong in ways only real content reveals.
+**Policies and standards are the proven types here.** The other schemas have met little real content, and `controls/`
+is still empty. That is the honest limit: a schema is wrong in ways only real content reveals.
 
 ## What this corpus declares about itself
 
@@ -93,6 +92,9 @@ live in it, each named for what it versions, and the file's own comments say wha
 Declaring `types:` states a decision rather than the shape the folders happen to have. `validate` then holds the corpus
 to standing up everything it declared, and every generated list of types is written from that declaration. A corpus that
 declares nothing still works: the tool reads adoption off the folders instead.
+
+It declines `tools`. A tool record names a technology and a version range, and the policies here name no technology.
+[`../dog-fooding/`](../dog-fooding/) keeps the approved-software register for this repository.
 
 ## What it publishes
 
