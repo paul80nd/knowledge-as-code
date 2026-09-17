@@ -34,6 +34,6 @@
     "Scope": "Every fault in `kac`, in the documentation site, in the workflows or in the plugin, and every action agreed after one."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/dog-fooding/deviations/nothing-learns-from-a-fault.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/dog-fooding/deviations/nothing-learns-from-a-fault.md"
   }
 }

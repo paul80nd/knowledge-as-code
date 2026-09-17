@@ -35,6 +35,6 @@
     "Conformance checklist": "- [ ] Every package source configured in the repository points at the organisation's feed.\n- [ ] The lockfile is committed, and CI installs from it without resolving afresh.\n- [ ] The dependency scan runs on every build, and its results are visible without opening the tool.\n- [ ] No critical finding is open past 7 days without a recorded deviation.\n- [ ] Every licence in the tree appears on the allowed list.\n- [ ] The build artefacts for the last release are still in the managed repository."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2fe23ded7c004eef896fb1cd0f644ce2175b2e8b/examples/engineering/standards/common/dependencies.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/engineering/standards/common/dependencies.md"
   }
 }
