@@ -62,7 +62,9 @@ internal static partial class SkillReference
             // are `docs/design/plugin.md`'s, so a reader meets one vocabulary across both pages.
             var reads = requires.Count > 0
                 ? string.Join(", ", requires)
-                : component?["standalone"]?.GetValue<bool>() == true ? "standalone" : "supporting";
+                : component?["standalone"]?.GetValue<bool>() == true
+                    ? "standalone"
+                    : "supporting";
 
             skills.Add(new Skill(name, Summary(Path.Combine(Bundled, "skills", name, "SKILL.md")), reads));
         }

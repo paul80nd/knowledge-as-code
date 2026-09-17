@@ -61,7 +61,7 @@ public class IdCheckTests
         => Assert.Equal("id-format", Assert.Single(Run(id, "policies/vurm-a.md", Mnemonic())).Check.Value);
 
     [Theory]
-    [InlineData("std-PR")]      // the floor
+    [InlineData("std-PR")] // the floor
     [InlineData("std-SECRET")]
     [InlineData("std-TESTING")] // the ceiling
     public void A_mnemonic_anywhere_inside_a_declared_span_is_silent(string id)

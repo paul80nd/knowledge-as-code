@@ -212,12 +212,12 @@ public class ImportsTests
         // and the line naming it carries the scope eng stamped.
         if (grandparent)
             files["eng/policies/gp/pol-OLD.json"] = """
-                                                   {
-                                                     "type": "policies",
-                                                     "path": "policies/old.md",
-                                                     "fields": { "id": "pol-OLD" }
-                                                   }
-                                                   """;
+                                                    {
+                                                      "type": "policies",
+                                                      "path": "policies/old.md",
+                                                      "fields": { "id": "pol-OLD" }
+                                                    }
+                                                    """;
 
         if (partsFile is not null)
             files[$"eng/{partsFile}"] =

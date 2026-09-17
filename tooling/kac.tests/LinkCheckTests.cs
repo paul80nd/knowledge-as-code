@@ -107,7 +107,7 @@ public class LinkCheckTests
     [InlineData("[std-CI] says so.\n\n[std-CI]: /standards/workflows.md\n")]
     [InlineData("[std-CI.the-rule] says so.\n\n[std-CI.the-rule]: /standards/workflows.md#the-rule\n")]
     [InlineData("[the standards] says so.\n\n[the standards]: /standards.md\n")] // a page has no id
-    [InlineData("[a picture]: /pictures/cat.png\n\nSee [a picture].\n")]             // nor has a png
+    [InlineData("[a picture]: /pictures/cat.png\n\nSee [a picture].\n")]         // nor has a png
     public void A_label_that_names_what_it_leads_to_is_silent(string markdown)
         => Assert.Empty(Labels(markdown));
 

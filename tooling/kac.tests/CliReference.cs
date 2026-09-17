@@ -166,7 +166,9 @@ internal static partial class CliReference
     }
 
     internal sealed record Verb(
-        string Name, IReadOnlyList<Argument> Arguments, IReadOnlyList<Option> Options);
+        string Name,
+        IReadOnlyList<Argument> Arguments,
+        IReadOnlyList<Option> Options);
 
     internal sealed record Argument(string Name, bool Required, string Description);
 

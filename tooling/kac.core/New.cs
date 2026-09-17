@@ -438,7 +438,7 @@ public static class New
     private static string Target(string tracker) =>
         tracker.Contains("github.com", StringComparison.OrdinalIgnoreCase) ? Publishing.GitHub
         : tracker.Contains("dev.azure.com", StringComparison.OrdinalIgnoreCase)
-        || tracker.Contains("visualstudio.com", StringComparison.OrdinalIgnoreCase) ? Publishing.AzureDevOps
+          || tracker.Contains("visualstudio.com", StringComparison.OrdinalIgnoreCase) ? Publishing.AzureDevOps
         : Publishing.None;
 
     // The words a YAML reader takes for a boolean or for nothing at all, rather than for a name. Held

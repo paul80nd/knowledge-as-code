@@ -35,10 +35,10 @@ public class WorkflowGateTests
 
         Assert.Equal(declared.Order(StringComparer.Ordinal), gated.Order(StringComparer.Ordinal));
     }
+
     // The text of a scalar the workflow writes. A node holding none is an empty key or an empty item,
     // and this file reads neither.
     private static string Text(YamlNode node) =>
         (node as YamlScalarNode)?.Value
         ?? throw new XunitException($"a node in kac.yml holds no text: {node}");
-
 }

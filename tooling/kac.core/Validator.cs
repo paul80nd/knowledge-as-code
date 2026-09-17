@@ -947,7 +947,8 @@ public static class Validator
     private static IEnumerable<(Doc Doc, TypeSchema Type)> Typed(IEnumerable<Doc> docs)
     {
         foreach (var d in docs)
-            if (d.Type is { } type) yield return (d, type);
+            if (d.Type is { } type)
+                yield return (d, type);
     }
 
     private static void CheckMinRecords(List<Doc> docs, List<Finding> f)
@@ -1263,8 +1264,7 @@ public static class Validator
     private static TypeSchema? Gathered(List<TypeSchema> targets, string citation)
     {
         var record = Citation.Read(citation).Record;
-        return targets.FirstOrDefault(
-            target => record.StartsWith(target.IdPrefix + "-", StringComparison.Ordinal));
+        return targets.FirstOrDefault(target => record.StartsWith(target.IdPrefix + "-", StringComparison.Ordinal));
     }
 
     // The type's own `rules:`, in the order the schema declares them. Two kinds arrive here. A rule

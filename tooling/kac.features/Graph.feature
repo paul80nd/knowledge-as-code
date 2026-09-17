@@ -41,50 +41,50 @@ Scenario: A field reconciles against the lines carrying its label, whichever lab
   Then the findings for "gizmos/covering.md" are exactly:
     | line | check | message |
   And the findings for "gizmos/drifting.md" are exactly:
-    | line | check             | message                                                                                                                             |
+    | line | check             | message                                                                                                                                              |
     |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
-    |    1 | mirrors-citations | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                         |
-    |   31 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                    |
-    |   39 | mirrors-citations | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.                          |
+    |    1 | mirrors-citations | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                                         |
+    |   31 | mirrors-citations | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                                    |
+    |   39 | mirrors-citations | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.                                               |
   And the findings for "gizmos/unitalic.md" are exactly:
-    | line | check             | message                                                                                                                             |
-    |   25 | mirrors-citations | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end.            |
+    | line | check             | message                                                                                                                |
+    |   25 | mirrors-citations | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end. |
   And the findings for "gizmos/wholesale.md" are exactly:
-    | line | check             | message                                                                                                                             |
-    |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    | line | check             | message                                                                                                                                                                               |
+    |    1 | mirrors-citations | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field.                                     |
     |   25 | mirrors-citations | this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |
 
 Scenario: A field naming a part refuses the record named whole
   When I validate the corpus
   Then the findings for "gizmos/named-whole.md" are exactly:
-    | line | check             | message                                                                                                                             |
-    |    1 | mirrors-citations | 'covers' lists 'giz-behaving' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    | line | check             | message                                                                                                                                                                           |
+    |    1 | mirrors-citations | 'covers' lists 'giz-behaving' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field.                                         |
     |    1 | ref-resolves      | 'covers' points at 'giz-behaving' whole, and this field names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |
 
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
   Then validation reports 13 documents and 0 skipped
   And the findings are exactly:
-    | file                  | severity | line | check                   | message                                                                                              |
-    | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                     |
-    | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0099' but it is not referenced in the '## Related' section.                     |
-    | adrs/0001-first.md    | error    |    1 | ref-resolves            | 'related' points at 'adr-0099', which does not exist.                                                |
-    | adrs/0001-first.md    | error    |    1 | reciprocal              | 'supersedes: adr-0002' is not reciprocated: adrs/0002-second.md must list 'superseded-by: adr-0001'. |
-    | adrs/0001-first.md    | error    |   31 | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                                |
-    | adrs/0001-first.md    | error    |   31 | undefined-label         | reference '[ADR-0099]' has no link definition.                                                       |
-    | adrs/0001-first.md    | error    |   33 | fragment-resolves       | '#renamed-away' names no heading in '0002-second.md'.                                                |
-    | adrs/0001-first.md    | warning  |   34 | bracket-literal         | '[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link).    |
-    | adrs/0003-third.md    | error    |    1 | id-matches-filename     | id 'adr-0002' carries number '0002', and the filename carries '0003'.                                |
-    | adrs/0003-third.md    | error    |    1 | id-unique               | id 'adr-0002' is also used by adrs/0002-second.md.                                                   |
-    | adrs/0004-dangling.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'adr-0099', which does not exist.                                          |
-    | adrs/0005-mistyped.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR.                              |
-    | gizmos/adrift.md      | error    |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it.           |
-    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
-    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                         |
-    | gizmos/drifting.md    | error    |   31 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to. |
-    | gizmos/drifting.md    | error    |   39 | mirrors-citations       | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.       |
-    | gizmos/named-whole.md | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
-    | gizmos/named-whole.md | error    |    1 | ref-resolves            | 'covers' points at 'giz-behaving' whole, and this field names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |
-    | gizmos/unitalic.md    | error    |   25 | mirrors-citations       | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end. |
-    | gizmos/wholesale.md   | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field. |
+    | file                  | severity | line | check                   | message                                                                                                                                                                               |
+    | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                                                                                                      |
+    | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0099' but it is not referenced in the '## Related' section.                                                                                                      |
+    | adrs/0001-first.md    | error    |    1 | ref-resolves            | 'related' points at 'adr-0099', which does not exist.                                                                                                                                 |
+    | adrs/0001-first.md    | error    |    1 | reciprocal              | 'supersedes: adr-0002' is not reciprocated: adrs/0002-second.md must list 'superseded-by: adr-0001'.                                                                                  |
+    | adrs/0001-first.md    | error    |   31 | link-resolves           | link target 'nonexistent-target.md' does not resolve.                                                                                                                                 |
+    | adrs/0001-first.md    | error    |   31 | undefined-label         | reference '[ADR-0099]' has no link definition.                                                                                                                                        |
+    | adrs/0001-first.md    | error    |   33 | fragment-resolves       | '#renamed-away' names no heading in '0002-second.md'.                                                                                                                                 |
+    | adrs/0001-first.md    | warning  |   34 | bracket-literal         | '[an unlinked placeholder]' looks like a reference but has no definition (or use an inline link).                                                                                     |
+    | adrs/0003-third.md    | error    |    1 | id-matches-filename     | id 'adr-0002' carries number '0002', and the filename carries '0003'.                                                                                                                 |
+    | adrs/0003-third.md    | error    |    1 | id-unique               | id 'adr-0002' is also used by adrs/0002-second.md.                                                                                                                                    |
+    | adrs/0004-dangling.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'adr-0099', which does not exist.                                                                                                                           |
+    | adrs/0005-mistyped.md | error    |    1 | ref-resolves            | 'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR.                                                                                                               |
+    | gizmos/adrift.md      | error    |    1 | related-matches-section | the '## Dependencies' section references 'giz-mirrored' but 'depends-on' does not list it.                                                                                            |
+    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-rattles' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field.                                  |
+    | gizmos/drifting.md    | error    |    1 | mirrors-citations       | a 'Covers' line names 'giz-behaving.it-purrs' and 'covers' does not list it.                                                                                                          |
+    | gizmos/drifting.md    | error    |   31 | mirrors-citations       | this 'Covers' line stands in the middle of a section. Write it as the last thing under the heading it belongs to.                                                                     |
+    | gizmos/drifting.md    | error    |   39 | mirrors-citations       | this 'Covers' line names nothing it could gather. Name what the section answers, or take the line off.                                                                                |
+    | gizmos/named-whole.md | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field.                                             |
+    | gizmos/named-whole.md | error    |    1 | ref-resolves            | 'covers' points at 'giz-behaving' whole, and this field names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered.     |
+    | gizmos/unitalic.md    | error    |   25 | mirrors-citations       | this 'Covers' line is not italic, so its marks show on the page. An emphasis mark needs a word against it at each end.                                                                |
+    | gizmos/wholesale.md   | error    |    1 | mirrors-citations       | 'covers' lists 'giz-behaving.it-hums' and no 'Covers' line names it. Close the section that answers it with one, or take the id out of the field.                                     |
     | gizmos/wholesale.md   | error    |   25 | mirrors-citations       | this 'Covers' line names 'giz-behaving' whole, and 'covers' names a behaviour. Write 'giz-behaving.<behaviour>', one entry per behaviour. A bare id reads as every behaviour covered. |

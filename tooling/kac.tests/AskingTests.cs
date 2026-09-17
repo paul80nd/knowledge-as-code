@@ -58,9 +58,9 @@ public class AskingTests
     // Both ways of having nobody to ask, and the one way of having somebody. Read once per command, so
     // the two readings a command used to hold cannot disagree.
     [Theory]
-    [InlineData(false, true, true)]    // a terminal, and nothing answered in advance
-    [InlineData(true, true, false)]    // `--yes` answered everything, terminal or not
-    [InlineData(false, false, false)]  // a pipeline, with nobody at a keyboard
+    [InlineData(false, true, true)]   // a terminal, and nothing answered in advance
+    [InlineData(true, true, false)]   // `--yes` answered everything, terminal or not
+    [InlineData(false, false, false)] // a pipeline, with nobody at a keyboard
     [InlineData(true, false, false)]
     public void Whether_there_is_anybody_to_ask(bool yes, bool interactive, bool asks)
         => Assert.Equal(asks, Asking.Asks(yes, interactive));

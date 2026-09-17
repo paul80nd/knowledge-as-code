@@ -28,7 +28,8 @@ public sealed class FeatureFileRepo : ICorpusRule
         // silence.
         var services = ctx.Type.FieldOrder
             .Select(name => ctx.Type.Fields[name])
-            .FirstOrDefault(f => f is { Type: "list", Of: "id" } && f.Refs.Contains("services", StringComparer.Ordinal));
+            .FirstOrDefault(f =>
+                f is { Type: "list", Of: "id" } && f.Refs.Contains("services", StringComparer.Ordinal));
         if (services is null) return;
 
         foreach (var doc in ctx.Records)

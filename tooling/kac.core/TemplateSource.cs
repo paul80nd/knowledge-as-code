@@ -111,8 +111,12 @@ public sealed class TemplateSource : IDisposable
     //
     // Disposable, because the fetch beneath it may have cloned. A take that reported a problem holds
     // nothing to remove, so disposing one costs nothing.
-    public sealed class Taken(TemplateSource? source, Manifest? manifest, Schema? schema,
-        IReadOnlyList<string>? declared, string? problem) : IDisposable
+    public sealed class Taken(
+        TemplateSource? source,
+        Manifest? manifest,
+        Schema? schema,
+        IReadOnlyList<string>? declared,
+        string? problem) : IDisposable
     {
         // Each value below is set exactly where `Problem` is not, which is the contract above. A caller
         // reads `Problem` first, so reaching one of these on a take that failed is a defect in that

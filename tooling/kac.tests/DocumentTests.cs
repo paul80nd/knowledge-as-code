@@ -656,7 +656,7 @@ public class DocumentTests
     };
 
     [Theory]
-    [InlineData("policies/flat.md", "")]                       // filed flat: no category, and none wanted
+    [InlineData("policies/flat.md", "")] // filed flat: no category, and none wanted
     [InlineData("policies/security/nested.md", "security")]
     [InlineData("policies/platform/node/deep.md", "platform/node")]
     public void Doc_Derived_reads_the_sub_path_under_the_type_folder(string rel, string expected)

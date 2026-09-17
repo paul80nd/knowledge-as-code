@@ -829,7 +829,7 @@ public partial class Doc
                 && em.FirstChild is EmphasisInline { DelimiterCount: 2 } inItalic)
                 (italic, scope, bold) = (true, em.Descendants(), inItalic);
             else if (first is LiteralInline stray && Unpaired(stray.Content.ToString())
-                     && stray.NextSibling is EmphasisInline { DelimiterCount: 2 } beside)
+                                                  && stray.NextSibling is EmphasisInline { DelimiterCount: 2 } beside)
                 (italic, scope, bold) = (false, OnTheLine(first), beside);
             else continue;
 
@@ -873,7 +873,8 @@ public partial class Doc
         {
             yield return node;
             if (node is ContainerInline container)
-                foreach (var inner in container.Descendants()) yield return inner;
+                foreach (var inner in container.Descendants())
+                    yield return inner;
         }
     }
 
@@ -923,7 +924,8 @@ public partial class Doc
     private static IEnumerable<ContainerInline> Inlines(IEnumerable<LeafBlock> leaves)
     {
         foreach (var leaf in leaves)
-            if (leaf.Inline is { } inline) yield return inline;
+            if (leaf.Inline is { } inline)
+                yield return inline;
     }
 
     private static IEnumerable<LeafBlock> Leaves(Block block) =>

@@ -102,7 +102,8 @@ public static class Generator
         IEnumerable<TypeSchema> types)
     {
         foreach (var t in types)
-            if (t.Lineage is { } lineage) yield return (t, lineage);
+            if (t.Lineage is { } lineage)
+                yield return (t, lineage);
     }
 
     private static string Link(TypeSchema t, string up) => up + t.Page;
