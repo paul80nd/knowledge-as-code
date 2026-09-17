@@ -22,6 +22,6 @@
     "Failure modes": "| Failure                         | How it presents                                      | Our fallback                              |\n|---------------------------------|------------------------------------------------------|-------------------------------------------|\n| The hosted page is unavailable  | The hold is created and stays unpaid                 | Branch staff take the payment at the desk |\n| The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |\n| The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/library/integrations/card-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/library/integrations/card-payments.md"
   }
 }

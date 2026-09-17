@@ -11,6 +11,7 @@
     ],
     "mechanism": "ci",
     "frequency": "per-pr",
+    "last-verified": null,
     "evidence": "The `docs` job's log on the pull request, under the step \"Build the site\".",
     "applies-to": [
       "all"
@@ -26,6 +27,6 @@
     "Coverage and gaps": "`strict: true` checks links inside the site. Nothing fetches an external URL, so a link to a page that has moved still\npasses.\n\nA reader judges whether a page is accurate. A published page describing behaviour the tool no longer has passes every check here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/dog-fooding/controls/0010-docs-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/dog-fooding/controls/0010-docs-build.md"
   }
 }

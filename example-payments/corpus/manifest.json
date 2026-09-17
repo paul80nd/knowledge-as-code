@@ -4,9 +4,9 @@
   "shortcode": "pay",
   "contentVersion": "0.17.0",
   "mechanismVersion": 18,
-  "commit": "68e944b630203aa0c880b2814da88d2191bff4e4",
+  "commit": "dfc3febbbb264a7f033ba8122a85635a6971d80e",
   "dirty": false,
-  "generatedAt": "2026-09-17T14:29:07Z",
+  "generatedAt": "2026-09-17T15:51:08Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "68e944b630203aa0c880b2814da88d2191bff4e4"
+    "ref": "dfc3febbbb264a7f033ba8122a85635a6971d80e"
   },
   "tracker": {
     "target": "github",
@@ -37,13 +37,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.22.2",
+      "contentVersion": "0.22.3",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/68e944b630203aa0c880b2814da88d2191bff4e4/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/dfc3febbbb264a7f033ba8122a85635a6971d80e/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "68e944b630203aa0c880b2814da88d2191bff4e4"
+        "ref": "dfc3febbbb264a7f033ba8122a85635a6971d80e"
       },
       "tracker": {
         "target": "github",
