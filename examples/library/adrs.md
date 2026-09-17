@@ -77,7 +77,7 @@ its id.
 * **Prescriptive language.** An ADR that establishes a default or a policy may use
   [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
   declarative prose.
-* **Format**: lean Nygard style, with an explicit Alternatives Considered section.
+* **Format**: lean Nygard style, opened by a Y-statement summary and with an explicit Alternatives Considered section.
   [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example.
 
 See [Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) for the review model that
