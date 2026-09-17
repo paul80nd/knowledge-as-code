@@ -16,7 +16,7 @@ owner: human:alex.doe
 
 ## What it does
 
-Sends the messages the borrower notifications capability describes. It is the target of that capability's
+Sends the messages the borrower notifications offering describes. It is the target of that offering's
 `implemented-by`, and of the catalogue's `depends-on` — which it points back at, so the two of them are the
 cycle `no-dependency-cycles` reports.
 

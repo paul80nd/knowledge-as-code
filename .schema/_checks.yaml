@@ -602,7 +602,7 @@ checks:
     description: A feature file path begins with a repository one of the implementing services names.
     notes: >
       The first segment alone, because the rest of the path is inside a repository this corpus cannot read.
-      A warning, since a regression pack can live in a repository no service claims. A capability whose
+      A warning, since a regression pack can live in a repository no service claims. An offering whose
       services state no repository between them is passed over, and so is an id `ref-resolves` has already
       reported.
 

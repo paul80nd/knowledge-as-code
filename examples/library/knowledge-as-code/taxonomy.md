@@ -25,7 +25,7 @@ column for your row.
 | A third-party or external system the estate depends on           | [Integrations](../integrations.md) |
 | How something works, or why it is shaped that way                | [Explanations](../explanations.md) |
 | What a deployable component is and does                          | [Services](../services.md)         |
-| What the organisation offers a customer, and why                 | [Capabilities](../capabilities.md) |
+| What the organisation offers a customer, and why                 | [Offerings](../offerings.md)       |
 | Where data lives, how long it is kept, and its sensitivity       | [Data](../data.md)                 |
 
 <!-- END GENERATED: types-placement -->
@@ -53,11 +53,6 @@ later ADR supersedes it. A decision that affects only one repository belongs in 
 
 CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
-NFRs behind it. A capability sits above the work items. It links to the ones that detail it, the services that implement
-it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own has
-stopped being one.
-
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
 in, the service that owns them, how sensitive they are, and how long they are kept.
@@ -75,6 +70,11 @@ to that entry.
 **[Integrations](../integrations.md).** An external system the estate depends on: its contract, auth, failure modes, SLA
 and fallback. One document per external system. It records the contract, how a caller authenticates, what happens when
 the system is down, and who to call about it.
+
+**[Offerings](../offerings.md).** What the organisation offers a customer, and why, with links to the services and NFRs
+behind it. An offering sits above the work items. It links to the ones that detail it, the services that implement it,
+the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own has
+stopped being one.
 
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
 stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
@@ -101,24 +101,24 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 ```mermaid
 graph LR;
   t_adrs[ADR];
-  t_capabilities[Capability];
   t_data[Data];
   t_explanations[Explanation];
   t_glossary[Glossary];
   t_integrations[Integration];
+  t_offerings[Offering];
   t_processes[Process];
   t_runbooks[Runbook];
   t_services[Service];
   t_adrs -- related --> t_adrs;
   t_adrs -- superseded-by --> t_adrs;
-  t_capabilities -- implemented-by --> t_services;
   t_data -- flows-to --> t_services;
   t_data -- flows-to --> t_integrations;
   t_data -- owned-by --> t_services;
   t_explanations -- explains --> t_services;
-  t_explanations -- explains --> t_capabilities;
+  t_explanations -- explains --> t_offerings;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
+  t_offerings -- implemented-by --> t_services;
   t_processes -- applies-to --> t_services;
   t_runbooks -- applies-to --> t_services;
   t_services -- data-stores --> t_data;
@@ -137,12 +137,12 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | ADR         | `related`        | ADR                  |                 |
 | ADR         | `superseded-by`  | ADR                  | `supersedes`    |
 | ADR         | `supersedes`     | ADR                  | `superseded-by` |
-| Capability  | `implemented-by` | Service              |                 |
 | Data        | `flows-to`       | Service, Integration |                 |
 | Data        | `owned-by`       | Service              |                 |
-| Explanation | `explains`       | Service, Capability  |                 |
+| Explanation | `explains`       | Service, Offering    |                 |
 | Glossary    | `narrows`        | Glossary             |                 |
 | Integration | `used-by`        | Service              |                 |
+| Offering    | `implemented-by` | Service              |                 |
 | Process     | `applies-to`     | Service              |                 |
 | Runbook     | `applies-to`     | Service              |                 |
 | Service     | `data-stores`    | Data                 |                 |
@@ -170,9 +170,6 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
-capability usually spans several services. One service usually contributes to several capabilities.
-
 **Explanation vs ADR.** An explanation describes the shape something has. An ADR records the choice that gave it that
 shape, and is frozen at the moment of choosing.
 
@@ -181,6 +178,9 @@ is meant to follow it step by step, it is a process.
 
 **Explanation vs Service.** An explanation covers how the pieces fit together. A service document describes one
 deployable component. If it is about a single component, it is a service.
+
+**Offering vs Service.** An offering is what a customer gets. A service is something the organisation deploys. One
+offering usually spans several services. One service usually contributes to several offerings.
 
 **Process vs Runbook.** Are you doing this because you planned to, or because something is broken? Planned is a process.
 Broken is a runbook.

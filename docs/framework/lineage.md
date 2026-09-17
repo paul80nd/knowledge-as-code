@@ -79,10 +79,9 @@ none of it. That is [Alignment, not compliance](#alignment-not-compliance) again
 Honesty about sourcing is part of the point of the register. Every row the framework declares was checked against a
 primary source, except these:
 
-* **ITIL** publications are paywalled, so the known-error definition behind the fix row rests on the publisher's own
-  summary.
+* **ITIL** publications are paywalled, so the known-error definition behind the fix row and the service offering
+  behind the offering row both rest on the publisher's own summary.
 * **ISO standards** are paywalled, so 25010's characteristics come from the issuing body's public descriptions.
-* **ArchiMate** is licence-gated beyond its public specification pages.
 
 Where a claim is later found wrong, correct the row. Do not soften it.
 

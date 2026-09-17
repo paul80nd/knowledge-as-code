@@ -16,7 +16,7 @@ what the component is for, where its code lives, what it runs on, what it depend
 ## Why we use them
 
 Services are the **anchor** the rest of the corpus points at. An NFR, a control and a fix each name the service they
-concern, and a capability names the services that implement it. Nobody can check those references, or write them the
+concern, and an offering names the services that implement it. Nobody can check those references, or write them the
 same way twice, without one canonical list of what a service is and what it is called.
 
 A new contributor or an AI session asks one question more than any other: *which repository does this thing live in, and
@@ -25,8 +25,8 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. A capability spanning six services gets a
-[capability](capabilities.md) document that links to all six.
+independently deployed apps gets three documents. An offering spanning six services gets a
+[offering](offerings.md) document that links to all six.
 
 **Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
 unit.** A feed of six packages, built from six folders by one workflow, is one document. Its artefacts are one build

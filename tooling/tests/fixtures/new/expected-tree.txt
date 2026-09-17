@@ -29,7 +29,6 @@
 .schema/_tiers.yaml
 .schema/_universal.yaml
 .schema/adrs.yaml
-.schema/capabilities.yaml
 .schema/controls.yaml
 .schema/data.yaml
 .schema/deviations.yaml
@@ -39,6 +38,7 @@
 .schema/integrations.yaml
 .schema/meta/type.schema.json
 .schema/nfrs.yaml
+.schema/offerings.yaml
 .schema/policies.yaml
 .schema/postmortems.yaml
 .schema/processes.yaml
@@ -53,9 +53,6 @@ adrs.md
 adrs/0001-knowledge-as-code.md
 adrs/_index.md
 adrs/_template.md
-capabilities.md
-capabilities/_index.md
-capabilities/_template.md
 controls.md
 controls/_index.md
 controls/_template.md
@@ -88,6 +85,9 @@ knowledge-as-code/taxonomy.md
 nfrs.md
 nfrs/_index.md
 nfrs/_template.md
+offerings.md
+offerings/_index.md
+offerings/_template.md
 policies.md
 policies/_index.md
 policies/_template.md

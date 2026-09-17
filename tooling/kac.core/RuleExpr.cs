@@ -62,6 +62,7 @@ public static class RuleExpr
         {
             ["field"] = new([ValueType.Str], ValueType.Str, (f, a) => f.Field(Str(a, 0))),
             ["present"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Present(Str(a, 0))),
+            ["entries"] = new([ValueType.Str], ValueType.Int, (f, a) => f.Entries(Str(a, 0))),
             ["section"] = new([ValueType.Str], ValueType.Bool, (f, a) => f.Section(Str(a, 0))),
             ["section_count"] = new([ValueType.Str], ValueType.Int, (f, a) => f.SectionCount(Str(a, 0))),
             ["first_section"] = new([], ValueType.Str, (f, _) => f.FirstSection()),

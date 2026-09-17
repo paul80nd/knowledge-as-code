@@ -51,13 +51,13 @@ The reader acts on a clause without checking it. Make it checkable.
   `posture-belongs-to-frameworks` warns.
 * A control, an NFR and a fix carry no clause table, no Purpose and no keywords. State what the reader will act on.
 
-### Descriptive: services, capabilities, explanations and glossaries
+### Descriptive: services, offerings, explanations and glossaries
 
 * Use the indicative mood. Write: "The API authenticates with workload identity." Not: "should authenticate".
 * Use no future tense. Describe what runs today.
 * Use no promotion. Cut "world-class" and "best-in-class".
 * Use no RFC 2119 keyword. `not-normative` warns.
-* A capability and an explanation are hubs. Link out instead of restating. `hub-not-specification` and
+* An offering and an explanation are hubs. Link out instead of restating. `hub-not-specification` and
   `links-rather-than-restates` warn at about forty words per outbound link.
 
 ### Decided: ADRs and postmortems

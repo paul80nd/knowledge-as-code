@@ -1,7 +1,6 @@
 README
 knowledge-as-code
 adrs
-capabilities
 controls
 data
 deviations
@@ -10,6 +9,7 @@ fixes
 glossary
 integrations
 nfrs
+offerings
 policies
 postmortems
 processes

@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=./meta/type.schema.json
+
+type: offering
+label: Offering
+label-plural: Offerings
+folder: offerings
+page: offerings.md
+tier: descriptive
+lifecycle: living
+summary: What the organisation offers a customer, and why, with links to the services and NFRs behind it.
+goes-here: What the organisation offers a customer, and why
+detail: >
+  An offering sits above the work items. It links to the ones that detail it, the services that implement it,
+  the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own
+  has stopped being one.
+
+versus:
+  services: >
+    An offering is what a customer gets. A service is something the organisation deploys. One offering usually
+    spans several services. One service usually contributes to several offerings.
+
+lineage:
+  prior-art: "ITIL 4 Foundation (2019), 2.3.2: the service offering"
+  alignment: >
+    An offering is defined by the consumer group it serves, not by what delivers it. ITIL describes a
+    service offering the same way, and places it above the services behind it. The GOV.UK Service Manual
+    asks that a service name describe a task the user recognises, which is how these records are titled.
+    Its second Service Standard point, solve a whole problem for users, is why one offering spans several
+    services
+  divergence: >
+    ITIL keeps a service offering in a catalogue a tool serves. This type is a record in a repository, and
+    CI validates it. ITIL also counts goods and access as part of an offering, where `implemented-by`
+    admits service ids alone. Backstage's `System` groups components by the APIs they expose, which is this
+    shape read from the inside; an offering is read from the outside, so `Surfaces` names where a customer
+    meets it rather than the delivery channels ITIL would list. `feature-files` ties an offering to the
+    tests that prove it, and `spans-more-than-one-service` warns where one service delivers the whole of
+    it. Neither has a counterpart in any of the three sources
+
+id:
+  prefix: ofr
+  style: slug
+
+filename:
+  pattern: '^[a-z0-9-]+\.md$'
+  slug-max: 30
+
+fields:
+
+  status:
+    required: true
+    type: enum
+    values: [planned, building, live, deprecated]
+    description: Lifecycle of the offering itself, which may differ from the lifecycle of its services.
+
+  implemented-by:
+    required: true
+    type: list
+    of: id
+    ref: services
+    mirrors-section: Where the detail lives
+    description: Ids of the services that implement this offering.
+
+  feature-files:
+    required: false
+    type: list
+    of: string
+    description: Paths to the feature files that test this offering, each one beginning with its repository.
+    notes: >
+      A path names the repository first, spelled as that repository's service spells `repo:`, then the path
+      inside it. `feature-file-repo` checks that first segment. The rest is a plain string, so
+      `ref-resolves` never sees it and nothing reads it until `feature-file-orphans` runs.
+
+  nfrs:
+    required: false
+    required-when: "status == live"
+    type: list
+    of: id
+    ref: nfrs
+    reciprocal: applies-to
+    mirrors-section: Where the detail lives
+    description: Ids of the NFRs this offering must meet.
+    notes: >
+      Required once an offering is live, because a customer already has it and nothing else here says how
+      well it has to work. A corpus that declined `nfrs` is not asked, and adopting the type starts the
+      obligation with no edit to this file.
+
+sections:
+  required: [What it does, Who it is for, Why it exists, Where the detail lives]
+  optional: [Surfaces, Known limitations]
+
+export:
+  version: 1
+  fields: [id, title, status, implemented-by, feature-files, nfrs, tags]
+  sections:
+    What it does: full
+    Who it is for: full
+    Why it exists: full
+    Surfaces: full
+    Where the detail lives: full
+    Known limitations: full
+  notes: >
+    Every section travels. `Where the detail lives` is the only place the work items are written, and no field
+    states them, so a consumer reads each one's label and not its address.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#offerings>.
+
+index:
+  columns: [id, title, status, implemented-by]
+  sort: id
+
+rules:
+  - id: hub-not-specification
+    description: An offering's prose stays proportionate to the links it makes.
+    severity: warning
+    # A ratio, so an offering that links to nothing fails at any length.
+    expr: "words() <= links() * 40"
+    message: >
+      prose has outgrown the links. Move the detail into the documents this points at, and link to them
+      from here.
+  - id: spans-more-than-one-service
+    description: An offering is delivered by more than one service.
+    severity: warning
+    # Guarded on the field, so a corpus that declined `services` is not warned about one it cannot fill.
+    expr: "present('implemented-by') implies entries('implemented-by') >= 2"
+    message: >
+      one service delivers the whole of this. Write the service record instead, or name the other
+      services the customer is getting.
+  # The only part of a feature file path this corpus can check without reading a code repository.
+  - id: feature-file-repo
+    description: A feature file path begins with a repository one of the implementing services names.
+    severity: warning
+  - id: feature-file-orphans
+    description: >
+      Scheduled. Reports feature files in the code repositories no offering claims, and paths here that
+      no longer exist.

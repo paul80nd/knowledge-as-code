@@ -15,9 +15,18 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.28.0 - 2026-09-17
 
 ### Added
+
+- **`spans-more-than-one-service` warns where one service delivers the whole of an offering.** An offering naming
+  one service in `implemented-by` restates the service record beside it. The rule is guarded on the field, so a
+  corpus that declined `services` is not warned about one it cannot fill.
+
+- **A rule expression can count a field's entries.** `entries('implemented-by')` answers how many, where
+  `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on
+  an absent field guards with `present()` first. `min-items:` states the same floor as an error. Use the fact where
+  the shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
 
 - **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
   writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
@@ -35,10 +44,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   estate's clocks and each action links a work item the reader cannot open. `docs/design/export.md` no longer lists
   `postmortems` among the types declaring no block.
 
-- **A capability travels to a consumer.** `.schema/capabilities.yaml` declares an `export:` block, so `kac export`
-  writes a file per capability record. Every section travels at `full`, because `Where the detail lives` is the only
-  place a capability states its work items and the rest of the record is short by design. `docs/design/export.md` no
-  longer lists `capabilities` among the types declaring no block.
+- **An offering travels to a consumer.** `.schema/offerings.yaml` declares an `export:` block, so `kac export`
+  writes a file per offering record. Every section travels at `full`, because `Where the detail lives` is the only
+  place an offering states its work items and the rest of the record is short by design. `docs/design/export.md` no
+  longer lists `offerings` among the types declaring no block.
 
 - **`feature-file-repo` warns where a feature file names a repository no implementing service does.** A path in
   `feature-files` starts with its repository, spelled as that repository's service spells `repo:`. The check compares
@@ -51,6 +60,39 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the other, and `validate` reports either end that does not.
 
 ### Changed
+
+- **An offering says who it is for.** `Who it is for` is a required section, and it travels in the export. ITIL 4
+  defines a service offering by the consumer group it serves, and that group is what decides where one offering ends
+  and the next begins. The `Why it exists` guidance in each `_template.md` no longer asks for the audience, because
+  the new section holds it. An existing offering gains one heading.
+
+- **An offering that is `live` states an NFR.** `nfrs` is required once the status reaches `live`: a customer
+  already has the offering, and nothing else on the record says how well it has to work. A corpus that declined
+  `nfrs` is not asked, and adopting the type starts the obligation with no edit to `.schema/offerings.yaml`.
+
+- **`offerings` names its prior art.** `lineage` said "None that fits" and left `alignment` and `divergence` empty.
+  It now names ITIL 4 Foundation 2.3.2, the service offering, and states what the type takes from ITIL, the GOV.UK
+  Service Manual and Backstage, and where it parts from each. Both values render into every adopting corpus's
+  `knowledge-as-code/lineage.md`. `docs/framework/lineage.md` records that ITIL is paywalled, beside the rows that
+  already were.
+
+- **The `capability` type is now `offering`.** A record lands in `offerings/` as `ofr-borrowing`, the page beside
+  it is `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and
+  defines it by the consumer group it serves, which is what this type always meant. `Capability` meant something else
+  to two of its likely readers: ArchiMate uses it for an ability an organisation possesses, and SAFe for functionality
+  below an epic. A corpus that adopted `capabilities` renames the folder and the page. It changes each record's
+  `type:`, `id:` and identity line, and rewrites every `cap-` reference in the records of other types. It then writes
+  `offerings` over `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand. `kac update --drop-type capabilities`
+  refuses that last step, because the template no longer declares the name. The export is `offerings@1`, so a consumer
+  sees `capabilities` stop and `offerings` start. The template version moves to 18, and `kac new` stamps
+  `template-version: 18`.
+
+- **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only
+  types nothing there supplies is dropped from the required pass, and a `required-when:` on such a field never fires.
+  A type an import publishes counts as supplied, so a standard citing a producer's policy clause is still asked for in
+  a corpus adopting no `policies` of its own. Adopting one of those types starts the obligation with no edit to
+  `.schema/`. A field with `allow-literal:` is fillable without them, so it is still asked for. `ref-resolves` is
+  unchanged: a value a record does write is held to the same standard as before.
 
 - **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
   sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.
@@ -83,10 +125,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   already uses for the same shape and the one a screen reader can read. It lost its `Tested by` line, which restated
   `feature-files` and had already drifted from it, and its `Decided in` line, which no field ever backed.
 
-- **`kac new` seeds a capability template and type page that name no tracker.** Both said functional detail lives in
+- **`kac new` seeds an offering template and type page that name no tracker.** Both said functional detail lives in
   Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. Inside the corpus the
   template links only to `services`, so one that adopted neither `adrs` nor `nfrs` no longer receives a definition
-  into a folder it does not have. The type page also states the floor the type has: a capability whose
+  into a folder it does not have. The type page also states the floor the type has: an offering whose
   `implemented-by` names one service is a synonym for that service. Both files seed, so an existing corpus keeps the
   wording it was created with.
 
@@ -112,7 +154,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Removed
 
-- **`ado-epics` is gone from `capabilities`, and with it the `int` value type.** A work item id assumed one tracker,
+- **`ado-epics` is gone from `offerings`, and with it the `int` value type.** A work item id assumed one tracker,
   and a corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
   `Where the detail lives` list, labelled the way the corpus's own tracker labels them. `ado-epics` was the only field
   in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer

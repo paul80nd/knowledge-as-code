@@ -1,6 +1,6 @@
 ---
-id: cap-{{slug}}
-type: capability
+id: ofr-{{slug}}
+type: offering
 tier: descriptive
 status: planned
 implemented-by:
@@ -10,13 +10,15 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Capability: cap-{{slug}}` `PLANNED`
+`Offering: ofr-{{slug}}` `PLANNED`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
 a template to, and nothing more.
 
 ## What it does
+
+## Who it is for
 
 ## Why it exists
 

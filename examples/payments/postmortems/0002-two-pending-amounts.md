@@ -9,7 +9,7 @@ restored-at: 2026-08-12T22:25:00Z
 duration: PT4H20M
 severity: sev2
 affected:
-  - cap-card-payment
+  - ofr-card-payment
   - svc-payment-api
   - svc-payment-ledger
 prompted:
@@ -49,7 +49,7 @@ afternoon.
 31 customers saw two pending amounts for one order, each for the basket value, for up to 20 hours. The duplicate holds
 totalled £1,847. Two customers rang to ask whether they had been charged twice.
 
-No customer was charged twice. [cap-card-payment] kept taking payments throughout, at the slower speed.
+No customer was charged twice. [ofr-card-payment] kept taking payments throughout, at the slower speed.
 
 Measured against [nfr-0001]: breached. The p95 held at about 4.2 seconds against a target of 800ms, for 4 hours 20
 minutes.
@@ -99,7 +99,7 @@ No customer was charged twice, and nothing about this incident prevented it. Cap
 each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the
 next day would have captured the second authorisation and taken the money.
 
-The separation of authorisation and capture is in [cap-card-payment] for a different reason: an order that never ships
+The separation of authorisation and capture is in [ofr-card-payment] for a different reason: an order that never ships
 is never charged. It absorbed this incident as a by-product.
 
 ## Actions
@@ -118,7 +118,7 @@ is never charged. It absorbed this incident as a by-product.
 
 ---
 
-[cap-card-payment]: ../capabilities/card-payment.md
+[ofr-card-payment]: ../offerings/card-payment.md
 [fix-0001]: ../fixes/duplicate-authorisation.md
 [gh#3402]: https://git.example.com/example-payments/payment-api/issues/3402
 [gh#3404]: https://git.example.com/example-payments/payment-ledger/issues/3404

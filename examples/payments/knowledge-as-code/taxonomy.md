@@ -16,14 +16,14 @@ column for your row.
 
 <!-- BEGIN GENERATED: types-placement -->
 
-| You have…                                        | It goes in                         |
-|--------------------------------------------------|------------------------------------|
-| A problem with a known, verified resolution      | [Fixes](../fixes.md)               |
-| A rule people must follow when building          | [Standards](../standards.md)       |
-| A target for speed, uptime, or recovery          | [NFRs](../nfrs.md)                 |
-| An account of an incident and what caused it     | [Postmortems](../postmortems.md)   |
-| What a deployable component is and does          | [Services](../services.md)         |
-| What the organisation offers a customer, and why | [Capabilities](../capabilities.md) |
+| You have…                                        | It goes in                       |
+|--------------------------------------------------|----------------------------------|
+| A problem with a known, verified resolution      | [Fixes](../fixes.md)             |
+| A rule people must follow when building          | [Standards](../standards.md)     |
+| A target for speed, uptime, or recovery          | [NFRs](../nfrs.md)               |
+| An account of an incident and what caused it     | [Postmortems](../postmortems.md) |
+| What a deployable component is and does          | [Services](../services.md)       |
+| What the organisation offers a customer, and why | [Offerings](../offerings.md)     |
 
 <!-- END GENERATED: types-placement -->
 
@@ -62,9 +62,9 @@ the union of the folders that apply to it.
 
 CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
-NFRs behind it. A capability sits above the work items. It links to the ones that detail it, the services that implement
-it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own has
+**[Offerings](../offerings.md).** What the organisation offers a customer, and why, with links to the services and NFRs
+behind it. An offering sits above the work items. It links to the ones that detail it, the services that implement it,
+the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own has
 stopped being one.
 
 **[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
@@ -81,18 +81,18 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 
 ```mermaid
 graph LR;
-  t_capabilities[Capability];
   t_fixes[Fix];
   t_nfrs[NFR];
+  t_offerings[Offering];
   t_postmortems[Postmortem];
   t_services[Service];
   t_standards[Standard];
-  t_capabilities -- implemented-by --> t_services;
-  t_capabilities -- nfrs --> t_nfrs;
   t_fixes -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_services;
+  t_nfrs -- applies-to --> t_offerings;
+  t_offerings -- implemented-by --> t_services;
   t_postmortems -- affected --> t_services;
-  t_postmortems -- affected --> t_capabilities;
+  t_postmortems -- affected --> t_offerings;
   t_postmortems -- prompted --> t_nfrs;
   t_postmortems -- prompted --> t_fixes;
   t_postmortems -- prompted --> t_standards;
@@ -107,17 +107,17 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From       | Field            | Points at           | Answered by  |
-|------------|------------------|---------------------|--------------|
-| Capability | `implemented-by` | Service             |              |
-| Capability | `nfrs`           | NFR                 | `applies-to` |
-| Fix        | `applies-to`     | Service             |              |
-| NFR        | `applies-to`     | Service, Capability | `nfrs`       |
-| Postmortem | `affected`       | Service, Capability |              |
-| Postmortem | `prompted`       | NFR, Fix, Standard  |              |
-| Service    | `depends-on`     | Service             |              |
-| Service    | `nfrs`           | NFR                 | `applies-to` |
-| Standard   | `applies-to`     | Service             |              |
+| From       | Field            | Points at          | Answered by  |
+|------------|------------------|--------------------|--------------|
+| Fix        | `applies-to`     | Service            |              |
+| NFR        | `applies-to`     | Service, Offering  | `nfrs`       |
+| Offering   | `implemented-by` | Service            |              |
+| Offering   | `nfrs`           | NFR                | `applies-to` |
+| Postmortem | `affected`       | Service, Offering  |              |
+| Postmortem | `prompted`       | NFR, Fix, Standard |              |
+| Service    | `depends-on`     | Service            |              |
+| Service    | `nfrs`           | NFR                | `applies-to` |
+| Standard   | `applies-to`     | Service            |              |
 
 <!-- END GENERATED: types-edges -->
 
@@ -141,8 +141,8 @@ this corpus holds both sides of it.
 
 <!-- BEGIN GENERATED: types-versus -->
 
-**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
-capability usually spans several services. One service usually contributes to several capabilities.
+**Offering vs Service.** An offering is what a customer gets. A service is something the organisation deploys. One
+offering usually spans several services. One service usually contributes to several offerings.
 
 <!-- END GENERATED: types-versus -->
 

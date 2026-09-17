@@ -41,10 +41,9 @@ what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
-[ADR](../adrs.md#metadata) · [Capability](../capabilities.md#metadata) · [Data](../data.md#metadata) ·
-[Explanation](../explanations.md#metadata) · [Glossary](../glossary.md#metadata) ·
-[Integration](../integrations.md#metadata) · [Process](../processes.md#metadata) · [Runbook](../runbooks.md#metadata) ·
-[Service](../services.md#metadata)
+[ADR](../adrs.md#metadata) · [Data](../data.md#metadata) · [Explanation](../explanations.md#metadata) ·
+[Glossary](../glossary.md#metadata) · [Integration](../integrations.md#metadata) · [Offering](../offerings.md#metadata)
+· [Process](../processes.md#metadata) · [Runbook](../runbooks.md#metadata) · [Service](../services.md#metadata)
 
 <!-- END GENERATED: types-metadata -->
 

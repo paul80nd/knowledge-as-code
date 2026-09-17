@@ -3,7 +3,7 @@ id: nfr-0001
 type: nfr
 tier: normative
 status: draft
-applies-to: [cap-borrower-notifications]
+applies-to: [ofr-borrower-notifications]
 target: 99.5% monthly
 measured-by: Monitored by the platform team where practical.
 review-by: "2026-12-31"

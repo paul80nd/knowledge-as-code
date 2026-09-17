@@ -28,8 +28,10 @@ public static class Validator
         // The schema first, because it decides how every document below is read.
         SchemaChecks.Check(schema, findings);
 
+        var fillable = Fillable(corpus);
+
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, tree, findings, today);
+            CheckDocument(doc, schema, tree, findings, today, fillable: fillable);
 
         // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file that gets a block is a file this
@@ -81,7 +83,7 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter: a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, tree, findings, today, DocKind.Template);
+                CheckDocument(template, schema, tree, findings, today, DocKind.Template, fillable);
         }
 
         // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
@@ -105,8 +107,12 @@ public static class Validator
         return findings;
     }
 
+    /// <param name="fillable">
+    /// The folders an id written here may point into: the types this corpus adopted, plus the types its
+    /// imports supply. Null says the caller does not know, and every obligation is then reported.
+    /// </param>
     public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f, DateOnly today,
-        DocKind kind = DocKind.Record)
+        DocKind kind = DocKind.Record, IReadOnlySet<string>? fillable = null)
     {
         var report = new Report(d.Rel, f);
 
@@ -158,13 +164,14 @@ public static class Validator
         // The required fields, universal and type alike, including the ones `required-when` turns on. Not
         // asked of a template. Every value in one is either bare or a placeholder, and both say "not
         // supplied yet". That is the whole point of the file. Whether the fields are all there to be
-        // supplied is CheckTemplateFields' question above.
+        // supplied is CheckTemplateFields' question above. A field no record here can fill is skipped,
+        // which Unfillable decides.
         if (kind == DocKind.Record)
             foreach (var spec in t.DeclaredFields)
             {
                 var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
                 var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name], spec);
-                if (req && absent)
+                if (req && absent && !Unfillable(spec, fillable))
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
                     report.Err(new CheckId("required-field"),
@@ -1296,6 +1303,36 @@ public static class Validator
         => condition is not null
            && present.TryGetValue(condition.Field, out var node)
            && condition.Holds(Yaml.Raw(node));
+
+    // True where a field points only at types nothing here supplies and accepts no literal in their place,
+    // so no record can fill it. The obligation is dropped in silence, which is the answer `ref:` already
+    // gives for resolution. See Checks/SchemaChecks.cs. Taking one of the types starts the obligation with
+    // no edit to the schema.
+    private static bool Unfillable(FieldSpec spec, IReadOnlySet<string>? fillable)
+        => fillable is not null
+           && spec.Refs.Count > 0
+           && spec.AllowLiteral.Count == 0
+           && !spec.Refs.Any(fillable.Contains);
+
+    // The folders an id written in this corpus may point into. A type the corpus declined is still one an
+    // import can supply: a standard here cites a policy clause from a producer, and the corpus adopts no
+    // `policies` of its own. An imported record names its type in the singular, so the schema is what
+    // turns it back into the folder a `ref:` spells.
+    private static HashSet<string> Fillable(LoadedCorpus corpus)
+    {
+        var folders = corpus.Adopted.Select(t => t.Folder).ToHashSet(StringComparer.Ordinal);
+
+        var supplied = corpus.Imports.Imports
+            .SelectMany(i => i.Records)
+            .Select(r => r.Type)
+            .ToHashSet(StringComparer.Ordinal);
+
+        foreach (var t in corpus.Schema.ByFolder.Values)
+            if (supplied.Contains(t.TypeName))
+                folders.Add(t.Folder);
+
+        return folders;
+    }
 
     private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 

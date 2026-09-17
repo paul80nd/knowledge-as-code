@@ -46,7 +46,7 @@ taxonomy without waiting on a change to the code.
 
 Repositories and folders are storage. The relationships are the knowledge.
 
-A policy is implemented by a standard, verified by a control, applied to a service, contributing to a capability. That
+A policy is implemented by a standard, verified by a control, applied to a service, contributing to an offering. That
 chain is meaningful whichever folder each record sits in, and it is where the value is. A service document is a fact. A
 service document that can tell you which standards bind it is an answer.
 

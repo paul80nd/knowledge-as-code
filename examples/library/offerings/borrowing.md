@@ -1,6 +1,6 @@
 ---
-id: cap-borrowing
-type: capability
+id: ofr-borrowing
+type: offering
 tier: descriptive
 status: live
 implemented-by:
@@ -19,7 +19,7 @@ tags: [ loans, renewals ]
 
 # Borrow and return an item
 
-`Capability: cap-borrowing` `LIVE`
+`Offering: ofr-borrowing` `LIVE`
 
 A borrower takes an item out, sees what they have on loan, renews it, and hears from the library before it falls due.
 
@@ -27,8 +27,12 @@ A borrower takes an item out, sees what they have on loan, renews it, and hears 
 
 One card borrows at every branch, and an item borrowed at one branch is returned at any other.
 
-Within this capability [svc-notices] writes to the borrower at three moments: a loan approaching its due date, a loan
+Within this offering [svc-notices] writes to the borrower at three moments: a loan approaching its due date, a loan
 already overdue, and a membership due for renewal.
+
+## Who it is for
+
+Cardholders of any library in the consortium, and the counter staff who borrow on their behalf.
 
 ## Why it exists
 

@@ -30,7 +30,13 @@ public sealed class Facts(Doc doc, DateOnly today)
     // would answer no to every list field and make a rule that guards on one impossible to satisfy.
     //
     // A bare key and an empty sequence are both absent, which is the same state `bare-key` reports on.
-    public bool Present(string name) => doc.FrontList(name).Count > 0;
+    public bool Present(string name) => Entries(name) > 0;
+
+    // How many entries the field has. `present()` answers whether a field has any. This answers how many,
+    // which is a different question: a field whose value is its breadth says something by naming one
+    // service and not four. Zero for an absent field, so a rule that must stay quiet on one guards with
+    // `present()` first.
+    public int Entries(string name) => doc.FrontList(name).Count;
 
     // Case-insensitive, matching required-section: a heading is prose a person wrote, and '## context'
     // is the section the schema means however it was capitalised.

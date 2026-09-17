@@ -1,6 +1,6 @@
 ---
-id: cap-card-payment
-type: capability
+id: ofr-card-payment
+type: offering
 tier: descriptive
 status: live
 implemented-by:
@@ -18,7 +18,7 @@ tags: [ checkout ]
 
 # Pay for an order with a card
 
-`Capability: cap-card-payment` `LIVE`
+`Offering: ofr-card-payment` `LIVE`
 
 A customer pays at the checkout and is told there and then whether the card was accepted.
 
@@ -29,9 +29,14 @@ the customer sees one charge rather than two.
 
 Authorisation and capture are separate steps for that reason. An order that never ships is never charged.
 
+## Who it is for
+
+Anyone at the checkout. Paying needs no account, so the group is every visitor with an order to
+settle.
+
 ## Why it exists
 
-Nothing else in the business takes money. Every other capability here corrects or explains a payment this one took.
+Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.
 
 ## Surfaces
 

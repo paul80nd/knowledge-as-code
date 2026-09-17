@@ -4,24 +4,10 @@
     "templates": 17,
     "skipped": 0,
     "errors": 22,
-    "warnings": 17,
+    "warnings": 18,
     "infos": 0
   },
   "findings": [
-    {
-      "file": "capabilities/borrower-notifications.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "hub-not-specification",
-      "message": "prose has outgrown the links. Move the detail into the documents this points at, and link to them from here."
-    },
-    {
-      "file": "capabilities/borrower-notifications.md",
-      "line": 1,
-      "severity": "warning",
-      "check": "feature-file-repo",
-      "message": "'feature-files: qa-pack/features/overdue.feature' starts in 'qa-pack', which is no repository of a service this record implements. Those services are in: notifications."
-    },
     {
       "file": "controls/0001-frequency-not-stated.md",
       "line": 1,
@@ -133,6 +119,27 @@
       "severity": "warning",
       "check": "target-is-measurable",
       "message": "`measured-by` is hedged. Write the dashboard, query or report that gives the number."
+    },
+    {
+      "file": "offerings/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "hub-not-specification",
+      "message": "prose has outgrown the links. Move the detail into the documents this points at, and link to them from here."
+    },
+    {
+      "file": "offerings/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "spans-more-than-one-service",
+      "message": "one service delivers the whole of this. Write the service record instead, or name the other services the customer is getting."
+    },
+    {
+      "file": "offerings/borrower-notifications.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "feature-file-repo",
+      "message": "'feature-files: qa-pack/features/overdue.feature' starts in 'qa-pack', which is no repository of a service this record implements. Those services are in: notifications."
     },
     {
       "file": "policies/cert-certification-claim.md",

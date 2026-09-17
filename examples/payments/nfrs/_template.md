@@ -23,7 +23,7 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 **Frontmatter**
 
 * **`status`**: `draft` until someone has agreed it, then `agreed`. An agreed target is a commitment, not an aspiration.
-* **`applies-to`**: service or capability ids. Estate-wide targets are almost always wrong, since a marketing page and
+* **`applies-to`**: service or offering ids. Estate-wide targets are almost always wrong, since a marketing page and
   the checkout flow don't deserve the same budget.
 * **`target`**: a concrete figure, such as `99.5% monthly`, `p95 < 400ms` or `RTO 4h`.
 * **`measured-by`**: required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
@@ -71,9 +71,9 @@ discovering it during an incident.)_
 
 ## Related
 
-* [cap-{{a}}] is the capability this constrains.
+* [ofr-{{a}}] is the offering this constrains.
 * [pmt-{{a}}] records an incident measured against this target.
 
-[cap-{{a}}]: ../capabilities/{{a}}.md
+[ofr-{{a}}]: ../offerings/{{a}}.md
 [int-{{a}}]: ../integrations/{{a}}.md
 [pmt-{{a}}]: ../postmortems/{{a}}.md

@@ -24,7 +24,7 @@ Takes one card payment on a page the vendor hosts. [svc-reservations] redirects 
 and the vendor returns them to the service against the hold reference. No card detail passes through any service this
 consortium deploys.
 
-**The status is `trial` because [cap-reservations] is still building.** Development and test run against the vendor's
+**The status is `trial` because [ofr-reservations] is still building.** Development and test run against the vendor's
 sandbox. Production points at the live endpoint and has taken no payment from a borrower yet.
 
 ## Contract
@@ -69,7 +69,7 @@ one working day. The trial has no named technical contact, so a question about t
 ## Related
 
 * [svc-reservations] runs the redirect and confirms the hold.
-* [cap-reservations] is the capability that cannot go live without this.
+* [ofr-reservations] is the offering that cannot go live without this.
 
-[cap-reservations]: ../capabilities/reservations.md
+[ofr-reservations]: ../offerings/reservations.md
 [svc-reservations]: ../services/reservations.md

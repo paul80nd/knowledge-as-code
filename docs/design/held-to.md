@@ -100,9 +100,14 @@ most often confused with. A corpus adopts as many of the framework's types as it
 type this corpus turned down.
 
 `kac` reports nothing when it does. The disambiguation renders nothing, and `kac update --add-type` starts the reference
-without an edit to `.schema/`. What a record is held to does not soften with it. `ref-resolves` still asks that a cited
-id exists, and it refuses one of a type the field never named. A field whose every type this corpus declined admits
-nothing at all, and says which types it wanted.
+without an edit to `.schema/`. `kac` also drops a required field that points only at types nothing here supplies. No
+record can fill one, so `required-field` says nothing until the corpus adopts one of those types or imports a corpus
+publishing them. A `required-when:` on such a field is quiet for the same reason. A field taking a word under
+`allow-literal:` is fillable without any of those types, so its obligation stands.
+
+What a record does write is held to the same standard. `ref-resolves` still asks that a cited id exists, and it refuses
+one of a type the field never named. A field whose every type this corpus declined admits nothing at all, and says which
+types it wanted.
 
 The cost is a misspelled name, which reads the same way from inside a corpus that holds a subset of the types. `kac`
 reports it nowhere. What catches it is a test over the authored `.schema/`, held in the repository that writes the

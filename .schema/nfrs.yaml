@@ -42,12 +42,12 @@ fields:
     required: true
     type: list
     of: id
-    ref: [services, capabilities]
+    ref: [services, offerings]
     reciprocal: nfrs
-    description: The service or capability ids this target binds.
+    description: The service or offering ids this target binds.
     notes: >
       A target listing every service must meet the strictest case among them. Write a second NFR where one service
-      needs a stricter number than the rest. A wait a customer feels binds a capability, and a property of one
+      needs a stricter number than the rest. A wait a customer feels binds an offering, and a property of one
       deployment binds a service. Both ends state the edge, so a record named here lists this NFR back.
 
   target:

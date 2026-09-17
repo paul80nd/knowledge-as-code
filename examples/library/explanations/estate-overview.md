@@ -5,9 +5,9 @@ tier: descriptive
 status: active
 owner: human:robin.hale
 explains:
-  - cap-borrowing
-  - cap-discovery
-  - cap-reservations
+  - ofr-borrowing
+  - ofr-discovery
+  - ofr-reservations
   - svc-catalogue-api
   - svc-catalogue-web
   - svc-covers-cdn
@@ -30,9 +30,9 @@ record it links to.
 ## What a borrower can do
 
 The consortium offers a [borrower](../glossary/example-libraries.md#borrower) three things. They find a title, they
-borrow it, and they reserve one held at another [branch](../glossary/example-libraries.md#branch). [cap-discovery],
-[cap-borrowing] and [cap-reservations] each list the services behind one of them. Reservations is still being built,
-and [cap-reservations] says what remains. Read all three before any service record, because a service on its own does
+borrow it, and they reserve one held at another [branch](../glossary/example-libraries.md#branch). [ofr-discovery],
+[ofr-borrowing] and [ofr-reservations] each list the services behind one of them. Reservations is still being built,
+and [ofr-reservations] says what remains. Read all three before any service record, because a service on its own does
 not say what it is for.
 
 ## The public surfaces
@@ -50,7 +50,7 @@ internet. [svc-search] is the exception, because the catalogue calls it directly
 ## The legacy system
 
 [svc-lending] wraps the legacy library management system and maps its database. Loans, holds and borrower records are
-read and written through it, so both [cap-borrowing] and [cap-reservations] depend on it.
+read and written through it, so both [ofr-borrowing] and [ofr-reservations] depend on it.
 
 ## What runs without a borrower
 
@@ -71,9 +71,9 @@ states that convention, and each service lists its own topics under operational 
 * [svc-search], [svc-notices] and [svc-shelf-audit] describe the work that runs on a schedule or on an event.
 * [Services](../services.md) states the conventions this catalogue follows, and why some coupling has no edge.
 
-[cap-borrowing]: ../capabilities/borrowing.md
-[cap-discovery]: ../capabilities/discovery.md
-[cap-reservations]: ../capabilities/reservations.md
+[ofr-borrowing]: ../offerings/borrowing.md
+[ofr-discovery]: ../offerings/discovery.md
+[ofr-reservations]: ../offerings/reservations.md
 [exp-covers-path]: covers-path.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-catalogue-web]: ../services/catalogue-web.md

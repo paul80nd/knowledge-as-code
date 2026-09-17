@@ -89,6 +89,24 @@ public class RuleExprTests
         Assert.False(Eval("present('derived-from')", "id: std-ERRORS\nderived-from:"));
     }
 
+    // A scalar is one entry, so a rule counting a field reads the same answer whichever shape the schema
+    // declared, the way `present()` does.
+    [Fact]
+    public void Entries_counts_a_list_and_reads_a_scalar_as_one()
+    {
+        Assert.True(Eval("entries('implemented-by') == 2",
+            "id: ofr-refund\nimplemented-by: [ svc-payment-api, svc-payment-ledger ]"));
+        Assert.True(Eval("entries('implemented-by') == 1", "id: ofr-refund\nimplemented-by: svc-payment-api"));
+    }
+
+    [Fact]
+    public void Entries_is_zero_for_a_bare_key_as_well_as_a_missing_one()
+    {
+        Assert.True(Eval("entries('implemented-by') == 0", "id: ofr-refund\nimplemented-by:"));
+        Assert.True(Eval("entries('implemented-by') == 0", "id: ofr-refund"));
+        Assert.True(Eval("entries('implemented-by') == 0", "id: ofr-refund\nimplemented-by: []"));
+    }
+
     [Fact]
     public void Section_matches_a_heading_whatever_its_case()
         => Assert.True(Eval("section('context')", body: "## Context\n\nProse."));

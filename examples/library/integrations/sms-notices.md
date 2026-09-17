@@ -65,8 +65,8 @@ nowhere to go.
 
 * [svc-notices] sent through this, and sends email alone now.
 * [int-mail-delivery] took what this used to send.
-* [cap-borrowing] is the capability the due-date reminder belonged to.
+* [ofr-borrowing] is the offering the due-date reminder belonged to.
 
-[cap-borrowing]: ../capabilities/borrowing.md
+[ofr-borrowing]: ../offerings/borrowing.md
 [int-mail-delivery]: mail-delivery.md
 [svc-notices]: ../services/notices.md
