@@ -15,7 +15,7 @@ shortcode: pay
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.15.0"
+content-version: "0.16.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -52,7 +52,7 @@ upstream:
   ref:
   commit:
   template-version: 17
-  taken-on: "2026-09-16"
+  taken-on: "2026-09-17"
 
 # Where to report a problem with the framework itself. This repository authors it, so a finding about
 # `kac`, the schema or a skill goes to the same tracker as one about a record here.
@@ -68,6 +68,7 @@ types:
   - capabilities
   - fixes
   - nfrs
+  - postmortems
   - services
   - standards
 
