@@ -270,12 +270,18 @@ lacks.
 
 ### explanations
 
-`Where the detail lives` is the one section this type declares, so it is the only one that can travel. The rest of the
-body is free-form, because an explanation's shape follows its subject. An explanation points at the documents with the
-detail and does not repeat it, so the pointers are the part worth sending.
+**`explains` admits a standard, a process and an ADR as well as a service or an offering.** Diátaxis starts an
+explanation from a why-question about a subject, and a subject is not always a deployable thing. An account of why the
+testing approach is shaped as it is explains a standard. Requiring the field at all is this framework's own, and it is
+what stops the residual type filling up with prose attached to nothing.
 
-A consumer receives each pointer as a bare id, because `Exporter.Body` drops a section's link definitions. That is the
-same reduction every other type gets, and the id is what a consumer looks the record up by.
+**`What this covers` says what the record leaves to another record.** The Good Docs Project's concept template opens
+with a required section that fixes the scope, and Diátaxis asks an explanation to stay closely bounded. The body
+between that section and `Where the detail lives` is free-form, because an explanation's shape follows its subject.
+
+Both declared sections travel, and a consumer receives every id in either of them as a bare id, because
+`Exporter.Body` drops a section's link definitions. That is the same reduction every other type gets, and the id is
+what a consumer looks the record up by.
 
 ### reports
 

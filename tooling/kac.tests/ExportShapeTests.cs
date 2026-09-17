@@ -39,9 +39,10 @@ public class ExportShapeTests
             What compensates: full
             How it closes: full
             Scope: full
-        explanations@1
+        explanations@2
           fields: id, title, status, explains, review-by, tags
           sections:
+            What this covers: full
             Where the detail lives: full
         fixes@2
           fields: id, title, status, symptom-keywords, applies-to, verified, review-by, tags

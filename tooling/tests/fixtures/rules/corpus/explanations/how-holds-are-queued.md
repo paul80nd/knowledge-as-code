@@ -12,6 +12,10 @@ review-by: "2026-12-31"
 
 `Explanation: exp-how-holds-are-queued` `ACTIVE`
 
+## What this covers
+
+How a hold reaches the front of the queue for a title.
+
 ## Where the detail lives
 
 It lives here, which is the fault this document exists to demonstrate. A hold joins the queue for a title

@@ -58,6 +58,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A rule can measure a gap in days.** `days('a', 'b')` counts whole days between two date fields, where `span()`
   answers in hours between two timestamps. `docs/design/expressions.md` is the reference.
 
+- **An explanation says what it covers.** `What this covers` is a required section, and it travels in the export. It
+  states what the record covers and what it leaves to another record, which is what keeps the residual type bounded.
+  `kac validate` reports `sections` against an explanation without it, and `kac new` sends a `_template.md` carrying
+  it.
+
 ### Changed
 
 - **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
@@ -87,6 +92,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the PCI DSS v4.0 compensating controls worksheet and the FedRAMP POA&M template. `alignment` claimed a bounded
   period and tracked remediation, which the type asks for nowhere. Both now name what the type takes and where it
   parts from them. `kac generate` writes both into every adopting corpus's `knowledge-as-code/lineage.md`.
+
+- **An explanation can explain a standard, a process or an ADR.** `explains` took a service or an offering alone, and
+  a subject is not always a deployable thing. The export's `shapeVersion` for the type moves from 1 to 2, because a
+  reader that resolved every id in the services or offerings folder would now be wrong.
+
+- **`explanations` states what it takes from current practice.** `lineage` was measured against Diátaxis, the Good
+  Docs Project's concept template and arc42. `alignment` claimed discursive prose and weighed alternatives, which the
+  type asks for nowhere. Both now name what the type takes and where it parts from them. `kac generate` writes both
+  into every adopting corpus's `knowledge-as-code/lineage.md`.
 
 ## 0.28.0 - 2026-09-17
 

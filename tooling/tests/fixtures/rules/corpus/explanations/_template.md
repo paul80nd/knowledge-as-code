@@ -16,4 +16,6 @@ Fixture scaffolding. A stood-up type needs a template beside its records, so thi
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds
 a template to, and nothing more.
 
+## What this covers
+
 ## Where the detail lives

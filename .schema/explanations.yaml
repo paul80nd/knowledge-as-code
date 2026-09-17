@@ -31,10 +31,17 @@ versus:
 lineage:
   prior-art: "[Diátaxis](https://diataxis.fr/explanation/), Explanation"
   alignment: >
-    Name for name. Understanding-oriented, discursive, gives background and considers alternatives
+    Name for name, and understanding-oriented. Diátaxis asks an explanation to stay closely bounded, and
+    [the Good Docs Project's concept template](https://www.thegooddocsproject.dev/template/concept) opens with a
+    required *Definition* that fixes the scope. `What this covers` is that section. Diátaxis also asks an
+    explanation to make connections to other things, which is what `explains` and `Where the detail lives` record
   divergence: >
-    Diátaxis constrains explanation only against tutorial, how-to and reference. This framework also forbids an
-    explanation being normative or a catalogue entry, because separate types cover both
+    Diátaxis asks an explanation to be discursive, and to weigh alternatives and counter-examples. Here the choice
+    between alternatives is an ADR, and `links-rather-than-restates` rations the prose at about forty words for each
+    outbound link. [arc42](https://docs.arc42.org/home/) keeps the decisions, the quality goals and the glossary
+    inside the architecture document, where each of those is a separate type here. Diátaxis constrains explanation
+    only against tutorial, how-to and reference. This framework also forbids an explanation being normative or a
+    catalogue entry, because separate types cover both
 
 id:
   prefix: exp
@@ -56,8 +63,8 @@ fields:
     required: true
     type: list
     of: id
-    ref: [services, offerings]
-    description: Ids of the services and offerings this explains.
+    ref: [services, offerings, standards, processes, adrs]
+    description: Ids of the services, offerings, standards, processes and ADRs this explains.
 
   review-by:
     required: true
@@ -66,20 +73,22 @@ fields:
     notes: An explanation is the residual category, so the review date does more work here than on other types.
 
 sections:
-  required: [Where the detail lives]
+  required: [What this covers, Where the detail lives]
   optional: []
   notes: >
-    Body sections are free-form, because an explanation is narrative and its shape follows its subject.
-    `Where the detail lives` is the one required section, because linking out is what defines the type.
+    `What this covers` states what the record covers and what it leaves to another record, which is what keeps the
+    residual type bounded. `Where the detail lives` lists the records with the facts. Between them the body is
+    free-form, because an explanation is narrative and its shape follows its subject.
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, explains, review-by, tags]
   sections:
+    What this covers: full
     Where the detail lives: full
   notes: >
-    This type declares one heading, so it is the only one a consumer can be promised. It travels for the ids
-    in it, because what an explanation points at is what it offers a reader who cannot open the record.
+    `What this covers` tells a reader who cannot open the record what the record is about. `Where the detail lives`
+    travels for the ids in it, because what an explanation points at is the rest of what it offers that reader.
     See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#explanations>.
 
 index:

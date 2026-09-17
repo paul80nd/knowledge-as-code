@@ -116,6 +116,8 @@ graph LR;
   t_data -- owned-by --> t_services;
   t_explanations -- explains --> t_services;
   t_explanations -- explains --> t_offerings;
+  t_explanations -- explains --> t_processes;
+  t_explanations -- explains --> t_adrs;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_offerings -- implemented-by --> t_services;
@@ -132,21 +134,21 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From        | Field            | Points at            | Answered by     |
-|-------------|------------------|----------------------|-----------------|
-| ADR         | `related`        | ADR                  |                 |
-| ADR         | `superseded-by`  | ADR                  | `supersedes`    |
-| ADR         | `supersedes`     | ADR                  | `superseded-by` |
-| Data        | `flows-to`       | Service, Integration |                 |
-| Data        | `owned-by`       | Service              |                 |
-| Explanation | `explains`       | Service, Offering    |                 |
-| Glossary    | `narrows`        | Glossary             |                 |
-| Integration | `used-by`        | Service              |                 |
-| Offering    | `implemented-by` | Service              |                 |
-| Process     | `applies-to`     | Service              |                 |
-| Runbook     | `applies-to`     | Service              |                 |
-| Service     | `data-stores`    | Data                 |                 |
-| Service     | `depends-on`     | Service              |                 |
+| From        | Field            | Points at                       | Answered by     |
+|-------------|------------------|---------------------------------|-----------------|
+| ADR         | `related`        | ADR                             |                 |
+| ADR         | `superseded-by`  | ADR                             | `supersedes`    |
+| ADR         | `supersedes`     | ADR                             | `superseded-by` |
+| Data        | `flows-to`       | Service, Integration            |                 |
+| Data        | `owned-by`       | Service                         |                 |
+| Explanation | `explains`       | Service, Offering, Process, ADR |                 |
+| Glossary    | `narrows`        | Glossary                        |                 |
+| Integration | `used-by`        | Service                         |                 |
+| Offering    | `implemented-by` | Service                         |                 |
+| Process     | `applies-to`     | Service                         |                 |
+| Runbook     | `applies-to`     | Service                         |                 |
+| Service     | `data-stores`    | Data                            |                 |
+| Service     | `depends-on`     | Service                         |                 |
 
 <!-- END GENERATED: types-edges -->
 

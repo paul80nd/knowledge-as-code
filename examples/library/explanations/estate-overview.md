@@ -27,6 +27,11 @@ tags: [ architecture, onboarding ]
 A map of the consortium's systems, for somebody meeting them for the first time. Every fact below is stated in the
 record it links to.
 
+## What this covers
+
+Every offering the consortium makes, every service behind it, and how they connect. What a service does in detail
+belongs to that service's record. The path a jacket image takes belongs to [exp-covers-path].
+
 ## What a borrower can do
 
 The consortium offers a [borrower](../glossary/example-libraries.md#borrower) three things. They find a title, they
