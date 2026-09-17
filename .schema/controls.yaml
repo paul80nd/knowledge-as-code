@@ -17,10 +17,10 @@ lineage:
   prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
   alignment: >
     800-53A ties a determination statement to the control item it tests, so a result traces back to the
-    requirement. `verifies` does the same with a rule-level anchor. 800-53A puts the method, the expected
-    evidence and the objects assessed beside that statement. Here those are `mechanism`, `evidence` and
-    `applies-to`. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment task `at-frequency`, and
-    `frequency` states the same thing
+    requirement. `verifies` ties a control to the standard it checks, and `What it checks` quotes the rule.
+    800-53A puts the method, the expected evidence and the objects assessed beside that statement. Here
+    those are `mechanism`, `evidence` and `applies-to`. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an
+    assessment task `at-frequency`, and `frequency` states the same thing
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
     internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own, and no source
