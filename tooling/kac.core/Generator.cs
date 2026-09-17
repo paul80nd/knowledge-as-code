@@ -514,10 +514,15 @@ public static class Generator
         return notes.Length == 0 ? when : $"{notes} {when}";
     }
 
+    // The words a column heading spells in capitals. `id` is the field every type has, and `sla` is one word
+    // of `their-sla`. A corpus declaring a field whose initialism is not in this set gets sentence case, and
+    // `docs/design/generation.md` tells its author so.
+    private static readonly IReadOnlySet<string> Initialisms =
+        new HashSet<string>(["id", "sla"], StringComparer.Ordinal);
+
     private static string Humanize(string col)
     {
-        if (col == "id") return "ID";
-        var s = col.Replace('-', ' ');
+        var s = string.Join(' ', col.Split('-').Select(w => Initialisms.Contains(w) ? w.ToUpperInvariant() : w));
         return char.ToUpperInvariant(s[0]) + s[1..];
     }
 }

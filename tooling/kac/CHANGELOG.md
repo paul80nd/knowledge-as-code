@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
+  writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
+  and `Contacts` stay behind, because each describes owning the account. `docs/design/export.md` now lists `data` as
+  the one type declaring no block.
+
 - **An explanation travels to a consumer.** `.schema/explanations.yaml` declares an `export:` block, so `kac export`
   writes a file per explanation record. `Where the detail lives` is the one section it declares, so it is the only one
   that travels, at `full`. The rest of the body is free-form and no schema can name it. `docs/design/export.md` no
@@ -112,6 +117,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `Where the detail lives` list, labelled the way the corpus's own tracker labels them. `ado-epics` was the only field
   in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer
   values a schema may declare. `kac checks` prints one check fewer.
+
+### Fixed
+
+- **An index column heading spells an initialism in capitals.** `kac generate` headed the `their-sla` column Their sla,
+  because `id` was the only field name it read as an initialism. That column now heads Their SLA. Every other field
+  heads a column in sentence case, as it did.
 
 ## 0.27.0 - 2026-09-16
 

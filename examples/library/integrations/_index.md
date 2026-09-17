@@ -2,4 +2,10 @@
 
 # Integration Index (INT)
 
-_Nothing here yet. Copy [`_template.md`](_template.md) to add the first._
+| ID                     | Title                                       | Vendor                     | Criticality | Their SLA                                                                            | Status  |
+|------------------------|---------------------------------------------|----------------------------|-------------|--------------------------------------------------------------------------------------|---------|
+| int-bibliographic-data | [Bibliographic Data](bibliographic-data.md) | Pennine Bibliographic Data | supporting  | 99.5% monthly availability on the API                                                | active  |
+| int-card-payments      | [Card Payments](card-payments.md)           | Kestrel Payments           | important   | 99.9% monthly availability on the hosted payment page                                | trial   |
+| int-identity           | [Identity](identity.md)                     | Loxley Identity            | critical    | 99.95% monthly availability on the sign-in endpoint                                  | active  |
+| int-mail-delivery      | [Mail Delivery](mail-delivery.md)           | Hartwell Mail              | important   | 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds | active  |
+| int-sms-notices        | [SMS Notices](sms-notices.md)               | Marbury Messaging          | supporting  |                                                                                      | retired |

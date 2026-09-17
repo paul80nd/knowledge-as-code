@@ -31,7 +31,7 @@ One section per type that declares an `export:` block, in tier order. A tier is 
 and [Taxonomy](../framework/taxonomy.md#the-four-tiers) lists the four.
 
 No type is deliberately held back. Where a block is unwritten rather than refused, that type has no section below.
-[A type held back](export.md#a-type-held-back) names those types and says why nothing here could prove one right.
+[A type held back](export.md#a-type-held-back) names that type and says why nothing here could prove one right.
 
 ### adrs
 
@@ -192,6 +192,18 @@ state no range at all.
 
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
+
+### integrations
+
+`What it does` and `Failure modes` travel. A consumer asks which external systems this estate calls, and what breaks
+when one of them is down. Those two sections answer both.
+
+`Contract`, `Commercials` and `Contacts` stay behind. An endpoint, a renewal date and a support line serve whoever owns
+the account, and a consumer can use none of them. `Contract` also states where a credential is kept, which nobody
+outside the estate needs.
+
+`their-sla` travels in the vendor's own words. `constraint-consistency` on `nfrs` compares an availability target
+against it, and a reworded promise is a different promise.
 
 ### capabilities
 
