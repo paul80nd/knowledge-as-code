@@ -10,7 +10,7 @@ generated:
   report: frameworks
   tool: kac/0.25.0
 sources:
-  - { resource: example-engineering, version: "0.22.2" }
+  - { resource: example-engineering, version: "0.22.3" }
 verified:
   - { at: 2026-09-11T12:30:00Z, by: human:alex.doe }
 tags: [ coverage, frameworks ]
