@@ -14,11 +14,11 @@
 | Type                           | Tier        | What it holds                                                                                                |
 |--------------------------------|-------------|--------------------------------------------------------------------------------------------------------------|
 | [ADR](adrs.md)                 | decided     | An architecturally significant decision affecting more than one repository, and the reasoning behind it.     |
-| [Capability](capabilities.md)  | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.             |
 | [Data](data.md)                | descriptive | Which service owns which data, how long it is kept, how sensitive it is, and where personal data flows.      |
 | [Explanation](explanations.md) | descriptive | Narrative that helps you understand how something works, or why it is shaped the way it is.                  |
 | [Glossary](glossary.md)        | descriptive | The ubiquitous language. Terms with a meaning specific to the organisation, or easily confused with another. |
 | [Integration](integrations.md) | descriptive | An external system the estate depends on: its contract, auth, failure modes, SLA and fallback.               |
+| [Offering](offerings.md)       | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.             |
 | [Process](processes.md)        | procedural  | A planned procedure (releasing, onboarding, provisioning, rotating a secret).                                |
 | [Runbook](runbooks.md)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.            |
 | [Service](services.md)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.           |
@@ -125,12 +125,12 @@ export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**This plugin ships one lookup skill.** `library` exports `adrs`, `capabilities`, `explanations`, `glossary`,
+**This plugin ships one lookup skill.** `library` exports `adrs`, `offerings`, `explanations`, `glossary`,
 `integrations` and `services`, and `glossary-lookup` is the only skill that reads any of them. `kac bundle` trims the
 controls, fix, policy, process and standards skills, because this corpus holds none of those types. What is agreed and
 unbuilt:
 
-* **A skill for a type that already travels.** An ADR, a capability, an explanation, an integration and a service each
+* **A skill for a type that already travels.** An ADR, an offering, an explanation, an integration and a service each
   reach the plugin as data, and nothing in it answers a question about one.
 * **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
   and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the

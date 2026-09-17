@@ -1,6 +1,6 @@
 ---
-id: cap-discovery
-type: capability
+id: ofr-discovery
+type: offering
 tier: descriptive
 status: live
 implemented-by:
@@ -19,7 +19,7 @@ tags: [ discovery ]
 
 # Find a title in the collection
 
-`Capability: cap-discovery` `LIVE`
+`Offering: ofr-discovery` `LIVE`
 
 A borrower searches the consortium's collection, sees which branches hold a copy, and opens the item they want.
 
@@ -31,7 +31,7 @@ Search reaches the whole consortium. A borrower standing in one
 ## Why it exists
 
 A borrower who cannot find a title does not borrow it. Discovery is the only surface most borrowers ever use, and every
-other capability starts here.
+other offering starts here.
 
 ## Surfaces
 

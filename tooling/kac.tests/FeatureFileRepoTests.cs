@@ -1,7 +1,7 @@
 using kac.core;
 
 // A feature file path is judged against records other than the one carrying it, so every case here is
-// two types at once: a capability writing the paths, and the services whose `repo:` the first segment is
+// two types at once: an offering writing the paths, and the services whose `repo:` the first segment is
 // held to. The fixture exercises one of these; the rest are the shapes a second fixture corpus would
 // only repeat.
 
@@ -76,7 +76,7 @@ public class FeatureFileRepoTests
             services: ["svc-lending"],
             repos: [("svc-lending", "lending")]));
 
-    // A capability whose services state no repository between them has nothing to be compared against.
+    // An offering whose services state no repository between them has nothing to be compared against.
     // Saying so once per path would report the services' silence over and over.
     [Fact]
     public void A_record_whose_services_state_no_repository_is_passed_over()
@@ -106,8 +106,8 @@ public class FeatureFileRepoTests
     [Fact]
     public void A_type_with_no_field_referencing_services_is_left_alone()
     {
-        var capabilities = CapabilityType(implementedBy: null);
-        Assert.Empty(Run(capabilities,
+        var offerings = OfferingType(implementedBy: null);
+        Assert.Empty(Run(offerings,
             paths: ["qa-pack/x.feature"], services: [], repos: [("svc-lending", "lending")]));
     }
 
@@ -119,13 +119,13 @@ public class FeatureFileRepoTests
 
     private static readonly FieldSpec Repo = new() { Name = "repo", Type = "string" };
 
-    private static TypeSchema CapabilityType(FieldSpec? implementedBy)
+    private static TypeSchema OfferingType(FieldSpec? implementedBy)
     {
         var fields = implementedBy is null ? new[] { FeatureFiles } : [implementedBy, FeatureFiles];
         return new TypeSchema
         {
-            Key = "capabilities",
-            Folder = "capabilities",
+            Key = "offerings",
+            Folder = "offerings",
             FieldOrder = [.. fields.Select(f => f.Name)],
             Fields = fields.ToDictionary(f => f.Name)
         };
@@ -133,12 +133,12 @@ public class FeatureFileRepoTests
 
     private static List<Finding> Check(
         string[] paths, string[] services, (string Id, string? Repo)[] repos)
-        => Run(CapabilityType(ImplementedBy), paths, services, repos);
+        => Run(OfferingType(ImplementedBy), paths, services, repos);
 
-    // One capability and the services it names, written as frontmatter so the rule reads them exactly as
+    // One offering and the services it names, written as frontmatter so the rule reads them exactly as
     // it reads a corpus.
     private static List<Finding> Run(
-        TypeSchema capabilities, string[] paths, string[] services, (string Id, string? Repo)[] repos)
+        TypeSchema offerings, string[] paths, string[] services, (string Id, string? Repo)[] repos)
     {
         var serviceType = new TypeSchema
         {
@@ -151,10 +151,10 @@ public class FeatureFileRepoTests
         var schema = new Schema
         {
             ByFolder = new Dictionary<string, TypeSchema>
-                { ["capabilities"] = capabilities, ["services"] = serviceType }
+                { ["offerings"] = offerings, ["services"] = serviceType }
         };
 
-        var implementedBy = capabilities.FieldOrder.Contains(ImplementedBy.Name)
+        var implementedBy = offerings.FieldOrder.Contains(ImplementedBy.Name)
             ? $"{ImplementedBy.Name}: [{string.Join(", ", services)}]\n"
             : "";
         var featureFiles = paths.Length == 0
@@ -162,10 +162,10 @@ public class FeatureFileRepoTests
             : $"{FeatureFiles.Name}: [{string.Join(", ", paths)}]\n";
 
         var docs = new List<Doc>();
-        if (Doc.Parse("capabilities/borrowing.md",
-                $"---\nid: cap-borrowing\n{implementedBy}{featureFiles}---\n\n# Borrowing\n", schema)
-            is { } capability)
-            docs.Add(capability);
+        if (Doc.Parse("offerings/borrowing.md",
+                $"---\nid: ofr-borrowing\n{implementedBy}{featureFiles}---\n\n# Borrowing\n", schema)
+            is { } offering)
+            docs.Add(offering);
 
         foreach (var (id, repo) in repos)
             if (Doc.Parse($"services/{id}.md",
@@ -178,7 +178,7 @@ public class FeatureFileRepoTests
         var byId = docs.ToDictionary(d => d.Scalar("id"), d => d, StringComparer.OrdinalIgnoreCase);
         var found = new List<Finding>();
 
-        new FeatureFileRepo().Check(new CorpusRuleContext(docs, byId, Empty, capabilities,
+        new FeatureFileRepo().Check(new CorpusRuleContext(docs, byId, Empty, offerings,
             new RuleSpec { Id = new RuleId("feature-file-repo") },
             new Dictionary<string, string>(StringComparer.Ordinal),
             (at, c, m, l) => Report(Sev.Error, at, c, m, l),

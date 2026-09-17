@@ -77,9 +77,9 @@ the account manager, whose number is in the contract. There is no out-of-hours c
 
 * [svc-catalogue-api] calls the API and owns what it returns.
 * [svc-thumbnailer] reads the container the nightly feed writes to, and [svc-covers-cdn] serves the result.
-* [cap-discovery] records the placeholder a missing jacket leaves.
+* [ofr-discovery] records the placeholder a missing jacket leaves.
 
-[cap-discovery]: ../capabilities/discovery.md
+[ofr-discovery]: ../offerings/discovery.md
 [gls-example-libraries.record]: ../glossary/example-libraries.md#record
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md

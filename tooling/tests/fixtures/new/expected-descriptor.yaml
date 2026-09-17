@@ -30,7 +30,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 17
+  template-version: 18
   taken-on: <today>
 
 # Where to report a problem with the framework itself: `kac`, the schema, the template or a skill.
@@ -45,7 +45,6 @@ update-policy: cautious
 # The types this corpus adopted. Validation and index generation cover these and no others.
 types:
   - adrs
-  - capabilities
   - controls
   - data
   - deviations
@@ -54,6 +53,7 @@ types:
   - glossary
   - integrations
   - nfrs
+  - offerings
   - policies
   - postmortems
   - processes

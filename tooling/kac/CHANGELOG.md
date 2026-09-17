@@ -35,10 +35,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   estate's clocks and each action links a work item the reader cannot open. `docs/design/export.md` no longer lists
   `postmortems` among the types declaring no block.
 
-- **A capability travels to a consumer.** `.schema/capabilities.yaml` declares an `export:` block, so `kac export`
-  writes a file per capability record. Every section travels at `full`, because `Where the detail lives` is the only
-  place a capability states its work items and the rest of the record is short by design. `docs/design/export.md` no
-  longer lists `capabilities` among the types declaring no block.
+- **An offering travels to a consumer.** `.schema/offerings.yaml` declares an `export:` block, so `kac export`
+  writes a file per offering record. Every section travels at `full`, because `Where the detail lives` is the only
+  place an offering states its work items and the rest of the record is short by design. `docs/design/export.md` no
+  longer lists `offerings` among the types declaring no block.
 
 - **`feature-file-repo` warns where a feature file names a repository no implementing service does.** A path in
   `feature-files` starts with its repository, spelled as that repository's service spells `repo:`. The check compares
@@ -51,6 +51,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the other, and `validate` reports either end that does not.
 
 ### Changed
+
+- **The `capability` type is now `offering`.** A record lands in `offerings/` as `ofr-borrowing`, the page beside
+  it is `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and
+  defines it by the consumer group it serves, which is what this type always meant. `Capability` meant something else
+  to two of its likely readers: ArchiMate uses it for an ability an organisation possesses, and SAFe for functionality
+  below an epic. A corpus that adopted `capabilities` renames the folder and the page, changes each record's `type:`,
+  `id:` and identity line, rewrites every `cap-` reference in the records of other types, then writes `offerings` over
+  `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand. `kac update --drop-type capabilities`
+  refuses that last step, because the template no longer declares the name. The export is `offerings@1`, so a consumer
+  sees `capabilities` stop and `offerings` start. The template version moves to 18, and `kac new` stamps
+  `template-version: 18`.
 
 - **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only
   types the corpus declined is dropped from the required pass, and a `required-when:` on such a field never fires.
@@ -89,10 +100,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   already uses for the same shape and the one a screen reader can read. It lost its `Tested by` line, which restated
   `feature-files` and had already drifted from it, and its `Decided in` line, which no field ever backed.
 
-- **`kac new` seeds a capability template and type page that name no tracker.** Both said functional detail lives in
+- **`kac new` seeds an offering template and type page that name no tracker.** Both said functional detail lives in
   Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. Inside the corpus the
   template links only to `services`, so one that adopted neither `adrs` nor `nfrs` no longer receives a definition
-  into a folder it does not have. The type page also states the floor the type has: a capability whose
+  into a folder it does not have. The type page also states the floor the type has: an offering whose
   `implemented-by` names one service is a synonym for that service. Both files seed, so an existing corpus keeps the
   wording it was created with.
 
@@ -118,7 +129,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Removed
 
-- **`ado-epics` is gone from `capabilities`, and with it the `int` value type.** A work item id assumed one tracker,
+- **`ado-epics` is gone from `offerings`, and with it the `int` value type.** A work item id assumed one tracker,
   and a corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
   `Where the detail lives` list, labelled the way the corpus's own tracker labels them. `ado-epics` was the only field
   in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer

@@ -65,9 +65,9 @@ Alongside the types sit the corpus's own root files. A README and agent guidance
 stands against. The framework's own documentation, and the machine-readable schema in `.schema/`. And
 `.corpus.yaml`, which says what this corpus is and where it takes the framework from.
 
-## A capability and a spec
+## An offering and a spec
 
-A capability lives in the corpus and a spec lives with the code. A **capability** is the product surface (Billing,
+An offering lives in the corpus and a spec lives with the code. A **offering** is the product surface (Billing,
 Search, Notifications), described once, above the epic layer, as a hub of links. A **spec** is the per-feature
 application of standards to a concrete contract. It belongs in the repository that owns the feature, next to the API
 description and the feature files it describes.

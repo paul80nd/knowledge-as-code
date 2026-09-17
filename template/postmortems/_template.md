@@ -42,7 +42,7 @@ the logs is written that way. Only `restored-at` before `occurred-at` is refused
 * **`duration`**: the span from `occurred-at` to `restored-at`, as an ISO 8601 duration: `PT12M`, `PT4H20M`. Hours,
   minutes and seconds, never days. `kac validate` prints the right value where yours disagrees.
 * **`severity`**: `sev1` · `sev2` · `sev3`.
-* **`affected`**: service or capability ids.
+* **`affected`**: service or offering ids.
 * **`prompted`**: the ADRs, runbooks, NFRs and fixes this incident caused to be written.
 * **`status`**: `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
   published**. A materially different understanding becomes a new document that references this one.

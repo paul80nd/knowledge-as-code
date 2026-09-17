@@ -4,7 +4,7 @@ type: explanation
 tier: descriptive
 status: active
 owner: human:alex.doe
-explains: [cap-borrower-notifications]
+explains: [ofr-borrower-notifications]
 review-by: "2026-12-31"
 ---
 

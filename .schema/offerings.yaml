@@ -1,36 +1,29 @@
 # yaml-language-server: $schema=./meta/type.schema.json
 
-type: capability
-label: Capability
-label-plural: Capabilities
-folder: capabilities
-page: capabilities.md
+type: offering
+label: Offering
+label-plural: Offerings
+folder: offerings
+page: offerings.md
 tier: descriptive
 lifecycle: living
 summary: What the organisation offers a customer, and why, with links to the services and NFRs behind it.
 goes-here: What the organisation offers a customer, and why
 detail: >
-  A capability sits above the work items. It links to the ones that detail it, the services that implement it,
-  the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own
+  An offering sits above the work items. It links to the ones that detail it, the services that implement it,
+  the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own
   has stopped being one.
 
 versus:
   services: >
-    A capability is what a customer gets. A service is something the organisation deploys. One capability usually
-    spans several services. One service usually contributes to several capabilities.
+    An offering is what a customer gets. A service is something the organisation deploys. One offering usually
+    spans several services. One service usually contributes to several offerings.
 
 lineage:
-  prior-art: "None that fits. See [Capability](#capability) below"
-
-collision: >
-  [ArchiMate](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Strategy-Layer.html) uses the word for an
-  ability an organisation possesses, and [SAFe](https://framework.scaledagile.com/features-and-capabilities) uses
-  it for solution functionality that sits below an epic. Here a capability is what the organisation offers a
-  customer, and it sits above the epic layer. Say which sense you mean wherever the word crosses into an
-  architecture conversation.
+  prior-art: "None that fits"
 
 id:
-  prefix: cap
+  prefix: ofr
   style: slug
 
 filename:
@@ -43,7 +36,7 @@ fields:
     required: true
     type: enum
     values: [planned, building, live, deprecated]
-    description: Lifecycle of the capability itself, which may differ from the lifecycle of its services.
+    description: Lifecycle of the offering itself, which may differ from the lifecycle of its services.
 
   implemented-by:
     required: true
@@ -51,13 +44,13 @@ fields:
     of: id
     ref: services
     mirrors-section: Where the detail lives
-    description: Ids of the services that implement this capability.
+    description: Ids of the services that implement this offering.
 
   feature-files:
     required: false
     type: list
     of: string
-    description: Paths to the feature files that test this capability, each one beginning with its repository.
+    description: Paths to the feature files that test this offering, each one beginning with its repository.
     notes: >
       A path names the repository first, spelled as that repository's service spells `repo:`, then the path
       inside it. `feature-file-repo` checks that first segment. The rest is a plain string, so
@@ -70,7 +63,7 @@ fields:
     ref: nfrs
     reciprocal: applies-to
     mirrors-section: Where the detail lives
-    description: Ids of the NFRs this capability must meet.
+    description: Ids of the NFRs this offering must meet.
 
 sections:
   required: [What it does, Why it exists, Where the detail lives]
@@ -88,7 +81,7 @@ export:
   notes: >
     Every section travels. `Where the detail lives` is the only place the work items are written, and no field
     states them, so a consumer reads each one's label and not its address.
-    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#capabilities>.
+    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#offerings>.
 
 index:
   columns: [id, title, status, implemented-by]
@@ -96,9 +89,9 @@ index:
 
 rules:
   - id: hub-not-specification
-    description: A capability's prose stays proportionate to the links it makes.
+    description: An offering's prose stays proportionate to the links it makes.
     severity: warning
-    # A ratio, so a capability that links to nothing fails at any length.
+    # A ratio, so an offering that links to nothing fails at any length.
     expr: "words() <= links() * 40"
     message: >
       prose has outgrown the links. Move the detail into the documents this points at, and link to them
@@ -109,5 +102,5 @@ rules:
     severity: warning
   - id: feature-file-orphans
     description: >
-      Scheduled. Reports feature files in the code repositories no capability claims, and paths here that
+      Scheduled. Reports feature files in the code repositories no offering claims, and paths here that
       no longer exist.

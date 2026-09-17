@@ -20,7 +20,7 @@ and how it is reviewed. What is below is only what an explanation adds to that.
 **Frontmatter**
 
 * **`status`**: `draft` · `active` · `stale`. `stale` is an honest state. Say so rather than let the page quietly rot.
-* **`explains`**: the service or capability ids this explains.
+* **`explains`**: the service or offering ids this explains.
 * **`review-by`**: a quoted date. Explanations are the residual category, so they need the tightest staleness
   discipline, not the loosest.
 
@@ -37,7 +37,7 @@ One or two sentences on what this explains and who it's for.
 
 ## {{Section}}
 
-Narrative. Link out to the services, capabilities, ADRs and standards that hold the detail rather than restating them
+Narrative. Link out to the services, offerings, ADRs and standards that hold the detail rather than restating them
 here.
 
 ## Where the detail lives

@@ -58,7 +58,7 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 
 * **Thresholds are judgements**, and a fixture pins each one, so moving it is visible.
   <https://paul80nd.github.io/knowledge-as-code/design/checks/> says where the numbers came from. A ratio such as
-  `words() <= links() * 40` fails a document that links to nothing, at any length. For a capability or an explanation,
+  `words() <= links() * 40` fails a document that links to nothing, at any length. For an offering or an explanation,
   that is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns live here rather than in C# for that

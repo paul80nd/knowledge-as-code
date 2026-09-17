@@ -1,6 +1,6 @@
 ---
-id: cap-refund
-type: capability
+id: ofr-refund
+type: offering
 tier: descriptive
 status: live
 implemented-by:
@@ -15,7 +15,7 @@ tags: [ refunds ]
 
 # Get money back for an order
 
-`Capability: cap-refund` `LIVE`
+`Offering: ofr-refund` `LIVE`
 
 A customer who returns an order gets the money back on the card that paid for it.
 

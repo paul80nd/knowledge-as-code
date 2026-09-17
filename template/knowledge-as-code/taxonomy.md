@@ -34,7 +34,7 @@ column for your row.
 | An answer about the corpus no single record states                 | [Reports](../reports.md)           |
 | How something works, or why it is shaped that way                  | [Explanations](../explanations.md) |
 | What a deployable component is and does                            | [Services](../services.md)         |
-| What the organisation offers a customer, and why                   | [Capabilities](../capabilities.md) |
+| What the organisation offers a customer, and why                   | [Offerings](../offerings.md)       |
 | Where data lives, how long it is kept, and its sensitivity         | [Data](../data.md)                 |
 
 <!-- END GENERATED: types-placement -->
@@ -90,11 +90,6 @@ the union of the folders that apply to it.
 
 CI can check these against the estate itself. They also fall out of date fastest.
 
-**[Capabilities](../capabilities.md).** What the organisation offers a customer, and why, with links to the services and
-NFRs behind it. A capability sits above the work items. It links to the ones that detail it, the services that implement
-it, the feature files that test it, and the NFRs that constrain it. A capability that accumulates detail of its own has
-stopped being one.
-
 **[Data](../data.md).** Which service owns which data, how long it is kept, how sensitive it is, and where personal data
 flows. One document per data domain, written for an engineer. It records the entities in the domain, the store they live
 in, the service that owns them, how sensitive they are, and how long they are kept.
@@ -112,6 +107,11 @@ to that entry.
 **[Integrations](../integrations.md).** An external system the estate depends on: its contract, auth, failure modes, SLA
 and fallback. One document per external system. It records the contract, how a caller authenticates, what happens when
 the system is down, and who to call about it.
+
+**[Offerings](../offerings.md).** What the organisation offers a customer, and why, with links to the services and NFRs
+behind it. An offering sits above the work items. It links to the ones that detail it, the services that implement it,
+the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own has
+stopped being one.
 
 **[Reports](../reports.md).** A question about the corpus, answered across every record, with the judgement a person
 added. Which clauses nothing implements, which framework references have only one citation. `kac report` fills every
@@ -146,7 +146,6 @@ cross-reference field the schema declares, so CI can check that it resolves to a
 ```mermaid
 graph LR;
   t_adrs[ADR];
-  t_capabilities[Capability];
   t_controls[Control];
   t_data[Data];
   t_deviations[Deviation];
@@ -155,6 +154,7 @@ graph LR;
   t_glossary[Glossary];
   t_integrations[Integration];
   t_nfrs[NFR];
+  t_offerings[Offering];
   t_policies[Policy];
   t_postmortems[Postmortem];
   t_processes[Process];
@@ -165,8 +165,6 @@ graph LR;
   t_tools[Tool];
   t_adrs -- related --> t_adrs;
   t_adrs -- superseded-by --> t_adrs;
-  t_capabilities -- implemented-by --> t_services;
-  t_capabilities -- nfrs --> t_nfrs;
   t_controls -- applies-to --> t_services;
   t_controls -- verifies --> t_standards;
   t_data -- flows-to --> t_services;
@@ -176,14 +174,16 @@ graph LR;
   t_deviations -- departs-from --> t_policies;
   t_deviations -- departs-from --> t_standards;
   t_explanations -- explains --> t_services;
-  t_explanations -- explains --> t_capabilities;
+  t_explanations -- explains --> t_offerings;
   t_fixes -- applies-to --> t_services;
   t_glossary -- narrows --> t_glossary;
   t_integrations -- used-by --> t_services;
   t_nfrs -- applies-to --> t_services;
+  t_nfrs -- applies-to --> t_offerings;
   t_nfrs -- constrained-by --> t_integrations;
+  t_offerings -- implemented-by --> t_services;
   t_postmortems -- affected --> t_services;
-  t_postmortems -- affected --> t_capabilities;
+  t_postmortems -- affected --> t_offerings;
   t_postmortems -- prompted --> t_adrs;
   t_postmortems -- prompted --> t_runbooks;
   t_postmortems -- prompted --> t_nfrs;
@@ -212,21 +212,21 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | ADR         | `related`        | ADR                              |                 |
 | ADR         | `superseded-by`  | ADR                              | `supersedes`    |
 | ADR         | `supersedes`     | ADR                              | `superseded-by` |
-| Capability  | `implemented-by` | Service                          |                 |
-| Capability  | `nfrs`           | NFR                              | `applies-to`    |
 | Control     | `applies-to`     | Service                          |                 |
 | Control     | `verifies`       | Standard                         | `verified-by`   |
 | Data        | `flows-to`       | Service, Integration             |                 |
 | Data        | `owned-by`       | Service                          |                 |
 | Deviation   | `applies-to`     | Service                          |                 |
 | Deviation   | `departs-from`   | Policy, Standard                 |                 |
-| Explanation | `explains`       | Service, Capability              |                 |
+| Explanation | `explains`       | Service, Offering                |                 |
 | Fix         | `applies-to`     | Service                          |                 |
 | Glossary    | `narrows`        | Glossary                         |                 |
 | Integration | `used-by`        | Service                          |                 |
-| NFR         | `applies-to`     | Service, Capability              | `nfrs`          |
+| NFR         | `applies-to`     | Service, Offering                | `nfrs`          |
 | NFR         | `constrained-by` | Integration                      |                 |
-| Postmortem  | `affected`       | Service, Capability              |                 |
+| Offering    | `implemented-by` | Service                          |                 |
+| Offering    | `nfrs`           | NFR                              | `applies-to`    |
+| Postmortem  | `affected`       | Service, Offering                |                 |
 | Postmortem  | `prompted`       | ADR, Runbook, NFR, Fix, Standard |                 |
 | Process     | `applies-to`     | Service                          |                 |
 | Runbook     | `applies-to`     | Service                          |                 |
@@ -267,9 +267,6 @@ this corpus holds both sides of it.
 current. Recording that an option was weighed and turned down is an ADR. Recording "you **MUST** do Y" is a standard.
 Most substantial changes produce an ADR and a standard.
 
-**Capability vs Service.** A capability is what a customer gets. A service is something the organisation deploys. One
-capability usually spans several services. One service usually contributes to several capabilities.
-
 **Deviation vs ADR.** An ADR decides how something is built, and the decision stays true. A deviation records a rule
 knowingly broken, and is written to be closed. If the estate is meant to look like this from now on, write the ADR and
 change the rule.
@@ -288,6 +285,9 @@ deployable component. If it is about a single component, it is a service.
 
 **Explanation vs Standard.** An explanation helps you understand. A standard tells you what to do. If it says you
 **MUST** do something, it is a standard however much context surrounds it.
+
+**Offering vs Service.** An offering is what a customer gets. A service is something the organisation deploys. One
+offering usually spans several services. One service usually contributes to several offerings.
 
 **Policy vs Standard.** A policy stays true whatever the stack, the framework or the year: "we do not store secrets in
 source control". A standard is specific enough to check: "read secrets from the vault via workload identity". If a

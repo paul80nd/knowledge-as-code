@@ -1,6 +1,6 @@
 ---
-id: cap-reservations
-type: capability
+id: ofr-reservations
+type: offering
 tier: descriptive
 status: building
 implemented-by:
@@ -17,7 +17,7 @@ tags: [ holds, payments ]
 
 # Reserve an item and pay the fee
 
-`Capability: cap-reservations` `BUILDING`
+`Offering: ofr-reservations` `BUILDING`
 
 A borrower places a hold on an item held at another branch, pays the fee it attracts, and collects it when it arrives.
 
@@ -42,7 +42,7 @@ Its own hostname, apart from the rest of the catalogue, and the same pages on th
 
 ## Known limitations
 
-This capability is live in no environment above test. [svc-reservations] says what remains.
+This offering is live in no environment above test. [svc-reservations] says what remains.
 
 [ADO#1455]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1455
 [ADO#1462]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1462

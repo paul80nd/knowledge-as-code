@@ -56,8 +56,8 @@ fields:
     required: true
     type: list
     of: id
-    ref: [services, capabilities]
-    description: Ids of the services and capabilities this explains.
+    ref: [services, offerings]
+    description: Ids of the services and offerings this explains.
 
   review-by:
     required: true

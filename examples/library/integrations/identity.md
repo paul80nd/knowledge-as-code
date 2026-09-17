@@ -72,9 +72,9 @@ gets a reply within four working hours on a weekday.
 
 * [svc-catalogue-web] redirects a borrower here and receives the token.
 * [svc-catalogue-api] validates that token on every call behind the site.
-* [cap-borrowing] and [cap-reservations] both start with a signed-in borrower.
+* [ofr-borrowing] and [ofr-reservations] both start with a signed-in borrower.
 
-[cap-borrowing]: ../capabilities/borrowing.md
-[cap-reservations]: ../capabilities/reservations.md
+[ofr-borrowing]: ../offerings/borrowing.md
+[ofr-reservations]: ../offerings/reservations.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-catalogue-web]: ../services/catalogue-web.md

@@ -56,7 +56,7 @@ postmortem means something.
 | `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`. |
 | `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`. |
 | `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                                     |
-| `affected` *    | list                 | Service and capability ids the incident affected.                                                             |
+| `affected` *    | list                 | Service and offering ids the incident affected.                                                               |
 | `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                           |
 
 \* Field is required  

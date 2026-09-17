@@ -41,10 +41,10 @@ what they need without leaving it, and there is still one definition.
 
 <!-- BEGIN GENERATED: types-metadata -->
 
-[ADR](../adrs.md#metadata) · [Capability](../capabilities.md#metadata) · [Control](../controls.md#metadata) ·
-[Data](../data.md#metadata) · [Deviation](../deviations.md#metadata) · [Explanation](../explanations.md#metadata) ·
-[Fix](../fixes.md#metadata) · [Glossary](../glossary.md#metadata) · [Integration](../integrations.md#metadata) ·
-[NFR](../nfrs.md#metadata) · [Policy](../policies.md#metadata) · [Postmortem](../postmortems.md#metadata) ·
+[ADR](../adrs.md#metadata) · [Control](../controls.md#metadata) · [Data](../data.md#metadata) ·
+[Deviation](../deviations.md#metadata) · [Explanation](../explanations.md#metadata) · [Fix](../fixes.md#metadata) ·
+[Glossary](../glossary.md#metadata) · [Integration](../integrations.md#metadata) · [NFR](../nfrs.md#metadata) ·
+[Offering](../offerings.md#metadata) · [Policy](../policies.md#metadata) · [Postmortem](../postmortems.md#metadata) ·
 [Process](../processes.md#metadata) · [Report](../reports.md#metadata) · [Runbook](../runbooks.md#metadata) ·
 [Service](../services.md#metadata) · [Standard](../standards.md#metadata) · [Tool](../tools.md#metadata)
 

@@ -1,6 +1,6 @@
 ---
-id: cap-card-payment
-type: capability
+id: ofr-card-payment
+type: offering
 tier: descriptive
 status: live
 implemented-by:
@@ -18,7 +18,7 @@ tags: [ checkout ]
 
 # Pay for an order with a card
 
-`Capability: cap-card-payment` `LIVE`
+`Offering: ofr-card-payment` `LIVE`
 
 A customer pays at the checkout and is told there and then whether the card was accepted.
 
@@ -31,7 +31,7 @@ Authorisation and capture are separate steps for that reason. An order that neve
 
 ## Why it exists
 
-Nothing else in the business takes money. Every other capability here corrects or explains a payment this one took.
+Nothing else in the business takes money. Every other offering here corrects or explains a payment this one took.
 
 ## Surfaces
 

@@ -205,9 +205,9 @@ outside the estate needs.
 `their-sla` travels in the vendor's own words. `constraint-consistency` on `nfrs` compares an availability target
 against it, and a reworded promise is a different promise.
 
-### capabilities
+### offerings
 
-A capability answers what the estate offers a customer, which is the question a stranger asks first. Every section
+An offering answers what the estate offers a customer, which is the question a stranger asks first. Every section
 travels, because there is nothing in one to trim: `hub-not-specification` weighs the whole record against its outbound
 links and keeps it short.
 

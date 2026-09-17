@@ -604,7 +604,7 @@ public class GeneratorTests
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
-        var table = Generator.LineageTable([Ancestor("Capability", "capabilities", new LineageSpec("None.", "", ""))],
+        var table = Generator.LineageTable([Ancestor("Offering", "offerings", new LineageSpec("None.", "", ""))],
             "../");
 
         Assert.Contains("| None.", table);

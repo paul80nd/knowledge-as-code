@@ -79,7 +79,7 @@ field, and it requires an entry.
 | Type                                                     | What `sources` holds                                                                                        |
 |----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | Data, Glossary, Integration, NFR, Standard, Tool         | the published document the record restates: a specification, a regulation, a vendor page, a contract        |
-| ADR, Capability, Deviation, Explanation, Fix, Postmortem | the material the record was written from: a benchmark, a ticket, a thread, an incident channel              |
+| ADR, Offering, Deviation, Explanation, Fix, Postmortem | the material the record was written from: a benchmark, a ticket, a thread, an incident channel              |
 | Control, Process, Runbook, Service                       | usually nothing. These records state the estate's own facts, and cite the repository or rule behind them    |
 | Policy                                                   | the minute or the opinion the commitment was written from, and never a framework, which `aligns-with` names |
 | Report                                                   | each corpus the report answers for, and the `content-version` it was true of                                |

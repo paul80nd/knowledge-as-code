@@ -5,7 +5,7 @@ tier: descriptive
 status: active
 owner: human:dev.raman
 explains:
-  - cap-discovery
+  - ofr-discovery
   - svc-catalogue-api
   - svc-covers-cdn
   - svc-thumbnailer
@@ -43,7 +43,7 @@ says why `repo` takes one value, and why the body has to state the rest.
 
 ## What a borrower sees when a leg fails
 
-[cap-discovery] states the ordinary case: a title the supplier sent no image for renders a placeholder. A failure of
+[ofr-discovery] states the ordinary case: a title the supplier sent no image for renders a placeholder. A failure of
 [svc-thumbnailer] is worse, because [svc-covers-cdn] then has no origin and every uncached image breaks across the
 estate.
 
@@ -52,10 +52,10 @@ estate.
 * [svc-covers-cdn] describes the edge, its routes and its cache key.
 * [svc-thumbnailer] describes the origin and the container it reads.
 * [svc-catalogue-api] describes the gateway that writes staff uploads.
-* [cap-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.
+* [ofr-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.
 * [exp-estate-overview] puts this path beside the rest of the estate.
 
-[cap-discovery]: ../capabilities/discovery.md
+[ofr-discovery]: ../offerings/discovery.md
 [exp-estate-overview]: estate-overview.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md

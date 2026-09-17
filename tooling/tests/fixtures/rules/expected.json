@@ -9,14 +9,14 @@
   },
   "findings": [
     {
-      "file": "capabilities/borrower-notifications.md",
+      "file": "offerings/borrower-notifications.md",
       "line": 1,
       "severity": "warning",
       "check": "hub-not-specification",
       "message": "prose has outgrown the links. Move the detail into the documents this points at, and link to them from here."
     },
     {
-      "file": "capabilities/borrower-notifications.md",
+      "file": "offerings/borrower-notifications.md",
       "line": 1,
       "severity": "warning",
       "check": "feature-file-repo",

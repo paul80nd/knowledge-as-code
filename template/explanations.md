@@ -29,7 +29,7 @@ An explanation is **not**:
 * **A catalogue entry.** If it describes one component, it is a [service](services.md).
 * **A decision.** If it records what was chosen and why, it is an [ADR](adrs.md).
 
-**Explanations link rather than restate.** An architecture overview points at the services, capabilities and ADRs that
+**Explanations link rather than restate.** An architecture overview points at the services, offerings and ADRs that
 hold the detail. An explanation that states a fact those documents already own holds the second copy of it. That copy is
 the one that goes stale first.
 
@@ -49,7 +49,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
 | `sources` †   | list                     | Where this record's content came from, one entry per source.                                |
 | `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
-| `explains` *  | list                     | Ids of the services and capabilities this explains.                                         |
+| `explains` *  | list                     | Ids of the services and offerings this explains.                                            |
 | `review-by` * | date                     | Quoted. The date by which someone confirms this is still true.                              |
 
 \* Field is required  
@@ -62,7 +62,7 @@ plausibly be an explanation *or* something else, it is the something else.
 1. Check it is none of the exclusions above.
 2. Copy [`_template.md`](explanations/_template.md) to a kebab-case filename, with no number prefix. Explanations are
    named, not sequenced.
-3. Set `explains` to the services or capabilities it covers, and `review-by`.
+3. Set `explains` to the services or offerings it covers, and `review-by`.
 4. Write it as prose. Link out for every concrete fact you are tempted to state.
 
 ## What CI checks

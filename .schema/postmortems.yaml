@@ -88,8 +88,8 @@ fields:
     required: true
     type: list
     of: id
-    ref: [services, capabilities]
-    description: Service and capability ids the incident affected.
+    ref: [services, offerings]
+    description: Service and offering ids the incident affected.
 
   prompted:
     required: false

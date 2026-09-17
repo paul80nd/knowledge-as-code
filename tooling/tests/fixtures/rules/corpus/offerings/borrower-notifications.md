@@ -1,6 +1,6 @@
 ---
-id: cap-borrower-notifications
-type: capability
+id: ofr-borrower-notifications
+type: offering
 tier: descriptive
 status: live
 owner: human:alex.doe
@@ -13,7 +13,7 @@ nfrs: [nfr-0001]
 
 # Borrower notifications
 
-`Capability: cap-borrower-notifications` `LIVE`
+`Offering: ofr-borrower-notifications` `LIVE`
 
 ## What it does
 

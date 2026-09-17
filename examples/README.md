@@ -36,7 +36,7 @@ between one corpus or tiering several, and says what the split costs.
 
 **[`library`](library/README.md) is the whole thing in one repository.** It holds its own vocabulary and its own service
 catalogue, and it takes nothing from outside. A first corpus arrives in this shape and most stay in it. It adopts
-`adrs`, `capabilities`, `data`, `explanations`, `glossary`, `integrations`, `processes`, `runbooks` and
+`adrs`, `offerings`, `data`, `explanations`, `glossary`, `integrations`, `processes`, `runbooks` and
 `services`.
 
 **[`engineering`](engineering/README.md) is the governance layer.** Its policies are written to be principle-level and
@@ -46,7 +46,7 @@ declines `tools` for the same reason.
 
 **[`payments`](payments/README.md) is a domain corpus, and it is thin on purpose.** It declares `engineering` in
 `consumes:`, so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes
-the inheritance visible: there is nothing here that `engineering` already says. It adopts `capabilities`, `fixes`,
+the inheritance visible: there is nothing here that `engineering` already says. It adopts `offerings`, `fixes`,
 `nfrs`, `postmortems`, `services` and `standards`, and declines the rest.
 
 **[`dog-fooding`](dog-fooding/README.md) takes the same shape and its estate is this repository.** It consumes
@@ -60,7 +60,7 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | Type           | Home                                       |
 |----------------|--------------------------------------------|
 | `adrs`         | `library`, `engineering`                   |
-| `capabilities` | `library`, `payments`                      |
+| `offerings` | `library`, `payments`                      |
 | `controls`     | `engineering`, `dog-fooding`               |
 | `data`         | `library`                                  |
 | `deviations`   | `dog-fooding`                              |

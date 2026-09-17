@@ -46,7 +46,7 @@ deliver.
 | `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
 | `sources` †      | list                       | Where this record's content came from, one entry per source.                             |
 | `tags` †         | list                       | Free-form, lowercase and hyphenated. A reader searches on these across types.            |
-| `applies-to` *   | list                       | The service or capability ids this target binds.                                         |
+| `applies-to` *   | list                       | The service or offering ids this target binds.                                           |
 | `target` *       | string                     | The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`. |
 | `measured-by` *  | string                     | The instrument that reports the number, and where to read it.                            |
 | `constrained-by` | list                       | Integrations whose own SLA caps this target.                                             |
@@ -68,7 +68,7 @@ deliver.
 
 **Conventions**
 
-* **Scope each target to a capability or a service.** A default covering the whole estate holds a marketing page to the
+* **Scope each target to an offering or a service.** A default covering the whole estate holds a marketing page to the
   checkout flow's availability budget.
 * **Record the current actual beside the target** where it is known. The gap between the two is the useful part.
 

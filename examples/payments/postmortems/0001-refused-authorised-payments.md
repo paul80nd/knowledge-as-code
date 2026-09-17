@@ -9,8 +9,8 @@ restored-at: 2026-06-03T21:26:00Z
 duration: PT12M
 severity: sev1
 affected:
-  - cap-card-payment
-  - cap-refund
+  - ofr-card-payment
+  - ofr-refund
   - svc-payment-api
   - svc-payment-ledger
 prompted:
@@ -51,10 +51,10 @@ rebuilt from the PSP's settlement file.
 
 86 customers were told at the checkout that their payment had failed. The PSP held an authorisation against each of
 those cards, so those customers saw a pending amount for an order they believed had not gone through. Some paid a second
-time. [cap-card-payment] was unusable for the 12 minutes the ledger refused writes.
+time. [ofr-card-payment] was unusable for the 12 minutes the ledger refused writes.
 
 A further 214 customers paid successfully and left no ledger entry. Their orders showed as unpaid, and a refund request
-against any of them could not be traced until 5 June, so [cap-refund] was unavailable for those orders for two days.
+against any of them could not be traced until 5 June, so [ofr-refund] was unavailable for those orders for two days.
 
 The value of the baskets abandoned during the 12 minutes is not known. Nothing records an attempt that never reached the
 PSP.
@@ -130,8 +130,8 @@ covers that. Eleven minutes was repairable here, and nothing in the design made 
 
 ---
 
-[cap-card-payment]: ../capabilities/card-payment.md
-[cap-refund]: ../capabilities/refund.md
+[ofr-card-payment]: ../offerings/card-payment.md
+[ofr-refund]: ../offerings/refund.md
 [gh#3312]: https://git.example.com/example-payments/payment-ledger/issues/3312
 [gh#3313]: https://git.example.com/example-payments/payment-api/issues/3313
 [gh#3314]: https://git.example.com/example-payments/payment-ledger/issues/3314

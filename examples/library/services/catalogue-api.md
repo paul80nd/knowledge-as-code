@@ -25,7 +25,7 @@ jacket imagery. It keeps the internal services off the public internet.
 Publishes a simplified API to [svc-catalogue-web]. It aggregates across the services behind it, so the site makes one
 call where it would otherwise make four.
 
-**Two capabilities are compiled into this application.** Account management and loan history are both under
+**Two offerings are compiled into this application.** Account management and loan history are both under
 `src/Services` in the monorepo. Nothing deploys either one on its own, so both are part of this service. The `platform`
 repository therefore produces three services in this catalogue, though its solution file shows five components.
 
@@ -65,7 +65,7 @@ service in this catalogue.
 ## Data
 
 This service has a database connection, configured as `ConnectionStrings__Catalogue`. The account-management and
-loan-history capabilities are compiled into this application, so their stores are read through it too.
+loan-history offerings are compiled into this application, so their stores are read through it too.
 
 **What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this
 catalogue was built from states it.
