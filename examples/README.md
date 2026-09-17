@@ -41,8 +41,8 @@ catalogue, and it takes nothing from outside. A first corpus arrives in this sha
 
 **[`engineering`](engineering/README.md) is the governance layer.** Its policies are written to be principle-level and
 stack-agnostic, so they name no service and invent no estate. That is what lets them be published and read by a team
-that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `policies`, `reports`, `standards` and
-`tools`.
+that runs something else entirely. It adopts `adrs`, `controls`, `glossary`, `policies`, `reports` and `standards`, and
+declines `tools` for the same reason.
 
 **[`payments`](payments/README.md) is a domain corpus, and it is thin on purpose.** It declares `engineering` in
 `consumes:`, so its standards cite `eng:pol-SCRT.STORE` rather than restating what that clause binds. Thin is what makes
@@ -76,12 +76,12 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | `runbooks`     | `library`, `dog-fooding`                   |
 | `services`     | `library`, `dog-fooding`, `payments`       |
 | `standards`    | `engineering`, `dog-fooding`, `payments`   |
-| `tools`        | `engineering`, `dog-fooding`               |
+| `tools`        | `dog-fooding`                              |
 
 Every type above is adopted by the corpus that is home to it.
 
-Five adopted folders are still empty. `library` has no `data`, `processes` or `runbooks` record. `engineering` has no
-`controls` or `tools` record. An issue on this repository tracks each one.
+Some adopted folders are still empty. `library` has no `data`, `processes` or `runbooks` record. `engineering` has no
+`controls` record. An issue on this repository tracks each one.
 
 ## What they share
 

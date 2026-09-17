@@ -42,8 +42,7 @@ what they need without leaving it, and there is still one definition.
 <!-- BEGIN GENERATED: types-metadata -->
 
 [ADR](../adrs.md#metadata) · [Control](../controls.md#metadata) · [Glossary](../glossary.md#metadata) ·
-[Policy](../policies.md#metadata) · [Report](../reports.md#metadata) · [Standard](../standards.md#metadata) ·
-[Tool](../tools.md#metadata)
+[Policy](../policies.md#metadata) · [Report](../reports.md#metadata) · [Standard](../standards.md#metadata)
 
 <!-- END GENERATED: types-metadata -->
 

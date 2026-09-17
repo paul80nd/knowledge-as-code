@@ -23,7 +23,6 @@ column for your row.
 | A principle-level commitment about how software is engineered here | [Policies](../policies.md)   |
 | A rule people must follow when building                            | [Standards](../standards.md) |
 | A term whose meaning is local, or not obvious                      | [Glossaries](../glossary.md) |
-| A tool or package approved, rejected, or on trial                  | [Tools](../tools.md)         |
 | An answer about the corpus no single record states                 | [Reports](../reports.md)     |
 
 <!-- END GENERATED: types-placement -->
@@ -75,9 +74,6 @@ added. Which clauses nothing implements, which framework references have only on
 cell the corpus states, and leaves the judgement cells open. A report becomes a record here once somebody has answered
 them.
 
-**[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version range
-for each. Knowing what was turned down, and why, saves the next person the evaluation.
-
 <!-- END GENERATED: types-detail -->
 
 ## How the types relate
@@ -95,15 +91,12 @@ graph LR;
   t_policies[Policy];
   t_reports[Report];
   t_standards[Standard];
-  t_tools[Tool];
   t_adrs -- related --> t_adrs;
   t_adrs -- superseded-by --> t_adrs;
   t_controls -- verifies --> t_standards;
   t_glossary -- narrows --> t_glossary;
   t_standards -- derived-from --> t_adrs;
   t_standards -- implements --> t_policies;
-  t_tools -- decided-in --> t_adrs;
-  t_tools -- replaces --> t_tools;
 ```
 
 <!-- END GENERATED: types-graph -->
@@ -123,9 +116,6 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Standard | `derived-from`  | ADR       |                 |
 | Standard | `implements`    | Policy    |                 |
 | Standard | `verified-by`   | Control   | `verifies`      |
-| Tool     | `decided-in`    | ADR       |                 |
-| Tool     | `replaces`      | Tool      | `successor`     |
-| Tool     | `successor`     | Tool      | `replaces`      |
 
 <!-- END GENERATED: types-edges -->
 
@@ -160,10 +150,6 @@ statement would survive replacing the whole technology estate, it is a policy.
 **Standard vs Control.** The standard says what to do. The control says how anybody can tell it happened. "Secrets
 **MUST** come from the vault" is a standard. "CI runs secret scanning on every PR" is a control. If it can fail a build,
 it is a control.
-
-**Tool vs ADR.** Adopting a tool is often a decision worth an ADR *and* an entry in the register. The ADR records the
-reasoning. The register records the current state and the version range. Small, uncontroversial adoptions need only the
-register.
 
 <!-- END GENERATED: types-versus -->
 
