@@ -25,6 +25,6 @@
     "Where it is used": "* [svc-marketplace] is validated with it, in `kac.yml` and again in `publish-plugin.yml`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/dog-fooding/tools/build/claude-code-cli.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/dog-fooding/tools/build/claude-code-cli.md"
   }
 }

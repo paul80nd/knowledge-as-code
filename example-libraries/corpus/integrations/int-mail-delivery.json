@@ -22,6 +22,6 @@
     "Failure modes": "| Failure                                            | How it presents                               | Our fallback                                     |\n|----------------------------------------------------|-----------------------------------------------|--------------------------------------------------|\n| The API returns 429 during the overdue sweep       | Notices arrive late                           | The queue keeps the work, and the sender retries |\n| A template is edited and will not render           | Every message of that type fails              | None. The vendor keeps no version history        |\n| A borrower's domain is put on the suppression list | The borrower gets nothing, and nothing errors | None. Somebody reads that list once a week       |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7b857818da63ddcc5863598c4044e31cf79065d6/examples/library/integrations/mail-delivery.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8d1517ff3dee105f5ae703cf103fe43a167d0789/examples/library/integrations/mail-delivery.md"
   }
 }
