@@ -129,6 +129,7 @@ public class NullForgivingTests
     private static void Blank(StringBuilder kept, string source, int from, int to)
     {
         for (var i = from; i < to && i < source.Length; i++)
-            if (source[i] == '\n') kept.Append('\n');
+            if (source[i] == '\n')
+                kept.Append('\n');
     }
 }

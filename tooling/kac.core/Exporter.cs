@@ -256,8 +256,9 @@ public static class Exporter
 
         var stale = inherited.Where(c => c.FormatVersion != FormatVersion).ToList();
         if (stale.Count > 0)
-            found.Add($"{string.Join(", ", stale.Select(c => $"{c.Shortcode} is at export format {c.FormatVersion}"))}, "
-                      + $"and this build reads {FormatVersion}. Re-export and re-pack it, then run kac restore.");
+            found.Add(
+                $"{string.Join(", ", stale.Select(c => $"{c.Shortcode} is at export format {c.FormatVersion}"))}, "
+                + $"and this build reads {FormatVersion}. Re-export and re-pack it, then run kac restore.");
 
         return found;
     }
@@ -685,7 +686,8 @@ public static class Exporter
 
         var array = new JsonArray();
         foreach (var item in items)
-            if (Entry(item, spec) is { } entry) array.Add(entry);
+            if (Entry(item, spec) is { } entry)
+                array.Add(entry);
 
         return array.Count > 0 ? array : null;
     }

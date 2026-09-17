@@ -164,5 +164,4 @@ public partial class CliReferenceTests
             Assert.Fail("the command table is stale in docs/cli/index.md. "
                         + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
-
 }

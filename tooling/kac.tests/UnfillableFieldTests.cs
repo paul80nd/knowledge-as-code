@@ -108,8 +108,10 @@ public class UnfillableFieldTests
         => Assert.Null(RequiredFieldInCorpus(ImportGraph.None));
 
     private static ImportGraph Supplying(string type) =>
-        new([new Import("eng", "example-engineering", "0.1.0", null,
-            [new ImportedRecord("eng", "pol-KNOW", type, "policies/pol-KNOW.md", false, [])])], [], []);
+        new([
+            new Import("eng", "example-engineering", "0.1.0", null,
+                [new ImportedRecord("eng", "pol-KNOW", type, "policies/pol-KNOW.md", false, [])])
+        ], [], []);
 
     // A corpus adopting `standards` and not `policies`, holding one standard that names no `implements`.
     private static string? RequiredFieldInCorpus(ImportGraph imports)

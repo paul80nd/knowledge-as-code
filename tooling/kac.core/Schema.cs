@@ -434,10 +434,13 @@ public sealed class TypeSchema
     // selects types on exactly that basis before it reaches either, so a null is that selection having
     // been skipped, and the message names the type it happened for.
     public ExportSpec DeclaredExport => Export
-        ?? throw new InvalidOperationException($"type '{TypeName}' declares no export: to read.");
+                                        ?? throw new InvalidOperationException(
+                                            $"type '{TypeName}' declares no export: to read.");
 
     public PartSpec DeclaredParts => Parts
-        ?? throw new InvalidOperationException($"type '{TypeName}' declares no export.parts: to read.");
+                                     ?? throw new InvalidOperationException(
+                                         $"type '{TypeName}' declares no export.parts: to read.");
+
     public IReadOnlyList<RuleSpec> Rules { get; init; } = [];
 
     // Derived at load from the declarations above. See the Derive* helpers.
@@ -1052,8 +1055,9 @@ public sealed partial class Schema
                 problem ??= $"field '{name}' takes its shape from '{shape}' and declares an 'entry:' "
                             + "block as well. A shape is taken whole, so drop one of the two.";
             else if (shapes.GetValueOrDefault(shape) is { } declared) entry = [.. declared];
-            else problem ??= $"field '{name}' takes its shape from '{shape}', and _shapes.yaml declares "
-                             + "no such shape.";
+            else
+                problem ??= $"field '{name}' takes its shape from '{shape}', and _shapes.yaml declares "
+                            + "no such shape.";
         }
 
         return new FieldSpec
@@ -1184,7 +1188,8 @@ public sealed partial class Schema
     // The generator builds that list from this method, so a miss is the list and the lookup having gone
     // out of step.
     public FieldSpec DeclaredField(TypeSchema t, string name) => EffectiveField(t, name)
-        ?? throw new InvalidOperationException($"type '{t.TypeName}' declares no field '{name}'.");
+                                                                 ?? throw new InvalidOperationException(
+                                                                     $"type '{t.TypeName}' declares no field '{name}'.");
 
     // A key the schema may write either way: one folder or several, one sort column or several. Both
     // arrive as a list, so that neither form can be read as the absence of the key. `Yaml.Str` answers

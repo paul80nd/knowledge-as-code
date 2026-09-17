@@ -146,7 +146,7 @@ public class RestoreTests
     public void An_entry_that_unpacks_past_the_cap_is_refused()
         => Assert.Contains("unpacks to more than",
             Assert.Single(Plan([Declared()],
-                Serving(Zip([($"{Packer.PayloadDir}/big.jsonl", new string('a', 17 * 1024 * 1024))])))
+                    Serving(Zip([($"{Packer.PayloadDir}/big.jsonl", new string('a', 17 * 1024 * 1024))])))
                 .Problems));
 
     [Fact]

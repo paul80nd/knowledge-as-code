@@ -66,5 +66,4 @@ public class GeneratedPageTests
 
         Assert.Contains("none of them is", thrown.Message, StringComparison.Ordinal);
     }
-
 }

@@ -192,9 +192,9 @@ public class ReportsTests
                     new Dictionary<string, string>(StringComparer.Ordinal),
                     [
                         """
-                        {"id":"gp:pol-OLD.HOLD","record":"gp:pol-OLD","part":"HOLD","level":"MUST",
-                        "clause":"Stay put."}
-                        """.ReplaceLineEndings("")
+                            {"id":"gp:pol-OLD.HOLD","record":"gp:pol-OLD","part":"HOLD","level":"MUST",
+                            "clause":"Stay put."}
+                            """.ReplaceLineEndings("")
                     ],
                     []),
                 new InheritedType("standards", 1, "standards", null, null, null, null, null,

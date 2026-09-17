@@ -173,7 +173,10 @@ public class BreadcrumbTests
     {
         var text = Render(
             Manifest("example-payments", "1.0.0", ["eng"], Type("glossary", records: 14, parts: 0)),
-            [.. Contexts(7), .. Enumerable.Range(1, 7).Select(i => Record($"glossary/eng/gls-{i:D3}.json", $"Eng{i}"))]);
+            [
+                .. Contexts(7),
+                .. Enumerable.Range(1, 7).Select(i => Record($"glossary/eng/gls-{i:D3}.json", $"Eng{i}"))
+            ]);
 
         Assert.Contains("glossary. 7 records: Context1, Context2, Context3, Context4, Context5 and 2 more.", text);
         Assert.Contains("glossary (from eng). 7 records: Eng1, Eng2, Eng3, Eng4, Eng5 and 2 more.", text);

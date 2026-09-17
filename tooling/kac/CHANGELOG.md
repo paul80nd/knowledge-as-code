@@ -19,19 +19,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
-- **`spans-more-than-one-service` warns where one service delivers the whole of an offering.** An offering naming
-  one service in `implemented-by` restates the service record beside it. The rule is guarded on the field, so a
-  corpus that declined `services` is not warned about one it cannot fill.
+- **`spans-more-than-one-service` warns where one service delivers the whole of an offering.** An offering naming one
+  service in `implemented-by` restates the service record beside it. The rule is guarded on the field, so a corpus that
+  declined `services` is not warned about one it cannot fill.
 
 - **A rule expression can count a field's entries.** `entries('implemented-by')` answers how many, where
-  `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on
-  an absent field guards with `present()` first. `min-items:` states the same floor as an error. Use the fact where
-  the shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
+  `present()` answers whether. A scalar counts as one, and an absent field as none, so a rule that must not fire on an
+  absent field guards with `present()` first. `min-items:` states the same floor as an error. Use the fact where the
+  shortfall is worth a warning and not a failure. `docs/design/expressions.md` lists it.
 
 - **An integration travels to a consumer.** `.schema/integrations.yaml` declares an `export:` block, so `kac export`
   writes a file per integration record. `What it does` and `Failure modes` travel at `full`. `Contract`, `Commercials`
-  and `Contacts` stay behind, because each describes owning the account. `docs/design/export.md` now lists `data` as
-  the one type declaring no block.
+  and `Contacts` stay behind, because each describes owning the account. `docs/design/export.md` now lists `data` as the
+  one type declaring no block.
 
 - **An explanation travels to a consumer.** `.schema/explanations.yaml` declares an `export:` block, so `kac export`
   writes a file per explanation record. `Where the detail lives` is the one section it declares, so it is the only one
@@ -45,9 +45,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `postmortems` among the types declaring no block.
 
 - **An offering travels to a consumer.** `.schema/offerings.yaml` declares an `export:` block, so `kac export`
-  writes a file per offering record. Every section travels at `full`, because `Where the detail lives` is the only
-  place an offering states its work items and the rest of the record is short by design. `docs/design/export.md` no
-  longer lists `offerings` among the types declaring no block.
+  writes a file per offering record. Every section travels at `full`, because `Where the detail lives` is the only place
+  an offering states its work items and the rest of the record is short by design. `docs/design/export.md` no longer
+  lists `offerings` among the types declaring no block.
 
 - **`feature-file-repo` warns where a feature file names a repository no implementing service does.** A path in
   `feature-files` starts with its repository, spelled as that repository's service spells `repo:`. The check compares
@@ -62,41 +62,42 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Changed
 
 - **An offering says who it is for.** `Who it is for` is a required section, and it travels in the export. ITIL 4
-  defines a service offering by the consumer group it serves, and that group is what decides where one offering ends
-  and the next begins. The `Why it exists` guidance in each `_template.md` no longer asks for the audience, because
-  the new section holds it. An existing offering gains one heading.
+  defines a service offering by the consumer group it serves, and that group is what decides where one offering ends and
+  the next begins. The `Why it exists` guidance in each `_template.md` no longer asks for the audience, because the new
+  section holds it. An existing offering gains one heading.
 
-- **An offering that is `live` states an NFR.** `nfrs` is required once the status reaches `live`: a customer
-  already has the offering, and nothing else on the record says how well it has to work. A corpus that declined
+- **An offering that is `live` states an NFR.** `nfrs` is required once the status reaches `live`: a customer already
+  has the offering, and nothing else on the record says how well it has to work. A corpus that declined
   `nfrs` is not asked, and adopting the type starts the obligation with no edit to `.schema/offerings.yaml`.
 
-- **`offerings` names its prior art.** `lineage` said "None that fits" and left `alignment` and `divergence` empty.
-  It now names ITIL 4 Foundation 2.3.2, the service offering, and states what the type takes from ITIL, the GOV.UK
-  Service Manual and Backstage, and where it parts from each. Both values render into every adopting corpus's
+- **`offerings` names its prior art.** `lineage` said "None that fits" and left `alignment` and `divergence` empty. It
+  now names ITIL 4 Foundation 2.3.2, the service offering, and states what the type takes from ITIL, the GOV.UK Service
+  Manual and Backstage, and where it parts from each. Both values render into every adopting corpus's
   `knowledge-as-code/lineage.md`. `docs/framework/lineage.md` records that ITIL is paywalled, beside the rows that
   already were.
 
-- **The `capability` type is now `offering`.** A record lands in `offerings/` as `ofr-borrowing`, the page beside
-  it is `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and
-  defines it by the consumer group it serves, which is what this type always meant. `Capability` meant something else
-  to two of its likely readers: ArchiMate uses it for an ability an organisation possesses, and SAFe for functionality
-  below an epic. A corpus that adopted `capabilities` renames the folder and the page. It changes each record's
+- **The `capability` type is now `offering`.** A record lands in `offerings/` as `ofr-borrowing`, the page beside it is
+  `offerings.md`, and the identity line reads `Offering:`. ITIL 4 calls this document a service offering and defines it
+  by the consumer group it serves, which is what this type always meant. `Capability` meant something else to two of its
+  likely readers: ArchiMate uses it for an ability an organisation possesses, and SAFe for functionality below an epic.
+  A corpus that adopted `capabilities` renames the folder and the page. It changes each record's
   `type:`, `id:` and identity line, and rewrites every `cap-` reference in the records of other types. It then writes
-  `offerings` over `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand. `kac update --drop-type capabilities`
+  `offerings` over `capabilities` in `types:` and deletes `.schema/capabilities.yaml` by hand.
+  `kac update --drop-type capabilities`
   refuses that last step, because the template no longer declares the name. The export is `offerings@1`, so a consumer
   sees `capabilities` stop and `offerings` start. The template version moves to 18, and `kac new` stamps
   `template-version: 18`.
 
-- **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only
-  types nothing there supplies is dropped from the required pass, and a `required-when:` on such a field never fires.
-  A type an import publishes counts as supplied, so a standard citing a producer's policy clause is still asked for in
-  a corpus adopting no `policies` of its own. Adopting one of those types starts the obligation with no edit to
+- **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only types
+  nothing there supplies is dropped from the required pass, and a `required-when:` on such a field never fires. A type
+  an import publishes counts as supplied, so a standard citing a producer's policy clause is still asked for in a corpus
+  adopting no `policies` of its own. Adopting one of those types starts the obligation with no edit to
   `.schema/`. A field with `allow-literal:` is fillable without them, so it is still asked for. `ref-resolves` is
   unchanged: a value a record does write is held to the same standard as before.
 
-- **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
-  sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.
-  Google SRE groups the three lessons under one `Lessons Learned` heading; each is declared on its own here, so
+- **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further sections,
+  `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export. Google SRE
+  groups the three lessons under one `Lessons Learned` heading; each is declared on its own here, so
   `required-section` asks for it and `empty-section` refuses a bare one. An existing postmortem gains three headings.
 
 - **A postmortem may name more than one root cause.** The template said "Resist listing several". Google SRE writes
@@ -116,19 +117,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A postmortem states when an incident began and when it was noticed, to the second.** `occurred-on` and
   `detected-on` are now `occurred-at` and `detected-at`, and each takes a UTC timestamp as `2026-09-07T20:18:00Z`. The
   gap between the pair is what the pair is for, and it is usually measured in minutes. `-on` names a date everywhere
-  else in the schema, so the names moved with the type. A corpus holding postmortem records renames both keys and
-  writes a time into each: `validate` reports the old spelling as `unknown-key`.
+  else in the schema, so the names moved with the type. A corpus holding postmortem records renames both keys and writes
+  a time into each: `validate` reports the old spelling as `unknown-key`.
 
 - **`Where the detail lives` and the frontmatter say the same thing, and `validate` checks it.** `implemented-by` and
-  `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an
-  id the other does not. That section is a bulleted list rather than a headerless table, which is the form `services`
+  `nfrs` declare `mirrors-section: Where the detail lives`, so `related-matches-section` reports either end naming an id
+  the other does not. That section is a bulleted list rather than a headerless table, which is the form `services`
   already uses for the same shape and the one a screen reader can read. It lost its `Tested by` line, which restated
   `feature-files` and had already drifted from it, and its `Decided in` line, which no field ever backed.
 
 - **`kac new` seeds an offering template and type page that name no tracker.** Both said functional detail lives in
-  Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. Inside the corpus the
-  template links only to `services`, so one that adopted neither `adrs` nor `nfrs` no longer receives a definition
-  into a folder it does not have. The type page also states the floor the type has: an offering whose
+  Azure DevOps epics. They now describe a work item and leave the tracker to the corpus. Inside the corpus the template
+  links only to `services`, so one that adopted neither `adrs` nor `nfrs` no longer receives a definition into a folder
+  it does not have. The type page also states the floor the type has: an offering whose
   `implemented-by` names one service is a synonym for that service. Both files seed, so an existing corpus keeps the
   wording it was created with.
 
@@ -136,29 +137,29 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   "the moment the content last changed", dropping the qualifier [OKF v0.2] states, while the framework moves the stamp
   for neither a hand-raised `sources` version nor the `Imported:` bullet an imported entry's raise rewrites. The
   description and the field's `notes:` are read by whoever maintains a corpus's schema, and `kac update` takes both
-  down. No generated block changes: the `schema-reports` table prints the description of `generated` itself and none
-  of its entries.
+  down. No generated block changes: the `schema-reports` table prints the description of `generated` itself and none of
+  its entries.
 
-- **`kac new` seeds report guidance the schema accepts.** `reports.md` told you to verify a report you had just
-  written, which `no-self-verification` rejects. It now says to write yourself into `generated.by`, leave `verified`
+- **`kac new` seeds report guidance the schema accepts.** `reports.md` told you to verify a report you had just written,
+  which `no-self-verification` rejects. It now says to write yourself into `generated.by`, leave `verified`
   empty, and ask somebody else to read it. Both it and `reports/_template.md` also say which `sources` entry a
   hand-raise touches: the corpus the report answers for comes first and its raise edits frontmatter alone, and raising
-  an imported entry also means editing the `Imported:` bullet under `## Limits` and adding a `verified` entry. The
-  files seed, so an existing corpus keeps the wording it was created with.
+  an imported entry also means editing the `Imported:` bullet under `## Limits` and adding a `verified` entry. The files
+  seed, so an existing corpus keeps the wording it was created with.
 
 - **`kac new` seeds the example policy as `policies/devi-deviations.md`.** The file was
   `devi-deviations-are-recorded.md`, which restated the record's title. A policy filename names what the policy is, and
-  the H1 states the intent. `.schema/policies.yaml` and the `policies.md` type page both state the rule. The file
-  seeds, so an existing corpus keeps the name it was created with. The template version moves to 17, and `kac new`
+  the H1 states the intent. `.schema/policies.yaml` and the `policies.md` type page both state the rule. The file seeds,
+  so an existing corpus keeps the name it was created with. The template version moves to 17, and `kac new`
   stamps `template-version: 17`.
 
 ### Removed
 
-- **`ado-epics` is gone from `offerings`, and with it the `int` value type.** A work item id assumed one tracker,
-  and a corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
+- **`ado-epics` is gone from `offerings`, and with it the `int` value type.** A work item id assumed one tracker, and a
+  corpus planning on GitHub issues had nowhere to put the equivalent. Work items are now links in the
   `Where the detail lives` list, labelled the way the corpus's own tracker labels them. `ado-epics` was the only field
-  in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer
-  values a schema may declare. `kac checks` prints one check fewer.
+  in the taxonomy declared `of: int`, so `int-format` guarded nothing and `type: int` and `of: int` are no longer values
+  a schema may declare. `kac checks` prints one check fewer.
 
 ### Fixed
 
@@ -171,15 +172,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **The documentation site lists every skill, under [Skills](https://paul80nd.github.io/knowledge-as-code/skills/).**
-  Sixteen of them across three trees, and which tree a skill lives in decides who can read it and what moving it
-  costs. The three tables are generated from the files that already decide the split: `plugin.json` for what travels
-  inside a plugin, `manifest.yaml` for what travels into a corpus, and the `.claude/skills/` directory for what stays
-  here. `SkillReferenceTests` fails a stale table, so the page cannot drift from the manifests the way a hand-written
-  one would. Nothing about `kac` changed.
+  Sixteen of them across three trees, and which tree a skill lives in decides who can read it and what moving it costs.
+  The three tables are generated from the files that already decide the split: `plugin.json` for what travels inside a
+  plugin, `manifest.yaml` for what travels into a corpus, and the `.claude/skills/` directory for what stays here.
+  `SkillReferenceTests` fails a stale table, so the page cannot drift from the manifests the way a hand-written one
+  would. Nothing about `kac` changed.
 
 - **`kac new` and `kac update` send a corpus the `writing-a-report` skill.** It joins `technical-writing` and
-  `writing-a-record` in the overlay, under one rule: a writing skill travels where it governs a surface a corpus
-  holds. A corpus can adopt `reports`, so the skill that says how to fill a report's judgement cells travels with it.
+  `writing-a-record` in the overlay, under one rule: a writing skill travels where it governs a surface a corpus holds.
+  A corpus can adopt `reports`, so the skill that says how to fill a report's judgement cells travels with it.
   `writing-in-the-tool` and `writing-the-docs` describe C# and a documentation site no corpus has, and `i-want-to`
   routes to this repository's own processes where a corpus reads its own through `process-lookup`, so all three stay
   behind. `reports/_template.md` gains the four verdicts as well, for an author who opens the template and loads no
@@ -190,10 +191,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac new` and `kac update` send a corpus the `harvest-findings` skill, which triages filed findings and drafts the
   record one asks for.** `raise-finding` files an observation as an issue and stops, so nothing moves it afterwards.
   `triage` reads every finding without a `kac:triaged` label, sorts each into one of five routes, shows a person the
-  table and writes nothing until they agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull
-  request carrying the record. Both invocations write: to the tracker, and to the records themselves. So the reader is
-  the corpus's own maintainer, and the skill lands in the corpus's working tree under `.claude/skills/`, beside the
-  writing skills. No plugin ships it, because a consumer holds a frozen export and not the source. It reads the
+  table and writes nothing until they agree. `draft <issue>` takes a `kac:route-record` finding and opens a pull request
+  carrying the record. Both invocations write: to the tracker, and to the records themselves. So the reader is the
+  corpus's own maintainer, and the skill lands in the corpus's working tree under `.claude/skills/`, beside the writing
+  skills. No plugin ships it, because a consumer holds a frozen export and not the source. It reads the
   `tracker`, `framework` and `publishing` blocks of `.corpus.yaml` for the backlog, for where the tool is reported and
   for where the record lives. A framework finding filed on a tracker other than the framework's own is drafted as a
   comment and copied by hand, because an Azure DevOps user has no GitHub account. `manifest.yaml` moves to 16, and
@@ -202,12 +203,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac validate` refuses a target the descriptor names and the tool cannot act on**, under a new
   `descriptor-target` check. `publishing-target` takes the five values the link rules are written for. `tracker.target`
   and `framework.target` take `github`, `azure-devops` or `none`, because a wiki and a documentation site publish
-  records and hold no backlog. The message names the key, the value and the list it takes. Only `kac new` held its
-  flags to these lists before, and every one of the keys is written by hand after that, so a misspelling read as a
-  corpus that publishes nowhere and files nowhere.
+  records and hold no backlog. The message names the key, the value and the list it takes. Only `kac new` held its flags
+  to these lists before, and every one of the keys is written by hand after that, so a misspelling read as a corpus that
+  publishes nowhere and files nowhere.
 
-- **`.corpus.yaml` states where work about its records is filed, under a new `tracker:` key.** It takes a `target` and
-  a `base`, the same pair `framework:` takes. A corpus that states no block gets the tracker its `publishing:` block
+- **`.corpus.yaml` states where work about its records is filed, under a new `tracker:` key.** It takes a `target` and a
+  `base`, the same pair `framework:` takes. A corpus that states no block gets the tracker its `publishing:` block
   implies, so a corpus on GitHub configures nothing: a repository there has an issue list of its own. State the block
   where the backlog and the published form are two places. One Azure DevOps project holds one backlog and many
   repositories, so a repository URL does not address the backlog, and `kac export` derives the project from it.
@@ -219,24 +220,23 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`.corpus.yaml` states where to report a problem with the framework, under a new `framework:` key.** It takes a
   `target` and a `base`, the same pair `publishing-target` and `publishing.base` take. `kac export` writes the block
-  into `manifest.json`, beside the `id` every tracker there gains, so the address travels to whoever installs the
-  corpus as a plugin. Its `base` is written the way every tracker's is, so an Azure DevOps base is the project holding
-  the backlog. Before this, the only address an export carried was the corpus's own `publishing.base`.
+  into `manifest.json`, beside the `id` every tracker there gains, so the address travels to whoever installs the corpus
+  as a plugin. Its `base` is written the way every tracker's is, so an Azure DevOps base is the project holding the
+  backlog. Before this, the only address an export carried was the corpus's own `publishing.base`.
   `upstream.url` was never one: it says where the template was copied from, and that is often a folder. `kac new`
-  writes the block, taking the base from `--from` where that names a repository and from the framework's own
-  repository where it names a folder. `descriptor-version` moves to 3, and `kac update` stamps it. No skill reads the
-  key yet.
+  writes the block, taking the base from `--from` where that names a repository and from the framework's own repository
+  where it names a folder. `descriptor-version` moves to 3, and `kac update` stamps it. No skill reads the key yet.
 
-- **A `fix` takes `status: draft`, and a draft states no verification.** `verified` is required of every other
-  status, so a session can write a fix from an observation nobody has checked and `kac validate` passes. The type's
-  export shape moves to `fixes@2`, because `verified` arrives as null on a draft. A corpus listing `draft` under
+- **A `fix` takes `status: draft`, and a draft states no verification.** `verified` is required of every other status,
+  so a session can write a fix from an observation nobody has checked and `kac validate` passes. The type's export shape
+  moves to `fixes@2`, because `verified` arrives as null on a draft. A corpus listing `draft` under
   `export.exclude:` in `.corpus.yaml` withholds a draft, which is how an unchecked resolution stays out of
   `fix-lookup`.
 
 - **`fix-lookup`, the skill that says whether a problem has already been solved here.** It searches
   `symptom-keywords`, which a fix over-fills with error text and the words somebody arrives with, then reports the
-  Symptom, Cause and Resolution the corpus settled. It states the record's derived `trust` on every answer, so a
-  caller can tell a resolution a person checked from one an agent ran. A fix declares no part, so the skill searches
+  Symptom, Cause and Resolution the corpus settled. It states the record's derived `trust` on every answer, so a caller
+  can tell a resolution a person checked from one an agent ran. A fix declares no part, so the skill searches
   `corpus/fixes/` and the record is the unit. It ships in every corpus's `plugin.json` and leaves the bundle wherever
   the export carries no fix. Take it with `kac update --from <template>`.
 
@@ -248,30 +248,30 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A verification taken before `generated.at` reaches no trust tier.** `kac export` derived `trust` from `verified`
   alone, so a report somebody read in March still shipped as `human-reviewed` after an agent rewrote its verdicts in
-  September. Authorship now passes to whoever answers those cells, which moves `generated.at` past every reading of
-  the words before them, so the exporter leaves an older entry out. A moment that will not parse still counts, because
+  September. Authorship now passes to whoever answers those cells, which moves `generated.at` past every reading of the
+  words before them, so the exporter leaves an older entry out. A moment that will not parse still counts, because
   `timestamp-format` already reports it against the record.
 
 - **A report's `generated` says who wrote the content, and authorship passes to whoever edits it.** `kac report` wrote
   itself into `generated.by` and left it there, so a report an agent finished credited the tool with the agent's
   verdicts. `by` now names whoever wrote the content a reader meets, which the Open Knowledge Format defines it as and
-  illustrates with a person. Two keys survive the handover: `report` states the report the run used, as `coverage`, so
-  a record says which `kac report` name regenerates it, and `tool` keeps the version that wrote the mechanical half.
-  Both are optional, and a report nobody produced with the tool states neither. `generated-by-a-producer` is renamed
+  illustrates with a person. Two keys survive the handover: `report` states the report the run used, as `coverage`, so a
+  record says which `kac report` name regenerates it, and `tool` keeps the version that wrote the mechanical half. Both
+  are optional, and a report nobody produced with the tool states neither. `generated-by-a-producer` is renamed
   `generated-by-a-known-actor` and admits all three actor forms, so `human:alex.doe` is now a legal author.
 
 - **A report states no verification until somebody reads it.** `verified` was required with at least one entry, so an
   agent finishing a report had to name a verifier to get past `kac validate`, and the two worked corpora each named an
-  agent that does not exist. The field now follows `fixes`: a draft states none, and every other status states one.
-  A report with no entry is the Open Knowledge Format's unverified tier, which `kac export` already ships as `trust`.
+  agent that does not exist. The field now follows `fixes`: a draft states none, and every other status states one. A
+  report with no entry is the Open Knowledge Format's unverified tier, which `kac export` already ships as `trust`.
 
 - **An accepted ADR is edited in place, and only a changed decision needs a superseding ADR.**
-  `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. That
-  list left out an edit changing no decision. A sentence that no longer matched the decision the ADR already stated
-  read as forbidden. The rule now asks whether the decision changed, and `adrs.md` says to name the edit in the commit
-  message. `immutable-after-published` takes the same shape for a postmortem, where a new understanding is a new
-  postmortem. Both are still declared and do not run, because telling a changed decision from a correction needs git
-  history. The Decided tier note in `_tiers.yaml` drops "never rewritten" for the same reason, so a corpus's
+  `immutable-after-accepted` allowed a typo fix, a link correction and a status transition, and nothing else. That list
+  left out an edit changing no decision. A sentence that no longer matched the decision the ADR already stated read as
+  forbidden. The rule now asks whether the decision changed, and `adrs.md` says to name the edit in the commit message.
+  `immutable-after-published` takes the same shape for a postmortem, where a new understanding is a new postmortem. Both
+  are still declared and do not run, because telling a changed decision from a correction needs git history. The Decided
+  tier note in `_tiers.yaml` drops "never rewritten" for the same reason, so a corpus's
   `knowledge-as-code/taxonomy.md` changes when you regenerate it. `kac update --from <template>` takes all three, and
   `kac generate` rewrites the blocks under them. `adrs.md` and `postmortems.md` seed a corpus, so the Immutability
   paragraph on each stays that corpus's own to reword.
@@ -290,11 +290,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Removed
 
-- **The `discoveries` type and the `observed` tier.** A corpus no longer keeps an unverified observation. One goes
-  into whatever tracker that corpus already uses, and what the corpus keeps is the answer somebody settled and
-  verified. `kac new` writes one type fewer, and `kac validate` counts one template fewer. `fixes` and `standards`
-  drop `promoted-from`, so a record that still has that key fails `unknown-key`; `sources` states where the content
-  came from instead. A `schema-shape` message naming the tiers now offers four. Take it with
+- **The `discoveries` type and the `observed` tier.** A corpus no longer keeps an unverified observation. One goes into
+  whatever tracker that corpus already uses, and what the corpus keeps is the answer somebody settled and verified.
+  `kac new` writes one type fewer, and `kac validate` counts one template fewer. `fixes` and `standards`
+  drop `promoted-from`, so a record that still has that key fails `unknown-key`; `sources` states where the content came
+  from instead. A `schema-shape` message naming the tiers now offers four. Take it with
   `kac update --from <template>`, which deletes `discoveries.md`, the folder and the schema file.
 
 ### Fixed
@@ -306,10 +306,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   that producer's own producer meets one record twice, and writes and counts it once. `sources` already listed the
   grandparent, and still does.
 
-- **`kac validate` resolves a citation into a corpus reached through another.** `gp:pol-OLD` was reported as a
-  shortcode this corpus consumes nothing under. The reader behind `validate` skipped the folders an export files an
-  inherited record in, and filed what it did read under the corpus it arrived through. A record is now found by the
-  shortcode of the corpus that wrote it, whether this corpus declared that corpus in `consumes:` or not.
+- **`kac validate` resolves a citation into a corpus reached through another.** `gp:pol-OLD` was reported as a shortcode
+  this corpus consumes nothing under. The reader behind `validate` skipped the folders an export files an inherited
+  record in, and filed what it did read under the corpus it arrived through. A record is now found by the shortcode of
+  the corpus that wrote it, whether this corpus declared that corpus in `consumes:` or not.
   `eng:pol-OLD` correspondingly stops resolving, which is what `ref-resolves` already says about a record eng does not
   have. While a declared import is unrestored, a shortcode nothing here knows is left to `import-restored` instead of
   drawing a second finding telling the reader to declare it.
@@ -324,28 +324,29 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`kac validate` checks that a quoted clause still says what it is quoted as saying.** A control quotes the clause it
   verifies, and nothing until now compared the two. `clause-quoted-faithfully` takes every double-quoted span on a line
-  that also cites a clause, and reports it as an error where the cited clause no longer contains those words.
-  Whitespace is collapsed on both sides, so a quotation wrapped across two lines is read whole. A quoted span on a line
-  citing nothing is left alone, and so is a citation into a corpus you consume: an export sends a record's ids and
-  fields, not its wording. `.schema/controls.yaml` declares the rule, so take it with
+  that also cites a clause, and reports it as an error where the cited clause no longer contains those words. Whitespace
+  is collapsed on both sides, so a quotation wrapped across two lines is read whole. A quoted span on a line citing
+  nothing is left alone, and so is a citation into a corpus you consume: an export sends a record's ids and fields, not
+  its wording. `.schema/controls.yaml` declares the rule, so take it with
   `kac update --from <template>`.
 
 - **A fix travels in an export.** `.schema/fixes.yaml` declares an `export:` block at shape 1, so `kac export` writes
   one JSON per fix. The record carries `symptom-keywords`, which is what a lookup searches on. It carries Symptom,
   Cause, Resolution and Why it happens whole, because a resolution read without its cause is half an answer. It carries
   `verified`, and the record's `trust` is derived from that list. Three things stay behind: `How we found it`, which
-  names commands a consumer cannot run, `promoted-from`, which names a discovery that travels nowhere, and `owner`.
-  Take the schema with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
+  names commands a consumer cannot run, `promoted-from`, which names a discovery that travels nowhere, and `owner`. Take
+  the schema with `kac update --from <template>`, and adopt the type with `kac update --add-type fixes`.
 
-- **`kac report --out <path>` writes the report to a file.** Without it the report still goes to standard output, so
-  a caller piping one loses nothing. With it `kac` writes the file after it has read the corpus, which is what keeps
-  a run off the console encoding and out of the way of a shell holding the same path open. A path a file already
-  occupies is refused and nothing is written, because a finished report holds verdicts somebody wrote.
+- **`kac report --out <path>` writes the report to a file.** Without it the report still goes to standard output, so a
+  caller piping one loses nothing. With it `kac` writes the file after it has read the corpus, which is what keeps a run
+  off the console encoding and out of the way of a shell holding the same path open. A path a file already occupies is
+  refused and nothing is written, because a finished report holds verdicts somebody wrote.
 
 - **Every record can say where its content came from.** `.schema/_universal.yaml` declares `sources`, an optional list
   whose entries carry a required `resource`. A `resource` names something a reader can follow, such as a ticket URL, or
-  the population the content was drawn from. `sources` is what the [Open Knowledge
-  Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list, and
+  the population the content was drawn from. `sources` is what
+  the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the
+  same list, and
   `resource` is its one required key. No type carries the universal field into an export, so a record a consumer holds
   stands up without the ticket behind it. `reports` keeps its own `sources`, which requires the field and adds the
   `version` each corpus was at. Take the field with `kac update --from <template>`.
@@ -364,8 +365,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **The `## Metadata` table says what a field is, where it used to describe the schema.** A field declaring only
   `notes:` fell back to them for its table cell, so maintainer commentary was published to whoever writes a record.
   Every field now declares a `description:`. An ADR's `superseded-by` reads "The ADR that replaces this one." where it
-  read "CI reconciles both directions, so a one-sided supersession fails the build." Run `kac generate` after taking
-  the schema with `kac update --from <template>`.
+  read "CI reconciles both directions, so a one-sided supersession fails the build." Run `kac generate` after taking the
+  schema with `kac update --from <template>`.
 
 - **Every check message opens lower case.** Twenty-three rule messages in `.schema/` opened with a capital, where
   `kac` prints a message mid-line after the check id. Several also ran to four or five sentences. Each now opens lower
@@ -385,48 +386,47 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `frameworks` now says that an `Alignment` cell stays in the corpus that wrote it, so it counts the citations written
   here, and that a citation records the naming rather than a clause meeting what it cites.
 
-- **The five lookup skills drop their search procedure.** `kac new`, `kac update` and `kac bundle` send skills that
-  name no search tool and no search flags. A trial ran three variants of `policy-lookup` over five questions: the
-  skill as it shipped, one without the tool name, and one without the search section at all. Every variant found and
-  cited every governing clause. Each run of the shipped skill spent tool calls hunting a Grep tool the session did
-  not hold. What stays is what an agent cannot work out for itself: the file map, the field table, and the warning
-  that a field name like `status` matches every line of the file.
+- **The five lookup skills drop their search procedure.** `kac new`, `kac update` and `kac bundle` send skills that name
+  no search tool and no search flags. A trial ran three variants of `policy-lookup` over five questions: the skill as it
+  shipped, one without the tool name, and one without the search section at all. Every variant found and cited every
+  governing clause. Each run of the shipped skill spent tool calls hunting a Grep tool the session did not hold. What
+  stays is what an agent cannot work out for itself: the file map, the field table, and the warning that a field name
+  like `status` matches every line of the file.
 
 - **`glossary-lookup`, `policy-lookup` and `standards-lookup` answer the near miss.** Each carries a section for a
-  subject the corpus has not written down that sits beside one it has. "Password rotation" meets a policy about
-  rotating secrets, and the skill now says to name the nearest clause as the nearest one and leave the reading to
-  its owner.
+  subject the corpus has not written down that sits beside one it has. "Password rotation" meets a policy about rotating
+  secrets, and the skill now says to name the nearest clause as the nearest one and leave the reading to its owner.
 
 - **`confirmed` is now `verified`, it takes any actor, and the export carries the trust tier derived from it.** The
-  field is renamed on `fixes` and `reports`, which is what the [Open Knowledge
-  Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the same list. It no
-  longer refuses an agent: a session that reproduced a symptom and ran the resolution has checked something real, and
-  `verified-by-a-known-actor` admits it, named with its version the way the tool names itself. That rule still refuses
-  a `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file
+  field is renamed on `fixes` and `reports`, which is what
+  the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) calls the
+  same list. It no longer refuses an agent: a session that reproduced a symptom and ran the resolution has checked
+  something real, and
+  `verified-by-a-known-actor` admits it, named with its version the way the tool names itself. That rule still refuses a
+  `role:`, because a post cannot read an answer. Who is in the list decides the record's tier, which each record file
   now ships as `trust`: an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is
-  `human-reviewed`. A type whose export does not name `verified` carries `trust` as `null`. One actor is still
-  refused, and `no-self-verification` is the new rule and reports as `self-verification`: a report may not be verified
-  by the producer its `generated.by` names. A fix declares `raiser-does-not-verify` and nothing runs it, because
-  nothing on a fix names who raised it. `kac report` writes `verified: []` where it wrote `confirmed: []`. A corpus
-  that adopted either type renames the key in every record and in its `_template.md`, and takes the new schema with
-  `kac update --from <template>`. The `reports` type's `shapeVersion` moves to 2, so a consumer reading records of
-  that type reads the new key.
+  `human-reviewed`. A type whose export does not name `verified` carries `trust` as `null`. One actor is still refused,
+  and `no-self-verification` is the new rule and reports as `self-verification`: a report may not be verified by the
+  producer its `generated.by` names. A fix declares `raiser-does-not-verify` and nothing runs it, because nothing on a
+  fix names who raised it. `kac report` writes `verified: []` where it wrote `confirmed: []`. A corpus that adopted
+  either type renames the key in every record and in its `_template.md`, and takes the new schema with
+  `kac update --from <template>`. The `reports` type's `shapeVersion` moves to 2, so a consumer reading records of that
+  type reads the new key.
 
 - **The `faq` type is now `fix`, and its `Fix` section is now `Resolution`.** A record lands in `fixes/` as
-  `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and
-  Resolution. The type and its third section no longer share a word. A corpus that adopted `faqs` renames the
-  folder and the page, changes each record's `type:`, `id:`, identity line and `Fix` heading, then writes `fixes`
-  over `faqs` in `types:` and deletes `.schema/faqs.yaml` by hand. `kac update --drop-type faqs` refuses that
-  step, because the template no longer declares the name. `kac update --from <template>` then takes the new
-  schema file. The type's page and its `_template.md` are seeds, so a corpus keeps the copies it has, and
+  `fix-0001`, the page beside it is `fixes.md`, and `kac validate` holds the record to Symptom, Cause and Resolution.
+  The type and its third section no longer share a word. A corpus that adopted `faqs` renames the folder and the page,
+  changes each record's `type:`, `id:`, identity line and `Fix` heading, then writes `fixes`
+  over `faqs` in `types:` and deletes `.schema/faqs.yaml` by hand. `kac update --drop-type faqs` refuses that step,
+  because the template no longer declares the name. `kac update --from <template>` then takes the new schema file. The
+  type's page and its `_template.md` are seeds, so a corpus keeps the copies it has, and
   `validate` names every line of them still saying FAQ.
 
 ### Fixed
 
-- **`kac` prints UTF-8 on Windows.** Standard output took whatever code page the machine was installed with, so a
-  clause citing `§9` reached the reader as a replacement character while the same text in the record was intact.
-  Every command writes through the same stream. `kac report` is where it showed, because a report quotes citation text
-  back.
+- **`kac` prints UTF-8 on Windows.** Standard output took whatever code page the machine was installed with, so a clause
+  citing `§9` reached the reader as a replacement character while the same text in the record was intact. Every command
+  writes through the same stream. `kac report` is where it showed, because a report quotes citation text back.
 
 - **`kac report` writes frontmatter a parser accepts.** `owner: human:` is not valid YAML, so a generated report met
   `frontmatter-parses` over the whole document rather than a message naming what to fill in. `id`, `owner` and
@@ -448,9 +448,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   and a record whose filename repeats the id prefix fails `id-matches-filename`. The filename carries the question the
   report answers, and the prefix belongs to the `id`.
 
-- **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two
-  or three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets
-  nothing back.
+- **`sections` is described as the object it is.** `policy-lookup` and `standards-lookup` told a reader to read two or
+  three things from `sections` without saying it is keyed by heading, and a reader parsing it as a list gets nothing
+  back.
 
 ## 0.25.0 - 2026-09-09
 
@@ -460,13 +460,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `deviations`, `nfrs`, `reports`, `runbooks`, `services` and `tools`, so `kac export` writes one JSON per record for
   each of them. `deviations` carries `owner`, because a register that says what was excused without saying who excused
   it is not a register. `runbooks` carries `Symptoms` and no steps, for the reason `processes` carries no steps.
-  `discoveries` holds everything back still, and its schema file says why. A standard now carries `derived-from` too,
-  so the ADR behind a rule resolves for a consumer holding both. Take them with `kac update --from <template>`.
-- **`kac validate` warns where an optional field is written with no value.** `empty-optional-key` reports a
-  bare key on a field the schema does not require, because it says exactly what leaving the key out says. A
-  required field is the other case, and `required-field` still reports that one. A field declaring
-  `required-when:` is exempt. The templates a corpus starts from now carry the required fields alone, and each
-  one names the optional fields it leaves out. Take those with `kac update --from <template>`.
+  `discoveries` holds everything back still, and its schema file says why. A standard now carries `derived-from` too, so
+  the ADR behind a rule resolves for a consumer holding both. Take them with `kac update --from <template>`.
+- **`kac validate` warns where an optional field is written with no value.** `empty-optional-key` reports a bare key on
+  a field the schema does not require, because it says exactly what leaving the key out says. A required field is the
+  other case, and `required-field` still reports that one. A field declaring
+  `required-when:` is exempt. The templates a corpus starts from now carry the required fields alone, and each one names
+  the optional fields it leaves out. Take those with `kac update --from <template>`.
 - **A plugin component can declare itself standalone.** `metadata.components` in `plugin.json` takes
   `"standalone": true` on a component whose `requires` is empty. `kac bundle` trims an empty-`requires` component when
   every component reading a type has gone, because such a component exists to support those. A standalone one supports
@@ -479,20 +479,20 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   risk is what the request asks for. It files inside the organisation holding the plugin and nowhere else, and it asks
   before it files. Take it with `kac update --from <template>`.
 - **A control travels in an export.** `.schema/controls.yaml` declares an `export:` block at shape 1, so `kac export`
-  writes one JSON per control carrying `verifies`, `mechanism`, `frequency`, `evidence` and the three sections a
-  control holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
+  writes one JSON per control carrying `verifies`, `mechanism`, `frequency`, `evidence` and the three sections a control
+  holds. A control declares no part, so no flat file is written and the record is the unit. Take it with
   `kac update --from <template>`.
 - **`controls-lookup`, the skill that says what proves a rule.** It answers what checks a standard, where the evidence
   lives, and which standards nothing claims. `mechanism: not-enforced` is what makes the last of those answerable. It
   reads each `verifies` entry to see whether the control named a record or one rule inside it, and refuses a per-rule
   figure where only records were named. Take it with `kac update --from <template>`.
 - **A corpus states the ranges the framework cannot know.** A field declaring `values: $corpus.<name>` in `.schema/`
-  draws its range from `enums:` in `.corpus.yaml`, so one schema above several catalogues stands behind the list each
-  of them wrote. `services.platform` is the first field to use it: what a service is built on is one list in a library
-  and another in a payments platform. `kac validate` reports `corpus-enum-undeclared` once against `.corpus.yaml` where
-  a corpus holds a record carrying such a field and has stated a range no record can satisfy, meaning none at all or
-  one carrying a value that is not lower case. An out-of-range value stays an ordinary `enum` failure quoting the
-  corpus's own values. `kac new` opens the block and leaves it empty. Take it with `kac update --from <template>`.
+  draws its range from `enums:` in `.corpus.yaml`, so one schema above several catalogues stands behind the list each of
+  them wrote. `services.platform` is the first field to use it: what a service is built on is one list in a library and
+  another in a payments platform. `kac validate` reports `corpus-enum-undeclared` once against `.corpus.yaml` where a
+  corpus holds a record carrying such a field and has stated a range no record can satisfy, meaning none at all or one
+  carrying a value that is not lower case. An out-of-range value stays an ordinary `enum` failure quoting the corpus's
+  own values. `kac new` opens the block and leaves it empty. Take it with `kac update --from <template>`.
 
 ### Changed
 
@@ -509,8 +509,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `entry:` block names.
 - **`kac report` stamps the release without the commit behind it.** `generated.by` takes the Open Knowledge Format's
   `<producer>/<version>` form, and the value carried the build metadata as well, as
-  `kac/0.24.0+24dcea21945982d92104c78a854465207d644ad6`. It now reads `kac/0.24.0`. A regenerated report no longer
-  shows a moved commit where the tool's version stood still.
+  `kac/0.24.0+24dcea21945982d92104c78a854465207d644ad6`. It now reads `kac/0.24.0`. A regenerated report no longer shows
+  a moved commit where the tool's version stood still.
 - **A discovery can be promoted to a standard.** `promoted-to` names an FAQ or a standard and declares
   `reciprocal: promoted-from`, but only `faqs` carried that field, so promoting to a standard failed `reciprocal` and
   adding the key to the standard failed `unknown-key`. `standards` now declares `promoted-from` as well, optional and
@@ -518,9 +518,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`label-canonical` catches a shortcut label that leads to a record it does not name.** The check compared a label
   against the canonical spelling of its own id, so `[std-BOGUS]` defined as `../standards/workflows.md` passed:
   `link-resolves` was happy with the path, and the reader was shown an id no record carries. `kac validate` now holds a
-  label to the id in the frontmatter of the record it resolves to, which reaches a label the id styles do not
-  recognise at all. A template is exempt, since its definitions demonstrate the form under labels nobody has chosen
-  yet. The row this check gets on a type page is reworded to match, so run `kac generate` after upgrading.
+  label to the id in the frontmatter of the record it resolves to, which reaches a label the id styles do not recognise
+  at all. A template is exempt, since its definitions demonstrate the form under labels nobody has chosen yet. The row
+  this check gets on a type page is reworded to match, so run `kac generate` after upgrading.
 
 ## 0.24.0 - 2026-09-08
 
@@ -530,52 +530,52 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   coverage` names every policy clause and what discharges it, with the deviations departing from it, the controls behind
   each covering standard, and any clause elsewhere sharing its key. `kac report frameworks` names every external
   framework reference the clause tables cite, the standing the register files each framework under, the clauses citing
-  each one, and how many rest on a single citation. Each row of both carries an empty `Note`, for whoever confirms
-  the report. Output is markdown on standard output, so a caller pipes it where they want it. Every run stamps
+  each one, and how many rest on a single citation. Each row of both carries an empty `Note`, for whoever confirms the
+  report. Output is markdown on standard output, so a caller pipes it where they want it. Every run stamps
   `generated` and `sources` into the frontmatter it writes, naming the tool version, the moment, and the
   `content-version` each corpus answered at. The tool prints `covered` and `uncovered` and never splits a gap from
   something out of scope, because only a person can tell those apart.
 
-- **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each
-  rule line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers
-  to can now count its own coverage: before this, it saw what its own standards covered and nothing that arrived with
-  the policies. `part.citations.<Label>` is the export source behind the rule line, and it takes the ids from the
-  labelled footnote closing a part. Neither addition moves `standards@1`, because a reader written against the shape
-  before them is still correct.
+- **A standard's `implements:` and its `Covers` lines reach a consumer.** The record carries `implements`, and each rule
+  line carries `covers`, holding the clause ids that rule discharges. A corpus inheriting the policies it answers to can
+  now count its own coverage: before this, it saw what its own standards covered and nothing that arrived with the
+  policies. `part.citations.<Label>` is the export source behind the rule line, and it takes the ids from the labelled
+  footnote closing a part. Neither addition moves `standards@1`, because a reader written against the shape before them
+  is still correct.
 
-- **`framework-uncited` fails a framework on the register that no clause cites.** The register is the list of
-  frameworks an estate has taken a standing against, so an entry nothing reaches is a standing nobody acts on, and it
-  reads as coverage to whoever is looking for evidence. It is the third check `alignment-rollup` reports under. The
-  register is found by following a clause's own link, so a corpus whose clauses cite nothing has none in view. A
-  finding lands on the policy that reached the page and names the page the entry is deleted from.
+- **`framework-uncited` fails a framework on the register that no clause cites.** The register is the list of frameworks
+  an estate has taken a standing against, so an entry nothing reaches is a standing nobody acts on, and it reads as
+  coverage to whoever is looking for evidence. It is the third check `alignment-rollup` reports under. The register is
+  found by following a clause's own link, so a corpus whose clauses cite nothing has none in view. A finding lands on
+  the policy that reached the page and names the page the entry is deleted from.
 
-- **`policies/frameworks.jsonl` travels in the export.** One line per external framework reference, naming the
-  standing the register files it under, the clauses citing it, the policies holding those clauses, and the page and
-  anchor the register entry sits at. A type names the file with `frameworks:` in its `export:` block and the exporter
-  fills the keys, because a reference is read from a clause's cell and from the register the cell links to rather than
-  from any field a type declares. Navigation stays one way: `clauses.jsonl` is unchanged, and a clause still carries no
+- **`policies/frameworks.jsonl` travels in the export.** One line per external framework reference, naming the standing
+  the register files it under, the clauses citing it, the policies holding those clauses, and the page and anchor the
+  register entry sits at. A type names the file with `frameworks:` in its `export:` block and the exporter fills the
+  keys, because a reference is read from a clause's cell and from the register the cell links to rather than from any
+  field a type declares. Navigation stays one way: `clauses.jsonl` is unchanged, and a clause still carries no
   framework. Both `policies@2` and `formatVersion` stand, because a reader written against the shape before this is
   still correct.
 
-- **`report-stale` warns where a report answers for a version the corpus has left behind.** Every other record is
-  about the estate, so a corpus that moved leaves it as true as it was; a report is about the corpus, and the same
-  change can make it wrong with nothing in the record showing it. Each `sources` entry is held against the version in
-  front of the reader: the descriptor's own `content-version`, or the version a consumed corpus's restore resolved to.
-  A warning, because the report may well still hold, and whoever owns it either confirms that and raises the version by
-  hand or runs it again.
+- **`report-stale` warns where a report answers for a version the corpus has left behind.** Every other record is about
+  the estate, so a corpus that moved leaves it as true as it was; a report is about the corpus, and the same change can
+  make it wrong with nothing in the record showing it. Each `sources` entry is held against the version in front of the
+  reader: the descriptor's own `content-version`, or the version a consumed corpus's restore resolved to. A warning,
+  because the report may well still hold, and whoever owns it either confirms that and raises the version by hand or
+  runs it again.
 
-- **`reports` is a knowledge type the framework ships.** A finished report is a record: it has an
-  owner, a person confirms it before it is published, and a reader browsing the corpus finds it beside everything else.
+- **`reports` is a knowledge type the framework ships.** A finished report is a record: it has an owner, a person
+  confirms it before it is published, and a reader browsing the corpus finds it beside everything else.
   `generated` names what produced the content and when, `sources` names each corpus it answers for and the
   `content-version` each was at, and `confirmed` names every person who has checked it since. Sections are free-form,
   because a report's headings follow the question it answers. Take it with `kac update --add-type reports`.
 
-- **A field may hold one object, and a shared shape may say what it holds.** `type: object` declares a value that is
-  one mapping, and its keys are held to their own declarations exactly as a list's object entries are. `_shapes.yaml`
+- **A field may hold one object, and a shared shape may say what it holds.** `type: object` declares a value that is one
+  mapping, and its keys are held to their own declarations exactly as a list's object entries are. `_shapes.yaml`
   joins `_enums.yaml` as a shared block, declaring an object shape a field takes whole with `shape: <name>`. Nothing
-  narrows a shape at the point of use, so a type holding one of its keys to a narrower value writes a rule. `event`,
-  an actor doing something at a point in time, is the shape that ships. This moves the template to version 8, so a
-  corpus takes `_shapes.yaml` with `kac update`.
+  narrows a shape at the point of use, so a type holding one of its keys to a narrower value writes a rule. `event`, an
+  actor doing something at a point in time, is the shape that ships. This moves the template to version 8, so a corpus
+  takes `_shapes.yaml` with `kac update`.
 
 - **`entries_match('field', 'key', 're')` joins the expression facts.** It reads one key inside every object a field
   holds: each entry of a list of them, and the one an `object` field holds. It is true where the field is absent and
@@ -584,9 +584,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A whole number is a field type the tool checks.** `type: int`, and `of: int` on a list, are read by
   `int-format`: plain decimal with an optional leading sign, and within what a 64-bit number holds. A separator or a
-  base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an
-  author should not have to know which spellings the parser admits. `ado-epics` on a capability is the field this
-  reaches, and its entries were checked by nothing before.
+  base prefix is refused rather than decoded, because YAML reads `1_000` and `0x1f` as numbers of its own and an author
+  should not have to know which spellings the parser admits. `ado-epics` on a capability is the field this reaches, and
+  its entries were checked by nothing before.
 
 ### Changed
 
@@ -603,15 +603,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   descriptor an earlier one aligned.
 
 - **A field's `type:` and `of:` are held to what the tool dispatches.** Either naming a value no check reads now fails
-  `schema-dispatch` when the schema loads, so `type: tiemstamp` is reported rather than loading and holding the field
-  to nothing. An entry key answers to the same vocabulary, to whatever depth an `entry:` block nests, because its value
+  `schema-dispatch` when the schema loads, so `type: tiemstamp` is reported rather than loading and holding the field to
+  nothing. An entry key answers to the same vocabulary, to whatever depth an `entry:` block nests, because its value
   goes back through the same checks. The types are `date`, `enum`, `id`, `int`, `list`, `string` and `timestamp`; a
-  list's entries are `id`, `int`, `object` and `string`. `bool` was offered by `meta/type.schema.json` and dispatched
-  by nothing, as was `of: date`, and both are gone from it.
+  list's entries are `id`, `int`, `object` and `string`. `bool` was offered by `meta/type.schema.json` and dispatched by
+  nothing, as was `of: date`, and both are gone from it.
 
-- **An `of:` on a field that is not a list is reported.** It is read from a list's entries and nowhere else, so a
-  scalar carrying one states a shape its value can never take. `values:`, `min-items:` and `min-records:` were already
-  held to the field type they are read against, and `of:` now joins them.
+- **An `of:` on a field that is not a list is reported.** It is read from a list's entries and nowhere else, so a scalar
+  carrying one states a shape its value can never take. `values:`, `min-items:` and `min-records:` were already held to
+  the field type they are read against, and `of:` now joins them.
 
 - **An unquoted placeholder in a record is reported.** YAML reads `owner: {{owner}}` as a flow mapping rather than as
   text, so the value reached no check at all and the record validated clean. `bare-key` now reports it and names the
@@ -625,47 +625,47 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A schema field can hold a moment.** `type: timestamp` sits beside `type: date` in a type's `fields:` block, and
   takes `2026-09-07T20:18:00Z`: UTC, to the second, unquoted. A date is a day and is written quoted, because YAML
-  rereads an unquoted one as a datetime and a reader's own zone then shifts the day it shows. A `Z` instant carries
-  its zone in the value, so no reread moves it. `timestamp-format` errors on a value written in another shape, and on
-  one naming a moment the calendar does not have.
+  rereads an unquoted one as a datetime and a reader's own zone then shifts the day it shows. A `Z` instant carries its
+  zone in the value, so no reread moves it. `timestamp-format` errors on a value written in another shape, and on one
+  naming a moment the calendar does not have.
 
 - **A field naming a person carries an actor prefix.** `owner` takes `human:alex.doe` for a person, or
   `role:head-of-engineering` for a post. Exactly one person holds a post, so a role keeps answerability with one human
   and survives a handover that leaves every record naming the previous holder wrong. `confirmed.by` on an FAQ and
-  `deciders` on an ADR take `human:` alone: each records who performed an act, and a post cannot perform one. A
-  bare name, an agent, a session id and a team alias all fail `field-pattern`, so the tier boundary between a
-  discovery and an FAQ is checked rather than described. The three prefixes are [OKF v0.2]'s, whose trust tiers key
-  off `human:` the same way. A corpus created before this rewrites the field in each record it holds, and
+  `deciders` on an ADR take `human:` alone: each records who performed an act, and a post cannot perform one. A bare
+  name, an agent, a session id and a team alias all fail `field-pattern`, so the tier boundary between a discovery and
+  an FAQ is checked rather than described. The three prefixes are [OKF v0.2]'s, whose trust tiers key off `human:` the
+  same way. A corpus created before this rewrites the field in each record it holds, and
   `kac validate` names the ones still bare.
 
 - **Every record carries its own `type`.** The universal schema requires the field, directly after `id`. Its value is
   the singular type name the record's folder declares: `standard` in `standards/`, `adr` in `adrs/`. A record read away
-  from its folder therefore says what it is. `type-matches-folder` errors where the field and the folder disagree.
-  Every `_template.md` carries the line, so `kac new` writes it. A corpus created before this adds the line to each
-  record it holds, and `kac validate` names the ones that are missing it.
+  from its folder therefore says what it is. `type-matches-folder` errors where the field and the folder disagree. Every
+  `_template.md` carries the line, so `kac new` writes it. A corpus created before this adds the line to each record it
+  holds, and `kac validate` names the ones that are missing it.
 
 ### Changed
 
 - **An FAQ records every confirmation, rather than the last one.** `confirmed` replaces `confirmed-by` and
   `confirmed-on` with a list, one entry per confirmation and oldest first:
   `- { at: 2026-09-07T20:18:00Z, by: human:alex.doe }`. The moment and the person are one entry, so they are edited
-  together and neither can be left behind. A reader asking when the answer was last checked, by whom, and who checked
-  it before that now has all three. The shape is [OKF v0.2]'s. A corpus holding FAQs written before this rewrites the
-  two keys as one entry per record, and `kac validate` names the ones still carrying the old pair.
+  together and neither can be left behind. A reader asking when the answer was last checked, by whom, and who checked it
+  before that now has all three. The shape is [OKF v0.2]'s. A corpus holding FAQs written before this rewrites the two
+  keys as one entry per record, and `kac validate` names the ones still carrying the old pair.
 
 ## 0.22.0 - 2026-09-07
 
 ### Added
 
 - **The framework declares a `deviations` type.** A deviation records a knowing departure from a policy or a standard:
-  the clauses it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks
-  at it again. `departs-from` names those clauses one by one and refuses a bare policy or standard id, because a bare
-  id claims a departure from every clause the rule carries. `kac update --add-type deviations` takes it, and `kac new`
+  the clauses it departs from, the person who accepted the risk, the day they accepted it, and the day somebody looks at
+  it again. `departs-from` names those clauses one by one and refuses a bare policy or standard id, because a bare id
+  claims a departure from every clause the rule carries. `kac update --add-type deviations` takes it, and `kac new`
   offers it beside the rest. Three rules run over a record. `review-after-acceptance` errors where the review date falls
   on or before the acceptance date, so a deviation cannot expire as it is written. `not-open-ended` warns where the
   record reads as a standing departure rather than a bounded one. `expiry` warns where a record is still `active` on a
-  day its `review-by` has gone by, and stays a warning so a late review never makes deleting the record the cheapest
-  way to a green build.
+  day its `review-by` has gone by, and stays a warning so a late review never makes deleting the record the cheapest way
+  to a green build.
 - **A rule expression can call `today()`.** It answers with the day the run happens, as an ISO date, so a rule compares
   it against a date field under the string comparison the grammar already uses between two dates. The day is read once
   for the whole run, so a corpus validated across midnight cannot answer one way for its first record and another for
@@ -679,9 +679,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Fixed
 
 - **A field may name a part spelled unlike the record holding it.** `id-format` read the whole entry as one id, so
-  `std-ERRORS.a-failure-says-what-happened` failed: a standard's record id carries a mnemonic and its rules are
-  heading slugs. The check now reads the record and leaves the part to `ref-resolves`, which is what answers for
-  whether the part exists.
+  `std-ERRORS.a-failure-says-what-happened` failed: a standard's record id carries a mnemonic and its rules are heading
+  slugs. The check now reads the record and leaves the part to `ref-resolves`, which is what answers for whether the
+  part exists.
 
 ## 0.21.0 - 2026-09-07
 
@@ -691,10 +691,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   frontmatter, its `When to use this` trigger and its `Prerequisites`, and stops there. `Steps` and `Verification`
   stay in the record, because a procedure is followed whole and in order against the version in force rather than
   against a copy taken on an earlier day. The type declares no parts, so nothing writes a flat file for it and
-  `manifest.json` reports `partsFile`, `recordKey`, `partKey`, `idKey` and `seeAlsoKey` as null beside `parts` at
-  zero.
-- **`kac bundle` ships two more skills.** `process-lookup` finds the procedure written for a planned task and reads
-  its trigger before deciding it is yours. It is trimmed where the export carries no processes. `corpus-retrieval`
+  `manifest.json` reports `partsFile`, `recordKey`, `partKey`, `idKey` and `seeAlsoKey` as null beside `parts` at zero.
+- **`kac bundle` ships two more skills.** `process-lookup` finds the procedure written for a planned task and reads its
+  trigger before deciding it is yours. It is trimmed where the export carries no processes. `corpus-retrieval`
   reaches a record's published source and builds a link to it, naming `gh` and `az devops invoke` as the clients that
   authenticate to each platform and saying what to do where neither reaches. The three skills that shipped before now
   hand their link building to it.
@@ -704,37 +703,37 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A component your plugin manifest declares with an empty `requires` now travels only where a component that reads a
   type did.** It reads no export itself, so it is there to support the ones that do, and a plugin shipping it alone
   would carry a skill supporting nothing a reader can reach. `bundle.json` gives the reason as
-  `no component it supports survived`, and a run that trims every component warns as it did before. A file no
-  component claims is unchanged: it needs no declaration and travels whatever the corpus adopted.
+  `no component it supports survived`, and a run that trims every component warns as it did before. A file no component
+  claims is unchanged: it needs no declaration and travels whatever the corpus adopted.
 - **The template's shape is at version 6.** It carries the two skills above, so a corpus running `kac update` receives
   them.
 
 - **`kac checks` asks you for the half of a drifted checks table you hold.** Where the reader-facing table and your
-  `.schema/_checks.yaml` disagree, every line of the report names `on-type-page:` in that file and says where it
-  sits. The row beside it is in the table `kac` ships, which your corpus holds no copy of, so the report says whose
-  it is rather than naming a source file you cannot open.
+  `.schema/_checks.yaml` disagree, every line of the report names `on-type-page:` in that file and says where it sits.
+  The row beside it is in the table `kac` ships, which your corpus holds no copy of, so the report says whose it is
+  rather than naming a source file you cannot open.
 
 ### Fixed
 
 - **The lookup skills `kac bundle` ships now state the type of every field they describe.** `obligations`,
-  `definition` and `not` are one string of markdown holding the record's bullets, and a skill calling any of them a
-  list sent a reader looping over a string. A field with no value arrives as `null` beside a key that is still there,
-  so test the value rather than the key. `shortcode` is the one key a line can be missing outright.
+  `definition` and `not` are one string of markdown holding the record's bullets, and a skill calling any of them a list
+  sent a reader looping over a string. A field with no value arrives as `null` beside a key that is still there, so test
+  the value rather than the key. `shortcode` is the one key a line can be missing outright.
 
 ## 0.20.0 - 2026-09-01
 
 ### Added
 
 - **`kac export` carries the corpora your corpus consumes.** Every type a producer exported travels, so a consumer
-  receives types it never adopted and a citation into them resolves. Their parts merge into one flat file per type,
-  and their records are filed under the shortcode of the corpus that wrote them. An inherited line carries that
-  shortcode on `id`, on `record` and on every `seeAlso` value, and again under `shortcode`; a line with none is your
-  own. The manifest gains `sources`, one entry per corpus inherited, each holding the publishing block its producer
-  wrote, because a record of theirs is read at their commit in their repository. `kac pack` seals all of it, so a
-  third corpus inherits the chain.
-- **`kac export` refuses rather than writing a hole.** It stops with the reason and no files where a declared import
-  has not been restored, where a consumed corpus is at an export format this build does not read, where two corpora
-  export one type at different shapes or section fidelities, and where one corpus arrives twice at two versions.
+  receives types it never adopted and a citation into them resolves. Their parts merge into one flat file per type, and
+  their records are filed under the shortcode of the corpus that wrote them. An inherited line carries that shortcode on
+  `id`, on `record` and on every `seeAlso` value, and again under `shortcode`; a line with none is your own. The
+  manifest gains `sources`, one entry per corpus inherited, each holding the publishing block its producer wrote,
+  because a record of theirs is read at their commit in their repository. `kac pack` seals all of it, so a third corpus
+  inherits the chain.
+- **`kac export` refuses rather than writing a hole.** It stops with the reason and no files where a declared import has
+  not been restored, where a consumed corpus is at an export format this build does not read, where two corpora export
+  one type at different shapes or section fidelities, and where one corpus arrives twice at two versions.
 
 ### Changed
 
@@ -781,85 +780,85 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   and `kac update` sends it to a corpus already created.
 - **A field can be held to the citations its prose gathers.** A type declares `mirrors-citations: <Label>` beside the
   field's `ref:`, and `kac validate` reports drift in both directions between the field and the labelled lines. A line
-  is written in italic with the label bold, and closes the section whose citations it gathers, so a line standing in
-  the middle of one is reported where it sits. A standard's `implements:` declares it: each rule closes on
-  `_**Covers:** …_` naming the clauses it discharges, so the frontmatter says which obligations the standard answers
-  and each rule says which of them it answers. The obligations under a rule then carry no clause citation of their
-  own, and `kac export` drops the footnote before it takes them, so a part carrying nothing else travels with no
-  obligations rather than with a coverage line standing where its words belong. `kac validate` also reports the key
-  declared with no `ref:` to resolve against. `kac new` ships the form in the standards template.
+  is written in italic with the label bold, and closes the section whose citations it gathers, so a line standing in the
+  middle of one is reported where it sits. A standard's `implements:` declares it: each rule closes on
+  `_**Covers:** …_` naming the clauses it discharges, so the frontmatter says which obligations the standard answers and
+  each rule says which of them it answers. The obligations under a rule then carry no clause citation of their own, and
+  `kac export` drops the footnote before it takes them, so a part carrying nothing else travels with no obligations
+  rather than with a coverage line standing where its words belong. `kac validate` also reports the key declared with no
+  `ref:` to resolve against. `kac new` ships the form in the standards template.
 - **A standard may carry a `Sources and further reading` section.** It names the external documents the standard defers
   to, each marked normative or informative. A rule built on somebody else's conventions then says where the rest of it
   lives. `kac new` ships the section in the standards template, and a standard deferring to nothing deletes it.
 
 ### Changed
 
-- **A standard's rules sit under `###` headings, and `kac validate` reports a Rules section with none.** The heading
-  is what the rules beneath it hold a reader to, and it is the address a citation and an export both carry, so
+- **A standard's rules sit under `###` headings, and `kac validate` reports a Rules section with none.** The heading is
+  what the rules beneath it hold a reader to, and it is the address a citation and an export both carry, so
   `part-none` now reaches standards as it already reached glossaries. A standard whose rules are a bare bullet list
   gains one heading. `kac new` ships the grouping in the standards template.
 - **A tool's `category` is the folder it sits in under `tools/`, as a policy's and a standard's already were.** It was
-  the one of the three still written by hand, and the only field in the schema carrying no `description:`. A record
-  that writes the key now fails `derived-key`: delete the line and file the record under the folder you want it to
-  name. It is no longer required, so a tool filed directly in `tools/` simply has no category, which is what the other
-  two do. `kac new` ships the template without the key.
+  the one of the three still written by hand, and the only field in the schema carrying no `description:`. A record that
+  writes the key now fails `derived-key`: delete the line and file the record under the folder you want it to name. It
+  is no longer required, so a tool filed directly in `tools/` simply has no category, which is what the other two do.
+  `kac new` ships the template without the key.
 
 ### Fixed
 
 - **`kac validate` reports a schema declaring `of: object` with no `entry:` block, rather than ending in a stack
-  trace.** The schema pass already names that fault as `schema-shape`. A record filling such a field reached the
-  entry check first and took the run down, so the message never printed.
+  trace.** The schema pass already names that fault as `schema-shape`. A record filling such a field reached the entry
+  check first and took the run down, so the message never printed.
 - **Declining `kac update --drop-type` says `update`, where it used to say `new`.** The message is the tail of the
   command that printed it, and the one it named was a command the reader had not run.
-- **A rule whose `expr:` names a number too large for a whole number is reported, rather than ending in a stack
-  trace.** `words() < 99999999999` reached the parser's integer literal and overflowed past the exception the schema
-  load catches. `kac validate` now names the number, its position and the rule.
-- **`kac restore` refuses a package that unpacks to more than 256MB, or that holds a single entry over 16MB.** The
-  path each entry names was already held inside the import folder, and what it unpacks to was not, so a malformed
-  package was read whole into memory instead. Both caps count the bytes actually read, because a zip entry's
-  declared size is the package's own claim about itself.
+- **A rule whose `expr:` names a number too large for a whole number is reported, rather than ending in a stack trace.**
+  `words() < 99999999999` reached the parser's integer literal and overflowed past the exception the schema load
+  catches. `kac validate` now names the number, its position and the rule.
+- **`kac restore` refuses a package that unpacks to more than 256MB, or that holds a single entry over 16MB.** The path
+  each entry names was already held inside the import folder, and what it unpacks to was not, so a malformed package was
+  read whole into memory instead. Both caps count the bytes actually read, because a zip entry's declared size is the
+  package's own claim about itself.
 - **A part id written against a link takes no delimiter that closes an emphasis.** `_[pol-SCRT].EMBED_` read the
-  citation as `pol-SCRT.EMBED_`, because the id was measured off the source rather than off the text markdown makes
-  of it. `part-ref` reported a clause nobody could write.
+  citation as `pol-SCRT.EMBED_`, because the id was measured off the source rather than off the text markdown makes of
+  it. `part-ref` reported a clause nobody could write.
 
 ## 0.18.0 - 2026-08-31
 
 ### Added
 
 - **A type's `id.width` takes a `min`/`max` span as well as an exact count.** A mnemonic drawn from a concept rather
-  than cut to a length can then admit both `std-PR` and `std-SECRET` under one declaration. `kac validate` reports an
-  id outside the span as `id-format` and names both ends. An exact `width: 4` behaves as it always has.
+  than cut to a length can then admit both `std-PR` and `std-SECRET` under one declaration. `kac validate` reports an id
+  outside the span as `id-format` and names both ends. An exact `width: 4` behaves as it always has.
 - **`filename.carries-id: false` keeps a type's id out of its filenames.** Its records are filed by topic alone, and
   nothing then reads the head of a filename as an id: `id-matches-filename` stays silent, `slug-length` measures the
-  whole stem, and a link to the file is a link rather than a citation. `kac validate` refuses the three spans it
-  cannot act on. One beside a filename that still carries the id, because `secret-handling.md` would otherwise bind
-  to whichever id its first segment happens to spell. One on a `numbered` type, which pads to a single width so that
-  ids sort. One whose `min:` sits above its `max:`, which no id can meet.
-- **A field can require the part of the record it points at.** A type declares `part-required: true` beside the
-  field's `ref:`, and `kac validate` reports an id there that names the record whole. The message uses the target
-  type's own word for a part, so a field pointing at policies asks for a clause. `kac validate` also reports the key
-  declared with no `ref:` to resolve against, and one pointing at a type that keeps no parts.
+  whole stem, and a link to the file is a link rather than a citation. `kac validate` refuses the three spans it cannot
+  act on. One beside a filename that still carries the id, because `secret-handling.md` would otherwise bind to
+  whichever id its first segment happens to spell. One on a `numbered` type, which pads to a single width so that ids
+  sort. One whose `min:` sits above its `max:`, which no id can meet.
+- **A field can require the part of the record it points at.** A type declares `part-required: true` beside the field's
+  `ref:`, and `kac validate` reports an id there that names the record whole. The message uses the target type's own
+  word for a part, so a field pointing at policies asks for a clause. `kac validate` also reports the key declared with
+  no `ref:` to resolve against, and one pointing at a type that keeps no parts.
 
 ### Changed
 
-- **Standards take mnemonic ids.** `std-0001` becomes `std-VCS`. A number records the order things were created, and
-  a reader meeting one in a control's `verifies:` learns nothing. Filenames are untouched, because a standard is
-  already named for its rule area. A corpus that wants its numbered standards back claims
+- **Standards take mnemonic ids.** `std-0001` becomes `std-VCS`. A number records the order things were created, and a
+  reader meeting one in a control's `verifies:` learns nothing. Filenames are untouched, because a standard is already
+  named for its rule area. A corpus that wants its numbered standards back claims
   `.schema/standards.yaml` with a `skip:` entry in `.corpus.yaml`, which stops `kac update` replacing it.
 - **`kac generate` heads a table per folder in a type's index.** A type that declares a field with `from: sub-path`
-  groups its index rows on the first folder below the type, so a policy folder holding Delivery, Governance,
-  Operations and Security reads as four tables instead of one long list. A record filed deeper joins the table its
-  first folder heads. A type whose records all sit directly in its folder gets the single table it has always had.
+  groups its index rows on the first folder below the type, so a policy folder holding Delivery, Governance, Operations
+  and Security reads as four tables instead of one long list. A record filed deeper joins the table its first folder
+  heads. A type whose records all sit directly in its folder gets the single table it has always had.
 - **`implements:` on a standard names clauses.** `implements: [ pol-EVER ]` becomes one entry per clause the standard
-  puts into practice, as `pol-EVER.BRANCH`. The bare id claimed the whole policy, so a standard discharging six of
-  eight clauses read to a coverage report as full cover and the other two disappeared. The shorthand is refused
-  rather than admitted beside the list, because it is a keystroke shorter than the honest form. A corpus that wants
-  the old reading back claims `.schema/standards.yaml` with a `skip:` entry in `.corpus.yaml`, which stops
+  puts into practice, as `pol-EVER.BRANCH`. The bare id claimed the whole policy, so a standard discharging six of eight
+  clauses read to a coverage report as full cover and the other two disappeared. The shorthand is refused rather than
+  admitted beside the list, because it is a keystroke shorter than the honest form. A corpus that wants the old reading
+  back claims `.schema/standards.yaml` with a `skip:` entry in `.corpus.yaml`, which stops
   `kac update` replacing it.
 - **The derived column is dropped from a table that repeats it.** Every row under a heading of Security carries
   `security`, so the Category column says nothing there and is left out. A record filed deeper keeps it, because
-  `platform/node` under a heading of Platform is the one place `node` is written down. A corpus using no folders at
-  all loses a column that was empty in every row.
+  `platform/node` under a heading of Platform is the one place `node` is written down. A corpus using no folders at all
+  loses a column that was empty in every row.
 
 ### Fixed
 
@@ -879,44 +878,44 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **A field can be derived from the folder a record sits in.** A type declares `from: sub-path` on a field, and `kac`
-  reads its value from the folders between the type's own folder and the file. `policies/security/accs-access-by-identity.md`
+  reads its value from the folders between the type's own folder and the file.
+  `policies/security/accs-access-by-identity.md`
   carries `category: security` without a line of frontmatter saying so, and `standards/platform/node/testing.md` carries
   `platform/node`. A record saved straight into its type folder gets an empty value, so you start using categories by
   making a folder. The value reaches the generated index, its sort, and `kac export`.
 - **`derived-key` reports a derived field written by hand.** The key is declared, so `unknown-key` admits it and cannot
   say that the value comes from the path. Delete the line, and file the record in the folder you want it to name.
-- **`schema-shape` reports a type whose `folder:` is not the name of the file declaring it.** A document's type is
-  read from the folder it sits in, and that lookup uses the schema file's name, so the two disagreeing left every
-  record of the type unread while `generate` wrote into the folder nobody was reading. The two names now have to
-  agree.
+- **`schema-shape` reports a type whose `folder:` is not the name of the file declaring it.** A document's type is read
+  from the folder it sits in, and that lookup uses the schema file's name, so the two disagreeing left every record of
+  the type unread while `generate` wrote into the folder nobody was reading. The two names now have to agree.
 
 ### Changed
 
 - **A standard's `axis` field is gone, and `category` replaces it.** Nothing read `axis` but one index column, which
   repeated the folder already shown in each row's link. The composition model stays: the rule-set binding a piece of
   work is the union of the folders that apply to it. Delete `axis:` from every standard.
-- **A policy's `category` is read from its folder rather than from its frontmatter.** It is no longer a required enum
-  of `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete
-  the `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
+- **A policy's `category` is read from its folder rather than from its frontmatter.** It is no longer a required enum of
+  `security`, `delivery`, `operations` and `governance`. Move each policy into the folder its category named, delete the
+  `category:` line, and the exported value is unchanged. The set of folders is now the corpus's own.
 
 ### Fixed
 
-- **`kac validate` judges a `#fragment` against the headings alone.** It read a record's frontmatter block as a
-  heading, so `fragment-resolves` accepted a link naming an anchor no renderer offers. A link into a record is now
-  held to the headings that record carries.
+- **`kac validate` judges a `#fragment` against the headings alone.** It read a record's frontmatter block as a heading,
+  so `fragment-resolves` accepted a link naming an anchor no renderer offers. A link into a record is now held to the
+  headings that record carries.
 
 ## 0.16.0 - 2026-08-28
 
 ### Changed
 
 - **`kac export` carries a field its type declares as a list.** Every such field was written as `null` on every record,
-  which reads exactly as a record that holds nothing. A list now travels as a JSON array, and an entry the type
-  declares as an object carries the keys that declaration names. A list a record left empty stays `null`, beside the
-  field it never wrote. `docs/design/export.md` states the shape.
+  which reads exactly as a record that holds nothing. A list now travels as a JSON array, and an entry the type declares
+  as an object carries the keys that declaration names. A list a record left empty stays `null`, beside the field it
+  never wrote. `docs/design/export.md` states the shape.
 
-- **The glossary exports `tags`.** It is the first field to travel as a list. A consumer holding a vendored glossary
-  can filter its records by subject without reading each `Scope`. The key lands on `glossary/<record>.json`, and a term
-  line in `terms.jsonl` carries no `tags`.
+- **The glossary exports `tags`.** It is the first field to travel as a list. A consumer holding a vendored glossary can
+  filter its records by subject without reading each `Scope`. The key lands on `glossary/<record>.json`, and a term line
+  in `terms.jsonl` carries no `tags`.
 
 - **`kac new` no longer sends a corpus a link to a type it declined.** A type's root page and its `_template.md` name
   the other types and link to them, which is what makes a full corpus navigable and what left a corpus adopting a subset
@@ -930,9 +929,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   This reaches the pages a corpus receives once and then owns. A framework document is shared word for word, and
   `framework-names-types` goes on holding it to naming a type rather than linking to one.
 
-  A link into another type's folder has no such repair, because its text names a record. Two seed pages defined one as
-  a reference link, which reached a corpus whole, so `glossary.md` and `frameworks.md` now name the record without
-  linking it.
+  A link into another type's folder has no such repair, because its text names a record. Two seed pages defined one as a
+  reference link, which reached a corpus whole, so `glossary.md` and `frameworks.md` now name the record without linking
+  it.
 
 - **`kac update --add-type` says what the arriving page does not get.** The new page links to the types the corpus
   holds. The pages already there name it without linking, because each was written while the type was still declined,

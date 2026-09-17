@@ -210,7 +210,8 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec { Id = new RuleId("very-wordy"), Description = new string('x', ChecksTable.DescriptionMax + 1) }
+            new RuleSpec
+                { Id = new RuleId("very-wordy"), Description = new string('x', ChecksTable.DescriptionMax + 1) }
         ])));
 
         Assert.Equal("schema-shape", finding.Check.Value);

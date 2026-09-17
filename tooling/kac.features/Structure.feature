@@ -51,7 +51,7 @@ Scenario: An identity line is required beneath the H1, and is reported once when
   When I validate the corpus
   Then the findings for "policies/obsv-no-identity-line.md" are exactly:
     | line | check    | message                                                          |
-    |  10 | identity | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`. |
+    |   10 | identity | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`. |
   And the findings for "policies/agnt-identity-malformed.md" are exactly:
     | line | check    | message                                                             |
     |   12 | identity | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`. |
@@ -92,60 +92,60 @@ Scenario: A mis-cased id label is flagged where it is read and where it is defin
 Scenario: A label the style admits is held against the document it leads to
   When I validate the corpus
   Then the findings for "policies/lead-label-leads-elsewhere.md" are exactly:
-    | line | check           | message                                                                                     |
+    | line | check           | message                                                                                                |
     |      | label-canonical | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
-    |      | label-canonical | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
-    | 17   | label-canonical | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
-    | 18   | label-canonical | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
+    |      | label-canonical | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.     |
+    | 17   | label-canonical | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.           |
+    | 18   | label-canonical | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.       |
 
 Scenario: A field the type derives from the folder is not the author's to write
   When I validate the corpus
   Then the findings for "policies/cats-category-written.md" are exactly:
     | line | check       | message                                                                                                                                                     |
-    | 1    | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
+    |    1 | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
 
 Scenario: A template carrying a derived field is reported, not only a record
   When I validate the corpus
   Then the findings for "policies/_template.md" are exactly:
     | line | check       | message                                                                                                                                                     |
-    | 1    | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
+    |    1 | derived-key | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
   Then validation reports 24 documents and 0 skipped
   And the findings are exactly:
-    | file                                                        | severity | line | check               | message                                                                                                |
-    | policies/cats-category-written.md                            | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
-    | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.               |
-    | adrs/0004-missing-consequences.md                           | error    |      | required-section    | missing required section '## Consequences'.                                                            |
-    | adrs/0004-missing-consequences.md                           | error    | 1    | id-matches-filename | id 'adr-0009' carries number '0009', and the filename carries '0004'.                                  |
-    | adrs/0005-no-h1.md                                          | warning  | 0    | y-statement         | no Y-statement block-quote follows the H1.                                                             |
-    | adrs/0005-no-h1.md                                          | error    | 1    | h1                  | document has no H1.                                                                                    |
-    | adrs/0006-bad-id-prefix.md                                  | error    | 1    | id-prefix           | id 'xyz-0006' must start with 'adr-'.                                                                  |
-    | adrs/0007-bad-id-width.md                                   | error    | 1    | id-format           | id 'adr-7' must be 'adr-' followed by 4 digits.                                                        |
-    | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                                     |
-    | adrs/0010-half-filled-copy.md                               | error    | 14   | placeholder-left    | '{{the pressure to get something committed}}' is a placeholder the template left for you to fill in.   |
-    | adrs/0011-headings-with-no-body.md                          | error    | 33   | empty-section       | required section '## Consequences' has nothing under it.                                               |
-    | adrs/0011-headings-with-no-body.md                          | error    | 35   | empty-section       | section '## Related' has nothing under it. Write it or delete the heading.                             |
+    | file                                                        | severity | line | check               | message                                                                                                                                                     |
+    | policies/cats-category-written.md                           | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
+    | adrs/0003-slug-that-is-definitely-way-too-long-for-limit.md | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long-for-limit' is 46 characters; the limit is 30.                                                                    |
+    | adrs/0004-missing-consequences.md                           | error    |      | required-section    | missing required section '## Consequences'.                                                                                                                 |
+    | adrs/0004-missing-consequences.md                           | error    | 1    | id-matches-filename | id 'adr-0009' carries number '0009', and the filename carries '0004'.                                                                                       |
+    | adrs/0005-no-h1.md                                          | warning  | 0    | y-statement         | no Y-statement block-quote follows the H1.                                                                                                                  |
+    | adrs/0005-no-h1.md                                          | error    | 1    | h1                  | document has no H1.                                                                                                                                         |
+    | adrs/0006-bad-id-prefix.md                                  | error    | 1    | id-prefix           | id 'xyz-0006' must start with 'adr-'.                                                                                                                       |
+    | adrs/0007-bad-id-width.md                                   | error    | 1    | id-format           | id 'adr-7' must be 'adr-' followed by 4 digits.                                                                                                             |
+    | adrs/0008-Bad_Name.md                                       | error    |      | filename-pattern    | filename '0008-Bad_Name.md' does not match ^\d{4}-[a-z0-9-]+\.md$.                                                                                          |
+    | adrs/0010-half-filled-copy.md                               | error    | 14   | placeholder-left    | '{{the pressure to get something committed}}' is a placeholder the template left for you to fill in.                                                        |
+    | adrs/0011-headings-with-no-body.md                          | error    | 33   | empty-section       | required section '## Consequences' has nothing under it.                                                                                                    |
+    | adrs/0011-headings-with-no-body.md                          | error    | 35   | empty-section       | section '## Related' has nothing under it. Write it or delete the heading.                                                                                  |
     | policies/_template.md                                       | error    | 1    | derived-key         | 'category' is derived from the record's sub-path and is not written in frontmatter. Delete the line, and file the record in the folder you want it to name. |
-    | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`.                                    |
-    | policies/dirs-directory-link.md                             | error    | 17   | link-resolves       | link target '/media' does not resolve.                                                                 |
-    | policies/envs-identity-status.md                            | error    | 12   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                            |
-    | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                                   |
-    | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                                   |
-    | policies/intc-label-case.md                                 | error    | 17   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                                         |
-    | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                                         |
-    | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case: `DRAFT`.                                              |
-    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
-    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.     |
-    | policies/lead-label-leads-elsewhere.md                      | error    | 17   | label-canonical     | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.           |
-    | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.       |
-    | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                         |
-    | policies/obsv-no-identity-line.md                           | error    |  10 | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                       |
-    | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'.                                |
-    | policies/recv-identity-id.md                                | error    | 12   | identity-id         | identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'.                               |
-    | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter. |
-    | policies/trus-identity-type.md                              | error    | 12   | identity-type       | identity line says 'Standard', but this is a Policy.                                                   |
-    | policies/vurm-bad-id-width.md                               | error    | 1    | id-format           | id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.   |
-    | tools/id-disagrees.md                                       | error    | 1    | id-matches-filename | id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'. |
-    | tools/site-server.md                                        | error    | 1    | id-format           | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens.                |
+    | policies/agnt-identity-malformed.md                         | error    | 12   | identity            | identity line is malformed. Write it as `Policy: pol-AGNT` `DRAFT`.                                                                                         |
+    | policies/dirs-directory-link.md                             | error    | 17   | link-resolves       | link target '/media' does not resolve.                                                                                                                      |
+    | policies/envs-identity-status.md                            | error    | 12   | identity-status     | identity line status 'ACTIVE' does not match the document's status 'draft'.                                                                                 |
+    | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[ADR-0004]' should be written as the id 'adr-0004'.                                                                                        |
+    | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                                                                                        |
+    | policies/intc-label-case.md                                 | error    | 17   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                                                                                              |
+    | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                                                                                              |
+    | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case: `DRAFT`.                                                                                                   |
+    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                      |
+    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                          |
+    | policies/lead-label-leads-elsewhere.md                      | error    | 17   | label-canonical     | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                                |
+    | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                            |
+    | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                                                                              |
+    | policies/obsv-no-identity-line.md                           | error    | 10   | identity            | no identity line follows the H1. Add `Policy: pol-OBSV` `DRAFT`.                                                                                            |
+    | policies/pipe-id-disagrees.md                               | error    | 1    | id-matches-filename | id 'pol-DEVI' carries mnemonic 'DEVI', and the filename carries 'pipe'.                                                                                     |
+    | policies/recv-identity-id.md                                | error    | 12   | identity-id         | identity line id 'pol-OBSV' does not match the document's id 'pol-RECV'.                                                                                    |
+    | policies/scrt-lower-case-id.md                              | error    | 1    | id-format           | id 'pol-scrt' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.                                                      |
+    | policies/trus-identity-type.md                              | error    | 12   | identity-type       | identity line says 'Standard', but this is a Policy.                                                                                                        |
+    | policies/vurm-bad-id-width.md                               | error    | 1    | id-format           | id 'pol-VU' must be 'pol-' followed by 4 upper-case alphanumeric characters beginning with a letter.                                                        |
+    | tools/id-disagrees.md                                       | error    | 1    | id-matches-filename | id 'tol-names-another-tool' carries slug 'names-another-tool', and the filename carries 'id-disagrees'.                                                     |
+    | tools/site-server.md                                        | error    | 1    | id-format           | id 'tol-Site_Server' must be 'tol-' followed by lower-case letters, digits and hyphens.                                                                     |

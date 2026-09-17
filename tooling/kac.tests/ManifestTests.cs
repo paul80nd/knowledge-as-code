@@ -344,7 +344,7 @@ public class ManifestTests
         Assert.Contains("  taken-on: \"2026-08-11\"\n", after);
         Assert.Contains("  commit: 9c4e1d2a\n", after);
         Assert.Contains("  url: ../src\n", after);              // untouched: the update does not own it
-        Assert.Contains("content-version: \"2.1.0\"\n", after);  // untouched: only the corpus knows this one
+        Assert.Contains("content-version: \"2.1.0\"\n", after); // untouched: only the corpus knows this one
         Assert.Contains("# Why owning a file is worth declaring.", after);
     }
 
@@ -354,8 +354,8 @@ public class ManifestTests
     [InlineData("descriptor-version: 0\n\nupstream:\n  url: ../src\n  template-version: 1\n"
                 + "  commit: 5fa039b0\n  taken-on: \"2026-01-01\"\n")] // every stamped key already there
     [InlineData("descriptor-version: 0\n\nupstream:\n  template-version:  1\n"
-                + "  taken-on:          \"2026-01-01\"\n")]            // aligned by an older stamp
-    [InlineData("corpus: sample\n")]                                    // no block, so the stamp opens one
+                + "  taken-on:          \"2026-01-01\"\n")] // aligned by an older stamp
+    [InlineData("corpus: sample\n")]                        // no block, so the stamp opens one
     public void A_stamped_descriptor_leaves_one_space_after_every_colon(string before)
     {
         var dir = Directory.CreateTempSubdirectory().FullName;

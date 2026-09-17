@@ -160,7 +160,9 @@ public static class Reports
     // policy it answers to adopts the type itself, and would otherwise report on none of them.
     private static TypeSchema? ClauseType(LoadedCorpus corpus) =>
         corpus.Schema.ByFolder.Values.FirstOrDefault(t => t.Parts is { } parts
-            && parts.Columns.Any(c => string.Equals(c, AlignmentColumn, StringComparison.OrdinalIgnoreCase)));
+                                                          && parts.Columns.Any(c =>
+                                                              string.Equals(c, AlignmentColumn,
+                                                                  StringComparison.OrdinalIgnoreCase)));
 
     // This corpus's own records of that type.
     private static IEnumerable<Doc> ClauseDocs(LoadedCorpus corpus)
@@ -181,8 +183,10 @@ public static class Reports
         var rows = clauses.Select(c => new CoverageRow(c,
             covers.GetValueOrDefault(c.Id) ?? [],
             departures.GetValueOrDefault(c.Id) ?? [],
-            [.. (covers.GetValueOrDefault(c.Id) ?? []).SelectMany(s => controls.GetValueOrDefault(s) ?? [])
-                .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)],
+            [
+                .. (covers.GetValueOrDefault(c.Id) ?? []).SelectMany(s => controls.GetValueOrDefault(s) ?? [])
+                .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)
+            ],
             pairs.GetValueOrDefault(c.Id))).ToList();
 
         var body = new StringBuilder();

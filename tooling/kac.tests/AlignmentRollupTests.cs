@@ -191,8 +191,10 @@ public class AlignmentRollupTests
     [Fact]
     public void A_framework_the_register_places_and_no_clause_cites_is_reported()
         => Assert.Equal(
-            ["'Azure Well-Architected Framework' is filed on 'frameworks.md' and no clause cites it.",
-                "'ISO 27001' is filed on 'frameworks.md' and no clause cites it."],
+            [
+                "'Azure Well-Architected Framework' is filed on 'frameworks.md' and no clause cites it.",
+                "'ISO 27001' is filed on 'frameworks.md' and no clause cites it."
+            ],
             Uncited("aligns-with:\n  - framework: WCAG 2.2 AA",
                 "| `CONFORM` | **MUST** conform. | [WCAG 2.2 AA] |").Select(f => f.Message));
 

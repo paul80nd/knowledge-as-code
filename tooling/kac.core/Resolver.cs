@@ -49,7 +49,8 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
     // other landing carries none, so reaching this is that check having been skipped, and the message
     // names the landing it happened on.
     private ImportedRecord Found => Imported
-        ?? throw new InvalidOperationException($"a citation that landed {How} holds no imported record.");
+                                    ?? throw new InvalidOperationException(
+                                        $"a citation that landed {How} holds no imported record.");
 
     // Whether the record carries the part named. Compared ordinally, as a part id is everywhere else.
     public bool Carries(string part) =>
