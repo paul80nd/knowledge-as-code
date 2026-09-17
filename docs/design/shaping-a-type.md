@@ -193,6 +193,18 @@ state no range at all.
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
 
+### integrations
+
+`What it does` and `Failure modes` travel. A consumer depending on this estate asks which external systems it depends
+on and what breaks when one of them is down, and those two sections answer both.
+
+`Contract`, `Commercials` and `Contacts` stay behind. An endpoint, a renewal date and a support line serve whoever owns
+the account, and a consumer can use none of them. `Contract` also states where a credential is kept, which nobody
+outside the estate needs.
+
+`their-sla` travels in the vendor's own words. `constraint-consistency` on `nfrs` compares an availability target
+against it, and a reworded promise is a different promise.
+
 ### capabilities
 
 A capability answers what the estate offers a customer, which is the question a stranger asks first. Every section

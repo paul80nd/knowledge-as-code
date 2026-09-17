@@ -80,8 +80,8 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 
 Every type above is adopted by the corpus that is home to it.
 
-Six adopted folders are still empty. `library` has no `data`, `integrations`, `processes` or `runbooks` record.
-`engineering` has no `controls` or `tools` record. An issue on this repository tracks each one.
+Five adopted folders are still empty. `library` has no `data`, `processes` or `runbooks` record. `engineering` has no
+`controls` or `tools` record. An issue on this repository tracks each one.
 
 ## What they share
 

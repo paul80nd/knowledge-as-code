@@ -61,8 +61,8 @@ comes from, and a service coupled to the whole estate with no dependency edges.
 
 **Services are the proven type here.** A consumer repository built a full catalogue against that schema and returned a
 run of findings, tracked as issues upstream. Every other schema here has met little real content, and `data`,
-`integrations`, `processes` and `runbooks` hold none at all. That is the honest limit: a schema is wrong in ways only
-real content reveals.
+`processes` and `runbooks` hold none at all. That is the honest limit: a schema is wrong in ways only real content
+reveals.
 
 ## What this corpus declares about itself
 
@@ -125,12 +125,13 @@ export wrote, and says which step failed. CI runs it on Linux and Windows.
 
 ### What the plugin does not do yet
 
-**This plugin ships one lookup skill.** `library` exports `adrs`, `capabilities`, `explanations`, `glossary` and
-`services`, and `glossary-lookup` is the only skill that reads any of them. `kac bundle` trims the controls, fix,
-policy, process and standards skills, because this corpus holds none of those types. What is agreed and unbuilt:
+**This plugin ships one lookup skill.** `library` exports `adrs`, `capabilities`, `explanations`, `glossary`,
+`integrations` and `services`, and `glossary-lookup` is the only skill that reads any of them. `kac bundle` trims the
+controls, fix, policy, process and standards skills, because this corpus holds none of those types. What is agreed and
+unbuilt:
 
-* **A skill for a type that already travels.** An ADR, a capability, an explanation and a service each reach the plugin
-  as data, and nothing in it answers a question about one.
+* **A skill for a type that already travels.** An ADR, a capability, an explanation, an integration and a service each
+  reach the plugin as data, and nothing in it answers a question about one.
 * **Publishing from Azure DevOps.** The [Azure Pipelines starter](../../template/azure-pipelines.yml) builds the bundle
   and publishes nothing, so a corpus hosted there has no route to a marketplace. That is where this has to work for the
   first adopters, and it is a pipeline of its own rather than a translation of the GitHub one.
