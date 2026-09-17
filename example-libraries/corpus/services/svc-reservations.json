@@ -29,6 +29,6 @@
     "Data": "**None of its own** (verified): the infrastructure declares no database, no storage account and no connection string for this app service. The single durable write is the provisional hold created in [svc-lending], which owns it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/53aeb8bc7ced3ccb5b0b7ae2812035898509bfd0/examples/library/services/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c50a3ed3cf1c9804388ffa498426e8606684942b/examples/library/services/reservations.md"
   }
 }

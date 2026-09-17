@@ -1,0 +1,34 @@
+{
+  "type": "explanations",
+  "path": "explanations/estate-overview.md",
+  "trust": null,
+  "fields": {
+    "id": "exp-estate-overview",
+    "title": "How the estate fits together",
+    "status": "active",
+    "explains": [
+      "cap-borrowing",
+      "cap-discovery",
+      "cap-reservations",
+      "svc-catalogue-api",
+      "svc-catalogue-web",
+      "svc-covers-cdn",
+      "svc-lending",
+      "svc-notices",
+      "svc-reservations",
+      "svc-search",
+      "svc-shelf-audit"
+    ],
+    "review-by": "2027-03-31",
+    "tags": [
+      "architecture",
+      "onboarding"
+    ]
+  },
+  "sections": {
+    "Where the detail lives": "* [svc-catalogue-web] and [svc-catalogue-api] describe the public site and its gateway.\n* [svc-lending] describes the strangler wrapper and the legacy database behind it.\n* [svc-search], [svc-notices] and [svc-shelf-audit] describe the work that runs on a schedule or on an event.\n* [Services](../services.md) states the conventions this catalogue follows, and why some coupling has no edge."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c50a3ed3cf1c9804388ffa498426e8606684942b/examples/library/explanations/estate-overview.md"
+  }
+}

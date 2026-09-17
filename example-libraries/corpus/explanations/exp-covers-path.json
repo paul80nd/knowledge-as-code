@@ -1,0 +1,26 @@
+{
+  "type": "explanations",
+  "path": "explanations/covers-path.md",
+  "trust": null,
+  "fields": {
+    "id": "exp-covers-path",
+    "title": "How a jacket image reaches a page",
+    "status": "active",
+    "explains": [
+      "cap-discovery",
+      "svc-catalogue-api",
+      "svc-covers-cdn",
+      "svc-thumbnailer"
+    ],
+    "review-by": "2027-03-31",
+    "tags": [
+      "jackets"
+    ]
+  },
+  "sections": {
+    "Where the detail lives": "* [svc-covers-cdn] describes the edge, its routes and its cache key.\n* [svc-thumbnailer] describes the origin and the container it reads.\n* [svc-catalogue-api] describes the gateway that writes staff uploads.\n* [cap-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.\n* [exp-estate-overview] puts this path beside the rest of the estate."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c50a3ed3cf1c9804388ffa498426e8606684942b/examples/library/explanations/covers-path.md"
+  }
+}
