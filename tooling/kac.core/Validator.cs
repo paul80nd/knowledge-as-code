@@ -28,8 +28,10 @@ public static class Validator
         // The schema first, because it decides how every document below is read.
         SchemaChecks.Check(schema, findings);
 
+        var adopted = corpus.Adopted.Select(t => t.Folder).ToHashSet(StringComparer.Ordinal);
+
         foreach (var doc in corpus.Docs)
-            CheckDocument(doc, schema, tree, findings, today);
+            CheckDocument(doc, schema, tree, findings, today, adopted: adopted);
 
         // Every file `kac generate` writes a block into, held to still carrying the markers to write between.
         // Driven from the list the generator writes from, so every file that gets a block is a file this
@@ -81,7 +83,7 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter: a document copied from it starts with none."));
             else
-                CheckDocument(template, schema, tree, findings, today, DocKind.Template);
+                CheckDocument(template, schema, tree, findings, today, DocKind.Template, adopted);
         }
 
         // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
@@ -106,7 +108,7 @@ public static class Validator
     }
 
     public static void CheckDocument(Doc d, Schema schema, Tree tree, List<Finding> f, DateOnly today,
-        DocKind kind = DocKind.Record)
+        DocKind kind = DocKind.Record, IReadOnlySet<string>? adopted = null)
     {
         var report = new Report(d.Rel, f);
 
@@ -158,13 +160,14 @@ public static class Validator
         // The required fields, universal and type alike, including the ones `required-when` turns on. Not
         // asked of a template. Every value in one is either bare or a placeholder, and both say "not
         // supplied yet". That is the whole point of the file. Whether the fields are all there to be
-        // supplied is CheckTemplateFields' question above.
+        // supplied is CheckTemplateFields' question above. A field no record here can fill is skipped,
+        // which Unfillable decides.
         if (kind == DocKind.Record)
             foreach (var spec in t.DeclaredFields)
             {
                 var req = spec.Required || RequiredWhenHolds(spec.RequiredWhenCondition, present);
                 var absent = !present.ContainsKey(spec.Name) || ValueChecks.IsAbsent(present[spec.Name], spec);
-                if (req && absent)
+                if (req && absent && !Unfillable(spec, adopted))
                 {
                     var why = spec.Required ? "" : $" (required when {spec.RequiredWhen})";
                     report.Err(new CheckId("required-field"),
@@ -1296,6 +1299,17 @@ public static class Validator
         => condition is not null
            && present.TryGetValue(condition.Field, out var node)
            && condition.Holds(Yaml.Raw(node));
+
+    // True where a field points only at types this corpus declined and accepts no literal in their place,
+    // so no record here can fill it. The obligation is dropped in silence, which is the answer `ref:`
+    // already gives for resolution. See Checks/SchemaChecks.cs. Adopting one of the types starts the
+    // obligation with no edit to the schema. A null `adopted` reports every obligation, so a caller that
+    // did not say which types the corpus took relaxes nothing.
+    private static bool Unfillable(FieldSpec spec, IReadOnlySet<string>? adopted)
+        => adopted is not null
+           && spec.Refs.Count > 0
+           && spec.AllowLiteral.Count == 0
+           && !spec.Refs.Any(adopted.Contains);
 
     private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 

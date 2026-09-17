@@ -52,6 +52,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`kac validate` no longer asks for a field no record in the corpus can fill.** A field whose `ref:` names only
+  types the corpus declined is dropped from the required pass, and a `required-when:` on such a field never fires.
+  Adopting one of those types starts the obligation with no edit to `.schema/`. A field with `allow-literal:` is
+  fillable without them, so it is still asked for. `ref-resolves` is unchanged: a value a record does write is held
+  to the same standard as before.
+
 - **A postmortem records what ended the incident, and all three of the lessons.** `Resolution` and two further
   sections, `What went wrong` and `Where we got lucky`, join `What went well`, and all five travel in the export.
   Google SRE groups the three lessons under one `Lessons Learned` heading; each is declared on its own here, so
