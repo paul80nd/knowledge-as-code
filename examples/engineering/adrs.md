@@ -37,20 +37,20 @@ its id.
 
 <!-- BEGIN GENERATED: schema-adrs -->
 
-| Field           | Value                                           | Notes                                                                         |
-|-----------------|-------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†         | string                                          | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†       | string                                          | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†       | `decided`                                       | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†     | `proposed` `accepted` `deprecated` `superseded` | Where the decision stands.                                                    |
-| `owner` *†      | string                                          | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †     | list                                            | Where this record's content came from, one entry per source.                  |
-| `tags` †        | list                                            | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `decided-on`    | date                                            | The day the decision was accepted. Required when `status == accepted`.        |
-| `supersedes`    | id                                              | The ADR this one replaces.                                                    |
-| `superseded-by` | id                                              | The ADR that replaces this one. Required when `status == superseded`.         |
-| `deciders`      | list                                            | The people who agreed it, each as `human:alex.doe`.                           |
-| `related`       | list                                            | Other ADRs worth reading beside this one, matching the `## Related` section.  |
+| Field           | Value                                                      | Notes                                                                             |
+|-----------------|------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| `id` *†         | string                                                     | Stable, unique across the corpus, never reused, in the format the type sets.      |
+| `type` *†       | string                                                     | The singular name of the type, which CI checks against the folder.                |
+| `tier` *†       | `decided`                                                  | The record's trust level, fixed for the type and checked against the folder.      |
+| `status` *†     | `proposed` `rejected` `accepted` `deprecated` `superseded` | Where the decision stands.                                                        |
+| `owner` *†      | string                                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.            |
+| `sources` †     | list                                                       | Where this record's content came from, one entry per source.                      |
+| `tags` †        | list                                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.     |
+| `decided-on`    | date                                                       | The day the decision was settled. Required when `status in [accepted, rejected]`. |
+| `supersedes`    | id                                                         | The ADR this one replaces.                                                        |
+| `superseded-by` | id                                                         | The ADR that replaces this one. Required when `status == superseded`.             |
+| `deciders`      | list                                                       | The people who agreed it, each as `human:alex.doe`.                               |
+| `related`       | list                                                       | Other ADRs worth reading beside this one, matching the `## Related` section.      |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -63,15 +63,16 @@ its id.
    number. The [index](adrs/_index.md) shows the highest one in use.
 2. Fill in the frontmatter and the sections. Keep it short: a few narrative paragraphs.
 3. Open a PR. The status starts at `proposed`.
-4. On acceptance, set `status: accepted` and `decided-on`. The index rebuilds itself.
+4. When the decision is settled, set `status` to `accepted` or `rejected`, and set `decided-on`. The index rebuilds
+   itself.
 
 **Conventions**
 
-* **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused. A withdrawn proposal retires its
-  number.
-* **Immutability.** Once an ADR is accepted, change the decision only by writing a new ADR that supersedes it. Edit
-  everything else in place: a status transition, a typo, a broken link, or a sentence that no longer matches the
-  decision. The commit message says what you changed.
+* **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused.
+* **Immutability.** Once an ADR is accepted or rejected, change the decision only by writing a new ADR that supersedes
+  it. Edit everything else in place: a status transition, a typo, a broken link, or a sentence that no longer matches
+  the decision. The commit message says what you changed.
+* **Rejection.** A proposal the team turns down becomes `rejected` and keeps its number. Its Decision section says why.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
 * **Prescriptive language.** An ADR that establishes a default or a policy may use

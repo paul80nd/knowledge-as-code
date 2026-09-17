@@ -23,9 +23,9 @@ and how it is reviewed. What is below is only what an ADR adds to that.
 
 * **`id`**: matches the filename number. Four digits, never reused.
 * **`tier`**: always `decided` for an ADR.
-* **`status`**: `proposed` while under review, then `accepted`, and later `deprecated` or `superseded`. Values are
-  lowercase.
-* **`decided-on`**: the acceptance date, quoted `"YYYY-MM-DD"`. Leave the key bare until accepted.
+* **`status`**: `proposed` while under review, then `accepted` or `rejected`, and later `deprecated` or `superseded`.
+  Values are lowercase.
+* **`decided-on`**: the day the decision was settled, quoted `"YYYY-MM-DD"`. Leave the key bare until then.
 * **`owner`**: who is answerable for the decision, as `human:alex.doe` or `role:head-of-engineering`. Never a team
   alias.
 
@@ -55,7 +55,7 @@ Keep it factual and free of advocacy: the decision itself comes next.
 ## Decision
 
 What did we decide? State it clearly and in the active voice ("We will use X for Y."). Keep it to one or two short
-paragraphs.
+paragraphs. Where the proposal was rejected, say what you turned down, and why.
 
 ## Alternatives Considered
 

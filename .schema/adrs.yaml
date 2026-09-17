@@ -22,16 +22,16 @@ versus:
 lineage:
   prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011), with the summary line from [Zimmermann's Y-statement](https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html)"
   alignment: >
-    Nygard's Context / Decision / Consequences, his status values, and the rule that a reversed decision is
+    Nygard's Context / Decision / Consequences, his four status values, and the rule that a reversed decision is
     superseded and left standing. The block-quote under the title states Zimmermann's six moves. A mandatory
     *Alternatives Considered* section matches [MADR 4](https://adr.github.io/madr/), which also asks for the options
     weighed
   divergence: >
     Nygard scopes a decision to one codebase, and an ADR here affects more than one repository. Every alternative
-    states a verdict, and *Consequences* is required where MADR leaves it optional. A supersession is a pair of
-    fields checked in both directions, not a phrase inside the status. MADR's *Confirmation* is a separate type
-    here: a standard cites the ADR it distils, and a control checks the standard. MADR's `consulted` and
-    `informed` are not kept
+    states a verdict, *Consequences* is required where MADR leaves it optional, and a fifth status, `rejected`, keeps
+    a proposal the estate turned down. A supersession is a pair of fields checked in both directions, not a phrase
+    inside the status. MADR's *Confirmation* is a separate type here: a standard cites the ADR it distils, and a
+    control checks the standard. MADR's `consulted` and `informed` are not kept
 
 id:
   prefix: adr
@@ -47,14 +47,17 @@ fields:
   status:
     required: true
     type: enum
-    values: [proposed, accepted, deprecated, superseded]
+    values: [proposed, rejected, accepted, deprecated, superseded]
     description: Where the decision stands.
+    notes: >
+      `rejected` keeps a proposal the estate turned down, with the reasoning that settled it. The other
+      four values are Nygard's.
 
   decided-on:
     required: false
-    required-when: 'status == accepted'
+    required-when: 'status in [accepted, rejected]'
     type: date
-    description: The day the decision was accepted.
+    description: The day the decision was settled.
 
   supersedes:
     required: false
