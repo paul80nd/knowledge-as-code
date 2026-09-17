@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - std-ERRORS.a-failure-says-what-happened
+risk: medium
 accepted-on: "2030-01-01"
 review-by: "2030-05-01"
 owner: human:alex.doe
@@ -21,6 +22,10 @@ The legacy reports endpoint returns the error shape it shipped with, rather than
 ## Why we need it
 
 Its remaining callers sit outside our estate, and none of them can be changed.
+
+## What the risk is
+
+The gap stays open for as long as nobody re-reads this record.
 
 ## What compensates
 

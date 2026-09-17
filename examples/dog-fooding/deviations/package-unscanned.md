@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-TRUS.ATTEST
   - eng:pol-TRUS.MALWARE
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -35,6 +36,12 @@ attestation naming the workflow, the commit or the runner that built it.
 Both are available and neither is free. GitHub's artifact attestation needs the publish workflow reworked around it,
 and a scan needs a scanner chosen and a failure path decided. Neither has been done, and the package is a
 documentation tool built from a public repository.
+
+## What the risk is
+
+A consumer installs `kac` and cannot check that the package came from this repository. Trusted publishing means no key
+exists for anybody else to push under this name, so the gap is proof and not control. A consumer with a rule about
+provenance has nothing here to satisfy it.
 
 ## What compensates
 

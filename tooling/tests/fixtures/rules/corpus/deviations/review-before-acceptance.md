@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - std-ERRORS.a-failure-says-what-happened
+risk: low
 accepted-on: "2030-05-01"
 review-by: "2030-04-01"
 owner: human:alex.doe
@@ -21,6 +22,10 @@ The batch importer answers a failed request with a status code and an empty body
 ## Why we need it
 
 Its only caller is a scheduled job that reads the status code, and the error shape would be built for nobody.
+
+## What the risk is
+
+The caller reads the status code, so a failure it cannot explain costs one support call.
 
 ## What compensates
 

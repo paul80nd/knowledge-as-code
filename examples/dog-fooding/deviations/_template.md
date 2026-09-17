@@ -4,6 +4,7 @@ type: deviation
 tier: normative
 status: draft
 departs-from:
+risk:
 accepted-on:
 review-by:
 closed-on:
@@ -29,12 +30,17 @@ and how it is reviewed. What is below is only what a deviation adds to that.
   `std-{{MNEM}}.{{rule-heading-slug}}`, and an inherited one takes the same `eng:` prefix. A bare id is refused,
   because it claims a departure from every clause the rule carries. Write `none` for a shortcut that breaks no rule,
   which is technical debt and is recorded the same way.
+* **`risk`**: `high` · `medium` · `low`. How bad the risk is once what compensates is working, and never how
+  bad the rule's authors thought it was. A `high` rating brings `review-by` inside six months, which
+  `high-risk-review-window` warns on.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
 * **`review-by`**: the day somebody has to look at this again. Every deviation carries one.
 * **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is
   `closed`.
-* **`owner`**: who accepts the risk, and has the authority to accept it. Write `human:alex.doe`, or
-  `role:head-of-engineering` where the authority belongs to the post. Never a team.
+* **`owner`**: the individual who accepts the risk, and has the authority to accept it. Write `human:alex.doe`. This
+  type refuses `role:`, where every other type admits it.
+* **`assigned-to`**: who does the work that closes this, where that is somebody else. A post may do the work, so this
+  one takes `role:head-of-engineering` as well as `human:alex.doe`. Leave it out where `owner` does both.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../deviations.md#metadata) lists every
@@ -57,6 +63,13 @@ whether it is still true.
 The reason this was worth accepting. Say what the alternative cost, and who it would have cost.
 
 _(A reason a reviewer can weigh. "It was quicker" is a reason. "Business need" is not.)_
+
+## What the risk is
+
+What can still go wrong while this stands, and who it costs. State the risk left after what compensates, not the risk
+the rule was written against.
+
+_(This is the section `risk` rates. A record whose rating and whose section disagree is one a reviewer cannot weigh.)_
 
 ## What compensates
 

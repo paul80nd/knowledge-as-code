@@ -11,6 +11,7 @@ departs-from:
   - eng:pol-DEVI.PERM
   - eng:pol-DEVI.RECORD
   - eng:pol-DEVI.SURFACE
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -37,6 +38,11 @@ it breaks. That is why the whole register was written in one sitting.
 
 The type arrived first and the register was written against a coverage map, so the records exist before the rule that
 governs them. Writing the standard at the same time would have stated a process nobody had run yet.
+
+## What the risk is
+
+A departure gets taken and never written down, because no rule here says it has to be. The schema checks the shape of
+a record that exists. Nothing asks whether the record exists at all, so a habit that breaks a clause stays a habit.
 
 ## What compensates
 

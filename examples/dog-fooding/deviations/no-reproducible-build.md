@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-AUTV.BITWISE
   - eng:pol-AUTV.REPRO
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -35,6 +36,12 @@ built the same commit twice and compared the two `.nupkg` files.
 A byte-identical build needs `ContinuousIntegrationBuild`, a deterministic source path map and a source-link setup,
 and then a job that builds twice and diffs. That is real work against a threat this repository does not face: the
 package is built by a workflow whose run is public, from a commit anybody can read.
+
+## What the risk is
+
+The published package differs from the commit it claims, and nothing here would show it. One public workflow builds
+what ships, and nuget.org refuses to replace a version, so a substitution nobody catches needs that workflow itself to
+be compromised.
 
 ## What compensates
 

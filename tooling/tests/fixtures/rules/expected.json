@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 34,
+    "validated": 35,
     "templates": 17,
     "skipped": 0,
     "errors": 22,
-    "warnings": 18,
+    "warnings": 19,
     "infos": 0
   },
   "findings": [
@@ -42,6 +42,13 @@
       "severity": "error",
       "check": "no-actual-data",
       "message": "this address looks real. Write it under `example.com`, which RFC 2606 reserves so it can never be anybody's."
+    },
+    {
+      "file": "deviations/high-risk-review-window.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "high-risk-review-window",
+      "message": "this deviation is rated `high` and `review-by` falls more than six months after `accepted-on`. Bring the date in, or rate the risk lower and say in the record what makes it lower."
     },
     {
       "file": "deviations/open-ended-departure.md",

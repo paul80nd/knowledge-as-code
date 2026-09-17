@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-EVER.SIGNED
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -32,6 +33,12 @@ no more verifiable than the author line above it.
 Signing means a key on the maintainer's machine, a key in every agent's environment, and a branch rule that rejects an
 unsigned push. The middle one is the problem. Much of this repository is written by agents running in sandboxes.
 Handing each one a signing key spreads the key and does not protect the history.
+
+## What the risk is
+
+An author line says somebody wrote a commit who did not. The branch rule refuses a direct push and GitHub records the
+account behind every merge, so forging that line means holding the account. Nothing here is deployed from a checkout,
+so a forged commit reaches a user only through a release the same account has to approve.
 
 ## What compensates
 

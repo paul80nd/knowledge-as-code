@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-A11Y.ASSIST
+risk: high
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -36,6 +37,12 @@ would use.
 `eng:pol-A11Y.ASSIST` asks for a test with the assistive technology people actually use. This repository has one
 maintainer, who has neither a screen reader configured nor the practice to read a page with one. A pass run badly is
 worse than no pass, because it reports a result somebody would believe.
+
+## What the risk is
+
+A reader who uses a screen reader cannot follow the site or the `kac` output, and nobody here would know. No rule
+covers what either surface is like in use, so the fault would be found by the person it excludes. That is the wrong way
+round, and it is the one risk here that somebody outside this repository carries.
 
 ## What compensates
 

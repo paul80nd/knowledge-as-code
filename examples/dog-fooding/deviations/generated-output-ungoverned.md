@@ -9,6 +9,7 @@ departs-from:
   - eng:pol-DERV.FAILED
   - eng:pol-DERV.LINEAGE
   - eng:pol-DERV.RUNLOG
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -40,6 +41,12 @@ that record only gains somebody a citation. Nothing has gone wrong here yet for 
 
 Lineage is the exception, and it is real work: a block would have to list the ids it read, and every generator would
 have to emit them.
+
+## What the risk is
+
+A reader doubts a generated block and has no way to tell what it was computed from. `generate --check` fails a stale
+file on the branch, so staleness is covered and lineage is not. Answering the doubt means rebuilding the block and
+comparing.
 
 ## What compensates
 

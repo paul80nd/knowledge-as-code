@@ -6,6 +6,7 @@ status: active
 departs-from:
   - eng:pol-TRUS.CLOUD
   - eng:pol-TRUS.EXIT
+risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"
 closed-on:
@@ -39,6 +40,12 @@ by pushing them. What does not move is the workflow syntax, the pages publish an
 that third of the problem is all the work there is, and nobody has needed it.
 
 Nothing here makes money or stores anybody's data. On the day GitHub stops, the cost is a rebuild.
+
+## What the risk is
+
+GitHub stops, and the source, the issues, the workflows, the site and the marketplace branch stop with it. Any clone
+keeps the content and the code, so what goes is the automation and the published surfaces. Rebuilding those is a cost
+nobody has measured.
 
 ## What compensates
 

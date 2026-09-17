@@ -132,8 +132,8 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 
 - A deviation request **MUST** open its body with a fenced block whose info string is `yaml kac-deviation`.
 - That block **MUST** open on `corpus`, naming the corpus that will contain the record.
-- The block **MUST** then contain `id`, `status`, `departs-from` and `review-by`, under the names and in the order the
-  `deviations` template writes them.
+- The block **MUST** then contain `id`, `status`, `departs-from`, `risk` and `review-by`, under the names and in the
+  order the `deviations` template writes them.
 - The block **MAY** contain `applies-to` and `tags` after those.
 - The block **MUST NOT** contain any other key.
 - `status` **MUST** be `draft`.
@@ -142,9 +142,9 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 - A skill **MUST NOT** write `owner` or `accepted-on`, because the individual who accepts the risk is what the request
   asks for.
 - A request **MUST NOT** describe the departure as permanent, indefinite, or standing until further notice.
-- The body **MUST** contain `## What we are doing instead`, `## Why we need it`, `## What compensates` and
-  `## How it closes`, in that order.
-- `## Who is asking` **MUST** follow those four.
+- The body **MUST** contain `## What we are doing instead`, `## Why we need it`, `## What the risk is`,
+  `## What compensates` and `## How it closes`, in that order.
+- `## Who is asking` **MUST** follow those five.
 - `## Who is asking` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
   doing.
 - Where the agent cannot reach one of those, `## Who is asking` **MUST** name it as unreached.

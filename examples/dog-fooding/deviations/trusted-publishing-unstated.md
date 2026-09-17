@@ -5,6 +5,7 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-SCRT.ZEROSEC
+risk: low
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
 closed-on:
@@ -33,6 +34,12 @@ somebody adding a second publish target could use an API key without failing a c
 
 The rule and the practice arrived together, and the practice was easier to write. [std-CI] grew from what the
 workflows already did, and a clause about a credential that does not exist reads as a clause about nothing.
+
+## What the risk is
+
+Somebody adds a second publish target and authenticates it with an API key, and no check refuses it. No key exists
+today, so the risk is a future change and not the arrangement now. [std-CI] refuses a workflow with a credential of
+its own, which reaches the same outcome from another clause.
 
 ## What compensates
 

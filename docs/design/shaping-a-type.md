@@ -130,11 +130,17 @@ the record, it vouches for that whole document whatever it checks inside it.
 A deviation travels whole. The people who carry the risk of a departure usually sit outside the team that raised it, and
 a register they cannot read surfaces nothing. This is the one type whose whole purpose is to be read by somebody else.
 
-The five sections are the whole of the argument: what you do instead, why, what limits the risk meanwhile, what ends it,
-and how far it applies. A reader who sees four of them sees a smaller departure than the one you took.
+The six sections are the whole of the argument: what you do instead, why, what can still go wrong, what limits that,
+what ends it, and how far it applies. A reader who sees five of them sees a smaller departure than the one you took.
 
 **`owner` travels, and this is the only type where it does.** A deviation names the individual who accepted the risk,
-and a register that says what was excused without saying who excused it is not a register.
+and a register that says what was excused without saying who excused it is not a register. This type takes the `human:`
+form alone. Accepting a risk is a person putting their name to a consequence, and a post cannot do that: whoever holds
+it on the day would be accepting something they never read. `assigned-to` names whoever does the work, admits a post,
+and stays behind, because a consumer reads who carries the risk and not who is clearing it.
+
+`risk` rates what is left once what compensates is working. It travels, because it is what a reader sorts a register on,
+and it decides how soon `review-by` may fall.
 
 `accepted-on`, `review-by` and `closed-on` say whether a departure is live, overdue or over. They travel beside
 `status`, which stays `active` past its review date, so you can compare the two accounts of one record. Nothing moves
