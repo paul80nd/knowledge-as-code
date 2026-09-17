@@ -31,7 +31,7 @@ generated blocks derived from these files.
    `required-when:`, a scalar type or a required section may already say it.
 2. Read `lineage:` in the type's schema file. Where `prior-art` names a specification, open it and read what it
    states about the field you are changing. A `description:` that paraphrases the source can have dropped a word the
-   source carries.
+   source carries. [prc-add-a-type] steps 3 and 4 carry the bar for measuring a whole type against its sources.
 3. Make the edit. A field using keys the schema language already has costs nothing in C#. A key the language does not
    have means an edit to `Schema.cs`. The code reading what it parsed into and `meta/type.schema.json` move in the same
    change.
