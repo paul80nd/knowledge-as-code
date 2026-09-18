@@ -4,6 +4,7 @@ type: policy
 tier: normative
 status: active
 owner: human:alex.doe
+active-from: "2026-01-01"
 review-by: "2026-12-31"
 ---
 

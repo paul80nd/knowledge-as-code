@@ -3,6 +3,7 @@ id: pol-{{MNEM}}
 type: policy
 tier: normative
 status: draft
+active-from:
 review-by:
 owner:
 tags: [ a, b ]
@@ -44,7 +45,10 @@ and how it is reviewed. What is below is only what a policy adds to that.
   Binding means the framework register files it under **Obliged** or **Self-obligated**. A clause may cite a framework
   filed under **Inspiration**, and that citation is provenance rather than obligation, so it stays out of the roll-up.
   `framework-posture` reports a clause citing a framework the register does not place at all.
-* **`review-by`**: a quoted date. Annual is usually right for a policy.
+* **`active-from`**: the day the policy came into force, quoted `"YYYY-MM-DD"`. Leave the key bare until
+  `status` is `active`. A retired policy keeps the date.
+* **`review-by`**: a quoted date. Annual is usually right for a policy. Bring it forward whenever the estate,
+  the law, or a framework this policy cites changes.
 
 A policy names no implementers. A standard points up at the policy it puts into practice, and a downstream corpus
 inherits these policies to write its own standards against. What implements this is not knowable from here.

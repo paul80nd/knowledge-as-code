@@ -22,16 +22,18 @@ versus:
 lineage:
   prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Policy layer"
   alignment: >
-    Statements of intent, with the mandatory language pushed down to the layer below
+    A high-level statement of intent, owned by a named person, reviewed on an annual cycle, and traced up to by
+    every standard beneath it
   divergence: >
-    HCGF policy is security-scoped and externally driven. A policy here states inward-facing engineering intent,
-    and puts its obligations in a clause table, so each row can be cited
+    HCGF policy is security-scoped, externally driven, and leaves every mandatory requirement to the standard
+    beneath it. A policy here states inward-facing engineering intent and binds in its own right, with each
+    obligation a clause table row anything else can cite. HCGF's control objective layer is absent, so a standard
+    cites a policy clause directly
 
 collision: >
-  In ISO/IEC 27001 an information security policy is a mandatory, auditable artefact. Here a policy is the
-  deliberately **non-binding** layer: it states intent, and the standard beneath it states the obligation. A
-  reader arriving from an information security management system will read a policy here as binding, and be
-  wrong.
+  In ISO/IEC 27001 an information security policy is one approved document, and the topic-specific policies sit
+  beneath it. Here every policy is topic-specific, and nothing sits above them. A reader arriving from an
+  information security management system will look for the overarching policy and find none.
 
 # A four-character mnemonic, upper case in the id and lower case in the filename.
 id:
@@ -78,6 +80,15 @@ fields:
     notes: >
       A framework cited with no reference into it takes no `clauses:`, as `[WCAG 2.2 AA]` does. See
       <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+
+  active-from:
+    required: false
+    required-when: 'status == active'
+    type: date
+    description: The day the policy came into force.
+    notes: >
+      A retired policy keeps this date. The day it was retired is in git, and `status` says it no longer
+      applies.
 
   review-by:
     required: true

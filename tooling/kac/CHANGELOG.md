@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A policy in force says the day it came into force.** `active-from` takes the day, quoted, and `kac validate`
+  requires it where `status` is `active`. NIST SP 800-53 Rev. 5's `-1` controls and ISO/IEC 27001 clause 5.2 both ask a
+  policy to record its approval, and `owner` says who without saying when. It stays out of the export, and `kac new`
+  sends a `_template.md` naming it.
+
 - **An integration says how the estate would leave it.** `Exit` is a section, and `exit-required` warns where a
   `critical` or `important` integration still in use has none. Article 30(3)(f) of DORA asks an ICT contract for an
   exit strategy, and the section travels in the export. `kac new` sends a `_template.md` naming it.
@@ -102,6 +107,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the export.
 
 ### Changed
+
+- **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's
+  policy layer, NIST SP 800-12 Rev. 1 and NIST SP 800-53 Rev. 5. `alignment` said a policy pushes its mandatory
+  language down to the standard beneath it, and 206 of the 243 clauses in `examples/engineering` are **MUST** or
+  **MUST NOT**. `alignment`, `divergence` and `collision` now describe a policy that binds in its own right, and
+  `kac generate` writes all three into every adopting corpus's `knowledge-as-code/lineage.md`.
 
 - **`target` on an NFR no longer carries the measurement window.** The window is `window`, so a consumer reads the
   figure and the period apart. `nfrs` publishes at `export.version` 2, because a reader that took the period out of

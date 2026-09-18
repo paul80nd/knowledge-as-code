@@ -18,6 +18,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `tags` †      | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types.                     |
 | `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                                          |
 | `aligns-with` | list                               | The binding frameworks this policy's clauses map to, grouped with the references they cite.       |
+| `active-from` | date                               | The day the policy came into force. Required when `status == active`.                             |
 | `review-by` * | date                               | The day the policy is looked at again, usually a year ahead.                                      |
 
 \* Field is required  

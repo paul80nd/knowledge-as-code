@@ -234,7 +234,7 @@
     },
     {
       "file": "policies/unpl-framework-not-placed.md",
-      "line": 28,
+      "line": 29,
       "severity": "error",
       "check": "framework-posture",
       "message": "'ISO 27001:2022' is cited here and nothing says what our standing against it is. File it under 'Obliged' or 'Self-obligated', or under a standing that binds nothing."
