@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.39.0",
+  "contentVersion": "0.40.0",
   "mechanismVersion": 16,
-  "commit": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317",
+  "commit": "248c16dc43dd85c87682f45d6afb25baf37ab261",
   "dirty": false,
-  "generatedAt": "2026-09-18T08:07:30Z",
+  "generatedAt": "2026-09-18T08:31:52Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/248c16dc43dd85c87682f45d6afb25baf37ab261/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
+    "ref": "248c16dc43dd85c87682f45d6afb25baf37ab261"
   },
   "tracker": {
     "target": "github",
@@ -37,13 +37,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.22.4",
+      "contentVersion": "0.23.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/248c16dc43dd85c87682f45d6afb25baf37ab261/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
+        "ref": "248c16dc43dd85c87682f45d6afb25baf37ab261"
       },
       "tracker": {
         "target": "github",

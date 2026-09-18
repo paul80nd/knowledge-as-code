@@ -55,7 +55,7 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 | `fields.status`           | string                   | `active`, `draft`, `superseded` or `fixed-upstream`      |
 | `fields.symptom-keywords` | list of strings          | the search terms. At least three, and never empty        |
 | `fields.applies-to`       | list of strings, or null | the service ids the problem concerns                     |
-| `fields.verified`         | list of objects, or null | one entry per verification, oldest first                 |
+| `fields.verified`         | list of objects, or null | one entry per actor who has checked it, oldest first     |
 | `fields.review-by`        | string                   | the date by which somebody re-checks this is still true  |
 | `fields.tags`             | list of strings, or null | the record's own subject words, searched across types    |
 | `trust`                   | string                   | how far the fix has been taken on trust, from `verified` |
@@ -73,7 +73,8 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 test for the key before you read it.
 
 **Each entry of `verified` is an object of two keys.** `at` is a UTC timestamp, as `2026-09-02T17:27:31Z`. `by` names a
-person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`.
+person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`. An actor is written once, and `at` is the last time
+that actor checked, so the list says who has read the fix and not how often.
 
 **Report Symptom, Environment, Cause and Resolution together.** A resolution read without its cause is half an
 answer. A reader who cannot see the environment cannot tell whether the steps apply to them at all.
