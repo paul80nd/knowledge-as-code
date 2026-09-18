@@ -9,9 +9,12 @@
     "severity": "sev3",
     "applies-to": null,
     "last-rehearsed": "never",
-    "rehearsal-frequency": null,
+    "rehearsal-frequency": "on-change",
+    "requires-tools": [
+      "A .NET 10 SDK",
+      "A checkout of this repository"
+    ],
     "requires-access": [
-      "A .NET 10 SDK and a checkout of this repository",
       "Write access to the branch the fix lands on"
     ],
     "tags": [
@@ -21,9 +24,10 @@
     ]
   },
   "sections": {
-    "Symptoms": "* `kac restore` prints `restore: ../engineering/.dist/package holds no package for example-engineering <version>.` and\n  exits 1.\n* `kac validate` fails in `examples/payments` or `examples/dog-fooding`, and says to run `kac restore` first.\n* The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`\n  and `engineering` consume nothing, so they pass.\n\nNothing failed in the producer. `examples/engineering` validates, exports and packs."
+    "Symptoms": "* `kac restore` prints `restore: ../engineering/.dist/package holds no package for example-engineering <version>.` and\n  exits 1.\n* `kac validate` fails in `examples/payments` or `examples/dog-fooding`, and says to run `kac restore` first.\n* The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`\n  and `engineering` consume nothing, so they pass.\n\nNothing failed in the producer. `examples/engineering` validates, exports and packs.",
+    "Impact": "Nothing in production. `examples/payments` and `examples/dog-fooding` cannot validate, so the `corpora` job fails and nothing merges."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/65e2a78c753ff43f3b6ec7b86b78269f9ea5ee36/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/260eaab13f43b05a4590f5f7a0ef01bce0f47571/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
   }
 }
