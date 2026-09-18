@@ -135,8 +135,8 @@ public class ExportShapeTests
           sections:
             Symptoms: full
             Impact: full
-        services@1
-          fields: id, title, status, platform, criticality, repo, depends-on, data-stores, nfrs, facets, tags
+        services@2
+          fields: id, title, status, component-type, platform, criticality, repos, depends-on, data-stores, nfrs, facets, tags
           sections:
             What it does: full
             Where it lives: full

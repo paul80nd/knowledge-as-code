@@ -2,4 +2,5 @@ corpus: fixture-corpus
 
 # The range this corpus states for `platform`, which `.schema/services.yaml` leaves to it.
 enums:
+  component-type: [api]
   platform: [dotnet-api, dotnet-web]

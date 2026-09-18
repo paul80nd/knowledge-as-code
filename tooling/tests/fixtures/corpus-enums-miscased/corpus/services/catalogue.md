@@ -3,7 +3,8 @@ id: svc-catalogue
 type: service
 tier: descriptive
 status: live
-repo: catalogue
+component-type: api
+repos: [ catalogue ]
 platform: dotnet-web
 criticality: critical
 owner: human:alex.doe

@@ -17,7 +17,7 @@
     },
     {
       "file": "services/catalogue.md",
-      "line": 6,
+      "line": 7,
       "severity": "error",
       "check": "enum",
       "message": "'platform' value 'dotnet-web' is not one of: Dotnet-Web."

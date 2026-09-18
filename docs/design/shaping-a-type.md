@@ -196,7 +196,8 @@ can run the commands it lists. A reader holding a copy can run none of them.
 
 A service id is cited from every other type, so what travels is what makes that id resolve to something a reader
 recognises. `What it does` and `Where it lives` are both short, and together they say which deployable this is and where
-its code sits.
+its code sits. `repos` travels beside them as a list, because a service whose content is published from one repository
+and served from another has two answers to that question.
 
 **`depends-on` is the estate's own graph, and the reason this type exports at all.** A reader holding the catalogue
 walks the edges without opening a record. `Dependencies` travels beside it, because an edge says which service and the
@@ -204,10 +205,10 @@ prose says what the call is for. The edges run one way, downward. A service reco
 is a question a reader asks of the whole graph, so nothing here has to keep a second field in step with the first.
 
 `data-stores` travels as ids a reader cannot follow, because data records travel nowhere. `Data` is what that reader
-reads instead. `platform`, `criticality` and `facets` are the three keys an agent filters on. Of the three, only
-`platform` draws its range from the corpus. An estate lists its own deployables, groups them by the runtime and the
-framework a contributor has to learn, and closes the list on what it found, so one schema above several estates can
-state no range at all.
+reads instead. `component-type`, `platform`, `criticality` and `facets` are the keys an agent filters on, and the first
+two draw their range from the corpus. An estate lists its own deployables, groups them once by what they are and once by
+the runtime and framework a contributor has to learn, and closes each list on what it found. So one schema above several
+estates can state no range at all.
 
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.

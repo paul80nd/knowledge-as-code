@@ -7,25 +7,37 @@ folder: services
 page: services.md
 tier: descriptive
 lifecycle: living
-summary: "One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner."
+summary: "One deployable component: purpose, repos, platform, environments, dependencies, data stores, owner."
 goes-here: What a deployable component is and does
 detail: >
   The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 lineage:
-  prior-art: "[Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`"
+  prior-art: >-
+    [Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`.
+    [OpsLevel `opslevel.yml`](https://docs.opslevel.com/docs/opslevel-yml): the component.
+    [Cortex entity descriptor](https://docs.cortex.io/ingesting-data-into-cortex/entities-overview/entities/yaml)
   alignment: >
-    A deployable unit with its owner, dependencies and consumed APIs, at the centre of the entity graph
+    A deployable unit with its owner and its dependencies, at the centre of the graph every other type cites.
+    Backstage, OpsLevel and Cortex each require a word for the sort of component this is, and `component-type`
+    is that word. `criticality` grades a service by what a customer loses while it is down, which is the tier
+    OpsLevel asks for and Backstage has no field for. `repos` takes a list because OpsLevel lets one component
+    name several repositories, where Cortex takes one per git provider and Backstage one source location
   divergence: >
-    Backstage models APIs, resources, systems and domains as separate kinds. This type folds dependencies, data
-    stores and environments into one service document
+    Backstage, OpsLevel and Cortex each produce a row of metadata. This type produces a document somebody
+    reads, so `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs,
+    resources, systems and domains as separate kinds, and this type folds dependencies, data stores and
+    environments into one document. Backstage states the APIs a component provides and consumes, and no field
+    here does. `facets` refuses a value fewer than two services share, and no source has anything like it. The
+    three sources say lifecycle and tier where this type says `status` and `criticality`: `tier` already grades
+    a record's authority here, and `status` is on every type
 
 id:
   prefix: svc
   style: slug
   notes: >
-    The id identifies the deployable. A repository shipping three services gets three ids, and `repo` is where the
-    repository goes.
+    The id identifies the deployable. A repository shipping three services gets three ids, and `repos` is where
+    the repository goes.
 
 filename:
   pattern: '^[a-z0-9-]+\.md$'
@@ -39,10 +51,24 @@ fields:
     values: [live, building, deprecated, retired]
     description: Where the service is in its life.
 
-  repo:
+  component-type:
     required: true
-    type: string
-    description: Where the code lives.
+    type: enum
+    values: $corpus.component-type
+    description: The sort of component this is, which `platform` does not say.
+    notes: >
+      The range belongs to the estate, so `.corpus.yaml` states it under `enums:` and this file states none.
+      Backstage, OpsLevel and Cortex each require this word and each leave the vocabulary to the adopter.
+
+  repos:
+    required: true
+    type: list
+    of: string
+    pattern: '^[a-z0-9-]+$'
+    description: Repositories a change to this service is made in.
+    notes: >
+      A list, because an asset surface can be filled by one repository and served from another. Every entry is
+      a repository a contributor edits to change this service.
 
   platform:
     required: true
@@ -105,8 +131,8 @@ sections:
   optional: [Dependencies, Data, Operational notes]
 
 export:
-  version: 1
-  fields: [id, title, status, platform, criticality, repo, depends-on, data-stores, nfrs, facets, tags]
+  version: 2
+  fields: [id, title, status, component-type, platform, criticality, repos, depends-on, data-stores, nfrs, facets, tags]
   sections:
     What it does: full
     Where it lives: full
@@ -117,7 +143,7 @@ export:
     <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services> says what else travels, and what
     stays behind.
 index:
-  columns: [id, title, platform, criticality, status, owner]
+  columns: [id, title, component-type, platform, criticality, status, owner]
   sort: id
 
 rules:

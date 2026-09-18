@@ -3,8 +3,9 @@ id: svc-reservations
 type: service
 tier: descriptive
 status: building
-repo: platform
-platform: dotnet-web
+component-type: website
+repos: [ platform ]
+platform: dotnet
 criticality: important
 depends-on:
   - svc-lending

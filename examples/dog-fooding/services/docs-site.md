@@ -3,7 +3,8 @@ id: svc-docs-site
 type: service
 tier: descriptive
 status: live
-repo: knowledge-as-code
+component-type: website
+repos: [ knowledge-as-code ]
 platform: static
 criticality: important
 owner: human:paul.law

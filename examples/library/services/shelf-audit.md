@@ -3,7 +3,8 @@ id: svc-shelf-audit
 type: service
 tier: descriptive
 status: deprecated
-repo: shelf-audit
+component-type: worker
+repos: [ shelf-audit ]
 platform: mixed
 criticality: supporting
 owner: human:dev.raman

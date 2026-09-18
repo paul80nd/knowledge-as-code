@@ -67,7 +67,7 @@ added. Which clauses nothing implements, which framework references have only on
 cell the corpus states, and leaves the judgement cells open. A report becomes a record here once somebody has answered
 them.
 
-**[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
+**[Services](../services.md).** One deployable component: purpose, repos, platform, environments, dependencies, data
 stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 **[Tools](../tools.md).** The approved-software register. What is chosen, rejected or deprecated, and the version range

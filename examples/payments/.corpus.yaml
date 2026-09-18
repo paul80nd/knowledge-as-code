@@ -15,7 +15,7 @@ shortcode: pay
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.21.0"
+content-version: "0.22.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -72,9 +72,11 @@ types:
   - services
   - standards
 
-# What a service here is built on. Every deployable here is a .NET API, so the list holds one value.
+# What a service here is built on, and what sort of component it is. Every deployable here is a .NET API, so
+# each list holds one value.
 enums:
-  platform: [dotnet-api]
+  component-type: [api]
+  platform: [dotnet]
 
 # Nothing withheld, so a consumer meets a draft record as a draft rather than not at all.
 export:

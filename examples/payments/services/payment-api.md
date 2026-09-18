@@ -3,8 +3,9 @@ id: svc-payment-api
 type: service
 tier: descriptive
 status: live
-repo: payment-api
-platform: dotnet-api
+component-type: api
+repos: [ payment-api ]
+platform: dotnet
 criticality: critical
 depends-on:
   - svc-payment-ledger

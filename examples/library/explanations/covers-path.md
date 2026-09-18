@@ -43,9 +43,9 @@ the supplier has no image for. [svc-covers-cdn] describes both.
 
 ## The repositories behind the path
 
-No single service record can describe this path, because each leg is changed in a different repository. The edge is
-defined in `infrastructure`, the origin in `thumbnailer`, and the staff uploads in `platform`. [Services](../services.md)
-says why `repo` takes one value, and why the body has to state the rest.
+No single service record can describe this path, because each leg is a service of its own. The edge is defined in
+`infrastructure`, the origin in `thumbnailer`, and the staff uploads in `platform`. [svc-covers-cdn] lists the two
+repositories its own leg is changed in, and the other two legs are [svc-thumbnailer] and [svc-catalogue-api].
 
 ## What a borrower sees when a leg fails
 

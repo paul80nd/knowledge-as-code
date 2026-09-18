@@ -3,7 +3,8 @@ id: svc-{{slug}}
 type: service
 tier: descriptive
 status: live
-repo:
+component-type:
+repos:
 platform:
 criticality:
 depends-on:
@@ -27,10 +28,12 @@ and how it is reviewed. Below is only what a service adds to that.
 * **`id`**: `svc-` plus the name of the **deployable**, not the repository it lives in. A repository shipping three app
   services yields three ids, and none of them is the repository's name.
 * **`status`**: `live` · `building` · `deprecated` · `retired`.
-* **`repo`**: the repository a change to *this service* is made in. Where the content it serves comes from somewhere
-  else, say so in the body. The field takes one value even though services may need more.
-* **`platform`**: what it is **built on**, not what deploys it. [The type page](../services.md) derives the values from
-  the estate, so read the list there before you pick one.
+* **`component-type`**: the sort of component this is, such as an API, a website, a worker or a command line tool.
+  [The type page](../services.md) derives the values from the estate, so read the list there before you pick one.
+* **`repos`**: every repository a change to *this service* is made in. Most services name one. An asset surface names
+  the repository defining it alongside the repository publishing what it serves.
+* **`platform`**: what it is **built on**, not what deploys it and not what sort of thing it is. [The type
+  page](../services.md) derives the values from the estate, so read the list there before you pick one.
 * **`criticality`**: `critical` if a reader sees the failure, `important` if service degrades, `supporting` if the
   impact is internal only. It drives runbook and NFR priority, so grade it honestly.
 * **`depends-on`**: other service ids, pointing downward only (this service is **configured to reach** that one).

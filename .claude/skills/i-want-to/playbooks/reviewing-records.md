@@ -93,8 +93,8 @@ a reader.
 Most records here are examples, and a type page often says so. That pulls against *not record content*, because the
 awkward case and the lecture about it arrive in one paragraph. Separate them.
 
-**Keep the awkward case in full.** A `repo` field that under-answers, a bare `depends-on` on a service that depends on
-plenty, a `critical` service depending on an `important` one. The fact is what makes the example worth shipping, and the
+**Keep the awkward case in full.** A service changed in two repositories, a bare `depends-on` on a service that
+depends on plenty, a `critical` service depending on an `important` one. The fact is what makes the example worth shipping, and the
 demonstration is the shape of the record.
 
 **Cut the convention it restates, and cite the type page instead.** Nine copies is nine things to keep in step.

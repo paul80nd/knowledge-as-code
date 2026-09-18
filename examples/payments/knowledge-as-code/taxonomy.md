@@ -67,7 +67,7 @@ behind it. An offering sits above the work items. It links to the ones that deta
 the feature files that test it, and the NFRs that constrain it. An offering that accumulates detail of its own has
 stopped being one.
 
-**[Services](../services.md).** One deployable component: purpose, repo, platform, environments, dependencies, data
+**[Services](../services.md).** One deployable component: purpose, repos, platform, environments, dependencies, data
 stores, owner. The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 <!-- END GENERATED: types-detail -->

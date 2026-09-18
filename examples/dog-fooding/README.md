@@ -35,7 +35,7 @@
 | [Process](processes.md)    | procedural  | A planned procedure (releasing, onboarding, provisioning, rotating a secret).                           |
 | [Report](reports.md)       | descriptive | A question about the corpus, answered across every record, with the judgement a person added.           |
 | [Runbook](runbooks.md)     | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.       |
-| [Service](services.md)     | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.      |
+| [Service](services.md)     | descriptive | One deployable component: purpose, repos, platform, environments, dependencies, data stores, owner.     |
 | [Standard](standards.md)   | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                 |
 | [Tool](tools.md)           | descriptive | The approved-software register. What is chosen, rejected or deprecated, and the version range for each. |
 

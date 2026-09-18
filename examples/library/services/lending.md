@@ -3,8 +3,9 @@ id: svc-lending
 type: service
 tier: descriptive
 status: live
-repo: lending
-platform: dotnet-api
+component-type: api
+repos: [ lending ]
+platform: dotnet
 criticality: critical
 owner: human:dev.raman
 facets: [ internal ]

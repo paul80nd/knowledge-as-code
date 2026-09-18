@@ -3,8 +3,9 @@ id: svc-kac
 type: service
 tier: descriptive
 status: live
-repo: knowledge-as-code
-platform: dotnet-tool
+component-type: cli
+repos: [ knowledge-as-code ]
+platform: dotnet
 criticality: critical
 owner: human:paul.law
 tags: [ cli, dotnet-tool, nuget ]

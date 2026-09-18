@@ -27,14 +27,14 @@
 
 <!-- BEGIN GENERATED: types-index -->
 
-| Type                         | Tier        | What it holds                                                                                      |
-|------------------------------|-------------|----------------------------------------------------------------------------------------------------|
-| [Fix](fixes.md)              | normative   | A problem with a resolution somebody has verified.                                                 |
-| [NFR](nfrs.md)               | normative   | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.     |
-| [Offering](offerings.md)     | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.   |
-| [Postmortem](postmortems.md) | decided     | What happened during an incident (timeline, impact, root cause, contributing factors, actions).    |
-| [Service](services.md)       | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner. |
-| [Standard](standards.md)     | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.            |
+| Type                         | Tier        | What it holds                                                                                       |
+|------------------------------|-------------|-----------------------------------------------------------------------------------------------------|
+| [Fix](fixes.md)              | normative   | A problem with a resolution somebody has verified.                                                  |
+| [NFR](nfrs.md)               | normative   | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.      |
+| [Offering](offerings.md)     | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.    |
+| [Postmortem](postmortems.md) | decided     | What happened during an incident (timeline, impact, root cause, contributing factors, actions).     |
+| [Service](services.md)       | descriptive | One deployable component: purpose, repos, platform, environments, dependencies, data stores, owner. |
+| [Standard](standards.md)     | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.             |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.

@@ -3,7 +3,8 @@ id: svc-notices
 type: service
 tier: descriptive
 status: live
-repo: notices
+component-type: worker
+repos: [ notices ]
 platform: azure-function
 criticality: important
 owner: human:mira.okonjo

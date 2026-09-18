@@ -66,8 +66,8 @@ fields:
     of: string
     description: Paths to the feature files that test this offering, each one beginning with its repository.
     notes: >
-      A path names the repository first, spelled as that repository's service spells `repo:`, then the path
-      inside it. `feature-file-repo` checks that first segment. The rest is a plain string, so
+      A path names the repository first, spelled as an entry of that repository's service `repos:`, then the
+      path inside it. `feature-file-repo` checks that first segment against every entry. The rest is a plain string, so
       `ref-resolves` never sees it and nothing reads it until `feature-file-orphans` runs.
 
   nfrs:

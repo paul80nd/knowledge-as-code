@@ -3,7 +3,8 @@ id: svc-covers-cdn
 type: service
 tier: descriptive
 status: live
-repo: infrastructure
+component-type: asset
+repos: [ covers-import, infrastructure ]
 platform: static
 criticality: critical
 depends-on:
@@ -33,12 +34,14 @@ Content arrives in the underlying container from two places:
 * `covers-import` brings jacket imagery from the bibliographic data supplier. Its own pipeline publishes it nightly.
 * [svc-catalogue-api] writes jackets uploaded by branch staff at runtime, for items the supplier has no image for.
 
-**`repo` is `infrastructure`.** That repository defines the edge, and a change to this service is made there. What this
-service serves is changed in `covers-import` and [svc-catalogue-api], and neither of those is `infrastructure`.
+**`repos` names `covers-import` and `infrastructure`.** The infrastructure repository defines the edge, so a change to
+the edge is made there. `covers-import` publishes the jacket imagery, so a change to what the edge serves is made there.
+[svc-catalogue-api] also writes jackets, at runtime, which is a call and not a repository.
 
 ## Where it lives
 
-* **Repository**: [`infrastructure`](https://git.example.com/example-libraries/infrastructure), at `services/covers`
+* **Repositories**: [`covers-import`](https://git.example.com/example-libraries/covers-import) publishes the imagery,
+  and [`infrastructure`](https://git.example.com/example-libraries/infrastructure) defines the edge at `services/covers`
 * **Platform**: CDN custom domain over an origin application
 * **Deployed as**: route `covers` on a dedicated endpoint, origin group `thumbnailer`, origin path `/covers`
 
