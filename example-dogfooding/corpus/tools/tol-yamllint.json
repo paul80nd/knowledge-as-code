@@ -24,6 +24,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against every YAML file in the repository, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/248c16dc43dd85c87682f45d6afb25baf37ab261/examples/dog-fooding/tools/lint/yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d0c2d6349aafd68c61e950d2c9d666221b70163/examples/dog-fooding/tools/lint/yamllint.md"
   }
 }

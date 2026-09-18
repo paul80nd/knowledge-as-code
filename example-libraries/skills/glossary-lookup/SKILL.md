@@ -31,6 +31,10 @@ corpus's terms and the terms of every corpus above it, and one search reaches al
 `record`, `definition`, `status`, `type`. A search for one of those matches every line in the file. A line defines a
 term when its `title` says so, never because it matched.
 
+**A term answers to more than its heading.** `also` gives the other names for the same thing, and `avoid` gives a name
+the corpus has dropped. Search both before you say a word is undefined. A word you were asked about often sits in
+`also` on a line whose `title` is something else.
+
 Each line carries the entry whole:
 
 | Field                | Type                     | What it holds                                                                |
@@ -38,6 +42,8 @@ Each line carries the entry whole:
 | `id`                 | string                   | `<glossary-id>.<term>`, the address to quote and to search on                |
 | `title`              | string                   | the term                                                                     |
 | `definition`         | string or null           | what the term means                                                          |
+| `also`               | string or null           | other names for the same thing: an acronym, an abbreviation, a second word   |
+| `avoid`              | string or null           | a name for it the corpus has dropped, and what to write instead              |
 | `not`                | string or null           | what the term excludes, where the corpus drew that boundary                  |
 | `seeAlso`            | list of strings, or null | related terms as full ids, so you can search straight to them                |
 | `type`               | string                   | `glossary`, on every line of this file                                       |
@@ -49,6 +55,10 @@ Each line carries the entry whole:
 
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
 one exception, and the row above says so.
+
+**A term another corpus wrote may carry neither `also` nor `avoid`.** A producer that published before those keys
+existed sends a line without them, and one search reaches both shapes. So read a missing key the same way you read a
+`null` one: the corpus said nothing there.
 
 ## Read the prefix on an id
 
@@ -103,6 +113,8 @@ naming the corpus as well wherever the two glossaries were written by different 
 
 * **Give the definition, then the `not` line.** A reader who gets only the definition will go on to apply the term to
   things it excludes.
+* **Say which name the corpus prefers.** Where you matched on `also`, give the `title` as well, because that is the
+  word the estate writes. Where you matched on `avoid`, say the corpus has dropped that name and give the `title`.
 * **Quote the `id`.** `gls-search.title` is one string a reader can search the corpus for, and it settles in seconds
   whether you read the entry correctly.
 * **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the one
