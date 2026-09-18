@@ -13,7 +13,7 @@
       "svc-marketplace"
     ],
     "last-rehearsed": "2026-09-07",
-    "rehearsal-frequency": null,
+    "rehearsal-frequency": "per-release",
     "tags": [
       "contributing",
       "review"
@@ -24,6 +24,6 @@
     "Prerequisites": "* A branch off `main`, with the change committed to it.\n* The `gh` CLI signed in to `paul80nd/knowledge-as-code`.\n* `kac` run as `dotnet run --project tooling/kac --` from the repository root, and as\n  `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`. Both build the tool on this\n  branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/93dcd63a32f9e7fb6ab7f7646a01948a7e0250c8/examples/dog-fooding/processes/pull-request.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/65e2a78c753ff43f3b6ec7b86b78269f9ea5ee36/examples/dog-fooding/processes/pull-request.md"
   }
 }
