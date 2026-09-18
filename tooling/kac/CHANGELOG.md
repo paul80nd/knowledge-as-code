@@ -206,6 +206,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   reader who has never done the task, where Diátaxis writes for a competent one. A `collision:` entry names what ITIL
   and BPMN mean by *process*. All three render into `knowledge-as-code/lineage.md`.
 
+- **`reports` states what it takes from current practice.** `lineage` was measured against the Open Knowledge Format
+  v0.2, SARIF 2.1.0 and NIST OSCAL Assessment Results 1.1.3. `alignment` now names the OKF keys and the actor forms
+  the schema declares. `divergence` adds the three verification rules OKF has no equivalent for, the `status` values
+  `active` and `stale`, and the staleness read from each source's `content-version` instead of OKF's `stale_after`.
+  Both render into `knowledge-as-code/lineage.md`.
+
 ### Fixed
 
 - **`meta/type.schema.json` offers `part.citations.<Label>`.** The editor's copy of the line-source vocabulary never
