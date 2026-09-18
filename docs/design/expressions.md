@@ -101,6 +101,7 @@ markdown. `today()` is the last row because it is the one that reads nothing abo
 | `entries('name')`                | int     | how many entries that field carries. `present()` asks whether, this asks how many. Zero where the field is absent    |
 | `field_matches('name', 're')`    | bool    | that scalar against a pattern. False where absent, and the one pattern fact that sees frontmatter                    |
 | `entries_match('n', 'k', 're')`  | bool    | key `k` of every object under field `n` against a pattern. True where the field is absent or has no such key         |
+| `entries_unique('n', 'k')`       | bool    | whether key `k` is written once across the objects under field `n`. True where the field is absent                   |
 | `section('Title')`               | bool    | whether an H2 of that name exists (case-insensitive)                                                                 |
 | `section_count('Title')`         | int     | how many times it appears. `section()` asks whether, this asks how many                                              |
 | `first_section()`                | string  | the first H2, or empty where there is none                                                                           |

@@ -8,8 +8,6 @@ applies-to:
   - svc-payment-api
   - svc-payment-ledger
 verified:
-  - { at: 2026-08-14T10:20:00Z, by: human:alex.doe }
-  - { at: 2026-08-17T09:05:00Z, by: human:alex.doe }
   - { at: 2026-08-29T14:10:00Z, by: human:alex.doe }
 review-by: "2027-03-09"
 owner: human:alex.doe

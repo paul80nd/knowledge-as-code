@@ -75,6 +75,8 @@ public static class RuleExpr
                 (f, a) => f.FieldMatches(Str(a, 0), Str(a, 1))),
             ["entries_match"] = new([ValueType.Str, ValueType.Str, ValueType.Str], ValueType.Bool,
                 (f, a) => f.EntriesMatch(Str(a, 0), Str(a, 1), Str(a, 2))),
+            ["entries_unique"] = new([ValueType.Str, ValueType.Str], ValueType.Bool,
+                (f, a) => f.EntriesUnique(Str(a, 0), Str(a, 1))),
             ["span"] = new([ValueType.Str, ValueType.Str], ValueType.Str,
                 (f, a) => f.Span(Str(a, 0), Str(a, 1))),
             ["days"] = new([ValueType.Str, ValueType.Str], ValueType.Int,

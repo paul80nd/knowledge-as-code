@@ -97,6 +97,18 @@ public sealed class Facts(Doc doc, DateOnly today)
                                        || re.IsMatch(v));
     }
 
+    // Whether one key is written once across the objects a field holds.
+    //
+    // True where the field is absent, and an object not carrying the key counts for nothing, for the
+    // reason `EntriesMatch` gives above.
+    public bool EntriesUnique(string field, string key)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        return Objects(field).All(o => Yaml.Get(o, key) is not YamlScalarNode { Value: { Length: > 0 } v }
+                                       || seen.Add(v));
+    }
+
     // The objects one field holds, read from the frontmatter rather than through `FrontScalar`, which
     // flattens a value to a string and has nothing to say about a mapping.
     private IEnumerable<YamlMappingNode> Objects(string field)

@@ -37,17 +37,17 @@ checked that it still holds.
 
 <!-- BEGIN GENERATED: schema-reports -->
 
-| Field         | Value                    | Notes                                                                                                 |
-|---------------|--------------------------|-------------------------------------------------------------------------------------------------------|
-| `id` *†       | string                   | Stable, unique across the corpus, never reused, in the format the type sets.                          |
-| `type` *†     | string                   | The singular name of the type, which CI checks against the folder.                                    |
-| `tier` *†     | `descriptive`            | The record's trust level, fixed for the type and checked against the folder.                          |
-| `status` *†   | `draft` `active` `stale` | Whether the report is drafted, current, or behind the corpus.                                         |
-| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                |
-| `sources` *†  | list                     | Every corpus this report answers for, and the version of each it is true of.                          |
-| `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types.                         |
-| `generated` * | object                   | Who wrote the content as it stands, and when.                                                         |
-| `verified`    | list                     | Every verification this report has had, oldest first, one line each. Required when `status != draft`. |
+| Field         | Value                    | Notes                                                                                            |
+|---------------|--------------------------|--------------------------------------------------------------------------------------------------|
+| `id` *†       | string                   | Stable, unique across the corpus, never reused, in the format the type sets.                     |
+| `type` *†     | string                   | The singular name of the type, which CI checks against the folder.                               |
+| `tier` *†     | `descriptive`            | The record's trust level, fixed for the type and checked against the folder.                     |
+| `status` *†   | `draft` `active` `stale` | Whether the report is drafted, current, or behind the corpus.                                    |
+| `owner` *†    | string                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                           |
+| `sources` *†  | list                     | Every corpus this report answers for, and the version of each it is true of.                     |
+| `tags` †      | list                     | Free-form, lowercase and hyphenated. A reader searches on these across types.                    |
+| `generated` * | object                   | Who wrote the content as it stands, and when.                                                    |
+| `verified`    | list                     | Who has checked this report, one entry per actor, oldest first. Required when `status != draft`. |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -107,6 +107,7 @@ editing the `Imported:` bullet under `## Limits` to match, and adding a `verifie
 | `report-stale`               | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `self-verification`          | error   | A report's `verified` list does not name the producer that `generated.by` names.                                |
 | `verified-by-a-known-actor`  | error   | A verification states an actor the Open Knowledge Format defines, and never a `role:`.                          |
+| `one-verification-per-actor` | error   | An actor is written once in `verified`, and a second check moves the `at` on the entry they have.               |
 | `generated-by-a-known-actor` | error   | `generated.by` states an actor the Open Knowledge Format defines.                                               |
 
 <!-- END GENERATED: checks-reports -->

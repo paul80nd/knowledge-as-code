@@ -74,9 +74,10 @@ fields:
     type: list
     of: object
     shape: event
-    description: Every verification this fix has had, oldest first, one line each.
+    description: Who has checked this fix, one entry per actor, oldest first.
     notes: >
-      A draft states no verification, and every other status must. The entries take the same shape as a report's.
+      A draft states no verification, and every other status must. An actor is written once, and a check they make
+      again moves the `at` on the entry they have. The entries take the same shape as a report's.
       <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter> gives that shape,
       the actors it refuses, and the trust tier derived from the list.
 
@@ -114,6 +115,13 @@ rules:
     message: >
       the `by` in this verification states no known actor. Write `human:alex.doe` for a person,
       `process:nightly-sweep` for an automated process, or `symptom-sweep/1.4.0` for an agent.
+
+  - id: one-verification-per-actor
+    description: An actor is written once in `verified`, and a second check moves the `at` on the entry they have.
+    severity: error
+    expr: "entries_unique('verified', 'by')"
+    message: >
+      this actor already states a verification on this record. Move the `at` on the entry they have.
 
   - id: raiser-does-not-verify
     description: An agent does not verify a fix it raised.

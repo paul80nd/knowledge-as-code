@@ -39,6 +39,30 @@ public class RuleExprTests
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')",
             "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"));
 
+    [Fact]
+    public void Entries_unique_is_false_where_one_actor_is_written_twice()
+        => Assert.False(Eval("entries_unique('verified', 'by')",
+            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            + "  - { at: 2026-09-04T11:30:00Z, by: human:alex.doe }\n"));
+
+    [Fact]
+    public void Entries_unique_is_true_where_each_actor_is_written_once()
+        => Assert.True(Eval("entries_unique('verified', 'by')",
+            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"
+            + "  - { at: 2026-09-04T11:30:00Z, by: symptom-sweep/1.4.0 }\n"));
+
+    [Fact]
+    public void Entries_unique_is_true_where_the_field_is_absent()
+        => Assert.True(Eval("entries_unique('verified', 'by')", "id: fix-0001"));
+
+    // An object without the key counts for nothing, for the reason `entries_match` gives above, so two
+    // of them are not two of the same value.
+    [Fact]
+    public void Entries_unique_is_true_where_no_object_carries_the_key()
+        => Assert.True(Eval("entries_unique('verified', 'by')",
+            "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"
+            + "  - { at: 2026-09-04T11:30:00Z }\n"));
+
     private static Facts FactsFor(string frontmatter, string body, DateOnly? today = null)
     {
         var doc = Required.Parsed("adrs/0001-a-title.md",

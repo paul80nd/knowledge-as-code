@@ -81,9 +81,11 @@ or as a description of what was read. Here it gives each corpus the report answe
 and this one does. The fact a reader needs is which content the report is true of, and `content-version` is what the
 corpus already keeps.
 
-`verified` holds every verification the report has had, oldest first, and the fix type has the same field. A draft
-states none, and every other status states one. A report an agent wrote and nobody has read is a draft, and writing an
-entry to get past the schema is the one thing this field must never hold. Two values are refused. A `role:` is out,
+`verified` says who has checked the report, one entry per actor and oldest first, and the fix type has the same field.
+A draft states none, and every other status states one. An actor is written once, and a check they make again moves the
+`at` on the entry they have, because git keeps every earlier state of the file. `one-verification-per-actor` is the
+rule. A report an agent wrote and nobody has read is a draft, and writing an entry to get past the schema is the one
+thing this field must never hold. Two values are refused. A `role:` is out,
 because a post cannot read an answer, and the person who did stays named after the post changes hands. The actor that
 `generated.by` names is out too, because nobody signs off their own writing. `no-self-verification` is the rule, and it
 reports as `self-verification`.
