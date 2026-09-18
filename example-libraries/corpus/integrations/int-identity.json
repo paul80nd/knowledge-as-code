@@ -23,6 +23,6 @@
     "Failure modes": "| Failure                                | How it presents                              | Our fallback                                          |\n|----------------------------------------|----------------------------------------------|-------------------------------------------------------|\n| The sign-in endpoint is unavailable    | Nobody can sign in, and open sessions run on | Branch staff do at the desk what nobody can do online |\n| The published key set is unreachable   | The gateway rejects every token              | The gateway caches that key set for 24 hours          |\n| The vendor rotates a signing key early | The same rejection, delayed by the cache     | None. The cache is flushed before sign-in recovers    |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/library/integrations/identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/library/integrations/identity.md"
   }
 }

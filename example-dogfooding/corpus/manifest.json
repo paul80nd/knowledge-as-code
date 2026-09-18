@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.38.0",
+  "contentVersion": "0.39.0",
   "mechanismVersion": 16,
-  "commit": "43fc8f08450a95bb1163e45850dc6ee7571798a4",
+  "commit": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317",
   "dirty": false,
-  "generatedAt": "2026-09-17T21:36:42Z",
+  "generatedAt": "2026-09-18T08:07:30Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "43fc8f08450a95bb1163e45850dc6ee7571798a4"
+    "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.22.4",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "43fc8f08450a95bb1163e45850dc6ee7571798a4"
+        "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
       },
       "tracker": {
         "target": "github",
@@ -105,6 +105,7 @@
       "seeAlsoKey": null,
       "sections": {
         "Symptom": "full",
+        "Environment": "full",
         "Cause": "full",
         "Resolution": "full",
         "Why it happens": "full"

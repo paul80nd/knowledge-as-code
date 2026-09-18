@@ -19,6 +19,6 @@
     "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which states the closed key space and the field-order trap.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite at step 9 and the behaviour specs at step 10."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/dog-fooding/processes/change-the-schema.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/dog-fooding/processes/change-the-schema.md"
   }
 }

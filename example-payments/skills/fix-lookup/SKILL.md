@@ -45,8 +45,8 @@ one of them is not yours. The title is the symptom in one line and two problems 
 
 ## Read the fix
 
-Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key. The
-three keys `Symptom`, `Cause` and `Resolution` are always in `sections`, because this type requires all three.
+Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
+`Symptom`, `Environment`, `Cause` and `Resolution` are always in `sections`, because this type requires all four.
 
 | Key                       | Type                     | What it contains                                         |
 |---------------------------|--------------------------|----------------------------------------------------------|
@@ -60,6 +60,7 @@ three keys `Symptom`, `Cause` and `Resolution` are always in `sections`, because
 | `fields.tags`             | list of strings, or null | the record's own subject words, searched across types    |
 | `trust`                   | string                   | how far the fix has been taken on trust, from `verified` |
 | `sections.Symptom`        | string of markdown       | what you see, in the author's own words                  |
+| `sections.Environment`    | string of markdown       | the tool, the platform and the versions it happened on   |
 | `sections.Cause`          | string of markdown       | what produces it                                         |
 | `sections.Resolution`     | string of markdown       | the steps that resolve it                                |
 | `sections.Why it happens` | string of markdown       | why the problem is easy to hit. Absent where none        |
@@ -74,8 +75,8 @@ test for the key before you read it.
 **Each entry of `verified` is an object of two keys.** `at` is a UTC timestamp, as `2026-09-02T17:27:31Z`. `by` names a
 person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`.
 
-**Report Symptom, Cause and Resolution together.** A resolution read without its cause is half an answer, and a
-reader who cannot see the cause cannot tell whether the steps apply to them.
+**Report Symptom, Environment, Cause and Resolution together.** A resolution read without its cause is half an
+answer. A reader who cannot see the environment cannot tell whether the steps apply to them at all.
 
 **A bracketed id inside a section is a cross-reference.** The export drops the link definitions at the foot of the
 record, so `[std-IDEM]` arrives as the id alone. The id is the address, so search it rather than reporting broken

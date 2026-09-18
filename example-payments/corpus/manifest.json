@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.17.1",
+  "contentVersion": "0.18.0",
   "mechanismVersion": 18,
-  "commit": "43fc8f08450a95bb1163e45850dc6ee7571798a4",
+  "commit": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317",
   "dirty": false,
-  "generatedAt": "2026-09-17T21:36:37Z",
+  "generatedAt": "2026-09-18T08:07:26Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "43fc8f08450a95bb1163e45850dc6ee7571798a4"
+    "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.22.4",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/43fc8f08450a95bb1163e45850dc6ee7571798a4/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b99d39b1db3e5c49b1368c4538dbd7d0f4796317/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "43fc8f08450a95bb1163e45850dc6ee7571798a4"
+        "ref": "b99d39b1db3e5c49b1368c4538dbd7d0f4796317"
       },
       "tracker": {
         "target": "github",
@@ -66,6 +66,7 @@
       "seeAlsoKey": null,
       "sections": {
         "Symptom": "full",
+        "Environment": "full",
         "Cause": "full",
         "Resolution": "full",
         "Why it happens": "full"
