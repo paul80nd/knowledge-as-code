@@ -27,8 +27,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   read the other way, and `kac validate` checks both ends. `retired-has-successor` warns where a `retired` integration
   names none. Both fields travel in the export.
 
-- **An integration on trial says what would end the trial.** `Trial criteria` is a section, and `trial-has-criteria`
-  warns where a `trial` integration has none. The section stays out of the export, because a consumer reads `status`.
+- **An integration on trial says what would end the trial.** `Trial criteria` is a section, and
+  `trial-criteria-required` warns where a `trial` integration has none. The section stays out of the export, because a consumer reads `status`.
 
 - **A control that never stops says so.** `frequency` takes `continuous`. A control whose `mechanism` is
   `runtime-alert` has to carry a frequency, and none of `per-pr` through `annual` is true of an alert rule that

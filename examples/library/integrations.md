@@ -119,7 +119,7 @@ Not the place for:
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `retired-has-successor`     | warning | A retired integration states what took over from it.                                                            |
-| `trial-has-criteria`        | warning | An integration on trial states what would end the trial.                                                        |
+| `trial-criteria-required`   | warning | An integration on trial states what would end the trial.                                                        |
 | `exit-required`             | warning | A critical or important integration still in use states how the estate would leave it.                          |
 | `fallback-required`         | warning | The Failure modes section mentions a fallback somewhere, or says there is none.                                 |
 | `no-credentials`            | error   | Nothing reads as a token, key, password or connection string.                                                   |

@@ -116,7 +116,7 @@ rules:
     message: >
       this integration is retired and names no successor. Set `successor` to the integration that took the
       traffic, so a reader arriving from an old citation has somewhere to go.
-  - id: trial-has-criteria
+  - id: trial-criteria-required
     description: An integration on trial states what would end the trial.
     severity: warning
     expr: "field('status') == 'trial' implies section('Trial criteria')"

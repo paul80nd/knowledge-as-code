@@ -25,7 +25,8 @@ REST over HTTPS. The key is held in the platform secret store.
 
 The service can time out, and the fallback is the rate table held here.
 
-This document carries two faults. `trial-has-criteria` reports the missing `## Trial criteria`, so nothing says what
-would end the trial. `exit-required` reports the missing `## Exit`, so a critical vendor has no stated way out.
+This document carries two faults. `trial-criteria-required` reports the missing `## Trial criteria`, so nothing
+says what would end the trial. `exit-required` reports the missing `## Exit`, so a critical vendor has no stated
+way out.
 
 [svc-catalogue]: ../services/catalogue.md

@@ -145,7 +145,7 @@
       "file": "integrations/trial-no-criteria-no-exit.md",
       "line": 1,
       "severity": "warning",
-      "check": "trial-has-criteria",
+      "check": "trial-criteria-required",
       "message": "this integration is on trial and nothing says what would end the trial. Add a `## Trial criteria` section stating what is being evaluated and what would settle it."
     },
     {
