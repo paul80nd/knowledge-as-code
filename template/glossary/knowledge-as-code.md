@@ -47,9 +47,8 @@ it takes the framework from.
 
 ### Document
 
-The general word for anything written down here. The tool's summary line uses it to count records.
-
-**Not:** a synonym for record wherever the difference matters. A page and a template are written down and are neither.
+The general word for anything written down here. A page and a template are documents, and neither is a record. The
+tool's summary line uses the word more narrowly, to count records.
 
 ### Drift
 
@@ -68,6 +67,8 @@ decides which of its fields, sections and parts travel.
 ### Framework
 
 The shared mechanism a corpus runs: the schema, the tooling and the documentation that travel between corpora.
+
+**Also:** KaC, and Knowledge as Code written out.
 
 **Not:** an external framework such as ISO 27001, which is what the frameworks register means by the word. Both senses
 are in use in every corpus, and only the register states a compliance posture.
@@ -96,9 +97,8 @@ Whether a type's records stay current or become immutable once accepted. The typ
 
 ### Mechanism
 
-The framework's files as they appear in one corpus: the half that travels.
-
-**Not:** the knowledge. `kac update` refreshes the mechanism from a template and reads no record.
+The framework's files as they appear in one corpus: the half that travels, where the knowledge is the half the corpus
+wrote. `kac update` refreshes the mechanism from a template and reads no record.
 
 ### Overlay
 

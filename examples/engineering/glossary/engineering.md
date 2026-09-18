@@ -44,10 +44,9 @@ little time.
 
 ### Must
 
-The level a clause takes where a framework we are obliged to requires it, or where not doing it would be reckless. No
-team negotiates one down. Departing from one is a recorded deviation ([pol-DEVI]).
-
-**Not:** everything we would like. A `MUST` binds us. `SHOULD` and `COULD` state good practice.
+The level a clause takes where a framework we are obliged to requires it, or where not doing it would be reckless. A
+`MUST` binds us, where `SHOULD` and `COULD` state good practice. No team negotiates one down, and departing from one is
+a recorded deviation ([pol-DEVI]).
 
 ### Must not
 
@@ -59,7 +58,9 @@ A policy lists those in its Exceptions section.
 ### Personal data
 
 Information about a living person who is identified, or who could be identified from it combined with anything else we
-store. PII is another name for the same thing.
+store.
+
+**Also:** PII.
 
 **Not:** sensitive personal data, which is a narrower set inside it. A name, a postal address and an email address are
 personal data, and none of them is sensitive.
@@ -84,6 +85,8 @@ The special categories [UK GDPR] sets apart: health, sex life, sexual orientatio
 opinion, religious belief, trade union membership, genetic data, and biometric data used to identify someone. This
 estate treats criminal offence data the same way.
 
+**Also:** special category data, which is what [UK GDPR] calls it.
+
 **Not:** personal data, which is the wider class. [pol-DATA].LOGS bars only this narrower set from a log line.
 
 ### Should
@@ -96,12 +99,11 @@ maturing, and is not in breach.
 
 ### We
 
-The engineering function, working as one technology team within its roles. A clause binds the function, not any one
-team. It applies to a person through whoever owns the thing it governs, and a thing nobody owns is a gap that clause has
-found. Adherence is joint: somebody else might do the work but you still say so when it is missing or broken.
-
-**Not:** the team that happens to be reading. A platform, a shared service or a specialist meets some clauses on
-everybody's behalf, and an unanswered clause is still not somebody else's problem.
+The engineering function, working as one technology team within its roles. A clause binds the function and not any one
+team, so a platform, a shared service or a specialist meets some clauses on everybody's behalf. It applies to a person
+through whoever owns the thing it governs, and a thing nobody owns is a gap that clause has found. Adherence is joint:
+somebody else might do the work, but you still say so when it is missing or broken, and an unanswered clause is never
+somebody else's problem.
 
 [pol-DATA]: ../policies/security/data-data-protection.md#clauses
 [pol-DEVI]: ../policies/governance/devi-deviations.md#clauses

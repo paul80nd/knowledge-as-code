@@ -15,13 +15,20 @@ detail: >
   entry.
 
 lineage:
-  prior-art: "Evans, *Domain-Driven Design*: ubiquitous language"
+  prior-art: >
+    Evans, *Domain-Driven Design*: ubiquitous language, for the shape of a glossary.
+    [SKOS](https://www.w3.org/TR/skos-reference/) and
+    [DITA `glossentry`](https://docs.oasis-open.org/dita/dita/v1.3/os/part3-all-inclusive/langRef/technicalContent/glossentry.html),
+    for the shape of an entry
   alignment: >
     A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
-    within it
+    within it. An entry carries the other names a reader may arrive by, which is SKOS's `altLabel` and DITA's
+    `glossAlt`
   divergence: >
     Evans' language is spoken as much as written, and lives in the model and the code. A glossary here is a set of
-    documents, and nothing checks the code against them
+    documents, and nothing checks the code against them. SKOS and DITA each hold a term as a record in a database,
+    carrying a part of speech, a symbol and a status of its own. A term here is a heading, a paragraph and three
+    labelled lines, in one flat list read end to end
 
 notes: >
   A glossary covers one bounded context or product surface, never a topic. A narrower glossary redefines a term
@@ -69,14 +76,18 @@ sections:
     `Scope` says which context this glossary admits, so a contributor can decide whether a new word belongs
     here. The terms are H3s under `Terms`, and a cross-reference points at a term's anchor.
 
-# A term is an H3 under `Terms`, cited by the anchor its heading slugs to. `Terms` is absent from `sections:`
-# above, because `parts:` declares it here.
+# A term is an H3 under `Terms`, cited by the anchor its heading slugs to.
+#
+# The three asides answer three different questions about the same term. `Also` gives the reader another
+# name for this thing, `Avoid` gives them a name for it this glossary has dropped, and `Not` gives them a
+# neighbouring thing this one is confused with. Each travels under its own key, so a search reaches a
+# term by a name its heading does not carry.
 parts:
   source: headings
   section: Terms
   noun: term
   level: 3
-  aside: Not
+  asides: [Also, Avoid, Not]
 
 export:
   version: 1
@@ -89,7 +100,9 @@ export:
       id: part.id
       title: part.text
       definition: part.lead
-      not: part.aside
+      also: part.aside.Also
+      avoid: part.aside.Avoid
+      not: part.aside.Not
       seeAlso: part.see-also
       type: record.type
       record: record.id
@@ -99,7 +112,9 @@ export:
       path: record.path
       anchor: part.anchor
   notes: >
-    A term travels whole: the definition, and the `**Not:**` line beneath it as a second piece.
+    A term travels whole: the definition, and each labelled line beneath it as a piece of its own. A
+    consumer searching `also` reaches a term by a name its heading does not carry, which is what the
+    heading alone cannot give it.
     See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#glossary>.
 index:
   columns: [id, title, narrows, status, owner, review-by]

@@ -263,8 +263,13 @@ reader holding them.
 
 ### glossary
 
-A term travels whole: the definition, and the `**Not:**` line beneath it as a second piece. A definition on its own is
-mostly guessable from the word.
+A term travels whole: the definition, and each labelled line beneath it as a piece of its own. A definition on its own
+is mostly guessable from the word.
+
+The three labels answer three different questions, so each travels under its own key. `**Also:**` gives another name
+for the same thing, `**Avoid:**` gives a name the glossary has dropped, and `**Not:**` gives a neighbouring thing the
+term is confused with. A reader searching an acronym reaches the term through `also`, which the heading alone could not
+give them. SKOS calls that an `altLabel` and DITA calls it a `glossAlt`.
 
 `line:` lists the keys of one term's line and where each takes its value. The export repeats `status` and `review-by`
 onto every term, because the flat file is what gets grepped and whoever grepped it has not opened the record. A copy
