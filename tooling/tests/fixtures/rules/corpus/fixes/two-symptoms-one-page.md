@@ -6,6 +6,7 @@ status: active
 symptom-keywords: [holds, notifications, timeout]
 verified:
   - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }
+  - { at: 2026-06-19T09:00:00Z, by: human:alex.doe }
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---
@@ -21,6 +22,10 @@ Holds are not released after seven days.
 ## Symptom
 
 Notification emails arrive twice.
+
+## Environment
+
+The holds service and the notification service, on the same afternoon.
 
 ## Cause
 

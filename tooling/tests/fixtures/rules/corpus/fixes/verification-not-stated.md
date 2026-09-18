@@ -16,6 +16,10 @@ owner: human:alex.doe
 
 Search results stay stale after a reindex.
 
+## Environment
+
+The search index, after a full reindex.
+
 ## Cause
 
 Nothing, in itself. It exists so that `required-when: 'status != draft'` has a record that trips it. The status is

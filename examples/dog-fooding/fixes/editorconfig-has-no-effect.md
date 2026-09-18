@@ -6,6 +6,7 @@ status: active
 symptom-keywords: [ editorconfig, formatting, ide, indent, reformat, rider, wrapping ]
 verified:
   - { at: 2026-09-09T08:14:30Z, by: human:paul.law }
+  - { at: 2026-09-18T11:40:00Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law
 sources:
@@ -22,6 +23,11 @@ tags: [ editorconfig, formatting, rider ]
 A key edited in `.editorconfig` from the terminal makes no difference to how Rider formats a file. Reformatting the
 file, and reopening it, both leave the old behaviour in place. Nothing is reported. The edit is valid, and Rider keeps
 using the settings it already read.
+
+## Environment
+
+JetBrains Rider, with the repository already open in it. The `.editorconfig` edit is made from a terminal, outside the
+IDE.
 
 ## Cause
 

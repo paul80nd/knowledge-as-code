@@ -16,6 +16,10 @@ owner: human:alex.doe
 
 A migration times out waiting for a lock.
 
+## Environment
+
+The migration runner, against the primary database.
+
 ## Cause
 
 Nothing, in itself. It is the other side of `fix-0002`. The status is `draft`, so `verified` is not required and

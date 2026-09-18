@@ -58,6 +58,11 @@ what a reader arriving from a citation sees first, and CI checks all three again
 What you see. Quote the error message verbatim where there is one, including the parts that look like noise. That is
 what someone will paste into a search.
 
+## Environment
+
+What you were running when it happened. Name the tool, the operating system and the version, as precisely as you can.
+A reader matches on this to tell whether the fix is theirs.
+
 ## Cause
 
 What is actually happening underneath, in a sentence or two.

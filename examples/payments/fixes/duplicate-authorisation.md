@@ -10,6 +10,7 @@ applies-to:
 verified:
   - { at: 2026-08-14T10:20:00Z, by: human:alex.doe }
   - { at: 2026-08-17T09:05:00Z, by: human:alex.doe }
+  - { at: 2026-08-29T14:10:00Z, by: human:alex.doe }
 review-by: "2027-03-09"
 owner: human:alex.doe
 tags: [ authorisation, idempotency, retries ]
@@ -24,6 +25,10 @@ tags: [ authorisation, idempotency, retries ]
 A customer reports two pending amounts for one order. The ledger contains two authorisations against the same order
 reference, seconds apart. Each has its own PSP reference and its own `Idempotency-Key`. Nothing failed: both calls
 returned `201`.
+
+## Environment
+
+[svc-payment-api] and [svc-payment-ledger], with a caller that retries an authorisation after a timeout.
 
 ## Cause
 
@@ -61,3 +66,4 @@ caller problem. Two with the same key are a fault in these services.
 [std-IDEM]: ../standards/authorisation/idempotency.md
 [std-LEDGER]: ../standards/ledger/entries.md
 [svc-payment-api]: ../services/payment-api.md
+[svc-payment-ledger]: ../services/payment-ledger.md

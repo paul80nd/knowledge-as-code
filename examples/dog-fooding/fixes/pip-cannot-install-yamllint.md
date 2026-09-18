@@ -7,6 +7,7 @@ symptom-keywords: [ actionlint, brew, homebrew, linters, macos, "no matching dis
   requirements.txt, yamllint ]
 verified:
   - { at: 2026-09-02T17:27:31Z, by: human:paul.law }
+  - { at: 2026-09-18T11:40:00Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law
 tags: [ linting, macos, setup ]
@@ -27,11 +28,15 @@ ERROR: No matching distribution found for yamllint==1.38.0
 
 The versions it offers stop one release short of the pin.
 
+## Environment
+
+macOS, running Apple's `/usr/bin/python3`, which is 3.9. `.github/requirements.txt` pins yamllint at 1.38.0.
+
 ## Cause
 
-macOS ships `/usr/bin/python3` at 3.9, and yamllint 1.38.0 needs Python 3.10 or newer. pip filters the index down to
-the releases the running interpreter supports, so the pinned release is on PyPI and invisible from here. The error
-quotes the pin it was given, and says nothing about the interpreter.
+yamllint 1.38.0 needs Python 3.10 or newer. pip filters the index down to the releases the running interpreter
+supports, so the pinned release is on PyPI and invisible from 3.9. The error quotes the pin it was given, and says
+nothing about the interpreter.
 
 ## Resolution
 
