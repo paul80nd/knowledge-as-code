@@ -111,10 +111,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A process says when it is rehearsed again.** `rehearsal-frequency` is required, and it takes a new `on-change`
   beside `per-release`, `quarterly` and `annual`. ComplianceForge HCGF reviews a procedure when its technology, its
-  steps or its people change, and NIST SP 800-53 Rev. 5's `-1` controls ask for a frequency and the events beside it.
-  Nothing running on a schedule can measure `on-change`, so `process-lookup` tells a reader the check is theirs to
-  make. `kac new` sends a `_template.md` carrying the field, and a corpus already holding a process owes a value at
-  its next `kac update`.
+  steps or its people change. NIST SP 800-53 Rev. 5's `-1` controls ask for a frequency and the events beside it.
+  Nothing running on a schedule can measure `on-change`, so `process-lookup` tells a reader to ask what has moved.
+  `kac new` sends a `_template.md` carrying the field. A corpus already holding a process writes a value into every
+  one of them, because `kac update` reaches the schema and never a record.
 
 - **A process says how to back out.** `If it goes wrong` is a required section, where it was optional. The type page
   already promised a rollback, and the section stays out of the export, because a reader who has to back out is

@@ -83,13 +83,13 @@ Read these before you hand anybody a procedure, and tell them what you saw:
 * **`last-rehearsed: never`** — nobody has followed this end to end. It is a hypothesis, and the first person to run it
   is testing it.
 * **`last-rehearsed` older than `rehearsal-frequency` allows** — the procedure has drifted out of its own cadence.
-  Where that field reads `on-change`, no date makes it stale. Ask what has moved since, and say the check is yours to
-  make.
+* **`rehearsal-frequency: on-change`** — no date makes this one stale. Ask the reader what has moved since
+  `last-rehearsed`, and tell them nothing here answers that.
 * **`status: draft`** — it was not agreed when the export was taken.
 * **`status: retired`** — it has been stood down. Find what replaced it before you follow it.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the four.
+`manifest.json` say when it was taken, and are worth quoting alongside any of them.
 
 ## Say when there is nothing
 

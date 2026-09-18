@@ -83,8 +83,8 @@ first record found, and which gaps the comparison left to an issue.
 A type nobody adopted costs nothing. Remove the folder from `types:` in `.corpus.yaml`, and the corpus stops
 generating and validating it.
 
-Removing a type a corpus has already adopted is not that. Every record of it, and every citation pointing at one, goes
-in the same change.
+A type a corpus has already adopted comes out with every record of it, and with every citation pointing at one, in
+the same change.
 
 ## Related
 

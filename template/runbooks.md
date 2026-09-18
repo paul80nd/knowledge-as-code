@@ -49,7 +49,7 @@ look like processes. You open the document on a day when the estate is already d
 | `applies-to`          | list                                           | Service ids this runbook covers.                                              |
 | `severity`            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                     |
 | `last-rehearsed` *    | date                                           | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
-| `rehearsal-frequency` | `on-change` `per-release` `quarterly` `annual` | How often to rehearse the runbook.                                            |
+| `rehearsal-frequency` | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                         |
 | `requires-access`     | list                                           | The systems or roles the reader needs before starting.                        |
 
 \* Field is required  
@@ -72,8 +72,8 @@ look like processes. You open the document on a day when the estate is already d
   reader wants the theory afterwards.
 * **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.
-* **Rehearse on a schedule.** `rehearsal-frequency` says how often, and `last-rehearsed` records the last time someone
-  did.
+* **Rehearse on a cadence, or on the change that breaks it.** `rehearsal-frequency` says which, and `last-rehearsed`
+  records the last time someone walked it.
 
 ## What CI checks
 

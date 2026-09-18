@@ -73,7 +73,7 @@ _(Not optional. A process that ends at the last action leaves the reader guessin
 
 How to back out, or who to tell. Where there is no way back, say so here, and warn the reader before step 1 as well.
 
-_(Not optional. A reader decides whether to start on what this section says.)_
+_(Not optional. A reader reads this before step 1, to decide whether to start at all.)_
 
 ## Related
 

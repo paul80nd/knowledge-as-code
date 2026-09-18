@@ -77,7 +77,8 @@ A process is also not:
 * **Put a warning before the step it guards.** A caution written after the action arrives too late to act on.
 * **Verification is not optional.** A process that stops at the last action leaves the reader guessing whether it
   worked.
-* **Say how to back out.** `If it goes wrong` is required. Where there is no way back, that is the sentence to write.
+* **Say how to back out.** `If it goes wrong` is required. Where nothing undoes the process, write that, and warn the
+  reader before step 1.
 * **Rehearse before you trust.** Walk the process end to end before you rely on it. `last-rehearsed` records that
   walk-through and not the last edit.
 

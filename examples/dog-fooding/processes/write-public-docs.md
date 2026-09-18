@@ -55,8 +55,8 @@ Close by stating what changed and why, every claim you checked against the sourc
 
 Revert the page. The site publishes on a push to `main`, so nothing a branch changed has reached a reader.
 
-`PACKAGE.md` is different. nuget.org renders the copy inside the package, and a version it has accepted cannot be
-replaced. Correct it in the next release.
+nuget.org renders the copy of `PACKAGE.md` inside the package, and a version it has accepted cannot be replaced.
+Correct that one in the next release.
 
 ## Related
 
