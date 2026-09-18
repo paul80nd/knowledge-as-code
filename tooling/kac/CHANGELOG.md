@@ -83,7 +83,34 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   a field holds and answers false where two of them state the same value. True where the field is absent.
   `docs/design/expressions.md` is the reference.
 
+- **An NFR says which quality it commits to.** `characteristic` is required, and takes `accuracy`, `availability`,
+  `capacity`, `latency`, `recovery`, `scalability` or `throughput`. The values sit at ISO/IEC 25010's
+  subcharacteristic level, so a corpus can list the qualities it has promised nothing about. It travels in the export,
+  indexes beside the target, and `kac new` sends a `_template.md` naming it.
+
+- **An NFR states the period its figure is read over.** `window` takes the period, such as `monthly` or
+  `rolling 4 weeks`. `kac validate` requires it where `characteristic` is `availability`, `capacity`, `latency` or
+  `throughput`, because a rate or a percentile only means something over a stated period. A recovery, scalability or
+  accuracy target binds each event or each value, so it needs none. It travels in the export.
+
+- **An NFR says why the figure is that one.** `Why this number` is a required section, and it travels in the export.
+  It states what fixes the figure and what the target leaves out, which the three records in `examples/payments` were
+  each stating inside `Target`. `kac validate` reports `sections` against an NFR without it.
+
+- **An agreed NFR says when it was agreed.** `agreed-on` takes the day, quoted, and `kac validate` requires it where
+  `status` is `agreed`. An agreed target is a commitment somebody accepted, and nothing recorded when. It travels in
+  the export.
+
 ### Changed
+
+- **`target` on an NFR no longer carries the measurement window.** The window is `window`, so a consumer reads the
+  figure and the period apart. `nfrs` publishes at `export.version` 2, because a reader that took the period out of
+  `target` would now find none there.
+
+- **`nfrs` states what it takes from current practice.** `lineage` was measured against ISO/IEC 25010:2023 and the
+  Google SRE workbook's *Implementing SLOs*. `alignment` names the four things the workbook asks an objective for, and
+  `divergence` names the error budget it keeps and this type does not take. `kac generate` writes both into every
+  adopting corpus's `knowledge-as-code/lineage.md`.
 
 - **A glossary term carries the other names it answers to.** `**Also:**` gives a second name for the same thing, an
   acronym or an abbreviation, and `**Avoid:**` gives a name the glossary has dropped. Both travel in the export as

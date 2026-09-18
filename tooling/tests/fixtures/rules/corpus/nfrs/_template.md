@@ -3,8 +3,10 @@ id: nfr-{{nnnn}}
 type: nfr
 tier: normative
 status: draft
+characteristic:
 applies-to:
 target:
+window:
 measured-by:
 review-by:
 owner:
@@ -20,6 +22,8 @@ real one — it carries the frontmatter, identity line and required sections tha
 a template to, and nothing more.
 
 ## Target
+
+## Why this number
 
 ## How it is measured
 

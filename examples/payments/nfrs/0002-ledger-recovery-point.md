@@ -3,10 +3,12 @@ id: nfr-0002
 type: nfr
 tier: normative
 status: agreed
+characteristic: recovery
 applies-to:
   - svc-payment-ledger
 target: RPO 5 minutes, RTO 1 hour
 measured-by: A quarterly restore of the ledger database into an isolated environment
+agreed-on: "2026-08-28"
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ ledger, recovery, resilience ]
@@ -20,11 +22,17 @@ The ledger is recoverable to a point five minutes before a failure. It is back i
 
 ## Target
 
-RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger].
+RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger]. Both figures are read against
+each failure.
+
+## Why this number
 
 Five minutes is what the reconciliation can repair. The PSP's settlement file lists every authorisation it took, so a
 gap shorter than one file can be rebuilt from it. A longer gap needs the PSP's support desk, and no procedure covers
 that.
+
+The hour is a figure the quarterly restore has already met. `Current actual` records the last one at 38 minutes, so
+the target commits to what the procedure does today and not to an improvement nobody has planned.
 
 ## How it is measured
 

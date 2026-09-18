@@ -3,8 +3,10 @@ id: nfr-0001
 type: nfr
 tier: normative
 status: draft
+characteristic: availability
 applies-to: [ofr-borrower-notifications]
-target: 99.5% monthly
+target: 99.5%
+window: monthly
 measured-by: Monitored by the platform team where practical.
 review-by: "2026-12-31"
 owner: human:alex.doe
@@ -17,6 +19,10 @@ owner: human:alex.doe
 ## Target
 
 99.5% monthly, which is concrete and arguable and is not what this document is about.
+
+## Why this number
+
+Nothing fixes it. The figure is here so the record has one, and what the fixture is about is the line below.
 
 ## How it is measured
 

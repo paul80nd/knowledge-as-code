@@ -2,8 +2,8 @@
 
 # NFR Index
 
-| ID       | Title                                                                                                    | Applies to         | Target                                                                           | Status | Review by  |
-|----------|----------------------------------------------------------------------------------------------------------|--------------------|----------------------------------------------------------------------------------|--------|------------|
-| nfr-0001 | [A customer waits under a second to hear whether their card was accepted](0001-authorisation-latency.md) | ofr-card-payment   | p95 under 800ms, measured over a rolling hour                                    | agreed | 2027-08-28 |
-| nfr-0002 | [A recovered ledger loses at most five minutes of payments](0002-ledger-recovery-point.md)               | svc-payment-ledger | RPO 5 minutes, RTO 1 hour                                                        | agreed | 2027-08-28 |
-| nfr-0003 | [A refund reaches the card scheme within the hour](0003-refund-settlement.md)                            | ofr-refund         | 95% of refunds submitted to the PSP within one hour of the return being accepted | agreed | 2027-08-28 |
+| ID       | Title                                                                                                    | Characteristic | Applies to         | Target                                                                           | Status | Review by  |
+|----------|----------------------------------------------------------------------------------------------------------|----------------|--------------------|----------------------------------------------------------------------------------|--------|------------|
+| nfr-0001 | [A customer waits under a second to hear whether their card was accepted](0001-authorisation-latency.md) | latency        | ofr-card-payment   | p95 under 800ms                                                                  | agreed | 2027-08-28 |
+| nfr-0002 | [A recovered ledger loses at most five minutes of payments](0002-ledger-recovery-point.md)               | recovery       | svc-payment-ledger | RPO 5 minutes, RTO 1 hour                                                        | agreed | 2027-08-28 |
+| nfr-0003 | [A refund reaches the card scheme within the hour](0003-refund-settlement.md)                            | latency        | ofr-refund         | 95% of refunds submitted to the PSP within one hour of the return being accepted | agreed | 2027-08-28 |

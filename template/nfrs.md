@@ -6,9 +6,10 @@ Non-functional requirements: what the platform promises about availability, spee
 
 ## What is an NFR?
 
-A stated, measurable target for a quality of service rather than a behaviour: availability, latency budgets, throughput,
-recovery point and recovery time objectives (RPO and RTO), capacity assumptions. Each one names what it applies to, what
-the target is, and how we measure it.
+A stated, measurable target for a quality of service rather than a behaviour. `characteristic` names which quality:
+availability, latency, throughput, capacity, recovery, scalability or accuracy. Recovery covers the recovery point and
+recovery time objectives (RPO and RTO). Each record states one quality, what it applies to, the target, the period the
+target is read over, and how we measure it.
 
 ## Why we use them
 
@@ -29,6 +30,14 @@ An NFR states a **target**, not a rule and not a mechanism.
 **An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
 build the instrument or state the target you *can* observe. "We'd notice" is not a measurement method.
 
+**A figure with no period behind it is not a target.** `window` is required for an availability, capacity, latency or
+throughput target, because a rate or a percentile only means something over a stated period. A recovery, scalability or
+accuracy target binds each event or each value, so it needs no window.
+
+**A target with no reason is a number somebody picked.** `Why this number` is required. State what fixes the figure:
+what a customer will tolerate, what a dependency already limits you to, or a measurement you have taken. Say what the
+target leaves out, so a reader can see the gap is deliberate.
+
 We cannot promise more than the dependencies we do not run. A third-party [integration](integrations.md) with a 99% SLA
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
 deliver.
@@ -37,20 +46,23 @@ deliver.
 
 <!-- BEGIN GENERATED: schema-nfrs -->
 
-| Field            | Value                      | Notes                                                                                    |
-|------------------|----------------------------|------------------------------------------------------------------------------------------|
-| `id` *†          | string                     | Stable, unique across the corpus, never reused, in the format the type sets.             |
-| `type` *†        | string                     | The singular name of the type, which CI checks against the folder.                       |
-| `tier` *†        | `normative`                | The record's trust level, fixed for the type and checked against the folder.             |
-| `status` *†      | `draft` `agreed` `retired` | `agreed` means somebody accepted the commitment.                                         |
-| `owner` *†       | string                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                   |
-| `sources` †      | list                       | Where this record's content came from, one entry per source.                             |
-| `tags` †         | list                       | Free-form, lowercase and hyphenated. A reader searches on these across types.            |
-| `applies-to` *   | list                       | The service or offering ids this target binds.                                           |
-| `target` *       | string                     | The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`. |
-| `measured-by` *  | string                     | The instrument that reports the number, and where to read it.                            |
-| `constrained-by` | list                       | Integrations whose own SLA caps this target.                                             |
-| `review-by` *    | date                       | Quoted. The date by which someone confirms this is still true.                           |
+| Field              | Value                                                                                | Notes                                                                                                                                                                |
+|--------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                                                               | Stable, unique across the corpus, never reused, in the format the type sets.                                                                                         |
+| `type` *†          | string                                                                               | The singular name of the type, which CI checks against the folder.                                                                                                   |
+| `tier` *†          | `normative`                                                                          | The record's trust level, fixed for the type and checked against the folder.                                                                                         |
+| `status` *†        | `draft` `agreed` `retired`                                                           | `agreed` means somebody accepted the commitment.                                                                                                                     |
+| `owner` *†         | string                                                                               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                               |
+| `sources` †        | list                                                                                 | Where this record's content came from, one entry per source.                                                                                                         |
+| `tags` †           | list                                                                                 | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                                        |
+| `characteristic` * | `accuracy` `availability` `capacity` `latency` `recovery` `scalability` `throughput` | The quality of service this target commits to.                                                                                                                       |
+| `applies-to` *     | list                                                                                 | The service or offering ids this target binds.                                                                                                                       |
+| `target` *         | string                                                                               | The number this commits to: `99.5%`, `p95 under 400ms`, `RPO 5 minutes`.                                                                                             |
+| `window`           | string                                                                               | The period the number is read over: `rolling 1 hour`, `monthly`, `rolling 4 weeks`. Required when `characteristic in [availability, capacity, latency, throughput]`. |
+| `measured-by` *    | string                                                                               | The instrument that reports the number, and where to read it.                                                                                                        |
+| `constrained-by`   | list                                                                                 | Integrations whose own SLA caps this target.                                                                                                                         |
+| `agreed-on`        | date                                                                                 | The day the named owner accepted the commitment. Required when `status == agreed`.                                                                                   |
+| `review-by` *      | date                                                                                 | Quoted. The date by which someone confirms this is still true.                                                                                                       |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -60,11 +72,14 @@ deliver.
 ## Adding an NFR
 
 1. Copy [`_template.md`](nfrs/_template.md) to `NNNN-kebab-slug.md`.
-2. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
-3. Name the instrument that measures it, and say where a reader can find its reading.
-4. Record what breaching it costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence
+2. Set `characteristic` to the quality this target commits to. One record states one quality.
+3. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
+4. Set `window` to the period the figure is read over, where the characteristic requires one.
+5. Say under `Why this number` what fixes the figure, and what it leaves out.
+6. Name the instrument that measures it, and say where a reader can find its reading.
+7. Record what breaching it costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence
    is documentation theatre.
-5. Leave `status: draft` until someone has accepted the target, then set it to `agreed`.
+8. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
 
 **Conventions**
 

@@ -81,7 +81,9 @@ primary source, except these:
 
 * **ITIL** publications are paywalled, so the known-error definition behind the fix row and the service offering
   behind the offering row both rest on the publisher's own summary.
-* **ISO standards** are paywalled, so 25010's characteristics come from the issuing body's public descriptions.
+* **ISO standards** are paywalled, so the NFR row rests on 25010 at second hand. Its characteristics and
+  subcharacteristics come from the issuing body's public description and from published summaries of the 2023
+  edition, and not from the standard's text.
 
 Where a claim is later found wrong, correct the row. Do not soften it.
 

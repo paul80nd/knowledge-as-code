@@ -3,10 +3,13 @@ id: nfr-0003
 type: nfr
 tier: normative
 status: agreed
+characteristic: latency
 applies-to:
   - ofr-refund
 target: 95% of refunds submitted to the PSP within one hour of the return being accepted
+window: rolling 1 day
 measured-by: Application Insights, on the gap between the return event and the refund request at [svc-payment-api]
+agreed-on: "2026-08-28"
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ psp, refunds, settlement ]
@@ -23,8 +26,15 @@ A refund is submitted to the PSP within an hour of the return being accepted.
 95% of refunds within one hour, measured over a rolling day, from the return being accepted to
 [svc-payment-api] submitting the refund to the PSP.
 
-The money arriving in the customer's account is not committed. The card scheme decides that, and it
-takes between three and five working days whatever this estate does.
+## Why this number
+
+The card scheme takes between three and five working days to move the money, and this estate cannot change that. An
+hour is what [svc-payment-api] can promise for the part it does control, so a return accepted during a working day is
+submitted the same day. The money arriving in the customer's account is deliberately not committed, because the scheme
+decides when that happens.
+
+The remaining 5% covers a return accepted while [svc-payment-ledger] is mid-deployment. `Current actual` records that
+as the only shape of failure seen so far.
 
 ## How it is measured
 

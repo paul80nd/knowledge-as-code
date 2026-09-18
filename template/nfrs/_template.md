@@ -3,8 +3,10 @@ id: nfr-{{nnnn}}
 type: nfr
 tier: normative
 status: draft
+characteristic:
 applies-to:
 target:
+window:
 measured-by:
 review-by:
 owner:
@@ -23,11 +25,16 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 **Frontmatter**
 
 * **`status`**: `draft` until someone has agreed it, then `agreed`. An agreed target is a commitment, not an aspiration.
+* **`characteristic`**: the quality this target commits to, from the values [the type page](../nfrs.md#metadata) lists.
+  One record states one quality. A service needing both a latency target and a recovery target gets two records.
 * **`applies-to`**: service or offering ids. Estate-wide targets are almost always wrong, since a marketing page and
   the checkout flow don't deserve the same budget.
-* **`target`**: a concrete figure, such as `99.5% monthly`, `p95 < 400ms` or `RTO 4h`.
+* **`target`**: a concrete figure, such as `99.5%`, `p95 under 400ms` or `RTO 4h`.
+* **`window`**: the period the figure is read over, such as `monthly` or `rolling 4 weeks`. Required for an
+  availability, capacity, latency or throughput target, because a rate without a period means nothing.
 * **`measured-by`**: required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
 * **`constrained-by`**: integration ids whose own SLA caps this.
+* **`agreed-on`**: the day the owner accepted the figure. Required once `status` is `agreed`.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../nfrs.md#metadata) lists every field
@@ -42,8 +49,13 @@ One sentence stating the target.
 
 ## Target
 
-The commitment, stated precisely enough to be argued about. Include the measurement window: a percentage without a
-period means nothing.
+The commitment, stated precisely enough to be argued about. State the period it is read over, and say what the number
+is taken from end to end.
+
+## Why this number
+
+Why this figure, and not a looser or a tighter one. Name what fixes it: what a customer will tolerate, what a
+dependency already limits you to, or a measurement you have taken. Say what the target deliberately leaves out.
 
 ## How it is measured
 

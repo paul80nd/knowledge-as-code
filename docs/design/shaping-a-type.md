@@ -148,11 +148,20 @@ the status on that date, because a departure left standing is the state worth se
 
 ### nfrs
 
-An NFR is normative, and a reader may act on it without opening anything else. The three required sections travel whole:
-what the target is, how anybody tells whether it was met, and what happens where it is missed.
+An NFR is normative, and a reader may act on it without opening anything else. The four required sections travel whole:
+what the target is, why it is that figure, how anybody tells whether it was met, and what happens where it is missed.
 
-`target` and `measured-by` state as fields what those sections state at length. The fields are what a reader filters and
-sorts on, and the sections are what somebody building against the number reads.
+`characteristic`, `target`, `window` and `measured-by` state as fields what those sections state at length. The fields
+are what a reader filters and sorts on, and the sections are what somebody building against the number reads.
+
+**`characteristic` takes 25010's subcharacteristic level, not its characteristic level.** An estate commits to
+availability, latency, throughput, capacity, recovery, scalability or accuracy. It does not commit to reliability,
+which sits above availability and recovery and says nothing about the other five. One record states one quality, so a
+service needing both a latency target and a recovery target has two.
+
+**`window` is required of an availability, capacity, latency or throughput target.** A rate or a percentile only means
+something over a stated period. `window` declares a `required-when` reading `characteristic`. A recovery, scalability
+or accuracy target binds each event or each value, so it needs none.
 
 `Constraints` travels because a target read without its limits reads as a stronger promise than the estate made. It
 states those limits in words, because `constrained-by` points at integrations and integrations travel nowhere.
