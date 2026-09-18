@@ -5,7 +5,6 @@ tier: normative
 status: active
 symptom-keywords: [ editorconfig, formatting, ide, indent, reformat, rider, wrapping ]
 verified:
-  - { at: 2026-09-09T08:14:30Z, by: human:paul.law }
   - { at: 2026-09-18T11:40:00Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law

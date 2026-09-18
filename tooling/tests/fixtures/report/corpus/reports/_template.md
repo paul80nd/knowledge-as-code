@@ -32,10 +32,11 @@ without the command beside them.
 * **`sources`**: one entry per corpus the run read, naming the corpus and the `content-version` it was at. Raise a
   version by hand where a corpus moved and nothing in this report changed, and add a `verified` entry saying you
   checked.
-* **`verified`**: every verification this report has had, oldest first. A draft states none, and every other status
-  states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with its version
-  as `coverage-sweep/1.2.0`. Two actors are refused: a `role:`, because a post cannot read an answer, and the actor
-  in `generated.by`, because nobody signs off their own writing.
+* **`verified`**: who has checked this report, one entry per actor, oldest first. A draft states none, and every
+  other status states one. Write a person as `human:alex.doe`, a process as `process:nightly-sweep`, or an agent with
+  its version as `coverage-sweep/1.2.0`. Write an actor once: a second check by the same actor moves the `at` on the
+  entry they have. Two actors are refused: a `role:`, because a post cannot read an answer, and the actor in
+  `generated.by`, because nobody signs off their own writing.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../reports.md#metadata) lists every

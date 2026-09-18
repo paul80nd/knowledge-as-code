@@ -68,6 +68,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `applies-to` takes service ids alone, and a fix about a laptop or a pinned tool version has no service to name.
   `kac validate` reports `sections` against a fix without it, and `kac new` sends a `_template.md` carrying it.
 
+- **A rule can ask whether a key is written once.** `entries_unique('field', 'key')` reads one key across the objects
+  a field holds and answers false where two of them state the same value. True where the field is absent.
+  `docs/design/expressions.md` is the reference.
+
 ### Changed
 
 - **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
@@ -111,6 +115,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   ServiceNow known error form and ITIL Problem Management. `alignment` names the four sections KCS asks for, and
   `divergence` names the workaround ITIL expects and this type does not take. `kac generate` writes both into every
   adopting corpus's `knowledge-as-code/lineage.md`.
+
+- **`verified` says who has checked a record, not how often.** An actor is written once, and a check they make again
+  moves the `at` on the entry they have. The Open Knowledge Format keeps the list for independent checks, a human
+  sign-off beside a nightly process, and git already keeps when each actor checked before. `kac validate` reports
+  `one-verification-per-actor` against a `fix` or a `report` naming one actor twice, and a corpus trims each list by
+  hand. The trust tier reads the actors and never the count, so no tier moves.
 
 ## 0.28.0 - 2026-09-17
 

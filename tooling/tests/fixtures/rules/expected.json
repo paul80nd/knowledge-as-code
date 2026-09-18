@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 35,
+    "validated": 36,
     "templates": 17,
     "skipped": 0,
-    "errors": 22,
+    "errors": 23,
     "warnings": 19,
     "infos": 0
   },
@@ -84,6 +84,13 @@
       "severity": "warning",
       "check": "not-normative",
       "message": "a bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
+    },
+    {
+      "file": "fixes/one-actor-verified-twice.md",
+      "line": 1,
+      "severity": "error",
+      "check": "one-verification-per-actor",
+      "message": "this actor already states a verification on this record. Move the `at` on the entry they have, because `verified` says who has checked the record and git says when each of them checked before."
     },
     {
       "file": "fixes/two-symptoms-one-page.md",

@@ -7,7 +7,6 @@ symptom-keywords: [calendar, moment, timestamp]
 verified:
   - { at: 2026-02-31T09:00:00Z, by: human:alex.doe }
   - { at: 2026-06-12, by: human:mira.okonjo }
-  - { at: 2026-06-19T09:00:00Z, by: human:mira.okonjo }
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---

@@ -104,11 +104,12 @@ fields:
     type: list
     of: object
     shape: event
-    description: Every verification this report has had, oldest first, one line each.
+    description: Who has checked this report, one entry per actor, oldest first.
     notes: >
-      A draft states no verification, and every other status must. The keys come from the `event` shape, and
-      `verified` is the name the Open Knowledge Format gives the same list. The `by` prefix decides the
-      exported `trust` tier, so `verified-by-a-known-actor` below limits an entry to a known actor.
+      A draft states no verification, and every other status must. An actor is written once, and a check they make
+      again moves the `at` on the entry they have. The keys come from the `event` shape, and `verified` is the name
+      the Open Knowledge Format gives the same list. The `by` prefix decides the exported `trust` tier, so
+      `verified-by-a-known-actor` below limits an entry to a known actor.
       See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
 
 sections:
@@ -144,6 +145,14 @@ rules:
   - id: no-self-verification
     description: A report is not verified by the actor named in `generated.by`.
     severity: error
+
+  - id: one-verification-per-actor
+    description: An actor is written once in `verified`, and a later check moves the entry it already has.
+    severity: error
+    expr: "entries_unique('verified', 'by')"
+    message: >
+      this actor already states a verification on this record. Move the `at` on the entry they have, because
+      `verified` says who has checked the record and git says when each of them checked before.
 
   - id: generated-by-a-known-actor
     description: '`generated.by` states an actor the Open Knowledge Format defines.'

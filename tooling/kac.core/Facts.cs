@@ -97,6 +97,23 @@ public sealed class Facts(Doc doc, DateOnly today)
                                        || re.IsMatch(v));
     }
 
+    // Whether one key is unique across the objects a field holds. `verified` lists who has checked a
+    // record, so a second entry for one actor is a log of what git already keeps.
+    //
+    // True where the field is absent, and an object not carrying the key counts for nothing, for the
+    // reason `EntriesMatch` gives above.
+    public bool EntriesUnique(string field, string key)
+    {
+        var values = Objects(field)
+            .Select(o => Yaml.Get(o, key))
+            .OfType<YamlScalarNode>()
+            .Select(v => v.Value)
+            .Where(v => !string.IsNullOrEmpty(v))
+            .ToList();
+
+        return values.Distinct(StringComparer.Ordinal).Count() == values.Count;
+    }
+
     // The objects one field holds, read from the frontmatter rather than through `FrontScalar`, which
     // flattens a value to a string and has nothing to say about a mapping.
     private IEnumerable<YamlMappingNode> Objects(string field)

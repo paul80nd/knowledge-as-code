@@ -25,8 +25,8 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
   know what is wrong. This is the field that makes the document findable, so over-fill it.
-* **`verified`**: one line per verification, oldest first. A `draft` leaves the key out. Every other status needs at
-  least one line.
+* **`verified`**: who has checked this fix, one line per actor, oldest first. A `draft` leaves the key out. Every
+  other status needs at least one line.
 
   ```yaml
   verified:
@@ -36,8 +36,8 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
   `at` is a moment in UTC, to the second, and written unquoted. `by` is a person as `human:alex.doe`, or an agent
   named with its version the way a tool names itself. An agent that reproduced the symptom and ran the resolution
-  belongs here. A `role:` does not: a post cannot read an answer. Add a line each time somebody checks the answer
-  again, and leave the earlier lines alone.
+  belongs here. A `role:` does not: a post cannot read an answer. Write an actor once: where somebody checks the
+  answer again, move the `at` on the line they have, because git keeps when they checked before.
 
   Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
   `human:` line makes it human-reviewed.

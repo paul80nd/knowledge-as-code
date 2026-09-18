@@ -55,9 +55,10 @@ coverage sits on. Where the verdict is obvious from the row, leave the cell empt
 **A verdict you cannot reach is a question, not a blank.** Ask whoever owns the area. A report published with an empty
 cell says the corpus was read and it was not.
 
-**Somebody else moves it off `draft`.** They read what you wrote, add a `verified` entry naming themselves, and set the
-status. A person is `human:alex.doe`, a process is `process:nightly-sweep`, and an agent states its version, as
-`coverage-sweep/1.2.0`. Two actors are refused: a `role:`, and the actor in `generated.by`.
+**Somebody else moves it off `draft`.** They read what you wrote, add a `verified` entry naming themselves, and set
+the status. An actor is written once, so somebody reading it again moves the `at` on the entry they have. A person is
+`human:alex.doe`, a process is `process:nightly-sweep`, and an agent states its version, as `coverage-sweep/1.2.0`.
+Two actors are refused: a `role:`, and the actor in `generated.by`.
 
 ## Bringing one up to date
 
