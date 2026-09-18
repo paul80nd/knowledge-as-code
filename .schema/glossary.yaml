@@ -76,12 +76,8 @@ sections:
     `Scope` says which context this glossary admits, so a contributor can decide whether a new word belongs
     here. The terms are H3s under `Terms`, and a cross-reference points at a term's anchor.
 
-# A term is an H3 under `Terms`, cited by the anchor its heading slugs to.
-#
-# The three asides answer three different questions about the same term. `Also` gives the reader another
-# name for this thing, `Avoid` gives them a name for it this glossary has dropped, and `Not` gives them a
-# neighbouring thing this one is confused with. Each travels under its own key, so a search reaches a
-# term by a name its heading does not carry.
+# A term is an H3 under `Terms`, cited by the anchor its heading slugs to. Each aside travels under a key
+# of its own, because `Also`, `Avoid` and `Not` answer different questions about the same term.
 parts:
   source: headings
   section: Terms
@@ -112,9 +108,7 @@ export:
       path: record.path
       anchor: part.anchor
   notes: >
-    A term travels whole: the definition, and each labelled line beneath it as a piece of its own. A
-    consumer searching `also` reaches a term by a name its heading does not carry, which is what the
-    heading alone cannot give it.
+    A term travels whole: the definition, and each labelled line beneath it as a piece of its own.
     See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#glossary>.
 index:
   columns: [id, title, narrows, status, owner, review-by]
