@@ -36,6 +36,6 @@
     "Where we got lucky": "No customer was charged twice, and nothing about this incident prevented it. Capture happens when an order ships, so each duplicate authorisation sat as a hold rather than a charge. Any of the 31 orders despatching before 14:10 the next day would have captured the second authorisation and taken the money.\n\nThe separation of authorisation and capture is in [ofr-card-payment] for a different reason: an order that never ships is never charged. It absorbed this incident as a by-product."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/payments/postmortems/0002-two-pending-amounts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/93dcd63a32f9e7fb6ab7f7646a01948a7e0250c8/examples/payments/postmortems/0002-two-pending-amounts.md"
   }
 }
