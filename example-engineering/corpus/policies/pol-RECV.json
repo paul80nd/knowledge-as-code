@@ -15,6 +15,6 @@
     "Exceptions": "A system whose whole state can be regenerated from source needs no data backup. Its recovery path is still defined and still exercised. Accepting a longer recovery objective than a system's criticality suggests is a recorded deviation under [pol-DEVI], owned by whoever will answer for the downtime."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/engineering/policies/operations/recv-recoverability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/engineering/policies/operations/recv-recoverability.md"
   }
 }

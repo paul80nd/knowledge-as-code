@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.20.0",
+  "contentVersion": "0.21.0",
   "mechanismVersion": 18,
-  "commit": "7ca6c891eea4819cf6dee73ae24365b0b7900290",
+  "commit": "1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e",
   "dirty": false,
-  "generatedAt": "2026-09-18T10:11:19Z",
+  "generatedAt": "2026-09-18T10:51:39Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "7ca6c891eea4819cf6dee73ae24365b0b7900290"
+    "ref": "1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.24.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "7ca6c891eea4819cf6dee73ae24365b0b7900290"
+        "ref": "1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e"
       },
       "tracker": {
         "target": "github",
@@ -75,7 +75,7 @@
     },
     {
       "type": "nfrs",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 3,
       "parts": 0,
       "dir": "nfrs",
@@ -86,6 +86,7 @@
       "seeAlsoKey": null,
       "sections": {
         "Target": "full",
+        "Why this number": "full",
         "How it is measured": "full",
         "If it is breached": "full",
         "Constraints": "full"

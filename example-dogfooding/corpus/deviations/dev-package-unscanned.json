@@ -33,6 +33,6 @@
     "Scope": "The `kac` package on nuget.org, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/dog-fooding/deviations/package-unscanned.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/dog-fooding/deviations/package-unscanned.md"
   }
 }

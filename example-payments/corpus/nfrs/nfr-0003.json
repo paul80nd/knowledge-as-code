@@ -6,12 +6,15 @@
     "id": "nfr-0003",
     "title": "A refund reaches the card scheme within the hour",
     "status": "agreed",
+    "characteristic": "latency",
     "applies-to": [
       "ofr-refund"
     ],
     "target": "95% of refunds submitted to the PSP within one hour of the return being accepted",
+    "window": "rolling 1 day",
     "measured-by": "Application Insights, on the gap between the return event and the refund request at [svc-payment-api]",
     "constrained-by": null,
+    "agreed-on": "2026-08-28",
     "review-by": "2027-08-28",
     "tags": [
       "psp",
@@ -20,12 +23,13 @@
     ]
   },
   "sections": {
-    "Target": "95% of refunds within one hour, measured over a rolling day, from the return being accepted to [svc-payment-api] submitting the refund to the PSP.\n\nThe money arriving in the customer's account is not committed. The card scheme decides that, and it takes between three and five working days whatever this estate does.",
+    "Target": "95% of refunds within one hour, measured over a rolling day, from the return being accepted to [svc-payment-api] submitting the refund to the PSP.",
+    "Why this number": "The card scheme takes between three and five working days to move the money, and this estate cannot change that. An hour is what [svc-payment-api] can promise for the part it does control, so a return accepted during a working day is submitted the same day. The money arriving in the customer's account is deliberately not committed, because the scheme decides when that happens.\n\nThe remaining 5% covers a return accepted while [svc-payment-ledger] is mid-deployment. `Current actual` records that as the only shape of failure seen so far.",
     "How it is measured": "Application Insights records both moments against the payment id. The payments dashboard shows the rolling day, and the same query runs in the monthly service review.",
     "If it is breached": "An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call engineer. A customer who has returned goods and seen nothing calls the contact centre on the second day. Support learns of a sustained breach before finance does.",
     "Constraints": "The PSP accepts a refund only against a captured payment, so a return accepted before capture waits for it. [ofr-card-payment] captures on shipment, which is why the hour is measured from acceptance of the return and not from the return itself."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/payments/nfrs/0003-refund-settlement.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1528bc65b8dc75605b3456e0f7bd1a63a0e14e7e/examples/payments/nfrs/0003-refund-settlement.md"
   }
 }
