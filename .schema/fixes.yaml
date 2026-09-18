@@ -13,12 +13,23 @@ detail: >
   Each fix lists its verifications, so a reader can see how far the resolution has been taken on trust.
 
 lineage:
-  prior-art: "ITIL Problem Management, the *known error* construct"
+  prior-art: >
+    ITIL Problem Management, the *known error* construct, and
+    [the KCS v6 article](https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/020)
   alignment: >
-    A problem whose cause is understood and whose resolution is documented
+    A problem whose cause is understood and whose resolution is documented. KCS structures such an article as *Issue*,
+    *Environment*, *Resolution* and *Cause*. The four sections this type requires are those. [The Good Docs Project's
+    troubleshooting template](https://www.thegooddocsproject.dev/template/troubleshooting) asks for three of them, as
+    *Symptoms*, *Causes* and *Solutions*. ITIL requires a documented cause, which KCS marks optional, and this type
+    requires it
   divergence: >
     ITIL binds a known error to a formal problem record and an owning practice. A fix here is written from anything
-    somebody noticed, and any verification gives it authority
+    somebody noticed, and any verification gives it authority. ITIL also expects a workaround while a permanent fix is
+    outstanding, and [the ServiceNow known error
+    article](https://www.servicenow.com/docs/bundle/zurich-it-service-management/page/product/problem-management/reference/known-error-article-form.html)
+    gives *Workaround* a field of its own. This type asks for one resolution somebody has verified, so a problem with
+    no answer yet stays in the tracker. KCS reviews an article when somebody uses it, where `review-by` sets a date.
+    `How we found it` is this type's own, and no source states it
 
 id:
   prefix: fix
@@ -75,7 +86,7 @@ fields:
     description: Quoted. The date by which someone verifies this is still true.
 
 sections:
-  required: [Symptom, Cause, Resolution]
+  required: [Symptom, Environment, Cause, Resolution]
   optional: [Why it happens, How we found it, Related]
 
 export:
@@ -83,6 +94,7 @@ export:
   fields: [id, title, status, symptom-keywords, applies-to, verified, review-by, tags]
   sections:
     Symptom: full
+    Environment: full
     Cause: full
     Resolution: full
     Why it happens: full

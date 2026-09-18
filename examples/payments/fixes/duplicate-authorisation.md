@@ -10,6 +10,7 @@ applies-to:
 verified:
   - { at: 2026-08-14T10:20:00Z, by: human:alex.doe }
   - { at: 2026-08-17T09:05:00Z, by: human:alex.doe }
+  - { at: 2026-08-29T14:10:00Z, by: human:alex.doe }
 review-by: "2027-03-09"
 owner: human:alex.doe
 tags: [ authorisation, idempotency, retries ]
@@ -24,6 +25,11 @@ tags: [ authorisation, idempotency, retries ]
 A customer reports two pending amounts for one order. The ledger contains two authorisations against the same order
 reference, seconds apart. Each has its own PSP reference and its own `Idempotency-Key`. Nothing failed: both calls
 returned `201`.
+
+## Environment
+
+Any caller of the `POST /authorisations` endpoint that retries after a timeout, over HTTP/1.1 with an
+`Idempotency-Key` header. The services the report covers are in `applies-to`.
 
 ## Cause
 

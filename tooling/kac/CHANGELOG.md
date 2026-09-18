@@ -63,6 +63,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac validate` reports `sections` against an explanation without it, and `kac new` sends a `_template.md` carrying
   it.
 
+- **A fix says what you were running.** `Environment` is a required section, and it travels in the export. It states
+  the tool, the operating system and the versions, which is how a reader tells whether the fix is theirs.
+  `applies-to` takes service ids alone, and a fix about a laptop or a pinned tool version has no service to name.
+  `kac validate` reports `sections` against a fix without it, and `kac new` sends a `_template.md` carrying it.
+
 ### Changed
 
 - **`manual-periodic` is now `manual`.** The value held a cadence inside a method name, where `frequency` states the
@@ -101,6 +106,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   Docs Project's concept template and arc42. `alignment` claimed discursive prose and weighed alternatives, which the
   type asks for nowhere. Both now name what the type takes and where it parts from them. `kac generate` writes both
   into every adopting corpus's `knowledge-as-code/lineage.md`.
+
+- **`fixes` states what it takes from current practice.** `lineage` was measured against the KCS v6 article, the
+  ServiceNow known error form and ITIL Problem Management. `alignment` names the four sections KCS asks for, and
+  `divergence` names the workaround ITIL expects and this type does not take. `kac generate` writes both into every
+  adopting corpus's `knowledge-as-code/lineage.md`.
 
 ## 0.28.0 - 2026-09-17
 

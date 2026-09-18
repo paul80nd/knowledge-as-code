@@ -48,6 +48,7 @@ public class ExportShapeTests
           fields: id, title, status, symptom-keywords, applies-to, verified, review-by, tags
           sections:
             Symptom: full
+            Environment: full
             Cause: full
             Resolution: full
             Why it happens: full

@@ -6,6 +6,7 @@ status: active
 symptom-keywords: [timeout, upload]
 verified:
   - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }
+  - { at: 2026-06-19T09:00:00Z, by: human:alex.doe }
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---
@@ -18,6 +19,10 @@ owner: human:alex.doe
 
 Covering `min-items`. `symptom-keywords` declares `min-items: 3` and this carries two, which is the one thing about a
 list that neither `list` nor `field-pattern` asks: both read the entries that are there and neither counts them.
+
+## Environment
+
+Any. The finding is about the field, and nothing in the environment bears on it.
 
 ## Cause
 

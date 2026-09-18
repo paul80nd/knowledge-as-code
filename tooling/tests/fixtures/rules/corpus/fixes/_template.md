@@ -20,6 +20,8 @@ a template to, and nothing more.
 
 ## Symptom
 
+## Environment
+
 ## Cause
 
 ## Resolution
