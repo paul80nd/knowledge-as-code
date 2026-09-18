@@ -35,7 +35,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   names none. Both fields travel in the export.
 
 - **An integration on trial says what would end the trial.** `Trial criteria` is a section, and
-  `trial-criteria-required` warns where a `trial` integration has none. The section stays out of the export, because a consumer reads `status`.
+  `trial-criteria-required` warns where a `trial` integration has none. The section stays out of the export, because
+  a consumer reads `status`.
 
 - **A control that never stops says so.** `frequency` takes `continuous`. A control whose `mechanism` is
   `runtime-alert` has to carry a frequency, and none of `per-pr` through `annual` is true of an alert rule that
@@ -107,6 +108,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **An agreed NFR says when it was agreed.** `agreed-on` takes the day, quoted, and `kac validate` requires it where
   `status` is `agreed`. An agreed target is a commitment somebody accepted, and nothing recorded when. It travels in
   the export.
+
+- **A process says when it is rehearsed again.** `rehearsal-frequency` is required, and it takes a new `on-change`
+  beside `per-release`, `quarterly` and `annual`. ComplianceForge HCGF reviews a procedure when its technology, its
+  steps or its people change. NIST SP 800-53 Rev. 5's `-1` controls ask for a frequency and the events beside it.
+  Nothing running on a schedule can measure `on-change`, so `process-lookup` tells a reader to ask what has moved.
+  `kac new` sends a `_template.md` carrying the field. A corpus already holding a process writes a value into every
+  one of them, because `kac update` reaches the schema and never a record.
+
+- **A process says how to back out.** `If it goes wrong` is a required section, where it was optional. The type page
+  already promised a rollback, and the section stays out of the export, because a reader who has to back out is
+  holding the record. `kac new` sends a `_template.md` naming it.
 
 ### Changed
 
@@ -188,6 +200,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   sign-off beside a nightly process, and git already keeps when each actor checked before. `kac validate` reports
   `one-verification-per-actor` against a `fix` or a `report` naming one actor twice, and a corpus trims each list by
   hand. The trust tier reads the actors and never the count, so no tier moves.
+
+- **`processes` states its lineage against both the sources it declares.** `alignment` names what the type takes from
+  the Diátaxis how-to guide as well as from ComplianceForge HCGF. `divergence` records that this type writes for a
+  reader who has never done the task, where Diátaxis writes for a competent one. A `collision:` entry names what ITIL
+  and BPMN mean by *process*. All three render into `knowledge-as-code/lineage.md`.
 
 ### Fixed
 

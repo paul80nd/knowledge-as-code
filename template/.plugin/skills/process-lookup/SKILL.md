@@ -42,7 +42,7 @@ What travels is what decides whether a process is yours:
 | `fields.applies-to`                     | the service ids the process concerns                                   |
 | `fields.status`                         | `active`, `draft` or `retired`                                         |
 | `fields.last-rehearsed`                 | a date, or `never`                                                     |
-| `fields.rehearsal-frequency`            | the cadence that date is read against                                  |
+| `fields.rehearsal-frequency`            | the cadence, or the event, that date is read against                   |
 | `fields.tags`, `fields.id`              | the word a reader arrives with, and the address to cite                |
 | `path`, `links`                         | where the full record lives, and the built link to it                  |
 
@@ -83,11 +83,13 @@ Read these before you hand anybody a procedure, and tell them what you saw:
 * **`last-rehearsed: never`** — nobody has followed this end to end. It is a hypothesis, and the first person to run it
   is testing it.
 * **`last-rehearsed` older than `rehearsal-frequency` allows** — the procedure has drifted out of its own cadence.
+* **`rehearsal-frequency: on-change`** — no date makes this one stale. Ask the reader what has moved since
+  `last-rehearsed`, and tell them nothing here answers that.
 * **`status: draft`** — it was not agreed when the export was taken.
 * **`status: retired`** — it has been stood down. Find what replaced it before you follow it.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the four.
+`manifest.json` say when it was taken, and are worth quoting alongside any of them.
 
 ## Say when there is nothing
 

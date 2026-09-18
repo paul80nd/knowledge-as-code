@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: draft
 last-rehearsed:
+rehearsal-frequency:
 owner:
 tags: [ a, b ]
 ---
@@ -22,7 +23,8 @@ and how it is reviewed. What is below is only what a process adds to that.
 * **`status`**: `active` · `draft` · `retired`.
 * **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is better than a guess: an unrehearsed procedure
   is a hypothesis. Update it when someone actually follows the process end to end, not when someone edits the document.
-* **`rehearsal-frequency`**: `per-release` · `quarterly` · `annual`.
+* **`rehearsal-frequency`**: `on-change` · `per-release` · `quarterly` · `annual`. Write `on-change` where the
+  trigger is a change to what the process operates on, and not a date.
 * **`requires-access`**: the systems or roles needed.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
@@ -51,13 +53,15 @@ doesn't know who that is. Name them, or name the role.)_
 
 ## Steps
 
-1. Do the thing. Imperative, one action per step.
+1. Do the thing. Imperative, one action per step. {{What the reader sees when it worked}}.
 2. Do the next thing.
+3. Optional: do this only where {{condition}}.
 
 * Sub-steps where a step branches.
 
-_(Assume the reader has not done this before. Do not hedge: "typically the order would be" is not followable. If the
-order genuinely varies, say what it depends on.)_
+_(Assume the reader has not done this before. State what a step produces, in the same step, so the reader can tell it
+worked. Open an optional step with `Optional:`. Put a warning before the step it guards. Do not hedge: "typically the
+order would be" is not followable. Where the order varies, say what decides it.)_
 
 ## Verification
 
@@ -67,7 +71,9 @@ _(Not optional. A process that ends at the last action leaves the reader guessin
 
 ## If it goes wrong
 
-How to back out, or who to tell. If there is no rollback, say so. That fact belongs before step 1, not after it.
+How to back out, or who to tell. Where there is no way back, say so here, and warn the reader before step 1 as well.
+
+_(Not optional. A reader reads this before step 1, to decide whether to start at all.)_
 
 ## Related
 

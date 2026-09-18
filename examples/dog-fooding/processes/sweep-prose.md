@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: active
 last-rehearsed: "never"
+rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ agents, prose ]
 ---
@@ -55,6 +56,13 @@ job.
 
 Close by stating each file's word count before and after. Name what you deliberately left, and the rule exempting it.
 Name every place a rule did not decide the answer.
+
+## If it goes wrong
+
+Run `git checkout` over the folder. A sweep changes prose alone, so the branch is the whole of the damage.
+
+Where the version check in step 2 did not stop an agent loading stale skills, discard that batch and run it again. A
+file half-swept to two sets of rules reads worse than the one you started with.
 
 ## Related
 

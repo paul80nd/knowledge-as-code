@@ -68,7 +68,7 @@ fields:
     required: false
     type: enum
     values: $enums.rehearsal-frequency
-    description: How often to rehearse the runbook.
+    description: How often, or on what event, to rehearse the runbook.
 
   requires-access:
     required: false

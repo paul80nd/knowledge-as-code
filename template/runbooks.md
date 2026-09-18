@@ -37,20 +37,20 @@ look like processes. You open the document on a day when the estate is already d
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                 | Value                              | Notes                                                                         |
-|-----------------------|------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†               | string                             | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†             | string                             | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†             | `procedural`                       | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†           | `active` `draft` `retired`         | Whether the runbook is current, drafted, or stood down.                       |
-| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †           | list                               | Where this record's content came from, one entry per source.                  |
-| `tags` †              | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `applies-to`          | list                               | Service ids this runbook covers.                                              |
-| `severity`            | `sev1` `sev2` `sev3`               | The severity this runbook is written for.                                     |
-| `last-rehearsed` *    | date                               | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
-| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often to rehearse the runbook.                                            |
-| `requires-access`     | list                               | The systems or roles the reader needs before starting.                        |
+| Field                 | Value                                          | Notes                                                                         |
+|-----------------------|------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†               | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†             | string                                         | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†             | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†           | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down.                       |
+| `owner` *†            | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †           | list                                           | Where this record's content came from, one entry per source.                  |
+| `tags` †              | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `applies-to`          | list                                           | Service ids this runbook covers.                                              |
+| `severity`            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                     |
+| `last-rehearsed` *    | date                                           | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
+| `rehearsal-frequency` | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                         |
+| `requires-access`     | list                                           | The systems or roles the reader needs before starting.                        |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -72,8 +72,8 @@ look like processes. You open the document on a day when the estate is already d
   reader wants the theory afterwards.
 * **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.
-* **Rehearse on a schedule.** `rehearsal-frequency` says how often, and `last-rehearsed` records the last time someone
-  did.
+* **Rehearse on a cadence, or on the change that breaks it.** `rehearsal-frequency` says which, and `last-rehearsed`
+  records the last time someone walked it.
 
 ## What CI checks
 
