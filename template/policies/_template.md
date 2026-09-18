@@ -46,7 +46,8 @@ and how it is reviewed. What is below is only what a policy adds to that.
   filed under **Inspiration**, and that citation is provenance rather than obligation, so it stays out of the roll-up.
   `framework-posture` reports a clause citing a framework the register does not place at all.
 * **`active-from`**: the day the policy came into force, quoted `"YYYY-MM-DD"`. Leave the key bare until
-  `status` is `active`. A retired policy keeps the date.
+  `status` is `active`. A retired policy keeps the date, and `review-not-before-active` fails a `review-by` earlier
+  than it.
 * **`review-by`**: a quoted date. Annual is usually right for a policy. Bring it forward whenever the estate,
   the law, or a framework this policy cites changes.
 

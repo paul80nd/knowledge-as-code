@@ -21,8 +21,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A policy in force says the day it came into force.** `active-from` takes the day, quoted, and `kac validate`
   requires it where `status` is `active`. NIST SP 800-53 Rev. 5's `-1` controls and ISO/IEC 27001 clause 5.2 both ask a
-  policy to record its approval, and `owner` says who without saying when. It stays out of the export, and `kac new`
-  sends a `_template.md` naming it.
+  policy to record its approval, and `owner` says who without saying when. `review-not-before-active` fails a
+  `review-by` earlier than it. The field stays out of the export, and `kac new` sends a `_template.md` naming it. A
+  corpus already holding an `active` policy owes the date at its next `kac update`.
 
 - **An integration says how the estate would leave it.** `Exit` is a section, and `exit-required` warns where a
   `critical` or `important` integration still in use has none. Article 30(3)(f) of DORA asks an ICT contract for an

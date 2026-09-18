@@ -156,6 +156,7 @@ Make the folders your own commitments need, and keep the set small enough to sca
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
+| `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
 
 <!-- END GENERATED: checks-policies -->

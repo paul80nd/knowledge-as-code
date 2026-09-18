@@ -152,6 +152,15 @@ rules:
     # `postures:` lists the standings that oblige a summary, in the words `frameworks.md` files them under.
     # The corpus decides that list, and `kac` reads it.
 
+  - id: review-not-before-active
+    description: '`review-by` is at or after `active-from`.'
+    severity: error
+    # Guarded, so a missing date is reported once, by `required-field`.
+    expr: "present('review-by') and present('active-from') implies field('review-by') >= field('active-from')"
+    message: >
+      `review-by` is before `active-from`, and a policy is not due for review before it comes into force. If
+      both dates are right, the earlier one is `active-from`.
+
   - id: posture-belongs-to-frameworks
     description: '"compliant", "certified" or "registered" written near a framework reference.'
     severity: warning
