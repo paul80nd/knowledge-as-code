@@ -13,17 +13,32 @@ detail: >
   Disaster recovery and estate rebuild are runbooks.
 
 lineage:
-  prior-art: "[Google SRE](https://sre.google/sre-book/introduction/), the playbook"
+  prior-art: >-
+    [Google SRE, *Introduction*](https://sre.google/sre-book/introduction/): the playbook.
+    [Google SRE Workbook, *On-Call*](https://sre.google/workbook/on-call/): what a playbook explains.
+    [AWS Well-Architected OPS07-BP03](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_runbooks.html):
+    the runbook that achieves an outcome, and
+    [OPS07-BP04](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_playbooks.html):
+    the playbook that investigates an issue
   alignment: >
-    Writing the response down before the incident. Google measures roughly a threefold improvement in mean
-    time to recovery
+    The response written down before the incident. Google measures roughly a threefold improvement in mean time to
+    recovery over improvising the response. The workbook asks a playbook to explain an alert's severity and impact,
+    which `severity` and `Impact` state. AWS asks for step-by-step discovery, and for the tools and permissions to
+    start: `Diagnosis`, `requires-tools` and `requires-access`. It asks for a route out where nobody finds the cause,
+    and a plan for telling the people waiting: `Escalation` and `Communication`
   divergence: >
-    Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree
+    Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
+    `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both
+    on one page, because a reader at 2am opens one document. The workbook and AWS each send a deterministic list of
+    commands to automation, and this type stays a document. Asking every runbook for a rehearsal date is this
+    framework's own, and no source states it
 
 collision: >
-  The industry uses *runbook* and *playbook* interchangeably, and Google's SRE material says *playbook*. This
-  framework says *runbook*, because *playbook* also means an executable artefact in configuration-management
-  tooling. A word meaning both a document and a program gets misread in a repository holding both.
+  The industry does not agree on *runbook* and *playbook*. Google's SRE material says *playbook* for investigating a
+  failure and for resolving it. AWS splits the two: a runbook achieves a known outcome, and a playbook investigates an
+  issue. This framework says *runbook* for the incident-time document and *process* for the planned one. *Playbook*
+  also means an executable artefact in configuration-management tooling, and a word meaning both a document and a
+  program gets misread in a repository holding both.
 
 id:
   prefix: rbk
@@ -50,10 +65,13 @@ fields:
     description: Service ids this runbook covers.
 
   severity:
-    required: false
+    required: true
     type: enum
     values: $enums.severity
     description: The severity this runbook is written for.
+    notes: >
+      `severity` says how urgent, and `Impact` says who is affected. A reader deciding whether to wake somebody
+      needs both.
 
   last-rehearsed:
     required: true
@@ -65,27 +83,41 @@ fields:
       incident, while there is still time to rehearse it.
 
   rehearsal-frequency:
-    required: false
+    required: true
     type: enum
     values: $enums.rehearsal-frequency
     description: How often, or on what event, to rehearse the runbook.
+
+  requires-tools:
+    required: false
+    type: list
+    of: string
+    description: The tools the reader needs installed before starting.
+    notes: >
+      Separate from `requires-access`. A tool is something you install, and a permission is something somebody
+      grants you.
 
   requires-access:
     required: false
     type: list
     of: string
-    description: The systems or roles the reader needs before starting.
+    description: The permissions or roles the reader needs before starting.
     notes: List every one. A permission found missing mid-incident extends the outage.
 
+# `Impact` follows `Symptoms`, so a reader learns whether this is their failure and then how bad it is.
+# `Communication` follows `Escalation`, because waking somebody and telling everybody else are one moment.
 sections:
-  required: [Symptoms, Immediate actions, Diagnosis, Resolution, Escalation]
+  required: [Symptoms, Impact, Immediate actions, Diagnosis, Resolution, Escalation, Communication]
   optional: [Afterwards, Related]
 
 export:
-  version: 1
-  fields: [id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-access, tags]
+  version: 2
+  fields:
+    [id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-tools, requires-access,
+     tags]
   sections:
     Symptoms: full
+    Impact: full
   notes: >
     The steps are left out on purpose.
     See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#runbooks>.

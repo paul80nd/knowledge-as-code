@@ -5,8 +5,11 @@ tier: procedural
 status: active
 severity: sev3
 last-rehearsed: "never"
+rehearsal-frequency: on-change
+requires-tools:
+  - A .NET 10 SDK
+  - A checkout of this repository
 requires-access:
-  - A .NET 10 SDK and a checkout of this repository
   - Write access to the branch the fix lands on
 owner: human:paul.law
 tags: [ imports, restore, versioning ]
@@ -25,6 +28,11 @@ tags: [ imports, restore, versioning ]
   and `engineering` consume nothing, so they pass.
 
 Nothing failed in the producer. `examples/engineering` validates, exports and packs.
+
+## Impact
+
+Nothing in production. `examples/payments` and `examples/dog-fooding` cannot validate, so the `corpora` job fails and
+nothing merges.
 
 ## Immediate actions
 
@@ -82,6 +90,12 @@ Confirmed when both consumers restore and validate with no errors.
 |---------------------------------------------------------------|-------------------------------|-----------------------------|
 | The folder has the version and the restore still refuses it   | Paul Law, as the tool's owner | An issue on this repository |
 | The package was fetched at one version and says it is another | Paul Law, as the tool's owner | An issue on this repository |
+
+## Communication
+
+| Who                                                 | What they need to know                          | How often                 |
+|-----------------------------------------------------|-------------------------------------------------|---------------------------|
+| Anybody on a branch touching `examples/engineering` | The lock is stale, and which version to move to | Once, as soon as you know |
 
 ## Afterwards
 

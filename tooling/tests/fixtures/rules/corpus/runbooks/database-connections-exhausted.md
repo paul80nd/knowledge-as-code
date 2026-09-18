@@ -3,8 +3,10 @@ id: rbk-database-connections-exhausted
 type: runbook
 tier: procedural
 status: active
+severity: sev2
 owner: human:alex.doe
 last-rehearsed: "never"
+rehearsal-frequency: quarterly
 ---
 
 # Database connections exhausted
@@ -23,6 +25,10 @@ assertion: without `allow-literal` the value fails `date-format`, and this golde
 
 Connection pool errors in the application log.
 
+## Impact
+
+Requests that need the database fail while the pool is empty.
+
 ## Diagnosis
 
 Check the pool size against the connection count.
@@ -34,3 +40,7 @@ Raise the pool ceiling, or find what is holding connections open.
 ## Escalation
 
 The platform team.
+
+## Communication
+
+Tell the support channel every thirty minutes until the pool recovers.
