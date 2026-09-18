@@ -8,6 +8,7 @@ used-by:
   - svc-notices
 criticality: important
 their-sla: 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds
+replaces: int-sms-notices
 owner: human:mira.okonjo
 tags: [ email, templates ]
 ---
@@ -50,6 +51,17 @@ The token sits in the platform key vault.
 
 Delivery is measured to the receiving server. A message a borrower's own provider then files as junk counts as
 delivered, so the target says nothing about whether anybody read it.
+
+## Exit
+
+The API call is one HTTP request, and [svc-notices] would point it at another vendor in a configuration change.
+
+**The wording is the lock-in.** The vendor stores every template, so a move means re-authoring each one in the new
+vendor's console and checking what a borrower reads. Nothing in version control says what the current wording is, so
+that re-authoring starts by copying it out of the console by hand.
+
+The contract gives 60 days' notice. This estate has made the move once already: [int-sms-notices] closed in June 2026
+and its traffic came here.
 
 ## Commercials
 

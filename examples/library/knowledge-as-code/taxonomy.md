@@ -119,6 +119,7 @@ graph LR;
   t_explanations -- explains --> t_processes;
   t_explanations -- explains --> t_adrs;
   t_glossary -- narrows --> t_glossary;
+  t_integrations -- replaces --> t_integrations;
   t_integrations -- used-by --> t_services;
   t_offerings -- implemented-by --> t_services;
   t_processes -- applies-to --> t_services;
@@ -143,6 +144,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Data        | `owned-by`       | Service                         |                 |
 | Explanation | `explains`       | Service, Offering, Process, ADR |                 |
 | Glossary    | `narrows`        | Glossary                        |                 |
+| Integration | `replaces`       | Integration                     | `successor`     |
+| Integration | `successor`      | Integration                     | `replaces`      |
 | Integration | `used-by`        | Service                         |                 |
 | Offering    | `implemented-by` | Service                         |                 |
 | Process     | `applies-to`     | Service                         |                 |

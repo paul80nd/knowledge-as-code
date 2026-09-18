@@ -19,6 +19,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **An integration says how the estate would leave it.** `Exit` is a section, and `exit-required` warns where a
+  `critical` or `important` integration still in use has none. Article 30(3)(f) of DORA asks an ICT contract for an
+  exit strategy, and the section travels in the export. `kac new` sends a `_template.md` naming it.
+
+- **A retired integration names what took over.** `successor` takes an integration id, `replaces` is the same edge
+  read the other way, and `kac validate` checks both ends. `retired-has-successor` warns where a `retired` integration
+  names none. Both fields travel in the export.
+
+- **An integration on trial says what would end the trial.** `Trial criteria` is a section, and `trial-has-criteria`
+  warns where a `trial` integration has none. The section stays out of the export, because a consumer reads `status`.
+
 - **A control that never stops says so.** `frequency` takes `continuous`. A control whose `mechanism` is
   `runtime-alert` has to carry a frequency, and none of `per-pr` through `annual` is true of an alert rule that
   evaluates without stopping.

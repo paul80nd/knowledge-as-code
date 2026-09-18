@@ -55,6 +55,16 @@ outage in that window earns no credit.
 **No target covers the administration console.** Branch staff unlock an account there, and the contract treats that as
 a separate product.
 
+## Exit
+
+Moving to another provider means re-registering every client and pointing both services at a new discovery document.
+[svc-catalogue-web] and [svc-catalogue-api] read that document at start-up, so the change is configuration at each end.
+
+**The borrower accounts are the hard part.** The vendor runs the tenant and keeps the password every borrower set.
+Nothing here can read one, so a move ends with every borrower setting a new password at the new provider.
+
+The contract gives 90 days' notice, and any move has to fit inside it.
+
 ## Commercials
 
 |                   |                                         |

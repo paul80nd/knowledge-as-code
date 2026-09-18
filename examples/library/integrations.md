@@ -8,8 +8,8 @@ The external systems the platform depends on.
 
 One document per third-party or external system we depend on but do not deploy: payment gateways, tax-calculation
 services, email delivery, accounting systems, and the Azure platform services themselves. The record covers what the
-system does for us, the contract we call it under, how it authenticates and how it fails. It also carries what the
-vendor promises us, what we do when they break that promise, and who to contact.
+system does for us, the contract we call it under, how it authenticates and how it fails. It also states what the vendor
+promises us, what we do when they break that promise, who to contact, and how we would move to somebody else.
 
 ## Why we use them
 
@@ -19,6 +19,9 @@ contract says, what SLA they signed and who answers the phone when we call. None
 An integration also caps what we can promise. Where an NFR targets more availability than the vendor's SLA supports, the
 vendor's bad day breaks our target. Whoever sets that target can read the vendor's number in `their-sla` first.
 Otherwise the gap turns up during an incident.
+
+An integration is also the hardest thing here to replace. On the day a vendor raises the price or stops answering,
+somebody has to say what a move would cost. `Exit` answers that before anyone is under pressure.
 
 ## Scope
 
@@ -51,6 +54,8 @@ Not the place for:
 | `used-by` *     | list                                | Ids of the services that call this integration.                               |
 | `criticality` * | `critical` `important` `supporting` | The impact on a customer when the integration is unavailable.                 |
 | `their-sla`     | string                              | What the vendor's contract promises, in the contract's own words.             |
+| `replaces`      | id                                  | The integration id this one took over from.                                   |
+| `successor`     | id                                  | The integration id that took over from this one.                              |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -66,11 +71,18 @@ Not the place for:
    503 during their maintenance window, we queue and retry" is.
 4. Copy `their-sla` from the contract, word for word.
 5. Name who to contact when the vendor misses that SLA.
+6. Say how we would leave. Name what would have to be rebuilt, what data would have to move, and what makes the move
+   hard.
 
 **Conventions**
 
 * **Every integration names a fallback**, or states plainly that it has none. Where the document says neither, whoever
   is on call works it out during the incident.
+* **A `critical` or `important` integration says how we would leave it.** `Exit` states what would have to be rebuilt
+  and what makes the move hard. A vendor's lock-in rarely appears in the contract.
+* **A `trial` integration says what would end the trial.** A trial with no decision criteria stays a trial forever.
+* **A `retired` integration names its `successor`**, and the successor names it back with `replaces`. CI checks both
+  ends, so a reader arriving from an old citation reaches the system that took the traffic.
 * **Record the commercial facts**: cost model, renewal date, account owner. Nobody else writes them down, and you want
   them on the day the vendor raises the price or stops answering.
 * **`used-by` names the services that call this system**, by id. CI fails an id that names no service.
@@ -104,7 +116,11 @@ Not the place for:
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
 | `label-canonical`           | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
+| `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `retired-has-successor`     | warning | A retired integration states what took over from it.                                                            |
+| `trial-has-criteria`        | warning | An integration on trial states what would end the trial.                                                        |
+| `exit-required`             | warning | A critical or important integration still in use states how the estate would leave it.                          |
 | `fallback-required`         | warning | The Failure modes section mentions a fallback somewhere, or says there is none.                                 |
 | `no-credentials`            | error   | Nothing reads as a token, key, password or connection string.                                                   |
 

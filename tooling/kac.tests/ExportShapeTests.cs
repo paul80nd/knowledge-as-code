@@ -72,10 +72,11 @@ public class ExportShapeTests
             path: record.path
             anchor: part.anchor
         integrations@1
-          fields: id, title, status, vendor, used-by, criticality, their-sla, tags
+          fields: id, title, status, vendor, used-by, criticality, their-sla, replaces, successor, tags
           sections:
             What it does: full
             Failure modes: full
+            Exit: full
         nfrs@1
           fields: id, title, status, applies-to, target, measured-by, constrained-by, review-by, tags
           sections:

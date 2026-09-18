@@ -46,12 +46,31 @@ The signing material sits in the platform key vault. A borrower's card number ne
 | The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |
 | The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |
 
+## Trial criteria
+
+The trial ends when [ofr-reservations] goes live and a borrower pays a fee. Three things settle whether this vendor
+stays.
+
+* **Settlement matches.** Every payment the vendor reports reaches the consortium's account within three working days,
+  over a full month.
+* **The unmatched holds stay few.** Branch staff match a payment the vendor took to a hold the borrower left
+  provisional. More than a handful a week ends the trial.
+* **The fee per transaction stands.** The contract is rolling, so the vendor can change that fee on 30 days' notice.
+
 ## Their SLA
 
 Availability is measured over a calendar month. Settlement into the consortium's account is three working days.
 
 **The contract covers the hosted page alone.** Nothing in it promises that a payment the vendor took is a payment this
-estate hears about. That is why the second row above has no fallback.
+estate hears about. That is why the second row of the failure table has no fallback.
+
+## Exit
+
+No card detail sits in this estate, so nothing has to be migrated. A move is a change to the redirect
+[svc-reservations] builds, and to the signature it verifies on the way back.
+
+**The old vendor keeps the history.** Every payment is matched to a hold by a reference this estate minted, and the
+record of what was paid stays with whoever took it. A move leaves that history behind the old vendor's portal.
 
 ## Commercials
 
@@ -64,7 +83,8 @@ estate hears about. That is why the second row above has no fallback.
 ## Contacts
 
 A payment incident goes to a 24-hour support line. Everything else goes to the portal, and a ticket gets a reply within
-one working day. The trial has no named technical contact, so a question about the sandbox goes through the account manager.
+one working day. The trial has no named technical contact, so a question about the sandbox goes through the account
+manager.
 
 ## Related
 
