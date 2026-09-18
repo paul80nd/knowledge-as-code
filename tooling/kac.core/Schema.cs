@@ -133,10 +133,11 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public string Source { get; } = source;
     public string Section { get; init; } = "";
 
-    // The label a part's optional second block opens with, written bold: `Not` on a glossary term. Empty
-    // where a type's parts carry no such block, and the whole of what makes one legible to anything but
-    // a reader. Declared on the type because it is a fact about how that type writes its parts.
-    public string Aside { get; init; } = "";
+    // The labels a part's optional further blocks open with, written bold: `Also`, `Avoid` and `Not` on a
+    // glossary term. Empty where a type's parts carry none, and the whole of what makes one legible to
+    // anything but a reader. Declared on the type because it is a fact about how that type writes its
+    // parts. Each label travels as its own key, so a consumer reads a second name and a boundary apart.
+    public IReadOnlyList<string> Asides { get; init; } = [];
 
     // The heading level a part is written at, for the heading source. H3 throughout the corpus: an H1 is
     // the document and an H2 is a section, so the first level below them is the first that can be a part.
@@ -248,19 +249,18 @@ public sealed class ExportSpec
 // Where one key of a part line takes its value from. Read by `schema-dispatch` from here, so a type
 // naming a source nothing fills is told so rather than exporting a key that is null on every line.
 //
-// Two of these take what follows the dot as an argument, because the thing named belongs to the type
+// Several of these take what follows the dot as an argument, because the thing named belongs to the type
 // rather than to this list: `front.review-by` names a field the type declares or inherits, and
 // `column.Alignment` names a header its `parts.columns:` declares. The rest each name one thing.
 //
-// `part.lead` and `part.aside` read a part's body, which only the heading source gives a part. A table
-// row is its own body, and `SchemaChecks` refuses either against a table-sourced type.
+// `part.lead` and `part.aside.<Label>` read a part's body, which only the heading source gives a part. A
+// table row is its own body, and `SchemaChecks` refuses either against a table-sourced type.
 public static class PartLineSource
 {
     public const string PartId = "part.id";       // `<record-id>.<part-id>`, the whole address
     public const string PartKey = "part.key";     // the part id alone
     public const string PartText = "part.text";   // the heading as written, or the second cell flattened
     public const string PartLead = "part.lead";   // the body's first block
-    public const string PartAside = "part.aside"; // the block `parts.aside:` labels, without its label
     public const string PartLevel = "part.level"; // the modal the part opens with
     public const string PartSeeAlso = "part.see-also";
     public const string PartAnchor = "part.anchor"; // the fragment the part resolves at
@@ -277,10 +277,14 @@ public static class PartLineSource
     // The remainder is that label, so `part.citations.Covers` carries what the `Covers` line gathers.
     public const string CitationPrefix = "part.citations.";
 
-    // The sources naming one thing each, so the two prefixed families are tested separately.
+    // A bold-labelled block inside a part, named by a label the type's `parts.asides:` declares. The
+    // remainder is that label, so `part.aside.Not` carries the `**Not:**` block without its label.
+    public const string AsidePrefix = "part.aside.";
+
+    // The sources naming one thing each, so the prefixed families are tested separately.
     public static readonly IReadOnlyList<string> Fixed =
     [
-        PartId, PartKey, PartText, PartLead, PartAside, PartLevel, PartSeeAlso, PartAnchor,
+        PartId, PartKey, PartText, PartLead, PartLevel, PartSeeAlso, PartAnchor,
         RecordId, RecordType, RecordPath
     ];
 
@@ -907,7 +911,7 @@ public sealed partial class Schema
                 {
                     Noun = Yaml.Str(parts.Get("noun")) ?? "part",
                     Section = Yaml.Str(parts.Get("section")) ?? "",
-                    Aside = Yaml.Str(parts.Get("aside")) ?? "",
+                    Asides = Yaml.StrList(parts.Get("asides")),
                     Level = Yaml.Int(parts.Get("level"), 3),
                     Columns = Yaml.StrList(parts.Get("columns")) is { Count: > 0 } cols
                         ? cols

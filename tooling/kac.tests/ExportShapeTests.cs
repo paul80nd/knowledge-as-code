@@ -60,7 +60,9 @@ public class ExportShapeTests
             id: part.id
             title: part.text
             definition: part.lead
-            not: part.aside
+            also: part.aside.Also
+            avoid: part.aside.Avoid
+            not: part.aside.Not
             seeAlso: part.see-also
             type: record.type
             record: record.id

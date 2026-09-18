@@ -56,9 +56,12 @@ the shared one still reads correctly in a corpus that never had the other half.
 3. Add an H3 in alphabetical position.
 4. One sentence of definition. If it needs a paragraph, the paragraph belongs in an explanation and the entry links to
    it.
-5. Add a `**Not:**` line wherever confusion is plausible. Those lines are the most useful content here.
-6. Name the owning service where the concept has one.
-7. Where a narrower glossary redefines a term, reference the other entry from each. Where the general glossary is
+5. Add an `**Also:**` line where the thing has a second name: an acronym, an abbreviation, or another word for it.
+   A reader searching that name reaches the entry.
+6. Add an `**Avoid:**` line where this glossary has dropped a name for the thing. Say what to write instead.
+7. Add a `**Not:**` line where another thing with a name is confused with this one. Name that thing.
+8. Name the owning service where the concept has one.
+9. Where a narrower glossary redefines a term, reference the other entry from each. Where the general glossary is
    shared, only the narrower entry carries a reference.
 
 **Conventions**
@@ -66,6 +69,13 @@ the shared one still reads correctly in a corpus that never had the other half.
 * **Cross-references name the term**: `[gls-search.title]`, defined as `search.md#title`. The anchor is the term's
   identifier. There are no numeric ids.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
+* **The labelled lines run `Also`, `Avoid`, then `Not`.** `Also` and `Avoid` give the reader other names for this
+  thing. `Not` gives them a different thing. Each travels to a consumer under its own key.
+* **All three are optional.** Leave a line out rather than reach for something to put under it. An entry is read by
+  everyone who reads the glossary, so a line that says nothing costs every one of them.
+* **A `Not:` line names another thing you can point at.** A neighbouring entry, a word from another context, a term the
+  reader already knows. It never names a property this thing lacks: "Not: everything we would like" points at nothing,
+  and a definition that needs it was written badly. Rewrite the definition and drop the line.
 
 **Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
 [adr-0001] describes. That digest cuts off when its budget is spent, and three glossaries are enough to spend it. So the

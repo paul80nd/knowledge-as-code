@@ -100,7 +100,7 @@ public class ExporterTests
         IdPrefix = "gls",
         RequiredSections = ["Scope", "Terms"],
         Parts = new PartSpec(PartSpec.Headings, "", [], [])
-            { Section = "Terms", Noun = "term", Level = 3, Aside = "Not" },
+            { Section = "Terms", Noun = "term", Level = 3, Asides = ["Also", "Avoid", "Not"] },
         Export = new ExportSpec
         {
             Version = 1,
@@ -113,7 +113,9 @@ public class ExporterTests
                 ("id", PartLineSource.PartId),
                 ("title", PartLineSource.PartText),
                 ("definition", PartLineSource.PartLead),
-                ("not", PartLineSource.PartAside),
+                ("also", $"{PartLineSource.AsidePrefix}Also"),
+                ("avoid", $"{PartLineSource.AsidePrefix}Avoid"),
+                ("not", $"{PartLineSource.AsidePrefix}Not"),
                 ("seeAlso", PartLineSource.PartSeeAlso),
                 ("type", PartLineSource.RecordType),
                 ("record", PartLineSource.RecordId),

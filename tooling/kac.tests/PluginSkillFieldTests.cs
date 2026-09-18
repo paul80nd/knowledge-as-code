@@ -115,12 +115,15 @@ public class PluginSkillFieldTests
         // absence to test rather than two.
         if (PartLineSource.Argument(source, PartLineSource.CitationPrefix) is not null) return List;
 
+        // A part carrying no block under that label writes null, the same absence as a missing lead.
+        if (PartLineSource.Argument(source, PartLineSource.AsidePrefix) is not null) return OrNull;
+
         return source switch
         {
             PartLineSource.PartId or PartLineSource.PartKey or PartLineSource.PartText
                 or PartLineSource.PartAnchor or PartLineSource.RecordId or PartLineSource.RecordType
                 or PartLineSource.RecordPath => Text,
-            PartLineSource.PartLead or PartLineSource.PartAside or PartLineSource.PartLevel => OrNull,
+            PartLineSource.PartLead or PartLineSource.PartLevel => OrNull,
             PartLineSource.PartSeeAlso => List,
             _ => throw new InvalidOperationException(
                 $"'{source}' is a line source this test holds no type for. Add it here and to the three skills.")

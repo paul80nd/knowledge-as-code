@@ -340,25 +340,29 @@ public static class SchemaChecks
                 return;
             }
 
+            if (PartLineSource.Argument(source, PartLineSource.AsidePrefix) is { } aside)
+            {
+                if (!parts.Asides.Contains(aside, StringComparer.Ordinal))
+                    f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                        $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and the type's "
+                        + "'parts.asides:' declares no such label. Nothing would recognise the block, so the "
+                        + "key would be null on every line."));
+                else if (parts.Source == PartSpec.Table) RefuseBodySource(name, source);
+                return;
+            }
+
             if (!PartLineSource.Fixed.Contains(source, StringComparer.Ordinal))
             {
                 Dispatch(at, $"type '{key}' declares 'export.parts.line: {name}' at source '{source}', which "
                              + $"nothing fills. A line takes {List(PartLineSource.Fixed)}, a "
                              + $"'{PartLineSource.FrontPrefix}<field>', a "
-                             + $"'{PartLineSource.ColumnPrefix}<Header>' or a "
-                             + $"'{PartLineSource.CitationPrefix}<Label>'.", f);
+                             + $"'{PartLineSource.ColumnPrefix}<Header>', a "
+                             + $"'{PartLineSource.CitationPrefix}<Label>' or a "
+                             + $"'{PartLineSource.AsidePrefix}<Label>'.", f);
                 return;
             }
 
-            // Both of these read a part's body, and only the heading source gives a part one: a table
-            // row is its own body. A table-sourced type carries the row through 'part.text' and its
-            // columns instead.
-            if ((source is PartLineSource.PartLead or PartLineSource.PartAside)
-                && parts.Source == PartSpec.Table)
-                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and sources its parts "
-                    + "from a table. A row is its own body, so the source would write null on every line. "
-                    + $"Carry the row through '{PartLineSource.PartText}' and its columns."));
+            if (source is PartLineSource.PartLead && parts.Source == PartSpec.Table) RefuseBodySource(name, source);
 
             if (source == PartLineSource.PartLevel && parts.Levels.Count == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
@@ -366,6 +370,14 @@ public static class SchemaChecks
                     + "declares no binding or advisory levels. Declare the modals a part may open with, or "
                     + "drop the key."));
         }
+
+        // A source reading a part's body, against a type whose parts are table rows. Only the heading
+        // source gives a part a body: a row is its own body, so the source would write null on every line.
+        void RefuseBodySource(string name, string source) =>
+            f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and sources its parts "
+                + "from a table. A row is its own body, so the source would write null on every line. "
+                + $"Carry the row through '{PartLineSource.PartText}' and its columns."));
 
         // A section and a part line admit different fidelities, so each call says which.
         void Fidelity(string entry, string value, IReadOnlyList<string> carried)

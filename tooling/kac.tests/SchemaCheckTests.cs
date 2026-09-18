@@ -671,20 +671,47 @@ public class SchemaCheckTests
             parts: new PartSpec(PartSpec.Table, "", ["MUST"], [])
                 { Section = "Terms", Columns = ["Id", "Clause", "Alignment"] })));
 
-    // A table row is its own body, so neither source has anything to read and both would write null on
-    // every line.
-    [Theory]
-    [InlineData("part.lead")]
-    [InlineData("part.aside")]
-    public void A_line_source_reading_a_body_against_a_table_is_reported(string source)
+    // A table row is its own body, so a source reading a body has nothing to read and would write null on
+    // every line. Asked of the lead here and of an aside below, because each reaches the refusal by its own
+    // arm: the lead through the fixed vocabulary, an aside through the prefixed one.
+    [Fact]
+    public void A_line_source_reading_a_lead_against_a_table_is_reported()
     {
         var found = Assert.Single(Check(Line(
-            ("definition", source),
+            ("definition", "part.lead"),
             parts: new PartSpec(PartSpec.Table, "", ["MUST"], []) { Section = "Terms" })));
 
         Assert.Equal("schema-shape", found.Check.Value);
         Assert.Contains("A row is its own body", found.Message);
     }
+
+    [Fact]
+    public void A_line_source_reading_an_aside_against_a_table_is_reported()
+    {
+        var found = Assert.Single(Check(Line(
+            ("not", "part.aside.Not"),
+            parts: new PartSpec(PartSpec.Table, "", ["MUST"], []) { Section = "Terms", Asides = ["Not"] })));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("A row is its own body", found.Message);
+    }
+
+    // A label the type never declared marks a block nothing looks for, so the key would be null on every
+    // line while the schema went on saying the type carries it.
+    [Fact]
+    public void A_line_source_naming_an_undeclared_aside_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("avoid", "part.aside.Avoid"))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("declares no such label", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_naming_a_declared_aside_passes()
+        => Assert.Empty(Check(Line(
+            ("not", "part.aside.Not"),
+            parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms", Asides = ["Not"] })));
 
     // The level is matched against the modals the type declares, so a type declaring none carries a key
     // that is null wherever it appears. A heading-sourced type is the case with nothing else to say it:

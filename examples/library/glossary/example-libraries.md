@@ -25,6 +25,8 @@ uses differently belongs in that system's glossary, and the entry here points at
 
 A person with a library card. One branch issues the card and every branch accepts it.
 
+**Avoid:** patron. The consortium writes borrower everywhere a reader can see it.
+
 **Not:** a reader. Anyone may read in a branch without a card.
 
 ### Branch
@@ -36,6 +38,8 @@ One physical library building, with its own opening hours, staff and shelves.
 ### Item
 
 One physical copy of a title, with its own barcode, shelved at one branch.
+
+**Also:** copy.
 
 **Not:** a title. A popular title is one work and thirty items. Only an item can be lent.
 
@@ -51,6 +55,8 @@ Owned by [svc-catalogue-api].
 ### Title
 
 A work the consortium has catalogued. The copies of it on the shelves are items.
+
+**Also:** work.
 
 **Not:** the indexed field of the same name. See [gls-search.title].
 
