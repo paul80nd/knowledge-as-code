@@ -205,15 +205,27 @@ with it, because both describe running the thing rather than depending on it.
 
 ### integrations
 
-`What it does` and `Failure modes` travel. A consumer asks which external systems this estate calls, and what breaks
-when one of them is down. Those two sections answer both.
+`What it does`, `Failure modes` and `Exit` travel. A consumer asks which external systems this estate calls, what
+breaks when one is down, and how hard one would be to replace. Those three sections answer all of it.
 
-`Contract`, `Commercials` and `Contacts` stay behind. An endpoint, a renewal date and a support line serve whoever owns
-the account, and a consumer can use none of them. `Contract` also states where a credential is kept, which nobody
-outside the estate needs.
+`Contract`, `Trial criteria`, `Commercials` and `Contacts` stay behind. An endpoint, a renewal date and a support line
+serve whoever owns the account. `Contract` also states where a credential is kept, which nobody outside the estate
+needs. `Trial criteria` is an evaluation in progress, and a consumer reads `status` instead.
 
-`their-sla` travels in the vendor's own words. `constraint-consistency` on `nfrs` compares an availability target
-against it, and a reworded promise is a different promise.
+`their-sla` travels in the vendor's own words, because `constraint-consistency` on `nfrs` compares an availability
+target against it. `replaces` and `successor` travel as a pair, so a consumer holding an old citation reaches the
+system that took the traffic.
+
+**`Exit` is required of a `critical` or `important` integration still in use.** `exit-required` reports one that has
+none. Article 30(3)(f) of [DORA](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) asks an ICT contract for an exit
+strategy, and the fact a record is missing is rarely the notice period: it is the wording, the history or the
+identities the vendor keeps, which no contract lists. A `retired` integration is excluded, because leaving is already
+done, and a `supporting` one because nothing a customer feels depends on it. A `trial` integration is asked like any
+other: it is the one most likely to be left.
+
+**Data protection is `data`'s, not this type's.** Article 30(2) of DORA puts data location and personal data in the
+vendor contract. Here `data` states them, through `region`, `personal-data` and `flows-to`, which resolves against an
+integration id. An integration record repeats neither.
 
 ### offerings
 

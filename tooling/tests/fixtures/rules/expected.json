@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 36,
+    "validated": 38,
     "templates": 17,
     "skipped": 0,
     "errors": 23,
-    "warnings": 19,
+    "warnings": 23,
     "infos": 0
   },
   "findings": [
@@ -117,6 +117,13 @@
       "file": "integrations/payment-gateway.md",
       "line": 1,
       "severity": "warning",
+      "check": "exit-required",
+      "message": "this integration is critical or important and nothing says how the estate would leave it. Add an `## Exit` section stating what would have to move, and what would make the move hard."
+    },
+    {
+      "file": "integrations/payment-gateway.md",
+      "line": 1,
+      "severity": "warning",
       "check": "fallback-required",
       "message": "the Failure modes section gives no fallback. Say what happens when this integration fails, or say plainly that nothing does."
     },
@@ -126,6 +133,27 @@
       "severity": "error",
       "check": "no-credentials",
       "message": "this looks like a real credential. Write the mechanism and where the value is kept, never the value itself."
+    },
+    {
+      "file": "integrations/retired-no-successor.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "retired-has-successor",
+      "message": "this integration is retired and names no successor. Set `successor` to the integration that took the traffic, so a reader arriving from an old citation has somewhere to go."
+    },
+    {
+      "file": "integrations/trial-no-criteria-no-exit.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "trial-criteria-required",
+      "message": "this integration is on trial and nothing says what would end the trial. Add a `## Trial criteria` section stating what is being evaluated and what would settle it."
+    },
+    {
+      "file": "integrations/trial-no-criteria-no-exit.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "exit-required",
+      "message": "this integration is critical or important and nothing says how the estate would leave it. Add an `## Exit` section stating what would have to move, and what would make the move hard."
     },
     {
       "file": "nfrs/0001-hedged-measurement.md",

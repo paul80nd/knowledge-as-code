@@ -180,6 +180,7 @@ graph LR;
   t_explanations -- explains --> t_adrs;
   t_fixes -- applies-to --> t_services;
   t_glossary -- narrows --> t_glossary;
+  t_integrations -- replaces --> t_integrations;
   t_integrations -- used-by --> t_services;
   t_nfrs -- applies-to --> t_services;
   t_nfrs -- applies-to --> t_offerings;
@@ -224,6 +225,8 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Explanation | `explains`       | Service, Offering, Standard, Process, ADR |                 |
 | Fix         | `applies-to`     | Service                                   |                 |
 | Glossary    | `narrows`        | Glossary                                  |                 |
+| Integration | `replaces`       | Integration                               | `successor`     |
+| Integration | `successor`      | Integration                               | `replaces`      |
 | Integration | `used-by`        | Service                                   |                 |
 | NFR         | `applies-to`     | Service, Offering                         | `nfrs`          |
 | NFR         | `constrained-by` | Integration                               |                 |

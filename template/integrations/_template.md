@@ -25,6 +25,8 @@ and how it is reviewed. What is below is only what an integration adds to that.
 * **`used-by`**: the service ids that call it. An integration nothing uses is a candidate for retirement.
 * **`criticality`**: judged by what breaks for a customer when it is unavailable.
 * **`their-sla`**: what the contract actually says, not what the marketing page implies.
+* **`successor`**: what took over, once the status is `retired`. `replaces` is the same edge read the other way, and
+  CI enforces both ends.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../integrations.md#metadata) lists
@@ -62,10 +64,25 @@ _("It goes down sometimes" is not a failure mode. "Returns 503 during their Sund
 retry with backoff" is. **Every integration names a fallback, or explicitly states there isn't one.** An undocumented
 single point of failure is the most expensive kind.)_
 
+## Trial criteria
+
+_(Required while the status is `trial`, and deleted once it is not.)_
+
+What is being evaluated, what would settle it either way, and what has been measured so far. A trial with no decision
+criteria stays a trial forever.
+
 ## Their SLA
 
 What they commit to, as written in the contract, and what happens when they miss it. Note where this caps one of our
 own [NFRs](../nfrs.md).
+
+## Exit
+
+_(Required while a `critical` or `important` integration is still in use.)_
+
+How we would move to another supplier: what would have to be rebuilt, what data would have to move, and the notice the
+contract needs. **Name what makes the move hard.** The wording, the history and the accounts a vendor keeps are the
+usual answer, and none of them appear in the contract.
 
 ## Commercials
 

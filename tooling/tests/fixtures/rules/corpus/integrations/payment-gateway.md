@@ -29,4 +29,5 @@ api_key=EXAMPLE-NOT-A-REAL-CREDENTIAL
 ## Failure modes
 
 The gateway can be unreachable, or can reject a card. Neither names what happens instead, which is the
-second fault this document carries.
+second of the three faults this document carries. The third is the missing `## Exit`, which `exit-required`
+reports against an `active` and `important` vendor.

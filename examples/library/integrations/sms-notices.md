@@ -7,6 +7,7 @@ vendor: Marbury Messaging
 used-by:
   - svc-notices
 criticality: supporting
+successor: int-mail-delivery
 owner: human:mira.okonjo
 tags: [ notices, sms ]
 ---
