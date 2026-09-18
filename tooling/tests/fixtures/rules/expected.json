@@ -90,7 +90,7 @@
       "line": 1,
       "severity": "error",
       "check": "one-verification-per-actor",
-      "message": "this actor already states a verification on this record. Move the `at` on the entry they have, because `verified` says who has checked the record and git says when each of them checked before."
+      "message": "this actor already states a verification on this record. Move the `at` on the entry they have."
     },
     {
       "file": "fixes/two-symptoms-one-page.md",

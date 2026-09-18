@@ -39,8 +39,6 @@ public class RuleExprTests
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')",
             "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z }\n"));
 
-    // `verified` says who has checked a record, so a second entry for one actor is a log of what git
-    // already keeps.
     [Fact]
     public void Entries_unique_is_false_where_one_actor_is_written_twice()
         => Assert.False(Eval("entries_unique('verified', 'by')",

@@ -37,7 +37,7 @@ Name the title and the filename for the **symptom**, not the cause. That is what
   `at` is a moment in UTC, to the second, and written unquoted. `by` is a person as `human:alex.doe`, or an agent
   named with its version the way a tool names itself. An agent that reproduced the symptom and ran the resolution
   belongs here. A `role:` does not: a post cannot read an answer. Write an actor once: where somebody checks the
-  answer again, move the `at` on the line they have, because git keeps when they checked before.
+  answer again, move the `at` on the line they have, because git keeps every earlier state of the file.
 
   Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
   `human:` line makes it human-reviewed.

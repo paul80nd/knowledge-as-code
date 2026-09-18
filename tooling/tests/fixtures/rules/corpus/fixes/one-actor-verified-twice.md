@@ -17,19 +17,17 @@ owner: human:alex.doe
 
 ## Symptom
 
-Covering `one-verification-per-actor`. The same person states two verifications, which is the list used as a log of
-every re-check rather than as the set of actors who have checked.
+Covering `one-verification-per-actor`. One person states two verifications, which is the list grown as a log.
 
 ## Environment
 
-Any. The finding is about the field, and nothing in the environment bears on it.
+Any. The rule reads the frontmatter, and nothing in the environment bears on it.
 
 ## Cause
 
-`verified` says who has checked the record, and the trust tier reads the actor rather than the count. What git already
-keeps is when each of them checked before.
+`verified` says who has checked the record, and the trust tier reads the actors in it. Git keeps every earlier state of
+the file.
 
 ## Resolution
 
-Move the `at` on the entry the actor has. Two actors reading the same record are two entries, and the rule stays quiet
-on those.
+Move the `at` on the entry the actor has. Two actors are two entries, and the rule stays quiet on those.

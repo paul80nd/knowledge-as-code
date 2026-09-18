@@ -107,7 +107,7 @@ editing the `Imported:` bullet under `## Limits` to match, and adding a `verifie
 | `report-stale`               | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `self-verification`          | error   | A report's `verified` list does not name the producer that `generated.by` names.                                |
 | `verified-by-a-known-actor`  | error   | A verification states an actor the Open Knowledge Format defines, and never a `role:`.                          |
-| `one-verification-per-actor` | error   | An actor is written once in `verified`, and a later check moves the entry it already has.                       |
+| `one-verification-per-actor` | error   | An actor is written once in `verified`, and a second check moves the `at` on the entry they have.               |
 | `generated-by-a-known-actor` | error   | `generated.by` states an actor the Open Knowledge Format defines.                                               |
 
 <!-- END GENERATED: checks-reports -->

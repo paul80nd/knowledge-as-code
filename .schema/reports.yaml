@@ -27,8 +27,9 @@ lineage:
   divergence: >
     OKF puts no version on a source. This type does, because a reader needs to know which content the report
     is true of. It also requires a `verified` entry once a report leaves `draft`, where OKF leaves
-    verification to the publisher. `generated.report` and `generated.tool` are additional keys, which OKF
-    permits and defines nothing of its own for
+    verification to the publisher, and it admits one entry per actor where OKF admits a second entry for an
+    actor already in the list. `generated.report` and `generated.tool` are additional keys, which OKF permits
+    and defines nothing of its own for
 
 collision: >
   A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
@@ -147,12 +148,11 @@ rules:
     severity: error
 
   - id: one-verification-per-actor
-    description: An actor is written once in `verified`, and a later check moves the entry it already has.
+    description: An actor is written once in `verified`, and a second check moves the `at` on the entry they have.
     severity: error
     expr: "entries_unique('verified', 'by')"
     message: >
-      this actor already states a verification on this record. Move the `at` on the entry they have, because
-      `verified` says who has checked the record and git says when each of them checked before.
+      this actor already states a verification on this record. Move the `at` on the entry they have.
 
   - id: generated-by-a-known-actor
     description: '`generated.by` states an actor the Open Knowledge Format defines.'

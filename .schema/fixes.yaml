@@ -117,12 +117,11 @@ rules:
       `process:nightly-sweep` for an automated process, or `symptom-sweep/1.4.0` for an agent.
 
   - id: one-verification-per-actor
-    description: An actor is written once in `verified`, and a later check moves the entry it already has.
+    description: An actor is written once in `verified`, and a second check moves the `at` on the entry they have.
     severity: error
     expr: "entries_unique('verified', 'by')"
     message: >
-      this actor already states a verification on this record. Move the `at` on the entry they have, because
-      `verified` says who has checked the record and git says when each of them checked before.
+      this actor already states a verification on this record. Move the `at` on the entry they have.
 
   - id: raiser-does-not-verify
     description: An agent does not verify a fix it raised.
