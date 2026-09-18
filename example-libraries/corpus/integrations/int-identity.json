@@ -13,6 +13,8 @@
     ],
     "criticality": "critical",
     "their-sla": "99.95% monthly availability on the sign-in endpoint",
+    "replaces": null,
+    "successor": null,
     "tags": [
       "sign-in",
       "tokens"
@@ -20,9 +22,10 @@
   },
   "sections": {
     "What it does": "Authenticates a borrower and issues the token the estate trusts. [svc-catalogue-web] redirects to it at\n`id.example.com`, and [svc-catalogue-api] validates the token it gets back against the same authority. The vendor runs\nthe tenant, so the hostname is the consortium's and the system behind it is not.\n\nBrowsing and search need no sign-in. A borrower opens their loans, renews an item and places a hold only once this has issued a token, so an outage here stops all three.",
-    "Failure modes": "| Failure                                | How it presents                              | Our fallback                                          |\n|----------------------------------------|----------------------------------------------|-------------------------------------------------------|\n| The sign-in endpoint is unavailable    | Nobody can sign in, and open sessions run on | Branch staff do at the desk what nobody can do online |\n| The published key set is unreachable   | The gateway rejects every token              | The gateway caches that key set for 24 hours          |\n| The vendor rotates a signing key early | The same rejection, delayed by the cache     | None. The cache is flushed before sign-in recovers    |"
+    "Failure modes": "| Failure                                | How it presents                              | Our fallback                                          |\n|----------------------------------------|----------------------------------------------|-------------------------------------------------------|\n| The sign-in endpoint is unavailable    | Nobody can sign in, and open sessions run on | Branch staff do at the desk what nobody can do online |\n| The published key set is unreachable   | The gateway rejects every token              | The gateway caches that key set for 24 hours          |\n| The vendor rotates a signing key early | The same rejection, delayed by the cache     | None. The cache is flushed before sign-in recovers    |",
+    "Exit": "Moving to another provider means re-registering every client and pointing both services at a new discovery document. [svc-catalogue-web] and [svc-catalogue-api] read that document at start-up, so the change is configuration at each end.\n\n**The borrower accounts are the hard part.** The vendor runs the tenant and keeps the password every borrower set. Nothing here can read one, so a move ends with every borrower setting a new password at the new provider.\n\nThe contract gives 90 days' notice, and any move has to fit inside it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d0c2d6349aafd68c61e950d2c9d666221b70163/examples/library/integrations/identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/library/integrations/identity.md"
   }
 }

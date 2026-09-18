@@ -12,6 +12,8 @@
     ],
     "criticality": "important",
     "their-sla": "99.9% monthly availability on the hosted payment page",
+    "replaces": null,
+    "successor": null,
     "tags": [
       "fees",
       "payments"
@@ -19,9 +21,10 @@
   },
   "sections": {
     "What it does": "Takes one card payment on a page the vendor hosts. [svc-reservations] redirects the borrower there, the borrower pays, and the vendor returns them to the service against the hold reference. No card detail passes through any service this consortium deploys.\n\n**The status is `trial` because [ofr-reservations] is still building.** Development and test run against the vendor's sandbox. Production points at the live endpoint and has taken no payment from a borrower yet.",
-    "Failure modes": "| Failure                         | How it presents                                      | Our fallback                              |\n|---------------------------------|------------------------------------------------------|-------------------------------------------|\n| The hosted page is unavailable  | The hold is created and stays unpaid                 | Branch staff take the payment at the desk |\n| The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |\n| The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |"
+    "Failure modes": "| Failure                         | How it presents                                      | Our fallback                              |\n|---------------------------------|------------------------------------------------------|-------------------------------------------|\n| The hosted page is unavailable  | The hold is created and stays unpaid                 | Branch staff take the payment at the desk |\n| The borrower closes the browser | The payment is taken, and the hold stays provisional | None. Nothing here reconciles the two     |\n| The vendor declines the card    | The borrower sees the decline on the vendor's page   | None. A decline is the system working     |",
+    "Exit": "No card detail sits in this estate, so nothing has to be migrated. A move is a change to the redirect [svc-reservations] builds, and to the signature it verifies on the way back.\n\n**The old vendor keeps the history.** Every payment is matched to a hold by a reference this estate minted, and the record of what was paid stays with whoever took it. A move leaves that history behind the old vendor's portal."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0d0c2d6349aafd68c61e950d2c9d666221b70163/examples/library/integrations/card-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7ca6c891eea4819cf6dee73ae24365b0b7900290/examples/library/integrations/card-payments.md"
   }
 }
