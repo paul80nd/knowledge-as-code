@@ -75,8 +75,8 @@ the shared one still reads correctly in a corpus that never had the other half.
 * **Terms are singular and in canonical casing.** `Term`, not `terms`.
 * **The labelled lines run `Also`, `Avoid`, then `Not`.** `Also` and `Avoid` give the reader other names for this
   thing. `Not` gives them a different thing. Each travels to a consumer under its own key.
-* **All three are optional.** Leave a line out rather than reach for something to put
-  under it. An entry is read by everyone who reads the glossary, so a line that says nothing costs every one of them.
+* **All three are optional.** Leave a line out rather than reach for something to put under it. An entry is read by
+  everyone who reads the glossary, so a line that says nothing costs every one of them.
 * **A `Not:` line names another thing you can point at.** A neighbouring entry, a word from another context, a term the
   reader already knows. It never names a property this thing lacks: "Not: everything we would like" points at nothing,
   and a definition that needs it was written badly. Rewrite the definition and drop the line.

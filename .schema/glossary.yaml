@@ -23,11 +23,11 @@ lineage:
   alignment: >
     A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
     within it. An entry carries the other names a reader may arrive by, which is SKOS's `altLabel` and DITA's
-    `glossAlt`
+    `glossAlt`, and marks one of them as dropped, which is DITA's `glossStatus`
   divergence: >
     Evans' language is spoken as much as written, and lives in the model and the code. A glossary here is a set of
     documents, and nothing checks the code against them. SKOS and DITA each hold a term as a record in a database,
-    carrying a part of speech, a symbol and a status of its own. A term here is a heading, a paragraph and three
+    carrying a part of speech and a symbol this type has no use for. A term here is a heading, a paragraph and three
     labelled lines, in one flat list read end to end
 
 notes: >

@@ -671,8 +671,9 @@ public class SchemaCheckTests
             parts: new PartSpec(PartSpec.Table, "", ["MUST"], [])
                 { Section = "Terms", Columns = ["Id", "Clause", "Alignment"] })));
 
-    // A table row is its own body, so neither source has anything to read and both would write null on
-    // every line.
+    // A table row is its own body, so a source reading a body has nothing to read and would write null on
+    // every line. Asked of the lead here and of an aside below, because each reaches the refusal by its own
+    // arm: the lead through the fixed vocabulary, an aside through the prefixed one.
     [Fact]
     public void A_line_source_reading_a_lead_against_a_table_is_reported()
     {

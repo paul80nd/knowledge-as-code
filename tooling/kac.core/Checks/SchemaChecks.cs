@@ -347,7 +347,7 @@ public static class SchemaChecks
                         $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and the type's "
                         + "'parts.asides:' declares no such label. Nothing would recognise the block, so the "
                         + "key would be null on every line."));
-                else if (parts.Source == PartSpec.Table) ReadsNoRow(name, source);
+                else if (parts.Source == PartSpec.Table) RefuseBodySource(name, source);
                 return;
             }
 
@@ -362,7 +362,7 @@ public static class SchemaChecks
                 return;
             }
 
-            if (source is PartLineSource.PartLead && parts.Source == PartSpec.Table) ReadsNoRow(name, source);
+            if (source is PartLineSource.PartLead && parts.Source == PartSpec.Table) RefuseBodySource(name, source);
 
             if (source == PartLineSource.PartLevel && parts.Levels.Count == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
@@ -373,7 +373,7 @@ public static class SchemaChecks
 
         // A source reading a part's body, against a type whose parts are table rows. Only the heading
         // source gives a part a body: a row is its own body, so the source would write null on every line.
-        void ReadsNoRow(string name, string source) =>
+        void RefuseBodySource(string name, string source) =>
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and sources its parts "
                 + "from a table. A row is its own body, so the source would write null on every line. "

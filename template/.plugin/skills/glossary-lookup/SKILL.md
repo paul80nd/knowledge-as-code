@@ -56,6 +56,10 @@ Each line carries the entry whole:
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
 one exception, and the row above says so.
 
+**A term another corpus wrote may carry neither `also` nor `avoid`.** A producer that published before those keys
+existed sends a line without them, and one search reaches both shapes. So read a missing key the same way you read a
+`null` one: the corpus said nothing there.
+
 ## Read the prefix on an id
 
 **A prefix on an id names the corpus that wrote the entry.** `eng:gls-estate.borrower` is the term `borrower`, in the

@@ -81,8 +81,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`parts.asides:` replaces `parts.aside:`, and takes a list.** A type declares every bold label its parts may open a
   block with, and `export.parts.line:` addresses one as `part.aside.<Label>`. `part.aside` on its own is gone.
-  `kac validate` reports `schema-dispatch` against a schema still naming it, and `schema-shape` against a label the
-  type's `parts.asides:` does not declare.
+  Against a schema still naming either, `kac validate` reports `schema-unknown-key` for the block key and
+  `schema-dispatch` for the line source. It reports `schema-shape` against a label the type's `parts.asides:` does not
+  declare.
 
 - **`glossary` states what it takes from current practice.** `lineage` was measured against Evans, *Domain-Driven
   Design*, SKOS and DITA `glossentry`. `prior-art` now names all three, and `alignment` and `divergence` say what the
@@ -136,6 +137,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   sign-off beside a nightly process, and git already keeps when each actor checked before. `kac validate` reports
   `one-verification-per-actor` against a `fix` or a `report` naming one actor twice, and a corpus trims each list by
   hand. The trust tier reads the actors and never the count, so no tier moves.
+
+### Fixed
+
+- **`meta/type.schema.json` offers `part.citations.<Label>`.** The editor's copy of the line-source vocabulary never
+  had a pattern for it, so it marked `standards.yaml`'s `covers: part.citations.Covers` as invalid while the build
+  stayed green. `MetaSchemaTests` now holds that enum to the list the exporter fills.
 
 ## 0.28.0 - 2026-09-17
 
