@@ -219,8 +219,9 @@ system that took the traffic.
 **`Exit` is required of a `critical` or `important` integration still in use.** `exit-required` reports one that has
 none. Article 30(3)(f) of [DORA](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) asks an ICT contract for an exit
 strategy, and the fact a record is missing is rarely the notice period: it is the wording, the history or the
-identities the vendor keeps, which no contract lists. `retired` and `trial` are excluded, because leaving is done in
-the first case and not yet decided in the second.
+identities the vendor keeps, which no contract lists. A `retired` integration is excluded, because leaving is already
+done, and a `supporting` one because nothing a customer feels depends on it. A `trial` integration is asked like any
+other: it is the one most likely to be left.
 
 **Data protection is `data`'s, not this type's.** Article 30(2) of DORA puts data location and personal data in the
 vendor contract. Here `data` states them, through `region`, `personal-data` and `flows-to`, which resolves against an

@@ -35,12 +35,12 @@ kac checks
 One check to a line, with the severity it reports at and what it proves, and a tally at the foot:
 
 ```text
-  error    schema-unknown-key             Every key in these files is one the loader reads.
-  error    frontmatter-parses             The frontmatter block is present and is a valid YAML mapping.
+  error    schema-unknown-key             Every key in a schema file is one the loader reads.
+  error    frontmatter-parses             The frontmatter block is present and parses as a YAML mapping.
   error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
-  warning  deprecated-has-successor       A deprecated tool names what replaces it, or the entry is just a complaint.
+  warning  deprecated-has-successor       A deprecated tool states what replaces it.
 
-103 checks: 74 error(s), 27 warning(s), 2 info.
+113 checks: 79 error(s), 32 warning(s), 2 info.
 ```
 
 Only an error fails the build. A warning is something to act on. An info reports something true that is nobody's fault,
