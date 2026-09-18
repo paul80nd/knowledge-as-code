@@ -328,11 +328,15 @@ whether a reader may start at all, and that is a question asked before the recor
 
 ### runbooks
 
-`Symptoms` is the one section that travels. A reader arrives holding a symptom and no id, greps the export for what they
-are seeing, finds the record, then fetches it. `symptoms-first` already checks that.
+`Symptoms` and `Impact` travel. A reader arrives holding a symptom and no id, greps the export for what they are
+seeing, finds the record, then fetches it. `symptoms-first` already checks that the symptom leads. `Impact` says who is
+affected, so the reader can tell without fetching anything whether this is worth waking somebody for.
 
-`requires-access` decides whether a reader may start at all. `severity` is what an agent sorts on where several runbooks
-match.
+`requires-tools` and `requires-access` decide whether a reader may start at all. `severity` is what an agent sorts on
+where several runbooks match.
+
+The steps stay behind. AWS splits this document in two, a playbook that finds the cause and a runbook that resolves it,
+and this type is both on one page. A reader who has found the right page fetches it whole.
 
 ## The framework register
 

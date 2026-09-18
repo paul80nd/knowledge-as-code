@@ -3,7 +3,9 @@ id: rbk-{{slug}}
 type: runbook
 tier: procedural
 status: draft
+severity:
 last-rehearsed:
+rehearsal-frequency:
 owner:
 tags: [ a, b ]
 ---
@@ -21,10 +23,13 @@ and how it is reviewed. What is below is only what a runbook adds to that.
 
 Title this document for the **failure**, not the fix. A reader at 2am searches for the failure.
 
-* **`severity`**: `sev1` · `sev2` · `sev3`.
+* **`severity`**: `sev1` · `sev2` · `sev3`. How urgent. The `Impact` section says who is affected.
 * **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is what you want to know before the incident
   rather than during it.
-* **`requires-access`**: name every system and role the fix needs. Discovering you lack a permission mid-incident is its
+* **`rehearsal-frequency`**: `on-change` · `per-release` · `quarterly` · `annual`. Pick `on-change` where a change to
+  the system is what breaks the steps.
+* **`requires-tools`**: list every tool the reader installs before starting.
+* **`requires-access`**: list every permission and role the runbook needs. Discovering you lack one mid-incident is its
   own outage.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
@@ -43,10 +48,16 @@ what a reader arriving from a citation sees first, and CI checks all three again
 
 _(Symptoms come first because that is how the reader finds this document.)_
 
+## Impact
+
+Who cannot do what while this is broken. Name the users, the service or the team, and what stops for them.
+
+_(One or two lines. A reader decides here whether to wake somebody.)_
+
 ## Immediate actions
 
 1. {{Stop the bleeding.}}
-2. {{Notify whom.}}
+2. Tell the people in [Communication](#communication).
 
 _(Before diagnosis. Contain first, understand afterwards.)_
 
@@ -75,6 +86,14 @@ Steps to restore service, imperative and numbered. Then how to confirm it is act
 | {{condition}} | {{name / role}} | {{channel}} |
 
 _(If this document is long, put this table near the top of the page. A reader has to find it without scrolling.)_
+
+## Communication
+
+| Who             | What they need to know | How often     |
+|-----------------|------------------------|---------------|
+| {{audience}}    | {{the message}}        | {{how often}} |
+
+_(Escalation wakes the people who can help. This tells the people who are waiting.)_
 
 ## Afterwards
 

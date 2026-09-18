@@ -130,10 +130,11 @@ public class ExportShapeTests
             Prerequisites: full
         reports@2
           fields: id, title, status, generated, sources, verified, tags
-        runbooks@1
-          fields: id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-access, tags
+        runbooks@2
+          fields: id, title, status, severity, applies-to, last-rehearsed, rehearsal-frequency, requires-tools, requires-access, tags
           sections:
             Symptoms: full
+            Impact: full
         services@1
           fields: id, title, status, platform, criticality, repo, depends-on, data-stores, nfrs, facets, tags
           sections:

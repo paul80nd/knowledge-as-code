@@ -6,8 +6,9 @@ What to do when something is broken.
 
 ## What is a runbook?
 
-An incident-time procedure, read under pressure by someone who may not have seen this failure before. Symptoms first,
-then the immediate actions, then a diagnosis tree, then resolution and escalation.
+An incident-time procedure, read under pressure by someone who may not have seen this failure before. It opens on
+the symptoms, so a reader can tell at once that this is the right document. Impact, immediate actions, a diagnosis
+tree, resolution, escalation and communication follow in that order.
 
 Keep it terse and imperative, and structure it so the reader finds their branch without reading the whole document.
 
@@ -37,20 +38,21 @@ look like processes. You open the document on a day when the estate is already d
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                 | Value                                          | Notes                                                                         |
-|-----------------------|------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†               | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†             | string                                         | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†             | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†           | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down.                       |
-| `owner` *†            | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †           | list                                           | Where this record's content came from, one entry per source.                  |
-| `tags` †              | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `applies-to`          | list                                           | Service ids this runbook covers.                                              |
-| `severity`            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                     |
-| `last-rehearsed` *    | date                                           | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
-| `rehearsal-frequency` | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                         |
-| `requires-access`     | list                                           | The systems or roles the reader needs before starting.                        |
+| Field                   | Value                                          | Notes                                                                         |
+|-------------------------|------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†                 | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†               | string                                         | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†             | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down.                       |
+| `owner` *†              | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †             | list                                           | Where this record's content came from, one entry per source.                  |
+| `tags` †                | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `applies-to`            | list                                           | Service ids this runbook covers.                                              |
+| `severity` *            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                     |
+| `last-rehearsed` *      | date                                           | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
+| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                         |
+| `requires-tools`        | list                                           | The tools the reader needs installed before starting.                         |
+| `requires-access`       | list                                           | The permissions or roles the reader needs before starting.                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -61,10 +63,13 @@ look like processes. You open the document on a day when the estate is already d
 
 1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids: `rbk-estate-rebuild`.
 2. Lead with **symptoms**: what the reader is seeing. That is how they find this document.
-3. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
-4. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
-5. Put the escalation path where the reader finds it without scrolling.
-6. Set `last-rehearsed` honestly, and name every permission the runbook needs in `requires-access`.
+3. State the **impact** next: who cannot do what while this is broken. `severity` says how urgent, and this says who.
+4. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
+5. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
+6. Put the escalation path where the reader finds it without scrolling.
+7. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
+8. Set `last-rehearsed` and `rehearsal-frequency` honestly. List tools in `requires-tools` and permissions in
+   `requires-access`.
 
 **Conventions**
 
@@ -72,8 +77,8 @@ look like processes. You open the document on a day when the estate is already d
   theory afterwards.
 * **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.
-* **Rehearse on a cadence, or on the change that breaks it.** `rehearsal-frequency` says which, and `last-rehearsed`
-  records the last time someone walked it.
+* **Rehearse on a cadence, or on the change that breaks it.** Every runbook sets `rehearsal-frequency`, and
+  `last-rehearsed` records the last time someone walked it.
 
 ## What CI checks
 

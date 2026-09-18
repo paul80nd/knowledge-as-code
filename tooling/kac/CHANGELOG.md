@@ -120,6 +120,19 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   already promised a rollback, and the section stays out of the export, because a reader who has to back out is
   holding the record. `kac new` sends a `_template.md` naming it.
 
+- **A runbook says who is affected.** `Impact` is a required section, and it travels in the export beside `Symptoms`.
+  The Google SRE workbook asks a playbook to explain the severity and the impact of the alert it answers, and
+  `severity` said only how urgent. `kac new` sends a `_template.md` naming it.
+
+- **A runbook says who to tell.** `Communication` is a required section. AWS Well-Architected OPS07-BP04 puts
+  stakeholders and a communication plan on a playbook, and PagerDuty asks a responder for status updates throughout.
+  `Escalation` says who to wake, and this says who is waiting. The section stays out of the export, because a reader
+  telling anybody is holding the record. `kac new` sends a `_template.md` naming it.
+
+- **A runbook lists its tools apart from its permissions.** `requires-tools` takes what the reader installs. AWS
+  Well-Architected OPS07-BP03 gives a runbook a column for each, and two of the three runbooks in `examples/dog-fooding`
+  were writing a tool into `requires-access`. It travels in the export, and `kac new` sends a `_template.md` naming it.
+
 ### Changed
 
 - **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's
@@ -131,6 +144,25 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`target` on an NFR no longer carries the measurement window.** The window is `window`, so a consumer reads the
   figure and the period apart. `nfrs` publishes at `export.version` 2, because a reader that took the period out of
   `target` would now find none there.
+
+- **`requires-access` on a runbook takes a permission and no longer a tool.** A tool is `requires-tools`, so a reader
+  sees what to install apart from what somebody has to grant them. `runbooks` publishes at `export.version` 2, because
+  a reader that took a tool out of `requires-access` would now find none there.
+
+- **A runbook says how urgent it is.** `severity` is required, where it was optional. The Google SRE workbook asks a
+  playbook to explain the severity of the alert it answers, and `Impact` states the other half.
+
+- **A runbook says when it is rehearsed again.** `rehearsal-frequency` is required, where it was optional. No runbook
+  anywhere set it, so the declared `staleness-loud` rule could only ever fire on a `last-rehearsed` of `"never"`.
+  Nothing running on a schedule can measure `on-change`, which the field accepts. A corpus that already has a runbook
+  writes a value into every one of them, because `kac update` copies the schema and never a record.
+
+- **`runbooks` states what it takes from current practice.** `lineage` was measured against the Google SRE book, the
+  Google SRE workbook's *On-Call* chapter and AWS Well-Architected OPS07-BP03 and BP04. `alignment` named a statistic
+  and no field or section, and now names the five it is true of. `divergence` records that AWS writes a playbook to
+  find the cause and a runbook to resolve it, where this type is both on one page. `collision` said the industry uses
+  *runbook* and *playbook* interchangeably, which is true of Google and not of AWS. `kac generate` writes all three
+  into every adopting corpus's `knowledge-as-code/lineage.md`.
 
 - **`nfrs` states what it takes from current practice.** `lineage` was measured against ISO/IEC 25010:2023 and the
   Google SRE workbook's *Implementing SLOs*. `alignment` names the four things the workbook asks an objective for, and

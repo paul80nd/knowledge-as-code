@@ -6,8 +6,10 @@ status: active
 applies-to: [ svc-kac ]
 severity: sev3
 last-rehearsed: "never"
-requires-access:
-  - A .NET 10 SDK and a checkout of this repository
+rehearsal-frequency: on-change
+requires-tools:
+  - A .NET 10 SDK
+  - A checkout of this repository
 owner: human:paul.law
 tags: [ goldens, testing ]
 ---
@@ -25,10 +27,14 @@ tags: [ goldens, testing ]
 * One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.
 * The branch is green on your machine and red in CI.
 
+## Impact
+
+Nothing in production. The branch stays red, so nothing on it merges until the diff is accounted for.
+
 ## Immediate actions
 
-**Do not run `--update` before you have read what changed.** Regenerating a golden accepts whatever the tool now
-emits. The export golden is a contract a consumer reads.
+**Do not run `--update` before you have read what changed.** Regenerating a golden accepts whatever the tool now emits.
+The export golden is a contract a consumer reads.
 
 1. Read the scenario name out of the failing line.
 2. Run that scenario on its own:
@@ -44,8 +50,8 @@ emits. The export golden is a contract a consumer reads.
 **Does the failure reproduce on your machine?**
 
 * **Yes** → continue.
-* **No** → the three layers assert different things about the same corpus. A regenerated golden can leave you green
-  here and red in CI. Go to [Resolution](#resolution) and start at step 4.
+* **No** → the three layers assert different things about the same corpus. A regenerated golden can leave you green here
+  and red in CI. Go to [Resolution](#resolution) and start at step 4.
 
 **Did you change `.schema/`?**
 
@@ -79,8 +85,8 @@ emits. The export golden is a contract a consumer reads.
    git diff tooling/tests/fixtures/<name>
    ```
 
-3. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you
-   have just accepted.
+3. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you have
+   just accepted.
 4. Run all three test layers, one at a time:
 
    ```sh
@@ -100,6 +106,12 @@ Confirmed when all three layers pass and the diff contains only lines you can ac
 |--------------------------------------------------------------|-------------------------------|-----------------------------|
 | The export dropped a path and you cannot restore it          | Paul Law, as the tool's owner | An issue on this repository |
 | The three layers disagree and you cannot tell which is right | Paul Law, as the tool's owner | An issue on this repository |
+
+## Communication
+
+| Who                           | What they need to know                           | How often                 |
+|-------------------------------|--------------------------------------------------|---------------------------|
+| Anybody waiting on the branch | The suite is red, and whether the diff was meant | Once, as soon as you know |
 
 ## Afterwards
 

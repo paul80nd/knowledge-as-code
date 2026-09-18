@@ -6,6 +6,10 @@ status: active
 applies-to: [ svc-kac ]
 severity: sev3
 last-rehearsed: "never"
+rehearsal-frequency: per-release
+requires-tools:
+  - "`curl` and `jq`"
+  - The .NET SDK, for `dotnet tool install`
 requires-access:
   - Actions, to read a run log and re-run a job on paul80nd/knowledge-as-code
   - The required reviewer on the nuget.org environment
@@ -27,12 +31,16 @@ tags: [ nuget, publishing ]
 
 Nothing failed in the run that published. The push step reported success, and the release step wrote the tag.
 
+## Impact
+
+Nobody can install `kac` at the new version. An installation already on an older version keeps working.
+
 ## Immediate actions
 
 **A published version cannot be replaced. A correction takes a higher version.**
 
 1. Leave `<Version>` in `tooling/kac/kac.csproj` where it is.
-2. Tell anyone waiting on the version to hold off installing it.
+2. Tell the people in [Communication](#communication).
 3. Note the time the publish step reported success. The window is measured from there.
 
 ## Diagnosis
@@ -76,6 +84,12 @@ Confirmed when `kac --version` prints the version you published.
 | The version is still unlisted an hour after a successful push | Paul Law, as the package owner | An issue on this repository              |
 | The publish step itself failed                                | Paul Law, as the package owner | An issue on this repository              |
 | The version is listed and installs still fail                 | nuget.org                      | <https://www.nuget.org/policies/Contact> |
+
+## Communication
+
+| Who                                 | What they need to know                        | How often                  |
+|-------------------------------------|-----------------------------------------------|----------------------------|
+| Anybody waiting on the new version  | Hold off installing, and the version is safe  | Once, then when it lists   |
 
 ## Afterwards
 

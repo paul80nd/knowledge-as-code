@@ -3,7 +3,9 @@ id: rbk-{{slug}}
 type: runbook
 tier: procedural
 status: draft
+severity:
 last-rehearsed:
+rehearsal-frequency:
 owner:
 tags: [ a, b ]
 ---
@@ -18,6 +20,8 @@ a template to, and nothing more.
 
 ## Symptoms
 
+## Impact
+
 ## Immediate actions
 
 ## Diagnosis
@@ -25,3 +29,5 @@ a template to, and nothing more.
 ## Resolution
 
 ## Escalation
+
+## Communication
