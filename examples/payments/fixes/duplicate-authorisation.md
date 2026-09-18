@@ -28,7 +28,8 @@ returned `201`.
 
 ## Environment
 
-[svc-payment-api] and [svc-payment-ledger], with a caller that retries an authorisation after a timeout.
+Any caller of the `POST /authorisations` endpoint that retries after a timeout, over HTTP/1.1 with an
+`Idempotency-Key` header. The services the report covers are in `applies-to`.
 
 ## Cause
 
@@ -66,4 +67,3 @@ caller problem. Two with the same key are a fault in these services.
 [std-IDEM]: ../standards/authorisation/idempotency.md
 [std-LEDGER]: ../standards/ledger/entries.md
 [svc-payment-api]: ../services/payment-api.md
-[svc-payment-ledger]: ../services/payment-ledger.md

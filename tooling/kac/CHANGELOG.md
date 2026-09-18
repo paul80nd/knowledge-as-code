@@ -65,7 +65,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A fix says what you were running.** `Environment` is a required section, and it travels in the export. It states
   the tool, the operating system and the versions, which is how a reader tells whether the fix is theirs.
-  `applies-to` reaches services alone, and a fix about a laptop or a pinned tool version has no service to name.
+  `applies-to` takes service ids alone, and a fix about a laptop or a pinned tool version has no service to name.
   `kac validate` reports `sections` against a fix without it, and `kac new` sends a `_template.md` carrying it.
 
 ### Changed

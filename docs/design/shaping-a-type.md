@@ -168,8 +168,8 @@ how old it has since become.
 environment and the cause are theirs, then acts, so a resolution arriving without either is half an answer. `Why it
 happens` travels with them: `Cause` says what went wrong this time, and `Why it happens` says what class it belongs to.
 
-`Environment` is required because `applies-to` reaches services alone. A fix about a laptop, an editor or a pinned tool
-version has no service to name, and a reader still has to match the versions.
+`Environment` is required because `applies-to` takes service ids alone. A fix about a laptop, an editor or a pinned
+tool version has no service to name, and a reader still has to match the versions.
 
 `verified` travels, and `trust` is derived from it. This type exists to say how far a resolution has been taken on
 trust. `status` and `review-by` say whether the answer is still true, and `fixed-upstream` is the value that earns them

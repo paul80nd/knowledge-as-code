@@ -6,10 +6,9 @@ Problems we have hit before, with the resolution that worked.
 
 ## What is a fix?
 
-One document per problem: the symptom as you would encounter it, what you were running, what causes it, how to
-resolve it, and why it happens.
-*"pip cannot find the version the lint job pins."* *"An `.editorconfig` change does nothing in the IDE."* Somebody has
-verified it, so a fix carries authority.
+One document per problem: the symptom as you would encounter it, what you were running, what causes it, how to resolve
+it, and why it happens. *"pip cannot find the version the lint job pins."* *"An `.editorconfig` change does nothing in
+the IDE."* Somebody has verified it, so a fix carries authority.
 
 Add one when an investigation cost real time. You will hit the same problem again, and so will the next session.
 
@@ -84,8 +83,8 @@ Other boundaries:
 
 **Conventions**
 
-* **Symptom, environment, cause, resolution, in that order.** The reader arrives with a symptom and nothing else,
-  and checks the environment is theirs before they act.
+* **Symptom, environment, cause, resolution, in that order.** The reader arrives with a symptom and nothing else, and
+  checks the environment is theirs before they act.
 * **`applies-to` names service ids, and `Environment` is prose.** A reader follows an id to the service. They read the
   section to tell whether their machine, their tooling and their versions match.
 * **Record how you found it**, not just what it was. The diagnostic route is often more reusable than the resolution.
