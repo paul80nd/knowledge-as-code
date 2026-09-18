@@ -38,19 +38,19 @@ A process is also not:
 
 <!-- BEGIN GENERATED: schema-processes -->
 
-| Field                 | Value                              | Notes                                                                         |
-|-----------------------|------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†               | string                             | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†             | string                             | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†             | `procedural`                       | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†           | `active` `draft` `retired`         | Whether the process is current, drafted, or stood down.                       |
-| `owner` *†            | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †           | list                               | Where this record's content came from, one entry per source.                  |
-| `tags` †              | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `applies-to`          | list                               | Service ids this process concerns.                                            |
-| `last-rehearsed` *    | date                               | Quoted. The day somebody last followed the process end to end, or `"never"`.  |
-| `rehearsal-frequency` | `per-release` `quarterly` `annual` | How often to rehearse the process.                                            |
-| `requires-access`     | list                               | The systems or roles the reader needs before step 1.                          |
+| Field                   | Value                                          | Notes                                                                         |
+|-------------------------|------------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†                 | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†               | string                                         | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†             | `active` `draft` `retired`                     | Whether the process is current, drafted, or stood down.                       |
+| `owner` *†              | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †             | list                                           | Where this record's content came from, one entry per source.                  |
+| `tags` †                | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `applies-to`            | list                                           | Service ids this process concerns.                                            |
+| `last-rehearsed` *      | date                                           | Quoted. The day somebody last followed the process end to end, or `"never"`.  |
+| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the process.                         |
+| `requires-access`       | list                                           | The systems or roles the reader needs before step 1.                          |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -62,7 +62,8 @@ A process is also not:
 1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids: `prc-releasing`.
 2. Write the steps in order and in the imperative, for a reader who has not done this before.
 3. Include prerequisites, a verification step ("you know it worked when…") and a rollback.
-4. Set `last-rehearsed`, and write `"never"` rather than guess a date.
+4. Set `last-rehearsed` and `rehearsal-frequency`. Write `"never"` rather than guess a date, and `on-change` where a
+   change to what the process operates on is the trigger.
 5. Name the systems and roles in `requires-access`, and say who to ask for each. "Obtain the file from the repository
    owner" helps nobody who does not know the owner.
 
@@ -70,8 +71,13 @@ A process is also not:
 
 * **No hedging.** A step that opens "typically the order is…" leaves the reader to decide. Where the order varies, say
   what decides it.
+* **Say what a step produces.** Put the result in the step itself, so a reader can tell it worked before starting the
+  next one.
+* **Open an optional step with `Optional:`.** Nothing else tells a reader which steps they may skip.
+* **Put a warning before the step it guards.** A caution written after the action arrives too late to act on.
 * **Verification is not optional.** A process that stops at the last action leaves the reader guessing whether it
   worked.
+* **Say how to back out.** `If it goes wrong` is required. Where there is no way back, that is the sentence to write.
 * **Rehearse before you trust.** Walk the process end to end before you rely on it. `last-rehearsed` records that
   walk-through and not the last edit.
 

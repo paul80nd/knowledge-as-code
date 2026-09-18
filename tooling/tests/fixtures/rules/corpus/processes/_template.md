@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: draft
 last-rehearsed:
+rehearsal-frequency:
 owner:
 tags: [ a, b ]
 ---
@@ -23,3 +24,5 @@ a template to, and nothing more.
 ## Steps
 
 ## Verification
+
+## If it goes wrong

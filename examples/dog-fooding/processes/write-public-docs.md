@@ -5,6 +5,7 @@ tier: procedural
 status: active
 applies-to: [ svc-docs-site, svc-kac ]
 last-rehearsed: "never"
+rehearsal-frequency: per-release
 owner: human:paul.law
 tags: [ mkdocs, nuget ]
 ---
@@ -49,6 +50,13 @@ The build reports no dead link, and every box on both conformance checklists is 
 nothing can say what the thing is after the first paragraph.
 
 Close by stating what changed and why, every claim you checked against the source, and every rule you left behind.
+
+## If it goes wrong
+
+Revert the page. The site publishes on a push to `main`, so nothing a branch changed has reached a reader.
+
+`PACKAGE.md` is different. nuget.org renders the copy inside the package, and a version it has accepted cannot be
+replaced. Correct it in the next release.
 
 ## Related
 

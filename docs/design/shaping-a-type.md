@@ -23,7 +23,7 @@ steps as parts. A step lifted out of its sequence is one a reader can act on alo
 incident gets worse.
 
 **`last-rehearsed` and `rehearsal-frequency` travel together.** A date says nothing about staleness without the cadence
-you read it against.
+or the event you read it against.
 
 ## What each type sends
 

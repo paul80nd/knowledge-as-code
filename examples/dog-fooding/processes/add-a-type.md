@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: active
 last-rehearsed: "never"
+rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ schema, taxonomy ]
 ---
@@ -76,6 +77,14 @@ tests pass, `DefaultTypesTests` included, and the golden suite passes.
 
 Close by stating what the type contains and what it excludes. Name the existing type it came closest to, what the
 first record found, and which gaps the comparison left to an issue.
+
+## If it goes wrong
+
+A type nobody adopted costs nothing. Remove the folder from `types:` in `.corpus.yaml`, and the corpus stops
+generating and validating it.
+
+Removing a type a corpus has already adopted is not that. Every record of it, and every citation pointing at one, goes
+in the same change.
 
 ## Related
 

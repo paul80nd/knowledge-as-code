@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: active
 last-rehearsed: "never"
+rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ schema, validation ]
 ---
@@ -68,6 +69,14 @@ golden suite and the behaviour specs pass.
 
 Close by stating what the schema now declares, which pass would catch it being wrong, and any golden or pinned
 expectation that moved.
+
+## If it goes wrong
+
+Revert the schema file and run `kac generate` in every corpus that adopted the type. A generated block left behind
+still states the rule you removed.
+
+A field that has shipped in an `export:` block is different. Removing it moves `export.version`, and every consumer
+reading the shape before it has to be told.
 
 ## Related
 

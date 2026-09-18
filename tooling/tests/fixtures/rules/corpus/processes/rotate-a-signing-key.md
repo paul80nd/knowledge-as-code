@@ -5,6 +5,7 @@ tier: procedural
 status: active
 owner: human:alex.doe
 last-rehearsed: "2026-04-02"
+rehearsal-frequency: quarterly
 ---
 
 # Rotate a signing key
@@ -29,3 +30,7 @@ Access to the secret store, and a maintenance window.
 ## Verification
 
 Both the old and new key ids appear in the audit log, and only the new one signs.
+
+## If it goes wrong
+
+The old key signs until it is retired, so step 4 is the only one that cannot be undone.

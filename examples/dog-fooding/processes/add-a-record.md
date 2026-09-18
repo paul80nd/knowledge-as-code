@@ -4,6 +4,7 @@ type: process
 tier: procedural
 status: active
 last-rehearsed: "never"
+rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ authoring, taxonomy ]
 ---
@@ -54,6 +55,13 @@ Nothing in CI reports that you used the wrong tier's rules.
 
 Close by stating the id and its folder, which tier's rules you applied, and anything the type declared that you could
 not answer.
+
+## If it goes wrong
+
+Delete the file and run `kac generate` again. A record on a branch has published nothing.
+
+An `id` that has shipped in an export is never reused. Retire that record instead of deleting it, and give the
+replacement a new id.
 
 ## Related
 

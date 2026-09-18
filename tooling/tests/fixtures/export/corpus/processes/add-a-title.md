@@ -37,3 +37,7 @@ is a fault rather than a planned task.
 ## Verification
 
 Search the public catalogue for the title. Every copy shows against the branch holding it, with a status of available.
+
+## If it goes wrong
+
+A record released to the public catalogue is withdrawn from it the same way. Nothing here is permanent.

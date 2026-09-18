@@ -20,10 +20,19 @@ versus:
 lineage:
   prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Procedure layer, and [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/)"
   alignment: >
-    Steps that operationalise the standard above them
+    Steps that operationalise the standard above them, written by the person who does the work. From Diátaxis, the
+    shape: one sequence, titled for the goal it reaches, with everything the reader needs stated before step 1
   divergence: >
-    Splitting the procedural layer by reading conditions is this framework's own.
+    Diátaxis writes for the already-competent reader. This type writes for one who has never done the task, because
+    that reader is as often an agent with no memory of the last run. Splitting the procedural layer by reading
+    conditions is this framework's own, and so is asking every procedure for a rehearsal date.
     See [What has no precedent](https://paul80nd.github.io/knowledge-as-code/framework/lineage/#what-has-no-precedent)
+
+collision: >
+  ITIL and BPMN use *process* for a chain of activities across an organisation, and *procedure* for the document
+  that says how one is carried out. ComplianceForge HCGF names its layer Procedures on the same reading. Here a
+  process is that document, so a reader arriving from any of them will look for the wider thing and find one
+  procedure.
 
 id:
   prefix: prc
@@ -58,10 +67,10 @@ fields:
       better than a guess.
 
   rehearsal-frequency:
-    required: false
+    required: true
     type: enum
     values: $enums.rehearsal-frequency
-    description: How often to rehearse the process.
+    description: How often, or on what event, to rehearse the process.
 
   requires-access:
     required: false
@@ -70,8 +79,8 @@ fields:
     description: The systems or roles the reader needs before step 1.
 
 sections:
-  required: [When to use this, Prerequisites, Steps, Verification]
-  optional: [If it goes wrong, Related]
+  required: [When to use this, Prerequisites, Steps, Verification, If it goes wrong]
+  optional: [Related]
 
 export:
   version: 1
