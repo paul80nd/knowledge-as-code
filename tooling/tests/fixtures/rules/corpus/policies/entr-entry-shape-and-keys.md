@@ -6,6 +6,7 @@ status: active
 aligns-with:
   - ISO 27001:2022
   - frameworks: ISO 27001:2022
+active-from: "2026-01-01"
 review-by: "2026-12-31"
 owner: human:alex.doe
 ---

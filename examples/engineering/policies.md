@@ -75,6 +75,7 @@ Accessibility under governance is the clearest of them.
 | `tags` †      | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types.                     |
 | `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                                          |
 | `aligns-with` | list                               | The binding frameworks this policy's clauses map to, grouped with the references they cite.       |
+| `active-from` | date                               | The day the policy came into force. Required when `status == active`.                             |
 | `review-by` * | date                               | The day the policy is looked at again, usually a year ahead.                                      |
 
 \* Field is required  
@@ -100,7 +101,10 @@ Accessibility under governance is the clearest of them.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
    up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](frameworks.md). Decide its
    posture there before citing it here.
-7. Set `review-by`. Policies change rarely, so an annual review is usually right.
+7. Set `review-by`. Policies change rarely, so an annual review is usually right. Bring the date forward whenever
+   the estate, the law, or a framework this policy cites changes.
+8. Leave `active-from` bare while the policy is a draft. Set it to the day the commitment came into force at the
+   same time as `status: active`. A retired policy keeps the date.
 
 **Conventions**
 
@@ -160,6 +164,7 @@ Accessibility under governance is the clearest of them.
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
+| `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
 
 <!-- END GENERATED: checks-policies -->

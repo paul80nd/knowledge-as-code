@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 38,
+    "validated": 39,
     "templates": 17,
     "skipped": 0,
-    "errors": 23,
+    "errors": 24,
     "warnings": 23,
     "infos": 0
   },
@@ -212,6 +212,13 @@
       "message": "'aligns-with' entry here is missing 'framework'."
     },
     {
+      "file": "policies/revw-review-before-active.md",
+      "line": 1,
+      "severity": "error",
+      "check": "review-not-before-active",
+      "message": "`review-by` is before `active-from`, and a policy is not due for review before it comes into force. If both dates are right, the earlier one is `active-from`."
+    },
+    {
       "file": "policies/roll-alignment-not-rolled-up.md",
       "line": 6,
       "severity": "error",
@@ -234,7 +241,7 @@
     },
     {
       "file": "policies/unpl-framework-not-placed.md",
-      "line": 28,
+      "line": 29,
       "severity": "error",
       "check": "framework-posture",
       "message": "'ISO 27001:2022' is cited here and nothing says what our standing against it is. File it under 'Obliged' or 'Self-obligated', or under a standing that binds nothing."
