@@ -121,7 +121,7 @@ a fragment of its own. The link lands on the clause table, and the reader finds 
 
 ## Say what stayed behind
 
-Three things a reader may expect are not here. Name whichever one the question reaches, rather than filling the gap:
+Four things a reader may expect are not here. Name whichever one the question reaches, rather than filling the gap:
 
 * **What an external framework obliges us to.** A clause maps to a framework reference through the corpus's own register
   of frameworks, and no consumer receives that page. The register is what says whether we are obliged, self-obligated or
@@ -131,6 +131,9 @@ Three things a reader may expect are not here. Name whichever one the question r
   behind whole.
 * **Anything a clause cites.** A table row has no body, so a clause carries no `seeAlso`. A clause pointing at another
   clause arrives with that id inside its own words: search for the id to read it.
+* **The day a policy came into force.** `status: active` says a policy binds, and nothing here says since when. The
+  record keeps that date in `active-from`, which travels neither on the clause line nor in the record file. A reader
+  asking how long an obligation has stood reads the published record.
 
 ## Say when a policy is unsettled
 
@@ -139,6 +142,9 @@ Two fields on the line say how far the policy has settled, in three states. Read
 * **`status: draft`** — the policy was not agreed when the export was taken, so its clauses are a proposal.
 * **`status: retired`** — the policy was withdrawn and kept for the record. It binds nothing.
 * **`reviewBy` earlier than today** — the policy passed the date it was meant to be read again.
+
+None of the three says when an active policy started binding. *Say what stayed behind* names the field that did not
+travel.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
 `manifest.json` say when it was taken, and are worth quoting alongside any of the three.
