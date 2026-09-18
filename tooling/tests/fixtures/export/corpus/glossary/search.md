@@ -26,8 +26,12 @@ rather than here.
 
 What a reader typed, after parsing and before matching.
 
+**Avoid:** search string. The parsed form is what every service here passes around.
+
 **Not:** the request the service received. One request carries a query and its paging.
 
 ### Relevance
 
 The score that orders results.
+
+**Also:** score.

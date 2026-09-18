@@ -23,3 +23,5 @@ What this corpus writes rather than inherits.
 ### Shelf
 
 Where a copy waits for the reader who asked for it.
+
+**Also:** hold shelf.

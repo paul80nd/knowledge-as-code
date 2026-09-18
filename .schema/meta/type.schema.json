@@ -323,10 +323,15 @@
           "type": "string",
           "minLength": 1
         },
-        "aside": {
-          "description": "The bold label a part's optional second block starts with: \"Not\" on a glossary term. An export sends the lead and the aside as two pieces. Omit it where a type's parts have no such block.",
-          "type": "string",
-          "minLength": 1
+        "asides": {
+          "description": "The bold labels a part's optional further blocks start with: \"Also\", \"Avoid\" and \"Not\" on a glossary term. An export sends the lead and each label as pieces of its own, addressed as `part.aside.<Label>`. Omit the key where a type's parts have no such block.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "level": {
           "description": "The heading level a part is written at, for `source: headings`. Defaults to 3.",
@@ -478,7 +483,7 @@
       ]
     },
     "lineSource": {
-      "description": "Where one key of a part line takes its value from. `part.lead` and `part.aside` read a part's body, which only a `source: headings` type gives a part. A `source: table` type sends the row through `part.text` and its columns. `front.<field>` is a field the type declares or inherits, and `column.<Header>` is a header its `parts.columns:` declares.",
+      "description": "Where one key of a part line takes its value from. `part.lead` and `part.aside.<Label>` read a part's body, which only a `source: headings` type gives a part. A `source: table` type sends the row through `part.text` and its columns. `front.<field>` is a field the type declares or inherits, `column.<Header>` is a header its `parts.columns:` declares, `part.aside.<Label>` is a label its `parts.asides:` declares, and `part.citations.<Label>` is the footnote a field reconciles against.",
       "anyOf": [
         {
           "enum": [
@@ -486,7 +491,6 @@
             "part.key",
             "part.text",
             "part.lead",
-            "part.aside",
             "part.level",
             "part.see-also",
             "part.anchor",
@@ -502,6 +506,14 @@
         {
           "type": "string",
           "pattern": "^column\\.\\S.*$"
+        },
+        {
+          "type": "string",
+          "pattern": "^part\\.aside\\.\\S.*$"
+        },
+        {
+          "type": "string",
+          "pattern": "^part\\.citations\\.\\S.*$"
         }
       ]
     },

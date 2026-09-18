@@ -803,8 +803,8 @@ public static class Exporter
             {
                 if (row.Id is not { Length: > 0 } partId) continue;
 
-                var (lead, aside) = Split(doc, row, spec.Aside, footnotes);
-                var part = new Part(doc, row, partId, id, lead, aside, SeeAlso(doc, row, byPath, tree),
+                var (lead, asides) = Split(doc, row, spec.Asides, footnotes);
+                var part = new Part(doc, row, partId, id, lead, asides, SeeAlso(doc, row, byPath, tree),
                     Citations(doc, row, footnotes));
 
                 var line = new JsonObject();
@@ -839,7 +839,7 @@ public static class Exporter
         string Id,
         string Record,
         string? Lead,
-        string? Aside,
+        IReadOnlyDictionary<string, string> Asides,
         IReadOnlyList<string>? SeeAlso,
         IReadOnlyDictionary<string, IReadOnlyList<string>> Citations);
 
@@ -859,13 +859,15 @@ public static class Exporter
                 ? new JsonArray([.. cited.Select(v => (JsonNode?)JsonValue.Create(v))])
                 : null;
 
+        if (PartLineSource.Argument(source, PartLineSource.AsidePrefix) is { } aside)
+            return JsonValue.Create(part.Asides.GetValueOrDefault(aside));
+
         return source switch
         {
             PartLineSource.PartId => JsonValue.Create($"{part.Record}.{part.Id}"),
             PartLineSource.PartKey => JsonValue.Create(part.Id),
             PartLineSource.PartText => JsonValue.Create(part.Row.Text),
             PartLineSource.PartLead => JsonValue.Create(part.Lead),
-            PartLineSource.PartAside => JsonValue.Create(part.Aside),
             PartLineSource.PartLevel => JsonValue.Create(t.DeclaredParts.Modal(part.Row.Text)),
             PartLineSource.PartSeeAlso => part.SeeAlso is null
                 ? null
@@ -973,19 +975,22 @@ public static class Exporter
         }
     }
 
-    // A part's body split into the two pieces a type writes it in: the lead, and the labelled block
-    // beneath it that the type's `parts.aside:` names. Both keep the source's markdown, unwrapped and
-    // trimmed, because `full` fidelity promises the record's own words and markdown is the words it was
-    // written in.
+    // A part's body split into the pieces a type writes it in: the lead, and each labelled block beneath
+    // it that the type's `parts.asides:` names. All keep the source's markdown, unwrapped and trimmed,
+    // because `full` fidelity promises the record's own words and markdown is the words it was written in.
     //
-    // A body with no labelled block returns a null aside, which is the common case. The label marks the
-    // confusion worth heading off, and most parts have none.
+    // A label a body does not carry is absent from the map, so its key writes null rather than an empty
+    // string. Each label marks one thing worth saying about a part, and a part rarely says all of them.
+    //
+    // Each label travels under its own key rather than as one block of prose, because they answer
+    // different questions. `Also` gives a reader a second name to search for, and `Not` gives them a
+    // boundary. A consumer that received both in one string could act on neither.
     //
     // A footnote reconciling a field against what the part cites is dropped first. It is a fact about
     // coverage rather than a piece of the part, and a part that carries nothing else would otherwise
     // travel to a consumer with the footnote standing where its words belong.
-    private static (string? Lead, string? Aside) Split(Doc doc, PartRow part, string label,
-        IReadOnlyList<string> footnotes)
+    private static (string? Lead, IReadOnlyDictionary<string, string> Asides) Split(
+        Doc doc, PartRow part, IReadOnlyList<string> labels, IReadOnlyList<string> footnotes)
     {
         var blocks = part.Body(doc.Text).ToString()
             .Split("\n\n", StringSplitOptions.RemoveEmptyEntries)
@@ -993,17 +998,20 @@ public static class Exporter
             .Where(b => b.Length > 0 && !footnotes.Any(f => b.StartsWith($"_**{f}:**", StringComparison.Ordinal)))
             .ToList();
 
-        var marker = label.Length > 0 ? $"**{label}:**" : null;
-        var lead = blocks.FirstOrDefault(b => marker is null || !b.StartsWith(marker, StringComparison.Ordinal));
+        var markers = labels.ToDictionary(l => l, l => $"**{l}:**", StringComparer.Ordinal);
 
-        // Both halves bind rather than closing on `marker?[marker.Length..]`. Rider reads a
-        // null-conditional index as a dereference of what may be null and reports it as an error, where
-        // the C# compiler is satisfied. Two patterns say the same thing and leave nothing to disagree over.
-        string? aside = null;
-        if (marker is { } m && blocks.FirstOrDefault(b => b.StartsWith(m, StringComparison.Ordinal)) is { } found)
-            aside = found[m.Length..].Trim();
+        var lead = blocks.FirstOrDefault(b =>
+            !markers.Values.Any(m => b.StartsWith(m, StringComparison.Ordinal)));
 
-        return (Absent(lead), Absent(aside));
+        var asides = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var (label, marker) in markers)
+        {
+            if (blocks.FirstOrDefault(b => b.StartsWith(marker, StringComparison.Ordinal)) is not { } found)
+                continue;
+            if (Absent(found[marker.Length..].Trim()) is { } text) asides[label] = text;
+        }
+
+        return (Absent(lead), asides);
     }
 
     // How this export's links are built, for the manifest: the template a person's link is substituted
