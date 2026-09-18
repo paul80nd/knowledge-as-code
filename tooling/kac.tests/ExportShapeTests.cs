@@ -77,10 +77,11 @@ public class ExportShapeTests
             What it does: full
             Failure modes: full
             Exit: full
-        nfrs@1
-          fields: id, title, status, applies-to, target, measured-by, constrained-by, review-by, tags
+        nfrs@2
+          fields: id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on, review-by, tags
           sections:
             Target: full
+            Why this number: full
             How it is measured: full
             If it is breached: full
             Constraints: full

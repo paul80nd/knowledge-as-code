@@ -3,10 +3,13 @@ id: nfr-0001
 type: nfr
 tier: normative
 status: agreed
+characteristic: latency
 applies-to:
   - ofr-card-payment
-target: p95 under 800ms, measured over a rolling hour
+target: p95 under 800ms
+window: rolling 1 hour
 measured-by: Application Insights, on the server duration of POST /authorisations
+agreed-on: "2026-08-28"
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ checkout, latency, psp ]
@@ -22,6 +25,11 @@ An authorisation returns in under 800ms at the 95th percentile.
 
 p95 under 800ms, over a rolling hour, on `POST /authorisations` at [svc-payment-api]. The measurement runs from the
 request arriving to the response leaving, so the PSP's own time counts towards the 800ms.
+
+## Why this number
+
+800ms is what [svc-payment-api] can promise on top of the PSP's own p95 of 500ms. `Constraints` sets out that
+arithmetic.
 
 The 99th percentile is deliberately not committed. A card issuer can take several seconds to answer a step-up
 challenge, and that time belongs to the issuer's system.

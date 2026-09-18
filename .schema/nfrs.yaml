@@ -13,12 +13,21 @@ detail: >
   Capacity assumptions belong here too. A target nobody measures is an aspiration.
 
 lineage:
-  prior-art: "[ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html) product quality model"
+  prior-art: >-
+    [ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html): the product quality model.
+    [Google SRE, *Implementing SLOs*](https://sre.google/workbook/implementing-slos/): the service level objective
   alignment: >
-    Quality characteristics written so that each one can be specified, measured and evaluated
+    25010 splits quality into characteristics that can each be specified and measured, and `characteristic` states
+    which one a target commits to. The SRE workbook asks an SLO document for four things. It asks for the indicator
+    that reports the objective, the day somebody approved it, the day it is next reviewed, and the reasoning behind
+    the number. `measured-by`, `agreed-on`, `review-by` and `Why this number` are those four. The workbook gives the
+    time window a section of its own, and `window` is where a target states it
   divergence: >
-    25010 lists the characteristics and stops. This type is a document. RPO and RTO come from continuity practice,
-    and per-service budgets from SLO practice
+    25010 lists the characteristics and stops. This type is a document, and `characteristic` takes 25010's
+    subcharacteristic level, because an estate commits to availability and recovery and not to reliability. RPO and
+    RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends. An error
+    budget policy then says what to stop once the budget runs out. Here a target is a commitment with a named
+    consequence, and no record does that arithmetic
 
 id:
   prefix: nfr
@@ -36,7 +45,18 @@ fields:
     type: enum
     values: [draft, agreed, retired]
     description: '`agreed` means somebody accepted the commitment.'
-    notes: Nothing checks the move out of `draft`. An author sets `agreed` once somebody has accepted the number.
+    notes: >
+      `owner` names who accepted the number. Nothing checks that the owner named today is the person who did.
+
+  characteristic:
+    required: true
+    type: enum
+    values: [accuracy, availability, capacity, latency, recovery, scalability, throughput]
+    description: The quality of service this target commits to.
+    notes: >
+      The values sit at ISO/IEC 25010's subcharacteristic level. `availability`, `capacity` and `scalability` are
+      25010's own names, `recovery` is its recoverability, `latency` and `throughput` divide its time behaviour,
+      and `accuracy` is its functional correctness.
 
   applies-to:
     required: true
@@ -53,7 +73,16 @@ fields:
   target:
     required: true
     type: string
-    description: 'The number this commits to, with its measurement window: `99.5% monthly`, `p95 < 400ms`.'
+    description: 'The number this commits to: `99.5%`, `p95 under 400ms`, `RPO 5 minutes`.'
+
+  window:
+    required: false
+    required-when: 'characteristic in [availability, capacity, latency, throughput]'
+    type: string
+    description: 'The period the number is read over: `rolling 1 hour`, `monthly`, `rolling 4 weeks`.'
+    notes: >
+      The four characteristics `required-when` names are the ones that state a rate or a percentile. A recovery,
+      scalability or accuracy target binds each event or each value.
 
   measured-by:
     required: true
@@ -67,20 +96,28 @@ fields:
     ref: integrations
     description: Integrations whose own SLA caps this target.
 
+  agreed-on:
+    required: false
+    required-when: 'status == agreed'
+    type: date
+    description: The day the named owner accepted the commitment.
+
   review-by:
     required: true
     type: date
     description: Quoted. The date by which someone confirms this is still true.
 
 sections:
-  required: [Target, How it is measured, If it is breached]
+  required: [Target, Why this number, How it is measured, If it is breached]
   optional: [Current actual, Constraints, Related]
 
 export:
-  version: 1
-  fields: [id, title, status, applies-to, target, measured-by, constrained-by, review-by, tags]
+  version: 2
+  fields: [id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on,
+           review-by, tags]
   sections:
     Target: full
+    Why this number: full
     How it is measured: full
     If it is breached: full
     Constraints: full
@@ -89,7 +126,7 @@ export:
     <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#nfrs> says what else travels, and what stays
     behind.
 index:
-  columns: [id, title, applies-to, target, status, review-by]
+  columns: [id, title, characteristic, applies-to, target, status, review-by]
   sort: id
 
 rules:
