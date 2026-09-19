@@ -3,8 +3,9 @@ id: svc-payment-ledger
 type: service
 tier: descriptive
 status: live
-repo: payment-ledger
-platform: dotnet-api
+component-type: api
+repos: [ payment-ledger ]
+platform: dotnet
 criticality: critical
 nfrs:
   - nfr-0002

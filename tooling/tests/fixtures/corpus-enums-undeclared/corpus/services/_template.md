@@ -3,7 +3,8 @@ id: svc-{{slug}}
 type: service
 tier: descriptive
 status: live
-repo:
+component-type:
+repos:
 platform:
 criticality:
 depends-on:

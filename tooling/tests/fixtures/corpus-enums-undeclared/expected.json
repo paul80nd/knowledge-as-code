@@ -3,11 +3,18 @@
     "validated": 1,
     "templates": 1,
     "skipped": 0,
-    "errors": 1,
+    "errors": 2,
     "warnings": 0,
     "infos": 0
   },
   "findings": [
+    {
+      "file": ".corpus.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "corpus-enum-undeclared",
+      "message": "'component-type' on a service is judged against a list this corpus states, and it states none. Write the values your estate uses under `enums:`, as `component-type: [a, b]`. services.md says how to reach them."
+    },
     {
       "file": ".corpus.yaml",
       "line": null,

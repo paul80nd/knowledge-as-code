@@ -3,8 +3,9 @@ id: svc-catalogue-api
 type: service
 tier: descriptive
 status: live
-repo: platform
-platform: dotnet-api
+component-type: api
+repos: [ platform ]
+platform: dotnet
 criticality: critical
 depends-on:
   - svc-lending

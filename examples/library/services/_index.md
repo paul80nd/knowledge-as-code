@@ -2,14 +2,14 @@
 
 # Service Index (SVC)
 
-| ID                | Title                             | Platform       | Criticality | Status     | Owner             |
-|-------------------|-----------------------------------|----------------|-------------|------------|-------------------|
-| svc-catalogue-api | [Catalogue API](catalogue-api.md) | dotnet-api     | critical    | live       | human:robin.hale  |
-| svc-catalogue-web | [Catalogue](catalogue-web.md)     | dotnet-web     | critical    | live       | human:robin.hale  |
-| svc-covers-cdn    | [Covers CDN](covers-cdn.md)       | static         | critical    | live       | human:dev.raman   |
-| svc-lending       | [Lending](lending.md)             | dotnet-api     | critical    | live       | human:dev.raman   |
-| svc-notices       | [Notices](notices.md)             | azure-function | important   | live       | human:mira.okonjo |
-| svc-reservations  | [Reservations](reservations.md)   | dotnet-web     | important   | building   | human:mira.okonjo |
-| svc-search        | [Search](search.md)               | typescript     | important   | live       | human:mira.okonjo |
-| svc-shelf-audit   | [Shelf Audit](shelf-audit.md)     | mixed          | supporting  | deprecated | human:dev.raman   |
-| svc-thumbnailer   | [Thumbnailer](thumbnailer.md)     | dotnet-web     | critical    | live       | human:dev.raman   |
+| ID                | Title                             | Component type | Platform       | Criticality | Status     | Owner             |
+|-------------------|-----------------------------------|----------------|----------------|-------------|------------|-------------------|
+| svc-catalogue-api | [Catalogue API](catalogue-api.md) | api            | dotnet         | critical    | live       | human:robin.hale  |
+| svc-catalogue-web | [Catalogue](catalogue-web.md)     | website        | dotnet         | critical    | live       | human:robin.hale  |
+| svc-covers-cdn    | [Covers CDN](covers-cdn.md)       | asset          | static         | critical    | live       | human:dev.raman   |
+| svc-lending       | [Lending](lending.md)             | api            | dotnet         | critical    | live       | human:dev.raman   |
+| svc-notices       | [Notices](notices.md)             | worker         | azure-function | important   | live       | human:mira.okonjo |
+| svc-reservations  | [Reservations](reservations.md)   | website        | dotnet         | important   | building   | human:mira.okonjo |
+| svc-search        | [Search](search.md)               | api            | typescript     | important   | live       | human:mira.okonjo |
+| svc-shelf-audit   | [Shelf Audit](shelf-audit.md)     | worker         | mixed          | supporting  | deprecated | human:dev.raman   |
+| svc-thumbnailer   | [Thumbnailer](thumbnailer.md)     | api            | dotnet         | critical    | live       | human:dev.raman   |

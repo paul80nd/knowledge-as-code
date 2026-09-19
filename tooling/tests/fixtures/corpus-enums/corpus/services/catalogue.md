@@ -3,7 +3,8 @@ id: svc-catalogue
 type: service
 tier: descriptive
 status: live
-repo: catalogue
+component-type: api
+repos: [ catalogue ]
 platform: azure-function
 criticality: critical
 owner: human:alex.doe

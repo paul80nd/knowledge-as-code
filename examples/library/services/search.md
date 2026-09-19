@@ -3,7 +3,8 @@ id: svc-search
 type: service
 tier: descriptive
 status: live
-repo: search
+component-type: api
+repos: [ search ]
 platform: typescript
 criticality: important
 owner: human:mira.okonjo

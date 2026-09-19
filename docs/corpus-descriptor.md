@@ -345,15 +345,18 @@ The ranges the schema leaves to the corpus.
 
 ```yaml
 enums:
-  platform: [dotnet-tool, static]
+  component-type: [asset, cli, website]
+  platform: [dotnet, static]
 ```
 
-Some fields take a value the framework cannot know. What a service is built on is one list in a library and another in a
-payments platform, so `.schema/services.yaml` declares `values: $corpus.platform` and lists no values of its own. You
-write the range here, and [`validate`](cli/validate.md) checks every record against it.
+Some fields take a value the framework cannot know. What a service is built on, and what sort of component it is, are
+one pair of lists in a library and another in a payments platform. So `.schema/services.yaml` declares
+`values: $corpus.platform` and `values: $corpus.component-type`, and lists no values of its own. You write each range
+here, and [`validate`](cli/validate.md) checks every record against it.
 
 Walk your own deployables, group them by the runtime and framework a contributor has to know, and close the list on what
-you found. The type page gives the method in full, and each corpus's copy records the values it settled on.
+you found. Group them a second time by what they are, and close that list the same way. The type page gives the method
+in full, and each corpus's copy records the values it settled on.
 
 **Write each value in lower case.** An enum value is a grep target first and prose second. A range with `Dotnet-Web` in
 it refuses `dotnet-web` from one side and `Dotnet-Web` from the other, because `enum-lowercase` refuses the value in the

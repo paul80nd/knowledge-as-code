@@ -3,7 +3,8 @@ id: svc-corpus-feed
 type: service
 tier: descriptive
 status: live
-repo: knowledge-as-code
+component-type: asset
+repos: [ knowledge-as-code ]
 platform: static
 criticality: important
 owner: human:paul.law
@@ -70,6 +71,8 @@ keeps untracked.
 * **One record covers four packages.** [The type page](../services.md) states the rule that allows this.
 * **`platform` is `static` because a package has no runtime.** The value covers generated files served as they were
   built, and an export inside a NuGet package is exactly that.
+* **`component-type` is `asset` because a reader downloads the package and nothing runs it.** [svc-docs-site] is
+  `website` on the same `platform`, which is what separates the two fields.
 * **`criticality` matches [svc-marketplace], though nothing here restores from the feed.** `examples/payments` and
   `examples/dog-fooding` name `../engineering/.dist/package` as their `source:`, so every build in this repository
   reads a folder. The reader who meets a broken feed is outside this repository, so the grade is above `supporting`.
@@ -79,5 +82,6 @@ keeps untracked.
   both matrices. A listed corpus also needs a shortcode, because `kac pack` refuses a corpus without one.
 
 [std-CONFIG]: ../standards/configuration.md
+[svc-docs-site]: docs-site.md
 [svc-kac]: kac.md
 [svc-marketplace]: marketplace.md

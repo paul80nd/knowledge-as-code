@@ -2,8 +2,8 @@ namespace kac.core;
 
 // A feature file path is a plain string, so `ref-resolves` never reads it and nothing resolves it until
 // `feature-file-orphans` sweeps the code repositories. Its first segment is the one half this corpus can
-// answer for on its own: the services are already named in the same record, and each of them states the
-// repository it lives in.
+// answer for on its own: the services are already named in the same record, and each of them lists the
+// repositories it lives in.
 //
 // Reported, never failed. A regression pack can live in a repository no service claims, and refusing that
 // would ask the corpus to lie about where the tests are.
@@ -15,11 +15,11 @@ public sealed class FeatureFileRepo : ICorpusRule
 
     public IReadOnlyList<CheckId> Emits => [Reports];
 
-    // The field of paths, and the field a service states its repository under. Named here rather than read
-    // from the type: neither carries a key saying what its strings mean, and only this rule knows that the
+    // The field of paths, and the field a service lists its repositories under. Named here rather than read
+    // from the type: neither has a key saying what its strings mean, and only this rule knows that the
     // first segment of one is a value of the other.
     private const string Paths = "feature-files";
-    private const string Repo = "repo";
+    private const string Repos = "repos";
 
     public void Check(CorpusRuleContext ctx)
     {
@@ -63,7 +63,7 @@ public sealed class FeatureFileRepo : ICorpusRule
         {
             if (services.IsLiteral(id)) continue;
             if (!ctx.ById.TryGetValue(id, out var service)) continue;
-            if (service.FrontScalar(Repo) is { Length: > 0 } repo) repos.Add(repo);
+            foreach (var repo in service.FrontList(Repos)) repos.Add(repo);
         }
 
         return repos;

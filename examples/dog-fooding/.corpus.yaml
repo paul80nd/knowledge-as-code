@@ -15,7 +15,7 @@ shortcode: dog
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.43.0"
+content-version: "0.44.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -78,10 +78,12 @@ types:
   - standards
   - tools
 
-# What a service here is built on. This repository publishes a dotnet tool, and everything else it ships is
-# generated and served as built. `services.md` says how the values were reached.
+# What a service here is built on, and what sort of component it is. This repository publishes a command line
+# tool, and everything else it ships is generated and served as built. `services.md` says how the values were
+# reached.
 enums:
-  platform: [dotnet-tool, static]
+  component-type: [asset, cli, website]
+  platform: [dotnet, static]
 
 # A draft is unsettled, so no consumer meets one. Every other record travels with its own status.
 export:

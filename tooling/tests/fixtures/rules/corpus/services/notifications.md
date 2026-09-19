@@ -3,7 +3,8 @@ id: svc-notifications
 type: service
 tier: descriptive
 status: live
-repo: notifications
+component-type: worker
+repos: [ notifications ]
 platform: azure-function
 criticality: important
 depends-on: [svc-catalogue]

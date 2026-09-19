@@ -6,4 +6,5 @@ content-version: 0.2.0
 # The range `platform` draws on, which the schema leaves to the corpus. Stated so that the services
 # below report the rules this fixture is about and nothing else.
 enums:
+  component-type: [api, worker]
   platform: [azure-function, dotnet-web]

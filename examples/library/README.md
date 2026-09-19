@@ -21,7 +21,7 @@
 | [Offering](offerings.md)       | descriptive | What the organisation offers a customer, and why, with links to the services and NFRs behind it.             |
 | [Process](processes.md)        | procedural  | A planned procedure (releasing, onboarding, provisioning, rotating a secret).                                |
 | [Runbook](runbooks.md)         | procedural  | An incident-time procedure read under pressure: terse, imperative, structured as a decision tree.            |
-| [Service](services.md)         | descriptive | One deployable component: purpose, repo, platform, environments, dependencies, data stores, owner.           |
+| [Service](services.md)         | descriptive | One deployable component: purpose, repos, platform, environments, dependencies, data stores, owner.          |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.
@@ -54,8 +54,8 @@ records describe one consortium: a public catalogue, a lending system, a search 
 the jobs around them. They form a graph instead of a list.
 
 **Delete these records rather than adapting them.** They are chosen to exercise the schema's awkward corners, and will
-not resemble your estate: a monorepo shipping three deployables, a CDN whose `repo` cannot answer where its content
-comes from, and a service coupled to the whole estate with no dependency edges.
+not resemble your estate: a monorepo shipping three deployables, a CDN changed in one repository and filled from
+another, and a service coupled to the whole estate with no dependency edges.
 
 ## Maturity
 

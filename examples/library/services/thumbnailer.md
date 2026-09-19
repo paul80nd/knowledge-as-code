@@ -3,8 +3,9 @@ id: svc-thumbnailer
 type: service
 tier: descriptive
 status: live
-repo: thumbnailer
-platform: dotnet-web
+component-type: api
+repos: [ thumbnailer ]
+platform: dotnet
 criticality: critical
 owner: human:dev.raman
 tags: [ internal ]

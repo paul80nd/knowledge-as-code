@@ -3,8 +3,9 @@ id: svc-catalogue-web
 type: service
 tier: descriptive
 status: live
-repo: platform
-platform: dotnet-web
+component-type: website
+repos: [ platform ]
+platform: dotnet
 criticality: critical
 depends-on:
   - svc-catalogue-api

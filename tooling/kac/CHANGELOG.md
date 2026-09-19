@@ -133,6 +133,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   Well-Architected OPS07-BP03 gives a runbook a column for each, and two of the three runbooks in `examples/dog-fooding`
   were writing a tool into `requires-access`. It travels in the export, and `kac new` sends a `_template.md` naming it.
 
+- **A service says what sort of component it is.** `component-type` is required, and takes its range from the corpus as
+  `platform` does. Backstage, OpsLevel and Cortex each require this word of a catalogue entry. It travels in the export,
+  and a corpus adopting `services` writes `enums.component-type` in `.corpus.yaml` before its first record validates.
+
 ### Changed
 
 - **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's
@@ -243,6 +247,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   the schema declares. `divergence` adds the three verification rules OKF has no equivalent for, the `status` values
   `active` and `stale`, and the staleness read from each source's `content-version` instead of OKF's `stale_after`.
   Both render into `knowledge-as-code/lineage.md`.
+
+- **`repo` on a service is now `repos`, and takes a list.** OpsLevel lets one component name several repositories,
+  and an asset surface is defined in one repository and filled from another. Each entry matches
+  `^[a-z0-9-]+$`, where `repo` was held to no pattern, so a corpus spelling one as `org/name` or a URL owes a second
+  edit. `services` publishes at `export.version` 2, because a reader that took a string out of `repo` would now find
+  nothing there. `feature-file-repo` reads every entry of the list.
+
+- **`services` states what it takes from current practice.** `lineage` was measured against the Backstage software
+  catalog, OpsLevel and Cortex. `alignment` said the type states the APIs a component consumes, and no field does.
+  `alignment` and `divergence` now describe the type as it stands, and `kac generate` writes both into every adopting
+  corpus's `knowledge-as-code/lineage.md`.
 
 ### Fixed
 

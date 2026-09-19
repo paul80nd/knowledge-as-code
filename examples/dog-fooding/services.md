@@ -44,22 +44,23 @@ of the catalogue as well, because it deploys services.
 
 <!-- BEGIN GENERATED: schema-services -->
 
-| Field           | Value                                    | Notes                                                                         |
-|-----------------|------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†         | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†       | string                                   | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†       | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†     | `live` `building` `deprecated` `retired` | Where the service is in its life.                                             |
-| `owner` *†      | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †     | list                                     | Where this record's content came from, one entry per source.                  |
-| `tags` †        | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `repo` *        | string                                   | Where the code lives.                                                         |
-| `platform` *    | `dotnet-tool` `static`                   | What it is built on. Drives which standards apply.                            |
-| `criticality` * | `critical` `important` `supporting`      | Judged by what a customer experiences when it is unavailable.                 |
-| `depends-on`    | list                                     | What this service calls, downward only.                                       |
-| `data-stores`   | list                                     | Data ids this service owns or reads.                                          |
-| `nfrs`          | list                                     | Ids of the NFRs this service must meet.                                       |
-| `facets`        | list                                     | Slices the catalogue: one exposure value, then any traits.                    |
+| Field              | Value                                    | Notes                                                                         |
+|--------------------|------------------------------------------|-------------------------------------------------------------------------------|
+| `id` *†            | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.  |
+| `type` *†          | string                                   | The singular name of the type, which CI checks against the folder.            |
+| `tier` *†          | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.  |
+| `status` *†        | `live` `building` `deprecated` `retired` | Where the service is in its life.                                             |
+| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
+| `sources` †        | list                                     | Where this record's content came from, one entry per source.                  |
+| `tags` †           | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types. |
+| `component-type` * | `asset` `cli` `website`                  | The sort of component this is, which `platform` does not say.                 |
+| `repos` *          | list                                     | Repositories a change to this service is made in.                             |
+| `platform` *       | `dotnet` `static`                        | What it is built on. Drives which standards apply.                            |
+| `criticality` *    | `critical` `important` `supporting`      | Judged by what a customer experiences when it is unavailable.                 |
+| `depends-on`       | list                                     | What this service calls, downward only.                                       |
+| `data-stores`      | list                                     | Data ids this service owns or reads.                                          |
+| `nfrs`             | list                                     | Ids of the NFRs this service must meet.                                       |
+| `facets`           | list                                     | Slices the catalogue: one exposure value, then any traits.                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -78,12 +79,12 @@ of the catalogue as well, because it deploys services.
 **Conventions**
 
 * **The id names the deployable, not the repository.** A repository shipping three independently deployed apps yields
-  three ids, and none of them carries the repository's name. `repo` carries it, and that is where to look for the code.
+  three ids, and none of them includes the repository's name. `repos` states it, and that is where to look for the code.
   Contributors get this wrong more often than anything else here. A repository list is the easiest list to reach for,
   and it is the wrong one.
-* **`repo` takes one value, and sometimes one value is not enough.** It names the repository you work in when you change
-  *this service*. Where the content a service serves comes from elsewhere, the field cannot say so and the body must:
-  an asset surface can be filled by two pipelines, or by another service at runtime.
+* **`repos` lists every repository you work in when you change this service.** Most services name one. An asset surface
+  names the repository defining it alongside the repository publishing what it serves. Where another service fills that
+  surface at runtime, it is not a repository, and the body says so.
 * **Criticality.** `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
   means internal impact only. Criticality drives runbook and NFR prioritisation, so grade a service honestly. A service
   graded above one of its own dependencies is not automatically wrong, but it is worth defending in the record.
@@ -102,9 +103,10 @@ of the catalogue as well, because it deploys services.
 
 ### Deriving the `platform` enum
 
-`platform` says what a service is **built on**, because that is what decides which standards apply to it. It does not
-say what deploys it: a service deployed by Terraform is not a Terraform service, and infrastructure-as-code is out of
-this catalogue entirely.
+`platform` says what a service is **built on**, because that is what decides which standards apply to it. It says
+neither what deploys it nor what sort of component it is. A service deployed by Terraform is not a Terraform service,
+and infrastructure-as-code is out of this catalogue entirely. `component-type` says the sort, so a value here naming a
+sort belongs in the other list.
 
 **Derive the values from the estate you have, then close the list.** Walk the deployables, group them by the runtime and
 framework a contributor would need to know, and let that be the range. Do not inherit a list from elsewhere. A value no
@@ -115,9 +117,26 @@ The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), which is this c
 catalogues and stand behind the list each of them wrote. `corpus-enum-undeclared` reports a record that arrives before
 the list does.
 
-This repository publishes a dotnet tool and static sites, so the list holds `dotnet-tool` and `static`. `static`
-covers anything generated and served as it was built, which reaches the documentation site, the marketplace branch and
-a sealed corpus package alike.
+This repository builds on .NET and serves generated files, so the list holds `dotnet` and `static`. `static` covers
+anything generated and served as it was built, which reaches the documentation site, the marketplace branch and a
+sealed corpus package alike.
+
+### Deriving the `component-type` vocabulary
+
+`component-type` says what sort of thing a service is: an API, a website, a worker, a command line tool. It is what a
+reader uses to tell two deployables apart before opening either. Backstage, OpsLevel and Cortex each require this word
+and each leave the vocabulary to the adopter, and so does this type.
+
+**Derive the values the way you derived `platform`, and keep the two lists apart.** A value belongs here where it
+answers "what is it", and in `platform` where it answers "what is it built on". `dotnet-api` fails that test: `dotnet`
+is the platform and `api` is the sort.
+
+The list lives under `enums:` in [`.corpus.yaml`](.corpus.yaml), beside `platform`. `corpus-enum-undeclared` reports a
+record that arrives before the list does.
+
+This repository publishes a command line tool, a documentation site, a marketplace branch and a corpus package feed,
+so the list holds `cli`, `website` and `asset`. The site, the branch and the feed all run on `platform: static`, and
+`component-type` is what separates them: a reader browses the site and downloads the other two.
 
 ### Deriving the facet vocabulary
 
@@ -140,7 +159,7 @@ Two rules keep the vocabulary small enough to browse, and they are the transfera
    are meant to reach it. A service reached by nobody carries neither value, and a command line tool somebody installs
    and runs is one.
 2. **Never restate another field.** There is no `cdn` facet, because `platform: static` says it. There is no `monorepo`
-   facet, because `repo` says it. A value that duplicates a field can only ever disagree with it.
+   facet, because `repos` says it. A value that duplicates a field can only ever disagree with it.
 
 Membership stays a judgement. The floor holds the shape of the vocabulary (that every value in it groups), and no
 declaration anywhere says which words this estate chose. That is the corpus's to decide and this page's to record.
