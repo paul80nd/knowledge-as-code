@@ -4,6 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DERV.EXPECT, eng:pol-DERV.LINEAGE ]
+depends-on: [ std-IDEM, std-SCA ]
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"

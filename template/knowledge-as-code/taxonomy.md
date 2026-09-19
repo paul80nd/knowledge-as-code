@@ -82,9 +82,10 @@ Capacity assumptions belong here too. A target nobody measures is an aspiration.
 Alignment to an external framework is stated clause by clause. A standing such as certification belongs in
 `frameworks.md`.
 
-**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
-the union of the folders that apply to it.
+**[Standards](../standards.md).** The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
+Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Standards
+compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards each of those
+names in `depends-on`.
 
 ### Descriptive: living, must mirror reality
 
@@ -198,8 +199,10 @@ graph LR;
   t_services -- data-stores --> t_data;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
+  t_standards -- depends-on --> t_standards;
   t_standards -- derived-from --> t_adrs;
   t_standards -- implements --> t_policies;
+  t_standards -- superseded-by --> t_standards;
   t_tools -- decided-in --> t_adrs;
   t_tools -- replaces --> t_tools;
 ```
@@ -240,8 +243,11 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | Service     | `depends-on`     | Service                                   |                 |
 | Service     | `nfrs`           | NFR                                       | `applies-to`    |
 | Standard    | `applies-to`     | Service                                   |                 |
+| Standard    | `depends-on`     | Standard                                  |                 |
 | Standard    | `derived-from`   | ADR                                       |                 |
 | Standard    | `implements`     | Policy                                    |                 |
+| Standard    | `superseded-by`  | Standard                                  | `supersedes`    |
+| Standard    | `supersedes`     | Standard                                  | `superseded-by` |
 | Standard    | `verified-by`    | Control                                   | `verifies`      |
 | Tool        | `decided-in`     | ADR                                       |                 |
 | Tool        | `replaces`       | Tool                                      | `successor`     |

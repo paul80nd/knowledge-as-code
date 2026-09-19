@@ -54,9 +54,10 @@ meanwhile. A year later, nobody can tell an unwritten departure from ignorance o
 **[Fixes](../fixes.md).** A problem with a resolution somebody has verified. Each fix lists its verifications, so a
 reader can see how far the resolution has been taken on trust.
 
-**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
-the union of the folders that apply to it.
+**[Standards](../standards.md).** The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
+Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Standards
+compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards each of those
+names in `depends-on`.
 
 ### Descriptive: living, must mirror reality
 
@@ -112,6 +113,8 @@ graph LR;
   t_runbooks -- applies-to --> t_services;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
+  t_standards -- depends-on --> t_standards;
+  t_standards -- superseded-by --> t_standards;
   t_tools -- replaces --> t_tools;
 ```
 
@@ -122,20 +125,23 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From      | Field          | Points at | Answered by   |
-|-----------|----------------|-----------|---------------|
-| Control   | `applies-to`   | Service   |               |
-| Control   | `verifies`     | Standard  | `verified-by` |
-| Deviation | `applies-to`   | Service   |               |
-| Deviation | `departs-from` | Standard  |               |
-| Fix       | `applies-to`   | Service   |               |
-| Process   | `applies-to`   | Service   |               |
-| Runbook   | `applies-to`   | Service   |               |
-| Service   | `depends-on`   | Service   |               |
-| Standard  | `applies-to`   | Service   |               |
-| Standard  | `verified-by`  | Control   | `verifies`    |
-| Tool      | `replaces`     | Tool      | `successor`   |
-| Tool      | `successor`    | Tool      | `replaces`    |
+| From      | Field           | Points at | Answered by     |
+|-----------|-----------------|-----------|-----------------|
+| Control   | `applies-to`    | Service   |                 |
+| Control   | `verifies`      | Standard  | `verified-by`   |
+| Deviation | `applies-to`    | Service   |                 |
+| Deviation | `departs-from`  | Standard  |                 |
+| Fix       | `applies-to`    | Service   |                 |
+| Process   | `applies-to`    | Service   |                 |
+| Runbook   | `applies-to`    | Service   |                 |
+| Service   | `depends-on`    | Service   |                 |
+| Standard  | `applies-to`    | Service   |                 |
+| Standard  | `depends-on`    | Standard  |                 |
+| Standard  | `superseded-by` | Standard  | `supersedes`    |
+| Standard  | `supersedes`    | Standard  | `superseded-by` |
+| Standard  | `verified-by`   | Control   | `verifies`      |
+| Tool      | `replaces`      | Tool      | `successor`     |
+| Tool      | `successor`     | Tool      | `replaces`      |
 
 <!-- END GENERATED: types-edges -->
 

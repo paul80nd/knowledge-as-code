@@ -13,9 +13,10 @@ namespace kac.core;
 // `part-empty`, and the table source needs no equivalent: a row with an empty clause cell is stopped by
 // `clause-modal` before anyone asks.
 //
-// Everything else below belongs to the table source, whose rows carry cells a heading has none of: the
-// table can be missing or mis-headed, and each row carries the modal that says whether it obliges. A
-// heading is its own id and offers no cells to be wrong, so a type sourcing headings stops there.
+// The modals are asked of both, of the cell for a table row and of the bullets beneath a heading, wherever
+// the type declares them: a table source must, and a heading source may. Everything else below belongs to
+// the table source, whose rows carry cells a heading has none of: the table can be missing or mis-headed,
+// and a row's id is written rather than derived. A heading is its own id and offers no cells to be wrong.
 //
 // Runs only for a type whose schema declares a `parts:` block, and only once the section itself is
 // present: a missing section is `required-section`'s to report, and saying it twice would make one fault
@@ -33,7 +34,12 @@ public static class PartChecks
 
         CheckAddresses(d, spec, report);
 
-        if (spec.Source == PartSpec.Headings) CheckBodies(d, spec, report);
+        if (spec.Source == PartSpec.Headings)
+        {
+            CheckBodies(d, spec, report);
+            CheckBullets(d, spec, report);
+        }
+
         if (spec.Source == PartSpec.Table) CheckObligations(d, spec, report);
     }
 
@@ -133,6 +139,45 @@ public static class PartChecks
                 report.Err(new CheckId("part-id-unique"),
                     $"two {spec.Noun}s here address as '{row.Id}': a citation of it names both and reaches neither.",
                     row.Line);
+        }
+    }
+
+    // What a heading's bullets say about how hard each one binds: the modal, and the bold that makes it
+    // bind at all. Asked only of a type declaring modals, which is how a glossary's terms sit under the
+    // same source and are asked none of it. `PartSpec.ModalNamed` states where in a bullet one may sit.
+    //
+    // A part with nothing under it is passed over. `part-empty` has already said so, and a second
+    // finding would make one fault look like two.
+    private static void CheckBullets(Doc d, PartSpec spec, Report report)
+    {
+        if (spec.Binding.Count == 0) return;
+
+        foreach (var part in d.Parts.Where(p => Md.HasContent(p.Body(d.Text))))
+        {
+            var bullets = Md.Bullets(d.Ast, part.BodyStart, part.BodyEnd).ToList();
+
+            if (bullets.Count == 0)
+            {
+                report.Err(new CheckId("part-modal"),
+                    $"{spec.Noun} '{Md.Snippet(part.Text)}' has no bullet under it, so it binds nobody. Write "
+                    + $"one bullet per obligation, each with one of {string.Join(", ", spec.Levels)}.",
+                    part.Line);
+                continue;
+            }
+
+            foreach (var (text, plain, bold, line) in bullets)
+            {
+                // The unbolded keyword is asked first, because a bullet with one and nothing else would
+                // otherwise be told twice: once that it names no modal, which is wrong, and once that the
+                // modal it names is not bold, which is the whole of what is wrong with it.
+                if (spec.ModalNamed(plain) is { } loose)
+                    report.Err(new CheckId("part-modal"),
+                        $"'{loose}' is written plain here, and bold is what binds. Write it `**{loose}**`.", line);
+                else if (!bold.Any(b => spec.Levels.Contains(b, StringComparer.Ordinal)))
+                    report.Err(new CheckId("part-modal"),
+                        $"{spec.Noun} '{Md.Snippet(text)}' has no modal, so nothing says how hard it binds. Write "
+                        + $"one of {string.Join(", ", spec.Levels)} in bold, or move the line to prose.", line);
+            }
         }
     }
 

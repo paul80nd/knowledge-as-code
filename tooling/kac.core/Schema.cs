@@ -171,6 +171,27 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
     public string? Modal(string text) =>
         ModalsLongestFirst.FirstOrDefault(m => text.StartsWith(m, StringComparison.Ordinal));
 
+    // The modal a stretch of text names anywhere in it, or null where it names none. Beside `Modal` above,
+    // which asks what a text opens with: a clause table's row is the obligation and opens with its modal,
+    // where a rule is a sentence and names the thing it binds first. A word the modal only prefixes is not
+    // the modal, so `MUST` inside `MUSTER` reads as nothing, and the longest is asked first so `MUST NOT`
+    // is never read as a `MUST` with a word after it.
+    public string? ModalNamed(string text) => ModalsLongestFirst.FirstOrDefault(m => Names(text, m));
+
+    private static bool Names(string text, string modal)
+    {
+        for (var i = text.IndexOf(modal, StringComparison.Ordinal);
+             i >= 0;
+             i = text.IndexOf(modal, i + 1, StringComparison.Ordinal))
+        {
+            var opens = i == 0 || !char.IsLetter(text[i - 1]);
+            var closes = i + modal.Length == text.Length || !char.IsLetter(text[i + modal.Length]);
+            if (opens && closes) return true;
+        }
+
+        return false;
+    }
+
     // The fragment a link into a part has to carry, which is the part's id for one source only. A
     // heading is its own address, so its slug answers as the id and as the anchor alike. A table row
     // has no fragment: no renderer emits one for a row, and the id beside it is authored. So a link

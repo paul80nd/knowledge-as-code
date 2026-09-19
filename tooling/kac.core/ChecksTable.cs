@@ -87,6 +87,11 @@ public static class ChecksTable
         ("part-none / part-empty", [new("part-none"), new("part-empty")],
             "The parts section holds at least one heading, and each has something under it.",
             t => t.Parts?.Source == PartSpec.Headings),
+        // Shown only where the type declares modals, which is what turns the bullets beneath a heading
+        // into obligations. A glossary sources headings too and is asked nothing of the kind.
+        ("part-modal", [new("part-modal")],
+            "A part heading states its obligations as bullets, each with a declared modal in bold.",
+            t => t.Parts is { Source: PartSpec.Headings, Binding.Count: > 0 }),
         // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
         // checks run corpus-wide, since a citation is checked where it is written and any document may
         // carry one. This predicate scopes the documentation, and a type whose records have no parts has

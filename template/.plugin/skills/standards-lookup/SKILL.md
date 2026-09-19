@@ -99,12 +99,12 @@ you build the filename. The owning record for `eng:std-TEST.every-test-is-hermet
 ## Read the keyword on every bullet
 
 **One line holds several obligations, and they do not all bind.** `obligations` is one string of markdown holding a
-`- ` bullet per obligation, and each bullet carries its own RFC 2119 keyword in capitals and in bold. No field on the
+`- ` bullet per obligation, and each bullet carries its own BCP 14 keyword in capitals and in bold. No field on the
 line says how strongly a bullet binds, so the keyword inside the wording is the only thing that says it. Read the string
 whole, and take the bullet rather than the line.
 
 * **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it.
-* **`SHOULD` and `MAY` advise.** Neither is a rule, and neither blocks anything on its own.
+* **`SHOULD`, `SHOULD NOT` and `MAY` advise.** None is a rule, and none blocks anything on its own.
 
 **Only capitals count.** [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) gives the keywords their normative meaning
 when they are written in capitals and not otherwise, so a lower-case "must" is prose. **`MUST NOT` opens with `MUST`**,
@@ -121,7 +121,9 @@ id* builds from `record` and `shortcode`, and read two things from `sections`, w
 * **`Conformance checklist`.** It is the same rules written as a test, so it is the fastest thing to hand somebody who
   has to show the work conforms.
 
-Read `fields` as well. `applies-to` and `category` are the two the section above turns on.
+Read `fields` as well. `applies-to` and `category` are the two the section above turns on. `depends-on` names the
+standards a reader applies to apply this one, so quote those alongside the rule you found. `superseded-by` names the
+standard that replaced this one: quote the replacement instead, and say the rule you were asked about has moved.
 
 The Rules section is not among those sections. Its headings travelled as the lines in `rules.jsonl`, one line each,
 sorted by heading rather than in the order the standard writes them. Open the record where the author's grouping

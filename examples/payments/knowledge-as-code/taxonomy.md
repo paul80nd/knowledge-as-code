@@ -54,9 +54,10 @@ reader can see how far the resolution has been taken on trust.
 **[NFRs](../nfrs.md).** A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured.
 Capacity assumptions belong here too. A target nobody measures is an aspiration.
 
-**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
-the union of the folders that apply to it.
+**[Standards](../standards.md).** The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
+Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Standards
+compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards each of those
+names in `depends-on`.
 
 ### Descriptive: living, must mirror reality
 
@@ -98,6 +99,8 @@ graph LR;
   t_postmortems -- prompted --> t_standards;
   t_services -- depends-on --> t_services;
   t_standards -- applies-to --> t_services;
+  t_standards -- depends-on --> t_standards;
+  t_standards -- superseded-by --> t_standards;
 ```
 
 <!-- END GENERATED: types-graph -->
@@ -107,17 +110,20 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 
 <!-- BEGIN GENERATED: types-edges -->
 
-| From       | Field            | Points at          | Answered by  |
-|------------|------------------|--------------------|--------------|
-| Fix        | `applies-to`     | Service            |              |
-| NFR        | `applies-to`     | Service, Offering  | `nfrs`       |
-| Offering   | `implemented-by` | Service            |              |
-| Offering   | `nfrs`           | NFR                | `applies-to` |
-| Postmortem | `affected`       | Service, Offering  |              |
-| Postmortem | `prompted`       | NFR, Fix, Standard |              |
-| Service    | `depends-on`     | Service            |              |
-| Service    | `nfrs`           | NFR                | `applies-to` |
-| Standard   | `applies-to`     | Service            |              |
+| From       | Field            | Points at          | Answered by     |
+|------------|------------------|--------------------|-----------------|
+| Fix        | `applies-to`     | Service            |                 |
+| NFR        | `applies-to`     | Service, Offering  | `nfrs`          |
+| Offering   | `implemented-by` | Service            |                 |
+| Offering   | `nfrs`           | NFR                | `applies-to`    |
+| Postmortem | `affected`       | Service, Offering  |                 |
+| Postmortem | `prompted`       | NFR, Fix, Standard |                 |
+| Service    | `depends-on`     | Service            |                 |
+| Service    | `nfrs`           | NFR                | `applies-to`    |
+| Standard   | `applies-to`     | Service            |                 |
+| Standard   | `depends-on`     | Standard           |                 |
+| Standard   | `superseded-by`  | Standard           | `supersedes`    |
+| Standard   | `supersedes`     | Standard           | `superseded-by` |
 
 <!-- END GENERATED: types-edges -->
 

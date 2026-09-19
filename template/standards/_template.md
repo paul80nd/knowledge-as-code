@@ -24,7 +24,9 @@ and how it is reviewed. What is below is only what a standard adds to that.
   reader meets it in a control's `verifies:`, so draw it from the concept rather than from the current wording. The
   filename carries none of it: `std-SECRET` sits in `common/secret-handling.md`. **Immutable once the standard is
   active.**
-* **`status`**: `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase.
+* **`status`**: `draft` until agreed, then `active`, and later `deprecated` or `superseded`. Values are lowercase. A
+  `superseded` standard names its replacement in `superseded-by`. A citation written before the replacement still
+  resolves, so the record it lands on says what to read now.
 * **Where you save it**: the folder below `standards/` becomes the standard's category, and folders can
   nest. Write the rule in the most general folder where it is still true. A standard saved straight into
   `standards/` has no category, which is fine while there are few enough to read as one list.
@@ -34,6 +36,9 @@ and how it is reviewed. What is below is only what a standard adds to that.
   `implements: [ pol-EVER.BRANCH, pol-EVER.HISTORY ]`. A bare policy id is refused: a standard discharges some of a
   policy's clauses and seldom all of them, and the bare id reads to anything counting coverage as every clause covered.
   A reader takes the same list from the `Covers` lines below, so this field is written for whatever counts coverage.
+* **`depends-on`**: the standards a reader has to apply to apply this one, as `depends-on: [ std-TEST ]`. A standard
+  adding detail to a more general one names it here, because a folder cannot express that. A standard worth reading
+  next goes in `Sources and further reading`.
 * **`applies-to`**: service ids, or `all`.
 * **`review-by`**: a quoted `"YYYY-MM-DD"`. Drives the staleness report.
 
@@ -55,8 +60,10 @@ The rule in a single scannable sentence: what a reader needs to take away in one
 
 ## Rules
 
-The normative content. State each rule imperatively and use [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
-keywords (**MUST**, **MUST NOT**, **SHOULD**, **MAY**) so compliance levels are unambiguous.
+The normative content. Write each rule as a bullet, and give it one [BCP 14](https://www.rfc-editor.org/rfc/rfc8174)
+keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**. A keyword binds only in bold capitals.
+`part-modal` reports a bullet with none, and one that leaves a keyword in plain text. It calls the keyword a modal,
+because the same declaration governs a policy's clause table.
 
 Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. The heading is what
 somebody hunting one rule finds before the bullet, and it is the address a citation and an export both carry. A
@@ -120,8 +127,9 @@ ADR owns the "why" and this standard owns the "what". Link, don't duplicate.
 ## Sources and further reading
 
 Optional. The external documents this standard defers to. Mark an entry **normative** where a reader has not read the
-rule until they have read the source, and **informative** where the source is background. A compliance posture is not a
-source, and [frameworks.md](../frameworks.md) is where one goes.
+rule until they have read the source, and **informative** where the source is background. A standard in this corpus
+goes in `depends-on` above. A compliance posture is not a source, and [frameworks.md](../frameworks.md) is where one
+goes.
 
 - **Normative.** [{{Source}}] sets {{the baseline this standard adds exceptions to}}.
 - **Informative.** [{{Other source}}] covers {{what a reader takes from it}}.

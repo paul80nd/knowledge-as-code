@@ -103,6 +103,44 @@ public static class Md
         return sb.ToString();
     }
 
+    // The bullets one heading gathers: the items of the first list beneath it, read off the document's
+    // own parse. A bullet wrapped over three lines arrives as one item, and a bullet inside a fenced
+    // block is no bullet at all, because the parse decides both and a line scan decides neither.
+    //
+    // `Plain` is the item with its bold runs and its code spans left out. A modal surviving into it was
+    // written in capitals and left unbolded, which under BCP 14 is a keyword and under this corpus's
+    // grammar is nothing: bold is what binds. A modal inside backticks is being named rather than used.
+    //
+    // Direct children throughout: the first list's own items, and each item's own first paragraph. A
+    // nested list is one bullet's workings, and asking each of its points for a modal would hold a
+    // rule's detail to the shape of a rule.
+    public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
+        MarkdownDocument ast, int start, int end)
+    {
+        var list = ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
+        if (list is null) yield break;
+
+        foreach (var item in list.OfType<ListItemBlock>())
+        {
+            if (item.OfType<ParagraphBlock>().FirstOrDefault()?.Inline is not { } inline) continue;
+
+            var text = new StringBuilder();
+            var plain = new StringBuilder();
+            var bold = new List<string>();
+
+            foreach (var child in inline)
+            {
+                var from = text.Length;
+                Walk(child, text);
+
+                if (child is EmphasisInline { DelimiterCount: 2 } run) bold.Add(PlainText(run));
+                else if (child is not CodeInline) plain.Append(text, from, text.Length - from);
+            }
+
+            yield return (text.ToString().Trim(), plain.ToString(), bold, item.Line + 1);
+        }
+    }
+
     private static void Walk(Inline inline, StringBuilder sb)
     {
         switch (inline)

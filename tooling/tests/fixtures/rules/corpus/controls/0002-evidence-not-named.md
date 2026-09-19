@@ -19,7 +19,7 @@ applies-to: [all]
 Nothing that can be shown. The mechanism says a human works through a checklist every pull request, and no
 field says where the record of that lives, so nobody can tell the control from a claim about one.
 
-* `std-ERRORS.a-failure-says-what-happened` says a failure "is reported with the status code that
+* `std-ERRORS.a-failure-says-what-happened` says a failure is "answered with the status code that
   describes it". Those are the clause's own words, and `clause-quoted-faithfully` reports nothing here.
 * `std-ERRORS.a-failure-says-what-happened` also says a failure "is answered with a `404`". The clause
   says no such thing, and that is the finding.

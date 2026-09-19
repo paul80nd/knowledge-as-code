@@ -39,7 +39,9 @@ want the deeper *why*.
 ## Categories
 
 Standards **compose**. The rule-set enforced for a piece of work is the union of the folders that apply to it, so a rule
-is written at the most general folder where it is still true and left alone below that.
+is written at the most general folder where it is still true and left alone below that. A standard adding detail to a
+more general one sits in a different folder. It names the one it rests on in `depends-on`, so a reader who applies
+`platform/dotnet/testing.md` knows to apply `common/testing.md` too.
 
 A folder under `standards/` is the standard's category, and the tool reads it from where the file sits. Folders can
 nest, so `platform/node/` is a category and `platform/` is the category above it. A standard saved straight into
@@ -57,21 +59,24 @@ Make the folders your own work needs. A category earns its place by grouping eno
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Value                                      | Notes                                                                          |
-|----------------|--------------------------------------------|--------------------------------------------------------------------------------|
-| `id` *†        | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.   |
-| `type` *†      | string                                     | The singular name of the type, which CI checks against the folder.             |
-| `tier` *†      | `normative`                                | The record's trust level, fixed for the type and checked against the folder.   |
-| `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                  |
-| `owner` *†     | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.         |
-| `sources` †    | list                                       | Where this record's content came from, one entry per source.                   |
-| `tags` †       | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.  |
-| `category`     | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                    |
-| `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead. |
-| `implements`   | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.      |
-| `verified-by`  | list                                       | Control ids that check it.                                                     |
-| `applies-to` * | list                                       | Service ids, or `all`.                                                         |
-| `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                 |
+| Field           | Value                                      | Notes                                                                          |
+|-----------------|--------------------------------------------|--------------------------------------------------------------------------------|
+| `id` *†         | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.   |
+| `type` *†       | string                                     | The singular name of the type, which CI checks against the folder.             |
+| `tier` *†       | `normative`                                | The record's trust level, fixed for the type and checked against the folder.   |
+| `status` *†     | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                  |
+| `owner` *†      | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.         |
+| `sources` †     | list                                       | Where this record's content came from, one entry per source.                   |
+| `tags` †        | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.  |
+| `supersedes`    | id                                         | The standard this one replaces.                                                |
+| `superseded-by` | id                                         | The standard that replaces this one. Required when `status == superseded`.     |
+| `category`      | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                    |
+| `derived-from`  | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead. |
+| `implements`    | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.      |
+| `depends-on`    | list                                       | Standards whose rules this one's rules depend on.                              |
+| `verified-by`   | list                                       | Control ids that check it.                                                     |
+| `applies-to` *  | list                                       | Service ids, or `all`.                                                         |
+| `review-by` *   | date                                       | Quoted. The date by which someone confirms this is still true.                 |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -84,10 +89,13 @@ Name where the standard comes from: an ADR in `derived-from`, a policy in `imple
 fails a standard carrying neither. Where you can name neither, either the decision has not been made (make it), or what
 you are writing is guidance rather than a standard.
 
-Write the rules with RFC 2119 keywords, and make each one **testable**. Where a rule cannot be checked against a
-concrete artefact, sharpen it or move it to the rationale section. Every **MUST** and **MUST NOT** should have a
-corresponding control, even where that control's mechanism is `not-enforced`. An honest gap is more useful than a silent
-one.
+Write each rule as a bullet with one BCP 14 keyword in bold capitals: **MUST**, **MUST NOT**, **SHOULD**,
+**SHOULD NOT** or **MAY**. `part-modal` reports a bullet with none, and one that leaves a keyword in plain text. It
+calls the keyword a modal, because the same declaration governs a policy's clause table.
+
+Make each rule **testable**. Where a rule cannot be checked against a concrete artefact, sharpen it or move it to the
+rationale section. Every **MUST** and **MUST NOT** should have a corresponding control, even where that control's
+mechanism is `not-enforced`. An honest gap is more useful than a silent one.
 
 **Group the rules under `###` headings.** A heading says what the rules beneath it hold a reader to, and it is the
 address something else cites: `std-SECRET.every-secret-rotates` names one group, and an export carries the group as a
@@ -142,6 +150,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
+| `part-modal`                | error   | A part heading states its obligations as bullets, each with a declared modal in bold.                           |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
@@ -154,10 +163,11 @@ Standards are living documents, and we edit them in place. Record every material
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                              |
-|--------------------------------|---------------------------------------------------------------------------------------------------|
-| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.  |
-| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.              |
-| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit. |
+| Rule                           | What it would verify                                                                                 |
+|--------------------------------|------------------------------------------------------------------------------------------------------|
+| `binds-only-under-rules`       | Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal. |
+| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.     |
+| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.                 |
+| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit.    |
 
 <!-- END GENERATED: checks-standards -->

@@ -7,21 +7,24 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 
 <!-- BEGIN GENERATED: schema-standards -->
 
-| Field          | Value                                      | Notes                                                                          |
-|----------------|--------------------------------------------|--------------------------------------------------------------------------------|
-| `id` *†        | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.   |
-| `type` *†      | string                                     | The singular name of the type, which CI checks against the folder.             |
-| `tier` *†      | `normative`                                | The record's trust level, fixed for the type and checked against the folder.   |
-| `status` *†    | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                  |
-| `owner` *†     | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.         |
-| `sources` †    | list                                       | Where this record's content came from, one entry per source.                   |
-| `tags` †       | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.  |
-| `category`     | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                    |
-| `derived-from` | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead. |
-| `implements`   | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.      |
-| `verified-by`  | list                                       | Control ids that check it.                                                     |
-| `applies-to` * | list                                       | Service ids, or `all`.                                                         |
-| `review-by` *  | date                                       | Quoted. The date by which someone confirms this is still true.                 |
+| Field           | Value                                      | Notes                                                                          |
+|-----------------|--------------------------------------------|--------------------------------------------------------------------------------|
+| `id` *†         | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.   |
+| `type` *†       | string                                     | The singular name of the type, which CI checks against the folder.             |
+| `tier` *†       | `normative`                                | The record's trust level, fixed for the type and checked against the folder.   |
+| `status` *†     | `draft` `active` `deprecated` `superseded` | Plain values only. Enforcement notes belong in `verified-by`.                  |
+| `owner` *†      | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.         |
+| `sources` †     | list                                       | Where this record's content came from, one entry per source.                   |
+| `tags` †        | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.  |
+| `supersedes`    | id                                         | The standard this one replaces.                                                |
+| `superseded-by` | id                                         | The standard that replaces this one. Required when `status == superseded`.     |
+| `category`      | derived from the record's sub-path         | The folder the standard is filed under, below `standards/`.                    |
+| `derived-from`  | list                                       | The ADRs this standard distils. Provenance may come from `implements` instead. |
+| `implements`    | list                                       | Policy clause ids this standard puts into practice, as `pol-EVER.BRANCH`.      |
+| `depends-on`    | list                                       | Standards whose rules this one's rules depend on.                              |
+| `verified-by`   | list                                       | Control ids that check it.                                                     |
+| `applies-to` *  | list                                       | Service ids, or `all`.                                                         |
+| `review-by` *   | date                                       | Quoted. The date by which someone confirms this is still true.                 |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -55,6 +58,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
+| `part-modal`                | error   | A part heading states its obligations as bullets, each with a declared modal in bold.                           |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
@@ -67,10 +71,11 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                              |
-|--------------------------------|---------------------------------------------------------------------------------------------------|
-| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.  |
-| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.              |
-| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit. |
+| Rule                           | What it would verify                                                                                 |
+|--------------------------------|------------------------------------------------------------------------------------------------------|
+| `binds-only-under-rules`       | Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal. |
+| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.     |
+| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.                 |
+| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit.    |
 
 <!-- END GENERATED: checks-standards -->

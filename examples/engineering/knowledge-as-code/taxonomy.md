@@ -56,9 +56,10 @@ leaves. Every control lists the rules it verifies. A rule nothing checks gets a 
 Alignment to an external framework is stated clause by clause. A standing such as certification belongs in
 `frameworks.md`.
 
-**[Standards](../standards.md).** The rulebook, imperative, RFC 2119, with concrete examples and a conformance
-checklist. Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work are
-the union of the folders that apply to it.
+**[Standards](../standards.md).** The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
+Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Standards
+compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards each of those
+names in `depends-on`.
 
 ### Descriptive: living, must mirror reality
 
@@ -95,8 +96,10 @@ graph LR;
   t_adrs -- superseded-by --> t_adrs;
   t_controls -- verifies --> t_standards;
   t_glossary -- narrows --> t_glossary;
+  t_standards -- depends-on --> t_standards;
   t_standards -- derived-from --> t_adrs;
   t_standards -- implements --> t_policies;
+  t_standards -- superseded-by --> t_standards;
 ```
 
 <!-- END GENERATED: types-graph -->
@@ -113,8 +116,11 @@ land on a service. Everything else hangs off that. The same edges, field by fiel
 | ADR      | `supersedes`    | ADR       | `superseded-by` |
 | Control  | `verifies`      | Standard  | `verified-by`   |
 | Glossary | `narrows`       | Glossary  |                 |
+| Standard | `depends-on`    | Standard  |                 |
 | Standard | `derived-from`  | ADR       |                 |
 | Standard | `implements`    | Policy    |                 |
+| Standard | `superseded-by` | Standard  | `supersedes`    |
+| Standard | `supersedes`    | Standard  | `superseded-by` |
 | Standard | `verified-by`   | Control   | `verifies`      |
 
 <!-- END GENERATED: types-edges -->

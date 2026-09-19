@@ -112,6 +112,11 @@ obligations rather than with the footnote standing where they belong.
 commonly leans on another. It never lists a policy clause: a clause is cited as `[pol-INTC].HOLDS`, and the link ends at
 the policy.
 
+`depends-on` states that composition at the record level, for the case a folder cannot: `platform/dotnet/testing.md`
+adds the .NET detail to `common/testing.md`, and the two sit in different folders. A consumer reads it to know which
+further standards it has to apply. `superseded-by` travels for the same reason, so a reader arriving from an old
+citation is sent to the standard that replaced this one.
+
 ### controls
 
 A control travels whole. It runs to a few hundred words, and a reader who sees what a check promises without seeing what
