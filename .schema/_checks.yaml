@@ -270,6 +270,15 @@ checks:
       in for the words counts as nothing. A table source needs no equivalent, since `clause-modal` stops a row with
       an empty cell first.
 
+  part-modal:
+    severity: error
+    description: A part heading states its obligations as bullets, each with a declared modal in bold.
+    notes: >
+      Asked only of a type declaring `binding:`, so a glossary term sits under the same source and is asked none of
+      it. The modal is looked for anywhere in the bullet, because a rule is a sentence and names the thing it binds
+      first. BCP 14 makes capitals normative and this corpus makes bold the weight a reader skims, so a keyword
+      written with one of the two and not the other is reported as well.
+
   clause-table:
     severity: error
     description: The declared section has a table headed with the block's `columns`, and at least one row.

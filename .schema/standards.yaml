@@ -7,11 +7,12 @@ folder: standards
 page: standards.md
 tier: normative
 lifecycle: living
-summary: The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.
+summary: The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
 goes-here: A rule people must follow when building
 detail: >
-  Imperative throughout: **MUST**, **SHOULD**, **MAY**. Standards compose: the rules for a piece of work
-  are the union of the folders that apply to it.
+  Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and
+  **MAY**. Standards compose: the rules for a piece of work are the union of the folders that apply to
+  it, and of the standards each of those names in `depends-on`.
 
 versus:
   controls: >
@@ -20,11 +21,30 @@ versus:
     fail a build, it is a control.
 
 lineage:
-  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Standard layer, and [BCP 14](https://www.rfc-editor.org/rfc/rfc8174) for the grammar"
+  prior-art: >-
+    [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
+    Standard layer: what a standard contains and how often it is reviewed.
+    [BCP 14](https://www.rfc-editor.org/rfc/rfc8174): the keywords and the capitals rule.
+    [ISO/IEC Directives, Part 2](https://www.iso.org/sites/directives/current/part2/index.xhtml), ninth
+    edition: the elements of a normative document.
+    [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/): the conformance clause
   alignment: >
-    Granular and prescriptive requirements, the RFC 2119 keyword set, and the all-capitals rule
+    HCGF's granular, mandatory requirement, owned by a named person and reviewed on a date the record
+    names: `status`, `owner` and `review-by`. BCP 14's keywords, declared in `parts.binding:` and
+    `parts.advisory:` and binding only in capitals, which `part-modal` checks on every rule. W3C's
+    conformance clause, as the required `Conformance checklist` a design is ticked against, and its good
+    practice of telling normative content from informative, which `binds-only-under-rules` states. ISO's
+    normative references, as `depends-on`, and its rule that a document names what replaces it, as
+    `superseded-by`
   divergence: >
-    Standards here compose by union across the folders that apply. HCGF has no composition model
+    BCP 14 asks for its imperatives sparingly. This type does the opposite and follows HCGF, which puts a
+    recommendation in a guideline and leaves a standard nothing but mandatory requirements:
+    `parts.binding:` and `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost
+    every rule written here binds. ISO makes terms and
+    definitions a clause of every document. Here a term is defined once in the glossary and linked, so no
+    standard states one. ISO puts the subject and the limits of applicability in a scope clause, which
+    this type splits into `applies-to` and the folder the record sits in. Standards here also compose by
+    union across the folders that apply, where HCGF has no composition model
 
 collision: >
   In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an
@@ -64,6 +84,24 @@ fields:
       Nothing needs a status such as "until ADR-NNNN is accepted". `derived-from` and that ADR's own
       status already give it.
 
+  supersedes:
+    required: false
+    type: id
+    ref: standards
+    reciprocal: superseded-by
+    description: The standard this one replaces.
+
+  superseded-by:
+    required: false
+    required-when: 'status == superseded'
+    type: id
+    ref: standards
+    reciprocal: supersedes
+    description: The standard that replaces this one.
+    notes: >
+      A citation written before the replacement still resolves, so the record it reaches says what to
+      read now. `deprecated` takes no successor: a rule withdrawn and not replaced is how most rules end.
+
   category:
     type: string
     from: sub-path
@@ -95,6 +133,17 @@ fields:
       field lists the policies, because the clause ids already give them.
       See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
 
+  depends-on:
+    required: false
+    type: list
+    of: id
+    ref: standards
+    description: Standards whose rules this one's rules depend on.
+    notes: >
+      The composition a folder cannot express. `platform/dotnet/testing.md` adds the .NET detail to
+      `common/testing.md`, and each sits in a different folder. Name a standard this one's rules rest
+      on. A standard worth reading next goes in `Sources and further reading`.
+
   verified-by:
     required: false
     type: list
@@ -121,16 +170,20 @@ sections:
   optional: [Sources and further reading, Changelog]
 
 # A rule is an H3 under `Rules`, addressed by the anchor its heading slugs to. The heading is the part, so
-# a citation addresses one heading's run of obligations and never a single bullet.
+# a citation addresses one heading's run of obligations and never a single bullet. Each bullet beneath
+# states one obligation: the subject first, then one of the modals below, in bold capitals.
 parts:
   source: headings
   section: Rules
   noun: rule
+  binding: [MUST, MUST NOT]
+  advisory: [SHOULD, SHOULD NOT, MAY]
 
 # `Rules` is absent from the export's `sections:` because its headings are parts, and `parts:` exports them.
 export:
   version: 1
-  fields: [id, title, category, status, derived-from, implements, applies-to, review-by, tags]
+  fields: [id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to,
+           review-by, tags]
   sections:
     Summary: full
     Conformance checklist: full
@@ -165,6 +218,11 @@ rules:
       neither `derived-from` nor `implements` is set, so this standard does not say where its authority
       comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the
       document as an explanation.
+  - id: binds-only-under-rules
+    description: >
+      Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal.
+    # No fact measures one section, so no `expr:` can ask this. `part-modal` holds the bullets under
+    # `Rules` and says nothing about the sections around them.
   - id: rules-have-controls
     description: >
       Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.

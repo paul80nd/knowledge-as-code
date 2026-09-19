@@ -143,7 +143,7 @@ public class ExportShapeTests
             Dependencies: full
             Data: full
         standards@1
-          fields: id, title, category, status, derived-from, implements, applies-to, review-by, tags
+          fields: id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to, review-by, tags
           sections:
             Summary: full
             Conformance checklist: full

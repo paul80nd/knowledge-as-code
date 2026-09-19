@@ -202,8 +202,9 @@ public static class SchemaChecks
     // type never declares is the second, and it is the `mirrors-section:` fault in another place. The
     // walk would run to a heading no record may carry and find nothing under it.
     //
-    // The modals are the table source's alone. Without them every row is reported as opening with no
-    // modal, and the message lists the modals to write as an empty list.
+    // The modals are required of the table source alone. A row without them is reported as opening with
+    // no modal, and the message lists the modals to write as an empty list. A heading source may declare
+    // them and need not: a glossary's terms carry no obligation, and declaring none is how it says so.
     private static void CheckParts(string at, string key, TypeSchema t, List<Finding> f)
     {
         if (t.Parts is not { } parts) return;

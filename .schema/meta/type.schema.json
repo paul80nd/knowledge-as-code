@@ -353,11 +353,11 @@
           "$ref": "#/$defs/regex"
         },
         "binding": {
-          "description": "The modals written bold, which oblige. Declare them strongest first: a record's clause table must group its rows in this order. `source: table` only.",
+          "description": "The modals written bold, which oblige. Declare them strongest first: a record's clause table must group its rows in this order. Required for `source: table`, and optional for `source: headings`, where declaring them holds every bullet beneath a part heading to one.",
           "$ref": "#/$defs/modals"
         },
         "advisory": {
-          "description": "The modals written plain, which recommend. They rank below every binding modal. `source: table` only.",
+          "description": "The modals written plain, which recommend. They rank below every binding modal. Read for `source: table`, where plain is how an advisory row is written. A heading source reads them as further modals a bullet may carry, and asks bold of all of them.",
           "$ref": "#/$defs/modals"
         }
       },

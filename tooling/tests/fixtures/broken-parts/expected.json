@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 19,
-    "templates": 2,
+    "validated": 20,
+    "templates": 3,
     "skipped": 0,
-    "errors": 18,
+    "errors": 21,
     "warnings": 2,
     "infos": 0
   },
@@ -147,6 +147,27 @@
       "severity": "error",
       "check": "clause-id-format",
       "message": "clause id 'CLEAN' is not a code span. Write it as `CLEAN`."
+    },
+    {
+      "file": "standards/moda-rules-that-bind-nobody.md",
+      "line": 24,
+      "severity": "error",
+      "check": "part-modal",
+      "message": "rule 'A service reads its secrets from the vault.' has no modal, so nothing says how hard it binds. Write one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY in bold, or move the line to prose."
+    },
+    {
+      "file": "standards/moda-rules-that-bind-nobody.md",
+      "line": 30,
+      "severity": "error",
+      "check": "part-modal",
+      "message": "'MUST' is written plain here, and bold is what binds. Write it `**MUST**`."
+    },
+    {
+      "file": "standards/moda-rules-that-bind-nobody.md",
+      "line": 32,
+      "severity": "error",
+      "check": "part-modal",
+      "message": "rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY."
     }
   ]
 }

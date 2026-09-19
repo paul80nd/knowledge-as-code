@@ -98,6 +98,14 @@ Scenario: A term declared by a heading is held to carrying something under it
     |   28 | part-empty | term 'Hollow' has nothing under it. Write it or delete the heading.      |
     |   32 | part-empty | term 'Placeholder' has nothing under it. Write it or delete the heading. |
 
+Scenario: Every bullet under a rule heading is held to a modal in bold capitals
+  When I validate the corpus
+  Then the findings for "standards/moda-rules-that-bind-nobody.md" are exactly:
+    | line | check      | message                                                                                                                                                                       |
+    |   24 | part-modal | rule 'A service reads its secrets from the vault.' has no modal, so nothing says how hard it binds. Write one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY in bold, or move the line to prose. |
+    |   30 | part-modal | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |
+    |   32 | part-modal | rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY. |
+
 Scenario: A parts section holding no headings is told what belongs there
   When I validate the corpus
   Then the findings for "glossary/none-terms-section-empty.md" are exactly:
@@ -106,7 +114,7 @@ Scenario: A parts section holding no headings is told what belongs there
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 19 documents and 0 skipped
+  Then validation reports 20 documents and 0 skipped
   And the findings are exactly:
     | file                                  | severity | line | check            | message                                                                                                                        |
     | glossary/dupe-two-terms-alike.md      | error    |   27 | part-id-unique   | two terms here address as 'identity-line': a citation of it names both and reaches neither.                                    |
@@ -129,3 +137,6 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/ordr-out-of-order.md         | warning  |   28 | clause-order     | clause 'SECND' is a 'MUST' but follows a 'MUST NOT'. Group the table MUST, MUST NOT, SHOULD, COULD.                            |
     | policies/refs-unknown-document.md     | error    |   16 | part-ref         | 'pol-ZZZZ.ANY' cites 'pol-ZZZZ', which does not exist.                                                                         |
     | policies/span-id-not-code.md          | error    |   28 | clause-id-format | clause id 'CLEAN' is not a code span. Write it as `CLEAN`.                                                                     |
+    | standards/moda-rules-that-bind-nobody.md | error |   24 | part-modal       | rule 'A service reads its secrets from the vault.' has no modal, so nothing says how hard it binds. Write one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY in bold, or move the line to prose. |
+    | standards/moda-rules-that-bind-nobody.md | error |   30 | part-modal       | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |
+    | standards/moda-rules-that-bind-nobody.md | error |   32 | part-modal       | rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY. |

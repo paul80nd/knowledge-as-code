@@ -19,6 +19,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **Every rule in a standard is held to a keyword in bold capitals.** `part-modal` reads the bullets under each rule
+  heading and reports one that names none of `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` or `MAY`, one that leaves a
+  keyword in plain text, and a heading gathering no bullet at all. BCP 14 gives a keyword its meaning only in capitals,
+  and this corpus makes bold the thing a reader skims, so a keyword carrying one of the two bound nobody and nothing
+  said so. A type declares its own set in `parts.binding:` and `parts.advisory:`, which a heading source may now carry:
+  a glossary declares none and is asked nothing.
+
+- **A standard names the standards it rests on.** `depends-on` takes standard ids, and `kac validate` checks each one
+  resolves. ISO/IEC Directives Part 2 makes normative references a clause of every document, and a folder cannot say
+  that `platform/dotnet/testing.md` is no use without `common/testing.md`. The field travels in the export.
+
+- **A superseded standard names its replacement.** `superseded-by` takes a standard id and is required where `status`
+  is `superseded`, with `supersedes` the same edge read the other way. Both travel in the export, so a reader arriving
+  from an old citation is sent to the standard that replaced it.
+
 - **A policy in force says the day it came into force.** `active-from` takes the day, quoted, and `kac validate`
   requires it where `status` is `active`. NIST SP 800-53 Rev. 5's `-1` controls and ISO/IEC 27001 clause 5.2 both ask a
   policy to record its approval, and `owner` says who without saying when. `review-not-before-active` fails a

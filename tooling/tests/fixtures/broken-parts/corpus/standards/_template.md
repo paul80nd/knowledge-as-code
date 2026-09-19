@@ -19,7 +19,7 @@ tags: [ a, b ]
 
 ## Rules
 
-{{The obligations, each leading with a BCP 14 keyword in capitals.}}
+{{The obligations, each leading with an RFC 2119 keyword in capitals.}}
 
 ## Examples
 

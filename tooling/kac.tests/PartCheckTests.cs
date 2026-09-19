@@ -291,6 +291,101 @@ public class PartCheckTests
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
             f => f.Check.Value == "part-empty");
 
+    // A heading source that declares modals, which is what turns the bullets beneath a heading into
+    // obligations. `Headings()` above declares none, and every test using it shows the type asked nothing.
+    private static PartSpec Rules() =>
+        new(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
+            { Section = "Rules", Noun = "rule", Level = 3 };
+
+    private const string Group = "## Rules\n\n### Every secret is read at run time\n\n";
+
+    [Fact]
+    public void A_bullet_with_no_modal_lists_the_ones_to_write()
+    {
+        var found = Run(Group + "- A service reads its secrets from the vault.\n", Rules(), "standards");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-modal", one.Check.Value);
+        Assert.Contains("MUST, MUST NOT, SHOULD, SHOULD NOT, MAY", one.Message);
+    }
+
+    // The modal sits where the sentence puts it, because a rule names the thing it binds first. A table
+    // row opens with its modal, and holding a bullet to the same shape would reject every rule written.
+    [Fact]
+    public void A_modal_mid_sentence_binds_the_bullet()
+        => Assert.Empty(Run(Group + "- A service **MUST** read its secrets from the vault.\n",
+            Rules(), "standards"));
+
+    [Fact]
+    public void An_advisory_modal_binds_the_bullet_too()
+        => Assert.Empty(Run(Group + "- A service **SHOULD NOT** log the request body.\n", Rules(), "standards"));
+
+    // BCP 14 gives capitals their meaning and this corpus gives bold the weight a reader skims, so a
+    // keyword carrying one of the two is reported.
+    [Fact]
+    public void A_keyword_left_in_plain_capitals_is_reported()
+    {
+        var found = Run(Group + "- A service MUST read its secrets from the vault.\n", Rules(), "standards");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-modal", one.Check.Value);
+        Assert.Contains("Write it `**MUST**`", one.Message);
+    }
+
+    // The longer modal is offered first, so the finding names the obligation the author wrote.
+    [Fact]
+    public void A_plain_prohibition_is_named_whole()
+    {
+        var found = Run(Group + "- A service MUST NOT log the request body.\n", Rules(), "standards");
+        Assert.Contains("'MUST NOT' is written plain", Assert.Single(found).Message);
+    }
+
+    // One bullet, one finding. A bullet naming a modal and leaving it plain is not also told it names
+    // none, which is the reverse of what is wrong with it.
+    [Fact]
+    public void A_plain_keyword_is_not_also_reported_as_no_keyword()
+    {
+        var found = Run(Group + "- A service MUST read its secrets from the vault.\n", Rules(), "standards");
+        Assert.Contains("written plain", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_keyword_inside_a_code_span_is_being_named_rather_than_used()
+        => Assert.Empty(Run(Group + "- A rule **MUST** open with `MUST` or `SHOULD`.\n", Rules(), "standards"));
+
+    // A word the keyword only prefixes is not the keyword.
+    [Fact]
+    public void A_longer_word_beginning_with_a_modal_is_not_one()
+        => Assert.Empty(Run(Group + "- A reviewer **MUST** MUSTER the evidence.\n", Rules(), "standards"));
+
+    [Fact]
+    public void A_heading_gathering_prose_and_no_bullet_binds_nothing()
+    {
+        var found = Run(Group + "Secrets come from the vault.\n", Rules(), "standards");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-modal", one.Check.Value);
+        Assert.Contains("has no bullet under it", one.Message);
+    }
+
+    // `part-empty` owns a heading with nothing under it, and one fault arriving under two ids reads as
+    // two faults.
+    [Fact]
+    public void A_heading_with_nothing_under_it_is_left_to_part_empty()
+        => Assert.DoesNotContain(Run(Group, Rules(), "standards"), f => f.Check.Value == "part-modal");
+
+    // A nested bullet is one rule's workings. Holding it to a modal would ask a rule's detail to be a
+    // rule.
+    [Fact]
+    public void A_nested_bullet_is_not_an_obligation_of_its_own()
+        => Assert.Empty(Run(Group + "- A service **MUST** read its secrets from the vault.\n"
+                            + "  - The vault is the one the platform team runs.\n", Rules(), "standards"));
+
+    // Declaring no modals is how a type says its parts carry no obligation, and a glossary is why.
+    [Fact]
+    public void A_heading_source_declaring_no_modals_is_asked_nothing()
+        => Assert.Empty(Run("## Terms\n\n### Corpus\n\n- A body of records.\n", Headings(), "glossary"));
+
     private static List<Finding> Run(string body) => Run(body, Table(), "policies");
 
     private static List<Finding> Run(string body, PartSpec? spec, string folder)

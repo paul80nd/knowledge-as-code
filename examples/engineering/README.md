@@ -34,7 +34,7 @@
 | [Glossary](glossary.md)  | descriptive | The ubiquitous language. Terms with a meaning specific to the organisation, or easily confused with another. |
 | [Policy](policies.md)    | normative   | A high-level engineering commitment, independent of any stack and rarely changed.                            |
 | [Report](reports.md)     | descriptive | A question about the corpus, answered across every record, with the judgement a person added.                |
-| [Standard](standards.md) | normative   | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist.                      |
+| [Standard](standards.md) | normative   | The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.                        |
 
 **Where does a document go?** The [taxonomy](knowledge-as-code/taxonomy.md) has the decision table, what each type is
 and is not, and the calls that are genuinely close.

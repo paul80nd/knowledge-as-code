@@ -50,7 +50,7 @@ corpus actually requires is that corpus's to set, and its own contributing page 
 | Tier            | Review required                    | Merge criteria                                                                   |
 |-----------------|------------------------------------|----------------------------------------------------------------------------------|
 | **Decided**     | Two reviewers                      | Alternatives genuinely weighed. Consequences stated including the unwelcome ones |
-| **Normative**   | The record's owner                 | Rules are testable. RFC 2119 keywords used correctly. Changelog updated          |
+| **Normative**   | The record's owner                 | Rules are testable. BCP 14 keywords used correctly. Changelog updated            |
 | **Descriptive** | One reviewer                       | Cross-references resolve. Content matches the estate as it actually is           |
 | **Procedural**  | One reviewer who has done the task | Someone who has never done it can follow the steps. Rollback stated              |
 

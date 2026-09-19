@@ -22,7 +22,8 @@ it cites no authority, so nothing says who decided any of it.
 
 ### A failure says what happened
 
-A failure is reported with the status code that describes it and a body the caller can act on.
+- A failure **MUST** be answered with the status code that describes it.
+- A response to a failure **MUST** include a body the caller can act on.
 
 ## Examples
 

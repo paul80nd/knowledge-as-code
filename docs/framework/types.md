@@ -26,7 +26,7 @@ Living and owned. Edited in place, with a changelog.
 | Type           | Folder        | What it holds                                                                                         |
 |----------------|---------------|-------------------------------------------------------------------------------------------------------|
 | **Policies**   | `policies/`   | A high-level engineering commitment: the what and the why, largely stack-agnostic and changing rarely |
-| **Standards**  | `standards/`  | The rulebook, imperative, RFC 2119, with concrete examples and a conformance checklist                |
+| **Standards**  | `standards/`  | The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist                  |
 | **Controls**   | `controls/`   | How a standard's rules are verified: the mechanism, the frequency, and the evidence it leaves         |
 | **Deviations** | `deviations/` | A knowing departure from a rule, the person who accepted the risk, and the date it is reviewed        |
 | **NFRs**       | `nfrs/`       | A non-functional requirement (availability, latency, RPO, RTO) stated with how it is measured         |

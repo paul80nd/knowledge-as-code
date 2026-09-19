@@ -4,6 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-DERV.CHECK, eng:pol-DERV.FAILED, eng:pol-DERV.RUNLOG, eng:pol-OBSV.ALERTS ]
+depends-on: [ std-LEDGER ]
 applies-to:
   - svc-payment-ledger
 review-by: "2027-08-31"
