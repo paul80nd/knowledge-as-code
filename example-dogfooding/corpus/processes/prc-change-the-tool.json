@@ -21,6 +21,6 @@
     "Prerequisites": "* The tool guidance at `tooling/CLAUDE.md`, which states the test for expression against class and the two rule\n  interfaces.\n* The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.\n* The fact table in `docs/design/expressions.md`, which lists what an expression can already read."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/260eaab13f43b05a4590f5f7a0ef01bce0f47571/examples/dog-fooding/processes/change-the-tool.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/dog-fooding/processes/change-the-tool.md"
   }
 }

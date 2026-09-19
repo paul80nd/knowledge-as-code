@@ -37,6 +37,6 @@
     "Why it happens": "An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` adds a second over it, and `template/` has its own with `root = true`. A key that looks inert therefore has two possible causes: another file overrides it, or Rider has not read the edit. The control above tells an override apart from a cached setting."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/260eaab13f43b05a4590f5f7a0ef01bce0f47571/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
   }
 }

@@ -6,9 +6,12 @@
     "id": "svc-search",
     "title": "Search",
     "status": "live",
+    "component-type": "api",
     "platform": "typescript",
     "criticality": "important",
-    "repo": "search",
+    "repos": [
+      "search"
+    ],
     "depends-on": null,
     "data-stores": null,
     "nfrs": null,
@@ -28,6 +31,6 @@
     "Data": "The index itself, stored by the search engine and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/260eaab13f43b05a4590f5f7a0ef01bce0f47571/examples/library/services/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/library/services/search.md"
   }
 }
