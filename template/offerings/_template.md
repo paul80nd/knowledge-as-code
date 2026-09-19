@@ -22,8 +22,9 @@ and how it is reviewed. What is below is only what an offering adds to that.
 * **`status`**: `planned` · `building` · `live` · `deprecated`.
 * **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
-* **`feature-files`**: each path names its repository first, spelled as that repository's service spells `repo:`, then
-  the path inside it. `feature-file-repo` warns where that first segment is no repository of a service you listed.
+* **`feature-files`**: each path names its repository first, spelled as an entry of that repository's service
+  `repos:`, then the path inside it. `feature-file-repo` warns where that first segment is no repository of a service
+  you listed.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../offerings.md#metadata) lists
