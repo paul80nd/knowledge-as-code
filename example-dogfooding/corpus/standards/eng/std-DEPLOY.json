@@ -7,6 +7,7 @@
     "title": "One artefact is built once and promoted to production",
     "category": "common",
     "status": "draft",
+    "superseded-by": null,
     "derived-from": null,
     "implements": [
       "pol-ENVS.PROMOTE",
@@ -20,6 +21,7 @@
       "pol-PIPE.SAMEART",
       "pol-PIPE.TRACE"
     ],
+    "depends-on": null,
     "applies-to": [
       "all"
     ],
@@ -35,6 +37,6 @@
     "Conformance checklist": "- [ ] The image or package running in production has the same digest as the one tested below it.\n- [ ] The artefact reports the commit it was built from, on a health or version endpoint.\n- [ ] No configuration file inside the artefact names an environment.\n- [ ] The pipeline definition is in the repository, and its last change went through review.\n- [ ] Production access allows deployment through the pipeline identity alone.\n- [ ] The last release's rollback path is written down, and somebody has run it in an environment below production."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/engineering/standards/common/deployment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/engineering/standards/common/deployment.md"
   }
 }

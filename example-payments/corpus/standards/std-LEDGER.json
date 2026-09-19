@@ -7,10 +7,15 @@
     "title": "A ledger entry is written once and corrected by another entry",
     "category": "ledger",
     "status": "active",
+    "superseded-by": null,
     "derived-from": null,
     "implements": [
       "eng:pol-DERV.EXPECT",
       "eng:pol-DERV.LINEAGE"
+    ],
+    "depends-on": [
+      "std-IDEM",
+      "std-SCA"
     ],
     "applies-to": [
       "svc-payment-ledger"
@@ -27,6 +32,6 @@
     "Conformance checklist": "- [ ] Every amount column is an integer type, and every entry has a currency code.\n- [ ] The database grants the service no UPDATE or DELETE on the entries table.\n- [ ] Summing debits and credits across the whole table returns zero.\n- [ ] Every correction in the last month appears as a reversal stating the entry it reverses.\n- [ ] Each entry records an order, a PSP reference and an idempotency key.\n- [ ] A payment's history can be rebuilt from the entries with no other source."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/standards/ledger/entries.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/standards/ledger/entries.md"
   }
 }

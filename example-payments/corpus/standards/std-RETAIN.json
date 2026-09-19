@@ -7,6 +7,7 @@
     "title": "A payment record is kept for seven years and nothing else is",
     "category": "operations",
     "status": "active",
+    "superseded-by": null,
     "derived-from": null,
     "implements": [
       "eng:pol-DATA.DELETE",
@@ -14,6 +15,7 @@
       "eng:pol-DATA.RIGHTS",
       "eng:pol-OBSV.RETAIN"
     ],
+    "depends-on": null,
     "applies-to": [
       "svc-payment-api",
       "svc-payment-ledger"
@@ -30,6 +32,6 @@
     "Conformance checklist": "- [ ] Every store keeping payment data has a period written against it in the repository.\n- [ ] The retention job has run in the last week, and its record says what it deleted.\n- [ ] A query for tokens last used over 13 months ago returns nothing.\n- [ ] The telemetry platform is configured to 90 days.\n- [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.\n- [ ] Backup lifecycle rules match the periods of the stores they back up."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/standards/operations/data-retention.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/standards/operations/data-retention.md"
   }
 }

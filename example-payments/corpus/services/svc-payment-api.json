@@ -31,6 +31,6 @@
     "Data": "None of its own. It keeps a card token for one request and stores nothing. [svc-payment-ledger] records what happened to a payment."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/services/payment-api.md"
   }
 }

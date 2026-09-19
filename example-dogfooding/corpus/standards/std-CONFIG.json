@@ -7,6 +7,7 @@
     "title": "Configuration is committed, pinned and explained",
     "category": null,
     "status": "active",
+    "superseded-by": null,
     "derived-from": null,
     "implements": [
       "eng:pol-AUTV.BLOCK",
@@ -20,6 +21,7 @@
       "eng:pol-TRUS.REVIEW",
       "eng:pol-TRUS.SOURCE"
     ],
+    "depends-on": null,
     "applies-to": [
       "all"
     ],
@@ -35,6 +37,6 @@
     "Conformance checklist": "- [ ] `yamllint --strict .` passes.\n- [ ] Every file the change touches is tracked, and contains no credential.\n- [ ] Every dependency it adds names one exact version.\n- [ ] `.github/dependabot.yml` names the directory that manifest sits in.\n- [ ] Every new value has a comment giving its reason, and no comment restates its value.\n- [ ] Any new `.yamllint` override gives the reason it departs from the baseline.\n- [ ] `kac update --check --from ../../` passes in each corpus the change reaches."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/dog-fooding/standards/configuration.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/standards/configuration.md"
   }
 }

@@ -7,12 +7,14 @@
     "title": "The PSP decides whether the cardholder is challenged",
     "category": "checkout",
     "status": "active",
+    "superseded-by": null,
     "derived-from": null,
     "implements": [
       "eng:pol-INTC.SECURE",
       "eng:pol-SECD.DESIGN",
       "eng:pol-SECD.REQS"
     ],
+    "depends-on": null,
     "applies-to": [
       "svc-payment-api"
     ],
@@ -28,6 +30,6 @@
     "Conformance checklist": "- [ ] Every authorisation request our services send includes a PSP authentication reference.\n- [ ] An authorisation with no authentication outcome is declined, confirmed by a test.\n- [ ] The challenge page in the browser's network trace is served by the PSP.\n- [ ] No page we serve has a field for a one-time passcode.\n- [ ] Every ledger entry for an authorisation records the outcome and the liability holder.\n- [ ] The checkout releases a held order when the challenge passes its timeout."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/standards/checkout/customer-authentication.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/standards/checkout/customer-authentication.md"
   }
 }

@@ -31,6 +31,6 @@
     "Data": "Owns the ledger database, `sql-payment-ledger-<env>`, configured as `ConnectionStrings__Ledger`. An entry contains the order, the amount, the PSP's reference and the token. No card number is written to it. The `data` type is not adopted here, so nothing in this corpus describes the schema. The repository's own migrations describe it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/services/payment-ledger.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/services/payment-ledger.md"
   }
 }

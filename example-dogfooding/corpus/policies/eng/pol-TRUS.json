@@ -15,6 +15,6 @@
     "Exceptions": "A component that can no longer be sourced or maintained is kept only under a recorded deviation ([pol-DEVI]). The deviation names the risk owner, the compensating controls and the plan to replace it. \"It still works\" is not a plan."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/engineering/policies/security/trus-trusted-components.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/engineering/policies/security/trus-trusted-components.md"
   }
 }

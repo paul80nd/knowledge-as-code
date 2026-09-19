@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.22.0",
+  "contentVersion": "0.23.0",
   "mechanismVersion": 18,
-  "commit": "df465bba43b0ef4d1e422a3147433de0b70b4902",
+  "commit": "2e69df727afb2148553bf6e3d33cea844f047412",
   "dirty": false,
-  "generatedAt": "2026-09-19T08:41:03Z",
+  "generatedAt": "2026-09-19T09:52:51Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "df465bba43b0ef4d1e422a3147433de0b70b4902"
+    "ref": "2e69df727afb2148553bf6e3d33cea844f047412"
   },
   "tracker": {
     "target": "github",
@@ -37,13 +37,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.24.1",
+      "contentVersion": "0.25.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/df465bba43b0ef4d1e422a3147433de0b70b4902/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "df465bba43b0ef4d1e422a3147433de0b70b4902"
+        "ref": "2e69df727afb2148553bf6e3d33cea844f047412"
       },
       "tracker": {
         "target": "github",
