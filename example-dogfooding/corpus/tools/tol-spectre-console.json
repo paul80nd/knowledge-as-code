@@ -7,8 +7,20 @@
     "title": "Spectre.Console",
     "status": "approved",
     "category": "build",
-    "versions": "Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x",
+    "packages": [
+      {
+        "purl": "pkg:nuget/Spectre.Console",
+        "versions": "0.57.x"
+      },
+      {
+        "purl": "pkg:nuget/Spectre.Console.Cli",
+        "versions": "0.55.x"
+      }
+    ],
+    "homepage": "https://spectreconsole.net/",
     "licence": "MIT",
+    "decided-on": "2026-08-21",
+    "review-by": "2027-08-21",
     "decided-in": null,
     "replaces": "tol-system-commandline",
     "successor": null,
@@ -20,11 +32,11 @@
   },
   "sections": {
     "What we use it for": "`Program.cs` wires `Spectre.Console.Cli` to each verb, and every option and exit code is declared there. `kac.core`\nreferences `Spectre.Console`, and its reporters build what a run prints.\n\nOne library now reads the command line and asks a question. `System.CommandLine` read the command line and\n`Spectre.Console` asked the question, so the parser moved here in 0.2.1. Taken from the entry for that version in\n`tooling/kac/CHANGELOG.md`.",
-    "Status": "**approved** since 2026-08-21.",
+    "Accessibility": "Assessed at Spectre.Console 0.57.x and Spectre.Console.Cli 0.55.x, by reading every call that colours or prompts. [WCAG 2.2 AA] covers content a browser renders and applies to no terminal. [std-A11Y] states the rules for the terminal, and this assessment checks `kac` against them.\n\nNothing the tool prints conveys meaning through colour alone. `Commands.Severity` pairs every severity with the word\n`error`, `warning` or `info`. `Tag` and `Tally` print the word beside the colour. `--no-color` calls `Out.NoColor`,\nwhich drops both consoles to `ColorSystem.NoColors`, and Spectre does the same for `NO_COLOR` in the environment.\nFindings are laid out in a `Grid`, so no box-drawing character separates one column from the next. `--json` writes\nstraight to the stream and never through a renderer. Every prompt `ConsoleAsker` draws has a flag on the verb that\nsupplies the answer. `Asking.Asks` returns false where there is no terminal, so an unattended run finishes without\nwaiting.\n\nTwo things fall short. `SelectionPrompt` and `MultiSelectionPrompt` redraw the whole list on each keystroke, which a screen reader may announce in full every time. `--yes` and the per-answer flags avoid both prompts. `Md.Snippet` truncates a long value with a Unicode ellipsis, and nothing substitutes an ASCII form where the terminal reports no Unicode support.",
     "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
     "Where it is used": "* [svc-kac] uses both packages."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/build/spectre-console.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/build/spectre-console.md"
   }
 }

@@ -36,6 +36,6 @@
     "Scope": "Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, and the export `kac export` writes."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/deviations/generated-output-ungoverned.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/deviations/generated-output-ungoverned.md"
   }
 }

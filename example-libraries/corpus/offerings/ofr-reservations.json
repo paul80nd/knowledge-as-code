@@ -31,6 +31,6 @@
     "Known limitations": "This offering is live in no environment above test. [svc-reservations] says what remains."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/library/offerings/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/library/offerings/reservations.md"
   }
 }

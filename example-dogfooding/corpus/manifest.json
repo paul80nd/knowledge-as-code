@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.45.0",
+  "contentVersion": "0.46.0",
   "mechanismVersion": 16,
-  "commit": "2e69df727afb2148553bf6e3d33cea844f047412",
+  "commit": "d27c129c1c5ddf2808f69f07a6488006aeb25c81",
   "dirty": false,
-  "generatedAt": "2026-09-19T09:52:54Z",
+  "generatedAt": "2026-09-20T08:36:27Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "2e69df727afb2148553bf6e3d33cea844f047412"
+    "ref": "d27c129c1c5ddf2808f69f07a6488006aeb25c81"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.25.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "2e69df727afb2148553bf6e3d33cea844f047412"
+        "ref": "d27c129c1c5ddf2808f69f07a6488006aeb25c81"
       },
       "tracker": {
         "target": "github",
@@ -198,7 +198,7 @@
     },
     {
       "type": "tools",
-      "shapeVersion": 1,
+      "shapeVersion": 2,
       "records": 13,
       "parts": 0,
       "dir": "tools",
@@ -210,6 +210,7 @@
       "sections": {
         "What we use it for": "full",
         "Status": "full",
+        "Accessibility": "full",
         "Licence and obligations": "full",
         "Where it is used": "full"
       },

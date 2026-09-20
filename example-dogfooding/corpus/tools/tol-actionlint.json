@@ -7,8 +7,16 @@
     "title": "actionlint",
     "status": "approved",
     "category": "lint",
-    "versions": "1.7.x",
+    "packages": [
+      {
+        "purl": "pkg:golang/github.com/rhysd/actionlint",
+        "versions": "1.7.x"
+      }
+    ],
+    "homepage": "https://github.com/rhysd/actionlint",
     "licence": "MIT",
+    "decided-on": "2026-09-02",
+    "review-by": "2027-09-02",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -20,11 +28,10 @@
   },
   "sections": {
     "What we use it for": "It checks the expression syntax, the job graph, the action inputs, and the shell in every `run:` block. The runner has shellcheck installed, so actionlint puts each of those blocks through shellcheck as well.\n\nIt is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job states the version, and the header comment in that file says where to look.",
-    "Status": "**approved** since 2026-09-02.",
     "Licence and obligations": "MIT. Nothing follows for anything this repository publishes.",
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/lint/actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/lint/actionlint.md"
   }
 }

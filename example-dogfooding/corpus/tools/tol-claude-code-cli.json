@@ -7,8 +7,16 @@
     "title": "Claude Code CLI",
     "status": "approved",
     "category": "build",
-    "versions": null,
+    "packages": [
+      {
+        "purl": "pkg:npm/%40anthropic-ai/claude-code",
+        "versions": null
+      }
+    ],
+    "homepage": "https://github.com/anthropics/claude-code",
     "licence": "LicenseRef-Anthropic-Terms-of-Service",
+    "decided-on": "2026-08-18",
+    "review-by": "2027-08-18",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,12 +27,11 @@
     ]
   },
   "sections": {
-    "What we use it for": "`claude plugin validate --strict` runs against every assembled bundle and against the marketplace beside it. It is the\nlast check before a broken bundle gets to the people who have it installed.\n\nA clean run prints one line whatever it read. A plugin with no component passes it too, so two shell guards in the same step cover that gap. Taken from the comments in `.github/workflows/kac.yml`.\n\n`versions` is bare because CI installs `@latest` on purpose. The bundle has to be valid against the CLI a reader runs,\nand `.github/dependabot.yml` would not move an npm pin. The install therefore runs in a job with no write permission,\nso a moved tag cannot cause a push.",
-    "Status": "**approved** since 2026-08-18.",
+    "What we use it for": "`claude plugin validate --strict` runs against every assembled bundle and against the marketplace beside it. It is the\nlast check before a broken bundle gets to the people who have it installed.\n\nA clean run prints one line whatever it read. A plugin with no component passes it too, so two shell guards in the same step cover that gap. Taken from the comments in `.github/workflows/kac.yml`.\n\nThe `packages` entry approves no version range, because CI installs `@latest` on purpose. The bundle has to be valid against the CLI a reader runs, and `.github/dependabot.yml` would not move an npm pin. The install therefore runs in a job with no write permission, so a moved tag cannot cause a push.",
     "Licence and obligations": "`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and that README has no\nlicence section. The `LICENSE.md` shipped in the same package reserves all rights to Anthropic PBC. It grants use\nunder the [legal agreements](https://code.claude.com/docs/en/legal-and-compliance) Anthropic publishes. The Commercial\nTerms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro and Max\nones.\n\nThe licence grants no right to copy, change or redistribute the package. CI installs the published binary with\n`npm install -g` and runs it untouched. The CLI is installed outside the working tree, and the plugin bundle it\nvalidates includes no part of it.\n\nAnthropic puts further conditions on preinstalling or running the CLI inside a product offered to other people. Nothing here does that, so those conditions do not apply to this repository.",
     "Where it is used": "* [svc-marketplace] is validated with it, in `kac.yml` and again in `publish-plugin.yml`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/build/claude-code-cli.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/build/claude-code-cli.md"
   }
 }

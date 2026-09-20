@@ -7,8 +7,16 @@
     "title": "MkDocs",
     "status": "approved",
     "category": "docs",
-    "versions": "1.6.x",
+    "packages": [
+      {
+        "purl": "pkg:pypi/mkdocs",
+        "versions": "1.6.x"
+      }
+    ],
+    "homepage": "https://www.mkdocs.org/",
     "licence": "BSD-2-Clause",
+    "decided-on": "2026-08-24",
+    "review-by": "2027-08-24",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,11 +27,10 @@
   },
   "sections": {
     "What we use it for": "The site documents `kac`, and MkDocs is here because it is what tool documentation uses. The site is not a corpus, so\n`publishing-target: mkdocs` in a corpus descriptor is a separate thing this build does not exercise.\n\n`strict: true` in `mkdocs.yml` turns a dead link into a failed build. MkDocs reports a page the navigation does not\nlist at INFO only, so `NavigationTests` in `kac.tests` covers that case instead.",
-    "Status": "**approved** since 2026-08-24.",
     "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with a redistribution. The site is generated output and not a redistribution of the generator, so nothing follows for what is published.",
     "Where it is used": "* [svc-docs-site] is built with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/docs/mkdocs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/docs/mkdocs.md"
   }
 }

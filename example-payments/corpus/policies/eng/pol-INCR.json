@@ -15,6 +15,6 @@
     "Exceptions": "Routine work handles a low-severity event, in place of the full process. The severity classification decides which events those are, and we apply it deliberately: convenience does not set it. Recording a significant incident has no exception, and recording a personal data breach has none. `EVIDENC` binds at every severity. A decision that a breach was not notifiable is itself a decision we have to be able to show."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/engineering/policies/operations/incr-incident-response.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/engineering/policies/operations/incr-incident-response.md"
   }
 }

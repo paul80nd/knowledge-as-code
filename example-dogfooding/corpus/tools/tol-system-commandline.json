@@ -7,8 +7,16 @@
     "title": "System.CommandLine",
     "status": "deprecated",
     "category": "build",
-    "versions": null,
+    "packages": [
+      {
+        "purl": "pkg:nuget/System.CommandLine",
+        "versions": null
+      }
+    ],
+    "homepage": "https://github.com/dotnet/command-line-api",
     "licence": "MIT",
+    "decided-on": "2026-08-21",
+    "review-by": "2027-08-21",
     "decided-in": null,
     "replaces": null,
     "successor": "tol-spectre-console",
@@ -19,11 +27,11 @@
   },
   "sections": {
     "What we use it for": "Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-08-21. No project references it today.",
-    "Status": "**deprecated** since 2026-08-21. [tol-spectre-console] replaced it in `kac` 0.2.1, and the package reference is already gone.\n\nEvery verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
+    "Status": "[tol-spectre-console] reads a command line and renders output, and `kac` needed both. Keeping this parser meant a second library for everything a verb prints, so 0.2.1 dropped it. The package reference is already gone.\n\nEvery verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`, and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.",
     "Licence and obligations": "MIT. Nothing followed for a package this repository published.",
     "Where it is used": "Nowhere. No service in this catalogue uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/build/system-commandline.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/build/system-commandline.md"
   }
 }

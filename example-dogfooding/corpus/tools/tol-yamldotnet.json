@@ -7,8 +7,16 @@
     "title": "YamlDotNet",
     "status": "approved",
     "category": "build",
-    "versions": "18.x",
+    "packages": [
+      {
+        "purl": "pkg:nuget/YamlDotNet",
+        "versions": "18.x"
+      }
+    ],
+    "homepage": "https://github.com/aaubry/YamlDotNet",
     "licence": "MIT",
+    "decided-on": "2026-08-03",
+    "review-by": "2027-08-03",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,11 +27,10 @@
   },
   "sections": {
     "What we use it for": "`kac.core` references it. It parses four kinds of file, and a reader meets one of them: the frontmatter of a record.\nThe `frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.",
-    "Status": "**approved** since 2026-08-03.",
     "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
     "Where it is used": "* [svc-kac] uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/build/yamldotnet.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/build/yamldotnet.md"
   }
 }

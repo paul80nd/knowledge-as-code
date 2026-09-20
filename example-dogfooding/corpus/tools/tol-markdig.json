@@ -7,8 +7,16 @@
     "title": "Markdig",
     "status": "approved",
     "category": "build",
-    "versions": "1.x",
+    "packages": [
+      {
+        "purl": "pkg:nuget/Markdig",
+        "versions": "1.x"
+      }
+    ],
+    "homepage": "https://github.com/xoofx/markdig",
     "licence": "BSD-2-Clause",
+    "decided-on": "2026-08-03",
+    "review-by": "2027-08-03",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,11 +27,10 @@
   },
   "sections": {
     "What we use it for": "`kac.core` references it. The checks that read a document body run on what it produces, so `h1`, `identity`,\n`sections`, `link-resolves` and `undefined-label` all read the same parse.",
-    "Status": "**approved** since 2026-08-03.",
     "Licence and obligations": "BSD-2-Clause. It asks that the copyright notice travel with source and binary redistributions. A NuGet package states the licence expression in its own metadata, so publishing `kac` needs nothing further.",
     "Where it is used": "* [svc-kac] uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/build/markdig.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/build/markdig.md"
   }
 }

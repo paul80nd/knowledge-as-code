@@ -7,8 +7,16 @@
     "title": "Reqnroll",
     "status": "approved",
     "category": "testing",
-    "versions": "3.3.x",
+    "packages": [
+      {
+        "purl": "pkg:nuget/Reqnroll.xunit.v3",
+        "versions": "3.3.x"
+      }
+    ],
+    "homepage": "https://reqnroll.net/",
     "licence": "BSD-3-Clause",
+    "decided-on": "2026-08-04",
+    "review-by": "2027-08-04",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -20,11 +28,10 @@
   },
   "sections": {
     "What we use it for": "Each feature document states what a verb does, in the words a reader of the documentation would use. Reqnroll binds each step to a method. A step that no longer matches fails the build, so a feature document cannot describe a command surface the tool has stopped offering.",
-    "Status": "**approved** since 2026-08-04.",
     "Licence and obligations": "BSD-3-Clause. It asks that the copyright notice travel with a redistribution. It also forbids using the project's name to endorse anything built on it. Nothing here redistributes it.",
     "Where it is used": "* [svc-kac] is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/testing/reqnroll.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/testing/reqnroll.md"
   }
 }

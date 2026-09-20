@@ -7,8 +7,16 @@
     "title": "Material for MkDocs",
     "status": "approved",
     "category": "docs",
-    "versions": "9.7.x",
+    "packages": [
+      {
+        "purl": "pkg:pypi/mkdocs-material",
+        "versions": "9.7.x"
+      }
+    ],
+    "homepage": "https://squidfunk.github.io/mkdocs-material/",
     "licence": "MIT",
+    "decided-on": "2026-08-24",
+    "review-by": "2027-08-24",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,11 +27,11 @@
   },
   "sections": {
     "What we use it for": "The `features:` and `palette:` blocks in `mkdocs.yml` are this theme's. They put each section's index page behind the section name, and they add an edit pencil to every page. They also let the reader's own light or dark setting choose the colour scheme, with a toggle either way.\n\nIt is pinned beside MkDocs in `docs/requirements.txt`. A theme release changes the site only when the pin moves.",
-    "Status": "**approved** since 2026-08-24.",
+    "Accessibility": "Assessed against [WCAG 2.2 AA] at 9.7.7, by building the site with the pinned version and reading the HTML it emits. [std-A11Y] states the rules the assessment checks against.\n\nThe theme supplies what a Markdown author cannot. `<html lang=\"en\">` states the language of every page. A \"Skip to\ncontent\" link is first in the keyboard tab order. The header logo is an image with `alt=\"logo\"`, inside a link\nwith `aria-label=\"knowledge-as-code\"`, so the accessible name is the site's own. Contrast comes from the `default` and\n`slate` schemes with `indigo` primary, which are the theme's own and unchanged. `docs/assets/extra.css` sets two\nmargins and nothing else.\n\nTwo things fall short. Nobody has run the site through a screen reader or a contrast checker, so the contrast of the two schemes is taken from the theme and not measured here. A Mermaid diagram renders as an SVG that the theme gives no text alternative, so the prose beside it is the only way to read what it says.",
     "Licence and obligations": "MIT for the community edition, which is what `docs/requirements.txt` installs. The sponsor-only edition is a separate package and nothing here uses it.",
     "Where it is used": "* [svc-docs-site] is built with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/docs/mkdocs-material.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/docs/mkdocs-material.md"
   }
 }

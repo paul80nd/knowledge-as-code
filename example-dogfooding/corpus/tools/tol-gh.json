@@ -7,8 +7,16 @@
     "title": "GitHub CLI",
     "status": "approved",
     "category": "release",
-    "versions": null,
+    "packages": [
+      {
+        "purl": "pkg:github/cli/cli",
+        "versions": null
+      }
+    ],
+    "homepage": "https://cli.github.com/",
     "licence": "MIT",
+    "decided-on": "2026-08-20",
+    "review-by": "2027-08-20",
     "decided-in": null,
     "replaces": null,
     "successor": null,
@@ -19,12 +27,11 @@
     ]
   },
   "sections": {
-    "What we use it for": "`publish-tool.yml` calls it twice in one step. The first call asks whether the release already exists. The second\ncreates the release, with the changelog section for that version as the body. Publishing creates the tag, so nobody\nhas a second step to remember.\n\nIt is also how issues are read and raised. `.claude/agents-config/issue-tracker.md` states that an agent uses `gh` for issues on this repository.",
-    "Status": "**approved** since 2026-08-20.",
+    "What we use it for": "`publish-tool.yml` calls it twice in one step. The first call asks whether the release already exists. The second\ncreates the release, with the changelog section for that version as the body. Publishing creates the tag, so nobody\nhas a second step to remember.\n\nIt is also how issues are read and raised. `.claude/agents-config/issue-tracker.md` states that an agent uses `gh` for issues on this repository.\n\nThe `packages` entry approves no version range, because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer installs whatever their package manager offers.",
     "Licence and obligations": "MIT. Nothing follows for anything this repository publishes.",
-    "Where it is used": "* [svc-kac] is tagged and released with it.\n\n`versions` is bare because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer\ninstalls whatever their package manager offers."
+    "Where it is used": "* [svc-kac] is tagged and released with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2e69df727afb2148553bf6e3d33cea844f047412/examples/dog-fooding/tools/release/gh.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/dog-fooding/tools/release/gh.md"
   }
 }
