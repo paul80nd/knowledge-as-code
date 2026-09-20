@@ -336,10 +336,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `one-verification-per-actor` against a `fix` or a `report` naming one actor twice, and a corpus trims each list by
   hand. The trust tier reads the actors and never the count, so no tier moves.
 
-- **`processes` states its lineage against both the sources it declares.** `alignment` names what the type takes from
-  the Diátaxis how-to guide as well as from ComplianceForge HCGF. `divergence` records that this type writes for a
-  reader who has never done the task, where Diátaxis writes for a competent one. A `collision:` entry names what ITIL
-  and BPMN mean by *process*. All three render into `knowledge-as-code/lineage.md`.
+- **`processes` states its lineage against EPA QA/G-6.** The type declared ComplianceForge HCGF and the Diátaxis
+  how-to guide. `prior-art` adds *Guidance for Preparing Standard Operating Procedures*. `alignment` and `divergence`
+  state what the comparison found: the review frequency and date EPA QA/G-6 asks for, the experience a procedure does
+  not state, and what git and `owner` answer for instead of a revision number and a signature. The row no longer
+  claims the rehearsal date has no precedent. A `collision:` entry names what ITIL and BPMN mean by *process*. All
+  three render into `knowledge-as-code/lineage.md`.
 
 - **`reports` states what it takes from current practice.** `lineage` was measured against the Open Knowledge Format
   v0.2, SARIF 2.1.0 and NIST OSCAL Assessment Results 1.1.3. `alignment` now names the OKF keys and the actor forms
