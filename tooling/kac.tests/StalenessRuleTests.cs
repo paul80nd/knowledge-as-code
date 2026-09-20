@@ -1,12 +1,8 @@
-// `staleness` is the one rule measuring a record's age against the day the run happens, and its two windows
-// are judgements a fixture cannot pin: a fixture date drifts further from today every day it sits there.
-// These name the day instead, so 92 and 366 are read here and moving either fails here.
-//
-// What the rule stays silent about matters as much as what it reports. `on-change` and `per-release` state an
-// event, and no window measures one, so a record using either passes on any date it states.
-//
-// The expression comes from the real `.schema/processes.yaml` rather than a copy, so a rewrite there is
-// judged by these cases instead of leaving them passing against wording nothing uses.
+// `staleness` is the one rule measuring a record's age against the day the run happens. Its two windows are
+// named here rather than in a fixture, for the reason `docs/design/checks.md` gives, so moving 92 or 366 fails
+// here. These cases also pin what the rule stays silent about: `on-change` and `per-release` state an event,
+// and no window measures one. The expression comes from the real `.schema/processes.yaml` rather than a copy,
+// so a rewrite there is judged by these cases instead of leaving them passing against wording nothing uses.
 
 using kac.core;
 
@@ -56,7 +52,7 @@ public class StalenessRuleTests
     }
 
     // A date the run has not reached measures nothing, so `days_since` answers zero and the rule passes.
-    // `date-format` owns whether the value should have been written that way.
+    // No check reports a rehearsal date in the future.
     [Fact]
     public void A_rehearsal_date_in_the_future_is_not_reported()
         => Assert.True(Holds("quarterly", "\"2029-06-01\""));

@@ -126,8 +126,8 @@ does. A same-day gap is zero as well, and no caller here needs to tell the two a
 
 **`days_since()` measures one date field against the day of the run**, which is how a rule asks whether a record has
 gone past a cadence it states. It answers zero on everything `days()` answers zero on, and a date in the future is one
-of them. So a rule comparing it against a threshold passes a record nothing can be measured about, and leaves the
-missing value to `required-field`.
+of them. So a rule comparing it against a threshold passes a record nothing can be measured about. The missing value is
+`required-field`'s to report.
 
 **`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has gone
 by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first record

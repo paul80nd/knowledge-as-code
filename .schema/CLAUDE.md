@@ -56,7 +56,9 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a new fact
   rather than a wider grammar.
 
-* **Thresholds are judgements**, and a fixture pins each one, so moving it is visible.
+* **Thresholds are judgements**, and each one is pinned so moving it is visible. A fixture pins a threshold
+  read from what a record states. A unit test naming the day pins one measured against the day of the run,
+  which no fixture can: its date drifts further from today every day it sits there.
   <https://paul80nd.github.io/knowledge-as-code/design/checks/> says where the numbers came from. A ratio such as
   `words() <= links() * 40` fails a document that links to nothing, at any length. For an offering or an explanation,
   that is the intended reading.

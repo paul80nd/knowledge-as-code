@@ -23,8 +23,9 @@ and how it is reviewed. What is below is only what a process adds to that.
 * **`status`**: `active` · `draft` · `retired`.
 * **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is better than a guess: an unrehearsed procedure
   is a hypothesis. Update it when someone actually follows the process end to end, not when someone edits the document.
-* **`rehearsal-frequency`**: `on-change` · `per-release` · `quarterly` · `annual`. Write `on-change` where the
-  trigger is a change to what the process operates on, and not a date.
+* **`rehearsal-frequency`**: `on-change` · `per-release` · `quarterly` · `annual`. `quarterly` and `annual` are
+  cycles, and `staleness` measures this date against them. `on-change` and `per-release` state an event, which no
+  window measures, so it reports a process using either only while `last-rehearsed` is `"never"`.
 * **`requires-access`**: the systems or roles needed.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
