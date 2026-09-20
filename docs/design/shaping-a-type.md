@@ -168,7 +168,8 @@ something over a stated period. `window` declares a `required-when` reading `cha
 or accuracy target binds each event or each value, so it needs none.
 
 `Constraints` travels because a target read without its limits reads as a stronger promise than the estate made. It
-states those limits in words, because `constrained-by` points at integrations and integrations travel nowhere.
+states those limits in words, because `constrained-by` resolves only where the corpus adopted `integrations`. A corpus
+that did not still has the cap, and this section is where it writes it down.
 
 `Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export has no way to say
 how old it has since become.
