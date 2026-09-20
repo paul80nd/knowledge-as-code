@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 applies-to: [ svc-kac ]
-last-rehearsed: "never"
+last-rehearsed: "2026-09-20"
 rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ checks, dotnet ]
