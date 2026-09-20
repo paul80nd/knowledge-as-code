@@ -18,6 +18,7 @@
     "flows-to": [
       "int-card-payments"
     ],
+    "review-by": "2027-03-31",
     "tags": [
       "fines",
       "payments"
@@ -32,6 +33,6 @@
     "Flows": "| Goes to             | Why                        | What is shared                        | Where they process it |\n|---------------------|----------------------------|---------------------------------------|-----------------------|\n| [int-card-payments] | Taking and refunding money | Amount, payment reference, card token | UK and Ireland        |\n\nThe consortium never sends a borrower's name or address with a payment, so what crosses to Ireland is a pseudonymous reference and an amount."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9dd611c7c2b9fbb47aae7274712017df114b9009/examples/library/data/payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e48c7afc845b51e94ff96993bd5217b259efdc45/examples/library/data/payments.md"
   }
 }
