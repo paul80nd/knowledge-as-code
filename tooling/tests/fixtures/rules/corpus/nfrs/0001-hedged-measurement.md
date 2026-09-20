@@ -29,6 +29,10 @@ Nothing fixes it. The figure is here so the record has one, and what the fixture
 It is not. `measured-by` is filled in, so `required-field` is satisfied, and what it says is that somebody
 is watching — which names no instrument and reports no number.
 
+## Current actual
+
+Unknown, and it has to be. Nothing reports the number, so there is no reading to put here.
+
 ## What a breach costs
 
 Nobody would know, which is the point. A target measured "where practical" is one nobody has to meet, and

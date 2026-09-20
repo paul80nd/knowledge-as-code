@@ -42,6 +42,13 @@ target leaves out, so a reader can see the gap is deliberate.
 `What we do about a breach` states the response: the alert that fires, who it pages, and the repair. Both are
 required. A target whose miss costs nothing much answers both, and says that nobody is paged.
 
+**An NFR says what it is achieving now.** `Current actual` is required. A reader sees the reading beside the target,
+so the gap between them is never something to work out elsewhere.
+
+**A target nobody is held to yet says so in `status`.** `aspirational` means somebody settled the figure and the
+estate is not measured against it. `What we do about a breach` then says that nobody is paged. `agreed` means the
+estate is held to the number.
+
 We cannot promise more than the dependencies we do not run. A third-party [integration](integrations.md) with a 99% SLA
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
 deliver.
@@ -55,7 +62,7 @@ deliver.
 | `id` *†            | string                                                                               | Stable, unique across the corpus, never reused, in the format the type sets.                                                                                         |
 | `type` *†          | string                                                                               | The singular name of the type, which CI checks against the folder.                                                                                                   |
 | `tier` *†          | `normative`                                                                          | The record's trust level, fixed for the type and checked against the folder.                                                                                         |
-| `status` *†        | `draft` `agreed` `retired`                                                           | `agreed` means somebody accepted the commitment.                                                                                                                     |
+| `status` *†        | `draft` `aspirational` `agreed` `retired`                                            | `agreed` binds the estate. `aspirational` is a target set but not yet binding.                                                                                       |
 | `owner` *†         | string                                                                               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                                               |
 | `sources` †        | list                                                                                 | Where this record's content came from, one entry per source.                                                                                                         |
 | `tags` †           | list                                                                                 | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                                        |
@@ -81,16 +88,18 @@ deliver.
 4. Set `window` to the period the figure is read over, where the characteristic requires one.
 5. Say under `Why this number` what fixes the figure, and what it leaves out.
 6. Name the instrument that measures it, and say where a reader can find its reading.
-7. Record what a breach costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence is
+7. Record the current actual, and the day it was read. The gap between it and the target is the useful part.
+8. Record what a breach costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence is
    documentation theatre.
-8. Record the response to a breach: the alert that fires, who it pages, and the repair.
-9. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
+9. Record the response to a breach: the alert that fires, who it pages, and the repair.
+10. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
 
 **Conventions**
 
 * **Scope each target to an offering or a service.** A default covering the whole estate holds a marketing page to the
   checkout flow's availability budget.
-* **Record the current actual beside the target** where it is known. The gap between the two is the useful part.
+* **Open an aspirational target at `aspirational`, not `draft`.** `draft` says nobody has settled the figure.
+  `aspirational` says the figure is settled and nobody is held to it.
 
 ## What CI checks
 

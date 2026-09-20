@@ -86,7 +86,7 @@ public class ExportShapeTests
             What it does: full
             Failure modes: full
             Exit: full
-        nfrs@3
+        nfrs@4
           fields: id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on, review-by, tags
           sections:
             Target: full
