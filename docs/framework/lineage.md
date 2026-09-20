@@ -24,14 +24,15 @@ standing belongs wholly to the corpus holding it.
 A type declares its lineage in its own `.schema/<type>.yaml`, beside the fields it declares. Most have three parts, and
 a type with no ancestor has the first alone. The ADR row reads:
 
-**`prior-art`**, what the type is nearest to. [Nygard, *Documenting Architecture Decisions*][nygard] (2011), with the
-summary line under the title from [Zimmermann's Y-statement][ystatement].
+**`prior-art`**, the sources and what each one is. [Nygard, *Documenting Architecture Decisions*][nygard] (2011), the
+ADR as a short record of one decision and what followed from it, and [Zimmermann's Y-statement][ystatement], a
+decision written as one sentence in six moves.
 
-**`alignment`**, what the framework took. Nygard's Context / Decision / Consequences, his four status values, and the
-rule that a reversed decision is superseded and left standing.
+**`alignment`**, where this framework went the same way. Nygard's Context / Decision / Consequences, his four status
+values, and the rule that a reversed decision is superseded and left standing.
 
-**`divergence`**, where it parted company. An ADR here spans more than one repository, every alternative states a
-verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
+**`divergence`**, where it is notably different. An ADR here affects more than one repository, every alternative
+states a verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens
