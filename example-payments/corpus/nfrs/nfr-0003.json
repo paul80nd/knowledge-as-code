@@ -26,10 +26,11 @@
     "Target": "95% of refunds within one hour, measured over a rolling day, from the return being accepted to [svc-payment-api] submitting the refund to the PSP.",
     "Why this number": "The card scheme takes between three and five working days to move the money, and this estate cannot change that. An hour is what [svc-payment-api] can promise for the part it does control, so a return accepted during a working day is submitted the same day. The money arriving in the customer's account is deliberately not committed, because the scheme decides when that happens.\n\nThe remaining 5% covers a return accepted while [svc-payment-ledger] is mid-deployment. `Current actual` records that as the only shape of failure seen so far.",
     "How it is measured": "Application Insights records both moments against the payment id. The payments dashboard shows the rolling day, and the same query runs in the monthly service review.",
-    "If it is breached": "An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call engineer. A customer who has returned goods and seen nothing calls the contact centre on the second day. Support learns of a sustained breach before finance does.",
+    "What a breach costs": "A customer who has returned goods and seen nothing calls the contact centre on the second day. Support learns of a sustained breach before finance does.",
+    "What we do about a breach": "An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call engineer. The engineer reads the deployment history of [svc-payment-ledger] first.",
     "Constraints": "The PSP accepts a refund only against a captured payment, so a return accepted before capture waits for it. [ofr-card-payment] captures on shipment, which is why the hour is measured from acceptance of the return and not from the return itself."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/payments/nfrs/0003-refund-settlement.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/payments/nfrs/0003-refund-settlement.md"
   }
 }

@@ -22,6 +22,6 @@
     "Where the detail lives": "* [svc-covers-cdn] describes the edge, its routes and its cache key.\n* [svc-thumbnailer] describes the origin and the container it reads.\n* [svc-catalogue-api] describes the gateway that writes staff uploads.\n* [ofr-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.\n* [exp-estate-overview] puts this path beside the rest of the estate."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/library/explanations/covers-path.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/library/explanations/covers-path.md"
   }
 }

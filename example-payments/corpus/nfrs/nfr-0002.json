@@ -26,9 +26,10 @@
     "Target": "RPO of 5 minutes and RTO of 1 hour for the ledger database behind [svc-payment-ledger]. Both figures are read against each failure.",
     "Why this number": "Five minutes is what the reconciliation can repair. The PSP's settlement file lists every authorisation it took, so a gap shorter than one file can be rebuilt from it. A longer gap needs the PSP's support desk, and no procedure covers that.\n\nThe hour is a figure the quarterly restore has already met. `Current actual` records the last one at 38 minutes, so the target commits to what the procedure does today and not to an improvement nobody has planned.",
     "How it is measured": "A quarterly restore into an isolated environment measures both figures. The recovery time runs from the decision to restore to the ledger serving queries. The recovery point compares the last entry in the restored data with the last entry the source held.",
-    "If it is breached": "Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger has no entry for it. The repair is the PSP's settlement file, and until that runs the ledger understates what was taken."
+    "What a breach costs": "Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger has no entry for it. Until the repair runs, the ledger understates what was taken.",
+    "What we do about a breach": "No alert fires, because the figure is read at a restore and not continuously. The repair is the reconciliation, which rebuilds the missing entries from the PSP's settlement file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/payments/nfrs/0002-ledger-recovery-point.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/payments/nfrs/0002-ledger-recovery-point.md"
   }
 }
