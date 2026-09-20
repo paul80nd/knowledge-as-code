@@ -81,6 +81,8 @@ public static class RuleExpr
                 (f, a) => f.Span(Str(a, 0), Str(a, 1))),
             ["days"] = new([ValueType.Str, ValueType.Str], ValueType.Int,
                 (f, a) => f.Days(Str(a, 0), Str(a, 1))),
+            ["days_since"] = new([ValueType.Str], ValueType.Int,
+                (f, a) => f.DaysSince(Str(a, 0))),
             // Last, because it is the one row that reads nothing about the document.
             ["today"] = new([], ValueType.Str, (f, _) => f.Today())
         };

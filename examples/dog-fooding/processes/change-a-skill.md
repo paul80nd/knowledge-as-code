@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 applies-to: [ svc-marketplace ]
-last-rehearsed: "never"
+last-rehearsed: "2026-09-19"
 rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ plugin, skills, versioning ]

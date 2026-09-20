@@ -254,6 +254,24 @@ public class RuleExprTests
     public void A_gap_nothing_can_measure_is_zero(string? from, string? to)
         => Assert.Equal(0, Instants.Days(from, to));
 
+    // Through the grammar, for the reason the two facts above are called through it. `Required.Today` is
+    // 2026-06-15, so the record states the day 92 before it.
+    [Fact]
+    public void An_age_in_days_is_callable_from_an_expression()
+        => Assert.True(Eval("days_since('last-rehearsed') == 92",
+            "id: prc-a\nlast-rehearsed: \"2026-03-15\""));
+
+    // `days_since()` measures the one date a rule names against the day of the run, so it answers what
+    // `days()` would for that date and today. A date the run has not reached measures nothing and is zero.
+    [Theory]
+    [InlineData("2026-03-15", 92)]
+    [InlineData("2025-06-14", 366)]
+    [InlineData("2026-06-15", 0)]
+    [InlineData("2029-06-01", 0)]
+    public void An_age_is_whole_days_up_to_the_run_day(string from, int expected)
+        => Assert.True(Eval($"days_since('last-rehearsed') == {expected}",
+            $"id: prc-a\nlast-rehearsed: \"{from}\""));
+
     // ISO dates order correctly as text, which is why the grammar carries no date type.
     [Fact]
     public void Iso_dates_order_as_text()

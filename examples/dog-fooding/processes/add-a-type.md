@@ -3,7 +3,7 @@ id: prc-add-a-type
 type: process
 tier: procedural
 status: active
-last-rehearsed: "never"
+last-rehearsed: "2026-09-17"
 rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ schema, taxonomy ]

@@ -101,12 +101,7 @@ A process is also not:
 | `label-canonical`           | error   | A shortcut label that names a document is written as that document's id.                                        |
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `staleness`                 | warning | A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.                               |
 | `no-hedged-ordering`        | warning | No step hedged with "typically", "usually" or "normally".                                                       |
-
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule        | What it would verify                                                                                    |
-|-------------|---------------------------------------------------------------------------------------------------------|
-| `staleness` | Scheduled. Reports processes past their rehearsal frequency, and any whose `last-rehearsed` is `never`. |
 
 <!-- END GENERATED: checks-processes -->

@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 applies-to: [ svc-corpus-feed, svc-docs-site, svc-kac, svc-marketplace ]
-last-rehearsed: "2026-09-07"
+last-rehearsed: "2026-09-20"
 rehearsal-frequency: per-release
 requires-access:
   - Push to paul80nd/knowledge-as-code, and the `gh` CLI signed in to it

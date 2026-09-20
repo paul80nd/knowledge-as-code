@@ -67,6 +67,10 @@ public sealed class Facts(Doc doc, DateOnly today)
     // nothing can be measured; see Instants.Days.
     public int Days(string from, string to) => Instants.Days(Field(from), Field(to));
 
+    // The whole days from a date field to the day of the run, so a rule compares a record's age against
+    // a cadence the record states. Zero where nothing can be measured; see Instants.Days.
+    public int DaysSince(string from) => Instants.Days(Field(from), Today());
+
     // Whether the body matches a pattern the schema supplies. Read as written, so code fences, link
     // targets and the markdown syntax itself are all in scope; `docs/design/checks.md` says which
     // rules need that. It is also what lets `\*\*MUST\*\*` find a bold modal that the rendered text

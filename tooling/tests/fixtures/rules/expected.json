@@ -4,7 +4,7 @@
     "templates": 17,
     "skipped": 0,
     "errors": 24,
-    "warnings": 26,
+    "warnings": 27,
     "infos": 0
   },
   "findings": [
@@ -273,6 +273,13 @@
       "severity": "error",
       "check": "duration-matches-the-moments",
       "message": "'duration' is 'PT30M', and 'occurred-at' to 'restored-at' is 'PT40M'. Write 'PT40M', or correct whichever of the two moments is wrong."
+    },
+    {
+      "file": "processes/rotate-a-signing-key.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness",
+      "message": "nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and set `last-rehearsed` to that day, or state a cadence somebody keeps."
     },
     {
       "file": "processes/rotate-a-signing-key.md",

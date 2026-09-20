@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 owner: human:alex.doe
-last-rehearsed: "2026-04-02"
+last-rehearsed: "2023-01-16"
 rehearsal-frequency: quarterly
 ---
 

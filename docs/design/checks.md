@@ -62,13 +62,23 @@ type page renders it under **Declared, not yet enforced**. Naming a severity wit
 forbids, and `schema-dispatch` is what forbids it.
 
 A rule that counts words, links or days sets a ratio, a ceiling or a window, and the number in it is a judgement. Most
-are uncalibrated, because no corpus has yet had enough records of those types to fix one. `high-risk-review-window` is
-the exception. [FedRAMP](https://www.fedramp.gov/legacy/playbook/csp/authorization/poam/) sets the window from the risk
+are uncalibrated, because no corpus has yet had enough records of those types to fix one.
+`high-risk-review-window` and `staleness` are the exceptions.
+
+[FedRAMP](https://www.fedramp.gov/legacy/playbook/csp/authorization/poam/) sets `high-risk-review-window` from the risk
 level and gives a higher rating a shorter one: 30 days for high, 90 for moderate, 180 for low. Those windows time the
 remediation of a vulnerability, where this one times the re-reading of an accepted risk, so the shape carries over and
 the numbers do not. Six months is this repository's own figure, written as 184 days because six calendar months runs
 from 181 days to 184.
-Each number is pinned by a fixture, so moving it is visible.
+
+`staleness` reads its windows off the calendar. 92 days is the longest quarter and 366 the longest year, so a rehearsal
+held to the cadence never trips. It measures `quarterly` and `annual` alone. `on-change` and `per-release` state an
+event, and a date check has no window to compare one against, so a record using either is reported only where
+`last-rehearsed` is `never`.
+
+A fixture pins each of `high-risk-review-window`'s numbers, so moving one is visible. A fixture cannot pin
+`staleness`, because its windows are measured against the day of the run and a fixture date drifts further from
+today every day it sits there. A unit test names the day instead, and pins both windows against it.
 
 A rule that matches text is a heuristic, and a heuristic gets tuned. Its pattern lives in `.schema/` for that reason.
 Tuning a regex there costs a schema edit. Moving it in the tool would cost a release every corpus has to take.
