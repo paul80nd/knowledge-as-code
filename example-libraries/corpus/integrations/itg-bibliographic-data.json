@@ -3,7 +3,7 @@
   "path": "integrations/bibliographic-data.md",
   "trust": null,
   "fields": {
-    "id": "int-bibliographic-data",
+    "id": "itg-bibliographic-data",
     "title": "Bibliographic Data",
     "status": "active",
     "vendor": "Pennine Bibliographic Data",
@@ -24,6 +24,6 @@
     "Failure modes": "| Failure                               | How it presents                          | Our fallback                                 |\n|---------------------------------------|------------------------------------------|----------------------------------------------|\n| The API returns 503                   | Cataloguing a new item fails at the desk | Staff type a short description by hand       |\n| The nightly feed does not arrive      | A new title shows a placeholder jacket   | None. The catalogue serves the images it has |\n| A feed row names a title nobody holds | `covers-import` skips it and logs it     | Re-run the import after the vendor resends   |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e48c7afc845b51e94ff96993bd5217b259efdc45/examples/library/integrations/bibliographic-data.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/library/integrations/bibliographic-data.md"
   }
 }

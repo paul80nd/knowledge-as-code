@@ -3,7 +3,7 @@
   "path": "integrations/mail-delivery.md",
   "trust": null,
   "fields": {
-    "id": "int-mail-delivery",
+    "id": "itg-mail-delivery",
     "title": "Mail Delivery",
     "status": "active",
     "vendor": "Hartwell Mail",
@@ -12,7 +12,7 @@
     ],
     "criticality": "important",
     "their-sla": "99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds",
-    "replaces": "int-sms-notices",
+    "replaces": "itg-sms-notices",
     "successor": null,
     "tags": [
       "email",
@@ -22,9 +22,9 @@
   "sections": {
     "What it does": "Accepts a message over an API and delivers it. [svc-notices] sends overdue reminders, hold-ready alerts and membership renewals through it, and no other service in this catalogue calls the vendor.\n\n**The vendor stores the message wording.** [svc-notices] selects a template by event type and sends the values that fill it. Changing what a borrower reads is therefore a change made in the vendor's console. That wording sits outside version control, so this corpus cannot tell you what a borrower received last month.",
     "Failure modes": "| Failure                                            | How it presents                               | Our fallback                                     |\n|----------------------------------------------------|-----------------------------------------------|--------------------------------------------------|\n| The API returns 429 during the overdue sweep       | Notices arrive late                           | The queue keeps the work, and the sender retries |\n| A template is edited and will not render           | Every message of that type fails              | None. The vendor keeps no version history        |\n| A borrower's domain is put on the suppression list | The borrower gets nothing, and nothing errors | None. Somebody reads that list once a week       |",
-    "Exit": "The API call is one HTTP request, and [svc-notices] would point it at another vendor in a configuration change.\n\n**The wording is the lock-in.** The vendor stores every template, so a move means re-authoring each one in the new vendor's console and checking what a borrower reads. Nothing in version control says what the current wording is, so that re-authoring starts by copying it out of the console by hand.\n\nThe contract gives 60 days' notice. This estate has made the move once already: [int-sms-notices] closed in June 2026 and its traffic came here."
+    "Exit": "The API call is one HTTP request, and [svc-notices] would point it at another vendor in a configuration change.\n\n**The wording is the lock-in.** The vendor stores every template, so a move means re-authoring each one in the new vendor's console and checking what a borrower reads. Nothing in version control says what the current wording is, so that re-authoring starts by copying it out of the console by hand.\n\nThe contract gives 60 days' notice. This estate has made the move once already: [itg-sms-notices] closed in June 2026 and its traffic came here."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e48c7afc845b51e94ff96993bd5217b259efdc45/examples/library/integrations/mail-delivery.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/library/integrations/mail-delivery.md"
   }
 }

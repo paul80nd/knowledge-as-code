@@ -3,7 +3,7 @@
   "path": "integrations/card-payments.md",
   "trust": null,
   "fields": {
-    "id": "int-card-payments",
+    "id": "itg-card-payments",
     "title": "Card Payments",
     "status": "trial",
     "vendor": "Kestrel Payments",
@@ -25,6 +25,6 @@
     "Exit": "No card detail sits in this estate, so nothing has to be migrated. A move is a change to the redirect [svc-reservations] builds, and to the signature it verifies on the way back.\n\n**The old vendor keeps the history.** Every payment is matched to a hold by a reference this estate minted, and the record of what was paid stays with whoever took it. A move leaves that history behind the old vendor's portal."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e48c7afc845b51e94ff96993bd5217b259efdc45/examples/library/integrations/card-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c9425ecea1b7c9191fdbcae7240d389ce48900d7/examples/library/integrations/card-payments.md"
   }
 }
