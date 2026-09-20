@@ -16,20 +16,17 @@ detail: >
 lineage:
   prior-art: "[NIST SP 800-53A Rev. 5](https://csrc.nist.gov/pubs/sp/800/53/a/r5/final), the assessment-procedure construct"
   alignment: >
-    800-53A ties a determination statement to the control item it tests, so a result traces back to the
-    requirement. `verifies` ties a control to the standard it checks, and `What it checks` quotes the rule.
-    800-53A puts the method, the expected evidence and the objects assessed beside that statement. Here
-    those are `mechanism`, `evidence` and `applies-to`. [OSCAL](https://pages.nist.gov/OSCAL/) schedules an
-    assessment task `at-frequency`, and `frequency` states the same thing
+    800-53A ties a determination statement to the control item it tests, so a result traces back to the requirement.
+    `verifies` is that tie, and `What it checks` quotes the rule. 800-53A puts the method, the expected evidence and
+    the objects assessed beside the statement: here, `mechanism`, `evidence` and `applies-to`.
+    [OSCAL](https://pages.nist.gov/OSCAL/) schedules an assessment `at-frequency`, which `frequency` states
   divergence: >
     800-53A procedures assess a federal catalogue inside an authorisation boundary. A control here verifies an
-    internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own, and no source
-    has it. A control may exist to record that nothing checks the rule. The corpus keeps the plan and never the
-    result, where OSCAL has an assessment-results model. `verifies` binds both ways, where 800-53A traces one
-    direction. Nothing names an assessor, because the mechanism is usually code. Rigour is prose in `Coverage
-    and gaps`. 800-53A grades it as depth and coverage, and the [CIS Controls Assessment
-    Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
-
+    internal standard, with no catalogue and no accreditation. `not-enforced` is this type's own: a control may exist
+    to record that nothing checks the rule. The corpus keeps the plan and never the result, where OSCAL has an
+    assessment-results model. `verifies` binds both ways, where 800-53A traces one. Nothing names an assessor, because
+    the mechanism is usually code. Rigour is prose in `Coverage and gaps`, where 800-53A grades depth and coverage and
+    the [CIS Controls Assessment Specification](https://cas.docs.cisecurity.org/) states a metric for every safeguard
 collision: >
   In [NIST SP 800-53](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), ISO/IEC 27001 Annex A, ISO/IEC
   27002 and ComplianceForge, a *control* **is the safeguard itself**: the technical, administrative or

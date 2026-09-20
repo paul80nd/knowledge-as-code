@@ -9,6 +9,7 @@ personal-data:
 data-subjects:
 retention:
 region:
+review-by: "{{date}}"
 owner:
 tags: [ a, b ]
 ---
@@ -36,6 +37,8 @@ and how it is reviewed. What is below is only what a data document adds to that.
 * **`region`**: where the owning service keeps the data, as a cloud region or a place.
 * **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that matters
   most.
+* **`review-by`**: the day someone confirms the classification and the retention are still right. A year ahead is
+  usual. `classification-in-date` warns once that day passes, and a warning leaves the build green.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../data.md#metadata) lists every field

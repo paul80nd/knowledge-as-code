@@ -16,10 +16,10 @@ detail: >
 
 lineage:
   prior-art: >
-    Evans, *Domain-Driven Design*: ubiquitous language, for the shape of a glossary.
-    [SKOS](https://www.w3.org/TR/skos-reference/) and
-    [DITA `glossentry`](https://docs.oasis-open.org/dita/dita/v1.3/os/part3-all-inclusive/langRef/technicalContent/glossentry.html),
-    for the shape of an entry
+    Evans, *Domain-Driven Design*, the ubiquitous language a team speaks, models and codes in.
+    [SKOS](https://www.w3.org/TR/skos-reference/), a vocabulary for concept schemes, and [DITA
+    `glossentry`](https://docs.oasis-open.org/dita/dita/v1.3/os/part3-all-inclusive/langRef/technicalContent/glossentry.html),
+    a markup element for one term and its definition
   alignment: >
     A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
     within it. An entry carries the other names a reader may arrive by, which is SKOS's `altLabel` and DITA's

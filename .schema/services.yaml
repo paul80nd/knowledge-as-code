@@ -13,25 +13,24 @@ detail: >
   The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 lineage:
-  prior-art: >-
-    [Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`.
-    [OpsLevel `opslevel.yml`](https://docs.opslevel.com/docs/opslevel-yml): the component.
-    [Cortex entity descriptor](https://docs.cortex.io/ingesting-data-into-cortex/entities-overview/entities/yaml)
+  prior-art: >
+    [Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`,
+    [OpsLevel `opslevel.yml`](https://docs.opslevel.com/docs/opslevel-yml) and the [Cortex entity
+    descriptor](https://docs.cortex.io/ingesting-data-into-cortex/entities-overview/entities/yaml): three
+    machine-readable catalogues of an estate's deployables
   alignment: >
     A deployable unit with its owner and its dependencies, at the centre of the graph every other type cites.
-    Backstage, OpsLevel and Cortex each require a word for the sort of component this is, and `component-type`
-    is that word. `criticality` grades a service by what a customer loses while it is down, which is the tier
-    OpsLevel asks for and Backstage has no field for. `repos` takes a list because OpsLevel lets one component
-    name several repositories, where Cortex takes one per git provider and Backstage one source location
+    Backstage, OpsLevel and Cortex each require a word for the sort of component this is, which `component-type`
+    states. `criticality` grades a service by what a customer loses while it is down, which is OpsLevel's tier and
+    which Backstage has no field for. `repos` takes a list because OpsLevel lets one component name several
+    repositories, where Cortex takes one per git provider and Backstage one source location
   divergence: >
-    Backstage, OpsLevel and Cortex each produce a row of metadata. This type produces a document somebody
-    reads, so `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs,
-    resources, systems and domains as separate kinds, and this type folds dependencies, data stores and
-    environments into one document. Backstage states the APIs a component provides and consumes, and no field
-    here does. `facets` refuses a value fewer than two services share, and no source has anything like it. The
-    three sources say lifecycle and tier where this type says `status` and `criticality`: `tier` already grades
-    a record's authority here, and `status` is on every type
-
+    Backstage, OpsLevel and Cortex each produce a row of metadata. This type produces a document somebody reads, so
+    `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs, resources, systems
+    and domains as separate kinds, where this type folds dependencies, data stores and environments into one document,
+    and no field here states the APIs a component provides. `facets` refuses a value fewer than two services share,
+    and no source has anything like it. The three sources say lifecycle and tier where this type says `status` and
+    `criticality`: `tier` already grades a record's authority, and `status` is on every type
 id:
   prefix: svc
   style: slug

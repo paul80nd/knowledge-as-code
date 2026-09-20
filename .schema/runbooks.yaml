@@ -13,19 +13,20 @@ detail: >
   Disaster recovery and estate rebuild are runbooks.
 
 lineage:
-  prior-art: >-
-    [Google SRE, *Introduction*](https://sre.google/sre-book/introduction/): the playbook.
-    [Google SRE Workbook, *On-Call*](https://sre.google/workbook/on-call/): what a playbook explains.
-    [AWS Well-Architected OPS07-BP03](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_runbooks.html):
+  prior-art: >
+    [Google SRE, *Introduction*](https://sre.google/sre-book/introduction/), the playbook. [Google SRE Workbook,
+    *On-Call*](https://sre.google/workbook/on-call/), what an on-call engineer is handed with an alert. [AWS
+    Well-Architected
+    OPS07-BP03](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_runbooks.html),
     the runbook that achieves an outcome, and
-    [OPS07-BP04](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_playbooks.html):
+    [OPS07-BP04](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_playbooks.html),
     the playbook that investigates an issue
   alignment: >
     The response written down before the incident. Google measures roughly a threefold improvement in mean time to
-    recovery over improvising the response. The workbook asks a playbook to explain an alert's severity and impact,
-    which `severity` and `Impact` state. AWS asks for step-by-step discovery, and for the tools and permissions to
-    start: `Diagnosis`, `requires-tools` and `requires-access`. It asks for a route out where nobody finds the cause,
-    and a plan for telling the people waiting: `Escalation` and `Communication`
+    recovery over improvising it. The workbook asks a playbook to explain an alert's severity and impact, which
+    `severity` and `Impact` state. AWS asks for step-by-step discovery, and for the tools and permissions to start:
+    `Diagnosis`, `requires-tools` and `requires-access`. It asks for a route out where nobody finds the cause, and a
+    plan for telling the people waiting: `Escalation` and `Communication`
   divergence: >
     Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
     `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both

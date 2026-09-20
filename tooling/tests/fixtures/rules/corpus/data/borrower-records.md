@@ -10,6 +10,7 @@ personal-data: personal
 data-subjects:
   - borrowers
 region: UK South
+review-by: "2030-01-01"
 ---
 
 # Borrower records

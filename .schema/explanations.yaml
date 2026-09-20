@@ -39,10 +39,9 @@ lineage:
     Diátaxis asks an explanation to be discursive, and to weigh alternatives and counter-examples. Here the choice
     between alternatives is an ADR, and `links-rather-than-restates` rations the prose at about forty words for each
     outbound link. [arc42](https://docs.arc42.org/home/) keeps the decisions, the quality goals and the glossary
-    inside the architecture document, where each of those is a separate type here. Diátaxis constrains explanation
-    only against tutorial, how-to and reference. This framework also forbids an explanation being normative or a
-    catalogue entry, because separate types cover both
-
+    inside the architecture document, where each is a separate type here. Diátaxis constrains explanation against
+    tutorial, how-to and reference alone. This framework also forbids an explanation being normative or a catalogue
+    entry
 id:
   prefix: exp
   style: slug

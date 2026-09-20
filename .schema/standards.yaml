@@ -21,13 +21,14 @@ versus:
     fail a build, it is a control.
 
 lineage:
-  prior-art: >-
-    [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
-    Standard layer: what a standard contains and how often it is reviewed.
-    [BCP 14](https://www.rfc-editor.org/rfc/rfc8174): the keywords and the capitals rule.
-    [ISO/IEC Directives, Part 2](https://www.iso.org/sites/directives/current/part2/index.xhtml), ninth
-    edition: the elements of a normative document.
-    [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/): the conformance clause
+  prior-art: >
+    [ComplianceForge
+    HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
+    Standard layer, the mandatory requirements beneath a policy. [BCP 14](https://www.rfc-editor.org/rfc/rfc8174), the
+    requirement keywords and the rule that only capitals bind. [ISO/IEC Directives, Part
+    2](https://www.iso.org/sites/directives/current/part2/index.xhtml), ninth edition, the elements of a normative
+    document. [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/), the conformance
+    clause
   alignment: >
     HCGF's granular, mandatory requirement, owned by a named person and reviewed on a date the record
     names: `status`, `owner` and `review-by`. BCP 14's keywords, declared in `parts.binding:` and
@@ -38,14 +39,12 @@ lineage:
     `superseded-by`
   divergence: >
     BCP 14 asks for its imperatives sparingly. This type does the opposite and follows HCGF, which puts a
-    recommendation in a guideline and leaves a standard nothing but mandatory requirements:
-    `parts.binding:` and `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost
-    every rule written here binds. ISO makes terms and
-    definitions a clause of every document. Here a term is defined once in the glossary and linked, so no
-    standard states one. ISO puts the subject and the limits of applicability in a scope clause, which
-    this type splits into `applies-to` and the folder the record sits in. Standards here also compose by
-    union across the folders that apply, where HCGF has no composition model
-
+    recommendation in a guideline and leaves a standard nothing but mandatory requirements. `parts.binding:` and
+    `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost every rule written here binds. ISO
+    makes terms and definitions a clause of every document, where a term here is defined once in the glossary and
+    linked. ISO puts the subject and the limits of applicability in a scope clause, which this type splits into
+    `applies-to` and the folder the record sits in. Standards here also compose by union across the folders that
+    apply, where HCGF has no composition model
 collision: >
   In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an
   IEEE, an RFC. Here it is an internal rulebook. The governance frameworks this layering comes from have

@@ -240,6 +240,15 @@ own words.
 **A document here contains no actual data.** `no-actual-data` fails an email address outside `example.com`, so what
 travels is an inventory about data and never the data itself.
 
+**`data` requires `review-by`, and `services`, `integrations` and `offerings` do not.** A data document's
+`classification`, `personal-data`, `retention` and `region` are claims about a store, and nothing in the corpus checks
+one. A domain that gained a column of special-category data still reads `personal` until a person opens the record. A
+`criticality` and a `their-sla` go stale as quietly, and what separates them is the source. The [ICO][ico-storage]
+asks you to review retained personal data regularly and to justify how often. [NIST SP 800-53r5][nist-80053] RA-2 asks
+that a categorisation be revisited so it stays accurate. ISO/IEC 27002:2022 5.12 asks the same, read here through a
+secondary summary because the standard is paywalled. None of the three sets an interval, so each document sets its own
+date.
+
 ### integrations
 
 `What it does`, `Failure modes` and `Exit` travel. A consumer asks which external systems this estate calls, what
@@ -414,3 +423,6 @@ standings mean.
 ## Where to go next
 
 [What the schema is held to](held-to.md) says what `kac` refuses when it reads a type file you have changed.
+
+[ico-storage]: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/storage-limitation/
+[nist-80053]: https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final

@@ -13,6 +13,7 @@ retention: Seven years from the end of the financial year the payment falls in.
 region: UK South
 flows-to:
   - int-card-payments
+review-by: "2027-03-31"
 owner: human:mira.okonjo
 tags: [ fines, payments ]
 ---
