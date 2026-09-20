@@ -29,7 +29,11 @@ Nothing fixes it. The figure is here so the record has one, and what the fixture
 It is not. `measured-by` is filled in, so `required-field` is satisfied, and what it says is that somebody
 is watching — which names no instrument and reports no number.
 
-## If it is breached
+## What a breach costs
 
 Nobody would know, which is the point. A target measured "where practical" is one nobody has to meet, and
 `target-is-measurable` is what says so.
+
+## What we do about a breach
+
+Nothing, for the same reason. No instrument reports the number, so no alert can fire on it.

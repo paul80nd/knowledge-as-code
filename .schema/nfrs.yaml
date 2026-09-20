@@ -21,13 +21,14 @@ lineage:
     which one a target commits to. The SRE workbook asks an SLO document for the indicator reporting the objective,
     the day somebody approved it, the day it is next reviewed, and the reasoning behind the number: `measured-by`,
     `agreed-on`, `review-by` and `Why this number`. The workbook gives the time window a section of its own, and
-    `window` is where a target states it
+    `window` is where a target states it. It also separates an error budget from the error budget policy that spends
+    it, which is why `What a breach costs` and `What we do about a breach` are two sections
   divergence: >
     25010 lists the characteristics and stops. This type is a document, and `characteristic` takes 25010's
     subcharacteristic level, because an estate commits to availability and recovery and not to reliability. RPO and
-    RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends. An error
-    budget policy then says what to stop once the budget runs out. Here a target is a commitment with a named
-    consequence, and no record does that arithmetic
+    RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends, and no
+    record here does that arithmetic. A breach states a cost and a response, and neither is a quantity anybody draws
+    down
 
 id:
   prefix: nfr
@@ -108,18 +109,19 @@ fields:
     description: Quoted. The date by which someone confirms this is still true.
 
 sections:
-  required: [Target, Why this number, How it is measured, If it is breached]
+  required: [Target, Why this number, How it is measured, What a breach costs, What we do about a breach]
   optional: [Current actual, Constraints, Related]
 
 export:
-  version: 2
+  version: 3
   fields: [id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on,
            review-by, tags]
   sections:
     Target: full
     Why this number: full
     How it is measured: full
-    If it is breached: full
+    What a breach costs: full
+    What we do about a breach: full
     Constraints: full
   notes: >
     An NFR is normative, and a reader may act on it without opening anything else.

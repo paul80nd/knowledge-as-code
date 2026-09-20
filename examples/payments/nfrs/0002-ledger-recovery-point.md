@@ -45,11 +45,15 @@ entry the source held.
 The last restore took 38 minutes and recovered to within 2 minutes. The database configuration shows point-in-time
 backup on, with a 35-day retention.
 
-## If it is breached
+## What a breach costs
 
 Payments taken inside the lost window are absent from the account finance reconciles. The money moved and the ledger
-has no entry for it. The repair is the PSP's settlement file, and until that runs the ledger understates what was
-taken.
+has no entry for it. Until the repair runs, the ledger understates what was taken.
+
+## What we do about a breach
+
+No alert fires, because the figure is read at a restore and not continuously. The repair is the reconciliation, which
+rebuilds the missing entries from the PSP's settlement file.
 
 ## Related
 

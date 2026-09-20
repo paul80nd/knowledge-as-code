@@ -27,4 +27,6 @@ a template to, and nothing more.
 
 ## How it is measured
 
-## If it is breached
+## What a breach costs
+
+## What we do about a breach

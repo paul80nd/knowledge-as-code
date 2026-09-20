@@ -152,11 +152,16 @@ the status on that date, because a departure left standing is the state worth se
 
 ### nfrs
 
-An NFR is normative, and a reader may act on it without opening anything else. The four required sections travel whole:
-what the target is, why it is that figure, how anybody tells whether it was met, and what happens where it is missed.
+An NFR is normative, and a reader may act on it without opening anything else. The five required sections travel
+whole: what the target is, why it is that figure, how anybody tells whether it was met, what a miss costs, and what the
+team does about a miss.
 
 `characteristic`, `target`, `window` and `measured-by` state as fields what those sections state at length. The fields
 are what a reader filters and sorts on, and the sections are what somebody building against the number reads.
+
+**The cost of a breach and the response to one are two sections.** The SRE workbook separates an error budget from the
+error budget policy that spends it. Both headings are required, so `required-section` reports one a record left out.
+This type needs no rule of its own.
 
 **`characteristic` takes 25010's subcharacteristic level, not its characteristic level.** An estate commits to
 availability, latency, throughput, capacity, recovery, scalability or accuracy. It does not commit to reliability,
