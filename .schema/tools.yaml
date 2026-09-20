@@ -27,22 +27,19 @@ lineage:
     [OpenSSF Concise Guide for Evaluating Open Source Software](https://best.openssf.org/Concise-Guide-for-Evaluating-Open-Source-Software.html):
     what an evaluation asks
   alignment: >
-    The Radar files a technology under one of four stances, which `status` does, with what was turned down
-    recorded beside what was taken up. CycloneDX identifies a component by package URL and SPDX by an external
-    reference of the same form, which `packages` states, one entry per package. Both give a component a licence,
-    which `licence` states as SPDX writes it, and a home page, which `homepage` states. OpenSSF asks whether a
-    project is still maintained, and `review-by` puts a date on the answer
+    The Radar files a technology under one of four stances, which `status` does, and records what was turned down
+    beside what was taken up. CycloneDX identifies a component by package URL and SPDX by an external reference of the
+    same form, which `packages` states, one entry per package. Both give a component a licence and a home page, which
+    `licence` and `homepage` state. OpenSSF asks whether a project is still maintained, and `review-by` puts a date on
+    the answer
   divergence: >
-    The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is
-    internal, it governs new work, and it expires an entry on the day `review-by` names. `trial` is the only
-    stance both spell the same way: `approved` and `rejected` are acts this estate took, where the Radar's
-    `adopt` and `hold` are advice it offers. It has no `assess` ring, because something nobody has committed to
-    is not yet an entry, and it adds `deprecated`, which an external radar has no reason to state. SPDX leaves a
-    home page optional and makes a download location mandatory instead, and this register requires `homepage`
-    and states no download location: a reader here decides whether to adopt a tool rather than rebuild it.
-    CycloneDX and SPDX inventory what is installed, so each component states one version. This register states
-    the range approved for new work, and the manifests across the estate state what is installed
-
+    The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is internal,
+    it governs new work, and it expires an entry on the day `review-by` names. `trial` is the only stance both spell
+    the same way: `approved` and `rejected` are acts this estate took, where the Radar's `adopt` and `hold` are advice
+    it offers. There is no `assess` ring, because something nobody has committed to is not yet an entry, and
+    `deprecated` is added. SPDX makes a download location mandatory and a home page optional, where this register
+    requires `homepage` and states no download location. CycloneDX and SPDX inventory what is installed, one version
+    per component, where this register states the range approved for new work
 id:
   prefix: tol
   style: slug

@@ -17,22 +17,21 @@ lineage:
   prior-art: "[GDPR Article 30](https://eur-lex.europa.eu/eli/reg/2016/679/oj), records of processing activities"
   alignment: >
     Article 30(1)'s purposes of the processing as `Purpose`, its categories of data subjects as `data-subjects`, its
-    categories of recipients as `flows-to`, and its envisaged time limit for erasure as `retention`. `region` answers
-    the NIST Privacy Framework's ID.IM-P7, which asks where data is processed, and `data-subjects` answers its
-    ID.IM-P3. Whether deletion actually runs is this type's own question, and the NIST Privacy Framework asks it as
-    CT.DM-P5. The [ICO's storage limitation guidance](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/storage-limitation/) asks you to review retained personal data regularly, and
-    to justify how often. [NIST SP 800-53r5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) RA-2 asks that a categorisation be revisited so it stays accurate.
+    categories of recipients as `flows-to`, and its time limit for erasure as `retention`. `region` is the NIST
+    Privacy Framework's ID.IM-P7 and `data-subjects` its ID.IM-P3. Whether deletion runs is this type's own question,
+    which that framework asks as CT.DM-P5. The
+    [ICO](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/storage-limitation/)
+    asks you to review retained personal data regularly. [NIST SP
+    800-53r5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) RA-2 asks that a categorisation be revisited.
     `review-by` answers both
   divergence: >
-    Article 30 is organised by processing activity and by controller. This type is organised by data domain. **A Data
-    document is not a ROPA and does not satisfy Article 30**. It names no controller, no representative and no data
-    protection officer, and it describes no security measures, where Article 30(1)(g) asks for a general description
-    of them. Article 30(1)(c) asks for the categories of personal data as well as the categories of data subjects,
-    and `Entities` lists the domain's objects instead. Article 30(1)(e)'s transfer to a third country is a column of
-    the `Flows` table and not a field. `classification` and `personal-data` split one question the sources ask
-    separately: ISO/IEC 27002:2022 5.12 grades confidentiality, and GDPR Article 9 names a category of data.
+    Article 30 is organised by processing activity and by controller, and this type by data domain. **A Data document
+    is not a ROPA and does not satisfy Article 30**: it names no controller, no representative and no data protection
+    officer, and describes no security measures, which Article 30(1)(g) asks for. Article 30(1)(c) also asks for the
+    categories of personal data, where `Entities` lists the domain's objects. Article 30(1)(e)'s transfer to a third
+    country is a column of the `Flows` table and not a field. `classification` and `personal-data` split one question
+    the sources ask separately: ISO/IEC 27002:2022 5.12 grades confidentiality, and GDPR Article 9 names a category.
     Neither the ICO nor RA-2 sets a review interval, so `review-by` fixes one per document
-
 notes: >
   The folder is singular because English gives `data` no plural. `glossary/` is the other singular folder in the
   taxonomy.

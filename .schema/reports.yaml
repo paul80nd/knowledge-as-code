@@ -28,15 +28,13 @@ lineage:
     required key on a source. `status: draft` is OKF's draft. The export ships `verified`, the field OKF
     derives its trust tier from
   divergence: >
-    OKF puts no version on a source. This type does, because a reader needs to know which content the report
-    is true of. Three rules have no OKF equivalent. `verified` is required once a report leaves `draft`, an
-    actor appears once in the list, and `no-self-verification` refuses the actor `generated.by` names. OKF
-    admits a second entry for an actor already listed, and leaves verification to the publisher. `status`
-    takes `active` and `stale` where OKF takes `stable` and `deprecated`. Staleness is read from each source's
-    `content-version` rather than OKF's `stale_after` instant, because a report goes out of date when the
-    corpus moves and not when a clock passes. `generated.report` and `generated.tool` are additional keys,
-    which OKF permits and defines nothing of its own for
-
+    OKF puts no version on a source. This type does, because a reader needs to know which content the report is true
+    of. `verified` is required once a report leaves `draft`, an actor appears once in the list, and
+    `no-self-verification` refuses the actor `generated.by` names. OKF has none of the three: it admits a second entry
+    for an actor already listed, and leaves verification to the publisher. `status` takes `active` and `stale` where
+    OKF takes `stable` and `deprecated`. Staleness is read from each source's `content-version` rather than OKF's
+    `stale_after` instant, because a report goes out of date when the corpus moves and not when a clock passes.
+    `generated.report` and `generated.tool` are additional keys, which OKF permits
 collision: >
   A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
   survives every record being deleted. A report does not.

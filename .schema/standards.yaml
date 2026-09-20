@@ -38,14 +38,12 @@ lineage:
     `superseded-by`
   divergence: >
     BCP 14 asks for its imperatives sparingly. This type does the opposite and follows HCGF, which puts a
-    recommendation in a guideline and leaves a standard nothing but mandatory requirements:
-    `parts.binding:` and `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost
-    every rule written here binds. ISO makes terms and
-    definitions a clause of every document. Here a term is defined once in the glossary and linked, so no
-    standard states one. ISO puts the subject and the limits of applicability in a scope clause, which
-    this type splits into `applies-to` and the folder the record sits in. Standards here also compose by
-    union across the folders that apply, where HCGF has no composition model
-
+    recommendation in a guideline and leaves a standard nothing but mandatory requirements. `parts.binding:` and
+    `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost every rule written here binds. ISO
+    makes terms and definitions a clause of every document, where a term here is defined once in the glossary and
+    linked. ISO puts the subject and the limits of applicability in a scope clause, which this type splits into
+    `applies-to` and the folder the record sits in. Standards here also compose by union across the folders that
+    apply, where HCGF has no composition model
 collision: >
   In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an
   IEEE, an RFC. Here it is an internal rulebook. The governance frameworks this layering comes from have

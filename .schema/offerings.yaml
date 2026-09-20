@@ -28,14 +28,12 @@ lineage:
     Its second Service Standard point, solve a whole problem for users, is why one offering spans several
     services
   divergence: >
-    ITIL keeps a service offering in a catalogue a tool serves. This type is a record in a repository, and
-    CI validates it. ITIL also counts goods and access as part of an offering, where `implemented-by`
-    admits service ids alone. Backstage's `System` groups components by the APIs they expose, which is this
-    shape read from the inside; an offering is read from the outside, so `Surfaces` names where a customer
-    meets it rather than the delivery channels ITIL would list. `feature-files` ties an offering to the
-    tests that prove it, and `spans-more-than-one-service` warns where one service delivers the whole of
-    it. Neither has a counterpart in any of the three sources
-
+    ITIL keeps a service offering in a catalogue a tool serves. This type is a record in a repository, and CI
+    validates it. ITIL also counts goods and access as part of an offering, where `implemented-by` admits service ids
+    alone. Backstage's `System` groups components by the APIs they expose, which is this shape read from the inside.
+    An offering is read from the outside, so `Surfaces` names where a customer meets it. `feature-files` ties an
+    offering to the tests that prove it, and `spans-more-than-one-service` warns where one service delivers the whole
+    of it. Neither has a counterpart in any of the three sources
 id:
   prefix: ofr
   style: slug

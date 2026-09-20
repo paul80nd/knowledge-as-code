@@ -27,12 +27,11 @@ lineage:
     *Alternatives Considered* section matches [MADR 4](https://adr.github.io/madr/), which also asks for the options
     weighed
   divergence: >
-    Nygard scopes a decision to one codebase, and an ADR here affects more than one repository. Every alternative
-    states a verdict, *Consequences* is required where MADR leaves it optional, and a fifth status, `rejected`, keeps
-    a proposal the team turned down. A supersession is a pair of fields checked in both directions, not a phrase
-    inside the status. MADR's *Confirmation* is a separate type here: a standard cites the ADR it distils, and a
-    control checks the standard. MADR's `consulted` and `informed` are not kept
-
+    Nygard scopes a decision to one codebase. An ADR here affects more than one repository. Every alternative states a
+    verdict, and *Consequences* is required where MADR leaves it optional. A fifth status, `rejected`, keeps a
+    proposal the team turned down. A supersession is a pair of fields checked both ways, not a phrase inside the
+    status. MADR's *Confirmation* is a separate type here: a standard cites the ADR it distils, and a control checks
+    the standard. MADR's `consulted` and `informed` are not kept
 id:
   prefix: adr
   style: numbered

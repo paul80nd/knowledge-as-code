@@ -24,13 +24,12 @@ lineage:
     requires it
   divergence: >
     ITIL binds a known error to a formal problem record and an owning practice. A fix here is written from anything
-    somebody noticed, and any verification gives it authority. ITIL also expects a workaround while a permanent fix is
+    somebody noticed, and any verification gives it authority. ITIL expects a workaround while a permanent fix is
     outstanding, and [the ServiceNow known error
     article](https://www.servicenow.com/docs/bundle/zurich-it-service-management/page/product/problem-management/reference/known-error-article-form.html)
     gives *Workaround* a field of its own. This type asks for one resolution somebody has verified, so a problem with
     no answer yet stays in the tracker. KCS reviews an article when somebody uses it, where `review-by` sets a date.
-    `How we found it` is this type's own, and no source states it
-
+    `How we found it` is this type's own
 id:
   prefix: fix
   style: numbered
