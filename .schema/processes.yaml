@@ -18,15 +18,28 @@ versus:
     runbook.
 
 lineage:
-  prior-art: "[ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework), Procedure layer, and [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/)"
+  prior-art: >
+    [ComplianceForge
+    HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
+    Procedure layer. [Diátaxis how-to guide](https://diataxis.fr/how-to-guides/), the shape of a task document. [EPA
+    QA/G-6](https://www.epa.gov/sites/default/files/2015-06/documents/g6-final.pdf), the elements of a written
+    procedure
   alignment: >
     Steps that operationalise the standard above them. From Diátaxis, the shape: `Steps` is one sequence,
     `Prerequisites` states what the reader needs before the first of them, and `When to use this` names the problem
-    that sequence solves
+    that sequence solves. EPA QA/G-6 asks for a check before the work is accepted, and for a troubleshooting step:
+    `Verification` and `If it goes wrong`. It states a review frequency and a date on the procedure, as
+    `rehearsal-frequency` and `last-rehearsed`. It takes a procedure out of use once nobody follows it, as
+    `status: retired`
   divergence: >
-    Diátaxis writes for the already-competent reader. This type writes for one who has never done the task. That
-    reader is as often an agent with no memory of the last run. Splitting the procedural layer by reading conditions
-    is this framework's own, and so is asking every procedure for a rehearsal date.
+    Diátaxis writes for the already-competent reader. This type writes for one who has never done the task, and EPA
+    QA/G-6 for one who has a basic understanding of the field. EPA QA/G-6 asks a procedure to state that experience,
+    and no field here records it. That reader is as often an agent with no memory of the last run. Splitting the
+    procedural layer by reading conditions is this framework's own. EPA QA/G-6 dates a document review, and tests a
+    draft once before release. `last-rehearsed` dates one walk-through, and its frequency repeats it. EPA QA/G-6 also
+    prints a revision number on every page, where git keeps the history. It has a supervisor and a quality assurance
+    officer sign a procedure before use, where `owner` names the person accountable and no field records an approval
+    date.
     See [What has no precedent](https://paul80nd.github.io/knowledge-as-code/framework/lineage/#what-has-no-precedent)
 
 collision: >
