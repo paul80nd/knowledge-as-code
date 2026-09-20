@@ -80,7 +80,7 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
-        integrations@1
+        integrations@2
           fields: id, title, status, vendor, used-by, criticality, their-sla, replaces, successor, tags
           sections:
             What it does: full

@@ -86,7 +86,7 @@ out against the database directly.
 | [svc-reservations] | Showing a queue position           | Card number, title, queue position   | UK South              |
 
 Nothing here leaves the estate. A notice that reaches a borrower by email includes the title, so the title crosses to
-[int-mail-delivery] through [dat-borrowers] and not through this domain.
+[itg-mail-delivery] through [dat-borrowers] and not through this domain.
 
 ## Related
 
@@ -100,7 +100,7 @@ readable.)_
 
 [dat-borrowers]: borrowers.md
 [dat-payments]: payments.md
-[int-mail-delivery]: ../integrations/mail-delivery.md
+[itg-mail-delivery]: ../integrations/mail-delivery.md
 [svc-lending]: ../services/lending.md
 [svc-notices]: ../services/notices.md
 [svc-reservations]: ../services/reservations.md

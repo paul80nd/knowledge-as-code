@@ -76,7 +76,7 @@ consequence is documentation theatre, and saying "nothing much" is a legitimate 
 
 External dependencies that cap this target:
 
-* **[int-{{a}}]** has an SLA of {{x}}, so anything built on it cannot promise more.
+* **[itg-{{a}}]** has an SLA of {{x}}, so anything built on it cannot promise more.
 
 _(If a target exceeds what a dependency promises, it is a hope rather than a commitment. Record that here rather than
 discovering it during an incident.)_
@@ -87,5 +87,5 @@ discovering it during an incident.)_
 * [pmt-{{a}}] records an incident measured against this target.
 
 [ofr-{{a}}]: ../offerings/{{a}}.md
-[int-{{a}}]: ../integrations/{{a}}.md
+[itg-{{a}}]: ../integrations/{{a}}.md
 [pmt-{{a}}]: ../postmortems/{{a}}.md

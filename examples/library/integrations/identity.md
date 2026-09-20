@@ -1,5 +1,5 @@
 ---
-id: int-identity
+id: itg-identity
 type: integration
 tier: descriptive
 status: active
@@ -15,7 +15,7 @@ tags: [ sign-in, tokens ]
 
 # Identity
 
-`Integration: int-identity` `ACTIVE`
+`Integration: itg-identity` `ACTIVE`
 
 The sign-in a borrower completes before the catalogue shows them anything of their own.
 

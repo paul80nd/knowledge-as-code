@@ -27,11 +27,11 @@ public class GeneratorTests
     {
         var t = new TypeSchema
         {
-            Label = "Integration", IdPrefix = "int", IndexColumns = ["id", "their-sla", "review-by"]
+            Label = "Integration", IdPrefix = "itg", IndexColumns = ["id", "their-sla", "review-by"]
         };
 
         var doc = Required.Parsed("integrations/mail.md",
-            "---\nid: int-mail\ntheir-sla: 99.9% monthly\nreview-by: \"2027-01-01\"\n---\n\n# Mail\n", new Schema());
+            "---\nid: itg-mail\ntheir-sla: 99.9% monthly\nreview-by: \"2027-01-01\"\n---\n\n# Mail\n", new Schema());
 
         var page = Generator.IndexPage(t, [doc]);
 

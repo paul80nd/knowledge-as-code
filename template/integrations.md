@@ -64,7 +64,7 @@ Not the place for:
 
 ## Adding an integration
 
-1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids: `int-sendgrid`.
+1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids: `itg-sendgrid`.
 2. Record the contract and how the system authenticates us. Name where the credential is held. Nothing secret goes in
    this corpus.
 3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns

@@ -1,5 +1,5 @@
 ---
-id: int-trial-no-criteria-no-exit
+id: itg-trial-no-criteria-no-exit
 type: integration
 tier: descriptive
 status: trial
@@ -11,7 +11,7 @@ owner: human:alex.doe
 
 # A critical trial that says nothing about leaving
 
-`Integration: int-trial-no-criteria-no-exit` `TRIAL`
+`Integration: itg-trial-no-criteria-no-exit` `TRIAL`
 
 ## What it does
 

@@ -189,6 +189,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An integration id starts `itg-`, not `int-`.** `kac validate` rejects `int-sendgrid`, and `ref-resolves` reports
+  each citation still pointing at one. `int` is a reserved word in C# and in most languages a maintainer reads, and
+  `int-` also matches `constraint-` and `print-`, so a search for an integration id returns mostly lines that are not
+  one. `integrations` publishes at `export.version` 2, because a reader matching `^int-` on an exported id would now
+  match nothing. Rename the id in every integration record, and in every citation of it. `kac generate` then rewrites
+  `integrations/_index.md`, whose heading reads `Integration Index (ITG)`.
+
 - **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's
   policy layer, NIST SP 800-12 Rev. 1 and NIST SP 800-53 Rev. 5. `alignment` said a policy pushes its mandatory
   language down to the standard beneath it, and 206 of the 243 clauses in `examples/engineering` are **MUST** or

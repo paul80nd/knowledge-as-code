@@ -1,5 +1,5 @@
 ---
-id: int-retired-no-successor
+id: itg-retired-no-successor
 type: integration
 tier: descriptive
 status: retired
@@ -11,7 +11,7 @@ owner: human:alex.doe
 
 # A retired vendor with nowhere to go
 
-`Integration: int-retired-no-successor` `RETIRED`
+`Integration: itg-retired-no-successor` `RETIRED`
 
 ## What it does
 

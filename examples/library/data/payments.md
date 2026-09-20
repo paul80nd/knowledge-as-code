@@ -12,7 +12,7 @@ data-subjects:
 retention: Seven years from the end of the financial year the payment falls in.
 region: UK South
 flows-to:
-  - int-card-payments
+  - itg-card-payments
 review-by: "2027-03-31"
 owner: human:mira.okonjo
 tags: [ fines, payments ]
@@ -52,7 +52,7 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 | **Owning service** | [svc-lending]                                  |
 | **Store**          | The legacy database, in the `FIN` table family |
 
-**No payment card details are held here.** [int-card-payments] returns a token and the last four digits of the payment
+**No payment card details are held here.** [itg-card-payments] returns a token and the last four digits of the payment
 card, and those two values are what a payment row keeps. The payment card number, its expiry date and its security
 code never enter the estate.
 
@@ -64,7 +64,7 @@ is `personal`, because a payment names a borrower through their library card num
 `data-subjects` names staff as well as borrowers, because a refund records who authorised it. That is the one place
 this domain keeps data about somebody who is not a borrower.
 
-The estate is the controller of these rows. [int-card-payments] is the processor for the card transaction itself, and
+The estate is the controller of these rows. [itg-card-payments] is the processor for the card transaction itself, and
 keeps the card details this domain never sees.
 
 ## Retention
@@ -81,7 +81,7 @@ more than two years reads the payment rows alone.
 
 | Goes to             | Why                        | What is shared                        | Where they process it |
 |---------------------|----------------------------|---------------------------------------|-----------------------|
-| [int-card-payments] | Taking and refunding money | Amount, payment reference, card token | UK and Ireland        |
+| [itg-card-payments] | Taking and refunding money | Amount, payment reference, card token | UK and Ireland        |
 
 The consortium never sends a borrower's name or address with a payment, so what crosses to Ireland is a pseudonymous
 reference and an amount.
@@ -89,7 +89,7 @@ reference and an amount.
 ## Related
 
 * [dat-loans] records the fine a payment clears.
-* [int-card-payments] takes the money and keeps the card details.
+* [itg-card-payments] takes the money and keeps the card details.
 
 ---
 
@@ -97,5 +97,5 @@ _(**Never put actual data here**: no sample records, no identifiers, no connecti
 readable.)_
 
 [dat-loans]: loans.md
-[int-card-payments]: ../integrations/card-payments.md
+[itg-card-payments]: ../integrations/card-payments.md
 [svc-lending]: ../services/lending.md

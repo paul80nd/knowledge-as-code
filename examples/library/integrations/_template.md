@@ -1,5 +1,5 @@
 ---
-id: int-{{slug}}
+id: itg-{{slug}}
 type: integration
 tier: descriptive
 status: active
@@ -12,7 +12,7 @@ tags: [ a, b ]
 
 # {{Integration name}}
 
-`Integration: int-{{slug}}` `ACTIVE`
+`Integration: itg-{{slug}}` `ACTIVE`
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 

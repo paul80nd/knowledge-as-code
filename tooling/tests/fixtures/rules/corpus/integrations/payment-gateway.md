@@ -1,5 +1,5 @@
 ---
-id: int-payment-gateway
+id: itg-payment-gateway
 type: integration
 tier: descriptive
 status: active
@@ -11,7 +11,7 @@ criticality: important
 
 # Payment gateway
 
-`Integration: int-payment-gateway` `ACTIVE`
+`Integration: itg-payment-gateway` `ACTIVE`
 
 ## What it does
 

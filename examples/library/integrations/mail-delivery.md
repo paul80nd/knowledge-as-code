@@ -1,5 +1,5 @@
 ---
-id: int-mail-delivery
+id: itg-mail-delivery
 type: integration
 tier: descriptive
 status: active
@@ -8,14 +8,14 @@ used-by:
   - svc-notices
 criticality: important
 their-sla: 99.9% monthly availability, and 95% of accepted messages delivered within 60 seconds
-replaces: int-sms-notices
+replaces: itg-sms-notices
 owner: human:mira.okonjo
 tags: [ email, templates ]
 ---
 
 # Mail Delivery
 
-`Integration: int-mail-delivery` `ACTIVE`
+`Integration: itg-mail-delivery` `ACTIVE`
 
 Every email the consortium sends a borrower.
 
@@ -60,7 +60,7 @@ The API call is one HTTP request, and [svc-notices] would point it at another ve
 vendor's console and checking what a borrower reads. Nothing in version control says what the current wording is, so
 that re-authoring starts by copying it out of the console by hand.
 
-The contract gives 60 days' notice. This estate has made the move once already: [int-sms-notices] closed in June 2026
+The contract gives 60 days' notice. This estate has made the move once already: [itg-sms-notices] closed in June 2026
 and its traffic came here.
 
 ## Commercials
@@ -79,7 +79,7 @@ portal, and a suppression question takes longer. There is no telephone escalatio
 ## Related
 
 * [svc-notices] sends every borrower-facing message through this.
-* [int-sms-notices] is the retired text-message vendor whose traffic moved here.
+* [itg-sms-notices] is the retired text-message vendor whose traffic moved here.
 
-[int-sms-notices]: sms-notices.md
+[itg-sms-notices]: sms-notices.md
 [svc-notices]: ../services/notices.md
