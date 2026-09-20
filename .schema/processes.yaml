@@ -99,7 +99,16 @@ index:
 rules:
   - id: staleness
     description: >
-      Scheduled. Reports a process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.
+      A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.
+    severity: warning
+    # 92 days is the longest quarter, and 366 the longest year.
+    expr: >-
+      field('last-rehearsed') != 'never'
+      and (field('rehearsal-frequency') == 'quarterly' implies days_since('last-rehearsed') <= 92)
+      and (field('rehearsal-frequency') == 'annual' implies days_since('last-rehearsed') <= 366)
+    message: >
+      nobody has walked this process inside its `rehearsal-frequency`. Follow it end to end and set
+      `last-rehearsed` to that day, or state a cadence somebody keeps.
   - id: no-hedged-ordering
     description: No step hedged with "typically", "usually" or "normally".
     severity: warning

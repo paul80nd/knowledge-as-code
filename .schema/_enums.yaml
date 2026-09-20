@@ -19,5 +19,5 @@ enums:
   rehearsal-frequency:
     values: [on-change, per-release, quarterly, annual]
     notes: >
-      `on-change` names an event instead of a cycle, so nothing running on a schedule can measure it. A record
-      using it is reported only where `last-rehearsed` is `"never"`.
+      `quarterly` and `annual` are cycles, and a date check measures a record against either. `on-change` and
+      `per-release` name an event, so a record using one is reported only where `last-rehearsed` is `"never"`.

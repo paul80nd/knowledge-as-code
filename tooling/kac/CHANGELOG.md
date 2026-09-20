@@ -19,6 +19,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A process past its rehearsal cadence is reported.** `staleness` now runs. `kac validate` warns on a process whose
+  `last-rehearsed` is `"never"`, and on a `quarterly` or `annual` one more than 92 or 366 days past that date. The rule
+  was declared and ran on nothing, so a corpus could say every procedure was rehearsed on a cycle and be asked for no
+  evidence. `on-change` and `per-release` state an event, which no window measures, so a process using either is
+  reported only while `last-rehearsed` is `"never"`.
+
+- **`days_since('field')` measures a date field against the day of the run.** An expression could already compare two
+  dates a record states, and ask whether one had gone by. Neither asks how old a record is. The fact answers zero where
+  a field is absent, is not a date, or names a day the run has not reached, so a rule comparing it against a threshold
+  leaves an absent value to `required-field`.
+
 - **Every rule in a standard is held to a keyword in bold capitals.** `part-modal` reads the bullets under each rule
   heading and reports one that names none of `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` or `MAY`, one that leaves a
   keyword in plain text, and a heading gathering no bullet at all. BCP 14 gives a keyword its meaning only in capitals,
