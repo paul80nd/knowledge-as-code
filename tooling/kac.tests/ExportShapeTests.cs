@@ -30,6 +30,15 @@ public class ExportShapeTests
             What it checks: full
             How it works: full
             Coverage and gaps: full
+        data@1
+          fields: id, title, status, owned-by, classification, personal-data, data-subjects, retention, region, flows-to, tags
+          sections:
+            Purpose: full
+            Entities: full
+            Where it lives: full
+            Classification: full
+            Retention: full
+            Flows: full
         deviations@1
           fields: id, title, status, risk, departs-from, owner, accepted-on, review-by, closed-on, applies-to, tags
           sections:

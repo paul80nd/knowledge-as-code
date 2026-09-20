@@ -30,8 +30,8 @@ or the event you read it against.
 One section per type that declares an `export:` block, in tier order. A tier is the level of authority a type sits at,
 and [Taxonomy](../framework/taxonomy.md#the-four-tiers) lists the four.
 
-No type is deliberately held back. Where a block is unwritten rather than refused, that type has no section below.
-[A type held back](export.md#a-type-held-back) names that type and says why nothing here could prove one right.
+Every type declares a block, so every type has a section below. [A type held back](export.md#a-type-held-back) says
+what a type declaring none would owe its reader.
 
 ### adrs
 
@@ -209,14 +209,36 @@ walks the edges without opening a record. `Dependencies` travels beside it, beca
 prose says what the call is for. The edges run one way, downward. A service records what it calls, and the reverse view
 is a question a reader asks of the whole graph, so nothing here has to keep a second field in step with the first.
 
-`data-stores` travels as ids a reader cannot follow, because data records travel nowhere. `Data` is what that reader
-reads instead. `component-type`, `platform`, `criticality` and `facets` are the keys an agent filters on, and the first
-two draw their range from the corpus. An estate lists its own deployables, groups them once by what they are and once by
-the runtime and framework a contributor has to learn, and closes each list on what it found. So one schema above several
-estates can state no range at all.
+`data-stores` travels as ids, and the `data` records those ids name travel with them, so a reader can follow one.
+`Data` says in prose what this service does with each store. `component-type`, `platform`, `criticality` and `facets`
+are the keys an agent filters on, and the first two draw their range from the corpus. An estate lists its own
+deployables, groups them once by what they are and once by the runtime and framework a contributor has to learn, and
+closes each list on what it found. So one schema above several estates can state no range at all.
 
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
+
+### data
+
+Every section but `Related` travels. A service's `data-stores` points at these records, so a reader following one of
+those ids arrives here and reads the document whole.
+
+`classification`, `personal-data`, `data-subjects`, `retention` and `region` are the keys a consumer filters on.
+`Classification` says what the grade rests on and where the boundary falls. `Retention` says how deletion is really
+carried out, and whether anybody has checked that it runs. A reader taking the frontmatter value alone would miss
+both.
+
+`flows-to` resolves against services and integrations, so a reader can walk from a data domain to the systems that
+receive it. `Flows` travels beside it as the table it is, because a recipient outside the estate is the row that
+matters most.
+
+`Purpose` states the lawful basis beside the use it supports. `Entities` names the domain's objects in the estate's
+own words.
+
+`Related` stays behind as navigation. A consumer follows the record's own `links`.
+
+**A document here contains no actual data.** `no-actual-data` fails an email address outside `example.com`, so what
+travels is an inventory about data and never the data itself.
 
 ### integrations
 

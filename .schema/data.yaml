@@ -121,6 +121,22 @@ sections:
   required: [Purpose, Entities, Where it lives, Classification, Retention]
   optional: [Flows, Related]
 
+export:
+  version: 1
+  fields: [id, title, status, owned-by, classification, personal-data, data-subjects, retention, region, flows-to, tags]
+  sections:
+    Purpose: full
+    Entities: full
+    Where it lives: full
+    Classification: full
+    Retention: full
+    Flows: full
+  notes: >
+    A service's `data-stores` travels as ids, and these records are what a reader follows them to. Every
+    section but `Related` travels whole, because each one qualifies a frontmatter value a consumer filters
+    on. <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#data> says what else travels,
+    and what stays behind.
+
 index:
   columns: [id, title, owned-by, classification, personal-data, retention]
   sort: classification
