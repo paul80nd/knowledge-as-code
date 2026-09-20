@@ -4,7 +4,7 @@ type: process
 tier: procedural
 status: active
 applies-to: [ svc-docs-site, svc-kac ]
-last-rehearsed: "never"
+last-rehearsed: "2026-09-15"
 rehearsal-frequency: per-release
 owner: human:paul.law
 tags: [ mkdocs, nuget ]

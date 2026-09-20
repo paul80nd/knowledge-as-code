@@ -3,7 +3,7 @@ id: prc-sweep-prose
 type: process
 tier: procedural
 status: active
-last-rehearsed: "never"
+last-rehearsed: "2026-09-13"
 rehearsal-frequency: on-change
 owner: human:paul.law
 tags: [ agents, prose ]

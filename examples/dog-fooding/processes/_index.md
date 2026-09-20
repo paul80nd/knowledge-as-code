@@ -4,11 +4,11 @@
 
 | ID                    | Title                                                     | Status | Last rehearsed | Owner          |
 |-----------------------|-----------------------------------------------------------|--------|----------------|----------------|
-| prc-add-a-record      | [Add a record to a corpus](add-a-record.md)               | active | never          | human:paul.law |
-| prc-add-a-type        | [Add a knowledge type](add-a-type.md)                     | active | never          | human:paul.law |
-| prc-change-a-skill    | [Change a skill or a hook](change-a-skill.md)             | active | never          | human:paul.law |
+| prc-add-a-record      | [Add a record to a corpus](add-a-record.md)               | active | 2026-09-17     | human:paul.law |
+| prc-add-a-type        | [Add a knowledge type](add-a-type.md)                     | active | 2026-09-17     | human:paul.law |
+| prc-change-a-skill    | [Change a skill or a hook](change-a-skill.md)             | active | 2026-09-19     | human:paul.law |
 | prc-change-the-schema | [Change the schema](change-the-schema.md)                 | active | 2026-09-20     | human:paul.law |
 | prc-change-the-tool   | [Change the tool](change-the-tool.md)                     | active | 2026-09-20     | human:paul.law |
 | prc-pull-request      | [Open a pull request](pull-request.md)                    | active | 2026-09-20     | human:paul.law |
-| prc-sweep-prose       | [Sweep the writing rules across a folder](sweep-prose.md) | active | never          | human:paul.law |
-| prc-write-public-docs | [Write the public documentation](write-public-docs.md)    | active | never          | human:paul.law |
+| prc-sweep-prose       | [Sweep the writing rules across a folder](sweep-prose.md) | active | 2026-09-13     | human:paul.law |
+| prc-write-public-docs | [Write the public documentation](write-public-docs.md)    | active | 2026-09-15     | human:paul.law |
