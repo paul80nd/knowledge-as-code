@@ -30,8 +30,7 @@ or the event you read it against.
 One section per type that declares an `export:` block, in tier order. A tier is the level of authority a type sits at,
 and [Taxonomy](../framework/taxonomy.md#the-four-tiers) lists the four.
 
-No type is deliberately held back. Where a block is unwritten rather than refused, that type has no section below.
-[A type held back](export.md#a-type-held-back) names that type and says why nothing here could prove one right.
+[A type held back](export.md#a-type-held-back) says what a type declaring none would owe its reader.
 
 ### adrs
 
@@ -169,7 +168,8 @@ something over a stated period. `window` declares a `required-when` reading `cha
 or accuracy target binds each event or each value, so it needs none.
 
 `Constraints` travels because a target read without its limits reads as a stronger promise than the estate made. It
-states those limits in words, because `constrained-by` points at integrations and integrations travel nowhere.
+states those limits in words, because `constrained-by` resolves only where the corpus adopted `integrations`. A corpus
+that did not still has the cap, and this section is where it writes it down.
 
 `Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export has no way to say
 how old it has since become.
@@ -209,14 +209,36 @@ walks the edges without opening a record. `Dependencies` travels beside it, beca
 prose says what the call is for. The edges run one way, downward. A service records what it calls, and the reverse view
 is a question a reader asks of the whole graph, so nothing here has to keep a second field in step with the first.
 
-`data-stores` travels as ids a reader cannot follow, because data records travel nowhere. `Data` is what that reader
-reads instead. `component-type`, `platform`, `criticality` and `facets` are the keys an agent filters on, and the first
-two draw their range from the corpus. An estate lists its own deployables, groups them once by what they are and once by
-the runtime and framework a contributor has to learn, and closes each list on what it found. So one schema above several
-estates can state no range at all.
+`data-stores` travels as ids. Where the corpus adopted `data`, those records travel too, so a reader can follow one.
+`Data` says in prose what this service does with each store. `component-type`, `platform`, `criticality` and `facets`
+are the keys an agent filters on, and the first two draw their range from the corpus. An estate lists its own
+deployables, groups them once by what they are and once by the runtime and framework a contributor has to learn, and
+closes each list on what it found. So one schema above several estates can state no range at all.
 
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
+
+### data
+
+Every section but `Related` travels. A service's `data-stores` points at these records, so a reader following one of
+those ids reads the document whole.
+
+`classification`, `personal-data`, `data-subjects`, `retention` and `region` are the keys a consumer filters on.
+`Classification` says why the data takes that grade, and what the domain excludes. `Retention` says how
+deletion is carried out, and whether anybody has checked that it runs. A reader taking the frontmatter value alone
+gets neither.
+
+`flows-to` resolves against services and integrations, so a reader can walk from a data domain to the systems that
+receive it. `Flows` travels beside it, because it states what each recipient gets and where they process it. The ids
+say neither.
+
+`Purpose` states the lawful basis beside the use it supports. `Entities` names the domain's objects in the estate's
+own words.
+
+`Related` stays behind as navigation. A consumer follows the record's own `links`.
+
+**A document here contains no actual data.** `no-actual-data` fails an email address outside `example.com`, so what
+travels is an inventory about data and never the data itself.
 
 ### integrations
 

@@ -175,6 +175,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   governed surface, and two entries were carrying one under a heading the type did not declare, which the export
   dropped.
 
+- **`data` records travel in the export.** `.schema/data.yaml` declares an `export:` block at version 1, so
+  `kac export` writes one file per data document and `kac bundle` ships them with the plugin. `classification`,
+  `personal-data`, `data-subjects`, `retention`, `region` and `flows-to` travel as frontmatter, and `Purpose`,
+  `Entities`, `Where it lives`, `Classification`, `Retention` and `Flows` travel whole. A service's `data-stores`
+  cited records no consumer could read. Every type in the taxonomy now declares a block.
+
 ### Changed
 
 - **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's

@@ -31,16 +31,13 @@ A corpus that adopted no exporting type still writes a manifest, with an empty t
 
 ### A type held back
 
-Every other type travels. A type declaring no `export:` block reaches nobody but a reader browsing the repository it
-sits in, which is a different product from the one this framework describes. So declaring the block is part of writing a
-type. A type deliberately held back gives the reason in its own schema file, where the next person to ask the question
-is already reading.
+A type declaring no `export:` block reaches nobody but a reader browsing the repository it sits in, which is a
+different product from the one this framework describes. So declaring the block is part of writing a type. A type
+deliberately held back gives the reason in its own schema file, where the next person to ask the question is already
+reading.
 
 Which types travel is therefore a fact about `.schema/` rather than about the tool. A corpus adopting a type receives
 what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
-
-The one type declaring no block is `data`. That is not a decision, and nothing here is deliberately held back.
-`examples/library` now has data records, so the block can be written and proved.
 
 ### A type declaring no sections
 
