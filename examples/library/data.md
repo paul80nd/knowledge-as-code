@@ -76,7 +76,7 @@ exceptions to the plural-folder rule.
 7. Record `region`: where the owning service keeps the data.
 8. Record `flows-to`: the services and [integrations](integrations.md) that receive this data, and say in the `Flows`
    table where each one processes it.
-9. Set `review-by`: the day somebody confirms the classification and the retention are still right. A year ahead is
+9. Set `review-by`: the day someone confirms the classification and the retention are still right. A year ahead is
    usual.
 
 **Conventions**

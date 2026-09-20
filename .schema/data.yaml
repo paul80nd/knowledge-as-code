@@ -20,8 +20,9 @@ lineage:
     categories of recipients as `flows-to`, and its envisaged time limit for erasure as `retention`. `region` answers
     the NIST Privacy Framework's ID.IM-P7, which asks where data is processed, and `data-subjects` answers its
     ID.IM-P3. Whether deletion actually runs is this type's own question, and the NIST Privacy Framework asks it as
-    CT.DM-P5. `review-by` answers the ICO, which asks you to review retained personal data regularly and to justify
-    how often, and NIST SP 800-53r5 RA-2, which asks that a categorisation be revisited so it stays accurate
+    CT.DM-P5. The [ICO's storage limitation guidance](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/storage-limitation/) asks you to review retained personal data regularly, and
+    to justify how often. [NIST SP 800-53r5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) RA-2 asks that a categorisation be revisited so it stays accurate.
+    `review-by` answers both
   divergence: >
     Article 30 is organised by processing activity and by controller. This type is organised by data domain. **A Data
     document is not a ROPA and does not satisfy Article 30**. It names no controller, no representative and no data
@@ -30,7 +31,7 @@ lineage:
     and `Entities` lists the domain's objects instead. Article 30(1)(e)'s transfer to a third country is a column of
     the `Flows` table and not a field. `classification` and `personal-data` split one question the sources ask
     separately: ISO/IEC 27002:2022 5.12 grades confidentiality, and GDPR Article 9 names a category of data.
-    Neither the ICO nor RA-2 sets a review interval, and `review-by` fixes one per document
+    Neither the ICO nor RA-2 sets a review interval, so `review-by` fixes one per document
 
 notes: >
   The folder is singular because English gives `data` no plural. `glossary/` is the other singular folder in the
@@ -124,9 +125,8 @@ fields:
     type: date
     description: Quoted. The date by which someone confirms the classification and the retention still hold.
     notes: >
-      `classification`, `personal-data`, `retention` and `region` are claims about a store, and nothing in
-      the corpus checks one. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#data>.
+      Nothing reports a date that has passed. `export.exclude` withholds the record where a corpus asks for
+      it. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#data>.
 
 sections:
   required: [Purpose, Entities, Where it lives, Classification, Retention]

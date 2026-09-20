@@ -79,6 +79,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   column. `region` covers the owning service, so a transfer out of the country is recorded beside the recipient that
   makes it, which is what GDPR Article 30(1)(e) asks about.
 
+- **A data document says when someone checks it again.** `review-by` takes the day, quoted, and `kac validate`
+  requires it. It travels in the export, which moves `data`'s shape to version 2. `classification`, `personal-data`,
+  `retention` and `region` are claims about a store that nothing in a corpus checks, and no field asked anybody to
+  confirm them. The ICO asks you to review retained personal data regularly and to justify how often, and NIST SP
+  800-53r5 RA-2 asks that a categorisation be revisited. Nothing reports a date that has passed.
+
 - **A deviation rates the risk it leaves.** `risk` takes `high`, `medium` or `low`, and `kac validate` requires it.
   The rating is the risk left once what compensates is working, and `high-risk-review-window` warns where a `high`
   rating sets `review-by` more than six months after `accepted-on`.
