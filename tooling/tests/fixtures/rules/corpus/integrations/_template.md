@@ -1,5 +1,5 @@
 ---
-id: int-{{slug}}
+id: itg-{{slug}}
 type: integration
 tier: descriptive
 status: active
@@ -12,7 +12,7 @@ tags: [ a, b ]
 
 # {{Title}}
 
-`Integration: int-{{slug}}` `ACTIVE`
+`Integration: itg-{{slug}}` `ACTIVE`
 
 Fixture scaffolding. A stood-up type needs a template beside its records, so this stands in for the
 real one — it carries the frontmatter, identity line and required sections that `kac validate` holds

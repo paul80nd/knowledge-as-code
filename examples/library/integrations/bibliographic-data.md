@@ -1,5 +1,5 @@
 ---
-id: int-bibliographic-data
+id: itg-bibliographic-data
 type: integration
 tier: descriptive
 status: active
@@ -14,7 +14,7 @@ tags: [ cataloguing, jackets ]
 
 # Bibliographic Data
 
-`Integration: int-bibliographic-data` `ACTIVE`
+`Integration: itg-bibliographic-data` `ACTIVE`
 
 The supplier of the catalogue's bibliographic descriptions and the jacket images that go with them.
 

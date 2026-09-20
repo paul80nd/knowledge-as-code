@@ -87,7 +87,7 @@ and the system does another, record both. That gap is the useful part.
 | Goes to     | Why | What is shared | Where they process it |
 |-------------|-----|----------------|-----------------------|
 | [svc-{{a}}] |     |                |                       |
-| [int-{{a}}] |     |                |                       |
+| [itg-{{a}}] |     |                |                       |
 
 _(Especially anything crossing outside the estate. `region` covers the owning service alone, so the last column is
 where a transfer out of the country is recorded.)_
@@ -103,6 +103,6 @@ _(**Never put actual data here**: no sample records, no identifiers, no connecti
 readable.)_
 
 [adr-{{a}}]: ../adrs/{{a}}.md
-[int-{{a}}]: ../integrations/{{a}}.md
+[itg-{{a}}]: ../integrations/{{a}}.md
 [pol-{{a}}]: ../policies/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

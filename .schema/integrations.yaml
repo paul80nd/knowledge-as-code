@@ -32,7 +32,7 @@ lineage:
     integration record has neither
 
 id:
-  prefix: int
+  prefix: itg
   style: slug
 
 filename:
@@ -94,7 +94,7 @@ sections:
   optional: [Trial criteria, Their SLA, Exit, Commercials, Contacts, Related]
 
 export:
-  version: 1
+  version: 2
   fields: [id, title, status, vendor, used-by, criticality, their-sla, replaces, successor, tags]
   sections:
     What it does: full

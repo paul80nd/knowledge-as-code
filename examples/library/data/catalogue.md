@@ -75,21 +75,21 @@ A withdrawn item keeps its barcode. Barcodes are never reused, so an old loan st
 | [svc-search]     | Building the search index             | Work, edition and item, in full     | UK South              |
 | [svc-covers-cdn] | Serving a cover image beside a result | ISBN and the cover image it selects | UK South              |
 
-Most of this domain arrives rather than leaves. [int-bibliographic-data] supplies the work and edition records, and the
+Most of this domain arrives rather than leaves. [itg-bibliographic-data] supplies the work and edition records, and the
 consortium adds the item and branch records to them. That direction is not recorded in `flows-to`, which lists
 recipients only.
 
 ## Related
 
 * [svc-catalogue-api] owns this data.
-* [int-bibliographic-data] is where the work and edition records come from.
+* [itg-bibliographic-data] is where the work and edition records come from.
 
 ---
 
 _(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
 readable.)_
 
-[int-bibliographic-data]: ../integrations/bibliographic-data.md
+[itg-bibliographic-data]: ../integrations/bibliographic-data.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md
 [svc-lending]: ../services/lending.md

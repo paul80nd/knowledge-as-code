@@ -11,8 +11,8 @@ data-subjects:
 retention: Six years after the membership lapses, then the row is anonymised.
 region: UK South
 flows-to:
-  - int-identity
-  - int-mail-delivery
+  - itg-identity
+  - itg-mail-delivery
   - svc-notices
 review-by: "2027-03-31"
 owner: human:dev.raman
@@ -58,7 +58,7 @@ _(Names and meanings, not schemas. Schemas live with the code that owns them.)_
 tables, so a change made at a branch counter appears here without the service seeing it. That second writer is the
 reason a correction requested by a borrower has to be made in both places.
 
-A copy of the name and the email address also sits in the [int-identity] tenant, which the vendor runs.
+A copy of the name and the email address also sits in the [itg-identity] tenant, which the vendor runs.
 
 ## Classification
 
@@ -86,11 +86,11 @@ system can create a borrower the job has not seen, and nothing reconciles the tw
 
 | Goes to             | Why                                    | What is shared                          | Where they process it |
 |---------------------|----------------------------------------|-----------------------------------------|-----------------------|
-| [int-identity]      | Sign-in                                | Name, email address, card number        | UK                    |
+| [itg-identity]      | Sign-in                                | Name, email address, card number        | UK                    |
 | [svc-notices]       | Overdue and hold notices               | Name, email address, contact preference | UK South              |
-| [int-mail-delivery] | Sending the notice [svc-notices] wrote | Name, email address                     | Ireland               |
+| [itg-mail-delivery] | Sending the notice [svc-notices] wrote | Name, email address                     | Ireland               |
 
-[int-mail-delivery] is the only recipient outside the estate that receives an address, and the only one processing
+[itg-mail-delivery] is the only recipient outside the estate that receives an address, and the only one processing
 outside the UK. A transfer out of the country takes place on every notice sent.
 
 ## Related
@@ -104,7 +104,7 @@ _(**Never put actual data here**: no sample records, no identifiers, no connecti
 readable.)_
 
 [dat-loans]: loans.md
-[int-identity]: ../integrations/identity.md
-[int-mail-delivery]: ../integrations/mail-delivery.md
+[itg-identity]: ../integrations/identity.md
+[itg-mail-delivery]: ../integrations/mail-delivery.md
 [svc-lending]: ../services/lending.md
 [svc-notices]: ../services/notices.md

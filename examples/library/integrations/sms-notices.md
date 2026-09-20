@@ -1,5 +1,5 @@
 ---
-id: int-sms-notices
+id: itg-sms-notices
 type: integration
 tier: descriptive
 status: retired
@@ -7,14 +7,14 @@ vendor: Marbury Messaging
 used-by:
   - svc-notices
 criticality: supporting
-successor: int-mail-delivery
+successor: itg-mail-delivery
 owner: human:mira.okonjo
 tags: [ notices, sms ]
 ---
 
 # SMS Notices
 
-`Integration: int-sms-notices` `RETIRED`
+`Integration: itg-sms-notices` `RETIRED`
 
 The text message a borrower used to get on the day a loan fell due.
 
@@ -65,9 +65,9 @@ nowhere to go.
 ## Related
 
 * [svc-notices] sent through this, and sends email alone now.
-* [int-mail-delivery] took what this used to send.
+* [itg-mail-delivery] took what this used to send.
 * [ofr-borrowing] is the offering the due-date reminder belonged to.
 
 [ofr-borrowing]: ../offerings/borrowing.md
-[int-mail-delivery]: mail-delivery.md
+[itg-mail-delivery]: mail-delivery.md
 [svc-notices]: ../services/notices.md

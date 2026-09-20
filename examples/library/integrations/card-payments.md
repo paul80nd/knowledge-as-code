@@ -1,5 +1,5 @@
 ---
-id: int-card-payments
+id: itg-card-payments
 type: integration
 tier: descriptive
 status: trial
@@ -14,7 +14,7 @@ tags: [ fees, payments ]
 
 # Card Payments
 
-`Integration: int-card-payments` `TRIAL`
+`Integration: itg-card-payments` `TRIAL`
 
 The card payment a borrower makes for the fee a hold attracts.
 
