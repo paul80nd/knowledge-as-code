@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.24.0",
+  "contentVersion": "0.25.0",
   "mechanismVersion": 18,
-  "commit": "ab13df43e416d5f1b6292f6a90d783f6159a4fd0",
+  "commit": "a221f6566eb33e91502000cc028070761397e686",
   "dirty": false,
-  "generatedAt": "2026-09-20T18:50:31Z",
+  "generatedAt": "2026-09-20T19:21:40Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "ab13df43e416d5f1b6292f6a90d783f6159a4fd0"
+    "ref": "a221f6566eb33e91502000cc028070761397e686"
   },
   "tracker": {
     "target": "github",
@@ -40,10 +40,10 @@
       "contentVersion": "0.25.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "ab13df43e416d5f1b6292f6a90d783f6159a4fd0"
+        "ref": "a221f6566eb33e91502000cc028070761397e686"
       },
       "tracker": {
         "target": "github",
@@ -75,7 +75,7 @@
     },
     {
       "type": "nfrs",
-      "shapeVersion": 3,
+      "shapeVersion": 4,
       "records": 3,
       "parts": 0,
       "dir": "nfrs",

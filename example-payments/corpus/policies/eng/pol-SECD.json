@@ -15,6 +15,6 @@
     "Exceptions": "A low-risk change to a system that contains no sensitive data and has no external exposure needs no separate threat consideration. The secure-design principles and the coding standard still apply. A high-risk change sometimes has to proceed before its security work is complete. That is a recorded deviation under [pol-DEVI], not a judgement call made in the moment."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/engineering/policies/security/secd-security-by-design.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/engineering/policies/security/secd-security-by-design.md"
   }
 }

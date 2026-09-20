@@ -24,6 +24,6 @@
     "Failure modes": "| Failure                               | How it presents                          | Our fallback                                 |\n|---------------------------------------|------------------------------------------|----------------------------------------------|\n| The API returns 503                   | Cataloguing a new item fails at the desk | Staff type a short description by hand       |\n| The nightly feed does not arrive      | A new title shows a placeholder jacket   | None. The catalogue serves the images it has |\n| A feed row names a title nobody holds | `covers-import` skips it and logs it     | Re-run the import after the vendor resends   |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/library/integrations/bibliographic-data.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/library/integrations/bibliographic-data.md"
   }
 }

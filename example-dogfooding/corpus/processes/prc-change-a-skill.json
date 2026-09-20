@@ -22,6 +22,6 @@
     "Prerequisites": "* [std-PLUGIN], which states the rules a bundled skill follows. It states no order, so this page supplies one.\n* [std-VERS], which states what a move of each version stamp means.\n* `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.\n* A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/dog-fooding/processes/change-a-skill.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/dog-fooding/processes/change-a-skill.md"
   }
 }

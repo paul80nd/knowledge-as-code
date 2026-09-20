@@ -30,6 +30,6 @@
     "Conformance checklist": "- [ ] The checkout page posts card fields to a PSP hostname, confirmed in the browser's network trace.\n- [ ] No request body sent to our estate has a field named for a card number, expiry or security code.\n- [ ] A search of every schema in the estate for a card-number column returns nothing.\n- [ ] The support tool has no free-text field a card number could be typed into.\n- [ ] The PSP contract's responsibility matrix is current, and someone here has read it this year."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/payments/standards/checkout/card-data.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/payments/standards/checkout/card-data.md"
   }
 }

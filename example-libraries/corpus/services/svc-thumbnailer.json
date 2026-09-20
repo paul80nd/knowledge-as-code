@@ -27,6 +27,6 @@
     "Data": "Reads the `covers` container in the shared storage account, configured as `ConnectionStrings__CoverStorage`. It owns nothing in that container: the nightly import pipeline and branch staff uploads fill it, and [svc-covers-cdn] records both."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/ab13df43e416d5f1b6292f6a90d783f6159a4fd0/examples/library/services/thumbnailer.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/library/services/thumbnailer.md"
   }
 }
