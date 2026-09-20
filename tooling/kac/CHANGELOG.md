@@ -189,6 +189,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An NFR states what a breach costs and what the response to one is, in two sections.** `If it is breached` was one
+  required section, and a record could answer with either half. `What a breach costs` and `What we do about a breach`
+  are both required, so `required-section` reports the one a record left out. The Google SRE workbook keeps an error
+  budget apart from the error budget policy that spends it. `nfrs` publishes at `export.version` 3, because a reader
+  taking the consequence out of `If it is breached` would now find no section under that name.
+
 - **An integration id starts `itg-`, not `int-`.** `kac validate` rejects `int-sendgrid`, and `ref-resolves` reports
   each citation still pointing at one. `int` is a reserved word in C# and in most languages a maintainer reads, and
   `int-` also matches `constraint-` and `print-`, so a search for an integration id returns mostly lines that are not

@@ -45,10 +45,14 @@ what raises a breach.
 p95 of 610ms over August 2026, against an average of 240ms. The PSP accounts for the gap. A slow reply from the PSP
 is a slow response here, and its response times account for most of the spread.
 
-## If it is breached
+## What a breach costs
 
-An alert fires at 800ms sustained for fifteen minutes and pages the on-call engineer. Beyond about two seconds
-customers begin abandoning the checkout, and finance sees the drop in conversion the same day.
+Beyond about two seconds customers begin abandoning the checkout. Finance sees the drop in conversion the same day.
+
+## What we do about a breach
+
+An alert fires at 800ms sustained for fifteen minutes and pages the on-call engineer. The engineer reads the PSP's own
+latency first.
 
 ## Constraints
 

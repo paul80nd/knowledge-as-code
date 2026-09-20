@@ -38,6 +38,10 @@ accuracy target binds each event or each value, so it needs no window.
 what a customer will tolerate, what a dependency already limits you to, or a measurement you have taken. Say what the
 target leaves out, so a reader can see the gap is deliberate.
 
+**A breach has a cost and a response, and they are two sections.** `What a breach costs` states what a miss costs.
+`What we do about a breach` states the response: the alert that fires, who it pages, and the repair. Both are
+required. A target whose miss costs nothing much answers both, and says that nobody is paged.
+
 We cannot promise more than the dependencies we do not run. A third-party [integration](integrations.md) with a 99% SLA
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
 deliver.
@@ -77,9 +81,10 @@ deliver.
 4. Set `window` to the period the figure is read over, where the characteristic requires one.
 5. Say under `Why this number` what fixes the figure, and what it leaves out.
 6. Name the instrument that measures it, and say where a reader can find its reading.
-7. Record what breaching it costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence
-   is documentation theatre.
-8. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
+7. Record what a breach costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence is
+   documentation theatre.
+8. Record the response to a breach: the alert that fires, who it pages, and the repair.
+9. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
 
 **Conventions**
 

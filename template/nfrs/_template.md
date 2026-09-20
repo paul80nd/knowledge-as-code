@@ -67,10 +67,15 @@ either build one or state the target you *can* observe instead.
 What we are achieving now, and as of when. The gap between this and the target is usually the most useful line in the
 document.
 
-## If it is breached
+## What a breach costs
 
-What actually happens: degraded service, contractual exposure, a customer conversation, nothing much. An NFR with no
-consequence is documentation theatre, and saying "nothing much" is a legitimate and clarifying answer.
+What a miss costs: degraded service, contractual exposure, a customer conversation, nothing much. An NFR with no
+consequence is documentation theatre, and "nothing much" is a legitimate and clarifying answer.
+
+## What we do about a breach
+
+The response once the target is missed. Name the alert that fires, who it pages, and the repair that follows. Where
+the cost above is nothing much, say that nobody is paged and nothing is stopped.
 
 ## Constraints
 

@@ -46,11 +46,15 @@ rolling day, and the same query runs in the monthly service review.
 98.2% over August 2026. The failures are all the same shape: a return accepted while
 [svc-payment-ledger] is mid-deployment waits for the next sweep.
 
-## If it is breached
+## What a breach costs
 
-An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call
-engineer. A customer who has returned goods and seen nothing calls the contact centre on the second
-day. Support learns of a sustained breach before finance does.
+A customer who has returned goods and seen nothing calls the contact centre on the second day. Support learns of a
+sustained breach before finance does.
+
+## What we do about a breach
+
+An alert fires where the figure falls below 95% for two consecutive hours and pages the on-call engineer. The engineer
+reads the deployment history of [svc-payment-ledger] first.
 
 ## Constraints
 
