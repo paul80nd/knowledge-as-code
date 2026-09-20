@@ -39,8 +39,6 @@ reading.
 Which types travel is therefore a fact about `.schema/` rather than about the tool. A corpus adopting a type receives
 what that type declared and narrows none of it, so two corpora publishing one type publish it the same way.
 
-Every type the framework ships declares a block, so none of them is held back.
-
 ### A type declaring no sections
 
 It travels as frontmatter. A type may declare no sections at all. `reports` is that case, because `kac report` writes
