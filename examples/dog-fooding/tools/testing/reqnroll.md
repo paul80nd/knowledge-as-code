@@ -3,8 +3,12 @@ id: tol-reqnroll
 type: tool
 tier: descriptive
 status: approved
-versions: 3.3.x
+packages:
+  - { purl: pkg:nuget/Reqnroll.xunit.v3, versions: 3.3.x }
+homepage: https://reqnroll.net/
 licence: BSD-3-Clause
+decided-on: "2026-08-04"
+review-by: "2027-08-04"
 owner: human:paul.law
 tags: [ bdd, gherkin, testing ]
 ---
@@ -21,10 +25,6 @@ binds it to [tol-xunit].
 Each feature document states what a verb does, in the words a reader of the documentation would use. Reqnroll binds
 each step to a method. A step that no longer matches fails the build, so a feature document cannot describe a command
 surface the tool has stopped offering.
-
-## Status
-
-**approved** since 2026-08-04.
 
 ## Where it is used
 

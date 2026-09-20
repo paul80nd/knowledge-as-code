@@ -3,8 +3,14 @@ id: tol-xunit
 type: tool
 tier: descriptive
 status: approved
-versions: 3.1.x
+packages:
+  - { purl: pkg:nuget/Microsoft.NET.Test.Sdk, versions: 18.x }
+  - { purl: pkg:nuget/xunit.runner.visualstudio, versions: 3.1.x }
+  - { purl: pkg:nuget/xunit.v3, versions: 3.1.x }
+homepage: https://xunit.net/
 licence: Apache-2.0
+decided-on: "2026-08-04"
+review-by: "2027-08-04"
 owner: human:paul.law
 tags: [ testing, unit-tests ]
 ---
@@ -26,10 +32,6 @@ makes `dotnet test` find and run the tests, and neither was chosen on its own.
 
 The third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output
 against committed goldens, and reports its own results.
-
-## Status
-
-**approved** since 2026-08-04.
 
 ## Where it is used
 

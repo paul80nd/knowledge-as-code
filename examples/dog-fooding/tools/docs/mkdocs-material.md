@@ -3,8 +3,12 @@ id: tol-mkdocs-material
 type: tool
 tier: descriptive
 status: approved
-versions: 9.7.x
+packages:
+  - { purl: pkg:pypi/mkdocs-material, versions: 9.7.x }
+homepage: https://squidfunk.github.io/mkdocs-material/
 licence: MIT
+decided-on: "2026-08-24"
+review-by: "2027-08-24"
 owner: human:paul.law
 tags: [ documentation, theme ]
 ---
@@ -23,10 +27,6 @@ section name, and they add an edit pencil to every page. They also let the reade
 the colour scheme, with a toggle either way.
 
 It is pinned beside MkDocs in `docs/requirements.txt`. A theme release changes the site only when the pin moves.
-
-## Status
-
-**approved** since 2026-08-24.
 
 ## Accessibility
 

@@ -3,7 +3,12 @@ id: tol-gh
 type: tool
 tier: descriptive
 status: approved
+packages:
+  - { purl: pkg:github/cli/cli }
+homepage: https://cli.github.com/
 licence: MIT
+decided-on: "2026-08-20"
+review-by: "2027-08-20"
 owner: human:paul.law
 tags: [ cli, github, releases ]
 ---
@@ -24,16 +29,12 @@ has a second step to remember.
 It is also how issues are read and raised. `.claude/agents-config/issue-tracker.md` states that an agent uses `gh` for
 issues on this repository.
 
-## Status
-
-**approved** since 2026-08-20.
+The `packages` entry approves no version range, because nothing pins it. The GitHub-hosted runner ships `gh` already
+installed, and a developer installs whatever their package manager offers.
 
 ## Where it is used
 
 * [svc-kac] is tagged and released with it.
-
-`versions` is bare because nothing pins it. The GitHub-hosted runner ships `gh` already installed, and a developer
-installs whatever their package manager offers.
 
 ## Alternatives considered
 

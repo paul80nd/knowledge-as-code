@@ -3,8 +3,12 @@ id: tol-dotnet-sdk
 type: tool
 tier: descriptive
 status: approved
-versions: 10.0.x
+packages:
+  - { purl: pkg:generic/dotnet-sdk, versions: 10.0.x }
+homepage: https://dotnet.microsoft.com/
 licence: MIT
+decided-on: "2026-08-03"
+review-by: "2027-08-03"
 owner: human:paul.law
 tags: [ dotnet, sdk ]
 ---
@@ -21,10 +25,6 @@ Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs th
 as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program that has no project around it.
 
 `actions/setup-dotnet` installs `10.0.x` in every job of every workflow here.
-
-## Status
-
-**approved** since 2026-08-03.
 
 ## Where it is used
 

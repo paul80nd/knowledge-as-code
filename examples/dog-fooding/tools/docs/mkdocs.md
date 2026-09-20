@@ -3,8 +3,12 @@ id: tol-mkdocs
 type: tool
 tier: descriptive
 status: approved
-versions: 1.6.x
+packages:
+  - { purl: pkg:pypi/mkdocs, versions: 1.6.x }
+homepage: https://www.mkdocs.org/
 licence: BSD-2-Clause
+decided-on: "2026-08-24"
+review-by: "2027-08-24"
 owner: human:paul.law
 tags: [ documentation, static-site ]
 ---
@@ -23,10 +27,6 @@ The site documents `kac`, and MkDocs is here because it is what tool documentati
 
 `strict: true` in `mkdocs.yml` turns a dead link into a failed build. MkDocs reports a page the navigation does not
 list at INFO only, so `NavigationTests` in `kac.tests` covers that case instead.
-
-## Status
-
-**approved** since 2026-08-24.
 
 ## Where it is used
 

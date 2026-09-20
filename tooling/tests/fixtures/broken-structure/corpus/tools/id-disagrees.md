@@ -3,6 +3,9 @@ id: tol-names-another-tool
 type: tool
 tier: descriptive
 status: approved
+homepage: https://example.invalid/tool
+decided-on: "2026-01-05"
+review-by: "2030-01-01"
 owner: human:alex.doe
 ---
 

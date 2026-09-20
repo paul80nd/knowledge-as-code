@@ -19,9 +19,9 @@ answers it alone. The estate ends up with several ways of doing one job. Nobody 
 depending on?"* without opening every manifest we own. That second question arrives with a licence review, with a
 security advisory, and on the day a dependency is abandoned.
 
-**Declared.** `drift-against-manifests` is declared and does not run. Once something implements it, the register can be
-compared against the real manifests in both directions: packages in use that were never approved, and approved tools
-nothing uses any more.
+**Declared.** `drift-against-manifests` is declared and does not run. `packages` states the package URL it would match
+a manifest entry against. Once something implements it, the register can be compared against the real manifests in both
+directions: packages in use that were never approved, and approved packages nothing uses any more.
 
 ## Scope
 
@@ -39,21 +39,24 @@ the evaluation we already did.
 
 <!-- BEGIN GENERATED: schema-tools -->
 
-| Field        | Value                                      | Notes                                                                                  |
-|--------------|--------------------------------------------|----------------------------------------------------------------------------------------|
-| `id` *†      | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.           |
-| `type` *†    | string                                     | The singular name of the type, which CI checks against the folder.                     |
-| `tier` *†    | `descriptive`                              | The record's trust level, fixed for the type and checked against the folder.           |
-| `status` *†  | `approved` `trial` `deprecated` `rejected` | `approved` applies to new work. Existing use of a tool with any other status is drift. |
-| `owner` *†   | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                 |
-| `sources` †  | list                                       | Where this record's content came from, one entry per source.                           |
-| `tags` †     | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.          |
-| `category`   | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                    |
-| `versions`   | string                                     | The version range approved for new work.                                               |
-| `licence`    | string                                     | The licence, as an SPDX identifier.                                                    |
-| `decided-in` | id                                         | The ADR id recording the decision to adopt this tool.                                  |
-| `replaces`   | id                                         | The tool id this supersedes.                                                           |
-| `successor`  | id                                         | The tool id that replaces this one.                                                    |
+| Field          | Value                                      | Notes                                                                                  |
+|----------------|--------------------------------------------|----------------------------------------------------------------------------------------|
+| `id` *†        | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.           |
+| `type` *†      | string                                     | The singular name of the type, which CI checks against the folder.                     |
+| `tier` *†      | `descriptive`                              | The record's trust level, fixed for the type and checked against the folder.           |
+| `status` *†    | `approved` `trial` `deprecated` `rejected` | `approved` applies to new work. Existing use of a tool with any other status is drift. |
+| `owner` *†     | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                 |
+| `sources` †    | list                                       | Where this record's content came from, one entry per source.                           |
+| `tags` †       | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.          |
+| `category`     | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                    |
+| `packages`     | list                                       | Every package this entry approves, with the version range approved for each.           |
+| `homepage` *   | string                                     | The project's own page.                                                                |
+| `licence`      | string                                     | The licence, as an SPDX identifier.                                                    |
+| `decided-on` * | date                                       | Quoted. The day the current status was decided.                                        |
+| `review-by` *  | date                                       | Quoted. The day by which somebody checks this entry is still right.                    |
+| `decided-in`   | id                                         | The ADR id recording the decision to adopt this tool.                                  |
+| `replaces`     | id                                         | The tool id this supersedes.                                                           |
+| `successor`    | id                                         | The tool id that replaces this one.                                                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -64,9 +67,11 @@ the evaluation we already did.
 
 1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids: `tol-vitest`.
 2. Set `status`. `trial` covers something being evaluated in one place. Promote or reject it once the evaluation ends.
-3. Record the `licence` as an SPDX identifier.
-4. Where this tool takes over from an older one, name the older tool in `replaces`, so the deprecation path is visible.
-5. Cite `decided-in` where an ADR exists. Where the choice was contested and no ADR exists, write one.
+3. Set `decided-on` to the day you decided, and `review-by` to the day somebody checks the entry again.
+4. List each package in `packages`, as a package URL with the range approved for new work.
+5. Record the `homepage` and the `licence` as an SPDX identifier.
+6. Where this tool takes over from an older one, name the older tool in `replaces`, so the deprecation path is visible.
+7. Cite `decided-in` where an ADR exists. Where the choice was contested and no ADR exists, write one.
 
 **Conventions**
 
@@ -74,7 +79,9 @@ the evaluation we already did.
   manual job until something implements `drift-against-manifests`.
 * **A deprecated entry names its successor.** Set `successor` to whatever took over, so somebody arriving from a
   manifest has somewhere to go next.
-* **Give `versions` a range, not a pin.** The pin belongs in the manifest.
+* **Give a package a range, not a pin.** The pin belongs in the manifest.
+* **An entry expires.** `review-in-date` warns once `review-by` has passed, so an approval nobody revisits stops
+  speaking for the estate.
 
 ## What CI checks
 
@@ -92,7 +99,9 @@ the evaluation we already did.
 | `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
 | `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
+| `min-items`                 | error   | A list field carries at least as many entries as its schema asks for.                                           |
 | `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `entry-shape / entry-key`   | error   | An object field, and each entry of an object list, carries the keys the field declares and no others.           |
 | `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
 | `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
@@ -110,6 +119,8 @@ the evaluation we already did.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `deprecated-has-successor`  | warning | A deprecated tool states what replaces it.                                                                      |
 | `trial-has-criteria`        | warning | A tool in `trial` states what would end the trial.                                                              |
+| `exit-states-a-reason`      | warning | A deprecated or rejected tool says what went wrong with it.                                                     |
+| `review-in-date`            | warning | An entry names a review date that has not passed.                                                               |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

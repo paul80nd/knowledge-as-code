@@ -3,8 +3,12 @@ id: tol-yamllint
 type: tool
 tier: descriptive
 status: approved
-versions: 1.38.x
+packages:
+  - { purl: pkg:pypi/yamllint, versions: 1.38.x }
+homepage: https://github.com/adrienverge/yamllint
 licence: GPL-3.0-or-later
+decided-on: "2026-09-02"
+review-by: "2027-09-02"
 owner: human:paul.law
 tags: [ linting, yaml ]
 ---
@@ -23,10 +27,6 @@ not have to.
 
 The `lint` job installs it from `.github/requirements.txt`. The pin means a linter release changes what the gate
 rejects only when the pin moves.
-
-## Status
-
-**approved** since 2026-09-02.
 
 ## Where it is used
 

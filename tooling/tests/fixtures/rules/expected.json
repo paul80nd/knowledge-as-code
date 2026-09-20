@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 39,
+    "validated": 41,
     "templates": 17,
     "skipped": 0,
     "errors": 24,
-    "warnings": 23,
+    "warnings": 25,
     "infos": 0
   },
   "findings": [
@@ -329,6 +329,20 @@
       "severity": "warning",
       "check": "deprecated-has-successor",
       "message": "this tool is deprecated and states no successor. Set `successor` to the tool that replaced it, so a reader arriving from a manifest has somewhere to go."
+    },
+    {
+      "file": "tools/rejected-no-reason.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "exit-states-a-reason",
+      "message": "this tool is out of use and nothing says why. Add a `## Status` section stating what went wrong with it, so nobody runs the same evaluation again."
+    },
+    {
+      "file": "tools/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "review-in-date",
+      "message": "this entry's `review-by` has passed. Check the tool is still what this entry says, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "tools/trial-no-criteria.md",
