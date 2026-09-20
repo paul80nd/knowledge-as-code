@@ -19,12 +19,29 @@ versus:
     need only the register.
 
 lineage:
-  prior-art: "[Thoughtworks Technology Radar](https://www.thoughtworks.com/radar)"
+  prior-art: >-
+    [Thoughtworks Technology Radar](https://www.thoughtworks.com/radar): the stances a technology is filed
+    under.
+    [CycloneDX 1.6](https://cyclonedx.org/docs/1.6/json/) and
+    [SPDX 2.3](https://spdx.github.io/spdx-spec/v2.3/package-information/): what identifies a component.
+    [OpenSSF Concise Guide for Evaluating Open Source Software](https://best.openssf.org/Concise-Guide-for-Evaluating-Open-Source-Software.html):
+    what an evaluation asks
   alignment: >
-    Named technologies sorted by stance, with rejections recorded beside adoptions
+    The Radar files a technology under one of four stances, which `status` does, with what was turned down
+    recorded beside what was taken up. CycloneDX identifies a component by package URL and SPDX by an external
+    reference of the same form, which `packages` states, one entry per package. Both give a component a licence,
+    which `licence` states as SPDX writes it, and a home page, which `homepage` states. OpenSSF asks whether a
+    project is still maintained, and `review-by` puts a date on the answer
   divergence: >
-    The Radar is industry opinion, published periodically and explicitly non-binding. This type is an internal
-    register with binding version ranges
+    The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is
+    internal, it governs new work, and it expires an entry on the day `review-by` names. `trial` is the only
+    stance both spell the same way: `approved` and `rejected` are acts this estate took, where the Radar's
+    `adopt` and `hold` are advice it offers. It has no `assess` ring, because something nobody has committed to
+    is not yet an entry, and it adds `deprecated`, which an external radar has no reason to state. SPDX leaves a
+    home page optional and makes a download location mandatory instead, and this register requires `homepage`
+    and states no download location: a reader here decides whether to adopt a tool rather than rebuild it.
+    CycloneDX and SPDX inventory what is installed, so each component states one version. This register states
+    the range approved for new work, and the manifests across the estate state what is installed
 
 id:
   prefix: tol
@@ -53,12 +70,36 @@ fields:
       where the file sits. A folder groups the tools somebody comes looking for, such as `testing` or
       `observability`.
 
-  versions:
+  packages:
     required: false
-    type: string
-    description: The version range approved for new work.
+    type: list
+    of: object
+    min-items: 1
+    entry:
+      purl:
+        required: true
+        type: string
+        pattern: '^pkg:[a-z][a-z0-9.+-]*/[^@\s]+$'
+        description: The package URL naming this package, with no version on it.
+      versions:
+        required: false
+        type: string
+        description: The version range approved for new work.
+    description: Every package this entry approves, with the version range approved for each.
     notes: >
-      Nothing checks the form, so a pin passes. Installed versions live in the package manifests across the estate.
+      A package URL is what `drift-against-manifests` would match a manifest entry against, so a version
+      range sits on the package and not on the record. One entry approves several packages where they are
+      chosen together and pinned apart. A tool no registry publishes takes purl's `generic` type, and a
+      tool nothing distributes states none. See <https://github.com/package-url/purl-spec>.
+
+  homepage:
+    required: true
+    type: string
+    pattern: '^https://\S+$'
+    description: The project's own page.
+    notes: >
+      The project's own address, and never a mirror, a registry listing or a fork.
+      See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#tools>.
 
   licence:
     required: false
@@ -66,6 +107,16 @@ fields:
     pattern: '^[A-Za-z0-9.\-+ ()]+$'
     description: The licence, as an SPDX identifier.
     notes: The pattern accepts an SPDX expression too, so `Apache-2.0 OR MIT` passes.
+
+  decided-on:
+    required: true
+    type: date
+    description: Quoted. The day the current status was decided.
+
+  review-by:
+    required: true
+    type: date
+    description: Quoted. The day by which somebody checks this entry is still right.
 
   decided-in:
     required: false
@@ -89,15 +140,22 @@ fields:
     notes: The reciprocal is checked, so stating `successor` at one end requires `replaces` at the other.
 
 sections:
-  required: [What we use it for, Status]
-  optional: [Trial criteria, Where it is used, Alternatives considered, Licence and obligations, Related]
+  required: [What we use it for]
+  optional: [Status, Trial criteria, Accessibility, Where it is used, Alternatives considered,
+             Licence and obligations, Related]
+  notes: >
+    `Status` states why a tool sits where it does, and `exit-states-a-reason` requires it of a `deprecated`
+    or a `rejected` entry. `Accessibility` records an assessment of a component that renders a surface, where
+    a standard in the corpus asks for one.
 
 export:
-  version: 1
-  fields: [id, title, status, category, versions, licence, decided-in, replaces, successor, tags]
+  version: 2
+  fields: [id, title, status, category, packages, homepage, licence, decided-on, review-by, decided-in,
+           replaces, successor, tags]
   sections:
     What we use it for: full
     Status: full
+    Accessibility: full
     Licence and obligations: full
     Where it is used: full
   notes: >
@@ -105,7 +163,7 @@ export:
     <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#tools> says what else travels, and what stays
     behind.
 index:
-  columns: [id, title, category, status, versions, licence]
+  columns: [id, title, category, status, review-by, licence]
   sort: [category, id]
 
 rules:
@@ -123,6 +181,21 @@ rules:
     message: >
       this tool is in trial and nothing says what would end the trial. Add a `## Trial criteria` section stating
       what is being evaluated, where, and what would settle it.
+  - id: exit-states-a-reason
+    description: A deprecated or rejected tool says what went wrong with it.
+    severity: warning
+    expr: "(field('status') == 'deprecated' or field('status') == 'rejected') implies section('Status')"
+    message: >
+      this tool is out of use and nothing says why. Add a `## Status` section stating what went wrong with it,
+      so nobody runs the same evaluation again.
+  - id: review-in-date
+    description: An entry names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this entry's `review-by` has passed. Check the tool is still what this entry says, then set `review-by`
+      to the next day somebody looks at it.
   - id: drift-against-manifests
     description: Every package in use is in the register, and every approved tool is in use.
-    # Runs on a schedule. Reports a package in use that was never approved, and an approved tool nothing uses.
+    # Runs on a schedule. Matches a manifest entry against `packages`, and reports a package in use that was
+    # never approved, and an approved package nothing uses.

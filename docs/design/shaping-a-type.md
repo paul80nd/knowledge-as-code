@@ -278,12 +278,29 @@ implementing services names.
 A tool register says what an estate builds on, which is the question an inventory exists to answer. An inventory nobody
 outside the team can read proves nothing to the people who ask for one.
 
-`licence` and `Licence and obligations` travel together. The identifier says which licence, and the section says what
-that licence obliges you to. A reader acts on the second.
+`packages` is what makes the register an inventory. CycloneDX identifies a component by package URL and SPDX by an
+external reference of the same form, so one entry per package is what a manifest can be matched against. The version
+range sits on the package rather than on the record, because a family chosen together is often pinned apart:
+`Spectre.Console` and `Spectre.Console.Cli` are one decision at two version ranges.
 
-`Status` says whether the tool is in use, on trial or on its way out, and `replaces` and `successor` are the same move
-written as ids. `Where it is used` travels because it names the records that use the tool, and those ids resolve for a
-reader holding them.
+`licence` and `Licence and obligations` travel together. The identifier says which licence, and the section says what
+that licence obliges you to. A reader acts on the second. `homepage` travels beside them. SPDX leaves a home page
+optional and makes a download location mandatory instead, and this register asks for the home page: the first question
+the OpenSSF evaluation guide puts is whether you have the project you think you have, rather than a fork of it.
+
+`decided-on` and `review-by` are the two dates an approval needs. `decided-on` says when the current stance was
+settled. `review-by` expires it, and `review-in-date` warns once the day has passed. Without the second, an approval
+taken once governs new work for ever.
+
+`Status` is optional and says why the tool sits where it does, which `status` and `decided-on` cannot.
+`exit-states-a-reason` asks for it once a tool is `deprecated` or `rejected`, because those are the stances that owe
+the next person an explanation. It travels, where `Alternatives considered` stays behind, so a consumer of the export
+learns why a tool was dropped without fetching the record. `replaces` and `successor` are the same move written as
+ids.
+
+`Accessibility` travels because a corpus governing a rendered surface keeps the component's assessment here, and the
+assessment is what a published accessibility statement is built from. `Where it is used` travels because it names the
+records that use the tool, and those ids resolve for a reader holding them.
 
 `Trial criteria` and `Alternatives considered` stay behind. Both record how this estate reached the decision, and
 `decided-in` gives the ADR to a reader who wants that argument.

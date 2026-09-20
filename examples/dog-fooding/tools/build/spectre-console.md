@@ -3,8 +3,13 @@ id: tol-spectre-console
 type: tool
 tier: descriptive
 status: approved
-versions: Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x
+packages:
+  - { purl: pkg:nuget/Spectre.Console, versions: 0.57.x }
+  - { purl: pkg:nuget/Spectre.Console.Cli, versions: 0.55.x }
+homepage: https://spectreconsole.net/
 licence: MIT
+decided-on: "2026-08-21"
+review-by: "2027-08-21"
 replaces: tol-system-commandline
 owner: human:paul.law
 tags: [ cli, console, terminal ]
@@ -25,10 +30,6 @@ references `Spectre.Console`, and its reporters build what a run prints.
 One library now reads the command line and asks a question. `System.CommandLine` read the command line and
 `Spectre.Console` asked the question, so the parser moved here in 0.2.1. Taken from the entry for that version in
 `tooling/kac/CHANGELOG.md`.
-
-## Status
-
-**approved** since 2026-08-21.
 
 ## Accessibility
 

@@ -3,6 +3,9 @@ id: tol-{{slug}}
 type: tool
 tier: descriptive
 status: trial
+homepage: https://{{project}}
+decided-on: "{{date}}"
+review-by: "{{date}}"
 owner:
 tags: [ a, b ]
 ---

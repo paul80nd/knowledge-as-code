@@ -48,7 +48,7 @@ Scenario: A field pattern on a scalar field applies to its value
   When I validate the corpus
   Then the findings for "tools/bad-licence-pattern.md" are exactly:
     | line | check         | message                                                           |
-    |    5 | field-pattern | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$. |
+    |    6 | field-pattern | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$. |
 
 Scenario: An actor field without its prefix is refused
   When I validate the corpus
@@ -80,4 +80,4 @@ Scenario: The corpus as a whole produces exactly these findings and nothing else
     | fixes/verified-at-is-not-a-moment.md | 7    | timestamp-format   | 'verified.at' is not a moment on the calendar, got '2026-02-31T09:00:00Z'.                  |
     | fixes/verified-at-is-not-a-moment.md | 8    | timestamp-format   | 'verified.at' must be a YYYY-MM-DDThh:mm:ssZ moment in UTC, got '2026-06-12'.               |
     | fixes/too-few-keywords.md            | 5    | min-items          | 'symptom-keywords' has 2 entries: the schema asks for at least 3.                           |
-    | tools/bad-licence-pattern.md         | 5    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                           |
+    | tools/bad-licence-pattern.md         | 6    | field-pattern      | 'licence' value 'GPL/2.0 †' does not match ^[A-Za-z0-9.\-+ ()]+$.                           |

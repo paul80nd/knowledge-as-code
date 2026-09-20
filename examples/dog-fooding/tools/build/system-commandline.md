@@ -3,7 +3,12 @@ id: tol-system-commandline
 type: tool
 tier: descriptive
 status: deprecated
+packages:
+  - { purl: pkg:nuget/System.CommandLine }
+homepage: https://github.com/dotnet/command-line-api
 licence: MIT
+decided-on: "2026-08-21"
+review-by: "2027-08-21"
 successor: tol-spectre-console
 owner: human:paul.law
 tags: [ cli, parser ]
@@ -21,8 +26,8 @@ Nothing. `kac` parsed its verbs and options with it from 2026-08-03 until 2026-0
 
 ## Status
 
-**deprecated** since 2026-08-21. [tol-spectre-console] replaced it in `kac` 0.2.1, and the package reference is
-already gone.
+[tol-spectre-console] reads a command line and renders output, and `kac` needed both. Keeping this parser meant a
+second library for everything a verb prints, so 0.2.1 dropped it. The package reference is already gone.
 
 Every verb, option and exit code behaved as before. `--help` reflowed into Spectre's layout, `-v` joined `--version`,
 and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/kac/CHANGELOG.md`.
@@ -30,11 +35,6 @@ and `-?` stopped meaning `--help`. Taken from the entry for 0.2.1 in `tooling/ka
 ## Where it is used
 
 Nowhere. No service in this catalogue uses it.
-
-## Alternatives considered
-
-* **[tol-spectre-console]**: it reads a command line and renders output, and `kac` needed both. Keeping this parser
-  meant a second library for everything a verb prints.
 
 ## Licence and obligations
 

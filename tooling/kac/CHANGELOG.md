@@ -152,6 +152,29 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `platform` does. Backstage, OpsLevel and Cortex each require this word of a catalogue entry. It travels in the export,
   and a corpus adopting `services` writes `enums.component-type` in `.corpus.yaml` before its first record validates.
 
+- **A tool entry names the packages it approves.** `packages` takes one entry per package, each a
+  [package URL](https://github.com/package-url/purl-spec) with the version range approved for it. CycloneDX 1.6 and
+  SPDX 2.3 both identify a component that way, and `drift-against-manifests` had nothing to match a manifest entry
+  against. `Spectre.Console` and `Spectre.Console.Cli` are one decision at two ranges, which the single `versions`
+  string could not state. It travels in the export.
+
+- **A tool entry links the project it names.** `homepage` is required and takes an `https://` address. SPDX gives
+  every package a home page, and the OpenSSF guide to evaluating open source software opens by asking whether you have
+  the project you think you have. No entry in `examples/dog-fooding` linked its own project.
+
+- **A tool entry carries two dates.** `decided-on` says when the current status was settled, and `review-by` says when
+  somebody checks the entry again. Both are required and both travel in the export. Every entry in
+  `examples/dog-fooding` was writing the first into the body as prose, and nothing stated the second, so an approval
+  taken once governed new work for ever. `review-in-date` warns once `review-by` has passed.
+
+- **A deprecated or rejected tool says what went wrong with it.** `exit-states-a-reason` warns where `## Status` is
+  absent, so somebody proposing the same package in two years finds the evaluation rather than repeating it.
+
+- **A tool entry may record an accessibility assessment.** `Accessibility` is a declared section and travels in the
+  export. `std-A11Y` in `examples/dog-fooding` requires an assessment in the tool record of any component rendering a
+  governed surface, and two entries were carrying one under a heading the type did not declare, which the export
+  dropped.
+
 ### Changed
 
 - **`policies` states what it takes from current practice.** `lineage` was measured against ComplianceForge HCGF's
@@ -159,6 +182,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   language down to the standard beneath it, and 206 of the 243 clauses in `examples/engineering` are **MUST** or
   **MUST NOT**. `alignment`, `divergence` and `collision` now describe a policy that binds in its own right, and
   `kac generate` writes all three into every adopting corpus's `knowledge-as-code/lineage.md`.
+
+- **`versions` on a tool is gone, and a version range sits on the package instead.** `packages` states the range for
+  each package it approves, so a family chosen together can be pinned apart. `tools` publishes at `export.version` 2,
+  because a reader that took a range out of `versions` would now find none there. The tool index lists `review-by`
+  where it listed `versions`.
+
+- **`Status` on a tool is optional, and says why the tool sits where it is.** It was required, and carried the status
+  and the date the status was set, which the frontmatter already states. `exit-states-a-reason` asks for it of a
+  `deprecated` or a `rejected` entry, which are the two stances that owe a reader an explanation.
+
+- **`tools` states what it takes from current practice.** `lineage` was measured against the Thoughtworks Technology
+  Radar, CycloneDX 1.6, SPDX 2.3 and the OpenSSF guide to evaluating open source software. `alignment` claimed named
+  technologies sorted by stance, and the index sorts by category. `divergence` claimed binding version ranges, and the
+  field was optional, unchecked and empty on three of 13 entries. Both now describe the schema as it stands, and
+  `divergence` records the `assess` ring this register does not have.
 
 - **`target` on an NFR no longer carries the measurement window.** The window is `window`, so a consumer reads the
   figure and the period apart. `nfrs` publishes at `export.version` 2, because a reader that took the period out of

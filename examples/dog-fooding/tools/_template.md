@@ -3,6 +3,9 @@ id: tol-{{slug}}
 type: tool
 tier: descriptive
 status: trial
+homepage: https://{{project}}
+decided-on: "{{date}}"
+review-by: "{{date}}"
 owner:
 tags: [ a, b ]
 ---
@@ -20,9 +23,14 @@ and how it is reviewed. What is below is only what a tool adds to that.
 
 * **`status`**: `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
   already in use but not approved is drift, and the drift report will say so.
-* **`versions`**: a range, not a pin. The register states what we stand behind, and the manifests state what is
-  installed.
+* **`packages`**: one entry per package this entry approves, each a
+  [package URL](https://github.com/package-url/purl-spec) with the range approved for new work. Give a range, not a
+  pin: the register states what we stand behind, and the manifests state what is installed. Leave `versions` out
+  where nothing pins the package, and leave `packages` out where nothing distributes the tool.
+* **`homepage`**: the project's own page, so a reader reaches the project and not a fork.
 * **`licence`**: an SPDX identifier. Nobody wants the field until they urgently do.
+* **`decided-on`**: the day the current `status` was decided.
+* **`review-by`**: the day somebody checks this entry is still right. `review-in-date` warns once it has passed.
 * **`decided-in`**: an ADR, where one exists.
 * **`successor`**: what replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
   and CI enforces both ends.
@@ -44,11 +52,12 @@ Where it sits in the stack and which problem it solves for us specifically.
 
 ## Status
 
-**{{approved / trial / deprecated / rejected}}** since {{date}}.
+_(Optional. Why the tool sits where it does, which `status` and `decided-on` cannot say. Delete it where an approval
+has nothing to add.)_
 
-For `deprecated`: name the replacement in `successor`, and say by when.
-
-For `rejected`: this entry exists so the evaluation isn't repeated in two years. Say what was wrong with it.
+`exit-states-a-reason` asks for this section once the status is `deprecated` or `rejected`. For `deprecated`: say what
+took over, and name it in `successor`. For `rejected`: say what was wrong with it, so nobody runs the same evaluation
+in two years.
 
 ## Trial criteria
 
@@ -56,6 +65,13 @@ _(Required while the status is `trial`, and deleted once it is not.)_
 
 What is being evaluated, where it is being evaluated, and what would settle it either way. A trial with no decision
 criteria stays a trial forever.
+
+## Accessibility
+
+_(Optional, and deleted where this tool renders nothing a person reads. A standard in this corpus may require it of a
+component that renders a governed surface.)_
+
+What was checked, how, and the version it was checked against. Then what falls short, or that nothing found does.
 
 ## Where it is used
 

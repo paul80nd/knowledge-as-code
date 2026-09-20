@@ -3,8 +3,12 @@ id: tol-markdig
 type: tool
 tier: descriptive
 status: approved
-versions: 1.x
+packages:
+  - { purl: pkg:nuget/Markdig, versions: 1.x }
+homepage: https://github.com/xoofx/markdig
 licence: BSD-2-Clause
+decided-on: "2026-08-03"
+review-by: "2027-08-03"
 owner: human:paul.law
 tags: [ markdown, parser ]
 ---
@@ -19,10 +23,6 @@ The Markdown reader `kac` uses for the body of a record: its headings, its links
 
 `kac.core` references it. The checks that read a document body run on what it produces, so `h1`, `identity`,
 `sections`, `link-resolves` and `undefined-label` all read the same parse.
-
-## Status
-
-**approved** since 2026-08-03.
 
 ## Where it is used
 

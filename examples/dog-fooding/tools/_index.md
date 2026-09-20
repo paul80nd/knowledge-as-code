@@ -4,38 +4,38 @@
 
 ## Build
 
-| ID                     | Title                                             | Status     | Versions                                           | Licence                               |
-|------------------------|---------------------------------------------------|------------|----------------------------------------------------|---------------------------------------|
-| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   |                                                    | LicenseRef-Anthropic-Terms-of-Service |
-| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 10.0.x                                             | MIT                                   |
-| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 1.x                                                | BSD-2-Clause                          |
-| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | Spectre.Console 0.57.x, Spectre.Console.Cli 0.55.x | MIT                                   |
-| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated |                                                    | MIT                                   |
-| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 18.x                                               | MIT                                   |
+| ID                     | Title                                             | Status     | Review by  | Licence                               |
+|------------------------|---------------------------------------------------|------------|------------|---------------------------------------|
+| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   | 2027-08-18 | LicenseRef-Anthropic-Terms-of-Service |
+| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 2027-08-03 | MIT                                   |
+| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 2027-08-03 | BSD-2-Clause                          |
+| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | 2027-08-21 | MIT                                   |
+| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated | 2027-08-21 | MIT                                   |
+| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 2027-08-03 | MIT                                   |
 
 ## Docs
 
-| ID                  | Title                                          | Status   | Versions | Licence      |
-|---------------------|------------------------------------------------|----------|----------|--------------|
-| tol-mkdocs          | [MkDocs](docs/mkdocs.md)                       | approved | 1.6.x    | BSD-2-Clause |
-| tol-mkdocs-material | [Material for MkDocs](docs/mkdocs-material.md) | approved | 9.7.x    | MIT          |
+| ID                  | Title                                          | Status   | Review by  | Licence      |
+|---------------------|------------------------------------------------|----------|------------|--------------|
+| tol-mkdocs          | [MkDocs](docs/mkdocs.md)                       | approved | 2027-08-24 | BSD-2-Clause |
+| tol-mkdocs-material | [Material for MkDocs](docs/mkdocs-material.md) | approved | 2027-08-24 | MIT          |
 
 ## Lint
 
-| ID             | Title                            | Status   | Versions | Licence          |
-|----------------|----------------------------------|----------|----------|------------------|
-| tol-actionlint | [actionlint](lint/actionlint.md) | approved | 1.7.x    | MIT              |
-| tol-yamllint   | [yamllint](lint/yamllint.md)     | approved | 1.38.x   | GPL-3.0-or-later |
+| ID             | Title                            | Status   | Review by  | Licence          |
+|----------------|----------------------------------|----------|------------|------------------|
+| tol-actionlint | [actionlint](lint/actionlint.md) | approved | 2027-09-02 | MIT              |
+| tol-yamllint   | [yamllint](lint/yamllint.md)     | approved | 2027-09-02 | GPL-3.0-or-later |
 
 ## Release
 
-| ID     | Title                       | Status   | Versions | Licence |
-|--------|-----------------------------|----------|----------|---------|
-| tol-gh | [GitHub CLI](release/gh.md) | approved |          | MIT     |
+| ID     | Title                       | Status   | Review by  | Licence |
+|--------|-----------------------------|----------|------------|---------|
+| tol-gh | [GitHub CLI](release/gh.md) | approved | 2027-08-20 | MIT     |
 
 ## Testing
 
-| ID           | Title                           | Status   | Versions | Licence      |
-|--------------|---------------------------------|----------|----------|--------------|
-| tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 3.3.x    | BSD-3-Clause |
-| tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 3.1.x    | Apache-2.0   |
+| ID           | Title                           | Status   | Review by  | Licence      |
+|--------------|---------------------------------|----------|------------|--------------|
+| tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 2027-08-04 | BSD-3-Clause |
+| tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 2027-08-04 | Apache-2.0   |

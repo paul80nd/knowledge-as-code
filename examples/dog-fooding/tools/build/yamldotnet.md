@@ -3,8 +3,12 @@ id: tol-yamldotnet
 type: tool
 tier: descriptive
 status: approved
-versions: 18.x
+packages:
+  - { purl: pkg:nuget/YamlDotNet, versions: 18.x }
+homepage: https://github.com/aaubry/YamlDotNet
 licence: MIT
+decided-on: "2026-08-03"
+review-by: "2027-08-03"
 owner: human:paul.law
 tags: [ parser, yaml ]
 ---
@@ -20,10 +24,6 @@ manifest, and the frontmatter block at the top of a record.
 
 `kac.core` references it. It parses four kinds of file, and a reader meets one of them: the frontmatter of a record.
 The `frontmatter-parses` check is this parser reporting that the block is a valid YAML mapping.
-
-## Status
-
-**approved** since 2026-08-03.
 
 ## Where it is used
 

@@ -3,7 +3,10 @@ id: tol-bad-licence-pattern
 type: tool
 tier: descriptive
 status: approved
+homepage: https://example.invalid/tool
 licence: GPL/2.0 †
+decided-on: "2026-01-05"
+review-by: "2030-01-01"
 owner: human:alex.doe
 ---
 

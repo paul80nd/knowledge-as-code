@@ -3,7 +3,12 @@ id: tol-claude-code-cli
 type: tool
 tier: descriptive
 status: approved
+packages:
+  - { purl: pkg:npm/%40anthropic-ai/claude-code }
+homepage: https://github.com/anthropics/claude-code
 licence: LicenseRef-Anthropic-Terms-of-Service
+decided-on: "2026-08-18"
+review-by: "2027-08-18"
 owner: human:paul.law
 tags: [ claude-code, plugin, validation ]
 ---
@@ -23,13 +28,9 @@ last check before a broken bundle gets to the people who have it installed.
 A clean run prints one line whatever it read. A plugin with no component passes it too, so two shell guards in the
 same step cover that gap. Taken from the comments in `.github/workflows/kac.yml`.
 
-`versions` is bare because CI installs `@latest` on purpose. The bundle has to be valid against the CLI a reader runs,
-and `.github/dependabot.yml` would not move an npm pin. The install therefore runs in a job with no write permission,
-so a moved tag cannot cause a push.
-
-## Status
-
-**approved** since 2026-08-18.
+The `packages` entry approves no version range, because CI installs `@latest` on purpose. The bundle has to be valid
+against the CLI a reader runs, and `.github/dependabot.yml` would not move an npm pin. The install therefore runs in a
+job with no write permission, so a moved tag cannot cause a push.
 
 ## Where it is used
 

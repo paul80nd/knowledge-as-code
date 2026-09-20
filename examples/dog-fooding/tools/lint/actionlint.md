@@ -3,8 +3,12 @@ id: tol-actionlint
 type: tool
 tier: descriptive
 status: approved
-versions: 1.7.x
+packages:
+  - { purl: pkg:golang/github.com/rhysd/actionlint, versions: 1.7.x }
+homepage: https://github.com/rhysd/actionlint
 licence: MIT
+decided-on: "2026-09-02"
+review-by: "2027-09-02"
 owner: human:paul.law
 tags: [ github-actions, linting, workflows ]
 ---
@@ -23,10 +27,6 @@ shellcheck installed, so actionlint puts each of those blocks through shellcheck
 
 It is a Go binary with no pip package, so `.github/requirements.txt` cannot pin it. The `go install` line in the job
 states the version, and the header comment in that file says where to look.
-
-## Status
-
-**approved** since 2026-09-02.
 
 ## Where it is used
 
