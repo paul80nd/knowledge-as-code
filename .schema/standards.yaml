@@ -21,13 +21,14 @@ versus:
     fail a build, it is a control.
 
 lineage:
-  prior-art: >-
-    [ComplianceForge HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
-    Standard layer: what a standard contains and how often it is reviewed.
-    [BCP 14](https://www.rfc-editor.org/rfc/rfc8174): the keywords and the capitals rule.
-    [ISO/IEC Directives, Part 2](https://www.iso.org/sites/directives/current/part2/index.xhtml), ninth
-    edition: the elements of a normative document.
-    [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/): the conformance clause
+  prior-art: >
+    [ComplianceForge
+    HCGF](https://complianceforge.com/start-here/governance-risk-compliance-grc-content/hierarchical-cybersecurity-governance-framework),
+    Standard layer, the mandatory requirements beneath a policy. [BCP 14](https://www.rfc-editor.org/rfc/rfc8174), the
+    requirement keywords and the rule that only capitals bind. [ISO/IEC Directives, Part
+    2](https://www.iso.org/sites/directives/current/part2/index.xhtml), ninth edition, the elements of a normative
+    document. [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/), the conformance
+    clause
   alignment: >
     HCGF's granular, mandatory requirement, owned by a named person and reviewed on a date the record
     names: `status`, `owner` and `review-by`. BCP 14's keywords, declared in `parts.binding:` and

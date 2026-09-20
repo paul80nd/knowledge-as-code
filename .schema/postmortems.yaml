@@ -14,7 +14,9 @@ detail: >
   outcome.
 
 lineage:
-  prior-art: "[Google SRE, *Postmortem Culture*](https://sre.google/sre-book/postmortem-culture/)"
+  prior-art: >
+    [Google SRE, *Postmortem Culture*](https://sre.google/sre-book/postmortem-culture/), the blameless postmortem
+    written after an incident
   alignment: >
     The field set (impact, resolution, actions, root cause, follow-up), the three lessons Google groups as
     *what went well*, *what went wrong* and *where we got lucky*, and blamelessness defined as naming

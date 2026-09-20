@@ -13,10 +13,11 @@ detail: >
   The record most other types point at. Without it, a cross-reference has nothing to resolve against.
 
 lineage:
-  prior-art: >-
-    [Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`.
-    [OpsLevel `opslevel.yml`](https://docs.opslevel.com/docs/opslevel-yml): the component.
-    [Cortex entity descriptor](https://docs.cortex.io/ingesting-data-into-cortex/entities-overview/entities/yaml)
+  prior-art: >
+    [Backstage software catalog](https://backstage.io/docs/features/software-catalog/system-model/), `Component`,
+    [OpsLevel `opslevel.yml`](https://docs.opslevel.com/docs/opslevel-yml) and the [Cortex entity
+    descriptor](https://docs.cortex.io/ingesting-data-into-cortex/entities-overview/entities/yaml): three
+    machine-readable catalogues of an estate's deployables
   alignment: >
     A deployable unit with its owner and its dependencies, at the centre of the graph every other type cites.
     Backstage, OpsLevel and Cortex each require a word for the sort of component this is, which `component-type`

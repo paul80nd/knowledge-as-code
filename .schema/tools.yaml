@@ -37,9 +37,8 @@ lineage:
     it governs new work, and it expires an entry on the day `review-by` names. `trial` is the only stance both spell
     the same way: `approved` and `rejected` are acts this estate took, where the Radar's `adopt` and `hold` are advice
     it offers. There is no `assess` ring, because something nobody has committed to is not yet an entry, and
-    `deprecated` is added. SPDX makes a download location mandatory and a home page optional, where this register
-    requires `homepage` and states no download location. CycloneDX and SPDX inventory what is installed, one version
-    per component, where this register states the range approved for new work
+    `deprecated` is added. CycloneDX and SPDX inventory what is installed, one version per component, where this
+    register states the range approved for new work
 id:
   prefix: tol
   style: slug

@@ -20,7 +20,12 @@ versus:
     standard. Most substantial changes produce an ADR and a standard.
 
 lineage:
-  prior-art: "[Nygard, *Documenting Architecture Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011), with the summary line from [Zimmermann's Y-statement](https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html)"
+  prior-art: >
+    [Nygard, *Documenting Architecture
+    Decisions*](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) (2011), the ADR as a short
+    record of one decision and what followed from it. [Zimmermann's
+    Y-statement](https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html), a decision written as one
+    sentence in six moves
   alignment: >
     Nygard's Context / Decision / Consequences, his four status values, and the rule that a reversed decision is
     superseded and left standing. The block-quote under the title states Zimmermann's six moves. A mandatory

@@ -33,8 +33,7 @@ lineage:
     `no-self-verification` refuses the actor `generated.by` names. OKF has none of the three: it admits a second entry
     for an actor already listed, and leaves verification to the publisher. `status` takes `active` and `stale` where
     OKF takes `stable` and `deprecated`. Staleness is read from each source's `content-version` rather than OKF's
-    `stale_after` instant, because a report goes out of date when the corpus moves and not when a clock passes.
-    `generated.report` and `generated.tool` are additional keys, which OKF permits
+    `stale_after` instant, because a report goes out of date when the corpus moves and not when a clock passes
 collision: >
   A report reads like an explanation, and a reader skimming one will file it as the other. An explanation
   survives every record being deleted. A report does not.
