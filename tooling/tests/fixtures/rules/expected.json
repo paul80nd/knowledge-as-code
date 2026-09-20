@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 41,
+    "validated": 42,
     "templates": 17,
     "skipped": 0,
     "errors": 24,
-    "warnings": 25,
+    "warnings": 26,
     "infos": 0
   },
   "findings": [
@@ -42,6 +42,13 @@
       "severity": "error",
       "check": "no-actual-data",
       "message": "this address looks real. Write it under `example.com`, which RFC 2606 reserves so it can never be anybody's."
+    },
+    {
+      "file": "data/stale-classification.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "classification-in-date",
+      "message": "this document's `review-by` has passed. Check the classification and the retention against the store, then set `review-by` to the next day someone looks at it."
     },
     {
       "file": "deviations/high-risk-review-window.md",

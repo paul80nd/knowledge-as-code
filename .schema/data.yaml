@@ -125,8 +125,9 @@ fields:
     type: date
     description: Quoted. The date by which someone confirms the classification and the retention still hold.
     notes: >
-      Nothing reports a date that has passed. `export.exclude` withholds the record where a corpus asks for
-      it. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#data>.
+      `classification-in-date` warns once the date has passed, and `export.exclude` withholds the record
+      where a corpus asks for it. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#data>.
 
 sections:
   required: [Purpose, Entities, Where it lives, Classification, Retention]
@@ -163,5 +164,12 @@ rules:
     message: >
       this address looks real. Write it under `example.com`, which RFC 2606 reserves so it can never be
       anybody's.
+  - id: classification-in-date
+    description: A document names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this document's `review-by` has passed. Check the classification and the retention against the store,
+      then set `review-by` to the next day someone looks at it.
   - id: store-has-service
     description: Every store named here resolves to a service in the catalogue.

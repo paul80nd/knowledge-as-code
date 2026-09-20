@@ -38,7 +38,7 @@ and how it is reviewed. What is below is only what a data document adds to that.
 * **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that matters
   most.
 * **`review-by`**: the day someone confirms the classification and the retention are still right. A year ahead is
-  usual. Nothing fails the build when that day passes.
+  usual. `classification-in-date` warns once that day passes, and a warning leaves the build green.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../data.md#metadata) lists every field

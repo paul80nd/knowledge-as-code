@@ -11,7 +11,7 @@ data-subjects:
   - readers
 retention: Until the reader opts out.
 region: UK South
-review-by: "2026-12-31"
+review-by: "2030-01-01"
 ---
 
 # Reader contact list

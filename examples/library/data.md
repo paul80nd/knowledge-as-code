@@ -86,8 +86,9 @@ exceptions to the plural-folder rule.
 * **`region` states where the owning service keeps the data, and never where a recipient processes it.** A recipient
   abroad is recorded in the last column of the `Flows` table.
 * **Never put actual data here**: no sample records, no identifiers, no connection strings.
-* **When `review-by` has passed, read the record against the store and set a new date.** No check reports the passed
-  date. A corpus that sets `export.exclude` to `overdue` withholds the document until you do.
+* **When `review-by` has passed, read the record against the store and set a new date.** `classification-in-date`
+  warns, and a warning leaves the build green. A corpus that sets `export.exclude` to `overdue` withholds the document
+  until you do.
 
 ## What CI checks
 
@@ -120,6 +121,7 @@ exceptions to the plural-folder rule.
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `no-actual-data`            | error   | Fails on an email address outside `example.com`. Nothing catches an identifier or a connection string.          |
+| `classification-in-date`    | warning | A document names a review date that has not passed.                                                             |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
