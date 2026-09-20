@@ -240,6 +240,13 @@ own words.
 **A document here contains no actual data.** `no-actual-data` fails an email address outside `example.com`, so what
 travels is an inventory about data and never the data itself.
 
+**`services`, `integrations` and `offerings` require no `review-by`, and `data` does.** Those three are built from
+ids, and `ref-resolves` fails one that no longer names a record. A data document's `classification`, `personal-data`,
+`retention` and `region` are claims about a store, and nothing in the corpus checks one. A domain that gained a column
+of special-category data still reads `personal` until a person opens the record. The ICO asks you to review retained
+personal data regularly and to justify how often, and NIST SP 800-53r5 RA-2 asks that a categorisation be revisited so
+it stays accurate. Neither sets an interval, so each document sets its own.
+
 ### integrations
 
 `What it does`, `Failure modes` and `Exit` travel. A consumer asks which external systems this estate calls, what
