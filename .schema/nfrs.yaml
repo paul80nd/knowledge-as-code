@@ -22,13 +22,15 @@ lineage:
     the day somebody approved it, the day it is next reviewed, and the reasoning behind the number: `measured-by`,
     `agreed-on`, `review-by` and `Why this number`. The workbook gives the time window a section of its own, and
     `window` is where a target states it. It also separates an error budget from the error budget policy that spends
-    it, which is why `What a breach costs` and `What we do about a breach` are two sections
+    it, which is why `What a breach costs` and `What we do about a breach` are two sections. Its aspirational
+    objective, tracked but exempt from that policy, is `status: aspirational`
   divergence: >
     25010 lists the characteristics and stops. This type is a document, and `characteristic` takes 25010's
     subcharacteristic level, because an estate commits to availability and recovery and not to reliability. RPO and
     RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends, and no
     record here does that arithmetic. A breach states a cost and a response, and neither is a quantity anybody draws
-    down
+    down. The workbook leaves the current reading to the monitoring, where `Current actual` is a required section, so
+    a record read on its own still says where the estate stands
 
 id:
   prefix: nfr
@@ -44,10 +46,13 @@ fields:
   status:
     required: true
     type: enum
-    values: [draft, agreed, retired]
-    description: '`agreed` means somebody accepted the commitment.'
+    values: [draft, aspirational, agreed, retired]
+    description: '`agreed` binds the estate. `aspirational` is a target set but not yet binding.'
     notes: >
-      `owner` names who accepted the number. Nothing checks that the owner named today is the person who did.
+      `aspirational` is the SRE workbook's aspirational objective: measured and tracked, and exempt from the response
+      a breach otherwise triggers, which `What we do about a breach` states. `agreed-on` is required of `agreed`
+      alone, because nobody accepted an aspirational figure as binding. `owner` names who accepted the number, and
+      nothing checks that the owner named today is the person who did.
 
   characteristic:
     required: true
@@ -109,11 +114,12 @@ fields:
     description: Quoted. The date by which someone confirms this is still true.
 
 sections:
-  required: [Target, Why this number, How it is measured, What a breach costs, What we do about a breach]
-  optional: [Current actual, Constraints, Related]
+  required: [Target, Why this number, How it is measured, Current actual, What a breach costs,
+             What we do about a breach]
+  optional: [Constraints, Related]
 
 export:
-  version: 3
+  version: 4
   fields: [id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on,
            review-by, tags]
   sections:

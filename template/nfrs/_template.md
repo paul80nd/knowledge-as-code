@@ -24,7 +24,8 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 
 **Frontmatter**
 
-* **`status`**: `draft` until someone has agreed it, then `agreed`. An agreed target is a commitment, not an aspiration.
+* **`status`**: `draft` while the figure is still being settled. `aspirational` where it is settled and nobody is held
+  to it yet. `agreed` where the estate is held to it. `retired` where it no longer applies.
 * **`characteristic`**: the quality this target commits to, from the values [the type page](../nfrs.md#metadata) lists.
   One record states one quality. A service needing both a latency target and a recovery target gets two records.
 * **`applies-to`**: service or offering ids. Estate-wide targets are almost always wrong, since a marketing page and
@@ -64,8 +65,8 @@ either build one or state the target you *can* observe instead.
 
 ## Current actual
 
-What we are achieving now, and as of when. The gap between this and the target is usually the most useful line in the
-document.
+What we are achieving now, and as of when. The gap between this and the target says whether the estate meets the
+number or is aiming at it. Where it is aiming, say under `What we do about a breach` that nobody is paged.
 
 ## What a breach costs
 

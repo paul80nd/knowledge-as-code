@@ -189,6 +189,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An NFR says whether anybody is held to its target.** `status` takes a fourth value, `aspirational`, for a figure
+  somebody settled that the estate is not measured against. The Google SRE workbook keeps such an objective measured
+  and tracked, and exempts it from the error budget policy a miss otherwise triggers; `What we do about a breach` is
+  where that exemption is written. `nfrs` publishes at `export.version` 4, because a reader that took `agreed` and
+  `draft` to be the only live values would now read an aspirational target as binding.
+
+- **An NFR records what it is achieving now.** `Current actual` was optional and is now required, so the reading sits
+  beside the target in every record. It stays out of the export, because an export has no way to say how old a
+  measurement has since become.
+
 - **An NFR states what a breach costs and what the response to one is, in two sections.** `If it is breached` was one
   required section, and a record could answer with either half. `What a breach costs` and `What we do about a breach`
   are both required, so `required-section` reports the one a record left out. The Google SRE workbook keeps an error

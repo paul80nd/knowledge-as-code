@@ -152,9 +152,9 @@ the status on that date, because a departure left standing is the state worth se
 
 ### nfrs
 
-An NFR is normative, and a reader may act on it without opening anything else. The five required sections travel
-whole: what the target is, why it is that figure, how anybody tells whether it was met, what a miss costs, and what the
-team does about a miss.
+An NFR is normative, and a reader may act on it without opening anything else. `Target`, `Why this number`, `How it
+is measured`, `What a breach costs` and `What we do about a breach` are required and travel whole. `Current actual` is
+required too, and stays behind.
 
 `characteristic`, `target`, `window` and `measured-by` state as fields what those sections state at length. The fields
 are what a reader filters and sorts on, and the sections are what somebody building against the number reads.
@@ -176,8 +176,18 @@ or accuracy target binds each event or each value, so it needs none.
 states those limits in words, because `constrained-by` resolves only where the corpus adopted `integrations`. A corpus
 that did not still has the cap, and this section is where it writes it down.
 
-`Current actual` stays behind. It is a measurement taken on the day somebody wrote it, and an export has no way to say
-how old it has since become.
+**`Current actual` is required, and stays behind.** It is required because a target read without the reading beside
+it says nothing about where the estate stands. It stays behind because it is a measurement taken on the day somebody
+wrote it, and an export has no way to say how old it has since become.
+
+**`status: aspirational` says nobody is held to the target.** The SRE workbook keeps an aspirational objective
+measured and tracked, and exempts it from the error budget policy that a missed objective otherwise triggers. Here
+that exemption is `What we do about a breach` saying nobody is paged, and `status` is what a reader sees first.
+
+**The distinction is a status, not a second field.** A `basis` enum beside `target` would restate the comparison
+`Current actual` already supports, and nothing could hold the two in step: `target` is free text such as `p95 under
+800ms`, so no rule compares it against a reading written in prose. Whether anybody is held to a number is a decision
+instead, which is what `status` records for every type here.
 
 ### fixes
 
