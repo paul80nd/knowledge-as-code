@@ -7,7 +7,7 @@
     "title": "Add a knowledge type",
     "status": "active",
     "applies-to": null,
-    "last-rehearsed": "never",
+    "last-rehearsed": "2026-09-17",
     "rehearsal-frequency": "on-change",
     "tags": [
       "schema",
@@ -19,6 +19,6 @@
     "Prerequisites": "* A candidate set of records no existing type would take.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/dog-fooding/processes/add-a-type.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7fd47279d109c325f7d3b91a8db4d71c719646b5/examples/dog-fooding/processes/add-a-type.md"
   }
 }

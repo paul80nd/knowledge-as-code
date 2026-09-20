@@ -7,7 +7,7 @@
     "title": "Sweep the writing rules across a folder",
     "status": "active",
     "applies-to": null,
-    "last-rehearsed": "never",
+    "last-rehearsed": "2026-09-13",
     "rehearsal-frequency": "on-change",
     "tags": [
       "agents",
@@ -19,6 +19,6 @@
     "Prerequisites": "* The main checkout, so an agent can read what it needs. One agent per folder.\n* `technical-writing` and the voice skill for the surface, loaded with the Read tool.\n* `kac` run from inside a corpus, and nobody else running it at the same time."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a221f6566eb33e91502000cc028070761397e686/examples/dog-fooding/processes/sweep-prose.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7fd47279d109c325f7d3b91a8db4d71c719646b5/examples/dog-fooding/processes/sweep-prose.md"
   }
 }
