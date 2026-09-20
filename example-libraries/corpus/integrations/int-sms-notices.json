@@ -24,6 +24,6 @@
     "Failure modes": "| Failure                      | How it presents                             | Our fallback                                        |\n|------------------------------|---------------------------------------------|-----------------------------------------------------|\n| The number was disconnected  | Accepted by the vendor, and never delivered | The email every borrower on this list also received |\n| The vendor's queue backed up | The reminder arrived the next morning       | None. A late reminder was still sent                |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/d27c129c1c5ddf2808f69f07a6488006aeb25c81/examples/library/integrations/sms-notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9dd611c7c2b9fbb47aae7274712017df114b9009/examples/library/integrations/sms-notices.md"
   }
 }
