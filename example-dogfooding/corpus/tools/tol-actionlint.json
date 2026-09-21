@@ -15,6 +15,7 @@
     ],
     "homepage": "https://github.com/rhysd/actionlint",
     "licence": "MIT",
+    "licence-declared": "MIT",
     "decided-on": "2026-09-02",
     "review-by": "2027-09-02",
     "decided-in": null,
@@ -32,6 +33,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml` against the workflows, and no service ships it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/tools/lint/actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/tools/lint/actionlint.md"
   }
 }

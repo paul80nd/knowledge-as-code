@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.48.0",
+  "contentVersion": "0.49.0",
   "mechanismVersion": 16,
-  "commit": "8c91685774429f2c8232d9e2bd9f650ace65d612",
+  "commit": "3c562975c69c65dbb06de3bbb17654076157ad0c",
   "dirty": false,
-  "generatedAt": "2026-09-21T11:32:26Z",
+  "generatedAt": "2026-09-21T12:41:48Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,11 +18,12 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "8c91685774429f2c8232d9e2bd9f650ace65d612"
+    "ref": "3c562975c69c65dbb06de3bbb17654076157ad0c"
   },
+  "reposBase": "https://github.com/paul80nd",
   "tracker": {
     "target": "github",
     "base": "https://github.com/paul80nd/knowledge-as-code",
@@ -40,11 +41,12 @@
       "contentVersion": "0.26.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "8c91685774429f2c8232d9e2bd9f650ace65d612"
+        "ref": "3c562975c69c65dbb06de3bbb17654076157ad0c"
       },
+      "reposBase": null,
       "tracker": {
         "target": "github",
         "base": "https://github.com/paul80nd/knowledge-as-code",
@@ -198,7 +200,7 @@
     },
     {
       "type": "tools",
-      "shapeVersion": 2,
+      "shapeVersion": 3,
       "records": 13,
       "parts": 0,
       "dir": "tools",

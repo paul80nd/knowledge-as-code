@@ -15,6 +15,7 @@
     ],
     "homepage": "https://github.com/aaubry/YamlDotNet",
     "licence": "MIT",
+    "licence-declared": "MIT",
     "decided-on": "2026-08-03",
     "review-by": "2027-08-03",
     "decided-in": null,
@@ -31,6 +32,6 @@
     "Where it is used": "* [svc-kac] uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/tools/build/yamldotnet.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/tools/build/yamldotnet.md"
   }
 }

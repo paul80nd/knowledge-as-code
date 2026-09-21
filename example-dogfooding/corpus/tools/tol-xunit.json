@@ -22,7 +22,8 @@
       }
     ],
     "homepage": "https://xunit.net/",
-    "licence": "Apache-2.0",
+    "licence": "Apache-2.0 AND MIT",
+    "licence-declared": "Apache-2.0 AND MIT",
     "decided-on": "2026-08-04",
     "review-by": "2027-08-04",
     "decided-in": null,
@@ -35,10 +36,10 @@
   },
   "sections": {
     "What we use it for": "`kac.tests` asserts what `kac.core` does with a corpus it builds for the purpose. `kac.features` runs Gherkin feature\ndocuments through the same runner, so one `dotnet test` command covers either project.\n\n`Microsoft.NET.Test.Sdk` and `xunit.runner.visualstudio` are referenced beside it in both projects. They are what\nmakes `dotnet test` find and run the tests, and neither was chosen on its own.\n\nThe third layer, `tooling/kac-tests.cs`, uses none of this. It is a file-based program. It compares `kac` output against committed goldens, and reports its own results.",
-    "Licence and obligations": "Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it: the packages are test-only, and no published artefact includes them.",
+    "Licence and obligations": "The two xUnit packages are Apache-2.0 and `Microsoft.NET.Test.Sdk` is MIT, which is why this entry names both. Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes them: the packages are test-only, and no published artefact includes them.",
     "Where it is used": "* [svc-kac] is tested with it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/tools/testing/xunit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/tools/testing/xunit.md"
   }
 }

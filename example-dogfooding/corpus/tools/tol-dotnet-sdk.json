@@ -14,7 +14,8 @@
       }
     ],
     "homepage": "https://dotnet.microsoft.com/",
-    "licence": "MIT",
+    "licence": "MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib",
+    "licence-declared": "MIT",
     "decided-on": "2026-08-03",
     "review-by": "2027-08-03",
     "decided-in": null,
@@ -27,10 +28,10 @@
   },
   "sections": {
     "What we use it for": "Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program that has no project around it.\n\n`actions/setup-dotnet` installs `10.0.x` in every job of every workflow here.",
-    "Licence and obligations": "MIT. Nothing follows for a package this repository publishes.",
+    "Licence and obligations": "Microsoft licenses the product distribution under MIT on Linux and macOS, and under the .NET Library License on Windows. This repository builds on Linux and macOS only, so the concluded value leaves the Windows terms out.\n\nThe installed SDK puts an MIT `LICENSE.txt` beside a `ThirdPartyNotices.txt` of 56 notices. Every notice is permissive or a public-domain dedication, and `licence` lists each one SPDX has an identifier for. The rest are bare permission grants SPDX does not list: ISO 8879, RFC 3492, RFC 4122, and code its author released with no named licence. Nothing in the file is copyleft.\n\nNothing follows for a package this repository publishes. CI installs the SDK, runs it, and redistributes no part of it.",
     "Where it is used": "* [svc-kac] is built, tested and packed with it.\n\nThe docs site and the marketplace branch are built by other toolchains, so neither uses it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/tools/build/dotnet-sdk.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/tools/build/dotnet-sdk.md"
   }
 }

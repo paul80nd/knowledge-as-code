@@ -19,6 +19,7 @@
     ],
     "homepage": "https://spectreconsole.net/",
     "licence": "MIT",
+    "licence-declared": "MIT",
     "decided-on": "2026-08-21",
     "review-by": "2027-08-21",
     "decided-in": null,
@@ -37,6 +38,6 @@
     "Where it is used": "* [svc-kac] uses both packages."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/tools/build/spectre-console.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/tools/build/spectre-console.md"
   }
 }

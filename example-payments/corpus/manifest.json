@@ -4,9 +4,9 @@
   "shortcode": "pay",
   "contentVersion": "0.27.0",
   "mechanismVersion": 18,
-  "commit": "8c91685774429f2c8232d9e2bd9f650ace65d612",
+  "commit": "3c562975c69c65dbb06de3bbb17654076157ad0c",
   "dirty": false,
-  "generatedAt": "2026-09-21T11:32:22Z",
+  "generatedAt": "2026-09-21T12:41:43Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,11 +18,12 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "8c91685774429f2c8232d9e2bd9f650ace65d612"
+    "ref": "3c562975c69c65dbb06de3bbb17654076157ad0c"
   },
+  "reposBase": "https://git.example.com/example-payments",
   "tracker": {
     "target": "github",
     "base": "https://github.com/paul80nd/knowledge-as-code",
@@ -40,11 +41,12 @@
       "contentVersion": "0.26.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "8c91685774429f2c8232d9e2bd9f650ace65d612"
+        "ref": "3c562975c69c65dbb06de3bbb17654076157ad0c"
       },
+      "reposBase": null,
       "tracker": {
         "target": "github",
         "base": "https://github.com/paul80nd/knowledge-as-code",
