@@ -69,6 +69,8 @@ A process is also not:
 
 **Conventions**
 
+* **Name the skills a step needs.** `Prerequisites` names them beside the access, the tools and the prior work. A
+  reader who finds out at the step that they cannot do it has already changed something. Nothing checks it.
 * **No hedging.** A step that opens "typically the order is…" leaves the reader to decide. Where the order varies, say
   what decides it.
 * **Say what a step produces.** Put the result in the step itself, so a reader can tell it worked before starting the

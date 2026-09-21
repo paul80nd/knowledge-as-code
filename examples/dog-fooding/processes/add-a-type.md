@@ -24,6 +24,8 @@ folder and no page fails `type-setup`. Removing a type reverses these steps.
 
 * A candidate set of records no existing type would take.
 * `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.
+* Reading a published specification, which steps 3 and 4 need.
+* Writing a schema file in YAML, which step 5 needs.
 
 ## Steps
 

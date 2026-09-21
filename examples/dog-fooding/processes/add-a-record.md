@@ -25,6 +25,8 @@ Nothing in CI reports that you used the wrong tier's rules.
 * A corpus, and a type it lists under `types:` in its `.corpus.yaml`.
 * `kac` run from inside that corpus as `dotnet run --project ../../tooling/kac --`.
 * A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed.
+* Reading a YAML schema, which step 3 needs.
+* Writing prose to a style guide, which step 6 needs.
 
 ## Steps
 

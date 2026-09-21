@@ -30,6 +30,8 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
 * `kac` run as `dotnet run --project tooling/kac --` from the repository root, and as
   `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`. Both build the tool on this
   branch.
+* Judging what a version move means, which steps 4 and 5 need.
+* Writing a commit message, which step 10 needs.
 
 ## Steps
 

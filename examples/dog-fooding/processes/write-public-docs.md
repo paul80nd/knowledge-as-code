@@ -26,6 +26,8 @@ reader has installed nothing and has nobody here to ask. That is the whole diffe
 * `technical-writing` and `writing-the-docs`, loaded in that order.
 * The source for every fact the page states, so each one can be checked.
 * The .NET SDK, where you touched the package page.
+* Reading a page as a newcomer would, which step 1 needs.
+* Judging prose against a style guide, which step 5 needs.
 
 ## Steps
 

@@ -25,6 +25,9 @@ generated blocks derived from these files.
 * The schema guidance at `.schema/CLAUDE.md`, which states the closed key space and the field-order trap.
 * `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.
 * The .NET SDK, for the golden suite at step 9 and the behaviour specs at step 10.
+* Reading a specification, which step 2 needs.
+* Writing C#, which step 3 needs where the edit reaches `Schema.cs`.
+* Repairing a Reqnroll feature file by hand, which step 10 needs.
 
 ## Steps
 

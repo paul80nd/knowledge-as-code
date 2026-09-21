@@ -48,9 +48,11 @@ The trigger. If you are here because something is broken, you probably want a [r
 * Access to {{system}}, requested from {{who}}.
 * {{Tool}} installed at version {{x}}.
 * {{Prior process}} completed.
+* {{Skill}}, which step {{n}} needs.
 
-_(Everything the reader needs before step 1. "Obtain the file from the repository owner" is not useful to someone who
-doesn't know who that is. Name them, or name the role.)_
+_(Everything the reader needs before step 1: the access, the tools, the prior work and the skills. "Obtain the file
+from the repository owner" is not useful to someone who doesn't know who that is. Name them, or name the role. A
+reader who finds out at the step that they cannot do it has already changed something.)_
 
 ## Steps
 
