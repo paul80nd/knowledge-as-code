@@ -421,7 +421,8 @@ checks:
     notes: >
       Two faults arrive under this id, and both leave the field impossible to satisfy: a range the corpus never
       wrote, and one with a value that is not lower case. Reported once against the descriptor, since nobody
-      writing a record can fix either. See
+      writing a record can fix either. A required field is asked from the first record of its type, and an
+      optional one from the first record that states it. See
       <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#enums>.
 
   shortcode:

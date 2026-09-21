@@ -76,6 +76,9 @@ public static class Validator
         // It is checked here rather than discovered as a record, because it is not one: it holds no id,
         // claims no place in the index, and must not answer to id-unique or to a reciprocal edge. What
         // it is held to is everything a copy of it inherits.
+        // Kept, because a template states a field exactly as a record does and `CheckCorpusEnums` reads
+        // what is stated to decide what range the corpus owes.
+        List<Doc> templates = [];
         foreach (var rel in corpus.Templates)
         {
             var template = Doc.Parse(rel, tree.Read(rel), schema);
@@ -83,7 +86,10 @@ public static class Validator
                 findings.Add(new Finding(rel, null, Sev.Error, new CheckId("template-fields"),
                     "the template carries no frontmatter: a document copied from it starts with none."));
             else
+            {
+                templates.Add(template);
                 CheckDocument(template, schema, tree, findings, today, DocKind.Template, fillable);
+            }
         }
 
         // The framework's own documentation. It takes the ordinary link pass, which discovery never gave
@@ -100,7 +106,7 @@ public static class Validator
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
         CheckTargets(corpus.Descriptor, findings);
-        CheckCorpusEnums(schema, corpus.Docs, corpus.Descriptor, findings);
+        CheckCorpusEnums(schema, corpus.Docs, templates, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
 
@@ -406,36 +412,53 @@ public static class Validator
     // The casing is what a corpus reaches first: `enum-lowercase` refuses the value in the record, so a
     // range holding `Dotnet-Web` refuses `dotnet-web` from one side and `Dotnet-Web` from the other. Both
     // findings would name the record, and the file to edit is this one.
-    private static void CheckCorpusEnums(
-        Schema schema, IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
+    private static void CheckCorpusEnums(Schema schema, IReadOnlyList<Doc> docs, IReadOnlyList<Doc> templates,
+        CorpusDescriptor descriptor, List<Finding> f)
     {
         var types = docs.Select(d => d.Type).OfType<TypeSchema>()
             .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal).ToList();
         if (types.Count == 0) return;
 
+        // A template states a field as a record does, so it is read for what the corpus owes a range for
+        // and never for which types have arrived. A type stood up with a template and no record has no
+        // estate to derive a list from, which is what `types` above reads.
+        var stated = docs.Concat(templates).ToList();
+
         // A universal field reaches every type, so it is asked once and its message names no page.
-        foreach (var field in Reachable(schema.Universal.Values))
-            Ask(field, $"'{field.Name}'", "");
+        foreach (var field in schema.Universal.Values)
+            Ask(field, stated, "", "");
 
         foreach (var t in types)
-        foreach (var field in Reachable(t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal)
-                     .Select(kv => kv.Value)))
-            Ask(field, $"'{field.Name}' on a {t.TypeName}", $" {t.Page} says how to reach them.");
-
-        void Ask(FieldSpec field, string said, string page)
         {
-            if (field.CorpusEnum is not { } name) return;
+            var written = stated.Where(d => d.Type?.Key == t.Key).ToList();
+            foreach (var field in t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value))
+                Ask(field, written, $" on a {t.TypeName}", $" {t.Page} says how to reach them.");
+        }
 
-            if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+        // One declared field, and every key an object entry nests below it.
+        void Ask(FieldSpec root, IReadOnlyList<Doc> written, string on, string page)
+        {
+            var owed = Owed(root, written);
+            foreach (var (path, field) in Reachable(root))
             {
-                Report($"{said} is judged against a list this corpus states, and it states none. Write the "
-                       + $"values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
-                return;
-            }
+                if (field.CorpusEnum is not { } name) continue;
+                var said = $"'{path}'{on}";
 
-            foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
-                Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
-                       + "value is lower case, so no record can satisfy this one.");
+                // Only this half waits for the field to be owed. A range the corpus has already written
+                // is in hand whether or not anything states the field, and a value in it that no record
+                // can satisfy is a fault the moment it is written.
+                if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+                {
+                    if (owed)
+                        Report($"{said} is judged against a list this corpus states, and it states none. Write "
+                               + $"the values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
+                    continue;
+                }
+
+                foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
+                    Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
+                           + "value is lower case, so no record can satisfy this one.");
+            }
 
             return;
 
@@ -444,10 +467,31 @@ public static class Validator
         }
     }
 
-    // Every field a declaration reaches, including the keys of an object entry. A `shape:` is resolved into
-    // `Entry` at load, so a shape's keys arrive here without a walk of their own.
-    private static IEnumerable<FieldSpec> Reachable(IEnumerable<FieldSpec> fields) =>
-        fields.SelectMany(field => new[] { field }.Concat(Reachable(field.Entry ?? [])));
+    // Whether the corpus has to state a range for a field it has not written one for.
+    //
+    // A required field owes one from the first record of the type, because every record of that type
+    // must carry a value and no range means no record can. An optional field owes one from the first
+    // document that states it: a record satisfies an optional field by leaving the key out, so a corpus
+    // using none of a field's values has nothing a range would judge.
+    //
+    // Asked of the declared field alone. A key inside an object entry is required against the entry that
+    // carries it, and an entry nobody wrote requires nothing.
+    private static bool Owed(FieldSpec root, IReadOnlyList<Doc> written) =>
+        root.Required || root.RequiredWhen is not null
+                      || written.Any(d => d.FrontNode(root.Name) is { } v && !ValueChecks.IsAbsent(v, root));
+
+    // Every field a declaration reaches, including the keys of an object entry, each with the path a record
+    // writes it at. A `shape:` is resolved into `Entry` at load, so a shape's keys arrive here without a walk
+    // of their own.
+    //
+    // The path is what an entry key needs. Its own name is `type` or `at`, which a reader would take for the
+    // frontmatter key of that name, and `interfaces.type` says which field to open.
+    private static IEnumerable<(string Path, FieldSpec Field)> Reachable(FieldSpec field, string prefix = "")
+    {
+        var path = prefix + field.Name;
+        return new[] { (path, field) }
+            .Concat((field.Entry ?? []).SelectMany(key => Reachable(key, path + ".")));
+    }
 
     // The shorthand another corpus cites this one by, held to a spelling a citation can carry.
     // `.schema/_checks.yaml` argues each part of that spelling under `shortcode`.

@@ -15,7 +15,7 @@ shortcode: lib
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.18.0"
+content-version: "0.19.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -71,6 +71,7 @@ types:
 # deployables this catalogue holds and closed on them. `services.md` says how they were reached.
 enums:
   component-type: [api, asset, website, worker]
+  interface-type: [asyncapi, openapi]
   platform: [azure-function, dotnet, mixed, static, typescript]
 
 # Nothing withheld, so a consumer meets a draft record as a draft rather than not at all.

@@ -230,6 +230,17 @@ are the keys an agent filters on, and the first two draw their range from the co
 deployables, groups them once by what they are and once by the runtime and framework a contributor has to learn, and
 closes each list on what it found. So one schema above several estates can state no range at all.
 
+**`interfaces` points at a contract, and never copies one.** Backstage's `spec.definition` embeds the contract text in
+the catalogue, so the address it was fetched from does not survive. A corpus is a document, so this field states that
+address instead, and it travels beside `Where it lives`, which already publishes a repository URL. The value is a whole
+URL because nothing derives one: `repos` states a bare repository name, and
+[OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html) recommends a filename and prescribes no path. The field is
+optional on every service, because a machine-readable format exists for an HTTP API and an event stream and not for a
+command line tool or a web page. `component-type` is the wrong axis for a `required-when`: an estate spells that range
+itself, so a condition naming `api` never fires for an estate that writes `http-api`. `type` draws its range from the
+estate for the same reason. No rule checks that a contract is there, because `kac` reads one corpus and cannot open a
+source repository.
+
 **`monitoring-output` states a commitment, and never a rota.** Backstage, OpsLevel and Cortex each keep a paging tool's
 id in the same file and dereference it through that tool's API. A corpus is a document, so the same id gives a reader a
 dead string. This field says what a live problem raises instead: `alert` if a person acts now, `ticket` if the system

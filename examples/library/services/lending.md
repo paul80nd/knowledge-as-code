@@ -8,6 +8,11 @@ repos: [ lending ]
 platform: dotnet
 criticality: critical
 monitoring-output: alert
+interfaces:
+  - type: asyncapi
+    contract: https://git.example.com/example-libraries/lending/blob/main/contract/events.yaml
+  - type: openapi
+    contract: https://git.example.com/example-libraries/lending/blob/main/contract/openapi.yaml
 owner: human:dev.raman
 facets: [ internal ]
 tags: [ legacy, loans ]

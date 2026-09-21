@@ -8,6 +8,9 @@ repos: [ payment-api ]
 platform: dotnet
 criticality: critical
 monitoring-output: alert
+interfaces:
+  - type: openapi
+    contract: https://git.example.com/example-payments/payment-api/blob/main/contract/openapi.yaml
 depends-on:
   - svc-payment-ledger
 owner: human:paul.law

@@ -59,16 +59,40 @@ public class CorpusEnumTests
     public void A_range_the_corpus_can_satisfy_is_silent()
         => Assert.Empty(Findings(PlatformField, ["dotnet-web"]));
 
-    // `values:` is read wherever a field is declared, so the check has to look wherever one can be.
+    // `values:` is read wherever a field is declared, so the check has to look wherever one can be. The
+    // message names the path a record writes the key at, because `channel` on its own reads as a
+    // frontmatter key of that name.
     [Fact]
     public void A_key_inside_an_object_entry_is_asked_for_its_range_too()
     {
-        var finding = Assert.Single(Undeclared(
-            "fields:\n  releases:\n    type: list\n    of: object\n    entry:\n"
-            + "      channel:\n        type: enum\n        values: $corpus.channel\n"));
+        var finding = Assert.Single(Undeclared(ReleasesField, "releases:\n  - channel: stable\n"));
 
-        Assert.Contains("'channel' on a service", finding.Message);
+        Assert.Contains("'releases.channel' on a service", finding.Message);
         Assert.Contains("`channel: [a, b]`", finding.Message);
+    }
+
+    // An optional field is owed a range from the first record that states it. A corpus using none of its
+    // values has nothing a range would judge, so asking for one would be setup work for a field that
+    // every record already satisfies by leaving the key out.
+    [Fact]
+    public void An_optional_field_no_record_states_is_asked_for_nothing()
+        => Assert.Empty(Undeclared(ReleasesField));
+
+    // A template teaches its value to every record copied from it, so it states the field as a record
+    // does and the range it draws on is owed from there.
+    [Fact]
+    public void An_optional_field_a_template_states_is_asked_for_its_range()
+        => Assert.Single(Findings(ReleasesField, null, "", "releases:\n  - channel: stable\n"));
+
+    // Only the half saying the corpus wrote no range waits for the field to be owed. A range already
+    // written carries a value no record can satisfy whether or not anything states the field.
+    [Fact]
+    public void A_range_written_for_a_field_no_record_states_is_still_held_to_lower_case()
+    {
+        var finding = Assert.Single(Findings(ReleasesField, null, "", "", ["Stable"]));
+
+        Assert.Contains("'releases.channel' on a service", finding.Message);
+        Assert.Contains("carries 'Stable'", finding.Message);
     }
 
     // The two prefixes are read in one switch, so a schema mixing them is worth pinning.
@@ -85,13 +109,21 @@ public class CorpusEnumTests
     public void A_name_the_corpus_answers_nothing_to_is_no_fault_in_the_schema()
         => Assert.Empty(Schema.Load(Files("$corpus.platform"), Declared(null)).UnreadKeys);
 
+    // Required, as the real `platform` is, so the range is owed from the first record of the type.
     private const string PlatformField =
-        "fields:\n  platform:\n    type: enum\n    values: $corpus.platform\n";
+        "fields:\n  platform:\n    required: true\n    type: enum\n    values: $corpus.platform\n";
 
-    private static List<Finding> Undeclared(string fields) => Findings(fields, null);
+    private const string ReleasesField =
+        "fields:\n  releases:\n    type: list\n    of: object\n    entry:\n"
+        + "      channel:\n        type: enum\n        values: $corpus.channel\n";
 
-    // One service, so the pass has a record of the type and asks the question the record's arrival raises.
-    private static List<Finding> Findings(string fields, IReadOnlyList<string>? declared)
+    private static List<Finding> Undeclared(string fields, string front = "") =>
+        Findings(fields, null, front);
+
+    // One service and its template, so the pass has a record of the type and asks the question the
+    // record's arrival raises. `front` is what the record states and `template` what the template does.
+    private static List<Finding> Findings(string fields, IReadOnlyList<string>? declared, string front = "",
+        string template = "", IReadOnlyList<string>? channels = null)
     {
         var schema = Schema.Load(new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -99,13 +131,19 @@ public class CorpusEnumTests
             ["services.yaml"] = "type: service\nfolder: services\npage: services.md\n" + fields
         }, Declared(declared));
 
-        const string record = "---\nid: svc-one\ntype: service\n---\n\n# One\n";
+        var descriptor = WithEnums(declared);
+        if (channels is not null) descriptor.Enums["channel"] = channels;
+
         var tree = new Tree(
-            new HashSet<string>(StringComparer.Ordinal) { "services/one.md" }, _ => record, _ => true);
+            new HashSet<string>(StringComparer.Ordinal) { "services/one.md", "services/_template.md" },
+            rel => rel.EndsWith(Artefact.Template, StringComparison.Ordinal)
+                ? "---\nid: svc-{{slug}}\ntype: service\n" + template + "---\n\n# {{Name}}\n"
+                : "---\nid: svc-one\ntype: service\n" + front + "---\n\n# One\n",
+            _ => true);
 
         return
         [
-            .. Validator.CheckAll(Corpus.Load(tree, schema, WithEnums(declared)), Required.Today)
+            .. Validator.CheckAll(Corpus.Load(tree, schema, descriptor), Required.Today)
                 .Where(f => f.Check.Value == "corpus-enum-undeclared")
         ];
     }

@@ -23,6 +23,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   service is `live` or `deprecated`. Its values are `alert`, `ticket`, `log` and `none`. `kac validate` warns through
   `critical-service-is-alerted` where a `live` or `deprecated` service graded `critical` states `none`. The field
   travels in the export beside `criticality`, and `kac generate` lists it in the services index after that column.
+- **A service states the interfaces it offers.** `services` declares `interfaces`, a list of the contract formats this
+  service publishes and the address each contract sits at. Each entry takes a `type`, drawn from an `interface-type`
+  range the corpus states under `enums:`, and a `contract` URL. The field is optional on every service, because no
+  machine-readable format exists for a command line tool or a web page. It travels in the export beside `repos`.
 - **A runbook whose resolution gives no route out is reported.** `failure-route-stated` runs. `kac validate` fails a
   runbook whose `Resolution` section links nowhere to `#escalation`, so a reader whose step did not work has somewhere
   to go. The schema asked this of `Diagnosis` alone. A reader in the diagnosis is still choosing, and a reader in the
@@ -31,6 +35,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **An optional field's range is asked for from the first document that states it.** `kac validate` reported
+  `corpus-enum-undeclared` for every field drawing on `enums:` as soon as the corpus held one record of the type, so a
+  corpus was asked for a range it had no use for. A required field is still asked from the first record of its type,
+  and a `_template.md` states a field as a record does. A range the corpus has already written is still held to lower
+  case whether or not anything states the field.
+- **A range asked for inside an object entry names the path a record writes it at.** `corpus-enum-undeclared` now
+  reports `'interfaces.type' on a service` where it reported `'type' on a service`, which read as the record's own
+  `type` key.
 - **A runbook closes its resolution on a fixed line.** The `_template.md` that `kac new` sends now ends `Resolution`
   with a line opening `Confirmed when` and closing with a link to the escalation. Before, it asked for the confirmation
   in any form and gave no route out. The `runbooks.md` beside it now tells an author to write that line, having said

@@ -365,7 +365,9 @@ record. No record can satisfy such a range, which is the same state as a range y
 A corpus created by [`new`](cli/new.md) receives the key with nothing under it, because a corpus with no records has no
 estate to derive a range from. Write a record with such a field before you write the range, and `validate` reports
 `corpus-enum-undeclared` once, against `.corpus.yaml`. Nobody who wrote a record can fix that, so it is reported where
-the person who can fix it works.
+the person who can fix it works. A required field is asked from the first record of its type, because every record of
+that type must carry a value. An optional one is asked from the first record that states it, because a record satisfies
+an optional field by leaving the key out.
 
 A value the range does not admit is an ordinary `enum` failure, reported against the record. The message quotes the
 values your descriptor lists, so an author reads back the list they are being checked against.

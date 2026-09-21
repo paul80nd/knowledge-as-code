@@ -8,6 +8,9 @@ repos: [ search ]
 platform: typescript
 criticality: important
 monitoring-output: ticket
+interfaces:
+  - type: openapi
+    contract: https://git.example.com/example-libraries/search/blob/main/contract/openapi.yaml
 owner: human:mira.okonjo
 facets: [ event-driven, internal ]
 tags: [ discovery, indexing ]
