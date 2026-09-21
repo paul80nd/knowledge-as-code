@@ -39,6 +39,10 @@ public record CheckInfo(string Check, string Severity, string Summary);
 // `About` is what the corpus says about itself, carried so that whatever seals or installs this export
 // can say it too. `kac pack` never loads the corpus, so the descriptor's own words reach a registry
 // through here or not at all.
+//
+// `ReposBase` is where the corpus addresses its code repositories from. A `repos` entry on a service is
+// a bare name, so a consumer that is not given this resolves one to nothing. Null where the corpus
+// stated none.
 public record ExportManifest(
     int FormatVersion,
     string? Corpus,
@@ -50,6 +54,7 @@ public record ExportManifest(
     string GeneratedAt,
     ExportAbout About,
     ExportPublishing Publishing,
+    string? ReposBase,
     ExportTracker Tracker,
     ExportTracker Framework,
     IReadOnlyList<ExportSource> Sources,
@@ -83,11 +88,16 @@ public record ExportTracker(string Target, string? Base, string? Id);
 // `Tracker` is the producer's own too, and is the address a problem with one of their records goes to.
 // A consumer holding it can tell an import's backlog from its own rather than filing everything on
 // whichever tracker it happens to have.
+//
+// `ReposBase` is theirs for the same reason. A `repos` entry on one of their services is a bare name,
+// and the consumer's own base resolves it to a repository in the wrong estate. Null where the producer
+// stated none.
 public record ExportSource(
     string Shortcode,
     string? Corpus,
     string? ContentVersion,
     ExportPublishing Publishing,
+    string? ReposBase,
     ExportTracker Tracker);
 
 // What a corpus says about itself, for a reader who meets it as a package or as an installed plugin

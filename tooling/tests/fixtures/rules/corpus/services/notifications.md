@@ -24,7 +24,7 @@ cycle `no-dependency-cycles` reports.
 
 ## Where it lives
 
-The `notifications` repository.
+* **Repository**: [`notifications`](https://git.example.com/fixture/notifications)
 
 ## Environments
 

@@ -66,7 +66,7 @@ public class ReportStaleTests
             [doc], new Dictionary<string, Doc> { ["rpt-coverage"] = doc },
             new Tree(new HashSet<string>([doc.Rel], StringComparer.Ordinal), _ => text),
             doc.TypeOf(), new RuleSpec { Id = new RuleId("report-stale") },
-            known.ToDictionary(k => k.Corpus, k => k.Version, StringComparer.Ordinal),
+            known.ToDictionary(k => k.Corpus, k => k.Version, StringComparer.Ordinal), null,
             (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Error, c, m)),
             (at, c, m, l) => found.Add(new Finding(at.Rel, l, Sev.Warning, c, m))));
 

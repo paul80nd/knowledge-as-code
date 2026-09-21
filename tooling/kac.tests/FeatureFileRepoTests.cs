@@ -190,7 +190,7 @@ public class FeatureFileRepoTests
 
         new FeatureFileRepo().Check(new CorpusRuleContext(docs, byId, Empty, offerings,
             new RuleSpec { Id = new RuleId("feature-file-repo") },
-            new Dictionary<string, string>(StringComparer.Ordinal),
+            new Dictionary<string, string>(StringComparer.Ordinal), null,
             (at, c, m, l) => Report(Sev.Error, at, c, m, l),
             (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return found;

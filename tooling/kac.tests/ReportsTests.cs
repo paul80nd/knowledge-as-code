@@ -184,6 +184,7 @@ public class ReportsTests
     private static readonly InheritedCorpus Grandparent =
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
+            null,
             Tracker.None,
             [],
             [

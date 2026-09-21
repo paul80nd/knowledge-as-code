@@ -10,6 +10,7 @@ public static class CorpusRules
         new AlignmentRollup(),
         new ClauseQuotedFaithfully(),
         new FeatureFileRepo(),
+        new MirrorsRepoLinks(),
         new ReportStale()
     ];
 

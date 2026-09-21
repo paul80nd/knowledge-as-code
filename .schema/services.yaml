@@ -36,7 +36,15 @@ lineage:
     them puts a paging tool's id in `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where
     `monitoring-output` states a standing commitment a reader can act on. Its `alert`, `ticket` and `log` are the
     three monitoring outputs the [SRE Book](https://sre.google/sre-book/introduction/) lists, and `none` is this
-    framework's own: no source found names the case where nothing is emitted at all
+    framework's own: no source found names the case where nothing is emitted at all. A `repos` entry is a bare
+    name where each source writes an address: Backstage puts the provider in the annotation key and the value in
+    `org/repo`, OpsLevel puts it in a sibling `provider:` beside an `org/repo` `name:`, and Cortex puts it in the
+    nesting level beside a `repository:` and, for Azure DevOps, a `project:`. Every one of them states the
+    provider outside the value, and `repos-base` in `.corpus.yaml` does the same once per corpus.
+    [purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses a
+    repository as `pkg:git/<host>/<owner>/<repo>` and answers the mixed estate none of these corpora has, and it
+    was declined because `feature-file-repo` reads the first segment of a path and `pkg:git` is what it would
+    read there
 id:
   prefix: svc
   style: slug
@@ -73,7 +81,10 @@ fields:
     description: Repositories a change to this service is made in.
     notes: >
       A list, because an asset surface can be filled by one repository and served from another. Every entry is
-      a repository a contributor edits to change this service.
+      a repository a contributor edits to change this service, named as the host names it and never as a path.
+      `repos-base` in `.corpus.yaml` resolves one to a URL, and `mirrors-repo-links` then holds the result
+      against the links under `Where it lives`.
+      See <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#repos-base>.
 
   platform:
     required: true
@@ -119,9 +130,10 @@ fields:
         description: The address the contract is published at.
     description: The interfaces this service offers, with the contract for each.
     notes: >
-      A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
-      states a bare repository name and no convention derives a path from one. The range belongs to the
-      estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
+      A pointer to the contract, and never a copy of it. The value is a whole URL, because a `repos`
+      entry resolves to a repository and never to a path inside one, and a contract is often published
+      outside the repository anyway. The range belongs to the estate, so `.corpus.yaml` states it under
+      `enums:` and this file states none. See
       <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
 
   depends-on:
@@ -202,6 +214,11 @@ rules:
     message: >
       this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live
       problem raises, or record the gap in `Operational notes` and leave this warning standing.
+  # `repos` states a bare name and `Where it lives` links the same repository, so the two can disagree.
+  # `mirrors-section:` cannot ask this: it reconciles ids, and a repository name resolves to no record.
+  - id: mirrors-repo-links
+    description: Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.
+    severity: warning
   - id: drift-against-repos
     description: Every service has a repository, and every repository has a service document.
     # Runs on a schedule. Reports a service whose repository is gone, and a repository with no service document.

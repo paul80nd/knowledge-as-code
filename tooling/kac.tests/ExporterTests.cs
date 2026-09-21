@@ -876,6 +876,7 @@ public class ExporterTests
         new(shortcode, Exporter.FormatVersion, $"{shortcode}-corpus", "1.0.0",
             new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
                 $"https://example.com/{shortcode}", null, "beefbeef"),
+            $"https://code.example.com/{shortcode}",
             Tracker.For(Publishing.GitHub, $"https://example.com/{shortcode}"),
             [],
             [
@@ -951,6 +952,7 @@ public class ExporterTests
                 new ExportSource("gp", "gp-corpus", "0.2.0",
                     new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                         "https://example.com/gp", null, "cafecafe"),
+                    "https://code.example.com/gp",
                     Tracker.For(Publishing.GitHub, "https://example.com/gp"))
             ]
         };
@@ -965,6 +967,21 @@ public class ExporterTests
             sources[1].GetProperty("publishing").GetProperty("ref").GetString());
     }
 
+    // A `repos` entry on a producer's service is a bare name, and this corpus's own base would resolve it
+    // to a repository in the wrong estate. So the producer's base arrives beside its publishing block.
+    [Fact]
+    public void A_producers_repository_base_reaches_sources()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirLine));
+
+        var sources = JsonDocument.Parse(Single(plan, Exporter.ManifestFile).Content).RootElement
+            .GetProperty("sources").EnumerateArray().ToList();
+
+        Assert.Equal("https://code.example.com/eng",
+            Assert.Single(sources).GetProperty("reposBase").GetString());
+    }
+
     // Two corpora consumed here can each have consumed a third, at two versions. Whichever account won,
     // a line naming that third would resolve to a commit half its records were never read at.
     [Fact]
@@ -974,6 +991,7 @@ public class ExporterTests
             new("gp", "gp-corpus", version,
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, version),
+                "https://code.example.com/gp",
                 Tracker.For(Publishing.GitHub, "https://example.com/gp"));
 
         var plan = Merged(
@@ -986,6 +1004,27 @@ public class ExporterTests
         Assert.Contains("0.3.0", plan.Refused[0]);
     }
 
+    // A producer whose export predates the repository base states none, and a corpus that states its own
+    // has one that differs. No line resolves through it, so refusing here would stop an export over a
+    // key nothing reads at a citation.
+    [Fact]
+    public void Two_accounts_of_one_corpus_differing_only_in_where_its_code_sits_still_merge()
+    {
+        static ExportSource Hosted(string? reposBase) =>
+            new("gp", "gp-corpus", "0.2.0",
+                new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
+                    "https://example.com/gp", null, "cafecafe"),
+                reposBase,
+                Tracker.For(Publishing.GitHub, "https://example.com/gp"));
+
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirLine) with { Sources = [Hosted(null)] },
+            Consumed("ops", TheirLine) with { Sources = [Hosted("https://code.example.com/gp")] });
+
+        Assert.Empty(plan.Refused);
+    }
+
     // A producer whose export predates the tracker key has one derived from its publishing block, and a
     // corpus that states its own has one that differs. Neither account moves where a line resolves, so
     // refusing here would stop an export over a key nothing reads at a citation.
@@ -996,6 +1035,7 @@ public class ExporterTests
             new("gp", "gp-corpus", "0.2.0",
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, "cafecafe"),
+                "https://code.example.com/gp",
                 Tracker.For(Publishing.GitHub, tracker));
 
         var plan = Merged(

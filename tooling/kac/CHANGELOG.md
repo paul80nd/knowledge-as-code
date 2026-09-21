@@ -27,6 +27,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   service publishes and the address each contract sits at. Each entry takes a `type`, drawn from an `interface-type`
   range the corpus states under `enums:`, and a `contract` URL. The field is optional on every service, because no
   machine-readable format exists for a command line tool or a web page. It travels in the export beside `repos`.
+- **A corpus states where its code repositories are addressed from.** `.corpus.yaml` takes `repos-base`, a URL a
+  `repos` entry on a service is appended to. `kac validate` warns through `mirrors-repo-links` where a `repos` entry
+  is not linked under `Where it lives`, and where that section links a repository under the base that `repos` does
+  not state. Both directions are reported, and a corpus stating no base runs no check. The value travels in the
+  export and in the plugin manifest, once for the corpus and once for each corpus it consumes, so a consumer
+  resolves an entry it inherited against the estate that wrote it. `descriptor-version` moves to 5, and `kac update`
+  stamps it.
 - **A runbook whose resolution gives no route out is reported.** `failure-route-stated` runs. `kac validate` fails a
   runbook whose `Resolution` section links nowhere to `#escalation`, so a reader whose step did not work has somewhere
   to go. The schema asked this of `Diagnosis` alone. A reader in the diagnosis is still choosing, and a reader in the

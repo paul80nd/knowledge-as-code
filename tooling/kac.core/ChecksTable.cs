@@ -146,7 +146,10 @@ public static class ChecksTable
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null),
         ("feature-file-repo", [new("feature-file-repo")],
-            "A feature file path begins with a repository one of the implementing services names.", null)
+            "A feature file path begins with a repository one of the implementing services names.", null),
+        ("mirrors-repo-links", [new("mirrors-repo-links")],
+            "Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.",
+            null)
     ];
 
     // Which rule class reports under which check id, read from the registries rather than written out.

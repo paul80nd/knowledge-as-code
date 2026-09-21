@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 4
+descriptor-version: 5
 
 corpus: example-libraries
 
@@ -27,6 +27,9 @@ license: MIT
 author:
   name: Paul Law
   url: https://github.com/paul80nd
+
+# This estate hosts every repository a service is changed in under one organisation.
+repos-base: https://git.example.com/example-libraries
 
 # This repository is the published form, and the corpus sits in a folder of it.
 publishing-target: github

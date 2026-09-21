@@ -22,7 +22,7 @@ service here states a value a person acts on.
 
 ## Where it lives
 
-The `unalerted-critical` repository.
+* **Repository**: [`unalerted-critical`](https://git.example.com/fixture/unalerted-critical)
 
 ## Environments
 

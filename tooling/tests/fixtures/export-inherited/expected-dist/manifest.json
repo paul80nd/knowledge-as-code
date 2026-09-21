@@ -20,6 +20,7 @@
     "pathPrefix": null,
     "ref": null
   },
+  "reposBase": "https://git.example.com/acme",
   "tracker": {
     "target": "azure-devops",
     "base": "https://dev.azure.com/acme/Standards",
@@ -42,6 +43,7 @@
         "pathPrefix": null,
         "ref": "1111111111111111111111111111111111111111"
       },
+      "reposBase": null,
       "tracker": {
         "target": "github",
         "base": "https://github.com/example/upstream",
@@ -59,6 +61,7 @@
         "pathPrefix": null,
         "ref": "2222222222222222222222222222222222222222"
       },
+      "reposBase": null,
       "tracker": {
         "target": "github",
         "base": "https://github.com/example/grandparent",

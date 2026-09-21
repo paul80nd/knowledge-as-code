@@ -34,6 +34,9 @@ public interface ICorpusRule
 // each consumed corpus under the name its descriptor gives it. A record naming a corpus and the
 // version it answers for is held against it, which is a fact about the corpus rather than about any
 // document, and therefore in no document's reach.
+//
+// `ReposBase` is where this estate's code repositories are addressed from, which is in no document's
+// reach for the same reason. It is null where the descriptor states none.
 public sealed record CorpusRuleContext(
     IReadOnlyList<Doc> Docs,
     IReadOnlyDictionary<string, Doc> ById,
@@ -41,6 +44,7 @@ public sealed record CorpusRuleContext(
     TypeSchema Type,
     RuleSpec Spec,
     IReadOnlyDictionary<string, string> Versions,
+    string? ReposBase,
     Action<Doc, CheckId, string, int?> Err,
     Action<Doc, CheckId, string, int?> Warn)
 {

@@ -31,8 +31,9 @@ public sealed record InheritedRecord(string Producer, string Name, string Conten
 // One corpus this one consumes, read for what an export has to carry of it.
 //
 // `Publishing` is the producer's own block. A record of theirs is read at their commit, under their path
-// prefix, in their repository, and a consumer's own block gets all three wrong. `Tracker` is theirs for
-// the same reason: a problem with a record of theirs is filed on their backlog.
+// prefix, in their repository, and a consumer's own block gets all three wrong. `Tracker` and
+// `ReposBase` are theirs for the same reason: a problem with a record of theirs is filed on their
+// backlog, and a `repos` entry of theirs names a repository in their estate.
 //
 // `FormatVersion` is the envelope the producer wrote. A consumer merging its files has to read every key
 // it stamps, so an envelope this build does not know is refused rather than merged around.
@@ -46,6 +47,7 @@ public sealed record InheritedCorpus(
     string? Corpus,
     string? ContentVersion,
     ExportPublishing Publishing,
+    string? ReposBase,
     ExportTracker Tracker,
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<InheritedType> Types);
@@ -121,6 +123,7 @@ public static class Inherited
             manifest.Corpus,
             manifest.ContentVersion,
             manifest.Publishing,
+            manifest.ReposBase,
             manifest.Tracker,
             manifest.Sources,
             types);
