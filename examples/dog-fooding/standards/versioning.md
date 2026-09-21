@@ -192,9 +192,10 @@ it states nothing the rules above have not already bound.
 
 **A reviewer reads most of the rules above.** [ctl-0007] runs `kac validate`, which fails a declared import that was
 never restored and warns where a newer version sits inside the declared range. It reports the caret trap as
-information, not as a warning, because a corpus that capped itself on purpose is reporting a decision. Nothing counts a
-stamp that should have moved and did not, nothing compares a `shapeVersion` against the files it stamps, and nothing
-reads `<Version>` against what a user of `kac` can observe.
+information, not as a warning, because a corpus that capped itself on purpose is reporting a decision. [ctl-0011]
+fails a corpus whose records changed and whose `content-version` did not rise, reading the whole record rather than
+the sections the export takes. Nothing compares a `shapeVersion` against the files it stamps, and nothing reads
+`<Version>` against what a user of `kac` can observe.
 
 ## Sources and further reading
 
@@ -212,6 +213,7 @@ reads `<Version>` against what a user of `kac` can observe.
 
 [Semantic Versioning 2.0.0]: https://semver.org
 [ctl-0007]: ../controls/0007-corpus-validation.md
+[ctl-0011]: ../controls/0011-content-version-tests.md
 [npm semver ranges]: https://github.com/npm/node-semver#ranges
 [std-CI]: workflows.md
 [std-CONFIG]: configuration.md

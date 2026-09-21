@@ -335,10 +335,12 @@ their own corpus holds records nobody there wrote.
   [`kac.features/Harness.cs`](kac.features/Harness.cs) and [`kac.tests/Repo.cs`](kac.tests/Repo.cs). The tool has two
   of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
   unify any of them without keeping those distinctions.
-* **`VerificationTests` reads git history, and a shallow checkout leaves it reading nothing.** It compares every
-  changed `fix` and `report` against the base branch, so the job running `dotnet test tooling/kac.tests` checks out
-  with `fetch-depth: 0` and passes the base branch in `KAC_BASE_REF`. A job that sets the variable and cannot reach
-  the branch fails. A job that sets neither reads nothing and passes, which is what a local run on `main` does.
+* **Two guards read git history, and a shallow checkout leaves them reading nothing.** `VerificationTests` compares
+  every changed `fix` and `report` against the base branch, and `ContentVersionTests` fails a corpus whose records
+  changed and whose `content-version` did not rise. `Diff` asks git for both. The job running
+  `dotnet test tooling/kac.tests` therefore checks out with `fetch-depth: 0` and passes the base branch in
+  `KAC_BASE_REF`. A job that sets the variable and cannot reach the branch fails. A job that sets neither reads
+  nothing and passes, which is what a local run on `main` does.
 * **A path written into a file a corpus keeps is a fact about somebody else's machine.** A corpus is read from wherever
   it was installed, so the generated banner and the stale-index message both name the tool instead.
   [`std-CONFIG`](../examples/dog-fooding/standards/configuration.md) is the rule.
