@@ -2,7 +2,7 @@
 id: rpt-framework-coverage
 type: report
 tier: descriptive
-status: draft
+status: active
 owner: human:paul.law
 generated:
   at: 2026-09-21T08:00:00Z
@@ -12,12 +12,13 @@ generated:
 sources:
   - { resource: example-engineering, version: "0.26.0" }
 verified:
+  - { at: 2026-09-21T08:30:00Z, by: human:paul.law }
 tags: [ coverage, frameworks ]
 ---
 
 # Framework coverage
 
-`Report: rpt-framework-coverage` `DRAFT`
+`Report: rpt-framework-coverage` `ACTIVE`
 
 ## Limits
 

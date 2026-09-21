@@ -4,4 +4,4 @@
 
 | ID                  | Title                                 | Status |
 |---------------------|---------------------------------------|--------|
-| rpt-clause-coverage | [Clause coverage](clause-coverage.md) | draft  |
+| rpt-clause-coverage | [Clause coverage](clause-coverage.md) | active |

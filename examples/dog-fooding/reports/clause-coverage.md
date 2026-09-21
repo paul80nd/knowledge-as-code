@@ -2,7 +2,7 @@
 id: rpt-clause-coverage
 type: report
 tier: descriptive
-status: draft
+status: active
 owner: human:paul.law
 generated:
   at: 2026-09-21T08:10:00Z
@@ -13,12 +13,13 @@ sources:
   - { resource: example-dogfooding, version: "0.46.2" }
   - { resource: example-engineering, version: "0.26.0" }
 verified:
+  - { at: 2026-09-21T08:30:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
 # Clause coverage
 
-`Report: rpt-clause-coverage` `DRAFT`
+`Report: rpt-clause-coverage` `ACTIVE`
 
 ## Limits
 

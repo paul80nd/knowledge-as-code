@@ -4,4 +4,4 @@
 
 | ID                     | Title                                       | Status |
 |------------------------|---------------------------------------------|--------|
-| rpt-framework-coverage | [Framework coverage](framework-coverage.md) | draft  |
+| rpt-framework-coverage | [Framework coverage](framework-coverage.md) | active |
