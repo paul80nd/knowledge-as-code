@@ -33,6 +33,6 @@
     "Scope": "The `kac` package published to nuget.org, and the local builds a contributor runs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3c562975c69c65dbb06de3bbb17654076157ad0c/examples/dog-fooding/deviations/no-reproducible-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f94f2153eea3dba45d62e39c24bce425e4da55a0/examples/dog-fooding/deviations/no-reproducible-build.md"
   }
 }
