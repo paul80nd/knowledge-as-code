@@ -15,7 +15,8 @@ detail: >
 lineage:
   prior-art: >-
     [ISO/IEC 25010:2023](https://www.iso.org/standard/78176.html): the product quality model.
-    [Google SRE, *Implementing SLOs*](https://sre.google/workbook/implementing-slos/): the service level objective
+    [Google SRE, *Implementing SLOs*](https://sre.google/workbook/implementing-slos/): the service level objective.
+    [OpenSLO](https://github.com/OpenSLO/OpenSLO): the machine-readable objective, and its alert condition
   alignment: >
     25010 splits quality into characteristics that can each be specified and measured, and `characteristic` states
     which one a target commits to. The SRE workbook asks an SLO document for the indicator reporting the objective,
@@ -30,7 +31,9 @@ lineage:
     RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends, and no
     record here does that arithmetic. A breach states a cost and a response, and neither is a quantity anybody draws
     down. The workbook leaves the current reading to the monitoring, where `Current actual` is a required section, so
-    a record read on its own still says where the estate stands
+    a record read on its own still says where the estate stands. No source found asks an estate to commit to a
+    detection time, and 25010 names no characteristic for one, so `alert-after` states the alert's own configured
+    delay instead, which is OpenSLO's `alertAfter`
 
 id:
   prefix: nfr
@@ -90,6 +93,15 @@ fields:
       The four characteristics `required-when` names are the ones that state a rate or a percentile. A recovery,
       scalability or accuracy target binds each event or each value.
 
+  alert-after:
+    required: false
+    type: string
+    description: 'How long the condition holds before the alert or ticket is raised: `15 minutes`, `2 hours`.'
+    notes: >
+      The alert's configured delay, read before anything breaks, and never a detection time measured after one. A
+      target nothing watches leaves the field out, as a recovery figure read at a restore does. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#nfrs>.
+
   measured-by:
     required: true
     type: string
@@ -119,9 +131,9 @@ sections:
   optional: [Constraints, Related]
 
 export:
-  version: 4
-  fields: [id, title, status, characteristic, applies-to, target, window, measured-by, constrained-by, agreed-on,
-           review-by, tags]
+  version: 5
+  fields: [id, title, status, characteristic, applies-to, target, window, alert-after, measured-by, constrained-by,
+           agreed-on, review-by, tags]
   sections:
     Target: full
     Why this number: full
@@ -146,6 +158,10 @@ rules:
       '(?i)\b(monitored|manually|as needed|as required|where practical|where possible|if possible|ad hoc|periodically)\b')
     message: >
       `measured-by` is hedged. Write the dashboard, query or report that gives the number.
+  # An offering emits nothing itself, so the walk reaches the services its `implemented-by` names.
+  - id: alert-after-needs-an-alert
+    description: A target stating `alert-after` binds a service that raises an alert or a ticket.
+    severity: warning
   - id: constraint-consistency
     description: >
       Every integration in `constrained-by` states a `their-sla` at least as strong as this target.

@@ -626,6 +626,15 @@ checks:
       since a service can sit outside the estate's usual host, and an error would make one outlier drop the key for
       every other record.
 
+  alert-after-needs-an-alert:
+    severity: warning
+    description: A target stating `alert-after` binds a service that raises an alert or a ticket.
+    notes: >
+      `applies-to` reaches an offering as often as a service, so the walk follows an offering's
+      `implemented-by` to the services behind it. `alert` and `ticket` are raised by the system and satisfy the
+      rule; `log` and `none` are not. One service the schema does not oblige to state the field leaves the whole
+      target unjudged, as does a target reaching no service at all.
+
   dependency-cycle:
     severity: warning
     description: The records' `depends-on` edges form no loop.

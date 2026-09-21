@@ -156,8 +156,9 @@ An NFR is normative, and a reader may act on it without opening anything else. `
 is measured`, `What a breach costs` and `What we do about a breach` are required and travel whole. `Current actual` is
 required too, and stays behind.
 
-`characteristic`, `target`, `window` and `measured-by` state as fields what those sections state at length. The fields
-are what a reader filters and sorts on, and the sections are what somebody building against the number reads.
+`characteristic`, `target`, `window`, `alert-after` and `measured-by` state as fields what those sections state at
+length. The fields are what a reader filters and sorts on, and the sections are what somebody building against the
+number reads.
 
 **The cost of a breach and the response to one are two sections.** The SRE workbook separates an error budget from the
 error budget policy that spends it. Both headings are required, so `required-section` reports one a record left out.
@@ -171,6 +172,22 @@ service needing both a latency target and a recovery target has two.
 **`window` is required of an availability, capacity, latency or throughput target.** A rate or a percentile only means
 something over a stated period. `window` declares a `required-when` reading `characteristic`. A recovery, scalability
 or accuracy target binds each event or each value, so it needs none.
+
+**`alert-after` states the alert's configured delay, and never a detection time somebody measured.** No source
+found asks an estate to commit to how fast a fault is noticed. The SRE workbook computes a detection time from an
+alerting window and a burn rate, and treats it as one of four attributes for comparing alerting strategies. Azure's
+[Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/reliability/monitoring) defines
+the recovery time objective as "the maximum acceptable time to detect, respond to, and recover from a failure or
+incident", so detection sits inside a target this type already has. What an estate can state before anything
+breaks is the delay it configured, which is [OpenSLO](https://github.com/OpenSLO/OpenSLO)'s `alertAfter`, so that is
+what the field holds.
+
+**A delay claims an alert exists, and `alert-after-needs-an-alert` asks the services whether one does.** `applies-to`
+names an offering as often as a service, and an offering emits nothing itself, so the check follows its
+`implemented-by` to the services behind it. A service stating `monitoring-output: alert` or `ticket` raises something
+and satisfies the check. One service the schema does not oblige to state the field leaves the whole target unjudged,
+because a target bound to something still in build has not claimed anything yet. A warning rather than an error: a
+target can state the delay an alert will have before anybody builds it.
 
 `Constraints` travels because a target read without its limits reads as a stronger promise than the estate made. It
 states those limits in words, because `constrained-by` resolves only where the corpus adopted `integrations`. A corpus

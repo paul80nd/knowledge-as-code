@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 46,
+    "validated": 47,
     "templates": 17,
     "skipped": 0,
     "errors": 25,
-    "warnings": 31,
+    "warnings": 32,
     "infos": 0
   },
   "findings": [
@@ -168,6 +168,13 @@
       "severity": "warning",
       "check": "target-is-measurable",
       "message": "`measured-by` is hedged. Write the dashboard, query or report that gives the number."
+    },
+    {
+      "file": "nfrs/0002-a-delay-with-no-alert.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "alert-after-needs-an-alert",
+      "message": "'alert-after' states a delay and nothing this binds raises an alert or a ticket: 'monitoring-output' is 'none'. Bind a service that raises one, or drop 'alert-after'."
     },
     {
       "file": "offerings/borrower-notifications.md",

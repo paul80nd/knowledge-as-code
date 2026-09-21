@@ -33,6 +33,8 @@ and how it is reviewed. What is below is only what an NFR adds to that.
 * **`target`**: a concrete figure, such as `99.5%`, `p95 under 400ms` or `RTO 4h`.
 * **`window`**: the period the figure is read over, such as `monthly` or `rolling 4 weeks`. Required for an
   availability, capacity, latency or throughput target, because a rate without a period means nothing.
+* **`alert-after`**: how long the condition holds before the alert or ticket is raised, such as `15 minutes`. Read
+  it from the alert's own configuration. Leave it out where nothing watches this target.
 * **`measured-by`**: required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
 * **`constrained-by`**: integration ids whose own SLA caps this.
 * **`agreed-on`**: the day the owner accepted the figure. Required once `status` is `agreed`.
