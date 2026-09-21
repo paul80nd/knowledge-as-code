@@ -3,7 +3,7 @@ id: std-CARD
 type: standard
 tier: normative
 status: active
-implements: [ eng:pol-DATA.MINIMAL, eng:pol-MEXP.PEERID, eng:pol-TRUS.CLOUD ]
+implements: [ eng:pol-DATA.MINIMAL, eng:pol-MEXP.PEERID, eng:pol-SUPL.CLOUD ]
 applies-to:
   - svc-payment-api
 review-by: "2027-08-28"
@@ -44,7 +44,7 @@ _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
 - The PSP contract **MUST** state which PCI DSS requirements the PSP answers for and which we do.
 - A change to how the checkout collects a card **MUST** be reviewed against that split before it ships.
 
-_**Covers:** `eng:pol-TRUS.CLOUD`_
+_**Covers:** `eng:pol-SUPL.CLOUD`_
 
 ## Examples
 

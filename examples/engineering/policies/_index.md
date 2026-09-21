@@ -42,5 +42,6 @@
 | pol-MEXP | [Exposure is minimised and traffic is controlled](security/mexp-minimised-exposure.md)                         | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
 | pol-SCRT | [Secrets are managed, never embedded](security/scrt-secrets-management.md)                                     | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-SECD | [Security is designed in, not added on](security/secd-security-by-design.md)                                   | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |
+| pol-SUPL | [Third-party services are chosen deliberately, and watched](security/supl-supplier-services.md)                | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-TRUS | [We ship only components we know and trust](security/trus-trusted-components.md)                               | draft  | ISO 27001:2022          | 2027-08-04 |
 | pol-VURM | [Vulnerabilities are found, prioritised and closed to a timeframe](security/vurm-vulnerability-remediation.md) | draft  | ISO 27001:2022, UK GDPR | 2027-08-04 |

@@ -31,14 +31,17 @@ erosion: a year later nobody can tell it from never having known the rule.
 ## Scope
 
 Any knowing departure from a policy here, or from a standard that implements one, in any environment. Also, any shortcut
-taken knowing someone will have to undo it. This binds whether the departure is permanent, temporary, or made under
-pressure during an incident.
+taken knowing someone will have to undo it, any gap an external review, audit or oversight process finds in what
+engineering does, and any finding of engineering's own whose implications reach beyond the system it was found in. This
+binds whether the departure is permanent, temporary, or made under pressure during an incident.
 
 ## Clauses
 
 | Id        | Clause                                                                                                                                    | Alignment               |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
 | `RECORD`  | **MUST** record a deviation before departing from a policy or standard, or immediately afterwards where an incident left no time          | [ISO 27001:2022].A.5.36 |
+| `FINDING` | **MUST** turn a finding from an external review, audit or oversight process into tracked work with someone accountable for it             | [ISO 27001:2022].A.5.36 |
+| `UPWARD`  | **MUST** report a finding to whoever owns the organisation's risk register, when its implications reach beyond the system it was found in | [ISO 27001:2022].A.5.36 |
 | `OWNER`   | **MUST** name an individual who accepts the risk: someone with the authority to accept it, never a team or a role in the abstract         |                         |
 | `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                        |                         |
 | `EXPIRY`  | **MUST** give every deviation a review date                                                                                               |                         |
