@@ -4,7 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-AUTV.BLOCK, eng:pol-AUTV.INTEG, eng:pol-EVER.ASSETS, eng:pol-EVER.ORPHAN, eng:pol-EVER.PARITY,
-  eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-TRUS.INVENT, eng:pol-TRUS.REVIEW, eng:pol-TRUS.SOURCE ]
+  eng:pol-PIPE.CONFIG, eng:pol-SCRT.EMBED, eng:pol-SUPL.REVIEW, eng:pol-TRUS.INVENT, eng:pol-TRUS.SOURCE ]
 verified-by: [ ctl-0004, ctl-0005 ]
 applies-to:
   - all
@@ -45,7 +45,7 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 - Packages that only move as a set **MUST** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
 
-_**Covers:** `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.REVIEW`, `eng:pol-TRUS.SOURCE`_
+_**Covers:** `eng:pol-SUPL.REVIEW`, `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.SOURCE`_
 
 ### The shape of a YAML file is yamllint's to decide
 
