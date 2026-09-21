@@ -35,7 +35,7 @@ Check the pool size against the connection count.
 
 ## Resolution
 
-Raise the pool ceiling, or find what is holding connections open.
+Raise the pool ceiling, or find what is holding connections open. If neither works, [escalate](#escalation).
 
 ## Escalation
 

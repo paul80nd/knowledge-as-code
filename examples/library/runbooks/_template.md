@@ -80,9 +80,10 @@ _(A tree, not prose. Each branch ends in a resolution or an escalation, never in
 1. {{Restore service.}}
 2. {{The next action.}}
 
-Confirmed when {{what tells you service is back}}.
+Confirmed when {{what tells you service is back}}. If a step does not do what it says, [escalate](#escalation).
 
-_(Numbered and imperative. End with the `Confirmed when` line, so the reader knows when to stop.)_
+_(Numbered and imperative. End with the `Confirmed when` line, so the reader knows when to stop. Close that line with a
+link to the escalation, so a reader whose step did not work knows where to go.)_
 
 ## Escalation
 

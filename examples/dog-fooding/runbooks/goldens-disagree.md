@@ -98,7 +98,8 @@ The export golden is a contract a consumer reads.
 5. Run `kac generate` in each corpus you changed, and in `template/`.
 6. Say in the commit message why the golden moved.
 
-Confirmed when all three layers pass and the diff contains only lines you can account for.
+Confirmed when all three layers pass and the diff contains only lines you can account for. If a step does not do what
+it says, [escalate](#escalation).
 
 ## Escalation
 

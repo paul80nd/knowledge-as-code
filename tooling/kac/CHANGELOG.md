@@ -17,13 +17,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A runbook whose resolution gives no route out is reported.** `failure-route-stated` runs. `kac validate` fails a
+  runbook whose `Resolution` section links nowhere to `#escalation`, so a reader whose step did not work has somewhere
+  to go. The schema asked this of `Diagnosis` alone. A reader in the diagnosis is still choosing, and a reader in the
+  resolution is already acting on the estate. The rule matches the whole section, so a step with a route of its own
+  satisfies it as the closing line does.
+
 ### Changed
 
-- **A runbook states its desired outcome on a fixed line.** The `_template.md` that `kac new` sends now ends
-  `Resolution` with a line opening `Confirmed when`, where before it asked for the confirmation in any form. The
-  `runbooks.md` beside it now tells an author to write that line, having said nothing about `Resolution` at all.
-  `outcome-stated` is declared and does not run, so `kac generate` lists it under **Declared, not yet enforced** on the
-  type page.
+- **A runbook closes its resolution on a fixed line.** The `_template.md` that `kac new` sends now ends `Resolution`
+  with a line opening `Confirmed when` and closing with a link to the escalation. Before, it asked for the confirmation
+  in any form and gave no route out. The `runbooks.md` beside it now tells an author to write that line, having said
+  nothing about `Resolution` at all. `outcome-stated` is declared and does not run, so `kac generate` lists it under
+  **Declared, not yet enforced** on the type page.
 
 ## 0.29.0 - 2026-09-21
 

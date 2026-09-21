@@ -26,8 +26,9 @@ lineage:
     recovery over improvising it. The workbook asks a playbook to explain an alert's severity and impact, which
     `severity` and `Impact` state. AWS asks for step-by-step discovery, and for the tools and permissions to start:
     `Diagnosis`, `requires-tools` and `requires-access`. It asks a runbook to state its desired outcome clearly, which
-    the last line of `Resolution` does, opening `Confirmed when`. It asks for a route out where nobody finds the cause,
-    and a plan for telling the people waiting: `Escalation` and `Communication`
+    the last line of `Resolution` does, opening `Confirmed when`. It asks for error handling and a route out wherever
+    something goes wrong, so `Diagnosis` and `Resolution` both send the reader to `Escalation`. It asks for a plan for
+    telling the people waiting: `Communication`
   divergence: >
     Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
     `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both
@@ -141,6 +142,15 @@ rules:
   - id: outcome-stated
     description: Resolution ends with a line opening `Confirmed when`.
     # Declared. A resolution with no outcome leaves the reader guessing whether to stop.
+  - id: failure-route-stated
+    description: Resolution links to Escalation for a reader whose step did not work.
+    severity: error
+    # A section-wide match, so a step with a route of its own satisfies this as the closing line does.
+    expr: >-
+      section_matches('Resolution', '(?i)\(#escalation\)')
+    message: >
+      nothing in `Resolution` tells a reader whose step did not work where to go. Close the
+      `Confirmed when` line with a link to `#escalation`.
   - id: staleness-loud
     description: Rehearsal staleness, reported more loudly than a process's.
     # Scheduled. An unrehearsed runbook is followed during an incident.

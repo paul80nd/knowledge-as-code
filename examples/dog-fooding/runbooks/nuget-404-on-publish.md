@@ -75,7 +75,8 @@ that push from failing, but it does not make the version appear.
    kac --version
    ```
 
-Confirmed when `kac --version` prints the version you published.
+Confirmed when `kac --version` prints the version you published. If a step does not do what it says,
+[escalate](#escalation).
 
 ## Escalation
 
