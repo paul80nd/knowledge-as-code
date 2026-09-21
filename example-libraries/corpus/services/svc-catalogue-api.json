@@ -9,6 +9,7 @@
     "component-type": "api",
     "platform": "dotnet",
     "criticality": "critical",
+    "monitoring-output": "alert",
     "repos": [
       "platform"
     ],
@@ -31,6 +32,6 @@
     "Data": "This service has a database connection, configured as `ConnectionStrings__Catalogue`. The account-management and loan-history offerings are compiled into this application, so their stores are read through it too.\n\n**What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this catalogue was built from states it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df3f2c874ea9d726dcafc9008d79a0ccc2fb2ab5/examples/library/services/catalogue-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/services/catalogue-api.md"
   }
 }

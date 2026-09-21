@@ -9,6 +9,7 @@
     "component-type": "api",
     "platform": "typescript",
     "criticality": "important",
+    "monitoring-output": "ticket",
     "repos": [
       "search"
     ],
@@ -31,6 +32,6 @@
     "Data": "The index itself, stored by the search engine and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df3f2c874ea9d726dcafc9008d79a0ccc2fb2ab5/examples/library/services/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/services/search.md"
   }
 }

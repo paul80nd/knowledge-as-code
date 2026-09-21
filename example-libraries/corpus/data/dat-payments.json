@@ -33,6 +33,6 @@
     "Flows": "| Goes to             | Why                        | What is shared                        | Where they process it |\n|---------------------|----------------------------|---------------------------------------|-----------------------|\n| [itg-card-payments] | Taking and refunding money | Amount, payment reference, card token | UK and Ireland        |\n\nThe consortium never sends a borrower's name or address with a payment, so what crosses to Ireland is a pseudonymous reference and an amount."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df3f2c874ea9d726dcafc9008d79a0ccc2fb2ab5/examples/library/data/payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/data/payments.md"
   }
 }
