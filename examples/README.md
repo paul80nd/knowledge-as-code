@@ -60,7 +60,7 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 | Type           | Home                                       |
 |----------------|--------------------------------------------|
 | `adrs`         | `library`, `engineering`                   |
-| `offerings` | `library`, `payments`                      |
+| `offerings`    | `library`, `payments`                      |
 | `controls`     | `engineering`, `dog-fooding`               |
 | `data`         | `library`                                  |
 | `deviations`   | `dog-fooding`                              |
@@ -80,8 +80,9 @@ Every type the schema defines has a home. A type with no home is a set of rules 
 
 Every type above is adopted by the corpus that is home to it.
 
-Some adopted folders are still empty. `library` has no `processes` or `runbooks` record, and `engineering` has no
-`controls` record. An issue on this repository tracks each one.
+Some adopted folders are still empty. `library` has no `processes` or `runbooks` record, because
+[#30](https://github.com/paul80nd/knowledge-as-code/issues/30) has to settle whether the two types differ before
+either is worth writing. `engineering` has no `controls` record, and nothing tracks that.
 
 ## What they share
 
