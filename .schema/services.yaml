@@ -23,13 +23,15 @@ lineage:
     Backstage, OpsLevel and Cortex each require a word for the sort of component this is, which `component-type`
     states. `criticality` grades a service by what a customer loses while it is down, which is OpsLevel's tier and
     which Backstage has no field for. `repos` takes a list because OpsLevel lets one component name several
-    repositories, where Cortex takes one per git provider and Backstage one source location
+    repositories, where Cortex takes one per git provider and Backstage one source location. `interfaces` points at a
+    contract, as Cortex's `x-cortex-link` and an OpsLevel `tools` entry each do
   divergence: >
     Backstage, OpsLevel and Cortex each produce a row of metadata. This type produces a document somebody reads, so
     `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs, resources, systems
-    and domains as separate kinds, where this type folds dependencies, data stores and environments into one document,
-    and no field here states the APIs a component provides. `facets` refuses a value fewer than two services share,
-    and no source has anything like it. Backstage, OpsLevel and Cortex say lifecycle and tier where this type says
+    and domains as separate kinds, where this type folds dependencies, data stores and environments into one document.
+    Backstage's `spec.definition` puts the contract text inside the catalogue, where `interfaces` states the address
+    the contract is published at. `facets` refuses a value fewer than two services share, and no source has anything
+    like it. Backstage, OpsLevel and Cortex say lifecycle and tier where this type says
     `status` and `criticality`: `tier` already grades a record's authority, and `status` is on every type. Each of
     them puts a paging tool's id in `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where
     `monitoring-output` states a standing commitment a reader can act on. Its `alert`, `ticket` and `log` are the
@@ -100,6 +102,28 @@ fields:
       runs, so `building` and `retired` are exempt. See
       <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
 
+  interfaces:
+    required: false
+    type: list
+    of: object
+    entry:
+      type:
+        required: true
+        type: enum
+        values: $corpus.interface-type
+        description: The contract format, such as `openapi` or `asyncapi`.
+      contract:
+        required: true
+        type: string
+        pattern: '^https://\S+$'
+        description: The address the contract is published at.
+    description: The interfaces this service offers, with the contract for each.
+    notes: >
+      A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
+      states a bare repository name and no convention derives a path from one. The range belongs to the
+      estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+
   depends-on:
     required: false
     type: list
@@ -147,7 +171,7 @@ sections:
 
 export:
   version: 2
-  fields: [id, title, status, component-type, platform, criticality, monitoring-output, repos, depends-on, data-stores, nfrs, facets, tags]
+  fields: [id, title, status, component-type, platform, criticality, monitoring-output, repos, interfaces, depends-on, data-stores, nfrs, facets, tags]
   sections:
     What it does: full
     Where it lives: full

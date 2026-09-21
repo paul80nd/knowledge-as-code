@@ -8,6 +8,11 @@ repos: [ platform ]
 platform: dotnet
 criticality: critical
 monitoring-output: alert
+interfaces:
+  - type: asyncapi
+    contract: https://git.example.com/example-libraries/platform/blob/main/src/ApiGateways/Catalogue/contract/events.yaml
+  - type: openapi
+    contract: https://git.example.com/example-libraries/platform/blob/main/src/ApiGateways/Catalogue/contract/openapi.yaml
 depends-on:
   - svc-lending
 owner: human:robin.hale

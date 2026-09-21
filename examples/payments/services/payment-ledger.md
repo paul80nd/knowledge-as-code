@@ -8,6 +8,9 @@ repos: [ payment-ledger ]
 platform: dotnet
 criticality: critical
 monitoring-output: alert
+interfaces:
+  - type: openapi
+    contract: https://git.example.com/example-payments/payment-ledger/blob/main/contract/openapi.yaml
 nfrs:
   - nfr-0002
 owner: human:paul.law

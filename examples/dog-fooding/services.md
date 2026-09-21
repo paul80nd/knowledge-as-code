@@ -58,6 +58,7 @@ of the catalogue as well, because it deploys services.
 | `platform` *        | `dotnet` `static`                        | What it is built on. Drives which standards apply.                                                   |
 | `criticality` *     | `critical` `important` `supporting`      | Judged by what a customer experiences when it is unavailable.                                        |
 | `monitoring-output` | `alert` `ticket` `log` `none`            | How a live problem with this service reaches a person. Required when `status in [live, deprecated]`. |
+| `interfaces`        | list                                     | The interfaces this service offers, with the contract for each.                                      |
 | `depends-on`        | list                                     | What this service calls, downward only.                                                              |
 | `data-stores`       | list                                     | Data ids this service owns or reads.                                                                 |
 | `nfrs`              | list                                     | Ids of the NFRs this service must meet.                                                              |
@@ -73,8 +74,10 @@ of the catalogue as well, because it deploys services.
 1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services take a **slug id**, `svc-<name>`, because they
    have natural stable names.
 2. Fill in the frontmatter. `depends-on` names other service ids. The [index](services/_index.md) is where to find them.
-3. Record environments and URLs, and the data stores it owns.
-4. Keep it current. Everything else in the corpus trusts this catalogue, so an entry that has drifted from the estate
+3. List each interface the service offers in `interfaces`: the contract format, and the address the contract is
+   published at.
+4. Record environments and URLs, and the data stores it owns.
+5. Keep it current. Everything else in the corpus trusts this catalogue, so an entry that has drifted from the estate
    sends the next reader to the wrong repository.
 
 **Conventions**
@@ -194,6 +197,7 @@ words worth keeping are the ones thrown away.
 | `enum`                        | error   | Enum values are in range and lowercase.                                                                         |
 | `field-pattern`               | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
 | `list-order`                  | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
+| `entry-shape / entry-key`     | error   | An object field, and each entry of an object list, carries the keys the field declares and no others.           |
 | `min-records`                 | warning | A value in a grouping field is carried by at least as many records as the schema asks for.                      |
 | `type-matches-folder`         | error   | `type` matches the singular type name the record's folder declares.                                             |
 | `tier-matches-type`           | error   | `tier` matches the tier the type declares.                                                                      |
