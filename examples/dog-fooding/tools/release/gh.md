@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:github/cli/cli }
 homepage: https://cli.github.com/
 licence: MIT
+licence-declared: MIT
 decided-on: "2026-08-20"
 review-by: "2027-08-20"
 owner: human:paul.law

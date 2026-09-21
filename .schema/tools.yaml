@@ -29,8 +29,9 @@ lineage:
   alignment: >
     The Radar files a technology under one of four stances, which `status` does, and records what was turned down
     beside what was taken up. CycloneDX identifies a component by package URL and SPDX by an external reference of the
-    same form, which `packages` states, one entry per package. Both give a component a licence and a home page, which
-    `licence` and `homepage` state. OpenSSF asks whether a project is still maintained, and `review-by` puts a date on
+    same form, which `packages` states, one entry per package. Both split a component's licence into what the package
+    declares and what a person concluded, which `licence-declared` and `licence` state. Both give a component a home
+    page, which `homepage` states. OpenSSF asks whether a project is still maintained, and `review-by` puts a date on
     the answer
   divergence: >
     The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is internal,
@@ -38,7 +39,9 @@ lineage:
     the same way: `approved` and `rejected` are acts this estate took, where the Radar's `adopt` and `hold` are advice
     it offers. There is no `assess` ring, because something nobody has committed to is not yet an entry, and
     `deprecated` is added. CycloneDX and SPDX inventory what is installed, one version per component, where this
-    register states the range approved for new work
+    register states the range approved for new work. CycloneDX tags each entry of one licence list `declared` or
+    `concluded`, where this states two fields as SPDX does. Its `evidence.licenses` block has no counterpart here,
+    because `Licence and obligations` states the reasoning as prose
 id:
   prefix: tol
   style: slug
@@ -98,11 +101,24 @@ fields:
       See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#tools>.
 
   licence:
+    required: true
+    type: string
+    pattern: '^[A-Za-z0-9.\-+ ()]+$'
+    description: The licence concluded to apply, as an SPDX expression, `NONE` or `NOASSERTION`.
+    notes: >
+      The concluded value, which SPDX states at `PackageLicenseConcluded`. The pattern accepts an expression, so
+      `Apache-2.0 OR MIT` passes. `NOASSERTION` says nobody has reached a determination.
+      See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#tools>.
+
+  licence-declared:
     required: false
     type: string
     pattern: '^[A-Za-z0-9.\-+ ()]+$'
-    description: The licence, as an SPDX identifier.
-    notes: The pattern accepts an SPDX expression too, so `Apache-2.0 OR MIT` passes.
+    description: The package's own statement of its licence, kept word for word.
+    notes: >
+      The declared value, which SPDX states at `PackageLicenseDeclared`. It keeps a string SPDX has no expression
+      for, so npm's `SEE LICENSE IN README.md` passes the pattern unchanged.
+      See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#tools>.
 
   decided-on:
     required: true
@@ -145,9 +161,9 @@ sections:
     a standard in the corpus asks for one.
 
 export:
-  version: 2
-  fields: [id, title, status, category, packages, homepage, licence, decided-on, review-by, decided-in,
-           replaces, successor, tags]
+  version: 3
+  fields: [id, title, status, category, packages, homepage, licence, licence-declared, decided-on, review-by,
+           decided-in, replaces, successor, tags]
   sections:
     What we use it for: full
     Status: full
@@ -184,6 +200,15 @@ rules:
     message: >
       this tool is out of use and nothing says why. Add a `## Status` section stating what went wrong with it,
       so nobody runs the same evaluation again.
+  - id: conclusion-states-a-reason
+    description: A tool whose concluded licence differs from its declared one says how that was reached.
+    severity: warning
+    expr: >
+      present('licence-declared') and field('licence-declared') != field('licence')
+      implies section('Licence and obligations')
+    message: >
+      this tool concludes a licence the package does not declare, and nothing says how. Add a
+      `## Licence and obligations` section stating what you read and what you concluded from it.
   - id: review-in-date
     description: An entry names a review date that has not passed.
     severity: warning

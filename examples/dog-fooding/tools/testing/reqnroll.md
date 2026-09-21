@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:nuget/Reqnroll.xunit.v3, versions: 3.3.x }
 homepage: https://reqnroll.net/
 licence: BSD-3-Clause
+licence-declared: BSD-3-Clause
 decided-on: "2026-08-04"
 review-by: "2027-08-04"
 owner: human:paul.law

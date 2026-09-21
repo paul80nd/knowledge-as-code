@@ -170,8 +170,8 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
-        tools@2
-          fields: id, title, status, category, packages, homepage, licence, decided-on, review-by, decided-in, replaces, successor, tags
+        tools@3
+          fields: id, title, status, category, packages, homepage, licence, licence-declared, decided-on, review-by, decided-in, replaces, successor, tags
           sections:
             What we use it for: full
             Status: full

@@ -4,6 +4,7 @@ type: tool
 tier: descriptive
 status: trial
 homepage: https://{{project}}
+licence: "{{SPDX}}"
 decided-on: "{{date}}"
 review-by: "{{date}}"
 owner:
@@ -28,7 +29,11 @@ and how it is reviewed. What is below is only what a tool adds to that.
   pin: the register states what we stand behind, and the manifests state what is installed. Leave `versions` out
   where nothing pins the package, and leave `packages` out where nothing distributes the tool.
 * **`homepage`**: the project's own page, so a reader reaches the project and not a fork.
-* **`licence`**: an SPDX identifier. Nobody wants the field until they urgently do.
+* **`licence`**: the licence you concluded applies, as an SPDX expression. Write `NOASSERTION` where nobody has
+  checked yet, so the gap shows.
+* **`licence-declared`**: what the package states about itself, written as it states it. Fill it wherever you read it,
+  including where your conclusion matches. Where the two differ, `conclusion-states-a-reason` asks for a
+  `## Licence and obligations` section.
 * **`decided-on`**: the day the current `status` was decided.
 * **`review-by`**: the day somebody checks this entry is still right. `review-in-date` warns once it has passed.
 * **`decided-in`**: an ADR, where one exists.
@@ -88,7 +93,7 @@ _(Brief. If the choice was contested or expensive, the reasoning belongs in an A
 
 ## Licence and obligations
 
-{{SPDX identifier}}. Any attribution, copyleft or commercial-use obligations that follow from it.
+What you read, what you concluded from it, and any attribution, copyleft or commercial-use obligations that follow.
 
 ## Related
 

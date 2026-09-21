@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:pypi/mkdocs, versions: 1.6.x }
 homepage: https://www.mkdocs.org/
 licence: BSD-2-Clause
+licence-declared: BSD-2-Clause
 decided-on: "2026-08-24"
 review-by: "2027-08-24"
 owner: human:paul.law

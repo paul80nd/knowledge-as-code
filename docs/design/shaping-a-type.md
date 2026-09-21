@@ -363,10 +363,23 @@ external reference of the same form, so one entry per package is what a manifest
 range sits on the package rather than on the record, because a family chosen together is often pinned apart:
 `Spectre.Console` and `Spectre.Console.Cli` are one decision at two version ranges.
 
-`licence` and `Licence and obligations` travel together. The identifier says which licence, and the section says what
-that licence obliges you to. A reader acts on the second. `homepage` travels beside them. SPDX leaves a home page
-optional and makes a download location mandatory instead, and this register asks for the home page: the first question
-the OpenSSF evaluation guide puts is whether you have the project you think you have, rather than a fork of it.
+`licence` and `licence-declared` split what a person concluded from what the package states about itself. SPDX splits
+it the same way, at `PackageLicenseConcluded` and `PackageLicenseDeclared`. CycloneDX splits it as one list with a
+`declared` or `concluded` tag on each entry, and that shape does not fit here: an `expr:` compares two fields and
+cannot compare two entries of one list, and an index column renders only the first key of an object list.
+
+`licence` is required and accepts `NOASSERTION`. A register that can leave the field out hides an entry nobody
+screened, where `NOASSERTION` shows one. `licence-declared` keeps a string SPDX has no expression for, so npm's
+`SEE LICENSE IN README.md` is recorded as written. Writing `NOASSERTION` there would throw away the evidence for why
+the entry needed a conclusion at all.
+
+`Licence and obligations` says what the licence obliges you to, and that is what a reader acts on.
+`conclusion-states-a-reason` asks for the section where the two values differ. The index column shows the concluded
+value alone, because that is the value the estate acts on.
+
+`homepage` travels beside them. SPDX leaves a home page optional and makes a download location mandatory instead, and
+this register asks for the home page: the first question the OpenSSF evaluation guide puts is whether you have the
+project you think you have, rather than a fork of it.
 
 `decided-on` and `review-by` are the two dates an approval needs. `decided-on` says when the current stance was
 settled. `review-by` expires it, and `review-in-date` warns once the day has passed. Without the second, an approval

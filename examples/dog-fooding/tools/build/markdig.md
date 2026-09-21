@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:nuget/Markdig, versions: 1.x }
 homepage: https://github.com/xoofx/markdig
 licence: BSD-2-Clause
+licence-declared: BSD-2-Clause
 decided-on: "2026-08-03"
 review-by: "2027-08-03"
 owner: human:paul.law

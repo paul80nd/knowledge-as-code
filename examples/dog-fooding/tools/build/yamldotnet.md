@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:nuget/YamlDotNet, versions: 18.x }
 homepage: https://github.com/aaubry/YamlDotNet
 licence: MIT
+licence-declared: MIT
 decided-on: "2026-08-03"
 review-by: "2027-08-03"
 owner: human:paul.law

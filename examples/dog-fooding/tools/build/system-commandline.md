@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:nuget/System.CommandLine }
 homepage: https://github.com/dotnet/command-line-api
 licence: MIT
+licence-declared: MIT
 decided-on: "2026-08-21"
 review-by: "2027-08-21"
 successor: tol-spectre-console

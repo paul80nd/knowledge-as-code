@@ -39,8 +39,17 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   to go. The schema asked this of `Diagnosis` alone. A reader in the diagnosis is still choosing, and a reader in the
   resolution is already acting on the estate. The rule matches the whole section, so a step with a route of its own
   satisfies it as the closing line does.
+- **A tool states what the package declares apart from what somebody concluded.** `tools` declares
+  `licence-declared`, which keeps a string SPDX has no expression for, such as npm's `SEE LICENSE IN README.md`.
+  `licence` states the concluded value. `kac validate` warns through `conclusion-states-a-reason` where the two
+  differ and no `## Licence and obligations` section says how the conclusion was reached. Both fields travel in the
+  export, and `version:` under `export:` in `.schema/tools.yaml` moves to 3.
 
 ### Changed
+
+- **`licence` on a tool is required.** `kac validate` fails a tool record that states none, through
+  `required-field`. An entry nobody has screened states `NOASSERTION`, so the register shows the gap. A corpus that
+  has adopted `tools` fills the field in every record before it takes this schema.
 
 - **An optional field's range is asked for from the first document that states it.** `kac validate` reported
   `corpus-enum-undeclared` for every field drawing on `enums:` as soon as the corpus held one record of the type, so a

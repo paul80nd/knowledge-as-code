@@ -8,7 +8,8 @@ packages:
   - { purl: pkg:nuget/xunit.runner.visualstudio, versions: 3.1.x }
   - { purl: pkg:nuget/xunit.v3, versions: 3.1.x }
 homepage: https://xunit.net/
-licence: Apache-2.0
+licence: Apache-2.0 AND MIT
+licence-declared: Apache-2.0 AND MIT
 decided-on: "2026-08-04"
 review-by: "2027-08-04"
 owner: human:paul.law
@@ -43,7 +44,8 @@ None. `kac.features` needs a runner Reqnroll binds to, and xUnit already ran the
 
 ## Licence and obligations
 
-Apache-2.0. It asks that the licence and any notice file travel with a redistribution. Nothing here redistributes it:
+The two xUnit packages are Apache-2.0 and `Microsoft.NET.Test.Sdk` is MIT, which is why this entry names both.
+Apache-2.0 asks that the licence and any notice file travel with a redistribution. Nothing here redistributes them:
 the packages are test-only, and no published artefact includes them.
 
 ## Related

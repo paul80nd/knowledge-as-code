@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 45,
+    "validated": 46,
     "templates": 17,
     "skipped": 0,
     "errors": 25,
-    "warnings": 30,
+    "warnings": 31,
     "infos": 0
   },
   "findings": [
@@ -364,6 +364,13 @@
       "severity": "error",
       "check": "provenance-required",
       "message": "neither `derived-from` nor `implements` is set, so this standard does not say where its authority comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the document as an explanation."
+    },
+    {
+      "file": "tools/conclusion-no-reason.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "conclusion-states-a-reason",
+      "message": "this tool concludes a licence the package does not declare, and nothing says how. Add a `## Licence and obligations` section stating what you read and what you concluded from it."
     },
     {
       "file": "tools/deprecated-no-successor.md",

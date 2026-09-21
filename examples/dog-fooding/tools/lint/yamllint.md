@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:pypi/yamllint, versions: 1.38.x }
 homepage: https://github.com/adrienverge/yamllint
 licence: GPL-3.0-or-later
+licence-declared: GPL-3.0-or-later
 decided-on: "2026-09-02"
 review-by: "2027-09-02"
 owner: human:paul.law

@@ -4,6 +4,7 @@ type: tool
 tier: descriptive
 status: trial
 homepage: https://{{project}}
+licence: "{{SPDX}}"
 decided-on: "{{date}}"
 review-by: "{{date}}"
 owner:
