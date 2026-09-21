@@ -15,15 +15,7 @@ public class VerificationTests
     [Fact]
     public void A_record_whose_body_changed_carries_a_new_verification()
     {
-        var named = Environment.GetEnvironmentVariable("KAC_BASE_REF");
-        var before = Base(named);
-
-        // A named base git cannot reach is a shallow checkout, and this guard reads nothing and passes on
-        // one. An unnamed base that resolves nothing is a tree nobody branched, which is ordinary.
-        Assert.False(before is null && !string.IsNullOrEmpty(named),
-            $"KAC_BASE_REF names '{named}', and no commit in this tree answers to it, so nothing was "
-            + "compared. This guard reads the history a shallow checkout drops, so the job setting that "
-            + "variable needs 'fetch-depth: 0'.");
+        var before = Diff.Against();
         if (before is null) return;
 
         var folders = Schema.Load(Repo.Root).ByFolder
@@ -41,7 +33,9 @@ public class VerificationTests
         var stale = new List<string>();
         var unread = new List<string>();
 
-        foreach (var (was, now) in Changed(before).Where(pair => IsRecord(pair.Now, folders)))
+        // A modification or a rename, because a file added at this revision has nothing at `before` to
+        // compare and a file deleted has nothing now.
+        foreach (var (_, was, now) in Diff.Changed(before, "MR").Where(file => IsRecord(file.Now, folders)))
         {
             // git answers nothing for a path it cannot spell as one argument, which is a path with a
             // space in it. Reported rather than skipped: a record this guard silently passed over reads
@@ -64,43 +58,6 @@ public class VerificationTests
             + string.Join("\n  ", stale)
             + "\nName yourself in 'generated' where you wrote the new text, or add a 'verified' entry "
             + "naming whoever read it.");
-    }
-
-    // The commit this branch grew from, or null where git could not name one. `named` comes from
-    // `KAC_BASE_REF` and is the pull request's own target branch, which CI knows and a working tree does
-    // not. It is used alone, so a job that sets it and gets no answer fails instead of falling back to a
-    // branch that would compare the wrong thing.
-    private static string? Base(string? named)
-    {
-        string[] candidates = string.IsNullOrEmpty(named) ? ["origin/main", "main"] : [named];
-
-        return candidates
-            .Select(candidate => Git.Run(Repo.Root, $"merge-base {candidate} HEAD")?.Trim())
-            .FirstOrDefault(sha => sha is { Length: >= 40 });
-    }
-
-    // Every tracked file the working tree has changed since `before`, as the path it had then and the
-    // path it has now. An edit nobody has committed yet is read the way CI reads a merged one. A rename
-    // is a change like any other, and the two paths differ only for one: a record renamed and rewritten
-    // in one pull request is what a guard reading the new path alone would pass over.
-    //
-    // `-z` separates every field with a NUL, so a path with a quote, a tab or a non-ASCII character in it
-    // arrives as git stored it. Without it git escapes such a path and this would ask for a file whose
-    // name it had just mangled.
-    private static IEnumerable<(string Was, string Now)> Changed(string before)
-    {
-        var fields = (Git.Run(Repo.Root, $"diff --name-status -M -z --diff-filter=MR {before} --") ?? "")
-            .Split('\0', StringSplitOptions.RemoveEmptyEntries);
-
-        for (var i = 0; i + 1 < fields.Length;)
-        {
-            // A rename carries both paths after its status, and a modification carries one.
-            var renamed = fields[i].StartsWith('R');
-            if (renamed && i + 2 >= fields.Length) yield break;
-
-            yield return renamed ? (fields[i + 1], fields[i + 2]) : (fields[i + 1], fields[i + 1]);
-            i += renamed ? 3 : 2;
-        }
     }
 
     // A record of a type declaring the field, in any of the trees here. The folder is looked for anywhere
