@@ -7,7 +7,7 @@ implements: [ eng:pol-ACCS.DUTIES, eng:pol-ACCS.LEAST, eng:pol-AUTV.BLOCK, eng:p
   eng:pol-PIPE.ASCODE, eng:pol-PIPE.DEPLOY, eng:pol-PIPE.GATES, eng:pol-PIPE.LOCAL, eng:pol-PIPE.MANUAL,
   eng:pol-PIPE.TRACE, eng:pol-SCRT.EMBED, eng:pol-SCRT.LOGS, eng:pol-SCRT.ROTATE, eng:pol-SCRT.STORE,
   eng:pol-TRUS.MUTATE, eng:pol-TRUS.REPO, eng:pol-TRUS.SOURCE, eng:pol-TRUS.UNTRUST ]
-verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006 ]
+verified-by: [ ctl-0001, ctl-0002, ctl-0003, ctl-0006, ctl-0011 ]
 applies-to:
   - all
 review-by: "2027-09-02"
@@ -161,9 +161,10 @@ Read-only permission keeps CI out of the files a person edits. `generate --check
 names the command to run locally, so no job needs to write one back.
 
 A `content-version` that has not moved publishes nothing, so no reader sees the edited record and the published copy
-drifts from `main` with no build reporting it. Merging a move of `<Version>` publishes to nuget.org, and a published
-version cannot be replaced. So the branch owner decides whether to release before the pull request opens, and an entry
-waits under `## Unreleased` until they do. What each of these numbers means, and what a producer's move obliges of the
+drifts from `main`. [ctl-0011] reports that on the pull request, and a reviewer judges whether the move is the right
+size. Merging a move of `<Version>` publishes to nuget.org, and a published version cannot be replaced. So the branch
+owner decides whether to release before the pull request opens, and an entry waits under `## Unreleased` until they
+do. What each of these numbers means, and what a producer's move obliges of the
 corpora consuming it, are [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a
 workflow publishes it.
 
@@ -205,4 +206,5 @@ corpus receives it, and it names `actions/checkout@v4` today.
 [Security hardening for GitHub Actions]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions
 [Trusted publishing on nuget.org]: https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
 [actionlint]: https://github.com/rhysd/actionlint
+[ctl-0011]: ../controls/0011-content-version-tests.md
 [std-VERS]: versioning.md
