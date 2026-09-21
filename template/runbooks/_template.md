@@ -77,7 +77,12 @@ _(A tree, not prose. Each branch ends in a resolution or an escalation, never in
 
 ## Resolution
 
-Steps to restore service, imperative and numbered. Then how to confirm it is actually restored.
+1. {{Restore service.}}
+2. {{The next action.}}
+
+Confirmed when {{what tells you service is back}}.
+
+_(Numbered and imperative. End with the `Confirmed when` line, so the reader knows when to stop.)_
 
 ## Escalation
 
