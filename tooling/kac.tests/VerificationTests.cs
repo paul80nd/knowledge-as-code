@@ -35,7 +35,8 @@ public class VerificationTests
 
         // A modification or a rename, because a file added at this revision has nothing at `before` to
         // compare and a file deleted has nothing now.
-        foreach (var (_, was, now) in Diff.Changed(before, "MR").Where(file => IsRecord(file.Now, folders)))
+        foreach (var (was, now) in Diff.Changed(before, "MR")
+                     .Where(file => RecordPath.IsRecord(file.Now, folders)))
         {
             // git answers nothing for a path it cannot spell as one argument, which is a path with a
             // space in it. Reported rather than skipped: a record this guard silently passed over reads
@@ -58,18 +59,5 @@ public class VerificationTests
             + string.Join("\n  ", stale)
             + "\nName yourself in 'generated' where you wrote the new text, or add a 'verified' entry "
             + "naming whoever read it.");
-    }
-
-    // A record of a type declaring the field, in any of the trees here. The folder is looked for anywhere
-    // above the file, because a corpus may file its records in subfolders and a type reads them all.
-    // `_index.md` is generated and `_template.md` is a shape rather than a record, and neither carries a
-    // verification.
-    private static bool IsRecord(string rel, IReadOnlySet<string> folders)
-    {
-        var parts = rel.Split('/');
-
-        return rel.EndsWith(".md", StringComparison.Ordinal)
-               && !parts[^1].StartsWith('_')
-               && parts[..^1].Any(folders.Contains);
     }
 }

@@ -336,8 +336,8 @@ their own corpus holds records nobody there wrote.
   of its own: `.corpus.yaml` finds the corpus, and `.schema/` above it finds what to judge that corpus against. Do not
   unify any of them without keeping those distinctions.
 * **Two guards read git history, and a shallow checkout leaves them reading nothing.** `VerificationTests` compares
-  every changed `fix` and `report` against the base branch, and `ContentVersionTests` compares every changed record
-  against the `content-version` its corpus states. `Diff` asks git for both. The job running
+  every changed `fix` and `report` against the base branch, and `ContentVersionTests` fails a corpus whose records
+  changed and whose `content-version` did not rise. `Diff` asks git for both. The job running
   `dotnet test tooling/kac.tests` therefore checks out with `fetch-depth: 0` and passes the base branch in
   `KAC_BASE_REF`. A job that sets the variable and cannot reach the branch fails. A job that sets neither reads
   nothing and passes, which is what a local run on `main` does.

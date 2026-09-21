@@ -40,16 +40,16 @@ internal static class Diff
         (Git.Run(Repo.Root, "ls-files --others --exclude-standard -z") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
-    // Every tracked file the working tree has changed since `before`: git's status letter, the path the
-    // file had then, and the path it has now. `filter` is git's `--diff-filter`, so each caller asks for
-    // the statuses its own question needs. An edit nobody has committed yet is read the way CI reads a
+    // Every tracked file the working tree has changed since `before`, as the path it had then and the
+    // path it has now. `filter` is git's `--diff-filter`, so each caller asks for the statuses its own
+    // question needs. An edit nobody has committed yet is read the way CI reads a
     // merged one. Only a rename gives two different paths, and a record renamed and rewritten in one pull
     // request is what a guard reading the new path alone would pass over.
     //
     // `-z` separates every field with a NUL, so a path with a quote, a tab or a non-ASCII character in it
     // arrives as git stored it. Without it git escapes such a path and the caller asks for a file whose
     // name it had just mangled.
-    internal static IEnumerable<(char Status, string Was, string Now)> Changed(string before, string filter)
+    internal static IEnumerable<(string Was, string Now)> Changed(string before, string filter)
     {
         var fields =
             (Git.Run(Repo.Root, $"diff --name-status -M -z --diff-filter={filter} {before} --") ?? "")
@@ -61,11 +61,9 @@ internal static class Diff
             var renamed = fields[i].StartsWith('R');
             if (renamed && i + 2 >= fields.Length) yield break;
 
-            var status = fields[i][0];
-
             yield return renamed
-                ? (status, fields[i + 1], fields[i + 2])
-                : (status, fields[i + 1], fields[i + 1]);
+                ? (fields[i + 1], fields[i + 2])
+                : (fields[i + 1], fields[i + 1]);
 
             i += renamed ? 3 : 2;
         }

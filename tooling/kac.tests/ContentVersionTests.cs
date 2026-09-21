@@ -5,9 +5,10 @@ using kac.core;
 // revisions together show one moving without the other. So this reads the diff, as `VerificationTests`
 // does.
 //
-// The reach is a record of a type declaring an `export:` block, in a corpus under `examples/`. An export
-// ships records, so a framework page, a README and a `.schema/` file are all outside it. Whether the move
-// is the right size is a judgement, and `std-VERS` is where a reviewer reads what each part means.
+// The reach is a whole record of a type declaring an `export:` block, in a corpus under `examples/`. It
+// is wider than the obligation in one direction and narrower in another, and `ctl-0011` names both:
+// `std-VERS` exempts a change confined to a section the export leaves out, and it asks for a move where
+// a `.schema/` edit or a bundled skill reaches a record.
 
 namespace kac.tests;
 
@@ -29,18 +30,18 @@ public class ContentVersionTests
             .Select(pair => pair.Key)
             .ToHashSet(StringComparer.Ordinal);
 
-        // Read off the schema and off the tree, so a type that starts exporting and a corpus added under
-        // `examples/` are both covered with nothing to remember. Reading none of either is this guard
-        // having gone quiet, and green is what it would report from then on.
+        var corpora = Corpora();
+
+        // Both sets are read off the schema and the tree, so a type that stops exporting and a corpus
+        // added under `examples/` are covered with nothing to remember. An empty one is this guard gone
+        // quiet, and green is what it would report from then on.
         Assert.True(exported.Count > 0,
             "no type declares an 'export:' block, so this guard is checking nothing. Either the key was "
             + "renamed, or the types declaring it have gone.");
 
-        var corpora = Corpora();
-
         Assert.True(corpora.Count > 0,
-            $"no folder under '{ExportedRecord.Published}/' holds a {Descriptor}, so this guard is "
-            + "checking nothing. Either the corpora moved, or the descriptor was renamed.");
+            $"no folder under '{RecordPath.Published}/' keeps a {Descriptor}, so this guard is checking "
+            + "nothing. Either the corpora moved, or the descriptor was renamed.");
 
         var changed = new SortedDictionary<string, SortedSet<string>>(StringComparer.Ordinal);
 
@@ -54,7 +55,7 @@ public class ContentVersionTests
 
         foreach (var path in touched)
         {
-            if (ExportedRecord.CorpusOf(path, corpora, exported) is not { } corpus) continue;
+            if (RecordPath.CorpusOf(path, corpora, exported) is not { } corpus) continue;
 
             if (!changed.TryGetValue(corpus, out var records))
                 changed[corpus] = records = new SortedSet<string>(StringComparer.Ordinal);
@@ -63,8 +64,8 @@ public class ContentVersionTests
         }
 
         var unmoved = changed
-            .Where(pair => Unmoved(pair.Key, before))
-            .Select(pair => $"{ExportedRecord.Published}/{pair.Key} at {Version(Now(pair.Key))}\n      "
+            .Where(pair => !Rose(pair.Key, before))
+            .Select(pair => $"{RecordPath.Published}/{pair.Key} at {Stated(pair.Key)}\n      "
                             + string.Join("\n      ", pair.Value))
             .ToList();
 
@@ -77,26 +78,24 @@ public class ContentVersionTests
     // Each corpus under `examples/`, by folder name.
     private static IReadOnlySet<string> Corpora() =>
         Directory
-            .EnumerateDirectories(Path.Combine(Repo.Root, ExportedRecord.Published))
+            .EnumerateDirectories(Path.Combine(Repo.Root, RecordPath.Published))
             .Where(dir => File.Exists(Path.Combine(dir, Descriptor)))
             .Select(dir => new DirectoryInfo(dir).Name)
             .ToHashSet(StringComparer.Ordinal);
 
-    // Whether this corpus states the same stamp now as it did at `before`. A corpus this branch created
-    // has no descriptor at `before`, so there is nothing to compare and its first stamp stands.
-    private static bool Unmoved(string corpus, string before)
-    {
-        var path = $"{ExportedRecord.Published}/{corpus}/{Descriptor}";
+    // Whether this corpus states a higher stamp than it did at `before`. A stamp edited downwards is
+    // reported alongside one nobody touched, because a registry orders what it is given and a consumer
+    // resolving a range would take the older content. A corpus this branch created has no descriptor at
+    // `before`, so there is nothing to compare and its first stamp stands.
+    private static bool Rose(string corpus, string before) =>
+        Git.Run(Repo.Root, $"show {before}:{RecordPath.Published}/{corpus}/{Descriptor}") is not { } then
+        || VersionRange.Newer(Stated(corpus) ?? "", Version(then) ?? "");
 
-        return Git.Run(Repo.Root, $"show {before}:{path}") is { } then
-               && Version(then) == Version(Now(corpus));
-    }
+    // The stamp this corpus states now. Null where the descriptor states none, which `pack` refuses and
+    // no corpus under `examples/` does.
+    private static string? Stated(string corpus) =>
+        Version(Files.ReadLf(Path.Combine(Repo.Root, RecordPath.Published, corpus, Descriptor)));
 
-    private static string Now(string corpus) =>
-        Files.ReadLf(Path.Combine(Repo.Root, ExportedRecord.Published, corpus, Descriptor));
-
-    // Null where the descriptor states no stamp. Every corpus under `examples/` states one, and `pack`
-    // refuses a corpus that does not.
     private static string? Version(string descriptor) =>
         Yaml.Str(Yaml.Get(Yaml.Load(descriptor), Stamp));
 }

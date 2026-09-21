@@ -1,14 +1,21 @@
-// The branches of `ExportedRecord.CorpusOf`, which the guard beside it runs over whatever a pull request
-// changed. Nothing here reads the repository, so each decision stays provable on a path a test writes.
+// The branches of `RecordPath`, which the guards beside it run over whatever a pull request changed.
+// Nothing here reads the repository, so each decision stays provable on a path a test writes.
 
 namespace kac.tests;
 
-public class ExportedRecordTests
+public class RecordPathTests
 {
     private static readonly HashSet<string> Corpora = new(StringComparer.Ordinal) { "library", "payments" };
 
-    private static readonly HashSet<string> Exported =
-        new(StringComparer.Ordinal) { "standards", "policies" };
+    private static readonly HashSet<string> Types = new(StringComparer.Ordinal) { "standards", "policies" };
+
+    [Fact]
+    public void A_record_of_a_named_type_is_a_record()
+        => Assert.True(RecordPath.IsRecord("standards/naming.md", Types));
+
+    [Fact]
+    public void A_record_of_a_type_nobody_named_is_not()
+        => Assert.False(RecordPath.IsRecord("data/rooms.md", Types));
 
     [Fact]
     public void A_record_in_an_exported_type_names_its_corpus()
@@ -23,7 +30,7 @@ public class ExportedRecordTests
     public void A_record_of_a_type_that_exports_nothing_is_left_alone()
         => Assert.Null(CorpusOf("examples/library/data/rooms.md"));
 
-    // The type root page, the generated index and the shape a new record starts from. An export ships
+    // The type root page, the generated index, and the shape a new record starts from. An export ships
     // none of them.
     [Theory]
     [InlineData("examples/library/standards.md")]
@@ -43,14 +50,20 @@ public class ExportedRecordTests
     public void A_tree_outside_examples_is_left_alone(string path)
         => Assert.Null(CorpusOf(path));
 
-    // A folder under `examples/` holding no descriptor is not a corpus, whatever it holds.
     [Fact]
-    public void A_folder_that_is_not_a_corpus_is_left_alone()
+    public void A_file_sitting_directly_under_examples_is_left_alone()
         => Assert.Null(CorpusOf("examples/README.md"));
 
     [Fact]
     public void A_path_under_an_unknown_corpus_is_left_alone()
         => Assert.Null(CorpusOf("examples/archive/standards/naming.md"));
 
-    private static string? CorpusOf(string rel) => ExportedRecord.CorpusOf(rel, Corpora, Exported);
+    // The corpus name is stripped before the record test, so a corpus called `standards` is still read
+    // as a corpus and never as a type folder.
+    [Fact]
+    public void A_corpus_named_after_a_type_does_not_pass_for_one()
+        => Assert.Null(RecordPath.CorpusOf("examples/standards/README.md",
+            new HashSet<string>(StringComparer.Ordinal) { "standards" }, Types));
+
+    private static string? CorpusOf(string rel) => RecordPath.CorpusOf(rel, Corpora, Types);
 }

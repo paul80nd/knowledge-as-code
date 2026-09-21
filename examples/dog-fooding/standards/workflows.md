@@ -164,9 +164,8 @@ A `content-version` that has not moved publishes nothing, so no reader sees the 
 drifts from `main`. [ctl-0011] reports that on the pull request, and a reviewer judges whether the move is the right
 size. Merging a move of `<Version>` publishes to nuget.org, and a published version cannot be replaced. So the branch
 owner decides whether to release before the pull request opens, and an entry waits under `## Unreleased` until they
-do. What each of these numbers means, and what a producer's move obliges of the
-corpora consuming it, are [std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a
-workflow publishes it.
+do. What each of these numbers means, and what a producer's move obliges of the corpora consuming it, are
+[std-VERS]'s. This standard covers when a number moves in the delivery flow, and how a workflow publishes it.
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
 outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. Neither checks a permission nobody
