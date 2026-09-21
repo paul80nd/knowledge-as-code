@@ -256,6 +256,12 @@ walks the edges without opening a record. `Dependencies` travels beside it, beca
 prose says what the call is for. The edges run one way, downward. A service records what it calls, and the reverse view
 is a question a reader asks of the whole graph, so nothing here has to keep a second field in step with the first.
 
+**`depends-on` declares no `mirrors-section:`, so the prose stays free.** `related-matches-section` reconciles a field
+against its section in both directions. A section naming an id the field omits is a finding, as much as the reverse.
+`Dependencies` names such an id on purpose. It states a coupling a reader expects to find there, and says why that
+coupling is not an edge: a message read off a bus, or a build that never calls the service it builds. Declaring the key
+would report every one of those. So `depends-on` states the calls, and `Dependencies` states the coupling.
+
 `data-stores` travels as ids. Where the corpus adopted `data`, those records travel too, so a reader can follow one.
 `Data` says in prose what this service does with each store. `component-type`, `platform`, `criticality` and `facets`
 are the keys an agent filters on, and the first two draw their range from the corpus. An estate lists its own
