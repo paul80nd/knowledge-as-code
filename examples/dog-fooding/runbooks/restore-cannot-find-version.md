@@ -82,7 +82,8 @@ ls examples/engineering/.dist/package
    dotnet run --project ../../tooling/kac -- validate
    ```
 
-Confirmed when both consumers restore and validate with no errors.
+Confirmed when both consumers restore and validate with no errors. If a step does not do what it says,
+[escalate](#escalation).
 
 ## Escalation
 

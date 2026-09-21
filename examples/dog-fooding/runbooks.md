@@ -66,7 +66,8 @@ look like processes. You open the document on a day when the estate is already d
 3. State the **impact** next: who cannot do what while this is broken. `severity` says how urgent, and this says who.
 4. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
 5. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
-6. End the **resolution** with a line opening `Confirmed when`. That line says how the reader knows service is back.
+6. End the **resolution** with a line opening `Confirmed when`. Say how the reader knows service is back, then link
+   to the escalation for a reader whose step did not work.
 7. Put the escalation path where the reader finds it without scrolling.
 8. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
 9. Set `last-rehearsed` and `rehearsal-frequency` honestly. List tools in `requires-tools` and permissions in
@@ -112,6 +113,7 @@ look like processes. You open the document on a day when the estate is already d
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `symptoms-first`            | error   | Symptoms is the first section after the H1.                                                                     |
+| `failure-route-stated`      | error   | Resolution links to Escalation for a reader whose step did not work.                                            |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
