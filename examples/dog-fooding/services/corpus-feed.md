@@ -7,6 +7,7 @@ component-type: asset
 repos: [ knowledge-as-code ]
 platform: static
 criticality: important
+monitoring-output: none
 owner: human:paul.law
 tags: [ github-packages, nuget ]
 ---

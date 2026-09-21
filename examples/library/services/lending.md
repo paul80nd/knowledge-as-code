@@ -7,6 +7,7 @@ component-type: api
 repos: [ lending ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 owner: human:dev.raman
 facets: [ internal ]
 tags: [ legacy, loans ]

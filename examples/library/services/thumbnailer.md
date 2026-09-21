@@ -7,6 +7,7 @@ component-type: api
 repos: [ thumbnailer ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 owner: human:dev.raman
 tags: [ internal ]
 ---

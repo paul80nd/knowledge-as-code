@@ -7,6 +7,7 @@ component-type: api
 repos: [ payment-api ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 depends-on:
   - svc-payment-ledger
 owner: human:paul.law

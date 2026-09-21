@@ -7,6 +7,7 @@ component-type: api
 repos: [ search ]
 platform: typescript
 criticality: important
+monitoring-output: ticket
 owner: human:mira.okonjo
 facets: [ event-driven, internal ]
 tags: [ discovery, indexing ]

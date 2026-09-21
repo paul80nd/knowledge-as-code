@@ -7,6 +7,7 @@ component-type: api
 repos: [ payment-ledger ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 nfrs:
   - nfr-0002
 owner: human:paul.law

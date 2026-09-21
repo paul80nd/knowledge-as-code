@@ -7,6 +7,7 @@ component-type: website
 repos: [ platform ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 depends-on:
   - svc-catalogue-api
   - svc-covers-cdn

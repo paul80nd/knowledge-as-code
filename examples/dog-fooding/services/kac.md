@@ -7,6 +7,7 @@ component-type: cli
 repos: [ knowledge-as-code ]
 platform: dotnet
 criticality: critical
+monitoring-output: none
 owner: human:paul.law
 tags: [ cli, dotnet-tool, nuget ]
 ---
@@ -60,6 +61,9 @@ under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in 
 
 * **`facets` is left out because a downloaded command has no inbound surface.** An exposure facet describes the surface
   a service is called on. Nothing calls `kac`: it runs on the machine that installed it.
+* **`monitoring-output` is `none`, and CI warns about it on every run.** Nothing watches nuget.org, so a broken
+  package reaches a person only when somebody installs it and says so. `critical-service-is-alerted` has no way to
+  clear, so the warning is the standing record of the gap.
 * **A published version cannot be replaced. A correction takes a higher version.** `publish-tool.yml` reads `<Version>`
   in `kac.csproj` and publishes where nuget.org does not already have that version, so the version moves by hand before
   the merge.
