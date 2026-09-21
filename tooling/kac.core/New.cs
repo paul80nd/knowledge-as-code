@@ -364,7 +364,8 @@ public static class New
 
         // Opened and left empty, because the values are derived from an estate this corpus has not
         // described yet. A field drawing on this reports `corpus-enum-undeclared` from the first record
-        // that carries it, which is the moment somebody can answer.
+        // of its type where the field is required, and from the first document that states it where the
+        // field is optional. Either way, that is the moment somebody can answer.
         sb.Append("\n# The ranges this corpus states, for the fields whose values are its estate's rather"
                   + " than the framework's.\n");
         sb.Append("# Each type's page says how to reach its own. A field drawing on one is judged against"

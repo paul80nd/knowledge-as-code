@@ -35,9 +35,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
-- **An optional field's range is asked for from the first record that states it.** `kac validate` reported
+- **An optional field's range is asked for from the first document that states it.** `kac validate` reported
   `corpus-enum-undeclared` for every field drawing on `enums:` as soon as the corpus held one record of the type, so a
-  corpus was asked for a range it had no use for. A required field is still asked from the first record of its type.
+  corpus was asked for a range it had no use for. A required field is still asked from the first record of its type,
+  and a `_template.md` states a field as a record does. A range the corpus has already written is still held to lower
+  case whether or not anything states the field.
 - **A range asked for inside an object entry names the path a record writes it at.** `corpus-enum-undeclared` now
   reports `'interfaces.type' on a service` where it reported `'type' on a service`, which read as the record's own
   `type` key.
