@@ -31,6 +31,8 @@ one says moves neither. One nothing sends moves nothing.
 * [std-VERS], which states what a move of each version stamp means.
 * `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.
 * A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed.
+* Writing a skill an agent follows, which step 4 needs.
+* Judging which version stamps move, which steps 7 to 9 need.
 
 ## Steps
 

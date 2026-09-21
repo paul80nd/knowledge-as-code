@@ -25,6 +25,8 @@ job.
 * The main checkout, so an agent can read what it needs. One agent per folder.
 * `technical-writing` and the voice skill for the surface, loaded with the Read tool.
 * `kac` run from inside a corpus, and nobody else running it at the same time.
+* Writing a prompt an agent works from, which step 2 needs.
+* Judging prose against a style guide, which step 7 needs.
 
 ## Steps
 

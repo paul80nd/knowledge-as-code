@@ -27,6 +27,8 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
   interfaces.
 * The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.
 * The fact table in `docs/design/expressions.md`, which lists what an expression can already read.
+* Writing C# and its unit tests, which steps 2 to 4 need.
+* Reading a failing Reqnroll scenario, which step 13 needs.
 
 ## Steps
 

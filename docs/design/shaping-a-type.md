@@ -392,9 +392,12 @@ derived from it.
 
 ### processes
 
-`When to use this` travels as the trigger. `Prerequisites` travels beside it, and states the access, the tooling and
-the prior process a reader needs before step 1. A reader decides from those two sections whether they may start,
-before opening the record.
+`When to use this` travels as the trigger. `Prerequisites` travels beside it, and states the access, the tooling, the
+prior process and the skills a reader needs before step 1. A reader decides from those two sections whether they may
+start, before opening the record.
+
+No field records the skills. EPA QA/G-6 is the only source this type cites that asks a procedure to state them, and one
+source is not enough for a field. `Prerequisites` states them in prose, and nothing checks that a process names them.
 
 `requires-access` stays behind, although a process declares the field. `Prerequisites` already states the access in
 prose. The runbook export sends the field because it exports `Symptoms` and `Impact` alone, and neither of those states
