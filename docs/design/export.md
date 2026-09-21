@@ -203,23 +203,25 @@ the last place anyone would see it.
 
 ### `sources`
 
-It is the one thing a merge cannot merge. Each entry has both blocks its producer wrote. `publishing` says where a
-record of theirs is read: at eng's commit, under eng's path prefix, in eng's repository, and the consuming corpus's own
-block gets all three wrong. `tracker` says where a problem with that record is filed, which is eng's backlog and not
-this corpus's.
+It is the one thing a merge cannot merge. Each entry has the three addresses its producer wrote. `publishing` says
+where a record of theirs is read: at eng's commit, under eng's path prefix, in eng's repository, and the consuming
+corpus's own block gets all three wrong. `tracker` says where a problem with that record is filed, which is eng's
+backlog and not this corpus's. `reposBase` says where the code of their services sits, which is eng's estate.
 
 ```json
 "sources": [
   { "shortcode": "eng", "corpus": "example-engineering", "contentVersion": "0.7.4",
     "publishing": { "target": "github", "ref": "133ebc79…", "pathPrefix": "examples/engineering" },
+    "reposBase": "https://github.com/example",
     "tracker": { "target": "github", "base": "https://github.com/example/engineering",
                  "id": "github:github.com/example/engineering" } }
 ]
 ```
 
-The two blocks at the root stay what this corpus says about itself, so a reader holding an export that inherits nothing
+The three at the root stay what this corpus says about itself, so a reader holding an export that inherits nothing
 reads them exactly as before. An entry written by a producer that predates `tracker` is derived from the `publishing`
-beside it, by the rule [`tracker`](#tracker) below states.
+beside it, by the rule [`tracker`](#tracker) below states. One that predates `reposBase` states `null`, and nothing
+derives it: no other key says where an estate keeps its code.
 
 ## The manifest
 
@@ -317,6 +319,21 @@ ticket is filed on either.
 `base` and `id` are `null` together wherever the block addresses no backlog: a `target` of `none`, a target that files
 nowhere, or a base the corpus never supplied. A base standing beside a target that cannot use it would read as an
 address, so it is not written at all.
+
+### `reposBase`
+
+It says where the corpus addresses its code repositories from.
+
+```json
+"reposBase": "https://github.com/paul80nd"
+```
+
+A `services` record states a bare repository name under `repos`, so a reader resolves one to
+`<reposBase>/<entry>` and to nothing without this. It is `null` where the corpus states none, and
+[`.corpus.yaml`](../corpus-descriptor.md#repos-base) is where a corpus states one.
+
+Each entry in `sources` carries its producer's, for the reason it carries their `publishing`: a `repos` entry on one of
+their services names a repository in their estate, and this corpus's own base resolves it into the wrong one.
 
 ### `id`, and the trackers it compares
 

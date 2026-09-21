@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 44,
+    "validated": 45,
     "templates": 17,
     "skipped": 0,
     "errors": 25,
-    "warnings": 28,
+    "warnings": 30,
     "infos": 0
   },
   "findings": [
@@ -336,6 +336,20 @@
       "severity": "warning",
       "check": "dependency-cycle",
       "message": "'depends-on' forms a cycle: svc-catalogue → svc-notifications → svc-catalogue."
+    },
+    {
+      "file": "services/repo-links-adrift.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'repos: repo-links-adrift' is not linked under 'Where it lives'. Link it as https://git.example.com/fixture/repo-links-adrift, or drop it from `repos`."
+    },
+    {
+      "file": "services/repo-links-adrift.md",
+      "line": 25,
+      "severity": "warning",
+      "check": "mirrors-repo-links",
+      "message": "'Where it lives' links https://git.example.com/fixture/elsewhere, which `repos` does not state. Add 'elsewhere' to `repos`, or link a repository this service is changed in."
     },
     {
       "file": "services/unalerted-critical.md",

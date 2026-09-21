@@ -20,6 +20,7 @@
     "pathPrefix": null,
     "ref": null
   },
+  "reposBase": null,
   "tracker": {
     "target": "none",
     "base": null,

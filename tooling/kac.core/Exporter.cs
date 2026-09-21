@@ -162,6 +162,7 @@ public static class Exporter
                 run.GeneratedAt,
                 About(corpus.Descriptor),
                 Addresses(corpus.Descriptor, publishing),
+                corpus.Descriptor.ReposBase,
                 Tracker.Own(corpus.Descriptor),
                 Tracker.Framework(corpus.Descriptor),
                 Sources(consumed),
@@ -186,7 +187,7 @@ public static class Exporter
         {
             found.TryAdd(from.Shortcode,
                 new ExportSource(from.Shortcode, from.Corpus, from.ContentVersion, from.Publishing,
-                    from.Tracker));
+                    from.ReposBase, from.Tracker));
 
             foreach (var theirs in from.Sources) found.TryAdd(theirs.Shortcode, theirs);
         }
@@ -279,7 +280,8 @@ public static class Exporter
         // records were never read at. One account or nothing.
         foreach (var source in consumed.SelectMany(c =>
                      c.Sources.Prepend(new ExportSource(
-                         c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing, c.Tracker))))
+                         c.Shortcode, c.Corpus, c.ContentVersion, c.Publishing, c.ReposBase,
+                         c.Tracker))))
         {
             if (seen.TryAdd(source.Shortcode, source)) continue;
             if (Addressed(seen[source.Shortcode]) == Addressed(source)) continue;
@@ -290,10 +292,12 @@ public static class Exporter
         }
 
         // What the two accounts have to agree on, which is everything a line resolves through. The
-        // tracker is left out: it says where a problem with that corpus is filed, which no line resolves
-        // through, and an export written before the key existed derives one from the publishing block
-        // beside it instead of reading the producer's own.
-        static ExportSource Addressed(ExportSource source) => source with { Tracker = Tracker.None };
+        // tracker and the repository base are left out. Neither is resolved through by any line: one
+        // says where a problem with that corpus is filed, the other where its code sits. An export
+        // written before either key existed states nothing for it, and refusing a merge over that would
+        // stop a chain no citation reads differently.
+        static ExportSource Addressed(ExportSource source) =>
+            source with { Tracker = Tracker.None, ReposBase = null };
 
         foreach (var key in consumed.SelectMany(c => c.Types).Select(t => t.Type)
                      .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal))

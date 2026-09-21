@@ -616,6 +616,16 @@ checks:
       services state no repository between them is passed over, and so is an id `ref-resolves` has already
       reported.
 
+  mirrors-repo-links:
+    severity: warning
+    description: Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.
+    notes: >
+      An entry resolves to `<repos-base>/<entry>`, so a corpus stating no `repos-base` in `.corpus.yaml` is passed
+      over and a record missing the section is left to `required-section`. Everything past the repository name is a
+      path inside it and is ignored, and the comparison is case-insensitive, as `mirrors-section` is. A warning,
+      since a service can sit outside the estate's usual host, and an error would make one outlier drop the key for
+      every other record.
+
   dependency-cycle:
     severity: warning
     description: The records' `depends-on` edges form no loop.

@@ -101,7 +101,8 @@ public static class Validator
         // one would be free to answer differently.
         var byId = CheckCorpus(schema, corpus.Docs, findings, corpus.Imports);
 
-        CheckCorpusRules(schema, corpus.Docs, byId, tree, Versions(corpus.Descriptor), findings);
+        CheckCorpusRules(schema, corpus.Docs, byId, tree, Versions(corpus.Descriptor),
+            corpus.Descriptor.ReposBase, findings);
         CheckMinRecords(corpus.Docs, findings);
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
@@ -964,12 +965,12 @@ public static class Validator
     }
 
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
-        Tree tree, IReadOnlyDictionary<string, string> versions, List<Finding> f)
+        Tree tree, IReadOnlyDictionary<string, string> versions, string? reposBase, List<Finding> f)
     {
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         foreach (var rule in t.Rules)
             if (CorpusRules.ByRuleId.TryGetValue(rule.Id, out var implementation))
-                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule, versions,
+                implementation.Check(new CorpusRuleContext(docs, byId, tree, t, rule, versions, reposBase,
                     (at, c, m, l) => Report(Sev.Error, at, c, m, l),
                     (at, c, m, l) => Report(Sev.Warning, at, c, m, l)));
         return;

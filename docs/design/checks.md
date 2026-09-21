@@ -54,8 +54,10 @@ A question the grammar cannot ask needs a rule written in C# instead, and that r
 `no-dependency-cycles` reports as `dependency-cycle`. Many of the rules declared in the schema run nothing yet, and
 `kac checks` prints the ones that do report.
 
-Two rules read every record at once. `dependency-cycle` reports a loop once, against the lowest id on that loop, and
-`alignment-rollup` reads the framework register beside the records.
+Some rules read every record at once, and some read what sits beside them. `dependency-cycle` reports a loop once,
+against the lowest id on that loop. `alignment-rollup` reads the framework register. `mirrors-repo-links` reads
+`repos-base` from [`.corpus.yaml`](../corpus-descriptor.md#repos-base), because no record states where the estate
+keeps its code.
 
 The schema also declares rules that do not run. Each is an intention, with a `description:` and no `severity:`, and the
 type page renders it under **Declared, not yet enforced**. Naming a severity without running is the one arrangement this

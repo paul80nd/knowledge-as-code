@@ -133,7 +133,7 @@ public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
     // newer tool writes, so an update stamps this alongside what it took.
-    public const int Format = 4;
+    public const int Format = 5;
 
     // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
     // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.
@@ -272,6 +272,12 @@ public class CorpusDescriptor
     // on the wrong side of it. Null where the corpus is the repository, which is the ordinary case.
     public string? PathPrefix;
 
+    // Where this estate's code repositories are addressed from. A `repos` entry on a service is a bare
+    // name, so `<ReposBase>/<entry>` is the whole of how one resolves to a URL. Whatever sits between the
+    // host and the name belongs here too, which is how an Azure DevOps corpus writes its `_git` segment
+    // in. Null where the corpus has stated none, and `mirrors-repo-links` then checks nothing.
+    public string? ReposBase;
+
     // What an export leaves behind: `draft`, `overdue`, or neither. Empty by default, because a record
     // carrying its own state lets a consumer decide, and one filtered out downstream is invisible. The
     // corpus reads smaller and tidier than it is, with nothing saying anything was withheld.
@@ -345,6 +351,7 @@ public class CorpusDescriptor
         var author = Yaml.Get(root, "author");
         descriptor.AuthorName = Said(Yaml.Str(Yaml.Get(author, "name")));
         descriptor.AuthorUrl = Said(Yaml.Str(Yaml.Get(author, "url")));
+        descriptor.ReposBase = Blank(Yaml.Str(Yaml.Get(root, "repos-base")));
         descriptor.PublishingTarget = Yaml.Str(Yaml.Get(root, "publishing-target"));
         var publishing = Yaml.Get(root, "publishing");
         descriptor.Base = Yaml.Str(Yaml.Get(publishing, "base"));

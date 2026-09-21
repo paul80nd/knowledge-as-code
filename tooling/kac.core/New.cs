@@ -336,6 +336,13 @@ public static class New
             sb.Append($"  base: {Scalar(published)}\n");
         }
 
+        // Written bare, because only the corpus knows where its code is. A corpus adopting `services`
+        // fills it in, and `mirrors-repo-links` then checks each `repos` entry against the link the
+        // record writes. Every other corpus leaves it, and the check stays silent.
+        sb.Append("\n# Where this estate's code repositories are addressed from. A `repos` entry on a"
+                  + " service is appended to it.\n");
+        sb.Append("repos-base:\n");
+
         sb.Append("\n# Where this corpus takes the framework from, and what the last take resolved to.\n");
         sb.Append("upstream:\n");
         sb.Append($"  url: {Scalar(upstream.Url)}\n");

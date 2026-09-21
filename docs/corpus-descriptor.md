@@ -32,6 +32,7 @@ the corpus adopted. It says nothing about their shape.
 | [`publishing-target`](#publishing-target)                        | how the corpus is published                     | `new`                           |
 | [`publishing.base`](#publishing)                                 | the URL a person opens to browse it             | `new`, then you                 |
 | [`publishing.path-prefix`](#publishing)                          | where the corpus sits inside its repository     | you                             |
+| [`repos-base`](#repos-base)                                      | where this estate's code repositories live      | you                             |
 | [`tracker`](#tracker)                                            | where work about this corpus's records is filed | you                             |
 | [`framework`](#framework)                                        | where to report a problem with the framework    | `new`                           |
 | [`upstream.url`, `.path`, `.ref`](#upstream)                     | where the framework is taken from               | `new`, then you                 |
@@ -92,7 +93,7 @@ Nothing refuses to load because the number moved. It is a notification.
 The format of this file, which the tool owns rather than the corpus.
 
 ```yaml
-descriptor-version: 4
+descriptor-version: 5
 ```
 
 [`update`](cli/update.md) stamps it with the format the tool writes, so a corpus records which shape it last took.
@@ -175,6 +176,31 @@ authenticates.
 Set `path-prefix` where the repository contains more than the corpus. Do not append that folder to `base` instead.
 `export` inserts the commit between `base` and the record's path, so there is no room for it there. Leave the key out
 where the corpus is the repository, which is the ordinary case.
+
+## Where the code is
+
+### `repos-base`
+
+Where this estate's code repositories are addressed from. A `services` record states a bare repository name under
+`repos`, and `kac` resolves it to `<repos-base>/<entry>`.
+
+```yaml
+repos-base: https://git.example.com/example-libraries
+```
+
+Write whatever sits between the host and the repository name into the base. An Azure DevOps corpus addresses a
+repository as `https://dev.azure.com/{org}/{project}/_git/{repo}`, so its base ends in `_git`:
+
+```yaml
+repos-base: https://dev.azure.com/acme/platform/_git
+```
+
+`mirrors-repo-links` compares the resolved set against the links a record writes under `Where it lives`, in both
+directions, and warns where the two disagree. It reports nothing in a corpus that states no base, and nothing in a
+corpus that has not adopted `services`.
+
+One base covers one host and one organisation. Leave it bare where the estate spans several. The check then stops,
+rather than reporting every repository outside the one host you could name.
 
 ## Where work is filed
 

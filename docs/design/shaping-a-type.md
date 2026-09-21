@@ -219,6 +219,21 @@ recognises. `What it does` and `Where it lives` are both short, and together the
 its code sits. `repos` travels beside them as a list, because a service whose content is published from one repository
 and served from another has two answers to that question.
 
+**A `repos` entry is a bare name, and the corpus resolves it.** Every id in this framework is a bare key, and a
+repository name follows that design: `repos-base` in [`.corpus.yaml`](../corpus-descriptor.md#repos-base) states the
+host and the organisation once, and an entry appends to it. Backstage, OpsLevel and Cortex each do the same, stating
+the provider in an annotation key, a sibling `provider:` or the nesting level, and leaving the value a bare
+`org/repo`. [purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses
+a repository as `pkg:git/<host>/<owner>/<repo>` and answers the estate spread over several hosts, which none of the
+corpora here has. It was declined because `feature-file-repo` reads the first segment of a `feature-files` path as a
+repository name, and for `pkg:git/x/y` that segment is `pkg:git`.
+
+`Where it lives` keeps its link, so the repository is stated twice: once as a join key and once as a URL a person
+follows with the path inside the repository beside it. `mirrors-repo-links` is what keeps the two in step. It builds
+`<repos-base>/<entry>`, reconciles the resolved set against the links under the heading in both directions, and warns
+where they disagree. A warning rather than an error, because a service can sit outside the estate's usual host, and an
+error would make one such service drop `repos-base` for every other record. A corpus stating no base runs no check.
+
 **`depends-on` is the estate's own graph, and the reason this type exports at all.** A reader holding the catalogue
 walks the edges without opening a record. `Dependencies` travels beside it, because an edge says which service and the
 prose says what the call is for. The edges run one way, downward. A service records what it calls, and the reverse view

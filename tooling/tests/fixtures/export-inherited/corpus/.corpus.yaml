@@ -14,6 +14,10 @@ consumes:
 upstream:
   url:
 
+# Stated, so the golden manifest proves a repository base travels. The corpus this one consumes states
+# none, and its entry under `sources` proves the absence is written down rather than left out.
+repos-base: https://git.example.com/acme
+
 # Stated, so the golden manifest proves a tracker travels. The other export fixtures state none, and
 # theirs proves the absence is written down rather than left out.
 framework:

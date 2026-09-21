@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 4
+descriptor-version: 5
 
 corpus: example-dogfooding
 
@@ -34,6 +34,9 @@ publishing-target: github
 publishing:
   base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/dog-fooding
+
+# Every service this corpus describes is built out of one repository on a single GitHub account.
+repos-base: https://github.com/paul80nd
 
 # The governance layer this corpus inherits rather than restates. `eng:` is what a citation into it
 # carries. The source is a folder because the producer is a corpus in this repository, so no registry

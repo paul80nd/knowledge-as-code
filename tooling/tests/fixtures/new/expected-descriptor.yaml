@@ -3,7 +3,7 @@
 # https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means.
 
 # The format of this file, which the tool owns rather than the corpus.
-descriptor-version: 4
+descriptor-version: 5
 
 # What this corpus calls itself, and the version of what it knows. Move `content-version` by hand.
 corpus: acme-corpus
@@ -23,6 +23,9 @@ author:
 
 # How this corpus is published. One of: azure-devops | azure-devops-wiki | github | mkdocs | none.
 publishing-target: none
+
+# Where this estate's code repositories are addressed from. A `repos` entry on a service is appended to it.
+repos-base:
 
 # Where this corpus takes the framework from, and what the last take resolved to.
 upstream:

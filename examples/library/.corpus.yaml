@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 4
+descriptor-version: 5
 
 corpus: example-libraries
 
@@ -33,6 +33,9 @@ publishing-target: github
 publishing:
   base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/library
+
+# This estate hosts every repository a service is changed in under one organisation.
+repos-base: https://git.example.com/example-libraries
 
 # Nothing. This corpus stands on its own, which is the ordinary shape.
 

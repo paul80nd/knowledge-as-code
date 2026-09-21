@@ -25,7 +25,7 @@ lands somewhere.
 
 ## Where it lives
 
-The `catalogue` repository.
+* **Repository**: [`catalogue`](https://git.example.com/fixture/catalogue)
 
 ## Environments
 
