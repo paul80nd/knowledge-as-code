@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.49.0",
+  "version": "0.50.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.49.0",
+    "contentVersion": "0.50.0",
     "types": [
       "controls",
       "deviations",
