@@ -7,6 +7,7 @@ component-type: api
 repos: [ platform ]
 platform: dotnet
 criticality: critical
+monitoring-output: alert
 depends-on:
   - svc-lending
 owner: human:robin.hale

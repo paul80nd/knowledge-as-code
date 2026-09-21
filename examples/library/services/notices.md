@@ -7,6 +7,7 @@ component-type: worker
 repos: [ notices ]
 platform: azure-function
 criticality: important
+monitoring-output: ticket
 owner: human:mira.okonjo
 facets: [ event-driven, internal, scheduled ]
 tags: [ email, renewals ]

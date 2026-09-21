@@ -7,6 +7,7 @@ component-type:
 repos:
 platform:
 criticality:
+monitoring-output:
 depends-on:
   - svc-{{a}}
   - svc-{{b}}

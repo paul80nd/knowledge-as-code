@@ -29,8 +29,12 @@ lineage:
     `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs, resources, systems
     and domains as separate kinds, where this type folds dependencies, data stores and environments into one document,
     and no field here states the APIs a component provides. `facets` refuses a value fewer than two services share,
-    and no source has anything like it. The three sources say lifecycle and tier where this type says `status` and
-    `criticality`: `tier` already grades a record's authority, and `status` is on every type
+    and no source has anything like it. Backstage, OpsLevel and Cortex say lifecycle and tier where this type says
+    `status` and `criticality`: `tier` already grades a record's authority, and `status` is on every type. Each of
+    them puts a paging tool's id in `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where
+    `monitoring-output` states a standing commitment a reader can act on. Its `alert`, `ticket` and `log` are the
+    three monitoring outputs the [SRE Book](https://sre.google/sre-book/introduction/) lists, and `none` is this
+    framework's own: no source found names the case where nothing is emitted at all
 id:
   prefix: svc
   style: slug
@@ -84,6 +88,18 @@ fields:
     values: $enums.criticality
     description: Judged by what a customer experiences when it is unavailable.
 
+  monitoring-output:
+    required: false
+    required-when: 'status in [live, deprecated]'
+    type: enum
+    values: $enums.monitoring-output
+    description: How a live problem with this service reaches a person.
+    notes: >
+      A standing commitment, and never a rota or a paging tool's id. Backstage, OpsLevel and Cortex each store that
+      id because a program dereferences it, where a reader of this record gets a dead string. Required once a service
+      runs, so `building` and `retired` are exempt. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+
   depends-on:
     required: false
     type: list
@@ -131,7 +147,7 @@ sections:
 
 export:
   version: 2
-  fields: [id, title, status, component-type, platform, criticality, repos, depends-on, data-stores, nfrs, facets, tags]
+  fields: [id, title, status, component-type, platform, criticality, monitoring-output, repos, depends-on, data-stores, nfrs, facets, tags]
   sections:
     What it does: full
     Where it lives: full
@@ -142,7 +158,7 @@ export:
     <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services> says what else travels, and what
     stays behind.
 index:
-  columns: [id, title, component-type, platform, criticality, status, owner]
+  columns: [id, title, component-type, platform, criticality, monitoring-output, status, owner]
   sort: id
 
 rules:
@@ -150,6 +166,14 @@ rules:
   - id: no-dependency-cycles
     description: A cycle in the dependency graph, with every service the loop runs through.
     severity: warning
+  # A service nothing alerts on is a decision, so the record has to state it rather than leave it unsaid.
+  - id: critical-service-is-alerted
+    description: A service graded `critical` emits something a person acts on.
+    severity: warning
+    expr: "field('criticality') == 'critical' implies field('monitoring-output') != 'none'"
+    message: >
+      this service is `critical` and emits nothing anybody acts on. Set `monitoring-output` to what a live
+      problem raises, or say in `Operational notes` why nothing does.
   - id: drift-against-repos
     description: Every service has a repository, and every repository has a service document.
     # Runs on a schedule. Reports a service whose repository is gone, and a repository with no service document.

@@ -7,6 +7,7 @@ component-type: worker
 repos: [ shelf-audit ]
 platform: mixed
 criticality: supporting
+monitoring-output: none
 owner: human:dev.raman
 facets: [ internal, scheduled ]
 tags: [ monitoring ]

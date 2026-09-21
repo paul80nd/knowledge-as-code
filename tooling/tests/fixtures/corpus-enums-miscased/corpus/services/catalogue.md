@@ -7,6 +7,7 @@ component-type: api
 repos: [ catalogue ]
 platform: dotnet-web
 criticality: critical
+monitoring-output: alert
 owner: human:alex.doe
 ---
 

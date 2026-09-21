@@ -7,6 +7,7 @@ component-type: asset
 repos: [ covers-import, infrastructure ]
 platform: static
 criticality: critical
+monitoring-output: alert
 depends-on:
   - svc-thumbnailer
 owner: human:dev.raman

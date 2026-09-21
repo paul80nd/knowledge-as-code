@@ -2,7 +2,7 @@
 
 # Service Index (SVC)
 
-| ID                 | Title                               | Component type | Platform | Criticality | Status | Owner          |
-|--------------------|-------------------------------------|----------------|----------|-------------|--------|----------------|
-| svc-payment-api    | [Payment API](payment-api.md)       | api            | dotnet   | critical    | live   | human:paul.law |
-| svc-payment-ledger | [Payment Ledger](payment-ledger.md) | api            | dotnet   | critical    | live   | human:paul.law |
+| ID                 | Title                               | Component type | Platform | Criticality | Monitoring output | Status | Owner          |
+|--------------------|-------------------------------------|----------------|----------|-------------|-------------------|--------|----------------|
+| svc-payment-api    | [Payment API](payment-api.md)       | api            | dotnet   | critical    | alert             | live   | human:paul.law |
+| svc-payment-ledger | [Payment Ledger](payment-ledger.md) | api            | dotnet   | critical    | alert             | live   | human:paul.law |

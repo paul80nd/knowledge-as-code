@@ -13,6 +13,13 @@ enums:
       `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
       means internal impact only.
 
+  monitoring-output:
+    values: [alert, ticket, log, none]
+    notes: >
+      `alert` means a person acts now, `ticket` means the system files one and a person acts later, and `log` means
+      the fault is recorded and nobody reads it. `none` means nothing is emitted. The first three are the monitoring
+      output the SRE Book lists, and `none` is this framework's own.
+
   severity:
     values: [sev1, sev2, sev3]
 

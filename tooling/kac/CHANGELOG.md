@@ -19,6 +19,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A service states how a live problem reaches a person.** `services` declares `monitoring-output`, required once a
+  service is `live` or `deprecated`. Its values are `alert`, `ticket`, `log` and `none`. `kac validate` warns through
+  `critical-service-is-alerted` where a `critical` service states `none`. The field travels in the export beside
+  `criticality`, and `kac generate` lists it in the services index after that column.
 - **A runbook whose resolution gives no route out is reported.** `failure-route-stated` runs. `kac validate` fails a
   runbook whose `Resolution` section links nowhere to `#escalation`, so a reader whose step did not work has somewhere
   to go. The schema asked this of `Diagnosis` alone. A reader in the diagnosis is still choosing, and a reader in the

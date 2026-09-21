@@ -230,6 +230,13 @@ are the keys an agent filters on, and the first two draw their range from the co
 deployables, groups them once by what they are and once by the runtime and framework a contributor has to learn, and
 closes each list on what it found. So one schema above several estates can state no range at all.
 
+**`monitoring-output` states a commitment, and never a rota.** Backstage, OpsLevel and Cortex each keep a paging tool's
+id in the same file and dereference it through that tool's API. A corpus is a document, so the same id gives a reader a
+dead string. This field says what a live problem raises instead: `alert` if a person acts now, `ticket` if the system
+files one and a person acts later, `log` if it is recorded and nobody reads it, and `none` if nothing is emitted. The
+range is shared in `.schema/_enums.yaml`, so no estate can drop `none` from a list of its own.
+`critical-service-is-alerted` warns where a `critical` service emits nothing.
+
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.
 

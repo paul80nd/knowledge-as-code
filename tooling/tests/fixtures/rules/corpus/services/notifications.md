@@ -7,6 +7,7 @@ component-type: worker
 repos: [ notifications ]
 platform: azure-function
 criticality: important
+monitoring-output: ticket
 depends-on: [svc-catalogue]
 owner: human:alex.doe
 ---

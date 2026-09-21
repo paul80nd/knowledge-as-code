@@ -7,6 +7,7 @@ component-type: website
 repos: [ knowledge-as-code ]
 platform: static
 criticality: important
+monitoring-output: none
 owner: human:paul.law
 facets: [ public ]
 tags: [ github-pages, mkdocs ]

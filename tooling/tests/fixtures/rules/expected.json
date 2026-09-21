@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 43,
+    "validated": 44,
     "templates": 17,
     "skipped": 0,
     "errors": 25,
-    "warnings": 27,
+    "warnings": 28,
     "infos": 0
   },
   "findings": [
@@ -336,6 +336,13 @@
       "severity": "warning",
       "check": "dependency-cycle",
       "message": "'depends-on' forms a cycle: svc-catalogue → svc-notifications → svc-catalogue."
+    },
+    {
+      "file": "services/unalerted-critical.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "critical-service-is-alerted",
+      "message": "this service is `critical` and emits nothing anybody acts on. Set `monitoring-output` to what a live problem raises, or say in `Operational notes` why nothing does."
     },
     {
       "file": "standards/common/error-responses.md",

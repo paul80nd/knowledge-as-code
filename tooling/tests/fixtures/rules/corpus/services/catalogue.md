@@ -7,6 +7,7 @@ component-type: api
 repos: [ catalogue ]
 platform: dotnet-web
 criticality: critical
+monitoring-output: alert
 depends-on: [svc-notifications]
 data-stores: [dat-borrower-records, dat-reader-contact-list]
 owner: human:alex.doe
