@@ -38,7 +38,7 @@ What travels is what decides whether a process is yours:
 |-----------------------------------------|------------------------------------------------------------------------|
 | `fields.title`                          | what the process achieves                                              |
 | `sections.When to use this`             | the trigger. This is the field that answers whether it is yours        |
-| `sections.Prerequisites`                | the access, the tools and the prior work needed before the first step  |
+| `sections.Prerequisites`                | the access, tools, prior work and skills before the first step         |
 | `fields.applies-to`                     | the service ids the process concerns                                   |
 | `fields.status`                         | `active`, `draft` or `retired`                                         |
 | `fields.last-rehearsed`                 | a date, or `never`                                                     |
@@ -51,8 +51,9 @@ similar things. The trigger says which one was written for the situation you are
 
 ## Check the reader can start
 
-**`Prerequisites` travels whole for a reason.** It names the access, the tooling and the prior process a reader needs
-before step 1. Where one of those is missing, say so before anybody begins, rather than after four steps have run.
+**`Prerequisites` travels whole for a reason.** It names the access, the tooling, the prior process and the skills a
+reader needs before step 1. Where one of those is missing, say so before anybody begins, rather than after four steps
+have run.
 
 ## The steps are not here
 
