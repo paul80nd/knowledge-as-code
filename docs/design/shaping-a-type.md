@@ -392,8 +392,13 @@ derived from it.
 
 ### processes
 
-`When to use this` travels as the trigger. `Prerequisites` travels beside it, because the access a step needs decides
-whether a reader may start at all, and that is a question asked before the record is opened.
+`When to use this` travels as the trigger. `Prerequisites` travels beside it, and states the access, the tooling and
+the prior process a reader needs before step 1. A reader decides from those two sections whether they may start,
+before opening the record.
+
+`requires-access` stays behind, although a process declares the field. `Prerequisites` already states the access in
+prose. The runbook export sends the field because it exports `Symptoms` and `Impact` alone, and neither of those states
+what a reader needs to start.
 
 ### runbooks
 
