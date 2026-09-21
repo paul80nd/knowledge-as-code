@@ -210,7 +210,7 @@ words worth keeping are the ones thrown away.
 | `reciprocal`                  | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`           | warning | A link definition that nothing references.                                                                      |
 | `dependency-cycle`            | warning | A cycle in the dependency graph these records form, naming every record the loop runs through.                  |
-| `critical-service-is-alerted` | warning | A service graded `critical` emits something a person acts on.                                                   |
+| `critical-service-is-alerted` | warning | A service graded `critical` emits something when it fails.                                                      |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

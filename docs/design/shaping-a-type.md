@@ -235,7 +235,8 @@ id in the same file and dereference it through that tool's API. A corpus is a do
 dead string. This field says what a live problem raises instead: `alert` if a person acts now, `ticket` if the system
 files one and a person acts later, `log` if it is recorded and nobody reads it, and `none` if nothing is emitted. The
 range is shared in `.schema/_enums.yaml`, so no estate can drop `none` from a list of its own.
-`critical-service-is-alerted` warns where a `critical` service emits nothing.
+`critical-service-is-alerted` warns where a `live` or `deprecated` service graded `critical` states `none`. It carries
+the same status guard the field does, so stating `none` on a draft is never worse than leaving the key out.
 
 `Environments` stays behind as a table of addresses a reader holding a copy cannot use. `Operational notes` stays behind
 with it, because both describe running the thing rather than depending on it.

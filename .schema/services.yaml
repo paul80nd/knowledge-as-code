@@ -166,14 +166,18 @@ rules:
   - id: no-dependency-cycles
     description: A cycle in the dependency graph, with every service the loop runs through.
     severity: warning
-  # A service nothing alerts on is a decision, so the record has to state it rather than leave it unsaid.
+  # The status guard matches the field's own `required-when`, so stating `none` on a draft is never worse
+  # than leaving the key out.
   - id: critical-service-is-alerted
-    description: A service graded `critical` emits something a person acts on.
+    description: A service graded `critical` emits something when it fails.
     severity: warning
-    expr: "field('criticality') == 'critical' implies field('monitoring-output') != 'none'"
+    expr: >-
+      (field('status') == 'live' or field('status') == 'deprecated')
+      and field('criticality') == 'critical'
+      implies field('monitoring-output') != 'none'
     message: >
-      this service is `critical` and emits nothing anybody acts on. Set `monitoring-output` to what a live
-      problem raises, or say in `Operational notes` why nothing does.
+      this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live
+      problem raises, or record the gap in `Operational notes` and leave this warning standing.
   - id: drift-against-repos
     description: Every service has a repository, and every repository has a service document.
     # Runs on a schedule. Reports a service whose repository is gone, and a repository with no service document.

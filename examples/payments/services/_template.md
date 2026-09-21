@@ -40,7 +40,7 @@ and how it is reviewed. Below is only what a service adds to that.
 * **`monitoring-output`**: what a live problem with this service raises. `alert` if a person must act now, `ticket` if
   the system files one and a person acts later, `log` if it is recorded and nobody reads it, `none` if nothing is
   emitted. Required once the service is `live` or `deprecated`. Write `none` where that is the truth: CI warns on a
-  `critical` service that emits nothing.
+  `live` or `deprecated` service graded `critical` that emits nothing, and that warning stands until something does.
 * **`depends-on`**: other service ids, pointing downward only (this service is **configured to reach** that one).
   Messages over a bus are not a dependency.
 * **`owner`**: who is answerable for the service, as `human:alex.doe` or `role:head-of-engineering`. Never a team
