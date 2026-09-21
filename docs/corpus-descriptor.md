@@ -199,8 +199,8 @@ repos-base: https://dev.azure.com/acme/platform/_git
 directions, and warns where the two disagree. It reports nothing in a corpus that states no base, and nothing in a
 corpus that has not adopted `services`.
 
-One base covers one host and one organisation. Leave the key out where the estate spans several, and the check stops
-rather than reporting every repository outside the one you chose.
+One base covers one host and one organisation. Leave it bare where the estate spans several. The check then stops,
+rather than reporting every repository outside the one host you could name.
 
 ## Where work is filed
 

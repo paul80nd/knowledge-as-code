@@ -28,14 +28,14 @@ author:
   name: Paul Law
   url: https://github.com/paul80nd
 
-# This estate hosts every repository a service is changed in under one organisation.
-repos-base: https://git.example.com/example-libraries
-
 # This repository is the published form, and the corpus sits in a folder of it.
 publishing-target: github
 publishing:
   base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/library
+
+# This estate hosts every repository a service is changed in under one organisation.
+repos-base: https://git.example.com/example-libraries
 
 # Nothing. This corpus stands on its own, which is the ordinary shape.
 

@@ -5,7 +5,8 @@ namespace kac.core;
 // `<base>/<entry>` is the URL an entry resolves to, and this rule reconciles the resolved set against
 // the links under the heading, in both directions.
 //
-// `mirrors-section:` cannot ask this. It reconciles ids, and a repository name resolves to no record.
+// A class rather than an `expr:`, because the base comes from the corpus descriptor and no fact reaches
+// it, and because the message has to name which entry or which link is the one at fault.
 //
 // Reported, never failed, for the reason `feature-file-repo` is: a service can sit in a repository
 // outside the estate's usual host, and an error would make one outlier drop `repos-base` for every

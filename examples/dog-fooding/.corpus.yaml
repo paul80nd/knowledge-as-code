@@ -29,14 +29,14 @@ author:
   name: Paul Law
   url: https://github.com/paul80nd
 
-# Every service this corpus describes is built out of one repository on a single GitHub account.
-repos-base: https://github.com/paul80nd
-
 # This repository is the published form, and the corpus sits in a folder of it.
 publishing-target: github
 publishing:
   base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/dog-fooding
+
+# Every service this corpus describes is built out of one repository on a single GitHub account.
+repos-base: https://github.com/paul80nd
 
 # The governance layer this corpus inherits rather than restates. `eng:` is what a citation into it
 # carries. The source is a folder because the producer is a corpus in this repository, so no registry

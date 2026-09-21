@@ -82,8 +82,7 @@ fields:
     notes: >
       A list, because an asset surface can be filled by one repository and served from another. Every entry is
       a repository a contributor edits to change this service, named as the host names it and never as a path.
-      `repos-base` in `.corpus.yaml` resolves one to a URL, and `mirrors-repo-links` then holds the result
-      against the links under `Where it lives`.
+      `repos-base` in `.corpus.yaml` is what resolves one.
       See <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#repos-base>.
 
   platform:
@@ -130,10 +129,9 @@ fields:
         description: The address the contract is published at.
     description: The interfaces this service offers, with the contract for each.
     notes: >
-      A pointer to the contract, and never a copy of it. The value is a whole URL, because a `repos`
-      entry resolves to a repository and never to a path inside one, and a contract is often published
-      outside the repository anyway. The range belongs to the estate, so `.corpus.yaml` states it under
-      `enums:` and this file states none. See
+      A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
+      states a bare repository name and no convention derives a path from one. The range belongs to the
+      estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
       <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
 
   depends-on:
@@ -214,7 +212,6 @@ rules:
     message: >
       this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live
       problem raises, or record the gap in `Operational notes` and leave this warning standing.
-  # `repos` states a bare name and `Where it lives` links the same repository, so the two can disagree.
   # `mirrors-section:` cannot ask this: it reconciles ids, and a repository name resolves to no record.
   - id: mirrors-repo-links
     description: Every `repos` entry is linked under `Where it lives`, and every repository linked there is stated.

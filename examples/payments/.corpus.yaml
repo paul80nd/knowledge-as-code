@@ -28,14 +28,14 @@ author:
   name: Paul Law
   url: https://github.com/paul80nd
 
-# Payments hosts its code apart from the library estate it consumes standards from.
-repos-base: https://git.example.com/example-payments
-
 # This repository is the published form, and the corpus sits in a folder of it.
 publishing-target: github
 publishing:
   base: https://github.com/paul80nd/knowledge-as-code
   path-prefix: examples/payments
+
+# Payments hosts its code apart from the library estate it consumes standards from.
+repos-base: https://git.example.com/example-payments
 
 # The governance layer this corpus inherits rather than restates. `eng:` is what a citation into it
 # carries. The source is a folder because the producer is the corpus next door, so no registry stands
