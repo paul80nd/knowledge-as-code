@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "The pipeline is the only route into production. A trivial change takes it and so does an urgent one. The one exception, for an outage, is recorded at the time and reconciled afterwards.",
-    "Scope": "Production and any environment where a change affects customers or contains real data. Applies equally to application deployments, infrastructure changes, configuration changes and database changes.\n\n_Boundary: this policy governs the route a change takes into production and the approval behind it. [pol-TRUS] owns what an artefact is made of, where it is kept and whether its origin can be proved._",
+    "Scope": "Production and any environment where a change affects customers or contains real data. Applies equally to application deployments, infrastructure changes, configuration changes and database changes.\n\n_Boundary: this policy governs the route a change takes into production and the approval behind it. [pol-TRUS] owns what an artefact is made of, where it is kept and whether its origin can be proved. A deployment that does not go as expected is an operational incident: [pol-INCR].LEARN reviews it._",
     "Exceptions": "An emergency change to restore service may bypass the normal path where the pipeline is itself unavailable, or where the delay would extend an outage. It is recorded as a deviation under [pol-DEVI] at the time, and the change is reconciled back into version control before the incident is closed. Otherwise the fix becomes the next outage."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7fd47279d109c325f7d3b91a8db4d71c719646b5/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5f79f82cda118de12e19fea2feea18b495c47671/examples/engineering/policies/delivery/pipe-pipeline-to-production.md"
   }
 }

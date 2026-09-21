@@ -1,0 +1,20 @@
+{
+  "type": "policies",
+  "path": "policies/security/supl-supplier-services.md",
+  "trust": null,
+  "fields": {
+    "id": "pol-SUPL",
+    "title": "Third-party services are chosen deliberately, and watched",
+    "category": "security",
+    "status": "draft",
+    "review-by": "2027-08-04"
+  },
+  "sections": {
+    "Purpose": "We choose a third-party or cloud service with its risks understood, not for its features alone, and we keep checking that the choice still holds.",
+    "Scope": "Every third-party or cloud service a system we build or operate depends on: infrastructure, platform or software delivered as a service, whether it holds our data, performs a function we chose not to build, or sits behind an API we call.\n\n_Boundary: [pol-TRUS] owns a component or artefact we ship: where it came from and what it is made of. This policy owns a service we depend on but do not ship anything of. [pol-ACCS].TERM covers removing a third party's access when that relationship ends; this policy covers the relationship itself, before and during it._",
+    "Exceptions": "A service that cannot be fully assessed before adoption, or that we cannot yet leave, is kept only under a recorded deviation ([pol-DEVI]). The deviation names the risk owner, the compensating controls and the plan to close the gap."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5f79f82cda118de12e19fea2feea18b495c47671/examples/engineering/policies/security/supl-supplier-services.md"
+  }
+}

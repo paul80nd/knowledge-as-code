@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "We know what our software is made of, and where every artefact we ship came from.",
-    "Scope": "All third-party and open-source components used by systems we build or operate, including transitive dependencies, base images and build-time tooling. It also covers the third-party and cloud services those systems depend on, and every artefact we deploy, whether we built it or obtained it from someone else.\n\n_Boundary: this policy governs what we admit into the estate and what we can prove about it. [pol-VURM] owns finding, prioritising and closing the vulnerabilities in what we have admitted, including whether a finding blocks a release. [pol-PIPE] owns the route an artefact takes into production and the approval behind it._",
+    "Scope": "All third-party and open-source components used by systems we build or operate, including transitive dependencies, base images and build-time tooling. A tool required for the pipeline to build, verify or release software counts as build-time tooling, whether or not it ships inside the artefact. A tool used only incidentally, with no place in that pipeline, is not, and stays procurement's or IT operations' asset register to keep. It also covers every artefact we deploy, whether we built it or obtained it from someone else.\n\n_Boundary: this policy governs what we admit into the estate and what we can prove about it. [pol-SUPL] owns a third-party or cloud service we depend on but do not ship anything of. [pol-VURM] owns finding, prioritising and closing the vulnerabilities in what we have admitted, including whether a finding blocks a release. [pol-PIPE] owns the route an artefact takes into production and the approval behind it._",
     "Exceptions": "A component that can no longer be sourced or maintained is kept only under a recorded deviation ([pol-DEVI]). The deviation names the risk owner, the compensating controls and the plan to replace it. \"It still works\" is not a plan."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7fd47279d109c325f7d3b91a8db4d71c719646b5/examples/engineering/policies/security/trus-trusted-components.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5f79f82cda118de12e19fea2feea18b495c47671/examples/engineering/policies/security/trus-trusted-components.md"
   }
 }

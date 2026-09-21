@@ -1,4 +1,4 @@
-example-payments 0.25.0 travels with this session as data, exported 2026-09-20.
+example-payments 0.25.1 travels with this session as data, exported 2026-09-21.
 fixes. 1 record: One order shows two authorisations on the cardholder's statement.
 nfrs. 3 records: A customer waits under a second to hear whether their card was accepted, A recovered ledger loses at most five minutes of payments and A refund reaches the card scheme within the hour.
 offerings. 2 records: Pay for an order with a card and Get money back for an order.
@@ -8,6 +8,6 @@ standards. 24 entries across 8 records: Card details reach the PSP and never rea
 standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, A container image is pinned by digest and runs as a non-root user, C# follows the runtime team's conventions, and the compiler enforces them, One artefact is built once and promoted to production, A dependency is pinned, screened and named in the inventory and 7 more.
 adrs (from eng). 1 record: Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to.
 glossary (from eng). 33 entries across 2 records: Engineering and Knowledge as code.
-policies (from eng). 243 entries across 23 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 18 more.
+policies (from eng). 276 entries across 24 records: Software we build is usable by everyone, Access is by individual identity, on least privilege, Agents propose, people decide, Every change is verified automatically, and failures block, Cost is a non-functional requirement and 19 more.
 reports (from eng). 1 record: Framework coverage.
 Ask the glossary-lookup skill before you answer from what you already know.
