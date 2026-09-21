@@ -409,33 +409,44 @@ public static class Validator
     private static void CheckCorpusEnums(
         Schema schema, IEnumerable<Doc> docs, CorpusDescriptor descriptor, List<Finding> f)
     {
-        var types = docs.Select(d => d.Type).OfType<TypeSchema>()
+        var all = docs.ToList();
+        var types = all.Select(d => d.Type).OfType<TypeSchema>()
             .DistinctBy(t => t.Key).OrderBy(t => t.Key, StringComparer.Ordinal).ToList();
         if (types.Count == 0) return;
 
         // A universal field reaches every type, so it is asked once and its message names no page.
-        foreach (var field in Reachable(schema.Universal.Values))
-            Ask(field, $"'{field.Name}'", "");
+        foreach (var field in schema.Universal.Values)
+            Ask(field, all, "", "");
 
         foreach (var t in types)
-        foreach (var field in Reachable(t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal)
-                     .Select(kv => kv.Value)))
-            Ask(field, $"'{field.Name}' on a {t.TypeName}", $" {t.Page} says how to reach them.");
-
-        void Ask(FieldSpec field, string said, string page)
         {
-            if (field.CorpusEnum is not { } name) return;
+            var records = all.Where(d => d.Type?.Key == t.Key).ToList();
+            foreach (var field in t.Fields.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Value))
+                Ask(field, records, $" on a {t.TypeName}", $" {t.Page} says how to reach them.");
+        }
 
-            if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+        // One declared field and every key an object entry nests below it, under the single answer to
+        // whether the corpus owes a range for that field at all.
+        void Ask(FieldSpec root, IReadOnlyList<Doc> records, string on, string page)
+        {
+            if (!Owed(root, records)) return;
+
+            foreach (var (path, field) in Reachable(root))
             {
-                Report($"{said} is judged against a list this corpus states, and it states none. Write the "
-                       + $"values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
-                return;
-            }
+                if (field.CorpusEnum is not { } name) continue;
+                var said = $"'{path}'{on}";
 
-            foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
-                Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
-                       + "value is lower case, so no record can satisfy this one.");
+                if (!descriptor.Enums.TryGetValue(name, out var values) || values.Count == 0)
+                {
+                    Report($"{said} is judged against a list this corpus states, and it states none. Write the "
+                           + $"values your estate uses under `enums:`, as `{name}: [a, b]`.{page}");
+                    continue;
+                }
+
+                foreach (var value in values.Where(v => v != v.ToLowerInvariant()))
+                    Report($"{said} is judged against `enums.{name}`, and that list carries '{value}'. An enum "
+                           + "value is lower case, so no record can satisfy this one.");
+            }
 
             return;
 
@@ -444,10 +455,31 @@ public static class Validator
         }
     }
 
-    // Every field a declaration reaches, including the keys of an object entry. A `shape:` is resolved into
-    // `Entry` at load, so a shape's keys arrive here without a walk of their own.
-    private static IEnumerable<FieldSpec> Reachable(IEnumerable<FieldSpec> fields) =>
-        fields.SelectMany(field => new[] { field }.Concat(Reachable(field.Entry ?? [])));
+    // Whether the corpus owes a range for a field yet.
+    //
+    // A required field is owed one from the first record of the type, because every record of that type
+    // must carry a value and no range means no record can. An optional field is owed one from the first
+    // record that states it: a record satisfies an optional field by leaving the key out, so a corpus
+    // using none of a field's values has nothing a range would judge.
+    //
+    // Asked of the declared field alone. A key inside an object entry is required against the entry that
+    // carries it, and an entry nobody wrote requires nothing.
+    private static bool Owed(FieldSpec root, IReadOnlyList<Doc> records) =>
+        root.Required || root.RequiredWhen is not null
+                      || records.Any(d => d.FrontNode(root.Name) is { } v && !ValueChecks.IsAbsent(v, root));
+
+    // Every field a declaration reaches, including the keys of an object entry, each with the path a record
+    // writes it at. A `shape:` is resolved into `Entry` at load, so a shape's keys arrive here without a walk
+    // of their own.
+    //
+    // The path is what an entry key needs. Its own name is `type` or `at`, which a reader would take for the
+    // frontmatter key of that name, and `interfaces.type` says which field to open.
+    private static IEnumerable<(string Path, FieldSpec Field)> Reachable(FieldSpec field, string prefix = "")
+    {
+        var path = prefix + field.Name;
+        return new[] { (path, field) }
+            .Concat((field.Entry ?? []).SelectMany(key => Reachable(key, path + ".")));
+    }
 
     // The shorthand another corpus cites this one by, held to a spelling a citation can carry.
     // `.schema/_checks.yaml` argues each part of that spelling under `shortcode`.
