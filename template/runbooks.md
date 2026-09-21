@@ -66,9 +66,10 @@ look like processes. You open the document on a day when the estate is already d
 3. State the **impact** next: who cannot do what while this is broken. `severity` says how urgent, and this says who.
 4. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
 5. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
-6. Put the escalation path where the reader finds it without scrolling.
-7. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
-8. Set `last-rehearsed` and `rehearsal-frequency` honestly. List tools in `requires-tools` and permissions in
+6. End the **resolution** with a line opening `Confirmed when`. That line says how the reader knows service is back.
+7. Put the escalation path where the reader finds it without scrolling.
+8. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
+9. Set `last-rehearsed` and `rehearsal-frequency` honestly. List tools in `requires-tools` and permissions in
    `requires-access`.
 
 **Conventions**
@@ -117,6 +118,7 @@ look like processes. You open the document on a day when the estate is already d
 | Rule                  | What it would verify                                          |
 |-----------------------|---------------------------------------------------------------|
 | `escalation-required` | Every diagnosis branch ends in a resolution or an escalation. |
+| `outcome-stated`      | Resolution ends with a line opening `Confirmed when`.         |
 | `staleness-loud`      | Rehearsal staleness, reported more loudly than a process's.   |
 
 <!-- END GENERATED: checks-runbooks -->

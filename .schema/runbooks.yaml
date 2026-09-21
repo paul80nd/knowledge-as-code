@@ -25,8 +25,9 @@ lineage:
     The response written down before the incident. Google measures roughly a threefold improvement in mean time to
     recovery over improvising it. The workbook asks a playbook to explain an alert's severity and impact, which
     `severity` and `Impact` state. AWS asks for step-by-step discovery, and for the tools and permissions to start:
-    `Diagnosis`, `requires-tools` and `requires-access`. It asks for a route out where nobody finds the cause, and a
-    plan for telling the people waiting: `Escalation` and `Communication`
+    `Diagnosis`, `requires-tools` and `requires-access`. It asks a runbook to state its desired outcome clearly, which
+    the last line of `Resolution` does, opening `Confirmed when`. It asks for a route out where nobody finds the cause,
+    and a plan for telling the people waiting: `Escalation` and `Communication`
   divergence: >
     Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
     `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both
@@ -137,6 +138,9 @@ rules:
   - id: escalation-required
     description: Every diagnosis branch ends in a resolution or an escalation.
     # `sections` requires the heading. This rule checks the branches under it.
+  - id: outcome-stated
+    description: Resolution ends with a line opening `Confirmed when`.
+    # Declared. A resolution with no outcome leaves the reader guessing whether to stop.
   - id: staleness-loud
     description: Rehearsal staleness, reported more loudly than a process's.
     # Scheduled. An unrehearsed runbook is followed during an incident.

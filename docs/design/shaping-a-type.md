@@ -412,6 +412,10 @@ where several runbooks match.
 The steps stay behind. AWS splits this document in two, a playbook that finds the cause and a runbook that resolves it,
 and this type is both on one page. A reader who has found the right page fetches it whole.
 
+The desired outcome stays behind with the steps. AWS asks a runbook to state its desired outcome clearly. Here it is
+the last line of `Resolution`, opening `Confirmed when`, so the reader reads it where they stop. The export says what
+the failure looks like and who it affects, not what a runbook restores.
+
 ## The framework register
 
 A policy states its alignment to an external framework clause by clause, as alignment rather than certification. Three

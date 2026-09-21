@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **A runbook states its desired outcome on a fixed line.** The `_template.md` that `kac new` sends now ends
+  `Resolution` with a line opening `Confirmed when`, where before it asked for the confirmation in any form. The
+  `runbooks.md` beside it now tells an author to write that line, having said nothing about `Resolution` at all.
+  `outcome-stated` is declared and does not run, so `kac generate` lists it under **Declared, not yet enforced** on the
+  type page.
+
 ## 0.29.0 - 2026-09-21
 
 ### Added
