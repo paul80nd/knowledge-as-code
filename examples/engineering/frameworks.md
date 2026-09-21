@@ -54,6 +54,7 @@ elsewhere in the management system, whole or in part:
 | The management system itself: `A.5.1`, `A.5.2`, `A.5.35` | The ISMS owner                            |
 | Compliance review, inside `A.5.36`                       | The ISMS owner                            |
 | Organisational reach: `A.5.5`, `A.5.6`, `A.5.31`         | Legal and the ISMS owner                  |
+| Threat intelligence: `A.5.7`                             | The Head of Information Security          |
 | Forensic custody, inside `A.5.28`                        | Legal                                     |
 | Our own intellectual property, inside `A.5.32`           | Legal                                     |
 | Asset handling: `A.5.10`, `A.5.11`, `A.5.13`             | IT operations                             |
@@ -110,9 +111,9 @@ are different commitments.
 
 ### WCAG
 
-**Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. Level AA is the bar because the policy sets it, and no law
-we answer to names a version. [Equality Act 2010] obliges the outcome and leaves the measure to us. Where a contract
-names an older version, this is the higher bar and the one we hold.
+**Self-obligated** at WCAG 2.2 level AA, under [pol-A11Y]. Level AA is the bar because the policy sets it, and no law we
+answer to names a version. [Equality Act 2010] obliges the outcome and leaves the measure to us. Where a contract names
+an older version, this is the higher bar and the one we hold.
 
 ## Inspiration
 
@@ -163,14 +164,13 @@ consumers of coding agents, so it does not cover what [pol-AGNT] governs; the AI
 ### SLSA
 
 **Inspiration.** Supply-chain Levels for Software Artifacts, at version 1.1: a build track grading how far a consumer
-can trust where an artefact came from. `L1` asks that provenance exists, `L2` that a hosted build platform signs it,
-and `L3` that the build is hardened against tampering from inside. Cited as `build-L1`, `build-L2`. Free, and not
+can trust where an artefact came from. `L1` asks that provenance exists, `L2` that a hosted build platform signs it, and
+`L3` that the build is hardened against tampering from inside. Cited as `build-L1`, `build-L2`. Free, and not
 certifiable.
 
 It puts a recognised shape on what [pol-TRUS] already asks for. `TRACE` wants a deployed artefact followed back to the
 build that produced it, which is what Build L1 provenance is for. `ATTEST` wants that provenance signed, which is L2.
-`ATTEST` is a SHOULD, so a build that cannot prove where an artefact came from needs a reason rather than a
-deviation.
+`ATTEST` is a SHOULD, so a build that cannot prove where an artefact came from needs a reason rather than a deviation.
 
 SPDX and CycloneDX are formats for exchanging an inventory rather than rules about what one holds, so `INVENT` cites
 neither and names no format.
