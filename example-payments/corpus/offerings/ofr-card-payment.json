@@ -31,6 +31,6 @@
     "Known limitations": "A card issuer may take several seconds to answer a step-up challenge, and [nfr-0001] does not cover that wait."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/payments/offerings/card-payment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/payments/offerings/card-payment.md"
   }
 }

@@ -13,6 +13,12 @@
     "repos": [
       "payment-api"
     ],
+    "interfaces": [
+      {
+        "type": "openapi",
+        "contract": "https://git.example.com/example-payments/payment-api/blob/main/contract/openapi.yaml"
+      }
+    ],
     "depends-on": [
       "svc-payment-ledger"
     ],
@@ -32,6 +38,6 @@
     "Data": "None of its own. It keeps a card token for one request and stores nothing. [svc-payment-ledger] records what happened to a payment."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/payments/services/payment-api.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/payments/services/payment-api.md"
   }
 }

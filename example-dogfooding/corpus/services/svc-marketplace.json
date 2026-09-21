@@ -13,6 +13,7 @@
     "repos": [
       "knowledge-as-code"
     ],
+    "interfaces": null,
     "depends-on": null,
     "data-stores": null,
     "nfrs": null,
@@ -31,6 +32,6 @@
     "Data": "Each plugin contains a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so an agent that finds a record wrong raises an issue."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/dog-fooding/services/marketplace.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/dog-fooding/services/marketplace.md"
   }
 }

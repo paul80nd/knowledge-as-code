@@ -13,6 +13,7 @@
     "repos": [
       "shelf-audit"
     ],
+    "interfaces": null,
     "depends-on": null,
     "data-stores": null,
     "nfrs": null,
@@ -30,6 +31,6 @@
     "Dependencies": "None. It reads the branch list from a file in its own repository and checks the catalogue from the outside, as any reader would."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/services/shelf-audit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/library/services/shelf-audit.md"
   }
 }

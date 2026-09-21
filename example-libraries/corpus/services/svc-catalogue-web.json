@@ -13,6 +13,7 @@
     "repos": [
       "platform"
     ],
+    "interfaces": null,
     "depends-on": [
       "svc-catalogue-api",
       "svc-covers-cdn",
@@ -34,6 +35,6 @@
     "Data": "No database connection is configured for this app service. It reads and writes data through the gateway."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/services/catalogue-web.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/library/services/catalogue-web.md"
   }
 }

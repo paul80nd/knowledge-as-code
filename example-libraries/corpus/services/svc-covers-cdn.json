@@ -14,6 +14,7 @@
       "covers-import",
       "infrastructure"
     ],
+    "interfaces": null,
     "depends-on": [
       "svc-thumbnailer"
     ],
@@ -33,6 +34,6 @@
     "Data": "Backed by the `covers` container in the shared storage account. The thumbnailer reads it on the edge's behalf."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4dd271ea645807f3cefcad5de9cff96df48318de/examples/library/services/covers-cdn.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8c91685774429f2c8232d9e2bd9f650ace65d612/examples/library/services/covers-cdn.md"
   }
 }
