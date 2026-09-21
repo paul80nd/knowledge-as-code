@@ -6,7 +6,8 @@ status: approved
 packages:
   - { purl: pkg:generic/dotnet-sdk, versions: 10.0.x }
 homepage: https://dotnet.microsoft.com/
-licence: MIT
+licence: MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib
+licence-declared: MIT
 decided-on: "2026-08-03"
 review-by: "2027-08-03"
 owner: human:paul.law
@@ -39,7 +40,16 @@ candidates.
 
 ## Licence and obligations
 
-MIT. Nothing follows for a package this repository publishes.
+Microsoft licenses the product distribution under MIT on Linux and macOS, and under the .NET Library License on
+Windows. This repository builds on Linux and macOS only, so the concluded value leaves the Windows terms out.
+
+The installed SDK puts an MIT `LICENSE.txt` beside a `ThirdPartyNotices.txt` of 56 notices. Every notice is permissive
+or a public-domain dedication, and `licence` lists each one SPDX has an identifier for. The rest are bare permission
+grants SPDX does not list: ISO 8879, RFC 3492, RFC 4122, and code its author released with no named licence. Nothing in
+the file is copyleft.
+
+Nothing follows for a package this repository publishes. CI installs the SDK, runs it, and redistributes no part of
+it.
 
 ## Related
 

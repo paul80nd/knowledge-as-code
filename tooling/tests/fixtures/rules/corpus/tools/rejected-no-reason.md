@@ -4,6 +4,7 @@ type: tool
 tier: descriptive
 status: rejected
 homepage: https://example.invalid/tool
+licence: MIT
 decided-on: "2026-01-05"
 review-by: "2030-01-01"
 owner: human:alex.doe

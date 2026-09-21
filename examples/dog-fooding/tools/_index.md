@@ -4,21 +4,21 @@
 
 ## Build
 
-| ID                     | Title                                             | Status     | Review by  | Licence                               |
-|------------------------|---------------------------------------------------|------------|------------|---------------------------------------|
-| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   | 2027-08-18 | LicenseRef-Anthropic-Terms-of-Service |
-| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 2027-08-03 | MIT                                   |
-| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 2027-08-03 | BSD-2-Clause                          |
-| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | 2027-08-21 | MIT                                   |
-| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated | 2027-08-21 | MIT                                   |
-| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 2027-08-03 | MIT                                   |
+| ID                     | Title                                             | Status     | Review by  | Licence                                                                                                 |
+|------------------------|---------------------------------------------------|------------|------------|---------------------------------------------------------------------------------------------------------|
+| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   | 2027-08-18 | LicenseRef-Anthropic-Terms-of-Service                                                                   |
+| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 2027-08-03 | MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib |
+| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 2027-08-03 | BSD-2-Clause                                                                                            |
+| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | 2027-08-21 | MIT                                                                                                     |
+| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated | 2027-08-21 | MIT                                                                                                     |
+| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 2027-08-03 | MIT                                                                                                     |
 
 ## Docs
 
-| ID                  | Title                                          | Status   | Review by  | Licence      |
-|---------------------|------------------------------------------------|----------|------------|--------------|
-| tol-mkdocs          | [MkDocs](docs/mkdocs.md)                       | approved | 2027-08-24 | BSD-2-Clause |
-| tol-mkdocs-material | [Material for MkDocs](docs/mkdocs-material.md) | approved | 2027-08-24 | MIT          |
+| ID                  | Title                                          | Status   | Review by  | Licence                                      |
+|---------------------|------------------------------------------------|----------|------------|----------------------------------------------|
+| tol-mkdocs          | [MkDocs](docs/mkdocs.md)                       | approved | 2027-08-24 | BSD-2-Clause                                 |
+| tol-mkdocs-material | [Material for MkDocs](docs/mkdocs-material.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0 |
 
 ## Lint
 
@@ -35,7 +35,7 @@
 
 ## Testing
 
-| ID           | Title                           | Status   | Review by  | Licence      |
-|--------------|---------------------------------|----------|------------|--------------|
-| tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 2027-08-04 | BSD-3-Clause |
-| tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 2027-08-04 | Apache-2.0   |
+| ID           | Title                           | Status   | Review by  | Licence            |
+|--------------|---------------------------------|----------|------------|--------------------|
+| tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 2027-08-04 | BSD-3-Clause       |
+| tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 2027-08-04 | Apache-2.0 AND MIT |

@@ -8,6 +8,7 @@ packages:
   - { purl: pkg:nuget/Spectre.Console.Cli, versions: 0.55.x }
 homepage: https://spectreconsole.net/
 licence: MIT
+licence-declared: MIT
 decided-on: "2026-08-21"
 review-by: "2027-08-21"
 replaces: tol-system-commandline

@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:golang/github.com/rhysd/actionlint, versions: 1.7.x }
 homepage: https://github.com/rhysd/actionlint
 licence: MIT
+licence-declared: MIT
 decided-on: "2026-09-02"
 review-by: "2027-09-02"
 owner: human:paul.law

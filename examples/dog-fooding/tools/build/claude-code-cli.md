@@ -7,6 +7,7 @@ packages:
   - { purl: pkg:npm/%40anthropic-ai/claude-code }
 homepage: https://github.com/anthropics/claude-code
 licence: LicenseRef-Anthropic-Terms-of-Service
+licence-declared: SEE LICENSE IN README.md
 decided-on: "2026-08-18"
 review-by: "2027-08-18"
 owner: human:paul.law
@@ -42,11 +43,10 @@ None. Nothing else reads a plugin manifest the way the CLI that loads it does.
 
 ## Licence and obligations
 
-`LicenseRef-Anthropic-Terms-of-Service`. The package declares `SEE LICENSE IN README.md`, and that README has no
-licence section. The `LICENSE.md` shipped in the same package reserves all rights to Anthropic PBC. It grants use
-under the [legal agreements](https://code.claude.com/docs/en/legal-and-compliance) Anthropic publishes. The Commercial
-Terms of Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro and Max
-ones.
+The README the package points at has no licence section. The `LICENSE.md` shipped in the same package reserves all
+rights to Anthropic PBC, and grants use under the
+[legal agreements](https://code.claude.com/docs/en/legal-and-compliance) Anthropic publishes. The Commercial Terms of
+Service cover Team, Enterprise and API customers, and the Consumer Terms of Service cover Free, Pro and Max ones.
 
 The licence grants no right to copy, change or redistribute the package. CI installs the published binary with
 `npm install -g` and runs it untouched. The CLI is installed outside the working tree, and the plugin bundle it

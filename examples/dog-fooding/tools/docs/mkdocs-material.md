@@ -6,7 +6,8 @@ status: approved
 packages:
   - { purl: pkg:pypi/mkdocs-material, versions: 9.7.x }
 homepage: https://squidfunk.github.io/mkdocs-material/
-licence: MIT
+licence: MIT AND Apache-2.0 AND CC-BY-4.0 AND CC0-1.0
+licence-declared: MIT
 decided-on: "2026-08-24"
 review-by: "2027-08-24"
 owner: human:paul.law
@@ -53,8 +54,13 @@ None recorded.
 
 ## Licence and obligations
 
-MIT for the community edition, which is what `docs/requirements.txt` installs. The sponsor-only edition is a separate
-package and nothing here uses it.
+The community edition is MIT, and that is what `docs/requirements.txt` installs. The wheel also ships four icon sets
+under `material/templates/.icons/`, each with its own licence file: Material Design Icons from the Pictogrammers under
+Apache-2.0, Font Awesome Free under CC-BY-4.0, GitHub's Octicons under MIT, and Simple Icons under CC0-1.0. Those sets
+ship as SVG files and no fonts, so the font clauses in the Font Awesome and Pictogrammers licences do not apply.
+
+An icon put on a page comes under its own set's terms, and CC-BY-4.0 asks for attribution. The sponsor-only edition is
+a separate package and nothing here uses it.
 
 ## Related
 
