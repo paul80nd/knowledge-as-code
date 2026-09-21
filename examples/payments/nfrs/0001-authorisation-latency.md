@@ -8,6 +8,7 @@ applies-to:
   - ofr-card-payment
 target: p95 under 800ms
 window: rolling 1 hour
+alert-after: 15 minutes
 measured-by: Application Insights, on the server duration of POST /authorisations
 agreed-on: "2026-08-28"
 review-by: "2027-08-28"

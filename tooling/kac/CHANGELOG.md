@@ -44,6 +44,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `licence` states the concluded value. `kac validate` warns through `conclusion-states-a-reason` where the two
   differ and no `## Licence and obligations` section says how the conclusion was reached. Both fields travel in the
   export, and `version:` under `export:` in `.schema/tools.yaml` moves to 3.
+- **An NFR states how long a condition holds before its alert is raised.** `nfrs` declares `alert-after`, optional
+  on every target. The value is the alert's configured delay, such as `15 minutes`, and never a detection time
+  measured after an incident. `kac validate` warns through `alert-after-needs-an-alert` where a target stating one
+  binds no service that raises an alert or a ticket, following an offering's `implemented-by` to the services behind
+  it. The field travels in the export beside `window`, and `version:` under `export:` in `.schema/nfrs.yaml` moves
+  to 5.
 
 ### Changed
 

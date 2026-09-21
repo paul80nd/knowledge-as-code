@@ -8,6 +8,7 @@ applies-to:
   - ofr-refund
 target: 95% of refunds submitted to the PSP within one hour of the return being accepted
 window: rolling 1 day
+alert-after: 2 hours
 measured-by: Application Insights, on the gap between the return event and the refund request at [svc-payment-api]
 agreed-on: "2026-08-28"
 review-by: "2027-08-28"

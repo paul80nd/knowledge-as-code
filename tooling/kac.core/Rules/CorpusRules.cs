@@ -7,6 +7,7 @@ public static class CorpusRules
     public static readonly IReadOnlyList<ICorpusRule> All =
     [
         new NoDependencyCycles(),
+        new AlertAfterNeedsAnAlert(),
         new AlignmentRollup(),
         new ClauseQuotedFaithfully(),
         new FeatureFileRepo(),

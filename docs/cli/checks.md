@@ -40,7 +40,7 @@ One check to a line, with the severity it reports at and what it proves, and a t
   error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
   warning  deprecated-has-successor       A deprecated tool states what replaces it.
 
-113 checks: 79 error(s), 32 warning(s), 2 info.
+124 checks: 82 error(s), 40 warning(s), 2 info.
 ```
 
 Only an error fails the build. A warning is something to act on. An info reports something true that is nobody's fault,
