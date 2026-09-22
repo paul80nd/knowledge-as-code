@@ -148,6 +148,10 @@ public static class ChecksTable
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
         ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",
             t => t.Rules.Any(r => r.Id == new RuleId("changelog-newest-first"))),
+        ("diagnosis-dead-end / diagnosis-no-escalation",
+            [new("diagnosis-dead-end"), new("diagnosis-no-escalation")],
+            "Every diagnosis branch routes to a section or falls through, and one branch reaches `Escalation`.",
+            t => t.Rules.Any(r => r.Id == new RuleId("escalation-required"))),
         ("alert-after-needs-an-alert", [new("alert-after-needs-an-alert")],
             "A target stating `alert-after` binds a service that raises an alert or a ticket, "
             + "through any offering between.",

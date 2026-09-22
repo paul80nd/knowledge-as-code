@@ -19,6 +19,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A diagnosis branch that strands the reader is reported.** `escalation-required` runs on `runbooks`. Every branch
+  under `## Diagnosis` links to `#resolution` or `#escalation`, or ends on the word `continue` to fall through to the
+  next question. The last list in the section has nothing to fall through to, so `continue` there is reported as well.
+  One branch of the tree reaches `#escalation`, for the reader the tree does not answer. `kac validate` fails each
+  branch at fault under `diagnosis-dead-end`, quoting it, and the tree that never escalates under
+  `diagnosis-no-escalation`. A `Diagnosis` written as prose has no branches and is passed over. The runbook
+  `_template.md` teaches the form.
 - **A standard's changelog runs newest first.** `kac validate` warns where an entry is dated after the one above it,
   and states both dates. A bullet that does not open on an ISO date before a colon is passed over, which is how a
   template placeholder stays out of it. The rule is `changelog-newest-first` and it reports under `changelog-order`.

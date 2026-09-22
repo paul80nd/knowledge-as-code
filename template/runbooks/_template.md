@@ -69,10 +69,12 @@ _(Before diagnosis. Contain first, understand afterwards.)_
 
 **Is {{next condition}}?**
 
-* **Yes** → {{action}}.
+* **Yes** → {{action}}, then go to [Resolution](#resolution).
 * **No** → [escalate](#escalation).
 
-_(A tree, not prose. Each branch ends in a resolution or an escalation, never in a dead end.)_
+_(A tree, not prose. Each branch links to [Resolution](#resolution) or to [escalate](#escalation), or writes
+`continue` to fall through to the next question. The last question has nothing to fall through to, so close
+every branch of it with a link. One branch of the tree reaches the escalation.)_
 
 ## Resolution
 
