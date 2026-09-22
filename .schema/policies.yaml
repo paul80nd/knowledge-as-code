@@ -61,7 +61,7 @@ fields:
     type: enum
     values: [draft, active, retired]
     in-force: active
-    description: Retire a policy instead of deleting it.
+    description: '`draft` while it is being agreed, `retired` once it is stood down. Retire a policy instead of deleting it.'
 
   aligns-with:
     required: false

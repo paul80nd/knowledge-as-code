@@ -93,16 +93,16 @@ public class PluginSkillStalenessTests
 
     // The states a record of this type can be in other than in force. The settled one is `in-force:` in the type's
     // own schema file, and it is not `active` across the set: `adrs` settles at `accepted`, `services` at `live`.
-    // `SchemaChecks.CheckInForce` fails a type that declares none, so the throw here is reached only by a schema
-    // this test loaded past that check.
+    // A type leaving `status` to `_universal.yaml` states no range, which `SchemaChecks.CheckInForce` passes over
+    // and a lookup skill cannot be written from, so the throw is what stops one being written for it.
     private static IEnumerable<string> Unsettled(TypeSchema type)
     {
         var status = type.Fields.GetValueOrDefault("status");
         var settled = status?.InForce
                       ?? throw new InvalidOperationException(
-                          $"'.schema/{type.Folder}.yaml' declares no 'in-force:' on 'status:'. Name the value that "
-                          + "says a record is in force, and say in that type's lookup skill what every other value "
-                          + "means.");
+                          $"'{type.Folder}' has a lookup skill, and '.schema/{type.Folder}.yaml' declares no "
+                          + "'status:' range with an 'in-force:' value beside it. Declare both, and say in that "
+                          + "skill's staleness section what every other value means.");
 
         return (status.Values ?? [])
             .Where(v => !string.Equals(v, settled, StringComparison.Ordinal))

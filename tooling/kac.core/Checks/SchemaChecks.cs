@@ -396,9 +396,8 @@ public static class SchemaChecks
     }
 
     // Every type that states a range for `status` names the value that says a record is in force.
-    // `FieldSpec.InForce` says why the schema declares it. Asked of the effective field, so a type refining
-    // `status` and a type taking the universal declaration owe the same answer. A type stating no range has
-    // nothing to name.
+    // `FieldSpec.InForce` says why the schema declares it. A type stating no range is passed over: it has
+    // nothing to name, and its `status` checks no record either, which is a fault of its own.
     private static void CheckInForce(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
     {
         if (schema.EffectiveField(t, "status") is not { Type: "enum", Values.Count: > 0 } status) return;
