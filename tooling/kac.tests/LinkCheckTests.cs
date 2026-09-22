@@ -90,6 +90,31 @@ public class LinkCheckTests
             "link definition '[std-ci]' should be written as the id 'std-CI'."
         ], Labels("[std-ci] says so.\n\n[std-ci]: /standards/workflows.md\n"));
 
+    // A reference resolves to its definition case-insensitively, so the two may be spelled differently.
+    // The reader is shown the use site's spelling, and the definition here is already canonical.
+    [Fact]
+    public void A_shortcut_is_judged_on_the_spelling_its_use_site_gives_it()
+        => Assert.Equal(["reference '[STD-ci]' should be written as the id 'std-CI'."],
+            Labels("[STD-ci] says so.\n\n[std-CI]: /standards/workflows.md\n"));
+
+    // A collapsed reference displays its label too, so it is read the same way as a shortcut.
+    [Fact]
+    public void A_collapsed_reference_is_judged_on_its_label()
+        => Assert.Equal(
+        [
+            "reference '[std-ci]' should be written as the id 'std-CI'.",
+            "link definition '[std-ci]' should be written as the id 'std-CI'."
+        ], Labels("[std-ci][] says so.\n\n[std-ci]: /standards/workflows.md\n"));
+
+    // A full reference displays its own text, so its label reaches no reader. The definition is the
+    // one place the label is written for anyone to read, and the only place the fault is reported.
+    [Fact]
+    public void A_full_reference_is_judged_on_its_definition_alone()
+        => Assert.Equal(
+            ["link definition '[std-BOGUS]' leads to 'standards/workflows.md', whose id is 'std-CI'."],
+            Labels("[the workflows standard][std-BOGUS] says so.\n\n"
+                   + "[std-BOGUS]: /standards/workflows.md\n"));
+
     // A renderer resolves a reference to the first definition of a repeated label, so the second is
     // not what the reader follows and is not what the label is held against.
     [Fact]

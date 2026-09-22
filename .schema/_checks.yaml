@@ -335,13 +335,15 @@ checks:
 
   label-canonical:
     severity: error
-    description: A shortcut label is the id of the record it leads to, written canonically.
+    description: A link label is the id of the record it leads to, written canonically.
     notes: >
       Prefix lower-case, mnemonic upper-case, slug lower-case. A label spelled canonically, and a label no id style
       recognises at all, are both then held against the id in the frontmatter of the record the definition resolves
-      to. That frontmatter is where a type keeping the id out of the filename states it. The label is its own
-      display text, so either fault shows the reader an id nothing has. A template is exempt, its definitions
-      demonstrating the form under labels nobody has chosen yet.
+      to. That frontmatter is where a type keeping the id out of the filename states it. Every link definition is
+      judged. A shortcut and a collapsed reference also show the reader the label their use site spells, so that
+      spelling is judged where they are read. A full reference shows its own words instead, and its label is judged
+      at the definition alone. A template is exempt, its definitions demonstrating the form under labels nobody has
+      chosen yet.
 
   part-ref:
     severity: error

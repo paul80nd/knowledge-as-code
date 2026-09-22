@@ -3,7 +3,7 @@
     "validated": 24,
     "templates": 3,
     "skipped": 0,
-    "errors": 33,
+    "errors": 35,
     "warnings": 1,
     "infos": 0
   },
@@ -149,6 +149,13 @@
       "message": "reference '[ADR-0004]' should be written as the id 'adr-0004'."
     },
     {
+      "file": "policies/intc-label-case.md",
+      "line": 18,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "reference '[POL-cats]' should be written as the id 'pol-CATS'."
+    },
+    {
       "file": "policies/know-identity-case.md",
       "line": 12,
       "severity": "error",
@@ -168,6 +175,13 @@
       "severity": "error",
       "check": "label-canonical",
       "message": "link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
+    },
+    {
+      "file": "policies/lead-label-leads-elsewhere.md",
+      "line": null,
+      "severity": "error",
+      "check": "label-canonical",
+      "message": "link definition '[pol-WRITTEN]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'."
     },
     {
       "file": "policies/lead-label-leads-elsewhere.md",

@@ -65,9 +65,10 @@ public static class LinkChecks
                         $"'[{inner}]' looks like a reference but has no definition (or use an inline link).", line);
             }
 
-        // A shortcut label doubles as its own display text, so it is read as an id and must be written
-        // as one. Reference and definition are matched case-insensitively, so a mis-cased label still
-        // resolves: nothing else would catch it.
+        // A label the link displays is read as an id, so it must be written as one. A shortcut and a
+        // collapsed reference display their label. A full reference displays the words its author
+        // wrote, so its label reaches no reader and only its definition is judged. The use site is
+        // judged on the spelling it gives the label, which is what the page shows.
         //
         // Two ways a label shows the reader an id nothing carries, and the second is asked only where
         // the first passed. A label recognisable as an id and spelled wrongly is told the spelling.
@@ -81,13 +82,13 @@ public static class LinkChecks
 
         foreach (var link in d.Links)
         {
-            if (!link.IsReference || string.IsNullOrEmpty(link.Label)) continue;
-            if (IdChecks.TryCanonicalId(link.Label, schema, out var canonical) && link.Label != canonical)
+            if (!link.IsReference || link.DisplayedLabel is not { Length: > 0 } shown) continue;
+            if (IdChecks.TryCanonicalId(shown, schema, out var canonical) && shown != canonical)
                 report.Err(new CheckId("label-canonical"),
-                    $"reference '[{link.Label}]' should be written as the id '{canonical}'.", link.Line);
-            else if (cite && Misnamed(link.Label, link.Target, d.Rel, schema, tree, ids) is { } led)
+                    $"reference '[{shown}]' should be written as the id '{canonical}'.", link.Line);
+            else if (cite && Misnamed(shown, link.Target, d.Rel, schema, tree, ids) is { } led)
                 report.Err(new CheckId("label-canonical"),
-                    $"reference '[{link.Label}]' leads to '{led.Page}', whose id is '{led.Id}'.", link.Line);
+                    $"reference '[{shown}]' leads to '{led.Page}', whose id is '{led.Id}'.", link.Line);
         }
 
         foreach (var label in d.DefinedLabels.Distinct(StringComparer.Ordinal))

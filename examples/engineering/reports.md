@@ -102,7 +102,7 @@ editing the `Imported:` bullet under `## Limits` to match, and adding a `verifie
 | `placeholder-left`           | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `link-resolves`              | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`            | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`            | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                        |
+| `label-canonical`            | error   | A link label is the id of the record it leads to, written as that record carries it.                            |
 | `unused-definition`          | warning | A link definition that nothing references.                                                                      |
 | `report-stale`               | warning | Each corpus a report answers for is at the version the report names.                                            |
 | `self-verification`          | error   | A report's `verified` list does not name the producer that `generated.by` names.                                |

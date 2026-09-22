@@ -80,7 +80,7 @@ Scenario: The mnemonic prefix is excluded from the slug-length measurement
     | line | check       | message                                                                        |
     |      | slug-length | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30. |
 
-Scenario: A mis-cased id label is flagged where it is read and where it is defined
+Scenario: A mis-cased id label is flagged wherever a reader meets it
   When I validate the corpus
   Then the findings for "policies/intc-label-case.md" are exactly:
     | line | check           | message                                                              |
@@ -88,6 +88,7 @@ Scenario: A mis-cased id label is flagged where it is read and where it is defin
     |      | label-canonical | link definition '[pol-vurm]' should be written as the id 'pol-VURM'. |
     | 17   | label-canonical | reference '[pol-vurm]' should be written as the id 'pol-VURM'.       |
     | 18   | label-canonical | reference '[ADR-0004]' should be written as the id 'adr-0004'.       |
+    | 18   | label-canonical | reference '[POL-cats]' should be written as the id 'pol-CATS'.       |
 
 Scenario: A label the style admits is held against the document it leads to
   When I validate the corpus
@@ -95,6 +96,7 @@ Scenario: A label the style admits is held against the document it leads to
     | line | check           | message                                                                                                |
     |      | label-canonical | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'. |
     |      | label-canonical | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.     |
+    |      | label-canonical | link definition '[pol-WRITTEN]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.  |
     | 17   | label-canonical | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.           |
     | 18   | label-canonical | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.       |
 
@@ -135,9 +137,11 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | policies/intc-label-case.md                                 | error    |      | label-canonical     | link definition '[pol-vurm]' should be written as the id 'pol-VURM'.                                                                                        |
     | policies/intc-label-case.md                                 | error    | 17   | label-canonical     | reference '[pol-vurm]' should be written as the id 'pol-VURM'.                                                                                              |
     | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[ADR-0004]' should be written as the id 'adr-0004'.                                                                                              |
+    | policies/intc-label-case.md                                 | error    | 18   | label-canonical     | reference '[POL-cats]' should be written as the id 'pol-CATS'.                                                                                              |
     | policies/know-identity-case.md                              | error    | 12   | identity-status     | identity line status 'Draft' must be upper-case: `DRAFT`.                                                                                                   |
     | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                      |
     | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                          |
+    | policies/lead-label-leads-elsewhere.md                      | error    |      | label-canonical     | link definition '[pol-WRITTEN]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                       |
     | policies/lead-label-leads-elsewhere.md                      | error    | 17   | label-canonical     | reference '[pol-DEVI]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                                |
     | policies/lead-label-leads-elsewhere.md                      | error    | 18   | label-canonical     | reference '[pol-CATEGORY]' leads to 'policies/cats-category-written.md', whose id is 'pol-CATS'.                                                            |
     | policies/mexp-slug-that-is-definitely-way-too-long.md       | error    |      | slug-length         | slug 'slug-that-is-definitely-way-too-long' is 36 characters; the limit is 30.                                                                              |

@@ -24,6 +24,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   brackets on the page as text, so the cell states no mapping. Reported once per label. While the definition is
   missing, `alignment-rollup` does not report `aligns-with` as claiming that framework.
 
+### Fixed
+
+- **`label-canonical` reads the label a reader sees.** `kac validate` fails a shortcut or collapsed reference whose
+  use site mis-cases the label, such as `[STD-ci]` behind a `[std-CI]:` definition. Markdown matches the two
+  case-insensitively, so the page rendered an id no record carries and every check passed. A full reference such as
+  `[the workflows standard][ci-standard]` displays its own words instead, so its label is now reported at the
+  definition alone and no longer quoted at a line where nobody can read it.
+
 ## 0.30.0 - 2026-09-21
 
 ### Added
