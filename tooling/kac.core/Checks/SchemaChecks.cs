@@ -623,9 +623,10 @@ public static class SchemaChecks
                          + "no description, and nothing to render.", f);
     }
 
-    // The two vocabularies a field declares itself with, read from `ValueChecks`, which holds them
-    // beside the code dispatching them. A second list here would say what is spelled correctly rather
-    // than what runs, and a value dropped from the switch would go on passing.
+    // What a field says it is, and what its entries are, read from `ValueChecks`, which keeps both
+    // vocabularies beside the code dispatching them. A second list here would say what is spelled
+    // correctly rather than what runs, and a value dropped from the switch would go on passing. The
+    // last question asks where an id resolves, which is the half of the declaration a type never states.
     //
     // Asked of an entry key as well, to whatever depth the field nests. `Entry` sends each key's value
     // back through `Check`, so a key's `type:` dispatches exactly as a field's does, and a key
@@ -649,6 +650,14 @@ public static class SchemaChecks
                 Dispatch(at, $"{what} declares 'of: {of}', which no entry check reads. A list's entries "
                              + $"are {List(ValueChecks.EntryTypes)}.", f);
         }
+
+        // An id is resolved against the folders a `ref:` names, and against nothing else. The reference
+        // pass selects a field on its `ref:` before it narrows on the type, so a declaration without one
+        // reaches no resolution at all, while the type page renders the field as a citation.
+        if ((spec.Type == "id" || (spec.Type == "list" && spec.Of == "id")) && spec.Refs.Count == 0)
+            Dispatch(at, $"{what} declares '{(spec.Type == "id" ? "type: id" : "of: id")}' and no 'ref:'. "
+                         + "An id is resolved against the folders a reference names, so nothing checks "
+                         + "what the value points at. Declare a 'ref:', or declare the value a string.", f);
 
         foreach (var key in spec.Entry ?? [])
             CheckDeclaredTypes(at, $"{what} entry key '{key.Name}'", key, f);

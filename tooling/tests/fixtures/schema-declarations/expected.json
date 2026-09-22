@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 31,
+    "errors": 32,
     "warnings": 0,
     "infos": 0
   },
@@ -189,6 +189,13 @@
       "severity": "error",
       "check": "schema-dispatch",
       "message": "field 'retention' declares 'part-required: true' and no 'ref:'. A part is looked up in the record the reference names, so nothing reads the key. Declare a 'ref:', or drop the key."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'sponsor' declares 'type: id' and no 'ref:'. An id is resolved against the folders a reference names, so nothing checks what the value points at. Declare a 'ref:', or declare the value a string."
     },
     {
       "file": ".schema/widgets.yaml",

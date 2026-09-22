@@ -27,7 +27,8 @@ checks:
     on-type-page: false
     description: Every value the schema declares is one the tool has code to act on.
     notes: >
-      A `ref:` and a `versus:` sit outside this pass, since either may name a type the corpus declined. The opposite
+      The value of a `ref:` or a `versus:` sits outside this pass, since either may name a type the corpus declined. A
+      field declaring an id and no `ref:` at all is reported, because its ids resolve against nothing. The opposite
       fault, a check declared here that nothing reports, is the coverage gate's to fail. See
       <https://paul80nd.github.io/knowledge-as-code/design/held-to/#ref-and-versus>.
 
