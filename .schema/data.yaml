@@ -171,5 +171,3 @@ rules:
     message: >
       this document's `review-by` has passed. Check the classification and the retention against the store,
       then set `review-by` to the next day someone looks at it.
-  - id: store-has-service
-    description: Every store named here resolves to a service in the catalogue.

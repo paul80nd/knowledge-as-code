@@ -172,10 +172,6 @@ rules:
     notes: >
       The span is written in hours, minutes and seconds, and never in days. See
       <https://paul80nd.github.io/knowledge-as-code/design/expressions/>.
-  - id: blameless
-    description: >
-      Flags a personal name in the Timeline, Root cause or Contributing factors sections. Name the role or
-      the system.
   - id: recurring-root-causes
     description: >
       Scheduled. Reports root causes recurring across postmortems.

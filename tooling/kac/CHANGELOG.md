@@ -46,6 +46,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   brackets on the page as text, so the cell states no mapping. Reported once per label. While the definition is
   missing, `alignment-rollup` does not report `aligns-with` as claiming that framework.
 
+### Removed
+
+- **Three rules nothing could run are gone from the schema.** `store-has-service` on `data`, `terms-are-singular` on
+  `glossary` and `blameless` on `postmortems` no longer appear on a type page under **Declared, not yet enforced**.
+  `kac` checks closed word lists. Each of these three needs a judgement it cannot make: a store written as prose, an
+  English plural, a personal name. The type page and the `_template.md` for each type already tell an author what to
+  write, and `ref-resolves` already reports a `data` record whose `owned-by` names no service.
+
 ### Fixed
 
 - **`clause-compound` reads a whole modal word.** `kac validate` no longer warns on a clause such as `**MUST** be

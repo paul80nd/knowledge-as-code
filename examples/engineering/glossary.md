@@ -147,7 +147,6 @@ nothing runs the rule and the limit is yours to keep.
 | `carried-in-full-by-digest`    | No entry runs beyond one paragraph. The digest takes the glossaries in the order the export writes them. |
 | `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                      |
 | `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                   |
-| `terms-are-singular`           | Entry headings are singular and in canonical casing.                                                     |
 
 <!-- END GENERATED: checks-glossary -->
 

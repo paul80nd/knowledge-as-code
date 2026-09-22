@@ -123,10 +123,9 @@ postmortem means something.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                                             |
-|-----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `immutable-after-published` | Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place.           |
-| `blameless`                 | Flags a personal name in the Timeline, Root cause or Contributing factors sections. Name the role or the system. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                                     |
+| Rule                        | What it would verify                                                                                   |
+|-----------------------------|--------------------------------------------------------------------------------------------------------|
+| `immutable-after-published` | Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place. |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                           |
 
 <!-- END GENERATED: checks-postmortems -->

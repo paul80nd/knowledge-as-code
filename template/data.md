@@ -124,10 +124,4 @@ exceptions to the plural-folder rule.
 | `no-actual-data`            | error   | Fails on an email address outside `example.com`. Nothing catches an identifier or a connection string.          |
 | `classification-in-date`    | warning | A document names a review date that has not passed.                                                             |
 
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule                | What it would verify                                           |
-|---------------------|----------------------------------------------------------------|
-| `store-has-service` | Every store named here resolves to a service in the catalogue. |
-
 <!-- END GENERATED: checks-data -->
