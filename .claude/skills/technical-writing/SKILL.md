@@ -13,6 +13,7 @@ say what that means in practice, and where this repository differs from Microsof
 These do most of the work.
 
 * **Lead with the point.** State the rule or the fact first. Put the reason after it, or leave the reason out.
+  Where a purpose or a condition decides whether to act, put it before the instruction it governs.
 * **Use the plain verb.** A command *lists*, *checks*, *writes*, *reports*, *creates*, *rejects*. It does not *hold
   to*, *carry*, *name*, *answer*, *reach*, *stand up* or *seal*. "holds" has four plain replacements: *has*,
   *contains*, *keeps*, *checks*. "carries" has four more: *has*, *contains*, *includes*, *states*. Pick by sense.

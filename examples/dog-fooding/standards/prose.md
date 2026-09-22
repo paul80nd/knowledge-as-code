@@ -28,6 +28,8 @@ shape on top of them.
 
 - Prose **MUST** follow the Microsoft Writing Style Guide, except where a clause below changes it.
 - A sentence **MUST** state the rule or the fact before the reason.
+- An instruction **MUST** come before the reason for taking it.
+- A purpose or a condition deciding whether to act **MUST** come before the instruction it governs.
 - A verb **MUST** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*. *Hold to*, *carry*,
   *name*, *answer*, *reach* and *seal* **MUST NOT** stand in for one. *Holds* has four plain replacements: *has*,
   *contains*, *keeps* and *checks*. *Carries* has *has*, *contains*, *includes* and *states*.
@@ -90,6 +92,7 @@ Only an error fails the build.
 `pack` zips `.dist/export/` into a `.nupkg` under `.dist/package/`.
 Two separators extend an id. `.` selects a part. `:` selects a corpus.
 To delete the document, click Delete.
+Run `kac generate`. The index is stale until you do.
 
 ❌ Avoid
 `validate` holds a corpus to carrying the markers this writes between.
@@ -97,6 +100,7 @@ Failing rather than warning is the whole of the trade.
 A directory is not something another repository can depend on.
 Two separators reach past an id, each with one job.
 Click Delete to remove the document.
+Because the index is stale, run `kac generate`.
 ```
 
 Each line under ❌ Avoid makes the reader read it twice.
@@ -105,11 +109,13 @@ Each line under ❌ Avoid makes the reader read it twice.
 - A generalisation about the design says nothing the reader can act on.
 - A sentence saying what a thing is not never says what it is.
 - A step written before its purpose is acted on before the purpose is read.
+- A reason put in front of the step it explains delays the step.
 
 ## Conformance checklist
 
 - [ ] Every verb is literal. No "holds", "carries", "names", "answers", "reaches" or "seals" replaces a plain verb.
 - [ ] Every section opens on the rule or the fact, not the reason.
+- [ ] Every instruction comes after the purpose or the condition governing it, and before its reason.
 - [ ] Every contrast left standing is one a reader needs, and every clause kept the one it had.
 - [ ] Every heading names a topic.
 - [ ] No em dash survives. Spelling is British.
@@ -135,6 +141,7 @@ checkout with no corpus in it. This standard is the record the estate cites.
 
 ## Changelog
 
+- 2026-09-22: separated a purpose from a reason, and stated where each one sits around an instruction.
 - 2026-09-11: replaced the restated rulebook with the Microsoft Writing Style Guide as the base, plus the local changes.
 - 2026-09-06: took the wrapping, generated-block, write-what-exists and schema-precedence rules that `CLAUDE.md` had
   been stating a second time.
