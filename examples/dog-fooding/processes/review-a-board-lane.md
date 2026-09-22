@@ -45,27 +45,31 @@ This process writes to the tracker and changes no file in the repository, so it 
 5. Close what the code has answered. Comment the evidence first, naming the file, the field and the count that settle
    it. Closing an issue moves its board item to `Done` on its own.
 6. Rewrite a body whose facts have moved. Keep the structure, rewrite the block that changed rather than appending a
-   correction, and end with a `## What changed` section saying what was true when it opened.
+   correction, and end with a `## What changed` section saying what was true when it opened. Retitle the issue where
+   its title states a count the rewrite changed.
 7. Comment where one part moved and the rest stands. State what you read and the date you read it.
 8. Search every other lane for issues on this one's subject, and move those in. An issue amending one in this lane
    from somewhere else is invisible to whoever picks that one up.
 9. Move out an issue this lane holds that belongs to another, and say where it went.
-10. Write the `Rank` field for every item in the lane: the open issues first, in the order you would do them, then the
+10. Search the lane and the tracker for two issues reporting one thing. Where you find a pair, merge the facts the
+    newer one adds into the older body, then close the newer one with the `duplicate` label and a comment naming the
+    older. A count the newer one states is the more recent reading, so carry it across.
+11. Write the `Rank` field for every item in the lane: the open issues first, in the order you would do them, then the
     closed ones. `Rank` is what the board sorts on. An issue you moved in at step 8 brought its old lane's number, so
     two items share one until you rewrite both.
-11. Put any new issue to the developer and wait for their answer. Filing one unasked is the one thing this process
+12. Put any new issue to the developer and wait for their answer. Filing one unasked is the one thing this process
     must never do.
-12. Optional: write an umbrella issue where the lane has none. Label it `Epic`, rank it 1, and add every other issue
+13. Optional: write an umbrella issue where the lane has none. Label it `Epic`, rank it 1, and add every other issue
     in the lane as a sub-issue of it. The board then reports the lane's progress as a percentage. A pull request
     cannot be a sub-issue, so leave one out and say so.
-13. Optional: archive the closed items where the lane's own work is finished. The lane empties, which is what a
+14. Optional: archive the closed items where the lane's own work is finished. The lane empties, which is what a
     finished phase looks like here. Ask first: an archived item leaves the board for everybody.
-14. Report what you closed, what you rewrote, what moved in and what moved out.
+15. Report what you closed, what you rewrote, what moved in and what moved out.
 
 ## Verification
 
-The lane lists its open issues in `Rank` order, no two share a number, and every claim left in an open body matches
-something you read in the repository.
+The lane lists its open issues in `Rank` order, no two share a number, no two report the same thing, and every claim
+left in an open body matches something you read in the repository.
 
 Close by stating what you closed and on what evidence, which bodies you rewrote, what moved in and out, and anything
 you left open because the decision is the developer's.
