@@ -212,9 +212,10 @@ public static class PartChecks
                     $"'{modal}' does not bind. Write it plain, not bold.", row.Line);
 
             // A second modal in the same row is two obligations sharing one id, so a citation of it can
-            // only ever name half of what it means.
+            // only ever name half of what it means. `ModalNamed` asks for the whole word, so the `MUST`
+            // inside `MUSTERED` is not one.
             var rest = row.Text[modal.Length..];
-            if (spec.ModalsLongestFirst.FirstOrDefault(m => rest.Contains(m, StringComparison.Ordinal)) is { } second)
+            if (spec.ModalNamed(rest) is { } second)
                 report.Warn(new CheckId("clause-compound"),
                     $"clause '{row.Id ?? row.IdText}' carries a second '{second}': one obligation per clause, or the "
                     + "citation is ambiguous.", row.Line);

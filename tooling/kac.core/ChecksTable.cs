@@ -81,7 +81,7 @@ public static class ChecksTable
             "The clause section is a table of `Id \\| Clause` rows, each id a code span and each "
             + "clause opening with its modal.", t => t.Parts?.Source == PartSpec.Table),
         ("clause-order / clause-compound", [new("clause-order"), new("clause-compound")],
-            "Clause rows are grouped by binding level, and each carries a single obligation.",
+            "Clause rows are grouped by binding level, and no row states a second modal.",
             t => t.Parts?.Source == PartSpec.Table),
         // What the `clauses` rows ask of a table, asked of the source that writes its parts as headings.
         ("part-none / part-empty", [new("part-none"), new("part-empty")],

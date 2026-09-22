@@ -156,7 +156,7 @@ Accessibility under governance is the clearest of them.
 | `sections`                             | error   | Every required section heading is present, and no declared section is left as a bare heading.                       |
 | `placeholder-left`                     | error   | No `{{…}}` from the template is left unfilled, outside code.                                                        |
 | `clauses`                              | error   | The clause section is a table of `Id \| Clause` rows, each id a code span and each clause opening with its modal.   |
-| `clause-order / clause-compound`       | warning | Clause rows are grouped by binding level, and each carries a single obligation.                                     |
+| `clause-order / clause-compound`       | warning | Clause rows are grouped by binding level, and no row states a second modal.                                         |
 | `part-id-unique / part-ref`            | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.               |
 | `link-resolves`                        | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.                  |
 | `undefined-label`                      | error   | Every shortcut reference has a link definition.                                                                     |

@@ -26,6 +26,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`clause-compound` reads a whole modal word.** `kac validate` no longer warns on a clause such as `**MUST** be
+  MUSTERED before the shift`, where a longer word only begins with a modal. `MAY` inside `MAYBE` and `SHALL` inside
+  `SHALLOW` did the same. A second modal is still all the check reads. Two obligations written under one modal pass,
+  and the check's description and the row on a policy's type page now say so.
 - **`label-canonical` reads the label a reader sees.** `kac validate` fails a shortcut or collapsed reference whose
   use site mis-cases the label, such as `[STD-ci]` behind a `[std-CI]:` definition. Markdown matches the two
   case-insensitively, so the page rendered an id no record carries and every check passed. A full reference such as

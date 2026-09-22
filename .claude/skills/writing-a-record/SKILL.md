@@ -38,8 +38,9 @@ The reader acts on a clause without checking it. Make it checkable.
 * Start each clause of a standard with an RFC 2119 keyword in capitals. Lower-case "must" is prose.
 * Put a policy's modals in the clause table only. Write Purpose and Scope as a commitment. `clause-modal` is an error.
 * Purpose states the position and stops. It does not repeat a clause's threshold, list or exception.
-* Write one obligation per clause. A clause you can fail in two ways is two clauses. `clause-order` and
-  `clause-compound` warn.
+* Write one obligation per clause. A clause you can fail in two ways is two clauses. `clause-compound` warns on a
+  second modal alone, so a second verb under the first modal is yours to catch.
+* Group the clause table by binding level, in the order the type declares. `clause-order` warns.
 * Make each clause testable. "Services read secrets from a managed vault" can be checked. "Services are secure"
   cannot.
 * State the whole obligation in the clause. A cross-reference points at the other side of a shared obligation. It does
