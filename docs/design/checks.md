@@ -118,8 +118,9 @@ Three checks exist because what they refuse looks correct to everything around i
 A part declared by a heading with nothing under it has a title, a working anchor, and a citation that resolves.
 `kac export` then ships it as a part of no words. `part-empty` is what refuses it.
 
-A shortcut label spelled `[ADR-0013]` resolves. Markdown matches a label to its definition case-insensitively, and
-`link-resolves` passes as soon as the path is real. `label-canonical` compares the label with the id instead.
+A reference label spelled `[ADR-0013]` resolves. Markdown matches a label to its definition case-insensitively, so the
+use site may spell it differently from the definition. `link-resolves` passes as soon as the path is real.
+`label-canonical` compares the label the page shows with the id instead.
 
 An id pointing at a record of the wrong type lands on a real page, so it reads as intentional, and whatever walks the
 edge afterwards takes it at its word. `ref-resolves` asks the type as well as the path.

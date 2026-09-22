@@ -160,7 +160,7 @@ Accessibility under governance is the clearest of them.
 | `part-id-unique / part-ref`            | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.               |
 | `link-resolves`                        | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.                  |
 | `undefined-label`                      | error   | Every shortcut reference has a link definition.                                                                     |
-| `label-canonical`                      | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                            |
+| `label-canonical`                      | error   | A link label is the id of the record it leads to, written as that record carries it.                                |
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
 | `alignment-unlinked`                   | error   | Every framework an `Alignment` cell cites is written as a link the corpus resolves.                                 |

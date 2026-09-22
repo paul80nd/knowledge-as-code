@@ -12,7 +12,13 @@ public class LinkRef
     public string Target = ""; // the url, taken from the definition where a label stands in for it
     public int Line;
     public bool IsReference; // a reference or shortcut link, which names a definition rather than a url
-    public string? Label;
+    public string? Label; // the definition's label, which is what resolved the target
+
+    // The label the link puts in front of a reader, spelled as the use site spells it. Null where the
+    // reader is shown something else: an inline link, or a full reference displaying its own words.
+    // A reference resolves to its definition case-insensitively, so this spelling and `Label` may
+    // differ, and this is the one on the page.
+    public string? DisplayedLabel;
 
     // Where the link sits in the document's text. A finding quotes the line, and the offset answers
     // which part of the record the link stands inside: a part's body is held as a span, so a line
@@ -291,6 +297,7 @@ public partial class Doc
                 Line = link.Line + 1,
                 IsReference = link.Reference is not null,
                 Label = link.Reference?.Label ?? link.Label,
+                DisplayedLabel = Displayed(link),
                 Position = link.Span.Start
             });
             if (link.Reference is not null) doc.UsedLabels.Add(link.Reference.Label ?? "");
@@ -878,6 +885,15 @@ public partial class Doc
         }
     }
 
+    // The label this link puts in front of a reader, or null where it shows them something else.
+    //
+    // `IsShortcut` marks a shortcut and leaves a collapsed reference alongside a full one, so the two
+    // are told apart by the text instead: flattening a collapsed reference returns its label, and a
+    // full reference returns the words its author wrote. A label carrying emphasis or a code span
+    // renders as neither, so it answers null here and is judged at its definition alone.
+    private static string? Displayed(LinkInline link) =>
+        link.Label is { } label && Md.PlainText(link) == label ? label : null;
+
     // A footnote's label with the colon the form puts after it taken off, so that the schema and the
     // document are read the same way whichever of them wrote one.
     private static string Label(string text) => text.Trim().TrimEnd(':').TrimEnd();
@@ -909,7 +925,10 @@ public partial class Doc
                 from link in inline.Descendants<LinkInline>()
                 where !link.IsImage
                 select new LinkRef
-                    { Target = link.Url ?? "", Line = link.Line + 1, Label = link.Reference?.Label ?? link.Label });
+                {
+                    Target = link.Url ?? "", Line = link.Line + 1,
+                    Label = link.Reference?.Label ?? link.Label, DisplayedLabel = Displayed(link)
+                });
         }
 
         return result;
