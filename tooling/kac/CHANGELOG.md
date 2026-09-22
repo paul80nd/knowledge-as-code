@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A framework citation that never became a link is reported.** `alignment-unlinked` runs. `kac validate` fails a
+  policy whose `Alignment` cell writes `[UK GDPR].Art.5(1)(e)` with no link definition behind it. Markdown leaves the
+  brackets on the page as text, so the cell states no mapping. Reported once per label. While the definition is
+  missing, `alignment-rollup` does not report `aligns-with` as claiming that framework.
+
 ## 0.30.0 - 2026-09-21
 
 ### Added

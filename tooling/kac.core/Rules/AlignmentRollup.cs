@@ -29,8 +29,9 @@ public sealed class AlignmentRollup : ICorpusRule
     private static readonly CheckId Reports = new("alignment-rollup");
     private static readonly CheckId Unstated = new("framework-posture");
     private static readonly CheckId Unreferenced = new("framework-uncited");
+    private static readonly CheckId Unlinked = new("alignment-unlinked");
 
-    public IReadOnlyList<CheckId> Emits => [Reports, Unstated, Unreferenced];
+    public IReadOnlyList<CheckId> Emits => [Reports, Unstated, Unreferenced, Unlinked];
 
     // The frontmatter key holding the roll-up. Named here rather than read from the type, because no
     // declaration says which field summarises a column: the type declares the column and the field
@@ -50,7 +51,7 @@ public sealed class AlignmentRollup : ICorpusRule
 
         foreach (var doc in ctx.Records)
         {
-            var cited = FromClauses(doc, column, register, ctx, reached);
+            var cited = FromClauses(doc, column, register, ctx, reached, out var unread);
             var declared = FromFrontmatter(doc, out var fieldLine);
 
             // A policy citing nothing that binds and claiming nothing is the ordinary case for a
@@ -61,9 +62,14 @@ public sealed class AlignmentRollup : ICorpusRule
                 ctx.Err(doc, Reports,
                     $"'{reference}' is cited in the clause table and missing from '{Field}'.", line);
 
+            // A framework whose citation the rule could not read is dropped from this direction alone.
+            // A clause may well cite it, and saying nothing does is a fault the author cannot act on.
+            // The direction above is safe either way: an unread citation leaves the clause side short
+            // and never invents an entry for it.
             foreach (var (reference, _) in Missing(declared, cited))
-                ctx.Err(doc, Reports,
-                    $"'{Field}' claims '{reference}', and no clause cites it.", fieldLine);
+                if (!Unread(reference, unread))
+                    ctx.Err(doc, Reports,
+                        $"'{Field}' claims '{reference}', and no clause cites it.", fieldLine);
         }
 
         Uncited(register, reached, ctx);
@@ -86,6 +92,15 @@ public sealed class AlignmentRollup : ICorpusRule
                     $"'{entry.Heading}' is filed on '{page}' and no clause cites it.", null);
     }
 
+    // Whether a roll-up entry names a framework the clause table cited and the rule could not read. The
+    // entry is the framework or `framework.reference`, so the label matches whole or up to the dot.
+    private static bool Unread(string reference, IReadOnlySet<string> labels) =>
+        labels.Any(label => reference.Length == label.Length
+            ? string.Equals(reference, label, StringComparison.Ordinal)
+            : reference.Length > label.Length
+              && reference[label.Length] == '.'
+              && reference.AsSpan(0, label.Length).SequenceEqual(label));
+
     // What one side holds that the other does not, in the order the first side reads. Comparison is
     // ordinal: a framework label and a reference into it are both written to be quoted, so a difference
     // of case is a difference worth reporting rather than one to absorb.
@@ -101,16 +116,31 @@ public sealed class AlignmentRollup : ICorpusRule
     // moves stays readable and a clause mentioning a framework in its wording is not mistaken for a
     // mapping.
     private static Dictionary<string, int?> FromClauses(Doc doc, string column, Register register,
-        CorpusRuleContext ctx, Dictionary<string, (Doc First, HashSet<string> Cited)> reached)
+        CorpusRuleContext ctx, Dictionary<string, (Doc First, HashSet<string> Cited)> reached,
+        out IReadOnlySet<string> unread)
     {
         var found = new Dictionary<string, int?>(StringComparer.Ordinal);
         var said = new HashSet<string>(StringComparer.Ordinal);
+        var undefined = new HashSet<string>(StringComparer.Ordinal);
+        unread = undefined;
 
         foreach (var row in doc.Parts)
         {
             if (row.Cells?.GetValueOrDefault(column) is not { Length: > 0 } cell) continue;
 
             var labels = row.CellLinks?.GetValueOrDefault(column) ?? [];
+
+            // Brackets the flattened cell still shows, which are the citations markdown never made
+            // into links. Reported once per label, because one definition fixes every clause citing it.
+            //
+            // Read from the cell and not from `Doc.BareBracketTokens`, which keeps a line rather than a
+            // column. A row writes its clause and its mapping on one line, so a bracket in the wording
+            // would arrive here as a framework nobody defined.
+            foreach (var label in Alignment.UndefinedLabels(cell))
+                if (undefined.Add(label))
+                    ctx.Err(doc, Unlinked,
+                        $"'[{label}]' is cited here and has no link definition, so the cell states no "
+                        + "mapping. Define the label against the register entry.", row.Line);
 
             foreach (var (framework, reference) in Alignment.References(cell, labels))
             {
@@ -309,6 +339,24 @@ public static class Alignment
     // cited whole is the framework, so a cell and a roll-up entry with no `clauses:` compare equal.
     public static string Join(string framework, string? reference) =>
         reference is { Length: > 0 } ? $"{framework}.{reference}" : framework;
+
+    // Every bracketed label the flattened cell still shows, in the order it writes them. A reference
+    // markdown resolved is flattened to its display text and loses its brackets, so a bracket that
+    // survived is one no definition stands behind. What follows the label is left alone: the label
+    // names the definition the author owes.
+    public static IEnumerable<string> UndefinedLabels(string cell)
+    {
+        var at = 0;
+
+        while ((at = cell.IndexOf('[', at)) >= 0)
+        {
+            var close = cell.IndexOf(']', at + 1);
+            if (close < 0) yield break;
+
+            if (cell[(at + 1)..close].Trim() is { Length: > 0 } label) yield return label;
+            at = close + 1;
+        }
+    }
 
     // Every mapping a cell states, in the order it states them, as the framework and what of it the
     // clause reaches. Kept apart rather than joined, because the caller weighs the framework on its own

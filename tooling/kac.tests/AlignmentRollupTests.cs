@@ -1,8 +1,8 @@
 using kac.core;
 
-// `alignment-rollup` reports two faults under one id, and `framework-posture` and `framework-uncited`
-// take one each. The coverage gate reads ids, so a fixture tripping any one of them turns that id
-// green. These are what hold the rest honest.
+// `alignment-rollup` reports two faults under one id, and `alignment-unlinked`, `framework-posture`
+// and `framework-uncited` take one each. The coverage gate reads ids, so a fixture tripping any one of
+// them turns that id green. These are what hold the rest honest.
 //
 // The cell reader gets its own tests at the foot. What it has to get right is a boundary the flattened
 // cell no longer marks, and every framework label in the corpus with a dot in it is a case for it.
@@ -85,6 +85,52 @@ public class AlignmentRollupTests
             "aligns-with:",
             "| `ONE` | **MUST** do one thing. | [FinOps 2024].cost |",
             "| `TWO` | **MUST** do another.   | [FinOps 2024].waste |"));
+
+    // A cell citing a framework whose label nothing defines. Markdig leaves the brackets as text, so the
+    // row contributes no link and the citation is invisible to every other question the rule asks.
+    [Fact]
+    public void A_citation_whose_label_has_no_definition_is_reported()
+    {
+        var found = Assert.Single(Unlinked(
+            "aligns-with:",
+            "| `HOLD` | **MUST** hold personal data lawfully. | [UK GDPR].Art.5(1)(e) |"));
+
+        Assert.Equal("alignment-unlinked", found.Check.Value);
+        Assert.Equal("'[UK GDPR]' is cited here and has no link definition, so the cell states no "
+                     + "mapping. Define the label against the register entry.", found.Message);
+    }
+
+    // The fix is one definition, so a policy citing the same undefined label twice has one fault.
+    [Fact]
+    public void An_undefined_label_is_reported_once_however_many_clauses_cite_it()
+        => Assert.Single(Unlinked(
+            "aligns-with:",
+            "| `ONE` | **MUST** do one thing. | [UK GDPR].Art.5(1)(e) |",
+            "| `TWO` | **MUST** do another.   | [UK GDPR].Art.32(1)(d) |"));
+
+    // A clause may well cite the framework the roll-up claims, so the claim is not reported against a
+    // citation the rule could not read. Saying no clause cites it would be a fault the author cannot
+    // act on until the definition is written.
+    [Fact]
+    public void A_roll_up_claiming_a_framework_whose_citation_is_unread_is_left_alone()
+        => Assert.Equal("alignment-unlinked", Assert.Single(Unlinked(
+            "aligns-with:\n  - framework: UK GDPR\n    clauses: ['Art.5(1)(e)']",
+            "| `HOLD` | **MUST** hold personal data lawfully. | [UK GDPR].Art.5(1)(e) |")).Check.Value);
+
+    // An unread citation leaves the clause side short and never invents an entry for it, so the other
+    // direction runs whole. A policy with one undefined label still reports every resolved reference
+    // its roll-up omits.
+    [Fact]
+    public void A_resolved_reference_missing_from_the_roll_up_is_reported_beside_an_unread_one()
+        => Assert.Equal(
+            [
+                "alignment-unlinked",
+                "'ISO 27001:2022.A.5.17' is cited in the clause table and missing from 'aligns-with'."
+            ],
+            Unlinked("aligns-with:",
+                    "| `STORE` | **MUST** hold secrets. | [ISO 27001:2022].A.5.17 |",
+                    "| `HOLD`  | **MUST** hold data lawfully. | [UK GDPR].Art.5(1)(e) |")
+                .Select(f => f.Check.Value == "alignment-unlinked" ? f.Check.Value : f.Message));
 
     // A heading above the first standing sits under none, which is a register that offers the anchor and
     // places nothing.
@@ -237,14 +283,17 @@ public class AlignmentRollupTests
     // The definitions at the foot are not decoration. Markdig resolves a shortcut reference only where
     // one is defined, so a cell written without them parses as literal brackets and the rule reads no
     // links at all. They are also how the rule reaches the register, because a label names the page and
-    // the heading on it.
-    private static List<Finding> Findings(string frontmatter, params string[] rows)
+    // the heading on it. `undefined` names the labels to write no definition for, which is how a case
+    // states a citation markdown never made into a link.
+    private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
+        params string[] rows)
     {
         var table = "| Id | Clause | Alignment |\n|----|--------|-----------|\n"
                     + string.Join("\n", rows) + "\n";
 
         var definitions = string.Join("\n",
-            Labels(rows).Select(l => $"[{l}]: ../frameworks.md#{Anchor(l)}"));
+            Labels(rows).Where(l => !undefined.Contains(l, StringComparer.Ordinal))
+                .Select(l => $"[{l}]: ../frameworks.md#{Anchor(l)}"));
 
         var text = $"---\nid: pol-SCRT\n{frontmatter}\n---\n\n# Secrets are managed\n\n"
                    + $"`Policy: pol-SCRT` `DRAFT`\n\n## Clauses\n\n{table}\n{definitions}\n";
@@ -270,10 +319,15 @@ public class AlignmentRollupTests
     // `framework-uncited` fires in every one of them. It is asked its own questions further up, and
     // dropped here so that a case about the roll-up asserts the roll-up alone.
     private static List<Finding> Run(string frontmatter, params string[] rows) =>
-        [.. Findings(frontmatter, rows).Where(f => f.Check != Unreferenced)];
+        [.. Findings(frontmatter, [], rows).Where(f => f.Check != Unreferenced)];
 
     private static List<Finding> Uncited(string frontmatter, params string[] rows) =>
-        [.. Findings(frontmatter, rows).Where(f => f.Check == Unreferenced)];
+        [.. Findings(frontmatter, [], rows).Where(f => f.Check == Unreferenced)];
+
+    // The same run with `UK GDPR` left undefined. No other case cites that label, so a case here can
+    // state an unreadable citation beside a readable one.
+    private static List<Finding> Unlinked(string frontmatter, params string[] rows) =>
+        [.. Findings(frontmatter, ["UK GDPR"], rows).Where(f => f.Check != Unreferenced)];
 
     private static readonly CheckId Unreferenced = new("framework-uncited");
 
