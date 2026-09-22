@@ -45,6 +45,11 @@ public sealed class FieldSpec
     public FieldSpec? EntryKey(string name) =>
         Entry?.FirstOrDefault(k => string.Equals(k.Name, name, StringComparison.Ordinal));
 
+    // Whether the field's value is an id: one scalar, or a list of them. The reference pass and the
+    // schema-load pass both select a field on it, and a second reading of the shape would be free to
+    // disagree with this one.
+    public bool DeclaresId => Type == "id" || (Type == "list" && Of == "id");
+
     // The folders an id in this field may belong to. A list, because several fields point at more than
     // one type: a deviation departs from a policy or a standard. A scalar `ref:` is the one-entry case
     // rather than a separate shape.

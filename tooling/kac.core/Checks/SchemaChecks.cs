@@ -659,7 +659,7 @@ public static class SchemaChecks
         // That pass reads a field's own value and never walks an `entry:` block, so an id inside an
         // object is resolved against nothing whatever the key declares. A `ref:` is no remedy there, and
         // asking for one would send the author after a key that changes nothing.
-        if (spec.Type == "id" || (spec.Type == "list" && spec.Of == "id"))
+        if (spec.DeclaresId)
         {
             var declared = spec.Type == "id" ? "type: id" : "of: id";
 

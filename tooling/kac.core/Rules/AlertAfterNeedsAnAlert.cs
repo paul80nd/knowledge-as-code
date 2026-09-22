@@ -78,8 +78,7 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
     private static FieldSpec? PointingField(TypeSchema t)
     {
         var found = t.FieldOrder.Select(n => t.Fields[n])
-            .Where(f => (f.Type == "id" || f is { Type: "list", Of: "id" })
-                        && f.Refs.Contains(ServicesFolder, StringComparer.Ordinal))
+            .Where(f => f.DeclaresId && f.Refs.Contains(ServicesFolder, StringComparer.Ordinal))
             .Take(2)
             .ToList();
 

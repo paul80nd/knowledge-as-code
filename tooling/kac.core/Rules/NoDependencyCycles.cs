@@ -32,8 +32,7 @@ public sealed class NoDependencyCycles : ICorpusRule
     // A field whose ids name documents of the type that carries it. Each such field is its own graph and
     // is walked on its own, so a message names one relation and never a path stitched from two.
     private static bool PointsAtOwnType(FieldSpec f, TypeSchema t)
-        => (f.Type == "id" || f is { Type: "list", Of: "id" })
-           && f.Refs.Contains(t.Key, StringComparer.Ordinal);
+        => f.DeclaresId && f.Refs.Contains(t.Key, StringComparer.Ordinal);
 
     // Where one record stands in the walk. `Unseen` is zero, so a record the state does not hold yet
     // answers with it and the walk needs no entry to ask about one.
