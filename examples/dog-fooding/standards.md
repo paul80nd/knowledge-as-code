@@ -121,7 +121,8 @@ the two look alike, apply the test a policy is written against: would this still
 technology estate? A WCAG posture survives it. A C# style baseline dies with C#, and it goes in the standard deferring
 to it.
 
-Standards are living documents, and we edit them in place. Record every material change in the changelog.
+Standards are living documents, and we edit them in place. Record every material change in the changelog, newest
+entry first.
 
 ## What CI checks
 
@@ -159,6 +160,7 @@ Standards are living documents, and we edit them in place. Record every material
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
+| `changelog-order`           | warning | A standard's changelog entries read newest first.                                                               |
 | `provenance-required`       | error   | A standard cites an ADR in `derived-from`, a policy clause in `implements`, or both.                            |
 | `standard-in-date`          | warning | A standard names a review date that has not passed.                                                             |
 

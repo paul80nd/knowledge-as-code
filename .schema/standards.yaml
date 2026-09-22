@@ -233,6 +233,9 @@ rules:
   - id: changelog-on-material-change
     description: >
       A change to the Rules section of an `active` standard needs a changelog entry in the same commit.
+  - id: changelog-newest-first
+    description: A standard's changelog entries run newest first, with the most recent change at the top.
+    severity: warning
   - id: standard-in-date
     description: A standard names a review date that has not passed.
     severity: warning

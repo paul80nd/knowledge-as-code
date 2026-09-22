@@ -86,8 +86,8 @@ standards implement that obligation on purpose: the governance layer's own secre
 
 ## Changelog
 
-- 2026-08-28: initial version.
 - 2026-08-31: names the OpenTelemetry semantic conventions as a normative source.
+- 2026-08-28: initial version.
 
 [OpenTelemetry semantic conventions]: https://opentelemetry.io/docs/specs/semconv/
 [The OpenTelemetry logs data model]: https://opentelemetry.io/docs/specs/otel/logs/data-model/

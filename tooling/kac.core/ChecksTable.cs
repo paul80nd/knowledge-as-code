@@ -146,6 +146,8 @@ public static class ChecksTable
             "`duration` is the span from `occurred-at` to `restored-at`.",
             t => t.Rules.Any(r => r.Id == new RuleId("duration-matches-the-moments"))),
         ("terms-alphabetical", [new("terms-alphabetical")], "A glossary's entries read in alphabetical order.", null),
+        ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",
+            t => t.Rules.Any(r => r.Id == new RuleId("changelog-newest-first"))),
         ("alert-after-needs-an-alert", [new("alert-after-needs-an-alert")],
             "A target stating `alert-after` binds a service that raises an alert or a ticket, "
             + "through any offering between.",

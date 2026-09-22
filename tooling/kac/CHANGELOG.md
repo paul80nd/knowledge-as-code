@@ -19,6 +19,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A standard's changelog runs newest first.** `kac validate` warns where an entry is dated after the one above it,
+  and states both dates. A bullet that does not open on an ISO date before a colon is passed over, which is how a
+  template placeholder stays out of it. The rule is `changelog-newest-first` and it reports under `changelog-order`.
 - **A control states the day somebody reads it again.** `controls` declares `review-by`, required on every control.
   `frequency` says how often the check runs, and `review-by` says when somebody reads the record against it. The field
   travels in the export after `applies-to`, `kac generate` lists it on the type page, and `controls-lookup` tells a

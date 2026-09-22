@@ -622,6 +622,14 @@ checks:
     description: A glossary's entries read in alphabetical order.
     notes: Compared without regard to casing, and the message states the entry that moved.
 
+  changelog-order:
+    severity: warning
+    description: A standard's changelog entries read newest first.
+    notes: >
+      Each entry opens on an ISO date, and those dates are what is compared. A bullet opening on anything
+      else is passed over, which is how a template placeholder and a nested bullet stay out of it. The
+      message states the entry that moved and the line it moves to.
+
   feature-file-repo:
     severity: warning
     description: A feature file path begins with a repository one of the implementing services names.
