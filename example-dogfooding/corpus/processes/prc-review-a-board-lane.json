@@ -1,0 +1,24 @@
+{
+  "type": "processes",
+  "path": "processes/review-a-board-lane.md",
+  "trust": null,
+  "fields": {
+    "id": "prc-review-a-board-lane",
+    "title": "Review and tidy a lane of the project board",
+    "status": "active",
+    "applies-to": null,
+    "last-rehearsed": "2026-09-22",
+    "rehearsal-frequency": "on-change",
+    "tags": [
+      "issues",
+      "tracker"
+    ]
+  },
+  "sections": {
+    "When to use this": "A lane has taken issues for a while and nobody has read it end to end. Work here raises issues as it goes, so a lane drifts in two directions: the code answers a question and the issue stays open, and a body states a number the repository has since changed.\n\nRead the lane before you plan work in it. An issue nobody has re-read is a plan built on what was true months ago.\n\nThis process writes to the tracker and changes no file in the repository, so it ends without [prc-pull-request].",
+    "Prerequisites": "* The `gh` CLI, authenticated against the repository that publishes this corpus. The agent configuration under\n  `.claude/agents-config/` names it and says that issues live as GitHub issues.\n* Project 3, and its `Status`, `Phase` and `Rank` fields. `Phase` is the lane.\n* A checkout of this repository, because step 3 reads the code rather than the issue.\n* Writing prose to a style guide, which steps 5 to 7 need."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/66958415fb7b7ea4722804d86f158af5352e2472/examples/dog-fooding/processes/review-a-board-lane.md"
+  }
+}

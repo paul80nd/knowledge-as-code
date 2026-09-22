@@ -28,6 +28,6 @@
     "Conformance checklist": "- [ ] Every verb is literal. No \"holds\", \"carries\", \"names\", \"answers\", \"reaches\" or \"seals\" replaces a plain verb.\n- [ ] Every section opens on the rule or the fact, not the reason.\n- [ ] Every contrast left standing is one a reader needs, and every clause kept the one it had.\n- [ ] Every heading names a topic.\n- [ ] No em dash survives. Spelling is British.\n- [ ] Every line of prose outside a table or a link definition is under 120 characters.\n- [ ] No hand edit sits inside a generated block.\n- [ ] Every count names what reports it.\n- [ ] Every rule left behind is named in the reply."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/39c251cb04bd36236eea2810ae1bcf5c15ed6b4b/examples/dog-fooding/standards/prose.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/66958415fb7b7ea4722804d86f158af5352e2472/examples/dog-fooding/standards/prose.md"
   }
 }

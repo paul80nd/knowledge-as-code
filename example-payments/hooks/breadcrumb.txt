@@ -1,4 +1,4 @@
-example-payments 0.28.0 travels with this session as data, exported 2026-09-21.
+example-payments 0.28.0 travels with this session as data, exported 2026-09-22.
 fixes. 1 record: One order shows two authorisations on the cardholder's statement.
 nfrs. 3 records: A customer waits under a second to hear whether their card was accepted, A recovered ledger loses at most five minutes of payments and A refund reaches the card scheme within the hour.
 offerings. 2 records: Pay for an order with a card and Get money back for an order.
