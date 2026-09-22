@@ -33,6 +33,7 @@ fields:
     required: true
     type: enum
     values: [live, retired]
+    in-force: live
     description: Where the gadget is in its life.
 
   facets:

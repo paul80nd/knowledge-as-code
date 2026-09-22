@@ -48,6 +48,7 @@ fields:
     required: true
     type: enum
     values: [planned, building, live, deprecated]
+    in-force: live
     description: Lifecycle of the offering itself, which may differ from the lifecycle of its services.
 
   implemented-by:

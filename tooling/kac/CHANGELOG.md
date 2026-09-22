@@ -19,6 +19,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A type says which `status` value means a record is in force.** `in-force:` sits beside `values:` in
+  `.schema/<type>.yaml`, and every type that states a range declares it. The value is not `active` throughout: an ADR
+  settles at `accepted`, an NFR at `agreed`, an offering and a service at `live`, a tool at `approved`, a postmortem at
+  `published`. `kac generate` writes it into the `status` row of the type page, so an author reads the settled value
+  beside the range. `kac validate` fails a type that states a range and names no value, an `in-force:` the range does
+  not include, and an `in-force:` on a field that is not an enum.
 - **A `type: id` with no `ref:` is reported.** `kac validate` fails a schema whose field declares `type: id`, or
   `of: id` on a list, and states no folders for its ids to resolve against. The reference pass selects a field on its
   `ref:` before it reads the type, so the value reached no check while the type page rendered the field as a citation.

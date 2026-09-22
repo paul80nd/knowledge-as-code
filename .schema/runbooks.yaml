@@ -58,6 +58,7 @@ fields:
     required: true
     type: enum
     values: [active, draft, retired]
+    in-force: active
     description: Whether the runbook is current, drafted, or stood down.
 
   applies-to:

@@ -7,19 +7,19 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 
 <!-- BEGIN GENERATED: schema-policies -->
 
-| Field         | Value                              | Notes                                                                                             |
-|---------------|------------------------------------|---------------------------------------------------------------------------------------------------|
-| `id` *†       | string                             | Stable, unique across the corpus, never reused, in the format the type sets.                      |
-| `type` *†     | string                             | The singular name of the type, which CI checks against the folder.                                |
-| `tier` *†     | `normative`                        | The record's trust level, fixed for the type and checked against the folder.                      |
-| `status` *†   | `draft` `active` `retired`         | Whether the policy is being agreed, in force, or retired. Retire a policy instead of deleting it. |
-| `owner` *†    | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                            |
-| `sources` †   | list                               | Where this record's content came from, one entry per source.                                      |
-| `tags` †      | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types.                     |
-| `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                                          |
-| `aligns-with` | list                               | The binding frameworks this policy's clauses map to, grouped with the references they cite.       |
-| `active-from` | date                               | The day the policy came into force. Required when `status == active`.                             |
-| `review-by` * | date                               | The day the policy is looked at again, usually a year ahead.                                      |
+| Field         | Value                              | Notes                                                                                                                            |
+|---------------|------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†       | string                             | Stable, unique across the corpus, never reused, in the format the type sets.                                                     |
+| `type` *†     | string                             | The singular name of the type, which CI checks against the folder.                                                               |
+| `tier` *†     | `normative`                        | The record's trust level, fixed for the type and checked against the folder.                                                     |
+| `status` *†   | `draft` `active` `retired`         | `draft` while it is being agreed, `retired` once it is stood down. Retire a policy instead of deleting it. In force at `active`. |
+| `owner` *†    | string                             | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                           |
+| `sources` †   | list                               | Where this record's content came from, one entry per source.                                                                     |
+| `tags` †      | list                               | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                    |
+| `category`    | derived from the record's sub-path | The folder the policy is filed under, below `policies/`.                                                                         |
+| `aligns-with` | list                               | The binding frameworks this policy's clauses map to, grouped with the references they cite.                                      |
+| `active-from` | date                               | The day the policy came into force. Required when `status == active`.                                                            |
+| `review-by` * | date                               | The day the policy is looked at again, usually a year ahead.                                                                     |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

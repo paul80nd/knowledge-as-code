@@ -50,6 +50,7 @@ fields:
     required: true
     type: enum
     values: [draft, aspirational, agreed, retired]
+    in-force: agreed
     description: '`agreed` binds the estate. `aspirational` is a target set but not yet binding.'
     notes: >
       `aspirational` is the SRE workbook's aspirational objective: measured and tracked, and exempt from the response

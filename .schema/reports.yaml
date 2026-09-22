@@ -53,6 +53,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, stale]
+    in-force: active
     description: Whether the report is drafted, current, or behind the corpus.
 
   generated:

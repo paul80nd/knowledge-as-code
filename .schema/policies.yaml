@@ -60,7 +60,8 @@ fields:
     required: true
     type: enum
     values: [draft, active, retired]
-    description: Whether the policy is being agreed, in force, or retired. Retire a policy instead of deleting it.
+    in-force: active
+    description: '`draft` while it is being agreed, `retired` once it is stood down. Retire a policy instead of deleting it.'
 
   aligns-with:
     required: false

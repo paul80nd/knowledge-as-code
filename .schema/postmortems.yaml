@@ -46,6 +46,7 @@ fields:
     required: true
     type: enum
     values: [draft, published]
+    in-force: published
     description: '`published` freezes the document. A new understanding is a new postmortem citing this one.'
 
   occurred-at:

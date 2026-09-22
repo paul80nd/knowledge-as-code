@@ -3,7 +3,7 @@
     "validated": 0,
     "templates": 0,
     "skipped": 0,
-    "errors": 32,
+    "errors": 35,
     "warnings": 0,
     "infos": 0
   },
@@ -110,6 +110,13 @@
       "file": ".schema/widgets.yaml",
       "line": null,
       "severity": "error",
+      "check": "schema-shape",
+      "message": "type 'widgets' declares 'status:' and no 'in-force:' beside its values. Name the value that says a record of this type is in force, which nothing else states."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
       "check": "schema-unreadable",
       "message": "field 'classification' draws its values from '$enums.sensitivity', and _enums.yaml declares no 'sensitivity'."
     },
@@ -133,6 +140,20 @@
       "severity": "error",
       "check": "schema-shape",
       "message": "field 'related' declares 'mirrors-section: See also', and the type's 'sections:' block declares no such section. Name a section the type has, or add it."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-shape",
+      "message": "field 'grade' declares 'in-force: third', and its 'values:' does not include it. Name one of 'first', 'second'."
+    },
+    {
+      "file": ".schema/widgets.yaml",
+      "line": null,
+      "severity": "error",
+      "check": "schema-dispatch",
+      "message": "field 'weight' is 'type: string' and declares 'in-force:', which names one of an enum's values. Declare it 'type: enum', or drop the key."
     },
     {
       "file": ".schema/widgets.yaml",

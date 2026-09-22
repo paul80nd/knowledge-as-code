@@ -37,6 +37,8 @@ fields:
     type: enum
     values: []          # supplied by each type
     description: The record's current state, from the values this type sets.
+    notes: >
+      Each type names the value that says a record is in force, in `in-force:` beside its own `values:`.
 
   owner:
     required: true

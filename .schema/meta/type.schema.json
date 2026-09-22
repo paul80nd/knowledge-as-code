@@ -600,6 +600,11 @@
             }
           ]
         },
+        "in-force": {
+          "description": "The one value of `values:` that says a record is in force. Only an enum declares it, and every type's `status` must. It is not `active` across the taxonomy: an ADR settles at `accepted`, a service at `live`, a tool at `approved`. `kac` renders it on the type page, and a lookup skill reports every other value as unsettled.",
+          "type": "string",
+          "minLength": 1
+        },
         "ref": {
           "description": "The folders an id in this field may point into. Write a scalar for the one-folder case. `kac` checks both halves: that the id resolves to a record, and that the record is one of these types. A folder this corpus declined goes unchecked, and adopting that type starts the check with no edit here. A required field naming only declined folders is not asked for either, because no record here can fill it, unless `allow-literal:` gives it a word that resolves against nothing. A field declaring `type: id`, or `of: id`, needs a `ref:`. An id on an entry key is reported whatever it declares, because the reference pass never walks an `entry:` block.",
           "oneOf": [
@@ -671,6 +676,17 @@
           },
           "required": [
             "type"
+          ]
+        },
+        "in-force": {
+          "properties": {
+            "type": {
+              "const": "enum"
+            }
+          },
+          "required": [
+            "type",
+            "values"
           ]
         },
         "of": {

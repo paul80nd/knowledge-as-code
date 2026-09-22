@@ -20,6 +20,12 @@ public sealed class FieldSpec
     public string? Of { get; init; }                          // each entry, where Type is list: ValueChecks.EntryTypes
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
+    // The one value of `values:` that says a record is in force. Declared rather than derived, because it
+    // is not `active` across the set: an ADR settles at `accepted`, a service at `live`, a tool at
+    // `approved`. Anything sorting a settled record from an unsettled one reads this, and a range alone
+    // would leave each reader to guess.
+    public string? InForce { get; init; }
+
     // The corpus-owned enum this field draws its range from, where it declares `values: $corpus.<name>`,
     // and null where the schema states the range itself. `Values` above carries what the corpus supplied
     // and stays null where it supplied nothing, so a field that has to be judged against a list the
@@ -1101,6 +1107,7 @@ public sealed partial class Schema
             Of = Yaml.Str(node.Get("of")),
             Entry = entry,
             Values = values,
+            InForce = Yaml.Str(node.Get("in-force")),
             CorpusEnum = corpusEnum,
             Refs = refs,
             PartRequired = Yaml.Bool(node.Get("part-required")),

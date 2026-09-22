@@ -34,6 +34,7 @@ fields:
     required: true
     type: enum
     values: [live, retired]
+    in-force: live
     description: Where the gizmo is in its life.
 
   depends-on:

@@ -42,22 +42,22 @@ postmortem means something.
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field           | Value                | Notes                                                                                                         |
-|-----------------|----------------------|---------------------------------------------------------------------------------------------------------------|
-| `id` *†         | string               | Stable, unique across the corpus, never reused, in the format the type sets.                                  |
-| `type` *†       | string               | The singular name of the type, which CI checks against the folder.                                            |
-| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                  |
-| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem citing this one.                    |
-| `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                        |
-| `sources` †     | list                 | Where this record's content came from, one entry per source.                                                  |
-| `tags` †        | list                 | Free-form, lowercase and hyphenated. A reader searches on these across types.                                 |
-| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                              |
-| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                   |
-| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`. |
-| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`. |
-| `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                                     |
-| `affected` *    | list                 | Service and offering ids the incident affected.                                                               |
-| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                           |
+| Field           | Value                | Notes                                                                                                               |
+|-----------------|----------------------|---------------------------------------------------------------------------------------------------------------------|
+| `id` *†         | string               | Stable, unique across the corpus, never reused, in the format the type sets.                                        |
+| `type` *†       | string               | The singular name of the type, which CI checks against the folder.                                                  |
+| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                        |
+| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem citing this one. In force at `published`. |
+| `owner` *†      | string               | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                              |
+| `sources` †     | list                 | Where this record's content came from, one entry per source.                                                        |
+| `tags` †        | list                 | Free-form, lowercase and hyphenated. A reader searches on these across types.                                       |
+| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                                    |
+| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                         |
+| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`.       |
+| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`.       |
+| `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                                           |
+| `affected` *    | list                 | Service and offering ids the incident affected.                                                                     |
+| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                                 |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

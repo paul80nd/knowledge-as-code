@@ -46,18 +46,18 @@ Related but different:
 
 <!-- BEGIN GENERATED: schema-offerings -->
 
-| Field              | Value                                    | Notes                                                                                       |
-|--------------------|------------------------------------------|---------------------------------------------------------------------------------------------|
-| `id` *†            | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.                |
-| `type` *†          | string                                   | The singular name of the type, which CI checks against the folder.                          |
-| `tier` *†          | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.                |
-| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the offering itself, which may differ from the lifecycle of its services.      |
-| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                      |
-| `sources` †        | list                                     | Where this record's content came from, one entry per source.                                |
-| `tags` †           | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types.               |
-| `implemented-by` * | list                                     | Ids of the services that implement this offering.                                           |
-| `feature-files`    | list                                     | Paths to the feature files that test this offering, each one beginning with its repository. |
-| `nfrs`             | list                                     | Ids of the NFRs this offering must meet. Required when `status == live`.                    |
+| Field              | Value                                    | Notes                                                                                                      |
+|--------------------|------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                   | Stable, unique across the corpus, never reused, in the format the type sets.                               |
+| `type` *†          | string                                   | The singular name of the type, which CI checks against the folder.                                         |
+| `tier` *†          | `descriptive`                            | The record's trust level, fixed for the type and checked against the folder.                               |
+| `status` *†        | `planned` `building` `live` `deprecated` | Lifecycle of the offering itself, which may differ from the lifecycle of its services. In force at `live`. |
+| `owner` *†         | string                                   | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                     |
+| `sources` †        | list                                     | Where this record's content came from, one entry per source.                                               |
+| `tags` †           | list                                     | Free-form, lowercase and hyphenated. A reader searches on these across types.                              |
+| `implemented-by` * | list                                     | Ids of the services that implement this offering.                                                          |
+| `feature-files`    | list                                     | Paths to the feature files that test this offering, each one beginning with its repository.                |
+| `nfrs`             | list                                     | Ids of the NFRs this offering must meet. Required when `status == live`.                                   |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

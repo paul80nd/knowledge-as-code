@@ -15,14 +15,15 @@ so the golden is the schema pass and nothing else.
   therefore need a rule each.
 * **Undispatched** — a rule claiming `severity: warning` that nothing implements, `id.style: roman-numeral`,
   `index.order: newest-first`, `tier: experimental`, `type: tiemstamp` on a field, `of: bool` on a list, a `values:`
-  list on a `type: list` field, a `min-items:` on a `type: string` field, a `part-required:` on a field naming no
-  `ref:` to resolve the part against, and a `type: id` with no `ref:` at all, whose value resolves against nothing. An
-  entry key's own `type:` answers to the same vocabulary and reaches the same finding, so `SchemaCheckTests` pins that
-  third way in rather than a fourth field here. It pins the id on an entry key too, which is reported whatever the key
-  declares, because the reference pass never walks an `entry:` block.
+  list on a `type: list` field, a `min-items:` on a `type: string` field, an `in-force:` on a `type: string` field, a
+  `part-required:` on a field naming no `ref:` to resolve the part against, and a `type: id` with no `ref:` at all,
+  whose value resolves against nothing. An entry key's own `type:` answers to the same vocabulary and reaches the same
+  finding, so `SchemaCheckTests` pins that third way in rather than a fourth field here. It pins the id on an entry key
+  too, which is reported whatever the key declares, because the reference pass never walks an `entry:` block.
 * **Shape** — a type with no `folder:`, `mirrors-section: See also` where the only section the type declares
   is `Summary`, `tier: experimental` where `_tiers.yaml` declares no such tier, `part-required: true` on a field
-  pointing at `widgets`, which keeps no parts, a `summary:` too long for the table cell it becomes, and no
+  pointing at `widgets`, which keeps no parts, a `status:` stating a range and naming no `in-force:` value, an
+  `in-force:` its own `values:` does not include, a `summary:` too long for the table cell it becomes, and no
   `goes-here:` at all — the two ways one key can fail, taken one each so both are pinned.
   `label-plural:` and `detail:` are present, since a type with nothing to say about itself would report the same fault
   four times and pin nothing extra.

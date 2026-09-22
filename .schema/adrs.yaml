@@ -52,6 +52,7 @@ fields:
     required: true
     type: enum
     values: [proposed, rejected, accepted, deprecated, superseded]
+    in-force: accepted
     description: Where the decision stands.
     notes: >
       The other four values are Nygard's, and the order is the one MADR 4 lists.

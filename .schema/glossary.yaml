@@ -52,6 +52,7 @@ fields:
     required: true
     type: enum
     values: [draft, active]
+    in-force: active
     description: '`draft` while the terms are still settling.'
 
   narrows:
