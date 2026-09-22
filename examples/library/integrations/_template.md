@@ -21,7 +21,6 @@ and how it is reviewed. What is below is only what an integration adds to that.
 
 **Frontmatter**
 
-* **`status`**: `active` · `trial` · `retired`.
 * **`used-by`**: the service ids that call it. An integration nothing uses is a candidate for retirement.
 * **`criticality`**: judged by what breaks for a customer when it is unavailable.
 * **`their-sla`**: what the contract actually says, not what the marketing page implies.

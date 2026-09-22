@@ -23,11 +23,10 @@ and how it is reviewed. What is below is only what a runbook adds to that.
 
 Title this document for the **failure**, not the fix. A reader at 2am searches for the failure.
 
-* **`severity`**: `sev1` · `sev2` · `sev3`. How urgent. The `Impact` section says who is affected.
+* **`severity`**: how urgent. The `Impact` section says who is affected.
 * **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is what you want to know before the incident
   rather than during it.
-* **`rehearsal-frequency`**: `on-change` · `per-release` · `quarterly` · `annual`. Pick `on-change` where a change to
-  the system is what breaks the steps.
+* **`rehearsal-frequency`**: pick `on-change` where a change to the system is what breaks the steps.
 * **`requires-tools`**: list every tool the reader installs before starting.
 * **`requires-access`**: list every permission and role the runbook needs. Discovering you lack one mid-incident is its
   own outage.

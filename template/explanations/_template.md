@@ -19,7 +19,7 @@ and how it is reviewed. What is below is only what an explanation adds to that.
 
 **Frontmatter**
 
-* **`status`**: `draft` · `active` · `stale`. `stale` is an honest state. Say so rather than let the page quietly rot.
+* **`status`**: `stale` is an honest state. Use it where the page no longer matches what runs.
 * **`explains`**: the ids of what this explains. A service, an offering, a standard, a process or an ADR.
 * **`review-by`**: a quoted date. Explanations are the residual category, so they need the tightest staleness
   discipline, not the loosest.
