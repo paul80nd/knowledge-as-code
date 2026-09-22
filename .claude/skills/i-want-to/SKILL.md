@@ -26,22 +26,24 @@ repository keeps about itself. Each is an ordinary process that `kac validate` h
 standard its steps stand on. Reviewing records stays a playbook, because most of that document is a rulebook rather
 than an order.
 
-| I want to                                                | Read                                                                                  |
-|----------------------------------------------------------|---------------------------------------------------------------------------------------|
-| write a record, or rewrite one                           | [prc-add-a-record](../../../examples/dog-fooding/processes/add-a-record.md)           |
-| review records against the rules                         | [reviewing-records](playbooks/reviewing-records.md)                                   |
-| change the schema, or write a rule                       | [prc-change-the-schema](../../../examples/dog-fooding/processes/change-the-schema.md) |
-| change `kac`, or add a check                             | [prc-change-the-tool](../../../examples/dog-fooding/processes/change-the-tool.md)     |
-| add a knowledge type                                     | [prc-add-a-type](../../../examples/dog-fooding/processes/add-a-type.md)               |
-| apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)             |
-| publish a report, or bring one up to date                | [writing-a-report](../writing-a-report/SKILL.md)                                      |
-| triage the findings filed here, or draft one             | [harvest-findings](../harvest-findings/SKILL.md)                                      |
-| write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md) |
-| change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)       |
-| open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)           |
+| I want to                                                | Read                                                                                      |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| write a record, or rewrite one                           | [prc-add-a-record](../../../examples/dog-fooding/processes/add-a-record.md)               |
+| review records against the rules                         | [reviewing-records](playbooks/reviewing-records.md)                                       |
+| change the schema, or write a rule                       | [prc-change-the-schema](../../../examples/dog-fooding/processes/change-the-schema.md)     |
+| change `kac`, or add a check                             | [prc-change-the-tool](../../../examples/dog-fooding/processes/change-the-tool.md)         |
+| add a knowledge type                                     | [prc-add-a-type](../../../examples/dog-fooding/processes/add-a-type.md)                   |
+| apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)                 |
+| publish a report, or bring one up to date                | [writing-a-report](../writing-a-report/SKILL.md)                                          |
+| triage the findings filed here, or draft one             | [harvest-findings](../harvest-findings/SKILL.md)                                          |
+| review and tidy a lane of the project board              | [prc-review-a-board-lane](../../../examples/dog-fooding/processes/review-a-board-lane.md) |
+| write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md)     |
+| change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)           |
+| open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)               |
 
-**Every other row ends by running `prc-pull-request`.** It is where the version, the changelog and the pages your
-change made wrong are dealt with.
+**Every row that changes a file ends by running `prc-pull-request`.** It is where the version, the changelog and
+the pages your change made wrong are dealt with. The board row is the one exception: it writes to the tracker and
+changes nothing here.
 
 ## Which writing skill
 
