@@ -29,6 +29,6 @@
     "Known limitations": "A card that has expired since the payment cannot be refunded to it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3e51dfdbdf9966f57e5e5061dd36bd84e9217f6/examples/payments/offerings/refund.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/658f8a09c419892f4608f4d98ab115dbc39a7bcf/examples/payments/offerings/refund.md"
   }
 }

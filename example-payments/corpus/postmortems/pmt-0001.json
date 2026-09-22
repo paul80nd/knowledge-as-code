@@ -37,6 +37,6 @@
     "Where we got lucky": "The whole lost window fell inside one settlement file. The PSP sends one file a day, and the 11 minutes ran from 21:03 to 21:14 on 3 June, so every missing entry was in the file that arrived at 02:00 the next morning. A failover at 23:55 would have split the window across two days' files.\n\n[nfr-0002] states five minutes because a gap longer than one file needs the PSP's support desk, and no procedure covers that. Eleven minutes was repairable here, and nothing in the design made it so."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3e51dfdbdf9966f57e5e5061dd36bd84e9217f6/examples/payments/postmortems/0001-refused-authorised-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/658f8a09c419892f4608f4d98ab115dbc39a7bcf/examples/payments/postmortems/0001-refused-authorised-payments.md"
   }
 }
