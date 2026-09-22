@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.30.0
 sources:
-  - { resource: example-dogfooding, version: "0.51.1" }
-  - { resource: example-engineering, version: "0.26.0" }
+  - { resource: example-dogfooding, version: "0.52.0" }
+  - { resource: example-engineering, version: "0.26.1" }
 verified:
-  - { at: 2026-09-21T08:30:00Z, by: human:paul.law }
+  - { at: 2026-09-22T15:30:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.26.0.
+* `eng`, example-engineering, at 0.26.1.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it.

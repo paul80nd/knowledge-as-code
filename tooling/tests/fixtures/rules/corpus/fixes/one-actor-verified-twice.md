@@ -7,7 +7,7 @@ symptom-keywords: [log, provenance, verification]
 verified:
   - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }
   - { at: 2026-09-04T11:30:00Z, by: human:alex.doe }
-review-by: "2026-12-31"
+review-by: "2030-12-31"
 owner: human:alex.doe
 ---
 

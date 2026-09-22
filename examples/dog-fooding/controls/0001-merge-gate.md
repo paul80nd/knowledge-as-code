@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `validate` check on the pull request, and the branch rule on `main` in the repository settings.
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ branch-protection, continuous-integration ]
 ---

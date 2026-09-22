@@ -170,3 +170,10 @@ rules:
       not matches('(?i)(compliant|compliance|certified|registered)[^.]{0,80}(ISO|GDPR|SOC ?2|PCI)|(ISO|GDPR|SOC ?2|PCI)[^.]{0,80}(compliant|compliance|certified|registered)')
     message: >
       this claims a standing against a framework. Say where the organisation stands in `frameworks.md`.
+  - id: policy-in-date
+    description: A policy names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this policy's `review-by` has passed. Check the clauses still state what the organisation commits
+      to, then set `review-by` to the next day somebody looks at it.

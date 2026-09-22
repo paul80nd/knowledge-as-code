@@ -4,7 +4,7 @@ type: glossary
 tier: descriptive
 status: draft
 owner: human:alex.doe
-review-by: "2027-08-07"
+review-by: "2031-08-07"
 ---
 
 # Knowledge as code

@@ -68,6 +68,7 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `provenance-required`       | error   | A standard cites an ADR in `derived-from`, a policy clause in `implements`, or both.                            |
+| `standard-in-date`          | warning | A standard names a review date that has not passed.                                                             |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

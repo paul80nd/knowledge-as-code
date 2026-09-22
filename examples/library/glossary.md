@@ -137,6 +137,7 @@ nothing runs the rule and the limit is yours to keep.
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                                |
+| `glossary-in-date`          | warning | A glossary names a review date that has not passed.                                                             |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

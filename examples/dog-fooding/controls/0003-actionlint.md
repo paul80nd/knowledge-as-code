@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `lint` job's log on the pull request, under the step "Check the workflows".
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ github-actions, linting, shell ]
 ---

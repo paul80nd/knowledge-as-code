@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `lint` job's log on the pull request, under the step "Check every YAML file".
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ linting, yaml ]
 ---

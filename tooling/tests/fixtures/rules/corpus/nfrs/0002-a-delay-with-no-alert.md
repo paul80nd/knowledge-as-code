@@ -9,7 +9,7 @@ target: 99.9%
 window: monthly
 alert-after: 15 minutes
 measured-by: The availability panel on the platform dashboard, read monthly.
-review-by: "2026-12-31"
+review-by: "2030-12-31"
 owner: human:alex.doe
 ---
 

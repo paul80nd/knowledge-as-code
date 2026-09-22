@@ -127,6 +127,7 @@ Other boundaries:
 | `verified-by-a-known-actor`  | error   | A verification names an actor the Open Knowledge Format defines, and never a post.                              |
 | `one-verification-per-actor` | error   | An actor is written once in `verified`, and a second check moves the `at` on the entry they have.               |
 | `one-problem-per-document`   | warning | A fix has one Symptom section, and a record with two is two fixes.                                              |
+| `fix-in-date`                | warning | A fix names a review date that has not passed.                                                                  |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

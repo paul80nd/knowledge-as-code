@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `corpora`, `round-trip` and `import-round-trip` job logs on the pull request.
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ export, packaging, plugin ]
 ---

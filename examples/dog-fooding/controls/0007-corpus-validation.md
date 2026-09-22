@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `corpora` job's log on the pull request, one run per corpus, plus the `tool` job's template steps.
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ corpus, schema, validation ]
 ---
