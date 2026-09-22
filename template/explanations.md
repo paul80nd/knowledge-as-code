@@ -100,6 +100,7 @@ plausibly be an explanation *or* something else, it is the something else.
 | `unused-definition`          | warning | A link definition that nothing references.                                                                      |
 | `links-rather-than-restates` | warning | An explanation's prose stays proportionate to the links it makes.                                               |
 | `not-normative`              | warning | No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.                   |
+| `explanation-in-date`        | warning | An explanation names a review date that has not passed.                                                         |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

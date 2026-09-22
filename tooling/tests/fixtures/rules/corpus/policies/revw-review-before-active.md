@@ -3,8 +3,8 @@ id: pol-REVW
 type: policy
 tier: normative
 status: active
-active-from: "2027-01-01"
-review-by: "2026-12-31"
+active-from: "2031-01-01"
+review-by: "2030-12-31"
 owner: human:alex.doe
 ---
 

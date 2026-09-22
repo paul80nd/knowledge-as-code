@@ -101,13 +101,23 @@ fields:
     allow-literal: [all]
     description: Service ids, or `all`.
 
+  review-by:
+    required: true
+    type: date
+    description: Quoted. The day somebody checks this control still describes what runs.
+    notes: >
+      `control-in-date` warns once the date has passed. `frequency` states how often the check runs,
+      which is a different question. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#controls>.
+
 sections:
   required: [What it checks, How it works, Coverage and gaps]
   optional: [Evidence, Owner]
 
 export:
   version: 1
-  fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, tags]
+  fields: [id, title, status, verifies, mechanism, frequency, last-verified, evidence, applies-to, review-by,
+           tags]
   sections:
     What it checks: full
     How it works: full
@@ -128,6 +138,13 @@ rules:
     message: >
       this control claims to run and does not say where the proof lives. Set `evidence` to the build log,
       the audit note or the dashboard.
+  - id: control-in-date
+    description: A control names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this control's `review-by` has passed. Check the control still runs the way this record says,
+      then set `review-by` to the next day somebody looks at it.
   - id: clause-quoted-faithfully
     description: >
       A quoted span beside a clause citation is still in the clause it cites.

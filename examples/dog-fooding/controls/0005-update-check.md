@@ -9,6 +9,7 @@ frequency: per-pr
 evidence: The `corpora` job's log on the pull request, under the step "Check the corpus is in step with the template".
 applies-to:
   - all
+review-by: "2027-09-22"
 owner: human:paul.law
 tags: [ overlay, template ]
 ---

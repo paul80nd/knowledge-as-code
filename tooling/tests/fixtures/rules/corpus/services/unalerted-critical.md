@@ -8,7 +8,7 @@ repos: [ unalerted-critical ]
 platform: azure-function
 criticality: critical
 monitoring-output: none
-nfrs: [nfr-0002]
+nfrs: [nfr-0002, nfr-0003]
 owner: human:alex.doe
 ---
 

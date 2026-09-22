@@ -157,13 +157,14 @@ Two things stay behind whatever `types` says:
 
 ## Say when a control is unsettled
 
-Read `status` before you rely on a control, and tell the reader what you saw:
+Read `status` and `review-by` before you rely on a control, and tell the reader what you saw:
 
 * **`status: planned`.** The check is intended and is not running. Nothing proves the rule today.
 * **`status: retired`.** The check has been stood down. Find what replaced it before you quote it.
+* **`review-by` earlier than today.** Nobody has confirmed the control still runs the way this record says.
 
 An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside either.
+`manifest.json` say when it was taken, and are worth quoting alongside any of the three.
 
 ## Link to the control, and read its source
 

@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 48,
+    "validated": 55,
     "templates": 17,
     "skipped": 0,
     "errors": 26,
-    "warnings": 34,
+    "warnings": 41,
     "infos": 0
   },
   "findings": [
@@ -24,10 +24,17 @@
     },
     {
       "file": "controls/0002-evidence-not-named.md",
-      "line": 24,
+      "line": 25,
       "severity": "error",
       "check": "clause-quoted-faithfully",
       "message": "'std-ERRORS.a-failure-says-what-happened' does not say \"is answered with a `404`\". Re-read the clause in standards/common/error-responses.md and quote it word for word, or cite the clause that says this."
+    },
+    {
+      "file": "controls/0003-review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "control-in-date",
+      "message": "this control's `review-by` has passed. Check the control still runs the way this record says, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "data/borrower-records.md",
@@ -86,6 +93,13 @@
       "message": "prose has outgrown the links. Link to the document that owns each fact instead of restating it here."
     },
     {
+      "file": "explanations/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "explanation-in-date",
+      "message": "this explanation's `review-by` has passed. Check it still describes what runs, then set `review-by` to the next day somebody looks at it."
+    },
+    {
       "file": "explanations/why-holds-expire.md",
       "line": 1,
       "severity": "warning",
@@ -98,6 +112,13 @@
       "severity": "error",
       "check": "one-verification-per-actor",
       "message": "this actor already states a verification on this record. Move the `at` on the entry they have."
+    },
+    {
+      "file": "fixes/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "fix-in-date",
+      "message": "this fix's `review-by` has passed. Check the steps still clear the symptom, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "fixes/two-symptoms-one-page.md",
@@ -119,6 +140,13 @@
       "severity": "warning",
       "check": "terms-alphabetical",
       "message": "'Branch' is out of order: it belongs before 'Item'."
+    },
+    {
+      "file": "glossary/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "glossary-in-date",
+      "message": "this glossary's `review-by` has passed. Check the terms still match how people here speak, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "integrations/payment-gateway.md",
@@ -175,6 +203,13 @@
       "severity": "warning",
       "check": "alert-after-needs-an-alert",
       "message": "'alert-after' states a delay and nothing this binds raises an alert or a ticket: 'monitoring-output' is 'none'. Bind a service that raises one, or drop 'alert-after'."
+    },
+    {
+      "file": "nfrs/0003-review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "nfr-in-date",
+      "message": "this target's `review-by` has passed. Check the number is still the one that was agreed, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "offerings/borrower-notifications.md",
@@ -238,6 +273,13 @@
       "severity": "error",
       "check": "alignment-rollup",
       "message": "'aligns-with' claims 'ISO 27001:2022.A.5.17', and no clause cites it."
+    },
+    {
+      "file": "policies/stal-review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "policy-in-date",
+      "message": "this policy's `review-by` has passed. Check the clauses still state what the organisation commits to, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "policies/unlk-framework-label-not-defined.md",
@@ -392,6 +434,13 @@
       "severity": "error",
       "check": "provenance-required",
       "message": "neither `derived-from` nor `implements` is set, so this standard does not say where its authority comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the document as an explanation."
+    },
+    {
+      "file": "standards/common/review-overdue.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "standard-in-date",
+      "message": "this standard's `review-by` has passed. Check the rules still describe how the work is done, then set `review-by` to the next day somebody looks at it."
     },
     {
       "file": "tools/conclusion-no-reason.md",

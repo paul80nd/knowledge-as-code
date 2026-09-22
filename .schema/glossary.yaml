@@ -135,3 +135,10 @@ rules:
     severity: warning
   - id: terms-are-singular
     description: Entry headings are singular and in canonical casing.
+  - id: glossary-in-date
+    description: A glossary names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this glossary's `review-by` has passed. Check the terms still match how people here speak, then set
+      `review-by` to the next day somebody looks at it.

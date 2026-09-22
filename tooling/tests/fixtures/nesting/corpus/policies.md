@@ -65,5 +65,6 @@ as any type page is: its links, both pairs of generated markers, and carrying no
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
 | `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
+| `policy-in-date`                       | warning | A policy names a review date that has not passed.                                                                   |
 
 <!-- END GENERATED: checks-policies -->

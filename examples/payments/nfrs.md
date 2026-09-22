@@ -134,6 +134,7 @@ built on it at 99%. Name that integration in `constrained-by`, and set the targe
 | `unused-definition`          | warning | A link definition that nothing references.                                                                      |
 | `alert-after-needs-an-alert` | warning | A target stating `alert-after` binds a service that raises an alert or a ticket, through any offering between.  |
 | `target-is-measurable`       | warning | `measured-by` states an instrument. A hedge such as "monitored" or "where practical" fails.                     |
+| `nfr-in-date`                | warning | A target names a review date that has not passed.                                                               |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

@@ -233,3 +233,10 @@ rules:
   - id: changelog-on-material-change
     description: >
       A change to the Rules section of an `active` standard needs a changelog entry in the same commit.
+  - id: standard-in-date
+    description: A standard names a review date that has not passed.
+    severity: warning
+    expr: "present('review-by') implies field('review-by') >= today()"
+    message: >
+      this standard's `review-by` has passed. Check the rules still describe how the work is done, then
+      set `review-by` to the next day somebody looks at it.

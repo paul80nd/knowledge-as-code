@@ -159,6 +159,7 @@ Make the folders your own commitments need, and keep the set small enough to sca
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
 | `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |
+| `policy-in-date`                       | warning | A policy names a review date that has not passed.                                                                   |
 
 <!-- END GENERATED: checks-policies -->
 

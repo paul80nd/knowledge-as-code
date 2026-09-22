@@ -6,7 +6,7 @@ status: draft
 aligns-with:
   - framework: ISO 27001:2022
     clauses: [A.8.29, A.8.7]
-review-by: "2027-08-05"
+review-by: "2031-08-05"
 owner: human:alex.doe
 ---
 

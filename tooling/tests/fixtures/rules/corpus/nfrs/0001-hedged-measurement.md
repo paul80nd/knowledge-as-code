@@ -8,7 +8,7 @@ applies-to: [ofr-borrower-notifications]
 target: 99.5%
 window: monthly
 measured-by: Monitored by the platform team where practical.
-review-by: "2026-12-31"
+review-by: "2030-12-31"
 owner: human:alex.doe
 ---
 

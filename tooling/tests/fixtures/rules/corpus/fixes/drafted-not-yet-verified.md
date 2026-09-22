@@ -4,7 +4,7 @@ type: fix
 tier: normative
 status: draft
 symptom-keywords: [lock, migration, timeout]
-review-by: "2026-12-31"
+review-by: "2030-12-31"
 owner: human:alex.doe
 ---
 

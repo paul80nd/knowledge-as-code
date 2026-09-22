@@ -56,6 +56,7 @@ several rules, and one rule may need several controls.
 | `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.           |
 | `evidence`      | string                                                                    | Where the proof lives: the build log, the audit note, or the dashboard.                                    |
 | `applies-to`    | list                                                                      | Service ids, or `all`.                                                                                     |
+| `review-by` *   | date                                                                      | Quoted. The day somebody checks this control still describes what runs.                                    |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -110,6 +111,7 @@ several rules, and one rule may need several controls.
 | `reciprocal`                | error   | A reciprocal field and its counterpart agree in both directions.                                                |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `mechanism-has-evidence`    | warning | A running control says where its evidence can be found.                                                         |
+| `control-in-date`           | warning | A control names a review date that has not passed.                                                              |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 

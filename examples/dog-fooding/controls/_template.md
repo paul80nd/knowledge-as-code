@@ -6,6 +6,7 @@ status: planned
 verifies:
 mechanism:
 frequency:
+review-by: "{{date}}"
 owner:
 tags: [ a, b ]
 ---
@@ -28,6 +29,8 @@ and how it is reviewed. What is below is only what a control adds to that.
   avoid using it.
 * **`frequency`**: `continuous` · `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
 * **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
+* **`review-by`**: the day somebody re-reads this record against the check, quoted. `control-in-date` warns once it
+  has passed.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../controls.md#metadata) lists every

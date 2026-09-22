@@ -4,8 +4,8 @@ using kac.core;
 // The staleness section of each lookup skill, held to the fields its type actually exports.
 //
 // A skill is the whole of what a consumer is told about the export, so a skill silent about the review date leaves a
-// reader quoting a policy that passed it. Which fields there are differs by type: `controls` and `processes` export no
-// review date at all, and a skill naming one would send a reader to a key that is not there. The spelling differs too.
+// reader quoting a policy that passed it. Which fields there are differs by type: `processes` exports no review date
+// at all, and a skill naming one would send a reader to a key that is not there. The spelling differs too.
 // A type declaring parts writes `reviewBy` on the line, and a type without them exports `review-by` under the schema's
 // own name. Deriving the expectation from the schema is what keeps a rule stated once from binding the types it does
 // not reach.

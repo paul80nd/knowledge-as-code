@@ -4,9 +4,9 @@ type: standard
 tier: normative
 status: active
 owner: human:alex.doe
-verified-by: [ctl-0001, ctl-0002]
+verified-by: [ctl-0001, ctl-0002, ctl-0003]
 applies-to: [svc-catalogue]
-review-by: "2026-12-31"
+review-by: "2030-12-31"
 ---
 
 # Error responses
