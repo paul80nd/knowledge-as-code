@@ -308,8 +308,10 @@ checks:
 
   clause-compound:
     severity: warning
-    description: Each clause states a single obligation under its own id.
-    notes: A second modal in a row means a citation of that id can only ever pick out half of what the row says.
+    description: No clause row states a second modal.
+    notes: >
+      A second modal in a row means a citation of that id can only ever pick out half of what the row says. The check
+      reads modals only, so two obligations written under a single modal pass.
 
   # ── links ────────────────────────────────────────────────────────────────────
 

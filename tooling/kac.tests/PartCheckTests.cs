@@ -81,6 +81,12 @@ public class PartCheckTests
     public void A_longer_modal_is_recognised_before_the_one_that_prefixes_it()
         => Assert.Empty(Run(Header + "| `LOGS` | **MUST NOT** leave the tenancy. |\n"));
 
+    // "MUSTERED" contains "MUST". Matched as a substring it would report a second modal the row
+    // does not state.
+    [Fact]
+    public void A_word_a_modal_only_prefixes_is_not_a_second_modal()
+        => Assert.Empty(Run(Header + "| `SHIFT` | **MUST** be MUSTERED before the shift. |\n"));
+
     [Fact]
     public void A_second_modal_in_one_row_is_two_obligations_sharing_an_id()
     {
