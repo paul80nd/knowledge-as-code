@@ -28,7 +28,6 @@ and how it is reviewed. Below is only what a service adds to that.
 
 * **`id`**: `svc-` plus the name of the **deployable**, not the repository it lives in. A repository shipping three app
   services yields three ids, and none of them is the repository's name.
-* **`status`**: `live` · `building` · `deprecated` · `retired`.
 * **`component-type`**: the sort of component this is, such as an API, a website, a worker or a command line tool.
   [The type page](../services.md) derives the values from the estate, so read the list there before you pick one.
 * **`repos`**: every repository a change to *this service* is made in. Most services name one. An asset surface names

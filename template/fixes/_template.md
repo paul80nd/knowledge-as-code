@@ -41,8 +41,7 @@ Name the title and the filename for the **symptom**, not the cause. That is what
 
   Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
   `human:` line makes it human-reviewed.
-* **`status`**: `active` · `draft` · `superseded` · `fixed-upstream`. Write `draft` where nobody has verified the
-  resolution yet.
+* **`status`**: write `draft` where nobody has verified the resolution yet.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../fixes.md#metadata) lists every

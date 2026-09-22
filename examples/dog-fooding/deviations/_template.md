@@ -23,16 +23,14 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 
 **Frontmatter**
 
-* **`status`**: `active` · `draft` · `closed`. A deviation past its review date is still `active`, because that is what
-  is true.
+* **`status`**: a deviation past its review date is still `active`, because that is what is true.
 * **`departs-from`**: the policy or standard clauses this departs from, one entry each. This corpus states no
   policies, so a policy clause is inherited and written `eng:pol-{{MNEM}}.{{CLAUSE}}`. A standard's rule is
   `std-{{MNEM}}.{{rule-heading-slug}}`, and an inherited one takes the same `eng:` prefix. A bare id is refused,
   because it claims a departure from every clause the rule carries. Write `none` for a shortcut that breaks no rule,
   which is technical debt and is recorded the same way.
-* **`risk`**: `high` · `medium` · `low`. How bad the risk is once what compensates is working, and never how
-  bad the rule's authors thought it was. A `high` rating brings `review-by` inside six months, which
-  `high-risk-review-window` warns on.
+* **`risk`**: how bad the risk is once what compensates is working, and never how bad the rule's authors thought it
+  was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
 * **`review-by`**: the day somebody has to look at this again. Every deviation carries one.
 * **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is

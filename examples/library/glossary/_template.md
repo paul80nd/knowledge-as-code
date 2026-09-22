@@ -21,7 +21,7 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 
 **Frontmatter**
 
-* **`status`**: `draft` · `active`. `draft` while the terms are still settling.
+* **`status`**: write `draft` while the terms are still settling.
 * **`narrows`**: the more general glossary this one sits inside. Left empty by the corpus-wide glossary, which nothing
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.

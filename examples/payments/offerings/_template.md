@@ -19,7 +19,6 @@ and how it is reviewed. What is below is only what an offering adds to that.
 
 **Frontmatter**
 
-* **`status`**: `planned` · `building` · `live` · `deprecated`.
 * **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
 * **`feature-files`**: each path names its repository first, spelled as an entry of that repository's service

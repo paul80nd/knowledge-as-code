@@ -22,8 +22,8 @@ and how it is reviewed. What is below is only what a tool adds to that.
 
 **Frontmatter**
 
-* **`status`**: `approved` · `trial` · `deprecated` · `rejected`. Approved means approved **for new work**; something
-  already in use but not approved is drift, and the drift report will say so.
+* **`status`**: approved means approved **for new work**. Something already in use but not approved is drift, and
+  finding it is a manual job.
 * **`packages`**: one entry per package this entry approves, each a
   [package URL](https://github.com/package-url/purl-spec) with the range approved for new work. Give a range, not a
   pin: the register states what we stand behind, and the manifests state what is installed. Leave `versions` out

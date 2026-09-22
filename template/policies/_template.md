@@ -26,7 +26,6 @@ and how it is reviewed. What is below is only what a policy adds to that.
 * **Where you save it**: the folder below `policies/` becomes the policy's category, which is the broad area
   the commitment belongs to. That is a different question from the topics `tags` records. A policy saved
   straight into `policies/` has no category.
-* **`status`**: `draft` · `active` · `retired`.
 * **`aligns-with`**: every **binding** framework the clause table cites, each with the references reached inside it.
   These capture alignment rather than compliance or certification, and the wording matters if this is ever read
   externally. Leave the key bare where the policy cites nothing that binds.

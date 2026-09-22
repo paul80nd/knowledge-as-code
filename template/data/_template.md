@@ -27,9 +27,9 @@ and how it is reviewed. What is below is only what a data document adds to that.
 
 * **`owned-by`**: a single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.
-* **`classification`**: `public` · `internal` · `confidential`. How widely the data may be shared, and nothing else.
-* **`personal-data`**: `none` · `personal` · `special-category`. A category of data, not a grade of sensitivity. Data
-  can be `confidential` and `none`, or `public` and `personal`.
+* **`classification`**: how widely you may share the data, and nothing else about it.
+* **`personal-data`**: a category of data, not a grade of sensitivity. Data can be `confidential` and `none`, or
+  `public` and `personal`.
 * **`data-subjects`**: required where `personal-data` is anything but `none`. The categories of people the data is
   about, in the corpus's own words.
 * **`retention`**: required where `personal-data` is `personal` or `special-category`. "indefinitely" is an answer, and

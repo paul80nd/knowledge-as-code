@@ -22,12 +22,9 @@ and how it is reviewed. What is below is only what a control adds to that.
 
 **Frontmatter**
 
-* **`status`**: `active` · `planned` · `retired`.
 * **`verifies`**: standard ids, ideally rule-level anchors.
-* **`mechanism`**: `ci` · `review-checklist` · `manual` · `runtime-alert` · `not-enforced`. Pick the real one:
-  `not-enforced` is a first-class value and the whole point of the coverage report, so do not invent a mechanism to
-  avoid using it.
-* **`frequency`**: `continuous` · `per-pr` · `per-deploy` · `daily` · `monthly` · `quarterly` · `annual`.
+* **`mechanism`**: pick the real one. `not-enforced` is a first-class value and the whole point of the coverage report,
+  so do not invent a mechanism to avoid using it.
 * **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
 * **`review-by`**: the day somebody re-reads this record against the check, quoted. `control-in-date` warns once it
   has passed.
