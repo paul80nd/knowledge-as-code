@@ -707,8 +707,7 @@ public static class Validator
             foreach (var name in d.Type.FieldOrder)
             {
                 var spec = d.Type.Fields[name];
-                if (spec.Refs.Count == 0) continue;
-                if (spec.Type != "id" && (spec.Type != "list" || spec.Of != "id")) continue;
+                if (spec.Refs.Count == 0 || !spec.DeclaresId) continue;
 
                 var admitted = Admitted(spec, schema);
                 foreach (var value in d.FrontList(name))

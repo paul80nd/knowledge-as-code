@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A `type: id` with no `ref:` is reported.** `kac validate` fails a schema whose field declares `type: id`, or
+  `of: id` on a list, and states no folders for its ids to resolve against. The reference pass selects a field on its
+  `ref:` before it reads the type, so the value reached no check while the type page rendered the field as a citation.
+  An id on an entry key is reported whatever the key declares, at any depth, because that pass reads a field's own
+  value and never walks an `entry:` block. Both are reported under `schema-dispatch`.
 - **A framework citation that never became a link is reported.** `alignment-unlinked` runs. `kac validate` fails a
   policy whose `Alignment` cell writes `[UK GDPR].Art.5(1)(e)` with no link definition behind it. Markdown leaves the
   brackets on the page as text, so the cell states no mapping. Reported once per label. While the definition is

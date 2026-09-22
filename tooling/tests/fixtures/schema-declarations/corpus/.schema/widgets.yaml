@@ -76,6 +76,9 @@ fields:
     min-items: 2
     min-records: 2
 
+  sponsor:
+    type: id
+
 sections:
   required:
     - Summary

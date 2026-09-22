@@ -23,6 +23,8 @@ you, and every finding names the file and the key.
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
 | A `type:` or an `of:` naming a value no check reads, at any depth of an `entry:` block   | `schema-dispatch`    |
 | An `of:` on any field that is not a `list`                                               | `schema-dispatch`    |
+| A `type: id` or an `of: id` with no `ref:`, so nothing resolves what the value points at | `schema-dispatch`    |
+| A `type: id` or an `of: id` on an entry key, which the reference pass never walks        | `schema-dispatch`    |
 | An `entry:` block or a `shape:` on a field whose value is never an object                | `schema-dispatch`    |
 | `type: object` or `of: object` with neither an `entry:` block nor a `shape:`             | `schema-shape`       |
 | An `index.order:` that is neither `ascending` nor `descending`                           | `schema-dispatch`    |
@@ -96,9 +98,11 @@ table cell bounds the `summary:` that becomes it.
 
 ## `ref:` and `versus:`
 
-Both are outside the pass. A field's `ref:` names the type its ids point at, and a type's `versus:` names the type it is
-most often confused with. A corpus adopts as many of the framework's types as it has use for, so either one may name a
-type this corpus turned down.
+The value of either is outside the pass. A field's `ref:` names the type its ids point at, and a type's `versus:` names
+the type it is most often confused with. A corpus adopts as many of the framework's types as it has use for, so either
+one may name a type this corpus turned down. A field declaring an id and no `ref:` at all is reported, because its ids
+resolve against nothing. So is an id on an entry key, with a `ref:` or without: the reference pass reads a field's own
+value and never walks an `entry:` block, so declaring one there changes nothing.
 
 `kac` reports nothing when it does. The disambiguation renders nothing, and `kac update --add-type` starts the reference
 without an edit to `.schema/`. `kac` also drops a required field that points only at types nothing here supplies. No

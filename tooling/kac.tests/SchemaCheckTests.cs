@@ -192,12 +192,15 @@ public class SchemaCheckTests
     [Fact]
     public void A_mirrors_citations_on_a_field_with_no_ref_is_reported()
     {
-        var finding = Assert.Single(Check(Widgets(fields:
+        var findings = Check(Widgets(fields:
         [
             ("implements", new FieldSpec
                 { Name = "implements", Type = "list", Of = "id", MirrorsCitations = "Covers" })
-        ])));
+        ]));
 
+        // The entries have no `ref:` to resolve against either, and each key answers for itself.
+        Assert.Equal(2, findings.Count);
+        var finding = Assert.Single(findings, x => x.Message.Contains("mirrors-citations: Covers"));
         Assert.Equal("schema-shape", finding.Check.Value);
         Assert.Contains("Covers", finding.Message);
     }
@@ -921,7 +924,6 @@ public class SchemaCheckTests
     [Theory]
     [InlineData("date")]
     [InlineData("enum")]
-    [InlineData("id")]
     [InlineData("list")]
     [InlineData("string")]
     [InlineData("timestamp")]
@@ -929,16 +931,61 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Widgets(
             fields: [("value", new FieldSpec { Name = "value", Type = type })])));
 
+    // An id is the one type that declares only half of itself. The folders it resolves against are the
+    // other half, so it is left alone only once a `ref:` states them.
+    [Theory]
+    [InlineData("id", null)]
+    [InlineData("list", "id")]
+    public void A_field_declaring_an_id_and_the_folders_it_points_into_is_left_alone(string type, string? of)
+        => Assert.Empty(Check(Widgets(
+            fields: [("value", new FieldSpec { Name = "value", Type = type, Of = of, Refs = ["widgets"] })])));
+
+    [Theory]
+    [InlineData("id", null, "type: id")]
+    [InlineData("list", "id", "of: id")]
+    public void A_field_declaring_an_id_and_no_reference_is_reported(string type, string? of, string declared)
+    {
+        var finding = Assert.Single(Check(Widgets(
+            fields: [("sponsor", new FieldSpec { Name = "sponsor", Type = type, Of = of })])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains($"field 'sponsor' declares '{declared}' and no 'ref:'", finding.Message);
+    }
+
+    // The reference pass reads a field's own value and never an entry of one, so an id inside an object
+    // is reported whatever the key declares. A `ref:` is asked for at the field alone, because that is
+    // the only place declaring one changes anything.
+    [Theory]
+    [InlineData(null)]
+    [InlineData("widgets")]
+    public void An_entry_key_declaring_an_id_is_reported(string? re)
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("signoffs", new FieldSpec
+            {
+                Name = "signoffs", Type = "list", Of = "object",
+                Entry = [new FieldSpec { Name = "by", Type = "id", Refs = re is null ? [] : [re] }]
+            })
+        ])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("entry key 'by' declares 'type: id', and the reference pass reads", finding.Message);
+        Assert.DoesNotContain("Declare a 'ref:'", finding.Message);
+    }
+
     // A part is read out of the record a reference names, so a field declaring no `ref:` leaves the key
     // with nothing to be resolved against.
     [Fact]
     public void A_field_requiring_a_part_and_naming_no_reference_is_reported()
     {
-        var finding = Assert.Single(Check(Widgets(
-            fields: [("implements", new FieldSpec { Name = "implements", Type = "id", PartRequired = true })])));
+        var findings = Check(Widgets(
+            fields: [("implements", new FieldSpec { Name = "implements", Type = "id", PartRequired = true })]));
 
+        // The id has no `ref:` to resolve against either, and each key answers for itself.
+        Assert.Equal(2, findings.Count);
+        var finding = Assert.Single(findings, x => x.Message.Contains("part-required: true"));
         Assert.Equal("schema-dispatch", finding.Check.Value);
-        Assert.Contains("part-required: true", finding.Message);
     }
 
     // Every id the field carries would fail, and the way out of it is an edit to the type at the other

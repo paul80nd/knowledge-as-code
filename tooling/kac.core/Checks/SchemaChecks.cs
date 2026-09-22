@@ -623,15 +623,17 @@ public static class SchemaChecks
                          + "no description, and nothing to render.", f);
     }
 
-    // The two vocabularies a field declares itself with, read from `ValueChecks`, which holds them
-    // beside the code dispatching them. A second list here would say what is spelled correctly rather
-    // than what runs, and a value dropped from the switch would go on passing.
+    // What a field says it is, what its entries are, and where an id resolves. The two vocabularies are
+    // read from `ValueChecks`, which keeps them beside the code dispatching them. A second list here
+    // would say what is spelled correctly rather than what runs, and a value dropped from the switch
+    // would go on passing.
     //
     // Asked of an entry key as well, to whatever depth the field nests. `Entry` sends each key's value
     // back through `Check`, so a key's `type:` dispatches exactly as a field's does, and a key
     // declaring its own `entry:` nests again. `ParseField` bounds that by the schema rather than by a
     // guard, and a question asked one level down would go quiet at the second.
-    private static void CheckDeclaredTypes(string at, string what, FieldSpec spec, List<Finding> f)
+    private static void CheckDeclaredTypes(string at, string what, FieldSpec spec, List<Finding> f,
+        bool insideAnObject = false)
     {
         if (!ValueChecks.FieldTypes.Contains(spec.Type))
             Dispatch(at, $"{what} declares 'type: {spec.Type}', which no value check reads. The types the "
@@ -650,8 +652,30 @@ public static class SchemaChecks
                              + $"are {List(ValueChecks.EntryTypes)}.", f);
         }
 
+        // An id is resolved against the folders a `ref:` names, and against nothing else. The reference
+        // pass selects a field on its `ref:` before it narrows on the type, so a declaration without one
+        // reaches no resolution at all, while the type page renders the field as a citation.
+        //
+        // That pass reads a field's own value and never walks an `entry:` block, so an id inside an
+        // object is resolved against nothing whatever the key declares. A `ref:` is no remedy there, and
+        // asking for one would send the author after a key that changes nothing.
+        if (spec.DeclaresId)
+        {
+            var declared = spec.Type == "id" ? "type: id" : "of: id";
+
+            if (insideAnObject)
+                Dispatch(at, $"{what} declares '{declared}', and the reference pass reads a field's own "
+                             + "value and never an entry of one. Nothing resolves the id, with a 'ref:' "
+                             + "or without. Declare the value a string, or make the id a field of its own.",
+                    f);
+            else if (spec.Refs.Count == 0)
+                Dispatch(at, $"{what} declares '{declared}' and no 'ref:'. An id is resolved against the "
+                             + "folders a reference names, so nothing checks what the value points at. "
+                             + "Declare a 'ref:', or declare the value a string.", f);
+        }
+
         foreach (var key in spec.Entry ?? [])
-            CheckDeclaredTypes(at, $"{what} entry key '{key.Name}'", key, f);
+            CheckDeclaredTypes(at, $"{what} entry key '{key.Name}'", key, f, true);
     }
 
     private static void Dispatch(string at, string message, List<Finding> f)

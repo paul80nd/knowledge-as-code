@@ -22,9 +22,9 @@ public static class ValueChecks
     //
     // `string` earns its place as the base every scalar `pattern:` applies to, and is what a field with
     // no `type:` at all is read as. `id` is read outside this class, by the reference pass in
-    // `Validator`, which narrows on it after a `ref:` has selected the field: a `type: id` carrying no
-    // `ref:` is resolved against nothing, and no check here or there reports that. The rest are arms of
-    // the switch.
+    // `Validator`, which narrows on it after a `ref:` has selected the field. `SchemaChecks` reports a
+    // `type: id` declaring no `ref:`, which would otherwise be resolved against nothing. The rest are
+    // arms of the switch.
     public static readonly IReadOnlyList<string> FieldTypes =
         ["date", "enum", "id", "list", "object", "string", "timestamp"];
 
