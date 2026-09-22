@@ -138,8 +138,10 @@ rules:
       the first section here is not `Symptoms`. Move `## Symptoms` above the others, so a reader who arrives
       with a symptom finds it first.
   - id: escalation-required
-    description: Every diagnosis branch ends in a resolution or an escalation.
-    # `sections` requires the heading. This rule checks the branches under it.
+    description: Every diagnosis branch routes or falls through, and one branch reaches Escalation.
+    severity: error
+    # `sections` requires the heading. This rule reads the branches under it, and a Diagnosis written
+    # as prose has none to read.
   - id: outcome-stated
     description: Resolution ends with a line opening `Confirmed when`.
     # Declared. A resolution with no outcome leaves the reader guessing whether to stop.

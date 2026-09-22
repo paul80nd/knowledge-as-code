@@ -630,6 +630,21 @@ checks:
       else is passed over, which is how a template placeholder and a nested bullet stay out of it. The
       message states the entry that moved and the line it moves to.
 
+  diagnosis-dead-end:
+    severity: error
+    description: Every branch of a runbook's diagnosis routes to a section or falls through to the next question.
+    notes: >
+      A branch routes by linking to `#resolution` or `#escalation`, and falls through by ending on the word
+      `continue`. The last list in the section has nothing to fall through to, so `continue` there is reported
+      as well. Reported per branch, and the message quotes the one at fault.
+
+  diagnosis-no-escalation:
+    severity: error
+    description: A runbook's diagnosis has one branch that reaches Escalation.
+    notes: >
+      For the reader the tree does not answer. `failure-route-stated` asks the same of `Resolution`, for the
+      reader whose fix did not work. A `Diagnosis` written as prose has no branches and is passed over.
+
   feature-file-repo:
     severity: warning
     description: A feature file path begins with a repository one of the implementing services names.

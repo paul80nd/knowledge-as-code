@@ -32,7 +32,7 @@ Page the on-call engineer.
 
 **Is the broker reachable?**
 
-* **Yes** → restart the consumer.
+* **Yes** → restart the consumer, then go to [Resolution](#resolution).
 * **No** → [escalate](#escalation).
 
 ## Resolution

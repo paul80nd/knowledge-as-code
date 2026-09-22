@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 56,
+    "validated": 58,
     "templates": 17,
     "skipped": 0,
-    "errors": 26,
+    "errors": 29,
     "warnings": 42,
     "infos": 0
   },
@@ -392,6 +392,27 @@
       "severity": "error",
       "check": "symptoms-first",
       "message": "the first section here is not `Symptoms`. Move `## Symptoms` above the others, so a reader who arrives with a symptom finds it first."
+    },
+    {
+      "file": "runbooks/diagnosis-branch-goes-nowhere.md",
+      "line": 36,
+      "severity": "error",
+      "check": "diagnosis-dead-end",
+      "message": "this diagnosis branch routes nowhere: \"Yes → restart the consumer.\". Send it to `[Resolution](#resolution)` or to `[escalate](#escalation)`, or write `continue`."
+    },
+    {
+      "file": "runbooks/diagnosis-branch-goes-nowhere.md",
+      "line": 42,
+      "severity": "error",
+      "check": "diagnosis-dead-end",
+      "message": "this diagnosis branch says `continue` under the last question: \"No → continue.\". Nothing follows it, so link it to `#resolution` or to `#escalation`."
+    },
+    {
+      "file": "runbooks/diagnosis-never-escalates.md",
+      "line": 1,
+      "severity": "error",
+      "check": "diagnosis-no-escalation",
+      "message": "no branch of this diagnosis reaches `#escalation`, so a reader the tree does not answer has nowhere to go. Close one branch with `[escalate](#escalation)`."
     },
     {
       "file": "runbooks/resolution-with-no-way-out.md",
