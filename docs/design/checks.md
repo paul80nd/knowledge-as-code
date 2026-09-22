@@ -24,6 +24,11 @@ two are told apart.
 type, and several catalogue ids fold into one row of it. The catalogue is flat and keyed by id. `kac checks` exits
 non-zero once the two have drifted, and that exit is what keeps the table honest.
 
+**It is not a prose reviewer.** A check that reads prose matches a closed set of words: the hedges
+`no-hedged-ordering` warns on, the modals a type declares, a heading title, a literal link target. An open-class
+rule, such as "a step opens with an imperative verb", needs a word list nobody can complete. A rule like that
+belongs in a standard and in the skill an agent loads, and an agent sweeps for it.
+
 ## How it works
 
 **A check is defined once, in the schema.**

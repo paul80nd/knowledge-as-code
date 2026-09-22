@@ -14,7 +14,7 @@ Read `tier` in the frontmatter. Find its row below and follow that section. Igno
 
 | Tier            | Write it as                                                                            |
 |-----------------|----------------------------------------------------------------------------------------|
-| **Procedural**  | One action per step. Imperative. Condition before the action. No reason inside a step. |
+| **Procedural**  | One action per step. Imperative. Condition, then action, then reason.                  |
 | **Normative**   | One obligation per clause. Testable. Keyword first. The reason goes in Purpose.        |
 | **Descriptive** | Indicative, present tense. State what is.                                              |
 | **Decided**     | Prose. Constrain the structure and the length, not the words.                          |
@@ -23,8 +23,12 @@ Read `tier` in the frontmatter. Find its row below and follow that section. Igno
 
 The reader is under pressure and may be new to the system. They skim.
 
-* Write one action per step. A step containing "and" is usually two steps.
-* Put the condition before the action. Write: "If the queue depth exceeds 1000, restart the consumer."
+* Write one action per step. A step containing "and" is usually two steps. Nothing checks this, so it is yours to
+  catch.
+* Open the step with the action. Put a purpose or a condition first only where it decides whether to act at all.
+  Write: "If the queue depth exceeds 1000, restart the consumer."
+* Put the reason for a step after the action, in its own sentence. A reason explains a step you take anyway, so it
+  never opens one.
 * State the outcome of each step, so the reader can tell it worked.
 * Put a warning before the step it guards.
 * Do not hedge an order. Cut "typically", "usually" and "normally". If the order depends on something, say what.
