@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 55,
+    "validated": 56,
     "templates": 17,
     "skipped": 0,
     "errors": 26,
-    "warnings": 41,
+    "warnings": 42,
     "infos": 0
   },
   "findings": [
@@ -427,6 +427,13 @@
       "severity": "warning",
       "check": "critical-service-is-alerted",
       "message": "this service is `critical` and emits nothing when it fails. Set `monitoring-output` to what a live problem raises, or record the gap in `Operational notes` and leave this warning standing."
+    },
+    {
+      "file": "standards/common/changelog-appended.md",
+      "line": 47,
+      "severity": "warning",
+      "check": "changelog-order",
+      "message": "changelog entry '2026-09-14' is out of order: it belongs above '2026-09-02'."
     },
     {
       "file": "standards/common/error-responses.md",

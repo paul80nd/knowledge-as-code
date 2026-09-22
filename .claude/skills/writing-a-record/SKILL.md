@@ -41,6 +41,7 @@ The reader acts on a clause without checking it. Make it checkable.
 * Write one obligation per clause. A clause you can fail in two ways is two clauses. `clause-compound` warns on a
   second modal alone, so a second verb under the first modal is yours to catch.
 * Group the clause table by binding level, in the order the type declares. `clause-order` warns.
+* Put a standard's newest changelog entry at the top. `changelog-order` warns.
 * Make each clause testable. "Services read secrets from a managed vault" can be checked. "Services are secure"
   cannot.
 * State the whole obligation in the clause. A cross-reference points at the other side of a shared obligation. It does

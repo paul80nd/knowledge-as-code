@@ -51,8 +51,8 @@ what a reader arriving from a citation sees first, and CI checks all three again
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
-Standards are living documents. Unlike an ADR, a standard is edited in place as practice matures. Record material
-changes in the Changelog at the bottom rather than rewriting silently.
+Standards are living documents. Unlike an ADR, a standard is edited in place as practice matures. Record every
+material change in the Changelog at the bottom, newest entry first, rather than rewriting silently.
 
 ## Summary
 

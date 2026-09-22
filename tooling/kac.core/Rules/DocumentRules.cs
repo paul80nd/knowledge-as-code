@@ -11,7 +11,8 @@ public static class DocumentRules
         new AlternativesHaveVerdicts(),
         new TermsAreAlphabetical(),
         new NoSelfVerification(),
-        new DurationMatchesTheMoments()
+        new DurationMatchesTheMoments(),
+        new ChangelogNewestFirst()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =

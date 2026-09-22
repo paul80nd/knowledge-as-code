@@ -141,6 +141,68 @@ public class DocumentRuleTests
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### Item\n\nOne.\n\n### Borrower\n\nTwo.\n\n### Adr\n\nThree.")).Count);
 
+    [Fact]
+    public void A_changelog_running_newest_first_is_left_alone()
+        => Assert.Empty(Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- 2026-09-14: third.\n- 2026-09-02: second.\n- 2026-08-20: initial version.")));
+
+    [Fact]
+    public void An_entry_appended_to_the_foot_names_itself_and_the_entry_above_it()
+    {
+        var found = Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- 2026-09-02: second.\n- 2026-08-20: initial version.\n- 2026-09-14: third."));
+
+        Assert.Equal("changelog-order", Single(found).Check.Value);
+        Assert.Equal("changelog entry '2026-09-14' is out of order: it belongs above '2026-09-02'.",
+            Single(found).Message);
+    }
+
+    // The entry moves to the top of the run it is newer than, not to the line above it.
+    [Fact]
+    public void An_entry_is_sent_above_the_first_entry_it_is_newer_than()
+    {
+        var found = Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- 2026-09-02: second.\n- 2026-08-30: also.\n- 2026-08-20: first.\n"
+                + "- 2026-08-31: appended."));
+
+        Assert.Equal("changelog entry '2026-08-31' is out of order: it belongs above '2026-08-30'.",
+            Single(found).Message);
+    }
+
+    // Two entries on one day are one change written twice, and neither came before the other.
+    [Fact]
+    public void Two_entries_sharing_a_date_are_left_alone()
+        => Assert.Empty(Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- 2026-09-02: one.\n- 2026-09-02: another.\n- 2026-08-20: initial version.")));
+
+    // Each entry is judged against the one before it.
+    [Fact]
+    public void Every_entry_out_of_place_in_a_changelog_is_reported()
+        => Assert.Equal(2, Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- 2026-08-20: one.\n- 2026-09-02: two.\n- 2026-09-14: three.")).Count);
+
+    // A template's date is a placeholder, so it opens no entry and is passed over. Reporting one would
+    // fail every corpus on the file it was sent to start from.
+    [Fact]
+    public void A_bullet_opening_on_something_other_than_a_date_is_passed_over()
+        => Assert.Empty(Run(new ChangelogNewestFirst(),
+            Adr("## Changelog\n\n- {{YYYY-MM-DD}}: initial version.\n- 2026-08-20: earlier.")));
+
+    // The entries are found by heading.
+    [Fact]
+    public void Bullets_outside_the_changelog_are_left_alone()
+        => Assert.Empty(Run(new ChangelogNewestFirst(),
+            Adr("## Summary\n\n- 2026-08-20: one.\n- 2026-09-02: two.")));
+
+    [Theory]
+    [InlineData("2026-09-14: added a rule.", "2026-09-14")]
+    [InlineData("  2026-09-14 : added a rule.", "2026-09-14")]
+    [InlineData("{{YYYY-MM-DD}}: initial version.", null)]
+    [InlineData("2026-9-14: added a rule.", null)]
+    [InlineData("2026-09-14 added a rule.", null)]
+    public void An_entry_opens_on_an_ISO_date_before_a_colon(string bullet, string? date)
+        => Assert.Equal(date, ChangelogNewestFirst.OpeningDate(bullet));
+
     private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
     {
         var found = new List<Finding>();
