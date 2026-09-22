@@ -332,9 +332,9 @@ breaks when one is down, and how hard one would be to replace. Those three secti
 serve whoever owns the account. `Contract` also states where a credential is kept, which nobody outside the estate
 needs. `Trial criteria` is an evaluation in progress, and a consumer reads `status` instead.
 
-`their-sla` travels in the vendor's own words, because `constraint-consistency` on `nfrs` compares an availability
-target against it. `replaces` and `successor` travel as a pair, so a consumer holding an old citation reaches the
-system that took the traffic.
+`their-sla` travels in the vendor's own words. A consumer setting a target of its own reads what the vendor promised.
+A paraphrase drops the window and the measurement point. `replaces` and `successor` travel as a pair, so a consumer
+holding an old citation reaches the system that took the traffic.
 
 **`Exit` is required of a `critical` or `important` integration still in use.** `exit-required` reports one that has
 none. Article 30(3)(f) of [DORA](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) asks an ICT contract for an exit

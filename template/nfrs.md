@@ -137,10 +137,4 @@ deliver.
 | `target-is-measurable`       | warning | `measured-by` states an instrument. A hedge such as "monitored" or "where practical" fails.                     |
 | `nfr-in-date`                | warning | A target names a review date that has not passed.                                                               |
 
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule                     | What it would verify                                                                          |
-|--------------------------|-----------------------------------------------------------------------------------------------|
-| `constraint-consistency` | Every integration in `constrained-by` states a `their-sla` at least as strong as this target. |
-
 <!-- END GENERATED: checks-nfrs -->
