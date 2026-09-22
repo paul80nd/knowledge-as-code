@@ -26,4 +26,4 @@ and nobody has confirmed that this description is what it runs.
 
 ## Coverage and gaps
 
-The gap is the reading, not the check.
+The gap is the reading. The check itself is sound.

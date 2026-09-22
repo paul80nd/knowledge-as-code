@@ -26,7 +26,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A review date that has passed is reported on every type that states one.** `control-in-date`, `policy-in-date`,
   `standard-in-date`, `nfr-in-date`, `fix-in-date`, `glossary-in-date` and `explanation-in-date` run. `kac validate`
   warns where `review-by` is earlier than the day of the run, as it already did for a tool, a data record and a
-  deviation. A record stating no date is not reported, and a warning does not fail the build.
+  deviation. A warning does not fail the build.
 - **A type says which `status` value means a record is in force.** `in-force:` sits beside `values:` in
   `.schema/<type>.yaml`, and every type that states a range declares it. The value is not `active` throughout: an ADR
   settles at `accepted`, an NFR at `agreed`, an offering and a service at `live`, a tool at `approved`, a postmortem at

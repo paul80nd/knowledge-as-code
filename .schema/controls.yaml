@@ -106,8 +106,9 @@ fields:
     type: date
     description: Quoted. The day somebody checks this control still describes what runs.
     notes: >
-      `frequency` says how often the check runs, and `review-by` says when somebody reads this record
-      against it. A check running every pull request can still describe a job renamed a year ago.
+      `control-in-date` warns once the date has passed. `frequency` states how often the check runs,
+      which is a different question. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#controls>.
 
 sections:
   required: [What it checks, How it works, Coverage and gaps]
