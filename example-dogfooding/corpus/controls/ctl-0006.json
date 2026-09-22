@@ -29,6 +29,6 @@
     "Coverage and gaps": "These tests cover the section for the version in front of them. A reviewer judges whether that section describes the change, and a reader would notice it in the published release.\n\nThe first test also covers the rename. A `<Version>` that moved without a section of its own fails, so a release cannot ship with its entries still under `## Unreleased`.\n\nNothing checks that a change to `kac` took its line under `## Unreleased`, and nothing checks that the branch owner decided to release before `<Version>` moved. A reviewer catches both."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/658f8a09c419892f4608f4d98ab115dbc39a7bcf/examples/dog-fooding/controls/0006-changelog-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/029f2e02b1d4298dd199ccebb5870ce6b46f8284/examples/dog-fooding/controls/0006-changelog-tests.md"
   }
 }
