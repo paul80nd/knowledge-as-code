@@ -72,8 +72,7 @@ fields:
     type: string
     description: What the vendor's contract promises, in the contract's own words.
     notes: >
-      `constraint-consistency` on `nfrs` compares this value against an NFR target, so quote the contract
-      itself.
+      Quote the contract itself. A paraphrase drops the window and the measurement point.
 
   replaces:
     required: false

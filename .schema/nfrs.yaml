@@ -163,9 +163,6 @@ rules:
   - id: alert-after-needs-an-alert
     description: A target stating `alert-after` binds a service that raises an alert or a ticket.
     severity: warning
-  - id: constraint-consistency
-    description: >
-      Every integration in `constrained-by` states a `their-sla` at least as strong as this target.
   - id: nfr-in-date
     description: A target names a review date that has not passed.
     severity: warning

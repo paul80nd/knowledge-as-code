@@ -48,6 +48,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Removed
 
+- **`constraint-consistency` is gone from `nfrs`.** The rule compared an NFR's `target` against the `their-sla` of
+  each integration in `constrained-by`. Both fields are free text, so there was no pair of numbers to compare. The
+  `their-sla` note in `.schema/integrations.yaml` no longer gives the rule as the reason to quote a contract, and
+  `constrained-by` is unchanged.
 - **Three rules nothing could run are gone from the schema.** `store-has-service` on `data`, `terms-are-singular` on
   `glossary` and `blameless` on `postmortems` no longer appear on a type page under **Declared, not yet enforced**.
   `kac` checks closed word lists. Each of these three needs a judgement it cannot make: a store written as prose, an
