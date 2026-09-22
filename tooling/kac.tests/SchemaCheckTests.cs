@@ -952,22 +952,26 @@ public class SchemaCheckTests
         Assert.Contains($"field 'sponsor' declares '{declared}' and no 'ref:'", finding.Message);
     }
 
-    // Asked of an entry key to whatever depth the field nests, which is where the reference pass has
-    // never looked and the declaration reads the same way.
-    [Fact]
-    public void An_entry_key_declaring_an_id_and_no_reference_is_reported()
+    // The reference pass reads a field's own value and never an entry of one, so an id inside an object
+    // is reported whatever the key declares. A `ref:` is asked for at the field alone, because that is
+    // the only place declaring one changes anything.
+    [Theory]
+    [InlineData(null)]
+    [InlineData("widgets")]
+    public void An_entry_key_declaring_an_id_is_reported(string? re)
     {
         var finding = Assert.Single(Check(Widgets(fields:
         [
             ("signoffs", new FieldSpec
             {
                 Name = "signoffs", Type = "list", Of = "object",
-                Entry = [new FieldSpec { Name = "by", Type = "id" }]
+                Entry = [new FieldSpec { Name = "by", Type = "id", Refs = re is null ? [] : [re] }]
             })
         ])));
 
         Assert.Equal("schema-dispatch", finding.Check.Value);
-        Assert.Contains("entry key 'by' declares 'type: id' and no 'ref:'", finding.Message);
+        Assert.Contains("entry key 'by' declares 'type: id', and the reference pass reads", finding.Message);
+        Assert.DoesNotContain("Declare a 'ref:'", finding.Message);
     }
 
     // A part is read out of the record a reference names, so a field declaring no `ref:` leaves the key
