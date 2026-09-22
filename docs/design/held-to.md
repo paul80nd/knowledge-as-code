@@ -20,6 +20,9 @@ you, and every finding names the file and the key.
 | A rule claiming a `severity:` that neither an `expr:` nor a rule class answers           | `schema-dispatch`    |
 | A rule class reporting under a check id `_checks.yaml` does not declare                  | `schema-dispatch`    |
 | `values:` on any field that is not an `enum`                                             | `schema-dispatch`    |
+| `in-force:` on any field that is not an `enum`                                           | `schema-dispatch`    |
+| An `in-force:` value the field's `values:` does not include                              | `schema-shape`       |
+| A `status:` that states a range and names no `in-force:` value                           | `schema-shape`       |
 | `min-items:` or `min-records:` on any field that is not a `list`                         | `schema-dispatch`    |
 | A `type:` or an `of:` naming a value no check reads, at any depth of an `entry:` block   | `schema-dispatch`    |
 | An `of:` on any field that is not a `list`                                               | `schema-dispatch`    |

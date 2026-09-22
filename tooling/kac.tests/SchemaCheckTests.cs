@@ -169,7 +169,61 @@ public class SchemaCheckTests
     public void A_values_list_on_an_enum_is_what_the_key_is_for()
         => Assert.Empty(Check(Widgets(fields:
         [
+            ("status", new FieldSpec
+                { Name = "status", Type = "enum", Values = ["draft", "active"], InForce = "active" })
+        ])));
+
+    // The settled value is one of the range, so a name outside it selects nothing and every reader of the
+    // key takes every value as unsettled.
+    [Fact]
+    public void An_in_force_value_the_range_does_not_include_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("status", new FieldSpec
+                { Name = "status", Type = "enum", Values = ["draft", "active"], InForce = "live" })
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("'in-force: live'", finding.Message);
+        Assert.Contains("'active'", finding.Message);
+    }
+
+    // A field that is not an enum has no range to select from, so the key promises a distinction nothing
+    // could draw.
+    [Fact]
+    public void An_in_force_value_on_anything_but_an_enum_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
+            ("status", new FieldSpec { Name = "status", Type = "string", InForce = "active" })
+        ])));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("'status'", finding.Message);
+    }
+
+    // Asked of the type rather than of the field, because a type refining `status` and a type taking the
+    // universal declaration owe the same answer.
+    [Fact]
+    public void A_status_with_a_range_and_no_in_force_value_is_reported()
+    {
+        var finding = Assert.Single(Check(Widgets(fields:
+        [
             ("status", new FieldSpec { Name = "status", Type = "enum", Values = ["draft", "active"] })
+        ])));
+
+        Assert.Equal("schema-shape", finding.Check.Value);
+        Assert.Contains("'in-force:'", finding.Message);
+    }
+
+    // A range the type never states leaves nothing to name, and `status` then holds no record to anything,
+    // which is a fault of its own.
+    [Fact]
+    public void A_status_stating_no_range_is_asked_for_no_in_force_value()
+        => Assert.Empty(Check(Widgets(fields:
+        [
+            ("status", new FieldSpec { Name = "status", Type = "enum", Values = [] })
         ])));
 
     // The section a field mirrors is read from the record, so the reconciliation runs against a heading

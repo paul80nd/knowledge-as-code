@@ -98,6 +98,8 @@ public static class SchemaChecks
             CheckExport(at, key, t, schema, f);
             CheckProse(at, key, t, f);
 
+            CheckInForce(at, key, t, schema, f);
+
             foreach (var name in t.FieldOrder)
                 CheckField(at, name, t.Fields[name], t, schema, f);
 
@@ -393,6 +395,20 @@ public static class SchemaChecks
         }
     }
 
+    // Every type that states a range for `status` names the value that says a record is in force.
+    // `FieldSpec.InForce` says why the schema declares it. Asked of the effective field, so a type refining
+    // `status` and a type taking the universal declaration owe the same answer. A type stating no range has
+    // nothing to name.
+    private static void CheckInForce(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
+    {
+        if (schema.EffectiveField(t, "status") is not { Type: "enum", Values.Count: > 0 } status) return;
+        if (status.InForce is not null) return;
+
+        f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+            $"type '{key}' declares 'status:' and no 'in-force:' beside its values. Name the value that says "
+            + "a record of this type is in force, which nothing else states."));
+    }
+
     // A type is a folder of records, and `folder:` names it. The check asks after the value rather than
     // the key, because an absent `folder:` and a deliberate `folder: null` parse to the same empty
     // string. A type with neither has nowhere to put a record.
@@ -482,6 +498,20 @@ public static class SchemaChecks
         if (spec.Values is { Count: > 0 } && spec.Type != "enum")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'values:', which only an "
                          + "enum's range is read from. Declare it 'type: enum', or drop the values.", f);
+
+        // The settled value is one of the range, so a name outside it selects nothing and every reader of
+        // the key would take every value as unsettled. On a field that is not an enum there is no range to
+        // select from at all.
+        if (spec.InForce is { } inForce)
+        {
+            if (spec.Type != "enum")
+                Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'in-force:', which names one "
+                             + "of an enum's values. Declare it 'type: enum', or drop the key.", f);
+            else if (spec.Values is { Count: > 0 } range && !range.Contains(inForce, StringComparer.Ordinal))
+                f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
+                    $"field '{name}' declares 'in-force: {inForce}', and its 'values:' does not include it. "
+                    + $"Name one of {List(range)}."));
+        }
 
         // A floor is a question about a sequence's length, so it has no reading on a scalar. `allow-literal`
         // needs no such guard: it is a word admitted in place of a value, and every field type has one.

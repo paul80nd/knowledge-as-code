@@ -48,6 +48,7 @@ fields:
     required: true
     type: enum
     values: [active, draft, superseded, fixed-upstream]
+    in-force: active
     description: Whether the fix is current, unverified, replaced, or no longer needed.
     notes: >
       `draft` is a fix written from an observation that nobody has verified. `fixed-upstream` means the cause is

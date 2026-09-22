@@ -62,6 +62,7 @@ fields:
     required: true
     type: enum
     values: [active, draft, retired]
+    in-force: active
     description: Whether the process is current, drafted, or stood down.
 
   applies-to:

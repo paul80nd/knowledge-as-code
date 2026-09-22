@@ -78,6 +78,7 @@ fields:
     required: true
     type: enum
     values: [draft, active, deprecated, superseded]
+    in-force: active
     description: Plain values only. Enforcement notes belong in `verified-by`.
     notes: >
       Nothing needs a status such as "until ADR-NNNN is accepted". `derived-from` and that ADR's own

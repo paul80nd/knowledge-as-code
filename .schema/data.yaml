@@ -50,6 +50,7 @@ fields:
     required: true
     type: enum
     values: [active, deprecated]
+    in-force: active
     description: Whether this data is current or deprecated.
 
   owned-by:

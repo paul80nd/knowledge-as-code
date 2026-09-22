@@ -55,6 +55,20 @@ fields:
     mirrors-section: See also
     unique: true
 
+  status:
+    required: true
+    type: enum
+    values: [live, retired]
+
+  grade:
+    type: enum
+    values: [first, second]
+    in-force: third
+
+  weight:
+    type: string
+    in-force: heavy
+
   stamped:
     type: tiemstamp
 

@@ -56,6 +56,7 @@ fields:
     required: true
     type: enum
     values: [approved, trial, deprecated, rejected]
+    in-force: approved
     description: '`approved` applies to new work. Existing use of a tool with any other status is drift.'
     notes: >
       Finding drift is a manual job. `drift-against-manifests` is declared and does not run.

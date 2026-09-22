@@ -60,7 +60,7 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `id` *†          | string                    | Stable, unique across the corpus, never reused, in the format the type sets.                    |
 | `type` *†        | string                    | The singular name of the type, which CI checks against the folder.                              |
 | `tier` *†        | `normative`               | The record's trust level, fixed for the type and checked against the folder.                    |
-| `status` *†      | `active` `draft` `closed` | Whether the deviation is in force, still being agreed, or closed.                               |
+| `status` *†      | `active` `draft` `closed` | `draft` while it is being agreed, `closed` once it no longer applies. In force at `active`.     |
 | `owner` *†       | string                    | The individual who accepted the risk, as `human:alex.doe`.                                      |
 | `sources` †      | list                      | Where this record's content came from, one entry per source.                                    |
 | `tags` †         | list                      | Free-form, lowercase and hyphenated. A reader searches on these across types.                   |

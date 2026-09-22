@@ -503,16 +503,19 @@ public static class Generator
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 
-    // Enum values are not repeated here. They are the Value column, which ValueFor renders. A required-when
-    // condition closes the cell as its own sentence, quoted exactly as the schema writes it, because it is
-    // the difference between a field an author may skip and one they may not.
+    // Enum values are not repeated here. They are the Value column, which ValueFor renders. Two sentences
+    // close the cell after the schema's own words. The settled value of an enum is one: the range alone
+    // does not say which value that is. A required-when condition is the other: it is the difference
+    // between a field an author may skip and one they may not.
     private static string NotesFor(FieldSpec f)
     {
-        var notes = Gfm.Escape(f.TableText ?? "");
-        if (string.IsNullOrEmpty(f.RequiredWhen)) return notes;
+        List<string> parts = [];
 
-        var when = $"Required when `{Gfm.Escape(f.RequiredWhen)}`.";
-        return notes.Length == 0 ? when : $"{notes} {when}";
+        if (Gfm.Escape(f.TableText ?? "") is { Length: > 0 } notes) parts.Add(notes);
+        if (f.InForce is { } inForce) parts.Add($"In force at `{inForce}`.");
+        if (!string.IsNullOrEmpty(f.RequiredWhen)) parts.Add($"Required when `{Gfm.Escape(f.RequiredWhen)}`.");
+
+        return string.Join(" ", parts);
     }
 
     // The words a column heading spells in capitals. `id` is the field every type has, and `sla` is one word

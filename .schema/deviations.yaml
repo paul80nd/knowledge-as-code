@@ -56,7 +56,8 @@ fields:
     required: true
     type: enum
     values: [active, draft, closed]
-    description: Whether the deviation is in force, still being agreed, or closed.
+    in-force: active
+    description: '`draft` while it is being agreed, `closed` once it no longer applies.'
     notes: >
       A deviation whose review date has passed stays `active`. Nothing moves it, and `expiry` warns instead.
 

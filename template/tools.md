@@ -39,25 +39,25 @@ the evaluation we already did.
 
 <!-- BEGIN GENERATED: schema-tools -->
 
-| Field              | Value                                      | Notes                                                                                  |
-|--------------------|--------------------------------------------|----------------------------------------------------------------------------------------|
-| `id` *†            | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.           |
-| `type` *†          | string                                     | The singular name of the type, which CI checks against the folder.                     |
-| `tier` *†          | `descriptive`                              | The record's trust level, fixed for the type and checked against the folder.           |
-| `status` *†        | `approved` `trial` `deprecated` `rejected` | `approved` applies to new work. Existing use of a tool with any other status is drift. |
-| `owner` *†         | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                 |
-| `sources` †        | list                                       | Where this record's content came from, one entry per source.                           |
-| `tags` †           | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.          |
-| `category`         | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                    |
-| `packages`         | list                                       | Every package this entry approves, with the version range approved for each.           |
-| `homepage` *       | string                                     | The project's own page.                                                                |
-| `licence` *        | string                                     | The licence concluded to apply, as an SPDX expression, `NONE` or `NOASSERTION`.        |
-| `licence-declared` | string                                     | The package's own statement of its licence, kept word for word.                        |
-| `decided-on` *     | date                                       | Quoted. The day the current status was decided.                                        |
-| `review-by` *      | date                                       | Quoted. The day by which somebody checks this entry is still right.                    |
-| `decided-in`       | id                                         | The ADR id recording the decision to adopt this tool.                                  |
-| `replaces`         | id                                         | The tool id this supersedes.                                                           |
-| `successor`        | id                                         | The tool id that replaces this one.                                                    |
+| Field              | Value                                      | Notes                                                                                                          |
+|--------------------|--------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| `id` *†            | string                                     | Stable, unique across the corpus, never reused, in the format the type sets.                                   |
+| `type` *†          | string                                     | The singular name of the type, which CI checks against the folder.                                             |
+| `tier` *†          | `descriptive`                              | The record's trust level, fixed for the type and checked against the folder.                                   |
+| `status` *†        | `approved` `trial` `deprecated` `rejected` | `approved` applies to new work. Existing use of a tool with any other status is drift. In force at `approved`. |
+| `owner` *†         | string                                     | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                         |
+| `sources` †        | list                                       | Where this record's content came from, one entry per source.                                                   |
+| `tags` †           | list                                       | Free-form, lowercase and hyphenated. A reader searches on these across types.                                  |
+| `category`         | derived from the record's sub-path         | The folder the tool is filed under, below `tools/`.                                                            |
+| `packages`         | list                                       | Every package this entry approves, with the version range approved for each.                                   |
+| `homepage` *       | string                                     | The project's own page.                                                                                        |
+| `licence` *        | string                                     | The licence concluded to apply, as an SPDX expression, `NONE` or `NOASSERTION`.                                |
+| `licence-declared` | string                                     | The package's own statement of its licence, kept word for word.                                                |
+| `decided-on` *     | date                                       | Quoted. The day the current status was decided.                                                                |
+| `review-by` *      | date                                       | Quoted. The day by which somebody checks this entry is still right.                                            |
+| `decided-in`       | id                                         | The ADR id recording the decision to adopt this tool.                                                          |
+| `replaces`         | id                                         | The tool id this supersedes.                                                                                   |
+| `successor`        | id                                         | The tool id that replaces this one.                                                                            |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).

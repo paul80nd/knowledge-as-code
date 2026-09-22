@@ -91,29 +91,20 @@ public class PluginSkillStalenessTests
             $"{skill} reads {type} and its staleness section never names status {string.Join(", ", missing)}.");
     }
 
-    // The value each type treats as in force. Nothing in `.schema/` declares it, and it is not `active` across the
-    // set: `adrs` settles at `accepted`, `nfrs` at `agreed`, `services` at `live`, `tools` at `approved`. A type with
-    // no answer here throws rather than defaulting, so a lookup skill written for a sixth type forces the decision
-    // instead of silently obliging its skill to report an in-force record as unsettled.
-    private static readonly Dictionary<string, string> InForce = new(StringComparer.Ordinal)
-    {
-        ["controls"] = "active",
-        ["fixes"] = "active",
-        ["glossary"] = "active",
-        ["policies"] = "active",
-        ["processes"] = "active",
-        ["standards"] = "active"
-    };
-
-    // The states a record of this type can be in other than in force.
+    // The states a record of this type can be in other than in force. The settled one is `in-force:` in the type's
+    // own schema file, and it is not `active` across the set: `adrs` settles at `accepted`, `services` at `live`.
+    // `SchemaChecks.CheckInForce` fails a type that declares none, so the throw here is reached only by a schema
+    // this test loaded past that check.
     private static IEnumerable<string> Unsettled(TypeSchema type)
     {
-        if (!InForce.TryGetValue(type.Folder, out var settled))
-            throw new InvalidOperationException(
-                $"'{type.Folder}' has a lookup skill and no in-force status here. Add it, and say in that skill's "
-                + "staleness section what every other value of its `status` means.");
+        var status = type.Fields.GetValueOrDefault("status");
+        var settled = status?.InForce
+                      ?? throw new InvalidOperationException(
+                          $"'.schema/{type.Folder}.yaml' declares no 'in-force:' on 'status:'. Name the value that "
+                          + "says a record is in force, and say in that type's lookup skill what every other value "
+                          + "means.");
 
-        return (type.Fields.GetValueOrDefault("status")?.Values ?? [])
+        return (status.Values ?? [])
             .Where(v => !string.Equals(v, settled, StringComparison.Ordinal))
             .Order(StringComparer.Ordinal);
     }

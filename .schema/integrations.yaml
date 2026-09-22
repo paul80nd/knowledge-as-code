@@ -45,6 +45,7 @@ fields:
     required: true
     type: enum
     values: [active, trial, retired]
+    in-force: active
     description: Whether the integration is active, on trial, or retired.
 
   vendor:
