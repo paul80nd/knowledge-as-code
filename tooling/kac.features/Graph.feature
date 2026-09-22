@@ -4,7 +4,8 @@ mirroring a section, and a field mirroring the citations a labelled line gathers
 against the graph fixture, which lays a gizmo type over the real schema. A second type gives an ADR a
 document of another type to point at, and it gives a field mirroring a section other than 'Related'
 something to mirror. The gizmo type keeps parts of its own, so a citation into one is what the
-field and the labelled lines both carry.
+field and the labelled lines both carry. One pair of ADRs reciprocates its supersession, which is
+the only sound chain here and the only run of those rules to a pass.
 
 Background:
   Given the graph fixture corpus
@@ -27,6 +28,13 @@ Scenario: A reference that resolves to a document of the wrong type is reported,
   Then the findings for "adrs/0005-mistyped.md" are exactly:
     | line | check        | message                                                                 |
     |    1 | ref-resolves | 'superseded-by' points at 'giz-mirrored', which is a Gizmo, not an ADR. |
+
+Scenario: A reciprocated supersede chain reports nothing at either end
+  When I validate the corpus
+  Then the findings for "adrs/0006-superseded.md" are exactly:
+    | line | check | message |
+  And the findings for "adrs/0007-supersedes.md" are exactly:
+    | line | check | message |
 
 Scenario: A field reconciles against the section it names, whichever section that is
   When I validate the corpus
@@ -63,7 +71,7 @@ Scenario: A field naming a part refuses the record named whole
 
 Scenario: The whole graph produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 13 documents and 0 skipped
+  Then validation reports 15 documents and 0 skipped
   And the findings are exactly:
     | file                  | severity | line | check                   | message                                                                                                                                                                               |
     | adrs/0001-first.md    | error    |    1 | related-matches-section | 'related' lists 'adr-0002' but it is not referenced in the '## Related' section.                                                                                                      |
