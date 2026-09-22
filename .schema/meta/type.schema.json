@@ -548,7 +548,7 @@
           "pattern": "^\\s*[a-z][a-z0-9-]*\\s*(==|!=)[^=]+$|^\\s*[a-z][a-z0-9-]*\\s+in\\s*\\[.*\\]\\s*$"
         },
         "type": {
-          "description": "What the value is. Defaults to `string`. A `date` is one day, written quoted. A `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`. An `object` is one mapping, and `entry:` or `shape:` declares its keys.",
+          "description": "What the value is. Defaults to `string`. A `date` is one day, written quoted. A `timestamp` is a moment in UTC, written unquoted as `YYYY-MM-DDThh:mm:ssZ`. An `object` is one mapping, and `entry:` or `shape:` declares its keys. An `id` points at another record, and needs a `ref:` saying which folders.",
           "enum": [
             "date",
             "enum",
@@ -601,7 +601,7 @@
           ]
         },
         "ref": {
-          "description": "The folders an id in this field may point into. Write a scalar for the one-folder case. `kac` checks both halves: that the id resolves to a record, and that the record is one of these types. A folder this corpus declined goes unchecked, and adopting that type starts the check with no edit here. A required field naming only declined folders is not asked for either, because no record here can fill it, unless `allow-literal:` gives it a word that resolves against nothing.",
+          "description": "The folders an id in this field may point into. Write a scalar for the one-folder case. `kac` checks both halves: that the id resolves to a record, and that the record is one of these types. A folder this corpus declined goes unchecked, and adopting that type starts the check with no edit here. A required field naming only declined folders is not asked for either, because no record here can fill it, unless `allow-literal:` gives it a word that resolves against nothing. A field declaring `type: id`, or `of: id`, needs a `ref:`. An id on an entry key is reported whatever it declares, because the reference pass never walks an `entry:` block.",
           "oneOf": [
             {
               "$ref": "#/$defs/name"
