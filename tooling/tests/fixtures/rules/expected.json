@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 47,
+    "validated": 48,
     "templates": 17,
     "skipped": 0,
-    "errors": 25,
-    "warnings": 32,
+    "errors": 26,
+    "warnings": 34,
     "infos": 0
   },
   "findings": [
@@ -238,6 +238,27 @@
       "severity": "error",
       "check": "alignment-rollup",
       "message": "'aligns-with' claims 'ISO 27001:2022.A.5.17', and no clause cites it."
+    },
+    {
+      "file": "policies/unlk-framework-label-not-defined.md",
+      "line": 29,
+      "severity": "warning",
+      "check": "bracket-literal",
+      "message": "'[UK GDPR]' looks like a reference but has no definition (or use an inline link)."
+    },
+    {
+      "file": "policies/unlk-framework-label-not-defined.md",
+      "line": 29,
+      "severity": "error",
+      "check": "alignment-unlinked",
+      "message": "'[UK GDPR]' is cited here and has no link definition, so the cell states no mapping. Define the label against the register entry."
+    },
+    {
+      "file": "policies/unlk-framework-label-not-defined.md",
+      "line": 30,
+      "severity": "warning",
+      "check": "bracket-literal",
+      "message": "'[UK GDPR]' looks like a reference but has no definition (or use an inline link)."
     },
     {
       "file": "policies/unpl-framework-not-placed.md",

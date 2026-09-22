@@ -491,9 +491,9 @@ the failure looks like and who it affects, not what a runbook restores.
 
 ## The framework register
 
-A policy states its alignment to an external framework clause by clause, as alignment rather than certification. Three
-checks keep that arrangement true, and all three read `frameworks.md`, the corpus's own register of the frameworks it
-has taken a standing against.
+A policy states its alignment to an external framework clause by clause, as alignment rather than certification. Four
+checks keep that arrangement true. `alignment-unlinked` asks whether a cell's citation is a link. The other three read
+`frameworks.md`, the corpus's own register of the frameworks it has taken a standing against.
 
 **`aligns-with` summarises the references a policy's clauses cite, grouped by framework.** Grouping is what keeps the
 frontmatter short: a data protection policy maps to two frameworks and twenty of their references, and a flat list would
@@ -506,6 +506,12 @@ roll-up leaves the generated index under-reporting what the policy covers. A ref
 cell is a claim of coverage no clause can show, and that is the worse of the two, because it reads as evidence. It is an
 error, where `clause-order` and `clause-compound` only warn: those two question an author's judgement, and this one
 reports two copies of one fact disagreeing.
+
+**`alignment-unlinked` reports a citation markdown never made into a link.** `[UK GDPR].Art.5(1)(e)` with no definition
+behind it stays on the page as text. The cell then states no mapping, and `alignment-rollup`, `framework-posture` and
+`framework-uncited` each see a clause that cites nothing. A policy could bind itself to UK GDPR across its clauses and
+claim nothing in `aligns-with`. While the definition is missing, `alignment-rollup` does not report `aligns-with` as
+claiming that framework, because a clause may well cite it.
 
 **`framework-posture` and `framework-uncited` check the register and the clauses against each other.** The register says
 whether you are obliged to a framework, self-obligated to it, or borrowing from it. `alignment-rollup` reads that

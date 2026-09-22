@@ -163,6 +163,7 @@ Accessibility under governance is the clearest of them.
 | `label-canonical`                      | error   | A shortcut label is the id of the record it leads to, written as that record carries it.                            |
 | `unused-definition`                    | warning | A link definition that nothing references.                                                                          |
 | `alignment-rollup / framework-posture` | error   | `aligns-with` carries every binding reference the `Alignment` column cites, and the register places each framework. |
+| `alignment-unlinked`                   | error   | Every framework an `Alignment` cell cites is written as a link the corpus resolves.                                 |
 | `framework-uncited`                    | error   | Every framework on the register is cited by at least one clause.                                                    |
 | `review-not-before-active`             | error   | `review-by` is at or after `active-from`.                                                                           |
 | `posture-belongs-to-frameworks`        | warning | "compliant", "certified" or "registered" written near a framework reference.                                        |

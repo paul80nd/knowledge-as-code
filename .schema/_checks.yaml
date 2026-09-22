@@ -562,6 +562,15 @@ checks:
       `aligns-with` entry with no `clauses:`. See
       <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
 
+  alignment-unlinked:
+    severity: error
+    description: Every framework an `Alignment` cell cites is written as a link the corpus resolves.
+    notes: >
+      Brackets that never became a link leave the citation invisible to `alignment-rollup`, `framework-posture` and
+      `framework-uncited`. Reported once per label. While the definition is missing, `alignment-rollup` does not
+      report `aligns-with` as claiming that framework. See
+      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+
   framework-posture:
     severity: error
     description: A framework a clause cites is placed on the corpus's framework register.

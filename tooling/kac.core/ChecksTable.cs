@@ -130,6 +130,9 @@ public static class ChecksTable
             "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
             + "places each framework.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
+        ("alignment-unlinked", [new("alignment-unlinked")],
+            "Every framework an `Alignment` cell cites is written as a link the corpus resolves.",
+            t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
         ("framework-uncited", [new("framework-uncited")],
             "Every framework on the register is cited by at least one clause.",
             t => t.Rules.Any(r => r.Id == new RuleId("alignment-rollup"))),
