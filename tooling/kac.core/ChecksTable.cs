@@ -92,6 +92,12 @@ public static class ChecksTable
         ("part-modal", [new("part-modal")],
             "A part heading states its obligations as bullets, each with a declared modal in bold.",
             t => t.Parts is { Source: PartSpec.Headings, Binding.Count: > 0 }),
+        // The same question asked of the sections around the parts, and shown wherever the rule is
+        // declared rather than wherever modals are, because a type may declare the modals and accept a
+        // bullet outside the section that carries one.
+        ("modal-outside-rules", [new("modal-outside-rules")],
+            "Only the parts section binds: no bullet outside it names a declared modal.",
+            t => t.Rules.Any(r => r.Id == new RuleId("binds-only-under-rules"))),
         // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
         // checks run corpus-wide, since a citation is checked where it is written and any document may
         // carry one. This predicate scopes the documentation, and a type whose records have no parts has

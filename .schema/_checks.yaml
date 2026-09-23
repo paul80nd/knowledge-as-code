@@ -281,6 +281,17 @@ checks:
       first. BCP 14 makes capitals normative and this corpus makes bold the weight a reader skims, so a keyword
       written with one of the two and not the other is reported as well.
 
+  modal-outside-rules:
+    severity: warning
+    description: 'Only the parts section binds: no bullet outside it names a declared modal.'
+    notes: >
+      Bullets only, because a rule has the shape the template teaches and a sentence discussing a keyword has not.
+      Bold and plain capitals both count, as they do for `part-modal`, and the advisory modals count beside the
+      binding ones. A bullet that names a keyword rather than using one writes it in backticks, which is how a
+      changelog entry recording a modal and a checklist item restating a rule stay out of this. A warning rather
+      than an error, because the rule infers an intention from a shape and an `Examples` section may bullet the
+      rule it demonstrates.
+
   clause-table:
     severity: error
     description: The declared section has a table headed with the block's `columns`, and at least one row.

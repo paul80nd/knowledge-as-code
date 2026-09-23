@@ -15,6 +15,17 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A modal written outside `Rules` is reported.** `binds-only-under-rules` runs on `standards`. `kac validate` warns
+  where a bullet in any other section names one of the type's declared keywords, in bold or in plain capitals, and quotes
+  the bullet back. No citation reaches a rule written there, so the message offers the two fixes: move the bullet under
+  a `Rules` heading, or write the keyword in backticks where the bullet only names one. A paragraph is never reported,
+  nor a bullet inside a block quote. The check id is `modal-outside-rules`, and the `standards/_template.md` a corpus
+  starts from teaches the form.
+
 ## 0.31.0 - 2026-09-23
 
 ### Added

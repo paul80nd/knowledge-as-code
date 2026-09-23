@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 58,
+    "validated": 59,
     "templates": 17,
     "skipped": 0,
     "errors": 29,
-    "warnings": 42,
+    "warnings": 43,
     "infos": 0
   },
   "findings": [
@@ -462,6 +462,13 @@
       "severity": "error",
       "check": "provenance-required",
       "message": "neither `derived-from` nor `implements` is set, so this standard does not say where its authority comes from. Cite the ADR it distils or the policy clause it puts into practice, or file the document as an explanation."
+    },
+    {
+      "file": "standards/common/modal-outside-rules.md",
+      "line": 35,
+      "severity": "warning",
+      "check": "modal-outside-rules",
+      "message": "this bullet names 'MUST NOT' outside `Rules`: \"A reader MUST NOT be asked to act on this line.\". No citation reaches a rule written here. Move the bullet under a `Rules` heading, or write the keyword in backticks where the bullet only names one."
     },
     {
       "file": "standards/common/review-overdue.md",

@@ -13,7 +13,8 @@ public static class DocumentRules
         new NoSelfVerification(),
         new DurationMatchesTheMoments(),
         new ChangelogNewestFirst(),
-        new EscalationRequired()
+        new EscalationRequired(),
+        new BindsOnlyUnderRules()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =

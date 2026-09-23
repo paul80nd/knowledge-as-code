@@ -163,6 +163,7 @@ entry first.
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
 | `part-modal`                | error   | A part heading states its obligations as bullets, each with a declared modal in bold.                           |
+| `modal-outside-rules`       | warning | Only the parts section binds: no bullet outside it names a declared modal.                                      |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
 | `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
@@ -177,11 +178,10 @@ entry first.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                                 |
-|--------------------------------|------------------------------------------------------------------------------------------------------|
-| `binds-only-under-rules`       | Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal. |
-| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.     |
-| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.                 |
-| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit.    |
+| Rule                           | What it would verify                                                                              |
+|--------------------------------|---------------------------------------------------------------------------------------------------|
+| `rules-have-controls`          | Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.  |
+| `changelog-begins-at-active`   | Changelog entries are material changes only, and begin when status becomes `active`.              |
+| `changelog-on-material-change` | A change to the Rules section of an `active` standard needs a changelog entry in the same commit. |
 
 <!-- END GENERATED: checks-standards -->

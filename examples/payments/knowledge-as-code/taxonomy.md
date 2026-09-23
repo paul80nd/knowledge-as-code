@@ -55,9 +55,10 @@ reader can see how far the resolution has been taken on trust.
 Capacity assumptions belong here too. A target nobody measures is an aspiration.
 
 **[Standards](../standards.md).** The rulebook, imperative, BCP 14, with concrete examples and a conformance checklist.
-Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Standards
-compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards each of those
-names in `depends-on`.
+Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY**. Only the
+`Rules` section binds, and every other section explains, shows or checks, so a modal written outside it obliges nobody.
+Standards compose: the rules for a piece of work are the union of the folders that apply to it, and of the standards
+each of those names in `depends-on`.
 
 ### Descriptive: living, must mirror reality
 

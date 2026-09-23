@@ -203,13 +203,143 @@ public class DocumentRuleTests
     public void An_entry_opens_on_an_ISO_date_before_a_colon(string bullet, string? date)
         => Assert.Equal(date, ChangelogNewestFirst.OpeningDate(bullet));
 
-    private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null)
+    [Fact]
+    public void A_bullet_binding_outside_the_parts_section_names_the_modal_and_quotes_itself()
+    {
+        var found = Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A secret **MUST** come from the vault."), type: Standards());
+
+        Assert.Equal("modal-outside-rules", Single(found).Check.Value);
+        Assert.Equal("this bullet names 'MUST' outside `Rules`: \"A secret MUST come from the vault.\". No "
+                     + "citation reaches a rule written here. Move the bullet under a `Rules` heading, or write "
+                     + "the keyword in backticks where the bullet only names one.",
+            Single(found).Message);
+        Assert.Equal(Sev.Warning, Single(found).Severity);
+    }
+
+    [Fact]
+    public void A_bullet_under_the_parts_section_is_left_alone()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Rules\n\n### Secrets come from the vault\n\n- A secret **MUST** come from the vault."),
+            type: Standards()));
+
+    // BCP 14 makes capitals normative, so an unbolded keyword is the same intention written weakly.
+    // `part-modal` reads both forms for that reason, and this reads both for it.
+    [Fact]
+    public void A_keyword_written_in_plain_capitals_outside_the_section_is_reported()
+    {
+        var found = Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A secret MUST come from the vault."), type: Standards());
+
+        Assert.StartsWith("this bullet names 'MUST' outside `Rules`", Single(found).Message);
+    }
+
+    // The rule tells an author a clause landed where nothing can cite it, and a clause is a bullet.
+    [Fact]
+    public void A_paragraph_naming_a_modal_is_never_reported()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Rationale and provenance\n\nA session met a **MUST**-shaped instruction here."),
+            type: Standards()));
+
+    // A keyword inside backticks is being named rather than used, which is the reading `Md.Bullets`
+    // already gives a code span under a part heading.
+    [Fact]
+    public void A_modal_in_a_code_span_is_left_alone()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- Write `MUST` in bold capitals."), type: Standards()));
+
+    // A nested list is one bullet's workings, so its points are not obligations of their own.
+    [Fact]
+    public void A_nested_bullet_is_left_alone()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- What the rule asks for:\n    - a secret **MUST** come from the vault."),
+            type: Standards()));
+
+    // The parts section is read from the type, so a second type adopting this rule is a line of YAML.
+    [Fact]
+    public void The_binding_section_is_the_one_the_type_declares()
+    {
+        var body = "## Rules\n\n- A secret **MUST** come from the vault.\n\n## Clauses\n\n- And **MUST** stay.";
+        var found = Run(new BindsOnlyUnderRules(), Standard(body), type: Standards("Clauses"));
+
+        Assert.Equal("A secret MUST come from the vault.", Quoted(Single(found).Message));
+    }
+
+    // A type declaring no modals declares no way for a bullet to bind, which is how a glossary sources
+    // headings and is asked none of this.
+    [Fact]
+    public void A_type_declaring_no_modals_is_asked_nothing()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A secret **MUST** come from the vault."),
+            type: new TypeSchema
+            {
+                Parts = new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" }
+            }));
+
+    [Fact]
+    public void Every_bullet_binding_outside_the_section_is_reported()
+        => Assert.Equal(2, Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A secret **MUST** come from the vault.\n- A log **MUST NOT** carry one."),
+            type: Standards()).Count);
+
+    // The whole word, so the `MUST` inside `MUSTER` is not one. `PartSpec.ModalNamed` draws that line
+    // and this rule reads it from there.
+    [Fact]
+    public void A_word_a_modal_only_prefixes_is_not_a_modal()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- The reviewers MUSTER once a week."), type: Standards()));
+
+    // The longest modal first, so a `MUST NOT` is never reported as a `MUST`.
+    [Fact]
+    public void A_two_word_modal_is_named_in_full()
+    {
+        var found = Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A log **MUST NOT** carry a secret."), type: Standards());
+
+        Assert.StartsWith("this bullet names 'MUST NOT' outside", Single(found).Message);
+    }
+
+    // An advisory modal is as unreachable outside the section as a binding one, and the message never
+    // says it binds: `MAY` recommends, and a type declaring it says so in `parts.advisory:`.
+    [Fact]
+    public void An_advisory_modal_outside_the_section_is_reported_without_being_called_binding()
+    {
+        var found = Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- A client **MAY** retry once."), type: Standards());
+
+        Assert.StartsWith("this bullet names 'MAY' outside `Rules`", Single(found).Message);
+        Assert.DoesNotContain("bind", Single(found).Message, StringComparison.Ordinal);
+    }
+
+    // A bullet bolding a whole sentence is the misplaced rule this looks for. `part-modal` reports the
+    // same shape inside the section for carrying no modal, so neither reading lets it through.
+    [Fact]
+    public void A_modal_inside_a_wider_bold_run_is_reported()
+    {
+        var found = Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n- **A secret MUST come from the vault.**"), type: Standards());
+
+        Assert.StartsWith("this bullet names 'MUST' outside `Rules`", Single(found).Message);
+    }
+
+    // A block quote is somebody else's words, and quoting a rule is naming one.
+    [Fact]
+    public void A_bullet_inside_a_block_quote_is_left_alone()
+        => Assert.Empty(Run(new BindsOnlyUnderRules(),
+            Standard("## Examples\n\n> - A secret **MUST** come from the vault."), type: Standards()));
+
+    // The bullet the message quotes, read back out of it.
+    private static string Quoted(string message) =>
+        message[(message.IndexOf('"') + 1)..message.LastIndexOf('"')];
+
+    private static List<Finding> Run(IDocumentRule rule, Doc doc, RuleSpec? spec = null, TypeSchema? type = null)
     {
         var found = new List<Finding>();
 
-        // `RuleContext` asks for a type and no rule below reads one, so it is handed a bare stand-in
-        // rather than the document's own. Parsing against an empty schema leaves that null.
-        rule.Check(new RuleContext(doc, new TypeSchema(), spec ?? new RuleSpec { Id = rule.RuleId },
+        // `RuleContext` asks for a type and most rules below read none, so it is handed a bare stand-in
+        // rather than the document's own. Parsing against an empty schema leaves that null. A rule
+        // reading the type's own declarations is passed one, which is what `Standards` below is.
+        rule.Check(new RuleContext(doc, type ?? new TypeSchema(), spec ?? new RuleSpec { Id = rule.RuleId },
             new Report(doc.Rel, found)));
         return found;
     }
@@ -223,6 +353,27 @@ public class DocumentRuleTests
     {
         var text = $"---\nid: adr-0001\nstatus: accepted\n---\n\n# A title\n\n`ADR: adr-0001` `ACCEPTED`\n\n{body}\n";
         var doc = Doc.Parse("adrs/0001-a-title.md", text, new Schema());
+        Assert.NotNull(doc);
+        return doc;
+    }
+
+    // A standard as the schema declares one: parts are the headings under `Rules`, and the modals are
+    // the BCP 14 keywords the type narrows to. Written out rather than loaded, so a test states the
+    // declaration it depends on.
+    private static TypeSchema Standards(string section = "Rules") => new()
+    {
+        Parts = new PartSpec(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
+        {
+            Section = section,
+            Noun = "rule"
+        }
+    };
+
+    private static Doc Standard(string body)
+    {
+        var text = $"---\nid: std-TEST\nstatus: active\n---\n\n# A title\n\n"
+                   + $"`Standard: std-TEST` `ACTIVE`\n\n{body}\n";
+        var doc = Doc.Parse("standards/common/a-title.md", text, new Schema());
         Assert.NotNull(doc);
         return doc;
     }
