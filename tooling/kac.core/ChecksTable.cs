@@ -170,6 +170,8 @@ public static class ChecksTable
             null),
         ("dependency-cycle", [new("dependency-cycle")],
             "A cycle in the dependency graph these records form, naming every record the loop runs through.", null),
+        ("dependency-criticality", [new("dependency-criticality")],
+            "No record is graded above the criticality of anything it depends on.", null),
         ("feature-file-repo", [new("feature-file-repo")],
             "A feature file path begins with a repository one of the implementing services names.", null),
         ("mirrors-repo-links", [new("mirrors-repo-links")],

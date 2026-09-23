@@ -10,6 +10,7 @@ public static class CorpusRules
         new AlertAfterNeedsAnAlert(),
         new AlignmentRollup(),
         new ClauseQuotedFaithfully(),
+        new DependencyCriticality(),
         new FeatureFileRepo(),
         new MirrorsRepoLinks(),
         new ReportStale()

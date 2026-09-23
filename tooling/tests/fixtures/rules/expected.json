@@ -4,7 +4,7 @@
     "templates": 17,
     "skipped": 0,
     "errors": 31,
-    "warnings": 52,
+    "warnings": 53,
     "infos": 0
   },
   "findings": [
@@ -504,6 +504,13 @@
       "severity": "warning",
       "check": "dependency-cycle",
       "message": "'depends-on' forms a cycle: svc-catalogue → svc-notifications → svc-catalogue."
+    },
+    {
+      "file": "services/catalogue.md",
+      "line": 10,
+      "severity": "warning",
+      "check": "dependency-criticality",
+      "message": "'depends-on' cites 'svc-notifications', graded 'important' where this record is 'critical'. Regrade one of the two, or write down what degrades when it is gone."
     },
     {
       "file": "services/repo-links-adrift.md",

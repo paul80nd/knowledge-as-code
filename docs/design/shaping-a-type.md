@@ -264,6 +264,13 @@ against its section in both directions. A section naming an id the field omits i
 coupling is not an edge: a message read off a bus, or a build that never calls the service it builds. Declaring the key
 would report every one of those. So `depends-on` states the calls, and `Dependencies` states the coupling.
 
+**`criticality` is ranked, and the graph is where the ranking is read.** `critical` sits above `important`, which
+sits above `supporting`. A list of values says nothing about which is higher, so `ordered: true` on the enum in
+`.schema/_enums.yaml` declares that the first value listed is the most significant. `dependency-criticality` then warns
+where a service outranks a service its `depends-on` cites. A warning rather than an error, because the edge is often a
+degradation the estate accepts: a catalogue graded `critical` calls a search service graded `important` and still
+renders every item page without it. The warning asks the record to say so.
+
 `data-stores` travels as ids. Where the corpus adopted `data`, those records travel too, so a reader can follow one.
 `Data` says in prose what this service does with each store. `component-type`, `platform`, `criticality` and `facets`
 are the keys an agent filters on, and the first two draw their range from the corpus. An estate lists its own
