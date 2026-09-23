@@ -36,9 +36,8 @@ no longer declares fails as well.
 
 ## Coverage and gaps
 
-The test reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list with no
-jobs, so this fault cannot arise there. A reader confirms whether that file still runs the same steps in the same
-order.
+The test reads `.github/workflows/kac.yml` and no other workflow. The publishing workflows gate nothing, so a job
+outside `validate`'s `needs:` is a fault only `kac.yml` can have.
 
 The branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`.
 

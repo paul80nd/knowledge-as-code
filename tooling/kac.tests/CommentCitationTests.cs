@@ -21,7 +21,7 @@ public partial class CommentCitationTests
     // than open, `_template.md` and `pol-DEVI.md` among them, and those name a shape rather than a page. Rooting the
     // test here is what tells the two apart without a list of every example the tool has ever printed.
     private static readonly string[] Roots =
-        ["docs/", "tooling/", "template/", "examples/", ".schema/", ".github/", ".azuredevops/"];
+        ["docs/", "tooling/", "template/", "examples/", ".schema/", ".github/"];
 
     [Fact]
     public void Every_page_a_comment_cites_is_a_page_the_repository_holds()
