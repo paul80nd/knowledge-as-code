@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.31.0 - 2026-09-23
 
 ### Added
 
@@ -65,28 +65,20 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   English plural, a personal name. The type page and the `_template.md` for each type already tell an author what to
   write, and `ref-resolves` already reports a `data` record whose `owned-by` names no service.
 - **A corpus states which area path inside an Azure DevOps project its work is filed under.** `tracker:` and
-  `framework:` in `.corpus.yaml` each take an `area`, written below the project and separated by `/`, as
-  `kac-it-swdev` or `kac-it-swdev/subteam`. One Azure DevOps project gives one backlog to any number of corpora, so
-  without an area every corpus's findings land in one queue. `kac export` writes it into `manifest.json` on all three
-  trackers: this corpus's, the framework's, and each entry in `sources`. The `raise-finding` and `request-deviation`
-  skills add it to `System.AreaPath` when they file, and retry without the field where the area does not exist or the
-  identity has no rights to it. `area` applies to `azure-devops` alone, so `kac validate` fails one stated beside
-  `github` or `none` under a new `descriptor-area` check, and the export drops it. A block stating no target is asked
-  about the one `publishing-target` implies. Nothing derives an area: only the corpus knows which one inside a shared
-  project is its own, so `kac new` and `kac update` never write it. `descriptor-version` moves to 6, and `kac update`
-  stamps it. The export's `formatVersion` stays at 4, because a reader written before the key reads every key it knows
-  and is still correct.
+  `framework:` in `.corpus.yaml` each take an `area`, written below the project and separated by `/`. One project gives
+  one backlog to any number of corpora, so without it every corpus's findings land in one queue. `kac export` writes it
+  on all three trackers in `manifest.json`, and the two filing skills set `System.AreaPath` from it. `area` applies to
+  `azure-devops` alone, so a new `descriptor-area` check fails one stated elsewhere and the export drops it. Nothing derives it: only the corpus knows which area inside a shared project is its own.
+  `descriptor-version` moves to 6, and the export's `formatVersion` stays at 4.
 
 ### Fixed
 
-- **`raise-finding` and `request-deviation` file on the tracker rather than where the corpus publishes.** Both skills
-  read `tracker`, `framework` and `sources[].tracker` from `manifest.json`, and no longer read `publishing`. On Azure
-  DevOps the two differ: `publishing.base` is a repository inside a project and the backlog is the project, so every
-  work item was filed against an address that holds no backlog. A finding about `kac`, the schema, the template or a
-  skill now goes to `framework` instead of to the corpus that shipped it. Both skills also decode a percent-encoded
-  project name before passing it to `az`, so a project such as `Engineering Standards` no longer arrives as
-  `Engineering%20Standards`. Nothing changes for a corpus on GitHub, where a repository is its own issue list and the
-  two addresses are one string.
+- **`raise-finding` and `request-deviation` file on the tracker rather than where the corpus publishes.** Both read
+  `tracker` and `sources[].tracker` from `manifest.json`, and neither reads `publishing` any more. On Azure DevOps the
+  two differ: `publishing.base` is a repository inside a project and the backlog is the project, so every work item went
+  to an address with no backlog. Both also decode a percent-encoded project name before passing it to `az`, so
+  `Engineering%20Standards` reaches it as `Engineering Standards`. Nothing changes for a corpus on GitHub, where a
+  repository is its own issue list and the two addresses are one string.
 - **`clause-compound` reads a whole modal word.** `kac validate` no longer warns on a clause such as `**MUST** be
   MUSTERED before the shift`, where a longer word only begins with a modal. `MAY` inside `MAYBE` and `SHALL` inside
   `SHALLOW` did the same. A second modal is still all the check reads. Two obligations written under one modal pass,
