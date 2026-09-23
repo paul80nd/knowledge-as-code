@@ -41,7 +41,8 @@ type's own page.
 ### Decided: immutable once accepted
 
 What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong. A decided
-record states its own constraints. Cite a living record for background, never as the authority a decision depends on.
+record therefore states the constraints it asserts. It cites a descriptive record for background, and never as the
+authority behind a constraint.
 
 **[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
 factors, actions). Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
