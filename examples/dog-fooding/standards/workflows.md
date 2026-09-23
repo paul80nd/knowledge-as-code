@@ -37,8 +37,6 @@ workflow is written.
 - A job **MUST NOT** declare `continue-on-error`.
 - A workflow **MUST** pass `actionlint`, which also puts every `run:` block through shellcheck.
 - A workflow file **MUST** arrive on `main` by the same reviewed merge as any other change.
-- `.azuredevops/kac.yml` **MUST** run the same steps, in the same order, as `.github/workflows/kac.yml`.
-- `.azuredevops/kac.yml` **MUST** name in its own header comment each step it leaves out, and why.
 
 _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.BRANCH`, `eng:pol-PIPE.ASCODE`,
 `eng:pol-PIPE.GATES`_
@@ -169,8 +167,7 @@ do. What each of these numbers means, and what a producer's move obliges of the 
 
 `WorkflowGateTests` reads `kac.yml` and fails a job that `validate` does not name. Its header comment says why a job
 outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. Neither checks a permission nobody
-uses, a credential in the wrong place, or `.azuredevops/kac.yml` drifting from its GitHub counterpart. A reviewer
-catches those.
+uses or a credential in the wrong place. A reviewer catches both.
 
 The timeout rule covers the publishing jobs, where a hang keeps a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, so the tag step always has a release body to publish.
@@ -193,6 +190,8 @@ corpus receives it, and it names `actions/checkout@v4` today.
 
 ## Changelog
 
+- 2026-09-23: dropped the clauses binding `.azuredevops/kac.yml` to its GitHub twin, and the file with them. No Azure
+  DevOps project ever ran it, and mirroring it by hand cost an edit on every workflow change.
 - 2026-09-15: made the release the branch owner's decision, so an observable change takes its changelog entry under
   `## Unreleased` without moving `<Version>`.
 - 2026-09-07: gave the stamp semantics and the consumer's lock and range to [std-VERS], keeping when a version moves,

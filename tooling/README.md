@@ -111,9 +111,8 @@ an answer where an absence reads as work not yet done.
 
 ## Tests
 
-Three layers, all run from the repository root and all run in CI, on GitHub through
-[`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and on Azure DevOps through
-[`.azuredevops/kac.yml`](../.azuredevops/kac.yml):
+Three layers, all run from the repository root and all run in CI, through
+[`.github/workflows/kac.yml`](../.github/workflows/kac.yml):
 
 | Layer       | Project / file            | Run                                | Covers                                                                                                                                                           |
 |-------------|---------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|

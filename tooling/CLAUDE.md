@@ -55,12 +55,12 @@ nothing here depends on it, and the build is what gates the branch.
 most are this repository's own idiom rather than defects. Reading them costs more than they are worth. One file you have
 just edited is the case where the ratio is good.
 
-**Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) and
-[`.azuredevops/kac.yml`](../.azuredevops/kac.yml) gate this repository, and
-[`std-CI`](../examples/dog-fooding/standards/workflows.md) is what holds `.azuredevops/kac.yml` to its GitHub twin.
-[`template/azure-pipelines.yml`](../template/azure-pipelines.yml) is the starter a corpus receives and then owns, so it
-runs `kac` over that corpus and reads no `template/`. No corpus under `examples/` keeps a copy: the two gates above
-are what cover them.
+**Each pipeline has one reader.** [`.github/workflows/kac.yml`](../.github/workflows/kac.yml) gates this repository,
+and [`std-CI`](../examples/dog-fooding/standards/workflows.md) states the rules it follows.
+[`template/.github/workflows/kac.yml`](../template/.github/workflows/kac.yml) and
+[`template/azure-pipelines.yml`](../template/azure-pipelines.yml) are the starters a corpus receives and then owns.
+Each runs `kac` over that corpus and reads no `template/`, and `kac new --ci` picks one. No corpus under `examples/`
+keeps a copy: the gate above covers them.
 
 ## Adding or changing a check
 

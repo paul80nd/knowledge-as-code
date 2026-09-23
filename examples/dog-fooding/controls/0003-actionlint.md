@@ -34,13 +34,12 @@ this repository has no configuration file for it.
 
 ## Coverage and gaps
 
-actionlint reports nothing about these three faults:
+actionlint reports nothing about these two faults:
 
 * a permission a job declares and never uses
 * a credential written in the wrong place
-* `.azuredevops/kac.yml` drifting from its GitHub counterpart
 
-A reviewer catches all three. Those faults are most of what [std-CI] states: its permission, credential, pinning and
+A reviewer catches both. Those faults are most of what [std-CI] states: its permission, credential, pinning and
 publishing rules have no check here.
 
 actionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job.
