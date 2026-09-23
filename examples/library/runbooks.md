@@ -114,13 +114,13 @@ look like processes. You open the document on a day when the estate is already d
 | `unused-definition`                            | warning | A link definition that nothing references.                                                                      |
 | `diagnosis-dead-end / diagnosis-no-escalation` | error   | Every diagnosis branch routes to a section or falls through, and one branch reaches `Escalation`.               |
 | `symptoms-first`                               | error   | Symptoms is the first section after the H1.                                                                     |
+| `outcome-stated`                               | error   | Resolution contains a line opening `Confirmed when`.                                                            |
 | `failure-route-stated`                         | error   | Resolution links to Escalation for a reader whose step did not work.                                            |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
 | Rule             | What it would verify                                        |
 |------------------|-------------------------------------------------------------|
-| `outcome-stated` | Resolution ends with a line opening `Confirmed when`.       |
 | `staleness-loud` | Rehearsal staleness, reported more loudly than a process's. |
 
 <!-- END GENERATED: checks-runbooks -->

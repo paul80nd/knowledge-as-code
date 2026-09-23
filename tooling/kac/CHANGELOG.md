@@ -25,6 +25,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   a `Rules` heading, or write the keyword in backticks where the bullet only names one. A paragraph is never reported,
   nor a bullet inside a block quote. The check id is `modal-outside-rules`, and the `standards/_template.md` a corpus
   starts from teaches the form.
+- **A runbook whose resolution never says when to stop is reported.** `outcome-stated` runs on `runbooks`. `kac
+  validate` fails a `Resolution` section with no line opening `Confirmed when`, so a reader whose steps worked learns
+  when the incident is over. The check asks only that the line is present. Prose wraps at 120 columns, so a rule
+  testing the last line would fail a closing sentence running over two. The runbook `_template.md` states where the
+  line goes. `failure-route-stated` serves the other reader, whose step did not work.
 
 ## 0.31.0 - 2026-09-23
 
