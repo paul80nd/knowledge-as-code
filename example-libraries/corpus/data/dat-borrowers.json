@@ -34,6 +34,6 @@
     "Flows": "| Goes to             | Why                                    | What is shared                          | Where they process it |\n|---------------------|----------------------------------------|-----------------------------------------|-----------------------|\n| [itg-identity]      | Sign-in                                | Name, email address, card number        | UK                    |\n| [svc-notices]       | Overdue and hold notices               | Name, email address, contact preference | UK South              |\n| [itg-mail-delivery] | Sending the notice [svc-notices] wrote | Name, email address                     | Ireland               |\n\n[itg-mail-delivery] is the only recipient outside the estate that receives an address, and the only one processing outside the UK. A transfer out of the country takes place on every notice sent."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7fa40f335ebe4de49fd691fd66941c5047b5bb57/examples/library/data/borrowers.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2a5caf0123484bc2ff6b4bd191bd8c10d763e701/examples/library/data/borrowers.md"
   }
 }
