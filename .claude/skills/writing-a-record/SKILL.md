@@ -1,6 +1,6 @@
 ---
 name: writing-a-record
-description: The shape of what a corpus holds. Covers a record of any tier, a type root page, the framework pages under `knowledge-as-code/`, a `_template.md`, and the schema's `description:` and `notes:` values. Load it after `technical-writing` whenever you write or change any prose in a corpus.
+description: The shape of what a corpus holds. Covers a record of any tier, a type root page, the framework pages under `knowledge-as-code/`, a `_template.md`, and the prose values in `.schema/`. Load it after `technical-writing` whenever you write or change any prose in a corpus.
 ---
 
 # Writing a record
@@ -192,13 +192,19 @@ says what an author does about it. Cut prose that repeats the block.
 
 Each key in `.schema/` has one reader. Write to that reader.
 
-| Key                                                     | Reader                                 | Shape                                                                                                                 |
-|---------------------------------------------------------|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `description:`                                          | the record author, in a table cell     | One sentence, under 120 characters. What the value is. Not why.                                                       |
-| `message:`                                              | the record author, at the terminal     | What is wrong, then what to write instead. Two sentences. Opens lower case, like every message `kac` prints.          |
-| `summary`, `goes-here`, `detail`, `versus`, `collision` | the corpus reader, on a generated page | Plain. `goes-here` is a decision-table cell, so under 12 words. These are the only schema prose a corpus reader sees. |
-| `notes:`                                                | a schema maintainer, in the file       | A comment. One paragraph. What the code cannot show: a boundary, a case it skips, a form it borrows.                  |
-| `# comment`                                             | a schema maintainer                    | One line. One short paragraph above a block such as `parts:` or `export:`.                                            |
+| Key                                                     | Reader                                 | Shape                                                                                                        |
+|---------------------------------------------------------|----------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `description:`                                          | the record author, in a table cell     | One sentence, under 120 characters. What the value is. Not why.                                              |
+| `message:`                                              | the record author, at the terminal     | What is wrong, then what to write instead. Two sentences. Opens lower case, like every message `kac` prints. |
+| `summary`, `goes-here`, `detail`, `versus`, `collision` | the corpus reader, on a generated page | Plain. `goes-here` is a decision-table cell, so under 12 words.                                              |
+| a tier's `note:`, and `lineage:`                        | the corpus reader, on a generated page | Plain and indicative. One short paragraph. The other three tier notes are the calibration.                   |
+| `notes:`                                                | a schema maintainer, in the file       | A comment. One paragraph. What the code cannot show: a boundary, a case it skips, a form it borrows.         |
+| `# comment`                                             | a schema maintainer                    | One line. One short paragraph above a block such as `parts:` or `export:`.                                   |
+
+The two corpus-reader rows are what reaches somebody who never opens `.schema/`. A tier's `note:` in `_tiers.yaml` is
+the one easiest to mistake for a maintainer's note, because it sits beside a top-level `notes:` that is one. `kac
+generate` writes each tier's `note:` into every corpus's `knowledge-as-code/taxonomy.md`, and each type's `lineage:`
+into `lineage.md`.
 
 * Do not argue in a `notes:`. Put the reason on a design page and cite the URL. End the `notes:` with the URL alone, or
   with "See <URL>." Do not write "<URL> says why".

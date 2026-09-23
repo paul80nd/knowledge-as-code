@@ -113,9 +113,6 @@ rules:
     message: >
       a bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard
       and link to it from here.
-  - id: not-load-bearing
-    description: No decided-tier document cites an explanation as the authority for a constraint.
-    # The decided tier is an ADR or a postmortem, and an immutable record may not rest on a mutable one.
   - id: explanation-in-date
     description: An explanation names a review date that has not passed.
     severity: warning

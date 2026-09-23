@@ -36,6 +36,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   A walk is a drill, or a read-through where the fault cannot be caused. The new `rehearsal-method` field records
   which, as `live` or `tabletop`, and is required once `last-rehearsed` states a day.
 
+### Removed
+
+- **`not-load-bearing` is gone from `explanations`.** The rule asked that no decided-tier document cite an explanation
+  as the authority for a constraint. No field declares `ref: explanations`, so such a citation is a markdown link, and
+  a link does not say whether it is background or an authority. `explanations.md` loses its **Declared, not yet
+  enforced** table, which held this rule alone. Every corpus's `knowledge-as-code/taxonomy.md` gains the principle as
+  prose, in the `decided` tier note.
+
 ## 0.31.0 - 2026-09-23
 
 ### Added

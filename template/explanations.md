@@ -102,10 +102,4 @@ plausibly be an explanation *or* something else, it is the something else.
 | `not-normative`              | warning | No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.                   |
 | `explanation-in-date`        | warning | An explanation names a review date that has not passed.                                                         |
 
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule               | What it would verify                                                             |
-|--------------------|----------------------------------------------------------------------------------|
-| `not-load-bearing` | No decided-tier document cites an explanation as the authority for a constraint. |
-
 <!-- END GENERATED: checks-explanations -->
