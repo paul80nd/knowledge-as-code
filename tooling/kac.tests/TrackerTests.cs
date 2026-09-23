@@ -17,11 +17,11 @@ public class TrackerTests
 
     private static CorpusDescriptor Descriptor(
         string? target = Publishing.GitHub, string? published = GitHubBase,
-        string? trackerTarget = null, string? trackerBase = null) =>
+        string? trackerTarget = null, string? trackerBase = null, string? trackerArea = null) =>
         new()
         {
             PublishingTarget = target, Base = published,
-            TrackerTarget = trackerTarget, TrackerBase = trackerBase
+            TrackerTarget = trackerTarget, TrackerBase = trackerBase, TrackerArea = trackerArea
         };
 
     // The case the derivation exists for: one repository, one issue list, and nothing for the corpus to
@@ -120,7 +120,7 @@ public class TrackerTests
     [InlineData("GitHub")]
     public void A_target_that_files_nowhere_states_no_base(string target)
     {
-        var tracker = Tracker.For(target, GitHubBase);
+        var tracker = Tracker.For(target, GitHubBase, null);
 
         Assert.Equal(target, tracker.Target);
         Assert.Null(tracker.Base);
@@ -163,7 +163,7 @@ public class TrackerTests
             Tracker.Own(Descriptor(Publishing.AzureDevOpsWiki, WikiBase)).Id);
 
         Assert.Equal(Tracker.Own(Descriptor(Publishing.AzureDevOps, RepoBase)).Id,
-            Tracker.For(Publishing.AzureDevOps, RepoBase).Id);
+            Tracker.For(Publishing.AzureDevOps, RepoBase, null).Id);
     }
 
     // Two repositories under one organisation are two issue lists, which is the comparison that has to
@@ -182,6 +182,73 @@ public class TrackerTests
     [InlineData(Publishing.GitHub, null)]
     public void A_pair_reaching_no_backlog_carries_no_identity(string target, string? published)
     {
-        Assert.Null(Tracker.For(target, published).Id);
+        Assert.Null(Tracker.For(target, published, null).Id);
+    }
+
+    // The case `area` exists for: one Azure DevOps project, several corpora, and a stated area telling
+    // this corpus's work from the rest of the backlog's.
+    [Fact]
+    public void An_azure_devops_corpus_files_under_the_area_it_states()
+    {
+        var tracker = Tracker.Own(Descriptor(Publishing.AzureDevOps, RepoBase, trackerArea: "kac-it-swdev"));
+
+        Assert.Equal(Project, tracker.Base);
+        Assert.Equal("kac-it-swdev", tracker.Area);
+    }
+
+    // A nested area is one value with a separator in it. The descriptor writes `/` the way every base
+    // here does, and the client that files converts it.
+    [Fact]
+    public void A_nested_area_travels_as_one_value()
+    {
+        Assert.Equal("kac-it-swdev/subteam",
+            Tracker.For(Publishing.AzureDevOps, RepoBase, "kac-it-swdev/subteam").Area);
+    }
+
+    // The separators a hand-written value picks up, dropped before the manifest carries it. A client
+    // joining the project to this would otherwise build a path with an empty segment in it.
+    [Theory]
+    [InlineData("  kac-it-swdev  ")]
+    [InlineData("/kac-it-swdev")]
+    [InlineData("kac-it-swdev/")]
+    public void An_area_is_written_without_its_padding(string stated)
+    {
+        Assert.Equal("kac-it-swdev", Tracker.For(Publishing.AzureDevOps, RepoBase, stated).Area);
+    }
+
+    // A target with no area paths states no area, whatever the descriptor wrote. `validate` reports it
+    // under `descriptor-area`, and an area beside a client that cannot set one would read as an address.
+    [Theory]
+    [InlineData(Publishing.GitHub)]
+    [InlineData(Publishing.MkDocs)]
+    [InlineData(Publishing.None)]
+    public void A_target_with_no_area_paths_states_no_area(string target)
+    {
+        Assert.Null(Tracker.For(target, GitHubBase, "kac-it-swdev").Area);
+    }
+
+    // An area stated with nothing to file against is dropped with the base it would have qualified.
+    [Fact]
+    public void An_area_with_no_backlog_beside_it_is_dropped()
+    {
+        Assert.Null(Tracker.For(Publishing.AzureDevOps, null, "kac-it-swdev").Area);
+    }
+
+    // Nothing derives an area. A publishing block says where the corpus is read, and two corpora in one
+    // project publish from two repositories and file under two areas neither block mentions.
+    [Fact]
+    public void A_derived_tracker_states_no_area()
+    {
+        Assert.Null(Tracker.Own(Descriptor(Publishing.AzureDevOps, RepoBase)).Area);
+    }
+
+    // One project is one backlog however many areas divide it, so the area is left out of the identity.
+    // A caller comparing two blocks is asking which tracker to file on, not where inside it to land.
+    [Fact]
+    public void Two_areas_in_one_project_are_one_tracker()
+    {
+        Assert.Equal(
+            Tracker.For(Publishing.AzureDevOps, RepoBase, "kac-it-swdev").Id,
+            Tracker.For(Publishing.AzureDevOps, RepoBase, "kac-framework").Id);
     }
 }

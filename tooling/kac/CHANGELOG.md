@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.31.0 - 2026-09-23
 
 ### Added
 
@@ -64,9 +64,21 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac` checks closed word lists. Each of these three needs a judgement it cannot make: a store written as prose, an
   English plural, a personal name. The type page and the `_template.md` for each type already tell an author what to
   write, and `ref-resolves` already reports a `data` record whose `owned-by` names no service.
+- **A corpus states which area path inside an Azure DevOps project its work is filed under.** `tracker:` and
+  `framework:` in `.corpus.yaml` each take an `area`, written below the project and separated by `/`. One project gives
+  one backlog to any number of corpora, so without it every corpus's findings land in one queue. `kac export` writes it
+  on all three trackers in `manifest.json`, and the two filing skills set `System.AreaPath` from it. `area` applies to
+  `azure-devops` alone, so a new `descriptor-area` check fails one stated elsewhere and the export drops it. Nothing derives it: only the corpus knows which area inside a shared project is its own.
+  `descriptor-version` moves to 6, and the export's `formatVersion` stays at 4.
 
 ### Fixed
 
+- **`raise-finding` and `request-deviation` file on the tracker rather than where the corpus publishes.** Both read
+  `tracker` and `sources[].tracker` from `manifest.json`, and neither reads `publishing` any more. On Azure DevOps the
+  two differ: `publishing.base` is a repository inside a project and the backlog is the project, so every work item went
+  to an address with no backlog. Both also decode a percent-encoded project name before passing it to `az`, so
+  `Engineering%20Standards` reaches it as `Engineering Standards`. Nothing changes for a corpus on GitHub, where a
+  repository is its own issue list and the two addresses are one string.
 - **`clause-compound` reads a whole modal word.** `kac validate` no longer warns on a clause such as `**MUST** be
   MUSTERED before the shift`, where a longer word only begins with a modal. `MAY` inside `MAYBE` and `SHALL` inside
   `SHALLOW` did the same. A second modal is still all the check reads. Two obligations written under one modal pass,

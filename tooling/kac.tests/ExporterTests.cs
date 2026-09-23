@@ -877,7 +877,7 @@ public class ExporterTests
             new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
                 $"https://example.com/{shortcode}", null, "beefbeef"),
             $"https://code.example.com/{shortcode}",
-            Tracker.For(Publishing.GitHub, $"https://example.com/{shortcode}"),
+            Tracker.For(Publishing.GitHub, $"https://example.com/{shortcode}", null),
             [],
             [
                 new InheritedType("glossary", 1, "glossary", "glossary/terms.jsonl",
@@ -953,7 +953,7 @@ public class ExporterTests
                     new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                         "https://example.com/gp", null, "cafecafe"),
                     "https://code.example.com/gp",
-                    Tracker.For(Publishing.GitHub, "https://example.com/gp"))
+                    Tracker.For(Publishing.GitHub, "https://example.com/gp", null))
             ]
         };
 
@@ -992,7 +992,7 @@ public class ExporterTests
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, version),
                 "https://code.example.com/gp",
-                Tracker.For(Publishing.GitHub, "https://example.com/gp"));
+                Tracker.For(Publishing.GitHub, "https://example.com/gp", null));
 
         var plan = Merged(
             Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
@@ -1015,7 +1015,7 @@ public class ExporterTests
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, "cafecafe"),
                 reposBase,
-                Tracker.For(Publishing.GitHub, "https://example.com/gp"));
+                Tracker.For(Publishing.GitHub, "https://example.com/gp", null));
 
         var plan = Merged(
             Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
@@ -1036,7 +1036,7 @@ public class ExporterTests
                 new ExportPublishing("github", "https://example.com/gp/{path}#{anchor}",
                     "https://example.com/gp", null, "cafecafe"),
                 "https://code.example.com/gp",
-                Tracker.For(Publishing.GitHub, tracker));
+                Tracker.For(Publishing.GitHub, tracker, null));
 
         var plan = Merged(
             Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),

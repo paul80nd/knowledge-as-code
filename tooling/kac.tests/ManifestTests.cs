@@ -194,6 +194,7 @@ public class ManifestTests
 
         Assert.Equal(Publishing.GitHub, descriptor.FrameworkTarget);
         Assert.Equal("https://github.com/example/framework", descriptor.FrameworkBase);
+        Assert.Null(descriptor.FrameworkArea);
     }
 
     // `upstream.url` is where the template was copied from and is often a folder, so a corpus that has
@@ -215,18 +216,20 @@ public class ManifestTests
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"),
-            "corpus: sample\ntracker:\n  target: azure-devops\n  base: https://dev.azure.com/acme/Standards\n");
+            "corpus: sample\ntracker:\n  target: azure-devops\n  base: https://dev.azure.com/acme/Standards\n"
+            + "  area: kac-it-swdev\n");
 
         var descriptor = CorpusDescriptor.Load(dir);
 
         Assert.Equal(Publishing.AzureDevOps, descriptor.TrackerTarget);
         Assert.Equal("https://dev.azure.com/acme/Standards", descriptor.TrackerBase);
+        Assert.Equal("kac-it-swdev", descriptor.TrackerArea);
     }
 
-    // Both null rather than `none`, because a corpus stating no block is one whose tracker is derived
-    // from where it publishes. `TrackerTests` holds that derivation.
+    // Null rather than `none`, because a corpus stating no block is one whose tracker is derived from
+    // where it publishes. `TrackerTests` holds that derivation, and holds that it derives no area.
     [Fact]
-    public void A_descriptor_stating_no_tracker_leaves_both_keys_unanswered()
+    public void A_descriptor_stating_no_tracker_leaves_every_key_unanswered()
     {
         var dir = Directory.CreateTempSubdirectory().FullName;
         File.WriteAllText(Path.Combine(dir, ".corpus.yaml"), "corpus: sample\n");
@@ -235,6 +238,7 @@ public class ManifestTests
 
         Assert.Null(descriptor.TrackerTarget);
         Assert.Null(descriptor.TrackerBase);
+        Assert.Null(descriptor.TrackerArea);
     }
 
     // A corpus that never chose is never handed three dozen rewritten seed files by an update it did not

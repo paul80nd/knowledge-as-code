@@ -5,7 +5,7 @@
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
-descriptor-version: 5
+descriptor-version: 6
 
 corpus: example-dogfooding
 
@@ -15,7 +15,7 @@ shortcode: dog
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.53.0"
+content-version: "0.54.0"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.
@@ -44,9 +44,9 @@ repos-base: https://github.com/paul80nd
 consumes:
   - corpus: example-engineering
     shortcode: eng
-    version: ^0.26.0
+    version: ^0.27.0
     source: ../engineering/.dist/package
-    resolved: "0.26.1"
+    resolved: "0.27.0"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.

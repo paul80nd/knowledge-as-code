@@ -1,0 +1,20 @@
+descriptor-version: 6
+corpus: test-descriptor-area
+
+# A GitHub repository divides its issue list with labels and has no area path to file under, so
+# `tracker.area` below names nothing the client can set.
+publishing-target: github
+publishing:
+  base: https://github.com/acme/standards
+
+tracker:
+  area: kac-it-swdev
+
+# A tracker that files nowhere, stated beside an area path of its own.
+framework:
+  target: none
+  area: kac-framework
+
+upstream:
+  url:
+skip: []
