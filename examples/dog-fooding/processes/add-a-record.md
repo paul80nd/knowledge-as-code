@@ -34,8 +34,9 @@ Nothing in CI reports that you used the wrong tier's rules.
    the record in the more general one.
 2. Read the type's root page and its `_template.md`. The page says what the type contains and what it excludes. The
    template says which sections the schema requires.
-3. Run `kac checks` for that type. Read the `rules:` block in its schema file. A rule with no `severity:` binds you and
-   fails nothing.
+3. Read the `rules:` block in the type's file under `.schema/`. It names every check declared on this type. Run
+   `kac checks` for what a check id proves. That command lists every check in the corpus and takes no type. A rule
+   with no `severity:` binds you and fails nothing.
 4. Load `technical-writing`, then `writing-a-record`. Read the section for this type's tier.
 5. List what the record needs against what you were told. Ask a person for the difference. A field you cannot answer is
    a question for that person. Write no placeholder.
