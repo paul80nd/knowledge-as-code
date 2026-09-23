@@ -34,8 +34,8 @@ public class StalenessLoudRuleTests
     public void A_runbook_nobody_has_walked_is_reported_whatever_it_states(string frequency)
         => Assert.False(Holds(frequency, "\"never\""));
 
-    // `last-rehearsed` is required, so an absent one is `required-field`'s to report in better words. The
-    // guard is what keeps this rule from reporting the same fault a second time and blaming the date for it.
+    // `last-rehearsed` is required, so an absent one is `required-field`'s to report in better words. This
+    // rule stays silent because `days_since` answers 0 on a value it cannot read, and 0 is inside the floor.
     [Fact]
     public void A_runbook_stating_no_rehearsal_date_is_left_to_required_field()
     {
@@ -43,14 +43,12 @@ public class StalenessLoudRuleTests
         Assert.True(Holds("quarterly", ""));
     }
 
-    // A date the run has not reached measures nothing, so `days_since` answers zero and the rule passes.
-    // No check reports a rehearsal date in the future.
+    // See StalenessRuleTests.cs for why a date the run has not reached is left alone.
     [Fact]
     public void A_rehearsal_date_in_the_future_is_not_reported()
         => Assert.True(Holds("quarterly", "\"2029-06-01\""));
 
-    // Whether the rule is satisfied, which is the sense an `expr:` is written in: true where it has nothing
-    // to say. Judged against a named day, so the reading never depends on when this ran.
+    // Whether the rule is satisfied, judged against a named day. See StalenessRuleTests.cs.
     private static bool Holds(string frequency, string? lastRehearsed)
     {
         var doc = Required.Parsed("runbooks/a-slug.md",

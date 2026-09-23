@@ -398,14 +398,14 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/diagnosis-branch-goes-nowhere.md",
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/diagnosis-branch-goes-nowhere.md",
@@ -433,7 +433,7 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/rehearsal-method-not-stated.md",
@@ -447,14 +447,14 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/rehearsed-outside-the-window.md",
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/resolution-with-no-outcome.md",
@@ -468,7 +468,7 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "runbooks/resolution-with-no-way-out.md",
@@ -482,7 +482,7 @@
       "line": 1,
       "severity": "warning",
       "check": "staleness-loud",
-      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it against the live system where you cannot cause the fault."
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "services/catalogue.md",

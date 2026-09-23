@@ -87,6 +87,9 @@ event, and a date check has no window to compare one against, so a process using
 meets. A runbook is read during an incident, and the tools, permissions and commands it assumes go out of date whether
 or not the system it covers changed. The price is a walk a quarter for every runbook a corpus keeps.
 
+The rule does not read `rehearsal-method`, so a tabletop walk earns the same 92 days as a live one. A shorter window
+for the tabletop would fall hardest on the runbooks whose fault nobody can cause, which are the ones no drill reaches.
+
 A fixture pins each of `high-risk-review-window`'s numbers, so moving one is visible. A fixture cannot pin `staleness`
 or `staleness-loud`, because their windows are measured against the day of the run and a fixture date drifts further
 from today every day it sits there. A unit test names the day instead, and pins every window against it.

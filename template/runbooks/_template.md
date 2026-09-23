@@ -26,7 +26,7 @@ Title this document for the **failure**, not the fix. A reader at 2am searches f
 
 * **`severity`**: how urgent. The `Impact` section says who is affected.
 * **`last-rehearsed`**: a quoted date. A walk is a drill where you cause the fault and follow the steps, or a
-  read-through against the live system where you cannot. `"never"` is permitted, and it is what you want to know
+  read-through against the running system where you cannot. `"never"` is permitted, and it is what you want to know
   before the incident rather than during it.
 * **`rehearsal-frequency`**: pick `on-change` where a change to the system is what breaks the steps. `staleness-loud`
   warns at 92 days whichever value you pick.

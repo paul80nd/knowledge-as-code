@@ -32,10 +32,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   line goes. `failure-route-stated` serves the other reader, whose step did not work.
 - **A runbook nobody has walked in 92 days is reported.** `staleness-loud` runs on `runbooks`. `kac validate` warns on
   `last-rehearsed: "never"`, and on a date more than 92 days past, whichever `rehearsal-frequency` the record states.
-  That floor is where this rule parts from `staleness` on `processes`, which measures `quarterly` and `annual` alone:
-  a runbook is read during an incident, and the tools and commands it assumes go out of date whether or not the system
-  did. A walk is a drill, or a read-through against the live system where the fault cannot be caused. The new
-  `rehearsal-method` field records which, as `live` or `tabletop`, and is required once `last-rehearsed` states a day.
+  That floor is where this rule parts from `staleness` on `processes`, which measures `quarterly` and `annual` alone.
+  A walk is a drill, or a read-through where the fault cannot be caused. The new `rehearsal-method` field records
+  which, as `live` or `tabletop`, and is required once `last-rehearsed` states a day.
 
 ## 0.31.0 - 2026-09-23
 
