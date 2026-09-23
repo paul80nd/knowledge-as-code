@@ -69,6 +69,12 @@ public class PartRow
 
     public ReadOnlySpan<char> Body(string text) =>
         BodyEnd > BodyStart ? text.AsSpan()[BodyStart..Math.Min(BodyEnd, text.Length)] : default;
+
+    // Whether a stretch of the document sits inside this part's body, for a rule that walked the
+    // record's blocks and has to place one. False for a part written as a table row, whose bounds are
+    // both zero and whose body is the row.
+    public bool Contains(Markdig.Syntax.SourceSpan span) =>
+        BodyEnd > BodyStart && span.Start >= BodyStart && span.End <= BodyEnd;
 }
 
 // One labelled footnote and the citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`, written as the

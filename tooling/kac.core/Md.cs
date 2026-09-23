@@ -26,7 +26,18 @@ public static class Md
     {
         if (container is null) return "";
         var sb = new StringBuilder();
-        Walk(container, sb);
+        Walk(container, sb, code: true);
+        return sb.ToString().Trim();
+    }
+
+    // The same reading with every code span left out, for a check asking what a sentence says rather
+    // than what it names. A term in backticks is being named, so a rule about the words has no
+    // business in it. `Bullets` drops them from its `Plain` reading for the same reason.
+    public static string PlainTextWithoutCode(ContainerInline? container)
+    {
+        if (container is null) return "";
+        var sb = new StringBuilder();
+        Walk(container, sb, code: false);
         return sb.ToString().Trim();
     }
 
@@ -36,7 +47,7 @@ public static class Md
         foreach (var para in quote.Descendants<ParagraphBlock>())
             if (para.Inline is not null)
             {
-                Walk(para.Inline, sb);
+                Walk(para.Inline, sb, code: true);
                 sb.Append(' ');
             }
 
@@ -138,7 +149,7 @@ public static class Md
             foreach (var child in inline)
             {
                 var from = text.Length;
-                Walk(child, text);
+                Walk(child, text, code: true);
 
                 if (child is EmphasisInline { DelimiterCount: 2 } run) bold.Add(PlainText(run));
                 else if (child is not CodeInline) plain.Append(text, from, text.Length - from);
@@ -148,17 +159,19 @@ public static class Md
         }
     }
 
-    private static void Walk(Inline inline, StringBuilder sb)
+    // `code` says whether a code span contributes its content. A link's target never does, under
+    // either reading: the label is a child inline and the target is not.
+    private static void Walk(Inline inline, StringBuilder sb, bool code)
     {
         switch (inline)
         {
             case LiteralInline lit: sb.Append(lit.Content.ToString()); break;
-            case CodeInline code: sb.Append(code.Content); break;
+            case CodeInline span when code: sb.Append(span.Content); break;
             case LineBreakInline: sb.Append(' '); break;
         }
 
         if (inline is ContainerInline c)
             foreach (var child in c)
-                Walk(child, sb);
+                Walk(child, sb, code);
     }
 }

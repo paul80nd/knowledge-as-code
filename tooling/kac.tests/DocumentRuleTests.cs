@@ -328,6 +328,145 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
             Standard("## Examples\n\n> - A secret **MUST** come from the vault."), type: Standards()));
 
+    [Fact]
+    public void A_definition_repeating_its_term_names_the_term_and_quotes_the_sentence()
+    {
+        var found = Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Catalogue\n\nThe catalogue a reader searches for a title."), type: GlossaryType());
+
+        Assert.Equal("definition-circular", Single(found).Check.Value);
+        Assert.Equal("the definition of 'Catalogue' repeats the term: \"The catalogue a reader searches for a "
+                     + "title.\". Define it in words a reader already has, and link the entry those words "
+                     + "belong to.",
+            Single(found).Message);
+        Assert.Equal(Sev.Warning, Single(found).Severity);
+    }
+
+    [Fact]
+    public void A_definition_in_other_words_is_left_alone()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Catalogue\n\nThe list a reader searches for a title."), type: GlossaryType()));
+
+    // An entry naming its own term in backticks defines it in the words around it, so reading the
+    // source would report nearly every entry that mentions a path or a command.
+    [Fact]
+    public void The_term_inside_a_code_span_is_passed_over()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Export\n\nWhat `kac export` writes: a flat file per type."), type: GlossaryType()));
+
+    // A link's target is not prose, and a path naming the term is the same case as a code span.
+    [Fact]
+    public void The_term_inside_a_link_target_is_passed_over()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Plugin\n\nWhat an agent installs, assembled under [the folder](../plugin/README.md)."),
+            type: GlossaryType()));
+
+    // By the second sentence the reader has the meaning, so using the word there is how an entry reads.
+    [Fact]
+    public void A_later_sentence_using_the_term_is_passed_over()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Page\n\nThe file at the root of a type's folder. A page has no frontmatter."),
+            type: GlossaryType()));
+
+    // `Also`, `Avoid` and `Not` answer other questions about the term, and each names it freely.
+    [Fact]
+    public void A_labelled_line_repeating_the_term_is_not_the_definition()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Record\n\nOne document a corpus keeps.\n\n**Not:** a record of a call."),
+            type: GlossaryType()));
+
+    // Whole words and no stemming. Precision is what makes the finding worth acting on.
+    [Fact]
+    public void A_definition_using_the_plural_of_its_term_is_passed_over()
+        => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Record\n\nOne of the records a corpus keeps."), type: GlossaryType()));
+
+    // A term spelling its last character with punctuation gets no boundary there. `\b` after `#` sits
+    // between two non-word characters and fails, so `C#` would never match its own definition.
+    [Fact]
+    public void A_term_ending_in_punctuation_is_still_matched()
+    {
+        var found = Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### C#\n\nThe language C# is written in."), type: GlossaryType());
+
+        Assert.StartsWith("the definition of 'C#' repeats the term", Single(found).Message);
+    }
+
+    [Fact]
+    public void Every_entry_defining_itself_is_reported()
+        => Assert.Equal(2, Run(new DefinitionsDoNotRepeatTheTerm(),
+            Glossary("### Catalogue\n\nThe catalogue a reader searches.\n\n### Digest\n\nThe digest a session "
+                     + "arrives holding."), type: GlossaryType()).Count);
+
+    [Theory]
+    [InlineData("A page, with no frontmatter. It states what the type contains.", "A page, with no frontmatter.")]
+    [InlineData("One sentence and no more", "One sentence and no more")]
+    [InlineData("What is a page? The file at the root.", "What is a page?")]
+    public void A_definition_is_read_up_to_its_first_full_stop(string text, string sentence)
+        => Assert.Equal(sentence, DefinitionsDoNotRepeatTheTerm.FirstSentence(text));
+
+    [Fact]
+    public void An_entry_binding_the_reader_names_itself_and_the_modal()
+    {
+        var found = Run(new EntriesStateNoRequirement(),
+            Glossary("### Retention\n\nHow long the estate keeps a record. A team **MUST** delete one after "
+                     + "seven years."), type: GlossaryType());
+
+        Assert.Equal("entry-requirement", Single(found).Check.Value);
+        Assert.Equal("'Retention' writes a bold 'MUST', and a definition states no requirement. Move the "
+                     + "obligation into a standard and link to it from here.",
+            Single(found).Message);
+        Assert.Equal(Sev.Warning, Single(found).Severity);
+    }
+
+    // Bold is what binds under BCP 14, and a glossary is where a keyword is defined. `Standard` names
+    // `MUST` in the course of saying what a standard is.
+    [Fact]
+    public void A_keyword_written_in_plain_capitals_inside_an_entry_is_passed_over()
+        => Assert.Empty(Run(new EntriesStateNoRequirement(),
+            Glossary("### Keyword\n\nA word BCP 14 makes normative, such as MUST, written in capitals."),
+            type: GlossaryType()));
+
+    // An obligation under a labelled line is as misplaced as one above it, and the fix is the same.
+    [Fact]
+    public void A_modal_inside_a_labelled_line_is_reported()
+    {
+        var found = Run(new EntriesStateNoRequirement(),
+            Glossary("### Retention\n\nHow long the estate keeps a record.\n\n**Not:** deletion, which a team "
+                     + "**MUST** run every year."), type: GlossaryType());
+
+        Assert.StartsWith("'Retention' writes a bold 'MUST'", Single(found).Message);
+    }
+
+    // The longest modal first, so a prohibition is never reported as an obligation.
+    [Fact]
+    public void A_two_word_modal_inside_an_entry_is_named_in_full()
+    {
+        var found = Run(new EntriesStateNoRequirement(),
+            Glossary("### Secret\n\nA credential a log **MUST NOT** carry."), type: GlossaryType());
+
+        Assert.StartsWith("'Secret' writes a bold 'MUST NOT'", Single(found).Message);
+    }
+
+    // The entries are the type's own reading, so prose outside the terms section is not one.
+    [Fact]
+    public void A_modal_outside_the_terms_section_is_left_to_another_check()
+        => Assert.Empty(Run(new EntriesStateNoRequirement(),
+            Glossary("### Retention\n\nHow long the estate keeps a record.",
+                scope: "A reader **MUST** start here."), type: GlossaryType()));
+
+    // The whole word, so the `MUST` inside `MUSTER` is not one.
+    [Fact]
+    public void A_word_a_modal_only_prefixes_inside_an_entry_is_not_a_modal()
+        => Assert.Empty(Run(new EntriesStateNoRequirement(),
+            Glossary("### Review\n\nThe hour the **MUSTER** takes."), type: GlossaryType()));
+
+    [Fact]
+    public void Every_bold_modal_inside_an_entry_is_reported()
+        => Assert.Equal(2, Run(new EntriesStateNoRequirement(),
+            Glossary("### Retention\n\nA team **MUST** delete a record, and **MUST NOT** keep a copy."),
+            type: GlossaryType()).Count);
+
     // The bullet the message quotes, read back out of it.
     private static string Quoted(string message) =>
         message[(message.IndexOf('"') + 1)..message.LastIndexOf('"')];
@@ -368,6 +507,36 @@ public class DocumentRuleTests
             Noun = "rule"
         }
     };
+
+    // A glossary as the schema declares one: entries are the H3s under `Terms`, each carrying the three
+    // labelled lines beneath it. Written out rather than loaded, so a test states the declaration it
+    // depends on.
+    private static TypeSchema GlossaryType() => new()
+    {
+        Parts = new PartSpec(PartSpec.Headings, "", [], [])
+        {
+            Section = "Terms",
+            Noun = "term",
+            Asides = ["Also", "Avoid", "Not"]
+        }
+    };
+
+    // Both glossary rules read the document's parts, and the parser fills those in only where the
+    // schema declares the type. So this parse is given one, where `Adr` above is given an empty schema.
+    private static Doc Glossary(string body, string scope = "One context and no other.")
+    {
+        var text = $"---\nid: gls-test\nstatus: draft\n---\n\n# A title\n\n`Glossary: gls-test` `DRAFT`\n\n"
+                   + $"## Scope\n\n{scope}\n\n## Terms\n\n{body}\n";
+
+        var schema = new Schema
+        {
+            ByFolder = new Dictionary<string, TypeSchema>(StringComparer.Ordinal) { ["glossary"] = GlossaryType() }
+        };
+
+        var doc = Doc.Parse("glossary/a-title.md", text, schema);
+        Assert.NotNull(doc);
+        return doc;
+    }
 
     private static Doc Standard(string body)
     {

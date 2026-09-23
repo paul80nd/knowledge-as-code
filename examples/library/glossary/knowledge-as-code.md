@@ -114,8 +114,8 @@ An export that `kac pack` zips into a versioned file. A registry stores it, and 
 
 ### Page
 
-A type's root page, with no frontmatter of its own. It states what the type contains, what it excludes, and how to add
-a record.
+The `<type>.md` file at the root of a type's folder, with no frontmatter of its own. It states what the type contains,
+what it excludes, and how to add a record.
 
 **Not:** a record. It describes the records, so it has no id and no identity line.
 

@@ -14,7 +14,9 @@ public static class DocumentRules
         new DurationMatchesTheMoments(),
         new ChangelogNewestFirst(),
         new EscalationRequired(),
-        new BindsOnlyUnderRules()
+        new BindsOnlyUnderRules(),
+        new DefinitionsDoNotRepeatTheTerm(),
+        new EntriesStateNoRequirement()
     ];
 
     public static readonly IReadOnlyDictionary<RuleId, IDocumentRule> ByRuleId =

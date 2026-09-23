@@ -17,18 +17,24 @@ detail: >
 lineage:
   prior-art: >
     Evans, *Domain-Driven Design*, the ubiquitous language a team speaks, models and codes in.
-    [SKOS](https://www.w3.org/TR/skos-reference/), a vocabulary for concept schemes, and [DITA
+    [SKOS](https://www.w3.org/TR/skos-reference/), a vocabulary for concept schemes. [DITA
     `glossentry`](https://docs.oasis-open.org/dita/dita/v1.3/os/part3-all-inclusive/langRef/technicalContent/glossentry.html),
-    a markup element for one term and its definition
+    a markup element for one term and its definition. [ISO/IEC Directives, Part
+    2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5, the drafting rules a definition
+    follows
   alignment: >
     A rigorous shared vocabulary maintained against ambiguity, scoped to a bounded context and used identically
     within it. An entry carries the other names a reader may arrive by, which is SKOS's `altLabel` and DITA's
-    `glossAlt`, and marks one of them as dropped, which is DITA's `glossStatus`
+    `glossAlt`, and marks one of them as dropped, which is DITA's `glossStatus`. ISO's rule that a definition does
+    not repeat the term it defines, which `definitions-do-not-repeat-the-term` checks, and that it states no
+    requirement, which `entries-state-no-requirement` checks
   divergence: >
     Evans' language is spoken as much as written, and lives in the model and the code. A glossary here is a set of
     documents, and nothing checks the code against them. SKOS and DITA each hold a term as a record in a database,
     carrying a part of speech and a symbol this type has no use for. A term here is a heading, a paragraph and three
-    labelled lines, in one flat list read end to end
+    labelled lines, in one flat list read end to end. ISO asks that a definition open with no article and close with
+    no full stop, because a standard substitutes it into a running sentence. Nothing does that here: a person reads
+    an entry as a sentence, and the export ships `definition` whole. So an entry is written as ordinary prose
 
 notes: >
   A glossary covers one bounded context or product surface, never a topic. A narrower glossary redefines a term
@@ -133,6 +139,14 @@ rules:
   - id: terms-are-alphabetical
     description: A glossary's entries are in alphabetical order, compared without regard to casing.
     severity: warning
+  - id: definitions-do-not-repeat-the-term
+    description: A term's definition does not repeat the term it defines.
+    severity: warning
+    # ISO/IEC Directives, Part 2, clause 16.5.6. Read on the first sentence, with code spans dropped.
+  - id: entries-state-no-requirement
+    description: No bold RFC 2119 keyword states a requirement inside a glossary entry.
+    severity: warning
+    # ISO/IEC Directives, Part 2, clause 16.5.6. Bold binds, so a keyword written plain is passed over.
   - id: glossary-in-date
     description: A glossary names a review date that has not passed.
     severity: warning
