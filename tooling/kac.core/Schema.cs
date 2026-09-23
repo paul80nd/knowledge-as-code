@@ -20,8 +20,8 @@ public sealed class FieldSpec
     public string? Of { get; init; }                          // each entry, where Type is list: ValueChecks.EntryTypes
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
-    // Whether `Values` is a ranking, most significant first, taken from the enum that declared it. A
-    // field writing its values inline is never ranked, because the flag sits on the enum. See EnumSpec.
+    // Whether `Values` is a ranking, taken from the enum that declared it. A field writing its values
+    // inline is never ranked, because the flag sits on the enum. See EnumSpec.
     public bool Ordered { get; init; }
 
     // Where a value sits in the ranking, `0` being the most significant. Null where the field declares
@@ -72,6 +72,10 @@ public sealed class FieldSpec
     // schema-load pass both select a field on it, and a second reading of the shape would be free to
     // disagree with this one.
     public bool DeclaresId => Type == "id" || (Type == "list" && Of == "id");
+
+    // Whether this field's ids point at documents of the type declaring it. Two rules walk that graph,
+    // and a second reading of the shape would be free to disagree with this one.
+    public bool PointsAt(TypeSchema t) => DeclaresId && Refs.Contains(t.Key, StringComparer.Ordinal);
 
     // The folders an id in this field may belong to. A list, because several fields point at more than
     // one type: a deviation departs from a policy or a standard. A scalar `ref:` is the one-entry case

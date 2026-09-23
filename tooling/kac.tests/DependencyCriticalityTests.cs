@@ -34,7 +34,8 @@ public class DependencyCriticalityTests
             + "one of the two, or write down what degrades when it is gone.",
             Single(Check(("svc-a", "critical", ["svc-b"]), ("svc-b", "important", []))).Message);
 
-    // One entry of a list is at fault, so the finding lands on that entry and not on the field above it.
+    // One entry of a list is at fault, so each finding gets a line of its own. The numbers sit one above
+    // the entry each names, as every frontmatter finding does. See Yaml.LineOf.
     [Fact]
     public void Each_finding_names_the_line_the_entry_sits_on()
     {
@@ -46,6 +47,13 @@ public class DependencyCriticalityTests
 
         Assert.Equal([5, 6], found.Select(f => f.Line));
     }
+
+    // Each occurrence is its own entry, so a record cited twice is reported once for each line it sits on.
+    [Fact]
+    public void A_dependency_cited_twice_is_reported_on_each_line()
+        => Assert.Equal([4, 5],
+            Check(("svc-a", "critical", ["svc-b", "svc-b"]), ("svc-b", "important", []))
+                .Select(f => f.Line));
 
     // Two places down is the same fault as one.
     [Fact]

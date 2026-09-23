@@ -2,10 +2,9 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
-// Nothing is more dependable than what it calls. A record graded above something it depends on is either
-// mis-graded or hides a degradation nobody wrote down, and the record stating the edge cannot show which:
-// the grade at the far end sits on another document. Reported, never failed: the edge is often a
-// degradation the estate accepts, and the warning asks for the sentence that says so.
+// A record graded above something it depends on is either mis-graded or hides a degradation nobody wrote
+// down, and the record stating the edge cannot show which: the grade at the far end sits on another
+// document. See docs/design/shaping-a-type.md for why this warns rather than fails.
 //
 // Both fields come from the schema. The grading field is whichever one draws on an enum declaring
 // `ordered: true`, and the edge is whichever field points back at the type's own records, as
@@ -21,20 +20,15 @@ public sealed class DependencyCriticality : ICorpusRule
 
     public void Check(CorpusRuleContext ctx)
     {
+        var declared = ctx.Type.FieldOrder.Select(n => ctx.Type.Fields[n]).ToList();
+
         // Every pairing, because the grading field and the edge are separate declarations and a type may
         // declare more than one of either. Each message states both fields, so two graded fields give
         // two findings.
-        foreach (var graded in Declared(ctx).Where(f => f.Ordered))
-        foreach (var edge in Declared(ctx).Where(f => PointsAtOwnType(f, ctx.Type)))
+        foreach (var graded in declared.Where(f => f.Ordered))
+        foreach (var edge in declared.Where(f => f.PointsAt(ctx.Type)))
             Walk(ctx, graded, edge);
     }
-
-    private static IEnumerable<FieldSpec> Declared(CorpusRuleContext ctx) =>
-        ctx.Type.FieldOrder.Select(n => ctx.Type.Fields[n]);
-
-    // A field whose ids point at documents of its own type, read as `no-dependency-cycles` reads it.
-    private static bool PointsAtOwnType(FieldSpec f, TypeSchema t)
-        => f.DeclaresId && f.Refs.Contains(t.Key, StringComparer.Ordinal);
 
     private static void Walk(CorpusRuleContext ctx, FieldSpec graded, FieldSpec edge)
     {
@@ -44,8 +38,9 @@ public sealed class DependencyCriticality : ICorpusRule
             // against either would turn one malformed value into a finding on every record citing it.
             if (doc.FrontScalar(graded.Name) is not { } ours || graded.Rank(ours) is not { } here) continue;
 
-            foreach (var target in doc.FrontList(edge.Name))
+            foreach (var item in Entries(doc, edge.Name))
             {
+                if (item is not YamlScalarNode { Value: { Length: > 0 } target }) continue;
                 if (edge.IsLiteral(target)) continue;
 
                 // `ref-resolves` reports an id nothing declares, and one resolving to another type. Either
@@ -61,18 +56,18 @@ public sealed class DependencyCriticality : ICorpusRule
                 ctx.Warn(doc, Reports,
                     $"'{edge.Name}' cites '{target}', graded '{theirs}' where this record is '{ours}'. "
                     + "Regrade one of the two, or write down what degrades when it is gone.",
-                    LineOf(doc, edge.Name, target));
+                    Yaml.LineOf(item, doc.FrontStartLine));
             }
         }
     }
 
-    // The line the entry sits on, so a finding about one entry lands on it. `FrontList` reads the values;
-    // this looks one up again only to place the finding. A field written as anything but a sequence falls
-    // back to the frontmatter.
-    private static int? LineOf(Doc doc, string field, string value) =>
-        doc.FrontNode(field) is YamlSequenceNode seq
-        && seq.Children.OfType<YamlScalarNode>()
-            .FirstOrDefault(c => string.Equals(c.Value, value, StringComparison.Ordinal)) is { } at
-            ? Yaml.LineOf(at, doc.FrontStartLine)
-            : doc.FrontStartLine;
+    // The field's entries as nodes, so a finding about one entry lands on the line that entry sits on. A
+    // scalar is the one-entry case, which is how `Doc.FrontList` reads one.
+    private static IEnumerable<YamlNode> Entries(Doc doc, string field) =>
+        doc.FrontNode(field) switch
+        {
+            YamlSequenceNode seq => seq.Children,
+            YamlScalarNode one => [one],
+            _ => []
+        };
 }

@@ -48,8 +48,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **A service graded above something it depends on is reported.** `dependency-criticality` runs on `services`. `kac
   validate` warns where a record's `criticality` outranks the `criticality` of a record its `depends-on` cites, and
   quotes the id and both grades. The comparison rests on `ordered: true`, a new key on a shared enum in
-  `.schema/_enums.yaml` saying its values rank, most significant first. A warning, because the edge is often a
-  degradation the estate accepts: what it buys is the sentence that defends it.
+  `.schema/_enums.yaml` saying its values rank, most significant first. `examples/library` carries one such edge, and
+  the record already explains it.
 
 ### Removed
 
