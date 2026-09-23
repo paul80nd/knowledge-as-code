@@ -35,6 +35,16 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   That floor is where this rule parts from `staleness` on `processes`, which measures `quarterly` and `annual` alone.
   A walk is a drill, or a read-through where the fault cannot be caused. The new `rehearsal-method` field records
   which, as `live` or `tabletop`, and is required once `last-rehearsed` states a day.
+- **A glossary definition that repeats its own term is reported.** `definitions-do-not-repeat-the-term` runs on
+  `glossary`. `kac validate` warns where the first sentence of an entry's definition names the term its heading
+  states, and quotes the sentence back. Code spans and link targets are dropped first, so an entry defining `Export`
+  as what `kac export` writes is passed over. A later sentence may use the term, because by then the reader has the
+  meaning. The check id is `definition-circular`, and ISO/IEC Directives, Part 2, clause 16.5.6 is the source.
+- **A requirement written into a glossary entry is reported.** `entries-state-no-requirement` runs on `glossary`.
+  `kac validate` warns on a bold RFC 2119 keyword anywhere inside an entry, and names the term carrying it. Bold is
+  what binds under BCP 14, so a keyword written in plain capitals is a term being named and is passed over. The
+  obligation belongs in a standard, which the message says. The check id is `entry-requirement`, and the glossary
+  type page states which of Part 2's rules run and which are the author's.
 
 ### Removed
 

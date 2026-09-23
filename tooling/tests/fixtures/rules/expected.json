@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 62,
+    "validated": 64,
     "templates": 17,
     "skipped": 0,
     "errors": 31,
-    "warnings": 50,
+    "warnings": 52,
     "infos": 0
   },
   "findings": [
@@ -135,6 +135,13 @@
       "message": "missing required field 'verified' (required when status != draft)."
     },
     {
+      "file": "glossary/circular-definition.md",
+      "line": 24,
+      "severity": "warning",
+      "check": "definition-circular",
+      "message": "the definition of 'Catalogue' repeats the term: \"The catalogue a reader searches for a title.\". Define it in words a reader already has, and link the entry those words belong to."
+    },
+    {
       "file": "glossary/out-of-order.md",
       "line": 31,
       "severity": "warning",
@@ -147,6 +154,13 @@
       "severity": "warning",
       "check": "glossary-in-date",
       "message": "this glossary's `review-by` has passed. Check the terms still match how people here speak, then set `review-by` to the next day somebody looks at it."
+    },
+    {
+      "file": "glossary/states-a-requirement.md",
+      "line": 27,
+      "severity": "warning",
+      "check": "entry-requirement",
+      "message": "'Retention' writes a bold 'MUST', and a definition states no requirement. Move the obligation into a standard and link to it from here."
     },
     {
       "file": "integrations/payment-gateway.md",

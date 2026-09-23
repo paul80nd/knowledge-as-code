@@ -77,6 +77,21 @@ the shared one still reads correctly in a corpus that never had the other half.
   reader already knows. It never names a property this thing lacks: "Not: everything we would like" points at nothing,
   and a definition that needs it was written badly. Rewrite the definition and drop the line.
 
+**What ISO asks of a definition.** [ISO/IEC Directives, Part
+2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5, states the drafting rules this type
+follows. Two of them run as checks, and the table says what becomes of the rest.
+
+| Part 2 asks                                         | Here                                                                    |
+|-----------------------------------------------------|-------------------------------------------------------------------------|
+| A definition does not repeat the term it defines    | `definition-circular` reports one that does.                            |
+| A definition states no requirement                  | `entry-requirement` reports a bold RFC 2119 keyword inside an entry.    |
+| One definition per entry                            | Yours. Nothing here counts the definitions in an entry.                 |
+| Only terms the corpus uses are listed               | `unused-terms` states it and does not run.                              |
+| A definition can be substituted for the term        | Yours. Read the entry back into a sentence that used the word.          |
+| A term a qualified reader knows is not defined      | Yours. Scope above says which reader that is.                           |
+| A definition opens with no article                  | Does not apply. An entry here is read as a sentence, not substituted.   |
+| A definition closes with no full stop               | Does not apply, for the same reason.                                    |
+
 **Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
 [adr-0001] describes. That digest cuts off when its budget is spent, and three glossaries are enough to spend it. So the
 ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and nothing else, so which of
@@ -137,6 +152,8 @@ nothing runs the rule and the limit is yours to keep.
 | `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                                |
+| `definition-circular`       | warning | A glossary entry's definition does not repeat the term it defines.                                              |
+| `entry-requirement`         | warning | No bold RFC 2119 keyword states a requirement inside a glossary entry.                                          |
 | `glossary-in-date`          | warning | A glossary names a review date that has not passed.                                                             |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.

@@ -644,6 +644,24 @@ checks:
     description: A glossary's entries read in alphabetical order.
     notes: Compared without regard to casing, and the message states the entry that moved.
 
+  definition-circular:
+    severity: warning
+    description: A glossary entry's definition does not repeat the term it defines.
+    notes: >
+      ISO/IEC Directives, Part 2, clause 16.5.6. Read on the first sentence of the definition, with code spans and
+      link targets dropped, because an entry naming `kac export` under `Export` defines the term in the words
+      around it. Whole words and no stemming, so a definition using the plural of its term is passed over. A
+      warning rather than an error, because a compound term may repeat its head noun and still define it.
+
+  entry-requirement:
+    severity: warning
+    description: No bold RFC 2119 keyword states a requirement inside a glossary entry.
+    notes: >
+      ISO/IEC Directives, Part 2, clause 16.5.6. Bold is what binds under BCP 14, so a keyword written plain is a
+      term being named and is passed over. The whole entry is read, not the definition alone, because an
+      obligation under `Also:` is as misplaced as one above it. Reported against the entry, so a glossary of
+      dozens states which term to move into a standard.
+
   changelog-order:
     severity: warning
     description: A standard's changelog entries read newest first.
