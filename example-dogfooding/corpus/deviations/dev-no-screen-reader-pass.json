@@ -33,6 +33,6 @@
     "Scope": "Both surfaces [std-A11Y] governs: the documentation site MkDocs builds from `docs/`, and the `kac` command line."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2a7f4cbb7b65d226d338be421458b447bfbdcc17/examples/dog-fooding/deviations/no-screen-reader-pass.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fbc0dd174c9f4d95605b9ef5015b72a361d8d903/examples/dog-fooding/deviations/no-screen-reader-pass.md"
   }
 }

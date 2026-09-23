@@ -25,9 +25,9 @@
   "sections": {
     "What it checks": "* [std-CI.the-gate-runs-on-every-pull-request-into-main] says `kac.yml` \"**MUST** name every one of its jobs in the\n  `needs:` of its `validate` job\".",
     "How it works": "`WorkflowGateTests` in `tooling/kac.tests` reads `.github/workflows/kac.yml` and collects the keys under `jobs:`. It\ncompares that set against `validate`'s `needs:` plus `validate` itself. The `tool` job runs it under\n`dotnet test tooling/kac.tests`.\n\nComparing sets catches two faults. A job added with no line in `needs:` fails. A `needs:` entry listing a job the file no longer declares fails as well.",
-    "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. `.azuredevops/kac.yml` is a flat step list with no jobs, so this fault cannot arise there. A reader confirms whether that file still runs the same steps in the same order.\n\nThe branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`."
+    "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. The publishing workflows gate nothing, so a job outside `validate`'s `needs:` is a fault only `kac.yml` can have.\n\nThe branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2a7f4cbb7b65d226d338be421458b447bfbdcc17/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fbc0dd174c9f4d95605b9ef5015b72a361d8d903/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
   }
 }

@@ -19,6 +19,6 @@
     "Prerequisites": "* The `gh` CLI, authenticated against the repository that publishes this corpus. The agent configuration under\n  `.claude/agents-config/` names it and says that issues live as GitHub issues.\n* Project 3, and its `Status`, `Phase` and `Rank` fields. `Phase` is the lane.\n* A checkout of this repository, because step 3 reads the code rather than the issue.\n* Writing prose to a style guide, which steps 5 to 7 need."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/2a7f4cbb7b65d226d338be421458b447bfbdcc17/examples/dog-fooding/processes/review-a-board-lane.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/fbc0dd174c9f4d95605b9ef5015b72a361d8d903/examples/dog-fooding/processes/review-a-board-lane.md"
   }
 }
