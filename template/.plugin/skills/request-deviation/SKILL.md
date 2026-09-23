@@ -70,25 +70,27 @@ check from here, and an owner reading that knows to check them instead.
 
 ## Pick the corpus that owns the clause
 
-`manifest.json` describes this corpus at the top level and every corpus it consumes under `sources`. Each carries its
-own `publishing` block.
+`manifest.json` states a tracker for this corpus's own records under `tracker`, and one for each corpus it consumes
+under `sources`. A clause always belongs to a corpus, so the request goes to one of those.
 
-| Field                  | Type            | What it holds                                                          |
-|------------------------|-----------------|------------------------------------------------------------------------|
-| `corpus`               | string          | the name of this corpus, as `example-payments`                         |
-| `shortcode`            | string or null  | this corpus's own prefix                                               |
-| `commit`               | string          | the commit this export was taken at                                    |
-| `publishing`           | object          | where this corpus publishes                                            |
-| `publishing.base`      | string or null  | the address to file against                                            |
-| `publishing.target`    | string          | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
-| `sources`              | list of objects | one entry per corpus this one consumes                                 |
-| `sources[].corpus`     | string          | that corpus's name                                                     |
-| `sources[].shortcode`  | string          | the prefix its records carry, as the `eng` in `eng:pol-DEVI.OWNER`     |
-| `sources[].publishing` | object or null  | where that corpus publishes, with the same keys as the block above     |
+| Field                 | Type            | What it holds                                                      |
+|-----------------------|-----------------|--------------------------------------------------------------------|
+| `corpus`              | string          | the name of this corpus, as `example-payments`                     |
+| `shortcode`           | string or null  | this corpus's own prefix                                           |
+| `commit`              | string          | the commit this export was taken at                                |
+| `tracker`             | object          | where work about this corpus's records is filed                    |
+| `tracker.target`      | string          | one of `github`, `azure-devops`, `none`                            |
+| `tracker.base`        | string or null  | the repository or project to file against                          |
+| `tracker.area`        | string or null  | the area path inside an Azure DevOps project, separated by `/`     |
+| `tracker.id`          | string or null  | the target and the base normalised, so two backlogs compare equal  |
+| `sources`             | list of objects | one entry per corpus this one consumes                             |
+| `sources[].corpus`    | string          | that corpus's name                                                 |
+| `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-DEVI.OWNER` |
+| `sources[].tracker`   | object          | where work about that corpus's records is filed, with the same keys |
 
 **The shortcode on the clause id names the corpus that owns it.** `eng:pol-TRUS.SCREEN` belongs to the `sources` entry
-whose `shortcode` is `eng`, and the request goes to the repository that entry's `publishing.base` names. A clause id
-carrying no shortcode belongs to the top-level corpus, and the request goes there.
+whose `shortcode` is `eng`, and the request goes to the tracker that entry states. A clause id carrying no shortcode
+belongs to the top-level corpus, and the request goes to its `tracker`.
 
 **A bare record id is not a clause id.** `pol-TRUS` names a whole policy, and a departure from every clause it carries
 is not what you are asking for. Name the clause, as `pol-TRUS.SCREEN`, and name each one where the work departs from
@@ -97,9 +99,12 @@ two.
 **Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be.
 Print the body and ask whoever is with you where it belongs.
 
-**A `publishing` block is always there, and its `base` may be present and `null`.** Test the value rather than the key.
-A `base` of `null`, or a `target` of `none`, means that corpus publishes nowhere this export can address. Say so, print
-the body, and ask whoever is with you who owns the clause. Do not invent a repository.
+**A tracker block is always there, and its `base` may be present and `null`.** Test the value rather than the key. A
+`base` of `null`, or a `target` of `none`, means nothing here addresses that backlog. Say so, print the body, and ask
+whoever is with you who owns the clause. Do not invent a repository.
+
+**A tracker is not `publishing`.** `publishing.base` is where a record is read, and on Azure DevOps that is a repository
+inside a project. The backlog is the project itself, so filing against `publishing.base` files nowhere.
 
 ## Stay inside one organisation
 
@@ -107,17 +112,21 @@ A deviation register is what one organisation keeps about itself. A request file
 which rule you are breaking, in which service, what you put in its place, and how long the gap stands. The maintainer
 of a corpus anybody can install never agreed to hold your risk, and cannot accept it on your behalf.
 
-**Compare the owning corpus's `base` with the top-level corpus's `base`.** The same repository is the same people, and
+**Compare the owning tracker's `base` with the top-level `tracker.base`.** The same repository is the same people, and
 the request goes there. A different repository under the same account or organisation is still inside, so compare the
 segment naming the account. On a GitHub address that is the segment after the host, and on an Azure DevOps address it is
 the `<org>`. Two different platforms share no such segment, so treat them as two organisations unless somebody tells you
 otherwise.
 
+**An `id` answers the first half of that in one comparison.** Two trackers stating the same `id` are one backlog, so the
+request goes there and nothing else needs reading. Two `id` values that differ still need the account compared, because
+two backlogs inside one organisation are ordinary.
+
 **Where the owner differs, or where you cannot tell, print the body and stop.** Ask whoever is with you who accepts
 this risk inside your own organisation. Never file it on a stranger's repository to find out.
 
-**Where either `base` is `null`, there is nothing to compare.** A corpus published nowhere says nothing about who owns
-it, so the comparison cannot answer. Print the body and ask.
+**Where either `base` is `null`, there is nothing to compare.** A corpus with no backlog says nothing about who owns it,
+so the comparison cannot answer. Print the body and ask.
 
 **Consuming a public corpus is what this is for.** A corpus published by somebody you have no relationship with states
 rules you chose to take on, and a departure from one of them is yours to own. Record it at home.
@@ -222,8 +231,8 @@ under `${CLAUDE_PLUGIN_ROOT}`.
 Write the body to a file first. Passing it inline turns every backtick and quote into a quoting problem, and the block
 is full of both.
 
-The section to follow is chosen by the block's `target`, every time. Read it from the `publishing` block of the corpus
-that owns the clause, which may publish to a different platform from the one you are holding.
+The section to follow is chosen by the tracker's `target`, every time. Read it from the tracker of the corpus that owns
+the clause, which may file on a different platform from the one you are holding.
 
 ### GitHub
 
@@ -243,10 +252,11 @@ way: print the body and say which of the two it was.
 
 ### Azure DevOps
 
-`target` is `azure-devops` or `azure-devops-wiki`, and `base` carries the organisation and the project together, as
-`https://dev.azure.com/<org>/<project>/_git/<repo>`. A wiki publishes from
-`https://dev.azure.com/<org>/<project>/_wiki/wikis/<id>` instead, and the two segments you need sit in the same places.
-`az` wants them apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
+`target` is `azure-devops`, and `base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`.
+`az` wants the two segments apart: the organisation follows the host, and the project follows the organisation.
+
+**A project name arrives percent-encoded, and `az` wants it spelled out.** A base ending
+`Engineering%20Standards` names a project `az` takes as `Engineering Standards`. Decode every escape before you pass it.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:deviation"
@@ -256,9 +266,29 @@ az boards work-item create --org https://dev.azure.com/<org> --project <project>
 already hold rather than refusing, so nothing is lost here. Where the command fails for any other reason, print the body
 and say so.
 
-### Where the platform runs no issue tracker
+#### The area path
 
-`target` of `mkdocs` or `none` names a corpus published as pages, or not published at all. There is nowhere to file.
+**`area` says which area path inside the project the item belongs to.** One project gives one backlog to any number of
+corpora, so the area is what separates the work about one corpus's clauses from the rest.
+
+Where the tracker states one, add `System.AreaPath` to `--fields` as the project and the area joined by a backslash.
+Azure Boards separates an area path with backslashes, and `area` arrives separated by forward slashes, so convert every
+one: an `area` of `kac-it-swdev/subteam` goes in as `<project>\kac-it-swdev\subteam`.
+
+```bash
+az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:deviation" "System.AreaPath=<project>\<area>"
+```
+
+**Where `area` is null, leave the field out.** The command is then the one above it, and the item lands in the project's
+default area.
+
+**An area path that does not exist, or one you have no rights to file into, fails the whole command.** Run it again
+with `System.AreaPath` left off, and say in your reply that it landed in the project's default area and why. Never let
+a wrong area cost the request.
+
+### Where the tracker files nowhere
+
+`target` of `none` names a corpus with no backlog this export can address. There is nowhere to file.
 Print the whole body, name the corpus that owns the clause, and ask whoever is with you who accepts this risk.
 
 ### Where no client is here

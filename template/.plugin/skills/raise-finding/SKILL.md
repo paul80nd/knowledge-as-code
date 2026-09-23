@@ -59,34 +59,46 @@ Three things are not findings, and each has somewhere better to go.
 * **A record you are already changing** is an edit. Make the change.
 * **A guess you have not seen happen** is not an observation. Say what you saw, or say nothing.
 
-## Pick the corpus, and the repository behind it
+## Pick the tracker to file on
 
-`manifest.json` describes this corpus at the top level and every corpus it consumes under `sources`. Each carries its
-own `publishing` block, and the finding goes to the one that owns what you noticed.
+`manifest.json` states three trackers: `tracker` for this corpus's own records, `framework` for the framework it took,
+and one under each entry in `sources` for a corpus this one consumes. Pick the tracker that owns what you noticed.
 
-| Field                  | Type            | What it holds                                                          |
-|------------------------|-----------------|------------------------------------------------------------------------|
-| `corpus`               | string          | the name of this corpus, as `example-payments`                         |
-| `shortcode`            | string or null  | this corpus's own prefix                                               |
-| `commit`               | string          | the commit this export was taken at                                    |
-| `publishing`           | object          | where this corpus publishes                                            |
-| `publishing.base`      | string or null  | the address to file against                                            |
-| `publishing.target`    | string          | one of `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs`, `none` |
-| `sources`              | list of objects | one entry per corpus this one consumes                                 |
-| `sources[].corpus`     | string          | that corpus's name, for the `corpus:` line of the body                 |
-| `sources[].shortcode`  | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`      |
-| `sources[].publishing` | object or null  | where that corpus publishes, with the same keys as the block above     |
+| Field                 | Type            | What it holds                                                        |
+|-----------------------|-----------------|----------------------------------------------------------------------|
+| `corpus`              | string          | the name of this corpus, as `example-payments`                       |
+| `shortcode`           | string or null  | this corpus's own prefix                                             |
+| `commit`              | string          | the commit this export was taken at                                  |
+| `tracker`             | object          | where work about this corpus's records is filed                      |
+| `tracker.target`      | string          | one of `github`, `azure-devops`, `none`                              |
+| `tracker.base`        | string or null  | the repository or project to file against                            |
+| `tracker.area`        | string or null  | the area path inside an Azure DevOps project, separated by `/`        |
+| `framework`           | object          | where a problem with `kac`, the schema, the template or a skill goes  |
+| `sources`             | list of objects | one entry per corpus this one consumes                               |
+| `sources[].corpus`    | string          | that corpus's name, for the `corpus:` line of the body               |
+| `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`    |
+| `sources[].tracker`   | object          | where work about that corpus's records is filed                      |
 
-**A record whose id carries a shortcode belongs to the `sources` entry with that shortcode.** One carrying none belongs
-to the top-level corpus, and so does anything you noticed about the plugin, a skill or the export itself. File against
-the wrong one and the issue lands where nobody owns the thing you saw.
+`framework` and every `sources[].tracker` state the same three keys `tracker` does.
+
+Three rules decide which one, and they do not overlap.
+
+* **A record whose id carries a shortcode goes to the `sources` entry with that shortcode.** Use its `tracker`.
+* **A record carrying no shortcode goes to the top-level `tracker`.**
+* **Anything about `kac`, the schema, the template, the plugin or a skill goes to `framework`.** Those arrived from
+  somewhere else, and the corpus holding them cannot change them.
+
+File against the wrong one and the issue lands where nobody owns the thing you saw.
 
 **Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be,
 which is itself worth reporting. Print the body and ask whoever is with you where it belongs.
 
-**A `publishing` block is always there, and its `base` may be present and `null`.** Test the value rather than the key.
-A `base` of `null`, or a `target` of `none`, means that corpus publishes nowhere this export can address. Say so, print
-the body, and ask whoever is with you where it should go. Do not invent a repository.
+**A tracker block is always there, and its `base` may be present and `null`.** Test the value rather than the key. A
+`base` of `null`, or a `target` of `none`, means nothing here addresses that backlog. Say so, print the body, and ask
+whoever is with you where it should go. Do not invent a repository.
+
+**A tracker is not `publishing`.** `publishing.base` is where a record is read, and on Azure DevOps that is a repository
+inside a project. The backlog is the project itself, so filing against `publishing.base` files nowhere.
 
 ## Write the body
 
@@ -155,7 +167,7 @@ under `${CLAUDE_PLUGIN_ROOT}`.
 Write the body to a file first. Passing it inline turns every backtick and quote into a quoting problem, and the block
 is full of both.
 
-The section to follow is chosen by the block's `target`, every time. Two corpora in one export can publish to two
+The section to follow is chosen by the tracker's `target`, every time. Three trackers in one export can name three
 platforms, so read it from the block you picked rather than from the one above it.
 
 ### GitHub
@@ -176,10 +188,11 @@ way: print the body and say which of the two it was.
 
 ### Azure DevOps
 
-`target` is `azure-devops` or `azure-devops-wiki`, and `base` carries the organisation and the project together, as
-`https://dev.azure.com/<org>/<project>/_git/<repo>`. A wiki publishes from
-`https://dev.azure.com/<org>/<project>/_wiki/wikis/<id>` instead, and the two segments you need sit in the same places.
-`az` wants them apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
+`target` is `azure-devops`, and `base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`.
+`az` wants the two segments apart: the organisation follows the host, and the project follows the organisation.
+
+**A project name arrives percent-encoded, and `az` wants it spelled out.** A base ending
+`Engineering%20Standards` names a project `az` takes as `Engineering Standards`. Decode every escape before you pass it.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding"
@@ -189,10 +202,30 @@ az boards work-item create --org https://dev.azure.com/<org> --project <project>
 already hold rather than refusing, so nothing is lost here. Where the command fails for any other reason, print the body
 and say so.
 
-### Where the platform runs no issue tracker
+#### The area path
 
-`target` of `mkdocs` or `none` names a corpus published as pages, or not published at all. There is nowhere to file.
-Print the whole body, name the corpus it belongs to, and ask whoever is with you where it should go.
+**`area` says which area path inside the project the item belongs to.** One project gives one backlog to any number of
+corpora, so the area is what separates this corpus's work from the rest.
+
+Where the block states one, add `System.AreaPath` to `--fields` as the project and the area joined by a backslash. Azure
+Boards separates an area path with backslashes, and `area` arrives separated by forward slashes, so convert every one:
+an `area` of `kac-it-swdev/subteam` goes in as `<project>\kac-it-swdev\subteam`.
+
+```bash
+az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:finding" "System.AreaPath=<project>\<area>"
+```
+
+**Where `area` is null, leave the field out.** The command is then the one above it, and the item lands in the project's
+default area.
+
+**An area path that does not exist, or one you have no rights to file into, fails the whole command.** Run it again
+with `System.AreaPath` left off, and say in your reply that it landed in the project's default area and why. Never let
+a wrong area cost the observation.
+
+### Where the tracker files nowhere
+
+`target` of `none` names a corpus with no backlog this export can address. There is nowhere to file. Print the whole
+body, name the corpus it belongs to, and ask whoever is with you where it should go.
 
 ### Where no client is here
 

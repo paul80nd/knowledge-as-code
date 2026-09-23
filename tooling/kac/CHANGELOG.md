@@ -79,6 +79,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Fixed
 
+- **`raise-finding` and `request-deviation` file on the tracker rather than where the corpus publishes.** Both skills
+  read `tracker`, `framework` and `sources[].tracker` from `manifest.json`, and no longer read `publishing`. On Azure
+  DevOps the two differ: `publishing.base` is a repository inside a project and the backlog is the project, so every
+  work item was filed against an address that holds no backlog. A finding about `kac`, the schema, the template or a
+  skill now goes to `framework` instead of to the corpus that shipped it. Both skills also decode a percent-encoded
+  project name before passing it to `az`, so a project such as `Engineering Standards` no longer arrives as
+  `Engineering%20Standards`. Nothing changes for a corpus on GitHub, where a repository is its own issue list and the
+  two addresses are one string.
 - **`clause-compound` reads a whole modal word.** `kac validate` no longer warns on a clause such as `**MUST** be
   MUSTERED before the shift`, where a longer word only begins with a modal. `MAY` inside `MAYBE` and `SHALL` inside
   `SHALLOW` did the same. A second modal is still all the check reads. Two obligations written under one modal pass,
