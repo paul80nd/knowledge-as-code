@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 60,
+    "validated": 62,
     "templates": 17,
     "skipped": 0,
-    "errors": 30,
-    "warnings": 43,
+    "errors": 31,
+    "warnings": 50,
     "infos": 0
   },
   "findings": [
@@ -394,6 +394,20 @@
       "message": "the first section here is not `Symptoms`. Move `## Symptoms` above the others, so a reader who arrives with a symptom finds it first."
     },
     {
+      "file": "runbooks/database-connections-exhausted.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/diagnosis-branch-goes-nowhere.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
       "file": "runbooks/diagnosis-branch-goes-nowhere.md",
       "line": 36,
       "severity": "error",
@@ -415,6 +429,34 @@
       "message": "no branch of this diagnosis reaches `#escalation`, so a reader the tree does not answer has nowhere to go. Close one branch with `[escalate](#escalation)`."
     },
     {
+      "file": "runbooks/diagnosis-never-escalates.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/rehearsal-method-not-stated.md",
+      "line": 1,
+      "severity": "error",
+      "check": "required-field",
+      "message": "missing required field 'rehearsal-method' (required when last-rehearsed != never)."
+    },
+    {
+      "file": "runbooks/rehearsal-method-not-stated.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
+      "file": "runbooks/rehearsed-outside-the-window.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
       "file": "runbooks/resolution-with-no-outcome.md",
       "line": 1,
       "severity": "error",
@@ -422,11 +464,25 @@
       "message": "nothing in `Resolution` tells a reader when the fix is done. End the section with a line opening `Confirmed when`, closed with a link to `#escalation`."
     },
     {
+      "file": "runbooks/resolution-with-no-outcome.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
+    },
+    {
       "file": "runbooks/resolution-with-no-way-out.md",
       "line": 1,
       "severity": "error",
       "check": "failure-route-stated",
       "message": "nothing in `Resolution` tells a reader whose step did not work where to go. Close the `Confirmed when` line with a link to `#escalation`."
+    },
+    {
+      "file": "runbooks/resolution-with-no-way-out.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "staleness-loud",
+      "message": "nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set `last-rehearsed` to that day, or read it through where you cannot cause the fault."
     },
     {
       "file": "services/catalogue.md",

@@ -27,5 +27,5 @@ enums:
     values: [on-change, per-release, quarterly, annual]
     notes: >
       `quarterly` and `annual` are cycles, so a date check can measure a record against either. `on-change` and
-      `per-release` state an event, which no window measures, so such a record is reported only where
-      `last-rehearsed` is `"never"`.
+      `per-release` state an event, which no window measures. A type may set a floor that every value meets:
+      `runbooks` does, and `processes` does not.

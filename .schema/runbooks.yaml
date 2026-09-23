@@ -20,7 +20,9 @@ lineage:
     OPS07-BP03](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_runbooks.html),
     the runbook that achieves an outcome, and
     [OPS07-BP04](https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/ops_ready_to_support_use_playbooks.html),
-    the playbook that investigates an issue
+    the playbook that investigates an issue. [Google SRE, *Accelerating SREs to On-Call and
+    Beyond*](https://sre.google/sre-book/accelerating-sre-on-call/), Disaster Role Playing, the walk of a document
+    against the running system
   alignment: >
     The response written down before the incident. Google measures roughly a threefold improvement in mean time to
     recovery over improvising it. The workbook asks a playbook to explain an alert's severity and impact, which
@@ -28,13 +30,15 @@ lineage:
     `Diagnosis`, `requires-tools` and `requires-access`. It asks a runbook to state its desired outcome clearly, which
     the last line of `Resolution` does, opening `Confirmed when`. It asks for error handling and a route out wherever
     something goes wrong, so `Diagnosis` and `Resolution` both send the reader to `Escalation`. It asks for a plan for
-    telling the people waiting: `Communication`
+    telling the people waiting: `Communication`. Google's Disaster Role Playing walks a document against the
+    running system where the fault cannot be caused, which `rehearsal-method` records as `tabletop`
   divergence: >
     Google specifies no form. This type mandates one: terse, imperative, structured as a decision tree, opening on
     `Symptoms`. AWS writes two documents, a playbook to find the cause and a runbook to resolve it. This type is both
     on one page, because a reader at 2am opens one document. The workbook and AWS each send a deterministic list of
-    commands to automation, and this type stays a document. Asking every runbook for a rehearsal date is this
-    framework's own, and no source states it
+    commands to automation, and this type stays a document. Google runs Disaster Role Playing and records no date on
+    the document. Asking every runbook for the day of its last walk, and a cadence for the next one, is this
+    framework's own
 
 collision: >
   The industry does not agree on *runbook* and *playbook*. Google's SRE material says *playbook* for investigating a
@@ -81,16 +85,27 @@ fields:
     required: true
     type: date
     allow-literal: [never]
-    description: Quoted. The day somebody last followed the runbook end to end, or `"never"`.
+    description: Quoted. The day somebody last walked the runbook end to end, or `"never"`.
     notes: >
-      Editing the page does not move this date. A runbook showing `"never"` is worth finding before the
-      incident, while there is still time to rehearse it.
+      A walk is a drill where you cause the fault and follow the steps, or a read-through against the running
+      system where you cannot. Editing the page does not move this date. A runbook showing `"never"` is worth
+      finding before the incident, while there is still time to rehearse it.
 
   rehearsal-frequency:
     required: true
     type: enum
     values: $enums.rehearsal-frequency
     description: How often, or on what event, to rehearse the runbook.
+
+  rehearsal-method:
+    required: false
+    required-when: 'last-rehearsed != never'
+    type: enum
+    values: [live, tabletop]
+    description: "Which walk the date records: `live` caused the fault, `tabletop` read the steps against the system."
+    notes: >
+      `staleness-loud` does not read this field, so a tabletop takes the same window as a live walk.
+      See <https://paul80nd.github.io/knowledge-as-code/design/checks/>.
 
   requires-tools:
     required: false
@@ -161,5 +176,11 @@ rules:
       nothing in `Resolution` tells a reader whose step did not work where to go. Close the
       `Confirmed when` line with a link to `#escalation`.
   - id: staleness-loud
-    description: Rehearsal staleness, reported more loudly than a process's.
-    # Scheduled. An unrehearsed runbook is followed during an incident.
+    description: A runbook nobody has walked, or one walked more than 92 days ago.
+    severity: warning
+    # 92 days is the longest quarter, and every frequency takes it.
+    expr: >-
+      field('last-rehearsed') != 'never' and days_since('last-rehearsed') <= 92
+    message: >
+      nobody has walked this runbook in the last 92 days, and it is read during an incident. Walk it and set
+      `last-rehearsed` to that day, or read it through where you cannot cause the fault.

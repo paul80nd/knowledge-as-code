@@ -70,7 +70,7 @@ forbids, and `schema-dispatch` is what forbids it.
 
 A rule that counts words, links or days sets a ratio, a ceiling or a window, and the number in it is a judgement. Most
 are uncalibrated, because no corpus has yet had enough records of those types to fix one.
-`high-risk-review-window` and `staleness` are the exceptions.
+`high-risk-review-window`, `staleness` and `staleness-loud` are the exceptions.
 
 [FedRAMP](https://www.fedramp.gov/legacy/playbook/csp/authorization/poam/) sets `high-risk-review-window` from the risk
 level and gives a higher rating a shorter one: 30 days for high, 90 for moderate, 180 for low. Those windows time the
@@ -80,12 +80,19 @@ from 181 days to 184.
 
 `staleness` reads its windows off the calendar. 92 days is the longest quarter and 366 the longest year, so a rehearsal
 held to the cadence never trips. It measures `quarterly` and `annual` alone. `on-change` and `per-release` state an
-event, and a date check has no window to compare one against, so a record using either is reported only where
+event, and a date check has no window to compare one against, so a process using either is reported only where
 `last-rehearsed` is `never`.
 
-A fixture pins each of `high-risk-review-window`'s numbers, so moving one is visible. A fixture cannot pin
-`staleness`, because its windows are measured against the day of the run and a fixture date drifts further from
-today every day it sits there. A unit test names the day instead, and pins both windows against it.
+`staleness-loud` is the runbook twin of that rule, and it takes the 92 days as a floor that every `rehearsal-frequency`
+meets. A runbook is read during an incident, and the tools, permissions and commands it assumes go out of date whether
+or not the system it covers changed. The price is a walk a quarter for every runbook a corpus keeps.
+
+The rule does not read `rehearsal-method`, so a tabletop walk earns the same 92 days as a live one. A shorter window
+for the tabletop would fall hardest on the runbooks whose fault nobody can cause, which are the ones no drill reaches.
+
+A fixture pins each of `high-risk-review-window`'s numbers, so moving one is visible. A fixture cannot pin `staleness`
+or `staleness-loud`, because their windows are measured against the day of the run and a fixture date drifts further
+from today every day it sits there. A unit test names the day instead, and pins every window against it.
 
 A rule that matches text is a heuristic, and a heuristic gets tuned. Its pattern lives in `.schema/` for that reason.
 Tuning a regex there costs a schema edit. Moving it in the tool would cost a release every corpus has to take.

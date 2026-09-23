@@ -38,21 +38,22 @@ look like processes. You open the document on a day when the estate is already d
 
 <!-- BEGIN GENERATED: schema-runbooks -->
 
-| Field                   | Value                                          | Notes                                                                         |
-|-------------------------|------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†                 | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†               | string                                         | The singular name of the type, which CI checks against the folder.            |
-| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
-| `status` *†             | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down. In force at `active`. |
-| `owner` *†              | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †             | list                                           | Where this record's content came from, one entry per source.                  |
-| `tags` †                | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
-| `applies-to`            | list                                           | Service ids this runbook covers.                                              |
-| `severity` *            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                     |
-| `last-rehearsed` *      | date                                           | Quoted. The day somebody last followed the runbook end to end, or `"never"`.  |
-| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                         |
-| `requires-tools`        | list                                           | The tools the reader needs installed before starting.                         |
-| `requires-access`       | list                                           | The permissions or roles the reader needs before starting.                    |
+| Field                   | Value                                          | Notes                                                                                                                                        |
+|-------------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `id` *†                 | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.                                                                 |
+| `type` *†               | string                                         | The singular name of the type, which CI checks against the folder.                                                                           |
+| `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.                                                                 |
+| `status` *†             | `active` `draft` `retired`                     | Whether the runbook is current, drafted, or stood down. In force at `active`.                                                                |
+| `owner` *†              | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.                                                                       |
+| `sources` †             | list                                           | Where this record's content came from, one entry per source.                                                                                 |
+| `tags` †                | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types.                                                                |
+| `applies-to`            | list                                           | Service ids this runbook covers.                                                                                                             |
+| `severity` *            | `sev1` `sev2` `sev3`                           | The severity this runbook is written for.                                                                                                    |
+| `last-rehearsed` *      | date                                           | Quoted. The day somebody last walked the runbook end to end, or `"never"`.                                                                   |
+| `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the runbook.                                                                                        |
+| `rehearsal-method`      | `live` `tabletop`                              | Which walk the date records: `live` caused the fault, `tabletop` read the steps against the system. Required when `last-rehearsed != never`. |
+| `requires-tools`        | list                                           | The tools the reader needs installed before starting.                                                                                        |
+| `requires-access`       | list                                           | The permissions or roles the reader needs before starting.                                                                                   |
 
 \* Field is required  
 † Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
@@ -70,8 +71,8 @@ look like processes. You open the document on a day when the estate is already d
    to the escalation for a reader whose step did not work.
 7. Put the escalation path where the reader finds it without scrolling.
 8. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
-9. Set `last-rehearsed` and `rehearsal-frequency` honestly. List tools in `requires-tools` and permissions in
-   `requires-access`.
+9. Set `last-rehearsed` and `rehearsal-frequency` honestly, and `rehearsal-method` once somebody has walked it. List
+   tools in `requires-tools` and permissions in `requires-access`.
 
 **Conventions**
 
@@ -80,7 +81,8 @@ look like processes. You open the document on a day when the estate is already d
 * **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
   reach them.
 * **Rehearse on a cadence, or on the change that breaks it.** Every runbook sets `rehearsal-frequency`, and
-  `last-rehearsed` records the last time someone walked it.
+  `last-rehearsed` records the last time someone walked it. `staleness-loud` warns at 92 days whichever cadence you
+  set, because a runbook is read during an incident.
 
 ## What CI checks
 
@@ -116,11 +118,6 @@ look like processes. You open the document on a day when the estate is already d
 | `symptoms-first`                               | error   | Symptoms is the first section after the H1.                                                                     |
 | `outcome-stated`                               | error   | Resolution contains a line opening `Confirmed when`.                                                            |
 | `failure-route-stated`                         | error   | Resolution links to Escalation for a reader whose step did not work.                                            |
-
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule             | What it would verify                                        |
-|------------------|-------------------------------------------------------------|
-| `staleness-loud` | Rehearsal staleness, reported more loudly than a process's. |
+| `staleness-loud`                               | warning | A runbook nobody has walked, or one walked more than 92 days ago.                                               |
 
 <!-- END GENERATED: checks-runbooks -->
