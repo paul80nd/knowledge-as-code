@@ -95,9 +95,14 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 
-### A skill writes back to the repository the export came from
+### A skill writes back to the tracker the corpus states
 
-- A skill **MUST** send a correction to the repository the record's publishing block addresses.
+- A skill **MUST** send a correction to the backlog the record's corpus addresses under `tracker`.
+- A skill **MUST NOT** file a correction on the address a `publishing` block states, because a published form and a
+  backlog are one address on GitHub and two on Azure DevOps, where the project holds the backlog and the repository
+  inside it holds none.
+- A skill **MUST** file the item under the area path that `tracker` block states.
+- Where that area path is refused, a skill **MUST** file the item at the project default and say so.
 - A skill **MUST** raise it as an issue or a work item.
 - A skill **MUST** use the client that already authenticates to that platform.
 - A skill **MUST NOT** offer to edit the installed copy.
@@ -149,8 +154,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
   doing.
 - Where the agent cannot reach one of those, `## Who is asking` **MUST** name it as unreached.
 - The title **MUST** be the departure in one line, naming the work and the rule it breaks.
-- A skill **MUST** file the request on the repository addressed by the `publishing` block of the corpus that owns the
-  clause.
+- A skill **MUST** file the request on the backlog addressed under `tracker` by the corpus that owns the clause.
 - A skill **MUST NOT** file a request on a repository outside the organisation holding the plugin.
 - A skill **MUST** mark the issue `kac:deviation`, using whatever the platform calls a label.
 - Where the platform refuses a mark it does not already have, a skill **MUST** file the request unmarked.
@@ -332,6 +336,9 @@ broke it.
 - [ ] Every component reading no export declares `standalone` where it supports nothing, and leaves it off where it
       supports the components that do.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
+- [ ] Every skill that files reads the address from a `tracker` block, and none of them reads `publishing`.
+- [ ] Every item filed on Azure DevOps carries the area path its `tracker` block states, or says it went to the
+      project default.
 - [ ] `bundle.json` names every component that left, and the type that left it out.
 - [ ] Every finding opens on a `yaml kac-finding` block containing `corpus`, then the keys the rule names, and nothing
       else.
@@ -440,9 +447,9 @@ absent skill needed, so a reader who does not have it reads that as an answer in
 
 The organisation boundary is the one rule here that no clause states. A deviation register is what one organisation
 keeps about itself, and a request names the rule being broken, the service it is in and how long the gap lasts. Filed
-on a public corpus's repository, that is an organisation's engineering published to anyone watching, and the maintainer
-there could not accept the risk anyway. So the skill reads the owner segment of both `publishing` addresses and stops
-where they differ.
+on a public corpus's tracker, that is an organisation's engineering published to anyone watching, and the maintainer
+there could not accept the risk anyway. So the skill compares the two `id` values, and where they differ reads the owner
+segment of both bases and stops.
 
 Triage is the other half of the round trip, and it needs two marks rather than one. `kac:finding` says what the ticket
 is, which never changes. `kac:triaged` and a route say what was decided, which does. Keeping them apart makes the queue
@@ -473,10 +480,16 @@ session is the maintainer. `request-deviation` draws its boundary by comparing t
 a plugin and has two to compare.
 
 The corpus comes from `corpus:` and never from the publishing address, because a corpus files where its publishing
-block does not point. `Tracker.cs` derives a tracker from `publishing` only where that target has a backlog, which is
-why the descriptor states `tracker:` separately at all. A corpus published as a wiki or a documentation site has no
-repository in `publishing.base`, so a skill reading the corpus out of that block would refuse that corpus's own
+block does not point. That is also why a skill that files reads `tracker` and not `publishing`. `Tracker.cs` derives a
+tracker from `publishing` only where that target has a backlog, and cuts an Azure DevOps base back to the project,
+which is why the descriptor states `tracker:` separately at all. A corpus published as a wiki or a documentation site
+has no repository in `publishing.base`, so a skill reading the corpus out of that block would refuse that corpus's own
 maintainer for ever. `.corpus.yaml` is beside the records in every case.
+
+An area path is stated rather than derived for the same reason the tracker is. One Azure DevOps project gives one
+backlog to any number of corpora, and each publishes from a repository of its own, so no publishing block names the
+area the project divides that backlog by. GitHub gives a repository one issue list and labels to sort it, so the key
+means nothing there and `kac validate` refuses it.
 
 The verdict is a mark, and the reason is a comment. A route stated twice is two things that can disagree, so the
 comment argues and states no data. It is also the only part a person can push back on, which a mark on its own gives
@@ -508,6 +521,9 @@ standard.
 
 ## Changelog
 
+- 2026-09-23: a skill that files reads the address from a `tracker` block, and never from `publishing`. On Azure DevOps
+  the two differ: the project holds the backlog and the repository inside it holds none. The item carries the area path
+  that block states, and falls back to the project default when the area is refused.
 - 2026-09-15: a record drafted from a finding cites that finding, and its pull request cites the record and closes
   the issue. A reviewer can check the record against the observation, and the finding points back at the record. No
   record is drafted from a finding a pull request already answers.

@@ -1,7 +1,7 @@
 ---
 name: request-deviation
-description: Ask the owner of a clause to accept a knowing departure from it, as an issue on the repository that
-  publishes the corpus holding that clause. Use when the work in front of you is about to break a rule this corpus
+description: Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the
+  corpus holding that clause. Use when the work in front of you is about to break a rule this corpus
   states, and when someone says "request a deviation", "we need an exception" or "ask for a waiver". Use it as well,
   unprompted, whenever a design you are about to propose departs from a clause a lookup just gave you. A deviation is
   accepted by a named individual with the authority to accept the risk, and nothing in this session can name them.
@@ -86,7 +86,7 @@ under `sources`. A clause always belongs to a corpus, so the request goes to one
 | `sources`             | list of objects | one entry per corpus this one consumes                             |
 | `sources[].corpus`    | string          | that corpus's name                                                 |
 | `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-DEVI.OWNER` |
-| `sources[].tracker`   | object          | where work about that corpus's records is filed, with the same keys |
+| `sources[].tracker`   | object          | where work about that corpus's records is filed, same keys         |
 
 **The shortcode on the clause id names the corpus that owns it.** `eng:pol-TRUS.SCREEN` belongs to the `sources` entry
 whose `shortcode` is `eng`, and the request goes to the tracker that entry states. A clause id carrying no shortcode
@@ -299,7 +299,7 @@ you to paste it. A request read out to somebody is worth more than one lost to a
 ## Say what you did
 
 Close by naming the issue you opened and its URL, or the repository the body still needs pasting on. Where you filed it
-unlabelled, say so. Where you left something out of `## Who is asking`, say which.
+unlabelled, or in the project's default area, say so. Where you left something out of `## Who is asking`, say which.
 
 **Say that nothing is accepted yet.** The issue is a question, and the work departs from the clause until an individual
 with the authority answers it. Name what you are waiting for: a person, and a review date they are content with.

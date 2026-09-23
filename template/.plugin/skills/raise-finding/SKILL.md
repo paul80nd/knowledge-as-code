@@ -1,6 +1,6 @@
 ---
 name: raise-finding
-description: File something you noticed about this corpus as an issue on the repository that publishes it. Use when a
+description: File something you noticed about this corpus as an issue on the tracker that corpus states. Use when a
   record here is wrong, missing, out of date, or sent you the wrong way, and when someone says "raise a finding",
   "file that" or "report that back". Use it as well, unprompted, whenever a lookup answered badly or answered nothing
   and the estate should have had the answer. The corpus travelling with this plugin is a frozen copy, so an issue is
@@ -61,34 +61,33 @@ Three things are not findings, and each has somewhere better to go.
 
 ## Pick the tracker to file on
 
-`manifest.json` states three trackers: `tracker` for this corpus's own records, `framework` for the framework it took,
-and one under each entry in `sources` for a corpus this one consumes. Pick the tracker that owns what you noticed.
+`manifest.json` states a tracker for this corpus's own records under `tracker`, and one for each corpus it consumes
+under `sources`. Pick the tracker that owns what you noticed.
 
-| Field                 | Type            | What it holds                                                        |
-|-----------------------|-----------------|----------------------------------------------------------------------|
-| `corpus`              | string          | the name of this corpus, as `example-payments`                       |
-| `shortcode`           | string or null  | this corpus's own prefix                                             |
-| `commit`              | string          | the commit this export was taken at                                  |
-| `tracker`             | object          | where work about this corpus's records is filed                      |
-| `tracker.target`      | string          | one of `github`, `azure-devops`, `none`                              |
-| `tracker.base`        | string or null  | the repository or project to file against                            |
-| `tracker.area`        | string or null  | the area path inside an Azure DevOps project, separated by `/`        |
-| `framework`           | object          | where a problem with `kac`, the schema, the template or a skill goes  |
-| `sources`             | list of objects | one entry per corpus this one consumes                               |
-| `sources[].corpus`    | string          | that corpus's name, for the `corpus:` line of the body               |
-| `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`    |
-| `sources[].tracker`   | object          | where work about that corpus's records is filed                      |
+| Field                 | Type            | What it holds                                                       |
+|-----------------------|-----------------|---------------------------------------------------------------------|
+| `corpus`              | string          | the name of this corpus, as `example-payments`                      |
+| `shortcode`           | string or null  | this corpus's own prefix                                            |
+| `commit`              | string          | the commit this export was taken at                                 |
+| `tracker`             | object          | where work about this corpus's records is filed                     |
+| `tracker.target`      | string          | one of `github`, `azure-devops`, `none`                             |
+| `tracker.base`        | string or null  | the repository or project to file against                           |
+| `tracker.area`        | string or null  | the area path inside an Azure DevOps project, separated by `/`      |
+| `sources`             | list of objects | one entry per corpus this one consumes                              |
+| `sources[].corpus`    | string          | that corpus's name, for the `corpus:` line of the body              |
+| `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-AGNT.PROV`   |
+| `sources[].tracker`   | object          | where work about that corpus's records is filed                     |
 
-`framework` and every `sources[].tracker` state the same three keys `tracker` does.
+Every `sources[].tracker` states the same keys `tracker` does.
 
-Three rules decide which one, and they do not overlap.
+**A record whose id carries a shortcode goes to the `sources` entry with that shortcode.** Use its `tracker`. A record
+carrying no shortcode goes to the top-level `tracker`, and so does anything you noticed about the plugin, a skill or the
+export itself. File against the wrong one and the issue lands where nobody owns the thing you saw.
 
-* **A record whose id carries a shortcode goes to the `sources` entry with that shortcode.** Use its `tracker`.
-* **A record carrying no shortcode goes to the top-level `tracker`.**
-* **Anything about `kac`, the schema, the template, the plugin or a skill goes to `framework`.** Those arrived from
-  somewhere else, and the corpus holding them cannot change them.
-
-File against the wrong one and the issue lands where nobody owns the thing you saw.
+**A finding about the framework goes to this corpus's own tracker too.** `manifest.json` states a `framework` block, and
+this skill never files there. A framework finding carries your session id, your repository and its commit, and the
+maintainer of `kac` is often somebody you have no relationship with. Triage sends a stripped copy upstream by hand, and
+`looks-like: framework` is what marks it for that.
 
 **Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be,
 which is itself worth reporting. Print the body and ask whoever is with you where it belongs.
@@ -235,7 +234,7 @@ you to paste it. A finding read out to somebody is worth more than one lost to a
 ## Say what you did
 
 Close by naming the issue you opened and its URL, or the repository the body still needs pasting on. Where you filed it
-unlabelled, say so. Where you left something out of `provenance`, say which.
+unlabelled, or in the project's default area, say so. Where you left something out of `provenance`, say which.
 
 **Say that it is untriaged.** A repository may route a new issue onto a board, into a milestone, or past somebody who
 decides what happens to it, and none of that is visible from here. A finding nobody routes is a finding nobody reads,
