@@ -11,8 +11,9 @@ summary: The rulebook, imperative, BCP 14, with concrete examples and a conforma
 goes-here: A rule people must follow when building
 detail: >
   Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and
-  **MAY**. Standards compose: the rules for a piece of work are the union of the folders that apply to
-  it, and of the standards each of those names in `depends-on`.
+  **MAY**. Only the `Rules` section binds, and every other section explains, shows or checks, so a
+  modal written outside it obliges nobody. Standards compose: the rules for a piece of work are the
+  union of the folders that apply to it, and of the standards each of those names in `depends-on`.
 
 versus:
   controls: >
@@ -34,7 +35,7 @@ lineage:
     names: `status`, `owner` and `review-by`. BCP 14's keywords, declared in `parts.binding:` and
     `parts.advisory:` and binding only in capitals, which `part-modal` checks on every rule. W3C's
     conformance clause, as the required `Conformance checklist` a design is ticked against, and its good
-    practice of telling normative content from informative, which `binds-only-under-rules` states. ISO's
+    practice of telling normative content from informative, which `binds-only-under-rules` checks. ISO's
     normative references, as `depends-on`, and its rule that a document names what replaces it, as
     `superseded-by`
   divergence: >
@@ -221,8 +222,10 @@ rules:
   - id: binds-only-under-rules
     description: >
       Only the `Rules` section binds. Every other section explains, shows or checks, and carries no modal.
-    # No fact measures one section, so no `expr:` can ask this. `part-modal` holds the bullets under
-    # `Rules` and says nothing about the sections around them.
+    severity: warning
+    # No fact measures one section, so no `expr:` can ask this, and the message worth reading quotes the
+    # bullet at fault. Bullets are the whole of what it reads: a clause has the shape `_template.md`
+    # teaches, and a sentence discussing a keyword has not.
   - id: rules-have-controls
     description: >
       Every MUST and MUST NOT rule has a control that checks it, or the standard says which have none.

@@ -60,10 +60,14 @@ The rule in a single scannable sentence: what a reader needs to take away in one
 
 ## Rules
 
-The normative content. Write each rule as a bullet, and give it one [BCP 14](https://www.rfc-editor.org/rfc/rfc8174)
-keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**. A keyword binds only in bold capitals.
-`part-modal` reports a bullet with none, and one that leaves a keyword in plain text. It calls the keyword a modal,
-because the same declaration governs a policy's clause table.
+The normative content, and the only section carrying any. Write each rule as a bullet, and give it one [BCP
+14](https://www.rfc-editor.org/rfc/rfc8174) keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**. A
+keyword binds only in bold capitals. `part-modal` reports a bullet with none, and one that leaves a keyword in plain
+text. It calls the keyword a modal, because the same declaration governs a policy's clause table.
+
+`modal-outside-rules` warns where a bullet in any other section names one of those keywords, because no citation
+reaches a rule written there. Where a bullet names a keyword rather than using one, as a changelog entry recording a
+modal that moved does, write the keyword in backticks.
 
 Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. The heading is what
 somebody hunting one rule finds before the bullet, and it is the address a citation and an export both carry. A
