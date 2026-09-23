@@ -196,6 +196,9 @@ reply that you will apply no labels.
 `tracker.target` is `azure-devops`, and `tracker.base` is the project, as `https://dev.azure.com/<org>/<project>`. `az`
 wants the two apart: the organisation is `base` up to and including `<org>`, and the project is the segment after it.
 
+**A project name arrives percent-encoded, and `az` wants it spelled out.** A base ending `Engineering%20Standards`
+names a project `az` takes as `Engineering Standards`. Decode every escape before you pass it to `--project`.
+
 **Azure creates a tag it does not already have.** There is nothing to make first, so skip this section and triage.
 
 ### Where the platform runs no tracker
