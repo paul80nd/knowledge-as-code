@@ -451,6 +451,17 @@ checks:
       a ticket, and neither of those is one. A key the descriptor leaves out is asked nothing. See
       <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#tracker>.
 
+  descriptor-area:
+    severity: error
+    on-type-page: false
+    description: Every area path the corpus descriptor states sits beside a target that has area paths.
+    notes: >
+      Azure DevOps divides one project's backlog into area paths, and GitHub divides one repository's issue list with
+      labels. So `area` beside `github` or `none` names nothing the client that files can set, and the export drops it.
+      A `tracker:` block stating no target is asked about the target `publishing:` implies, because that is the one a
+      filing client will use. See
+      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#tracker>.
+
   import-restored:
     severity: error
     on-type-page: false

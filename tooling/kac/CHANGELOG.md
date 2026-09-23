@@ -64,6 +64,18 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac` checks closed word lists. Each of these three needs a judgement it cannot make: a store written as prose, an
   English plural, a personal name. The type page and the `_template.md` for each type already tell an author what to
   write, and `ref-resolves` already reports a `data` record whose `owned-by` names no service.
+- **A corpus states which area path inside an Azure DevOps project its work is filed under.** `tracker:` and
+  `framework:` in `.corpus.yaml` each take an `area`, written below the project and separated by `/`, as
+  `kac-it-swdev` or `kac-it-swdev/subteam`. One Azure DevOps project gives one backlog to any number of corpora, so
+  without an area every corpus's findings land in one queue. `kac export` writes it into `manifest.json` on all three
+  trackers: this corpus's, the framework's, and each entry in `sources`. The `raise-finding` and `request-deviation`
+  skills add it to `System.AreaPath` when they file, and retry without the field where the area does not exist or the
+  identity has no rights to it. `area` applies to `azure-devops` alone, so `kac validate` fails one stated beside
+  `github` or `none` under a new `descriptor-area` check, and the export drops it. A block stating no target is asked
+  about the one `publishing-target` implies. Nothing derives an area: only the corpus knows which one inside a shared
+  project is its own, so `kac new` and `kac update` never write it. `descriptor-version` moves to 6, and `kac update`
+  stamps it. The export's `formatVersion` stays at 4, because a reader written before the key reads every key it knows
+  and is still correct.
 
 ### Fixed
 

@@ -133,7 +133,7 @@ public class CorpusDescriptor
 {
     // The format `.corpus.yaml` is written in. The tool's own number: a corpus cannot know the shape a
     // newer tool writes, so an update stamps this alongside what it took.
-    public const int Format = 5;
+    public const int Format = 6;
 
     // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new
     // one and the file, and rewrites nothing: a corpus that has taken a copy is a repository someone owns.
@@ -256,14 +256,23 @@ public class CorpusDescriptor
     // `docs/corpus-descriptor.md` sets the two blocks side by side.
     public string FrameworkTarget = Publishing.None;
     public string? FrameworkBase;
+    public string? FrameworkArea;
 
     // Where work about this corpus's own records is filed. Kept apart from `publishing:` because a
     // published form and a backlog are not one address everywhere: GitHub gives one repository one issue
     // list, and Azure DevOps gives one project one backlog and many repositories, so a repository URL
-    // does not address it. Both are null where the descriptor states no block, and `Tracker.Own` derives
-    // the pair from `publishing:` instead.
+    // does not address it. The target and the base are null where the descriptor states no block, and
+    // `Tracker.Own` derives that pair from `publishing:` instead.
     public string? TrackerTarget;
     public string? TrackerBase;
+
+    // Which area path inside an Azure DevOps project a filed work item belongs to, written below the
+    // project and separated by `/`, or null where the item goes to the project's default area. One
+    // project gives one backlog to any number of corpora, so the area is what separates the work of one
+    // from the work of the rest. Nothing derives it: only the corpus knows which area is its own.
+    //
+    // Meaningful on `azure-devops` alone, and `Tracker.For` drops it beside any other target.
+    public string? TrackerArea;
 
     // Where the corpus root sits inside the published repository, where it is not the root itself.
     //
@@ -359,9 +368,11 @@ public class CorpusDescriptor
         var framework = Yaml.Get(root, "framework");
         descriptor.FrameworkTarget = Blank(Yaml.Str(Yaml.Get(framework, "target"))) ?? Publishing.None;
         descriptor.FrameworkBase = Blank(Yaml.Str(Yaml.Get(framework, "base")));
+        descriptor.FrameworkArea = Blank(Yaml.Str(Yaml.Get(framework, "area")));
         var tracker = Yaml.Get(root, "tracker");
         descriptor.TrackerTarget = Blank(Yaml.Str(Yaml.Get(tracker, "target")));
         descriptor.TrackerBase = Blank(Yaml.Str(Yaml.Get(tracker, "base")));
+        descriptor.TrackerArea = Blank(Yaml.Str(Yaml.Get(tracker, "area")));
         descriptor.ExportExclude.AddRange(Yaml.StrList(Yaml.Get(Yaml.Get(root, "export"), "exclude")));
         descriptor.PluginFrom = Blank(Yaml.Str(Yaml.Get(Yaml.Get(root, "plugin"), "from")));
 

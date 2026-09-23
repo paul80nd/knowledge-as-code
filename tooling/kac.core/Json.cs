@@ -67,13 +67,17 @@ public record ExportManifest(
 //
 // `Target` names the client that opens the ticket, as it does on `ExportPublishing`, and is written as
 // the corpus stated it. `Base` is the address of the backlog, which on Azure DevOps is the project and
-// never the repository or wiki inside it. `Tracker.cs` states what each one is written from.
+// never the repository or wiki inside it. `Area` is the area path below that project a new item is
+// filed under, and is null on every other target and wherever the corpus stated none. `Tracker.cs`
+// states what each one is written from.
 //
-// `Id` is the pair normalised, and it is the whole of how two blocks are told apart. A caller routing a
-// finding compares two `Id` strings and files where they differ, rather than parsing a URL itself and
-// reading `Example/Repo.git` and `example/repo` as two backlogs. `Base` and `Id` are null together,
+// `Id` is the target and the base normalised, and it is the whole of how two blocks are told apart. A
+// caller routing a finding compares two `Id` strings and files where they differ, rather than parsing a
+// URL itself and reading `Example/Repo.git` and `example/repo` as two backlogs. `Area` is left out of
+// it: one project is one backlog however many areas divide it, so two corpora sharing a project share
+// an `Id` and differ only in where inside it their work lands. `Base` and `Id` are null together,
 // wherever the block addresses no backlog.
-public record ExportTracker(string Target, string? Base, string? Id);
+public record ExportTracker(string Target, string? Base, string? Area, string? Id);
 
 // One corpus this export inherited, and where that corpus publishes.
 //

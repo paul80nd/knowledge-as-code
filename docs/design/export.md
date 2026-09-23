@@ -214,7 +214,7 @@ backlog and not this corpus's. `reposBase` says where the code of their services
     "publishing": { "target": "github", "ref": "133ebc79…", "pathPrefix": "examples/engineering" },
     "reposBase": "https://github.com/example",
     "tracker": { "target": "github", "base": "https://github.com/example/engineering",
-                 "id": "github:github.com/example/engineering" } }
+                 "area": null, "id": "github:github.com/example/engineering" } }
 ]
 ```
 
@@ -300,7 +300,7 @@ It says where work about this corpus's own records is filed.
 
 ```json
 "tracker": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code",
-             "id": "github:github.com/paul80nd/knowledge-as-code" }
+             "area": null, "id": "github:github.com/paul80nd/knowledge-as-code" }
 ```
 
 A reader that meets the export as an installed plugin has no repository to walk and no descriptor to open. The manifest
@@ -319,6 +319,12 @@ ticket is filed on either.
 `base` and `id` are `null` together wherever the block addresses no backlog: a `target` of `none`, a target that files
 nowhere, or a base the corpus never supplied. A base standing beside a target that cannot use it would read as an
 address, so it is not written at all.
+
+`area` is the area path below an Azure DevOps project a new item is filed under, separated by `/`. It is `null` on every
+other target and wherever the corpus stated none, so a client reading it never has to test the target first. Nothing
+derives it: two corpora in one project publish from two repositories, and neither `publishing` block names an area.
+[`.corpus.yaml`](../corpus-descriptor.md#tracker) is where a corpus states one, and `kac validate` reports one stated
+beside a target that has no area paths.
 
 ### `reposBase`
 
@@ -348,16 +354,20 @@ The normalisation drops every part of the base that never told two backlogs apar
 `.git` suffix, a trailing `/`, and upper case. `base` is already the project on `azure-devops`, so a corpus published
 in a wiki and one published in a repository of that project compare equal. `id` is `null` wherever `base` is.
 
+`area` is left out of it. One project is one backlog however many areas divide it, so two corpora sharing a project
+share an `id` and differ only in where inside it their work lands. A caller comparing two blocks is asking which
+tracker to file on, and an `id` that split by area would answer a question nobody asked.
+
 ### `framework`
 
 It says where to report a problem with the framework the corpus took, rather than with one of the corpus's own records.
 
 ```json
 "framework": { "target": "github", "base": "https://github.com/paul80nd/knowledge-as-code",
-               "id": "github:github.com/paul80nd/knowledge-as-code" }
+               "area": null, "id": "github:github.com/paul80nd/knowledge-as-code" }
 ```
 
-It is the same three keys `tracker` takes, written the same way, and it is stated or absent. Nothing derives it: where
+It is the same four keys `tracker` takes, written the same way, and it is stated or absent. Nothing derives it: where
 the corpus publishes says nothing about who maintains `kac`. `target` is `none` and `base` is `null` where the corpus
 states no framework tracker, which is the same absence `publishing` spells.
 [`.corpus.yaml`](../corpus-descriptor.md#framework) is where a corpus states one.
@@ -595,6 +605,9 @@ rather than any one type declaring it in its `export:` block. How a link is buil
 It went from 3 to 4 when `sources` arrived and a consumer began carrying what it consumes. `idKey` and `seeAlsoKey`
 arrived on each type's entry in the same edit and moved no `shapeVersion`, because they name keys that were already
 there rather than changing any line.
+
+`area` on each tracker arrived at 4 and moved nothing, by the test above: a reader written before it reads every key it
+knows and is still correct.
 
 ## What a type cannot say
 

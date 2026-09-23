@@ -13,6 +13,10 @@ public static class Tracker
     // nowhere are the rest of what `publishing-target` takes, and none of them has a backlog to file on.
     public static readonly IReadOnlyList<string> Targets = [Publishing.AzureDevOps, Publishing.GitHub];
 
+    // The targets that divide one backlog, which is Azure DevOps alone. GitHub gives a repository one
+    // issue list and labels to sort it, so it has nothing an area path would name.
+    public static readonly IReadOnlyList<string> Areas = [Publishing.AzureDevOps];
+
     // Every value a descriptor may write for a tracker's target, which is the pair above and `none` for
     // a corpus that has no tracker. `validate` holds `tracker:` and `framework:` to this list.
     public static readonly IReadOnlyList<string> Stated =
@@ -24,7 +28,7 @@ public static class Tracker
 
     // No tracker at all: the state a corpus reaches by publishing nowhere, by publishing somewhere with
     // no backlog, or by stating a block with nothing in it.
-    public static ExportTracker None => new(Publishing.None, null, null);
+    public static ExportTracker None => new(Publishing.None, null, null, null);
 
     // Where work about this corpus is filed. A stated key wins over the derived one, so a corpus
     // publishing to Azure Repos and filing on its project's backlog states the base and lets the client
@@ -39,45 +43,59 @@ public static class Tracker
         var target = descriptor.TrackerTarget ?? derived.Target;
         var agreed = target.Equals(derived.Target, StringComparison.Ordinal);
 
-        return For(target, descriptor.TrackerBase ?? (agreed ? derived.Base : null));
+        return For(target, descriptor.TrackerBase ?? (agreed ? derived.Base : null), descriptor.TrackerArea);
     }
 
     // Where to report a problem with the framework the corpus took. Stated or absent, and never derived:
     // where a corpus publishes says nothing about who maintains `kac`.
     public static ExportTracker Framework(CorpusDescriptor descriptor) =>
-        For(descriptor.FrameworkTarget, descriptor.FrameworkBase);
+        For(descriptor.FrameworkTarget, descriptor.FrameworkBase, descriptor.FrameworkArea);
 
     // The tracker a publishing block implies, for an export written before a corpus could state one. The
     // same derivation `Own` falls back to, reading the block an export published instead of a descriptor.
     public static ExportTracker From(ExportPublishing publishing) =>
         Derived(publishing.Target, publishing.Base);
 
-    // A target and a base as the pair they address. The target is written through as it was stated, so a
-    // value nobody spelled right stays visible in the manifest.
+    // A target, a base and an area as the address they make between them. The target is written through
+    // as it was stated, so a value nobody spelled right stays visible in the manifest.
     //
     // `Base` and `Id` are null together, and are null wherever the pair addresses no backlog: a target
     // that files nowhere, a target nobody spelled right, or a base nobody supplied. A base standing
     // beside a target that cannot use it would read as an address, and every caller would have to test
     // the target before believing it.
-    public static ExportTracker For(string? target, string? published)
+    //
+    // `Area` is dropped on the same terms, and again on GitHub, where a repository and its labels
+    // already divide one issue list. `validate` reports an area stated beside either under
+    // `descriptor-area`, so a corpus learns of the drop rather than reading it out of the export.
+    public static ExportTracker For(string? target, string? published, string? area)
     {
         var named = target is { Length: > 0 } ? target : Publishing.None;
-        if (!Targets.Contains(named, StringComparer.Ordinal)) return new ExportTracker(named, null, null);
+        if (!Targets.Contains(named, StringComparer.Ordinal)) return new ExportTracker(named, null, null, null);
+
+        var filed = Areas.Contains(named, StringComparer.Ordinal) ? Written(area) : null;
 
         return Project(named, published) is { } url
-            ? new ExportTracker(named, url, $"{named}:{Identity(url)}")
-            : new ExportTracker(named, null, null);
+            ? new ExportTracker(named, url, filed, $"{named}:{Identity(url)}")
+            : new ExportTracker(named, null, null, null);
     }
 
+    // The area path as the manifest writes it, or null where the corpus wrote nothing worth carrying. A
+    // stated key holding only spaces is the same absence as no key at all, and a leading or trailing
+    // separator would build a path with an empty segment in it.
+    private static string? Written(string? area) =>
+        area?.Trim().Trim('/') is { Length: > 0 } stated ? stated : null;
+
+    // A publishing block says where the corpus is read and nothing about which area its work is filed
+    // under, so every arm below derives no area. A corpus that wants one states it.
     private static ExportTracker Derived(string? publishingTarget, string? published) =>
         publishingTarget switch
         {
-            Publishing.GitHub => For(Publishing.GitHub, published),
+            Publishing.GitHub => For(Publishing.GitHub, published, null),
 
             // `az boards` files against the project whichever of them publishes the records, so the
             // wiki target does not travel. It says how a record is read and nothing about where a ticket
             // goes.
-            Publishing.AzureDevOps or Publishing.AzureDevOpsWiki => For(Publishing.AzureDevOps, published),
+            Publishing.AzureDevOps or Publishing.AzureDevOpsWiki => For(Publishing.AzureDevOps, published, null),
             _ => None
         };
 

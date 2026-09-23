@@ -1109,7 +1109,7 @@ public static class Exporter
     // which is stated or absent. The identity is computed here instead of read from the document, so
     // every block a reader compares was normalised by one rule.
     private static ExportTracker Sound(ExportTracker? t, ExportPublishing? from) =>
-        Read(t) is { } stated ? Tracker.For(stated.Target, stated.Base)
+        Read(t) is { } stated ? Tracker.For(stated.Target, stated.Base, stated.Area)
         : from is null ? Tracker.None
         : Tracker.From(from);
 

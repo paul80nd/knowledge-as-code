@@ -107,6 +107,7 @@ public static class Validator
         CheckTypeSetup(schema, tree, corpus.Descriptor, findings);
         CheckShortcode(schema, corpus.Descriptor, findings);
         CheckTargets(corpus.Descriptor, findings);
+        CheckAreas(corpus.Descriptor, findings);
         CheckCorpusEnums(schema, corpus.Docs, templates, corpus.Descriptor, findings);
         CheckImports(corpus.Imports, findings);
         CheckFreshness(standings ?? [], findings);
@@ -551,6 +552,34 @@ public static class Validator
             f.Add(new Finding(".corpus.yaml", null, Sev.Error, new CheckId("descriptor-target"),
                 $"{key} '{stated}' is not a target kac can {verb}. write one of: "
                 + $"{string.Join(", ", allowed)}."));
+        }
+    }
+
+    // Every area path the descriptor states, held to a target that has somewhere to put it. Azure DevOps
+    // divides one project's backlog into area paths, and GitHub divides one repository's issue list with
+    // labels, so an area stated beside `github` or `none` names nothing the client can set.
+    //
+    // Reported against the effective target, which for `tracker:` is the stated one or the target
+    // `publishing:` implies. A corpus publishing to Azure Repos states its area and no target at all, so
+    // reading the stated key alone would fail the ordinary case.
+    //
+    // An area the tool cannot use is dropped from the export by `Tracker.For`. This is what tells the
+    // corpus, because a key that goes quiet is one nobody knows to remove.
+    private static void CheckAreas(CorpusDescriptor descriptor, List<Finding> f)
+    {
+        Divided("tracker", descriptor.TrackerArea, Tracker.Own(descriptor).Target);
+        Divided("framework", descriptor.FrameworkArea, descriptor.FrameworkTarget);
+
+        return;
+
+        void Divided(string block, string? area, string target)
+        {
+            if (string.IsNullOrWhiteSpace(area)) return;
+            if (Tracker.Areas.Contains(target, StringComparer.Ordinal)) return;
+
+            f.Add(new Finding(".corpus.yaml", null, Sev.Error, new CheckId("descriptor-area"),
+                $"{block}.area '{area}' names an area path, and {block} files on '{target}', which has "
+                + $"no area paths. only {string.Join(", ", Tracker.Areas)} does."));
         }
     }
 

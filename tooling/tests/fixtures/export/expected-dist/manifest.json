@@ -24,11 +24,13 @@
   "tracker": {
     "target": "none",
     "base": null,
+    "area": null,
     "id": null
   },
   "framework": {
     "target": "none",
     "base": null,
+    "area": null,
     "id": null
   },
   "sources": [],

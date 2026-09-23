@@ -212,12 +212,14 @@ Where work about this corpus's records is filed.
 tracker:
   target: azure-devops
   base: https://dev.azure.com/acme/Standards
+  area: kac-it-swdev
 ```
 
-| Key      | What it states                                   | Who writes it |
-|----------|--------------------------------------------------|---------------|
-| `target` | the client that opens a ticket on the tracker    | you           |
-| `base`   | the repository or project the backlog belongs to | you           |
+| Key      | What it states                                          | Who writes it |
+|----------|---------------------------------------------------------|---------------|
+| `target` | the client that opens a ticket on the tracker           | you           |
+| `base`   | the repository or project the backlog belongs to        | you           |
+| `area`   | the area path inside an Azure DevOps project to file in | you           |
 
 **Leave the block out where the backlog belongs to what `publishing:` already names.** [`export`](cli/export.md) derives
 the address from that block instead, by the table below. A corpus published on GitHub therefore states nothing: a
@@ -231,6 +233,28 @@ and many repositories, so a repository URL does not address the backlog.
 
 Write the project URL for `azure-devops`, as `https://dev.azure.com/{org}/{project}`. A URL naming a repository or a
 wiki inside the project is cut back to the project, because that is where the backlog is.
+
+#### `area`
+
+`area` is the area path below that project a new work item is filed under. Write it separated by `/`, the way `base` is
+already written, as `kac-it-swdev` or `kac-it-swdev/subteam`. The client that files converts it to the backslashes Azure
+Boards uses.
+
+**State it where one Azure DevOps project holds several corpora.** One project has one backlog, so without an area every
+corpus's work lands in one undifferentiated queue. With one, a team sees its own.
+
+**Leave it out and an item lands in the project's default area.** That is the ordinary case for a project holding one
+corpus.
+
+`area` applies to `azure-devops` alone. GitHub divides one repository's issue list with labels, so
+[`validate`](cli/validate.md) refuses an `area` stated beside `github` or `none`. A block stating no `target` is asked
+about the one [`publishing-target`](#publishing-target) implies, because that is the client that will file.
+
+Nothing derives `area`, and [`new`](cli/new.md) and [`update`](cli/update.md) never write it. Only the corpus knows
+which area inside a shared project is its own. Set it by hand.
+
+`area` is not checked against Azure DevOps. `validate` reaches no network. An area path that does not exist, or one the
+identity filing has no rights to, fails at the point the item is created.
 
 #### What `export` derives
 
@@ -258,13 +282,16 @@ framework:
   base: https://github.com/paul80nd/knowledge-as-code
 ```
 
-| Key      | What it states                                   | Who writes it |
-|----------|--------------------------------------------------|---------------|
-| `target` | the client that opens an issue on the tracker    | `new`         |
-| `base`   | the repository or project the tracker belongs to | `new`         |
+| Key      | What it states                                          | Who writes it |
+|----------|---------------------------------------------------------|---------------|
+| `target` | the client that opens an issue on the tracker           | `new`         |
+| `base`   | the repository or project the tracker belongs to        | `new`         |
+| `area`   | the area path inside an Azure DevOps project to file in | you           |
 
 [`export`](cli/export.md) writes the block into the manifest, so an agent that meets your corpus as an installed plugin
 has the address. Without it, the only address that agent has is your own `publishing.base`.
+
+`area` means here what it means on [`tracker`](#area), and is held to the same rule. `new` writes none.
 
 `target` takes the same three values [`tracker`](#tracker) takes. Write `github` for a tracker on github.com, and
 `azure-devops` for one on Azure Boards. Write `none`, or leave the block out, where you know of no tracker.
