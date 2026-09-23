@@ -21,7 +21,8 @@ owner: human:alex.doe
 
 Serves the public catalogue. It is here because the records around it name it — a data domain it owns, an integration
 it uses, a standard it is held to, and two postmortems it appears in — and `ref-resolves` asks that each of those ids
-lands somewhere.
+lands somewhere. It is graded `critical` and depends on a service graded `important`, which is the edge
+`dependency-criticality` reports.
 
 ## Where it lives
 

@@ -60,7 +60,9 @@ A question the grammar cannot ask needs a rule written in C# instead, and that r
 `kac checks` prints the ones that do report.
 
 Some rules read every record at once, and some read what sits beside them. `dependency-cycle` reports a loop once,
-against the lowest id on that loop. `alignment-rollup` reads the framework register. `mirrors-repo-links` reads
+against the lowest id on that loop. `dependency-criticality` compares a record's grade with the grade on each record it
+depends on. That comparison needs an order, and `ordered: true` on the enum in `.schema/_enums.yaml` declares one: the
+first value listed is the most significant. `alignment-rollup` reads the framework register. `mirrors-repo-links` reads
 `repos-base` from [`.corpus.yaml`](../corpus-descriptor.md#repos-base), because no record states where the estate
 keeps its code.
 

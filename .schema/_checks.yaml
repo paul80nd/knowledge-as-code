@@ -719,3 +719,13 @@ checks:
     notes: >
       No one record shows the loop, which is a property of the edges together, so the message states the route it
       runs through. Reported once per loop, against the lowest id on it.
+
+  dependency-criticality:
+    severity: warning
+    description: No record is graded above the criticality of anything it depends on.
+    notes: >
+      The grade at the far end of an edge sits on another document, so the record stating the edge cannot show the
+      mismatch. The grading field is whichever one draws on an enum declaring `ordered: true`, and the edge is
+      whichever field points back at the type's own records. A warning, because the edge is often a degradation the
+      estate accepts: what it buys is the sentence that defends it. A grade outside its range, and an id that
+      resolves to nothing, each go to the check already reporting them.

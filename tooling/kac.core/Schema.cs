@@ -20,6 +20,23 @@ public sealed class FieldSpec
     public string? Of { get; init; }                          // each entry, where Type is list: ValueChecks.EntryTypes
     public IReadOnlyList<string>? Values { get; init; }       // enum values, resolved
 
+    // Whether `Values` is a ranking, most significant first, taken from the enum that declared it. A
+    // field writing its values inline is never ranked, because the flag sits on the enum. See EnumSpec.
+    public bool Ordered { get; init; }
+
+    // Where a value sits in the ranking, `0` being the most significant. Null where the field declares
+    // no ranking, and where the range excludes the value, which `enum` reports.
+    public int? Rank(string value)
+    {
+        if (!Ordered || Values is null) return null;
+
+        for (var i = 0; i < Values.Count; i++)
+            if (string.Equals(Values[i], value, StringComparison.Ordinal))
+                return i;
+
+        return null;
+    }
+
     // The one value of `values:` that says a record is in force. Declared rather than derived, because it
     // is not `active` across the set: an ADR settles at `accepted`, a service at `live`, a tool at
     // `approved`. Anything sorting a settled record from an unsettled one reads this, and a range alone
@@ -616,6 +633,12 @@ internal sealed class KeyReader(string file)
         _levels.SelectMany(l => l.Unread().Select(key => new UnreadKey(file, l.Where, key)));
 }
 
+// One shared enum: its values, and whether they rank. The first value is the most significant.
+//
+// `Ordered` sits on the enum because the ranking belongs to the vocabulary. Two fields drawing on the
+// same enum then give a rule one answer about what its order means.
+public sealed record EnumSpec(IReadOnlyList<string> Values, bool Ordered);
+
 // One tier: the word a document carries in its frontmatter, what it is called on a page, how a document
 // of that tier behaves, and its note. The note is what is worth saying about the tier before the types
 // beneath it are listed, and a tier need not have one.
@@ -666,8 +689,8 @@ public sealed partial class Schema
     public IReadOnlyDictionary<string, FieldSpec> Universal { get; init; } = new Dictionary<string, FieldSpec>();
     public IReadOnlyList<string> Reserved { get; init; } = [];
 
-    public IReadOnlyDictionary<string, IReadOnlyList<string>> Enums { get; init; } =
-        new Dictionary<string, IReadOnlyList<string>>();
+    public IReadOnlyDictionary<string, EnumSpec> Enums { get; init; } =
+        new Dictionary<string, EnumSpec>();
 
     public IReadOnlyDictionary<string, TypeSchema> ByFolder { get; init; } = new Dictionary<string, TypeSchema>();
 
@@ -690,7 +713,7 @@ public sealed partial class Schema
         IReadOnlyList<string> Order,
         IReadOnlyDictionary<string, FieldSpec> Fields,
         IReadOnlyList<string> Reserved,
-        IReadOnlyDictionary<string, IReadOnlyList<string>> Enums,
+        IReadOnlyDictionary<string, EnumSpec> Enums,
         IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> Shapes);
 
     // The folder holding the schema a corpus is judged against: the nearest one at or above the corpus
@@ -762,9 +785,12 @@ public sealed partial class Schema
 
         var enumKeys = new KeyReader(".schema/_enums.yaml");
         var enumsRoot = enumKeys.At(Read("_enums.yaml"), TheFile);
-        var enums = new Dictionary<string, IReadOnlyList<string>>();
+        var enums = new Dictionary<string, EnumSpec>();
         foreach (var (name, node) in Yaml.Map(enumsRoot.Get("enums")))
-            enums[name] = Yaml.StrList(enumKeys.At(node, $"enum '{name}'").Get("values"));
+        {
+            var declared = enumKeys.At(node, $"enum '{name}'");
+            enums[name] = new EnumSpec(Yaml.StrList(declared.Get("values")), Yaml.Bool(declared.Get("ordered")));
+        }
         unread.AddRange(enumKeys.Unread());
 
         // After the enums, because a shape's keys are fields and one of them may draw its values from
@@ -1014,7 +1040,7 @@ public sealed partial class Schema
     ];
 
     private static FieldSpec ParseField(KeyReader keys, Level node, string name,
-        IReadOnlyDictionary<string, IReadOnlyList<string>> enums,
+        IReadOnlyDictionary<string, EnumSpec> enums,
         IReadOnlyDictionary<string, IReadOnlyList<FieldSpec>> shapes,
         IReadOnlyDictionary<string, IReadOnlyList<string>> corpusEnums)
     {
@@ -1030,6 +1056,7 @@ public sealed partial class Schema
         // `Validator.CheckCorpusEnums` reports against the descriptor.
         IReadOnlyList<string>? values = null;
         string? corpusEnum = null;
+        var ordered = false;
         switch (node.Get("values"))
         {
             case YamlScalarNode { Value: { } v } when v.StartsWith("$corpus.", StringComparison.Ordinal):
@@ -1043,10 +1070,17 @@ public sealed partial class Schema
                 break;
             case YamlScalarNode { Value: { } v } when v.StartsWith("$enums.", StringComparison.Ordinal):
                 var enumName = v["$enums.".Length..];
-                values = enums.GetValueOrDefault(enumName);
-                if (values is null)
+                if (enums.GetValueOrDefault(enumName) is { } shared)
+                {
+                    values = shared.Values;
+                    ordered = shared.Ordered;
+                }
+                else
+                {
                     problem = $"field '{name}' draws its values from '{v}', and _enums.yaml declares no "
                               + $"'{enumName}'.";
+                }
+
                 break;
             case YamlSequenceNode seq:
                 values = Yaml.StrList(seq);
@@ -1107,6 +1141,7 @@ public sealed partial class Schema
             Of = Yaml.Str(node.Get("of")),
             Entry = entry,
             Values = values,
+            Ordered = ordered,
             InForce = Yaml.Str(node.Get("in-force")),
             CorpusEnum = corpusEnum,
             Refs = refs,

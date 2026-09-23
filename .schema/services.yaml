@@ -201,6 +201,10 @@ rules:
   - id: no-dependency-cycles
     description: A cycle in the dependency graph, with every service the loop runs through.
     severity: warning
+  # `criticality` is ranked, so a service and the ones it calls can be compared.
+  - id: dependency-criticality
+    description: No service is graded above the criticality of anything it depends on.
+    severity: warning
   # The status guard matches the field's own `required-when`, so stating `none` on a draft is never worse
   # than leaving the key out.
   - id: critical-service-is-alerted
