@@ -484,6 +484,9 @@ affected, so the reader can tell without fetching anything whether this is worth
 `requires-tools` and `requires-access` decide whether a reader may start at all. `severity` is what an agent sorts on
 where several runbooks match.
 
+`rehearsal-method` stays behind. `last-rehearsed` already tells a reader how long ago somebody walked the runbook, and
+which kind of walk it was changes nothing they decide before opening the page.
+
 The steps stay behind. AWS splits this document in two, a playbook that finds the cause and a runbook that resolves it,
 and this type is both on one page. A reader who has found the right page fetches it whole.
 
