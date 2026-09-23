@@ -35,7 +35,9 @@ Check the pool size against the connection count.
 
 ## Resolution
 
-Raise the pool ceiling, or find what is holding connections open. If neither works, [escalate](#escalation).
+Raise the pool ceiling, or find what is holding connections open.
+
+Confirmed when the pool has free connections and the errors stop. If neither works, [escalate](#escalation).
 
 ## Escalation
 

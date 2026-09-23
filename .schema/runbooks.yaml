@@ -143,8 +143,14 @@ rules:
     # `sections` requires the heading. This rule reads the branches under it, and a Diagnosis written
     # as prose has none to read.
   - id: outcome-stated
-    description: Resolution ends with a line opening `Confirmed when`.
-    # Declared. A resolution with no outcome leaves the reader guessing whether to stop.
+    description: Resolution contains a line opening `Confirmed when`.
+    severity: error
+    # Presence, not position. The closing sentence wraps at 120 columns, so its last line is the escalation link.
+    expr: >-
+      section_matches('Resolution', '(?m)^Confirmed when')
+    message: >
+      nothing in `Resolution` tells a reader when the fix is done. End the section with a line opening
+      `Confirmed when`, closed with a link to `#escalation`.
   - id: failure-route-stated
     description: Resolution links to Escalation for a reader whose step did not work.
     severity: error
