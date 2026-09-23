@@ -11,7 +11,8 @@ tiers:
     behaviour: immutable once accepted
     note: >
       What was decided is superseded rather than rewritten, so what was thought at the time survives being
-      wrong.
+      wrong. A decided record states its own constraints. Cite a living record for background, never as the
+      authority a decision depends on.
 
   normative:
     label: Normative

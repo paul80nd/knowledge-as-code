@@ -16,7 +16,8 @@
 
 ### Decided: immutable once accepted
 
-What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong.
+What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong. A decided
+record states its own constraints. Cite a living record for background, never as the authority a decision depends on.
 
 **[ADRs](../adrs.md).** An architecturally significant decision affecting more than one repository, and the reasoning
 behind it. The context, the choice, the alternatives weighed, and the consequences. An accepted ADR is immutable, so a
