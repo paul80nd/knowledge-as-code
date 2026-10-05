@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.57.2" />
     <ProjectReference Include="../kac.core/kac.core.csproj" />
   </ItemGroup>
 
