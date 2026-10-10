@@ -19,13 +19,13 @@ Load `technical-writing` first. This page adds the shape of prose in the tool.
 Write comments to John Ousterhout's *A Philosophy of Software Design*, chapters 12 to 16. You know it. The rules
 below say where this repository differs.
 
-* **Comment every constraint a maintainer could break by tidying the code.** Where deleting a line would still
-  compile and still pass the tests, say why it is there. That is the comment most often missing, and the one that
-  pays for itself.
+* **Comment a constraint a maintainer could break by tidying the code.** Where deleting a line would still compile
+  and still pass the tests, say what the line protects. One or two lines is enough. Most code needs no comment.
 * **State the constraint. Do not argue for it.** A comment that defends a choice against the alternatives is a
-  design page in the wrong place. The reasoning goes under `docs/design/`, and the comment cites the path.
-* **Keep a comment to one paragraph.** A longer one is a design page in the wrong place too. Move it and cite the
-  path.
+  design page in the wrong place. The reasoning goes under `docs/design/`, and the comment cites the path. A
+  "because" or a "rather than" in a comment is usually the argument starting. Cut the clause.
+* **Keep a comment to one paragraph of three lines.** `CommentLengthTests` fails a `//` block that runs longer. Where
+  the reason needs more, move it to a page and cite the path.
 * **A comment at the same level as the code repeats it. Delete it.**
 * **Describe the design as it stands.** A comment never says what the code used to do. The commit message holds
   that.

@@ -15,10 +15,8 @@ public partial class SkillInstructionTests
         Path.Combine(Repo.Root, "template", ".plugin", "skills")
     ];
 
-    // A clause that forbids something, up to the punctuation ending it. The verbs are the ones the writing skills use
-    // for an instruction, so a spelling nobody listed here is a miss rather than a false failure. `does not` is left
-    // out on purpose: it describes what the tool writes, and the sentence around it usually tells the reader to
-    // supply the field themselves.
+    // A clause forbidding something, up to its closing punctuation, in the verbs the writing skills use. `does not`
+    // is left out: it describes what the tool writes, around a sentence telling the reader to supply the field.
     [GeneratedRegex(@"\b(?:never|do not|don[''’]t) (?:write|set|fill|state|give)\b[^.,;\n]*"
                     + @"|\bleaves? [^.,;\n]{0,40}?\bout\b[^.,;\n]*"
                     + @"|\bomits?\b[^.,;\n]*", RegexOptions.IgnoreCase)]

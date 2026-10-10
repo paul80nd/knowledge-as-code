@@ -46,10 +46,9 @@ public static class Freshness
                 continue;
             }
 
-            // An empty listing is not a current lock. A feed answers 404 both for a package nobody has
-            // published and for a private one refusing an anonymous read, and `Registry` says the two are
-            // not tellable apart there. A folder answering none has not been packed into. None of the
-            // three says the locked version is the newest there is, so none of them may read as current.
+            // An empty listing is not a current lock. A feed answers 404 for an unpublished package and for a
+            // private one refusing an anonymous read (see `Registry`), and an empty folder was never packed into.
+            // None of the three says the locked version is the newest.
             if (versions.Count == 0)
             {
                 standings.Add(new ImportStanding(

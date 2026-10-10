@@ -29,11 +29,8 @@ public static class Instants
             ? end.DayNumber - start.DayNumber
             : 0;
 
-    // The time between two moments, as an ISO 8601 duration in hours, minutes and seconds. Never days:
-    // ISO 8601 gives a day no fixed length, so a caller comparing the text would take one spelling of a
-    // span and refuse the other.
-    //
-    // Empty where either value is absent or not a moment, and where the second is the earlier.
+    // The time between two moments as an ISO 8601 duration in hours, minutes and seconds, never days, which ISO 8601
+    // gives no fixed length. Empty where either value is absent or not a moment, or where the second is earlier.
     public static string Span(string? from, string? to)
     {
         if (Read(from) is not { } start || Read(to) is not { } end || end < start) return "";

@@ -108,10 +108,8 @@ public partial class Doc
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
 
-    // Keyed the way a reference reaches it, because a reference holds only the label.
-    //
-    // A label defined twice keeps the first target, because that is the one a renderer resolves a
-    // reference to. Taking the last would report a finding against a definition the page never uses.
+    // Keyed by label, because a reference holds only the label. A label defined twice keeps the first target, which
+    // is the one a renderer resolves.
     public readonly Dictionary<string, string> DefinedTargets = new(StringComparer.OrdinalIgnoreCase);
 
     // Definitions render as nothing, so an export leaves these spans out of a section's prose.
@@ -244,13 +242,9 @@ public partial class Doc
             doc.DefinitionSpans.Add((def.Span.Start, def.Span.End + 1));
         }
 
-        // Bare [bracket] tokens left in prose. An undefined shortcut reference such as [ADR-0099]
-        // renders as literal text. Markdig emits a failed link opener '[' as its own literal inline and
-        // leaves the ']' in the following sibling, so the brackets never survive in one literal: the
-        // scan rejoins the run of consecutive literal siblings first. A real link or code span is a
-        // non-literal inline and breaks the run, which is what keeps code and resolved links out.
-        // Driven from each leaf block's root inline, because `Descendants<ContainerInline>` yields only
-        // nested containers and never the root that holds the run.
+        // Bare [bracket] tokens left in prose. Markdig splits a failed link's `[` and `]` across literal siblings, so
+        // the scan rejoins each run of literals, which a link or a code span breaks. Driven from each leaf's root
+        // inline, because `Descendants<ContainerInline>` never yields the root.
         foreach (var leaf in ast.Descendants<LeafBlock>())
             if (leaf.Inline is not null)
                 ScanContainer(leaf.Inline, doc.BareBracketTokens);
@@ -650,15 +644,9 @@ public partial class Doc
         {
             if (para.Inline?.FirstChild is not { } first) continue;
 
-            // Two shapes reach the same line. Written as the form, markdig gives one italic inline
-            // opening on the bold label. Written with a space against either mark, it reads neither as
-            // emphasis and gives an unpaired delimiter run, the bold label, and the rest of the line
-            // beside it. The second is what the author meant and not what the page will show, so it is
-            // collected and told apart by `Italic` rather than passed over.
-            //
-            // What each reads is the stretch the label opens and no more. The first stops at the
-            // closing mark, so the second stops at the line break, and a paragraph running on past one
-            // does not hand either a citation the footnote never claimed.
+            // Two shapes reach this line: the form, as one italic opening on the bold label, and a mark with a space
+            // against it, as an unpaired delimiter run beside the label. `Italic` tells them apart. Each reads only
+            // the stretch its label opens: to the closing mark, or to the line break.
             bool italic;
             IEnumerable<MarkdownObject> scope;
             EmphasisInline bold;
@@ -710,12 +698,9 @@ public partial class Doc
         }
     }
 
-    // The label this link puts in front of a reader, or null where it shows them something else.
-    //
-    // `IsShortcut` marks a shortcut and leaves a collapsed reference alongside a full one, so the two
-    // are told apart by the text instead: flattening a collapsed reference returns its label, and a
-    // full reference returns the words its author wrote. A label carrying emphasis or a code span
-    // renders as neither, so it answers null here and is judged at its definition alone.
+    // The label this link shows a reader, or null where it shows something else. `IsShortcut` does not separate a
+    // collapsed reference from a full one, so the flattened text does. A label carrying emphasis or a code span
+    // answers null, and is judged at its definition alone.
     private static string? Displayed(LinkInline link) =>
         link.Label is { } label && Md.PlainText(link) == label ? label : null;
 

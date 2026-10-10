@@ -31,11 +31,8 @@ public sealed class Publishing
 
     public required string Target { get; init; }
 
-    // The commit every link resolves against, so a link reads the corpus as it was exported.
-    //
-    // `azure-devops-wiki` is the exception it cannot help. No `?pagePath=` URL takes a commit, so a
-    // person following that target's link reads whatever the wiki holds now. An agent still reads the
-    // pinned version, because the ref reaches it through the export rather than through the link.
+    // The commit every link resolves against, so a link reads the corpus as exported. No `?pagePath=` URL takes one,
+    // so an `azure-devops-wiki` link shows the wiki as it is now; an agent still reads the pinned version.
     public required string Ref { get; init; }
 
     // Without a leading slash, or null where the corpus is the repository. Carried separately as well as baked
@@ -61,10 +58,8 @@ public sealed class Publishing
         return new Publishing(published, descriptor.PathPrefix) { Target = target, Ref = gitRef };
     }
 
-    // Only the wiki has anything to check. Azure DevOps assigns a page a numeric id when it is first
-    // created and shows that id in the URL, so a base copied out of the address bar carries one and
-    // names a page rather than the wiki. Nothing derives the id of a second page from the id of the
-    // first, so a base carrying one addresses exactly one record and silently misaddresses the rest.
+    // Only the wiki has anything to check. A base copied from the address bar carries the numeric id Azure DevOps gave
+    // one page, and nothing derives another page's id from it, so it addresses one record and misaddresses the rest.
     private static bool Joinable(string target, string published)
     {
         if (!target.Equals(AzureDevOpsWiki, StringComparison.Ordinal)) return true;
@@ -125,12 +120,8 @@ public sealed class Publishing
     private static string Rest(string repo, int from) =>
         repo[from..].TrimStart(':', '/').TrimEnd('/');
 
-    // The anchor a link uses to land on a part. GitHub derives it from the heading by discarding the
-    // punctuation it meets, which is the form `Md.Slug` writes and the form the corpus's own links
-    // already use.
-    //
-    // Azure DevOps percent-encodes that punctuation, so a heading with `/`, `:` or `.` gets the wrong anchor
-    // there. Its rule is unverified, so the corpus writes a linked heading without punctuation. See `Md.cs`.
+    // The anchor a link uses to land on a part, as GitHub derives it and `Md.Slug` writes it. Azure DevOps
+    // percent-encodes punctuation, so a heading with `/`, `:` or `.` gets the wrong anchor there. See `Md.cs`.
     public static string Anchor(string heading) => Md.Slug(heading);
 
     // The link rule as one string with `{path}` and `{anchor}` left to fill. The ref and the path prefix are

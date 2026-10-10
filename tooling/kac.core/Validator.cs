@@ -4,11 +4,9 @@ namespace kac.core;
 
 public static class Validator
 {
-    // The whole of `validate`. A caller wanting the tool's verdict calls this, so none can run a subset
-    // and believe it ran the lot.
-    //
-    // `today` is the day a rule written against `today()` judges by. See `docs/design/expressions.md`.
-    // A null `standings` reports no import's freshness, rather than every import as current.
+    // The whole of `validate`, so no caller runs a subset and believes it ran the lot. `today` is the day a rule
+    // written against `today()` judges by (see `docs/design/expressions.md`). A null `standings` reports no import's
+    // freshness, rather than every import as current.
     public static List<Finding> CheckAll(
         LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
     {
@@ -245,13 +243,8 @@ public static class Validator
         }
     }
 
-    // A declared type with nothing behind it is valid: a corpus grows into its schema. Half of one is not.
-    // A folder needs its page and its template, and a page needs its folder. The generated index is
-    // `generate --check`'s to report.
-    //
-    // A folder counts as present when it holds tracked files. An empty directory git has never seen is not
-    // part of the corpus, so the answer is the same in a fresh clone as on the machine that happened to
-    // create it.
+    // A declared type with nothing behind it is valid; half of one is not. A folder needs its page and template, and a
+    // page its folder. A folder counts as present when it holds tracked files, so a fresh clone answers the same.
     private static void CheckTypeSetup(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, tree, descriptor, f);
@@ -957,11 +950,8 @@ public static class Validator
             declared.Add((spec, label, d.CitationFootnotes.GetValueOrDefault(label, []), targets));
         }
 
-        // Decided once per line rather than per field. Two fields spelling one label are handed the same
-        // list, so a per-field pass would report each line twice.
-        //
-        // The comparer is held in a typed local so the group key comes from the selector. Passed
-        // inline, it widens the key to object and the group no longer enumerates.
+        // Decided once per line, because two fields spelling one label share a list. The comparer is held in a typed
+        // local so the group key comes from the selector; passed inline, it widens the key to object.
         IEqualityComparer<List<CitationFootnote>> sameLines = ReferenceEqualityComparer.Instance;
         foreach (var group in declared.GroupBy(x => x.Lines, sameLines))
         {

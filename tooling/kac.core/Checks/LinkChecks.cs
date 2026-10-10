@@ -131,10 +131,8 @@ public static class LinkChecks
 
         if (rel is null) return null;
 
-        // A directory is deliberately not a target. In Azure DevOps `data.md` is the page and `data/`
-        // is its children, and the two are one node. So `/data` is a link to the page, which the `.md`
-        // form below already resolves. Accepting the directory as well would resolve a link to a type
-        // whose page has gone.
+        // A directory is not a target: in Azure DevOps `data.md` and `data/` are one node, so `/data` links the page,
+        // which the `.md` form resolves. Accepting the directory would resolve a link to a type whose page has gone.
         if (tree.Exists(rel)) return rel;
         return tree.Exists(rel + ".md") ? rel + ".md" : null; // ADO resolves links with .md omitted
     }

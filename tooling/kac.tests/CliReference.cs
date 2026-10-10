@@ -8,13 +8,9 @@ using Xunit.Sdk;
 
 namespace kac.tests;
 
-// `Spectre.Console.Cli` carries a hidden `cli xmldoc` command that prints its command model, so a page shows the usage
-// the tool accepts and not a second statement of it. The model is asked of the built `kac`, because one assembled here
-// would prove the renderer and nothing else.
-//
-// Two properties of that output are worked around below. It is hard-wrapped to eighty columns even when redirected,
-// which drops a newline where a description had a space, so every description is put back onto one line. And it names
-// no global option, because `--help` and `--version` belong to the parser. The overview carries those.
+// Usage as `Spectre.Console.Cli`'s hidden `cli xmldoc` prints it from the built `kac`. Its output is hard-wrapped to
+// eighty columns even when redirected, so every description is put back onto one line, and it names no global option,
+// because `--help` and `--version` belong to the parser.
 internal static partial class CliReference
 {
     internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");

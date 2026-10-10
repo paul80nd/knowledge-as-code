@@ -67,10 +67,9 @@ public static class Tracker
             _ => None
         };
 
-    // The base as a backlog is addressed, or null where nothing stated one. An Azure DevOps base is cut
-    // back to the project holding the backlog, whether the corpus stated it or `Own` derived it: the
-    // segment below it names a repository or a wiki, and no ticket is filed on either. A GitHub base is
-    // already the repository the issues belong to, so it loses only a trailing separator.
+    // The base as a backlog is addressed, or null where nothing stated one. An Azure DevOps base is cut back to the
+    // project, because the segment below names a repository or a wiki and no ticket is filed on either. A GitHub base
+    // loses only a trailing separator.
     private static string? Project(string target, string? published)
     {
         if (published?.Trim().TrimEnd('/') is not { Length: > 0 } url) return null;

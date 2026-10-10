@@ -47,7 +47,7 @@ public partial class CommentCitationTests
             "a comment cites a page nothing answers to:\n  " + string.Join("\n  ", missing));
     }
 
-    private static IEnumerable<string> Sources() =>
+    internal static IEnumerable<string> Sources() =>
         Directory.EnumerateFiles(Path.Combine(Repo.Root, "tooling"), "*.cs", SearchOption.AllDirectories)
             .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
                         && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"));

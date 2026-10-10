@@ -7,10 +7,8 @@ namespace kac.core;
 // here: it goes straight to the stream, so no renderer can wrap it.
 public static class Out
 {
-    // A redirected stream has no width to report, and Spectre answers 80. That is a guess about a
-    // terminal nobody is looking at: it wraps a finding message mid-word and splits a check id across
-    // two lines. A width no line reaches leaves redirected output as one line per fact, which is what
-    // a golden captures and what `grep` expects. A terminal reports its own width and keeps it.
+    // A redirected stream has no width, and Spectre's guess of 80 wraps a message mid-word. A width no line reaches
+    // keeps redirected output to one line per fact, which a golden captures and `grep` expects.
     private const int RedirectedWidth = 1000;
 
     private static IAnsiConsole? s_std;
@@ -37,13 +35,8 @@ public static class Out
 
     public static void ErrMarkup(string markup) => Err.MarkupLine(markup);
 
-    // A grid, or anything else Spectre lays out. It goes into a buffer first, because Spectre pads
-    // every row out to the width of its widest column. Sent straight to the stream, the check
-    // catalogue arrives with every line padded to the longest summary in it. A terminal hides that.
-    // Redirect it and the file is full of ragged trailing spaces.
-    //
-    // The padding is plain spaces, written after the colour has been reset. Trimming the end of each
-    // line therefore takes the spaces and nothing else, whether or not colour is on.
+    // A grid, or anything else Spectre lays out. Buffered first, because Spectre pads every row to its widest column,
+    // and trimmed per line: the padding is plain spaces written after the colour reset, so the trim takes only it.
     public static void Write(IRenderable renderable)
     {
         var buffer = new StringWriter();

@@ -129,16 +129,8 @@ public static class Packer
         return $"{Dist.Package}/{plan.FileName}";
     }
 
-    // The id, the version, and the elements a registry refuses a package without. The corpus's content is not restated,
-    // because `corpus/manifest.json` carries it. The description names the shortcode, opening with what the corpus says
-    // about itself.
-    //
-    // `authors` is required by the format, so a corpus naming nobody is filed under its own id rather than under
-    // whoever wrote the template it copied. A licence is not required, and a corpus that chose none asserts none.
-    //
-    // `repository` is the one element beyond the four, and a registry may act on it: GitHub Packages reads that URL to
-    // decide which repository a package belongs to, and a token scoped to a repository refuses a package naming none.
-    // `docs/cli/pack.md` says when to pass it.
+    // The id, the version, and the elements a registry refuses a package without; `corpus/manifest.json` carries the
+    // content. `authors` is required, so a corpus naming nobody is filed under its own id.
     private static string Nuspec(
         string id, string version, string shortcode, string? repository, ExportAbout? about)
     {
@@ -155,9 +147,11 @@ public static class Packer
             new XElement(ns + "authors", about?.Author?.Name is { Length: > 0 } who ? who : id),
             new XElement(ns + "description", description));
 
+        // A licence is not required, and a corpus that chose none asserts none.
         if (about?.License is { Length: > 0 } licence)
             metadata.Add(new XElement(ns + "license", new XAttribute("type", "expression"), licence));
 
+        // GitHub Packages reads this URL to decide which repository owns the package. `docs/cli/pack.md` says when.
         if (repository is { Length: > 0 })
             metadata.Add(new XElement(ns + "repository",
                 new XAttribute("type", "git"),
@@ -180,11 +174,8 @@ public static class Packer
             JsonRead.Str(about["license"]));
     }
 
-    // The OPC relationship naming the manifest inside the package.
-    //
-    // The relationship id has to be unique within the document and to open on a letter. It is derived from the part it
-    // points at rather than generated, because a fresh one on every run would be the only thing keeping two packs of
-    // one export from matching.
+    // The OPC relationship naming the manifest. Its id must be unique in the document and open on a letter, and is
+    // derived from the part rather than generated, so two packs of one export match.
     private static string Rels(string nuspecPath)
     {
         XNamespace ns = "http://schemas.openxmlformats.org/package/2006/relationships";

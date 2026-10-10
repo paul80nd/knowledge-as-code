@@ -7,13 +7,9 @@ namespace kac.core;
 
 public static class Md
 {
-    // The extensions every document depends on: the frontmatter block, the pipe tables a clause section
-    // is written as, and task lists. A `[ ]` at the head of a list item is a checkbox, and the same
-    // brackets mid-sentence are prose, so what they mean depends on where the block puts them. The
-    // bracket scan in `Doc` reads inlines and cannot ask. Markdig can: with task lists on, the checkbox
-    // parses as an inline of its own and breaks the run of literals the scan reads, while a `[x]` typed
-    // mid-sentence still reaches it. A built pipeline is immutable, so it is built once here and shared
-    // across every parse.
+    // Frontmatter, pipe tables and task lists. With task lists on, a `[ ]` heading a list item parses as a checkbox
+    // and breaks the literal run the bracket scan in `Doc` reads, while a `[x]` mid-sentence still reaches it. Built
+    // once and shared, because a built pipeline is immutable.
     private static readonly MarkdownPipeline Pipeline =
         new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().UseTaskLists().Build();
 
@@ -83,14 +79,9 @@ public static class Md
         return set;
     }
 
-    // The anchor a renderer derives from a heading: lower-cased, spaces hyphenated, everything that is
-    // not a letter, digit, hyphen or underscore dropped.
-    //
-    // Renderers agree on that much and on nothing beyond it. Azure DevOps percent-encodes the
-    // punctuation it meets into the anchor where GitHub discards it, so a heading carrying `/`, `:` or
-    // `.` has two different anchors and one link cannot name both. This is the discarding form, which
-    // is why a heading meant to be linked to is written without punctuation in the first place. See
-    // `frameworks.md`, where the framework's version lives in the opening line rather than the heading.
+    // The anchor a renderer derives from a heading: lower-cased, spaces hyphenated, all but letters, digits, `-` and
+    // `_` dropped. Azure DevOps percent-encodes the punctuation GitHub drops, so a heading meant to be linked to
+    // carries none, which is why `frameworks.md` keeps its version in the opening line.
     public static string Slug(string heading)
     {
         var sb = new StringBuilder();

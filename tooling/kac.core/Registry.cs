@@ -135,11 +135,8 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         $"there is no folder at {source}. `source:` names either a registry's service index or a folder "
         + "holding the packages a producer built.";
 
-    // Where this feed serves packages from, discovered once per source.
-    //
-    // The address is asked of the feed rather than assembled from its host. Every registry lays its flat container out
-    // somewhere different (GitHub Packages puts it under `/download`, and nuget.org on a host of its own), and the
-    // service index is the one place each of them says so.
+    // Where this feed serves packages from, discovered once per source. Asked of the service index rather than built
+    // from the host, because every registry puts its flat container somewhere different.
     private Answer<string> Base(string source)
     {
         if (_bases.TryGetValue(source, out var known)) return new Answer<string>(known, null);

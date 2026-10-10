@@ -191,15 +191,9 @@ public static class Generator
         }
     }
 
-    // The same edges as a diagram. A reciprocal pair is one edge here.
-    //
-    // Written to the subset of Mermaid an Azure DevOps wiki renders, which is narrower than Mermaid's own and fails
-    // silently where a diagram exceeds it. Use `graph`, never `flowchart`, and `-->`, never a longer arrow. No
-    // subgraphs, because ADO does not support a link crossing one. GitHub renders this subset too, so the fence goes in
-    // rather than ADO's `:::` container, which it shows as literal text.
-    //
-    // Edges carry their label as `-- text -->` rather than `-->|text|`. A markdown formatter reading the file for
-    // tables finds the pipes in the second form and reformats the fenced block as cells.
+    // The same edges as a diagram, a reciprocal pair as one edge, in the Mermaid subset
+    // `docs/design/generation.md` names. Labels are `-- text -->`, because a markdown formatter reads the pipes in
+    // `-->|text|` as table cells. The fence is ```mermaid, which GitHub renders too.
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
         var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);

@@ -1,10 +1,8 @@
 using System.Text;
 using kac.core;
 
-// What every type publishes, written out and pinned. A shape edit fails this, which is where the
-// `export.version:` beside it gets moved. Update the block below in the same commit.
-// `docs/design/export.md` says which edits oblige the version to move.
-//
+// What every type publishes, written out and pinned. A shape edit fails this; update the block below in the same
+// commit, and see `docs/design/export.md` for which edits oblige `export.version:` to move.
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]

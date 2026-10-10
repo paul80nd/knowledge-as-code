@@ -106,10 +106,9 @@ public static class Update
         return new Settled(new UpdateSettings(from, policy), null);
     }
 
-    // Decided from listings, not a filesystem. `manifest` is the template's, so a new tree is resolved by its own
-    // rules. `same` answers whether two copies say the same thing. `ids` answers what record a file is, because
-    // only a record is free to move. `readInPlace` is true where the corpus sits inside its template's
-    // repository, so a file whose destination is its source is shared, not copied.
+    // Decided from listings, not a filesystem. `same` answers whether two copies agree, and `ids` what record a file
+    // is, because only a record may move. `readInPlace` means the corpus sits inside its template's repository, so a
+    // file whose destination is its source is shared, not copied.
     public static UpdatePlan Plan(IReadOnlySet<string> templateFiles, IReadOnlySet<string> corpusFiles,
         Manifest manifest, CorpusDescriptor descriptor, UpdateTypes types, string policy,
         bool readInPlace, Func<PlannedFile, bool> same, RecordIds ids)

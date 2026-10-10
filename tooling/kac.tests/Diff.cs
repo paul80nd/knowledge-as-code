@@ -36,12 +36,8 @@ internal static class Diff
         (Git.Run(Repo.Root, "ls-files --others --exclude-standard -z") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
-    // Every tracked file the working tree has changed since `before`, as the path it had then and the
-    // path it has now. `filter` is git's `--diff-filter`.
-    //
-    // `-z` separates every field with a NUL, so a path with a quote, a tab or a non-ASCII character in it
-    // arrives as git stored it. Without it git escapes such a path and the caller asks for a file whose
-    // name it had just mangled.
+    // Every tracked file changed since `before`, as its path then and now. `filter` is git's `--diff-filter`. `-z`
+    // keeps a path with a quote, a tab or a non-ASCII character as git stored it, rather than escaped.
     internal static IEnumerable<(string Was, string Now)> Changed(string before, string filter)
     {
         var fields =

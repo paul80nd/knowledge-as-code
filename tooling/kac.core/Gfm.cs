@@ -2,12 +2,8 @@ using System.Text;
 
 namespace kac.core;
 
-// `Generator`, `ChecksTable` and the CLI reference under `docs/cli/` all render through this, so none
-// can drift from another.
-//
-// Written out rather than taken from Markdig, which `Md` already depends on to read markdown. Markdig
-// renders an AST to HTML or back to normalised markdown, and neither pass writes a pipe table:
-// `Markdown.Normalize` returns one as the run of its cell text.
+// `Generator`, `ChecksTable` and the CLI reference under `docs/cli/` all render tables through this, so none drifts.
+// Written out because Markdig writes no pipe table: `Markdown.Normalize` returns one as the run of its cell text.
 public static class Gfm
 {
     // No trailing newline, because callers add their own.

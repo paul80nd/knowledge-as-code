@@ -240,11 +240,9 @@ public class AlignmentRollupTests
     public void A_policy_citing_nothing_leaves_the_register_unread()
         => Assert.Empty(Uncited("aligns-with:", "| `ZEROSEC` | COULD reach zero secrets. | |"));
 
-    // The definitions at the foot are not decoration. Markdig resolves a shortcut reference only where
-    // one is defined, so a cell written without them parses as literal brackets and the rule reads no
-    // links at all. They are also how the rule reaches the register, because a label names the page and
-    // the heading on it. `undefined` names the labels to write no definition for, which is how a case
-    // states a citation markdown never made into a link.
+    // Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make
+    // a cell's labels links, and a label names the register page and heading. `undefined` names the labels left
+    // without one, which is how a case states a citation markdown never made into a link.
     private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
         params string[] rows)
     {

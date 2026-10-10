@@ -157,10 +157,8 @@ public partial class KacJson : JsonSerializerContext
     private static KacJson? s_relaxed;
     private static KacJson? s_line;
 
-    // Shared context for CLI output: the source-generated metadata from Default, plus relaxed escaping,
-    // so a quote or an em dash in a finding reaches the reader as itself rather than as a numeric
-    // escape. Lazily initialised so it does not touch the generator's Default during static
-    // construction, whose order across the partial is unspecified.
+    // CLI output with relaxed escaping, so a quote or an em dash reaches the reader as itself. Lazy, so it does not
+    // touch `Default` during static construction, whose order across the partial is unspecified.
     public static KacJson Relaxed => s_relaxed ??= new KacJson(Escaped(indented: true));
 
     // One object per line, so a grep hands back a complete one.

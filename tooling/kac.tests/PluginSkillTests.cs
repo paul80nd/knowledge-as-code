@@ -1,10 +1,9 @@
 using kac.core;
 using YamlDotNet.RepresentationModel;
 
-// `claude plugin validate` is what CI asks, and it needs the Claude Code CLI. Nothing else in this repository opens a
-// `SKILL.md` at all: `kac` copies the tree through as bytes, so a skill whose frontmatter does not parse bundles
-// cleanly, installs, and loads with no metadata at all. That failure reached CI once, over a `: ` inside a plain
-// scalar, which `technical-writing` warns about and no local run could see.
+// Nothing else here opens a `SKILL.md`: `kac` copies it as bytes, so a skill whose frontmatter does not parse bundles,
+// installs, and loads with no metadata. `claude plugin validate` catches it in CI only, as it needs the Claude Code
+// CLI; a `: ` inside a plain scalar is the usual cause.
 
 namespace kac.tests;
 

@@ -49,11 +49,8 @@ if (scenarios.Count == 0)
     return 2;
 }
 
-// Every scenario below runs kac as a subprocess, because what it asserts is the CLI's contract
-// rather than the library's: the exit code, and what lands on stdout. `dotnet run` would repeat its
-// up-to-date check on each of those invocations, which costs an order of magnitude more than the
-// suite's real work; building once and calling the built assembly keeps the process boundary
-// without paying for it a dozen times over.
+// Each scenario runs kac as a subprocess, because it asserts the CLI's exit code and stdout. It calls a build made
+// once, because `dotnet run` would repeat its up-to-date check on every invocation.
 var kac = BuildKac(kacProject);
 if (kac is null) return 2;
 
@@ -1068,10 +1065,8 @@ static void Regenerate(string kac, string schemaDir, string corpusDir)
     }
 }
 
-// Build the tool project and return the assembly to invoke, or null having said why. Two calls
-// because they do different things: the first builds, and `--getProperty` evaluates the project
-// without building. The path is read back rather than constructed, so a configuration or a target
-// framework settled in the project cannot silently disagree with a path spelled out here.
+// Build the tool project and return the assembly to invoke, or null having said why. The path is read back with
+// `--getProperty` rather than constructed, so it cannot disagree with the project's configuration or framework.
 static string? BuildKac(string kacProject)
 {
     var (buildOut, buildErr, buildExit) = Run(Directory.GetCurrentDirectory(), "dotnet", "build", kacProject);

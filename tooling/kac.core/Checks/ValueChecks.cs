@@ -25,10 +25,8 @@ public static class ValueChecks
             return;
         }
 
-        // A placeholder opening a value is a flow mapping to YAML, not text. `{` is an indicator in that
-        // one position, so `review-by: {{date}}` parses as a mapping and arrives here with nothing
-        // readable in it. Reported with the fix rather than left to the value checks, which would say
-        // the date is malformed and quote an empty string back at whoever wrote it.
+        // A placeholder opening a value is a flow mapping to YAML, so `review-by: {{date}}` arrives as a mapping
+        // with nothing readable in it. Reported here with the fix, rather than as a malformed empty date.
         if (node is YamlMappingNode)
         {
             var key = name[(name.LastIndexOf('.') + 1)..];

@@ -47,10 +47,9 @@ public class NullForgivingTests
         return false;
     }
 
-    // The file with its comments and its string literals blanked, so a `!` inside either is not read as
-    // code. Every literal form C# offers is a quote to skip to: raw, verbatim and ordinary all end at a
-    // quote, and only the escape rules between them differ. The one it cannot see into is an
-    // interpolation hole, whose contents are code inside a literal, and nothing here writes one.
+    // The file with its comments and string literals blanked, so a `!` inside either is not read as code. Every
+    // literal form ends at a quote. An interpolation hole is code inside a literal and is not seen into, so nothing
+    // here writes one.
     private static string Code(string source)
     {
         var kept = new StringBuilder(source.Length);

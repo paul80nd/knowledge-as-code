@@ -4,11 +4,9 @@ using Xunit.Sdk;
 
 namespace kac.tests;
 
-// A generated block inside a hand-written documentation page, filled by the `Markers` pair `kac generate`
-// writes between. A page carrying no block is given an empty pair under its first heading. A page carrying
-// other blocks is refused instead, because nothing says which heading the missing one belongs under and a
-// guess passes every test. An unclosed block is refused because `SpliceBlock` returns that page
-// untouched, and an untouched page reads as up to date.
+// A generated block inside a hand-written page, between the `Markers` pair. A page with no blocks gets an empty pair
+// under its first heading; one with other blocks is refused, as nothing says which heading the new one goes under. An
+// unclosed block is refused because `SpliceBlock` returns that page untouched, which reads as up to date.
 internal static partial class GeneratedPage
 {
     // The first heading of a page, under which a missing marker pair is inserted.

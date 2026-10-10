@@ -160,10 +160,8 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
         return false;
     }
 
-    // The fragment a link into a part has to carry, which is the part's id for one source only. A
-    // heading is its own address, so its slug answers as the id and as the anchor alike. A table row
-    // has no fragment: no renderer emits one for a row, and the id beside it is authored. So a link
-    // into a clause lands on the section holding the table, which is as close as a renderer allows.
+    // The fragment a link into a part carries. A heading's slug is its id and its anchor alike. A table row has no
+    // fragment a renderer emits, so a link into a clause lands on the section holding the table.
     public string Anchor(string partId) => Source == Table ? Publishing.Anchor(Section) : partId;
 
     // The sources an extractor exists for. `schema-dispatch` reads them from here.
@@ -460,12 +458,9 @@ public sealed record EnumSpec(IReadOnlyList<string> Values, bool Ordered);
 
 public sealed record TierSpec(string Name, string Label, string Behaviour, string Note);
 
-// A type's prior art, and the two things worth saying about it: what the framework took, and where it deliberately
-// parts company. Links are written inline rather than as reference labels, because the block this renders into cannot
-// see the definitions at the foot of the page it lands on. A label whose definition is deleted renders as literal
-// brackets rather than as a failure.
-//
-// A type with no useful ancestor says so in `PriorArt` and leaves the other two empty.
+// A type's prior art, what the framework took, and where it parts company; a type with no useful ancestor says so in
+// `PriorArt` and leaves the others empty. Links are written inline, because the block this renders into cannot see
+// the definitions at the foot of its page.
 public sealed record LineageSpec(string PriorArt, string Alignment, string Divergence);
 
 // How long a `numbered` or `mnemonic` discriminator may be. A scalar `width:` sets both ends. A `min:`/`max:` mapping

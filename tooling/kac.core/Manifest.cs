@@ -359,14 +359,9 @@ public class CorpusDescriptor
         File.WriteAllText(path, string.Join('\n', lines).TrimEnd('\n') + "\n");
     }
 
-    // Record what an update took: the format this tool writes, the commit it resolved, the template's version, and the
-    // day it arrived. `content-version` is left alone. `commit` is null where the template was read from a folder, and
-    // the key is then left as it stands.
-    //
-    // This rewrites lines rather than re-serialising the file, because the descriptor is mostly commentary. Someone
-    // opens it to read what each key means and when owning a file is worth declaring, and a YAML round-trip would throw
-    // all of that away. Rewriting a line does drop any trailing comment on it, which is right: that comment described
-    // the value the update just replaced.
+    // Record what an update took: format, resolved commit, template version and day. `content-version` is left alone,
+    // and so is `commit` where the template was read from a folder. Rewrites lines rather than re-serialising, so the
+    // descriptor's commentary survives; a rewritten line loses its own trailing comment.
     public static void Stamp(string corpusRoot, int templateVersion, string takenOn, string? commit = null)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");

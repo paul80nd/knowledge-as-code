@@ -868,9 +868,8 @@ public static class Exporter
         }
     }
 
-    // A missing key arrives as null whatever the record declares, so a manifest short of one holds nulls
-    // its own type rules out. Settling them here is what lets every reader below take the record at its
-    // word: an entry naming no type is dropped, a type naming no directory is read under its own name,
+    // A missing key arrives as null whatever the record declares. Settled here so every reader below takes the
+    // record at its word: an entry naming no type is dropped, a type naming no directory is read under its own name,
     // and a block naming no publishing target publishes nowhere.
     private static ExportManifest Sound(ExportManifest m)
     {
@@ -916,12 +915,8 @@ public static class Exporter
         Sections = Read(t.Sections) ?? new Dictionary<string, string>(StringComparer.Ordinal)
     };
 
-    // A value as it arrived rather than as its own type describes it.
-    //
-    // The annotations on these records say what the exporter writes, and the deserialiser holds them to
-    // none of it: a key the document is short of arrives as null in a member declared without one. This
-    // returns the same value typed as the deserialiser could have left it, so the check above is a
-    // question rather than dead code, to a reader and to an analyser both.
+    // The value typed as the deserialiser can leave it: a key the document lacks arrives as null whatever the record
+    // declares, so the null checks in `Sound` stay real questions to a reader and to an analyser.
     // ReSharper disable once ReturnTypeCanBeNotNullable — the nullable return is what this exists for.
     private static T? Read<T>(T value) => value;
 
