@@ -807,8 +807,8 @@ public static class Exporter
                 if (row.Id is not { Length: > 0 } partId) continue;
 
                 var (lead, asides) = Split(doc, row, spec.Asides, footnotes);
-                var part = new Part(doc, row, partId, id, lead, asides, SeeAlso(doc, row, byPath, tree),
-                    Citations(doc, row, footnotes));
+                var part = new Part(doc, row, partId, id, lead, Bullets(doc, row, spec), asides,
+                    SeeAlso(doc, row, byPath, tree), Citations(doc, row, footnotes));
 
                 var line = new JsonObject();
                 foreach (var (key, source) in t.DeclaredExport.Line) line[key] = Value(source, part, t);
@@ -842,6 +842,7 @@ public static class Exporter
         string Id,
         string Record,
         string? Lead,
+        IReadOnlyList<Bullet> Bullets,
         IReadOnlyDictionary<string, string> Asides,
         IReadOnlyList<string>? SeeAlso,
         IReadOnlyDictionary<string, IReadOnlyList<string>> Citations);
@@ -872,6 +873,13 @@ public static class Exporter
             PartLineSource.PartText => JsonValue.Create(part.Row.Text),
             PartLineSource.PartLead => JsonValue.Create(part.Lead),
             PartLineSource.PartLevel => JsonValue.Create(t.DeclaredParts.Modal(part.Row.Text)),
+            PartLineSource.PartBullets => part.Bullets.Count == 0
+                ? null
+                : new JsonArray([.. part.Bullets.Select(b => (JsonNode?)new JsonObject
+                {
+                    ["level"] = JsonValue.Create(b.Level),
+                    ["text"] = JsonValue.Create(b.Text)
+                })]),
             PartLineSource.PartSeeAlso => part.SeeAlso is null
                 ? null
                 : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
@@ -1016,6 +1024,18 @@ public static class Exporter
 
         return (Absent(lead), asides);
     }
+
+    // Each bullet under a part, with the modal that says how hard it binds. The modal is the bold run naming
+    // a declared level whole, so `MUST NOT` is never read as `MUST`. `part-modal` fails a bullet carrying
+    // none, so the level is null only in a corpus that would not validate.
+    private static IReadOnlyList<Bullet> Bullets(Doc doc, PartRow part, PartSpec spec) =>
+    [
+        .. Md.BulletSources(doc.Ast, doc.Text, part.BodyStart, part.BodyEnd)
+            .Select(b => new Bullet(
+                b.Bold.FirstOrDefault(r => spec.Levels.Contains(r, StringComparer.Ordinal)), b.Markdown))
+    ];
+
+    private sealed record Bullet(string? Level, string Text);
 
     // How this export's links are built, for the manifest: the template a person's link is substituted
     // into, and the base, prefix and ref an agent fetches a record's source with. All null where the

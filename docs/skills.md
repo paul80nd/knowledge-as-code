@@ -36,7 +36,7 @@ A change to one of these moves the `content-version` of every corpus whose bundl
 | `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`     |
 | `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`  |
 | `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@1` |
-| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@1` |
+| `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@2` |
 
 <!-- END GENERATED: skills-in-the-plugin -->
 

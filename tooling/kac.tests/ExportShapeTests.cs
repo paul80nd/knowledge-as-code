@@ -152,7 +152,7 @@ public class ExportShapeTests
             Where it lives: full
             Dependencies: full
             Data: full
-        standards@1
+        standards@2
           fields: id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to, review-by, tags
           sections:
             Summary: full
@@ -160,7 +160,7 @@ public class ExportShapeTests
           parts: full
             id: part.id
             title: part.text
-            obligations: part.lead
+            obligations: part.bullets
             covers: part.citations.Covers
             seeAlso: part.see-also
             type: record.type

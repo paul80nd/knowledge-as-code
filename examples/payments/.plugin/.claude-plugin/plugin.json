@@ -58,7 +58,7 @@
       {
         "path": "skills/standards-lookup",
         "requires": [
-          "standards@1"
+          "standards@2"
         ],
         "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
       },

@@ -94,9 +94,13 @@ it.
 
 ### standards
 
-A rule travels as its heading and the obligations beneath it, in the Markdown the standard wrote them in. The bold
-**MUST** is what binds a line under BCP 14, so flattening the Markdown would leave an agent reading an obligation as
-advice.
+A rule travels as its heading and one entry for each bullet beneath it. Each entry states the bullet's `level` and its
+`text`, so an agent reads how hard a bullet binds from a key. The modal inside the wording is easy to misread.
+`MUST NOT` opens with `MUST`, and a wrapped bullet can put its keyword on the next line. `kac validate` already requires
+a bold modal on every bullet, so the level the export writes is one the tool has checked.
+
+The `text` keeps the Markdown the standard wrote, bold keyword included, so a quoted bullet reads as the standard reads.
+A citation names the rule. An entry has no address of its own, because the schema addresses a heading.
 
 `Summary` travels because a rule read without it binds more than the standard does. `Conformance checklist` travels
 because it is the same rules written as a test. `Examples` stays behind as the longest section, written against one
@@ -104,8 +108,7 @@ stack, and `Rationale and provenance` stays behind because a reader acts on what
 
 `implements` and `covers` travel so a reader can count its own coverage. A corpus inheriting the policies it must meet
 also inherits the standards discharging them, and without this edge it sees only what its own standards cover. The
-exporter drops a rule's `Covers` line before it takes the obligations, so a rule with nothing else travels with no
-obligations rather than with the footnote standing where they belong.
+exporter drops a rule's `Covers` line before it takes the obligations, so the footnote never arrives as an entry.
 
 `seeAlso` lists the rules of other standards this one points at, because a standard composes by union and one rule
 commonly leans on another. It never lists a policy clause: a clause is cited as `[pol-INTC].HOLDS`, and the link ends at

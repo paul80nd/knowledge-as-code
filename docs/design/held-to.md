@@ -50,9 +50,9 @@ you, and every finding names the file and the key.
 | A `line:` source outside the vocabulary the exporter fills                               | `schema-dispatch`    |
 | A `front.<field>` naming a field neither the type nor `_universal.yaml` declares         | `schema-shape`       |
 | A `column.<Header>` at a header the type's `parts.columns:` does not declare             | `schema-shape`       |
-| A `part.lead` or `part.aside.<Label>` on a type sourcing its parts from a table          | `schema-shape`       |
+| A `part.lead`, `part.bullets` or `part.aside.<Label>` on a table-sourced type            | `schema-shape`       |
 | A `part.aside.<Label>` at a label the type's `parts.asides:` does not declare            | `schema-shape`       |
-| A `part.level` on a type declaring no binding or advisory modals                         | `schema-shape`       |
+| A `part.level` or `part.bullets` on a type declaring no binding or advisory modals       | `schema-shape`       |
 | A `parts.source:` outside the sources the tool extracts                                  | `schema-dispatch`    |
 | A `parts.section:` at a section the type's `sections:` block does not declare            | `schema-shape`       |
 | A table-sourced `parts:` block declaring no `binding:`                                   | `schema-shape`       |

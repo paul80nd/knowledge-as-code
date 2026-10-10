@@ -51,6 +51,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `.schema/_enums.yaml` saying its values rank, most significant first. `examples/library` carries one such edge, and
   the record already explains it.
 
+### Changed
+
+- **A rule's obligations export one entry per bullet.** `kac export` writes `obligations` on each line of
+  `standards/rules.jsonl` as a list, one entry per bullet under the rule's heading. Each entry states `level`, the bold
+  modal the bullet binds with, and `text`, the bullet as Markdown with its wrapped lines joined. A consumer filters on
+  `level`. The `standards` export moves to shape version 2, and any type declaring modals can take the `part.bullets`
+  line source.
+
 ### Removed
 
 - **`not-load-bearing` is gone from `explanations`.** The rule asked that no decided-tier document cite an explanation

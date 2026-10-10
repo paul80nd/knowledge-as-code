@@ -28,7 +28,7 @@ rather than in the repository you are working in. A path you build relative to t
 cite them by. That is enough to quote what the estate requires and say where it is written. It is not enough to say the
 work in front of you conforms. Whoever asked wants a ruling, and the ruling belongs to the estate.
 
-Quote the obligation, name its keyword, link the standard, and say plainly which part of the question you are
+Quote the obligation, name its level, link the standard, and say plainly which part of the question you are
 leaving to the reader.
 
 ## Collect every rule that applies, rather than the first
@@ -62,7 +62,7 @@ Each line carries one heading of a standard's Rules section, with everything wri
 |----------------------|--------------------------|------------------------------------------------------------------------------|
 | `id`                 | string                   | `<standard-id>.<rule-key>`, the address to quote and to cite                 |
 | `title`              | string                   | the heading, which says what the obligations beneath it are about            |
-| `obligations`        | string or null           | every bullet under that heading, as one block of markdown. Read this whole   |
+| `obligations`        | list of objects, or null | one entry per bullet under that heading, in the order the standard wrote it  |
 | `covers`             | list of strings, or null | the policy clauses this rule discharges                                      |
 | `seeAlso`            | list of strings, or null | the rules of other standards this one points at                              |
 | `type`               | string                   | `standards`, on every line of this file                                      |
@@ -71,6 +71,13 @@ Each line carries one heading of a standard's Rules section, with everything wri
 | `shortcode`          | string, or absent        | the corpus that published the rule. A rule written here carries no such key  |
 | `status`, `reviewBy` | string                   | how far the standard has settled, and the date it was meant to be read again |
 | `path`, `anchor`     | string                   | the two values `corpus-retrieval` builds a link from                         |
+
+Each entry in `obligations` has two keys:
+
+| Key     | Type   | What it holds                                                             |
+|---------|--------|---------------------------------------------------------------------------|
+| `level` | string | the bullet's keyword: `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` or `MAY` |
+| `text`  | string | the bullet as markdown, with its keyword in bold and its lines joined     |
 
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
 one exception, and the row above says so.
@@ -96,20 +103,19 @@ you build the filename. The owning record for `eng:std-TEST.every-test-is-hermet
 `${CLAUDE_PLUGIN_ROOT}/corpus/standards/eng/std-TEST.json`, and for a bare id it is
 `${CLAUDE_PLUGIN_ROOT}/corpus/standards/std-TEST.json`.
 
-## Read the keyword on every bullet
+## Read the level on every obligation
 
-**One line holds several obligations, and they do not all bind.** `obligations` is one string of markdown holding a
-`- ` bullet per obligation, and each bullet carries its own BCP 14 keyword in capitals and in bold. No field on the
-line says how strongly a bullet binds, so the keyword inside the wording is the only thing that says it. Read the string
-whole, and take the bullet rather than the line.
+**One line holds several obligations, and they do not all bind.** Each entry in `obligations` is one bullet, and its
+`level` says how strongly that bullet binds. Read `level`, and never the capitals inside `text`.
 
 * **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it.
 * **`SHOULD`, `SHOULD NOT` and `MAY` advise.** None is a rule, and none blocks anything on its own.
 
-**Only capitals count.** [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174) gives the keywords their normative meaning
-when they are written in capitals and not otherwise, so a lower-case "must" is prose. **`MUST NOT` opens with `MUST`**,
-so a match on the shorter keyword files a prohibition as an obligation, which is the reverse of what the standard says.
-Compare the keyword whole.
+**Compare `level` whole.** `MUST NOT` opens with `MUST`, so a match on the shorter value files a prohibition as an
+obligation, which is the reverse of what the standard says.
+
+**Quote the `text`, and cite the line's `id`.** A rule is addressed by its heading, so an entry has no id of its own.
+Quote the bullet as the standard wrote it, and cite the rule it sits under.
 
 ## Read the standard beside the rule
 

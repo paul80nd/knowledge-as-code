@@ -118,10 +118,35 @@ public static class Md
     // own parse. A later list under the same heading is a second run of points, and a heading's
     // obligations are the first.
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
-        MarkdownDocument ast, int start, int end)
+        MarkdownDocument ast, int start, int end) =>
+        FirstList(ast, start, end) is { } list ? Bullets(list) : [];
+
+    // The same bullets in the markdown the author wrote them in, each with the bold runs `Bullets` reads
+    // from it. The marker is dropped and a wrapped bullet's lines are joined, so the keyword sits on the
+    // one line a reader takes. Both walk `Leads`, so the two pair item for item.
+    public static IEnumerable<(string Markdown, IReadOnlyList<string> Bold)> BulletSources(
+        MarkdownDocument ast, string text, int start, int end)
     {
-        var list = ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
-        return list is null ? [] : Bullets(list);
+        if (FirstList(ast, start, end) is not { } list) return [];
+
+        return Leads(list).Zip(Bullets(list), (lead, bullet) =>
+        {
+            var source = text.Substring(lead.Paragraph.Span.Start, lead.Paragraph.Span.Length);
+            var lines = source.Replace("\r\n", "\n").Split('\n').Select(l => l.Trim()).Where(l => l.Length > 0);
+            return (string.Join(' ', lines), bullet.Bold);
+        });
+    }
+
+    private static ListBlock? FirstList(MarkdownDocument ast, int start, int end) =>
+        ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
+
+    // Each item of a list with its first paragraph. An item opening on no paragraph is no bullet.
+    private static IEnumerable<(ListItemBlock Item, ParagraphBlock Paragraph, ContainerInline Inline)> Leads(
+        ListBlock list)
+    {
+        foreach (var item in list.OfType<ListItemBlock>())
+            if (item.OfType<ParagraphBlock>().FirstOrDefault() is { Inline: { } inline } paragraph)
+                yield return (item, paragraph, inline);
     }
 
     // The items of one list, for a caller that has found the list itself rather than the heading above
@@ -138,10 +163,8 @@ public static class Md
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         ListBlock list)
     {
-        foreach (var item in list.OfType<ListItemBlock>())
+        foreach (var (item, _, inline) in Leads(list))
         {
-            if (item.OfType<ParagraphBlock>().FirstOrDefault()?.Inline is not { } inline) continue;
-
             var text = new StringBuilder();
             var plain = new StringBuilder();
             var bold = new List<string>();

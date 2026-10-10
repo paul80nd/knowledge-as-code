@@ -182,7 +182,7 @@ parts:
 
 # `Rules` is absent from the export's `sections:` because its headings are parts, and `parts:` exports them.
 export:
-  version: 1
+  version: 2
   fields: [id, title, category, status, superseded-by, derived-from, implements, depends-on, applies-to,
            review-by, tags]
   sections:
@@ -193,7 +193,7 @@ export:
     line:
       id: part.id
       title: part.text
-      obligations: part.lead
+      obligations: part.bullets
       covers: part.citations.Covers
       seeAlso: part.see-also
       type: record.type
@@ -204,8 +204,9 @@ export:
       path: record.path
       anchor: part.anchor
   notes: >
-    A rule travels as its heading and the obligations beneath it, in the Markdown the standard wrote them
-    in. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
+    A rule travels as its heading and one entry for each bullet beneath it. An entry states the bullet's
+    level and its text, in the Markdown the standard wrote it in. See
+    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
 index:
   columns: [id, title, category, status, derived-from, review-by]
   sort: id
