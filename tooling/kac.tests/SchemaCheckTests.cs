@@ -782,6 +782,35 @@ public class SchemaCheckTests
         Assert.Contains("no binding or advisory levels", found.Message);
     }
 
+    // Each bullet's level is read against the declared modals too, so a type declaring none writes a null
+    // level on every bullet.
+    [Fact]
+    public void A_line_source_taking_bullets_from_a_type_declaring_no_levels_is_reported()
+    {
+        var found = Assert.Single(Check(Line(("obligations", "part.bullets"))));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("no binding or advisory levels", found.Message);
+    }
+
+    // A table row has no bullets at all, so this is the body refusal again.
+    [Fact]
+    public void A_line_source_reading_bullets_against_a_table_is_reported()
+    {
+        var found = Assert.Single(Check(Line(
+            ("obligations", "part.bullets"),
+            parts: new PartSpec(PartSpec.Table, "", ["MUST"], []) { Section = "Terms" })));
+
+        Assert.Equal("schema-shape", found.Check.Value);
+        Assert.Contains("A row is its own body", found.Message);
+    }
+
+    [Fact]
+    public void A_line_source_taking_bullets_from_a_type_declaring_levels_passes()
+        => Assert.Empty(Check(Line(
+            ("obligations", "part.bullets"),
+            parts: new PartSpec(PartSpec.Headings, "", ["MUST"], ["SHOULD"]) { Section = "Terms" })));
+
     [Fact]
     public void A_projection_every_key_of_which_resolves_passes()
         => Assert.Empty(Check(Widgets(

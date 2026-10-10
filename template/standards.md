@@ -91,7 +91,8 @@ you are writing is guidance rather than a standard.
 
 Write each rule as a bullet with one BCP 14 keyword in bold capitals: **MUST**, **MUST NOT**, **SHOULD**,
 **SHOULD NOT** or **MAY**. `part-modal` reports a bullet with none, and one that leaves a keyword in plain text. It
-calls the keyword a modal, because the same declaration governs a policy's clause table.
+calls the keyword a modal, because the same declaration governs a policy's clause table. Write each point as a bullet
+of its own: `part-nested` refuses a list inside a bullet, because nothing cites or exports the points it holds.
 
 Make each rule **testable**. Where a rule cannot be checked against a concrete artefact, sharpen it or move it to the
 rationale section. Every **MUST** and **MUST NOT** should have a corresponding control, even where that control's
@@ -151,7 +152,7 @@ entry first.
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
-| `part-modal`                | error   | A part heading states its obligations as bullets, each with a declared modal in bold.                           |
+| `part-modal / part-nested`  | error   | A part heading states its obligations as bullets, each with a declared modal in bold and no list inside it.     |
 | `modal-outside-rules`       | warning | Only the parts section binds: no bullet outside it names a declared modal.                                      |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |

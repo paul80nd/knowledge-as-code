@@ -15,10 +15,14 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.32.0 - 2026-10-10
 
 ### Added
 
+- **A list written inside a rule's bullet is refused.** `kac validate` fails a bullet under a standard's rule heading
+  that holds a list of its own, and reports it once at the outermost nested list. One bullet is one obligation, so a
+  point nested inside it is cited by nothing and exported nowhere. Write each point as a bullet of its own with its own
+  modal. The check id is `part-nested`, and a type declaring no modals, as a glossary does, may still nest a list.
 - **A modal written outside `Rules` is reported.** `binds-only-under-rules` runs on `standards`. `kac validate` warns
   where a bullet in any other section names one of the type's declared keywords, in bold or in plain capitals, and quotes
   the bullet back. No citation reaches a rule written there, so the message offers the two fixes: move the bullet under
@@ -50,6 +54,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   quotes the id and both grades. The comparison rests on `ordered: true`, a new key on a shared enum in
   `.schema/_enums.yaml` saying its values rank, most significant first. `examples/library` carries one such edge, and
   the record already explains it.
+
+### Changed
+
+- **A rule's obligations export one entry per bullet.** `kac export` writes `obligations` on each line of
+  `standards/rules.jsonl` as a list, one entry per bullet under the rule's heading. Each entry states `level`, the bold
+  modal the bullet binds with, and `text`, the bullet as Markdown with its wrapped lines joined. A consumer filters on
+  `level`. The `standards` export moves to shape version 2, and any type declaring modals can take the `part.bullets`
+  line source.
 
 ### Removed
 

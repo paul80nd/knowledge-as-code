@@ -106,6 +106,12 @@ Scenario: Every bullet under a rule heading is held to a modal in bold capitals
     |   30 | part-modal | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |
     |   32 | part-modal | rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY. |
 
+Scenario: A list written inside a rule's bullet is refused
+  When I validate the corpus
+  Then the findings for "standards/nest-a-rule-holding-a-list.md" are exactly:
+    | line | check       | message |
+    |   25 | part-nested | rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it. |
+
 Scenario: A parts section holding no headings is told what belongs there
   When I validate the corpus
   Then the findings for "glossary/none-terms-section-empty.md" are exactly:
@@ -114,7 +120,7 @@ Scenario: A parts section holding no headings is told what belongs there
 
 Scenario: The whole corpus produces exactly these findings and nothing else
   When I validate the corpus
-  Then validation reports 20 documents and 0 skipped
+  Then validation reports 21 documents and 0 skipped
   And the findings are exactly:
     | file                                  | severity | line | check            | message                                                                                                                        |
     | glossary/dupe-two-terms-alike.md      | error    |   27 | part-id-unique   | two terms here address as 'identity-line': a citation of it names both and reaches neither.                                    |
@@ -140,3 +146,4 @@ Scenario: The whole corpus produces exactly these findings and nothing else
     | standards/moda-rules-that-bind-nobody.md | error |   24 | part-modal       | rule 'A service reads its secrets from the vault.' has no modal, so nothing says how hard it binds. Write one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY in bold, or move the line to prose. |
     | standards/moda-rules-that-bind-nobody.md | error |   30 | part-modal       | 'MUST' is written plain here, and bold is what binds. Write it `**MUST**`.                            |
     | standards/moda-rules-that-bind-nobody.md | error |   32 | part-modal       | rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY. |
+    | standards/nest-a-rule-holding-a-list.md  | error |   25 | part-nested      | rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it. |

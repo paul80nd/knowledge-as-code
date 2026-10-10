@@ -365,9 +365,10 @@ public static class SchemaChecks
                 return;
             }
 
-            if (source is PartLineSource.PartLead && parts.Source == PartSpec.Table) RefuseBodySource(name, source);
+            if (source is (PartLineSource.PartLead or PartLineSource.PartBullets) && parts.Source == PartSpec.Table)
+                RefuseBodySource(name, source);
 
-            if (source == PartLineSource.PartLevel && parts.Levels.Count == 0)
+            if (source is (PartLineSource.PartLevel or PartLineSource.PartBullets) && parts.Levels.Count == 0)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and its 'parts:' block "
                     + "declares no binding or advisory levels. Declare the modals a part may open with, or "

@@ -1,9 +1,9 @@
 {
   "summary": {
-    "validated": 20,
+    "validated": 21,
     "templates": 3,
     "skipped": 0,
-    "errors": 21,
+    "errors": 22,
     "warnings": 2,
     "infos": 0
   },
@@ -168,6 +168,13 @@
       "severity": "error",
       "check": "part-modal",
       "message": "rule 'A heading gathering prose' has no bullet under it, so it binds nobody. Write one bullet per obligation, each with one of MUST, MUST NOT, SHOULD, SHOULD NOT, MAY."
+    },
+    {
+      "file": "standards/nest-a-rule-holding-a-list.md",
+      "line": 25,
+      "severity": "error",
+      "check": "part-nested",
+      "message": "rule 'Every secret is read at run time' has a list inside a bullet. Write each point as a bullet of its own with its own modal, or fold it into the sentence above it."
     }
   ]
 }

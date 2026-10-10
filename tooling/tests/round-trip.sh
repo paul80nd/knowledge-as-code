@@ -510,7 +510,7 @@ policy_lookup() {
 }
 
 # The same question of the standards skill. A rule is neither a term nor a clause: one line holds
-# several obligations, and the keyword that says whether each binds is written inside the wording.
+# several obligations, and each states the level it binds at beside its wording.
 standards_lookup() {
   RULES="$ROOT/$CORPUS_ROOT/standards/rules.jsonl"
 
@@ -535,23 +535,22 @@ standards_lookup() {
   HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
   [ "$HITS" = "1" ] || fail "expected one line for std-IDEM.the-caller-chooses-the-key, found $HITS."
 
-  OBLIGATIONS=$(jqr '.obligations // empty' "$WORK/hits.txt")
-  [ -n "$OBLIGATIONS" ] || fail "std-IDEM.the-caller-chooses-the-key came back with no obligations."
+  OBLIGATIONS=$(jqr '.obligations[]? | select(.level == "MUST") | .text' "$WORK/hits.txt")
+  [ -n "$OBLIGATIONS" ] || fail "std-IDEM.the-caller-chooses-the-key came back with no MUST obligation."
 
-  # The markdown is what carries the keyword, so it travels unflattened. A reader handed the bullets
-  # with the emphasis stripped cannot tell an obligation from the prose around it.
+  # The level is read from a key, and the text still travels as the markdown the standard wrote.
   echo "$OBLIGATIONS" | grep -qF '**MUST**' \
-    || fail "std-IDEM.the-caller-chooses-the-key came back with no bold MUST in its obligations."
+    || fail "std-IDEM.the-caller-chooses-the-key came back with a MUST whose text lost its bold."
 
-  echo "round-trip: std-IDEM.the-caller-chooses-the-key carries its obligations, keyword and all."
+  echo "round-trip: std-IDEM.the-caller-chooses-the-key carries its obligations, level and all."
 
-  # `MUST NOT` opens with `MUST`, and the skill tells a reader to compare the keyword whole. A rule
+  # `MUST NOT` opens with `MUST`, and the skill tells a reader to compare `level` whole. A rule
   # holding a prohibition is what shows the longer keyword survives the export unshortened.
   grep -E '"id": *"std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait"' "$RULES" \
     > "$WORK/prohibition.txt" || fail "std-IDEM carries no an-in-flight-repeat-waits-or-is-told-to-wait rule."
 
-  jqr '.obligations // empty' "$WORK/prohibition.txt" | grep -qF '**MUST NOT**' \
-    || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait came back with no bold MUST NOT."
+  jqr '.obligations[]? | select(.level == "MUST NOT") | .text' "$WORK/prohibition.txt" | grep -qF '**MUST NOT**' \
+    || fail "std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait came back with no MUST NOT."
 
   echo "round-trip: a prohibition arrives as MUST NOT, whole rather than shortened to its first word."
 

@@ -162,7 +162,7 @@ entry first.
 | `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
 | `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
 | `part-none / part-empty`    | error   | The parts section holds at least one heading, and each has something under it.                                  |
-| `part-modal`                | error   | A part heading states its obligations as bullets, each with a declared modal in bold.                           |
+| `part-modal / part-nested`  | error   | A part heading states its obligations as bullets, each with a declared modal in bold and no list inside it.     |
 | `modal-outside-rules`       | warning | Only the parts section binds: no bullet outside it names a declared modal.                                      |
 | `part-id-unique / part-ref` | error   | No two parts of a record share an address, and a `record-id.part` citation reaches the part it names.           |
 | `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |

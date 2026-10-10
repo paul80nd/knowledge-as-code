@@ -16,10 +16,11 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public class PluginSkillFieldTests
 {
-    // The vocabulary a Type cell is written in. Four words, because the exporter writes four shapes.
+    // The vocabulary a Type cell is written in. Five words, because the exporter writes five shapes.
     private const string Text = "string";
     private const string OrNull = "string or null";
     private const string List = "list of strings, or null";
+    private const string Bullets = "list of objects, or null";
     private const string OrMissing = "string, or absent";
 
     private static readonly string Plugin = Path.Combine(Repo.Root, "template", ".plugin");
@@ -125,6 +126,9 @@ public class PluginSkillFieldTests
                 or PartLineSource.RecordPath => Text,
             PartLineSource.PartLead or PartLineSource.PartLevel => OrNull,
             PartLineSource.PartSeeAlso => List,
+
+            // A part with no list beneath it writes null, the same absence as a missing lead.
+            PartLineSource.PartBullets => Bullets,
             _ => throw new InvalidOperationException(
                 $"'{source}' is a line source this test holds no type for. Add it here and to the three skills.")
         };

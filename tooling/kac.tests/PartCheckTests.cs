@@ -380,12 +380,27 @@ public class PartCheckTests
     public void A_heading_with_nothing_under_it_is_left_to_part_empty()
         => Assert.DoesNotContain(Run(Group, Rules(), "standards"), f => f.Check.Value == "part-modal");
 
-    // A nested bullet is one rule's workings. Holding it to a modal would ask a rule's detail to be a
-    // rule.
+    // An obligation is one bullet, and a list inside it is detail no citation or export reaches. It is
+    // reported once, at the nested list, and its points are not also asked for a modal.
     [Fact]
-    public void A_nested_bullet_is_not_an_obligation_of_its_own()
-        => Assert.Empty(Run(Group + "- A service **MUST** read its secrets from the vault.\n"
-                            + "  - The vault is the one the platform team runs.\n", Rules(), "standards"));
+    public void A_list_nested_in_a_bullet_is_reported()
+    {
+        var found = Run(Group + "- A service **MUST** read its secrets from the vault.\n"
+                        + "  - The vault is the one the platform team runs.\n"
+                        + "  - The token is short-lived.\n", Rules(), "standards");
+
+        var one = Assert.Single(found);
+        Assert.Equal("part-nested", one.Check.Value);
+        Assert.Equal(12, one.Line);
+        Assert.Contains("'Every secret is read at run time'", one.Message);
+    }
+
+    // A glossary nests a list under a term to give examples, and declares no modals to say its parts oblige
+    // nobody.
+    [Fact]
+    public void A_list_nested_under_a_term_is_not_reported()
+        => Assert.Empty(Run("## Terms\n\n### Corpus\n\n- A body of records.\n  - One repository.\n",
+            Headings(), "glossary"));
 
     // Declaring no modals is how a type says its parts carry no obligation, and a glossary is why.
     [Fact]

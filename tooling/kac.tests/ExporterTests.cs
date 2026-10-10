@@ -1299,7 +1299,23 @@ public class ExporterTests
     {
         var line = RuleLines()[0];
 
-        Assert.DoesNotContain("Covers", line.GetProperty("obligations").GetString());
+        Assert.All(line.GetProperty("obligations").EnumerateArray(),
+            b => Assert.DoesNotContain("Covers", b.GetProperty("text").GetString()));
+    }
+
+    // Each bullet binds on its own, so each travels with the modal it was written with, and a consumer reads
+    // how hard a bullet binds from a key.
+    [Fact]
+    public void A_rule_line_carries_each_bullet_with_its_level()
+    {
+        var bullets = RuleLines()[0].GetProperty("obligations").EnumerateArray()
+            .Select(b => (b.GetProperty("level").GetString(), b.GetProperty("text").GetString()));
+
+        Assert.Equal(
+        [
+            ("MUST", "A push **MUST** run the tests."),
+            ("MUST NOT", "A push **MUST NOT** skip a failing test, whatever the branch it lands on.")
+        ], bullets);
     }
 
     // The policy type is declared and holds no record. A citation is read against the id prefixes the
@@ -1363,6 +1379,8 @@ public class ExporterTests
         ### Tests run on every push
 
         - A push **MUST** run the tests.
+        - A push **MUST NOT** skip a failing test, whatever the branch it
+          lands on.
 
         _**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].MACHINE_
 
@@ -1382,7 +1400,7 @@ public class ExporterTests
         Page = "standards.md",
         IdPrefix = "std",
         RequiredSections = ["Summary", "Rules"],
-        Parts = new PartSpec(PartSpec.Headings, "", [], [])
+        Parts = new PartSpec(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD"])
             { Section = "Rules", Noun = "rule", Level = 3 },
         DeclaredFields = [new FieldSpec { Name = "implements", MirrorsCitations = "Covers" }],
         Export = new ExportSpec
@@ -1396,7 +1414,7 @@ public class ExporterTests
             [
                 ("id", PartLineSource.PartId),
                 ("title", PartLineSource.PartText),
-                ("obligations", PartLineSource.PartLead),
+                ("obligations", PartLineSource.PartBullets),
                 ("covers", $"{PartLineSource.CitationPrefix}Covers"),
                 ("record", PartLineSource.RecordId),
                 ("part", PartLineSource.PartKey)

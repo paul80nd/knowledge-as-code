@@ -306,8 +306,8 @@ public sealed class ExportSpec
 // rather than to this list: `front.review-by` names a field the type declares or inherits, and
 // `column.Alignment` names a header its `parts.columns:` declares. The rest each name one thing.
 //
-// `part.lead` and `part.aside.<Label>` read a part's body, which only the heading source gives a part. A
-// table row is its own body, and `SchemaChecks` refuses either against a table-sourced type.
+// `part.lead`, `part.bullets` and `part.aside.<Label>` read a part's body, which only the heading source gives
+// a part. A table row is its own body, and `SchemaChecks` refuses each of them against a table-sourced type.
 public static class PartLineSource
 {
     public const string PartId = "part.id";       // `<record-id>.<part-id>`, the whole address
@@ -315,6 +315,7 @@ public static class PartLineSource
     public const string PartText = "part.text";   // the heading as written, or the second cell flattened
     public const string PartLead = "part.lead";   // the body's first block
     public const string PartLevel = "part.level"; // the modal the part opens with
+    public const string PartBullets = "part.bullets"; // each bullet of the body's first list, with its modal
     public const string PartSeeAlso = "part.see-also";
     public const string PartAnchor = "part.anchor"; // the fragment the part resolves at
     public const string RecordId = "record.id";
@@ -337,7 +338,7 @@ public static class PartLineSource
     // The sources naming one thing each, so the prefixed families are tested separately.
     public static readonly IReadOnlyList<string> Fixed =
     [
-        PartId, PartKey, PartText, PartLead, PartLevel, PartSeeAlso, PartAnchor,
+        PartId, PartKey, PartText, PartLead, PartLevel, PartBullets, PartSeeAlso, PartAnchor,
         RecordId, RecordType, RecordPath
     ];
 

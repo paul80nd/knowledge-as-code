@@ -221,10 +221,10 @@ _**Covers:** `eng:pol-AGNT.PROV`_
 words: `title`, `obligations`, `record`, `status`, `type`. A search for one of those matches every line in
 the file.
 
-| Field         | Type                     | What it holds                                             |
-|---------------|--------------------------|-----------------------------------------------------------|
-| `obligations` | string or null           | every bullet under that heading, as one block of markdown |
-| `seeAlso`     | list of strings, or null | the rules of other standards this one points at           |
+| Field         | Type                     | What it holds                                   |
+|---------------|--------------------------|-------------------------------------------------|
+| `obligations` | list of objects, or null | one entry per bullet under that heading         |
+| `seeAlso`     | list of strings, or null | the rules of other standards this one points at |
 
 **A key with no value is `null`, and the key is still there.** Test the value rather than the key.
 
@@ -239,9 +239,9 @@ the file.
 
 The good instruction names no tool. It says which file the answer is in, and what will mislead a reader who takes a
 match for an answer. It leaves how to search to the session, which knows what tools it has. The avoided instruction
-names a tool the session may not have, so a reader without it must choose between ignoring the instruction and
-stopping. The avoided table states no type at all, so a reader iterates a string of markdown one character at a time.
-It says a field with no value is absent, so a reader testing for the key finds it every time and reads nothing.
+names a tool the session may not have, so a reader without it must choose between ignoring the instruction and stopping.
+The avoided table states no type at all, so a reader cannot tell whether to loop over the field or read it whole. It
+says a field with no value is absent, so a reader testing for the key finds it every time and reads nothing.
 
 A finding is the whole of an issue body. `fix-0002` settled what a session first noticed about Rider, and this is the
 finding that observation would have arrived as.
