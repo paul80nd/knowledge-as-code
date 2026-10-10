@@ -1,12 +1,6 @@
 using kac.core;
 using Xunit.Sdk;
 
-// In-process unit tests for how a publishing target addresses what it publishes.
-//
-// The link forms cannot be shown by a golden fixture: the harness assembles a corpus that is not a git
-// repository, so no run there resolves a ref and no run there writes a link. That is the right shape
-// for the fixture: it proves the no-links path, and leaves the rules themselves to be proven here.
-
 namespace kac.tests;
 
 public class PublishingTests
@@ -20,8 +14,10 @@ public class PublishingTests
         string? target = Publishing.GitHub, string? published = GitHubBase, string? prefix = null) =>
         new() { PublishingTarget = target, Base = published, PathPrefix = prefix };
 
-    // The publishing a descriptor resolves to. Every descriptor above names a target and a base, so a
-    // null is this file's own arrangement being wrong rather than the case a test is making.
+    /// <summary>
+    /// The publishing a descriptor resolves to. Every descriptor above names a target and a base, so a null is this
+    /// file's own arrangement being wrong rather than the case a test is making.
+    /// </summary>
     private static Publishing For(CorpusDescriptor descriptor) =>
         Publishing.For(descriptor, Sha)
         ?? throw new XunitException($"'{descriptor.PublishingTarget}' resolved to no publishing.");
@@ -44,8 +40,6 @@ public class PublishingTests
         Assert.NotNull(Publishing.For(Descriptor(target, published), Sha));
     }
 
-    // The caller's question is whether it can write a link, and a null says no without asking it to tell
-    // the cases apart.
     [Theory]
     [InlineData(Publishing.None, GitHubBase, Sha)]    // publishes nowhere
     [InlineData(Publishing.MkDocs, GitHubBase, Sha)]  // a target nothing addresses yet
@@ -63,9 +57,11 @@ public class PublishingTests
         Assert.Null(Publishing.For(Descriptor(target: null), Sha));
     }
 
-    // Azure DevOps shows a page's numeric id in the address bar, and nothing derives the id of a second
-    // page from the id of the first. A base copied from there addresses one record and misaddresses
-    // every other, which is worse than addressing none.
+    /// <summary>
+    /// Azure DevOps shows a page's numeric id in the address bar, and nothing derives the id of a second page from the
+    /// id of the first. A base copied from there addresses one record and misaddresses every other, which is worse than
+    /// addressing none.
+    /// </summary>
     [Theory]
     [InlineData(WikiBase + "/880/Knowledge-as-code")]
     [InlineData(WikiBase + "/880")]
@@ -83,7 +79,9 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
-    // A wiki addresses a page rather than a file, so the extension goes and the separators are encoded.
+    /// <summary>
+    /// A wiki addresses a page rather than a file, so the extension goes and the separators are encoded.
+    /// </summary>
     [Fact]
     public void A_wiki_record_is_read_at_an_encoded_page_path()
     {
@@ -102,8 +100,10 @@ public class PublishingTests
         Assert.Equal($"{RepoBase}?path=/glossary/search.md&version=GC{Sha}", link);
     }
 
-    // A wiki takes its anchor as a query parameter, because `?pagePath=` opened the query string first.
-    // A fragment there is discarded and the reader lands at the top of the page.
+    /// <summary>
+    /// A wiki takes its anchor as a query parameter, because <c>?pagePath=</c> opened the query string first. A
+    /// fragment there is discarded and the reader lands at the top of the page.
+    /// </summary>
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, "#query")]
     [InlineData(Publishing.AzureDevOps, RepoBase, "#query")]
@@ -116,8 +116,10 @@ public class PublishingTests
         Assert.EndsWith(expected, link, StringComparison.Ordinal);
     }
 
-    // A citation says what the agent read. A wiki is the one target that cannot keep this, because no
-    // `?pagePath=` URL takes a commit.
+    /// <summary>
+    /// A citation says what the agent read. A wiki is the one target that cannot keep this, because no
+    /// <c>?pagePath=</c> URL takes a commit.
+    /// </summary>
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase)]
     [InlineData(Publishing.AzureDevOps, RepoBase)]
@@ -129,7 +131,6 @@ public class PublishingTests
         Assert.DoesNotContain("/main/", link, StringComparison.Ordinal);
     }
 
-    // A corpus should not have to know that the mechanism is about to append a slash.
     [Fact]
     public void A_trailing_slash_on_a_base_does_not_double()
     {
@@ -138,7 +139,6 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
-    // The prefix lands between the commit and the record, which is the one place it can go.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase,
         GitHubBase + "/blob/" + Sha + "/example/glossary/search.md#query")]
@@ -155,7 +155,6 @@ public class PublishingTests
         Assert.Equal(expected, link);
     }
 
-    // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits.
     [Theory]
     [InlineData("example")]
     [InlineData("/example")]
@@ -169,8 +168,6 @@ public class PublishingTests
         Assert.Equal("example", publishing.PathPrefix);
     }
 
-    // The link carries no empty segment where a prefix would sit, and the manifest states no prefix for
-    // an agent to join.
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -183,8 +180,6 @@ public class PublishingTests
         Assert.Null(publishing.PathPrefix);
     }
 
-    // The anchor rule is the target's, and GitHub's is the discarding form the corpus's own links
-    // already use. That is what lets one citation name a term and a link land on it.
     [Fact]
     public void The_anchor_is_the_form_the_corpus_already_links_with()
     {
@@ -192,8 +187,6 @@ public class PublishingTests
         Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
 
-    // The commit is settled too: a ref a reader has to copy is forty characters that can be mistyped
-    // into a plausible 404. The wrong one answers as confidently as the right one.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, GitHubBase + "/blob/" + Sha + "/{path}#{anchor}")]
     [InlineData(Publishing.AzureDevOps, RepoBase, RepoBase + "?path=/{path}&version=GC" + Sha + "#{anchor}")]
@@ -204,8 +197,6 @@ public class PublishingTests
         Assert.Equal(expected, For(Descriptor(target, published)).Template());
     }
 
-    // A reader holding a record's path supplies the path alone, and cannot join it to the prefix in the
-    // wrong order.
     [Fact]
     public void A_template_settles_the_subdirectory_too()
     {
@@ -214,7 +205,6 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/example/{{path}}#{{anchor}}", template);
     }
 
-    // One rule builds both, so a corpus reading the export cannot be handed two addresses for one part.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, "query")]
     [InlineData(Publishing.GitHub, GitHubBase, null)]

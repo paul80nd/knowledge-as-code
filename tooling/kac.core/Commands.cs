@@ -1,8 +1,7 @@
 using System.Text.Json;
 using Spectre.Console;
 
-// Subcommands: the orchestration behind each CLI verb. The entrypoint, tooling/kac/Program.cs, only wires
-// Spectre.Console.Cli to these. All the work lives here and in the rest of kac.core.
+// The orchestration behind each CLI verb. tooling/kac/Program.cs only wires Spectre.Console.Cli to these.
 
 namespace kac.core;
 
@@ -20,13 +19,10 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // What each import's source publishes now. Null for a corpus consuming nothing, which is every corpus
-    // standing on its own: no source is read, and the check costs it nothing.
-    //
-    // This is the one place `validate` leaves the working tree. A `source:` names a folder as often as a
-    // registry, and a folder is read from disk, so no network is involved there. Where the source is a
-    // registry and the run cannot reach it, `import-unreachable` says so rather than reporting the lock
-    // as current.
+    /// <summary>
+    /// Null for a corpus consuming nothing, so no source is read. The one place <c>validate</c> leaves the working
+    /// tree: an unreachable registry reports <c>import-unreachable</c> rather than the lock as current.
+    /// </summary>
     private static IReadOnlyList<ImportStanding>? Standings(CorpusDescriptor descriptor, Registry registry) =>
         descriptor.Consumes.Count == 0 ? null : Freshness.Read(descriptor.Consumes, registry);
 
@@ -38,7 +34,6 @@ public static class Commands
     /// </summary>
     public static int Export(string corpusRoot, string? type, DateTime now, string? commit, bool? dirty)
     {
-        // The corpus is loaded whole, whatever `type` names.
         var corpus = Corpus.Load(corpusRoot);
         var (inherited, missing) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
         var publishing = Publishing.For(corpus.Descriptor, commit);
@@ -56,9 +51,6 @@ public static class Commands
         var written = Exporter.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
 
-        // What the export cannot say is worth saying here, where someone is watching. Neither state is an error. A
-        // corpus may publish nowhere, and an export built from a dirty tree is still an export. It is only one that
-        // cannot be rebuilt from the commit it names.
         if (publishing is null)
             Note(
                 "export: no published links. This corpus states no publishing target the tool can address, "
@@ -68,16 +60,12 @@ public static class Commands
                 "export: built from a dirty working tree, and the manifest says so. The commit it names "
                 + "does not reproduce it.");
 
-        // Named rather than counted. A record left behind is invisible in the output, so this run is the last place
-        // anyone sees which ones they were.
+        // Named rather than counted: a record left behind is invisible in the output.
         if (plan.Withheld.Count > 0)
             Note(
                 $"export: withheld {string.Join(", ", plan.Withheld)}: .corpus.yaml excludes "
                 + $"{string.Join(" and ", corpus.Descriptor.ExportExclude)}.");
 
-        // The same reasoning for a cross-reference the export could not read. The export carries what a link names, and
-        // a link naming a record rather than a term inside it leaves nothing to carry. So this run states the omission,
-        // where an author can act on it, rather than leaving a reader to guess.
         if (plan.Unread.Count > 0)
         {
             Note(
@@ -87,11 +75,6 @@ public static class Commands
             Note("export: point each link at the part it means, as '<file>.md#<anchor>'.");
         }
 
-        // An empty type list is a statement of what this corpus has, and not a failure. Either it adopted no type that
-        // declares an export, or it withheld everything the types it did adopt would have carried. The line above says
-        // which, where it was the second.
-        // Named because a file count says nothing about whose records are in it, and a consumer receiving
-        // another corpus's records under this corpus's name is the fact worth stating out loud.
         if (inherited.Count > 0)
             Note($"export: carried {string.Join(", ", inherited.Select(c => $"{c.Corpus ?? c.Shortcode} "
                                                                             + $"{c.ContentVersion}"))}, which "
@@ -103,14 +86,11 @@ public static class Commands
         return 0;
     }
 
-    // Turn the folder this was run in into a corpus.
-    //
-    // The one verb answering about a corpus that is not there yet, so it takes the working directory
-    // rather than a corpus root, and refuses where the others require one.
-    //
-    // The order is the whole design: everything that can fail is settled before the first question, so
-    // that nobody answers six of them and is then told the URL was unreachable. `docs/cli/new.md` argues
-    // each step. `today` is passed in rather than read here, so a golden can pin what the descriptor says.
+    /// <summary>
+    /// Takes the working directory rather than a corpus root, because the corpus is not there yet. Everything that can
+    /// fail is settled before the first question. <c>docs/cli/new.md</c> argues each step. <c>today</c> is passed in so
+    /// a golden can pin what the descriptor says.
+    /// </summary>
     public static int New(string dir, NewRequest request, string toolVersion, string today)
     {
         var ground = kac.core.New.Survey(dir);
@@ -119,8 +99,7 @@ public static class Commands
             return Fail($"new: {already} is already a corpus, so there is nothing here to create. "
                         + "taking a newer framework into one is `kac update`.");
 
-        // A dirty tree stops the run, so that what `new` writes is legible as a diff against what was
-        // there. A tree git could not answer for is not reported as clean, and is not stopped either.
+        // A tree git could not answer for is not reported as clean, and is not stopped either.
         if (ground.Dirty is true)
             return Fail("new: this repository holds uncommitted changes. commit or stash them first, so "
                         + "that what `new` writes reads as a diff of its own.");
@@ -159,8 +138,6 @@ public static class Commands
         var declined = SeedLinks.Declined(take.Schema, answers.Types);
         foreach (var path in kac.core.New.Apply(plan, take.Root, dir, declined)) Out.Markup(Wrote(path));
 
-        // Named where a reader can act on it, counted where they cannot. A declined type is a decision
-        // just made and needs no list; a starter withheld is one file, and which one is the whole fact.
         if (plan.DeclinedTypes.Count > 0)
             Account($"new: {plan.DeclinedTypes.Count} file(s) withheld for the types this corpus declined.");
         if (plan.DeclinedCi.Count > 0)
@@ -170,30 +147,29 @@ public static class Commands
         Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
                 + $"from {request.From}{At(take.Commit)}.");
 
-        // Generation writes the `_index.md` files and the generated blocks that validation then checks,
-        // so it goes first. Staging goes last, so everything the command did is visible in one place.
+        // Generation writes what validation then checks, so it goes first. Staging goes last.
         Generate(dir, check: false);
         var validated = Validate(dir, json: false, DateOnly.ParseExact(today, "yyyy-MM-dd"), Unreachable);
         Stage(dir);
 
         if (validated == 0) return 0;
 
-        // Whichever types were adopted, a corpus this wrote and cannot validate is a defect upstream. The
-        // person who just ran the command should not be left thinking they caused it.
         Stop("new: the corpus this created does not validate. that is a defect in the template or in the "
              + "tool, and not in anything you answered. the files are written and staged.");
         return 1;
     }
 
-    // The registry the corpus this wrote is validated against. The template declares no `consumes:`, so
-    // nothing is ever asked of it. Should a template come to declare one, every import reports
-    // `import-unreachable` here rather than `new` fetching from a network nobody asked it to use.
+    /// <summary>
+    /// The template declares no <c>consumes:</c>. Should one appear, every import reports <c>import-unreachable</c>
+    /// rather than <c>new</c> fetching from a network nobody asked it to use.
+    /// </summary>
     private static readonly Registry Unreachable = new(
         _ => new Fetched(null, 0, "new does not read a registry."),
         new FolderFeed(_ => null, _ => null));
 
-    // Offer `git init`, and answer with the refusal where there is one. Discovery reads the git listing,
-    // so the choice is between running it and cancelling rather than carrying on without a repository.
+    /// <summary>
+    /// Discovery reads the git listing, so the choice is between running <c>git init</c> and cancelling.
+    /// </summary>
     private static int? Initialise(string dir, NewRequest request, IAsker? asker) =>
         Asking.OrRefuse(asker, request.Yes, $"{dir} is not a git repository. Run `git init` here?") switch
         {
@@ -206,16 +182,10 @@ public static class Commands
                 : null
         };
 
-    // Put the cost of giving up a type to whoever asked for it, and answer with the refusal where there
-    // is one.
-    //
-    // Asked rather than refused. `Adopt` already refuses where the folder holds records, because that is
-    // a fact the listing settles. This one is a judgement: the pages naming the type are the corpus's own
-    // words by now, and the tool can see a link it can parse and nothing else. Somebody who has rewritten
-    // those pages knows what else points at the type, and is the only one who does.
-    //
-    // A no ends the whole run rather than the drop alone. The run was asked for a drop, and taking a newer
-    // framework while leaving the type in place is a third thing nobody asked for.
+    /// <summary>
+    /// Asked rather than refused: the pages naming the type are the corpus's own words, and only the person running
+    /// this knows what else points at it. A no ends the whole run, not the drop alone.
+    /// </summary>
     private static int? Relinquish(string dropping, UpdateRequest request)
     {
         var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
@@ -234,7 +204,6 @@ public static class Commands
         };
     }
 
-    // What the run is about to do, before the one question that can still stop it.
     private static void Summarise(string dir, NewAnswers answers, Upstream upstream, int declared)
     {
         Out.Markup($"[grey]new:[/] creating [bold]{answers.Name.EscapeMarkup()}[/] in {dir.EscapeMarkup()}");
@@ -254,8 +223,9 @@ public static class Commands
         static string Ref(string? name) => name is { Length: > 0 } r ? $" at {r}" : "";
     }
 
-    // Everything the command did, in one place, before anybody commits it. A failure here is worth a note
-    // and not a stop: the files are written either way, and staging is the part a person can redo.
+    /// <summary>
+    /// A failure here is a note and not a stop: the files are written either way, and staging can be redone.
+    /// </summary>
     private static void Stage(string dir)
     {
         if (Git.Run(dir, "add -A") is null)
@@ -264,8 +234,6 @@ public static class Commands
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
     }
 
-    // Both halves of `TemplateFaults`, whichever verb read the template. Each names what the template did
-    // rather than the count of it, because the fix is upstream and needs the paths.
     private static int StopUnsound(string verb, string from, TemplateFaults faults)
     {
         if (faults.Unclassified.Count > 0)
@@ -281,32 +249,27 @@ public static class Commands
         return 1;
     }
 
-    // The verb is the caller's, because `update` gives a type up through this too and a reader meets the
-    // message as the tail of the command they ran.
+    /// <summary>The verb is the caller's, because <c>update</c> gives a type up through this too.</summary>
     private static int Cancelled(string verb)
     {
         Note($"{verb}: cancelled. nothing was written.");
         return 1;
     }
 
-    // The commit a take resolved to, short, or nothing where the template was read from a folder.
+    /// <summary>Nothing where the template was read from a folder.</summary>
     private static string At(string? commit) => commit is { Length: >= 7 } c ? $" at {c[..7]}" : "";
 
-    // A path the descriptor states, resolved against the corpus root. Every verb answers the same wherever
-    // inside a corpus it is run, and a path resolved against the working directory would not: it would find
-    // one folder from the root and another from a folder below it.
-    //
-    // A path the platform cannot parse comes back as it was given. The caller reads that as a folder that is
-    // not there, which is the message it was going to print anyway.
+    /// <summary>
+    /// Against the corpus root, so every verb answers the same from any folder inside the corpus. A path the platform
+    /// cannot parse comes back as given, and the caller reports a folder that is not there.
+    /// </summary>
     private static string Rooted(string corpusRoot, string path)
     {
         try { return Path.GetFullPath(path, corpusRoot); }
         catch (ArgumentException) { return path; }
     }
 
-    // Assemble the plugin from the export and the `.plugin/` tree. Two trees in, one directory out, and
-    // the corpus is never loaded bar its descriptor, which says where the plugin tree is read from: what
-    // a bundle has to decide beyond that is a fact about the export it was handed.
+    /// <summary>The corpus is never loaded bar its descriptor, which says where the plugin tree is read from.</summary>
     public static int Bundle(string corpusRoot)
     {
         var descriptor = CorpusDescriptor.Load(corpusRoot);
@@ -315,10 +278,7 @@ public static class Commands
 
         if (descriptor.PluginFrom is { } from)
         {
-            // Resolved against the corpus root and never against the working directory, so `bundle`
-            // assembles the same plugin wherever inside the corpus it is run. `Update.TemplatePath`
-            // is the wrong resolver here: it hands back a path it cannot resolve, which is right for
-            // a `--from` that may be a URL and would leave this one reading a folder beside the caller.
+            // Not `Update.TemplatePath`, which hands back a path it cannot resolve because a `--from` may be a URL.
             var shared = Bundler.Read(Rooted(corpusRoot, from));
             if (shared is null)
                 return Fail($"bundle: .corpus.yaml reads the plugin tree from {from}, and there is no folder "
@@ -348,9 +308,7 @@ public static class Commands
         var written = Bundler.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
 
-        // Named rather than counted, as the export names what it withheld. A dropped component is invisible in the
-        // output, and two corpora building one plugin name may drop different ones. So the run says which, beside the
-        // `bundle.json` that will outlive it.
+        // Named rather than counted: two corpora building one plugin name may drop different components.
         foreach (var t in plan.Trimmed)
             Note($"bundle: trimmed {t.Path}: {t.Reason}.");
 
@@ -361,16 +319,15 @@ public static class Commands
             + $"{plan.Version ?? "(no version)"}. {plan.Included.Count} component(s) included, "
             + $"{plan.Trimmed.Count} trimmed.");
 
-        // The command is the one part of this line anybody retypes, so it is the one part set in bold.
         Out.Markup(
             $"[grey]bundle:[/] {Dist.Root}/ is a marketplace holding it. Install it from a path with:  "
             + $"[bold]claude plugin marketplace add ./{Dist.Root}[/]");
         return 0;
     }
 
-    // Seal the export into one versioned file a registry can hold. The export is the only thing read:
-    // a package is what a consumer receives, and building it from the corpus would let the tree that was
-    // proved and the tree that was published come apart.
+    /// <summary>
+    /// Reads the export alone, so the tree that was proved and the tree that is published cannot come apart.
+    /// </summary>
     public static int Pack(string corpusRoot, string? repository)
     {
         var export = Bundler.Read(Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
@@ -391,19 +348,12 @@ public static class Commands
         Account($"pack: sealed {plan.Entries.Count} file(s) as {plan.Id} {plan.Version}, cited as "
                 + $"'{plan.Shortcode}:'.");
 
-        // Said here because the package cannot say it. Whether this version may be published is a question
-        // about somewhere else, and the answer arrives as a rejected push rather than as anything this run
-        // could have checked. What to do about it is in `docs/cli/pack.md`.
+        // `docs/cli/pack.md` says what to do when a registry rejects the push.
         Note($"pack: {plan.Version} is content-version from .corpus.yaml. A registry never replaces a "
              + "published version.");
         return 0;
     }
 
-    // Fetch what this corpus declares it consumes, and unpack each one where the resolver will look.
-    //
-    // The corpus is never loaded, only its descriptor: what a restore has to decide is a fact about the
-    // declarations and about what the registry holds, and loading a corpus before its imports have
-    // arrived would ask the validator about a graph that is not assembled yet.
     /// <summary>
     /// Fetch what <c>consumes:</c> declares into <c>.imports/</c>, from <paramref name="registry"/>.
     /// </summary>
@@ -428,23 +378,17 @@ public static class Commands
         var written = kac.core.Restore.Write(corpusRoot, plan);
         foreach (var path in written) Out.Markup(Wrote(path));
 
-        // The lock is written after the fetch rather than as each version resolves, so a run that
-        // refused halfway leaves the descriptor saying what the last whole restore took.
+        // Written after the fetch, so a run that refused halfway leaves the lock from the last whole restore.
         var locked = CorpusDescriptor.SetResolved(corpusRoot,
             plan.Steps.ToDictionary(s => s.Corpus, s => s.Version, StringComparer.Ordinal));
 
-        // An entry the writer could not find is named rather than passed over. It writes a line into a
-        // block somebody hand-wrote, and a shape it cannot place would otherwise read as a lock recorded
-        // and leave the next run resolving from the registry again.
+        // Named rather than passed over: an entry the writer could not place would otherwise read as locked.
         var unwritten = plan.Steps.Select(s => s.Corpus)
             .Where(c => !locked.Contains(c, StringComparer.Ordinal)).ToList();
         if (unwritten.Count > 0)
             Note($"restore: could not write a resolved version for {string.Join(", ", unwritten)}. "
                  + "Write `resolved:` on each entry by hand, so the next run takes the same version.");
 
-        // Named one apiece rather than counted. Which version each import came in at is the thing a
-        // reader of this output is checking, and a corpus already current is the answer to a different
-        // question than a corpus just fetched.
         foreach (var step in plan.Steps)
             Account($"restore: {step.Corpus} {step.Version} as '{step.Shortcode}:'."
                     + (step.Current ? " Already current." : ""));
@@ -459,8 +403,7 @@ public static class Commands
     {
         var corpus = Corpus.Load(corpusRoot);
 
-        // What every generated file should hold, beside what it holds now. `GeneratedFiles` owns which files those are
-        // and which blocks each carries, so `validate` holds a corpus to the same list this writes.
+        // `GeneratedFiles` owns which files and blocks there are, so `validate` checks the list this writes.
         var plan = GeneratedFiles.Plan(corpus.Schema, corpus.Adopted, corpus.Docs, corpus.Tree);
 
         if (check)
@@ -482,12 +425,7 @@ public static class Commands
         return 0;
     }
 
-    // What a regeneration wrote. Shared with `update`, which ends by regenerating, so an update reports the files it
-    // rebuilt in the words `generate` uses for the same work.
-    //
-    // A file the corpus did not hold is marked, because creating one changes what the corpus contains rather than what
-    // a file inside it says. The tally names the whole plan beside the part of it that moved: a reader who sees one
-    // file written wants to know it was one of forty.
+    /// <summary>Shared with <c>update</c>, which ends by regenerating.</summary>
     private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
         var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
@@ -543,29 +481,21 @@ public static class Commands
             Out.Line();
         }
 
-        // Templates are counted apart from documents because they are checked apart from them. A reader who sees a
-        // finding against a `_template.md` should find it accounted for in the tally. A reader who sees none should be
-        // able to tell the templates were read rather than skipped.
         Out.Markup(
             $"validated {validated} document(s) and {templates} template(s), skipped {skipped} without "
             + $"frontmatter. {Tally(errors, Sev.Error)}, {Tally(warnings, Sev.Warning)}"
-            // The third count appears only where there is one. A corpus consuming nothing can report no
-            // info at all, and a zero it can never move is a word on every run that says nothing.
             + (infos > 0 ? $", {Tally(infos, Sev.Info)}" : ""));
         return errors > 0 ? 1 : 0;
     }
 
     public static int Checks(string corpusRoot, bool json)
     {
-        // The only verb that reads the schema without loading the corpus around it, so it takes the walk
-        // itself. `Corpus.Load` is where every other verb gets the same answer.
+        // The only verb that reads the schema without loading the corpus, so it takes the walk itself.
         var schema = Schema.LoadNearest(corpusRoot);
         var catalogue = CheckCatalogue.For(schema);
 
-        // The catalogue is always valid data, so emit it either way. Whether the reader-facing table is faithful to it
-        // is a separate signal, reported to stderr and through the exit code below. The test suite relies on that exit
-        // code. A new catalogue check with no table row and no explicit waiver exits non-zero here, and so does a row
-        // naming a check that no longer exists.
+        // The catalogue is always emitted. Whether the table matches it is a separate signal, on stderr and in
+        // the exit code, and the test suite relies on that exit code.
         if (json)
         {
             var report = new ChecksReport(
@@ -587,9 +517,6 @@ public static class Commands
             Out.Write(grid);
             Out.Line();
 
-            // Split by severity, because a reader comes to this list to learn how much of it fails a
-            // build. The catalogue's own order says nothing about that. Counted one severity at a time
-            // rather than as errors and the remainder, so a third is not filed under the second.
             Out.Markup($"{catalogue.Count} checks: "
                        + $"{Tally(catalogue.Count(c => c.Severity == Sev.Error), Sev.Error)}, "
                        + $"{Tally(catalogue.Count(c => c.Severity == Sev.Warning), Sev.Warning)}, "
@@ -601,19 +528,13 @@ public static class Commands
 
         Stop("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Out.ErrLine($"  {p}");
-        // The lines above say what to do and this says where. Only the flag is named by a path: the row
-        // beside it lives in a table this tool ships, which a corpus holds no copy of. `tooling/CLAUDE.md`
-        // is where somebody who can move that row is told where it sits.
+        // Only the flag is named by a path: the row lives in a table this tool ships. `tooling/CLAUDE.md` says
+        // where it sits.
         Out.ErrLine("'on-type-page:' sits beside the check in .schema/_checks.yaml.");
         return 1;
     }
 
-    // Print one report over this corpus and everything it imports.
-    //
-    // Markdown to stdout, so the caller pipes it into a record, a pull request or a terminal, or to the
-    // file `--out` names. The run stamps what produced it and which content version it answers for,
-    // because only the tool knows both. `docs/cli/report.md` says what each report carries and what it
-    // leaves open.
+    /// <summary><c>docs/cli/report.md</c> says what each report carries.</summary>
     public static int Report(string corpusRoot, string name, string toolVersion, string at, string? outPath)
     {
         if (!Reports.Names.Contains(name, StringComparer.Ordinal))
@@ -622,8 +543,6 @@ public static class Commands
 
         var corpus = Corpus.Load(corpusRoot);
 
-        // An import that has not been restored is a hole in the report rather than a smaller one, which
-        // is the argument `Export` above makes about the same folder.
         var (inherited, notRestored) = Inherited.Read(corpusRoot, corpus.Descriptor.Consumes);
         if (notRestored.Count > 0)
             return Fail($"report: nothing is restored for {string.Join(", ", notRestored)}, which this corpus "
@@ -644,13 +563,11 @@ public static class Commands
             return 0;
         }
 
-        // Relative to where the command was typed, as a shell's own redirection is. The corpus root is
-        // what `kac` walked up to find, and a caller standing in a subfolder did not mean that one.
+        // Relative to where the command was typed, as a shell's own redirection is, not to the corpus root.
         var full = Path.GetFullPath(outPath);
 
-        // A finished report holds verdicts and notes somebody wrote, and the run cannot tell one from a
-        // file it wrote itself a minute ago. `writing-a-report` merges the two by hand, and refusing here
-        // is what leaves something to merge.
+        // A finished report holds verdicts somebody wrote. `writing-a-report` merges them by hand, and refusing
+        // here is what leaves something to merge.
         if (File.Exists(full))
             return Fail($"report: {outPath} already exists, so nothing was written. A report holds verdicts "
                         + "somebody wrote. Write this run somewhere else, and merge the two by hand.");
@@ -664,12 +581,10 @@ public static class Commands
         return 0;
     }
 
-    // Take a newer framework into a corpus that already has one.
-    //
-    // The order mirrors `New`: everything that can stop the run is settled before anything is written.
-    // Nothing is committed, which is the whole safety model and the reason `update` can be liberal.
-    // `docs/cli/update.md` argues each step. `today` is passed in rather than read here, so a golden can
-    // pin what the descriptor says.
+    /// <summary>
+    /// Everything that can stop the run is settled before anything is written, as in <c>New</c>. Nothing is committed.
+    /// <c>docs/cli/update.md</c> argues each step. <c>today</c> is passed in so a golden can pin it.
+    /// </summary>
     public static int Update(string corpusRoot, UpdateRequest request, string toolVersion, string today)
     {
         if (kac.core.Update.Contradiction(request) is { } contradiction) return Fail(contradiction);
@@ -682,9 +597,8 @@ public static class Commands
         if (settled.Failed) return Fail(settled.Problem);
         var (from, policy) = settled.Settings;
 
-        // A clean tree is what makes everything this writes distinguishable from everything the person
-        // wrote. A tree git could not answer for is not reported as clean, and is not stopped either.
-        // `--check` writes nothing, so it runs over a tree in any state.
+        // `--check` writes nothing, so it runs over a tree in any state. A tree git could not answer for is
+        // not reported as clean, and is not stopped either.
         if (!request.Check && Git.Dirty(corpusRoot) is true)
             return Fail("update: this repository holds uncommitted changes. commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
@@ -711,8 +625,7 @@ public static class Commands
                 rel => kac.core.Update.IdAt(take.Root, rel, take.Schema),
                 rel => kac.core.Update.IdAt(corpusRoot, rel, take.Schema)));
 
-        // A type being given up takes its own files with it, and they are deletions like any other. So
-        // they join the plan rather than being carried beside it, and `--check` reports them too.
+        // Joined to the plan, so `--check` reports the deletions too.
         if (adoption.Deleted.Count > 0)
             plan = plan with
             {
@@ -735,8 +648,7 @@ public static class Commands
         kac.core.Update.Apply(plan, take.Root, corpusRoot, declined);
         CorpusDescriptor.Stamp(corpusRoot, take.Manifest.Version, today, take.Commit);
 
-        // Only where a flag asked for it. `types:` is the corpus's own list, and rewriting it on a run
-        // that changed nothing would reformat a block somebody laid out by hand.
+        // Only where a flag asked for it: `types:` is a block somebody laid out by hand.
         if (adoption.Account is not null && adoption.Types is { } adopted)
             CorpusDescriptor.SetTypes(corpusRoot, adopted);
 
@@ -744,9 +656,7 @@ public static class Commands
             request.DropType, request.AddType);
     }
 
-    // The shape both listings take: how loud, what it is called, and what it says. Only the last column
-    // wraps. The other two are short and fixed, and squeezing them would split a check id across lines.
-    // A wrapped message keeps the hanging indent, so the column still reads down the page.
+    /// <summary>Only the message column wraps, so a check id is never split across lines.</summary>
     private static Grid Rows()
     {
         var grid = new Grid();
@@ -756,18 +666,14 @@ public static class Commands
         return grid;
     }
 
-    // The two things a severity carries into the output, decided in one place: what it is called, and
-    // what colour says so. The word carries the severity where colour cannot, into a pipe or under
-    // `--no-color`.
+    /// <summary>The word carries the severity where colour cannot, into a pipe or under <c>--no-color</c>.</summary>
     private static (string Word, string Colour) Severity(Sev severity) => severity switch
     {
         Sev.Error => ("error", "red"),
         Sev.Warning => ("warning", "yellow"),
         Sev.Info => ("info", "grey"),
 
-        // Every severity is named above, so this arm exists for a value cast in from outside the enum.
-        // A fourth one added and not named here is louder as a throw than as a finding filed under the
-        // wrong word.
+        // For a value cast in from outside the enum, or a severity added and not named here.
         _ => throw new InvalidOperationException($"no word for severity '{severity}'.")
     };
 
@@ -777,21 +683,15 @@ public static class Commands
         return $"[{colour}]{word}[/]";
     }
 
-    // A count of findings at one severity. Zero stays plain, because a reader glances at this line to
-    // decide the run was clean and a red zero says the opposite.
+    /// <summary>Zero stays plain: a red zero reads as a failed run.</summary>
     private static string Tally(int count, Sev severity)
     {
         var (word, colour) = Severity(severity);
 
-        // `info` is uncountable, so it takes no plural where the other two take one.
         var counted = severity == Sev.Info ? $"{count} {word}" : $"{count} {word}(s)";
         return count == 0 ? counted : $"[{colour}]{counted}[/]";
     }
 
-    // `wrote <path>`, with everything but the filename dimmed. A bundle writes a dozen paths sharing a
-    // prefix, and the eye should land on the part that differs. One separator covers every platform:
-    // the manifest and the corpus both hold their paths with forward slashes, and so does every path
-    // written here.
     private static string Wrote(string path)
     {
         var cut = path.LastIndexOf('/') + 1;
@@ -800,14 +700,8 @@ public static class Commands
             : $"[grey]wrote {path[..cut].EscapeMarkup()}[/]{path[cut..].EscapeMarkup()}";
     }
 
-    // A verb's own remark about the run. The verb's name is coloured to say which kind it is.
-    //
-    // A note is what nothing else will say: a link that carried nothing, a component dropped, an export that cannot be
-    // rebuilt from the commit it names. None of it is an error, and none of it shows in the artefact. Colour stops it
-    // reading as part of the tally.
     private static void Note(string line) => Out.Markup(Prefix(line, "yellow"));
 
-    // An account of what the run came to, and the last thing a verb says about its own work.
     private static void Account(string line) => Out.Markup(Prefix(line, "grey"));
 
     private static string Prefix(string line, string colour)
@@ -816,22 +710,14 @@ public static class Commands
         return $"[{colour}]{line[..cut].EscapeMarkup()}[/]{line[cut..].EscapeMarkup()}";
     }
 
-    // A command stopping on something the caller asked for and cannot have. The message goes to stderr and the exit
-    // code says so, as it does for every verb.
     private static int Fail(string message)
     {
         Stop(message);
         return 1;
     }
 
-    // Why a command stopped, or the heading over a list of what stopped it. The whole line is coloured,
-    // because it is the message rather than a remark sitting beside other output. Whatever the heading
-    // names stays plain beneath it.
     private static void Stop(string line) => Out.ErrMarkup($"[red]{line.EscapeMarkup()}[/]");
 
-    // What `--check` found: nothing, or the files that would change. The same discipline as
-    // `generate --check`, and for the same reason. A pipeline says whether a corpus has fallen behind,
-    // and never pushes.
     private static int ReportCheck(UpdatePlan plan, string origin, string? dropped)
     {
         Out.Line($"update: comparing this corpus against {origin}.");
@@ -869,7 +755,6 @@ public static class Commands
         }
     }
 
-    // What the update did. Every file it touched, then the tally and what the descriptor now records.
     private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string origin,
         int templateVersion, string today, string? dropped, string? added)
     {
@@ -881,7 +766,6 @@ public static class Commands
         Aside(plan, dropped);
         if (adoption.Account is { } changed) Account(changed);
 
-        // An update writes nothing for one of these, so saying so is the whole of what the tool can do.
         if (plan.Unshared.Count > 0)
         {
             Note($"update: {plan.Unshared.Count} file(s) sit where the framework's rules apply, and the "
@@ -895,25 +779,17 @@ public static class Commands
         Account("update: nothing is committed. `git diff` is the review step, and `git checkout` on a "
                 + "file is how to decline one.");
 
-        // A page is unlinked as it is written, and every page already here was written while this type
-        // was still declined. So the arriving page links out and none of the others link back. Said
-        // rather than repaired: those pages hold the corpus's own words now.
+        // Said rather than repaired: the pages already here hold the corpus's own words.
         if (added is not null)
             Note($"update: {added} arrives linking to the types this corpus holds. the pages already "
                  + $"here name {added} without linking to it, and they are yours to change.");
 
-        // Every overlay page may carry a generated block built from this corpus's own types, so the
-        // copies above are only right once rebuilt against what this corpus holds. Regenerating here
-        // makes a passing `generate --check` the update's postcondition.
+        // Overlay pages carry generated blocks built from this corpus's types, so a passing
+        // `generate --check` is the update's postcondition.
         return Regenerate(corpusRoot);
     }
 
-    // What the run stepped over and what it could still take. Neither is a change, and both are worth a
-    // line: a skipped file is one nothing will refresh, and an unadopted type is one nothing will offer
-    // again unless this says so.
-    //
-    // A type this run has just given up is left out. The corpus could indeed take it back, and saying so
-    // beside the deletions reads as the tool arguing with the decision it was handed.
+    /// <summary>A type this run has just given up is left out of the offer.</summary>
     private static void Aside(UpdatePlan plan, string? dropped)
     {
         if (plan.Skipped.Count > 0)
@@ -939,9 +815,10 @@ public static class Commands
                     + "kac update --add-type <name>.");
     }
 
-    // The corpus is loaded here rather than by the caller, because an update has just replaced the schema. A schema
-    // this corpus cannot yet read is the one failure worth surviving: the files are already in place, and saying so is
-    // more use than a stack trace over a half-finished tree.
+    /// <summary>
+    /// Loaded here, after the schema was replaced. A schema this corpus cannot read yet is reported rather than thrown,
+    /// because the files are already in place.
+    /// </summary>
     private static int Regenerate(string corpusRoot)
     {
         try

@@ -1,8 +1,5 @@
 using kac.core;
 
-// Any actor may verify a report, and one may not: whoever `generated.by` names. The fixture turns the
-// id green; these are the branches a fixture would only duplicate.
-
 namespace kac.tests;
 
 public class NoSelfVerificationTests
@@ -18,19 +15,14 @@ public class NoSelfVerificationTests
     public void A_person_verifying_the_report_is_left_alone()
         => Assert.Empty(Run("kac/0.24.0", "human:alex.doe"));
 
-    // The point of accepting any actor. An agent that read the verdicts did work worth recording, and
-    // the only thing this rule asks is whether it also wrote them.
     [Fact]
     public void An_agent_verifying_the_report_is_left_alone()
         => Assert.Empty(Run("kac/0.24.0", "agent:coverage-sweep"));
 
-    // A later version reading the corpus again is a second look rather than self-confirmation, so the
-    // comparison is exact and never on the producer's name alone.
     [Fact]
     public void A_later_version_of_the_producer_is_left_alone()
         => Assert.Empty(Run("kac/0.24.0", "kac/0.25.0"));
 
-    // The finding points at the entry, because the fix is to delete one line of a list and keep the rest.
     [Fact]
     public void The_finding_points_at_the_entry()
         => Assert.Equal(11, Assert.Single(Run("kac/0.24.0", "agent:sweep", "kac/0.24.0")).Line);
@@ -39,7 +31,6 @@ public class NoSelfVerificationTests
     public void Every_offending_entry_is_reported()
         => Assert.Equal(2, Run("kac/0.24.0", "kac/0.24.0", "kac/0.24.0").Count);
 
-    // `required-field` has already said so, in better words than a rule about actors could.
     [Fact]
     public void A_report_carrying_no_generated_producer_is_left_alone()
         => Assert.Empty(Run(null, "human:alex.doe"));

@@ -1,12 +1,5 @@
 using kac.core;
 
-// In-process unit tests for the pass that reads a type's `_template.md`.
-//
-// The file is checked and is not a record: it holds no id, claims no place in the index, and is held to
-// everything a copy of it inherits. The goldens reach the pass through a fixture corpus, in which the
-// template is a tracked file like any other. So what is left here is the reading itself, and a
-// template nobody has added yet is exactly the state a contributor is in when they need the findings.
-
 namespace kac.tests;
 
 public class TemplateCheckTests
@@ -20,8 +13,6 @@ public class TemplateCheckTests
         => Assert.Contains("a document copied from it starts with none",
             Assert.Single(Fields("# {{Title}}\n")).Message);
 
-    // Both directions are one question: would a copy of this file pass its own frontmatter checks? So a
-    // missing required field and a key the type does not have report under one id.
     [Fact]
     public void A_template_missing_a_required_field_names_the_check_a_copy_would_fail()
         => Assert.Contains("would fail required-field",
@@ -32,8 +23,6 @@ public class TemplateCheckTests
         => Assert.Contains("would fail unknown-key",
             Assert.Single(Fields(Template("id: \"adr-{{slug}}\"\nstatus: draft\nowner: someone"))).Message);
 
-    // The payoff of asking for the template with `OnDisk`: a contributor meets its defects while they are
-    // looking at it.
     [Fact]
     public void A_template_the_corpus_does_not_yet_hold_is_still_read()
         => Assert.Contains("would fail required-field",
@@ -56,8 +45,9 @@ public class TemplateCheckTests
         ]
     };
 
-    // Every `template-fields` finding the corpus produces. `tracked` says whether the corpus holds the
-    // template or whether it is merely on the disk of whoever wrote it.
+    /// <summary>
+    /// <c>tracked</c> says whether the corpus holds the template or it is merely on the disk of whoever wrote it.
+    /// </summary>
     private static List<Finding> Fields(string template, bool tracked = true)
     {
         const string rel = "adrs/_template.md";

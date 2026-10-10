@@ -1,6 +1,5 @@
-# Publishes kac when kac.csproj names a version nuget.org does not already hold, then tags the commit
-# and opens the release for it. The version is hand-moved before the merge, so a change to the tool
-# ships in the pull request that makes it.
+# Publishes kac when kac.csproj names a version nuget.org does not already hold, then tags the commit and opens
+# the release. The version is moved by hand before the merge, so a change ships in the pull request making it.
 # Authentication is a trusted publishing policy on nuget.org naming this repository, this file and the
 # environment below, so there is no stored key and a fork cannot publish under this name.
 
@@ -95,8 +94,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # The gate ran these against the pull request's head, and main moved beneath it. A published
-      # version cannot be replaced, only followed, so they are asked again about the merge commit.
+      # Asked again about the merge commit, because a published version cannot be replaced, only followed.
       - name: Run kac.core unit tests
         run: dotnet test tooling/kac.tests
 
@@ -106,13 +104,11 @@ jobs:
       - name: Run the golden test suite
         run: dotnet run tooling/kac-tests.cs
 
-      # Packed once, so what is pushed is what the two steps below proved. Pack also fails on package
-      # metadata no test layer reads, such as a readme the project names and nobody wrote.
+      # Packed once, so what is pushed is what the next step proved runnable.
       - name: Pack the tool
         run: dotnet pack tooling/kac/kac.csproj -o .dist/pack
 
-      # A well-formed package can still fail to resolve to a runnable command. `--version` needs no
-      # corpus, so it is asked from a directory that is not one.
+      # `--version` needs no corpus, so it is asked from a directory that is not one.
       - name: Install what was packed and ask it its version
         run: |
           dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
@@ -142,8 +138,7 @@ jobs:
 
           echo "published version $VERSION to nuget.org."
 
-      # The tag arrives as a consequence of publishing rather than as a second thing to remember, and
-      # `ChangelogTests` is what makes sure a section exists to become the release body.
+      # The tag follows from publishing, and `ChangelogTests` makes sure a section exists to become its body.
       - name: Tag the commit and open the release
         env:
           GH_TOKEN: ${{ github.token }}

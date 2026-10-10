@@ -3,41 +3,40 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// One corpus a report answers for, and the version of it the run read. The version is what
-// `report-stale` compares against, so a report says which content it is true of rather than only when it
-// was taken. OKF carries no version on a source, and `docs/design/reports.md` says why this one does.
+/// <summary>
+/// One corpus a report answers for, and the version of it the run read, which <c>report-stale</c> compares against.
+/// <c>docs/design/reports.md</c> says why a source carries a version.
+/// </summary>
 public sealed record ReportSource(string Resource, string? Version);
 
-// What produced a report and when, as the frontmatter of the record it becomes.
-//
-// `By` takes any of OKF's actor forms, because a report passes from the run that printed it to whoever
-// answered its judgement cells. `docs/design/reports.md` carries that handover.
+/// <summary>
+/// What produced a report and when, as the frontmatter of the record it becomes. <c>By</c> takes any of OKF's actor
+/// forms. <c>docs/design/reports.md</c> carries the handover.
+/// </summary>
 public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSource> Sources)
 {
     /// <summary>This tool's stamp, from the version string the assembly was built with.</summary>
     /// <remarks>
-    /// The build metadata `--version` carries is cut off, because `<producer>/<version>` admits a release
-    /// and not a commit. A reader comparing two reports would otherwise meet a changed commit and read it
-    /// as content that moved.
+    /// The build metadata <c>--version</c> carries is cut off, because <c>&lt;producer&gt;/&lt;version&gt;</c> admits
+    /// a release and not a commit, so two reports differ only where their content does.
     /// </remarks>
     public static ReportStamp ForTool(string toolVersion, string at, IReadOnlyList<ReportSource> sources)
         => new($"kac/{toolVersion.Split('+')[0]}", at, sources);
 }
 
-// What a report comes to, decided before anything is written, as `ExportPlan` and `BundlePlan` are. A
-// test asks what a report would say without a filesystem, and the command prints what it answers.
-//
-// The mechanical half fills what the corpus states. Every judgement is left open, because the tool
-// cannot tell a gap from a thing that does not exist here. `docs/cli/report.md` carries that division.
+/// <summary>
+/// What a report comes to, decided before anything is written, as <c>ExportPlan</c> and <c>BundlePlan</c> are. Every
+/// judgement is left open. <c>docs/cli/report.md</c> carries that division.
+/// </summary>
 public sealed record ReportPlan(string Name, string Title, string Frontmatter, string Body)
 {
     public string Text => $"---\n{Frontmatter}---\n\n# {Title}\n\n{Body}";
 }
 
-// One policy clause, whoever wrote it, as a report reads it.
-//
-// `Alignment` is the raw cell and stands null for an inherited clause, whose export left the column
-// behind. `Shortcode` is null for a clause this corpus wrote.
+/// <summary>
+/// One policy clause, whoever wrote it, as a report reads it. <c>Alignment</c> is null for an inherited clause, whose
+/// export left the column behind. <c>Shortcode</c> is null for a clause this corpus wrote.
+/// </summary>
 public sealed record ClauseFact(
     string Id,
     string Record,
@@ -48,7 +47,7 @@ public sealed record ClauseFact(
     IReadOnlyList<string> AlignmentLabels,
     string? Shortcode);
 
-// One row of the coverage report: a clause and every edge the corpus draws back to it.
+/// <summary>One row of the coverage report: a clause and every edge the corpus draws back to it.</summary>
 public sealed record CoverageRow(
     ClauseFact Clause,
     IReadOnlyList<string> CoveredBy,
@@ -56,14 +55,11 @@ public sealed record CoverageRow(
     IReadOnlyList<string> Controls,
     string? Pair);
 
-// One row of the framework report: a reference into a framework, and what cites it.
-//
-// `Standing` is the heading the register files the framework under, verbatim, and null where the
-// register places it nowhere. The tool states the corpus's own word and never rules on what it means, so
-// a corpus renaming its standings reports in the vocabulary it wrote.
-//
-// `Path` and `Anchor` address the register entry itself, so a reader holding this row can reach the
-// page that placed the framework. Both stand null where the register places it nowhere.
+/// <summary>
+/// One row of the framework report: a reference into a framework, and what cites it. <c>Standing</c> is the heading the
+/// register files the framework under, verbatim. <c>Standing</c>, <c>Path</c> and <c>Anchor</c> are null where the
+/// register places it nowhere.
+/// </summary>
 public sealed record FrameworkRow(
     string Framework,
     string? Reference,
@@ -73,10 +69,10 @@ public sealed record FrameworkRow(
     string? Path,
     string? Anchor);
 
-// The reports `kac report` can print, and what each comes to.
-//
-// A report reads the corpus and everything under `.imports/`. A producer cannot see what its consumers
-// implement, so an uncovered clause means uncovered here, and every report states that limit itself.
+/// <summary>
+/// The reports <c>kac report</c> can print. A report reads the corpus and everything under <c>.imports/</c>, so an
+/// uncovered clause means uncovered here, and every report states that limit.
+/// </summary>
 public static class Reports
 {
     public const string Coverage = "coverage";
@@ -84,15 +80,17 @@ public static class Reports
 
     public static readonly IReadOnlyList<string> Names = [Coverage, Frameworks];
 
-    // The three fields a coverage report walks back. Named here rather than read from the schema,
-    // because no declaration says which field covers an obligation and which departs from one: a type
-    // declares a `ref:` and a `part-required:`, and only this report knows what each edge means.
-    // `AlignmentRollup` names `aligns-with` for the same reason.
+    /// <summary>
+    /// The three fields a coverage report walks back. Named here, because no declaration says which field covers an
+    /// obligation and which departs from one. <c>AlignmentRollup</c> names <c>aligns-with</c> for the same reason.
+    /// </summary>
     private const string Implements = "implements";
     private const string DepartsFrom = "departs-from";
     private const string Verifies = "verifies";
 
-    // The column a clause states its framework mapping in. `AlignmentRollup` reads the same one.
+    /// <summary>
+    /// The column a clause states its framework mapping in. <c>AlignmentRollup</c> reads the same one.
+    /// </summary>
     private const string AlignmentColumn = "Alignment";
 
     public static ReportPlan? Plan(
@@ -104,8 +102,7 @@ public static class Reports
             _ => null
         };
 
-    // Every policy clause the corpus can see, its own first and then each corpus it consumes, in the
-    // order a reader meets them.
+    /// <summary>Every policy clause the corpus can see, its own first and then each corpus it consumes.</summary>
     public static List<ClauseFact> Clauses(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
     {
         var found = new List<ClauseFact>();
@@ -127,8 +124,7 @@ public static class Reports
             }
         }
 
-        // Only the clause-bearing type. Every type carrying parts exports a flat file, so reading them
-        // all would file a glossary's terms as obligations.
+        // Only the clause-bearing type. Reading every type carrying parts would file a glossary's terms as obligations.
         var clauseType = ClauseType(corpus)?.Key;
 
         foreach (var source in inherited)
@@ -142,8 +138,8 @@ public static class Reports
             var key = JsonRead.Str(json[type.PartKey ?? "part"]);
             if (id is null || record is null || key is null) continue;
 
-            // Scoped here rather than in the export, because `.imports/` holds what the producer
-            // published and the shortcode is the consumer's name for it.
+            // Scoped here, because `.imports/` holds what the producer published and the shortcode is the consumer's
+            // name for it.
             found.Add(new ClauseFact(
                 Exporter.Scoped(id, source.Shortcode), Exporter.Scoped(record, source.Shortcode), key,
                 JsonRead.Str(json["level"]), JsonRead.Str(json["clause"]) ?? "", null, [],
@@ -153,18 +149,16 @@ public static class Reports
         return found;
     }
 
-    // The type whose parts are clauses, found through what it declares rather than by its name, so a
-    // corpus that renamed it still reports.
-    //
-    // Read from the whole schema rather than from what this corpus adopted. A consumer inheriting every
-    // policy it answers to adopts the type itself, and would otherwise report on none of them.
+    /// <summary>
+    /// The type whose parts are clauses, found through what it declares, so a corpus that renamed it still reports.
+    /// Read from the whole schema, because a consumer inheriting every policy may not adopt the type itself.
+    /// </summary>
     private static TypeSchema? ClauseType(LoadedCorpus corpus) =>
         corpus.Schema.ByFolder.Values.FirstOrDefault(t => t.Parts is { } parts
                                                           && parts.Columns.Any(c =>
                                                               string.Equals(c, AlignmentColumn,
                                                                   StringComparison.OrdinalIgnoreCase)));
 
-    // This corpus's own records of that type.
     private static IEnumerable<Doc> ClauseDocs(LoadedCorpus corpus)
     {
         var type = ClauseType(corpus);
@@ -230,10 +224,10 @@ public static class Reports
             body.ToString().TrimEnd() + "\n");
     }
 
-    // Every reference the clause tables cite, keyed so a reference six clauses reach is one row.
-    //
-    // Local clauses alone. An inherited clause left its `Alignment` cell behind, and `docs/design/export.md`
-    // says why. A consumer reads its producer's own report for that half.
+    /// <summary>
+    /// Every reference the clause tables cite, keyed so a reference six clauses reach is one row. Local clauses alone,
+    /// because an inherited clause left its <c>Alignment</c> cell behind. <c>docs/design/export.md</c> says why.
+    /// </summary>
     public static List<FrameworkRow> FrameworkRows(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
     {
@@ -272,21 +266,20 @@ public static class Reports
         ];
     }
 
-    // One reference, with the policies holding its clauses taken from the clause ids themselves. A
-    // clause id opens with the record that wrote it, so the set of policies is already in hand.
+    /// <summary>
+    /// One reference, with the policies taken from the clause ids, which open with the record that wrote them.
+    /// </summary>
     private static FrameworkRow Row(string framework, string? reference, List<string> clauses,
         (string? Standing, string? Path, string? Anchor) placed) =>
         new(framework, reference, placed.Standing, clauses,
             [.. clauses.Select(c => c[..c.LastIndexOf('.')]).Distinct(StringComparer.Ordinal)],
             placed.Path, placed.Anchor);
 
-    // Where the register puts a framework: the word it is filed under, the page carrying the entry, and
-    // the anchor a link reaches it by. Read through a document citing it, because the label is defined
-    // as a link and only a citing document holds that definition.
-    //
-    // The register is built with no standings, because this asks it to place a framework and never to
-    // weigh one. Which standings bind is `alignment-rollup`'s judgement, and a report repeating it would
-    // tie what it prints to a rule's configuration it has no other use for.
+    /// <summary>
+    /// Where the register puts a framework: the word it is filed under, the page carrying the entry, and the anchor.
+    /// Read through a document citing it, because only a citing document holds the label's definition. The register is
+    /// built with no standings, because this places a framework and never weighs one.
+    /// </summary>
     private static (string? Standing, string? Path, string? Anchor) Placed(
         Register register, LoadedCorpus corpus, string framework)
     {
@@ -297,17 +290,11 @@ public static class Reports
         return (null, null, null);
     }
 
-    // Every id a field of the given name names, keyed by the id it points at. One pass over every
-    // adopted type, so a corpus declaring the field on two types reports both.
-    //
-    // Inherited records count. A corpus consuming the policies it answers to consumes the standards
-    // discharging them, and a report reading only local records would call two thirds of its own
-    // coverage a gap. `.schema/standards.yaml` says why the field travels.
-    //
-    // A record file keeps the ids its own corpus wrote, so both halves of an inherited edge are scoped
-    // to the corpus that wrote the record. Scoping them to the corpus it arrived through would file a
-    // grandparent's standard against a clause id nothing else in the report uses, and the join would
-    // miss on both sides.
+    /// <summary>
+    /// Every id a field of the given name names, keyed by the id it points at, across every adopted type. Inherited
+    /// records count, and both halves of an inherited edge are scoped to the corpus that wrote the record, so the join
+    /// meets on both sides.
+    /// </summary>
     private static Dictionary<string, List<string>> Edges(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field)
     {
@@ -342,11 +329,10 @@ public static class Reports
         return found;
     }
 
-    // The clause a clause is likely paired with: the same key in another policy, which is how this
-    // corpus writes one obligation stated from both sides.
-    //
-    // A candidate rather than a fact. Two policies may reach for one word by coincidence, so the report
-    // offers the match and whoever confirms it decides.
+    /// <summary>
+    /// The clause a clause is likely paired with: the same key in another policy. A candidate, which whoever confirms
+    /// the report decides.
+    /// </summary>
     private static Dictionary<string, string> Pairs(IReadOnlyList<ClauseFact> clauses)
     {
         var byKey = clauses.GroupBy(c => c.Key, StringComparer.Ordinal).Where(g => g.Count() > 1);
@@ -360,19 +346,12 @@ public static class Reports
         return found;
     }
 
-    // What the tool can answer, and a blank for everything else. The id names the question somebody
-    // chose, and who owns a record is a fact about people. The run writing the content cannot sign it
-    // off either, which is what `no-self-verification` refuses.
-    //
-    // `status` is the one judgement left to the tool: a report nobody has read is a draft.
-    //
-    // `generated.by` names this run, which is true while the output stands unedited. Whoever fills the
-    // judgement cells writes themselves there instead, and `tool` keeps the run that wrote the
-    // mechanical half. `docs/design/reports.md` carries that handover.
-    //
-    // Every blank is a YAML null rather than half a value. `owner: human:` does not parse, so somebody
-    // filling in one field meets `frontmatter-parses` over the whole document instead of `required-field`
-    // naming what is still missing.
+    /// <summary>
+    /// What the tool can answer, and a blank for everything else. <c>status</c> is <c>draft</c>, and
+    /// <c>generated.by</c> names this run. Every blank is a YAML null, because <c>owner: human:</c> does not parse and
+    /// would fail <c>frontmatter-parses</c> over the whole document. <c>docs/design/reports.md</c> carries the
+    /// handover.
+    /// </summary>
     private static string Frontmatter(ReportStamp stamp, string report)
     {
         var sb = new StringBuilder();
@@ -395,9 +374,9 @@ public static class Reports
         return sb.ToString();
     }
 
-    // What the report can and cannot see, stated in the report rather than left to a reader. Each report
-    // passes its own two paragraphs: the two ask opposite questions of the same clause tables, and a limit
-    // written for one answers a question the other's reader never asked.
+    /// <summary>
+    /// What the report can and cannot see, stated in the report. Each report passes its own two paragraphs.
+    /// </summary>
     private static void Limits(
         StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
         string reach, string closing)
@@ -504,13 +483,10 @@ public static class Reports
         }
     }
 
-    // Where the register files a framework, said again above its own table. The standing decides how hard
-    // a reader looks at the rows beneath it, and somebody working down one framework has the totals table
-    // off the screen by then.
-    //
-    // The link climbs one folder because a report is a record in `reports/`, and the register page is
-    // addressed from the corpus root. `Standing` is non-null only where an anchor placed it, so the
-    // second form covers a framework the register links and files under no heading.
+    /// <summary>
+    /// Where the register files a framework, said again above its own table. The link climbs one folder because a
+    /// report sits in <c>reports/</c> and the register is addressed from the corpus root.
+    /// </summary>
     private static string Filed(FrameworkRow row)
     {
         if (row.Path is not { } path || row.Anchor is not { } anchor)
@@ -524,7 +500,9 @@ public static class Reports
             : $"{link} holds this framework under no standing.";
     }
 
-    // What the report leaves open, said once at the foot so nobody takes an empty column for an answer.
+    /// <summary>
+    /// What the report leaves open, said once at the foot so nobody takes an empty column for an answer.
+    /// </summary>
     private static void Judgement(StringBuilder body, string lead, string detail)
     {
         body.AppendLine("## What this leaves open");

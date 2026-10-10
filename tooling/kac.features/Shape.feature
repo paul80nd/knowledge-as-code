@@ -33,10 +33,6 @@ Scenario: Every file carrying a generated block is checked for its markers, and 
     | knowledge-as-code/taxonomy.md | 8    | framework-names-types | '/adrs.md#no-such-heading' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off. |
     | knowledge-as-code/taxonomy.md | 10   | framework-names-types | '/adrs.md' links to the 'adrs' type from a document every corpus shares. Name the type instead: a corpus that has not adopted it reads a dead link, and one that has is no worse off.                 |
 
-    # The count is the assertion here. A template is checked and is not a document: it holds no id, takes no
-    # place in an index, and answers to nothing corpus-wide. Were it discovered as a record instead, this
-    # would read 1, and the findings below would be joined by a dozen more saying the file is not filled in.
-
 Scenario: A type's template is checked without being counted as a record
   Given the broken-template fixture corpus
   When I validate the corpus

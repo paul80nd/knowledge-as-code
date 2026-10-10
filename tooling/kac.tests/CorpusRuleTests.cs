@@ -1,10 +1,5 @@
 using kac.core;
 
-// A corpus rule is handed every record at once, which makes it the hardest kind to drive from a
-// fixture: one graph per scenario, and a scenario is a whole mini-corpus. These tests hand it graphs
-// directly, so the shapes a fixture would only repeat are each one method: a longer loop, a loop
-// entered from two sides, an edge pointing nowhere.
-
 namespace kac.tests;
 
 public class CorpusRuleTests
@@ -16,7 +11,6 @@ public class CorpusRuleTests
         Assert.All(CorpusRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // As on the document side: what an emitted id means is `_checks.yaml`'s to say, not this test's.
     [Fact]
     public void Every_emitted_id_is_a_usable_check_id()
     {
@@ -40,20 +34,16 @@ public class CorpusRuleTests
         Assert.Equal("'depends-on' forms a cycle: svc-a → svc-b → svc-a.", Single(found).Message);
     }
 
-    // A reader deciding whether a cycle was meant needs to see what it runs through.
     [Fact]
     public void A_longer_loop_names_each_record_on_it_in_order()
         => Assert.Equal("'depends-on' forms a cycle: svc-a → svc-b → svc-c → svc-a.",
             Single(Cycles(("svc-a", ["svc-b"]), ("svc-b", ["svc-c"]), ("svc-c", ["svc-a"]))).Message);
 
-    // The record carrying the warning follows from the corpus rather than from the order the files were read.
     [Fact]
     public void The_finding_is_reported_against_the_lowest_id_on_the_loop()
         => Assert.Equal("services/svc-b.md",
             Single(Cycles(("svc-c", ["svc-b"]), ("svc-b", ["svc-c"]))).File);
 
-    // Rotating the route to open at the lowest id makes the two spellings of one loop the same string, and
-    // the same string is what recognises them as one.
     [Fact]
     public void A_loop_reachable_from_two_sides_is_reported_once()
         => Assert.Equal("'depends-on' forms a cycle: svc-b → svc-c → svc-b.",
@@ -62,7 +52,6 @@ public class CorpusRuleTests
                 ("svc-b", ["svc-c"]),
                 ("svc-c", ["svc-b"]))).Message);
 
-    // Naming a record hanging off the loop would send the reader to edges that break nothing.
     [Fact]
     public void A_record_leading_into_a_loop_is_not_named_on_it()
         => Assert.Equal("'depends-on' forms a cycle: svc-b → svc-c → svc-b.",
@@ -85,13 +74,10 @@ public class CorpusRuleTests
             ("svc-c", ["svc-d"]),
             ("svc-d", ["svc-c"])).Count);
 
-    // An id nothing carries is `ref-resolves`'s to report. Walking it as an edge would either invent a
-    // second complaint about it or drop it in silence, and the first is not this rule's to make.
     [Fact]
     public void An_edge_pointing_at_nothing_is_not_this_rules_business()
         => Assert.Empty(Cycles(("svc-a", ["svc-missing"]), ("svc-b", ["svc-a"])));
 
-    // The graph is read off the schema: the field whose `ref:` names the type's own key.
     [Fact]
     public void A_field_pointing_at_another_type_is_not_walked()
     {
@@ -115,8 +101,6 @@ public class CorpusRuleTests
     private static List<Finding> Cycles(params (string Id, string[] Targets)[] records)
         => Cycles(Type(DependsOn), records);
 
-    // The frontmatter is written under whichever field the type declares, so the same graph can be laid
-    // on a field that references this type and on one that does not.
     private static List<Finding> Cycles(TypeSchema type, params (string Id, string[] Targets)[] records)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { ["services"] = type } };
@@ -144,8 +128,6 @@ public class CorpusRuleTests
             => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
-    // `no-dependency-cycles` reads the records and never the tree, so an empty corpus of files is the
-    // honest thing to hand it.
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

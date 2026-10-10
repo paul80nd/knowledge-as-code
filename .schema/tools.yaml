@@ -219,5 +219,5 @@ rules:
       to the next day somebody looks at it.
   - id: drift-against-manifests
     description: Every package in use is in the register, and every approved tool is in use.
-    # Runs on a schedule. Matches a manifest entry against `packages`, and reports a package in use that was
-    # never approved, and an approved package nothing uses.
+    # Declared and not running. Would report a package in use that was never approved, and an approved
+    # package nothing uses.

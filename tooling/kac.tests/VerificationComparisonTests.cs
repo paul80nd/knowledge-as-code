@@ -1,7 +1,3 @@
-// The branches of `Verification.Unverified`, which the guard beside it runs over whatever a pull request
-// changed. Nothing here reads the repository, so the comparison stays provable on a tree with no
-// verified record in it at all.
-
 namespace kac.tests;
 
 public class VerificationComparisonTests
@@ -18,8 +14,7 @@ public class VerificationComparisonTests
             Record("Restart the runner.", Paul),
             Record("Clear the cache and restart the runner.", Paul, Alex)));
 
-    // Whoever read the new text may be whoever read the old one, so a second entry from one person
-    // counts. The dates differ, which is what separates the two entries.
+    /// <summary>The dates differ, which is what separates the two entries.</summary>
     [Fact]
     public void A_second_reading_by_the_same_person_is_left_alone()
         => Assert.False(Verification.Unverified(
@@ -32,22 +27,21 @@ public class VerificationComparisonTests
             Record("Restart the runner.", Paul),
             Record("Restart the runner.", Paul).Replace("status: active", "status: fixed-upstream")));
 
-    // A draft is a fix nobody has verified, and its prose invalidates no signature.
     [Fact]
     public void A_record_nobody_had_verified_is_left_alone()
         => Assert.False(Verification.Unverified(
             Record("Restart the runner."),
             Record("Clear the cache and restart the runner.")));
 
-    // Deleting a verification is a judgement somebody made about text this did not touch, and a rule
-    // asking for a new entry would report the opposite of what happened.
     [Fact]
     public void A_verification_withdrawn_from_an_unchanged_body_is_left_alone()
         => Assert.False(Verification.Unverified(Record("Restart the runner.", Paul, Alex),
             Record("Restart the runner.", Paul)));
 
-    // Rider rewraps markdown here from `.editorconfig`, in files a session never opened. The words are
-    // the ones somebody verified, so the entry beside them still answers for the record.
+    /// <summary>
+    /// Rider rewraps markdown here from <c>.editorconfig</c>, in files a session never opened. The words are the ones
+    /// somebody verified, so the entry beside them still answers for the record.
+    /// </summary>
     [Fact]
     public void A_reflowed_paragraph_is_left_alone()
         => Assert.False(Verification.Unverified(

@@ -2,16 +2,18 @@ using System.Collections.Concurrent;
 using System.Text;
 using System.Text.RegularExpressions;
 
-// Minimal glob → regex for manifest patterns: `**` spans path segments, `*` stays within one, and a
-// leading `**/` also matches at the root. Enough for the manifest's vocabulary, not a full gitignore.
 namespace kac.core;
 
+/// <summary>
+/// Minimal glob → regex for manifest patterns: <c>**</c> spans path segments, <c>*</c> stays within one, and a leading
+/// <c>**/</c> also matches at the root. Enough for the manifest's vocabulary, not a full gitignore.
+/// </summary>
 public static class Glob
 {
-    // One cache for the process: whoever asks for a pattern first compiles it, and everyone after reads
-    // what they left. Several threads ask at once, because a spec suite runs its scenarios side by side
-    // and each loads a corpus of its own. A `Dictionary` corrupts itself under that, and it throws in
-    // whichever scenario happened to be running, which is never the one that explains why.
+    /// <summary>
+    /// Concurrent, because the spec suite runs scenarios side by side and a <c>Dictionary</c> corrupts itself under
+    /// that.
+    /// </summary>
     private static readonly ConcurrentDictionary<string, Regex> Cache = new(StringComparer.Ordinal);
 
     public static bool IsMatch(string path, string pattern) =>

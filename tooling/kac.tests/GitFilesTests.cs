@@ -1,5 +1,3 @@
-// The golden suite assembles a non-git tree, so what git itself reports is only asked here.
-
 using kac.core;
 
 namespace kac.tests;
@@ -16,15 +14,19 @@ public class GitFilesTests
             Directory.CreateDirectory(Path.Combine(dir.FullName, ".git"));
             File.WriteAllText(Path.Combine(dir.FullName, "a.md"), "");
             File.WriteAllText(Path.Combine(dir.FullName, "sub", "b.md"), "");
-            File.WriteAllText(Path.Combine(dir.FullName, ".git", "c.md"), ""); // under a skipped dir
-            File.WriteAllText(Path.Combine(dir.FullName, "x.txt"), "");        // wrong pattern
+            // Under a skipped dir.
+            File.WriteAllText(Path.Combine(dir.FullName, ".git", "c.md"), "");
+            // Wrong pattern.
+            File.WriteAllText(Path.Combine(dir.FullName, "x.txt"), "");
 
             var md = GitFiles.Walk(dir.FullName, "*.md", ".git").OrderBy(x => x, StringComparer.Ordinal).ToList();
             Assert.Equal(["a.md", "sub/b.md"], md);
 
             var all = GitFiles.Walk(dir.FullName, "*", ".git");
-            Assert.Contains("x.txt", all);           // the '*' pattern picks up non-.md
-            Assert.DoesNotContain(".git/c.md", all); // ...but the skipped dir is still dropped
+            // The '*' pattern picks up non-.md.
+            Assert.Contains("x.txt", all);
+            // ...but the skipped dir is still dropped.
+            Assert.DoesNotContain(".git/c.md", all);
         }
         finally
         {
@@ -32,8 +34,10 @@ public class GitFilesTests
         }
     }
 
-    // `git ls-files --cached` lists a file the index holds whether or not the working tree still has it,
-    // so a deletion nobody has staged yet would otherwise reach every caller as a path to read.
+    /// <summary>
+    /// <c>git ls-files --cached</c> lists a file the index holds whether or not the working tree still has it, so a
+    /// deletion nobody has staged yet would otherwise reach every caller as a path to read.
+    /// </summary>
     [Fact]
     public void Tracked_drops_a_file_the_working_tree_no_longer_has()
     {

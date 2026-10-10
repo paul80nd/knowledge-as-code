@@ -1,27 +1,10 @@
 using System.Text.RegularExpressions;
 
-// The trait that sorts this project into two packs, held to being applied.
-//
-// Nothing about a missing `[Trait]` fails: the class runs, and runs in the wrong pack. So a repository
-// guard written without one goes on breaking the tight loop that exists to leave those guards out, which
-// is the whole of what the trait buys.
-//
-// What gives it away is reading the repository. A test that opens `Repo.Root` is either asking whether
-// this repository still holds together, or standing the real template up to exercise the tool. Both are
-// legitimate and only the first takes the trait, so the second is named below rather than inferred.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
 public partial class KindTests
 {
-    // Files that read the repository and are not repository guards.
-    //
-    // `Repo`, `CliReference`, `SkillReference` and `Diff` are helpers rather than test classes. `ManifestTests`,
-    // `NewTests` and `UpdateTests` stand the real template up and ask what `kac` makes of it, which is the tool's
-    // behaviour over the only corpus that ships with it. A fixture could not answer for the template,
-    // because the template is the thing under test. `CommandsTests` copies a golden fixture under the
-    // real schema and runs a verb over it, which is what the golden suite does in another assembly.
     private static readonly string[] ReadTheRepositoryToExerciseTheTool =
     [
         "Repo.cs", "CliReference.cs", "SkillReference.cs", "Diff.cs", "ManifestTests.cs", "NewTests.cs",

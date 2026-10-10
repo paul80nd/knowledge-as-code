@@ -5,68 +5,56 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// What a request came back with: the bytes, or why there are none. Exactly one of the two is set.
-//
-// `Status` is the code the server answered with, and zero where nothing answered at all. It is carried
-// because one code means something different depending on what was asked: a 404 from a version listing
-// is a package nobody has published yet, and a 404 from anywhere else is an address that is wrong. Only
-// the caller knows which question it asked.
+/// <summary>
+/// What a request came back with: the bytes, or why there are none. Exactly one of the two is set. <c>Status</c> is
+/// zero where nothing answered, and only the caller knows whether a 404 means an unpublished package or a wrong
+/// address.
+/// </summary>
 public sealed record Fetched(byte[]? Body, int Status, string? Problem);
 
-// A folder of `.nupkg` files, which is the other form a `source:` may take. NuGet calls one a local
-// feed, and a corpus consuming a sibling it builds beside itself wants no registry between the two.
-//
-// Two functions rather than a path, for the reason `Tree` takes the same pair: what a restore comes to
-// stays decidable without a filesystem.
-//
-// `Names` answers the file names directly inside one folder, and null where there is no folder there.
-// `Read` answers the bytes of one file, and null where it could not be read.
+/// <summary>
+/// A folder of <c>.nupkg</c> files, which NuGet calls a local feed. Two functions, so a restore stays decidable without
+/// a filesystem. <c>Names</c> is null where there is no folder, and <c>Read</c> is null where a file could not be read.
+/// </summary>
 public sealed record FolderFeed(Func<string, IReadOnlyList<string>?> Names, Func<string, byte[]?> Read);
 
-// Where a package comes from. Two questions between them, asked of whatever a `source:` names: which
-// versions of a corpus it holds, and the bytes of one of them.
-//
-// A source is a registry or a folder, and `Restore` never learns which. `kac pack` writes a `.nupkg`,
-// so a registry serving one is a NuGet feed and a folder holding one is what NuGet calls a local feed.
-// The same sealed package arrives either way and is held to the same checks.
-//
-// Three requests to a feed, and no NuGet client. It publishes a service index naming its resources; one
-// of those is the flat container, which lists a package's versions and serves the file itself at
-// addresses built from the id and the version. All three are plain GETs returning JSON or bytes, which
-// is what made borrowing the envelope worth it: moving to another registry is a change to `source:` in
-// one descriptor.
-//
-// Every method takes the source a corpus declared and never an address derived once and kept, so a
-// caller cannot address the wrong feed by holding a stale base. The base each source resolved to is
-// remembered here instead, so a restore of four dependencies from one feed asks for the index once.
+/// <summary>
+/// Where a package comes from: which versions of a corpus a source holds, and the bytes of one. A source is a NuGet
+/// feed or a local folder, and <c>Restore</c> never learns which. Every method takes the declared source, and the base
+/// each one resolved to is remembered here, so a feed's index is asked for once.
+/// </summary>
 public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 {
-    // The environment variable naming the bearer token. A registry serving a private feed refuses an
-    // anonymous read, GitHub Packages among them, and a token belongs in the environment rather than in
-    // an option: a flag lands in shell history and in the transcript of every CI run that echoes its
-    // command line.
+    /// <summary>
+    /// The environment variable naming the bearer token. A token belongs in the environment, because a flag lands in
+    /// shell history and CI logs.
+    /// </summary>
     public const string TokenVariable = "KAC_REGISTRY_TOKEN";
 
-    // What the service index calls the resource this reads. The version suffix is the resource's own
-    // and is matched as a prefix, because a feed may serve several revisions of one resource and the
-    // addresses this builds are the same in each.
+    /// <summary>
+    /// What the service index calls the resource this reads. Matched as a prefix, because a feed may serve several
+    /// revisions of one resource.
+    /// </summary>
     private const string FlatContainer = "PackageBaseAddress/3.0.0";
 
     private readonly Dictionary<string, string> _bases = new(StringComparer.Ordinal);
 
-    // What one lookup came to. `Value` is null exactly where `Problem` is set.
+    /// <summary>What one lookup came to. <c>Value</c> is null exactly where <c>Problem</c> is set.</summary>
     public sealed record Answer<T>(T? Value, string? Problem) where T : class
     {
-        // The invariant above, told to the compiler, so a caller that branches on it reads the other
-        // half without asserting anything. Every construction below holds it.
+        /// <summary>
+        /// The invariant above, told to the compiler, so a caller that branches on it reads the other half without
+        /// asserting anything. Every construction below holds it.
+        /// </summary>
         [MemberNotNullWhen(true, nameof(Problem))]
         [MemberNotNullWhen(false, nameof(Value))]
         public bool Failed => Problem is not null;
     }
 
-    // Every version of `id` the feed holds, in whatever order it lists them, or why it could not be
-    // asked. The caller is choosing the highest version a range admits, so it orders them itself rather
-    // than trusting a feed to have done it.
+    /// <summary>
+    /// Every version of <c>id</c> the feed holds, in whatever order it lists them, or why it could not be asked. The
+    /// caller orders them itself.
+    /// </summary>
     public Answer<IReadOnlyList<string>> Versions(string source, string id)
     {
         if (!IsFeed(source)) return FolderVersions(source, id);
@@ -76,11 +64,6 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
 
         var index = get($"{root}{Lower(id)}/index.json");
 
-        // A package nobody has published yet, which is a corpus depending on one that has not shipped.
-        // The caller reports it as no version satisfying the range, which is the sentence worth reading.
-        //
-        // A private feed answers an anonymous read the same way, so the two are not tellable apart here.
-        // `Restore` names the token where it reports an empty listing.
         if (index is { Body: null, Status: 404 })
             return new Answer<IReadOnlyList<string>>([], null);
 
@@ -93,7 +76,6 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
             [.. (versions ?? []).Select(JsonRead.Str).OfType<string>()], null);
     }
 
-    // The package file itself, at one version.
     public Answer<byte[]> Package(string source, string id, string version)
     {
         if (!IsFeed(source)) return FolderPackage(source, id, version);
@@ -109,15 +91,15 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
             : new Answer<byte[]>(file.Body, null);
     }
 
-    // Which of the two forms a `source:` takes. A registry is addressed over HTTP and anything else is a
-    // path, so a scheme this tool cannot fetch over reads as a folder and is reported as one missing.
+    /// <summary>
+    /// A registry is addressed over HTTP and anything else is a path, so an unsupported scheme reads as a missing
+    /// folder.
+    /// </summary>
     private static bool IsFeed(string source) =>
         source.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
         || source.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
 
-    // What an empty version listing means, which is a different sentence for each form of source. A
-    // registry may be holding the package behind a token. A folder cannot, so the producer has not
-    // packed into it.
+    /// <summary>What an empty version listing means, which differs for each form of source.</summary>
     public static string Absent(string source) =>
         IsFeed(source)
             ? "That registry holds no version of it at all, or holds them behind a token this run did "
@@ -125,8 +107,7 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
             : "That folder holds no package for it. Run `kac export` and then `kac pack` in the "
               + "producing corpus.";
 
-    // Every version a folder holds, read off the names `kac pack` wrote. A folder publishes no index, so
-    // the listing is the index.
+    /// <summary>Every version a folder holds, read off the names <c>kac pack</c> wrote.</summary>
     private Answer<IReadOnlyList<string>> FolderVersions(string source, string id)
     {
         if (folder.Names(source) is not { } names)
@@ -136,9 +117,6 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
             [.. names.Select(n => VersionIn(n, id)).OfType<string>()], null);
     }
 
-    // The package file itself, found by the listing rather than by a name built from the id and the
-    // version. A case-sensitive filesystem serves neither spelling of a name it does not hold, and a
-    // registry compares both halves without regard to case.
     private Answer<byte[]> FolderPackage(string source, string id, string version)
     {
         if (folder.Names(source) is not { } names)
@@ -156,13 +134,11 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
             : new Answer<byte[]>(body, null);
     }
 
-    // The version inside a package's file name, and null where the name belongs to another package or to
-    // no package at all. `kac pack` writes `<id>.<version>.nupkg`.
-    //
-    // A version opens on a digit, and asking that is what keeps a longer id out. `Acme.Core` is a prefix
-    // of `Acme.Core.Abstractions`, so without it a sibling package in the same folder reads as a version
-    // of this one. Resolution refuses the string either way, and the refusal would have named a version
-    // nobody published rather than saying the folder holds nothing.
+    /// <summary>
+    /// The version inside a package's file name, and null where the name belongs to another package or to none. A
+    /// version opens on a digit, which keeps <c>Acme.Core.Abstractions</c> from reading as a version of
+    /// <c>Acme.Core</c>.
+    /// </summary>
     private static string? VersionIn(string name, string id)
     {
         const string suffix = ".nupkg";
@@ -179,11 +155,10 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         $"there is no folder at {source}. `source:` names either a registry's service index or a folder "
         + "holding the packages a producer built.";
 
-    // Where this feed serves packages from, discovered once per source.
-    //
-    // The address is asked of the feed rather than assembled from its host. Every registry lays its flat
-    // container out somewhere different (GitHub Packages puts it under `/download`, and nuget.org on a
-    // host of its own), and the service index is the one place each of them says so.
+    /// <summary>
+    /// Where this feed serves packages from, discovered once per source. Asked of the service index rather than built
+    /// from the host, because every registry puts its flat container somewhere different.
+    /// </summary>
     private Answer<string> Base(string source)
     {
         if (_bases.TryGetValue(source, out var known)) return new Answer<string>(known, null);
@@ -214,17 +189,11 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         return new Answer<string>(root, null);
     }
 
-    // How a fetch is actually performed, which nothing but a run against a real registry uses. Every
-    // test hands `Registry` a function of its own, so what a restore comes to is decidable without a
-    // network.
-    //
-    // The token is read from the environment here rather than passed down from the command, because
-    // this is the only place it is used and carrying a credential through three signatures is three
-    // more places for it to be logged.
-    //
-    // It travels to every `https://` source the descriptor names, and to none over plain HTTP. A corpus
-    // consuming from two registries has one token between them, so a source is a host that gets to see
-    // it: `docs/cli/restore.md` says so where somebody sets the variable.
+    /// <summary>
+    /// How a fetch is actually performed. Tests hand <c>Registry</c> a function of their own. The token is read from
+    /// the environment here, the only place it is used, and travels to every <c>https://</c> source and to none over
+    /// plain HTTP. <c>docs/cli/restore.md</c> says so where somebody sets the variable.
+    /// </summary>
     public static Func<string, Fetched> Over(HttpClient client)
     {
         var token = Environment.GetEnvironmentVariable(TokenVariable);
@@ -248,10 +217,6 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
                     : new Fetched(null, status,
                         $"{status} {response.ReasonPhrase}" + Unauthorised(status));
             }
-            // The network's own failures, and the three a `source:` nobody checked throws before a packet
-            // is sent: a URL with no scheme, one no parser can read, and one naming a protocol this
-            // client does not speak. All of them are the descriptor being wrong, and the caller has a
-            // sentence ready that names the source and says what the key is for.
             catch (Exception e) when (e is HttpRequestException or TaskCanceledException or IOException
                                           or InvalidOperationException or UriFormatException
                                           or NotSupportedException)
@@ -261,11 +226,10 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         };
     }
 
-    // How a folder is actually read, which nothing but a run against a real folder uses. `Over`'s
-    // bargain, one form of source along.
-    //
-    // A `source:` naming a folder is relative to the corpus declaring it, exactly as `upstream.url` is,
-    // so the corpus root is what it resolves against. An absolute path is taken as it stands.
+    /// <summary>
+    /// How a folder is actually read. A relative <c>source:</c> resolves against the corpus root, as
+    /// <c>upstream.url</c> does, and an absolute path is taken as it stands.
+    /// </summary>
     public static FolderFeed OnDisk(string corpusRoot)
     {
         return new FolderFeed(
@@ -277,16 +241,11 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
         string At(string relative) => Path.Combine(corpusRoot, relative);
     }
 
-    // What a refusal usually means, said where somebody meets it. A private feed answers an anonymous
-    // read with 401 and sometimes with 404, so the hint is attached to both rather than to the one that
-    // reads as an authentication failure.
     private static string Unauthorised(int status) =>
         status is 401 or 403 or 404
             ? $". A private feed needs a token in {TokenVariable}"
             : "";
 
-    // A registry compares an id and a version without regard to case, and the flat container addresses
-    // both in lower case. A package published as `Example.Corpus` is fetched from `example.corpus`.
     private static string Lower(string value) => value.ToLowerInvariant();
 
     private static string Text(byte[] body) => new UTF8Encoding(false).GetString(body).TrimStart('﻿');

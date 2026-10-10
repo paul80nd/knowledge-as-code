@@ -2,18 +2,10 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// One record another corpus published, as the export under `.imports/` states it.
-//
-// Everything a check asks of a local record, answered from data rather than from a parsed document. The
-// producer's corpus is not here and never will be: what a consumer holds is the export, so a question
-// the export cannot answer is one no check may ask across a boundary.
-//
-// `Scope` is the shortcode a citation writes for this record, which is the corpus that wrote it. It is
-// the import this corpus declared for that corpus's own records. It is a corpus further up the chain for
-// the records that corpus inherited.
-//
-// `Parts` is empty for a type keeping none, and `KeepsParts` is what tells that apart from a record that
-// happens to carry none.
+/// <summary>
+/// A question the export cannot answer is one no check may ask across a boundary. <c>Scope</c> is the shortcode a
+/// citation writes for the record. <c>KeepsParts</c> tells a type keeping no parts from a record carrying none.
+/// </summary>
 public sealed record ImportedRecord(
     string Scope,
     string Id,
@@ -22,10 +14,9 @@ public sealed record ImportedRecord(
     bool KeepsParts,
     IReadOnlyList<string> Parts);
 
-// One corpus this one imported, unpacked under `.imports/<shortcode>/`.
-//
-// `Link` is the producer's own template for a published record, taken from their manifest. A consumer
-// building a link from its own publishing would address its own repository and resolve to nothing.
+/// <summary>
+/// <c>Link</c> is the producer's own template: one built from this corpus's publishing would resolve to nothing.
+/// </summary>
 public sealed record Import(
     string Shortcode,
     string Corpus,
@@ -33,37 +24,26 @@ public sealed record Import(
     string? Link,
     IReadOnlyList<ImportedRecord> Records);
 
-// What `.imports/` answered for what `consumes:` declared, which `validate` reports rather than works
-// around.
-//
-// `NotRestored` holds the shortcode of each declaration whose folder does not stand. `Undeclared` holds
-// the entries that named no shortcode at all: they have no folder to look in, so no citation could reach
-// one, and each is named by its corpus or by its position.
+/// <summary>
+/// <c>Undeclared</c> holds the entries naming no shortcode, each named by its corpus or by its position.
+/// </summary>
 public sealed record ImportGraph(
     IReadOnlyList<Import> Imports,
     IReadOnlyList<string> NotRestored,
     IReadOnlyList<string> Undeclared)
 {
-    // A corpus standing on its own, which is the ordinary case and pays nothing for this.
     public static readonly ImportGraph None = new([], [], []);
 }
 
-// The exports a corpus imported, read from the folders `kac restore` unpacked them into.
-//
-// **`.imports/` is not the corpus.** `Tree` lists what git tracks and a restored artefact is not
-// committed, so nothing here comes through it. That separation is the point rather than an awkwardness:
-// an import is somebody else's published record, and a check that walked it as though it were local
-// would hold this corpus to a rule the other corpus answers for.
-//
-// The reading is a pair of functions for the reason `Tree` takes the same pair. What a corpus resolves
-// against stays decidable from a set of strings.
+/// <summary>
+/// <c>.imports/</c> is not the corpus: <c>Tree</c> lists what git tracks, and a restored artefact is not committed. The
+/// reading is a pair of functions, as <c>Tree</c> takes, so resolution is decidable from strings.
+/// </summary>
 public static class Imports
 {
-    // Every declared import that is on disk, and the shortcode of each that is not.
-    //
-    // `names` lists the file names directly inside one folder under `.imports/`, `folders` lists the
-    // folder names inside one, and `read` returns one file's text. Each is null where there is nothing
-    // there.
+    /// <summary>
+    /// Each of <c>names</c>, <c>folders</c> and <c>read</c> returns null where there is nothing there.
+    /// </summary>
     public static ImportGraph Load(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
@@ -76,10 +56,7 @@ public static class Imports
 
         for (var i = 0; i < declared.Count; i++)
         {
-            // An entry naming no shortcode has no folder to look in, so it can never be restored. Why
-            // the declaration is wrong is `restore`'s to say, in sentences naming the key it wants. What
-            // is said here is that the entry stands and nothing answers to it, which is this check's own
-            // question and would otherwise pass in silence.
+            // Reported here, because otherwise the entry would pass in silence. `restore` says why it is wrong.
             if (declared[i].Shortcode is not { } shortcode)
             {
                 nameless.Add(declared[i].Corpus is { } corpus ? $"'{corpus}'" : $"entry {i + 1}");
@@ -93,8 +70,7 @@ public static class Imports
         return new ImportGraph(imports, missing, nameless);
     }
 
-    // One folder read whole, or null where it holds no manifest. The manifest is the last file a restore
-    // writes, so a folder carrying one carries the records it describes.
+    /// <summary>The manifest is the last file a restore writes, so a folder carrying one carries its records.</summary>
     private static Import? Read(
         string shortcode,
         Func<string, IReadOnlyList<string>?> names,
@@ -114,10 +90,8 @@ public static class Imports
 
             var partsFile = JsonRead.Str(type?["partsFile"]);
 
-            // The keys a part line addresses itself by are the producing type's own words, so they are
-            // read from what it published rather than assumed. `Json.cs` says why the export carries
-            // them. An export written before it did carries neither, and the two names every type has
-            // used are what it falls back to.
+            // Read from what the producer published. `Json.cs` says why. An export carrying neither falls back to
+            // the two names every type has used.
             var parts = partsFile is null
                 ? []
                 : PartsIn(
@@ -136,11 +110,10 @@ public static class Imports
             records);
     }
 
-    // Every record one type's folder contains, and the corpus each one is cited by. A record is a file
-    // named for its id, and the parts file sitting beside them is not one.
-    //
-    // The import's own records sit directly in the type's folder, and the ones it inherited sit in a
-    // folder named for the corpus that wrote them. See the chain section of docs/design/export.md.
+    /// <summary>
+    /// Inherited records sit in a folder named for the corpus that wrote them. See the chain section of
+    /// docs/design/export.md.
+    /// </summary>
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,
         Dictionary<string, List<string>> parts,
@@ -150,8 +123,6 @@ public static class Imports
     {
         var found = new List<ImportedRecord>();
 
-        // The type keeps parts exactly where its manifest entry named a file for them, which is what
-        // tells a record carrying none from a type that has none to carry.
         var keepsParts = partsFile is not null;
         var partsName = partsFile?[(partsFile.LastIndexOf('/') + 1)..];
         var root = $"{shortcode}/{dir}";
@@ -173,9 +144,7 @@ public static class Imports
                 var record = JsonRead.Parse(read($"{folder}/{name}") ?? "");
                 if (JsonRead.Str(JsonRead.Object(record?["fields"])?["id"]) is not { } id) continue;
 
-                // A record file states the id its own corpus wrote, and the parts file names an
-                // inherited record by the id the export scoped. A bare id is only bare for the corpus
-                // this one declared.
+                // The parts file names an inherited record by its scoped id.
                 var key = scope == shortcode ? id : Exporter.Scoped(id, scope);
 
                 found.Add(new ImportedRecord(
@@ -185,9 +154,9 @@ public static class Imports
         }
     }
 
-    // The parts each record carries, in the order the file lists them. A parts file is one JSON object
-    // per line, so a line this build cannot read is skipped rather than failing the whole import: the
-    // producer's export is held to its own shape by the producer's own build.
+    /// <summary>
+    /// A line this build cannot read is skipped: the producer's own build holds its export to its shape.
+    /// </summary>
     private static Dictionary<string, List<string>> PartsIn(string? text, string recordKey, string partKey)
     {
         var parts = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
@@ -207,7 +176,6 @@ public static class Imports
         return parts;
     }
 
-    // How the folders are actually read, which nothing but a run against a real corpus uses.
     public static ImportGraph Load(string corpusRoot, IReadOnlyList<Consumed> declared)
     {
         var root = Path.Combine(corpusRoot, Restore.ImportsDir);

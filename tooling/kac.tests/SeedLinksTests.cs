@@ -21,7 +21,7 @@ public class SeedLinksTests
     public void A_link_to_an_adopted_type_is_left_alone(string sent)
         => Assert.Equal(sent, SeedLinks.Unlinked(sent, Declined));
 
-    // The closed set. `SeedLinks.cs` says why each of these is left alone.
+    /// <summary>The closed set. <c>SeedLinks.cs</c> says why each of these is left alone.</summary>
     [Theory]
     [InlineData("Read the [index](policies/_index.md).")]
     [InlineData("Read the [index](../policies/_index.md).")]
@@ -46,8 +46,6 @@ public class SeedLinksTests
         Assert.Equal(sent, SeedLinks.Unlinked(sent, new HashSet<string>(StringComparer.Ordinal)));
     }
 
-    // Line endings are the template's own. A page checked out with CRLF is written back with CRLF, so a
-    // corpus created on Windows does not fail `generate --check` on the day it is created.
     [Fact]
     public void The_line_endings_around_an_unlinked_reference_are_untouched()
         => Assert.Equal(
@@ -63,8 +61,7 @@ public class SeedLinksTests
     public void The_unlinking_reads_markdown_seeds_and_nothing_else(string to, string layer, bool reaches)
         => Assert.Equal(reaches, SeedLinks.Reaches(new PlannedFile($"template/{to}", to, layer)));
 
-    // A link carries the page, and a type is free to name one that does not match its folder. So the set
-    // is keyed on the page: `catalogue` here is what a link to the declined `services` type writes.
+    /// <summary><c>catalogue</c> here is what a link to the declined <c>services</c> type writes.</summary>
     [Fact]
     public void A_type_is_declined_under_the_name_its_page_carries()
     {

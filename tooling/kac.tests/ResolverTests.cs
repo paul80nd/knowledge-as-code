@@ -1,14 +1,5 @@
 using kac.core;
 
-// In-process unit tests for resolving a reference across a corpus boundary.
-//
-// A fixture would need two corpora on disk, one of them a restored artefact nothing commits, so the
-// graph is handed to the check directly: one standard carrying the citation, one policy this corpus
-// holds, and an import standing in for the governance corpus it consumes.
-//
-// What these hold is the spelling. Whether the record exists is the same question either side of the
-// boundary, and `RefCheckTests` and `PartRefTests` already ask it.
-
 namespace kac.tests;
 
 public class ResolverTests
@@ -31,8 +22,6 @@ public class ResolverTests
         => Assert.Equal("'eng:pol-NONE.X' cites 'eng:pol-NONE', which does not exist.",
             Assert.Single(Cite("`eng:pol-NONE.X`")).Message);
 
-    // Two spellings of one obligation defeat every search anybody runs for it, so each is refused on the
-    // other's records rather than quietly accepted.
     [Fact]
     public void A_bare_id_naming_an_imported_record_is_told_the_scope_to_write()
         => Assert.Equal(
@@ -47,14 +36,10 @@ public class ResolverTests
             + "'pol-LOCAL.HERE': two spellings of one id defeat every search anybody runs for it.",
             Assert.Single(Cite("`eng:pol-LOCAL.HERE`")).Message);
 
-    // A chain three corpora deep. `gp` is not in `consumes:` here, and its records arrive inside eng's
-    // export naming it, so the shortcode a citation writes is the one that wrote the record.
     [Fact]
     public void A_citation_into_a_corpus_reached_through_another_resolves()
         => Assert.Empty(Cite("`gp:pol-OLD.KEEP`"));
 
-    // The scope is the record's and never the import's, so citing a grandparent's record through the
-    // corpus it arrived in reaches nothing.
     [Fact]
     public void A_grandparent_s_record_is_not_reachable_under_the_corpus_it_arrived_in()
         => Assert.Equal("'eng:pol-OLD.KEEP' cites 'eng:pol-OLD', which does not exist.",
@@ -67,21 +52,14 @@ public class ResolverTests
             + "Declare it in `consumes:`, or correct the spelling.",
             Assert.Single(Cite("`gov:pol-SCRT.STORE`")).Message);
 
-    // The one line telling somebody to restore is the useful one. A finding for each reference they
-    // wrote correctly would bury it.
     [Fact]
     public void A_citation_into_an_unrestored_import_reports_nothing_of_its_own()
         => Assert.Empty(Cite("`eng:pol-SCRT.STORE`", ImportGraph.None with { NotRestored = ["eng"] }));
 
-    // A chain introduces a shortcode this corpus never declared, so while a restore is outstanding the
-    // missing export is where an unknown one would have come from. "Declare it in `consumes:`" is the
-    // one thing a reader must not do about it.
     [Fact]
     public void An_unknown_shortcode_is_left_to_the_restore_while_one_is_outstanding()
         => Assert.Empty(Cite("`gp:pol-OLD.KEEP`", ImportGraph.None with { NotRestored = ["eng"] }));
 
-    // `implements: eng:pol-SCRT.STORE` names one clause rather than the whole policy, and a coverage
-    // report has to walk which clause was discharged.
     [Fact]
     public void A_ref_field_accepts_a_scoped_part_level_id()
         => Assert.Empty(Implements("eng:pol-SCRT.STORE"));
@@ -108,26 +86,19 @@ public class ResolverTests
         => Assert.Contains("consumes nothing under that shortcode",
             Assert.Single(Implements("gov:pol-SCRT")).Message);
 
-    // `byId` compares an id without regard to case, so an imported one is compared the same way. A
-    // stricter reading here would report a record that is exactly where the reader left it as absent.
     [Fact]
     public void A_mis_cased_imported_id_resolves_as_a_mis_cased_local_one_does()
         => Assert.Empty(Cite("`eng:pol-scrt.STORE`"));
 
-    // The prefix stays lower case, because `PartCitationRegex` never sees a citation that mis-cases it.
-    // What the id says after the prefix is what this reads without regard to case.
     [Fact]
     public void A_mis_cased_bare_id_is_still_told_the_scope_to_write()
         => Assert.Contains("Write it as 'eng:pol-scrt.STORE'",
             Assert.Single(Cite("`pol-scrt.STORE`")).Message);
 
-    // A corpus standing on its own is the ordinary case, and none of the rules above reach it.
     [Fact]
     public void A_corpus_importing_nothing_reads_a_bare_citation_exactly_as_before()
         => Assert.Empty(Cite("`pol-LOCAL.HERE`", ImportGraph.None));
 
-    // The prose citation under test, in a standard, against a corpus holding one policy and importing
-    // another corpus that holds two records.
     private static List<Finding> Cite(string body, ImportGraph? imports = null)
         => Check($"# std-ERRORS\n\n{body}\n", null, imports);
 
@@ -153,8 +124,10 @@ public class ResolverTests
         return found;
     }
 
-    // A governance corpus holding one policy with two clauses, and a service, so a field declaring
-    // `ref: policies` has something of the wrong type to be aimed at.
+    /// <summary>
+    /// A governance corpus holding one policy with two clauses, and a service, so a field declaring <c>ref:
+    /// policies</c> has something of the wrong type to be aimed at.
+    /// </summary>
     private static ImportGraph Consuming() =>
         new([
             new Import("eng", "example-engineering", "0.1.0", null, [
@@ -162,13 +135,12 @@ public class ResolverTests
                     ["STORE", "ROTATE"]),
                 new ImportedRecord("eng", "svc-GATE", "services", "services/gate.md", false, []),
 
-                // A record eng inherited, reached by the shortcode of the corpus that wrote it. This
-                // corpus declares no `gp:`, so the scope comes off the record and off nothing else.
+                // This corpus declares no `gp:`, so the scope comes off the record and off nothing else.
                 new ImportedRecord("gp", "pol-OLD", "policies", "policies/old.md", true, ["KEEP"])
             ])
         ], [], []);
 
-    // Two types, and the parts declaration is what gives a message the word "clause" rather than "part".
+    /// <summary>The parts declaration is what gives a message the word "clause" rather than "part".</summary>
     private static Schema Schema()
     {
         var implements = new FieldSpec { Name = "implements", Type = "id", Refs = ["policies"] };

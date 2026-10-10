@@ -1,9 +1,5 @@
 namespace kac.core;
 
-// How one import stands against what its source holds now.
-//
-// `Current` covers both ways of being level: the lock is the newest release published, or the newest one
-// the range admits and the range is exact. Neither is worth a line.
 public enum Standing
 {
     Current,
@@ -12,10 +8,10 @@ public enum Standing
     Unreachable
 }
 
-// One declared import, and what asking its source came to.
-//
-// `Available` is the version the reader would move to, and is null only where nothing could be asked.
-// `Problem` is the refusal in the source's own words, and is set exactly where `How` is `Unreachable`.
+/// <summary>
+/// <c>Available</c> is the version to move to, and null where <c>How</c> is <c>Current</c> or <c>Unreachable</c>.
+/// <c>Problem</c> is set exactly where <c>How</c> is <c>Unreachable</c>.
+/// </summary>
 public sealed record ImportStanding(
     string Shortcode,
     string Range,
@@ -24,24 +20,16 @@ public sealed record ImportStanding(
     string? Available,
     string? Problem);
 
-// What each import's source now publishes, against the version this corpus locked.
-//
-// **A restore never asks this.** `Restore.Version` takes the locked version whenever the range still
-// admits it, so two restores of an unchanged descriptor write the same bytes. That is what makes a build
-// reproducible and it is also how a corpus sits on a version for a year without noticing. Asking is
-// therefore `validate`'s, once per run, and the answer is never an error: being a version behind is not a
-// broken corpus, and failing on somebody else's release would turn every downstream red the day the
-// governance layer ships.
-//
-// The registry is passed in for the reason `Restore.Plan` takes one. What a corpus's imports come to
-// stays decidable from a set of strings, so the three standings are unit tests rather than a network.
+/// <summary>
+/// What each import's source now publishes, against the locked version. <c>validate</c> asks this once per run and
+/// never reports it as an error: being a version behind is not a broken corpus.
+/// </summary>
 public static class Freshness
 {
-    // Every declared import that can be compared, and nothing about the ones that cannot.
-    //
-    // An entry short of a shortcode, a range or a source is skipped in silence: `restore` refuses it by
-    // name, in sentences saying which key is missing. An entry with no `resolved:` is skipped too, having
-    // no locked version to hold anything against, and so is one whose range has moved past its lock.
+    /// <summary>
+    /// Every declared import that can be compared. An incomplete entry is skipped, because <c>restore</c> refuses it by
+    /// name, and so is one with no lock or a lock its range no longer admits.
+    /// </summary>
     public static List<ImportStanding> Read(IReadOnlyList<Consumed> declared, Registry registry)
     {
         var standings = new List<ImportStanding>();
@@ -54,9 +42,6 @@ public static class Freshness
             if (entry.Source is not { } source) continue;
             if (entry.Corpus is not { } corpus) continue;
 
-            // A lock its own range no longer admits is about to move, and downwards as readily as up: the
-            // next restore re-resolves it, because the range has been narrowed since. Nothing said about
-            // it now would still be true afterwards.
             if (!VersionRange.Admits(range, locked)) continue;
 
             var published = registry.Versions(source, corpus);
@@ -67,10 +52,9 @@ public static class Freshness
                 continue;
             }
 
-            // An empty listing is not a current lock. A feed answers 404 both for a package nobody has
-            // published and for a private one refusing an anonymous read, and `Registry` says the two are
-            // not tellable apart there. A folder answering none has not been packed into. None of the
-            // three says the locked version is the newest there is, so none of them may read as current.
+            // An empty listing is not a current lock. A feed answers 404 for an unpublished package and for a
+            // private one refusing an anonymous read (see `Registry`), and an empty folder was never packed into.
+            // None of the three says the locked version is the newest.
             if (versions.Count == 0)
             {
                 standings.Add(new ImportStanding(
@@ -84,11 +68,9 @@ public static class Freshness
         return standings;
     }
 
-    // Which of the three a locked version is in, given everything the source listed.
-    //
-    // The range is asked first, because a version the corpus already said it would take is the one it can
-    // move to by running `restore` and nothing else. Only where the range holds the newest release back is
-    // the cap worth naming, and then the reader's choice is to widen the range or to leave it alone.
+    /// <summary>
+    /// The range is asked first, because a version it admits is one <c>restore</c> moves to with no other change.
+    /// </summary>
     private static ImportStanding Compare(
         string shortcode, string range, string locked, IReadOnlyList<string> versions)
     {

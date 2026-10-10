@@ -2,17 +2,18 @@ using System.Reflection;
 
 namespace kac.tests;
 
-// The repository, found by the solution at its root. A corpus is what `kac` walks up for; what the tests using this
-// want is the tree carrying the engine and the pages written beside it, and one folder answers to that.
-//
-// `kac.features/Harness.cs` and `kac-tests.cs` hold their own copies because each is a different assembly and neither
-// references this one. The root `CLAUDE.md` says why none of the three may be unified with the tool's own.
+/// <summary>
+/// <c>kac.features/Harness.cs</c> and <c>kac-tests.cs</c> hold their own copies, because neither references this
+/// assembly. <c>tooling/CLAUDE.md</c> says why none of the three may be unified with the tool's own walk-ups.
+/// </summary>
 internal static class Repo
 {
     internal static readonly string Root = Find();
 
-    // The `kac` the CLI reference asks for its usage. Its path is stamped into this assembly by kac.tests.csproj,
-    // because only the build knows which configuration it put the executable in.
+    /// <summary>
+    /// The <c>kac</c> the CLI reference asks for its usage. Its path is stamped into this assembly by kac.tests.csproj,
+    /// because only the build knows which configuration it put the executable in.
+    /// </summary>
     internal static readonly string KacAssembly =
         typeof(Repo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
             .First(a => a.Key == "KacAssembly").Value

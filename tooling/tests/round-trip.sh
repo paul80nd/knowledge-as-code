@@ -1,29 +1,13 @@
 #!/usr/bin/env sh
-# round-trip — install the assembled plugin and ask each of its skills what that skill describes.
+# round-trip: install the assembled plugin and ask each of its skills what that skill describes.
+# `tooling/README.md` says what it proves, how to run it and which corpus proves which skill.
 #
-# Everything else about the export and the bundle is proved over data: the golden fixtures diff the
-# tree file for file, and the unit tests pin the rules that built it. None of them can show the chain
-# end to end. A bundle installs, the components it kept arrive and the ones it trimmed do not, the
-# paths a skill names resolve inside the installed copy, and a link built from its template fetches
-# the record it points at.
-#
-# Run it from the corpus root, after `kac export` and `kac bundle`:
-#
-#   cd examples/library && sh ../../tooling/tests/round-trip.sh
-#
-# The corpus it runs in decides which lookup it performs. `example-libraries` proves the glossary
-# skill, `example-engineering` proves the policy skill and `example-payments` proves the standards
-# skill, because each holds the records that skill was written for.
-#
-# It reads `.dist/`, writes only inside a work directory of its own, and installs into a Claude
-# config directory of its own, so it leaves the machine it ran on as it found it.
+# It reads `.dist/`, writes only inside a work directory of its own, and installs into a Claude config directory
+# of its own, so it leaves the machine as it found it.
 #
 # Held to the subset Git Bash and older macOS bash agree on: no arrays, no `[[`, no process
 # substitution. Command substitution is used freely, because a file on disk reaches the shell
 # unparsed.
-#
-# Three prerequisites, all already on a GitHub runner: `jq` reads the manifests, `curl` fetches a
-# record's source, and the Claude Code CLI installs the plugin.
 
 set -e
 
@@ -61,12 +45,7 @@ jqr() {
 
 [ -d "$REPO/.dist/plugin" ] || fail "no .dist/plugin — run kac export and kac bundle first."
 
-# ── install ───────────────────────────────────────────────────────────────────────────────────────
-#
-# Both names are read rather than written down. A corpus names its own plugin and its own
-# marketplace, so a script that hard-coded either would pass here and fail in the next corpus to
-# run it.
-
+# Both names are read rather than written down, because each corpus names its own plugin and marketplace.
 MARKETPLACE=$(jqr '.name' "$REPO/.dist/.claude-plugin/marketplace.json")
 PLUGIN=$(jqr '.plugins[0].name' "$REPO/.dist/.claude-plugin/marketplace.json")
 
@@ -74,8 +53,6 @@ echo "round-trip: installing $PLUGIN from $MARKETPLACE"
 claude plugin marketplace add "$REPO/.dist"
 claude plugin install "$PLUGIN@$MARKETPLACE"
 
-# ── the installed copy ────────────────────────────────────────────────────────────────────────────
-#
 # `${CLAUDE_PLUGIN_ROOT}` in the skill resolves to whatever directory the install produced, and the
 # skill's paths hang off it. Finding that directory by its manifest rather than by a cache layout
 # keeps this reading the same thing the agent reads.
@@ -98,16 +75,8 @@ CORPUS_ROOT=$(jqr '.metadata.corpusRoot' "$MANIFEST")
 EXPORT_MANIFEST="$ROOT/$CORPUS_ROOT/manifest.json"
 [ -f "$EXPORT_MANIFEST" ] || fail "the installed plugin holds no $CORPUS_ROOT/manifest.json."
 
-# ── the components the bundle kept, and the ones it trimmed ───────────────────────────────────────
-#
-# One plugin tree serves corpora that adopted different types, and the trim is what fits it to each of
-# them. A component that survives when its type stayed behind is a skill pointing at files the export
-# never wrote, and an agent reads an empty search as an answer.
-#
-# `bundle.json` travels inside the plugin, so both lists are read from the installed copy. The corpus
-# a run happens to be in decides which of the two cases it proves: a corpus adopting one of the two
-# types proves the trim, and a corpus adopting both proves that neither skill crowds the other out.
-
+# A component surviving when its type stayed behind is a skill pointing at files the export never wrote.
+# `bundle.json` travels inside the plugin, so both lists are read from the installed copy.
 BUNDLE="$ROOT/bundle.json"
 [ -f "$BUNDLE" ] || fail "the installed plugin holds no bundle.json."
 
@@ -137,14 +106,8 @@ while read -r component; do
   echo "round-trip: $component trimmed, and absent from the install."
 done < "$WORK/trimmed.txt"
 
-# ── each skill reads its own type and no other ────────────────────────────────────────────────────
-#
-# Two skills over one export is the case a corpus adopting both types produces. Each names the parts
-# file of the type it declares in `requires`. Naming another type's would send its reader to a file
-# written for a different question, and the reader has no way to tell.
-#
-# Skills only. A hook renders its text when the bundle is assembled and searches nothing.
-
+# Each skill names the parts file of the type in its `requires`, and no other type's. Skills only: a hook
+# renders its text when the bundle is assembled and searches nothing.
 jqr '.types[].partsFile // empty' "$EXPORT_MANIFEST" > "$WORK/parts.txt"
 jqr '.included[] | select(.path | startswith("skills/")) | .path' "$BUNDLE" > "$WORK/skills.txt"
 
@@ -181,24 +144,9 @@ while read -r skill; do
   echo "round-trip: $skill names its own parts file and no other."
 done < "$WORK/skills.txt"
 
-# ── a link built from the template, and fetched ───────────────────────────────────────────────────
-#
-# The one assertion here that leaves the machine. A template with the wrong host, the wrong ref or a
-# path prefix that no longer exists assembles into a string that matches any pattern you would write
-# for it and fetches a 404, or a page from a version of the corpus nobody asked about. Only the fetch
-# tells those apart, and comparing the response against the file in the working tree is what says the
-# template addressed this corpus at this commit.
-#
-# Written to outlive glossary. It takes one record's `path` from each type the export declares, so a
-# corpus that adopts a second type brings its records under the same check without a line changing
-# here. An ADR needs this more than a term does: a term line carries its whole content, and a broken
-# link costs the reader nothing, where an ADR's source is the only route an agent has to the text.
-#
-# The URL is assembled here rather than read from the manifest. An export carries the base, the path
-# prefix and the ref an agent fetches with, and no raw template, because only a public GitHub
-# repository can be fetched without credentials. Assembling it is therefore the same work a consumer
-# does, over the same three values, which is what makes the fetch worth running.
-
+# The one assertion here that leaves the machine. A wrong host, ref or prefix still assembles a plausible URL, so
+# only the fetch tells them apart, and comparing the response with the working tree says it addressed this commit.
+# The URL is assembled from the base, prefix and ref the export carries, which is the work a consumer does.
 PUB_TARGET=$(jqr '.publishing.target' "$EXPORT_MANIFEST")
 PUB_BASE=$(jqr '.publishing.base // empty' "$EXPORT_MANIFEST")
 PUB_PREFIX=$(jqr '.publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
@@ -218,8 +166,7 @@ else
   jqr '.types[].dir' "$EXPORT_MANIFEST" > "$WORK/dirs.txt"
 
   while read -r dir; do
-    # A type contributing no record has no path to substitute. Saying so beats failing over an
-    # emptiness the corpus is entitled to.
+    # A type contributing no record has no path to substitute, which the corpus is entitled to.
     RECORDS=$(jqr --arg d "$dir" '.types[] | select(.dir == $d) | .records' "$EXPORT_MANIFEST")
     if [ "$RECORDS" = "0" ]; then
       echo "round-trip: $dir carries no record — no link to build."
@@ -229,10 +176,8 @@ else
     PARTS_FILE=$(jqr --arg d "$dir" '.types[] | select(.dir == $d) | .partsFile // empty' "$EXPORT_MANIFEST")
     PARTS_NAME=$(basename "$PARTS_FILE")
 
-    # Directly inside the type's directory, and never below it. A subdirectory there holds the records
-    # of a corpus this one consumes, published at that corpus's own commit under its own prefix, so
-    # joining this corpus's three values to one of those paths builds an address for a file that was
-    # never there. The inherited half is fetched below, from the source that published it.
+    # Directly inside the type's directory: a subdirectory holds the records of a consumed corpus, published at
+    # that corpus's own commit under its own prefix. Those are fetched below, from the source that published them.
     RECORD=$(find "$ROOT/$CORPUS_ROOT/$dir" -maxdepth 1 -type f -name '*.json' ! -name "$PARTS_NAME" \
       | sort | head -1)
 
@@ -255,18 +200,8 @@ else
   done < "$WORK/dirs.txt"
 fi
 
-# ── an inherited record, fetched from the corpus that published it ────────────────────────────────
-#
-# The assertion the merge exists for. An inherited record sits at its producer's commit under its
-# producer's path prefix, and this corpus's own three values name neither. Building the address from
-# `sources` is the work a consumer does for every link into a record it did not write, and a wrong
-# entry there resolves to a plausible 404 or to a version of somebody else's corpus nobody asked
-# about. Only the fetch tells those apart.
-#
-# The response is not compared against the working tree. A consumer holds the export of what it
-# consumes and never those files, so there is nothing here to compare with; that this corpus and its
-# producer happen to share a repository is an accident of the examples.
-
+# An inherited record sits at its producer's commit under its producer's prefix, so its address is built from
+# `sources`. The response is not compared with the working tree, because a consumer holds only the export.
 jqr '.sources[]? | select(.publishing.target == "github") | .shortcode' "$EXPORT_MANIFEST" \
   > "$WORK/sources.txt"
 
@@ -307,8 +242,7 @@ while read -r code; do
 
   [ -s "$WORK/inherited.md" ] || fail "'$code' built a URL that fetched an empty file: $URL"
 
-  # The producer resolved its own link when it exported, so the record carries the address this run
-  # just rebuilt from `sources`. Two accounts of one address, and this is where they meet.
+  # The producer resolved its own link when it exported, so that address and the one rebuilt from `sources` meet here.
   HUMAN=$(jqr '.links.human // empty' "$RECORD")
   case "$HUMAN" in
     "$SRC_BASE"*) ;;
@@ -319,17 +253,9 @@ while read -r code; do
   echo "round-trip: '$code' fetched a record from the corpus that published it."
 done < "$WORK/sources.txt"
 
-# ── the breadcrumb a session is given ─────────────────────────────────────────────────────────────
-#
-# The one text every session reads whether it asks anything or not. Everything else here is reached by
-# an agent that decided to look, so a count stated wrongly in this file is the one nobody goes on to
-# check. A merged export counts several corpora's records into one type, and the breadcrumb credits
-# each corpus beside the count that belongs to it.
-#
-# Read from the installed copy, because the hook prints a file `bundle` wrote rather than reading the
-# export at runtime. A plugin whose hook was trimmed ships no breadcrumb, which is `bundle-empty`'s
-# case in the golden suite and is reported here rather than failed.
-
+# Every session reads the breadcrumb, so a wrong count in it is the one nobody checks. A merged export credits each
+# corpus beside its own count. Read from the installed copy, because the hook prints a file `bundle` wrote. A plugin
+# whose hook was trimmed ships none, which is reported rather than failed.
 BREADCRUMB="$ROOT/hooks/breadcrumb.txt"
 
 if [ -f "$BREADCRUMB" ]; then
@@ -343,9 +269,9 @@ if [ -f "$BREADCRUMB" ]; then
   while read -r code; do
     [ -n "$code" ] || continue
 
-    # A corpus reaches `sources` for publishing its own address, whether or not this export counts
-    # anything of its own. Asking the export first is what keeps the failure below an accusation the
-    # renderer has earned: a directory of its records, or a part line naming it, is what a line counts.
+    # A corpus reaches `sources` for its address whether or not this export counts anything of its own. A line
+    # counts a corpus only where the export holds a directory of its records or a part line naming it, so the
+    # export is asked first.
     if ! find "$ROOT/$CORPUS_ROOT" -type d -name "$code" | grep -q . \
       && ! grep -rq "\"shortcode\": *\"$code\"" "$ROOT/$CORPUS_ROOT"; then
       echo "round-trip: '$code' sent nothing this export counts, so no line names it."
@@ -361,20 +287,13 @@ else
   echo "round-trip: this plugin ships no hook, so there is no breadcrumb to read."
 fi
 
-# ── the lookup each skill describes ───────────────────────────────────────────────────────────────
-#
-# Everything above is read from the manifests, so it holds for any corpus. What a skill tells a reader
-# to search for is content, and content belongs to one corpus. Each function below is written about
-# the corpus that holds the records its skill was written for.
+# Everything above is read from the manifests and holds for any corpus. Each lookup below is written about the corpus
+# holding the records its skill was written for.
 
-# The line a term or a clause arrived on. Ordering is a property of the file rather than of any one
-# entry, so it is asked of the file.
 line_of() {
   grep -n "\"id\": *\"$2\"" "$1" | cut -d: -f1
 }
 
-# What the plugin exists for: a term searched for by the skill's own pattern comes back carrying the
-# two things the skill tells a reader to give.
 glossary_lookup() {
   TERMS="$ROOT/$CORPUS_ROOT/glossary/terms.jsonl"
 
@@ -396,19 +315,14 @@ glossary_lookup() {
   DEFINITION=$(jqr '.definition // empty' "$WORK/hits.txt")
   [ -n "$DEFINITION" ] || fail "$ID came back with no definition."
 
-  # The `**Not:**` line, which the skill tells a reader to give alongside the definition. A reader
-  # handed only the definition goes on to apply the term to the things it excludes.
+  # The skill tells a reader to give the `**Not:**` line beside the definition.
   NOT=$(jqr '.not // empty' "$WORK/hits.txt")
   [ -n "$NOT" ] || fail "$ID came back with no Not line."
 
   echo "round-trip: $ID — definition and Not line both present."
 
-  # What the order of the file means, and what it does not. `ExporterTests` pins these rules over
-  # corpora it builds for the purpose. This asserts them over the corpus a reader actually receives,
-  # which is the only place the two could have come apart.
-
-  # The chain, which is the case the ordering exists for. `gls-search` narrows `gls-example-libraries`
-  # and both define `title`, so a grep meets the general entry before the one refining it.
+  # `ExporterTests` pins the ordering over corpora it builds. This asserts it over the corpus a reader receives.
+  # `gls-search` narrows `gls-example-libraries` and both define `title`, so a grep meets the general entry first.
   GENERAL=$(line_of "$TERMS" gls-example-libraries.title)
   NARROWER=$(line_of "$TERMS" gls-search.title)
 
@@ -418,11 +332,8 @@ glossary_lookup() {
 
   echo "round-trip: gls-example-libraries.title precedes gls-search.title, as the chain requires."
 
-  # Across roots, only that the order does not move. `record` is a bibliographic record in one glossary
-  # and a knowledge document in the other; neither narrows the other, and nothing ranks them. This is
-  # deliberately not an assertion that the first is the more general — reading it that way is what would
-  # hand a reader the wrong domain, so the absence of that assertion is the point rather than an
-  # oversight.
+  # Across roots, only that the order does not move. Neither glossary narrows the other, so asserting that the first
+  # is the more general would hand a reader the wrong domain.
   FIRST=$(line_of "$TERMS" gls-example-libraries.record)
   SECOND=$(line_of "$TERMS" gls-knowledge-as-code.record)
 
@@ -433,8 +344,6 @@ glossary_lookup() {
   echo "round-trip: the two record entries come back in a stable order, and neither is claimed the general one."
 }
 
-# The same question of the policy skill. A clause is not a term: its wording is only half the answer,
-# and `level` is the half the reader acts on.
 policy_lookup() {
   CLAUSES="$ROOT/$CORPUS_ROOT/policies/clauses.jsonl"
 
@@ -442,8 +351,7 @@ policy_lookup() {
 
   echo "round-trip: clauses reachable at $CORPUS_ROOT/policies/clauses.jsonl inside the installed plugin"
 
-  # The skill's first pattern: the subject in the words the estate would use. It tells a reader to
-  # search the stem, and `timeframe` is the stem `timeframes` in pol-VURM sits on.
+  # The skill's first pattern searches the stem, and `timeframe` is the stem `timeframes` in pol-VURM sits on.
   grep -iE 'timeframe' "$CLAUSES" > "$WORK/subject.txt" || fail "no clause mentions a timeframe."
 
   grep -qE '"record": *"pol-VURM"' "$WORK/subject.txt" \
@@ -462,16 +370,14 @@ policy_lookup() {
   WORDING=$(jqr '.clause // empty' "$WORK/hits.txt")
   [ -n "$WORDING" ] || fail "pol-VURM.TIMEBOX came back with no clause."
 
-  # The field the answer turns on. A skill handed a clause without it can only guess whether the
-  # estate committed to the thing or merely suggested it.
+  # Without `level` a skill can only guess whether the estate committed to the clause or merely suggested it.
   LEVEL=$(jqr '.level // empty' "$WORK/hits.txt")
   [ "$LEVEL" = "MUST" ] || fail "pol-VURM.TIMEBOX came back at level '$LEVEL' rather than MUST."
 
   echo "round-trip: pol-VURM.TIMEBOX binds at $LEVEL, and the wording came with it."
 
-  # `MUST NOT` opens with `MUST`, so a level read out of the wording files a prohibition as an
-  # obligation. Asserting the longer of the two whole is what tells a real `level` field from one
-  # rebuilt by matching the first word.
+  # `MUST NOT` opens with `MUST`, so asserting the longer level whole tells a real `level` field from one rebuilt by
+  # matching the first word.
   grep -E '"id": *"pol-VURM.SHIP"' "$CLAUSES" > "$WORK/prohibition.txt" \
     || fail "pol-VURM carries no SHIP clause."
 
@@ -483,8 +389,7 @@ policy_lookup() {
 
   echo "round-trip: pol-VURM.SHIP binds at $LEVEL, whole rather than shortened to its first word."
 
-  # The clauses of one policy come back in the order its table wrote them, which is what lets a reader
-  # quote them as the policy reads.
+  # A policy's clauses come back in the order its table wrote them, so a reader can quote them as the policy reads.
   FIRST=$(line_of "$CLAUSES" pol-VURM.SCAN)
   LAST=$(line_of "$CLAUSES" pol-VURM.INDEP)
 
@@ -494,8 +399,7 @@ policy_lookup() {
 
   echo "round-trip: pol-VURM.SCAN precedes pol-VURM.INDEP, as the clause table has them."
 
-  # The skill sends a reader from the clause to the record beside it for the three sections that say
-  # what the clause binds. A clause read without them is stricter than the one we wrote.
+  # The skill sends a reader on to the record for the three sections saying what the clause binds.
   RECORD=$(jqr '.record' "$WORK/hits.txt")
   POLICY="$ROOT/$CORPUS_ROOT/policies/$RECORD.json"
 
@@ -509,8 +413,6 @@ policy_lookup() {
   echo "round-trip: $RECORD.json carries Purpose, Scope and Exceptions."
 }
 
-# The same question of the standards skill. A rule is neither a term nor a clause: one line holds
-# several obligations, and each states the level it binds at beside its wording.
 standards_lookup() {
   RULES="$ROOT/$CORPUS_ROOT/standards/rules.jsonl"
 
@@ -518,8 +420,7 @@ standards_lookup() {
 
   echo "round-trip: rules reachable at $CORPUS_ROOT/standards/rules.jsonl inside the installed plugin"
 
-  # The skill's first pattern: the subject in the words the estate would use. It tells a reader to
-  # search the stem, and `idempot` is the stem `idempotency` and `idempotent` both sit on.
+  # The skill's first pattern searches the stem, and `idempot` is the stem `idempotency` and `idempotent` sit on.
   grep -iE 'idempot' "$RULES" > "$WORK/subject.txt" || fail "no rule mentions idempotency."
 
   grep -qE '"record": *"std-IDEM"' "$WORK/subject.txt" \
@@ -544,8 +445,7 @@ standards_lookup() {
 
   echo "round-trip: std-IDEM.the-caller-chooses-the-key carries its obligations, level and all."
 
-  # `MUST NOT` opens with `MUST`, and the skill tells a reader to compare `level` whole. A rule
-  # holding a prohibition is what shows the longer keyword survives the export unshortened.
+  # `MUST NOT` opens with `MUST`, so a rule holding a prohibition shows the longer level survives the export whole.
   grep -E '"id": *"std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait"' "$RULES" \
     > "$WORK/prohibition.txt" || fail "std-IDEM carries no an-in-flight-repeat-waits-or-is-told-to-wait rule."
 
@@ -554,9 +454,7 @@ standards_lookup() {
 
   echo "round-trip: a prohibition arrives as MUST NOT, whole rather than shortened to its first word."
 
-  # What a heading-sourced part gives that a table row cannot. A clause resolves to the section
-  # holding its table, and a rule resolves to itself, so a link built from the template lands on the
-  # rule rather than at the top of the standard.
+  # A rule resolves to its own heading, so a link built from the template lands on the rule and not on the standard.
   ANCHOR=$(jqr '.anchor' "$WORK/hits.txt")
   PART=$(jqr '.part' "$WORK/hits.txt")
 
@@ -564,9 +462,8 @@ standards_lookup() {
 
   echo "round-trip: a rule addresses itself, so its anchor is its own key."
 
-  # A heading-sourced type sorts on the heading, so a grep meets a rule where somebody looking down a
-  # list of names would find it. The standard writes this pair the other way round, which is what makes
-  # the assertion say something: a reader wanting the author's order opens the record.
+  # A heading-sourced type sorts on the heading. The standard writes this pair the other way round, which is what makes
+  # the assertion say something.
   FIRST=$(line_of "$RULES" std-IDEM.an-in-flight-repeat-waits-or-is-told-to-wait)
   LAST=$(line_of "$RULES" std-IDEM.the-caller-chooses-the-key)
 
@@ -576,9 +473,8 @@ standards_lookup() {
 
   echo "round-trip: the rules of std-IDEM come back sorted on the heading."
 
-  # A rule leans on another standard's rule, and composition is what makes that ordinary. The link is
-  # what states the reference, and its target is stripped out of the words, so `seeAlso` is where the
-  # id survives. `std-RECON` points at a rule of `std-LEDGER`.
+  # The link's target is stripped out of the words, so `seeAlso` is where the id survives. `std-RECON` points at a
+  # rule of `std-LEDGER`.
   grep -E '"id": *"std-RECON.nothing-downstream-reads-an-unreconciled-day"' "$RULES" \
     > "$WORK/refers.txt" || fail "std-RECON carries no nothing-downstream-reads-an-unreconciled-day rule."
 
@@ -588,8 +484,7 @@ standards_lookup() {
 
   echo "round-trip: a rule carries the other standard's rule it leans on, as a part id."
 
-  # The skill sends a reader from the rule to the record beside it for the two sections that say what
-  # the rule is for and how anyone shows the work meets it.
+  # The skill sends a reader on to the record for the two sections saying what the rule is for and how it is shown.
   RECORD=$(jqr '.record' "$WORK/hits.txt")
   STANDARD="$ROOT/$CORPUS_ROOT/standards/$RECORD.json"
 
@@ -602,9 +497,8 @@ standards_lookup() {
 
   echo "round-trip: $RECORD.json carries Summary and Conformance checklist."
 
-  # The union the skill promises. payments consumes engineering, so a search of one file has to reach
-  # engineering's rules as well as its own, and each of those arrives under the shortcode of the corpus
-  # that wrote it. A rule filed under a bare id would read as this estate's own work.
+  # payments consumes engineering, so one search reaches both corpora's rules, each under the shortcode of the corpus
+  # that wrote it. A rule filed under a bare id would read as this estate's own.
   grep -E '"shortcode": *"eng"' "$RULES" > "$WORK/inherited-rules.txt" \
     || fail "this corpus consumes eng and no rule in its export names eng as the producer."
 
@@ -625,10 +519,8 @@ standards_lookup() {
 
   echo "round-trip: an engineering rule arrived in payments' own file, carrying eng: on its id."
 
-  # The assertion the `sources` block exists for, asked of the rule a reader actually followed. eng
-  # publishes its standards under its own path prefix, and this corpus's prefix names a directory that
-  # holds a different set of files. Only fetching tells the two apart, because both assemble into a URL
-  # that looks right.
+  # eng publishes under its own prefix, and this corpus's prefix names a directory of different files. Both assemble
+  # into a URL that looks right, so only the fetch tells them apart.
   ENG_TARGET=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.target // empty' "$EXPORT_MANIFEST")
   ENG_BASE=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.base // empty' "$EXPORT_MANIFEST")
   ENG_PREFIX=$(jqr '.sources[] | select(.shortcode == "eng") | .publishing.pathPrefix // empty' "$EXPORT_MANIFEST")
@@ -639,8 +531,7 @@ standards_lookup() {
   [ "$ENG_PREFIX" != "$OWN_PREFIX" ] \
     || fail "eng and this corpus both publish under '$OWN_PREFIX', so this proves nothing."
 
-  # Only a public GitHub repository answers without credentials, which is the same limit the generic
-  # fetch above works to. eng moving elsewhere leaves the two assertions above standing.
+  # Only a public GitHub repository answers without credentials.
   [ "$ENG_TARGET" = "github" ] || {
     echo "round-trip: eng publishes to $ENG_TARGET, which no unauthenticated fetch reaches."
     return 0
@@ -675,9 +566,8 @@ case "$CORPUS" in
     standards_lookup
     ;;
   *)
-    # A corpus exporting none of these types has no lookup to perform. One exporting any of them and
-    # reaching here has been renamed out of the arms above, and would otherwise close on a pass having
-    # asked the skill nothing.
+    # A corpus exporting any of these types and reaching here was renamed out of the arms above, and would otherwise
+    # pass having asked the skill nothing.
     for parts in glossary/terms.jsonl policies/clauses.jsonl standards/rules.jsonl; do
       if [ -f "$ROOT/$CORPUS_ROOT/$parts" ]; then
         fail "$CORPUS exports $parts and no arm above reads it. Name this corpus in one of them."

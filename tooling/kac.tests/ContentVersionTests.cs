@@ -1,14 +1,7 @@
 using kac.core;
 
-// A corpus moves its `content-version` in the pull request that changes what the corpus knows.
-// `validate` cannot see that: the stamp and the records are each correct on their own, and only the two
-// revisions together show one moving without the other. So this reads the diff, as `VerificationTests`
-// does.
-//
-// The reach is a whole record of a type declaring an `export:` block, in a corpus under `examples/`. It
-// is wider than the obligation in one direction and narrower in another, and `ctl-0011` names both:
-// `std-VERS` exempts a change confined to a section the export leaves out, and it asks for a move where
-// a `.schema/` edit or a bundled skill reaches a record.
+// `validate` sees one revision, so this reads the diff, as `VerificationTests` does. `ctl-0011` names
+// where its reach differs from `std-VERS`.
 
 namespace kac.tests;
 
@@ -32,9 +25,7 @@ public class ContentVersionTests
 
         var corpora = Corpora();
 
-        // Both sets are read off the schema and the tree, so a type that stops exporting and a corpus
-        // added under `examples/` are covered with nothing to remember. An empty one is this guard gone
-        // quiet, and green is what it would report from then on.
+        // An empty set is this guard gone quiet, and green is what it would report from then on.
         Assert.True(exported.Count > 0,
             "no type declares an 'export:' block, so this guard is checking nothing. Either the key was "
             + "renamed, or the types declaring it have gone.");
@@ -45,9 +36,8 @@ public class ContentVersionTests
 
         var changed = new SortedDictionary<string, SortedSet<string>>(StringComparer.Ordinal);
 
-        // Every status, because adding a record, rewriting one, renaming one and deleting one each change
-        // what the export publishes. Only a rename gives two paths, and they sit in different corpora
-        // where a record moved between them.
+        // Every status, because adding, rewriting, renaming and deleting a record each change what the export
+        // publishes.
         var touched = Diff.Changed(before, "AMRD")
             .SelectMany(file => new[] { file.Was, file.Now })
             .Concat(Diff.Untracked())
@@ -75,7 +65,6 @@ public class ContentVersionTests
             + $"\nMove {Stamp} in each {Descriptor}. std-VERS says which part of it a change moves.");
     }
 
-    // Each corpus under `examples/`, by folder name.
     private static IReadOnlySet<string> Corpora() =>
         Directory
             .EnumerateDirectories(Path.Combine(Repo.Root, RecordPath.Published))
@@ -83,16 +72,15 @@ public class ContentVersionTests
             .Select(dir => new DirectoryInfo(dir).Name)
             .ToHashSet(StringComparer.Ordinal);
 
-    // Whether this corpus states a higher stamp than it did at `before`. A stamp edited downwards is
-    // reported alongside one nobody touched, because a registry orders what it is given and a consumer
-    // resolving a range would take the older content. A corpus this branch created has no descriptor at
-    // `before`, so there is nothing to compare and its first stamp stands.
+    /// <summary>
+    /// A stamp edited downwards has not risen. A corpus this branch created has no descriptor at <c>before</c>, so its
+    /// first stamp stands.
+    /// </summary>
     private static bool Rose(string corpus, string before) =>
         Git.Run(Repo.Root, $"show {before}:{RecordPath.Published}/{corpus}/{Descriptor}") is not { } then
         || VersionRange.Newer(Stated(corpus) ?? "", Version(then) ?? "");
 
-    // The stamp this corpus states now. Null where the descriptor states none, which `pack` refuses and
-    // no corpus under `examples/` does.
+    /// <summary>Null where the descriptor states none.</summary>
     private static string? Stated(string corpus) =>
         Version(Files.ReadLf(Path.Combine(Repo.Root, RecordPath.Published, corpus, Descriptor)));
 

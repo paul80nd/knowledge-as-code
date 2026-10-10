@@ -1,18 +1,9 @@
 using kac.core;
 
-// In-process unit tests for the listing every pass reads the corpus through.
-//
-// What it answers is mostly about presence, and the differences are what the rest of the tool leans on:
-// the listing is what git tracks, `OnDisk` is what is there, and a glob names a set. No fixture can
-// show them apart, because a fixture corpus is a directory in which every file is both tracked and
-// present.
-
 namespace kac.tests;
 
 public class TreeTests
 {
-    // What a corpus holds. Presence is left to the listing here; the two cases where it is not are built
-    // their own corpus below, because the difference between them is the whole of what they assert.
     private static Tree Corpus() => new(
         new HashSet<string>(StringComparer.Ordinal)
         {
@@ -32,7 +23,6 @@ public class TreeTests
         Assert.False(Corpus().Exists("adrs/0099-gone.md"));
     }
 
-    // A file git does not track is in no clone, so it is present without being held.
     [Fact]
     public void A_file_the_corpus_does_not_hold_may_still_be_on_disk()
     {
@@ -45,8 +35,6 @@ public class TreeTests
         Assert.True(tree.OnDisk("adrs/_template.md"));
     }
 
-    // A corpus assembled from values has no disk to ask, which is what makes a test corpus a set of paths
-    // rather than a set of paths and a second set beside it.
     [Fact]
     public void A_corpus_built_from_values_answers_on_disk_from_its_listing()
     {
@@ -63,8 +51,6 @@ public class TreeTests
         Assert.False(Corpus().HasFolder("policies"));
     }
 
-    // `*` stops at a slash. The framework's own documentation is read as a set and reported against file
-    // by file.
     [Fact]
     public void A_glob_names_the_files_directly_inside_a_folder()
         => Assert.Equal(["knowledge-as-code/style.md", "knowledge-as-code/taxonomy.md"],
@@ -79,7 +65,6 @@ public class TreeTests
             ],
             Corpus().Match("**/*.md"));
 
-    // Ordinal, so that a pass walking a set reports in one order however the listing arrived.
     [Fact]
     public void The_matches_come_back_in_ordinal_order()
         => Assert.Equal(["adrs/0001-a.md", "adrs/_template.md"], Corpus().Match("adrs/*.md"));
@@ -88,8 +73,6 @@ public class TreeTests
     public void A_glob_matching_nothing_names_nothing()
         => Assert.Empty(Corpus().Match("policies/*.md"));
 
-    // A path is normalised before it is looked up or read, so a caller that built one with the platform's
-    // separator asks the same question as one that wrote it with a slash.
     [Fact]
     public void A_windows_separator_names_the_same_file()
     {

@@ -1,11 +1,5 @@
 using kac.core;
 
-// In-process unit tests for reading what `kac restore` unpacked, and for the citation form that reaches
-// it.
-//
-// No fixture stands behind these. `.imports/` holds another corpus's export and nothing commits one, so
-// the folders are stood up here as a dictionary of paths.
-
 namespace kac.tests;
 
 public class ImportsTests
@@ -32,13 +26,10 @@ public class ImportsTests
         Assert.Equal("0.1.0", import.Version);
     }
 
-    // A consumer building a link from its own publishing would address its own repository.
     [Fact]
     public void The_link_template_is_the_producers_own()
         => Assert.Equal("https://example.com/eng/{path}#{anchor}", Assert.Single(Loaded().Imports).Link);
 
-    // A citation into a grandparent names the corpus that wrote the record, not the one this corpus
-    // fetched it through. Its parts are found under the scoped id the export stamped on the line.
     [Fact]
     public void A_record_its_producer_inherited_is_scoped_to_the_corpus_that_wrote_it()
     {
@@ -50,13 +41,10 @@ public class ImportsTests
         Assert.Equal(["KEEP"], old.Parts);
     }
 
-    // The parts file sits in the same folder as the records and is not one of them.
     [Fact]
     public void The_parts_file_is_not_read_as_a_record()
         => Assert.Single(Assert.Single(Loaded().Imports).Records);
 
-    // A type names its own part-line keys, so a producer calling them something else exports a package
-    // whose parts a consumer assuming the spelling would read as empty.
     [Fact]
     public void The_part_line_keys_are_read_from_what_the_producer_published()
     {
@@ -66,8 +54,6 @@ public class ImportsTests
         Assert.Equal(["STORE", "ROTATE"], record.Parts);
     }
 
-    // An export written before the manifest named them carries neither, and the two names every type
-    // has used are what it falls back to.
     [Fact]
     public void An_export_naming_no_part_line_keys_falls_back_to_record_and_part()
     {
@@ -76,8 +62,6 @@ public class ImportsTests
         Assert.Equal(["STORE", "ROTATE"], record.Parts);
     }
 
-    // A type keeping no parts is told apart from a record carrying none, because the two earn different
-    // sentences from `part-ref`.
     [Fact]
     public void A_type_declaring_no_parts_file_keeps_no_parts()
     {
@@ -96,8 +80,6 @@ public class ImportsTests
         Assert.Empty(graph.Undeclared);
     }
 
-    // Nothing can ever answer to it, so passing over it would leave `import-restored` reporting clean on
-    // a declaration no restore could satisfy.
     [Fact]
     public void An_entry_naming_no_shortcode_is_reported_under_the_corpus_it_named()
     {
@@ -109,7 +91,6 @@ public class ImportsTests
         Assert.Equal(["'example-engineering'"], graph.Undeclared);
     }
 
-    // An entry short of both is named by where it sits, which is all there is to name it by.
     [Fact]
     public void An_entry_naming_neither_a_corpus_nor_a_shortcode_is_named_by_its_position()
         => Assert.Equal(["entry 1"], Imports
@@ -132,9 +113,10 @@ public class ImportsTests
         Assert.Equal(text, citation.ToString());
     }
 
-    // A shortcode is lower-case letters and digits alone, so a colon anywhere else belongs to the text.
-    // `std-A11Y:WCAG` is a citation written with the wrong separator, and reading a scope off it would
-    // hide the fault the corpus reports as `part-separator`.
+    /// <summary>
+    /// A shortcode is lower-case letters and digits alone. Reading a scope off <c>std-A11Y:WCAG</c> would hide the
+    /// wrong separator the corpus reports as <c>part-separator</c>.
+    /// </summary>
     [Theory]
     [InlineData("std-A11Y:WCAG")]
     [InlineData("Policy: pol-SCRT")]
@@ -161,15 +143,15 @@ public class ImportsTests
             path => held.GetValueOrDefault(path));
     }
 
-    // Everything below one folder, named relative to it. The two delegates above split that into the
-    // files sitting directly in it and the folders beside them.
     private static IEnumerable<string> Under(Dictionary<string, string> held, string folder) =>
         held.Keys
             .Where(k => k.StartsWith(folder + "/", StringComparison.Ordinal))
             .Select(k => k[(folder.Length + 1)..]);
 
-    // One import's folder, as `restore` writes it: the manifest, one record, and the parts file the
-    // manifest names. `partsFile: null` is the same corpus with a type that keeps no parts.
+    /// <summary>
+    /// One import's folder, as <c>restore</c> writes it: the manifest, one record, and the parts file the manifest
+    /// names. <c>partsFile: null</c> is the same corpus with a type that keeps no parts.
+    /// </summary>
     private static Dictionary<string, string> Files(
         string? partsFile = "policies/clauses.jsonl",
         string recordKey = "record",

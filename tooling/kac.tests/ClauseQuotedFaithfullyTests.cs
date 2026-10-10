@@ -1,11 +1,5 @@
 using kac.core;
 
-// A control quotes the clause it verifies, and this is what holds the quotation to the clause. The
-// fixture turns the id green; these are the branches a fixture would only duplicate.
-//
-// Two of them are about where the words are. A standard writes a part as a heading and the obligation
-// as a bullet beneath it, and a policy writes a part as a table row whose bold run flattening drops.
-
 namespace kac.tests;
 
 public class ClauseQuotedFaithfullyTests
@@ -33,7 +27,6 @@ public class ClauseQuotedFaithfullyTests
             found.Message);
     }
 
-    // Prose wraps at 120 characters, so a quotation of any length runs onto the line below the citation.
     [Fact]
     public void A_quotation_wrapped_onto_the_next_line_is_read_whole()
         => Assert.Empty(Run(
@@ -41,7 +34,6 @@ public class ClauseQuotedFaithfullyTests
             "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the\n"
             + "  status code that describes it\"."));
 
-    // The clause wraps too, and the words it wraps on are the same words either way.
     [Fact]
     public void A_clause_wrapped_onto_the_next_line_is_read_whole()
         => Assert.Empty(Run(
@@ -49,8 +41,6 @@ public class ClauseQuotedFaithfullyTests
             "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the "
             + "status code that describes it\"."));
 
-    // The bullet under the heading is where a standard writes the obligation, so every bullet beneath it
-    // is part of the clause.
     [Fact]
     public void A_quotation_of_a_second_bullet_under_the_heading_is_read()
         => Assert.Empty(Run(
@@ -64,7 +54,6 @@ public class ClauseQuotedFaithfullyTests
             "- A failure **MUST** be answered with the status code that describes it.",
             "* [std-ERRORS.a-failure-says-what-happened] is titled \"A failure says what happened\"."));
 
-    // A heading below the part ends the clause, so words from the next rule are not this one's to quote.
     [Fact]
     public void A_quotation_taken_from_the_next_clause_is_reported()
         => Assert.Single(Run(
@@ -72,8 +61,6 @@ public class ClauseQuotedFaithfullyTests
             + "### A body is machine-readable\n\n- A body **MUST** be JSON.",
             "* [std-ERRORS.a-failure-says-what-happened] says a body \"**MUST** be JSON\"."));
 
-    // Controls quote the names of jobs, steps and files. Those sit on lines of their own, and a line
-    // with no citation on it names no clause to compare them against.
     [Fact]
     public void A_quoted_span_on_a_line_carrying_no_citation_is_left_alone()
         => Assert.Empty(Run(
@@ -82,22 +69,18 @@ public class ClauseQuotedFaithfullyTests
             + "* [std-ERRORS.a-failure-says-what-happened] says a failure \"**MUST** be answered with the "
             + "status code that describes it\"."));
 
-    // A corpus writes a citation as a code span as well as a reference link, and both reach the parser.
     [Fact]
     public void A_quotation_beside_a_citation_written_as_a_code_span_is_read()
         => Assert.Single(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
             "* `std-ERRORS.a-failure-says-what-happened` says a failure \"**MUST** be answered with a `404`\"."));
 
-    // An imported record arrives as ids and fields, so its clause text is not here to compare against.
-    // Reporting the quotation would be reporting that this corpus cannot read somebody else's words.
     [Fact]
     public void A_quotation_of_an_imported_clause_is_skipped()
         => Assert.Empty(Run(
             "- A failure **MUST** be answered with the status code that describes it.",
             "* `eng:std-ERRORS.a-failure-says-what-happened` says a failure \"**MUST** be answered with a `404`\"."));
 
-    // `part-ref` reports both of these, and a second complaint about one citation helps nobody.
     [Fact]
     public void A_citation_of_a_record_this_corpus_does_not_have_is_skipped()
         => Assert.Empty(Run(
@@ -110,7 +93,6 @@ public class ClauseQuotedFaithfullyTests
             "- A failure **MUST** be answered with the status code that describes it.",
             "* `std-ERRORS.a-body-is-machine-readable` says a failure \"**MUST** be answered with a `404`\"."));
 
-    // A quotation is word for word, so a difference of case is a difference.
     [Fact]
     public void A_quotation_that_differs_only_in_case_is_reported()
         => Assert.Single(Run(
@@ -124,8 +106,6 @@ public class ClauseQuotedFaithfullyTests
             "- A failure **MUST** be answered with the status code that describes it.",
             "* [std-ERRORS.a-failure-says-what-happened] says \"A failure\" and \"is answered with a `404`\"."));
 
-    // A clause written as a table row is one line, and flattening it drops the bold run the quotation
-    // keeps. So the row is read as it was written as well as as it renders.
     [Fact]
     public void A_clause_written_as_a_table_row_is_read_as_it_was_written()
         => Assert.Empty(Clauses(
@@ -136,7 +116,9 @@ public class ClauseQuotedFaithfullyTests
         => Assert.Single(Clauses(
             "* [pol-SCRT.STORE] says a secret \"**MUST NOT** be written into a build log\"."));
 
-    // The standard's parts are headings, so the clause is the bullet under the one the citation names.
+    /// <summary>
+    /// The standard's parts are headings, so the clause is the bullet under the one the citation names.
+    /// </summary>
     private static List<Finding> Run(string clause, string control) => Findings(
         "standards/error-responses.md",
         "---\nid: std-ERRORS\ntype: standard\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
@@ -144,7 +126,7 @@ public class ClauseQuotedFaithfullyTests
         + $"### A failure says what happened\n\n{clause}\n",
         "std-ERRORS", control);
 
-    // The policy's parts are table rows, so the clause is the row the citation names.
+    /// <summary>The policy's parts are table rows, so the clause is the row the citation names.</summary>
     private static List<Finding> Clauses(string control) => Findings(
         "policies/secrets.md",
         "---\nid: pol-SCRT\ntype: policy\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
@@ -183,8 +165,7 @@ public class ClauseQuotedFaithfullyTests
         return found;
     }
 
-    // A control keeps no parts of its own, so the citing type declares none. Both cited types do, each
-    // in the source its records are written in.
+    /// <summary>A control keeps no parts of its own, so the citing type declares none.</summary>
     private static readonly Schema Types = new()
     {
         ByFolder = new Dictionary<string, TypeSchema>

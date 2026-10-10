@@ -1,12 +1,5 @@
 using kac.core;
 
-// In-process unit tests for `framework-names-types`, the one rule the framework's own documentation is
-// held to.
-//
-// `Validator.CheckFrameworkDocs` says why the rule exists. What no fixture can show is which files it
-// reads: every type page exists in the corpus that writes these documents, so a fixture proves the rule
-// fires and never that the glob found the file. These cases are that half.
-
 namespace kac.tests;
 
 public class FrameworkDocTests
@@ -25,29 +18,24 @@ public class FrameworkDocTests
         Assert.Contains("Name the type instead", finding.Message);
     }
 
-    // Every corpus is told to delete the records it inherits, so a link to one dies even where the type
-    // was adopted.
     [Fact]
     public void A_link_to_a_record_inside_a_type_is_reported_as_the_worse_fault()
         => Assert.Contains("the first thing a corpus deletes",
             Assert.Single(Framework(
                 ("knowledge-as-code.md", "# The framework\n\nSee [one](/adrs/0001-a.md).\n"))).Message);
 
-    // A generated block's links are this corpus's, so they are not this rule's to judge.
     [Fact]
     public void A_link_inside_a_generated_block_is_exempt()
         => Assert.Empty(Framework(("knowledge-as-code.md",
             "# The framework\n\n<!-- BEGIN GENERATED: types-index -->\n[ADRs](/adrs)\n"
             + "<!-- END GENERATED: types-index -->\n")));
 
-    // The glob is what finds these documents.
     [Fact]
     public void A_document_inside_the_framework_s_folder_is_read()
         => Assert.Equal("knowledge-as-code/style.md",
             Assert.Single(Framework(
                 ("knowledge-as-code/style.md", "# Style\n\nSee the [ADRs](/adrs).\n"))).File);
 
-    // The glossary is shared byte-for-byte, and the link pass is not run over it twice.
     [Fact]
     public void The_shared_glossary_is_read_although_it_is_also_a_record()
         => Assert.Equal("glossary/knowledge-as-code.md",
@@ -55,14 +43,15 @@ public class FrameworkDocTests
                 ("glossary/knowledge-as-code.md",
                     "---\nid: gls-knowledge-as-code\n---\n\n# Words\n\nSee the [ADRs](/adrs).\n"))).File);
 
-    // A document the corpus does not hold is in nobody else's clone.
     [Fact]
     public void A_document_the_corpus_does_not_hold_is_not_read()
         => Assert.Empty(Framework(
             ("knowledge-as-code/draft.md", "# Draft\n\nSee the [ADRs](/adrs).\n"), tracked: false));
 
-    // Two types, so that a link can name one: `adrs` is what the documents above link to, and `glossary` is
-    // where the framework's own shared glossary is filed.
+    /// <summary>
+    /// <c>adrs</c> is what the documents above link to, and <c>glossary</c> is where the framework's own shared
+    /// glossary is filed.
+    /// </summary>
     private static Schema Schema() => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
@@ -73,8 +62,10 @@ public class FrameworkDocTests
         }
     };
 
-    // The corpus a framework document sits in: both types stood up, so every link in the cases above
-    // resolves and `framework-names-types` is the only thing left to report.
+    /// <summary>
+    /// Both types stood up, so every link in the cases above resolves and <c>framework-names-types</c> is the only
+    /// thing left to report.
+    /// </summary>
     private static List<Finding> Framework((string Path, string Text) doc, bool tracked = true)
     {
         string[] corpus =

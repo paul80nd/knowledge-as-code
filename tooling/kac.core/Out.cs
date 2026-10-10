@@ -3,17 +3,16 @@ using Spectre.Console.Rendering;
 
 namespace kac.core;
 
-// The console every verb writes through. There are two. Stdout carries what a command produced and
-// stderr carries why it stopped, and a caller redirecting one still sees the other.
-//
-// Machine-readable output does not come through here. `--json` is a contract a pipeline parses, so it
-// goes straight to the stream, never through a renderer that could wrap or restyle it.
+/// <summary>
+/// Stdout carries what a command produced and stderr why it stopped. <c>--json</c> does not come through here: it goes
+/// straight to the stream, so no renderer can wrap it.
+/// </summary>
 public static class Out
 {
-    // A redirected stream has no width to report, and Spectre answers 80. That is a guess about a
-    // terminal nobody is looking at: it wraps a finding message mid-word and splits a check id across
-    // two lines. A width no line reaches leaves redirected output as one line per fact, which is what
-    // a golden captures and what `grep` expects. A terminal reports its own width and keeps it.
+    /// <summary>
+    /// A redirected stream has no width, and Spectre's guess of 80 wraps a message mid-word. A width no line reaches
+    /// keeps redirected output to one line per fact, which a golden captures and <c>grep</c> expects.
+    /// </summary>
     private const int RedirectedWidth = 1000;
 
     private static IAnsiConsole? s_std;
@@ -22,34 +21,32 @@ public static class Out
     private static IAnsiConsole Std => s_std ??= Make(Console.Out, Console.IsOutputRedirected);
     private static IAnsiConsole Err => s_err ??= Make(Console.Error, Console.IsErrorRedirected);
 
-    // The console a question is asked on. A prompt writes as well as reads, so it goes through the same
-    // console every other line of output does, and `--no-color` reaches it.
+    /// <summary>The same console as every other line, so <c>--no-color</c> reaches a prompt.</summary>
     public static IAnsiConsole Terminal => Std;
 
-    // Whether there is somebody to ask. Spectre's own `Interactive` answers for the terminal it would
-    // draw on and not for the keyboard, so a redirected stdin passes it and reads back nothing.
+    /// <summary>
+    /// Whether there is somebody to ask. Spectre's own <c>Interactive</c> answers for the terminal it would draw on and
+    /// not for the keyboard, so a redirected stdin passes it and reads back nothing.
+    /// </summary>
     public static bool Interactive =>
         Std.Profile.Capabilities.Interactive && !System.Console.IsInputRedirected;
 
-    // Plain text, written as given. Markup is not read here, so a message quoting '[ADR-0004]' or a
-    // regex reaches the reader intact rather than throwing on an unbalanced tag.
+    /// <summary>Markup is not read, so a message quoting '[ADR-0004]' or a regex reaches the reader intact.</summary>
     public static void Line(string text = "") => Std.WriteLine(text);
 
     public static void ErrLine(string text) => Err.WriteLine(text);
 
-    // Markup the caller composed. Every value interpolated into one needs `EscapeMarkup()`, because
-    // the check messages are full of square brackets.
+    /// <summary>
+    /// Every interpolated value needs <c>EscapeMarkup()</c>: the check messages are full of square brackets.
+    /// </summary>
     public static void Markup(string markup) => Std.MarkupLine(markup);
 
     public static void ErrMarkup(string markup) => Err.MarkupLine(markup);
 
-    // A grid, or anything else Spectre lays out. It goes into a buffer first, because Spectre pads
-    // every row out to the width of its widest column. Sent straight to the stream, the check
-    // catalogue arrives with every line padded to the longest summary in it. A terminal hides that.
-    // Redirect it and the file is full of ragged trailing spaces.
-    //
-    // The padding is plain spaces, written after the colour has been reset. Trimming the end of each
-    // line therefore takes the spaces and nothing else, whether or not colour is on.
+    /// <summary>
+    /// A grid, or anything else Spectre lays out. Buffered first, because Spectre pads every row to its widest column,
+    /// and trimmed per line: the padding is plain spaces written after the colour reset, so the trim takes only it.
+    /// </summary>
     public static void Write(IRenderable renderable)
     {
         var buffer = new StringWriter();
@@ -67,9 +64,7 @@ public static class Out
             writer.WriteLine(line.TrimEnd());
     }
 
-    // Strip the colour from both consoles. Spectre already does this for `NO_COLOR` in the
-    // environment, so what remains here is `--no-color`, for a caller who cannot set a variable. Both
-    // leave bold alone, so the two ways of asking come to the same output.
+    /// <summary>Spectre already honours <c>NO_COLOR</c>, so this serves <c>--no-color</c>.</summary>
     public static void NoColor()
     {
         Std.Profile.Capabilities.ColorSystem = ColorSystem.NoColors;

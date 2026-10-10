@@ -1,9 +1,6 @@
 using System.Text.Json;
 using kac.core;
 
-// How far a record has been taken on trust, derived from `verified` and shipped as `trust`. The Open
-// Knowledge Format names the three tiers, and this is where each one is pinned.
-
 namespace kac.tests;
 
 public class TrustTierTests
@@ -16,7 +13,6 @@ public class TrustTierTests
     public void Agents_alone_make_the_record_machine_confirmed()
         => Assert.Equal("machine-confirmed", Trust("  - { at: 2026-09-08T11:00:00Z, by: sweep/1.0.0 }\n"));
 
-    // One person is enough, wherever in the list they sit. The tiers rank, so the highest actor decides.
     [Fact]
     public void One_person_among_agents_still_makes_it_human_reviewed()
         => Assert.Equal("human-reviewed", Trust(
@@ -31,15 +27,11 @@ public class TrustTierTests
     public void A_record_carrying_no_such_field_is_unverified()
         => Assert.Equal("unverified", Trust("", ""));
 
-    // `list` refuses a bare mapping and `validate` reports it, so the tier reads it the way the field
-    // beside it does rather than answering `unverified` about a record naming a person.
     [Fact]
     public void A_list_written_as_one_mapping_is_the_one_entry_case()
         => Assert.Equal("human-reviewed",
             Trust("", "verified: { at: 2026-09-08T11:00:00Z, by: human:alex.doe }\n"));
 
-    // A type whose export never declares `verified` answers nothing rather than `unverified`. Reading a
-    // tier off a type that has no such field would tell a consumer something the corpus never said.
     [Fact]
     public void A_type_that_does_not_export_the_field_carries_no_tier()
     {
@@ -49,9 +41,6 @@ public class TrustTierTests
         Assert.Equal(JsonValueKind.Null, record.GetProperty("trust").ValueKind);
     }
 
-    // Authorship passes to whoever answers a report's judgement cells, so `generated.at` moves past
-    // every reading of the words before them. A tier counting one of those would tell a consumer that
-    // somebody read text that did not exist when they read it.
     [Fact]
     public void A_person_who_read_the_text_before_the_last_edit_does_not_reach_the_tier()
         => Assert.Equal("unverified", Trust(
@@ -64,8 +53,6 @@ public class TrustTierTests
             "  - { at: 2026-09-20T11:00:00Z, by: human:alex.doe }\n",
             generated: "generated: { at: 2026-09-20T09:00:00Z, by: sweep/1.0.0 }\n"));
 
-    // `timestamp-format` reports a moment that is not one, against the record. Dropping the entry here
-    // as well would answer for the same fault twice, and the second answer is one nobody can see.
     [Fact]
     public void A_verification_whose_moment_will_not_parse_still_reaches_the_tier()
         => Assert.Equal("human-reviewed", Trust(

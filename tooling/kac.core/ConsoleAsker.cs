@@ -2,11 +2,7 @@ using Spectre.Console;
 
 namespace kac.core;
 
-// The console half of `IAsker`: how a question is drawn and how a keystroke is read. It sits on this side
-// of the boundary with `Commands` and `Out`, and nothing in the tool decides anything here.
-//
-// Every prompt is asked on `Out.Terminal`, so a question is coloured the way every other line is and
-// `--no-color` reaches it.
+/// <summary>Every prompt goes through <c>Out.Terminal</c>, so <c>--no-color</c> reaches it.</summary>
 public sealed class ConsoleAsker : IAsker
 {
     public string Text(string question, string fallback)
@@ -23,8 +19,10 @@ public sealed class ConsoleAsker : IAsker
                 .Title(question)
                 .AddChoices(Ordered(options, fallback)));
 
-    // `NotRequired` is what lets a corpus tick nothing. Without it Spectre refuses to return an empty
-    // selection, and adopting no type is a state the descriptor holds.
+    /// <summary>
+    /// <c>NotRequired</c> is what lets a corpus tick nothing. Without it Spectre refuses to return an empty selection,
+    /// and adopting no type is a state the descriptor holds.
+    /// </summary>
     public IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options)
     {
         var prompt = new MultiSelectionPrompt<string>().Title(question).NotRequired();
@@ -36,8 +34,7 @@ public sealed class ConsoleAsker : IAsker
     public bool Confirm(string question, bool fallback = true) =>
         Out.Terminal.Prompt(new ConfirmationPrompt(question) { DefaultValue = fallback });
 
-    // The default offered first, because a selection prompt opens on its first choice and the answer
-    // most people want should be the one already under the cursor.
+    /// <summary>The default goes first, because a selection prompt opens on its first choice.</summary>
     private static IEnumerable<string> Ordered(IReadOnlyList<string> options, string fallback) =>
         options.Contains(fallback, StringComparer.Ordinal)
             ? [fallback, .. options.Where(o => !o.Equals(fallback, StringComparison.Ordinal))]

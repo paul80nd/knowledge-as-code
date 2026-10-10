@@ -10,12 +10,6 @@
 #   Project settings -> Repositories -> <your-repo> -> Policies -> Branch Policies ->
 #   main -> Build Validation -> + -> select this pipeline -> Required.
 # The `pr:` block is kept for intent, and works as written if the repository is mirrored to GitHub.
-#
-# Publishing to an Azure DevOps wiki: `.order` beside this file drives the navigation, and frontmatter
-# renders as a metadata table. What `publishing-target: azure-devops-wiki` does not yet give you is
-# links in the export. `kac` builds those for `github` alone, so an export from a corpus on this target
-# carries none. Nothing here is broken by that, and an agent reading the export gets no address to
-# follow.
 
 trigger: none # no CI on branch pushes; PR validation is via branch policy
 

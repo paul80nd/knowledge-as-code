@@ -1,8 +1,5 @@
-// `staleness-loud` is the runbook twin of `staleness`, and its 92 days are named here rather than in a fixture,
-// for the reason `docs/design/checks.md` gives, so moving the number fails here. What separates the two rules is
-// that every `rehearsal-frequency` takes the same floor, and these cases pin that: a process stating an event is
-// measured by no window, and a runbook stating one is measured by this. The expression comes from the real
-// `.schema/runbooks.yaml` rather than a copy, so a rewrite there is judged by these cases.
+// `staleness-loud` is the runbook twin of `staleness`. Its 92 days are named here, for the reason
+// `docs/design/checks.md` gives, and the expression is read from the real `.schema/runbooks.yaml`.
 
 using kac.core;
 
@@ -11,9 +8,10 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public class StalenessLoudRuleTests
 {
-    // Counted back from `Required.Today`, which is 2026-06-15.
-    private const string LastDayInside = "2026-03-15";   // 92 days
-    private const string FirstDayPast = "2026-03-14";    // 93 days
+    /// <summary>92 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string LastDayInside = "2026-03-15";
+    /// <summary>93 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string FirstDayPast = "2026-03-14";
 
     [Theory]
     [InlineData("on-change")]
@@ -34,8 +32,6 @@ public class StalenessLoudRuleTests
     public void A_runbook_nobody_has_walked_is_reported_whatever_it_states(string frequency)
         => Assert.False(Holds(frequency, "\"never\""));
 
-    // `last-rehearsed` is required, so an absent one is `required-field`'s to report in better words. This
-    // rule stays silent because `days_since` answers 0 on a value it cannot read, and 0 is inside the floor.
     [Fact]
     public void A_runbook_stating_no_rehearsal_date_is_left_to_required_field()
     {
@@ -43,12 +39,10 @@ public class StalenessLoudRuleTests
         Assert.True(Holds("quarterly", ""));
     }
 
-    // See StalenessRuleTests.cs for why a date the run has not reached is left alone.
     [Fact]
     public void A_rehearsal_date_in_the_future_is_not_reported()
         => Assert.True(Holds("quarterly", "\"2029-06-01\""));
 
-    // Whether the rule is satisfied, judged against a named day. See StalenessRuleTests.cs.
     private static bool Holds(string frequency, string? lastRehearsed)
     {
         var doc = Required.Parsed("runbooks/a-slug.md",

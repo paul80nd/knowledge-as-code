@@ -1,12 +1,5 @@
 using kac.core;
 
-// In-process unit tests for `descriptor-area`: every area path `.corpus.yaml` states, held to a target
-// that has area paths.
-//
-// The `descriptor-area` fixture covers the id once through the CLI, which is all the coverage gate asks.
-// Every other combination lives here, where a case is one string. `TrackerTests` holds what the exporter
-// then writes.
-
 namespace kac.tests;
 
 public class DescriptorAreaTests
@@ -18,8 +11,6 @@ public class DescriptorAreaTests
     public void A_descriptor_stating_no_area_is_not_asked_anything()
         => Assert.Empty(Areas(new CorpusDescriptor()));
 
-    // The case the key exists for: one Azure DevOps project, and an area telling this corpus's work from
-    // the rest of the backlog's.
     [Fact]
     public void An_area_beside_an_azure_devops_tracker_is_silent()
         => Assert.Empty(Areas(new CorpusDescriptor
@@ -27,9 +18,6 @@ public class DescriptorAreaTests
             TrackerTarget = Publishing.AzureDevOps, TrackerBase = Project, TrackerArea = "kac-it-swdev"
         }));
 
-    // A corpus publishing to Azure Repos states its area and no target, because the target follows from
-    // `publishing:`. Reading the stated key alone would fail the ordinary case, so the check asks the
-    // effective target.
     [Fact]
     public void An_area_beside_a_derived_azure_devops_tracker_is_silent()
         => Assert.Empty(Areas(new CorpusDescriptor
@@ -39,7 +27,7 @@ public class DescriptorAreaTests
             TrackerArea = "kac-it-swdev"
         }));
 
-    // GitHub divides one repository's issue list with labels, so it has nothing an area path names.
+    /// <summary>GitHub divides one repository's issue list with labels, so it has nothing an area path names.</summary>
     [Fact]
     public void An_area_beside_a_github_tracker_names_the_target_it_files_on()
     {
@@ -53,7 +41,6 @@ public class DescriptorAreaTests
         Assert.Contains("only azure-devops does.", message);
     }
 
-    // A tracker that files nowhere has nowhere to put an area either.
     [Fact]
     public void An_area_beside_a_tracker_that_files_nowhere_is_reported()
     {
@@ -65,8 +52,6 @@ public class DescriptorAreaTests
         Assert.Contains("tracker files on 'none'", message);
     }
 
-    // The same question, and the key is named in the message, so an author fixing one block is not sent
-    // to the other. `framework:` is never derived, so its stated target is the effective one.
     [Fact]
     public void A_framework_area_is_asked_the_same_question_and_named_apart()
     {
@@ -79,7 +64,6 @@ public class DescriptorAreaTests
         Assert.Contains("framework files on 'github'", message);
     }
 
-    // Each block is asked on its own, so a corpus that got both wrong fixes both from one run.
     [Fact]
     public void Both_blocks_are_reported_together()
     {
@@ -94,7 +78,6 @@ public class DescriptorAreaTests
         Assert.Contains(findings, f => f.Message.Contains("framework.area"));
     }
 
-    // A key holding only spaces is the same absence as no key at all, so it is not reported as a value.
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -104,7 +87,6 @@ public class DescriptorAreaTests
             PublishingTarget = Publishing.GitHub, Base = Repo, TrackerArea = area
         }));
 
-    // Nothing here is stood up: the pass reads the descriptor and never the listing.
     private static List<Finding> Areas(CorpusDescriptor descriptor)
     {
         var schema = new Schema

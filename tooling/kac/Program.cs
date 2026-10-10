@@ -1,7 +1,5 @@
-// The CLI surface: it wires Spectre.Console.Cli to `Commands` and finds the corpus each verb answers about.
-// Every verb's logic is in kac.core, and `tooling/CLAUDE.md` says which file answers what. The clock, git
-// and the network are read here and passed down, so a test calls a verb with a fixed day and a registry
-// that answers from memory.
+// The clock, git and the network are read here and passed down, so a test calls a verb with a fixed day and a
+// registry that answers from memory. `tooling/CLAUDE.md` says which file answers what.
 
 using System.ComponentModel;
 using System.Reflection;
@@ -10,12 +8,8 @@ using kac.core;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-// Windows gives a process whatever code page the machine was installed with, and .NET encodes stdout with
-// it. A clause citing `§9` then reaches the reader damaged, while the same text written to a file is
-// intact. UTF-8 makes what a command prints agree with what the corpus holds.
-//
-// The setter reaches the console handle, so it throws where the process has none. Nothing is lost there:
-// a host holding no console takes the bytes as written.
+// Windows encodes stdout in the machine's install code page, which damages a clause citing `§9`; UTF-8 makes output
+// agree with the corpus. The setter throws where the process has no console, and such a host takes the bytes as is.
 if (OperatingSystem.IsWindows())
 {
     try
@@ -24,19 +18,14 @@ if (OperatingSystem.IsWindows())
     }
     catch (IOException)
     {
-        // No console to re-encode for.
     }
 }
 
 var app = new CommandApp();
 app.Configure(config =>
 {
-    // What the help text and every usage error call the tool. It is the packed `ToolCommandName`, which is
-    // what a corpus types, and is stated here rather than left to be inferred from the assembly's name.
     config.SetApplicationName("kac");
 
-    // `--version` exists only once a version is set, and the informational one is what the build stamps
-    // with the commit. So the answer names the source it was built from as well as the release.
     config.SetApplicationVersion(Cli.Version);
 
     // Without this an option the verb does not declare is dropped in silence, and a mistyped flag
@@ -87,16 +76,12 @@ if (args.Length == 0)
 var exit = app.Run(args);
 return exit == -1 ? 1 : exit;
 
-// Run a verb against the corpus the working directory sits in, or decline having said why. Every
-// verb needs one, and nothing else does: `--version` and `--help` are answered by the parser, from
-// wherever the command was typed. Resolving inside a verb's Execute rather than before the parse is
-// what lets an installed `kac` say which version it is without standing in a corpus first.
-//
-// Colour is settled here too, because this is the one step every verb takes before it writes anything.
+/// <summary>
+/// A verb finds its corpus inside its own Execute, not before the parse, so <c>--version</c> and <c>--help</c> answer
+/// from any folder.
+/// </summary>
 internal static class Cli
 {
-    // The release the build stamped this assembly with, and the commit it came from. `--version` prints
-    // it, and `new` holds itself against a template's `minimum-tool`.
     public static readonly string Version =
         typeof(Cli).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
         ?? "unknown";
@@ -112,8 +97,6 @@ internal static class Cli
             return 2;
         }
 
-        // A corpus with no schema above it is a corpus this tool cannot judge, so it is declined here
-        // rather than left to fail on the first file the loader opens.
         if (Schema.FindRoot(corpusRoot) is null)
         {
             Out.ErrMarkup($"[red]kac: {corpusRoot} has no .schema/ at or above it, so there is nothing to "
@@ -124,21 +107,11 @@ internal static class Cli
         return run(corpusRoot);
     }
 
-    // The registry a verb fetches from: the network through `client`, and the folders `.corpus.yaml` names
-    // as sources from disk. The caller owns the client, because the timeout is the caller's to choose.
+    /// <summary>The caller owns the client, because the timeout is the caller's to choose.</summary>
     public static Registry RegistryFor(string corpusRoot, HttpClient client) =>
         new(Registry.Over(client), Registry.OnDisk(corpusRoot));
 }
 
-// What every verb takes, whatever else it declares.
-//
-// `--no-color` sits here rather than on each verb because it is a fact about the terminal, not about
-// the command. `NO_COLOR` in the environment asks for the same thing and is the cross-tool standard,
-// which Spectre reads for itself. The flag is for a caller who cannot set a variable.
-//
-// It reaches a verb's own output and no further. The parser renders `--help` and `--version` before
-// any verb runs, so `NO_COLOR` is what covers those. Either way colour goes and bold stays, which is
-// what the standard asks for.
 internal class KacSettings : CommandSettings
 {
     [CommandOption("--no-color")]
@@ -146,14 +119,12 @@ internal class KacSettings : CommandSettings
     public bool NoColor { get; init; }
 }
 
-// A verb taking nothing but the corpus it stands in.
 internal sealed class CorpusSettings : KacSettings;
 
-// `new` is the one verb answering about a corpus that is not there yet, so it takes the working directory
-// and never `Cli.InCorpus`. Finding a corpus is what stops it rather than what lets it run.
-//
-// Every answer has a flag, so nothing the command needs is reachable only by typing, and a run with no
-// terminal exits rather than waiting. `docs/cli/new.md` carries the defaults and the order it asks in.
+/// <summary>
+/// <c>new</c> takes the working directory and never <c>Cli.InCorpus</c>: finding a corpus there is what stops it. Every
+/// answer has a flag, so a run with no terminal exits rather than waits. <c>docs/cli/new.md</c> has the defaults.
+/// </summary>
 internal sealed class NewSettings : KacSettings
 {
     [CommandOption("--name <NAME>")]
@@ -212,8 +183,10 @@ internal sealed class NewCommand : Command<NewSettings>
     }
 }
 
-// `validate` takes no paths: several of its checks ask about the shape of the corpus rather than
-// about a document, and a subset cannot answer them.
+/// <summary>
+/// <c>validate</c> takes no paths: several of its checks ask about the shape of the corpus, and a subset cannot answer
+/// them.
+/// </summary>
 internal sealed class ValidateSettings : KacSettings
 {
     [CommandOption("--json")]
@@ -226,14 +199,11 @@ internal sealed class ValidateCommand : Command<ValidateSettings>
     public override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
         {
-            // Shorter than the two minutes `restore` allows itself. That one fetches packages and is run
-            // when somebody means to wait; this reads one small index per source, on a command run after
-            // every edit. A source that never answers costs each of its imports this and then reports
-            // `import-unreachable`, so the wait is bounded by the number of entries rather than by a hang.
+            // Shorter than the two minutes `restore` allows: this runs after every edit, and a source that never
+            // answers costs each of its imports this wait before reporting `import-unreachable`.
             using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
 
-            // One day for the whole run, so every record is judged against the same one. UTC, so two
-            // people in different places validating one commit agree on what has gone by.
+            // One UTC day for the whole run, so every record is judged against the same day wherever it runs.
             return Commands.Validate(corpus, settings.Json, DateOnly.FromDateTime(DateTime.UtcNow),
                 Cli.RegistryFor(corpus, client));
         });
@@ -252,10 +222,6 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
         Cli.InCorpus(settings, corpus => Commands.Generate(corpus, settings.Check));
 }
 
-// `restore` fetches what `consumes:` declares and unpacks each one under `.imports/`. It takes nothing:
-// what to fetch, at which version and from where are all in `.corpus.yaml`, so a restore run by hand and
-// one run by a pipeline read the same declaration. A token for a private feed comes from the
-// environment, which `docs/cli/restore.md` names.
 internal sealed class RestoreCommand : Command<CorpusSettings>
 {
     public override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
@@ -266,9 +232,7 @@ internal sealed class RestoreCommand : Command<CorpusSettings>
         });
 }
 
-// `export` writes the corpus to `.dist/export/` as data a consumer reads instead of cloning. `--type`
-// narrows what is written and never what is read; `docs/cli/export.md` says why the corpus is
-// loaded whole either way.
+/// <summary><c>--type</c> narrows what is written and never what is read. <c>docs/cli/export.md</c> says why.</summary>
 internal sealed class ExportSettings : KacSettings
 {
     [CommandOption("--type <TYPE>")]
@@ -283,18 +247,12 @@ internal sealed class ExportCommand : Command<ExportSettings>
             Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), Git.Dirty(corpus)));
 }
 
-// `bundle` assembles what `export` wrote, plus the `.plugin/` tree, into a plugin directory under
-// `.dist/plugin/`. Two commands rather than one because they fail differently and are proved
-// differently: an export is wrong about the corpus, and a bundle is wrong about what it shipped.
 internal sealed class BundleCommand : Command<CorpusSettings>
 {
     public override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, Commands.Bundle);
 }
 
-// `pack` seals what `export` wrote into one versioned file a registry can hold. A third verb rather than
-// a flag on `export`, for the reason `bundle` is one: an export is wrong about the corpus, a bundle is
-// wrong about what it shipped, and a package is wrong about what somebody else will import.
 internal sealed class PackSettings : KacSettings
 {
     [CommandOption("--repository <URL>")]
@@ -308,8 +266,6 @@ internal sealed class PackCommand : Command<PackSettings>
         Cli.InCorpus(settings, corpus => Commands.Pack(corpus, settings.Repository));
 }
 
-// `checks` is machinery before it is documentation: the test suite reads `checks --json` to assert
-// every rule is exercised by a fixture, so a new rule cannot ship without a golden covering it.
 internal sealed class ChecksSettings : KacSettings
 {
     [CommandOption("--json")]
@@ -323,10 +279,6 @@ internal sealed class ChecksCommand : Command<ChecksSettings>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
-// `report` prints markdown to stdout, and `--out` writes it to a file instead. Either way the caller
-// decides where it lands. The mechanical half fills what the corpus states and leaves every judgement
-// open, which is what lets a skill complete it and a human confirm the result. `docs/cli/report.md`
-// carries the division.
 internal sealed class ReportSettings : KacSettings
 {
     [CommandArgument(0, "<NAME>")]
@@ -345,12 +297,10 @@ internal sealed class ReportCommand : Command<ReportSettings>
             DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), settings.OutPath));
 }
 
-// `update` takes a newer framework into a corpus that already has one, and is where a corpus adopts a
-// type or gives one up. Everything it writes stays in the working tree and nothing is committed, which is
-// what lets it be liberal where a tool without that safety net would have to be timid.
-//
-// It asks nothing, because an update runs in a pipeline as often as it runs under somebody watching.
-// `docs/cli/update.md` carries the defaults and what each layer means.
+/// <summary>
+/// <c>update</c> asks nothing, because it runs in a pipeline as often as under somebody watching.
+/// <c>docs/cli/update.md</c> has the defaults and what each layer means.
+/// </summary>
 internal sealed class UpdateSettings : KacSettings
 {
     [CommandOption("--from <URL|PATH>")]

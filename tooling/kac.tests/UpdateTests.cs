@@ -1,17 +1,9 @@
 using kac.core;
 
-// `Update.Plan` decides from two listings and a manifest, so every arm of it is a case here rather than
-// a tree on disk. The golden `update` scenario is the layer above: it stands a corpus up from the real
-// template, breaks it, and proves the round trip.
-//
-// `docs/cli/update.md` says what each layer means. Nothing below repeats that.
-
 namespace kac.tests;
 
 public class UpdateTests
 {
-    // What the flags and the descriptor settle between them, which is everything an update decides before
-    // it reaches git or the network. Each refusal below is what an invocation typed wrong comes to.
     [Fact]
     public void An_invocation_asking_to_add_and_to_drop_is_refused()
     {
@@ -21,7 +13,6 @@ public class UpdateTests
         Assert.Contains("--add-type and --drop-type", contradiction, StringComparison.Ordinal);
     }
 
-    // Judged before the descriptor is read, so a corpus that is itself broken cannot swallow it.
     [Fact]
     public void An_invocation_asking_for_one_of_them_is_let_through()
     {
@@ -50,8 +41,6 @@ public class UpdateTests
         Assert.Contains("'reckless' is not an update policy", settled.Problem, StringComparison.Ordinal);
     }
 
-    // The descriptor answers where no flag does, and the flag wins where both do. That is the whole of
-    // what `--from` and `--policy` mean, and neither was reachable without running the command.
     [Fact]
     public void The_descriptor_names_the_template_and_the_policy_where_no_flag_does()
     {
@@ -82,8 +71,10 @@ public class UpdateTests
         Assert.Equal(CorpusDescriptor.Full, settled.Settings.Policy);
     }
 
-    // A manifest holding one rule per layer, and one that relocates. Written here rather than read from
-    // the repository, so a case says what it is about and a rule added upstream cannot rewrite it.
+    /// <summary>
+    /// A manifest holding one rule per layer, and one that relocates. Written here rather than read from the
+    /// repository, so a case says what it is about and a rule added upstream cannot rewrite it.
+    /// </summary>
     private static Manifest Rules() => new()
     {
         Version = 4,
@@ -104,15 +95,11 @@ public class UpdateTests
 
     private static HashSet<string> Files(params string[] paths) => new(paths, StringComparer.Ordinal);
 
-    // No file carries an id unless a case says so, so a seed is matched by path alone as it always was.
     private static readonly RecordIds Anonymous = new(_ => null, _ => null);
 
-    // One id on the template's side and one on the corpus's, which is all a case about a moved seed
-    // needs. Every other file carries none.
     private static RecordIds Carrying(string seed, string path, string held) =>
         new(_ => seed, rel => rel.Equals(path, StringComparison.Ordinal) ? held : null);
 
-    // Every type adopted, so nothing is declined unless a case says so.
     private static UpdateTypes Everything(params string[] declared) =>
         new(declared, declared, _ => false);
 
@@ -123,8 +110,6 @@ public class UpdateTests
         Update.Plan(template, corpus, Rules(), descriptor ?? new CorpusDescriptor(),
             types ?? Everything(), policy, readInPlace, _ => same, ids ?? Anonymous);
 
-    // A corpus sharing one plugin tree with its siblings holds none of the shared half, so an update
-    // that wrote a copy here would put the tree back the moment it was taken away.
     [Fact]
     public void A_corpus_reading_the_plugin_tree_elsewhere_receives_none_of_it()
     {
@@ -138,8 +123,6 @@ public class UpdateTests
         Assert.False(plan.Changes);
     }
 
-    // The manifest names the plugin and lists the components this corpus declares, so it is a seed and
-    // arrives whatever the descriptor says about the rest of the tree.
     [Fact]
     public void Its_own_plugin_manifest_arrives_all_the_same()
     {
@@ -152,9 +135,6 @@ public class UpdateTests
         Assert.Equal(1, plan.DeclinedPlugin);
     }
 
-    // A corpus that adopted `plugin.from` with the old copies still on disk. `Merge` gives its own file
-    // priority, so a leftover would win over the shared tree for good and no upstream change would reach
-    // it. Reported as a file nothing sends to, which is what it now is.
     [Fact]
     public void A_copy_left_behind_by_adopting_the_key_is_reported()
     {
@@ -167,7 +147,6 @@ public class UpdateTests
         Assert.True(plan.Changes);
     }
 
-    // The ordinary case, and the one a corpus standing on its own is always in.
     [Fact]
     public void A_corpus_saying_nothing_receives_the_plugin_tree()
     {
@@ -240,7 +219,6 @@ public class UpdateTests
         Assert.Equal(["CLAUDE.md"], plan.Seeded.Select(f => f.To));
     }
 
-    // Filing a record in a folder is how a corpus sets its category, so this is the ordinary case.
     [Fact]
     public void A_seeded_record_the_corpus_filed_under_a_category_is_already_held()
     {
@@ -254,7 +232,6 @@ public class UpdateTests
         Assert.False(plan.Changes);
     }
 
-    // The corpus holds a record of that type, and the id says it is a different one.
     [Fact]
     public void A_seeded_record_the_corpus_has_none_of_is_still_written()
     {
@@ -277,8 +254,6 @@ public class UpdateTests
         Assert.Equal(["policies/devi-deviations.md"], plan.Seeded.Select(f => f.To));
     }
 
-    // `full` refreshes a seed against the template, and a record's relative links are written for the
-    // depth it was seeded at. There is no copy that would land correctly a folder down.
     [Fact]
     public void A_moved_seed_is_left_alone_under_full_too()
     {
@@ -293,7 +268,6 @@ public class UpdateTests
         Assert.False(plan.Changes);
     }
 
-    // `id-unique` reads two ids differing only in case as one, so the match in front of it has to.
     [Fact]
     public void A_moved_seed_is_matched_however_the_corpus_cased_its_id()
     {
@@ -306,7 +280,6 @@ public class UpdateTests
         Assert.Equal(1, plan.InStep);
     }
 
-    // The policy widens what is compared and never what is copied.
     [Fact]
     public void A_seed_that_already_matches_is_left_alone_under_full()
     {
@@ -317,8 +290,6 @@ public class UpdateTests
         Assert.Equal(1, plan.InStep);
     }
 
-    // The template no longer holds the file a tombstone names, so nothing but the corpus-side pass
-    // reaches one.
     [Fact]
     public void A_tombstoned_file_the_corpus_still_holds_is_deleted()
     {
@@ -358,7 +329,6 @@ public class UpdateTests
         Assert.Contains("Patched for our proxy.", Assert.Single(plan.Skipped));
     }
 
-    // A deletion is the direction that cannot be undone by hand, so `skip:` has to hold there too.
     [Fact]
     public void A_skipped_path_is_not_deleted_by_a_tombstone()
     {
@@ -455,7 +425,6 @@ public class UpdateTests
         Assert.Empty(plan.Written);
     }
 
-    // Only the overlay is the framework's to account for.
     [Fact]
     public void A_seed_the_template_does_not_send_is_left_unreported()
     {

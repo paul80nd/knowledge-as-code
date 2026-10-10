@@ -1,10 +1,5 @@
 using kac.core;
 
-// In-process unit tests for how `identity-type` names the type the reader is actually looking at. The
-// fixture corpus covers the check on a policy, where the article is the ordinary one; what needs a
-// declaration of its own is a label that reads differently: an initialism, and a plural that is the
-// same word as its singular.
-
 namespace kac.tests;
 
 public class IdentityLineTests
@@ -19,7 +14,6 @@ public class IdentityLineTests
         => Assert.Equal("identity line says 'Standard', but this is a Service.",
             IdentityType(Type("services", "Service", "Services"), "svc-catalogue"));
 
-    // "a Data" is the reading that gives a mass noun away.
     [Fact]
     public void A_label_whose_plural_is_the_same_word_takes_no_article()
         => Assert.Equal("identity line says 'Standard', but this is Data.",
@@ -28,10 +22,10 @@ public class IdentityLineTests
     private static TypeSchema Type(string key, string label, string plural) =>
         new() { Key = key, Folder = key, Label = label, LabelPlural = plural };
 
-    // The whole document pass runs, because the identity line is read where a reader meets it: beneath
-    // the H1, against the type the folder resolves to. The pass has plenty else to say about a document
-    // this bare, so the finding under test is picked out of what it produced. Nothing here links
-    // anywhere, which is what leaves the corpus free to be an empty one.
+    /// <summary>
+    /// The finding under test is picked out of what the whole document pass produced. Nothing here links anywhere,
+    /// which is what leaves the corpus free to be an empty one.
+    /// </summary>
     private static string IdentityType(TypeSchema type, string id)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };

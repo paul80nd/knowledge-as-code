@@ -1,7 +1,8 @@
 namespace kac.core;
 
-// The registry, explicit for the reason `DocumentRules.All` is: what runs should be readable in one
-// place, and a rule that silently stopped being found would look exactly like a rule that never fires.
+/// <summary>
+/// Explicit, as <c>DocumentRules.All</c> is: a rule that stopped being found would look like a rule that never fires.
+/// </summary>
 public static class CorpusRules
 {
     public static readonly IReadOnlyList<ICorpusRule> All =

@@ -1,10 +1,6 @@
-# The gate on a pull request: kac run over each corpus under examples/ and over the one at template/,
-# a corpus stood up from nothing by the packed tool, the plugin each corpus builds, and the tool's own
-# three test layers. The corpus half mirrors template/azure-pipelines.yml, the starter a corpus
-# receives, which runs over that corpus alone and reads no template/.
-#
-# Nothing CI produces is written back over a file a human edits, and read-only permission is what
-# keeps it that way. `generate --check` only reports staleness, naming the command to run locally.
+# The gate on a pull request: kac over each corpus under examples/ and template/, a corpus stood up by the
+# packed tool, each corpus's plugin, and the tool's three test layers. The corpus half mirrors
+# template/azure-pipelines.yml. Read-only permission keeps CI from writing over a file a human edits.
 
 name: kac
 
@@ -21,9 +17,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 jobs:
-  # Every corpus, in parallel. Each declares a different `types:`, so running all of them is what
-  # proves the framework holds for a corpus that adopted a subset and not only for one that adopted
-  # the lot. Each writes its own .dist/ under its own root, so no two collide.
+  # Each corpus declares a different `types:`, so the matrix proves the framework holds for a subset too.
   corpora:
     strategy:
       fail-fast: false
@@ -34,8 +28,7 @@ jobs:
           - payments
           - dog-fooding
     runs-on: ubuntu-latest
-    # kac takes the first ancestor holding a .corpus.yaml as the corpus, so the working directory is
-    # what selects one. There is no flag that names a corpus.
+    # kac takes the nearest ancestor holding a .corpus.yaml as the corpus, so the working directory selects it.
     defaults:
       run:
         working-directory: examples/${{ matrix.corpus }}
@@ -49,9 +42,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, and `kac pack`
-      # is what writes there. Each job holds its own checkout, so this step packs engineering itself
-      # rather than taking what the engineering job already produced.
+      # Each job holds its own checkout, so this packs the `source:` payments and dog-fooding name itself.
       - name: Build the package this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
@@ -59,8 +50,7 @@ jobs:
           dotnet run --project ../../tooling/kac -- export
           dotnet run --project ../../tooling/kac -- pack
 
-      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
-      # this command. A corpus consuming nothing skips the step.
+      # .imports/ is not committed, so a fresh checkout has to restore before `validate` can pass.
       - name: Restore what this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         run: dotnet run --project ../../tooling/kac -- restore
@@ -71,8 +61,6 @@ jobs:
       - name: Check generated output is fresh
         run: dotnet run --project ../../tooling/kac -- generate --check
 
-      # Each corpus holds a materialised copy of what the template sends, so this is what keeps every
-      # tree equal to the template in both directions.
       - name: Check the corpus is in step with the template
         run: dotnet run --project ../../tooling/kac -- update --check --from ../../
 
@@ -82,8 +70,7 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
-      # Every corpus here declares a shortcode, and publish-corpus.yml pushes every one, so the gate
-      # asks the same of each. A pack is refused without a shortcode. See docs/cli/pack.md.
+      # publish-corpus.yml pushes every corpus, and a pack is refused without a shortcode, so the gate packs each.
       - name: Seal the export into a package
         run: dotnet run --project ../../tooling/kac -- pack
 
@@ -126,16 +113,14 @@ jobs:
             exit 1
           fi
 
-  # The template, the tool and a corpus stood up from nothing. None of it is per-corpus, so it runs
-  # once beside the matrix above.
+  # Nothing here is per-corpus, so it runs once beside the matrix above.
   tool:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # `VerificationTests` and `ContentVersionTests` read each record this pull request changed
-          # against the base branch, which a shallow checkout does not hold.
+          # `VerificationTests` and `ContentVersionTests` diff against the base branch, which a shallow clone lacks.
           fetch-depth: 0
 
       - name: Install .NET 10 SDK
@@ -143,9 +128,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # `generate --check` is askable only here. The corpus the installed tool stands up further down
-      # is generated as it is created, so nothing there holds these committed copies fresh.
-      # The starter at template/azure-pipelines.yml reads no template/, because a corpus has none.
+      # Only here: the corpus stood up below is generated as it is created, and the starter reads no template/.
       - name: Validate the template where it is authored
         working-directory: template
         run: dotnet run --project ../tooling/kac -- validate
@@ -157,8 +140,7 @@ jobs:
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
-      # `bundle-empty` in the golden suite pins what an emptied plugin holds. What it cannot say is
-      # whether that plugin is still valid to install, which is what this asks.
+      # `bundle-empty` pins what an emptied plugin holds; this asks whether it is still valid to install.
       - name: Bundle a corpus that adopted no type, and validate what it produced
         shell: sh
         working-directory: examples/library
@@ -167,15 +149,11 @@ jobs:
         run: |
           mkdir -p "$TEMPDIR/no-types"
           cp -R ../../.schema "$TEMPDIR/no-types/.schema"
-          # The tree this corpus reads through plugin.from, and its own manifest over the top: the two
-          # halves bundle merges. Copying this corpus's .plugin alone would carry the manifest and no
-          # component file, so nothing would be left for the trim to strip.
+          # The tree read through plugin.from, with this corpus's manifest over it: the two halves bundle merges.
           cp -R ../../template/.plugin "$TEMPDIR/no-types/.plugin"
           cp .plugin/.claude-plugin/plugin.json "$TEMPDIR/no-types/.plugin/.claude-plugin/plugin.json"
 
-          # kac reads a folder as a corpus by this file. The name and the version are what a plugin is
-          # installed by and updated on, and the bundle takes both from here, so a corpus adopting no
-          # type still states them.
+          # The bundle takes the plugin's name and version from here, so a corpus adopting no type still states them.
           printf 'descriptor-version: 1\ncorpus: no-types\ncontent-version: "0.1.0"\n' \
             > "$TEMPDIR/no-types/.corpus.yaml"
 
@@ -186,9 +164,7 @@ jobs:
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
 
-          # Nothing that reads a type may ship, because the corpus holds none of them. A component
-          # declaring `standalone` reads no export and supports nothing, so it survives and is what
-          # leaves this corpus a route to report that it is empty.
+          # Nothing reading a type may ship. A `standalone` component reads no export, so it survives.
           if ! jq -e '[.included[] | select(.requires | length > 0)] == [] and (.trimmed | length) > 0' \
             .dist/plugin/bundle.json > /dev/null; then
             echo "a corpus with no type bundled something that reads a type it does not hold"
@@ -210,8 +186,7 @@ jobs:
 
       # tooling/README.md#tests says what each layer covers and why all three are here.
       - name: Run kac.core unit tests
-        # The branch this pull request targets. Empty on a push, where there is nothing to compare
-        # against, and the guards reading git history then read nothing.
+        # Empty on a push, where there is no base to compare, so the guards reading git history read nothing.
         env:
           KAC_BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || '' }}
         run: dotnet test tooling/kac.tests
@@ -222,12 +197,8 @@ jobs:
       - name: Run the golden test suite
         run: dotnet run tooling/kac-tests.cs
 
-      # Pack fails on package metadata no test layer above reads, such as a readme the project names
-      # and nobody wrote. Installing what was packed catches a package that is well-formed and still
-      # does not resolve to a runnable command.
-      #
-      # `shell: sh` below limits this to the POSIX subset, and TEMP_ROOT and SOURCES are set in `env:`
-      # rather than taken from whichever runner names them.
+      # Pack fails on metadata no test reads, and installing catches a package that resolves to no command.
+      # `shell: sh` below limits this to the POSIX subset, and TEMP_ROOT and SOURCES are set in `env:`.
       - name: Pack the tool, then stand a corpus up with the installed copy
         shell: sh
         env:
@@ -239,18 +210,13 @@ jobs:
           cd "$TEMP_ROOT"
           "$SOURCES/.dist/tools/kac" --version
 
-          # `new` validates before it returns. The two verbs after it put the same questions to a
-          # separate process, which is what finds a corpus only its creator can read.
+          # `new` validates in-process. Asking again from a separate process finds a corpus only its creator can read.
           mkdir -p "$TEMP_ROOT/created"
           cd "$TEMP_ROOT/created"
           "$SOURCES/.dist/tools/kac" new --yes --from "$SOURCES" --name created --ci github
           "$SOURCES/.dist/tools/kac" validate
           "$SOURCES/.dist/tools/kac" generate --check
 
-  # How a YAML file and a workflow are written, checked by the two linters this repository defers to
-  # rather than by rules of its own. `.yamllint` at the root carries the four overrides it takes on top
-  # of yamllint's `default` ruleset, and actionlint runs with its own defaults. std-CONFIG and std-CI in
-  # examples/dog-fooding are the standards these two answer.
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -268,20 +234,16 @@ jobs:
           go-version: stable
 
       # actionlint ships no manifest Dependabot reads, so its version is pinned here and moved by hand.
-      # It is v1.7.12 today. yamllint's pin is in .github/requirements.txt, which Dependabot does move.
       - name: Install the linters
         run: |
           pip install -r .github/requirements.txt
           go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
 
-      # --strict, because `comments`, `comments-indentation` and `truthy` are warning-level in the
-      # default ruleset, and a warning that fails nothing is a warning nobody reads. `.yamllint` reads
-      # .gitignore, so this walks the same files a fresh checkout holds.
+      # --strict, because `comments`, `comments-indentation` and `truthy` only warn in the default ruleset.
       - name: Check every YAML file
         run: yamllint --strict .
 
-      # The runner carries shellcheck, so actionlint puts every `run:` block through it as well as
-      # checking the workflow itself.
+      # The runner carries shellcheck, so actionlint puts every `run:` block through it too.
       - name: Check the workflows
         run: |
           "$(go env GOPATH)"/bin/actionlint
@@ -291,8 +253,7 @@ jobs:
   # never arrives. Gathering every job behind one name keeps the rule to a single entry that survives a
   # corpus, a runner or a job being added or dropped.
   #
-  # Every job belongs here. One left out still runs and still reports, and blocks nothing.
-  # `WorkflowGateTests` fails a job this list does not name.
+  # Every job belongs here. One left out still runs and blocks nothing. `WorkflowGateTests` fails it.
   validate:
     needs:
       - corpora
@@ -306,8 +267,7 @@ jobs:
       - name: Report that the gate passed
         run: echo "every job passed."
 
-  # The documentation site, built the way publish-docs.yml builds it. A job of its own because
-  # `strict:` in mkdocs.yml is what makes a dead link or an unreachable page fail rather than warn.
+  # A job of its own because `strict:` in mkdocs.yml makes a dead link or an unreachable page fail.
   docs:
     runs-on: ubuntu-latest
     steps:
@@ -327,15 +287,9 @@ jobs:
       - name: Build the site
         run: mkdocs build
 
-  # Installs what was assembled and asks each skill in it the questions that skill describes. On both
-  # platforms because development happens on macOS and the first audience is on Windows.
-  #
-  # Every corpus, because the trim reads in more than one direction and one corpus can only show one
-  # of them. `library` adopts glossary and not policies, so it proves that a skill whose type stayed
-  # behind is gone from the install. `engineering` adopts both and standards besides, so it proves
-  # that several skills ship over one export and that none names another's file. `payments` adopts
-  # standards alone, so it proves the one heading-sourced lookup a reader receives. `dog-fooding` is
-  # left out because it is the same shape as `payments`.
+  # Installs the bundle and asks each skill what it describes. Both platforms, because development happens on
+  # macOS and the first audience is on Windows. library, engineering and payments each show a different trim;
+  # dog-fooding is left out because it is the same shape as payments.
   #
   # A job of its own because it needs a different checkout. The export stamps whatever commit HEAD
   # stands on into every link, and a pull_request run checks out a merge commit the raw host does
@@ -366,9 +320,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # An export carries what its corpus consumes, and refuses where nothing is restored for one. So
-      # the producer's package is built and restored before the consumer exports, as the `corpora` job
-      # already does. Each job holds its own checkout, so nothing another one did is on this runner.
+      # An export refuses where what it consumes is not restored, and this job holds its own checkout.
       - name: Build the package this corpus consumes
         if: matrix.corpus == 'payments'
         working-directory: examples/engineering
@@ -393,19 +345,10 @@ jobs:
         shell: bash
         run: sh ../../tooling/tests/round-trip.sh
 
-  # The other end of the same promise, over the two corpora that publish and consume. `corpora
-  # (payments)` already runs export, pack, restore and validate and passes; what it cannot show is
-  # that the pass means anything, because a corpus citing nothing would pass it too. So this asserts
-  # the citation resolved, then renames the clause upstream and asserts the downstream build goes red
-  # naming it.
-  #
-  # Both platforms, for the reason the job above runs on both: the script is held to the shell subset
-  # Git Bash and older macOS bash agree on, and a subset nothing exercises is a claim rather than a
-  # constraint. It needs no network and no CLI beyond `jq`, because the two corpora exchange a sealed
-  # package through a folder.
-  #
-  # An ordinary checkout, unlike the job above. Nothing here fetches a record from the host the export
-  # names, so the commit HEAD stands on does not have to be one a raw host serves.
+  # Proves the `corpora (payments)` pass means something: asserts the citation resolved, then renames the
+  # clause upstream and expects the downstream build to fail naming it. Both platforms, because the script
+  # holds to the shell subset Git Bash and older macOS bash share. An ordinary checkout, because nothing here
+  # fetches from the host the export names.
   import-round-trip:
     strategy:
       fail-fast: false

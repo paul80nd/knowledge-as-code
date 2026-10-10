@@ -1,9 +1,5 @@
 using kac.core;
 
-// A diagnosis tree strands a reader one branch at a time, so the rule reads branches and the message
-// quotes the one at fault. The fixtures turn the two ids green; these are the branches a fixture would
-// only duplicate, and the forms the three runbooks in this repository actually write.
-
 namespace kac.tests;
 
 public class EscalationRequiredTests
@@ -23,8 +19,6 @@ public class EscalationRequiredTests
             Assert.Single(Run("* **Yes** → restart the consumer.\n" + Escalates,
                 c => c.Check == new CheckId("diagnosis-dead-end"))).Message);
 
-    // The message quotes the branch with its runs of space collapsed. `**Yes**` and the arrow arrive as
-    // separate literals, so the text is joined rather than read off one run.
     [Fact]
     public void The_message_quotes_the_branch_with_single_spaces()
         => Assert.Contains("\"Yes → restart the consumer.\"",
@@ -36,7 +30,6 @@ public class EscalationRequiredTests
         => Assert.Equal(18, Assert.Single(Run("* **Yes** → restart the consumer.\n" + Escalates,
             c => c.Check == new CheckId("diagnosis-dead-end"))).Line);
 
-    // `continue` falls through to the next question, which is a route and not a dead end.
     [Fact]
     public void A_branch_that_falls_through_to_a_later_question_is_left_alone()
         => Assert.Empty(Run("* **Yes** → continue.\n" + Escalates
@@ -50,13 +43,12 @@ public class EscalationRequiredTests
             Assert.Single(Run("* **Yes** → continue.\n" + Escalates,
                 c => c.Check == new CheckId("diagnosis-dead-end"))).Message);
 
-    // `restore-cannot-find-version.md` writes the label this way.
+    /// <summary><c>restore-cannot-find-version.md</c> writes the label this way.</summary>
     [Fact]
     public void An_escalation_link_labelled_in_capitals_is_read()
         => Assert.Empty(Run(Routes + "* **No** → [Escalate](#escalation).\n"));
 
-    // `goldens-disagree.md` writes the link mid-sentence, so the branch is read for a link and not for
-    // what it ends on.
+    /// <summary><c>goldens-disagree.md</c> writes the link mid-sentence.</summary>
     [Fact]
     public void A_link_before_the_end_of_the_branch_is_read()
         => Assert.Empty(Run("* **Yes** → go to [Resolution](#resolution) and start at step 4.\n" + Escalates));
@@ -68,8 +60,7 @@ public class EscalationRequiredTests
             + "nowhere to go. Close one branch with `[escalate](#escalation)`.",
             Assert.Single(Run(Routes + "* **No** → go to [Resolution](#resolution).\n")).Message);
 
-    // `database-connections-exhausted.md` writes its diagnosis as prose. Whether a tree is owed at all
-    // is a question about the section, and this rule reads the branches under it.
+    /// <summary><c>database-connections-exhausted.md</c> writes its diagnosis as prose.</summary>
     [Fact]
     public void A_diagnosis_written_as_prose_is_left_alone()
         => Assert.Empty(Run("Check the pool size against the connection count.\n"));
@@ -78,7 +69,6 @@ public class EscalationRequiredTests
     public void A_runbook_with_no_diagnosis_is_left_alone()
         => Assert.Empty(RunWhole("# A runbook\n\n`Runbook: rbk-x` `ACTIVE`\n\n## Resolution\n\nRestart it.\n"));
 
-    // The rule reads one section, so a tree written under another heading is not its business.
     [Fact]
     public void A_list_outside_Diagnosis_is_left_alone()
         => Assert.Empty(RunWhole("# A runbook\n\n`Runbook: rbk-x` `ACTIVE`\n\n## Diagnosis\n\n"

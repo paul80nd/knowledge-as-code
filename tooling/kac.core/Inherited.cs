@@ -1,13 +1,10 @@
 namespace kac.core;
 
-// One type of a consumed corpus, as that corpus published it.
-//
-// The lines and the records arrive as text rather than as parsed objects. A consumer merging them stamps
-// its producer's shortcode onto the keys that hold an id and carries the rest through untouched, so what
-// a producer wrote is what a consumer publishes.
-//
-// The four key names are the producing type's own words, read from its manifest. `Json.cs` says why a
-// type publishes them and what assuming a spelling would cost.
+/// <summary>
+/// One type of a consumed corpus, as that corpus published it. Lines and records stay text, so a consumer stamps its
+/// producer's shortcode onto the id keys and carries the rest through untouched. <c>Json.cs</c> says why the four key
+/// names are read from the manifest.
+/// </summary>
 public sealed record InheritedType(
     string Type,
     int ShapeVersion,
@@ -21,26 +18,16 @@ public sealed record InheritedType(
     IReadOnlyList<string> PartLines,
     IReadOnlyList<InheritedRecord> Records);
 
-// One record file of a consumed corpus: its writer, the name it was published under, and its bytes.
-//
-// `Producer` is the corpus this one consumes where the record is that corpus's own. It is a corpus
-// further up the chain where it is not. An export files a record under its writer, so a grandparent's
-// record arrives in a folder of its own.
+/// <summary>
+/// <c>Producer</c> is the corpus that wrote the record, which for an inherited one is further up the chain.
+/// </summary>
 public sealed record InheritedRecord(string Producer, string Name, string Content);
 
-// One corpus this one consumes, read for what an export has to carry of it.
-//
-// `Publishing` is the producer's own block. A record of theirs is read at their commit, under their path
-// prefix, in their repository, and a consumer's own block gets all three wrong. `Tracker` and
-// `ReposBase` are theirs for the same reason: a problem with a record of theirs is filed on their
-// backlog, and a `repos` entry of theirs names a repository in their estate.
-//
-// `FormatVersion` is the envelope the producer wrote. A consumer merging its files has to read every key
-// it stamps, so an envelope this build does not know is refused rather than merged around.
-//
-// `Sources` is what this corpus inherited in turn. A grandparent's records arrive inside its child's
-// export already labelled, and their address lives in the child's `sources` rather than anywhere this
-// corpus could work out. Carrying the list forward is what makes a chain of any depth cost no code.
+/// <summary>
+/// <c>Publishing</c>, <c>Tracker</c> and <c>ReposBase</c> are the producer's own, because a record of theirs is read
+/// and reported in their repository. <c>Sources</c> is what the producer inherited in turn, carried forward so a chain
+/// of any depth needs no code.
+/// </summary>
 public sealed record InheritedCorpus(
     string Shortcode,
     int FormatVersion,
@@ -52,25 +39,17 @@ public sealed record InheritedCorpus(
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<InheritedType> Types);
 
-// The exports a corpus consumes, read as the bytes an export will carry rather than as the facts a check
-// asks. `Imports.cs` is the other reader, and it projects the same folders down to what `validate` needs.
-//
-// Two readers because they answer two questions. A check asks whether a citation resolves, which is a
-// fact about ids. An export asks what to publish, which is the files themselves. One reader answering
-// both would hand each caller most of what it wanted and a little of what it did not.
-//
-// The reading is a set of functions for the reason `Tree` and `Imports` take one. What an export comes
-// to stays decidable from a set of strings.
+/// <summary>
+/// The exports a corpus consumes, read as the bytes an export carries. <c>Imports.cs</c> reads the same folders for
+/// <c>validate</c>.
+/// </summary>
 public static class Inherited
 {
-    // Every declared import that is on disk, and the shortcode of each that is not.
-    //
-    // `names` lists the file names directly inside one folder under `.imports/`, `folders` lists the
-    // folder names inside one, and `read` returns one file's text. Each is null where there is nothing
-    // there.
-    //
-    // An entry naming no shortcode is skipped rather than reported. It has no folder to look in, so
-    // nothing could be read for it, and `validate` is what names a declaration that cannot resolve.
+    /// <summary>
+    /// <c>names</c> lists the files directly inside a folder under <c>.imports/</c>, <c>folders</c> the folders inside
+    /// one, and <c>read</c> returns one file's text. Each returns null where there is nothing there. An entry with no
+    /// shortcode is skipped, because <c>validate</c> reports it.
+    /// </summary>
     public static (IReadOnlyList<InheritedCorpus> Carried, IReadOnlyList<string> Missing) Read(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
@@ -91,8 +70,10 @@ public static class Inherited
         return (carried, missing);
     }
 
-    // One folder read whole, or null where it holds no manifest. The manifest is the last file a restore
-    // writes, so a folder carrying one carries the files it describes.
+    /// <summary>
+    /// Null where the folder has no manifest. A restore writes the manifest last, so a folder with one has every file
+    /// it describes.
+    /// </summary>
     private static InheritedCorpus? One(
         string shortcode,
         Func<string, IReadOnlyList<string>?> names,
@@ -129,17 +110,13 @@ public static class Inherited
             types);
     }
 
-    // A parts file as its lines, with the blank one a trailing newline leaves taken out. Nothing here
-    // parses a line: a consumer stamps the keys it was told hold an id and carries the rest through.
     private static List<string> Lines(string? text) =>
         text is null ? [] : [.. text.Split('\n').Where(l => l.Length > 0)];
 
-    // Every record file one type's folder contains, and which corpus wrote each one. A record is a
-    // `.json` named for its id, and the parts file sitting beside them is not one.
-    //
-    // The producer's own records sit directly in the type's folder. The ones it inherited sit in a folder
-    // named for the corpus that wrote them, one level deep however long the chain. See the chain section
-    // of docs/design/export.md.
+    /// <summary>
+    /// A record is a <c>.json</c> named for its id, and the parts file beside them is not one. Inherited records sit
+    /// one folder deep, named for their writer. See docs/design/export.md.
+    /// </summary>
     private static List<InheritedRecord> RecordsIn(
         string shortcode, string dir, string? partsFile,
         Func<string, IReadOnlyList<string>?> names,
@@ -170,7 +147,6 @@ public static class Inherited
         }
     }
 
-    // How the folders are actually read, which nothing but a run against a real corpus uses.
     public static (IReadOnlyList<InheritedCorpus> Carried, IReadOnlyList<string> Missing) Read(
         string corpusRoot, IReadOnlyList<Consumed> declared)
     {

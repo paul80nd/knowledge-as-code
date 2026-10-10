@@ -1,11 +1,5 @@
 using kac.core;
 
-// In-process unit tests for the list of generated files, and for the check that holds a corpus to it.
-//
-// The list is the point of the module: `generate` writes from it and `validate` reads from it, so a case
-// here asserts the whole list rather than one entry. A golden fixture proves the pass reaches the CLI;
-// it cannot show that the list is complete, because a fixture only holds the files it happens to carry.
-
 namespace kac.tests;
 
 public class GeneratedFilesTests
@@ -37,8 +31,6 @@ public class GeneratedFilesTests
         ], files.Select(f => (f.Path, string.Join(',', f.Blocks), f.MarkersRequired)));
     }
 
-    // The framework's own pages are the corpus's however few types it took, so their blocks are named
-    // whether or not anything is generated into them.
     [Fact]
     public void The_framework_pages_are_named_for_a_corpus_that_adopted_no_types()
     {
@@ -52,7 +44,6 @@ public class GeneratedFilesTests
             files.Select(f => f.Path));
     }
 
-    // Both blocks a type carries are written into its page, and there is nowhere else to put them.
     [Fact]
     public void A_type_without_a_page_names_no_blocks()
     {
@@ -61,8 +52,6 @@ public class GeneratedFilesTests
         Assert.DoesNotContain(files, f => f.Blocks.Any(b => b.StartsWith("schema-glossary")));
     }
 
-    // `README.md` belongs to the corpus. Everything else arrives from the framework with its markers, so a
-    // marker that has gone is a fault.
     [Fact]
     public void Only_the_corpus_readme_may_decline_its_block()
     {
@@ -72,11 +61,6 @@ public class GeneratedFilesTests
     }
 }
 
-// What a regeneration comes to, decided from a listing and a set of records. `Plan` reads nothing, so the
-// corpus each case needs is written out here in a few lines.
-//
-// The `generate`, `generate-adoption` and `generate-stale` fixtures cover the same ground through the CLI. They pin
-// the tree a command leaves behind; these pin what it decided to leave.
 public class GeneratedFilePlanTests
 {
     private static TypeSchema Type(string key) => new()
@@ -114,8 +98,6 @@ public class GeneratedFilePlanTests
         Assert.Contains(plan, f => f.Path == "adrs/_index.md");
     }
 
-    // The folder is the half that says the type is really here. Without it there is nowhere to put an
-    // index, and `validate` is the voice that says the type is half set up.
     [Fact]
     public void An_adopted_type_whose_folder_is_absent_gets_nothing()
     {
@@ -132,7 +114,6 @@ public class GeneratedFilePlanTests
         Assert.DoesNotContain(plan, f => f.Path.StartsWith("adrs"));
     }
 
-    // The type page links to the index.
     [Fact]
     public void An_index_the_corpus_does_not_hold_yet_is_written_rather_than_skipped()
     {
@@ -143,7 +124,6 @@ public class GeneratedFilePlanTests
         Assert.True(file.Stale);
     }
 
-    // The generator populates structure the corpus declared and never invents it.
     [Fact]
     public void A_block_carrying_file_the_corpus_does_not_hold_is_skipped()
     {
@@ -158,7 +138,6 @@ public class GeneratedFilePlanTests
         var first = Assert.Single(Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", Markers))),
             f => f.Path == "adrs.md");
 
-        // Feed the rendered text back in: what the plan wanted is what the corpus now holds.
         var second = Assert.Single(
             Plan([Type("adrs")], Corpus(("adrs/0001-a.md", "# A"), ("adrs.md", first.Wanted))),
             f => f.Path == "adrs.md");
@@ -167,7 +146,6 @@ public class GeneratedFilePlanTests
         Assert.False(second.Stale);
     }
 
-    // A file with no markers left resolves to itself, which is how `README.md` declines its block.
     [Fact]
     public void A_file_that_carries_no_marker_is_left_as_it_is()
     {
@@ -179,8 +157,6 @@ public class GeneratedFilePlanTests
     }
 }
 
-// The marker check itself. The golden fixture trips one of these; the rest are here, because the coverage
-// gate reads ids rather than branches and would call the check covered on the strength of the first.
 public class GeneratedBlockCheckTests
 {
     private static List<Finding> Check(string text, params string[] blocks)
@@ -212,8 +188,6 @@ public class GeneratedBlockCheckTests
         Assert.Contains(expected, finding.Message);
     }
 
-    // The check reads a declared list rather than the file, because a block deleted outright leaves nothing
-    // behind to notice it has gone.
     [Fact]
     public void A_block_that_lost_both_markers_is_still_reported()
     {

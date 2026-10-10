@@ -1,9 +1,5 @@
 namespace kac.core;
 
-// A Y-statement is a block-quote beneath the H1 stating six moves. Three things can be wrong with one,
-// and the rule stays in C# for the third: an expression could report that the block-quote is not a
-// Y-statement, which is the one thing the author already knows. Naming the absent move is the message
-// worth reading, and it needs a list the grammar has no way to hold.
 public sealed class YStatementPresent : IDocumentRule
 {
     public RuleId RuleId => new("y-statement-present");
@@ -31,21 +27,18 @@ public sealed class YStatementPresent : IDocumentRule
                 $"Y-statement is missing {QuotedList(missing)}. The six moves are what make it a "
                 + "Y-statement rather than a summary of one.", line);
 
-        // The ceiling is the schema's, because a threshold is a judgement a corpus tunes. The moves
-        // below are fixed: a block-quote missing one has stopped being a Y-statement.
         var max = ctx.Spec.MaxWords ?? 60;
         var words = text.Split([' ', '\n', '\t'], StringSplitOptions.RemoveEmptyEntries).Length;
         if (words > max)
             report.Warn(Reports, $"Y-statement is {words} words; keep it under {max}.", line);
     }
 
-    // The six moves, in the order they are written.
     private static readonly string[] Moves =
         ["in the context of", "facing", "we decided", "rather than", "to achieve", "accepting"];
 
-    // Asked of the rendered text, so the bold that marks each move in the corpus is already gone and a
-    // Y-statement written without it still reads. Whole words only: `facing` is not found inside
-    // `surfacing`, and a move followed by a comma is still found.
+    /// <summary>
+    /// Asked of the rendered text, in whole words, so <c>facing</c> is not found inside <c>surfacing</c>.
+    /// </summary>
     public static List<string> MissingMoves(string text)
     {
         var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())
@@ -54,7 +47,6 @@ public sealed class YStatementPresent : IDocumentRule
         return [.. Moves.Where(m => !haystack.Contains($" {m} ", StringComparison.Ordinal))];
     }
 
-    // The moves as a sentence reads them: "facing", "rather than" and "accepting".
     private static string QuotedList(IReadOnlyList<string> items) =>
         items.Count == 1
             ? Quoted(items[0])

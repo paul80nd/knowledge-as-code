@@ -1,5 +1,3 @@
-// The manifest and the descriptor as values. The engines acting on them are in NewTests and UpdateTests.
-
 using System.Text.RegularExpressions;
 using kac.core;
 
@@ -13,7 +11,8 @@ public class ManifestTests
         [
             new ManifestRule(["knowledge-as-code/**"], "synced"),
             new ManifestRule(["**/*.md"], "forked"),
-            new ManifestRule(["**"], "local") // catch-all
+            // Catch-all.
+            new ManifestRule(["**"], "local")
         ]
     };
 
@@ -31,7 +30,6 @@ public class ManifestTests
         Assert.Null(m.Resolve("adrs/0001-x.md"));
     }
 
-    // Every rule of the portability manifest names no destination, and most of the template's.
     [Fact]
     public void A_rule_with_no_destination_lands_a_file_where_it_was_read()
     {
@@ -42,8 +40,6 @@ public class ManifestTests
             m.Place("knowledge-as-code/taxonomy.md"));
     }
 
-    // Rewriting the prefix lets a template be authored in a subdirectory of the repository serving it. A
-    // single-file pattern is rewritten by its folder too, so several relocate under one `to:`.
     [Theory]
     [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "template/knowledge-as-code/taxonomy.md",
         "knowledge-as-code/taxonomy.md")]
@@ -60,7 +56,6 @@ public class ManifestTests
         Assert.Equal(new Placement(Manifest.Seed, lands), m.Place(read));
     }
 
-    // The rewrite is how a check reading the corpus side knows what a corpus may hold there.
     [Theory]
     [InlineData("template/knowledge-as-code/**", "knowledge-as-code/", "knowledge-as-code/**")]
     [InlineData("template/*.md", "", "*.md")]
@@ -72,8 +67,6 @@ public class ManifestTests
         Assert.Equal([destination], Manifest.Destinations(rule));
     }
 
-    // A pattern opening on `**/` matches at any depth, so it names no one folder to rewrite. A rule
-    // wanting a tail carried has to name the folder it starts from.
     [Fact]
     public void A_rule_matching_at_any_depth_lands_everything_it_matches_on_one_path()
     {
@@ -82,7 +75,6 @@ public class ManifestTests
         Assert.Equal("notes.md", m.Place("deeply/nested/notes.md")?.Path);
     }
 
-    // A tombstone is a layer like any other to the reader. What deletes the file is `update`.
     [Fact]
     public void A_tombstone_resolves_to_the_removed_layer()
     {
@@ -103,7 +95,6 @@ public class ManifestTests
         Assert.True(Declines(".schema/runbooks.yaml"));
     }
 
-    // Everything else under `.schema/` belongs to no type and is shared whatever a corpus adopted.
     [Theory]
     [InlineData(".schema/_universal.yaml")]
     [InlineData(".schema/_tiers.yaml")]
@@ -111,8 +102,7 @@ public class ManifestTests
     [InlineData("README.md")]
     public void Nothing_but_a_type_file_is_ever_declined(string path) => Assert.False(Declines(path));
 
-    // The one predicate deciding what a declined type takes with it, read against the real schema so a
-    // type folder renamed there reaches this test.
+    /// <summary>Read against the real schema, so a type folder renamed there reaches this test.</summary>
     private static bool Declines(string path) => New.DeclinesTypes(Schema.Load(Repo.Root), ["adrs"])(path);
 
     [Fact]
@@ -124,8 +114,6 @@ public class ManifestTests
         Assert.Equal(["adrs", "policies"], CorpusDescriptor.Load(dir).Types);
     }
 
-    // The two names answer two questions: what the corpus calls itself, and what a citation from another
-    // corpus writes before the colon.
     [Fact]
     public void A_descriptor_reads_both_of_the_names_a_corpus_has()
     {
@@ -138,8 +126,6 @@ public class ManifestTests
         Assert.Equal("smp", descriptor.Shortcode);
     }
 
-    // The key `kac new` writes is bare, and it has to reach the validator as absent: an empty string
-    // there would be reported as a shortcode that is too short.
     [Theory]
     [InlineData("corpus: sample\n")]
     [InlineData("corpus: sample\nshortcode:\n")]
@@ -169,7 +155,6 @@ public class ManifestTests
         Assert.Equal("2026-08-20", descriptor.TakenOn);
     }
 
-    // A descriptor saying nothing about a version is not one saying zero.
     [Fact]
     public void A_descriptor_stating_no_versions_reads_as_silent()
     {
@@ -197,8 +182,6 @@ public class ManifestTests
         Assert.Null(descriptor.FrameworkArea);
     }
 
-    // `upstream.url` is where the template was copied from and is often a folder, so a corpus that has
-    // named no tracker has to read as having named none rather than as naming that.
     [Fact]
     public void A_descriptor_naming_no_framework_tracker_reports_none()
     {
@@ -226,8 +209,6 @@ public class ManifestTests
         Assert.Equal("kac-it-swdev", descriptor.TrackerArea);
     }
 
-    // Null rather than `none`, because a corpus stating no block is one whose tracker is derived from
-    // where it publishes. `TrackerTests` holds that derivation, and holds that it derives no area.
     [Fact]
     public void A_descriptor_stating_no_tracker_leaves_every_key_unanswered()
     {
@@ -241,8 +222,6 @@ public class ManifestTests
         Assert.Null(descriptor.TrackerArea);
     }
 
-    // A corpus that never chose is never handed three dozen rewritten seed files by an update it did not
-    // ask for.
     [Fact]
     public void A_descriptor_naming_no_update_policy_is_cautious()
     {
@@ -265,7 +244,6 @@ public class ManifestTests
         Assert.Equal([new SkippedFile(".plugin/hooks/breadcrumb", "Patched for our proxy.")], descriptor.Skipped);
     }
 
-    // The migration is the author's to make, so the message has to carry everything the edit needs.
     [Fact]
     public void A_descriptor_on_the_old_version_key_is_told_what_to_rename_it_to()
     {
@@ -280,7 +258,6 @@ public class ManifestTests
         Assert.Contains(Path.Combine(dir, ".corpus.yaml"), message);
     }
 
-    // A key nested in a block is found where it lives.
     [Theory]
     [InlineData("upstream:\n  mechanism-version: 3\n", "`upstream.mechanism-version:`", "`template-version:`")]
     [InlineData("upstream:\n  synced-on: \"2026-01-01\"\n", "`upstream.synced-on:`", "`taken-on:`")]
@@ -297,7 +274,6 @@ public class ManifestTests
         Assert.Contains(becomes, message);
     }
 
-    // Naming what took over makes the fix one edit rather than a search.
     [Theory]
     [InlineData("upstream:\n  synced-from: ../src\n", "`upstream.synced-from:`", "upstream.url")]
     [InlineData("role: consumer\n", "`role:`", "prove the tool")]
@@ -325,7 +301,6 @@ public class ManifestTests
         Assert.Null(CorpusDescriptor.RenamedKeyInUse(dir));
     }
 
-    // `update` has its own answer for a missing descriptor.
     [Fact]
     public void A_corpus_with_no_descriptor_has_nothing_to_rename()
         => Assert.Null(CorpusDescriptor.RenamedKeyInUse(Directory.CreateTempSubdirectory().FullName));
@@ -347,13 +322,17 @@ public class ManifestTests
         Assert.Contains("  template-version: 3\n", after);
         Assert.Contains("  taken-on: \"2026-08-11\"\n", after);
         Assert.Contains("  commit: 9c4e1d2a\n", after);
-        Assert.Contains("  url: ../src\n", after);              // untouched: the update does not own it
-        Assert.Contains("content-version: \"2.1.0\"\n", after); // untouched: only the corpus knows this one
+        // Untouched: the update does not own it.
+        Assert.Contains("  url: ../src\n", after);
+        // Untouched: only the corpus knows this one.
+        Assert.Contains("content-version: \"2.1.0\"\n", after);
         Assert.Contains("# Why owning a file is worth declaring.", after);
     }
 
-    // The corpus runs `yamllint --strict` over the file this writes, and its `colons` rule allows one
-    // space. A descriptor an older stamp aligned is repaired on the next run, key by key.
+    /// <summary>
+    /// The corpus runs <c>yamllint --strict</c> over the file this writes, and its <c>colons</c> rule allows one space.
+    /// A descriptor an older stamp aligned is repaired on the next run, key by key.
+    /// </summary>
     [Theory]
     [InlineData("descriptor-version: 0\n\nupstream:\n  url: ../src\n  template-version: 1\n"
                 + "  commit: 5fa039b0\n  taken-on: \"2026-01-01\"\n")] // every stamped key already there
@@ -376,8 +355,6 @@ public class ManifestTests
         static bool Padded(string line) => Regex.IsMatch(line, @"^\s*[^#\s][^:]*:\s\s+\S");
     }
 
-    // A template read from a folder resolves no commit, and a key filled with one nobody resolved is
-    // worse than a key left as it stands.
     [Fact]
     public void Stamping_without_a_commit_leaves_the_one_already_recorded()
     {
@@ -390,7 +367,6 @@ public class ManifestTests
         Assert.Contains("  commit: 5fa039b0\n", File.ReadAllText(path));
     }
 
-    // The tool owns the file's format.
     [Fact]
     public void Stamping_a_descriptor_stating_no_format_writes_one_above_its_first_key()
     {
@@ -405,7 +381,6 @@ public class ManifestTests
             File.ReadAllText(path));
     }
 
-    // The first update is the corpus recording where it takes from for the first time.
     [Fact]
     public void Stamping_a_descriptor_with_no_upstream_block_writes_one()
     {
@@ -420,8 +395,6 @@ public class ManifestTests
         Assert.Contains("upstream:", File.ReadAllText(Path.Combine(dir, ".corpus.yaml")));
     }
 
-    // What a corpus consumes, read as the file states it. Every field is what was written, because an
-    // entry short of anything is refused by name where the message can say which key is missing.
     [Fact]
     public void The_consumes_block_is_read_entry_by_entry()
     {
@@ -445,8 +418,6 @@ public class ManifestTests
         Assert.Empty(CorpusDescriptor.Load(dir).Consumes);
     }
 
-    // The lock lands on the entry it belongs to, whether or not that entry already carried one, and the
-    // range and the reason somebody wrote beside it are both still there afterwards.
     [Fact]
     public void Resolving_writes_the_version_onto_each_entry_and_leaves_the_commentary()
     {
@@ -469,8 +440,6 @@ public class ManifestTests
         Assert.Equal(["0.1.4", "1.0.0"], CorpusDescriptor.Load(dir).Consumes.Select(c => c.Resolved));
     }
 
-    // An entry the run did not resolve is left as it stands, so a refusal on one dependency never
-    // rewrites the lock of another.
     [Fact]
     public void An_entry_the_restore_did_not_resolve_keeps_the_lock_it_had()
     {
@@ -484,8 +453,6 @@ public class ManifestTests
         Assert.Equal(["0.1.0", "1.0.0"], CorpusDescriptor.Load(dir).Consumes.Select(c => c.Resolved));
     }
 
-    // The two passes over one file have to agree on what an entry says. A YAML comment after a value is
-    // not part of it, and a writer reading it as one silently writes no lock at all.
     [Fact]
     public void A_comment_after_a_value_is_not_part_of_it()
     {
@@ -502,8 +469,6 @@ public class ManifestTests
         Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
     }
 
-    // A dash standing alone opens an entry whose keys are on the lines below it, which the loader reads
-    // and this pass has to read the same way.
     [Fact]
     public void A_dash_on_a_line_of_its_own_opens_an_entry()
     {
@@ -518,8 +483,6 @@ public class ManifestTests
         Assert.Equal("0.1.4", Assert.Single(CorpusDescriptor.Load(dir).Consumes).Resolved);
     }
 
-    // A shape this pass cannot place is reported by its absence from the return, so a caller says what
-    // landed rather than saying everything did.
     [Fact]
     public void An_entry_this_pass_cannot_place_is_left_out_of_what_it_reports()
     {
@@ -531,8 +494,6 @@ public class ManifestTests
             new Dictionary<string, string> { ["example-engineering"] = "0.1.4" }));
     }
 
-    // A run that resolved every entry to the lock it already carried has changed nothing, and a file
-    // nothing edited should not report as edited.
     [Fact]
     public void Resolving_to_the_lock_already_written_leaves_the_file_alone()
     {
@@ -548,8 +509,9 @@ public class ManifestTests
         Assert.Equal(written, File.GetLastWriteTimeUtc(path));
     }
 
-    // A `consumes:` block with two entries, one already locked and one not, and a comment inside it that
-    // a rewrite has to leave standing.
+    /// <summary>
+    /// Two entries, one locked and one not, and a comment inside the block that a rewrite has to leave standing.
+    /// </summary>
     private const string Consumes =
         """
         corpus: sample

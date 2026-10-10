@@ -2,18 +2,10 @@ using System.Text;
 using System.Text.Json.Nodes;
 using kac.core;
 
-// What a session is told at the moment it starts, which is the only moment the plugin gets before the
-// agent has already decided what a word means.
-//
-// These read the rendered text rather than a structure, because the text is the artefact: nothing
-// parses a breadcrumb, and a line that reads wrongly is wrong however well-formed it was.
-
 namespace kac.tests;
 
 public class BreadcrumbTests
 {
-    // The count tells a reader at a glance that the export is present and non-empty, which is the
-    // failure a silently absent bundle otherwise looks exactly like.
     [Fact]
     public void It_states_the_corpus_its_version_the_count_and_the_records()
     {
@@ -26,30 +18,22 @@ public class BreadcrumbTests
         Assert.Contains("Example Libraries and Search", text);
     }
 
-    // An export reads the same however long ago it was written, and a session is entitled to know it is
-    // holding last year's vocabulary.
     [Fact]
     public void It_states_the_day_the_export_was_taken()
         => Assert.Contains("exported 2026-08-18", Render(Manifest("c", "1.0.0", Type("glossary", 1, 3))));
 
-    // The skill line is where a session takes the question the breadcrumb has just created. A plugin
-    // cannot advertise a skill it did not ship.
     [Fact]
     public void It_names_the_skills_that_survived_the_trim()
         => Assert.Contains("Ask the glossary-lookup skill",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
                 included: [new PluginComponent("skills/glossary-lookup", ["glossary"], null, Announce: true)]));
 
-    // Three skills announce and each asks a different question, so the sentence names none of them. A
-    // corpus shipping the standards skill and no glossary would otherwise be warned about words alone.
     [Fact]
     public void The_skill_line_warns_against_answering_from_memory_and_names_no_type()
         => Assert.Contains("Ask the standards-lookup skill before you answer from what you already know.",
             Render(Manifest("c", "1.0.0", Type("standards", 1, 3)),
                 included: [new PluginComponent("skills/standards-lookup", ["standards"], null, Announce: true)]));
 
-    // A skill somebody asks for by name already has its question, so it is not worth a line every
-    // session pays for. `announce` on the manifest entry is what separates the two.
     [Fact]
     public void A_skill_that_does_not_announce_is_left_out()
         => Assert.DoesNotContain("policy-lookup",
@@ -60,12 +44,10 @@ public class BreadcrumbTests
                     new PluginComponent("skills/policy-lookup", ["policies"], null)
                 ]));
 
-    // No skill name is written here to fall back on.
     [Fact]
     public void A_plugin_with_no_skill_points_at_nothing()
         => Assert.DoesNotContain("Ask the", Render(Manifest("c", "1.0.0", Type("glossary", 1, 3))));
 
-    // "0 entries" would read as an empty export, which is the one thing the count is there to rule out.
     [Fact]
     public void A_type_with_no_parts_is_counted_in_records()
     {
@@ -75,30 +57,24 @@ public class BreadcrumbTests
         Assert.DoesNotContain("entries", text);
     }
 
-    // Nothing in the renderer names a record type.
     [Fact]
     public void A_type_this_tool_has_never_heard_of_is_described_the_same_way()
         => Assert.Contains("shanties. 12 entries across 2 records: Sea and Land",
             Render(Manifest("c", "1.0.0", Type("shanties", 2, 12)),
                 Record("shanties/one.json", "Sea"), Record("shanties/two.json", "Land")));
 
-    // The parts file sits in the type's own directory. Counting it would put a filename among the record
-    // names, where every other entry is something a person recognises.
     [Fact]
     public void The_flat_parts_file_is_not_counted_as_a_record()
         => Assert.DoesNotContain("terms",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 4)),
                 ("glossary/terms.jsonl", "{}"), Record("glossary/gls-estate.json", "Example Libraries")));
 
-    // A gap where a record should be would read as a corpus covering one fewer context than it does.
     [Fact]
     public void A_record_with_no_title_falls_back_to_its_id()
         => Assert.Contains("gls-estate",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 4)),
                 ("glossary/gls-estate.json", """{"fields":{"id":"gls-estate"}}""")));
 
-    // What a session pays for the line is fixed by the renderer, not by the corpus. A handful of titles
-    // is what says which contexts a type covers.
     [Fact]
     public void A_type_at_the_threshold_names_every_record()
     {
@@ -108,7 +84,6 @@ public class BreadcrumbTests
         Assert.DoesNotContain("more", text);
     }
 
-    // One line covers a corpus of any size.
     [Fact]
     public void A_type_past_the_threshold_names_the_first_few_and_counts_the_rest()
     {
@@ -123,9 +98,6 @@ public class BreadcrumbTests
         => Assert.Contains("Context1, Context2, Context3, Context4, Context5 and 2 more.",
             Render(Manifest("c", "1.0.0", Type("glossary", records: 7, parts: 35)), Contexts(7)));
 
-    // A merged type counts several corpora's records together, and the number is the load-bearing part
-    // of the line. Read under the installing corpus's own name it sends a reader looking for records
-    // nobody there wrote.
     [Fact]
     public void A_type_merged_from_a_source_is_counted_under_each_corpus_that_wrote_it()
     {
@@ -139,8 +111,6 @@ public class BreadcrumbTests
         Assert.Contains("glossary (from eng). 2 entries across 1 record: Engineering.", text);
     }
 
-    // Every record of the type came from somewhere else, and a line for the installing corpus would
-    // report it holding a glossary of its own.
     [Fact]
     public void A_type_the_installing_corpus_wrote_none_of_gets_no_line_of_its_own()
     {
@@ -153,8 +123,6 @@ public class BreadcrumbTests
         Assert.DoesNotContain("\nglossary. ", text);
     }
 
-    // A corpus reached through another sends its part lines and not its record files. "across 0 records"
-    // would read as an export that lost them, where the count is the one thing the line exists to make.
     [Fact]
     public void A_source_that_sent_parts_and_no_record_file_counts_its_parts_alone()
     {
@@ -166,8 +134,6 @@ public class BreadcrumbTests
         Assert.DoesNotContain("0 records", text);
     }
 
-    // The bound on how many records a line names is what a session pays for the text, and it is per
-    // line rather than per type.
     [Fact]
     public void Each_corpus_line_names_up_to_the_same_few_records()
     {
@@ -199,8 +165,6 @@ public class BreadcrumbTests
     private static string Manifest(string corpus, string? contentVersion, params string[] types) =>
         Manifest(corpus, contentVersion, [], types);
 
-    // `sources` names the corpora this one consumes, which is what the exporter merged into the types
-    // below and what the renderer reads to say whose records are whose.
     private static string Manifest(string corpus, string? contentVersion, string[] sources, params string[] types) =>
         $$"""
           {
@@ -213,8 +177,10 @@ public class BreadcrumbTests
           }
           """;
 
-    // The flat parts file, one line per part. Each argument is the shortcode the line arrived under,
-    // or null for a part this corpus wrote itself, which is the only place the split is written down.
+    /// <summary>
+    /// The flat parts file, one line per part. Each argument is the shortcode the line arrived under, or null for a
+    /// part this corpus wrote itself.
+    /// </summary>
     private static (string, string) Parts(params string?[] sources) =>
         ("glossary/terms.jsonl", string.Join("\n", sources.Select((c, i) =>
             c is null
@@ -227,8 +193,10 @@ public class BreadcrumbTests
            "dir":"{{type}}","partsFile":"{{type}}/terms.jsonl"}
           """;
 
-    // `count` records of one type, named `Context1` upward and ordered as the export orders them, which
-    // is what decides which of them a bounded line names.
+    /// <summary>
+    /// <c>count</c> records named <c>Context1</c> upward, in the order the export writes them, which decides which of
+    /// them a bounded line names.
+    /// </summary>
     private static (string Path, string Content)[] Contexts(int count) =>
         [.. Enumerable.Range(1, count).Select(i => Record($"glossary/gls-{i:D3}.json", $"Context{i}"))];
 

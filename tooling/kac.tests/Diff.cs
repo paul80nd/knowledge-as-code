@@ -1,20 +1,21 @@
 using kac.core;
 
 // What a pull request changed, for the guards that compare this branch against the one it targets.
-// `VerificationTests` and `ContentVersionTests` both ask git what moved, so the process call and the
-// parsing sit here once.
 
 namespace kac.tests;
 
 internal static class Diff
 {
-    // The branch a pull request targets. CI knows it and a working tree does not, so the job passes it in.
+    /// <summary>
+    /// The branch a pull request targets. CI knows it and a working tree does not, so the job passes it in.
+    /// </summary>
     private const string BaseRef = "KAC_BASE_REF";
 
-    // The commit this branch grew from, or null where git named none and there is nothing to compare. A
-    // named base is used alone, so a job that sets `KAC_BASE_REF` and gets no answer fails here instead of
-    // falling back to a branch that would compare the wrong thing. That state is a shallow checkout, and a
-    // guard reading nothing reports green for a branch it never looked at.
+    /// <summary>
+    /// The commit this branch grew from, or null where git named none and there is nothing to compare. A named base is
+    /// used alone, so a job that sets <c>KAC_BASE_REF</c> and gets no answer fails here instead of falling back to a
+    /// branch that would compare the wrong thing.
+    /// </summary>
     internal static string? Against()
     {
         var named = Environment.GetEnvironmentVariable(BaseRef);
@@ -33,22 +34,19 @@ internal static class Diff
         return before;
     }
 
-    // Every file the working tree keeps that git does not track, forward-slashed. `git diff` reports none
-    // of them, so a record written on this branch and not yet committed is invisible to `Changed`. CI
-    // reads it as an addition, and a guard that missed it locally would be green here and red there.
+    /// <summary>
+    /// Every file the working tree keeps that git does not track, forward-slashed. <c>git diff</c> reports none of
+    /// them, so a record written on this branch and not yet committed is invisible to <c>Changed</c>.
+    /// </summary>
     internal static IEnumerable<string> Untracked() =>
         (Git.Run(Repo.Root, "ls-files --others --exclude-standard -z") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
-    // Every tracked file the working tree has changed since `before`, as the path it had then and the
-    // path it has now. `filter` is git's `--diff-filter`, so each caller asks for the statuses its own
-    // question needs. An edit nobody has committed yet is read the way CI reads a
-    // merged one. Only a rename gives two different paths, and a record renamed and rewritten in one pull
-    // request is what a guard reading the new path alone would pass over.
-    //
-    // `-z` separates every field with a NUL, so a path with a quote, a tab or a non-ASCII character in it
-    // arrives as git stored it. Without it git escapes such a path and the caller asks for a file whose
-    // name it had just mangled.
+    /// <summary>
+    /// Every tracked file changed since <c>before</c>, as its path then and now. <c>filter</c> is git's
+    /// <c>--diff-filter</c>. <c>-z</c> keeps a path with a quote, a tab or a non-ASCII character as git stored it,
+    /// rather than escaped.
+    /// </summary>
     internal static IEnumerable<(string Was, string Now)> Changed(string before, string filter)
     {
         var fields =

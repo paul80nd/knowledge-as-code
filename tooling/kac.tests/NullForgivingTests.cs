@@ -1,10 +1,5 @@
-// `!` turns off a compiler check one site at a time, and says nothing where it was wrong. A repository
-// with `Nullable` enabled throughout has two better answers, both used here: a type that carries its own
-// invariant through `MemberNotNullWhen`, and a read that names what it expected. `Required.cs` holds the
-// second for tests, and `kac.core` holds it wherever a caller has already established a value.
-//
-// Held at nothing rather than at a ceiling. A budget above zero is a number nobody can argue about, and
-// the first site under it is the one that teaches the next reader that `!` is available.
+// `!` turns off a compiler check one site at a time. Use `MemberNotNullWhen` or a read that names what it
+// expected instead. Held at nothing rather than at a ceiling.
 
 using System.Text;
 
@@ -38,9 +33,11 @@ public class NullForgivingTests
             .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
                         && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"));
 
-    // Whether the line carries `!` as the null-forgiving operator rather than as `not`. The operator
-    // follows the value it vouches for, so what precedes it is a name, a closing bracket or a closing
-    // parenthesis. `!=` is the other reading of those two characters.
+    /// <summary>
+    /// Whether the line carries <c>!</c> as the null-forgiving operator rather than as <c>not</c>. The operator follows
+    /// the value it vouches for, so what precedes it is a name, a closing bracket or a closing parenthesis. <c>!=</c>
+    /// is the other reading of those two characters.
+    /// </summary>
     private static bool Forgiving(string line)
     {
         for (var i = 1; i < line.Length; i++)
@@ -52,10 +49,11 @@ public class NullForgivingTests
         return false;
     }
 
-    // The file with its comments and its string literals blanked, so a `!` inside either is not read as
-    // code. Every literal form C# offers is a quote to skip to: raw, verbatim and ordinary all end at a
-    // quote, and only the escape rules between them differ. The one it cannot see into is an
-    // interpolation hole, whose contents are code inside a literal, and nothing here writes one.
+    /// <summary>
+    /// The file with its comments and string literals blanked, so a <c>!</c> inside either is not read as code. Every
+    /// literal form ends at a quote. An interpolation hole is code inside a literal and is not seen into, so nothing
+    /// here writes one.
+    /// </summary>
     private static string Code(string source)
     {
         var kept = new StringBuilder(source.Length);
@@ -94,10 +92,12 @@ public class NullForgivingTests
         return kept.ToString();
     }
 
-    // Where the literal opening at `start` ends, one past its closing quote. The three forms differ only
-    // in how a quote inside one is written: a raw literal ends at its fence, a verbatim literal doubles
-    // the quote, and an ordinary one escapes it with a backslash.
-    private static int Literal(string source, int start)
+    /// <summary>
+    /// Where the literal opening at <c>start</c> ends, one past its closing quote. The three forms differ only in how a
+    /// quote inside one is written: a raw literal ends at its fence, a verbatim literal doubles the quote, and an
+    /// ordinary one escapes it with a backslash.
+    /// </summary>
+    internal static int Literal(string source, int start)
     {
         var quote = source[start];
 
@@ -124,8 +124,9 @@ public class NullForgivingTests
         return source.Length;
     }
 
-    // The span replaced by its newlines, so blanking a literal or a comment does not move the lines under
-    // it.
+    /// <summary>
+    /// The span replaced by its newlines, so blanking a literal or a comment does not move the lines under it.
+    /// </summary>
     private static void Blank(StringBuilder kept, string source, int from, int to)
     {
         for (var i = from; i < to && i < source.Length; i++)

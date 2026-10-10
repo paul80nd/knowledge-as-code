@@ -1,33 +1,13 @@
 namespace kac.core;
 
-// What the schema says the tool will do, held against what the tool can actually do.
-//
-// Every other check reads a document. This one reads the files that decide how documents are read, and
-// it exists because those files are copied into corpora whose authors cannot ask what a key meant. A
-// declaration nothing dispatches is not inert to a reader: `rules:` is documented as behaviour the
-// validator applies, so a rule id no code answers to reads as a commitment.
-//
-// The question asked of each value is not "is this key spelled right" but "is there code that acts on
-// this value". `style: mnemonic` is a real style and would pass a spelling test; what makes it sound is
-// the branch in IdChecks. So each vocabulary here is read from the code that dispatches it rather than
-// restated.
-//
-// A `ref:` and a `versus:` are the exception, because each names a type and a corpus adopts as many types
-// as it has use for. One naming a type this corpus declined is left alone here: nothing enforces it,
-// nothing renders it, and adopting the type later starts both without an edit to this file. A name that
-// is simply wrong is caught where the schema is authored, by SchemaReferenceTests, which reads a
-// `.schema/` holding every type.
-//
-// Findings land against `.schema/<file>.yaml`, because that is the file a corpus owner edits and the
-// one an update writes. A rule or field the loader could not read at all carries its own
-// account of why, recorded where it was parsed, and is reported here alongside the rest so that a
-// schema defect is a finding like any other rather than a stack trace on the way to one.
+/// <summary>
+/// Each vocabulary is read from the code that dispatches it, never restated. <c>../../CLAUDE.md</c> says why.
+/// </summary>
 public static class SchemaChecks
 {
     public static void Check(Schema schema, List<Finding> f)
     {
-        // Walked in declared order, here and below, so that a schema with several faults reports them
-        // in the order someone reading the file would meet them.
+        // Walked in declared order, so several faults are reported in the order a reader meets them.
         UnreadKeys(".schema/_enums.yaml", schema, f);
         UnreadKeys(".schema/_tiers.yaml", schema, f);
         UnreadKeys(".schema/_checks.yaml", schema, f);
@@ -49,17 +29,12 @@ public static class SchemaChecks
                 Dispatch(at, $"type '{key}' declares 'id.style: {t.IdStyle}', which no id check reads. "
                              + $"The styles the tool applies are {List(IdChecks.IdStyles)}.", f);
 
-            // A span the wrong way round admits nothing, so every record of the type fails id-format
-            // and the message quotes back a range that cannot be met. JSON Schema cannot say this.
             if (t.IdWidth.Min > t.IdWidth.Max)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'id.width' with a 'min:' of {t.IdWidth.Min} above its 'max:' of "
                     + $"{t.IdWidth.Max}. No id can be both, so every record of the type would fail. Put the "
                     + "shorter end in 'min:'."));
 
-            // A span is for a mnemonic, whose length follows the concept it names. A number is padded
-            // to a fixed width so that ids sort, and a span there would make `adr-007` and `adr-0007`
-            // two ids for one decision.
             if (t.IdWidth.Min != t.IdWidth.Max && t.IdStyle == "numbered")
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' is 'id.style: numbered' and declares 'id.width' as a span of {t.IdWidth}. "
@@ -67,10 +42,6 @@ public static class SchemaChecks
                     + $"{t.IdPrefix}-007' and '{t.IdPrefix}-0007' two ids for one record. Give the type an exact "
                     + "width, or the mnemonic style a span was written for."));
 
-            // Two ways a type leaves its id and its filename able to say different things. A span
-            // admits several lengths, so the head of `secret-handling.md` reads as an id under any span
-            // reaching six. A slug id is the whole filename stem, so a type withholding it from the
-            // filename has withheld the id itself.
             if (t.FilenameCarriesId && t.IdWidth.Min != t.IdWidth.Max)
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                     $"type '{key}' declares 'id.width' as a span of {t.IdWidth} and leaves its filename "
@@ -110,14 +81,6 @@ public static class SchemaChecks
         CheckVersus(schema, f);
     }
 
-    // The disambiguations, which are the one thing a type says about another type rather than about
-    // itself. Two ways that goes wrong, and both read as working until someone opens the page: a pair
-    // against itself renders "ADR vs ADR", and a pair both sides declare renders twice, with two accounts
-    // of the same distinction that nothing keeps in step.
-    //
-    // Which side declares a pair is a convention rather than a rule the tool could derive: it is the
-    // type the heading is titled from. So the tool holds the two sides against each other and leaves
-    // the choice to whoever writes it.
     private static void CheckVersus(Schema schema, List<Finding> f)
     {
         var declared = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -134,8 +97,7 @@ public static class SchemaChecks
                 continue;
             }
 
-            // A type this corpus turned down. `Generator.Disambiguations` already leaves the pair out, so
-            // nothing renders and there is nothing to report: a pair needs both sides to say anything.
+            // A type this corpus declined renders no pair, so there is nothing to report.
             if (!schema.ByFolder.ContainsKey(other)) continue;
 
             var pair = string.CompareOrdinal(key, other) < 0 ? $"{key}|{other}" : $"{other}|{key}";
@@ -148,14 +110,9 @@ public static class SchemaChecks
         }
     }
 
-    // The two files that between them define a tier, held against each other. `_universal.yaml` gives the
-    // `tier` field its range, and every record is validated against it. `_tiers.yaml` says what each of
-    // those values is called and means, which a generated page renders. Neither is derivable from the
-    // other. A tier declared in one and not the other is silent in both directions: a record admitted
-    // with a tier no page can name, or a heading no document will ever sit under.
-    //
-    // Reported against `_tiers.yaml` whichever side is short, because that is the file whose entries are
-    // cheap to add: widening the field's range is a change to what every corpus may carry.
+    /// <summary>
+    /// Reported against <c>_tiers.yaml</c> whichever side is short, because its entries are the cheap side to add.
+    /// </summary>
     private static void CheckTiers(Schema schema, List<Finding> f)
     {
         if (!schema.Universal.TryGetValue("tier", out var field)) return;
@@ -180,14 +137,6 @@ public static class SchemaChecks
                 + "the tier's section in the generated taxonomy."));
     }
 
-    // A key the loader never asked for. Every other check here reads a declaration and asks whether code
-    // acts on its value. This one asks whether the declaration is read at all, which is the question a
-    // key nothing dispatches answers with silence. The vocabulary is not listed anywhere: it is the set
-    // of keys the loader requested, recorded as it read the file. So a key gains its meaning and its
-    // admission in the same edit.
-    //
-    // `notes:` is admitted at every level and is the way to say something these files should say and the
-    // tool has no use for.
     private static void UnreadKeys(string at, Schema schema, List<Finding> f)
     {
         foreach (var key in schema.UnreadKeys.Where(k => k.File == at))
@@ -196,17 +145,6 @@ public static class SchemaChecks
                 + "or write what it was saying as 'notes:', the one key every level admits."));
     }
 
-    // Where a type says its parts live, held against what an extractor can actually read.
-    //
-    // Only a `parts:` block makes a `pol-VURM.TIMEBOX` citation resolvable, so every way of getting it
-    // wrong ends the same way: the type offers no parts, every citation into it fails, and the schema
-    // reads as though addressing were set up. A source nothing extracts is the first way. A section the
-    // type never declares is the second, and it is the `mirrors-section:` fault in another place. The
-    // walk would run to a heading no record may carry and find nothing under it.
-    //
-    // The modals are required of the table source alone. A row without them is reported as opening with
-    // no modal, and the message lists the modals to write as an empty list. A heading source may declare
-    // them and need not: a glossary's terms carry no obligation, and declaring none is how it says so.
     private static void CheckParts(string at, string key, TypeSchema t, List<Finding> f)
     {
         if (t.Parts is not { } parts) return;
@@ -226,18 +164,6 @@ public static class SchemaChecks
                 + "oblige, or every row is reported as opening with none of them."));
     }
 
-    // What a type says it contributes to a published export, held against what the type itself declares
-    // and against what an export can carry.
-    //
-    // The corpus that reads an export took a copy of these files and cannot ask what was meant. So every
-    // way of getting this wrong ends in silence: a section, a field or a set of parts named here and not
-    // there contributes nothing, while the schema goes on saying it does. Selection is by key for that
-    // reason, and this is where each key is resolved.
-    //
-    // Fidelity is asked of every entry, because it is what a consumer reads the export for: words
-    // arriving whole, cut to a line, or replaced by a breadcrumb. A section becomes an entry as soon as
-    // its heading is written, so a heading with nothing beside it is asked. `parts:` is the entry itself,
-    // so writing it with nothing beside it declares no parts at all.
     private static void CheckExport(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
     {
         if (t.Export is not { } export) return;
@@ -255,8 +181,7 @@ public static class SchemaChecks
             Fidelity($"export.sections: {section}", fidelity, ExportSpec.Carried);
         }
 
-        // `title` answers as a field without being one: a record's title is its H1, which every record
-        // has and an index column already names the same way.
+        // `title` answers as a field without being one: a record's title is its H1.
         foreach (var name in export.Fields.Where(n =>
                      n != Generator.Title && schema.EffectiveField(t, n) is null))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
@@ -264,8 +189,6 @@ public static class SchemaChecks
                 + $"declares such a field. Name a field a record carries, or '{Generator.Title}', which is a "
                 + "record's heading rather than its frontmatter."));
 
-        // The number a consumer holds this type's files to. Zero is the absence of one, and an export
-        // stating it would leave a consumer nothing to refuse a moved shape by.
         if (export.Version <= 0)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares an 'export:' block and no 'version:' above 0. A consumer reads these "
@@ -274,8 +197,6 @@ public static class SchemaChecks
 
         if (!export.PartsDeclared) return;
 
-        // Nowhere to read a part from stops the pass. Everything below asks what one part writes, and a
-        // type with no parts at all would have every one of those answers reported against it.
         if (t.Parts is not { } parts)
         {
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
@@ -286,8 +207,6 @@ public static class SchemaChecks
 
         Fidelity("export.parts.fidelity:", export.Parts, ExportSpec.CarriedByParts);
 
-        // The line is the whole of what a consumer greps, so a type exporting parts and declaring none
-        // of its keys exports a file of empty objects. Nothing further down would report that.
         if (export.Line.Count == 0)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.parts:' and no 'line:' beneath it. Name the keys one part "
@@ -298,11 +217,6 @@ public static class SchemaChecks
 
         return;
 
-        // One key of the part line, against the source declared beside it.
-        //
-        // A `front.` and a `column.` name something the type declares elsewhere, so each is resolved
-        // against that declaration. Every fault here is the same fault: a source resolving to nothing
-        // exports a key that is null on every line, while the schema goes on saying the type carries it.
         void Source(string name, string source)
         {
             if (source.Length == 0)
@@ -375,15 +289,12 @@ public static class SchemaChecks
                     + "drop the key."));
         }
 
-        // A source reading a part's body, against a type whose parts are table rows. Only the heading
-        // source gives a part a body: a row is its own body, so the source would write null on every line.
         void RefuseBodySource(string name, string source) =>
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'export.parts.line: {name}' at '{source}', and sources its parts "
                 + "from a table. A row is its own body, so the source would write null on every line. "
                 + $"Carry the row through '{PartLineSource.PartText}' and its columns."));
 
-        // A section and a part line admit different fidelities, so each call says which.
         void Fidelity(string entry, string value, IReadOnlyList<string> carried)
         {
             if (value.Length == 0)
@@ -396,9 +307,6 @@ public static class SchemaChecks
         }
     }
 
-    // Every type that states a range for `status` names the value that says a record is in force.
-    // `FieldSpec.InForce` says why the schema declares it. A type stating no range is passed over: it has
-    // nothing to name, and its `status` checks no record either, which is a fault of its own.
     private static void CheckInForce(string at, string key, TypeSchema t, Schema schema, List<Finding> f)
     {
         if (schema.EffectiveField(t, "status") is not { Type: "enum", Values.Count: > 0 } status) return;
@@ -409,11 +317,9 @@ public static class SchemaChecks
             + "a record of this type is in force, which nothing else states."));
     }
 
-    // A type is a folder of records, and `folder:` names it. The check asks after the value rather than
-    // the key, because an absent `folder:` and a deliberate `folder: null` parse to the same empty
-    // string. A type with neither has nowhere to put a record.
     private static void CheckFolder(string at, string key, TypeSchema t, List<Finding> f)
     {
+        // An absent `folder:` and `folder: null` parse to the same empty string, so the value is asked, not the key.
         if (string.IsNullOrEmpty(t.Folder))
         {
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
@@ -421,10 +327,6 @@ public static class SchemaChecks
             return;
         }
 
-        // The two names are one name. `Schema.Load` keys the types by the file's own name and
-        // `Doc.Parse` reads a record's type from the folder it sits in, while `type-setup`, `generate`
-        // and `update` act on the declared value. Where the two differ, one half of the tool writes
-        // into a folder the other half cannot see, and every other check passes.
         if (!string.Equals(t.Folder, key, StringComparison.Ordinal))
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares 'folder: {t.Folder}', and this file is named for '{key}'. A document's "
@@ -432,32 +334,22 @@ public static class SchemaChecks
                 + $"'{t.Folder}/' would reach nothing. Make the two names agree."));
     }
 
-    // What a type says about itself, which every generated list of types is written from. Each is
-    // required, because a type that declares none of them still appears in those lists: a row with an
-    // empty cell. That reads as an oversight in the page rather than in the schema it came from.
-    //
-    // `label-plural:` is here and `label:` is not, because only one of them can be derived. A singular
-    // falls back to the type name capitalised; nothing turns `nfr` into "NFRs".
-    //
-    // The bound is the one a rule's description is held to, for the same reason: these are table cells a
-    // reader scans, and the sentence that will not fit in one is the sentence that belongs on the type's
-    // own page.
+    /// <summary>
+    /// <c>label:</c> is not required, because it falls back to the type name capitalised. Nothing derives a plural.
+    /// </summary>
     private static void CheckProse(string at, string key, TypeSchema t, List<Finding> f)
     {
         Line("label-plural", t.LabelPlural, "what a folder of these is called (\"ADRs\", \"Policies\", \"NFRs\")");
         Line("summary", t.Summary, "what the type is");
         Line("goes-here", t.GoesHere, "what a contributor has in hand when this type is the answer");
 
-        // Not held to the cell bound: `detail:` is the paragraph the other three are too short to be, and
-        // it is rendered as prose rather than into a table.
+        // Not held to the cell bound: `detail:` renders as prose, not into a table.
         if (t.Detail.Length == 0)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'detail:'. Say what the type carries beyond its first sentence, and the "
                 + "edge a reader is most likely to walk over."));
 
-        // Only the prior art is required, and "none" is one of its answers. What the framework took from an
-        // ancestor and where it parts company are questions a type with no ancestor cannot answer, so an
-        // empty pair is a real state rather than an unfinished one.
+        // Only the prior art is required. A type with no ancestor answers the rest with an empty pair.
         if (t.Lineage is null)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"type '{key}' declares no 'lineage.prior-art:'. Name what the type is nearest to, or say that "
@@ -479,29 +371,21 @@ public static class SchemaChecks
         }
     }
 
-    // `t` is the type declaring the field, and is null for a universal one. A field declared for every
-    // type belongs to none of them, so the questions that read the type's own declarations are not
-    // asked of it.
+    /// <summary>
+    /// <c>t</c> is null for a universal field, which belongs to no type and is asked none of a type's own questions.
+    /// </summary>
     private static void CheckField(string at, string name, FieldSpec spec, TypeSchema? t, Schema schema,
         List<Finding> f)
     {
         if (spec.Problem is { } problem)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-unreadable"), problem));
 
-        // What the field says it is, and what its entries are. Both are vocabularies, and a value
-        // outside either reaches no check at all: the switch in `ValueChecks.Check` passes over it, no
-        // `pattern:` need be declared, and the type page renders the field as though something held it.
         CheckDeclaredTypes(at, $"field '{name}'", spec, f);
 
-        // Only an enum's range is applied. A `values:` list anywhere else states a vocabulary that
-        // nothing holds a document to, which is the shape of promise this pass exists to stop.
         if (spec.Values is { Count: > 0 } && spec.Type != "enum")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'values:', which only an "
                          + "enum's range is read from. Declare it 'type: enum', or drop the values.", f);
 
-        // The settled value is one of the range, so a name outside it selects nothing and every reader of
-        // the key would take every value as unsettled. On a field that is not an enum there is no range to
-        // select from at all.
         if (spec.InForce is { } inForce)
         {
             if (spec.Type != "enum")
@@ -513,23 +397,14 @@ public static class SchemaChecks
                     + $"Name one of {List(range)}."));
         }
 
-        // A floor is a question about a sequence's length, so it has no reading on a scalar. `allow-literal`
-        // needs no such guard: it is a word admitted in place of a value, and every field type has one.
         if (spec.MinItems is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-items:', which only a "
                          + "list's length is read against. Declare it 'type: list', or drop the floor.", f);
 
-        // `min-records` is read from a list's entries and nowhere else. A scalar could in principle be
-        // counted the same way and is not, which makes it exactly the kind of declaration this pass exists
-        // to report: one a reader would take as enforced.
         if (spec.MinRecords is not null && spec.Type != "list")
             Dispatch(at, $"field '{name}' is 'type: {spec.Type}' and declares 'min-records:', which is read "
                          + "against the entries of a list. Declare it 'type: list', or drop the floor.", f);
 
-        // The two halves of an object are declared apart and neither reads without the other. A value
-        // declared an object with nothing saying what it holds would be held to nothing; keys declared
-        // against a value that is never an object state a shape it can never take. Both read as enforced
-        // from the file and are not.
         var holdsObjects = spec.Type == "object" || spec.Of == "object";
         var declared = spec.Type == "object" ? "type: object" : $"of: {spec.Of}";
 
@@ -544,31 +419,20 @@ public static class SchemaChecks
                          + $"'type: {spec.Type}', and an object's keys are read only where the value is "
                          + "an object. Declare 'type: object' or 'of: object', or drop it.", f);
 
-        // A source is a vocabulary, and `Doc.Derived` is the branch that answers to it. A name nothing
-        // resolves leaves the field empty in every record, which reads on the page as a column the
-        // corpus simply never fills in.
         if (spec.From is { } from && !Doc.DerivedSources.Contains(from))
             Dispatch(at, $"field '{name}' declares 'from: {from}', which no derivation reads. The "
                          + $"sources the tool resolves are {List(Doc.DerivedSources)}.", f);
 
-        // A derived value is never written, so requiring it asks for a line the author must not supply.
-        // Every record of the type would fail `required-field` and `derived-key` in turn, and the way
-        // out of one is the way into the other.
         if (spec.From is not null && spec.Required)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares both 'from: {spec.From}' and 'required: true'. A derived field "
                 + "is not the author's to write, so nothing can satisfy the requirement. Drop 'required'."));
 
-        // A part is read out of the record a reference names, so a field declaring no `ref:` gives the
-        // key nothing to be resolved against.
         if (spec.PartRequired && spec.Refs.Count == 0)
             Dispatch(at, $"field '{name}' declares 'part-required: true' and no 'ref:'. A part is looked up "
                          + "in the record the reference names, so nothing reads the key. Declare a 'ref:', "
                          + "or drop the key.", f);
 
-        // A type keeping no parts answers no citation into one, so every id the field carries would fail
-        // and the way out of it would be an edit to the target's type. Asked of the types this corpus
-        // adopted alone, because a `ref:` naming one it declined is left alone everywhere here.
         if (spec.PartRequired)
             foreach (var folder in spec.Refs)
                 if (schema.ByFolder.TryGetValue(folder, out var target) && target.Parts is null)
@@ -577,9 +441,6 @@ public static class SchemaChecks
                         + "no parts. Nothing an author writes could reach one, so every record filling the "
                         + "field would fail. Take the key out, or give the type a 'parts:' block."));
 
-        // Any section reconciles, so this is not a vocabulary the tool holds. That is why nothing else
-        // would catch a section the type never offers. The reconciliation would run against a heading
-        // no record may carry and report every id in the field as missing from it.
         if (t is not null && spec.MirrorsSection is { } section
                           && !t.RequiredSections.Concat(t.OptionalSections)
                               .Contains(section, StringComparer.OrdinalIgnoreCase))
@@ -587,9 +448,6 @@ public static class SchemaChecks
                 $"field '{name}' declares 'mirrors-section: {section}', and the type's 'sections:' block "
                 + "declares no such section. Name a section the type has, or add it."));
 
-        // Any label reconciles, so there is no vocabulary here either. What the label gathers is
-        // citations of another record, and a field pointing at no type carries none, so the two sides
-        // could never meet.
         if (spec.MirrorsCitations is { } label && spec.Refs.Count == 0)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"field '{name}' declares 'mirrors-citations: {label}' and no 'ref:'. The line gathers "
@@ -597,15 +455,6 @@ public static class SchemaChecks
                 + "never meet. Declare a 'ref:', or drop the key."));
     }
 
-    // A rule says what it is by what it carries. An `expr:` is a rule that is finished; an id one of the
-    // rule registries answers to is a rule finished in C#; and a rule carrying neither is an intention
-    // the schema records, which the type page renders as declared-but-not-enforced and nothing pretends
-    // to run.
-    //
-    // What no rule may do is claim a `severity:` with nothing behind it. Severity is the statement that
-    // something acts on this: it is what puts a rule in the catalogue and in `kac checks`. So a rule
-    // naming a level nothing fires at is the one arrangement that reads as enforced from every angle
-    // and is not.
     private static void CheckRule(string at, string key, RuleSpec rule, List<Finding> f)
     {
         if (rule.Problem is { } problem)
@@ -614,8 +463,8 @@ public static class SchemaChecks
             return;
         }
 
-        // Asked of every rule, before the dispatched ones are let go: a rule that runs is a rule whose
-        // description reaches the type page, and that is the row a reader has to scan past.
+        // Asked of every rule before the dispatched ones return, because a rule that runs has its description on the
+        // type page.
         if (rule.Description is { Length: > ChecksTable.DescriptionMax } description)
             f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
                 $"rule '{rule.Id}' on type '{key}' has a {description.Length}-character description; the "
@@ -633,15 +482,10 @@ public static class SchemaChecks
                          + "declared as an intention.", f);
     }
 
-    // `_checks.yaml` against the code that reports, in the one direction a load can answer.
-    //
-    // A rule class names the check ids it reports under, so an id it emits that nothing here declares is
-    // a finding a reader would meet with no entry behind it: no severity, no description, and a blank
-    // cell wherever the tables render it. That is decidable from the registry, so it is decided here.
-    //
-    // The other direction is an entry nothing ever reports, and the registry cannot decide that. A core
-    // check reports through a literal string written where the check is, and no registry holds those.
-    // The coverage gate answers it instead, by failing on a declared check no fixture can reach.
+    /// <summary>
+    /// One direction only. An entry nothing reports is the coverage gate's to fail, because a core check reports
+    /// through a literal no registry holds.
+    /// </summary>
     private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
     {
         const string at = ".schema/_checks.yaml";
@@ -653,15 +497,10 @@ public static class SchemaChecks
                          + "no description, and nothing to render.", f);
     }
 
-    // What a field says it is, what its entries are, and where an id resolves. The two vocabularies are
-    // read from `ValueChecks`, which keeps them beside the code dispatching them. A second list here
-    // would say what is spelled correctly rather than what runs, and a value dropped from the switch
-    // would go on passing.
-    //
-    // Asked of an entry key as well, to whatever depth the field nests. `Entry` sends each key's value
-    // back through `Check`, so a key's `type:` dispatches exactly as a field's does, and a key
-    // declaring its own `entry:` nests again. `ParseField` bounds that by the schema rather than by a
-    // guard, and a question asked one level down would go quiet at the second.
+    /// <summary>
+    /// The vocabularies are <c>ValueChecks</c>'s, kept beside the switch dispatching them. Asked of entry keys too, to
+    /// whatever depth the field nests, because <c>Entry</c> sends each key back through <c>Check</c>.
+    /// </summary>
     private static void CheckDeclaredTypes(string at, string what, FieldSpec spec, List<Finding> f,
         bool insideAnObject = false)
     {
@@ -669,9 +508,7 @@ public static class SchemaChecks
             Dispatch(at, $"{what} declares 'type: {spec.Type}', which no value check reads. The types the "
                          + $"tool acts on are {List(ValueChecks.FieldTypes)}.", f);
 
-        // `of:` is read from a list's entries and nowhere else, so a scalar carrying one states a shape
-        // its value can never take. Reported before the vocabulary below, because a reader told their
-        // `of: bool` is not an entry type would take the field for a list it is not.
+        // Before the vocabulary below, so a scalar carrying `of:` is not told its entry type is wrong.
         if (spec.Of is { } of)
         {
             if (spec.Type != "list")
@@ -682,13 +519,6 @@ public static class SchemaChecks
                              + $"are {List(ValueChecks.EntryTypes)}.", f);
         }
 
-        // An id is resolved against the folders a `ref:` names, and against nothing else. The reference
-        // pass selects a field on its `ref:` before it narrows on the type, so a declaration without one
-        // reaches no resolution at all, while the type page renders the field as a citation.
-        //
-        // That pass reads a field's own value and never walks an `entry:` block, so an id inside an
-        // object is resolved against nothing whatever the key declares. A `ref:` is no remedy there, and
-        // asking for one would send the author after a key that changes nothing.
         if (spec.DeclaresId)
         {
             var declared = spec.Type == "id" ? "type: id" : "of: id";
@@ -714,8 +544,7 @@ public static class SchemaChecks
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));
 
-    // A vocabulary whose order is part of what it declares, quoted as declared. Sorting the tiers would
-    // misstate the one thing the reader has to take from them.
+    /// <summary>Quoted as declared, because sorting the tiers would misstate them.</summary>
     private static string Ordered(IEnumerable<string> values)
         => string.Join(", ", values.Select(v => $"'{v}'"));
 }

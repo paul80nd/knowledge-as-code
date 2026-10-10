@@ -2,13 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kac.core;
 
-// Who a command puts a question to. `new` asks most of them, and `update --drop-type` asks the one
-// standing in front of a deletion. The console implementation sits beside `Commands`, where the rest of
-// the console does; a test hands over scripted answers instead.
-//
-// The seam is here because what is asked, in what order, and what a flag or a default answers instead are
-// decisions, and every decision in this project is testable without a terminal. Only the drawing and the
-// keystroke are on the other side.
+/// <summary>
+/// What is asked, in what order, and what a flag or default answers instead are decisions, and testable without a
+/// terminal. A test hands over scripted answers.
+/// </summary>
 public interface IAsker
 {
     string Text(string question, string fallback);
@@ -17,105 +14,86 @@ public interface IAsker
 
     IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options);
 
-    /// `fallback` is the answer a bare Enter gives. Yes for a question standing between somebody and the
-    /// thing they asked for, and no for one standing in front of a deletion.
+    /// <summary>Asks a yes or no question.</summary>
+    /// <param name="fallback">The answer a bare Enter gives. Yes for a question standing between somebody and the
+    /// thing they asked for, and no for one standing in front of a deletion.</param>
     bool Confirm(string question, bool fallback = true);
 }
 
-// What a question standing in front of an irreversible step came to.
-//
-// `Unattended` is the state that makes this worth a type. A run with nobody at the keyboard has to do
-// something with the question, and the two answers are not interchangeable: taking the default is right
-// where the step is what the caller asked for, and stopping is right where it is a deletion they did not.
+/// <summary>
+/// <c>Unattended</c> exists because taking the default is right where the step is what the caller asked for, and
+/// stopping is right where it is a deletion they did not.
+/// </summary>
 public enum Consent
 {
-    // Asked and answered yes, or nobody had to be asked.
     Given,
 
-    // Asked and answered no. The run stops, having written nothing.
+    /// <summary>The run stops, having written nothing.</summary>
     Withheld,
 
-    // Nobody was there to ask, and this question has no default worth taking.
+    /// <summary>Nobody was there to ask, and this question has no default worth taking.</summary>
     Unattended
 }
 
-// What `new` was given on the command line. Every answer has a flag, so nothing is reachable only by
-// typing. `docs/cli/new.md` carries the table of defaults.
+/// <summary>
+/// Every answer has a flag, so nothing is reachable only by typing. <c>docs/cli/new.md</c> carries the defaults.
+/// </summary>
 public sealed record NewRequest
 {
     public string? Name { get; init; }
 
-    // The types to adopt, comma-separated, or `all`. Null where the flag was not given.
+    /// <summary>Null where the flag was not given.</summary>
     public string? Types { get; init; }
 
     public string? Publishing { get; init; }
     public string? Ci { get; init; }
 
-    // Where the template comes from, and which ref and folder inside it. `From` defaults to the
-    // framework's own repository: a tool that cannot bootstrap without a URL you have to look up is a
-    // tool people get wrong.
     public string From { get; init; } = Asking.DefaultFrom;
     public string? Ref { get; init; }
     public string? Path { get; init; }
 
-    // Take the default for everything unasked, and put no question to anybody.
     public bool Yes { get; init; }
 }
 
-// Turning the flags, the defaults and whatever a person says into the answers a creation needs.
 public static class Asking
 {
-    // The framework's own repository, compiled in. A corpus taking its framework from elsewhere passes
-    // `--from` once, at creation, and `.corpus.yaml` remembers.
+    /// <summary>
+    /// A corpus taking its framework from elsewhere passes <c>--from</c> once, and <c>.corpus.yaml</c> remembers.
+    /// </summary>
     public const string DefaultFrom = "https://github.com/paul80nd/knowledge-as-code";
 
-    // The value `--types` takes to mean every type the template declares.
     public const string AllTypes = "all";
 
-    // Whether there is anybody to put a question to: a terminal, and no `--yes` answering in advance.
-    //
-    // Every command reads this once and carries the answer, so a run cannot be interactive in one decision
-    // and unattended in the next. `interactive` is the caller's, because a terminal is the one thing here
-    // that is not a decision.
+    /// <summary>
+    /// Read once per command, so a run cannot be interactive in one decision and unattended in the next.
+    /// </summary>
     public static bool Asks(bool yes, bool interactive) => interactive && !yes;
 
-    // A question a run with nobody at it answers for itself, by going ahead. The step is the one the
-    // caller asked for, and the question only offers them a way out of it.
+    /// <summary>Goes ahead unattended: the step is the one the caller asked for.</summary>
     public static Consent OrDefault(IAsker? asker, string question, bool fallback = true) =>
         asker is null || asker.Confirm(question, fallback) ? Consent.Given : Consent.Withheld;
 
-    // A question a run with nobody at it may not answer for itself, because the step takes something away.
-    // `--yes` is the caller saying it anyway, in advance, and is the only thing that gets past this
-    // unattended.
+    /// <summary>Refused unattended, because the step takes something away. Only <c>--yes</c> gets past it.</summary>
     public static Consent OrRefuse(IAsker? asker, bool yes, string question, bool fallback = true) =>
         Unattended(asker, yes) ? Consent.Unattended
         : asker is null || asker.Confirm(question, fallback) ? Consent.Given
         : Consent.Withheld;
 
-    // Nobody to ask, and nobody who answered in advance. A question reaching this state with no default
-    // is refused rather than waited on: a hung pipeline is worse than a failed one.
+    /// <summary>Refused rather than waited on: a hung pipeline is worse than a failed one.</summary>
     private static bool Unattended(IAsker? asker, bool yes) => asker is null && !yes;
 
-    // What resolving the answers came to: the answers, or why there are none. Exactly one of the two
-    // is set. Cancelling is not one of the two, because the question that offers it is asked after
-    // this, and the caller reads the answer rather than this record.
+    /// <summary>Exactly one of the two is set.</summary>
     public sealed record Answered(NewAnswers? Answers, string? Problem)
     {
-        // The invariant above, told to the compiler, so a caller that branches on it reads the other
-        // half without asserting anything. Both constructions below hold it.
         [MemberNotNullWhen(true, nameof(Problem))]
         [MemberNotNullWhen(false, nameof(Answers))]
         public bool Failed => Problem is not null;
     }
 
-    // Resolve every answer `new` needs, asking only what no flag and no default settles.
-    //
-    // `asker` is null where there is nobody to ask, which is a run with no terminal or one given `--yes`.
-    // A question that reaches that state and has no default is an error rather than a wait: a hung
-    // pipeline is worse than a failed one.
-    //
-    // `origin` is the repository's own remote, which the publishing bases are filled in from. Null where
-    // there is no remote yet, and the person types them or the corpus states none.
+    /// <summary>
+    /// <c>asker</c> is null where nobody can be asked. <c>origin</c> is the repository's own remote, or null where
+    /// there is none yet.
+    /// </summary>
     public static Answered Resolve(NewRequest request, string folderName, IReadOnlyList<string> declared,
         string? origin, IAsker? asker)
     {
@@ -161,10 +139,7 @@ public static class Asking
             null);
     }
 
-    // Why nothing can settle the answers, or null where something can.
-    //
-    // Every question missing its flag is named at once, so a caller fixing the invocation fixes all of it
-    // rather than meeting one more refusal per run.
+    /// <summary>Every question missing its flag is named at once, so one fix answers all of them.</summary>
     private static string? Unanswerable(NewRequest request)
     {
         List<string> missing = [];
@@ -179,11 +154,7 @@ public static class Asking
               + "pass every answer as a flag, or pass --yes to take the defaults.";
     }
 
-    // The types the corpus adopts, or null where `--types` named one the template does not declare.
-    //
-    // Asked as a multi-select with everything ticked, because declining is the exception. A corpus may
-    // still tick nothing: `types: []` is a corpus that adopted none, which is a state the descriptor can
-    // hold and validation can act on.
+    /// <summary><c>types: []</c> is a valid answer: a corpus that adopted none.</summary>
     private static IReadOnlyList<string>? Types(NewRequest request, IReadOnlyList<string> declared,
         IAsker? asker)
     {
@@ -210,9 +181,6 @@ public static class Asking
                + $"it declares {string.Join(", ", declared)}.";
     }
 
-    // Where the published corpus is browsed, offered already filled in by `Publishing.BaseFrom`. A
-    // target needing no base is asked nothing, and a run with nobody to ask takes what the remote
-    // implied or states none.
     private static string? Base(string target, string? origin, IAsker? asker)
     {
         if (target.Equals(Publishing.None, StringComparison.Ordinal)) return null;

@@ -1,12 +1,5 @@
 using kac.core;
 
-// In-process unit tests for `descriptor-target`: every target `.corpus.yaml` names, held to the values
-// the tool acts on.
-//
-// The `descriptor-targets` fixture covers a corpus that gets one wrong through the CLI, and covers the
-// id once, which is all the coverage gate asks. Every other spelling lives here, where a case is one
-// string.
-
 namespace kac.tests;
 
 public class DescriptorTargetTests
@@ -43,8 +36,6 @@ public class DescriptorTargetTests
     public void Every_target_a_corpus_can_file_on_is_silent(string target)
         => Assert.Empty(Targets(new CorpusDescriptor { TrackerTarget = target, FrameworkTarget = target }));
 
-    // A wiki and a documentation site publish records and hold no backlog, so a tracker naming either
-    // addresses nothing. The corpus is told rather than left with a block that files nowhere.
     [Theory]
     [InlineData(Publishing.AzureDevOpsWiki)]
     [InlineData(Publishing.MkDocs)]
@@ -57,8 +48,6 @@ public class DescriptorTargetTests
         Assert.Contains("azure-devops, github, none.", message);
     }
 
-    // The same vocabulary, and the key is named in the message, so an author fixing one block is not
-    // sent to the other.
     [Fact]
     public void A_framework_target_is_held_to_the_same_values_and_named_apart()
     {
@@ -67,7 +56,6 @@ public class DescriptorTargetTests
         Assert.Contains("framework.target 'mkdocs'", message);
     }
 
-    // Each key is asked on its own, so a corpus that got two wrong fixes both from one run.
     [Fact]
     public void Two_keys_spelled_wrong_are_reported_together()
     {
@@ -81,7 +69,6 @@ public class DescriptorTargetTests
         Assert.Contains(findings, f => f.Message.Contains("tracker.target"));
     }
 
-    // Nothing here is stood up: the pass reads the descriptor and never the listing.
     private static List<Finding> Targets(CorpusDescriptor descriptor)
     {
         var schema = new Schema

@@ -50,8 +50,6 @@ public class TemplateSourceTests : IDisposable
         Assert.True(Directory.Exists(from));
     }
 
-    // The take is the fetch plus everything both verbs then ask of the template. Its two refusals are
-    // what a rearrangement of that sequence would lose, and the fetch above cannot reach either.
     [Fact]
     public void A_template_with_no_manifest_is_refused_by_the_verb_that_asked()
     {
@@ -184,7 +182,5 @@ public class TemplateSourceTests : IDisposable
         Assert.Empty(Directory.EnumerateFileSystemEntries(into));
     }
 
-    // A local repository addressed as a URL, which is what makes the clone above a real clone and still
-    // reaches nothing outside this machine.
     private static string Url(string path) => new Uri(path).AbsoluteUri;
 }

@@ -1,9 +1,9 @@
 namespace kac.core;
 
-// Alphabetical as a reader means it, used by the `list-order` check. Digit runs compare as numbers,
-// so `A.8.7` precedes `A.8.29` and `7` precedes `108`, where a byte-wise comparison inverts both.
-// Letters compare case-insensitively, with an ordinal tie-break so the order stays total. Two
-// entries differing only in case still have a defined winner rather than being read as equal.
+/// <summary>
+/// Alphabetical as a reader means it, for <c>list-order</c>. Digit runs compare as numbers, so <c>A.8.7</c> precedes
+/// <c>A.8.29</c>. Letters compare case-insensitively, with an ordinal tie-break so the order stays total.
+/// </summary>
 public static class Natural
 {
     public static int Compare(string a, string b)
@@ -34,6 +34,7 @@ public static class Natural
 
         if (i < a.Length) return 1;
         if (j < b.Length) return -1;
-        return string.CompareOrdinal(a, b); // equal but for case or leading zeros
+        // Equal but for case or leading zeros.
+        return string.CompareOrdinal(a, b);
     }
 }

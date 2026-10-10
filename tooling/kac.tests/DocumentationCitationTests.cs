@@ -1,9 +1,3 @@
-// A page names a symbol the tool declares, and nothing in MkDocs resolves it. `CliReference.Unbuilt` outlived the
-// list it named, on a published page, because deleting the list broke no build. The names are resolved here instead.
-//
-// This is the other half of `CommentCitationTests`: a comment cites a page, and a page cites a symbol. Neither
-// citation is followed by anything that would report it, so both are followed here.
-
 using System.Text.RegularExpressions;
 using kac.core;
 
@@ -12,36 +6,37 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public partial class DocumentationCitationTests
 {
-    // A code span holding `Type.Member`, or a `File.ext`. Both open upper case, which is what tells them from
-    // `.corpus.yaml`, `raw.githubusercontent.com` and every other dotted thing a page writes in a span.
+    /// <summary>
+    /// A code span holding <c>Type.Member</c>, or a <c>File.ext</c>. Both open upper case, which is what tells them
+    /// from <c>.corpus.yaml</c>, <c>raw.githubusercontent.com</c> and every other dotted thing a page writes in a span.
+    /// </summary>
     [GeneratedRegex(@"`(?<type>[A-Z][A-Za-z0-9]*)\.(?<member>[A-Za-z][A-Za-z0-9]*)`")]
     private static partial Regex Symbol();
 
-    // A declaration, whatever modifiers precede it. Partials all declare the name, so a member is looked for in
-    // every file that does.
+    /// <summary>Partials all declare the name, so a member is looked for in every file that does.</summary>
     [GeneratedRegex(@"\b(?:class|record|struct|interface|enum)\s+(?<name>[A-Za-z][A-Za-z0-9]*)")]
     private static partial Regex Declaration();
 
-    // A verb typed after the command. The space is what tells `kac export` from `kac.core`.
+    /// <summary>The space is what tells <c>kac export</c> from <c>kac.core</c>.</summary>
     [GeneratedRegex(@"\bkac (?<verb>[a-z][a-z-]*)")]
     private static partial Regex Invocation();
 
-    // A markdown link's target.
     [GeneratedRegex(@"\]\((?<target>[^)\s]+)\)")]
     private static partial Regex Link();
 
-    // A fenced block, and a code span outside one. A verb is only ever typed in either, so the prose around them
-    // is dropped rather than made to explain itself.
     [GeneratedRegex(@"```.*?```|`[^`\n]+`", RegexOptions.Singleline)]
     private static partial Regex Code();
 
-    // What a page names a file by. `Schema.feature` and `Schema.cs` both read as a member of the `Schema` class
-    // otherwise, and one of them is a real type with a real file beside it.
+    /// <summary>
+    /// <c>Schema.feature</c> and <c>Schema.cs</c> would otherwise both read as a member of the <c>Schema</c> class.
+    /// </summary>
     private static readonly string[] Extensions =
         ["cs", "md", "feature", "yaml", "yml", "json", "jsonl", "csproj", "slnx", "txt", "css", "svg", "png"];
 
-    // `cli xmldoc` is hidden from `--help` and prints the command model the usage blocks are generated from.
-    // `tooling/README.md` is where it is explained.
+    /// <summary>
+    /// <c>cli xmldoc</c> is hidden from <c>--help</c> and prints the command model the usage blocks are generated from.
+    /// <c>tooling/README.md</c> is where it is explained.
+    /// </summary>
     private static readonly string[] Hidden = ["cli"];
 
     [Fact]
@@ -58,8 +53,7 @@ public partial class DocumentationCitationTests
                 var type = m.Groups["type"].Value;
                 var member = m.Groups["member"].Value;
 
-                // A file rather than a member. The tool's own source is resolved, and a page or a Gherkin spec is
-                // left to `CommentCitationTests` and to `mkdocs build --strict`.
+                // A page or a Gherkin spec is left to `CommentCitationTests` and to `mkdocs build --strict`.
                 if (Extensions.Contains(member))
                 {
                     if (member is not "cs" || sources.Any(f => Path.GetFileName(f) == $"{type}.cs")) continue;
@@ -67,10 +61,8 @@ public partial class DocumentationCitationTests
                     continue;
                 }
 
-                // A name this repository never declares belongs to a package or a namespace: `System.CommandLine`
-                // and `KnowledgeAsCode.Tool` both read this way. Deleting a whole type therefore passes, and only
-                // deleting a member of one that survives is caught. The alternative is a list of every external
-                // name a page may write, which is a second thing to keep current.
+                // A name this repository never declares belongs to a package or a namespace, as `System.CommandLine`
+                // does. So deleting a whole type passes, and only deleting a member of one that survives is caught.
                 if (!declarations.TryGetValue(type, out var files)) continue;
 
                 if (files.Any(f => Regex.IsMatch(File.ReadAllText(f), $@"\b{Regex.Escape(member)}\b"))) continue;
@@ -83,9 +75,6 @@ public partial class DocumentationCitationTests
             "a page cites a symbol the tool does not declare:\n  " + string.Join("\n  ", unresolved));
     }
 
-    // `mkdocs build --strict` resolves the links under `docs/`, and nothing resolves the ones beside the tool.
-    // `tooling/README.md` linked a `manifest.yaml` in its own folder for the life of a release after that file
-    // moved to the repository root.
     [Fact]
     public void Every_file_a_page_links_is_a_file_the_repository_holds()
     {
@@ -128,12 +117,10 @@ public partial class DocumentationCitationTests
             "a page types a command the parser does not accept:\n  " + string.Join("\n  ", unknown));
     }
 
-    // Every prose page addressed to somebody outside this folder: the site, the repository's own front page, and
-    // the pages beside the tool. A corpus under `examples/` writes records rather than facts about the tool.
-    //
-    // The changelog is left out of both. A released entry is fixed to the release it sits under, so it goes on
-    // naming `kac mechanism` long after the verb was replaced, and that is the entry staying true rather than
-    // going stale.
+    /// <summary>
+    /// The changelog is left out. A released entry is fixed to its release, so it goes on naming a verb long after the
+    /// verb was replaced.
+    /// </summary>
     private static IEnumerable<(string Page, int Line, string Text)> Lines()
     {
         foreach (var file in Pages())
@@ -163,7 +150,6 @@ public partial class DocumentationCitationTests
         !file.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
         && !file.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}");
 
-    // Each declared name against every file declaring it, read once however many citations ask.
     private static Dictionary<string, List<string>> Declarations()
     {
         var declarations = new Dictionary<string, List<string>>(StringComparer.Ordinal);

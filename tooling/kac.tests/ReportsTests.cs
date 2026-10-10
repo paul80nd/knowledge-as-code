@@ -1,11 +1,5 @@
 using kac.core;
 
-// What `kac report` comes to, asked of a corpus nobody wrote to disk.
-//
-// `ReportPlan` is a value for the reason `ExportPlan` is: the command prints what this answers, so the
-// division between what the tool states and what it leaves open is decidable without a filesystem. The
-// golden suite exercises no report, because a fixture would only restate these against bytes.
-
 namespace kac.tests;
 
 public class ReportsTests
@@ -14,8 +8,6 @@ public class ReportsTests
     public void A_name_no_report_answers_to_comes_to_nothing()
         => Assert.Null(Reports.Plan("invented", Corpus(), [], Stamp));
 
-    // The whole of what the tool decides about a clause. A standard whose `implements:` names it is
-    // covered, and everything else is uncovered, whatever the reason.
     [Fact]
     public void A_clause_a_standard_implements_reads_covered()
         => Assert.Contains("| `STORE` | MUST | `std-SEC` |  |  |  | covered | |", Coverage());
@@ -24,33 +16,22 @@ public class ReportsTests
     public void A_clause_nothing_implements_reads_uncovered()
         => Assert.Contains("| `ROTATE` | SHOULD |  |  |  |  | uncovered | |", Coverage());
 
-    // A deviation's `departs-from` is the other edge into a clause, and it says a departure was decided
-    // rather than that the clause is now covered. So the row carries both and the verdict stays as it
-    // was.
     [Fact]
     public void A_deviation_departing_from_a_clause_is_named_beside_it()
         => Assert.Contains("| `LEAKED` | MUST |  | `dev-no-scanner` |  |  | uncovered | |", Coverage());
 
-    // A control verifies a standard rather than a clause, so it reaches the row through whatever covers
-    // it. The report says as much in its own limits.
     [Fact]
     public void A_control_reaches_a_clause_through_the_standard_covering_it()
         => Assert.Contains("| `STORE` | MUST | `std-SEC` |  |  |", Coverage());
 
-    // The same key in a second policy, offered rather than asserted. Two policies reaching for one word
-    // by coincidence is the other reading, and only a person can tell them apart.
     [Fact]
     public void A_clause_key_a_second_policy_also_uses_is_offered_as_a_pair()
         => Assert.Contains("| `SHARED` | MUST NOT |  |  |  | `pol-KEYS.SHARED` | uncovered | |", Coverage());
 
-    // Both reports say what they could not see, because a reader meets the numbers without the command
-    // beside them.
     [Fact]
     public void A_report_states_the_corpus_it_read()
         => Assert.Contains("This reads `test-corpus` and what it imports.", Coverage());
 
-    // Each report writes its own. A control vouching for a whole standard is a fact about coverage, and
-    // over a framework report it would answer a question nobody reading that page had asked.
     [Fact]
     public void A_coverage_report_states_that_no_column_says_a_clause_is_verified()
         => Assert.Contains("No column here says a clause is verified.", Coverage());
@@ -64,15 +45,11 @@ public class ReportsTests
         Assert.DoesNotContain("No column here says a clause is verified.", body);
     }
 
-    // The `Alignment` cell an export leaves behind, which is what makes this report local-only and is
-    // stated nowhere else a reader of the page would meet it.
     [Fact]
     public void A_framework_report_states_that_it_counts_the_citations_written_here()
         => Assert.Contains("the citations counted below are the ones written here",
             Plan("frameworks").Body);
 
-    // The stamp is the tool's, because only the tool knows both halves of it. `by` names the run while the
-    // output stands unedited, and `tool` keeps that version once somebody takes the content over.
     [Fact]
     public void Every_run_stamps_what_produced_it_and_what_it_answered_for()
     {
@@ -82,7 +59,6 @@ public class ReportsTests
         Assert.Contains("  - { resource: test-corpus, version: \"2.1.0\" }", plan.Frontmatter);
     }
 
-    // The name a reader runs to regenerate the record, which the record states nowhere else.
     [Fact]
     public void Every_run_stamps_the_report_it_was_run_under_and_the_tool_that_wrote_it()
     {
@@ -122,8 +98,6 @@ public class ReportsTests
         Assert.Null(Yaml.Str(Yaml.Get(parsed, "owner")));
     }
 
-    // The one thing the tool refuses to print. `Gap` and `Out of scope` are judgements about an estate,
-    // and the report says so where a reader would otherwise take an empty column for an answer.
     [Fact]
     public void The_report_names_the_judgement_it_declined_to_make()
     {
@@ -133,13 +107,10 @@ public class ReportsTests
         Assert.Contains("The tool prints two verdicts and a person writes the rest.", body);
     }
 
-    // Counted from the rows, so the table and the totals cannot disagree.
     [Fact]
     public void The_totals_count_what_the_rows_say()
         => Assert.Contains("| **Total** | **5** | **1** | **4** |", Coverage());
 
-    // The framework report reads the cells rather than the roll-up, and keys a reference so that a
-    // control six clauses cite is one row.
     [Fact]
     public void A_framework_reference_two_clauses_cite_is_one_row()
         => Assert.Contains("| A.5.17 | 2 | `pol-SCRT.STORE`, `pol-SCRT.ROTATE` | `pol-SCRT` | |",
@@ -149,23 +120,15 @@ public class ReportsTests
     public void A_framework_report_names_the_standing_the_register_files_it_under()
         => Assert.Contains("| ISO 27001:2022 | Obliged | 1 | 0 |", Plan("frameworks").Body);
 
-    // The standing again over the table it governs, and a link to the entry that placed it. A reader
-    // works down one framework at a time and the totals table is by then off the screen.
     [Fact]
     public void A_framework_section_repeats_the_standing_and_links_the_register_entry()
         => Assert.Contains("Filed under `Obliged` in [`frameworks.md`](../frameworks.md#iso-27001).",
             Plan("frameworks").Body);
 
-    // The count beside the clauses, so a reference one clause cites reads as `1` without counting the
-    // cell next to it. `Cited once` in the totals is the same question asked of the whole framework.
     [Fact]
     public void A_reference_carries_the_number_of_clauses_citing_it()
         => Assert.Contains("| A.5.17 | 2 |", Plan("frameworks").Body);
 
-    // A clause and the standard discharging it, both written two corpora up and both arriving inside
-    // eng's export. Each is scoped to gp, so the two halves of the edge meet and the clause reads
-    // covered. Scoping the record's ids to eng would file the standard against a clause id the parts
-    // file never wrote, and the report would call a discharged clause a gap.
     [Fact]
     public void A_clause_a_grandparent_s_standard_implements_reads_covered()
         => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |  |  |  | covered | |", Inheriting());
@@ -179,8 +142,10 @@ public class ReportsTests
         return plan.Body;
     }
 
-    // What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the
-    // bare ids gp wrote, in the folder eng filed it under.
+    /// <summary>
+    /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
+    /// wrote, in the folder eng filed it under.
+    /// </summary>
     private static readonly InheritedCorpus Grandparent =
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
@@ -217,8 +182,6 @@ public class ReportsTests
     private static readonly ReportStamp Stamp = new("kac/9.9.9", "2026-08-08T10:00:00Z",
         [new ReportSource("test-corpus", "2.1.0")]);
 
-    // Two policies, a standard covering one clause, a deviation departing from another, and a control
-    // verifying the standard. Every edge a coverage report walks, and no more of the corpus than that.
     private const string Policy =
         """
         ---
@@ -363,8 +326,6 @@ public class ReportsTests
             { Section = "Clauses", Noun = "clause", Columns = ["Id", "Clause", "Alignment"] }
     };
 
-    // A type whose only interesting declaration is the field naming clauses. `Edges` reads the field off
-    // the type, so a type that does not declare it contributes nothing however its records are written.
     private static TypeSchema Refers(string key, string prefix, string typeName, string field) => new()
     {
         Key = key,

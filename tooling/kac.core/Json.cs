@@ -18,31 +18,14 @@ public record ChecksReport(IReadOnlyList<CheckInfo> Checks);
 
 public record CheckInfo(string Check, string Severity, string Summary);
 
-// Export documents
-//
-// A consumer reads these instead of cloning the corpus, so their shape is a contract from the moment
-// one is published. Two numbers say which contract is in hand: `ExportManifest.FormatVersion` for the
-// envelope, and `ExportedType.ShapeVersion` for the files of one type.
+// A consumer reads these instead of cloning the corpus, so their shape is a contract once published.
+// `docs/design/export.md` says what moves `FormatVersion` and each `ShapeVersion`.
 
-// What this export is, where it came from, and what is in it. Everything that varies between two runs
-// over one commit is confined here, so the rest of the output is byte-identical run to run.
-//
-// `Commit` and `Dirty` together say whether the export can be rebuilt from its own account of itself: a
-// commit alone would read as reproducible over a tree that was not. Both are null where git could not
-// answer, which is honest about a corpus unpacked from an archive rather than cloned.
-//
-// `Corpus` and `Shortcode` are two names for one corpus and answer two questions. The first is what the
-// corpus calls itself, for a consumer telling one export from another. The second is what a citation
-// writes before the colon, so a consumer resolving `eng:pol-VURM` knows which export answers it. It is
-// null where the corpus has not declared one.
-//
-// `About` is what the corpus says about itself, carried so that whatever seals or installs this export
-// can say it too. `kac pack` never loads the corpus, so the descriptor's own words reach a registry
-// through here or not at all.
-//
-// `ReposBase` is where the corpus addresses its code repositories from. A `repos` entry on a service is
-// a bare name, so a consumer that is not given this resolves one to nothing. Null where the corpus
-// stated none.
+/// <summary>
+/// Everything that varies between two runs over one commit is confined here, so the rest of the output is
+/// byte-identical run to run. <c>Commit</c> and <c>Dirty</c> are null where git could not answer. <c>Shortcode</c>,
+/// <c>ReposBase</c> and every <c>About</c> field are null where the corpus stated none.
+/// </summary>
 public record ExportManifest(
     int FormatVersion,
     string? Corpus,
@@ -60,42 +43,17 @@ public record ExportManifest(
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<ExportedType> Types);
 
-// Where work is filed, which a manifest states three times: once for this corpus's own records under
-// `tracker`, once for the framework it took under `framework`, and once for each corpus it inherited.
-// A reader that meets this export as an installed plugin has no descriptor to open, so an address it is
-// not given here is one it invents.
-//
-// `Target` names the client that opens the ticket, as it does on `ExportPublishing`, and is written as
-// the corpus stated it. `Base` is the address of the backlog, which on Azure DevOps is the project and
-// never the repository or wiki inside it. `Area` is the area path below that project a new item is
-// filed under, and is null on every other target and wherever the corpus stated none. `Tracker.cs`
-// states what each one is written from.
-//
-// `Id` is the target and the base normalised, and it is the whole of how two blocks are told apart. A
-// caller routing a finding compares two `Id` strings and files where they differ, rather than parsing a
-// URL itself and reading `Example/Repo.git` and `example/repo` as two backlogs. `Area` is left out of
-// it: one project is one backlog however many areas divide it, so two corpora sharing a project share
-// an `Id` and differ only in where inside it their work lands. `Base` and `Id` are null together,
-// wherever the block addresses no backlog.
+/// <summary>
+/// <c>Area</c> is null on every target but Azure DevOps. <c>Base</c> and <c>Id</c> are null together, where the block
+/// addresses no backlog. <c>Id</c> leaves <c>Area</c> out: one project is one backlog however many areas divide it.
+/// <c>Tracker.cs</c> states what each one is written from.
+/// </summary>
 public record ExportTracker(string Target, string? Base, string? Area, string? Id);
 
-// One corpus this export inherited, and where that corpus publishes.
-//
-// The records travel merged into the types beside this corpus's own, so a consumer greps one file per
-// type. What cannot merge is the address: a record of `eng` is read at eng's commit, under eng's path
-// prefix, in eng's repository, and this corpus's own `Publishing` gets all three wrong. So each source
-// carries the publishing block its producer wrote, and a line names its source through `shortcode`.
-//
-// `Corpus` and `ContentVersion` are what the producer called itself and the version it published at.
-// They say which knowledge arrived, which a shortcode alone does not.
-//
-// `Tracker` is the producer's own too, and is the address a problem with one of their records goes to.
-// A consumer holding it can tell an import's backlog from its own rather than filing everything on
-// whichever tracker it happens to have.
-//
-// `ReposBase` is theirs for the same reason. A `repos` entry on one of their services is a bare name,
-// and the consumer's own base resolves it to a repository in the wrong estate. Null where the producer
-// stated none.
+/// <summary>
+/// Each source carries its producer's own publishing, tracker and repos base: a record of <c>eng</c> is read at eng's
+/// commit, in eng's repository, and filed on eng's backlog.
+/// </summary>
 public record ExportSource(
     string Shortcode,
     string? Corpus,
@@ -104,40 +62,20 @@ public record ExportSource(
     string? ReposBase,
     ExportTracker Tracker);
 
-// What a corpus says about itself, for a reader who meets it as a package or as an installed plugin
-// rather than as a repository.
-//
-// Every field is null where the corpus has not said. Nothing here is invented from a neighbour's value:
-// a licence nobody chose and an author nobody named are assertions about a person, and the template that
-// once supplied them is how a corpus came to publish under somebody else's name.
+/// <summary>Every field is null where the corpus has not said. Nothing is invented from a neighbour's value.</summary>
 public record ExportAbout(
     string? DisplayName,
     string? Description,
     ExportAuthor? Author,
     string? License);
 
-// Who publishes a corpus. An object rather than a string, because a plugin manifest carries both halves
-// and a package envelope carries the name alone, so splitting them here lets each take what it holds.
 public record ExportAuthor(string? Name, string? Url);
 
-// How a link into the published form is built, and what an agent needs to read a record's source.
-//
-// `HumanTemplate` is the whole rule for the link a person follows: a consumer substitutes the `path` and
-// `anchor` a line carries and edits nothing else. The commit is already inside the string, so a citation
-// names the version the agent read without a ref ever passing through the agent's hands.
-//
-// The other three are ingredients rather than an address, and they are what replaced a second template.
-// Only GitHub ever served a corpus's raw source to an anonymous caller, and only for a public
-// repository, so a URL an agent could simply fetch was never a rule the other targets could follow.
-// `Base`, `PathPrefix` and `Ref` are instead what a client authenticating to `Target` needs to ask for
-// the file. `docs/design/export.md` sets out the exchange.
-//
-// `Base` is the descriptor's own, carried through unresolved. `PathPrefix` is null where the corpus is
-// its repository, and is otherwise joined ahead of a record's `path` to reach the file.
-//
-// `HumanTemplate`, `Base` and `Ref` are null together, where the corpus publishes nowhere or names a
-// target nothing builds links for. That is the same state the per-record files report by carrying no
-// links.
+/// <summary>
+/// <c>HumanTemplate</c>, <c>Base</c> and <c>Ref</c> are null together, where the corpus publishes nowhere or names a
+/// target nothing builds links for. <c>PathPrefix</c> is null where the corpus is its repository.
+/// <c>docs/design/export.md</c> sets out how a client reads a record's source from these.
+/// </summary>
 public record ExportPublishing(
     string Target,
     string? HumanTemplate,
@@ -145,36 +83,11 @@ public record ExportPublishing(
     string? PathPrefix,
     string? Ref);
 
-// One type this export carries, how much of it there is, and where to find it.
-//
-// Two counts, named apart. `Records` is how many files sit under `Dir`; `Parts` is how many lines sit in
-// `PartsFile`, which for a glossary is the size of the vocabulary rather than the number of glossaries.
-// One number could be read as either, and the two differ by an order of magnitude.
-//
-// `PartsFile` is null for a type whose records hold no addressable parts, so a consumer reads the
-// per-record files alone rather than seeking a file that was never written; `Parts` is then zero.
-//
-// `ShapeVersion` is what this type's files are shaped like, and it moves alone. A consumer reading the
-// glossary is refused a bundle only where the glossary's own shape moved past what it knows, so a policy
-// gaining a key leaves it alone. `docs/design/export.md` sets the three versions out and what moves each.
-//
-// `Sections` is the fidelity each section travelled at. It belongs to the type rather than to any one
-// record, so it is stated here instead of onto every record the type wrote.
-//
-// `RecordKey` and `PartKey` name the two keys of a part line that address the part: which record it
-// belongs to, and which part of that record it is. They are published because a type names its own keys
-// and a consumer reading a type it never adopted has no schema to read them from. Assuming a spelling
-// would leave a producer whose type calls them something else exporting a valid package whose parts read
-// as empty, and every citation into them failing for a reason nothing states.
-//
-// `IdKey` and `SeeAlsoKey` name the other two that hold an id: the part's own full id, and the ids of
-// the parts it points at. A corpus merging this type in stamps its shortcode onto all four, and reads
-// which keys to stamp from here for the same reason. All four are null where the type keeps no parts,
-// alongside `PartsFile`, and `SeeAlsoKey` is null as well where the type declares no such key.
-//
-// `FrameworksFile` names the second flat file a type may keep, holding the external frameworks its
-// parts cite. It is null for every type that declares none, which is all of them bar policies. Nothing
-// here says what a line of it holds, because the exporter writes those keys rather than the type.
+/// <summary>
+/// <c>PartsFile</c>, <c>RecordKey</c>, <c>PartKey</c> and <c>IdKey</c> are null where the type keeps no parts, and
+/// <c>Parts</c> is then zero. <c>SeeAlsoKey</c> is also null where the type declares no such key. <c>FrameworksFile</c>
+/// is null for every type that declares none. <c>docs/design/export.md</c> sets out what moves <c>ShapeVersion</c>.
+/// </summary>
 public record ExportedType(
     string Type,
     int ShapeVersion,
@@ -189,21 +102,11 @@ public record ExportedType(
     IReadOnlyDictionary<string, string> Sections,
     string? FrameworksFile = null);
 
-// One record, carrying what its type's `export:` block declares, and one value derived from it. `Fields`
-// and `Sections` are keyed by what the schema named, so a consumer reading a corpus with a type it does
-// not know still gets a document it can walk.
-//
-// `Trust` is the derived one, and it is the exporter's rather than any record's. It reads the `verified`
-// list and answers with one of the Open Knowledge Format's three tiers. A type whose export declares no
-// `verified` field leaves it null, which is the same absence every other key spells.
-//
-// Absent is `null` throughout, here and on every line of the flat file. `Exporter.Absent` is where that
-// is decided. A section carried at `reference` is `null` for that reason, and a section the record never
-// wrote is absent from the map instead: two absences answering different questions about the record.
-//
-// A field's value is JSON because a field its type declares as a list travels as an array.
-// `Exporter.Value` reads the shape off that declaration, so one key holds one shape on every record of
-// the type and a consumer never branches on what an individual record wrote.
+/// <summary>
+/// <c>Trust</c> is null where the type's export declares no <c>verified</c> field. A section carried at
+/// <c>reference</c> is null, and a section the record never wrote is absent from the map. <c>Exporter.Absent</c>
+/// decides absence and <c>Exporter.Value</c> the shape of a field.
+/// </summary>
 public record ExportRecord(
     string Type,
     string Path,
@@ -212,29 +115,17 @@ public record ExportRecord(
     IReadOnlyDictionary<string, string?> Sections,
     ExportLinks? Links);
 
-// Where a record is read, resolved. One address, and it is the rendered page: see `ExportPublishing`
-// for why an agent is handed ingredients rather than a second link.
 public record ExportLinks(string Human);
 
-// One part of the flat file is one line, and no record here describes it. The type declares its keys in
-// its own `export.parts.line:` block, and `Exporter.Value` fills each from the source named beside it.
-// A fixed record would spell one type's words onto every other type's parts.
-//
-// `docs/design/export.md` says what a self-contained line costs and buys, and why a line carries a `path`
-// and an `anchor` rather than the two resolved links the manifest's templates build from them.
+// The type declares a part line's keys in its own `export.parts.line:` block. `docs/design/export.md`
+// says why a line carries a `path` and an `anchor` rather than two resolved links.
 
-// Bundle documents
-//
-// What `kac bundle` writes for itself. `plugin.json` is not here: it is the corpus's own file, edited
-// as a DOM so that keys this tool has never heard of survive the round trip.
+// `plugin.json` is not here: it is edited as a DOM, so keys this tool has never heard of survive.
 
-// What the assembled plugin holds, and why anything is missing from it.
-//
-// Two corpora running one plugin name may ship different component sets. This is where a plugin says
-// which it has; `docs/cli/bundle.md` says why that has to be stated rather than inferred.
-//
-// It carries no timestamp and no commit. The export it was built from is inside the plugin already,
-// and its manifest states both. A second clock here would be a second answer to one question.
+/// <summary>
+/// No timestamp and no commit: the copied export's manifest states both. <c>docs/cli/bundle.md</c> says why the
+/// component set is stated rather than inferred.
+/// </summary>
 public record BundleRecord(
     int BundleVersion,
     string Plugin,
@@ -244,22 +135,13 @@ public record BundleRecord(
     IReadOnlyList<BundleIncluded> Included,
     IReadOnlyList<BundleTrimmed> Trimmed);
 
-// The export this plugin was assembled around, named so that a reader holding the plugin alone can tell
-// which corpus and which envelope it has, without walking into the copy to find out. The shape each type
-// is at is not restated: it is in the copied manifest, and `Included` already names the shape every
-// surviving component reads.
 public record BundleExport(int? FormatVersion, string? Corpus, string? ContentVersion, IReadOnlyList<string> Types);
 
 public record BundleIncluded(string Path, IReadOnlyList<string> Requires, string? Note);
 
-// A component and the reason it was left out. The reason is prose because it is read by a person
-// asking why the plugin they installed does less than the one their colleague has.
 public record BundleTrimmed(string Path, IReadOnlyList<string> Requires, string Reason);
 
-// The local marketplace
-//
-// The minimum that installs and validates: what the plugin is, who owns it, and where under the
-// marketplace root it sits. `Dist.Root` says why the marketplace is the root and not a sibling.
+// `Dist.Root` says why the marketplace is the root and not a sibling.
 
 public record MarketplaceManifest(
     [property: JsonPropertyName("$schema")]
@@ -289,17 +171,18 @@ public partial class KacJson : JsonSerializerContext
     private static KacJson? s_relaxed;
     private static KacJson? s_line;
 
-    // Shared context for CLI output: the source-generated metadata from Default, plus relaxed escaping,
-    // so a quote or an em dash in a finding reaches the reader as itself rather than as a numeric
-    // escape. Lazily initialised so it does not touch the generator's Default during static
-    // construction, whose order across the partial is unspecified.
+    /// <summary>
+    /// CLI output with relaxed escaping, so a quote or an em dash reaches the reader as itself. Lazy, so it does not
+    /// touch <c>Default</c> during static construction, whose order across the partial is unspecified.
+    /// </summary>
     public static KacJson Relaxed => s_relaxed ??= new KacJson(Escaped(indented: true));
 
-    // The same, not indented, for a document whose unit is the line. JSONL exists so that a grep hands
-    // back a complete object, which an indented one spread over several lines never does.
+    /// <summary>One object per line, so a grep hands back a complete one.</summary>
     public static KacJson Line => s_line ??= new KacJson(Escaped(indented: false));
 
-    // `Options` is the generator's own name on this partial, so this one is named for what it does.
+    /// <summary>
+    /// <c>Options</c> is the generator's own name on this partial, so this one is named for what it does.
+    /// </summary>
     private static JsonSerializerOptions Escaped(bool indented) => new(Default.Options)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

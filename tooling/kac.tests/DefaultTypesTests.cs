@@ -1,14 +1,8 @@
 using System.Text.RegularExpressions;
 using kac.core;
 
-// Two pages of the framework documentation name every type by hand. `docs/framework/types.md` introduces each
-// one for somebody deciding whether to adopt the framework, and `docs/framework/metadata.md` says what a source
-// is for each. The lines are hand-written: the schema's own `summary:` is the same altitude, and a page that
-// generated them would be a second copy of a sentence the schema already owns.
-//
-// So what is held here are the names, and the tier each sits under, and the wording is left alone. That is the
-// stance `DocumentationTests` takes for the schema reference, and it catches the faults that matter: a type
-// added, retired, renamed or moved between tiers, on a page nobody opens while doing any of those.
+// `docs/framework/types.md` and `docs/framework/metadata.md` name every type by hand. This holds the
+// names and the tier each sits under, and leaves the wording alone.
 
 namespace kac.tests;
 
@@ -21,7 +15,6 @@ public partial class DefaultTypesTests
     private static readonly string MetadataPage =
         File.ReadAllText(Path.Combine(Repo.Root, "docs", "framework", "metadata.md"));
 
-    // A tier's own H2, then every folder named in the table beneath it: `| **ADRs** | `adrs/` | …`.
     [GeneratedRegex(@"^## (?<tier>\w+)$", RegexOptions.Multiline)]
     private static partial Regex TierHeading();
 
@@ -36,8 +29,6 @@ public partial class DefaultTypesTests
                 .OrderBy(x => x, Comparer<(string, string)>.Default),
             Listed().OrderBy(x => x, Comparer<(string, string)>.Default));
 
-    // The table under `## Filling `sources`` lists each type against what a source is for it. A type is named by
-    // the schema's own `label:`, between the pipe opening its cell and the comma or pipe closing it.
     [Fact]
     public void Every_type_the_schema_declares_is_listed_against_what_a_source_is()
     {
@@ -55,9 +46,7 @@ public partial class DefaultTypesTests
             + string.Join("\n  ", missing));
     }
 
-    // The count the page opens on, spelled as prose spells it. A type added moves this, and nothing else on the
-    // file may state it: `framework/index.md` and `getting-started.md` both carried a copy, and a copy is what
-    // goes stale on the day somebody adds the eighteenth.
+    /// <summary>The count the page opens on, spelled as prose spells it.</summary>
     private static readonly string[] Numbers =
     [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
@@ -74,8 +63,10 @@ public partial class DefaultTypesTests
             Page, StringComparison.Ordinal);
     }
 
-    // Tracked files rather than a folder walk, so a worktree under `.claude/` and an untracked scratch
-    // file are somebody else's business. The prose files are the ones a reader meets a number in.
+    /// <summary>
+    /// Tracked files rather than a folder walk, so a worktree under <c>.claude/</c> and an untracked scratch file are
+    /// somebody else's business.
+    /// </summary>
     [Fact]
     public void No_other_file_states_that_count()
     {
@@ -101,7 +92,6 @@ public partial class DefaultTypesTests
         ? Numbers[count]
         : throw new InvalidOperationException($"kac.tests: no word for {count} types. Extend Numbers.");
 
-    // Every (tier, folder) pair the page states, read off the heading each table sits under.
     private static List<(string Tier, string Folder)> Listed()
     {
         var headings = TierHeading().Matches(Page);

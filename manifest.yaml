@@ -1,32 +1,11 @@
-# knowledge-as-code: template manifest
-#
-# A template is not a folder. It is the set of files the rules below name, read from anywhere in this
-# repository, and this file is the only place that set is written down. That is what lets one `.schema/`
-# at the root be part of the template while sitting outside `template/`, and it is what lets a fork lay
-# its own repository out however it likes.
-#
-# Every rule says which layer its files belong to, and `to:` says where they land in a corpus. Omit
-# `to:` and a file lands on the path it was read from. Give it one and it replaces the pattern's
-# directory prefix, meaning everything up to the last `/` before the first wildcard, so a folder
-# relocates whole and several files sharing one folder relocate together.
-#
-# A rule may also say `ci:`, naming the continuous integration system its files serve. A corpus is
-# created for one system and receives that system's rule alone.
-#
-# A file whose destination is its source is shared with the corpora in this repository rather than
-# copied into them: `.schema/` and the four skills below are read from this root by every corpus under
-# `examples/` and by `template/` alike. A corpus created elsewhere receives its own copy of each.
-#
-# The rules are read in order and the first match wins, so a rule carving one file out of a folder is
-# written above the rule claiming the folder.
+# The set of files a corpus receives from the template, read from anywhere in this repository. Each rule names
+# its layer, and `to:` replaces the pattern's directory prefix, everything up to the last `/` before the first
+# wildcard. The first matching rule wins, so a rule carving a file out of a folder sits above the folder's rule.
 
-# The version of the template's shape. Increment when a corpus has to respond to the change: a file
-# added or removed, a file renamed, or a file moving between layers.
+# The template's shape. Increment when a corpus has to respond: a file added, removed, renamed or moved between layers.
 version: 18
 
-# The oldest `kac` that can read this manifest. The template is fetched rather than shipped inside the
-# package, so the two version independently. An older tool meeting a newer template stops on this and
-# says so, rather than half-reading it.
+# The oldest kac that reads this manifest. The template is fetched rather than shipped, so the two version apart.
 minimum-tool: "0.6.0"
 
 layers:
@@ -63,7 +42,7 @@ layers:
 
 rules:
 
-  # ── withheld, ahead of the folders they sit in ─────────────────────────────
+  # Withheld files sit above the folder rules that would otherwise claim them.
 
   - path:
       - "manifest.yaml"
@@ -77,8 +56,6 @@ rules:
       Present so that `kac` reads `template/` as a corpus and can validate it here. A corpus's own
       descriptor is written fresh when the corpus is created, from what the invocation was told, rather
       than copied from a file carrying somebody else's name.
-
-  # ── overlay ────────────────────────────────────────────────────────────────
 
   - path: ".schema/**"
     layer: overlay
@@ -126,11 +103,8 @@ rules:
       three. A skill is addressed the same way from any repository root, so these land where they were
       read and need no `to:`.
 
-  # ── the plugin ─────────────────────────────────────────────────────────────
-
-  # Both `.plugin/` rules sit here, out of layer order, because the order is what decides. A
-  # `.plugin/**` overlay rule written among the rules above would claim the manifest before this rule
-  # reached it, and a corpus would lose the one file in the plugin it names for itself.
+  # Both `.plugin/` rules sit here, out of layer order, because the first match wins: a `.plugin/**` overlay
+  # rule above this one would claim the manifest a corpus names for itself.
 
   - path: "template/.plugin/.claude-plugin/plugin.json"
     to: ".plugin/.claude-plugin/"
@@ -149,8 +123,6 @@ rules:
       `${CLAUDE_PLUGIN_ROOT}` rather than opening the tree, so every corpus ships the same words. A
       corpus naming `plugin.from` in its descriptor reads them from that one tree instead, and receives
       none of these.
-
-  # ── seed ───────────────────────────────────────────────────────────────────
 
   - path: "template/**/_template.md"
     to: ""
@@ -212,19 +184,8 @@ rules:
       out the framework's own pages, which are not a corpus's to rewrite. Written as a pattern rather
       than as one name per type, so adding a type is adding its schema and its pages and nothing else.
 
-  # Everything else `template/` holds: the worked records that show the shape, and the `_index.md` a
-  # corpus arrives with fresh so that it validates before its owner has run anything. `generate` owns
-  # those afterwards.
-  #
-  # It seeds, so a file added to `template/` and classified by nothing is the corpus's from the moment it
-  # arrives. That is the safe way round here: a corpus's own edit is never overwritten by a file nobody
-  # thought about, and every template file reaches a corpus whether or not a rule was written for it.
+  # Everything else `template/` holds seeds, so a template file no rule names is the corpus's from arrival.
   - {path: "template/**", to: "", layer: seed}
 
-  # Everything this repository holds and no corpus receives: the tool, the three test layers, the
-  # documentation site, the worked corpora under `examples/`, and the repository's own CI and licence.
-  #
-  # This catch-all withholds, where the one above it seeds. The rules name the whole repository, so a
-  # file outside `template/` that nobody classified is far more likely to be this repository's own than
-  # a corpus's, and silence has to mean "stays here".
+  # Everything else withholds, so a file outside `template/` that nobody classified stays here.
   - {path: "**", layer: withheld}

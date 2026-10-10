@@ -1,11 +1,5 @@
 using kac.core;
 
-// In-process unit tests for a field whose range the corpus states: `values: $corpus.<name>` in the schema,
-// and `enums:` in `.corpus.yaml`.
-//
-// The `corpus-enums` and `corpus-enums-undeclared` fixtures cover both faults through the CLI. What lives
-// here is the binding itself, where a schema and a descriptor are two strings and a case is one of each.
-
 namespace kac.tests;
 
 public class CorpusEnumTests
@@ -19,8 +13,6 @@ public class CorpusEnumTests
         Assert.Equal(["dotnet-tool", "static"], field.Values);
     }
 
-    // Null rather than empty, because the value checks read a null range as no range at all and would
-    // otherwise refuse every value a record carries. What the corpus owes is reported once, elsewhere.
     [Fact]
     public void A_corpus_that_wrote_nothing_leaves_the_range_unresolved()
     {
@@ -30,13 +22,10 @@ public class CorpusEnumTests
         Assert.Null(field.Values);
     }
 
-    // An empty range would refuse every value a record carries, so a corpus that opened the key and wrote
-    // nothing under it reads exactly as one that never opened it.
     [Fact]
     public void A_corpus_that_wrote_an_empty_list_leaves_the_range_unresolved()
         => Assert.Null(Platform([]).Values);
 
-    // A scalar reaches `Yaml.StrList` as nothing, which is the same state and the same reading.
     [Fact]
     public void A_range_written_as_a_scalar_leaves_it_unresolved()
     {
@@ -45,7 +34,6 @@ public class CorpusEnumTests
         Assert.Empty(Assert.Single(descriptor.Enums).Value);
     }
 
-    // A range no record can satisfy, reported where the values were written rather than where they were met.
     [Fact]
     public void A_value_that_is_not_lower_case_is_reported_against_the_descriptor()
     {
@@ -59,9 +47,6 @@ public class CorpusEnumTests
     public void A_range_the_corpus_can_satisfy_is_silent()
         => Assert.Empty(Findings(PlatformField, ["dotnet-web"]));
 
-    // `values:` is read wherever a field is declared, so the check has to look wherever one can be. The
-    // message names the path a record writes the key at, because `channel` on its own reads as a
-    // frontmatter key of that name.
     [Fact]
     public void A_key_inside_an_object_entry_is_asked_for_its_range_too()
     {
@@ -71,21 +56,14 @@ public class CorpusEnumTests
         Assert.Contains("`channel: [a, b]`", finding.Message);
     }
 
-    // An optional field is owed a range from the first record that states it. A corpus using none of its
-    // values has nothing a range would judge, so asking for one would be setup work for a field that
-    // every record already satisfies by leaving the key out.
     [Fact]
     public void An_optional_field_no_record_states_is_asked_for_nothing()
         => Assert.Empty(Undeclared(ReleasesField));
 
-    // A template teaches its value to every record copied from it, so it states the field as a record
-    // does and the range it draws on is owed from there.
     [Fact]
     public void An_optional_field_a_template_states_is_asked_for_its_range()
         => Assert.Single(Findings(ReleasesField, null, "", "releases:\n  - channel: stable\n"));
 
-    // Only the half saying the corpus wrote no range waits for the field to be owed. A range already
-    // written carries a value no record can satisfy whether or not anything states the field.
     [Fact]
     public void A_range_written_for_a_field_no_record_states_is_still_held_to_lower_case()
     {
@@ -95,7 +73,6 @@ public class CorpusEnumTests
         Assert.Contains("carries 'Stable'", finding.Message);
     }
 
-    // The two prefixes are read in one switch, so a schema mixing them is worth pinning.
     [Fact]
     public void A_field_drawing_on_the_schema_is_untouched_by_what_the_corpus_wrote()
     {
@@ -109,7 +86,9 @@ public class CorpusEnumTests
     public void A_name_the_corpus_answers_nothing_to_is_no_fault_in_the_schema()
         => Assert.Empty(Schema.Load(Files("$corpus.platform"), Declared(null)).UnreadKeys);
 
-    // Required, as the real `platform` is, so the range is owed from the first record of the type.
+    /// <summary>
+    /// Required, as the real <c>platform</c> is, so the range is owed from the first record of the type.
+    /// </summary>
     private const string PlatformField =
         "fields:\n  platform:\n    required: true\n    type: enum\n    values: $corpus.platform\n";
 
@@ -120,8 +99,9 @@ public class CorpusEnumTests
     private static List<Finding> Undeclared(string fields, string front = "") =>
         Findings(fields, null, front);
 
-    // One service and its template, so the pass has a record of the type and asks the question the
-    // record's arrival raises. `front` is what the record states and `template` what the template does.
+    /// <summary>
+    /// One service and its template. <c>front</c> is what the record states and <c>template</c> what the template does.
+    /// </summary>
     private static List<Finding> Findings(string fields, IReadOnlyList<string>? declared, string front = "",
         string template = "", IReadOnlyList<string>? channels = null)
     {
@@ -172,7 +152,9 @@ public class CorpusEnumTests
             ? new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
             : new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal) { ["platform"] = platform };
 
-    // One type and one field, so that what the loader made of `values:` is the only thing under test.
+    /// <summary>
+    /// One type and one field, so that what the loader made of <c>values:</c> is the only thing under test.
+    /// </summary>
     private static Dictionary<string, string> Files(string values) =>
         new(StringComparer.Ordinal)
         {

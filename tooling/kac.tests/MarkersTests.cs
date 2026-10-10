@@ -1,6 +1,3 @@
-// Unit tests for the marker protocol: what a splice writes between a pair of markers, and what `update`
-// reads on a page carrying them.
-
 using kac.core;
 
 namespace kac.tests;
@@ -20,8 +17,6 @@ public class MarkersTests
         Assert.EndsWith("\nafter", result);
     }
 
-    // A corpus that adopted few types has blocks with nothing to say: no pair of its types is easily
-    // confused, none of its words collides. Two blank lines between the markers reads as deleted content.
     [Fact]
     public void SpliceBlock_closes_an_empty_block_on_the_next_line()
     {
@@ -38,8 +33,6 @@ public class MarkersTests
         Assert.Equal(text, Markers.SpliceBlock(text, "missing", "NEW"));
     }
 
-    // Authored is what `update --check` compares, so it decides whether an overlay page may carry a
-    // corpus-specific table.
     [Fact]
     public void Authored_drops_what_a_generated_block_holds_and_keeps_the_markers()
     {
@@ -78,8 +71,6 @@ public class MarkersTests
     [Fact]
     public void Authored_compares_the_whole_page_where_a_block_is_never_closed()
     {
-        // The generator cannot follow the structure, so nothing is treated as generated and the drift
-        // stays visible rather than being masked by a marker someone deleted half of.
         const string text = "a\n<!-- BEGIN GENERATED: one -->\nX\n";
 
         Assert.Equal(text, Markers.Authored(text));

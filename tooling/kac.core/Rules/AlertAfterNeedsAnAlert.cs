@@ -1,14 +1,5 @@
 namespace kac.core;
 
-// `alert-after` is the delay an alert is configured with, so a target stating one is claiming an alert
-// exists. Whether it does is a fact about the services the target binds, and no NFR states it.
-//
-// A class rather than an `expr:`, because the walk crosses two types: `applies-to` reaches an offering
-// as often as a service, an offering emits nothing itself, and the services behind it are named by its
-// own field. No expression reads a second document.
-//
-// Reported, never failed. A target can state the delay an alert will have before anybody builds it,
-// and an error would make a record lie about the plan to stay green.
 public sealed class AlertAfterNeedsAnAlert : ICorpusRule
 {
     public RuleId RuleId => new("alert-after-needs-an-alert");
@@ -17,19 +8,16 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
 
     public IReadOnlyList<CheckId> Emits => [Reports];
 
-    // The field the rule is about. Renaming it in `.schema/nfrs.yaml` means renaming it here, and
-    // nothing holds the two together.
+    /// <summary>
+    /// Renaming the field in <c>.schema/nfrs.yaml</c> means renaming it here, and nothing holds the two together.
+    /// </summary>
     private const string AlertAfter = "alert-after";
 
-    // The field on a service saying how a live problem is raised, and the values that raise one. Named
-    // here because only this rule knows that `alert` and `ticket` are emitted by the system and that
-    // `log` and `none` are not.
     private const string MonitoringOutput = "monitoring-output";
 
     private static readonly HashSet<string> Emitting =
         new(["alert", "ticket"], StringComparer.OrdinalIgnoreCase);
 
-    // The folder the walk ends in, and the one both hops are held against.
     private const string ServicesFolder = "services";
 
     public void Check(CorpusRuleContext ctx)
@@ -45,8 +33,6 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
                 .SelectMany(t => ServicesBehind(ctx, t))
                 .ToList();
 
-            // An id nothing resolves is `ref-resolves`'s to report, and a target reaching no service at
-            // all leaves nothing to judge.
             if (services.Count == 0) continue;
 
             var stated = services.Select(s => s.FrontScalar(MonitoringOutput))
@@ -54,8 +40,6 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
                 .Where(o => o.Length > 0)
                 .ToList();
 
-            // A service the field does not oblige to state one says nothing either way, and one silence
-            // suppresses the warning rather than earning it.
             if (stated.Count != services.Count) continue;
             if (stated.Any(Emitting.Contains)) continue;
 
@@ -69,12 +53,10 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
         }
     }
 
-    // A field of ids naming services. `applies-to` on an NFR and `implemented-by` on an offering are both
-    // this shape, which is what lets one walk follow the pair. Read from the type rather than by name,
-    // where the constants above are named: a rename of either reaches this file through the schema.
-    //
-    // Answered only where the type declares exactly one. A second would make which graph this walks
-    // follow the order the fields were declared in, and pick one of them in silence.
+    /// <summary>
+    /// Answered only where the type declares exactly one such field. With two, which graph the walk follows would turn
+    /// on declaration order.
+    /// </summary>
     private static FieldSpec? PointingField(TypeSchema t)
     {
         var found = t.FieldOrder.Select(n => t.Fields[n])
@@ -85,8 +67,6 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
         return found.Count == 1 ? found[0] : null;
     }
 
-    // Every service one target names, directly or through the offering that names it. An offering
-    // reaching a second offering is not a shape any type declares, so the walk stops at one hop.
     private static IEnumerable<Doc> ServicesBehind(CorpusRuleContext ctx, string id)
     {
         if (ctx.ById.GetValueOrDefault(id) is not { Type: { } type } doc) yield break;

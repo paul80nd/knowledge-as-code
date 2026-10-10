@@ -1,10 +1,9 @@
 namespace kac.core;
 
-// What looking a citation up came to.
-//
-// `Missing` is nothing answering to it anywhere. The two spelling answers are a record that does exist,
-// written the other way, which is a different mistake and earns a different sentence: a reader told the
-// record does not exist goes looking for the record.
+/// <summary>
+/// What looking a citation up came to. <c>Missing</c> is nothing answering to it anywhere. The two spelling answers are
+/// a record that does exist, written the other way.
+/// </summary>
 public enum Landing
 {
     Local,
@@ -14,29 +13,29 @@ public enum Landing
     NeedsNoScope,
     UnknownScope,
 
-    // The scope names a corpus that is not on disk: an import this corpus declared and has not restored,
-    // or one a chain would have introduced from inside it. `import-restored` reports that once, against
-    // the descriptor, so every citation into it stays quiet: a reader whose restore has not run wants
-    // one line telling them to run it, not one per reference.
+    /// <summary>
+    /// The scope names a corpus that is not on disk. <c>import-restored</c> reports that once against the descriptor,
+    /// so every citation into it stays quiet.
+    /// </summary>
     NotRestored
 }
 
-// Where a citation landed, and everything a check asks about the record it found.
-//
-// The two halves are answered here rather than at each call site. A check reading a part off a `Doc`
-// and off an `ImportedRecord` separately would be a second resolution path, free to drift from this
-// one in whatever it forgot to ask.
+/// <summary>
+/// Where a citation landed, and everything a check asks about the record it found, for a local <c>Doc</c> and an
+/// <c>ImportedRecord</c> alike.
+/// </summary>
 public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, string? Scope)
 {
-    // The record a message names. A path where this corpus holds the file, and the citation itself where
-    // another corpus does: a path into somebody else's repository is a fact about their tree.
+    /// <summary>
+    /// The record a message names: a path where this corpus holds the file, and the citation itself where another
+    /// corpus does.
+    /// </summary>
     public string Where => Local?.Rel ?? $"{Scope}:{Imported?.Id}";
 
-    // What one part of this record is called, in the word the type's own readers use. Null where the
-    // type keeps no parts at all, which is a different fault from naming a part it does not carry.
-    //
-    // An imported record's type is read from the schema this corpus holds. A consumer that never adopted
-    // the producer's type still judges the citation, and falls back to the general word for it.
+    /// <summary>
+    /// What one part of this record is called, in the word the type's own readers use. Null where the type keeps no
+    /// parts at all.
+    /// </summary>
     public string? Noun(Schema schema)
     {
         if (Local is { } local) return local.Type?.Parts?.Noun;
@@ -45,40 +44,35 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
         return schema.ByFolder.GetValueOrDefault(imported.Type)?.Parts?.Noun ?? "part";
     }
 
-    // The imported record, for a caller that has already established the citation landed on one. Every
-    // other landing carries none, so reaching this is that check having been skipped, and the message
-    // names the landing it happened on.
+    /// <summary>
+    /// The imported record, for a caller that has already established the citation landed on one. Throws otherwise.
+    /// </summary>
     private ImportedRecord Found => Imported
                                     ?? throw new InvalidOperationException(
                                         $"a citation that landed {How} holds no imported record.");
 
-    // Whether the record carries the part named. Compared ordinally, as a part id is everywhere else.
+    /// <summary>Compared ordinally, as a part id is everywhere else.</summary>
     public bool Carries(string part) =>
         Local is { } local
             ? local.Parts.Any(p => string.Equals(p.Id, part, StringComparison.Ordinal))
             : Found.Parts.Any(p => string.Equals(p, part, StringComparison.Ordinal));
 
-    // The type this record is, as the schema names it. Null where nothing in the schema covers it, which
-    // leaves the target to the checks that can answer for it.
+    /// <summary>
+    /// The type this record is, as the schema names it, and null where nothing in the schema covers it.
+    /// </summary>
     public TypeSchema? Type(Schema schema) =>
         Local is { } local ? local.Type : schema.ByFolder.GetValueOrDefault(Found.Type);
 }
 
-// Every record a citation can land on, local and imported alike, behind one lookup.
-//
-// **One path serves both.** Once the graph is assembled an imported id is a record like any other, and
-// the checks that walk references never ask which side of a boundary they are on. A corpus is not
-// judged more loosely for having imported the record it cites.
-//
-// What the two sides do not share is how they are spelled. A record this corpus holds is cited bare and
-// one it imported is cited with its producer's shortcode, so each spelling is refused on the other's
-// records: two spellings of one obligation defeat every search anybody runs for it.
+/// <summary>
+/// Every record a citation can land on, local and imported alike, behind one lookup. A local record is cited bare and
+/// an imported one with its producer's shortcode, and each spelling is refused on the other's records.
+/// </summary>
 public sealed class Resolver
 {
-    // Case-insensitive throughout, because `byId` is: an id that resolves when this corpus wrote the
-    // record has to resolve when another corpus did. `id-unique` reports a collision the same way, so a
-    // stricter comparison here would report a mis-cased import as a record that does not exist and send
-    // the reader looking for one that is where they left it.
+    /// <summary>
+    /// Case-insensitive throughout, as <c>byId</c> and <c>id-unique</c> are, so a mis-cased import still resolves.
+    /// </summary>
     private readonly Dictionary<string, Doc> _local;
     private readonly Dictionary<string, ImportedRecord> _imported = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _scopes = new(StringComparer.OrdinalIgnoreCase);
@@ -94,28 +88,25 @@ public sealed class Resolver
         {
             _shortcodes.Add(import.Shortcode);
 
-            // The scope is the record's own and never the import's. A chain therefore introduces a
-            // shortcode `consumes:` never lists, which is how a citation into a grandparent resolves.
+            // The scope is the record's own, not the import's, which is how a citation into a grandparent resolves.
             foreach (var record in import.Records)
             {
                 _shortcodes.Add(record.Scope);
                 _imported[$"{record.Scope}:{record.Id}"] = record;
 
-                // Which corpus a bare id would have meant, so a citation missing its scope is told the
-                // spelling to write. The first record declaring an id wins: the imports in the order
-                // `consumes:` lists them, and inside one import its own records before the ones it
-                // inherited.
+                // Which corpus a bare id would have meant, so a citation missing its scope is told the spelling to
+                // write. The first record declaring an id wins.
                 _scopes.TryAdd(record.Id, record.Scope);
             }
         }
     }
 
-    // Whether anything was imported at all. A corpus standing on its own never meets the spelling rules
-    // below, so a check can skip the question entirely.
+    /// <summary>Whether anything was imported at all. A corpus standing on its own skips the spelling rules.</summary>
     public bool Any => _imported.Count > 0;
 
-    // Where this citation's record lands. The part is not looked at here: whether a record carries one
-    // is a question for whoever asked, and it reads differently for a citation than for a `ref:` field.
+    /// <summary>
+    /// Where this citation's record lands. Whether the record carries the part is the caller's question.
+    /// </summary>
     public Landed Resolve(Citation citation)
     {
         if (citation.Scope is not { } scope)
@@ -127,9 +118,8 @@ public sealed class Resolver
 
         if (_pending.Contains(scope)) return new Landed(Landing.NotRestored, null, null, scope);
 
-        // A shortcode nothing here knows, while a declared import is missing, may be a corpus inside
-        // that export: a chain introduces shortcodes this corpus never declared. Telling the reader to
-        // declare it would be wrong, and `import-restored` already names the one thing to do.
+        // A shortcode nothing here knows, while a declared import is missing, may be a corpus inside that export.
+        // `import-restored` already names the fix.
         if (!_shortcodes.Contains(scope))
             return _pending.Count > 0
                 ? new Landed(Landing.NotRestored, null, null, scope)

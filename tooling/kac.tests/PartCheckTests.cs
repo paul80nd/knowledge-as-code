@@ -1,10 +1,5 @@
 using kac.core;
 
-// In-process unit tests for a record's addressable parts. Every branch here is driven by a type's
-// `parts:` declaration rather than by anything specific to policies or glossaries, so these build small
-// declarations of their own. That is also the only way to show that the source, the modals, the
-// levels and the id pattern are read from the schema rather than assumed.
-
 namespace kac.tests;
 
 public class PartCheckTests
@@ -33,7 +28,6 @@ public class PartCheckTests
         Assert.Equal("clause-table", Assert.Single(found).Check.Value);
     }
 
-    // Reported and stopped rather than left to the row checks, which would find nothing and say nothing.
     [Fact]
     public void An_empty_table_binds_nobody()
     {
@@ -42,7 +36,6 @@ public class PartCheckTests
         Assert.Contains("binds nothing binds nobody", Assert.Single(found).Message);
     }
 
-    // A missing section is `required-section`'s to report; saying it twice would make one fault two.
     [Fact]
     public void A_document_without_the_section_is_left_to_required_section()
         => Assert.Empty(Run("## Context\n\nNothing to do with clauses.\n"));
@@ -59,7 +52,6 @@ public class PartCheckTests
         Assert.Contains("MUST, MUST NOT, SHOULD", Assert.Single(found).Message);
     }
 
-    // Bold carries the level visually, so a binding modal written plain reads as advice.
     [Fact]
     public void A_binding_modal_written_plain_is_reported()
     {
@@ -75,14 +67,10 @@ public class PartCheckTests
         Assert.Contains("Write it plain", Assert.Single(found).Message);
     }
 
-    // "MUST NOT" matched as the "MUST" that prefixes it would be reported as a compound clause carrying
-    // a second modal.
     [Fact]
     public void A_longer_modal_is_recognised_before_the_one_that_prefixes_it()
         => Assert.Empty(Run(Header + "| `LOGS` | **MUST NOT** leave the tenancy. |\n"));
 
-    // "MUSTERED" contains "MUST". Matched as a substring it would report a second modal the row
-    // does not state.
     [Fact]
     public void A_word_a_modal_only_prefixes_is_not_a_second_modal()
         => Assert.Empty(Run(Header + "| `SHIFT` | **MUST** be MUSTERED before the shift. |\n"));
@@ -110,8 +98,6 @@ public class PartCheckTests
         Assert.Contains("does not match ^[A-Z]{3,8}$", Assert.Single(found).Message);
     }
 
-    // Ordinal, because `LOGS` and `logs` differing only in case is not two clauses a reader could tell
-    // apart either. Here, though, the pattern catches the lower-cased one first.
     [Fact]
     public void An_id_used_twice_makes_a_citation_of_it_ambiguous()
     {
@@ -159,8 +145,6 @@ public class PartCheckTests
         Assert.Empty(Notation("Answering `pol-VURM.TIMEBOX` in full.\n"));
     }
 
-    // A shortcode carries no type prefix and no hyphen, so a scoped reference is not a citation with the
-    // wrong separator and must not be reported as one.
     [Theory]
     [InlineData("eng:pol-VURM")]
     [InlineData("eng:pol-VURM.TIMEBOX")]
@@ -171,7 +155,6 @@ public class PartCheckTests
         Assert.Empty(Notation($"Written as `{span}` here.\n"));
     }
 
-    // A citation is written in the types that offer no parts.
     [Fact]
     public void The_notation_is_checked_where_no_parts_are_declared()
     {
@@ -180,13 +163,11 @@ public class PartCheckTests
 
     private const string Terms = "## Terms\n\n";
 
-    // The heading is the address, so the checks a table needs have nothing to ask here.
     [Fact]
     public void Headings_under_the_section_are_parts_and_nothing_else_is_asked()
         => Assert.Empty(Run(Terms + "### Corpus\n\nA body of records.\n\n### Drift\n\nCopies parting.\n",
             Headings(), "glossary"));
 
-    // A citation and a link to a heading name the same thing.
     [Fact]
     public void A_headings_address_is_the_anchor_it_slugs_to()
     {
@@ -198,7 +179,6 @@ public class PartCheckTests
         Assert.Equal("Identity line", part.Text);
     }
 
-    // The message uses the word the type's own readers do.
     [Fact]
     public void Two_headings_slugging_alike_collide()
     {
@@ -219,7 +199,6 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
-    // A citation resolves against what the type said it would find, and nothing else.
     [Fact]
     public void A_heading_outside_the_section_is_not_a_part()
     {
@@ -229,7 +208,6 @@ public class PartCheckTests
         Assert.Equal(["corpus"], doc.Parts.Select(p => p.Id));
     }
 
-    // Nothing else reports this, so without the check a glossary holding no terms validates in silence.
     [Fact]
     public void A_section_holding_no_headings_says_what_belongs_there()
     {
@@ -240,7 +218,6 @@ public class PartCheckTests
         Assert.Contains("the '## Terms' section holds no terms. Write each one as an H3 heading.", one.Message);
     }
 
-    // A heading at the wrong level is prose rather than a part.
     [Fact]
     public void A_section_holding_only_headings_at_another_level_holds_no_parts()
     {
@@ -248,14 +225,10 @@ public class PartCheckTests
         Assert.Equal("part-none", Assert.Single(found).Check.Value);
     }
 
-    // Reported and stopped, so the checks that read parts do not report on a record already known to
-    // carry none.
     [Fact]
     public void An_empty_section_is_not_also_reported_as_an_empty_entry()
         => Assert.DoesNotContain(Run(Terms, Headings(), "glossary"), f => f.Check.Value == "part-empty");
 
-    // `clause-table` already tells a table source that its section holds nothing, and one fault arriving
-    // under two ids reads as two faults.
     [Fact]
     public void An_empty_table_is_not_also_reported_as_a_section_holding_nothing()
         => Assert.DoesNotContain(Run(Header), f => f.Check.Value == "part-none");
@@ -271,7 +244,6 @@ public class PartCheckTests
         Assert.Contains("term 'Hollow' has nothing under it", one.Message);
     }
 
-    // The last entry is the one an off-by-one would let through.
     [Fact]
     public void The_last_heading_is_asked_the_same_question()
     {
@@ -279,8 +251,6 @@ public class PartCheckTests
         Assert.Equal("part-empty", Assert.Single(found).Check.Value);
     }
 
-    // Read on the source as written, so what a renderer would offer as a block still counts as nothing
-    // written.
     [Theory]
     [InlineData("---")]
     [InlineData("—")]
@@ -291,14 +261,15 @@ public class PartCheckTests
         Assert.Equal("part-empty", Assert.Single(found).Check.Value);
     }
 
-    // A row is its own body, so `part-empty` is a question only a heading-sourced part is asked.
     [Fact]
     public void A_table_row_is_not_asked_whether_a_heading_holds_anything()
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
             f => f.Check.Value == "part-empty");
 
-    // A heading source that declares modals, which is what turns the bullets beneath a heading into
-    // obligations. `Headings()` above declares none, and every test using it shows the type asked nothing.
+    /// <summary>
+    /// A heading source that declares modals, which is what turns the bullets beneath a heading into obligations.
+    /// <c>Headings()</c> above declares none.
+    /// </summary>
     private static PartSpec Rules() =>
         new(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
             { Section = "Rules", Noun = "rule", Level = 3 };
@@ -315,8 +286,6 @@ public class PartCheckTests
         Assert.Contains("MUST, MUST NOT, SHOULD, SHOULD NOT, MAY", one.Message);
     }
 
-    // The modal sits where the sentence puts it, because a rule names the thing it binds first. A table
-    // row opens with its modal, and holding a bullet to the same shape would reject every rule written.
     [Fact]
     public void A_modal_mid_sentence_binds_the_bullet()
         => Assert.Empty(Run(Group + "- A service **MUST** read its secrets from the vault.\n",
@@ -326,8 +295,6 @@ public class PartCheckTests
     public void An_advisory_modal_binds_the_bullet_too()
         => Assert.Empty(Run(Group + "- A service **SHOULD NOT** log the request body.\n", Rules(), "standards"));
 
-    // BCP 14 gives capitals their meaning and this corpus gives bold the weight a reader skims, so a
-    // keyword carrying one of the two is reported.
     [Fact]
     public void A_keyword_left_in_plain_capitals_is_reported()
     {
@@ -338,7 +305,6 @@ public class PartCheckTests
         Assert.Contains("Write it `**MUST**`", one.Message);
     }
 
-    // The longer modal is offered first, so the finding names the obligation the author wrote.
     [Fact]
     public void A_plain_prohibition_is_named_whole()
     {
@@ -346,8 +312,6 @@ public class PartCheckTests
         Assert.Contains("'MUST NOT' is written plain", Assert.Single(found).Message);
     }
 
-    // One bullet, one finding. A bullet naming a modal and leaving it plain is not also told it names
-    // none, which is the reverse of what is wrong with it.
     [Fact]
     public void A_plain_keyword_is_not_also_reported_as_no_keyword()
     {
@@ -359,7 +323,6 @@ public class PartCheckTests
     public void A_keyword_inside_a_code_span_is_being_named_rather_than_used()
         => Assert.Empty(Run(Group + "- A rule **MUST** open with `MUST` or `SHOULD`.\n", Rules(), "standards"));
 
-    // A word the keyword only prefixes is not the keyword.
     [Fact]
     public void A_longer_word_beginning_with_a_modal_is_not_one()
         => Assert.Empty(Run(Group + "- A reviewer **MUST** MUSTER the evidence.\n", Rules(), "standards"));
@@ -374,14 +337,10 @@ public class PartCheckTests
         Assert.Contains("has no bullet under it", one.Message);
     }
 
-    // `part-empty` owns a heading with nothing under it, and one fault arriving under two ids reads as
-    // two faults.
     [Fact]
     public void A_heading_with_nothing_under_it_is_left_to_part_empty()
         => Assert.DoesNotContain(Run(Group, Rules(), "standards"), f => f.Check.Value == "part-modal");
 
-    // An obligation is one bullet, and a list inside it is detail no citation or export reaches. It is
-    // reported once, at the nested list, and its points are not also asked for a modal.
     [Fact]
     public void A_list_nested_in_a_bullet_is_reported()
     {
@@ -395,14 +354,11 @@ public class PartCheckTests
         Assert.Contains("'Every secret is read at run time'", one.Message);
     }
 
-    // A glossary nests a list under a term to give examples, and declares no modals to say its parts oblige
-    // nobody.
     [Fact]
     public void A_list_nested_under_a_term_is_not_reported()
         => Assert.Empty(Run("## Terms\n\n### Corpus\n\n- A body of records.\n  - One repository.\n",
             Headings(), "glossary"));
 
-    // Declaring no modals is how a type says its parts carry no obligation, and a glossary is why.
     [Fact]
     public void A_heading_source_declaring_no_modals_is_asked_nothing()
         => Assert.Empty(Run("## Terms\n\n### Corpus\n\n- A body of records.\n", Headings(), "glossary"));
@@ -429,8 +385,10 @@ public class PartCheckTests
         return found;
     }
 
-    // The schema carries the type's prefix as well as its parts, because the parser tells a citation
-    // from a filename of the same shape by asking whether the half before the dot opens with one.
+    /// <summary>
+    /// The schema carries the type's prefix, because the parser tells a citation from a filename of the same shape by
+    /// asking whether the half before the dot opens with one.
+    /// </summary>
     private static (Doc, TypeSchema) Parse(string body, PartSpec? spec, string folder)
     {
         var type = new TypeSchema { Folder = folder, IdPrefix = folder == "glossary" ? "gls" : "pol", Parts = spec };

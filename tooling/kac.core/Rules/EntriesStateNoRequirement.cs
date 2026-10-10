@@ -4,18 +4,6 @@ using Markdig.Syntax.Inlines;
 
 namespace kac.core;
 
-// A glossary says what a word means. An obligation written into an entry is addressed by nothing: no
-// control cites it, and a reader looking for the rule opens the standards. ISO/IEC Directives, Part 2,
-// clause 16.5.6 states the rule. The message names the entry, which is why this is a class, where
-// `not-normative` reports the same fault over a whole explanation.
-//
-// Bold counts and plain capitals do not. Bold is what binds under BCP 14, and a glossary is the one
-// place in the corpus that defines a keyword: `Standard` names `MUST` in the course of saying what a
-// standard is.
-//
-// The whole entry is read, because an obligation under `Not:` is as misplaced as one above it.
-//
-// Reported as a warning, per bold run, because the rule infers a requirement from a keyword.
 public sealed partial class EntriesStateNoRequirement : IDocumentRule
 {
     public RuleId RuleId => new("entries-state-no-requirement");
@@ -33,9 +21,6 @@ public sealed partial class EntriesStateNoRequirement : IDocumentRule
                 part.Line);
     }
 
-    // Every bold run inside an entry that names a BCP 14 keyword, with the entry it sits in. The parts
-    // are the type's own reading, so a keyword written in `Scope` sits inside no entry and is passed
-    // over.
     private static IEnumerable<(PartRow Part, string Modal)> Requirements(Doc d)
     {
         foreach (var bold in d.Ast.Descendants<EmphasisInline>())
@@ -47,7 +32,7 @@ public sealed partial class EntriesStateNoRequirement : IDocumentRule
         }
     }
 
-    // The two-word keywords first, so a `MUST NOT` is never reported as a `MUST`.
+    /// <summary>The two-word keywords first, so a <c>MUST NOT</c> is never reported as a <c>MUST</c>.</summary>
     [GeneratedRegex(@"\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b", RegexOptions.CultureInvariant)]
     private static partial Regex ModalRegex();
 }

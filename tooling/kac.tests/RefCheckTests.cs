@@ -1,10 +1,5 @@
 using kac.core;
 
-// In-process unit tests for `ref-resolves`, which is answered across the whole corpus rather than
-// within a document. What a fixture would have to build for each of these is a second mini-corpus with
-// a second schema over it, so the graphs are handed to the check directly: one ADR carrying the field
-// under test, and a document of each type for it to point at.
-
 namespace kac.tests;
 
 public class RefCheckTests
@@ -41,15 +36,11 @@ public class RefCheckTests
             Assert.Single(Refs(Field("supersedes", "adrs"), "dat-borrowers")).Message);
     }
 
-    // The type question cannot be asked of a document that is not there.
     [Fact]
     public void A_target_that_does_not_exist_is_reported_as_absent()
         => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
             Assert.Single(Refs(Field("supersedes", "adrs"), "adr-0099")).Message);
 
-    // A folder no schema covers is a type this corpus declined, which SchemaChecks leaves alone. What the
-    // record is held to does not soften with it: the id has to exist, and it cannot be of a type the
-    // field never named. The declaration names the type, because a type nothing covers has no label.
     [Fact]
     public void A_ref_at_a_folder_no_schema_covers_still_asks_that_the_target_exists()
         => Assert.Equal("'supersedes' points at 'adr-0099', which does not exist.",
@@ -62,14 +53,11 @@ public class RefCheckTests
             + "which this corpus did not adopt.",
             Assert.Single(Refs(Field("supersedes", "widgets"), "svc-catalogue")).Message);
 
-    // One declined type beside one this corpus holds leaves the question askable, so the reader is told
-    // which type was wanted rather than which was missing.
     [Fact]
     public void A_field_naming_a_declined_type_beside_an_adopted_one_still_names_the_type_it_wanted()
         => Assert.Equal("'supersedes' points at 'svc-catalogue', which is a Service, not an ADR.",
             Assert.Single(Refs(Field("supersedes", "widgets", "adrs"), "svc-catalogue")).Message);
 
-    // A wrong-type target carries no counterpart field to point back with, so the reciprocity check stays out of it.
     [Fact]
     public void A_wrong_type_target_on_a_reciprocal_field_is_reported_once()
         => Assert.Equal("ref-resolves",
@@ -79,8 +67,6 @@ public class RefCheckTests
     public void A_target_of_the_right_type_is_still_held_to_pointing_back()
         => Assert.Equal("reciprocal", Assert.Single(Refs(Reciprocating("supersedes", "adrs"), "adr-0002")).Check.Value);
 
-    // `part-required:` on the field, which a standard's `implements:` declares so that it names the
-    // clauses it puts into practice one by one.
     [Fact]
     public void A_field_requiring_a_part_admits_an_id_that_names_one()
         => Assert.Empty(Implements("pol-VURM.TIMEBOX"));
@@ -96,8 +82,6 @@ public class RefCheckTests
             found.Message);
     }
 
-    // The type is answered first. A message asking for a clause would send the author looking for one on
-    // a record whose type keeps none.
     [Fact]
     public void A_target_of_the_wrong_type_is_reported_as_that_rather_than_as_a_missing_part()
         => Assert.Equal("'implements' points at 'adr-0002', which is an ADR, not a Policy.",
@@ -109,12 +93,10 @@ public class RefCheckTests
     private static FieldSpec Reciprocating(string name, params string[] refs) =>
         new() { Name = name, Type = "id", Refs = refs, Reciprocal = "superseded-by" };
 
-    // Three types, so that a field can name one, two or none of them. The labels are the real ones
-    // because how a message names a type is read off them. The article follows how the label sounds,
-    // as "an ADR" and "a Service" do, and a label whose plural is the same word takes none.
-    //
-    // The cast is fixed: an ADR carrying the field, and one document of each type to aim it at. An id
-    // outside the cast is the target that does not exist.
+    /// <summary>
+    /// The labels are the real ones, because a message names a type from its label. An id outside the cast is the
+    /// target that does not exist.
+    /// </summary>
     private static List<Finding> Refs(FieldSpec field, string target)
     {
         var adrs = new TypeSchema
@@ -139,16 +121,18 @@ public class RefCheckTests
             .Prepend(Parse(schema, "adrs/adr-0001.md", "adr-0001", $"{field.Name}: {target}"))
             .OfType<Doc>()
             .ToList();
-        Assert.Equal(cast.Length + 1, docs.Count); // a document that did not parse would quietly shrink the corpus
+        // A document that did not parse would quietly shrink the corpus.
+        Assert.Equal(cast.Length + 1, docs.Count);
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);
         return found;
     }
 
-    // A second cast, for the field that reaches past the record. A standard carries `implements:`, and a
-    // policy keeps clauses in a table for it to name. The ADR is what a target of the wrong type is
-    // taken from, and its type keeps no parts.
+    /// <summary>
+    /// A standard carries <c>implements:</c> and a policy keeps clauses for it to name. The ADR is the target of the
+    /// wrong type, and its type keeps no parts.
+    /// </summary>
     private static List<Finding> Implements(string target)
     {
         var field = new FieldSpec
@@ -183,7 +167,8 @@ public class RefCheckTests
                 $"---\nid: std-TEST\nimplements:\n  - {target}\n---\n\n# std-TEST\n", schema)
         }.OfType<Doc>().ToList();
 
-        Assert.Equal(3, docs.Count); // a document that did not parse would quietly shrink the corpus
+        // A document that did not parse would quietly shrink the corpus.
+        Assert.Equal(3, docs.Count);
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);

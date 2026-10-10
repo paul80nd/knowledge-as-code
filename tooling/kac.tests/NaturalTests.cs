@@ -1,5 +1,3 @@
-// The ordering rule itself, including the edges no frontmatter in the corpus reaches yet.
-
 using kac.core;
 
 namespace kac.tests;

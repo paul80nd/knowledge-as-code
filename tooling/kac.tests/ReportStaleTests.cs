@@ -1,8 +1,5 @@
 using kac.core;
 
-// A report answers for a version of a corpus, and this is what holds that against the version in front
-// of the reader. The fixture turns the id green; these are the branches a fixture would only duplicate.
-
 namespace kac.tests;
 
 public class ReportStaleTests
@@ -18,26 +15,18 @@ public class ReportStaleTests
     public void A_report_at_the_corpus_version_is_left_alone()
         => Assert.Empty(Run("0.2.0", ("eng", "0.2.0")));
 
-    // A report ahead of the corpus is somebody's mistake rather than staleness, and a different message
-    // would be needed to say anything useful about it. This rule reports the one direction it is about.
     [Fact]
     public void A_report_ahead_of_the_corpus_is_left_alone()
         => Assert.Empty(Run("0.3.0", ("eng", "0.2.0")));
 
-    // A corpus this one does not read is a comparison that cannot be made. A report carried in from
-    // elsewhere names corpora nothing here consumes.
     [Fact]
     public void A_source_naming_a_corpus_this_one_does_not_read_is_left_alone()
         => Assert.Empty(Run("0.1.0", ("other", "0.2.0")));
 
-    // The finding points at the entry rather than at the field, because a report answering for three
-    // corpora has three lines and only one of them moved.
     [Fact]
     public void The_finding_points_at_the_source_entry()
         => Assert.Equal(8, Assert.Single(Run("0.1.0", ("eng", "0.2.0"))).Line);
 
-    // A version neither side can order is left alone. `VersionRange.Newer` answers false for it, which
-    // is the same answer `Admits` gives, and reporting a comparison nobody made would be worse.
     [Fact]
     public void A_version_the_tool_cannot_order_is_left_alone()
         => Assert.Empty(Run("whenever", ("eng", "0.2.0")));

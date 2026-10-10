@@ -1,14 +1,8 @@
 using System.Text.RegularExpressions;
 
-// `publish-tool.yml` publishes whenever `kac.csproj` names a version nuget.org does not already hold, and it opens a
-// GitHub release whose body is this changelog's section for that version. Nothing else in the pipeline asks for that
-// section, so a version moved without one publishes cleanly and leaves an empty release behind it.
-//
-// These read the repository rather than a value built in the test, as `DocumentationTests` does and for the same
-// reason: the fault they exist to catch is a page going quietly out of step with the code beside it.
-//
-// The reach is the section for the version being published, and no further. Whether that section says anything worth
-// reading is a judgement, and the release it becomes is where a reader would notice.
+// `publish-tool.yml` publishes whenever `kac.csproj` names a version nuget.org does not hold, and opens a
+// release whose body is this changelog's section for that version. Nothing else asks for that section, so
+// a version moved without one publishes cleanly and leaves an empty release behind it.
 
 namespace kac.tests;
 
@@ -19,7 +13,6 @@ public partial class ChangelogTests
     private static readonly string Project = File.ReadAllText(Path.Combine(Kac, "kac.csproj"));
     private static readonly string Changelog = File.ReadAllText(Path.Combine(Kac, "CHANGELOG.md"));
 
-    // The element the pack reads, not the `Version="2.0.*"` attribute a package reference carries.
     [GeneratedRegex(@"<Version>([^<]+)</Version>")]
     private static partial Regex ProjectVersion();
 
@@ -36,8 +29,6 @@ public partial class ChangelogTests
             $"kac.csproj publishes {version}, and CHANGELOG.md has no '{Opening(version)}<date>' section.");
     }
 
-    // A heading with nothing under it is what this pass is really for: a section added to satisfy the test above and
-    // left empty, which publishes a release saying nothing.
     [Fact]
     public void That_section_says_what_the_version_carries()
     {
@@ -48,8 +39,6 @@ public partial class ChangelogTests
             $"'{Opening(version)}…' in CHANGELOG.md is empty, and its text is the body of the release.");
     }
 
-    // docs/index.md tells a reader the tool is early because it has not reached 1.0.0. That sentence stops being
-    // true on the day it does, and nothing else would say so.
     [Fact]
     public void The_site_says_the_tool_is_below_one_while_it_is()
     {
@@ -73,10 +62,12 @@ public partial class ChangelogTests
                 "no '<Version>' in kac.csproj: this pass reads the changelog against it.");
     }
 
-    // A released section opens `## 0.1.1 - 2026-08-20`. `## Unreleased` carries no date and is deliberately not one.
+    /// <summary>
+    /// A released section opens <c>## 0.1.1 - 2026-08-20</c>. <c>## Unreleased</c> carries no date and is deliberately
+    /// not one.
+    /// </summary>
     private static string Opening(string version) => $"## {version} - ";
 
-    // Each heading with the text below it, up to the next heading.
     private static IEnumerable<(string Heading, string Body)> Sections()
     {
         var headings = SectionHeading().Matches(Changelog);

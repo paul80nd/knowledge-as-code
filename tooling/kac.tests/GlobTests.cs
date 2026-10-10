@@ -1,6 +1,3 @@
-// In-process unit tests for the manifest glob matcher: the kind of focused, table-driven coverage
-// the golden and subprocess suites cannot express. Exercises the kac.core Glob type directly.
-
 using kac.core;
 
 namespace kac.tests;
@@ -17,8 +14,10 @@ public class GlobTests
     public void IsMatch_matches_expected(string path, string pattern, bool expected)
         => Assert.Equal(expected, Glob.IsMatch(path, pattern));
 
-    // A corrupted cache surfaces in whichever spec scenario happens to be running, never in a test that
-    // names the cache, so the concurrent ask is put here deliberately.
+    /// <summary>
+    /// A corrupted cache surfaces in whichever spec scenario happens to be running, never in a test that names the
+    /// cache, so the concurrent ask is put here deliberately.
+    /// </summary>
     [Fact]
     public void The_cache_survives_being_asked_from_several_threads()
     {

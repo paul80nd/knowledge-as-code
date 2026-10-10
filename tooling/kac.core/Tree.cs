@@ -1,51 +1,39 @@
 namespace kac.core;
 
-// Every path the corpus holds, and a way to read one.
-//
-// The listing comes from git. See `Corpus.AllFiles`. A file the repository ignores is therefore not in
-// the corpus, so these questions answer the same in a fresh clone as on the machine that created the
-// file. Ask the filesystem instead and a check passes for whoever wrote it and fails in CI, by which
-// time they have stopped looking.
-//
-// Reading is a `Func` rather than a root path, so the whole of it is decidable from values as `New.Plan`
-// and `Update.Plan` already are. A test builds one over a dictionary; the tool builds one over the
-// working tree. Every pass that reads the corpus comes through here, which is what lets a check be
-// written against a corpus nobody wrote to disk.
+/// <summary>
+/// Every path the corpus holds, and a way to read one. The listing comes from git (see <c>Corpus.AllFiles</c>), so a
+/// check answers the same in a fresh clone as on the machine that created the file. Reading is a <c>Func</c>, so a test
+/// builds a tree over a dictionary.
+/// </summary>
 public sealed class Tree(IReadOnlySet<string> paths, Func<string, string> read, Func<string, bool>? onDisk = null)
 {
     public bool Exists(string rel) => paths.Contains(Normalise(rel));
 
-    // Whether the file is present, tracked or not. Ask this where a file's absence and its untracked
-    // state are separate faults, and ask `Exists` everywhere else: what git does not track is in no
-    // clone.
-    //
-    // A type's `_template.md` is the one file that qualifies. `type-setup` says the type is half set up
-    // where no template sits beside the folder, and a contributor who has written one and not yet added
-    // it is looking at the file that finding tells them to write.
-    //
-    // A corpus assembled from values supplies no answer, so the listing answers: everything it holds is
-    // present, and nothing else is.
+    /// <summary>
+    /// Whether the file is present, tracked or not. Ask this only where a file's absence and its untracked state are
+    /// separate faults, as with a type's <c>_template.md</c>. Ask <c>Exists</c> everywhere else. A tree built from
+    /// values answers from its listing.
+    /// </summary>
     public bool OnDisk(string rel) => onDisk?.Invoke(Normalise(rel)) ?? Exists(rel);
 
-    // An empty directory is not a folder the corpus has: git cannot track one, so counting it would make
-    // the answer depend on who is asking.
+    /// <summary>An empty directory is not a folder the corpus has, because git cannot track one.</summary>
     public bool HasFolder(string folder)
     {
         var prefix = Normalise(folder) + "/";
         return paths.Any(p => p.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
     }
 
-    // Every path the corpus holds that matches a glob, in ordinal order. The pattern is the manifest's.
-    // See `Glob`. So `knowledge-as-code/*.md` names the markdown directly inside that folder, and
-    // `**/*.md` names it at any depth.
-    //
-    // Ordered here, because a caller reporting against several of the files it names should name them in
-    // the same order twice.
+    /// <summary>
+    /// Every path the corpus holds that matches a glob (see <c>Glob</c>), in ordinal order, so a caller reporting
+    /// against several names them in the same order every time.
+    /// </summary>
     public IEnumerable<string> Match(string pattern) =>
         paths.Where(p => Glob.IsMatch(p, pattern)).Order(StringComparer.Ordinal);
 
-    // What the file holds, with line endings already normalised. It reads whatever is there; whether the
-    // file is there at all is `Exists` or `OnDisk`, and which of those to ask is the caller's question.
+    /// <summary>
+    /// What the file holds, with line endings already normalised. Whether it is there at all is <c>Exists</c> or
+    /// <c>OnDisk</c>.
+    /// </summary>
     public string Read(string rel) => read(Normalise(rel));
 
     private static string Normalise(string path) => path.Replace('\\', '/');

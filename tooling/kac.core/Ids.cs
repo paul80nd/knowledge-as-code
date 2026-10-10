@@ -1,18 +1,10 @@
 namespace kac.core;
 
-// A check id: what a finding reports under, and what `_checks.yaml` declares an entry for.
-//
-// Its own type because the corpus has two kinds of id in play and they are one suffix apart:
-// `y-statement-present` is the rule a type declares, `y-statement` is what that rule reports under.
-// Held as strings the two swap silently. The swap reads as correct in every place it can happen: a
-// registry lookup, a catalogue entry, a table row. Neither converts to the other or to a string, so
-// the compiler asks the question a reader would have to.
-//
-// There is no conversion from string either. An id enters the program where one is declared, in the
-// schema or in a rule class naming what it emits, rather than wherever a literal is convenient.
-//
-// Ordered, because findings and catalogue entries are listed for people to read and an id is what they
-// are listed by. Ordinal, like every other comparison over these files.
+/// <summary>
+/// A check id: what a finding reports under, and what <c>_checks.yaml</c> declares an entry for. It converts to neither
+/// <c>RuleId</c> nor string. The two are one suffix apart (<c>y-statement-present</c> is a rule, <c>y-statement</c> the
+/// check it reports), so only the compiler can tell them apart.
+/// </summary>
 public readonly record struct CheckId(string Value) : IComparable<CheckId>
 {
     public int CompareTo(CheckId other) => string.CompareOrdinal(Value, other.Value);
@@ -20,8 +12,10 @@ public readonly record struct CheckId(string Value) : IComparable<CheckId>
     public override string ToString() => Value;
 }
 
-// A rule id: what a type's `rules:` block declares, and what the dispatcher finds a rule class by.
-// A rule reports under one or more `CheckId`s, which are usually not this. See CheckId.
+/// <summary>
+/// A rule id: what a type's <c>rules:</c> block declares, and what the dispatcher finds a rule class by. A rule reports
+/// under one or more <c>CheckId</c>s, which are usually not this. See CheckId.
+/// </summary>
 public readonly record struct RuleId(string Value)
 {
     public override string ToString() => Value;

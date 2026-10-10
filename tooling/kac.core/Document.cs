@@ -9,98 +9,81 @@ namespace kac.core;
 
 public class LinkRef
 {
-    public string Target = ""; // the url, taken from the definition where a label stands in for it
+    /// <summary>The url, taken from the definition where a label stands in for it.</summary>
+    public string Target = "";
     public int Line;
-    public bool IsReference; // a reference or shortcut link, which names a definition rather than a url
-    public string? Label; // the definition's label, which is what resolved the target
+    /// <summary>A reference or shortcut link, which names a definition rather than a url.</summary>
+    public bool IsReference;
+    /// <summary>The definition's label, which is what resolved the target.</summary>
+    public string? Label;
 
-    // The label the link puts in front of a reader, spelled as the use site spells it. Null where the
-    // reader is shown something else: an inline link, or a full reference displaying its own words.
-    // A reference resolves to its definition case-insensitively, so this spelling and `Label` may
-    // differ, and this is the one on the page.
+    /// <summary>
+    /// Spelled as the use site spells it, which may differ from <c>Label</c> in case. Null where the reader is shown
+    /// something else: an inline link, or a full reference displaying its own words.
+    /// </summary>
     public string? DisplayedLabel;
 
-    // Where the link sits in the document's text. A finding quotes the line, and the offset answers
-    // which part of the record the link stands inside: a part's body is held as a span, so a line
-    // number would have to be converted back into one to compare the two.
+    /// <summary>Offset in the document's text, so a rule can compare it with a part's body span.</summary>
     public int Position;
 }
 
-// One part of a record, held as the parser found it rather than as it should be. A table row whose id
-// cell is not a single code span keeps its text and reports no id. A cell that opens with no bold run
-// reports no bold lead. Every judgement about what is wrong belongs to the validator, which has the
-// schema to judge against and the words to say what was expected.
-//
-// Where the id comes from is the difference between the two sources, and the only one this record shows.
-// A table row carries the id its author wrote, so `Id` is null wherever the parser could read none. A
-// heading is slugged into its own id, and `Id` is null there only where the slug comes out empty.
-// `BoldLead` belongs to the table source alone and stands null for a heading, which carries no cell
-// to open with a bold run.
+/// <summary>
+/// One part as the parser found it, not as it should be. The validator makes every judgement. A table row's <c>Id</c>
+/// is null where the parser read none, and a heading's only where its slug is empty. <c>BoldLead</c> is always null for
+/// a heading.
+/// </summary>
 public class PartRow
 {
-    public string? Id;         // the part's own id: the Id cell's code span, or a heading's slug
-    public string IdText = ""; // the Id cell flattened, for quoting back when it is not a span
-    public string Text = "";   // the Clause cell flattened, or the heading as written
-    public string? BoldLead;   // the leading bold run's text, when the cell opens with one
+    /// <summary>The part's own id: the Id cell's code span, or a heading's slug.</summary>
+    public string? Id;
+    /// <summary>The Id cell flattened, for quoting back when it is not a span.</summary>
+    public string IdText = "";
+    /// <summary>The Clause cell flattened, or the heading as written.</summary>
+    public string Text = "";
+    /// <summary>The leading bold run's text, when the cell opens with one.</summary>
+    public string? BoldLead;
     public int Line;
 
-    // The row's cells flattened, keyed by the header standing over each. Null for a heading, which
-    // stands under no headers at all. The first two cells are read positionally into `Id` and `Text`,
-    // and this is how any further column reaches a reader: a type's `parts.columns:` names them, and an
-    // export line draws on one through `column.<Header>`.
+    /// <summary>
+    /// Null for a heading. The first two cells are read into <c>Id</c> and <c>Text</c>. Further columns reach a reader
+    /// through <c>parts.columns:</c> and an export line's <c>column.&lt;Header&gt;</c>.
+    /// </summary>
     public IReadOnlyDictionary<string, string>? Cells;
 
-    // The link labels each cell carries, in the order it writes them, keyed the way `Cells` is.
-    //
-    // Flattening a cell drops the link and keeps only what it displayed, so `[ISO 27001:2022].A.8.24`
-    // arrives in `Cells` as `ISO 27001:2022.A.8.24` with nothing marking where the label ended. A rule
-    // reading a reference out of a cell needs that boundary back, and the label is it.
+    /// <summary>
+    /// The link labels each cell writes, in order. Flattening drops where a label ended, so <c>[ISO
+    /// 27001:2022].A.8.24</c> arrives in <c>Cells</c> as <c>ISO 27001:2022.A.8.24</c>.
+    /// </summary>
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? CellLinks;
 
-    // Where the part's body begins and ends in the document's text, for a part written as a heading:
-    // everything beneath it, up to the next part, the end of the section holding it, or the end of the
-    // document. Both zero for a part written as a table row, whose body is the row.
-    //
-    // Held as a span rather than as flattened prose, because a body is several blocks and what a
-    // reader wants of it differs. An export carries the words as written, and a rule counting
-    // paragraphs counts them here.
+    /// <summary>
+    /// The body of a part written as a heading: up to the next part, the end of its section or the end of the document.
+    /// Both zero for a table row, whose body is the row.
+    /// </summary>
     public int BodyStart;
     public int BodyEnd;
 
     public ReadOnlySpan<char> Body(string text) =>
         BodyEnd > BodyStart ? text.AsSpan()[BodyStart..Math.Min(BodyEnd, text.Length)] : default;
 
-    // Whether a stretch of the document sits inside this part's body, for a rule that walked the
-    // record's blocks and has to place one. False for a part written as a table row, whose bounds are
-    // both zero and whose body is the row.
+    /// <summary>False for a part written as a table row.</summary>
     public bool Contains(Markdig.Syntax.SourceSpan span) =>
         BodyEnd > BodyStart && span.Start >= BodyStart && span.End <= BodyEnd;
 }
 
-// One labelled footnote and the citations it gathers: `_**Covers:** [pol-SCRT].EMBED_`, written as the
-// last block of the section it closes. The label is the field's to declare, so the parser is told which
-// labels to look for and collects every line carrying one.
-//
-// `Italic` and `ClosesSection` are the two ways a line can carry the label and not be the form. Held
-// rather than filtered on, so each is reported against the line and its citations still count: dropping
-// them would report every id it named as missing from the document.
-//
-// `Italic` is false where a space inside the underscores stopped markdown reading them, which leaves
-// them on the page. `ClosesSection` is what tells the form from the labelled prose that sits in among
-// the writing.
+/// <summary>
+/// One labelled footnote and its citations: <c>_**Covers:** [pol-SCRT].EMBED_</c>, the last block of its section.
+/// <c>Italic</c> is false where a space inside the underscores stopped markdown reading them. A line failing either
+/// flag is kept, so it is reported and its citations still count.
+/// </summary>
 public record CitationFootnote(int Line, bool Italic, bool ClosesSection, IReadOnlyList<string> Citations);
 
-// One H2 and what stands under it: the heading as written, the line it sits on, and where its body
-// begins and ends in the document's text. The body runs to the next heading at the same level or
-// above, so a sub-heading and everything beneath it stand inside the section above them. Found once
-// here, because two checks read the same stretch: whether anything is written under the heading, and
-// whether what is written matches a pattern a rule supplies.
+/// <summary>One H2. Its body runs to the next H1 or H2, so a sub-heading stands inside the section above it.</summary>
 public record Section(string Title, int Line, int BodyStart, int BodyEnd);
 
-// What is being read. A record is a document of the corpus. A template is the file every record of its
-// type is copied from. The two are held to different questions: a template has no id of its own, no
-// filename to agree with and no values filled in. The kind is what the checks branch on, so that
-// "which of these applies to a template" is answered once per check, where the check is written.
+/// <summary>
+/// A template has no id, no filename to agree with and no values filled in, so checks branch on the kind.
+/// </summary>
 public enum DocKind
 {
     Record,
@@ -115,96 +98,83 @@ public partial class Doc
     public required string Text;
     public required MarkdownDocument Ast;
 
-    public YamlMappingNode? Front; // the frontmatter mapping, read with the representation model
+    /// <summary>The frontmatter mapping, read with the representation model.</summary>
+    public YamlMappingNode? Front;
     public readonly List<string> FrontKeys = [];
-    public int FrontStartLine; // 1-based line where the frontmatter block begins
+    /// <summary>1-based line where the frontmatter block begins.</summary>
+    public int FrontStartLine;
 
-    // Where the body begins: the first character after the frontmatter block, or 0 where there is none.
-    // Held so a check can read the document as it was written, code fences and link targets included,
-    // rather than as the AST renders it. A credential is most likely to sit in a fenced block, which is
-    // exactly what the flattened text drops.
+    /// <summary>
+    /// The first character after the frontmatter, or 0 where there is none. A check reads the source from here, because
+    /// a credential is likeliest in a fenced block, which the flattened text drops.
+    /// </summary>
     public int BodyStart;
 
     public string? H1;
     public int H1Line;
 
-    // The identity line is the paragraph directly beneath the H1, naming the document's type, id and
-    // status as code spans: "`Policy: pol-A11Y` `DRAFT`". Held as the raw span contents, in order, so
-    // the validator owns every judgement about their shape and can word each mismatch itself. Null
-    // when no paragraph beneath the H1 opens with a code span, which is the line being absent
-    // altogether. An empty list never occurs.
+    /// <summary>
+    /// The raw code spans of the paragraph directly beneath the H1, in order: "<c>Policy: pol-A11Y</c> <c>DRAFT</c>".
+    /// Null where that paragraph does not open with a code span. Never an empty list.
+    /// </summary>
     public List<string>? IdentitySpans;
     public int IdentityLine;
 
-    // The record's addressable parts, read from wherever the type's `parts:` block says they live: the
-    // rows of a table, or the headings a section is written as. `PartTableHeaders` belongs to the table
-    // source alone and is null where the named section holds no table: the section being absent and the
-    // section holding prose are different faults, and only the parser can tell them apart. `PartRefs`
-    // collects every citation of a part, in each form the corpus writes one, from anywhere in the
-    // document.
+    /// <summary>
+    /// <c>PartTableHeaders</c> is null where the part section holds no table, which tells a missing section from one
+    /// holding prose. <c>PartRefs</c> collects every citation of a part, in every form, from anywhere in the document.
+    /// </summary>
     public List<string>? PartTableHeaders;
     public readonly List<PartRow> Parts = [];
     public int PartSectionLine;
     public int PartTableLine;
     public readonly List<(string Ref, int Line)> PartRefs = [];
 
-    // Citations of a part written with a colon, which is not the separator the corpus uses. Collected
-    // apart from `PartRefs` so the validator can name the separator and quote the form to write. A
-    // citation reaching no part and one spelled wrongly need different words back.
+    /// <summary>Citations written with a colon, kept apart so the validator can name the right separator.</summary>
     public readonly List<(string Ref, int Line)> ColonCitations = [];
 
     public readonly List<Section> Sections = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
 
-    // What each label was defined to point at, keyed the way a reference reaches it. A definition holds
-    // the target and the reference holds only the label, so a check asking where an unused definition
-    // leads has nowhere else to read it.
-    //
-    // A label defined twice keeps the first target, because that is the one a renderer resolves a
-    // reference to. Taking the last would report a finding against a definition the page never uses.
+    /// <summary>
+    /// Keyed by label, because a reference holds only the label. A label defined twice keeps the first target, which is
+    /// the one a renderer resolves.
+    /// </summary>
     public readonly Dictionary<string, string> DefinedTargets = new(StringComparer.OrdinalIgnoreCase);
 
-    // Where each link reference definition sits in the document's text. A definition renders as nothing,
-    // and this corpus writes them in a block at the foot, which puts them inside whichever section is
-    // written last. Held as spans because the export carries a section as its author's prose, and a
-    // reader of that prose would otherwise meet a run of paths nobody sees on the page.
+    /// <summary>Definitions render as nothing, so an export leaves these spans out of a section's prose.</summary>
     public readonly List<(int Start, int End)> DefinitionSpans = [];
     public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
     public readonly List<(string inner, int line)> BareBracketTokens = [];
     public QuoteBlock? YStatement;
 
-    // The links written under each section a field of this type mirrors, keyed by the section name the
-    // field declared. Keyed rather than flattened, because two fields on a type may mirror two
-    // different sections. A section this document does not carry arrives as an empty list, so the
-    // reconciliation reports every id in the field rather than passing in silence.
+    /// <summary>
+    /// Keyed by the mirrored section, because a type may mirror two. A section the document lacks arrives as an empty
+    /// list, so every id in the field is reported.
+    /// </summary>
     public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
         new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
 
-    // The labelled footnote lines a field of this type reconciles against, keyed by the label the field
-    // declared. Keyed for the reason above: two fields on a type may declare two labels. A label no
-    // line carries arrives as an empty list, so the reconciliation reports every id in the field.
+    /// <summary>Keyed by label, for the same reason. A label no line carries arrives as an empty list.</summary>
     public IReadOnlyDictionary<string, List<CitationFootnote>> CitationFootnotes =
         new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
 
-    // `requireFrontmatter: false` is for a document read for its prose alone: either a type page or one
-    // of the framework's own documents. A type page is not a record and carries no frontmatter. Both
-    // hold links and generated blocks worth checking, so the parse runs whether or not a block is there.
+    /// <summary><c>requireFrontmatter: false</c> reads a type page or a framework document for its prose.</summary>
     public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
         var ast = Md.Parse(text);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-        if (fmBlock is null && requireFrontmatter) return null; // not migrated, so the caller counts and skips
+        // Not migrated, so the caller counts and skips.
+        if (fmBlock is null && requireFrontmatter) return null;
 
         var top = rel.Split('/')[0];
         schema.ByFolder.TryGetValue(top, out var type);
 
         var doc = new Doc { Rel = rel, Folder = top, Type = type, Text = text, Ast = ast };
 
-        // Frontmatter: strip the --- fences and parse with the representation model, so that key order
-        // and scalar quoting survive. A page parsed without it keeps `Front` null and is only ever
-        // asked about its prose, so the rest of the parse still runs.
+        // Parsed with the representation model, so key order and scalar quoting survive.
         if (fmBlock is not null)
         {
             var yamlText = StripFences(text, fmBlock);
@@ -225,17 +195,13 @@ public partial class Doc
                         doc.FrontKeys.Add((kv.Key as YamlScalarNode)?.Value ?? "");
                 }
             }
-            // What a document YAML cannot read throws, and nothing else. Anything else is a defect in
-            // this parser, and catching it here would tell an author their frontmatter is at fault.
-            // `frontmatter-parses` reports what this catches.
+            // Only `YamlException`: anything else is a defect here, not the author's. `frontmatter-parses` reports it.
             catch (YamlException)
             {
                 doc.Front = null;
             }
         }
 
-        // H1 and H2 in one walk, over the headings that divide the document: an H2's body ends at the
-        // next of them, so where a section stops is a question about its siblings.
         var divisions = ast.Descendants<HeadingBlock>().Where(h => h.Level <= 2).ToList();
         for (var i = 0; i < divisions.Count; i++)
         {
@@ -254,15 +220,10 @@ public partial class Doc
             doc.Sections.Add(new Section(txt, h.Line + 1, from, Math.Max(from, to)));
         }
 
-        // Identity line: the block immediately after the H1, when it is a paragraph opening with a
-        // code span. Anchoring on "the next block" rather than "the first paragraph of code spans
-        // anywhere" is what lets the validator say the line is missing: a document that puts its
-        // Y-statement or its prose first has no identity line, however its later paragraphs read.
+        // Only the block directly after the H1, so a document opening with its Y-statement has no identity line.
         ReadIdentity(ast, doc);
 
-        // The record's own parts, from wherever its type keeps them, and the citations of a part anywhere
-        // in the document. A citation is collected whatever this document's type: a part is cited from
-        // the record that answers it, which is rarely one of the same type.
+        // Citations are collected whatever the document's type, because a part is rarely cited from its own type.
         if (type?.Parts is { } parts) ReadParts(ast, doc, parts);
         foreach (var code in ast.Descendants<CodeInline>())
         {
@@ -272,23 +233,18 @@ public partial class Doc
             else if (ColonCitationRegex().IsMatch(content)) doc.ColonCitations.Add((content, code.Line + 1));
         }
 
-        // Every link, written inline or resolved from a reference or a shortcut. Iterating LinkInline
-        // leaves code out: a code span carries no LinkInline, and neither does a fenced or indented block.
+        // Iterating LinkInline leaves code out: neither a code span nor a code block carries one.
         var citations = new HashSet<string>(StringComparer.Ordinal);
         foreach (var link in ast.Descendants<LinkInline>())
         {
             if (link.IsImage) continue;
 
-            // The other places a citation is written: the label of a reference link, the text of an
-            // inline one, and a part id following either. Collected beside the code spans so every form
-            // a citation takes answers to the same pass. See `part-ref` in .schema/_checks.yaml.
+            // Collected beside the code spans, so every form of citation answers to one pass. See `part-ref` in
+            // .schema/_checks.yaml.
             if (LinkCitation(link, schema) is { } citation)
             {
-                // Once per citation, where a code span is collected every time it appears: a
-                // reference is defined once however often the prose reaches for it, and the definition
-                // is the line an author would fix. The whole citation is the key rather than the
-                // label, because several parts of one record share a definition and keying the label
-                // would collect the first of them and drop the rest.
+                // Once per citation, keyed on the whole citation, because several parts of one record share a
+                // definition.
                 if (citations.Add(citation))
                 {
                     if (Cites(citation)) doc.PartRefs.Add((citation, link.Line + 1));
@@ -320,13 +276,9 @@ public partial class Doc
             doc.DefinitionSpans.Add((def.Span.Start, def.Span.End + 1));
         }
 
-        // Bare [bracket] tokens left in prose. An undefined shortcut reference such as [ADR-0099]
-        // renders as literal text. Markdig emits a failed link opener '[' as its own literal inline and
-        // leaves the ']' in the following sibling, so the brackets never survive in one literal: the
-        // scan rejoins the run of consecutive literal siblings first. A real link or code span is a
-        // non-literal inline and breaks the run, which is what keeps code and resolved links out.
-        // Driven from each leaf block's root inline, because `Descendants<ContainerInline>` yields only
-        // nested containers and never the root that holds the run.
+        // Bare [bracket] tokens left in prose. Markdig splits a failed link's `[` and `]` across literal siblings, so
+        // the scan rejoins each run of literals, which a link or a code span breaks. Driven from each leaf's root
+        // inline, because `Descendants<ContainerInline>` never yields the root.
         foreach (var leaf in ast.Descendants<LeafBlock>())
             if (leaf.Inline is not null)
                 ScanContainer(leaf.Inline, doc.BareBracketTokens);
@@ -340,18 +292,21 @@ public partial class Doc
         return doc;
     }
 
-    // The one source there is, named so that the schema's word, the arm resolving it and the index
-    // grouping on it cannot drift apart.
+    /// <summary>
+    /// Named so the schema's word, the arm resolving it and the index grouping on it cannot drift apart.
+    /// </summary>
     public const string SubPath = "sub-path";
 
-    // The sources a `from:` may name, read by `Derived` below. SchemaChecks holds a declaration to this
-    // list, so a source the tool cannot resolve is reported where the schema is read rather than as an
-    // empty column nobody can explain.
+    /// <summary>
+    /// <c>SchemaChecks</c> refuses a <c>from:</c> not in this list, so an unresolvable source is reported at the
+    /// schema.
+    /// </summary>
     public static readonly IReadOnlySet<string> DerivedSources =
         new HashSet<string>([SubPath], StringComparer.Ordinal);
 
-    // What the type derives for this key from where the record sits, or null where it derives nothing.
-    // One arm per source, so the list above and the code answering to it are read together.
+    /// <summary>
+    /// Null where the type derives nothing for this key. One arm per source in <c>DerivedSources</c>.
+    /// </summary>
     public string? Derived(string key) =>
         Type?.Fields.GetValueOrDefault(key)?.From switch
         {
@@ -359,9 +314,10 @@ public partial class Doc
             _ => null
         };
 
-    // The folders between the type's own folder and the file, which is the value every reading below
-    // hands back. A record sitting directly in its type folder yields the empty string, and every
-    // caller reads that as an unset field. `docs/design/discovery.md` is the account of it.
+    /// <summary>
+    /// Empty for a record sitting directly in its type folder, which every caller reads as unset. See
+    /// <c>docs/design/discovery.md</c>.
+    /// </summary>
     private string SubPathValue()
     {
         if (Folder.Length == 0 || Rel.Length <= Folder.Length) return "";
@@ -371,25 +327,23 @@ public partial class Doc
         return cut < 0 ? "" : under[..cut];
     }
 
-    // A derived field is read here rather than beside each caller, so the index, the sort, the export
-    // and a rule expression all take one answer. Derived first, because a key the type derives is
-    // never the author's to write: `derived-key` reports one that was written, and this call is what
-    // stops the two disagreeing in the meantime. `FrontList` below reads one the same way, so
-    // `field()` and `present()` cannot answer differently about the same field.
+    /// <summary>
+    /// Derived first, because a derived key is never the author's: <c>derived-key</c> reports one written, and this
+    /// keeps the two from disagreeing. <c>FrontList</c> reads the same way, so <c>field()</c> and <c>present()</c>
+    /// agree.
+    /// </summary>
     public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null
         : (from kv in Front.Children
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault());
 
-    // What a field holds, read as a list however it is written. A scalar is the one-entry case rather
-    // than a separate shape, so a check over the values of a field asks the same question of
-    // `depends-on: [svc-a, svc-b]` and of `successor: tol-vault`. Whether either shape is the one the
-    // schema declared is the field's own check, answered before this is asked.
+    /// <summary>
+    /// A scalar is the one-entry case, so a check asks the same of <c>depends-on: [a, b]</c> and <c>successor: x</c>.
+    /// </summary>
     public List<string> FrontList(string key)
     {
-        // A derived field is a scalar, so it is the one-entry case here too. An empty derivation is no
-        // entries, which is what makes `present()` false for a record filed flat.
+        // An empty derivation is no entries, which makes `present()` false for a record filed flat.
         if (Derived(key) is { } derived)
             return derived.Length == 0 ? [] : [derived];
 
@@ -407,12 +361,7 @@ public partial class Doc
         return values;
     }
 
-    // What a field holds, read for display rather than for checking. A scalar entry reads as itself; a
-    // mapping entry reads as the key that names it, which the caller supplies because which key that is
-    // belongs to the schema and not to the document.
-    //
-    // Beside `FrontList`, which answers the same question about the values a check walks. The two part
-    // company on a mapping: a check has the whole entry to judge, and a table cell has one column.
+    /// <summary>For display. A mapping entry reads as its <c>naming</c> key, which the schema chooses.</summary>
     public List<string> FrontEntries(string key, string? naming)
     {
         var values = new List<string>();
@@ -440,14 +389,10 @@ public partial class Doc
         return values;
     }
 
-    // A field's node as the document wrote it, for a caller that decides the shape itself. The three
-    // readings above each settle on strings, which is what a check and a table cell want. An export writes
-    // JSON, so it needs the mapping and the nesting inside an entry intact. `Exporter.Value` is the caller.
-    //
-    // A derived field is handed back as the scalar the derivation came to, for the reason `FrontScalar`
-    // reads one first: the export carries what the corpus means by the field, and where the record sits
-    // is what the corpus means. An empty derivation stays null, so a flat record exports the field
-    // exactly as an unset one.
+    /// <summary>
+    /// The node as written, for an export, which needs mappings intact. A derived field comes back as a scalar, and an
+    /// empty derivation as null, so a flat record exports the field as unset.
+    /// </summary>
     public YamlNode? FrontNode(string key)
     {
         if (Derived(key) is { } derived)
@@ -460,11 +405,10 @@ public partial class Doc
                 select kv.Value).FirstOrDefault();
     }
 
-    // Walk the top-level blocks to the H1, then look at the one after it. A paragraph whose first
-    // inline is a code span is taken as an attempted identity line, and its code spans are collected.
-    // Attempted rather than correct: a line with the wrong number of spans is reported as a malformed
-    // identity line rather than as no line at all. Only the code spans are kept. Stray prose between
-    // them is invisible here, and the span count catches it.
+    /// <summary>
+    /// A paragraph after the H1 that opens with a code span is an attempted identity line, so a wrong span count is
+    /// reported as malformed rather than missing. The span count also catches stray prose between spans.
+    /// </summary>
     private static void ReadIdentity(MarkdownDocument ast, Doc doc)
     {
         var blocks = ast.ToList();
@@ -477,44 +421,27 @@ public partial class Doc
         doc.IdentityLine = p.Line + 1;
     }
 
-    // A code span shaped like a citation of a part: an id, a dot, and the part's id, as
-    // `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`. Both halves admit a hyphen, because a record
-    // named by a slug carries one and so does the term a heading is slugged from.
-    //
-    // A producer's shortcode may open it, as `eng:pol-VURM.TIMEBOX`, which is how a part of an imported
-    // record is addressed. See Citation.cs.
-    //
-    // Loose on case and width after the prefix: a mis-cased or over-long id is one the validator should
-    // report as unresolved rather than one the parser should quietly decline to see. The prefix itself is
-    // held to lowercase and to four characters, so a citation that mis-cases it is not seen here at all.
+    /// <summary>
+    /// <c>pol-VURM.TIMEBOX</c> or <c>gls-knowledge-as-code.corpus</c>, optionally scoped as
+    /// <c>eng:pol-VURM.TIMEBOX</c>. Loose on case and width after the prefix, so the validator reports a mis-cased id
+    /// the parser still sees.
+    /// </summary>
     [System.Text.RegularExpressions.GeneratedRegex(
         @"^(?:[a-z0-9]+:)?[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
     private static partial System.Text.RegularExpressions.Regex PartCitationRegex();
 
-    // An imported record cited whole, as `eng:pol-VURM`. A record this corpus holds is never collected
-    // this way: `pol-VURM` in a code span is an id a document mentions, and holding every mention to
-    // resolving would report the identity line under every title in the corpus. A scope is the author
-    // saying they mean the record in another corpus, which is a claim worth checking.
+    /// <summary>
+    /// An imported record cited whole, as <c>eng:pol-VURM</c>. A local id in a code span is a mention, not a citation,
+    /// so only a scoped one is collected.
+    /// </summary>
     [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z0-9]+:[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*$")]
     private static partial System.Text.RegularExpressions.Regex ScopedRecordRegex();
 
-    // What a link carries as a citation beyond its label: a separator against the closing bracket and a
-    // part id against that, as the `.TIMEBOX` in `[pol-VURM].TIMEBOX`. Empty where the link ends the
-    // citation, which leaves the label to answer for itself.
-    //
-    // Read off the text following the link rather than off the source, so that a delimiter closing an
-    // emphasis is not taken for part of the id. `_**Covers:** [pol-VURM].TIMEBOX_` ends on markup, and
-    // the underscore is a character a part id may carry.
-    //
-    // Nothing may stand between the separator and the id. A sentence ending on a link is ordinary
-    // prose, and its full stop is followed by a space, so `See [pol-VURM]. The policy` reaches no part
-    // called `The`. A digit opens a part id, since a heading slugs to one, so `[pol-VURM].2024` is read
-    // as a citation and reported as unresolved. Nothing here can tell that from a part genuinely
-    // numbered.
-    //
-    // A colon is collected here too, for `ColonCitationRegex` to word: a citation spelled with one
-    // should be told the form to write, as it is in a code span. A link reference definition writes a
-    // colon in the same place and is a block, so it never reaches this.
+    /// <summary>
+    /// The <c>.TIMEBOX</c> after <c>[pol-VURM].TIMEBOX</c>, read off the following text so a closing emphasis delimiter
+    /// is not taken into the id. Nothing may stand between separator and id, so <c>See [pol-VURM]. The</c> cites no
+    /// part. A colon is collected too, for <c>ColonCitationRegex</c> to word.
+    /// </summary>
     private static string PartSuffix(LinkInline link)
     {
         if (link.NextSibling is not LiteralInline next) return "";
@@ -528,13 +455,10 @@ public partial class Doc
         return after[..end];
     }
 
-    // The citation a link writes, or null where it writes none. The label of a reference link and the
-    // text of an inline one are the same claim, and `NamesARecord` is what keeps ordinary prose in a
-    // link out of it.
-    //
-    // The part id may follow the closing bracket as text, which is the cheapest form: a document citing
-    // six clauses of one policy defines the label once. A label already carrying the whole citation ends
-    // it, and reading a second part id onto it would build `pol-VURM.TIMEBOX.Also` and match nothing.
+    /// <summary>
+    /// Null where the link cites nothing. A label already carrying a part id ends the citation, so no second one is
+    /// read onto it.
+    /// </summary>
     private static string? LinkCitation(LinkInline link, Schema schema)
     {
         var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
@@ -543,49 +467,35 @@ public partial class Doc
         return PartCitationRegex().IsMatch(cited) ? cited : cited + PartSuffix(link);
     }
 
-    // Whether the half before the dot opens with a prefix some type declares. The shape alone cannot
-    // tell a citation from a filename written as a code span: `vurm-vulnerability-remediation.md` has
-    // every feature of one, and reading it as a citation would report a policy nobody wrote and a part
-    // called `md`. Asking after the prefix settles it, because a record's id opens with its type's.
-    //
-    // The prefixes come from the schema, so adopting a type admits citations into it and declining one
-    // shuts them off, with no list here to keep in step.
+    /// <summary>
+    /// Asks the schema's prefixes, so <c>vurm-vulnerability-remediation.md</c> in a code span is not a citation.
+    /// </summary>
     private static bool NamesARecord(string content, Schema schema)
     {
-        // The scope comes off first. A shortcode carries no hyphen, so reading the prefix out of the
-        // whole string would find `eng:pol` and match no type.
+        // The scope comes off first: a shortcode has no hyphen, so `eng:pol` would match no type.
         var (_, id) = Citation.Split(content);
         return id.IndexOf('-') is var dash and > 0 && schema.IdPrefixes.Contains(id[..dash]);
     }
 
-    // Whether this text is a citation the validator answers for: a part of a record, or an imported
-    // record cited whole.
     private static bool Cites(string text) =>
         PartCitationRegex().IsMatch(text) || ScopedRecordRegex().IsMatch(text);
 
-    // The same citation with a colon where the dot belongs, as `std-A11Y:WCAG`. An id has to sit on the
-    // left for this to match. That keeps a scoped reference out of it, since a shortcode carries no
-    // type prefix and no hyphen before the colon. `eng:pol-VURM` is a shortcode and then an id.
+    /// <summary><c>std-A11Y:WCAG</c>. An id must sit left of the colon, which keeps <c>eng:pol-VURM</c> out.</summary>
     [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
     private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 
-    // The record's parts, from the source its type declares. One walk either way, over the blocks
-    // standing under the H2 the schema names. Nothing here judges what it finds, and `PartRow` says why.
     private static void ReadParts(MarkdownDocument ast, Doc doc, PartSpec spec)
     {
         var inSection = false;
 
-        // The heading part whose body is still running. A body ends where the next thing that can hold
-        // one begins, so the row is filled in on reaching that point rather than on being added.
+        // Filled in on reaching the next thing that can hold a body, not on being added.
         PartRow? open = null;
 
         foreach (var block in ast)
         {
             if (block is HeadingBlock h)
             {
-                // A heading below the section level does not end the section. Where parts are written
-                // as headings, a heading at the part level is one of them. Anything deeper stands
-                // inside the part above it, so it closes nothing.
+                // Below the section level: a heading at the part level is a part, and anything deeper stays inside one.
                 if (h.Level > 2)
                 {
                     if (h.Level != spec.Level) continue;
@@ -620,10 +530,10 @@ public partial class Doc
         }
     }
 
-    // A heading is a part nobody wrote an id for, so the id comes from the heading: the same anchor a
-    // link to it would use, which lets a citation and a link name one entry. An empty slug, from a
-    // heading of punctuation alone, leaves the id null. That reads downstream as a part offering no
-    // address, exactly as an unreadable id cell does.
+    /// <summary>
+    /// The id is the heading's slug, the anchor a link would use, so a citation and a link name one entry. A heading of
+    /// punctuation alone leaves the id null.
+    /// </summary>
     private static PartRow AddHeading(Doc doc, HeadingBlock h)
     {
         var text = Md.PlainText(h.Inline);
@@ -641,9 +551,9 @@ public partial class Doc
         return row;
     }
 
-    // The first table under the named section, read whole. The header row supplies `PartTableHeaders`,
-    // and every other row supplies a `PartRow`, however malformed, so that "no table here" is the only
-    // thing the parser decides.
+    /// <summary>
+    /// Every row gives a <c>PartRow</c>, however malformed, so "no table here" is the only thing the parser decides.
+    /// </summary>
     private static void ReadTable(Doc doc, Markdig.Extensions.Tables.Table table)
     {
         doc.PartTableLine = table.Line + 1;
@@ -679,10 +589,7 @@ public partial class Doc
         doc.PartTableHeaders ??= [];
         return;
 
-        // The row against the headers, pairing each cell with the one above it. A table whose header row
-        // the parser never met, or a row shorter than its headers, keys only the cells there are: a
-        // header the author moved is `clause-table` to report, and a second account of it here would
-        // invent an empty cell to report it with.
+        // Keys only the cells there are. A moved header is `clause-table`'s to report.
         static Dictionary<string, string> Cells(IReadOnlyList<string>? headers, List<ContainerInline?> row)
         {
             var byHeader = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -693,8 +600,7 @@ public partial class Doc
             return byHeader;
         }
 
-        // The same pairing, for the labels rather than the text. A link written inline carries no label,
-        // so its display text stands in: what a reader sees is what the flattened cell holds either way.
+        // An inline link has no label, so its display text stands in.
         static Dictionary<string, IReadOnlyList<string>> Links(IReadOnlyList<string>? headers,
             List<ContainerInline?> row)
         {
@@ -711,8 +617,6 @@ public partial class Doc
 
     private static string StripFences(string text, YamlFrontMatterBlock block)
     {
-        // `block.Span` covers the whole frontmatter, the --- fences included. Drop the first and last
-        // fence lines and keep the YAML body.
         var slice = text.Substring(block.Span.Start, block.Span.Length);
         var lines = slice.Replace("\r\n", "\n").Split('\n').ToList();
         if (lines.Count > 0 && lines[0].TrimEnd() == "---") lines.RemoveAt(0);
@@ -720,10 +624,7 @@ public partial class Doc
         return string.Join("\n", lines);
     }
 
-    // Rejoin the run of consecutive literal children of a container, breaking the run on any
-    // non-literal inline, and scan each run for bare brackets. Then recurse into nested containers such
-    // as an emphasis or a link label. Only direct children are joined at each level, so a literal is
-    // scanned once.
+    /// <summary>Only direct children are joined at each level, so a literal is scanned once.</summary>
     private static void ScanContainer(ContainerInline container, List<(string, int)> outp)
     {
         var run = new StringBuilder();
@@ -760,9 +661,7 @@ public partial class Doc
             var close = s.IndexOf(']', i + 1);
             if (close < 0) break;
             var inner = s.Substring(i + 1, close - i - 1);
-            // A real link, inline, collapsed or full, would not survive as a literal, so a literal
-            // '[x]' is a candidate undefined reference. Skip one followed by '(' or '[', which the AST
-            // handled elsewhere, or by ':', which opens a link definition rather than a reference to one.
+            // Skip one followed by `(` or `[`, which the AST handled, or by `:`, which opens a definition.
             var next = close + 1 < s.Length ? s[close + 1] : ' ';
             // Map the line from the closing bracket: Markdig gives a failed link-opener '[' its own
             // literal whose source line is 0, while the ']' always sits in a real-text literal that
@@ -773,7 +672,6 @@ public partial class Doc
         }
     }
 
-    // The source line of the literal segment that character `index` of a rejoined run falls in.
     private static int LineAt(List<(int offset, int line)> segments, int index)
     {
         var line = segments.Count > 0 ? segments[0].line : 1;
@@ -786,26 +684,15 @@ public partial class Doc
         return line;
     }
 
-    // The links under each of the named H2 sections, gathered in one walk however many are asked for.
-    // A section title matches case-insensitively, an H1 ends whichever section is open, and a heading
-    // deeper than H2 leaves it open: a sub-heading is inside its section, not after it.
-    // The labelled footnotes a field reconciles against, keyed by the label the field declared. The form
-    // is a whole line in italic opening on a bold label, which is what tells it from the labelled prose
-    // that sits in among the writing: `**Not:**` is bold alone and stands mid-paragraph.
-    //
-    // Every paragraph is read, nested ones included. A footnote written inside a list item is collected
-    // and marked as closing nothing, so the validator reports where it sits rather than dropping it and
-    // reporting each id it named as absent from the document.
+    /// <summary>
+    /// The form is a whole line in italic opening on a bold label: <c>**Not:**</c> alone is prose. Nested paragraphs
+    /// are read too, so a footnote inside a list item is reported where it sits, not dropped.
+    /// </summary>
     private static Dictionary<string, List<CitationFootnote>> Footnotes(
         MarkdownDocument ast, Schema schema, IEnumerable<string?>? labels)
     {
-        // Keyed by the label as the schema wrote it, and matched on the label with the colon taken off.
-        // The colon belongs to the form, so `mirrors-citations: "Covers:"` would otherwise match no line
-        // anybody would write, and the author would meet one finding per id in the field with nothing
-        // naming the cause.
-        //
-        // Two fields spelling one label two ways share the list, rather than the second field
-        // reconciling against nothing. Both are asking about the same lines.
+        // Matched on the label without its colon, so `mirrors-citations: "Covers:"` matches. Two fields spelling
+        // one label two ways share the list.
         var result = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
         var matching = new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
         foreach (var label in (labels ?? []).OfType<string>())
@@ -826,15 +713,9 @@ public partial class Doc
         {
             if (para.Inline?.FirstChild is not { } first) continue;
 
-            // Two shapes reach the same line. Written as the form, markdig gives one italic inline
-            // opening on the bold label. Written with a space against either mark, it reads neither as
-            // emphasis and gives an unpaired delimiter run, the bold label, and the rest of the line
-            // beside it. The second is what the author meant and not what the page will show, so it is
-            // collected and told apart by `Italic` rather than passed over.
-            //
-            // What each reads is the stretch the label opens and no more. The first stops at the
-            // closing mark, so the second stops at the line break, and a paragraph running on past one
-            // does not hand either a citation the footnote never claimed.
+            // Two shapes reach this line: the form, as one italic opening on the bold label, and a mark with a space
+            // against it, as an unpaired delimiter run beside the label. `Italic` tells them apart. Each reads only
+            // the stretch its label opens: to the closing mark, or to the line break.
             bool italic;
             IEnumerable<MarkdownObject> scope;
             EmphasisInline bold;
@@ -851,9 +732,7 @@ public partial class Doc
             var at = blocks.IndexOf(para);
             var closes = at >= 0 && (at + 1 == blocks.Count || blocks[at + 1] is HeadingBlock);
 
-            // Both notations, in the order the line writes them. A local record is cited through a link
-            // and an imported one through a code span, so a corpus reading its policies from an import
-            // writes every citation the second way.
+            // Both notations, in line order: a local record is cited by link, an imported one by code span.
             var cited = scope
                 .Select(inline => inline switch
                 {
@@ -869,17 +748,14 @@ public partial class Doc
         return result;
     }
 
-    // A delimiter run markdown could not pair off, which is what a mark with a space against it leaves.
-    // Either mark, since the form writes underscores outside and asterisks inside, and an author who
-    // reached for the other pair has made the same mistake.
+    /// <summary>Either mark, since an author may reach for the wrong pair.</summary>
     private static bool Unpaired(string text)
     {
         var run = text.Trim();
         return run.Length > 0 && (run.All(c => c == '_') || run.All(c => c == '*'));
     }
 
-    // Every inline from here to the end of the line it opens. A paragraph runs on past a soft line
-    // break, and the prose after one is not the footnote's to gather.
+    /// <summary>A soft line break ends it, because the prose after one is not the footnote's.</summary>
     private static IEnumerable<MarkdownObject> OnTheLine(Inline? from)
     {
         for (var node = from; node is not null and not LineBreakInline; node = node.NextSibling)
@@ -891,19 +767,18 @@ public partial class Doc
         }
     }
 
-    // The label this link puts in front of a reader, or null where it shows them something else.
-    //
-    // `IsShortcut` marks a shortcut and leaves a collapsed reference alongside a full one, so the two
-    // are told apart by the text instead: flattening a collapsed reference returns its label, and a
-    // full reference returns the words its author wrote. A label carrying emphasis or a code span
-    // renders as neither, so it answers null here and is judged at its definition alone.
+    /// <summary>
+    /// The label this link shows a reader, or null where it shows something else. <c>IsShortcut</c> does not separate a
+    /// collapsed reference from a full one, so the flattened text does. A label carrying emphasis or a code span
+    /// answers null, and is judged at its definition alone.
+    /// </summary>
     private static string? Displayed(LinkInline link) =>
         link.Label is { } label && Md.PlainText(link) == label ? label : null;
 
-    // A footnote's label with the colon the form puts after it taken off, so that the schema and the
-    // document are read the same way whichever of them wrote one.
+    /// <summary>Without the colon the form puts after it, so schema and document compare equal.</summary>
     private static string Label(string text) => text.Trim().TrimEnd(':').TrimEnd();
 
+    /// <summary>An H1 ends the open section, and a heading deeper than H2 leaves it open.</summary>
     private static Dictionary<string, List<LinkRef>> SectionLinks(
         MarkdownDocument ast, IEnumerable<string?>? sectionTitles)
     {
@@ -940,12 +815,10 @@ public partial class Doc
         return result;
     }
 
-    // Every leaf block one block holds, itself included when it is one. Inlines hang off leaves and
-    // nowhere else, which is what makes this the way to reach a link written as prose: descending from
-    // the block itself yields the links in a list beneath it and none of the links in a paragraph, and
-    // to whoever wrote the section those are the same link.
-    // The inline content of each leaf carrying any. A `where` in a query cannot tell the `from` after
-    // it that it settled the value, so the leaves without content are dropped here instead.
+    /// <summary>
+    /// The inline content of each leaf carrying any. A <c>where</c> in a query cannot tell the <c>from</c> after it
+    /// that it settled the value, so the leaves without content are dropped here instead.
+    /// </summary>
     private static IEnumerable<ContainerInline> Inlines(IEnumerable<LeafBlock> leaves)
     {
         foreach (var leaf in leaves)
@@ -953,6 +826,9 @@ public partial class Doc
                 yield return inline;
     }
 
+    /// <summary>
+    /// Itself included when it is a leaf. Inlines hang off leaves, so this reaches a link written as prose.
+    /// </summary>
     private static IEnumerable<LeafBlock> Leaves(Block block) =>
         block is LeafBlock leaf ? [leaf] : ((ContainerBlock)block).Descendants<LeafBlock>();
 }
