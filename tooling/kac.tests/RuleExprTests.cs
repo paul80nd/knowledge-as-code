@@ -1,15 +1,9 @@
-// What the grammar accepts, and what a comparison means when the field it names is absent. Both are
-// contracts with whoever writes a schema, and a corpus only ever shows the answer for what it holds.
-
 using kac.core;
 
 namespace kac.tests;
 
 public class RuleExprTests
 {
-    // A document with the frontmatter, sections and links a case needs, parsed the way kac parses one.
-    // `entries_match` is the one fact that reads inside an object. A shared shape leaves a key such as
-    // `by` a plain string, so this is how a type holds it to the kind of actor that type admits.
     [Fact]
     public void Entries_match_reads_every_object_in_a_list()
         => Assert.False(Eval("entries_match('verified', 'by', '^human:')",
@@ -21,15 +15,11 @@ public class RuleExprTests
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')",
             "id: fix-0001\nverified:\n  - { at: 2026-06-12T09:00:00Z, by: human:alex.doe }\n"));
 
-    // One mapping is one object, so a field declaring `type: object` is asked the same question.
     [Fact]
     public void Entries_match_reads_the_one_object_a_mapping_holds()
         => Assert.False(Eval("entries_match('generated', 'by', '^kac/')",
             "id: rpt-coverage\ngenerated: { at: 2026-06-12T09:00:00Z, by: someone }\n"));
 
-    // True where there is nothing to hold to the pattern. Whether the field ought to be there is
-    // `required-field`'s question, and whether the key ought to be is `entry-key`'s, so a rule written
-    // on top of this reports one fault once.
     [Fact]
     public void Entries_match_is_true_where_the_field_is_absent()
         => Assert.True(Eval("entries_match('verified', 'by', '^human:')", "id: fix-0001"));
@@ -55,8 +45,6 @@ public class RuleExprTests
     public void Entries_unique_is_true_where_the_field_is_absent()
         => Assert.True(Eval("entries_unique('verified', 'by')", "id: fix-0001"));
 
-    // An object without the key counts for nothing, for the reason `entries_match` gives above, so two
-    // of them are not two of the same value.
     [Fact]
     public void Entries_unique_is_true_where_no_object_carries_the_key()
         => Assert.True(Eval("entries_unique('verified', 'by')",
@@ -78,15 +66,11 @@ public class RuleExprTests
     public void Field_reads_a_frontmatter_scalar()
         => Assert.True(Eval("field('status') == 'deprecated'", "id: adr-0001\nstatus: deprecated"));
 
-    // The ISO string is what makes the fact useful: the ordinary string comparison is then a date
-    // comparison, which is the bargain the grammar already strikes between two date fields. The literal is
-    // `Required.Today` written out, so a move of that day fails here rather than everywhere at once.
+    // The literal is `Required.Today` written out, so a move of that day fails here rather than everywhere at once.
     [Fact]
     public void Today_is_the_run_day_as_an_iso_date()
         => Assert.True(Eval("today() == '2026-06-15'"));
 
-    // The reading `expiry` is built on, both ways round and on the day itself, where a review has come
-    // due and is not yet late.
     [Theory]
     [InlineData("2026-06-14", false)]
     [InlineData("2026-06-15", true)]
@@ -103,8 +87,6 @@ public class RuleExprTests
         Assert.True(Eval("present('owner')", "id: adr-0001\nowner: alex.doe"));
     }
 
-    // `provenance-required` is the rule the list reading exists for: both fields it names are lists, and
-    // a reading that saw only scalars would make every standard fail it however it was written.
     [Fact]
     public void Present_reads_a_list_as_well_as_a_scalar()
     {
@@ -113,8 +95,6 @@ public class RuleExprTests
         Assert.False(Eval("present('derived-from')", "id: std-ERRORS\nderived-from:"));
     }
 
-    // A scalar is one entry, so a rule counting a field reads the same answer whichever shape the schema
-    // declared, the way `present()` does.
     [Fact]
     public void Entries_counts_a_list_and_reads_a_scalar_as_one()
     {
@@ -142,9 +122,6 @@ public class RuleExprTests
         Assert.True(Eval("first_section() == ''", body: "No headings at all."));
     }
 
-    // `section()` asks whether a document has one. `section_count()` asks whether it has more than one,
-    // which is a different fault. A heading is prose someone wrote, so `## symptom` is the section the
-    // schema means however it was capitalised.
     [Fact]
     public void Section_count_counts_the_heading_and_ignores_its_casing()
     {
@@ -153,9 +130,6 @@ public class RuleExprTests
         Assert.True(Eval("section_count('Symptom') == 0", body: "## Cause\n\nb"));
     }
 
-    // The body pattern facts cannot see frontmatter, because a field is judged against what its own
-    // declaration says. `field_matches` is false for an absent field, because whether the field ought to
-    // be there is `required-field`'s question.
     [Fact]
     public void Field_matches_reads_the_frontmatter_that_matches_cannot()
     {
@@ -165,7 +139,6 @@ public class RuleExprTests
         Assert.False(Eval("field_matches('nope', '.')", front, "Body text."));
     }
 
-    // The H1 is prose the document renders, so it counts; the frontmatter above it does not.
     [Fact]
     public void Words_counts_prose_and_not_frontmatter()
         => Assert.True(Eval("words() == 6", "id: adr-0001\nowner: alex.doe", "One two three four."));
@@ -173,9 +146,6 @@ public class RuleExprTests
     [Fact]
     public void Links_counts_the_links_the_body_carries()
         => Assert.True(Eval("links() == 2", body: "See [a](/a.md) and [b](/b.md)."));
-
-    // One rule covers every operator: a schema author guards with `present(…) implies …` rather than
-    // working out which way silence falls for each.
 
     [Theory]
     [InlineData("field('nope') == 'x'", false)]
@@ -187,7 +157,6 @@ public class RuleExprTests
     public void A_comparison_against_an_absent_field_is_false_and_its_negation_true(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr));
 
-    // A guarded rule stays quiet rather than reporting a fault that required-field has already reported.
     [Fact]
     public void A_guarded_rule_is_satisfied_when_the_field_it_guards_is_absent()
     {
@@ -199,8 +168,6 @@ public class RuleExprTests
         Assert.False(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-10\"\noccurred-at: \"2026-06-11\""));
     }
 
-    // Through the grammar, which is the surface a schema rule calls it on. The theories below hold the
-    // arithmetic; this holds the row in RuleExpr's function table against it.
     [Fact]
     public void A_span_is_callable_from_an_expression()
         => Assert.True(Eval("span('occurred-at', 'restored-at') == 'PT40M'",
@@ -216,8 +183,6 @@ public class RuleExprTests
     public void A_span_is_hours_minutes_and_seconds(string from, string to, string expected)
         => Assert.Equal(expected, Instants.Span(from, to));
 
-    // Each of these is another check's to report, so the fact answers with nothing and the rule asking
-    // for a span guards rather than reporting the same fault twice.
     [Theory]
     [InlineData(null, "2026-06-12T09:00:00Z")]
     [InlineData("2026-06-12T09:00:00Z", null)]
@@ -226,14 +191,12 @@ public class RuleExprTests
     public void A_span_nothing_can_measure_is_empty(string? from, string? to)
         => Assert.Equal("", Instants.Span(from, to));
 
-    // Through the grammar, for the reason the span fact above is called through it.
     [Fact]
     public void A_gap_in_days_is_callable_from_an_expression()
         => Assert.True(Eval("days('accepted-on', 'review-by') == 184",
             "id: dev-a\naccepted-on: \"2026-03-07\"\nreview-by: \"2026-09-07\""));
 
-    // What `days()` promises a rule that calls it. Six calendar months runs from 181 days to 184, which
-    // is where `high-risk-review-window`'s threshold comes from.
+    // Six calendar months runs from 181 days to 184.
     [Theory]
     [InlineData("2026-01-07", "2026-07-07", 181)]
     [InlineData("2026-03-07", "2026-09-07", 184)]
@@ -243,8 +206,6 @@ public class RuleExprTests
     public void A_gap_is_whole_days(string from, string to, int expected)
         => Assert.Equal(expected, Instants.Days(from, to));
 
-    // Zero for a gap nothing can measure, and zero for a genuine same-day gap. A rule reading one as the
-    // other stays quiet, which is what every caller here wants: each of these is another check's to report.
     [Theory]
     [InlineData(null, "2026-06-12")]
     [InlineData("2026-06-12", null)]
@@ -254,15 +215,13 @@ public class RuleExprTests
     public void A_gap_nothing_can_measure_is_zero(string? from, string? to)
         => Assert.Equal(0, Instants.Days(from, to));
 
-    // Through the grammar, for the reason the two facts above are called through it. `Required.Today` is
-    // 2026-06-15, so the record states the day 92 before it.
+    // `Required.Today` is 2026-06-15, so the record states the day 92 before it.
     [Fact]
     public void An_age_in_days_is_callable_from_an_expression()
         => Assert.True(Eval("days_since('last-rehearsed') == 92",
             "id: prc-a\nlast-rehearsed: \"2026-03-15\""));
 
-    // `days_since()` measures the one date a rule names against the day of the run, so it answers what
-    // `days()` would for that date and today. A date the run has not reached measures nothing and is zero.
+    // Measured against `Required.Today`, 2026-06-15. A date the run has not reached measures nothing and is zero.
     [Theory]
     [InlineData("2026-03-15", 92)]
     [InlineData("2025-06-14", 366)]
@@ -272,13 +231,10 @@ public class RuleExprTests
         => Assert.True(Eval($"days_since('last-rehearsed') == {expected}",
             $"id: prc-a\nlast-rehearsed: \"{from}\""));
 
-    // ISO dates order correctly as text, which is why the grammar carries no date type.
     [Fact]
     public void Iso_dates_order_as_text()
         => Assert.True(Eval("field('a') < field('b')", "id: adr-0001\na: \"2026-01-09\"\nb: \"2026-01-10\""));
 
-    // There are no `true`/`false` literals: every condition starts from something the document says.
-    // `not present('nope')` is how a rule writes a constant, and nothing needs one.
     [Theory]
     [InlineData("present('id') or present('nope')", true)]
     [InlineData("present('id') and present('nope')", false)]
@@ -291,8 +247,6 @@ public class RuleExprTests
     [InlineData("4 / 0 == 0", true)]
     public void The_grammar_evaluates_as_declared(string expr, bool expected)
         => Assert.Equal(expected, Eval(expr, body: "One [link](/a.md)."));
-
-    // Each of these would otherwise become a check that silently never fires.
 
     [Theory]
     [InlineData("field('status')", "yes/no")] // not a question
@@ -315,7 +269,6 @@ public class RuleExprTests
         Assert.Contains(expectedInMessage, ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    // Parsing a chain would need the grammar to pick an associativity the author did not choose.
     [Fact]
     public void A_chained_comparison_does_not_parse()
         => Assert.Throws<RuleExprException>(() => RuleExpr.Compile("1 < words() < 40"));
@@ -325,15 +278,11 @@ public class RuleExprTests
         => Assert.True(Eval("matches('AKIA[0-9A-Z]{6}')",
             body: "Configure it:\n\n```\nAWS_KEY=AKIA123456\n```\n"));
 
-    // The flattened text a word count walks carries no fenced code at all, so folding one fact onto the
-    // other fails here rather than in a corpus with a credential in it.
     [Fact]
     public void Words_does_not_see_what_matches_does()
         => Assert.True(Eval("words() == 4 and matches('secret')",
             body: "Configure it:\n\n```\nTOKEN=secret\n```\n"));
 
-    // The emphasis markers are gone by the time the text is flattened, so a rule looking for a bold modal
-    // has nowhere else to find one.
     [Fact]
     public void Matches_sees_markdown_syntax()
     {
@@ -341,8 +290,6 @@ public class RuleExprTests
         Assert.False(Eval(@"matches('\*\*MUST\*\*')", body: "You MUST do this."));
     }
 
-    // Frontmatter is checked field by field against patterns its own fields declare, and a rule sweeping
-    // the prose should not trip over the metadata above it.
     [Fact]
     public void Matches_does_not_see_the_frontmatter()
         => Assert.False(Eval("matches('alex.doe')", "id: adr-0001\nowner: alex.doe", "Prose with no name in it."));
@@ -373,9 +320,7 @@ public class RuleExprTests
         Assert.Contains(expected, ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    // A doubled quote is one quote, as in YAML and SQL. Regular expressions are the strings that most need
-    // one, and this is the escape that avoids putting a second backslash layer over an expression already
-    // full of them. The pattern below is the character class ["'].
+    // A doubled quote is one quote, as in YAML and SQL. The pattern below is the character class ["'].
     [Fact]
     public void A_doubled_quote_is_one_quote()
     {

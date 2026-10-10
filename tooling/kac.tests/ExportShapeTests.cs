@@ -1,16 +1,10 @@
 using System.Text;
 using kac.core;
 
-// What every type publishes, written out and pinned.
+// What every type publishes, written out and pinned. A shape edit fails this, which is where the
+// `export.version:` beside it gets moved. Update the block below in the same commit.
+// `docs/design/export.md` says which edits oblige the version to move.
 //
-// A type's `export.version:` is moved by hand, so nothing but a diff stands between a line whose keys
-// moved and a consumer still reading it against the number that did not move. This is that diff.
-//
-// Whether a shape is the right one is not the question here. What this catches is a shape changing
-// quietly: edit a `line:`, a `fields:` or a fidelity and this fails, which is where the version beside
-// it gets moved. Update the block below in the same commit. `docs/design/export.md` says which edits
-// oblige the number to move and which leave it where it is.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
@@ -184,9 +178,8 @@ public class ExportShapeTests
     public void Every_exported_type_publishes_the_shape_pinned_here()
         => Assert.Equal(Pinned, Declared(), ignoreLineEndingDifferences: true);
 
-    // The schema's own account of what each type contributes, rendered so that a reader of the diff sees
-    // the keys rather than a hash. Types in folder order, and everything else in the order it is
-    // declared, because a consumer reads a line's keys in that order.
+    // Types in folder order, and everything else in the order it is declared, because a consumer reads a
+    // line's keys in that order.
     private static string Declared()
     {
         var shapes = new StringBuilder();

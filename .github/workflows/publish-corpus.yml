@@ -1,23 +1,7 @@
-# Publishes each worked corpus as a package a downstream corpus can import. On a push to main that
-# touched one of them, it rebuilds that corpus's export, seals it, and pushes it to GitHub Packages at
-# the version .corpus.yaml states.
-#
-# Publishing these corpora is how this repository proves the pack-and-push half of its own tool against
-# a real registry, and how somebody deciding whether to adopt it can pull one and look. Every corpus
-# but `dog-fooding` describes an invented estate and is meant to. `dog-fooding` describes the
-# repository it sits in. Each package says which it is in its own description, which `.corpus.yaml`
-# states and `kac pack` writes into the envelope.
-#
-# A content-version the registry already holds ends the job at exit 0, as publish-plugin.yml does for
-# the same reason. The path filter narrows the runs but cannot tell an edited record from an edited
-# CLAUDE.md, so failing there would turn an editorial change on main into a red build accusing its
-# author of forgetting a bump.
-#
-# Nothing here retries, skips a duplicate or forces. A registry keeps a published version forever, so a
-# correction is a new content-version and never a second push of this one.
-#
-# A pack is refused without a shortcode, so a corpus joins this matrix by declaring one.
-# docs/cli/pack.md says why.
+# Publishes each worked corpus to GitHub Packages, at the version .corpus.yaml states, on a push to main that
+# touched it. A version the registry already holds ends the job at exit 0, because the path filter cannot tell an
+# edited record from an edited CLAUDE.md. Nothing retries or forces: a registry keeps a published version forever.
+# A pack is refused without a shortcode, so a corpus joins this matrix by declaring one. docs/cli/pack.md says why.
 
 name: publish-corpus
 
@@ -34,8 +18,7 @@ on:
 permissions:
   contents: read
 
-# Queued rather than cancelled, as publish-plugin.yml is: the loser still carries a version the winner
-# does not.
+# Queued rather than cancelled: the loser still carries a version the winner does not.
 concurrency:
   group: publish-corpus
   cancel-in-progress: false
@@ -69,9 +52,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, and `kac pack`
-      # is what writes there. Each job holds its own checkout, so this step packs engineering itself
-      # rather than taking what the engineering job already produced.
+      # Each job holds its own checkout, so this packs the `source:` payments and dog-fooding name itself.
       - name: Build the package this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
@@ -79,15 +60,13 @@ jobs:
           dotnet run --project ../../tooling/kac -- export
           dotnet run --project ../../tooling/kac -- pack
 
-      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
-      # this command. A corpus consuming nothing skips the step.
+      # .imports/ is not committed, so a fresh checkout has to restore before `validate` can pass.
       - name: Restore what this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- restore
 
-      # The gate ran against the pull request's head, and main moved beneath it. A published version
-      # cannot be replaced, only followed, so it is asked again about the merge commit.
+      # Asked again about the merge commit, because a published version cannot be replaced, only followed.
       - name: Validate frontmatter, links and structure
         working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- validate
@@ -100,15 +79,13 @@ jobs:
         working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- pack
 
-  # The only job granted write. It rebuilds rather than taking an artifact from `verify`, as
-  # publish-plugin.yml does: two packs of one export are identical bytes, so a hand-off would preserve
-  # nothing and add a second way for the two to disagree.
+  # The only job granted write. It rebuilds rather than taking an artifact, because two packs of one export are
+  # identical bytes and a hand-off would only add a second way for them to disagree.
   publish:
     needs: verify
     strategy:
       fail-fast: false
-      # One at a time. Two jobs pushing to one feed is not a conflict, but a failure then names a
-      # corpus rather than a run, which is what somebody reading the log is looking for.
+      # One at a time, so a failure in the log names a corpus rather than a run.
       max-parallel: 1
       matrix:
         corpus:
@@ -130,9 +107,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # An export carries what its corpus consumes, and refuses where nothing is restored for one, so
-      # engineering is packed and restored before a consumer exports. Each job holds its own checkout,
-      # so `verify` having done this already is no help here.
+      # Each job holds its own checkout, so engineering is packed and restored again before a consumer exports.
       - name: Build the package this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
@@ -145,8 +120,7 @@ jobs:
         working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- restore
 
-      # Every link the export writes names the commit HEAD stands on, which here is one the raw host
-      # serves.
+      # Every link the export writes names the commit HEAD stands on, which here is one the raw host serves.
       - name: Build the export
         working-directory: examples/${{ matrix.corpus }}
         run: dotnet run --project ../../tooling/kac -- export
@@ -159,13 +133,8 @@ jobs:
           dotnet run --project ../../tooling/kac -- pack
           --repository ${{ github.server_url }}/${{ github.repository }}
 
-      # Read from the export rather than from .corpus.yaml, because the export is what was sealed and
-      # a second reading of the descriptor could disagree with it.
-      #
-      # The versions already published are asked of the registry's own flat container, over plain HTTP
-      # with no NuGet client. A request failing for any other reason reads as an empty list here, and
-      # the push below is then what reports it: this step decides whether to publish and never whether
-      # the registry is reachable.
+      # Read from the export, which is what was sealed. Any failure but a 404 reads as an empty list here, and the
+      # push below reports it: this step decides whether to publish, never whether the registry is reachable.
       - name: Decide whether this version is new
         env:
           GH_TOKEN: ${{ github.token }}
@@ -187,8 +156,7 @@ jobs:
           PUBLISHED=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
             "$FEED/download/$LOWER/index.json" | jq -r '.versions[]?' || echo '')
 
-          # -F, because a version carries dots and dashes and this is an exact comparison rather than
-          # a pattern match.
+          # -F, because a version carries dots and dashes and this is an exact comparison.
           if echo "$PUBLISHED" | grep -Fqx "$VERSION"; then
             echo "$ID $VERSION is already published. Nothing to publish."
             echo "Bump content-version in examples/${{ matrix.corpus }}/.corpus.yaml to release what changed since."
@@ -202,8 +170,8 @@ jobs:
             echo "VERSION=$VERSION"
           } >> "$GITHUB_ENV"
 
-      # No --skip-duplicate. The step above is what decides whether this version may be published, and
-      # a flag swallowing the registry's own refusal would leave a green run that published nothing.
+      # No --skip-duplicate: the step above decides, and swallowing the registry's refusal would leave a green run
+      # that published nothing.
       - name: Publish to GitHub Packages
         if: env.NEW == 'yes'
         env:

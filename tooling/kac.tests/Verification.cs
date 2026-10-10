@@ -2,9 +2,6 @@ using System.Text.RegularExpressions;
 using kac.core;
 using YamlDotNet.RepresentationModel;
 
-// Two versions of one record, and whether the prose moved without anybody reading it. Apart from
-// `VerificationTests`, which reads the repository, so the comparison is provable on texts a test writes.
-
 namespace kac.tests;
 
 internal static partial class Verification

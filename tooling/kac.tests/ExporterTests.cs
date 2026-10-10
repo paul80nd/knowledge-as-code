@@ -1,19 +1,10 @@
 using System.Text.Json;
 using kac.core;
 
-// In-process unit tests for the export.
-//
-// The golden fixture holds one corpus and pins what the CLI writes for it, file for file. It cannot
-// hold a second, and several rules need one: ordering is about several roots with a chain beneath one
-// of them, exclusion is about a corpus that declares it, and reproducibility is about running twice
-// over one tree. That is what these build.
-
 namespace kac.tests;
 
 public class ExporterTests
 {
-    // A manifest short of a key the exporter always writes. Deserialising fills the gap with null
-    // whatever the record declares, so the read settles each one before a caller can walk into it.
     [Fact]
     public void A_type_naming_no_directory_is_read_under_its_own_name()
     {
@@ -45,7 +36,6 @@ public class ExporterTests
         Assert.Equal(["glossary"], manifest.Types.Select(t => t.Type));
     }
 
-    // A source is named by its shortcode everywhere else in the export, so one naming none names nobody.
     [Fact]
     public void A_source_naming_no_shortcode_is_dropped()
     {
@@ -63,8 +53,6 @@ public class ExporterTests
         Assert.Equal(Publishing.None, source.Publishing.Target);
     }
 
-    // A borrowed address resolves somewhere wrong rather than nowhere, so nothing of the reader's own
-    // is filled in for a producer that stated none.
     [Fact]
     public void A_manifest_stating_no_publishing_target_publishes_nowhere()
     {
@@ -88,8 +76,6 @@ public class ExporterTests
     private static readonly ExportRun Run =
         new("2026-08-17T00:00:00Z", new DateOnly(2026, 8, 17), "abc123", false);
 
-    // A glossary as this corpus writes one: `narrows:` orders it, `Scope` travels whole, and the terms
-    // under `Terms` are its parts.
     // A caller naming no sections gets `Scope` whole, which is what a glossary declares.
     private static TypeSchema GlossaryType(params (string Section, string Fidelity)[] sections) => new()
     {
@@ -128,7 +114,6 @@ public class ExporterTests
         }
     };
 
-    // A grep meeting a redefined term meets the general one first, whichever root it belongs under.
     [Fact]
     public void Roots_sort_by_id_and_each_root_s_chain_follows_it()
     {
@@ -152,8 +137,6 @@ public class ExporterTests
         Assert.Equal(["gls-general.title", "gls-narrow.title"], lines.Select(l => l.GetProperty("id").GetString()));
     }
 
-    // Nothing in the corpus ranks two roots, so this pins the order and deliberately not the generality
-    // a reader might take from it.
     [Fact]
     public void Across_unrelated_roots_the_order_is_stable_and_claims_no_generality()
     {
@@ -163,13 +146,9 @@ public class ExporterTests
         var estate = Glossary("gls-estate", narrows: null, terms: "### Record\n\nA bibliographic description.\n");
         var framework = Glossary("gls-framework", narrows: null, terms: "### Record\n\nA knowledge document.\n");
 
-        // Neither declares `narrows`, so nothing in the corpus ranks them. The same two ids come back
-        // whichever order they are loaded in, and that is the whole of the claim.
         Assert.Equal(Ids(estate, framework), Ids(framework, estate));
         Assert.Equal(2, Ids(estate, framework).Length);
 
-        // What a reader needs to tell "refines" from "unrelated" is on the record, and every
-        // line reaches it by naming the record it came from.
         foreach (var line in TermLines(Corpus(estate, framework)))
             Assert.NotEmpty(line.Text("record"));
     }
@@ -183,7 +162,6 @@ public class ExporterTests
         Assert.Equal(["Apple", "Zebra"], lines.Select(l => l.GetProperty("title").GetString()));
     }
 
-    // Dropping such a record, or leaving it unordered at the end, would hide what the corpus contains.
     [Fact]
     public void A_record_narrowing_something_outside_the_set_is_a_root()
     {
@@ -194,8 +172,6 @@ public class ExporterTests
         Assert.Equal(["gls-alpha.alpha", "gls-beta.beta"], lines.Select(l => l.GetProperty("id").GetString()));
     }
 
-    // Reporting the cycle is the validator's. An export holding the records back would be a second,
-    // smaller account of what the corpus holds.
     [Fact]
     public void A_cycle_still_exports_every_record_it_traps()
     {
@@ -225,7 +201,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, line.GetProperty("not").ValueKind);
     }
 
-    // A line has to be parseable on its own, because a grep hands back a line and nothing around it.
     [Fact]
     public void Every_term_is_one_line_and_that_line_is_a_whole_object()
     {
@@ -238,8 +213,6 @@ public class ExporterTests
             Assert.Equal("gls-one", JsonDocument.Parse(line).RootElement.GetProperty("record").GetString());
     }
 
-    // The wrap is a fact about the file. Carried into the export it defeats what the flat file is for,
-    // because a grep for a phrase straddling the break matches nothing.
     [Fact]
     public void A_definition_wrapped_in_the_source_arrives_as_one_line()
     {
@@ -259,7 +232,6 @@ public class ExporterTests
         Assert.Equal("the request the service received.", line.GetProperty("not").GetString());
     }
 
-    // A blank line is the author's, and says something a wrap does not.
     [Fact]
     public void A_paragraph_break_in_a_section_survives_the_unwrapping()
     {
@@ -272,8 +244,6 @@ public class ExporterTests
             record.GetProperty("sections").GetProperty("Scope").GetString());
     }
 
-    // Joining a list destroys it, where leaving a paragraph wrapped merely reads as written. The doubt
-    // resolves towards leaving the block alone.
     [Fact]
     public void A_list_is_left_exactly_as_written()
     {
@@ -286,8 +256,6 @@ public class ExporterTests
             record.GetProperty("sections").GetProperty("Scope").GetString());
     }
 
-    // A link's target is stripped out of the prose, so an agent reading `see [gls-two]` is handed a
-    // bracket it cannot follow. The ids travel beside the words, and resolve to the part.
     [Fact]
     public void A_reference_naming_the_file_and_no_term_carries_nothing_and_is_reported()
     {
@@ -299,9 +267,8 @@ public class ExporterTests
         var referring = TermLines(corpus).Single(l => l.GetProperty("id").GetString() == "gls-one.record");
         Assert.Equal(JsonValueKind.Null, referring.GetProperty("seeAlso").ValueKind);
 
-        // Both glossaries happen to call the term `record`, so the counterpart is guessable here.
-        // Guessing it is what this asserts the export does not do. The same guess is silently wrong for
-        // a pair that does not share a word, and the run reports the link instead.
+        // Both glossaries call the term `record`, so the counterpart is guessable here. This asserts the
+        // export does not guess it, because the same guess is wrong for a pair that shares no word.
         Assert.Equal(["gls-one.record -> gls-two"], Plan(corpus).Unread);
     }
 
@@ -317,8 +284,6 @@ public class ExporterTests
         Assert.Equal(["gls-two.beta"], referring.GetProperty("seeAlso").EnumerateArray().Select(e => e.GetString()));
     }
 
-    // The broken link is `fragment-resolves`'s to report. The export's part is to carry no id rather
-    // than a plausible one.
     [Fact]
     public void An_anchor_naming_no_part_of_the_target_carries_nothing()
     {
@@ -332,7 +297,6 @@ public class ExporterTests
         Assert.Contains("see [gls-two]", referring.GetProperty("not").GetString());
     }
 
-    // Only a link reaching another record of the same export can name a part of it.
     [Fact]
     public void A_link_leaving_the_export_is_neither_carried_nor_reported()
     {
@@ -344,8 +308,6 @@ public class ExporterTests
         Assert.Empty(Plan(corpus).Unread);
     }
 
-    // A consumer that grepped the flat file has not opened the record, so a hit carrying no state is a
-    // definition with nothing saying its glossary is still settling.
     [Fact]
     public void Every_term_line_carries_the_state_of_the_glossary_it_came_from()
     {
@@ -356,8 +318,6 @@ public class ExporterTests
         Assert.Equal("2020-01-01", line.GetProperty("reviewBy").GetString());
     }
 
-    // `""` here beside `null` there would make the spelling of absent a property of which file was
-    // opened.
     [Fact]
     public void A_field_left_blank_is_null_and_never_an_empty_string()
     {
@@ -377,8 +337,6 @@ public class ExporterTests
         Assert.Equal(["search", "discovery"], fields.GetProperty("tags").EnumerateArray().Select(e => e.GetString()));
     }
 
-    // A shape `list` refuses, read here anyway so the export never disagrees with `Doc.FrontList` about
-    // what a field holds.
     [Fact]
     public void A_list_written_as_one_scalar_travels_as_an_array_of_one()
     {
@@ -387,7 +345,6 @@ public class ExporterTests
         Assert.Equal(["search"], fields.GetProperty("tags").EnumerateArray().Select(e => e.GetString()));
     }
 
-    // `[]` beside `null` would give a consumer two spellings of the same absence to branch on.
     [Fact]
     public void A_list_left_empty_is_null_and_never_an_empty_array()
     {
@@ -396,8 +353,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, fields.GetProperty("tags").ValueKind);
     }
 
-    // The reading `Doc.FrontEntries` cannot give: it takes the key naming an entry, which is all a table
-    // cell has room for, so a roll-up read that way would carry the framework and drop the references.
     [Fact]
     public void An_object_entry_carries_the_keys_its_type_declares()
     {
@@ -409,8 +364,6 @@ public class ExporterTests
         Assert.Equal(["A.8.24", "A.8.8"], entry.GetProperty("clauses").EnumerateArray().Select(e => e.GetString()));
     }
 
-    // A field declared as an object rather than a list of them. `generated` on a report is the case:
-    // one event, so a consumer reads the keys directly rather than through an array of one.
     [Fact]
     public void An_object_field_carries_the_keys_its_type_declares()
     {
@@ -421,8 +374,6 @@ public class ExporterTests
         Assert.Equal("kac/0.16.0", generated.GetProperty("by").GetString());
     }
 
-    // An object nobody wrote is the same absence every other field spells `null`, rather than an object
-    // whose every key is null.
     [Fact]
     public void An_object_field_left_out_is_null_and_never_an_object_of_nulls()
     {
@@ -431,8 +382,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, fields.GetProperty("generated").ValueKind);
     }
 
-    // A type may declare no sections at all, which `reports` does because each report's headings follow the
-    // question it answers. The key is still written, so a consumer reads one shape across every record file.
     [Fact]
     public void A_type_declaring_no_sections_writes_an_empty_sections_object()
     {
@@ -462,7 +411,6 @@ public class ExporterTests
         Assert.Equal("What this admits.", record.GetProperty("sections").GetProperty("Scope").GetString());
     }
 
-    // Links built on an empty base would resolve to nothing. The manifest states the same absence.
     [Fact]
     public void A_corpus_that_publishes_nowhere_writes_records_without_links()
     {
@@ -479,8 +427,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, publishing.GetProperty("ref").ValueKind);
     }
 
-    // A reader that meets this export as an installed plugin has no descriptor to open, so a tracker it
-    // is not handed here is one it has to invent.
     [Fact]
     public void The_manifest_carries_where_a_problem_with_the_framework_is_reported()
     {
@@ -495,7 +441,6 @@ public class ExporterTests
         Assert.Equal("https://github.com/example/framework", framework.GetProperty("base").GetString());
     }
 
-    // Stated rather than left out, so a reader tests the value and never the key.
     [Fact]
     public void A_corpus_naming_no_framework_tracker_states_the_absence()
     {
@@ -508,7 +453,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, framework.GetProperty("base").ValueKind);
     }
 
-    // An export written before the key existed is one a reader still has to settle.
     [Fact]
     public void A_manifest_short_of_a_framework_block_reads_as_naming_no_tracker()
     {
@@ -523,8 +467,6 @@ public class ExporterTests
         Assert.Null(manifest.Framework.Base);
     }
 
-    // The corpus's own backlog, beside the two addresses already in the manifest. A caller holding only
-    // `publishing` would file a problem with a record wherever that corpus happens to be read.
     [Fact]
     public void The_manifest_carries_where_work_about_this_corpus_is_filed()
     {
@@ -540,8 +482,6 @@ public class ExporterTests
         Assert.Equal("azure-devops:dev.azure.com/acme/standards", tracker.GetProperty("id").GetString());
     }
 
-    // A corpus stating no tracker gets the one its publishing block implies, which is what leaves a
-    // GitHub corpus nothing to configure.
     [Fact]
     public void A_corpus_stating_no_tracker_files_where_it_publishes()
     {
@@ -556,8 +496,6 @@ public class ExporterTests
         Assert.Equal("github:github.com/example/corpus", tracker.GetProperty("id").GetString());
     }
 
-    // A record of theirs is filed on their backlog, for the reason it is read at their commit. A
-    // consumer holding one address would send every finding to whichever corpus it happened to be.
     [Fact]
     public void An_inherited_corpus_carries_its_own_tracker_into_sources()
     {
@@ -570,8 +508,6 @@ public class ExporterTests
         Assert.Equal("github:example.com/eng", tracker.GetProperty("id").GetString());
     }
 
-    // An export written before the key existed still has to answer, and the block beside it says where
-    // that corpus is read. Deriving from it is what a consumer would otherwise do by hand, differently.
     [Fact]
     public void A_manifest_short_of_a_tracker_block_files_where_it_publishes()
     {
@@ -591,8 +527,6 @@ public class ExporterTests
         Assert.Equal("github:github.com/example/upstream", manifest.Sources.Single().Tracker.Id);
     }
 
-    // The framework's is stated or absent. A corpus taking the template from a folder publishes nowhere
-    // near whoever maintains it, so the block beside it answers a different question.
     [Fact]
     public void A_manifest_short_of_a_framework_block_derives_no_tracker_from_where_it_publishes()
     {
@@ -635,8 +569,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, sections.GetProperty("Scope").ValueKind);
     }
 
-    // A consumer reading one absence as the other would report a record as silent on something its type
-    // never asked it to send.
     [Fact]
     public void A_section_the_record_never_wrote_is_absent_where_a_referenced_one_is_null()
     {
@@ -647,7 +579,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, sections.GetProperty("Scope").ValueKind);
     }
 
-    // Without this a summary reaches a consumer looking exactly like a whole section.
     [Fact]
     public void The_manifest_states_the_fidelity_each_section_travelled_at()
     {
@@ -660,8 +591,6 @@ public class ExporterTests
         Assert.Equal("summary", declared.GetProperty("Scope").GetString());
     }
 
-    // The host, the path prefix and the commit sit in the manifest's templates, said once for the whole
-    // export rather than sixty times over thirty terms.
     [Fact]
     public void A_term_line_carries_the_two_substitutions_and_no_resolved_link()
     {
@@ -672,8 +601,6 @@ public class ExporterTests
         Assert.False(line.TryGetProperty("links", out _));
     }
 
-    // A consumer that builds a link and one that reads a record's own are never handed two different
-    // strings.
     [Fact]
     public void Substituting_a_line_into_the_template_gives_the_link_the_record_carries()
     {
@@ -695,7 +622,6 @@ public class ExporterTests
                 .Replace(Publishing.AnchorToken, anchor));
     }
 
-    // A consumer reads an answer rather than meeting an empty directory.
     [Fact]
     public void A_corpus_with_no_exporting_type_still_writes_a_manifest()
     {
@@ -708,8 +634,6 @@ public class ExporterTests
         Assert.Empty(manifest.GetProperty("types").EnumerateArray());
     }
 
-    // One number would be read as either, and for a glossary they differ by an order of magnitude. The
-    // parts count sizes the vocabulary and is not derivable without reading the flat file.
     [Fact]
     public void The_manifest_counts_records_and_parts_separately()
     {
@@ -740,8 +664,6 @@ public class ExporterTests
         Assert.Equal(Run.GeneratedAt, manifest.GetProperty("generatedAt").GetString());
     }
 
-    // `corpus` tells one export from another. `shortcode` is what a citation writes before the colon, so
-    // a consumer resolving `eng:pol-VURM` knows which of the exports it holds answers it.
     [Fact]
     public void The_manifest_carries_the_shortcode_a_citation_scopes_by()
     {
@@ -754,7 +676,6 @@ public class ExporterTests
         Assert.Equal("tst", manifest.GetProperty("shortcode").GetString());
     }
 
-    // The absence is stated rather than the key dropped, so a consumer reads one shape either way.
     [Fact]
     public void A_corpus_declaring_no_shortcode_states_the_absence()
         => Assert.Equal(JsonValueKind.Null,
@@ -763,8 +684,6 @@ public class ExporterTests
                         .Content)
                 .RootElement.GetProperty("shortcode").ValueKind);
 
-    // A timestamp is the only moving part, which is what lets a consumer diff two exports to see whether
-    // the corpus moved.
     [Fact]
     public void Two_runs_over_one_corpus_differ_only_in_the_generated_timestamp()
     {
@@ -783,7 +702,6 @@ public class ExporterTests
             Single(later, Exporter.ManifestFile).Content);
     }
 
-    // The state travels with the record, which is what lets a consumer decide for itself.
     [Fact]
     public void An_unsettled_record_travels_by_default_with_its_state_attached()
     {
@@ -810,8 +728,6 @@ public class ExporterTests
         Assert.Empty(plan.Types);
     }
 
-    // The malformed date is the validator's to report. Withholding the record over it would answer one
-    // problem with a quieter one.
     [Fact]
     public void An_unreadable_review_date_is_not_overdue()
     {
@@ -861,7 +777,6 @@ public class ExporterTests
         Assert.Contains($"format {Exporter.FormatVersion + 1}", Assert.Single(plan.Refused));
     }
 
-    // One run says everything that has to change, so nobody fixes one and is then told about the next.
     [Fact]
     public void Every_refusal_is_listed_at_once()
     {
@@ -870,8 +785,6 @@ public class ExporterTests
         Assert.Equal(2, plan.Refused.Count);
     }
 
-    // A consumed corpus as `.imports/` states it. Every key a merge stamps is named here rather than
-    // assumed, because a producer names its own keys and this is where they arrive from.
     private static InheritedCorpus Consumed(string shortcode, params string[] lines) =>
         new(shortcode, Exporter.FormatVersion, $"{shortcode}-corpus", "1.0.0",
             new ExportPublishing("github", $"https://example.com/{shortcode}/{{path}}#{{anchor}}",
@@ -893,8 +806,6 @@ public class ExporterTests
     private const string TheirLine =
         """{"id":"gls-theirs.alpha","record":"gls-theirs","seeAlso":["gls-other.beta"],"part":"alpha"}""";
 
-    // All three keys that hold an id, and the line itself. A `seeAlso` left bare would point at whatever
-    // this corpus happens to call the same thing, which resolves and resolves wrongly.
     [Fact]
     public void An_inherited_line_carries_its_producer_s_name_on_every_id_it_holds()
     {
@@ -908,8 +819,6 @@ public class ExporterTests
         Assert.Equal("eng", line.GetProperty(Exporter.ShortcodeKey).GetString());
     }
 
-    // The rule a citation already follows, on a line: bare names this corpus. So a consumer tells its own
-    // records from the ones it inherited without being told which corpus it is.
     [Fact]
     public void A_line_this_corpus_wrote_carries_no_name_and_no_shortcode()
     {
@@ -925,8 +834,6 @@ public class ExporterTests
     private const string TheirInheritedLine =
         """{"id":"gp:gls-old.alpha","record":"gp:gls-old","seeAlso":null,"part":"alpha","shortcode":"gp"}""";
 
-    // What makes a grandparent arrive labelled once rather than twice. Restamping would file the record
-    // under the corpus this one fetched it through, and send every link for it to the wrong repository.
     [Fact]
     public void A_line_already_naming_its_writer_keeps_that_name()
     {
@@ -940,8 +847,6 @@ public class ExporterTests
         Assert.Equal("gp", line.GetProperty(Exporter.ShortcodeKey).GetString());
     }
 
-    // The other half of the same promise. A line naming `gp` resolves only where `gp` is in `sources`,
-    // and this corpus never heard of `gp`: it reads the account `eng` published.
     [Fact]
     public void A_corpus_its_producer_consumed_reaches_sources_too()
     {
@@ -967,8 +872,6 @@ public class ExporterTests
             sources[1].GetProperty("publishing").GetProperty("ref").GetString());
     }
 
-    // A `repos` entry on a producer's service is a bare name, and this corpus's own base would resolve it
-    // to a repository in the wrong estate. So the producer's base arrives beside its publishing block.
     [Fact]
     public void A_producers_repository_base_reaches_sources()
     {
@@ -982,8 +885,6 @@ public class ExporterTests
             Assert.Single(sources).GetProperty("reposBase").GetString());
     }
 
-    // Two corpora consumed here can each have consumed a third, at two versions. Whichever account won,
-    // a line naming that third would resolve to a commit half its records were never read at.
     [Fact]
     public void One_corpus_arriving_twice_at_two_versions_refuses()
     {
@@ -1004,9 +905,6 @@ public class ExporterTests
         Assert.Contains("0.3.0", plan.Refused[0]);
     }
 
-    // A producer whose export predates the repository base states none, and a corpus that states its own
-    // has one that differs. No line resolves through it, so refusing here would stop an export over a
-    // key nothing reads at a citation.
     [Fact]
     public void Two_accounts_of_one_corpus_differing_only_in_where_its_code_sits_still_merge()
     {
@@ -1025,9 +923,6 @@ public class ExporterTests
         Assert.Empty(plan.Refused);
     }
 
-    // A producer whose export predates the tracker key has one derived from its publishing block, and a
-    // corpus that states its own has one that differs. Neither account moves where a line resolves, so
-    // refusing here would stop an export over a key nothing reads at a citation.
     [Fact]
     public void Two_accounts_of_one_corpus_differing_only_in_where_it_files_still_merge()
     {
@@ -1046,8 +941,6 @@ public class ExporterTests
         Assert.Empty(plan.Refused);
     }
 
-    // Two corpora can name one record, so an inherited file is filed under the corpus that wrote it. The
-    // parts file merges because a line says whose it is; a filename cannot.
     [Fact]
     public void An_inherited_record_is_filed_under_its_producer_s_shortcode()
     {
@@ -1057,7 +950,6 @@ public class ExporterTests
         Assert.Contains("glossary/gls-one.json", plan.Files.Select(f => f.Path));
     }
 
-    // A record eng inherited keeps the folder it arrived in, the way its part lines keep their shortcode.
     [Fact]
     public void A_record_its_producer_inherited_keeps_the_folder_of_the_corpus_that_wrote_it()
     {
@@ -1070,9 +962,6 @@ public class ExporterTests
         Assert.Equal(3, Assert.Single(plan.Types).Records);
     }
 
-    // One corpus consuming both a producer and that producer's own producer meets gp's record twice at
-    // one path. A second copy written is harmless and a second copy counted is not: the manifest would
-    // claim more records than the export wrote.
     [Fact]
     public void A_record_arriving_by_two_routes_is_written_and_counted_once()
     {
@@ -1099,8 +988,6 @@ public class ExporterTests
     private static InheritedCorpus Records(InheritedCorpus corpus, IReadOnlyList<InheritedRecord> records) =>
         corpus with { Types = [corpus.Types[0] with { Records = records }] };
 
-    // Two counts in one entry, because a consumer asks how much of a type there is and not how much of it
-    // each corpus wrote. Which corpus wrote a record is a fact about the line.
     [Fact]
     public void A_type_entry_counts_what_this_corpus_wrote_and_what_it_inherited_together()
     {
@@ -1112,8 +999,6 @@ public class ExporterTests
         Assert.Equal(3, type.Parts);
     }
 
-    // The address is the one thing a merge cannot merge. A record of `eng` is read at eng's commit under
-    // eng's prefix, and this corpus's own template gets both wrong.
     [Fact]
     public void A_source_carries_the_publishing_its_producer_wrote()
     {
@@ -1129,9 +1014,6 @@ public class ExporterTests
         Assert.Equal("beefbeef", source.GetProperty("publishing").GetProperty("ref").GetString());
     }
 
-    // A rule of this corpus cites a clause of a policy it never adopted, and that citation resolves only
-    // where the policy travelled too. So an inherited type arrives whole rather than being filtered to
-    // what this corpus happens to hold.
     [Fact]
     public void A_type_only_a_consumed_corpus_holds_still_travels()
     {
@@ -1144,8 +1026,6 @@ public class ExporterTests
         Assert.Contains("glossary/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
     }
 
-    // A merged file whose halves are shaped differently reads as one file and answers two ways, and
-    // nothing in the output says so. So the run stops where somebody can act on it.
     [Fact]
     public void A_type_exported_at_two_shapes_refuses_and_writes_nothing()
     {
@@ -1159,8 +1039,6 @@ public class ExporterTests
         Assert.Contains("shape 2", plan.Refused[0]);
     }
 
-    // The same fault one level down. A skill told a section always travels would be right for half the
-    // records and wrong for the rest.
     [Fact]
     public void A_type_whose_sections_travelled_differently_refuses()
     {
@@ -1185,8 +1063,6 @@ public class ExporterTests
 
     private static ExportPlan Plan(LoadedCorpus corpus) => Exporter.Plan(corpus, null, null, Run);
 
-    // A corpus with an address, for the tests that read one. The base and the ref are `PublishingTests`'
-    // business; what matters here is that an export handed one writes a template rather than a link.
     private static readonly Publishing? Published = Publishing.For(
         new CorpusDescriptor
         {
@@ -1198,15 +1074,12 @@ public class ExporterTests
     private static ExportFile Single(ExportPlan plan, string path) =>
         Assert.Single(plan.Files, f => f.Path == path);
 
-    // The `sections` object of the one record a type wrote, for the tests that ask what reached it.
     private static JsonElement Sections(TypeSchema type, string scope) =>
         JsonDocument.Parse(
                 Single(Plan(Corpus(type, ("gls-one", Glossary("gls-one", null, "### Alpha\n\nA.\n", scope: scope)))),
                     "glossary/gls-one.json").Content)
             .RootElement.GetProperty("sections");
 
-    // What a type declaring its own line buys: two types export parts through one exporter, and neither
-    // one's vocabulary reaches the other's file.
     [Fact]
     public void A_clause_line_carries_the_modal_and_the_column_the_type_declares()
     {
@@ -1219,7 +1092,6 @@ public class ExporterTests
         Assert.False(line.TryGetProperty("definition", out _));
     }
 
-    // The modal is read from the words rather than from the emphasis around them.
     [Fact]
     public void A_clause_that_does_not_bind_still_carries_its_level()
         => Assert.Equal("SHOULD", ClauseLines()[1].GetProperty("level").GetString());
@@ -1228,7 +1100,6 @@ public class ExporterTests
     public void A_column_the_row_leaves_empty_carries_a_null()
         => Assert.Equal(JsonValueKind.Null, ClauseLines()[1].GetProperty("alignment").ValueKind);
 
-    // Sorting these would put `AUDIT` first, which is a different policy from the one the page shows.
     [Fact]
     public void Clauses_travel_in_the_order_the_table_writes_them()
     {
@@ -1239,9 +1110,6 @@ public class ExporterTests
         Assert.Equal(["ZONE", "AUDIT"], lines.Select(l => l.GetProperty("part").GetString()));
     }
 
-    // The definitions sit at the foot of the document, which is inside whichever section is written
-    // last. They render as nothing, so a section carried as prose must not hand a consumer a run of
-    // paths that no reader of the page sees.
     [Fact]
     public void A_carried_section_leaves_the_link_reference_definitions_behind()
     {
@@ -1269,8 +1137,6 @@ public class ExporterTests
         Assert.Equal(line.GetProperty("part").GetString(), line.GetProperty("anchor").GetString());
     }
 
-    // A rule's `Covers` line is dropped from the obligations it exports, so without this the clauses a
-    // rule discharges reach a consumer nowhere at all.
     [Fact]
     public void A_rule_line_carries_the_clauses_its_footnote_gathers()
     {
@@ -1281,8 +1147,6 @@ public class ExporterTests
             line.GetProperty("covers").EnumerateArray().Select(c => c.GetString()));
     }
 
-    // A footnote is found once for the whole document, so a rule carrying none must not take the one
-    // belonging to the rule above it.
     [Fact]
     public void A_rule_with_no_footnote_carries_no_clauses()
     {
@@ -1292,8 +1156,6 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, line.GetProperty("covers").ValueKind);
     }
 
-    // The footnote is prose about coverage rather than a piece of the rule, and a consumer reading the
-    // obligations should meet the words the standard wrote and nothing else.
     [Fact]
     public void The_footnote_is_dropped_from_the_obligations_it_travelled_beside()
     {
@@ -1303,8 +1165,6 @@ public class ExporterTests
             b => Assert.DoesNotContain("Covers", b.GetProperty("text").GetString()));
     }
 
-    // Each bullet binds on its own, so each travels with the modal it was written with, and a consumer reads
-    // how hard a bullet binds from a key.
     [Fact]
     public void A_rule_line_carries_each_bullet_with_its_level()
     {
@@ -1355,8 +1215,6 @@ public class ExporterTests
         ];
     }
 
-    // A standard as this corpus writes one: rules are headings under `Rules`, each closing on the
-    // footnote naming the clauses it discharges.
     private static string Standard() =>
         """
         ---
@@ -1422,8 +1280,6 @@ public class ExporterTests
         }
     };
 
-    // The framework edge, read back from the framework's end. A reference two clauses cite is one line
-    // naming both, because the file answers what a control rests on rather than what a clause maps to.
     [Fact]
     public void A_reference_two_clauses_cite_is_one_line_naming_both()
     {
@@ -1436,8 +1292,6 @@ public class ExporterTests
         Assert.Equal(["pol-BKUP"], line.GetProperty("records").EnumerateArray().Select(r => r.GetString()));
     }
 
-    // The register's own heading, verbatim. The tool states what the corpus filed the framework under
-    // and rules on nothing, so a corpus naming its standings differently exports the words it wrote.
     [Fact]
     public void A_framework_line_carries_the_register_word_and_the_entry_it_sits_at()
     {
@@ -1448,13 +1302,11 @@ public class ExporterTests
         Assert.Equal("iso-27001", line.GetProperty("anchor").GetString());
     }
 
-    // The manifest names the file, so a consumer opens what it was told about rather than guessing.
     [Fact]
     public void The_manifest_names_the_frameworks_file()
         => Assert.Equal("policies/frameworks.jsonl",
             Assert.Single(Plan(Aligned()).Types).FrameworksFile);
 
-    // A type declaring no `frameworks:` key writes no such file, which is every type bar policies.
     [Fact]
     public void A_type_declaring_no_frameworks_file_writes_none()
     {
@@ -1533,7 +1385,6 @@ public class ExporterTests
             .Select(l => JsonDocument.Parse(l).RootElement)
     ];
 
-    // A policy as this corpus writes one: clauses are rows under `Clauses`, the binding ones bold.
     private static string Policy() =>
         """
         ---
@@ -1591,8 +1442,6 @@ public class ExporterTests
 
         """;
 
-    // The type behind those clauses. Its line names a modal and a column, and neither has a home in a
-    // glossary's line.
     private static TypeSchema PolicyType(string frameworks = "") => new()
     {
         Key = "policies",
@@ -1641,8 +1490,6 @@ public class ExporterTests
         + $"narrows: {narrows}\nreview-by: \"{reviewBy}\"\n---\n\n"
         + $"# {id}\n\n## Scope\n\n{scope}\n\n## Terms\n\n{terms}";
 
-    // The `fields` object of one record, over a type and one line of extra frontmatter. The line sits
-    // last, because `key-order` is the corpus's business and nothing here reads it.
     private static JsonElement Fields(TypeSchema type, string id, string extra)
     {
         var text = $"---\nid: {id}\ntier: descriptive\nstatus: draft\nowner: someone\n"
@@ -1653,7 +1500,6 @@ public class ExporterTests
             .RootElement.GetProperty("fields");
     }
 
-    // A glossary declaring `tags` as a list of strings and exporting it.
     private static TypeSchema ListType() => FieldType("tags", new FieldSpec
     {
         Name = "tags",
@@ -1661,8 +1507,6 @@ public class ExporterTests
         Of = "string"
     });
 
-    // A glossary declaring the shape a policy's `aligns-with` has: a list whose entries are objects, one
-    // key naming the entry and one holding a list of its own.
     private static TypeSchema ObjectListType() => FieldType("aligns-with", new FieldSpec
     {
         Name = "aligns-with",
@@ -1675,7 +1519,6 @@ public class ExporterTests
         ]
     });
 
-    // A glossary exporting a field and no section, which is the shape `reports` declares.
     private static TypeSchema SectionlessType()
     {
         var type = FieldType("tags", new FieldSpec { Name = "tags", Type = "list", Of = "string" });
@@ -1703,8 +1546,6 @@ public class ExporterTests
         };
     }
 
-    // A glossary declaring the shape a report's `generated` has: one object, its keys taken from a shape
-    // rather than from a list of entries.
     private static TypeSchema ObjectType() => FieldType("generated", new FieldSpec
     {
         Name = "generated",
@@ -1716,9 +1557,6 @@ public class ExporterTests
         ]
     });
 
-    // A footnote reconciling a field against what the part cites is a fact about coverage rather than a
-    // piece of the part. Left in, a part carrying nothing else travels with the footnote standing where
-    // its words belong, and the consumer reads a coverage line as the definition.
     [Fact]
     public void A_citation_footnote_is_not_exported_as_the_part_s_lead()
     {
@@ -1739,8 +1577,7 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, line.GetProperty("definition").ValueKind);
     }
 
-    // The glossary type with a field reconciling its citations against a `Covers` line. Declared rather
-    // than merely present, because that is the list the exporter reads the labels off.
+    // Declared rather than merely present, because the exporter reads the labels off the declared list.
     private static TypeSchema Covering()
     {
         var type = GlossaryType();
@@ -1790,7 +1627,6 @@ public class ExporterTests
     private static LoadedCorpus Corpus(params string[] glossaries) =>
         Corpus(GlossaryType(), [.. glossaries.Select(t => (t.Split('\n')[1]["id: ".Length..], t))]);
 
-    // The same, for a type the caller supplies. A record is named by its id, as every record here is.
     private static LoadedCorpus Corpus(TypeSchema type, params (string Id, string Text)[] records)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };

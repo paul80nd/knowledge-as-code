@@ -1,10 +1,5 @@
 using kac.core;
 
-// A rule that needs C# is a class with one method, so each of its ways to fail can be driven directly
-// rather than only through a whole corpus. That matters more here than elsewhere: the coverage gate
-// reads check ids, not branches, so a rule reporting three faults under one id is green once a fixture
-// trips any one of them. These tests are what hold the other two honest.
-
 namespace kac.tests;
 
 public class DocumentRuleTests
@@ -16,7 +11,6 @@ public class DocumentRuleTests
         Assert.All(DocumentRules.All, r => Assert.NotEmpty(r.Emits));
     }
 
-    // What each emitted id *means* is `_checks.yaml`'s to say.
     [Fact]
     public void Every_emitted_id_is_a_usable_check_id()
     {
@@ -64,8 +58,6 @@ public class DocumentRuleTests
         Assert.Contains("keep it under 20.", Single(found).Message);
     }
 
-    // A corpus can tune the ceiling without a release, and the default applies only where the schema
-    // declares none.
     [Fact]
     public void The_ceiling_is_the_schemas_and_a_Y_statement_within_it_is_silent()
     {
@@ -78,9 +70,6 @@ public class DocumentRuleTests
             new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = 5 }));
     }
 
-    // The moves are matched on the rendered text, so the bold that marks them in the corpus is optional
-    // and a move followed by punctuation is still found. Whole words only, or `facing` would be found
-    // inside `surfacing`.
     [Theory]
     [InlineData("in the context of a, facing b, we decided c, rather than d, to achieve e, accepting f.", 0)]
     [InlineData("IN THE CONTEXT OF a, FACING b, WE DECIDED c, RATHER THAN d, TO ACHIEVE e, ACCEPTING f.", 0)]
@@ -100,7 +89,6 @@ public class DocumentRuleTests
         Assert.Contains("A message queue", Single(found).Message);
     }
 
-    // The bullets are found by heading.
     [Fact]
     public void Bullets_outside_the_section_are_left_alone()
         => Assert.Empty(Run(new AlternativesHaveVerdicts(),
@@ -128,14 +116,11 @@ public class DocumentRuleTests
         Assert.Equal("'Branch' is out of order: it belongs before 'Item'.", Single(found).Message);
     }
 
-    // Casing is the entry's own, and a glossary holds `ADR` beside `Borrower`. So ordering by code
-    // point would report every initialism as misplaced where a reader scans them as fine.
     [Fact]
     public void Casing_does_not_decide_the_order()
         => Assert.Empty(Run(new TermsAreAlphabetical(),
             Adr("## Terms\n\n### ADR\n\nOne.\n\n### Borrower\n\nTwo.\n\n### corpus\n\nThree.")));
 
-    // Each entry is judged against the one before it.
     [Fact]
     public void Every_entry_out_of_place_is_reported()
         => Assert.Equal(2, Run(new TermsAreAlphabetical(),
@@ -157,7 +142,6 @@ public class DocumentRuleTests
             Single(found).Message);
     }
 
-    // The entry moves to the top of the run it is newer than, not to the line above it.
     [Fact]
     public void An_entry_is_sent_above_the_first_entry_it_is_newer_than()
     {
@@ -169,26 +153,21 @@ public class DocumentRuleTests
             Single(found).Message);
     }
 
-    // Two entries on one day are one change written twice, and neither came before the other.
     [Fact]
     public void Two_entries_sharing_a_date_are_left_alone()
         => Assert.Empty(Run(new ChangelogNewestFirst(),
             Adr("## Changelog\n\n- 2026-09-02: one.\n- 2026-09-02: another.\n- 2026-08-20: initial version.")));
 
-    // Each entry is judged against the one before it.
     [Fact]
     public void Every_entry_out_of_place_in_a_changelog_is_reported()
         => Assert.Equal(2, Run(new ChangelogNewestFirst(),
             Adr("## Changelog\n\n- 2026-08-20: one.\n- 2026-09-02: two.\n- 2026-09-14: three.")).Count);
 
-    // A template's date is a placeholder, so it opens no entry and is passed over. Reporting one would
-    // fail every corpus on the file it was sent to start from.
     [Fact]
     public void A_bullet_opening_on_something_other_than_a_date_is_passed_over()
         => Assert.Empty(Run(new ChangelogNewestFirst(),
             Adr("## Changelog\n\n- {{YYYY-MM-DD}}: initial version.\n- 2026-08-20: earlier.")));
 
-    // The entries are found by heading.
     [Fact]
     public void Bullets_outside_the_changelog_are_left_alone()
         => Assert.Empty(Run(new ChangelogNewestFirst(),
@@ -223,8 +202,6 @@ public class DocumentRuleTests
             Standard("## Rules\n\n### Secrets come from the vault\n\n- A secret **MUST** come from the vault."),
             type: Standards()));
 
-    // BCP 14 makes capitals normative, so an unbolded keyword is the same intention written weakly.
-    // `part-modal` reads both forms for that reason, and this reads both for it.
     [Fact]
     public void A_keyword_written_in_plain_capitals_outside_the_section_is_reported()
     {
@@ -234,28 +211,23 @@ public class DocumentRuleTests
         Assert.StartsWith("this bullet names 'MUST' outside `Rules`", Single(found).Message);
     }
 
-    // The rule tells an author a clause landed where nothing can cite it, and a clause is a bullet.
     [Fact]
     public void A_paragraph_naming_a_modal_is_never_reported()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
             Standard("## Rationale and provenance\n\nA session met a **MUST**-shaped instruction here."),
             type: Standards()));
 
-    // A keyword inside backticks is being named rather than used, which is the reading `Md.Bullets`
-    // already gives a code span under a part heading.
     [Fact]
     public void A_modal_in_a_code_span_is_left_alone()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
             Standard("## Examples\n\n- Write `MUST` in bold capitals."), type: Standards()));
 
-    // A nested list is one bullet's workings, so its points are not obligations of their own.
     [Fact]
     public void A_nested_bullet_is_left_alone()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
             Standard("## Examples\n\n- What the rule asks for:\n    - a secret **MUST** come from the vault."),
             type: Standards()));
 
-    // The parts section is read from the type, so a second type adopting this rule is a line of YAML.
     [Fact]
     public void The_binding_section_is_the_one_the_type_declares()
     {
@@ -265,8 +237,6 @@ public class DocumentRuleTests
         Assert.Equal("A secret MUST come from the vault.", Quoted(Single(found).Message));
     }
 
-    // A type declaring no modals declares no way for a bullet to bind, which is how a glossary sources
-    // headings and is asked none of this.
     [Fact]
     public void A_type_declaring_no_modals_is_asked_nothing()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
@@ -282,14 +252,11 @@ public class DocumentRuleTests
             Standard("## Examples\n\n- A secret **MUST** come from the vault.\n- A log **MUST NOT** carry one."),
             type: Standards()).Count);
 
-    // The whole word, so the `MUST` inside `MUSTER` is not one. `PartSpec.ModalNamed` draws that line
-    // and this rule reads it from there.
     [Fact]
     public void A_word_a_modal_only_prefixes_is_not_a_modal()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
             Standard("## Examples\n\n- The reviewers MUSTER once a week."), type: Standards()));
 
-    // The longest modal first, so a `MUST NOT` is never reported as a `MUST`.
     [Fact]
     public void A_two_word_modal_is_named_in_full()
     {
@@ -299,8 +266,6 @@ public class DocumentRuleTests
         Assert.StartsWith("this bullet names 'MUST NOT' outside", Single(found).Message);
     }
 
-    // An advisory modal is as unreachable outside the section as a binding one, and the message never
-    // says it binds: `MAY` recommends, and a type declaring it says so in `parts.advisory:`.
     [Fact]
     public void An_advisory_modal_outside_the_section_is_reported_without_being_called_binding()
     {
@@ -311,8 +276,6 @@ public class DocumentRuleTests
         Assert.DoesNotContain("bind", Single(found).Message, StringComparison.Ordinal);
     }
 
-    // A bullet bolding a whole sentence is the misplaced rule this looks for. `part-modal` reports the
-    // same shape inside the section for carrying no modal, so neither reading lets it through.
     [Fact]
     public void A_modal_inside_a_wider_bold_run_is_reported()
     {
@@ -322,7 +285,6 @@ public class DocumentRuleTests
         Assert.StartsWith("this bullet names 'MUST' outside `Rules`", Single(found).Message);
     }
 
-    // A block quote is somebody else's words, and quoting a rule is naming one.
     [Fact]
     public void A_bullet_inside_a_block_quote_is_left_alone()
         => Assert.Empty(Run(new BindsOnlyUnderRules(),
@@ -347,35 +309,29 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Catalogue\n\nThe list a reader searches for a title."), type: GlossaryType()));
 
-    // An entry naming its own term in backticks defines it in the words around it, so reading the
-    // source would report nearly every entry that mentions a path or a command.
     [Fact]
     public void The_term_inside_a_code_span_is_passed_over()
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Export\n\nWhat `kac export` writes: a flat file per type."), type: GlossaryType()));
 
-    // A link's target is not prose, and a path naming the term is the same case as a code span.
     [Fact]
     public void The_term_inside_a_link_target_is_passed_over()
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Plugin\n\nWhat an agent installs, assembled under [the folder](../plugin/README.md)."),
             type: GlossaryType()));
 
-    // By the second sentence the reader has the meaning, so using the word there is how an entry reads.
     [Fact]
     public void A_later_sentence_using_the_term_is_passed_over()
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Page\n\nThe file at the root of a type's folder. A page has no frontmatter."),
             type: GlossaryType()));
 
-    // `Also`, `Avoid` and `Not` answer other questions about the term, and each names it freely.
     [Fact]
     public void A_labelled_line_repeating_the_term_is_not_the_definition()
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Record\n\nOne document a corpus keeps.\n\n**Not:** a record of a call."),
             type: GlossaryType()));
 
-    // Whole words and no stemming. Precision is what makes the finding worth acting on.
     [Fact]
     public void A_definition_using_the_plural_of_its_term_is_passed_over()
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
@@ -419,15 +375,12 @@ public class DocumentRuleTests
         Assert.Equal(Sev.Warning, Single(found).Severity);
     }
 
-    // Bold is what binds under BCP 14, and a glossary is where a keyword is defined. `Standard` names
-    // `MUST` in the course of saying what a standard is.
     [Fact]
     public void A_keyword_written_in_plain_capitals_inside_an_entry_is_passed_over()
         => Assert.Empty(Run(new EntriesStateNoRequirement(),
             Glossary("### Keyword\n\nA word BCP 14 makes normative, such as MUST, written in capitals."),
             type: GlossaryType()));
 
-    // An obligation under a labelled line is as misplaced as one above it, and the fix is the same.
     [Fact]
     public void A_modal_inside_a_labelled_line_is_reported()
     {
@@ -438,7 +391,6 @@ public class DocumentRuleTests
         Assert.StartsWith("'Retention' writes a bold 'MUST'", Single(found).Message);
     }
 
-    // The longest modal first, so a prohibition is never reported as an obligation.
     [Fact]
     public void A_two_word_modal_inside_an_entry_is_named_in_full()
     {
@@ -448,14 +400,12 @@ public class DocumentRuleTests
         Assert.StartsWith("'Secret' writes a bold 'MUST NOT'", Single(found).Message);
     }
 
-    // The entries are the type's own reading, so prose outside the terms section is not one.
     [Fact]
     public void A_modal_outside_the_terms_section_is_left_to_another_check()
         => Assert.Empty(Run(new EntriesStateNoRequirement(),
             Glossary("### Retention\n\nHow long the estate keeps a record.",
                 scope: "A reader **MUST** start here."), type: GlossaryType()));
 
-    // The whole word, so the `MUST` inside `MUSTER` is not one.
     [Fact]
     public void A_word_a_modal_only_prefixes_inside_an_entry_is_not_a_modal()
         => Assert.Empty(Run(new EntriesStateNoRequirement(),
@@ -467,7 +417,6 @@ public class DocumentRuleTests
             Glossary("### Retention\n\nA team **MUST** delete a record, and **MUST NOT** keep a copy."),
             type: GlossaryType()).Count);
 
-    // The bullet the message quotes, read back out of it.
     private static string Quoted(string message) =>
         message[(message.IndexOf('"') + 1)..message.LastIndexOf('"')];
 
@@ -475,9 +424,8 @@ public class DocumentRuleTests
     {
         var found = new List<Finding>();
 
-        // `RuleContext` asks for a type and most rules below read none, so it is handed a bare stand-in
-        // rather than the document's own. Parsing against an empty schema leaves that null. A rule
-        // reading the type's own declarations is passed one, which is what `Standards` below is.
+        // Most rules here read no type, so the context is handed a bare stand-in. A rule reading the type's
+        // own declarations is passed one, as `Standards` gives.
         rule.Check(new RuleContext(doc, type ?? new TypeSchema(), spec ?? new RuleSpec { Id = rule.RuleId },
             new Report(doc.Rel, found)));
         return found;
@@ -485,9 +433,7 @@ public class DocumentRuleTests
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);
 
-    // A rule reads a parsed document and nothing else, so the fixture is the markdown itself. The
-    // schema is empty because no rule here asks anything of the type, which is why `Run` above can
-    // hand the context a stand-in.
+    // Parsed against an empty schema, because no rule given an ADR asks anything of the type.
     private static Doc Adr(string body)
     {
         var text = $"---\nid: adr-0001\nstatus: accepted\n---\n\n# A title\n\n`ADR: adr-0001` `ACCEPTED`\n\n{body}\n";
@@ -496,9 +442,7 @@ public class DocumentRuleTests
         return doc;
     }
 
-    // A standard as the schema declares one: parts are the headings under `Rules`, and the modals are
-    // the BCP 14 keywords the type narrows to. Written out rather than loaded, so a test states the
-    // declaration it depends on.
+    // Written out rather than loaded, so a test states the declaration it depends on.
     private static TypeSchema Standards(string section = "Rules") => new()
     {
         Parts = new PartSpec(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
@@ -508,9 +452,7 @@ public class DocumentRuleTests
         }
     };
 
-    // A glossary as the schema declares one: entries are the H3s under `Terms`, each carrying the three
-    // labelled lines beneath it. Written out rather than loaded, so a test states the declaration it
-    // depends on.
+    // Written out rather than loaded, so a test states the declaration it depends on.
     private static TypeSchema GlossaryType() => new()
     {
         Parts = new PartSpec(PartSpec.Headings, "", [], [])
@@ -521,8 +463,8 @@ public class DocumentRuleTests
         }
     };
 
-    // Both glossary rules read the document's parts, and the parser fills those in only where the
-    // schema declares the type. So this parse is given one, where `Adr` above is given an empty schema.
+    // The parser fills in a document's parts only where the schema declares the type, so this parse is
+    // given one.
     private static Doc Glossary(string body, string scope = "One context and no other.")
     {
         var text = $"---\nid: gls-test\nstatus: draft\n---\n\n# A title\n\n`Glossary: gls-test` `DRAFT`\n\n"

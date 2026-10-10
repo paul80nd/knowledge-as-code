@@ -1,11 +1,3 @@
-// The skills reference, held to the three files that decide which tree each skill lives in.
-//
-// A hand-written table drifts from what it describes inside two pull requests and nothing notices. Adding one skill
-// to the plugin already made four pages wrong in a single change, and only a grep found them.
-//
-// `KAC_UPDATE_DOCS=1` rewrites the blocks instead of asserting on them, as it does for the CLI reference. Read the
-// diff afterwards: the update blesses a regression as happily as a fix.
-
 using kac.core;
 
 namespace kac.tests;
@@ -15,7 +7,6 @@ public class SkillReferenceTests
 {
     private static bool Updating => Environment.GetEnvironmentVariable("KAC_UPDATE_DOCS") == "1";
 
-    // Each table, and the block on the page that holds it.
     public static TheoryData<string> Blocks() => ["skills-in-the-plugin", "skills-in-a-corpus", "skills-here"];
 
     [Fact]

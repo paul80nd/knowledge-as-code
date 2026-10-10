@@ -1,31 +1,11 @@
 namespace kac.core;
 
-// A record's addressable parts: the children something else may cite by name. The type declares where
-// they live and what holds them to shape, so nothing here is specific to policies or to glossaries
-// except by way of that declaration.
-//
-// Three questions run across both sources, each read off whatever that source writes its parts in.
-// First, the section holds at least one part. A record promising parts and carrying none says nothing
-// where it undertook to say something, which `clause-table` reads off an empty table and `part-none`
-// off a section with no headings. Second, each part offers an id, and no two parts of a record share
-// one, because a citation reaching two children names neither. Third, a part written as a heading
-// carries something beneath it, since a heading is an address and a container both. That third one is
-// `part-empty`, and the table source needs no equivalent: a row with an empty clause cell is stopped by
-// `clause-modal` before anyone asks.
-//
-// The modals are asked of both, of the cell for a table row and of the bullets beneath a heading, wherever
-// the type declares them: a table source must, and a heading source may. Everything else below belongs to
-// the table source, whose rows carry cells a heading has none of: the table can be missing or mis-headed,
-// and a row's id is written rather than derived. A heading is its own id and offers no cells to be wrong.
-//
-// Runs only for a type whose schema declares a `parts:` block, and only once the section itself is
-// present: a missing section is `required-section`'s to report, and saying it twice would make one fault
-// look like two.
 public static class PartChecks
 {
     public static void Check(Doc d, TypeSchema t, Report report)
     {
         if (t.Parts is not { } spec) return;
+        // A missing section is `required-section`'s to report.
         if (!d.Sections.Any(s => string.Equals(s.Title, spec.Section, StringComparison.OrdinalIgnoreCase))) return;
 
         if (spec.Source == PartSpec.Table && !TableIsSound(d, spec, report)) return;
@@ -43,11 +23,6 @@ public static class PartChecks
         if (spec.Source == PartSpec.Table) CheckObligations(d, spec, report);
     }
 
-    // Reported and stopped, for the reason a broken table is: the checks below read parts, and a section
-    // holding none gives them nothing to say.
-    //
-    // The message is built from the declaration, so it names the section, the word the type calls its
-    // parts and the level to write them at, whatever type is asking.
     private static bool SectionIsPopulated(Doc d, PartSpec spec, Report report)
     {
         if (d.Parts.Count > 0) return true;
@@ -58,13 +33,8 @@ public static class PartChecks
         return false;
     }
 
-    // Every part is asked, including the last, whose body runs to the end of the document rather than to
-    // a heading that closes it.
-    //
-    // `Md.HasContent` reads the source as written rather than the rendered blocks, which is what makes a
-    // horizontal rule or an em dash standing in for the definition count as nothing written. The
-    // heading is quoted into the message, because a record holds many entries and the author needs to
-    // know which one is empty.
+    // `Md.HasContent` reads the source as written, so a horizontal rule or an em dash standing in for a definition
+    // counts as nothing written.
     private static void CheckBodies(Doc d, PartSpec spec, Report report)
     {
         foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))
@@ -73,9 +43,7 @@ public static class PartChecks
                 row.Line);
     }
 
-    // A missing table, a mis-headed one and an empty one are three different faults the parser has
-    // already told apart. Each is reported and stops the pass, because nothing beneath a broken table
-    // can be judged.
+    // Each fault stops the pass, because nothing beneath a broken table can be judged.
     private static bool TableIsSound(Doc d, PartSpec spec, Report report)
     {
         var headers = string.Join(" | ", spec.Columns);
@@ -106,16 +74,6 @@ public static class PartChecks
         return true;
     }
 
-    // The address itself, asked of both sources.
-    //
-    // A table row's id is written by the author, so it can be written as something other than a code
-    // span or fail the type's pattern. Both are `clause-id-format`, and neither can be asked of a
-    // heading: a heading is its own id, and the slug admits whatever the heading says. A
-    // heading that slugs to nothing, such as punctuation alone, offers no address and is passed over.
-    // A link to it gets the same answer from `fragment-resolves`.
-    //
-    // Uniqueness is asked of both, ordinally, because `pol-SCRT.LOGS` and `pol-SCRT.logs` differing only
-    // in case is not two parts a reader could tell apart either.
     private static void CheckAddresses(Doc d, PartSpec spec, Report report)
     {
         var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -142,12 +100,7 @@ public static class PartChecks
         }
     }
 
-    // What a heading's bullets say about how hard each one binds: the modal, and the bold that makes it
-    // bind at all. Asked only of a type declaring modals, which is how a glossary's terms sit under the
-    // same source and are asked none of it. `PartSpec.ModalNamed` states where in a bullet one may sit.
-    //
-    // A part with nothing under it is passed over. `part-empty` has already said so, and a second
-    // finding would make one fault look like two.
+    // A part with nothing under it is passed over, because `part-empty` has already reported it.
     private static void CheckBullets(Doc d, PartSpec spec, Report report)
     {
         if (spec.Binding.Count == 0) return;
@@ -165,8 +118,8 @@ public static class PartChecks
                 continue;
             }
 
-            // One bullet is one obligation, and a citation names the heading above it. A list inside a bullet
-            // is detail nothing addresses and nothing exports, so it is refused and its points go unasked.
+            // One bullet is one obligation. A nested list is detail nothing addresses or exports, so its points go
+            // unasked.
             foreach (var line in Md.NestedLists(d.Ast, part.BodyStart, part.BodyEnd))
                 report.Err(new CheckId("part-nested"),
                     $"{spec.Noun} '{Md.Snippet(part.Text)}' has a list inside a bullet. Write each point as a "
@@ -174,9 +127,7 @@ public static class PartChecks
 
             foreach (var (text, plain, bold, line) in bullets)
             {
-                // The unbolded keyword is asked first, because a bullet with one and nothing else would
-                // otherwise be told twice: once that it names no modal, which is wrong, and once that the
-                // modal it names is not bold, which is the whole of what is wrong with it.
+                // The unbolded keyword first, so a bullet with only that is told once what is wrong with it.
                 if (spec.ModalNamed(plain) is { } loose)
                     report.Err(new CheckId("part-modal"),
                         $"'{loose}' is written plain here, and bold is what binds. Write it `**{loose}**`.", line);
@@ -188,8 +139,6 @@ public static class PartChecks
         }
     }
 
-    // What a clause table's rows carry beyond an address: the modal that says whether the row obliges,
-    // how it is written, and where it sits among the rest.
     private static void CheckObligations(Doc d, PartSpec spec, Report report)
     {
         var highest = 0;
@@ -197,8 +146,6 @@ public static class PartChecks
 
         foreach (var row in d.Parts)
         {
-            // The modal is the binding level, so a row without one is a sentence rather than an
-            // obligation and nothing below it can be judged either.
             var modal = spec.Modal(row.Text);
             if (modal is null)
             {
@@ -208,9 +155,6 @@ public static class PartChecks
                 continue;
             }
 
-            // Bold carries the binding level visually, and the reader skimming a long table reads the
-            // weight before the words. A binding modal that is not bold reads as advice; an advisory one
-            // that is bold reads as an obligation. Both are the wrong document.
             var binds = spec.Binding.Contains(modal, StringComparer.Ordinal);
             if (binds && !string.Equals(row.BoldLead, modal, StringComparison.Ordinal))
                 report.Err(new CheckId("clause-modal"), $"'{modal}' binds. Write it bold, `**{modal}**`.", row.Line);
@@ -218,17 +162,14 @@ public static class PartChecks
                 report.Err(new CheckId("clause-modal"),
                     $"'{modal}' does not bind. Write it plain, not bold.", row.Line);
 
-            // A second modal in the same row is two obligations sharing one id, so a citation of it can
-            // only ever name half of what it means. `ModalNamed` asks for the whole word, so the `MUST`
-            // inside `MUSTERED` is not one.
+            // `ModalNamed` asks for the whole word, so the `MUST` inside `MUSTERED` is not a second modal.
             var rest = row.Text[modal.Length..];
             if (spec.ModalNamed(rest) is { } second)
                 report.Warn(new CheckId("clause-compound"),
                     $"clause '{row.Id ?? row.IdText}' carries a second '{second}': one obligation per clause, or the "
                     + "citation is ambiguous.", row.Line);
 
-            // Reported once, against the first row that breaks the grouping: a table sorted wholly the
-            // wrong way would otherwise report every row after the first.
+            // Reported once, against the first row breaking the grouping.
             var rank = spec.Rank(modal);
             if (rank < highest && !disordered)
             {
@@ -242,17 +183,7 @@ public static class PartChecks
         }
     }
 
-    // The third way a citation fails, beside naming no document and naming no part: separating the two
-    // with a colon. Reported under `part-ref` because a reader meets one question: does this citation
-    // reach the thing it claims to? The separator is the first way of answering no.
-    //
-    // Every document is asked, including the ones offering no parts of their own: a citation is written
-    // where the part is answered, which is rarely a record of the same type. The other two ways need
-    // `byId` and run over the corpus. This one is legible in the single file, so it sits here.
-    //
-    // Left unchecked it is silent. The parser reads a citation by its separator, so a colon-separated
-    // one is never collected, the resolution checks never see it, and the build passes on a reference
-    // the reader has every reason to trust.
+    // Asked of every document, because a citation is rarely written in a record of the same type as the part it names.
     public static void CheckNotation(Doc d, Report report)
     {
         foreach (var (citation, line) in d.ColonCitations)

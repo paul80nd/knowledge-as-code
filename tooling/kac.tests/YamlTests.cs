@@ -1,6 +1,3 @@
-// In-process unit tests for the kac.core Yaml representation-model helpers, driven through a real
-// temp file so LoadFile is covered end to end.
-
 using kac.core;
 
 namespace kac.tests;

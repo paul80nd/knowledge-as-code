@@ -7,12 +7,10 @@ public sealed record ValidationResult(List<Finding> Findings, int Validated, int
 
 public static class Harness
 {
-    // Shared with `Creation`, which needs the same tree for a different reason: the template it reads.
     internal static readonly string RepoRoot = FindRepoRoot();
 
-    // The day every scenario is judged against. Named rather than read from the clock, so a rule written
-    // against `today()` gives one answer for the life of the fixture. `FixtureDateTests` in `kac.tests`
-    // keeps the dates in those fixtures well clear of it.
+    // The day every scenario is judged against, fixed so a rule written against `today()` gives one answer.
+    // `FixtureDateTests` in `kac.tests` keeps the fixtures' dates clear of it.
     internal static readonly DateOnly Today = new(2026, 6, 15);
 
     public static ValidationResult Validate(string fixtureName)
@@ -38,16 +36,15 @@ public static class Harness
         finally
         {
             try { Directory.Delete(temp, recursive: true); }
-            // A file still open leaves the tree under the system temp directory, which the machine
-            // clears. Failing the spec here would report the cleanup as a fault in the corpus.
+            // A file still open leaves the tree for the machine to clear.
+            // Failing here would report cleanup as a corpus fault.
             catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
             }
         }
     }
 
-    // The repository, found by the solution at its root rather than by the corpus beside it. The specs need
-    // the tree that carries the engine, the fixtures and the schema at once, and only one folder answers.
+    // Found by the solution file, not a `.corpus.yaml`: the specs need the engine, the fixtures and the schema at once.
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);

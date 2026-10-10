@@ -35,8 +35,7 @@ public partial class NavigationTests
         Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal))]);
     }
 
-    // Every page the nav names, in the order it names them. The block runs to the next top-level key, of which there
-    // is none today: `nav:` is the last thing in the file.
+    // The block runs to the next top-level key, and `nav:` is the last thing in the file.
     private static List<string> Listed()
     {
         var listed = new List<string>();

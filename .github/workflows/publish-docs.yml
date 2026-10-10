@@ -1,13 +1,10 @@
-# Publishes the documentation site to GitHub Pages on every push to main. mkdocs.yml at the repository root
-# says what the site is; docs/ holds every page in it.
+# Publishes the documentation site to GitHub Pages on every push to main. mkdocs.yml says what the site is.
 # The site source is set to GitHub Actions in the repository's Pages settings, so nothing here pushes a branch.
 
 name: publish-docs
 
-# No `paths:` filter. A page's content need not come from the file holding the page: docs/changelog.md is
-# a snippet of tooling/kac/CHANGELOG.md, so a release moves the site without touching anything a filter
-# naming docs/ would list. Such a filter has to name every input the site reads, and the one that goes
-# unlisted is invisible. The concurrency group below holds the cost of building on every push to one run.
+# No `paths:` filter, because a page need not come from the file holding it: docs/changelog.md is a snippet of
+# tooling/kac/CHANGELOG.md. The concurrency group below holds the cost of building on every push to one run.
 on:
   push:
     branches:

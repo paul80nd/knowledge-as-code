@@ -8,9 +8,7 @@ namespace kac.features;
 [Binding]
 public sealed class CreationSteps
 {
-    // The scenario's own tree, and the folder inside it the corpus is created in. Two levels, because one
-    // scenario writes a descriptor above the folder and the level it writes to has to be this scenario's
-    // to delete. Written into the shared temp root, it would be a corpus above every scenario after it.
+    // Two levels, so a descriptor written above the folder is still inside this scenario's tree and deleted with it.
     private string _root = "";
     private string _folder = "";
     private int _exit = -1;
@@ -44,8 +42,6 @@ public sealed class CreationSteps
         Git("init", "-q", "-b", "main", ".");
     }
 
-    // Above the folder rather than in it, because the framework reaching a subfolder of a corpus is the
-    // same fault as it reaching the corpus itself, and it is the quieter of the two.
     [Given("a corpus descriptor above it")]
     public void GivenACorpusDescriptorAboveIt()
     {
@@ -62,8 +58,7 @@ public sealed class CreationSteps
         _before = Count();
     }
 
-    // Committed, so the tree is clean and the check that stops a dirty one does not fire. What this pins
-    // is that the warning about a folder holding files is a warning and never a second refusal.
+    // Committed, so the dirty-tree refusal does not fire and the folder-not-empty warning is what runs.
     [Given(@"it holds a committed ""(.*)""")]
     public void GivenItHoldsACommitted(string name)
     {
@@ -83,8 +78,6 @@ public sealed class CreationSteps
     public void WhenICreateACorpusThereAdopting(string types)
         => _exit = Creation.Create(_folder, types: types);
 
-    // Read from the corpus that was written rather than from the exit code, so a failure here names the
-    // links. The exit code is asserted beside it and answers for every other check.
     [Then("no link fails to resolve")]
     public void ThenNoLinkFailsToResolve()
     {
@@ -96,9 +89,6 @@ public sealed class CreationSteps
         Assert.True(dangling.Count == 0, string.Join("\n", dangling));
     }
 
-    // The unlinking has to reach the comparison as well as the write. Held to the template as authored, a
-    // corpus that declined types reads as behind on every seed page it holds, and a full update puts back
-    // the links its own `types:` says it cannot follow.
     [Then("a full update finds it in step")]
     public void ThenAFullUpdateFindsItInStep()
         => Assert.Equal(0, Creation.WouldChangeUnderFull(_folder));
@@ -124,7 +114,6 @@ public sealed class CreationSteps
     public void ThenIsStillThere(string name)
         => Assert.True(File.Exists(Path.Combine(_folder, name)));
 
-    // Everything the folder holds, `.git` aside, so a refusal can be held to having written none of it.
     private int Count() =>
         Directory.EnumerateFileSystemEntries(_folder).Count(e => Path.GetFileName(e) != ".git");
 

@@ -3,12 +3,8 @@ using System.Text;
 
 namespace kac.core;
 
-// What restoring one consumed corpus comes to. Named before anything is written, as `ExportPlan` and
-// `PackPlan` are, so a test can ask what a restore would do without a filesystem or a network.
-//
-// `Files` are named relative to that corpus's own folder under `.imports/`, with the package's payload
-// prefix already stripped. `Current` says the folder already holds this version, in which case `Files`
-// is empty and nothing was fetched.
+// `Files` are relative to the corpus's folder under `.imports/`, payload prefix stripped. `Current`
+// says the folder already holds this version, and `Files` is then empty.
 public sealed record RestoreStep(
     string Corpus,
     string Shortcode,
@@ -16,35 +12,20 @@ public sealed record RestoreStep(
     bool Current,
     IReadOnlyList<BundleFile> Files);
 
-// What a whole restore comes to. `Problems` is what stops the run, and a plan carrying one writes
-// nothing at all: a corpus half-restored validates against a graph nobody declared.
+// A plan carrying a problem writes nothing: a half-restored corpus validates against a graph nobody
+// declared.
 public sealed record RestorePlan(IReadOnlyList<RestoreStep> Steps, IReadOnlyList<string> Problems);
 
-// What a folder under `.imports/` already holds, read from the export manifest that arrived in it.
-//
-// The corpus is carried beside the version because a shortcode alone does not say whose records these
-// are. An entry repointed at another corpus keeps its shortcode, and a folder judged only by version
-// would be left standing with the wrong corpus's records inside it.
+// The corpus is carried beside the version: a repointed entry keeps its shortcode, and a folder judged
+// by version alone would keep the wrong corpus's records.
 public sealed record Imported(string Corpus, string Version);
 
-// The consuming half of publishing. A corpus declares what it consumes, and this fetches each
-// dependency at a version the declaration admits and unpacks it where the resolver will look.
-//
-// **`.imports/` is a restored artefact and is never committed.** It holds another corpus's whole
-// content, and a copy in this repository's history would be a second place that content lives and a
-// second thing to keep in step. CI restores before it validates, exactly as a build restores packages.
-//
-// **The range is intent and the lock is what the build used.** A declaration carrying a `resolved:` that
-// its range still admits is taken at that version and the registry is never asked, so two restores of an
-// unchanged `.corpus.yaml` write the same bytes. A range that has moved past its lock re-resolves, which
-// is how changing the declaration takes effect. Whether a newer version has been published is a
-// different question, and not one a restore answers.
-//
+// `.imports/` is a restored artefact and is never committed. A lock its range still admits is taken
+// without asking the registry, so two restores of an unchanged descriptor write the same bytes.
 // `docs/cli/restore.md` says what a run writes and what it refuses.
 public static class Restore
 {
-    // Where a restored corpus lands. One folder per shortcode, because a shortcode is what a citation
-    // carries and a reader following `eng:pol-VURM` should find it under the name they typed.
+    // One folder per shortcode, the name a citation carries.
     public const string ImportsDir = ".imports";
 
     // What a package may unpack to. A zip entry declares its uncompressed size and a hostile one is free
@@ -53,11 +34,7 @@ public static class Restore
     private const long MaxEntryBytes = 16L * 1024 * 1024;
     private const long MaxPackageBytes = 256L * 1024 * 1024;
 
-    // What a restore comes to, given what the descriptor declared.
-    //
-    // `installed` answers what version each shortcode's folder already holds, or null where it holds
-    // nothing readable. It is a function rather than a path so that the whole decision is testable from
-    // a set of strings, which is the bargain `Update.Plan` and `New.Plan` already strike.
+    // `installed` is a function rather than a path, so the decision is testable from strings.
     public static RestorePlan Plan(
         IReadOnlyList<Consumed> declared, Registry registry, Func<string, Imported?> installed)
     {
@@ -77,9 +54,7 @@ public static class Restore
 
             var version = resolved.Value;
 
-            // Already unpacked, by the same corpus and at the version this resolved to, so nothing is
-            // fetched. Both halves are asked, because the checks a fetch is held to are skipped here and
-            // a shortcode says nothing about whose records are under it.
+            // Both corpus and version are asked: the checks a fetch is held to are skipped here.
             if (installed(entry.Shortcode) == new Imported(entry.Corpus, version))
             {
                 steps.Add(new RestoreStep(entry.Corpus, entry.Shortcode, version, true, []));
@@ -101,11 +76,7 @@ public static class Restore
         return new RestorePlan(steps, problems);
     }
 
-    // Replace each restored corpus's folder whole, as the export and the bundle replace theirs. A record
-    // withdrawn upstream has to leave, and a folder written over in place would keep it.
-    //
-    // A step that found the folder current is not rewritten. It already holds these bytes, and deleting
-    // and restoring them would make a no-op run look like work in every file watcher watching.
+    // Replaced whole, so a record withdrawn upstream leaves. A current folder is not rewritten.
     public static IReadOnlyList<string> Write(string corpusRoot, RestorePlan plan)
     {
         var written = new List<string>();
@@ -115,7 +86,7 @@ public static class Restore
             var root = Folder(corpusRoot, step.Shortcode);
             if (Directory.Exists(root)) Directory.Delete(root, recursive: true);
 
-            // Written in the order the plan named them, which puts the manifest last.
+            // In the plan's order, which puts the manifest last. See `Unpack`.
             foreach (var file in step.Files)
             {
                 var path = Path.Combine(root, file.Path.Replace('/', Path.DirectorySeparatorChar));
@@ -129,9 +100,7 @@ public static class Restore
         return written;
     }
 
-    // What a shortcode's folder already holds, or null where it holds nothing this tool wrote. The
-    // unpacked export's own manifest is what answers, because it is what actually arrived rather than
-    // what something recorded having asked for.
+    // The unpacked export's own manifest answers, because it is what actually arrived.
     public static Imported? Installed(string corpusRoot, string shortcode)
     {
         var path = Path.Combine(Folder(corpusRoot, shortcode), Exporter.ManifestFile);
@@ -147,10 +116,7 @@ public static class Restore
     private static string Folder(string corpusRoot, string shortcode) =>
         Path.Combine(corpusRoot, ImportsDir, shortcode);
 
-    // Every declaration read and held to what a restore needs of it, or null where one of them was not.
-    //
-    // All of them are judged before any of them is fetched. A run that fetched two corpora and then
-    // refused the third would leave `.imports/` describing a graph the descriptor does not.
+    // All are judged before any is fetched, so a refusal never leaves `.imports/` half-written.
     private static List<Declaration>? Declarations(IReadOnlyList<Consumed> declared, List<string> problems)
     {
         var entries = new List<Declaration>();
@@ -159,9 +125,6 @@ public static class Restore
         {
             var entry = declared[i];
 
-            // Named by its corpus where it has one, because that is what a reader scans the block for.
-            // An entry that has not even said which corpus it consumes is named by its position, which
-            // is all there is to name it by.
             var at = entry.Corpus is { } named ? $"'{named}'" : $"entry {i + 1} of `consumes:`";
 
             if (entry.Corpus is not { } corpus)
@@ -208,17 +171,13 @@ public static class Restore
             entries.Add(new Declaration(corpus, shortcode, range, entry.Resolved, source));
         }
 
-        // One folder per shortcode, so two declarations claiming one would each be restoring over the
-        // other and whichever ran last would win in silence. Both are named, because the fix is to
-        // change one of them and only their owner knows which.
         foreach (var clash in Repeated(entries, e => e.Shortcode))
             problems.Add($"'{clash.Key}' is claimed by {string.Join(" and ", clash.Select(e => e.Corpus))}. "
                          + $"A shortcode names one corpus, and both would restore into {ImportsDir}/"
                          + $"{clash.Key}/.");
 
-        // The other direction, and the lock is what makes it an error rather than a waste. A version is
-        // written back onto the entry naming a corpus, so two entries naming one corpus have two ranges
-        // and one place to record what either came to.
+        // An error rather than a waste: the lock is written onto the entry naming a corpus, so two entries
+        // naming one corpus have one place to record two answers.
         foreach (var clash in Repeated(entries, e => e.Corpus))
             problems.Add($"'{clash.Key}' is consumed twice, as "
                          + $"{string.Join(" and ", clash.Select(e => $"'{e.Shortcode}'"))}. A corpus is "
@@ -227,14 +186,10 @@ public static class Restore
         return problems.Count == 0 ? entries : null;
     }
 
-    // The declarations sharing a value that has to be theirs alone, grouped by it. Empty where every
-    // entry differs, which is every descriptor anybody meant to write.
     private static IEnumerable<IGrouping<string, Declaration>> Repeated(
         List<Declaration> entries, Func<Declaration, string> by) =>
         entries.GroupBy(by, StringComparer.Ordinal).Where(g => g.Count() > 1);
 
-    // Which version this declaration resolves to, and the registry asked only where the answer is not
-    // already written down.
     private static Registry.Answer<string> Version(Declaration entry, Registry registry)
     {
         if (entry.Resolved is { } locked && VersionRange.Admits(entry.Version, locked))
@@ -253,12 +208,7 @@ public static class Restore
         return new Registry.Answer<string>(best, null);
     }
 
-    // The package opened, held against what the declaration said it would be, and reduced to the payload
-    // a consumer reads.
-    //
-    // The envelope is dropped here. `[Content_Types].xml`, the relationships and the `.nuspec` are a
-    // registry's business, and the corpus this restores is everything under the payload prefix `kac pack`
-    // wrote it beneath.
+    // The envelope is dropped: everything under the payload prefix `kac pack` wrote is the corpus.
     private static Registry.Answer<IReadOnlyList<BundleFile>> Unpack(
         byte[] bytes, Declaration entry, string version)
     {
@@ -277,8 +227,7 @@ public static class Restore
 
                 var path = zipped.FullName[prefix.Length..];
 
-                // A package is somebody else's file, and a zip may name an entry anywhere it likes. This
-                // is what stops one addressing a path outside the folder it is being unpacked into.
+                // Stops a zip entry addressing a path outside the folder it is unpacked into.
                 if (!Contained(path))
                     return Refused(entry, $"holds an entry named '{zipped.FullName}', which addresses a "
                                           + $"path outside {ImportsDir}/{entry.Shortcode}/.");
@@ -306,26 +255,19 @@ public static class Restore
             return Refused(entry, $"carries no readable {Packer.PayloadDir}/{Exporter.ManifestFile}, so "
                                   + "there is no export inside it.");
 
-        // The shape the export declares, held against the shape this build reads, as `pack` and `bundle`
-        // both ask it. A package written to a contract this tool has never seen is refused rather than
-        // half-read.
+        // A package written to a contract this tool has never seen is refused rather than half-read.
         var format = JsonRead.Int(manifest["formatVersion"]);
         if (format != Exporter.FormatVersion)
             return Refused(entry, $"is at export format version {format?.ToString() ?? "none"} and this "
                                   + $"tool reads version {Exporter.FormatVersion}. Upgrade kac, or consume "
                                   + "a version of that corpus this one can read.");
 
-        // The declaration's own claim about what it is importing, held against what the producer stamped.
-        // The consumer's spelling is what every citation in this corpus is written against, so one that
-        // disagrees would file a corpus under a name that resolves nothing.
         var stamped = JsonRead.Str(manifest["shortcode"]);
         if (stamped != entry.Shortcode)
             return Refused(entry, $"is cited as '{stamped ?? "nothing"}:' by its own manifest, and this "
                                   + $"corpus declares it as '{entry.Shortcode}:'. The producer owns the "
                                   + "spelling, so change the declaration to match it.");
 
-        // The same question about the package's other half of its identity. A registry serving the wrong
-        // file under an id is unlikely; a `source:` pointing at the wrong feed is not.
         var named = JsonRead.Str(manifest["corpus"]);
         if (named != entry.Corpus)
             return Refused(entry, $"calls itself '{named ?? "nothing"}', and was fetched as "
@@ -337,10 +279,8 @@ public static class Restore
             return Refused(entry, $"was fetched at {version} and says it is {carried ?? "no version"}. "
                                   + "The registry is serving something other than what it listed.");
 
-        // Ordered so the manifest is last, because its presence is what `Installed` reads the folder's
-        // identity from. A write that stopped halfway would otherwise leave a folder answering for
-        // records it does not hold, and every later run would call it current and never repair it. The
-        // order is the plan's rather than the writer's, so what a run does is decided in one place.
+        // The manifest goes last: `Installed` reads its presence as the folder's identity, so a write that
+        // stopped halfway must not leave one behind.
         return new Registry.Answer<IReadOnlyList<BundleFile>>(
         [
             .. files
@@ -349,9 +289,7 @@ public static class Restore
         ], null);
     }
 
-    // Whether a path stays inside the folder it is unpacked into: no root, no drive, and no segment
-    // walking back up. Read off the string rather than resolved against the disk, because the answer has
-    // to be the same on a machine where the folder does not exist yet.
+    // Read off the string rather than the disk, so the answer is the same where the folder does not exist.
     private static bool Contained(string path) =>
         path.Length > 0
         && !Path.IsPathRooted(path)
@@ -385,9 +323,6 @@ public static class Restore
             ? new UTF8Encoding(false).GetString(file.Content).TrimStart('﻿')
             : null;
 
-    // One entry of `consumes:` with everything a restore needs of it present. `Consumed` is what the
-    // file said and every field of it is nullable; this is what survived being read, so nothing below
-    // re-asks whether a corpus stated its source.
     private sealed record Declaration(
         string Corpus,
         string Shortcode,

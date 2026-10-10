@@ -1,12 +1,5 @@
 using kac.core;
 
-// A `fix` and a `report` each list who checked the record and when. Rewrite the prose under one of those
-// entries and it vouches for text its author never read. `validate` cannot see that, because a rule reads
-// one document and has no earlier version of it to compare against. This reads the diff instead.
-//
-// The reach is the body, and no further. A frontmatter key moved on its own leaves the prose somebody
-// verified exactly as they read it, so nothing is asked of the list.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
@@ -23,9 +16,6 @@ public class VerificationTests
             .Select(pair => pair.Key)
             .ToHashSet(StringComparer.Ordinal);
 
-        // Every type declaring the field, so a rename of `fixes` or a third type taking a `verified` list
-        // is covered with nothing to remember. Reading none of them is this guard having gone quiet, and
-        // green is what it would report from then on.
         Assert.True(folders.Count > 0,
             "no type declares a 'verified' field, so this guard is checking nothing. Either the field was "
             + "renamed, or the types declaring it have gone.");

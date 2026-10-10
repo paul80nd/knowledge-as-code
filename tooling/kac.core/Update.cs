@@ -2,14 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kac.core;
 
-// The `update` engine: what taking a newer framework into a corpus that already has one comes to.
-//
-// Deciding and doing stay apart, as they do either side of `New` and of `GeneratedFiles`. `Plan` names
-// every file an update writes and every file it deletes, and touches nothing. `Apply` carries that plan
-// out. So an update is decidable from two listings and a manifest, with no template on disk and no
-// network, which is what lets the unit tests ask about a corpus nobody wrote.
-//
-// `docs/cli/update.md` is the reference for what each layer means and why a seed is left alone.
+// The `update` engine. `Plan` names every file an update writes and deletes, and touches nothing. `Apply`
+// carries it out. `docs/cli/update.md` says what each layer means.
 
 // What the invocation was told. `From`, `Ref` and `Path` are null where `.corpus.yaml` is to answer.
 public sealed record UpdateRequest
@@ -18,40 +12,31 @@ public sealed record UpdateRequest
     public string? Ref { get; init; }
     public string? Path { get; init; }
 
-    // Compute the plan, print it, write nothing, and exit non-zero if anything would change.
+    // Write nothing, and exit non-zero if anything would change.
     public bool Check { get; init; }
 
     // `cautious` or `full`, for this run only. Null where `update-policy:` is to answer.
     public string? Policy { get; init; }
 
-    // The type to adopt, or the one to give up. Each is a run of its own.
     public string? AddType { get; init; }
     public string? DropType { get; init; }
 
-    // Reaches the clone, and the one question an update asks: giving up a type leaves the pages that
-    // name it holding a dead link, and `--drop-type` waits on an answer before it deletes anything.
+    // Also confirms `--drop-type`, which otherwise waits on an answer before it deletes anything.
     public bool Yes { get; init; }
 }
 
-// The template an update takes and the policy it takes it under, each named by a flag or by the corpus.
 public sealed record UpdateSettings(string From, string Policy);
 
-// What the flags and the descriptor settled between them, or why the run cannot start. Exactly one of
-// the two is set.
+// Exactly one of the two is set.
 public sealed record Settled(UpdateSettings? Settings, string? Problem)
 {
-    // The invariant above, told to the compiler, so a caller that branches on it reads the other half
-    // without asserting anything. Both constructions below hold it.
     [MemberNotNullWhen(true, nameof(Problem))]
     [MemberNotNullWhen(false, nameof(Settings))]
     public bool Failed => Problem is not null;
 }
 
-// Which types the template declares, which this corpus holds, and the predicate telling a declined
-// type's files from the rest.
-//
-// `Adopted` is null where the descriptor states no `types:`. That corpus has not declared, so it is held
-// to everything and offered nothing.
+// `Adopted` is null where the descriptor states no `types:`, so the corpus is held to everything and offered
+// nothing.
 public sealed record UpdateTypes(
     IReadOnlyList<string> Declared,
     IReadOnlyList<string>? Adopted,
@@ -67,25 +52,18 @@ public sealed record UpdateTypes(
             ];
 }
 
-// What `--add-type` and `--drop-type` come to: the types this corpus holds afterwards, the files a drop
-// takes with it, and the line saying what happened. `Problem` is set instead where the run cannot go on,
-// and is then the only field worth reading.
+// `Problem` is set where the run cannot go on, and is then the only field worth reading.
 public sealed record Adoption(
     IReadOnlyList<string>? Types,
     IReadOnlyList<string> Deleted,
     string? Account,
     string? Problem);
 
-// The record id a file carries, read on each side of an update: `Sent` from the template and `Held`
-// from the corpus, each given a path relative to that root. Null wherever the file carries none, which
-// is every file that is not a record.
-//
-// A delegate, for the reason `same` is one: a plan decides from what it is told, so a case can state
-// two ids with no tree on disk. `Update.IdAt` is what a command passes.
+// Null wherever the file carries no id, which is every file that is not a record. Delegates, so a plan can
+// state two ids with no tree on disk. `Update.IdAt` is what a command passes.
 public sealed record RecordIds(Func<string, string?> Sent, Func<string, string?> Held);
 
-// What an update comes to. `Written` and `Seeded` are the files to copy, and are the only lists carrying
-// where each file is read from. Everything else names a path in the corpus.
+// `Written` and `Seeded` are the files to copy, and the only lists with a source path.
 public sealed record UpdatePlan(
     IReadOnlyList<PlannedFile> Written, // overlay, whose authored halves differ
     IReadOnlyList<PlannedFile> Seeded,  // seed, absent from this corpus, or refreshed under `full`
@@ -101,29 +79,18 @@ public sealed record UpdatePlan(
 {
     public IEnumerable<PlannedFile> Copies => Written.Concat(Seeded);
 
-    // Whether this corpus is out of step with its framework. What `--check` exits on. An unshared file is
-    // not something an update writes, and it fails a check all the same: it is a framework change made in
-    // the wrong tree, and it would reach no other corpus.
+    // What `--check` exits on. An unshared file fails it too, because it is a framework change in the wrong tree.
     public bool Changes => Written.Count > 0 || Seeded.Count > 0 || Deleted.Count > 0 || Unshared.Count > 0;
 }
 
 public static class Update
 {
-    // What the invocation asked for that it cannot have, or null where it asked for something coherent.
-    //
-    // Judged before anything reads the corpus, because it is decidable without one and because the corpus
-    // may be the second thing wrong: a descriptor that does not parse would otherwise throw over a run
-    // this refuses in a line.
+    // Judged before the corpus is read, so a descriptor that does not parse cannot throw over a run this refuses.
     public static string? Contradiction(UpdateRequest request) =>
         request.AddType is not null && request.DropType is not null
             ? "update: --add-type and --drop-type change the same list. ask for one."
             : null;
 
-    // Which template an update takes and under which policy, each named by a flag or by the descriptor.
-    //
-    // Off `Commands` because both are decisions, and every decision in this project is testable without a
-    // terminal. See Asking.cs. They are also the refusals a person is likeliest to meet, because they are
-    // what an invocation typed wrong comes to.
     public static Settled Settle(UpdateRequest request, CorpusDescriptor descriptor)
     {
         var from = request.From ?? descriptor.UpstreamUrl;
@@ -139,27 +106,10 @@ public static class Update
         return new Settled(new UpdateSettings(from, policy), null);
     }
 
-    // What taking this template into this corpus comes to, decided from listings rather than from a
-    // filesystem.
-    //
-    // `manifest` is the template's, because the boundary arrives with the files it describes: a corpus on
-    // an older manifest would otherwise resolve the new tree by the old rules and silently skip whatever
-    // those rules had not yet heard of.
-    //
-    // `policy` is `cautious` or `full`, already resolved between the descriptor and `--policy`. `same`
-    // answers whether two copies of a file say the same thing, and `Same` below is what a command passes.
-    //
-    // A corpus naming `plugin.from` in its descriptor reads the plugin tree from somewhere else, so the
-    // shared half of that tree is withheld rather than copied in. Its own manifest is a seed and still
-    // arrives: the manifest names the plugin and is the corpus's to write.
-    //
-    // `ids` answers what record a file is, and `Filed` below says why a seed asks. Every other layer is
-    // decided by path, because only a record is free to move.
-    //
-    // `readInPlace` is true where the corpus sits inside the repository serving its template. A file
-    // whose destination is its source is then shared with that corpus rather than copied into it, which
-    // is the arrangement `.schema/` and the travelling skills are in: the tool walks up for them, so the
-    // corpus below holds none of its own and is missing nothing. `ReadInPlace` below decides it.
+    // Decided from listings, not a filesystem. `manifest` is the template's, so a new tree is resolved by its own
+    // rules. `same` answers whether two copies say the same thing. `ids` answers what record a file is, because
+    // only a record is free to move. `readInPlace` is true where the corpus sits inside its template's
+    // repository, so a file whose destination is its source is shared, not copied.
     public static UpdatePlan Plan(IReadOnlySet<string> templateFiles, IReadOnlySet<string> corpusFiles,
         Manifest manifest, CorpusDescriptor descriptor, UpdateTypes types, string policy,
         bool readInPlace, Func<PlannedFile, bool> same, RecordIds ids)
@@ -186,15 +136,11 @@ public static class Update
                 continue;
             }
 
-            // A tombstone names a file the template no longer holds, so nothing here would ever match
-            // one. The corpus-side loop below is what acts on `removed`.
+            // A tombstone matches nothing the template holds. The corpus-side loop below acts on `removed`.
             if (placement.Layer is Manifest.Withheld or Manifest.Removed) continue;
 
-            // Ahead of `sent`, and deliberately. A corpus that adopted `plugin.from` while still holding
-            // the copies it used to keep would otherwise carry them forever: `Merge` gives a corpus's own
-            // file priority, so the leftovers win over the shared tree and no later change upstream ever
-            // reaches that corpus's bundle. Left out of `sent`, each one surfaces below as a file the
-            // corpus holds that nothing sends to.
+            // Ahead of `sent`, so a corpus that adopted `plugin.from` while holding old copies sees each one
+            // reported as unshared. `Merge` would otherwise let the leftovers win over the shared tree.
             if (descriptor.PluginFrom is not null
                 && placement.Layer == Manifest.Overlay
                 && Bundler.InSourceTree(placement.Path))
@@ -212,9 +158,7 @@ public static class Update
                 continue;
             }
 
-            // Written only where this corpus already holds one. `New.Plan` argues why a starter belongs
-            // to the repository rather than to the framework, and an update may not introduce what `new`
-            // was careful not to send.
+            // Written only where the corpus already holds one, because `new` does not send a starter. See `New.Plan`.
             if (placement.Ci is { } ci)
             {
                 if (!CiSystem.All.Contains(ci, StringComparer.Ordinal))
@@ -238,15 +182,8 @@ public static class Update
 
             var here = corpusFiles.Contains(placement.Path);
 
-            // A seeded record the corpus filed under a category folder is that record, moved. Read by
-            // path it looks absent, and the offer that follows writes a second copy carrying the same
-            // id, which `id-unique` then fails.
-            //
-            // In step under `full` as well as under `cautious`, which is the one place a moved seed
-            // parts company with a seed sitting where it was sent. A record's relative links are written
-            // for the depth it was seeded at, so the template's bytes copied a folder down leave every
-            // `../` short by one and `link-resolves` fails the lot. There is no copy to write, so there
-            // is nothing to compare either.
+            // A seeded record filed under a category folder is that record, moved, and in step under either policy. A
+            // second copy would fail `id-unique`, and the template's bytes a folder down would break its `../` links.
             if (!here && placement.Layer == Manifest.Seed
                       && Filed(from, placement.Path, corpusFiles, ids) is { } filed)
             {
@@ -257,9 +194,7 @@ public static class Update
 
             var file = new PlannedFile(from, placement.Path, placement.Layer);
 
-            // A seed is the corpus's own words from the moment it lands, so `cautious` asks only whether
-            // the corpus has one. `full` holds it to the template and hands the reconciliation to the
-            // diff.
+            // A seed is the corpus's own once it lands, so `cautious` asks only whether it is there.
             if (placement.Layer == Manifest.Seed && here && !full)
             {
                 inStep++;
@@ -283,9 +218,7 @@ public static class Update
             else deleted.Add(rel);
         }
 
-        // The other direction, and the one nothing else covers. A file the corpus keeps where the rules
-        // call the area overlay, that no template file was sent to, is a framework change written in the
-        // wrong tree: it reaches no other corpus, and nothing in this one reads as though it is missing.
+        // A file in an overlay area that no template file was sent to is a framework change in the wrong tree.
         var received = AsReceived(manifest);
         var unshared = corpusFiles
             .Where(rel => !sent.Contains(rel))
@@ -298,24 +231,15 @@ public static class Update
             TemplateFaults.Of(unclassified, unknownCi), inStep, declined, declinedCi, declinedPlugin);
     }
 
-    // The same rules read from the corpus's side: each rule's patterns rewritten to where its files land,
-    // in the order they were written. A corpus file has to be sorted by the rule that sent it, and only
-    // the order says which that was: `.plugin/.claude-plugin/plugin.json` is a seed carved out ahead of
-    // the overlay claiming the folder around it.
+    // Rules in their written order, because only the order says which rule sent a file:
+    // `.plugin/.claude-plugin/plugin.json` is a seed carved out ahead of the overlay around it.
     private static Manifest AsReceived(Manifest manifest) => new()
     {
         Rules = [.. manifest.Rules.Select(r => new ManifestRule([.. Manifest.Destinations(r)], r.Layer))]
     };
 
-    // Where to read the template from, given what `--from` or `upstream.url` said.
-    //
-    // A relative path is resolved against the corpus root and never against the working directory. Every
-    // other verb answers the same question wherever inside a corpus it is run, and one that did not would
-    // work at the root and fail a folder down. `upstream.url` is a value the corpus wrote about itself, so
-    // the corpus is what it is relative to.
-    //
-    // Anything that does not resolve to a folder is handed back exactly as it was given, which is what a
-    // URL is. A path a platform cannot parse at all is the same case.
+    // A relative path resolves against the corpus root, never the working directory. Anything that is not a
+    // folder is returned as given, which is what a URL is.
     public static string TemplatePath(string from, string corpusRoot)
     {
         try
@@ -329,8 +253,6 @@ public static class Update
         }
     }
 
-    // Whether the corpus sits inside the repository serving its template, which is what makes a file
-    // authored at the template's root reachable from the corpus without a copy.
     public static bool ReadInPlace(string templateRoot, string corpusRoot)
     {
         var template = Path.GetFullPath(templateRoot).TrimEnd(Path.DirectorySeparatorChar);
@@ -338,21 +260,11 @@ public static class Update
         return corpus.StartsWith(template + Path.DirectorySeparatorChar, StringComparison.Ordinal);
     }
 
-    // Where the corpus filed a seeded record, or null where it holds no such record. A record is its id
-    // everywhere else in the tool, so a seed absent from the path the template sends it to is looked for
-    // by id before it is offered again.
-    //
-    // The search stops at the type folder. An id carries its type's prefix, so a record above or beside
-    // that folder is a different record whatever it is called. The ordering settles a corpus that
-    // somehow holds one id twice, so every machine answers the same.
-    //
-    // Compared the way `id-unique` compares, so the guard is as wide as the rule it stands in front of.
-    // An id differing only in case is one record to that check, and matching it here on case alone
-    // would offer the copy that trips it.
+    // Where the corpus filed a seeded record, or null. Searched by id within the type folder only, and compared
+    // case-insensitively as `id-unique` compares, so the guard is as wide as that rule.
     private static string? Filed(string from, string to, IReadOnlySet<string> corpusFiles, RecordIds ids)
     {
-        // Ahead of the read, because a seed landing at the root is every type's page and `CLAUDE.md`,
-        // and parsing each of those to discard the answer is work `--check` does on every run.
+        // Ahead of the read, so a seed at the root is not parsed on every `--check`.
         var cut = to.IndexOf('/', StringComparison.Ordinal);
         if (cut <= 0) return null;
 
@@ -362,22 +274,17 @@ public static class Update
             .FirstOrDefault(rel => id.Equals(ids.Held(rel), StringComparison.OrdinalIgnoreCase));
     }
 
-    // Whether a tombstone names this path. The rules are read from the corpus's side, through the
-    // destinations `to:` sends each pattern to, because the file is still in the corpus and no longer in
-    // the template.
+    // Read through the destinations `to:` sends each pattern to, because the file is in the corpus and no longer
+    // in the template.
     private static bool Tombstoned(Manifest manifest, string rel) =>
         manifest.Rules
             .Where(r => r.Layer == Manifest.Removed)
             .SelectMany(Manifest.Destinations)
             .Any(pattern => Glob.IsMatch(rel, pattern));
 
-    // A skipped path beside the reason the corpus gave for owning it, which is written for whoever reads
-    // the run rather than for the tool.
     private static string Owned(string rel, string? reason) => reason is null ? rel : $"{rel}  ({reason})";
 
-    // Carry the plan out. The plan decided all of it, so this asks the template nothing beyond the bytes
-    // and the mode of each file it was told to copy, and it commits and stages nothing. `declined` reaches
-    // the seed pages alone, and `SeedLinks` says why.
+    // Commits and stages nothing. `declined` reaches the seed pages alone. `SeedLinks` says why.
     public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
         IReadOnlySet<string> declined)
     {
@@ -386,24 +293,14 @@ public static class Update
         foreach (var rel in plan.Deleted) File.Delete(Path.Combine(corpusRoot, rel));
     }
 
-    // What adopting or giving up a type comes to, decided from the listing and the template's schema.
-    //
-    // Adopting and giving up are asymmetric, and the asymmetry is the design. Adopting is the same
-    // machinery as any other write, pointed at one type's files. Giving up refuses where the folder holds
-    // records, because deleting a record is deleting knowledge and everything else in a corpus exists to
-    // serve them.
-    //
-    // A run naming neither flag answers with the types the corpus already holds, so the caller has one
-    // list to read whether or not it asked for a change.
+    // Giving up a type refuses where its folder holds records, because deleting a record is deleting knowledge.
+    // With neither flag, returns the types the corpus already holds.
     public static Adoption Adopt(IReadOnlySet<string> corpusFiles, CorpusDescriptor descriptor, Schema schema,
         IReadOnlyList<string> declared, string? add, string? drop)
     {
         var held = descriptor.Types;
         if (add is null && drop is null) return new Adoption(held, [], null, null);
 
-        // Reading adoption off the folders is what a corpus that has declared nothing gets, and there is
-        // no list there to add a name to. Declaring is the corpus's own step, and `validate` is what holds
-        // it to the declaration afterwards.
         if (held is null)
             return Refuse("update: this corpus states no `types:`, so there is no list to change. declare "
                           + "what it has adopted first.");
@@ -422,9 +319,7 @@ public static class Update
                 $"update: adopted {adding}. its schema, root page and template arrived with this run.", null);
         }
 
-        // `drop` is set here, because the pair being empty returned at the top and `add` being set
-        // returned just above. Asked again so the compiler carries it, and answered the same way the
-        // top guard answers an empty pair.
+        // Unreachable with `drop` unset. Asked again so the compiler knows.
         if (drop is not { } dropping) return new Adoption(held, [], null, null);
 
         if (!held.Contains(dropping, StringComparer.Ordinal))
@@ -449,9 +344,8 @@ public static class Update
         static Adoption Refuse(string message) => new(null, [], null, message);
     }
 
-    // The records a type's folder holds, which is the whole of what stops `--drop-type`. Read off the
-    // listing rather than loaded as documents, so the count is right even in a corpus the schema no
-    // longer loads. An underscore opens the two files a type folder holds that are not records.
+    // Read off the listing, not loaded, so the count is right even where the schema no longer loads. An
+    // underscore marks a type folder's two non-record files.
     public static IReadOnlyList<string> RecordsUnder(IReadOnlySet<string> corpusFiles, string folder) =>
     [
         .. corpusFiles
@@ -461,8 +355,6 @@ public static class Update
             .OrderBy(rel => rel, StringComparer.Ordinal)
     ];
 
-    // Everything a corpus holds for one type: the schema file the tool judges it by, the root page, and
-    // the folder. What `--drop-type` deletes once it has established the folder holds no record.
     public static IReadOnlyList<string> FilesOf(IReadOnlySet<string> corpusFiles, TypeSchema type, string name)
     {
         var folder = type.Folder;
@@ -478,15 +370,8 @@ public static class Update
         ];
     }
 
-    // Whether the template's copy of a file and the corpus's copy say the same thing. LF-normalised, so a
-    // working copy checked out with CRLF never reads as drift, and compared on the authored half alone.
-    // See `Markers.Authored` for why an overlay page may hold a different table in each corpus and
-    // still be in step.
-    //
-    // The template's side is unlinked before the comparison, so what a corpus is held to under `full` is
-    // what `new` would have written. Compared against the template as authored, a corpus that declined
-    // types would read as behind on every seed page it holds, and a full update would put back the links
-    // its own `types:` says it cannot follow.
+    // LF-normalised and compared on the authored half. See `Markers.Authored`. The template's side is unlinked
+    // first, so `full` holds a corpus to what `new` would have written.
     internal static bool Same(string templateRoot, string corpusRoot, PlannedFile file,
         IReadOnlySet<string> declined)
     {
@@ -496,9 +381,8 @@ public static class Update
                == Markers.Authored(Files.ReadLf(Path.Combine(corpusRoot, file.To)));
     }
 
-    // The id the record at a path carries, or null where the file carries none. Read with the document
-    // parser, so an update asks a corpus the same question `validate` asks it. Frontmatter that will not
-    // parse carries no id here, and `validate` is what reports it.
+    // Read with the document parser, so `update` asks the same question `validate` does. Frontmatter that does
+    // not parse carries no id here.
     internal static string? IdAt(string root, string rel, Schema schema)
     {
         if (!rel.EndsWith(".md", StringComparison.Ordinal)) return null;
@@ -507,8 +391,7 @@ public static class Update
         return File.Exists(path) ? Doc.Parse(rel, Files.ReadLf(path), schema)?.FrontScalar("id") : null;
     }
 
-    // Every tracked (and not-ignored) file a corpus holds, relative and forward-slashed. `GitFiles` falls
-    // back to a walk where git cannot answer, which is a corpus outside version control.
+    // `GitFiles` falls back to a walk where git cannot answer.
     internal static IReadOnlySet<string> Listing(string root) =>
         new HashSet<string>(GitFiles.Tracked(root) ?? GitFiles.Walk(root, "*", ".git"), StringComparer.Ordinal);
 }

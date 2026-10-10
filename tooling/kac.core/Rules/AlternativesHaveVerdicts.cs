@@ -3,10 +3,6 @@ using Markdig.Syntax.Inlines;
 
 namespace kac.core;
 
-// Every bullet in Alternatives Considered states an outcome. An alternative left open means the
-// decision has not been made. The rule evaluates per bullet and its message quotes the bullet that
-// failed, which is why it stays in C#. The grammar has no collections by design, and a count would
-// not tell the author which line to go back to.
 public sealed class AlternativesHaveVerdicts : IDocumentRule
 {
     public RuleId RuleId => new("alternatives-have-verdicts");
@@ -50,9 +46,6 @@ public sealed class AlternativesHaveVerdicts : IDocumentRule
         }
     }
 
-    // An explicit verdict word, or a contrastive / negative-outcome cue that shows the option was
-    // weighed to a conclusion. A genuinely open bullet ("we could also use X") carries none of these
-    // and is what this warning is for.
     public static bool HasVerdict(string text)
     {
         var t = text.ToLowerInvariant();

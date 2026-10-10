@@ -1,9 +1,5 @@
-// `expiry` is the one rule written against `today()`, and what it stays silent about matters as much as what
-// it reports. A fixture proves the record it fires on. These prove the three it does not, which would each
-// need a record of its own in the corpus and would then read as a fault somebody meant to fix.
-//
 // The expression comes from the real `.schema/deviations.yaml` rather than a copy, so a rewrite there is
-// judged by these cases instead of leaving them passing against wording nothing uses.
+// judged by these cases.
 
 using kac.core;
 
@@ -23,8 +19,6 @@ public class ExpiryRuleTests
         string status, string reviewBy, bool silent)
         => Assert.Equal(silent, Holds($"status: {status}\nreview-by: \"{reviewBy}\""));
 
-    // `review-by` is required, so an absent one is `required-field`'s to report in better words. The guard is
-    // what keeps this rule from reporting the same fault a second time and blaming the date for it.
     [Fact]
     public void A_deviation_carrying_no_review_date_is_left_to_required_field()
     {
@@ -32,8 +26,7 @@ public class ExpiryRuleTests
         Assert.True(Holds("status: active\nreview-by:"));
     }
 
-    // Whether the rule is satisfied, which is the sense an `expr:` is written in: true where it has nothing
-    // to say. Judged against a named day, so the reading never depends on when this ran.
+    // Whether the rule is satisfied: true where it has nothing to say, as an `expr:` is written.
     private static bool Holds(string frontmatter)
     {
         var doc = Required.Parsed("deviations/a-slug.md",

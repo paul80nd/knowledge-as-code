@@ -1,6 +1,3 @@
-// Unit tests for what `new` reads off a folder before it asks anything, driven through real temp trees.
-// What each state comes to is the command's to decide, so these hold the facts and never the refusals.
-
 using kac.core;
 
 namespace kac.tests;
@@ -90,7 +87,6 @@ public class GroundTests : IDisposable
         Assert.Equal(["LICENCE", "notes.md", "src"], New.Survey(dir).Holds);
     }
 
-    // `.git` is what the run is about to write into, and not something a creation is mixed in with.
     [Fact]
     public void A_repository_holding_nothing_else_still_holds_nothing()
     {

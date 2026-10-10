@@ -1,17 +1,7 @@
 namespace kac.core;
 
-// A dependency graph is written one record at a time, and each edge is reasonable where it is written.
-// A loop only exists in the set of them, so nobody adding an edge is in a position to see it. That is
-// the whole case for asking the question here.
-//
-// Reported, never failed. Some loops are real: two services that call each other are a fact about the
-// estate, and a check that refused them would be asking the corpus to lie about what is deployed. What
-// the warning is for is the loop nobody meant, and the message names the records on it so the reader
-// can decide which of the two it is.
-//
-// The graph is whichever field points back at the type that declares the rule, read from the schema.
-// A rule holding the string `depends-on` would walk nothing at all the day the field is renamed, and
-// say so in silence.
+// The graph is whichever field points back at the type declaring the rule, read from the schema, so a rename of
+// `depends-on` cannot leave the rule walking nothing.
 public sealed class NoDependencyCycles : ICorpusRule
 {
     public RuleId RuleId => new("no-dependency-cycles");
@@ -25,14 +15,11 @@ public sealed class NoDependencyCycles : ICorpusRule
         foreach (var name in ctx.Type.FieldOrder)
         {
             var field = ctx.Type.Fields[name];
-            // Each such field is its own graph and is walked on its own, so a message names one
-            // relation and never a path stitched from two.
             if (field.PointsAt(ctx.Type)) Walk(ctx, field);
         }
     }
 
-    // Where one record stands in the walk. `Unseen` is zero, so a record the state does not hold yet
-    // answers with it and the walk needs no entry to ask about one.
+    // `Unseen` is the default, so a record the walk has no entry for yet reads as unseen.
     private enum Step
     {
         Unseen,
@@ -42,17 +29,11 @@ public sealed class NoDependencyCycles : ICorpusRule
 
     private static void Walk(CorpusRuleContext ctx, FieldSpec field)
     {
-        // Ids as their own documents write them. A second document claiming an id is `id-unique`'s to
-        // report, and is left out here: two nodes would share a name.
         var records = new Dictionary<string, Doc>(StringComparer.OrdinalIgnoreCase);
         foreach (var d in ctx.Records)
             if (d.FrontScalar("id") is { Length: > 0 } id)
                 records.TryAdd(id, d);
 
-        // An edge is kept only where both ends are records of this type: an id nothing carries is
-        // `ref-resolves`'s to report, and a literal the field admits is not an id at all. Targets are
-        // canonicalised through the document they name, so a message quotes the id as the corpus writes
-        // it however the edge spelled it.
         var edges = new Dictionary<string, List<string>>(StringComparer.Ordinal);
         foreach (var (id, doc) in records)
             edges[id] =
@@ -64,10 +45,7 @@ public sealed class NoDependencyCycles : ICorpusRule
                     .Order(StringComparer.Ordinal)
             ];
 
-        // A depth-first walk, entering nodes in id order so the same corpus is always walked the same
-        // way. Every cycle leaves at least one edge back into the path being walked, so following those
-        // finds each looping group of records. A group reachable by several of them is recognised as one
-        // cycle below and reported once.
+        // Entered in id order, so the same corpus is always walked the same way.
         var state = new Dictionary<string, Step>(StringComparer.Ordinal);
         var path = new List<string>();
         var reported = new HashSet<string>(StringComparer.Ordinal);
@@ -95,9 +73,7 @@ public sealed class NoDependencyCycles : ICorpusRule
         {
             var cycle = path[path.IndexOf(target)..];
 
-            // Rotated to open at the lowest id, so which record carries the warning follows from the
-            // cycle and not from where the walk entered it. The same cycle reached twice is then written
-            // the same way, which is what lets it be recognised as one.
+            // Rotated to open at the lowest id, so a cycle reached twice is written the same way and reported once.
             var lowest = cycle.IndexOf(cycle.Order(StringComparer.Ordinal).First());
             List<string> rotated = [.. cycle[lowest..], .. cycle[..lowest]];
 

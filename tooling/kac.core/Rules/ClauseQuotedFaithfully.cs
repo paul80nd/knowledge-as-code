@@ -2,21 +2,8 @@ using System.Text;
 
 namespace kac.core;
 
-// A control quotes the clause it verifies, and the clause is reworded somewhere else.
-//
-// The quotation is a reader's evidence that the control and the rule are about the same obligation.
-// Edit the clause and the quotation still reads as one: the marks are there and the sentence scans, so
-// nothing on the page shows that the words moved. This reads the cited clause and asks whether the
-// quoted span is still in it.
-//
-// Only a clause this corpus stores can be checked. An imported record arrives as ids and fields, and
-// its clause text stays in the corpus that published it, so a scoped citation is skipped in silence.
-// So is a citation no local id matches, which `part-ref` reports instead.
-//
-// One quotation is read per citation. A reference link is collected once however many times a document
-// cites it, so a second quotation of the same clause in the same record is not compared.
-//
-// A corpus rule rather than a document rule, because the words quoted are in a second document.
+// One quotation is read per citation: a reference link is collected once, so a second quotation of the same clause in
+// one record is not compared.
 public sealed class ClauseQuotedFaithfully : ICorpusRule
 {
     public RuleId RuleId => new("clause-quoted-faithfully");
@@ -53,18 +40,11 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         }
     }
 
-    // The part the citation addresses, or null where the record has no such part. Compared ordinally,
-    // as `part-ref` compares it.
     private static PartRow? Part(Doc cited, string id) =>
         cited.Parts.FirstOrDefault(p => string.Equals(p.Id, id, StringComparison.Ordinal));
 
-    // Everywhere the quotation could have come from: what the part renders to, the line it is written
-    // on, and for a part written as a heading the lines beneath it.
-    //
-    // Three readings because two types write a part two ways. A policy writes one as a table row, where
-    // `Text` is the clause flattened and the raw line is the same clause with its bold run and its code
-    // spans intact. A standard writes one as a heading, where `Text` is the heading alone and the
-    // obligation is a bullet in the body under it.
+    // Three readings, because a policy writes a part as a table row and a standard writes one as a heading with the
+    // obligation in the body beneath it.
     private static IEnumerable<string> Readings(Doc cited, PartRow part, string[] lines)
     {
         yield return part.Text;
@@ -76,9 +56,8 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         if (!body.IsEmpty) yield return body.ToString();
     }
 
-    // The citation's line together with the lines it wraps onto. Prose wraps at 120 characters, so a
-    // quotation routinely runs past the line its citation sits on. A blank line, or one opening a block
-    // of its own, ends the wrap.
+    // Prose wraps at 120 characters, so a quotation runs past its citation's line. A blank line or a new block ends the
+    // wrap.
     private static string Sentence(string[] lines, int at)
     {
         if (at < 1 || at > lines.Length) return "";
@@ -95,15 +74,13 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         return joined.ToString();
     }
 
-    // Whether a line begins a block of its own. A list marker takes a space after it, which is what
-    // tells a new bullet from a wrapped line opening `**MUST**`.
+    // A list marker takes a space after it, which tells a new bullet from a wrapped line opening `**MUST**`.
     private static bool Opens(string line) =>
         line[0] is '#' or '>' or '|'
         || line.StartsWith("```", StringComparison.Ordinal)
         || (line[0] is '*' or '-' or '+' && (line.Length == 1 || line[1] == ' '));
 
-    // Every double-quoted span on the line, in the order it is written. An unclosed mark ends the
-    // reading, since pairing on past it would take the words after the quotation as a second one.
+    // An unclosed mark ends the reading, so the words after it are never taken as a second quotation.
     private static IEnumerable<string> Quoted(string sentence)
     {
         var from = 0;
@@ -118,8 +95,7 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         }
     }
 
-    // Whitespace runs collapsed to one space, so a span wrapped across two lines compares equal to the
-    // same words wrapped elsewhere. Case and punctuation are kept: a quotation is word for word.
+    // Case and punctuation are kept: a quotation is word for word.
     private static string Flat(string text)
     {
         var flat = new StringBuilder(text.Length);
@@ -141,9 +117,6 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         return flat.ToString();
     }
 
-    // A document's text as lines, cached for one run. Every citation into a standard reads the same
-    // lines, and a dozen controls citing three standards would otherwise split each of them a dozen
-    // times.
     private static string[] LinesOf(Dictionary<string, string[]> cache, Doc doc)
     {
         if (cache.TryGetValue(doc.Rel, out var known)) return known;

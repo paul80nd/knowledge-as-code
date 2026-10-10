@@ -1,28 +1,18 @@
 namespace kac.core;
 
-// A reference as somebody wrote it: an optional scope, the record, and an optional part.
-//
-// `eng:pol-VURM.TIMEBOX` carries all three. `pol-VURM.TIMEBOX` names a record this corpus holds and a
-// clause inside it. `eng:pol-VURM` names an imported record whole.
-//
-// One reading of the form, so a frontmatter value, a code span and a link label are held to the same
-// grammar. `docs/framework/metadata.md` is where the notation is settled.
+// `eng:pol-VURM.TIMEBOX` carries a scope, a record and a part. `docs/framework/metadata.md` settles the
+// notation.
 public readonly record struct Citation(string? Scope, string Record, string? Part)
 {
-    // The citation as it was written, which is what a message quotes back.
     public override string ToString() =>
         (Scope is null ? "" : Scope + ":") + Record + (Part is null ? "" : "." + Part);
 
-    // The record with its scope and without its part, which is what resolving the first half asks about.
     public string Whole => (Scope is null ? "" : Scope + ":") + Record;
 
-    // The same citation under another scope, or under none. What a message about a misspelling has to
-    // suggest writing instead: dropping the part along with the scope would tell an author to replace a
-    // clause reference with a whole-record one.
+    // Keeps the part, so a suggested spelling never turns a clause reference into a whole-record one.
     public Citation In(string? scope) => this with { Scope = scope };
 
-    // What the text says, whatever it says. Nothing here decides whether the scope names an import or
-    // the record exists: this reads the form, and the validator answers for the meaning.
+    // Reads the form alone. The validator answers whether the scope and the record exist.
     public static Citation Read(string text)
     {
         var (scope, after) = Split(text);
@@ -33,11 +23,8 @@ public readonly record struct Citation(string? Scope, string Record, string? Par
             : new Citation(scope, after[..dot], after[(dot + 1)..]);
     }
 
-    // The scope a citation carries, and what is left after it.
-    //
-    // A shortcode is lower-case letters and digits alone, which `CorpusDescriptor.ShortcodeFault` is
-    // what holds a producer to. So a colon anywhere else belongs to the text rather than to a scope, and
-    // the whole of it comes back unscoped.
+    // A shortcode is lower-case letters and digits, as `CorpusDescriptor.ShortcodeFault` requires, so a
+    // colon anywhere else belongs to the text.
     public static (string? Scope, string After) Split(string text)
     {
         var colon = text.IndexOf(':', StringComparison.Ordinal);

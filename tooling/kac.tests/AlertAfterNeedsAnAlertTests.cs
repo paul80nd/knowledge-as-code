@@ -1,9 +1,5 @@
 using kac.core;
 
-// A delay is judged against records the target does not carry, and often two hops away: the NFR names an
-// offering, the offering names the services, and only the last of those says whether anything fires. The
-// fixture exercises the one-hop case; the rest are the shapes a second fixture corpus would only repeat.
-
 namespace kac.tests;
 
 public class AlertAfterNeedsAnAlertTests
@@ -16,7 +12,6 @@ public class AlertAfterNeedsAnAlertTests
     public void A_delay_on_a_service_that_alerts_is_left_alone()
         => Assert.Empty(Bound("15 minutes", services: [("svc-api", "alert")]));
 
-    // A ticket is filed by the system, so a delay in front of it is the same claim an alert makes.
     [Fact]
     public void A_ticket_raises_something_and_satisfies_the_rule()
         => Assert.Empty(Bound("2 hours", services: [("svc-search", "ticket")]));
@@ -34,14 +29,11 @@ public class AlertAfterNeedsAnAlertTests
             found.Message);
     }
 
-    // A log is recorded and nothing reads it, so no delay in front of it means anything.
     [Fact]
     public void A_log_raises_nothing_and_is_reported()
         => Assert.Contains("'monitoring-output' is 'log'",
             Assert.Single(Bound("15 minutes", services: [("svc-audit", "log")])).Message);
 
-    // A customer-facing target binds the offering, so the walk has to reach the services under it or the
-    // rule never fires on the records that carry a delay.
     [Fact]
     public void The_walk_reaches_the_services_an_offering_implements()
         => Assert.Single(Through("ofr-card-payment", "15 minutes",
@@ -52,13 +44,10 @@ public class AlertAfterNeedsAnAlertTests
         => Assert.Empty(Through("ofr-card-payment", "15 minutes",
             services: [("svc-ledger", "none"), ("svc-api", "alert")]));
 
-    // One service raising something is enough, whatever the rest of them emit.
     [Fact]
     public void One_service_that_alerts_answers_for_all_of_them()
         => Assert.Empty(Bound("15 minutes", services: [("svc-audit", "log"), ("svc-api", "alert")]));
 
-    // `monitoring-output` is required of a live service alone, so a service that states none has not said
-    // it emits nothing. Reading silence as a fault would warn on every target bound to a service in build.
     [Fact]
     public void A_service_stating_no_output_suppresses_the_warning()
         => Assert.Empty(Bound("15 minutes", services: [("svc-building", null)]));
@@ -68,28 +57,21 @@ public class AlertAfterNeedsAnAlertTests
         => Assert.Empty(Bound("15 minutes",
             services: [("svc-ledger", "none"), ("svc-building", null)]));
 
-    // A dangling id is `ref-resolves`'s to report, and a target reaching nothing has nothing to judge.
     [Fact]
     public void An_id_naming_no_record_is_not_this_rules_business()
         => Assert.Empty(Bound("15 minutes", services: [], appliesTo: ["svc-missing"]));
 
-    // The values are what the author acts on, so the message reads the same however the services were
-    // listed and says each one once.
     [Fact]
     public void The_message_states_each_output_once_and_in_order()
         => Assert.Contains("'monitoring-output' is 'log' and 'none'",
             Assert.Single(Bound("15 minutes",
                 services: [("svc-c", "none"), ("svc-b", "log"), ("svc-a", "none")])).Message);
 
-    // The targets are read off whichever field references services, so a type declaring none has nothing
-    // to walk and the rule stops rather than reaching for a field by name.
     [Fact]
     public void A_type_with_no_field_referencing_services_is_left_alone()
         => Assert.Empty(Run(NfrType(appliesTo: null), "15 minutes", ["svc-ledger"], null,
             [("svc-ledger", "none")]));
 
-    // Two fields of service ids would make the walk follow whichever was declared first. The rule stops
-    // instead, because picking one of them is a choice nothing in the schema states.
     [Fact]
     public void A_type_declaring_two_fields_of_service_ids_is_left_alone()
     {
@@ -206,7 +188,5 @@ public class AlertAfterNeedsAnAlertTests
             => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
-    // The rule reads the records and never the tree, so an empty corpus of files is the honest thing to
-    // hand it.
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 }

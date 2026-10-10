@@ -3,11 +3,8 @@ using Spectre.Console.Rendering;
 
 namespace kac.core;
 
-// The console every verb writes through. There are two. Stdout carries what a command produced and
-// stderr carries why it stopped, and a caller redirecting one still sees the other.
-//
-// Machine-readable output does not come through here. `--json` is a contract a pipeline parses, so it
-// goes straight to the stream, never through a renderer that could wrap or restyle it.
+// Stdout carries what a command produced and stderr why it stopped. `--json` does not come through
+// here: it goes straight to the stream, so no renderer can wrap it.
 public static class Out
 {
     // A redirected stream has no width to report, and Spectre answers 80. That is a guess about a
@@ -22,8 +19,7 @@ public static class Out
     private static IAnsiConsole Std => s_std ??= Make(Console.Out, Console.IsOutputRedirected);
     private static IAnsiConsole Err => s_err ??= Make(Console.Error, Console.IsErrorRedirected);
 
-    // The console a question is asked on. A prompt writes as well as reads, so it goes through the same
-    // console every other line of output does, and `--no-color` reaches it.
+    // The same console as every other line, so `--no-color` reaches a prompt.
     public static IAnsiConsole Terminal => Std;
 
     // Whether there is somebody to ask. Spectre's own `Interactive` answers for the terminal it would
@@ -31,14 +27,12 @@ public static class Out
     public static bool Interactive =>
         Std.Profile.Capabilities.Interactive && !System.Console.IsInputRedirected;
 
-    // Plain text, written as given. Markup is not read here, so a message quoting '[ADR-0004]' or a
-    // regex reaches the reader intact rather than throwing on an unbalanced tag.
+    // Markup is not read, so a message quoting '[ADR-0004]' or a regex reaches the reader intact.
     public static void Line(string text = "") => Std.WriteLine(text);
 
     public static void ErrLine(string text) => Err.WriteLine(text);
 
-    // Markup the caller composed. Every value interpolated into one needs `EscapeMarkup()`, because
-    // the check messages are full of square brackets.
+    // Every interpolated value needs `EscapeMarkup()`: the check messages are full of square brackets.
     public static void Markup(string markup) => Std.MarkupLine(markup);
 
     public static void ErrMarkup(string markup) => Err.MarkupLine(markup);
@@ -67,9 +61,7 @@ public static class Out
             writer.WriteLine(line.TrimEnd());
     }
 
-    // Strip the colour from both consoles. Spectre already does this for `NO_COLOR` in the
-    // environment, so what remains here is `--no-color`, for a caller who cannot set a variable. Both
-    // leave bold alone, so the two ways of asking come to the same output.
+    // Spectre already honours `NO_COLOR`, so this serves `--no-color`.
     public static void NoColor()
     {
         Std.Profile.Capabilities.ColorSystem = ColorSystem.NoColors;

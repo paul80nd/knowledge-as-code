@@ -2,14 +2,6 @@ using System.IO.Compression;
 using System.Text;
 using kac.core;
 
-// In-process unit tests for the consuming half of publishing.
-//
-// There is no fixture corpus behind these and there could not be. A restore is decided by what a
-// registry answers, and a golden that reached one would prove somebody else's uptime. So the feed is
-// stood up here as a dictionary of URLs, and the packages it serves are built by `Packer` from an export
-// written for the case. That is what holds the two halves together: a package these tests refuse is one
-// `pack` could really have produced.
-
 namespace kac.tests;
 
 public class RestoreTests
@@ -26,8 +18,6 @@ public class RestoreTests
         Assert.False(step.Current);
     }
 
-    // The lock is what the last restore actually took, so a restore from an unchanged descriptor asks
-    // the registry nothing and takes the same version however much has been published since.
     [Fact]
     public void A_lock_the_range_still_admits_is_taken_without_asking_the_registry()
     {
@@ -39,16 +29,12 @@ public class RestoreTests
         Assert.DoesNotContain(asked, url => url.EndsWith("example-engineering/index.json", StringComparison.Ordinal));
     }
 
-    // Which is how changing the declaration takes effect. A range moved past its lock is a corpus asking
-    // for something else, and the lock it carries is an answer to the question it used to ask.
     [Fact]
     public void A_lock_the_range_no_longer_admits_is_resolved_again()
         => Assert.Equal("0.2.0",
             Assert.Single(Plan([Declared(range: "^0.2.0", resolved: "0.1.0")], Feed(["0.1.0", "0.2.0"])).Steps)
                 .Version);
 
-    // The folder is what a restore produces, so a folder already holding the resolved version is the
-    // produced thing and nothing is fetched.
     [Fact]
     public void A_corpus_already_unpacked_at_the_resolved_version_is_left_alone()
     {
@@ -58,8 +44,6 @@ public class RestoreTests
         Assert.Empty(step.Files);
     }
 
-    // The identity checks a fetch is held to are skipped on this path, so a folder judged by version
-    // alone would leave one corpus's records standing under another corpus's shortcode.
     [Fact]
     public void A_folder_holding_another_corpus_at_the_right_version_is_fetched_again()
         => Assert.False(Assert
@@ -71,8 +55,6 @@ public class RestoreTests
         => Assert.False(Assert.Single(Plan([Declared(range: "0.1.0")], Feed(["0.1.0"]), Holding("0.0.9")).Steps)
             .Current);
 
-    // One folder per shortcode, so two declarations claiming one would restore over each other and
-    // whichever ran last would win in silence.
     [Fact]
     public void A_shortcode_two_declarations_both_claim_is_refused_naming_both()
     {
@@ -84,8 +66,6 @@ public class RestoreTests
         Assert.Contains("another-corpus", problem);
     }
 
-    // The other direction, and the lock is what makes it an error. A version is written back onto the
-    // entry naming a corpus, so two entries naming one corpus have one place to record two answers.
     [Fact]
     public void A_corpus_two_declarations_both_consume_is_refused_naming_both_shortcodes()
     {
@@ -96,8 +76,6 @@ public class RestoreTests
         Assert.Contains("consumed twice, as 'eng' and 'gov'", problem);
     }
 
-    // The producer owns the spelling, and every citation in the consuming corpus is written against the
-    // one it declared. A package filed under a name that resolves nothing is worse than no package.
     [Fact]
     public void A_package_whose_stamped_shortcode_disagrees_with_the_declaration_is_refused()
     {
@@ -108,19 +86,14 @@ public class RestoreTests
         Assert.Contains("declares it as 'gov:'", problem);
     }
 
-    // A registry serving the wrong file under an id is unlikely; a `source:` pointing at the wrong feed
-    // is not.
     [Fact]
     public void A_package_calling_itself_another_corpus_is_refused()
         => Assert.Contains("calls itself 'example-engineering'",
             Assert.Single(Plan([Declared(corpus: "example-payments")],
                 Feed(["0.1.0"], id: "example-payments", stamped: "example-engineering")).Problems));
 
-    // The question `pack` and `bundle` both ask of an export. A package written to a contract this build
-    // has never read is refused rather than half-understood.
-    //
     // Zipped by hand rather than sealed, because `pack` refuses to seal an export at a format version it
-    // does not itself write. The package this refuses came from a later build of the tool.
+    // does not itself write.
     [Fact]
     public void A_package_at_another_export_format_version_is_refused()
         => Assert.Contains("Upgrade kac",
@@ -134,7 +107,6 @@ public class RestoreTests
         => Assert.Contains("not a readable package",
             Assert.Single(Plan([Declared()], Serving("not a zip"u8.ToArray())).Problems));
 
-    // A package is somebody else's file and a zip may name an entry anywhere it likes.
     [Theory]
     [InlineData("corpus/../../escaped.json")]
     [InlineData("corpus//absolute.json")]
@@ -154,7 +126,6 @@ public class RestoreTests
         => Assert.Contains("no readable corpus/manifest.json",
             Assert.Single(Plan([Declared()], Serving(Zip([("corpus/glossary/terms.jsonl", "{}")]))).Problems));
 
-    // Each key a restore cannot proceed without, refused by name so the fix is one line in one entry.
     [Theory]
     [InlineData("corpus", "names no corpus")]
     [InlineData("shortcode", "declares no shortcode")]
@@ -172,8 +143,6 @@ public class RestoreTests
         Assert.Contains(said, Assert.Single(Plan([entry], Feed(["0.1.0"])).Problems));
     }
 
-    // A shortcode is a folder name as well as a citation, so a value that is not one is refused before
-    // it is joined to a path.
     [Fact]
     public void A_declaration_whose_shortcode_is_not_one_is_refused()
         => Assert.Contains("is too long",
@@ -184,8 +153,6 @@ public class RestoreTests
         => Assert.Contains("neither `1.2.0` nor `^1.2.0`",
             Assert.Single(Plan([Declared(range: ">=1.0.0")], Feed(["0.1.0"])).Problems));
 
-    // Named, because the fix is either the range or a release upstream, and which one depends on what is
-    // published.
     [Fact]
     public void A_range_no_published_version_satisfies_names_what_the_registry_holds()
         => Assert.Contains("It holds 0.1.0, 0.2.0",
@@ -207,15 +174,11 @@ public class RestoreTests
         => Assert.Contains("could not read the registry",
             Assert.Single(Plan([Declared()], _ => new Fetched(null, 500, "500 Server Error")).Problems));
 
-    // A refusal anywhere stops the whole run. A corpus with two of its three imports on disk validates
-    // against a graph nobody declared.
     [Fact]
     public void Nothing_is_planned_where_any_declaration_is_refused()
         => Assert.Empty(Plan([Declared(), Declared(corpus: "example-payments", shortcode: "pay", range: "nope")],
             Feed(["0.1.0"])).Steps);
 
-    // The envelope is a registry's business. What a consumer reads is the export, at the paths the
-    // export wrote it at.
     [Fact]
     public void The_payload_prefix_is_stripped_and_the_envelope_dropped()
     {
@@ -233,8 +196,6 @@ public class RestoreTests
             Encoding.UTF8.GetString(step.Files.Single(f => f.Path == "glossary/terms.jsonl").Content));
     }
 
-    // A record withdrawn upstream has to leave. The folder is replaced whole rather than written over,
-    // so what is on disk afterwards is what the package holds and nothing else.
     [Fact]
     public void A_restore_replaces_the_import_folder_whole()
     {
@@ -249,8 +210,6 @@ public class RestoreTests
         Assert.True(File.Exists(Path.Combine(root, Restore.ImportsDir, "eng", "glossary", "terms.jsonl")));
     }
 
-    // Same lock in, same bytes out. A consumer's validation has to be reproducible, and a restore that
-    // wrote something different from one run to the next would be the one thing making it not.
     [Fact]
     public void Two_restores_of_one_lock_write_the_same_bytes()
     {
@@ -266,8 +225,6 @@ public class RestoreTests
         Assert.Equal(first, Read(root));
     }
 
-    // What is on disk is what a later run asks about, and what it reports is what actually arrived
-    // rather than what something recorded having asked for.
     [Fact]
     public void What_a_folder_holds_is_read_from_the_manifest_that_arrived()
     {
@@ -278,8 +235,6 @@ public class RestoreTests
         Assert.Null(Restore.Installed(root, "pay"));
     }
 
-    // The manifest is what `Installed` reads a folder's identity from, so a write that stopped halfway
-    // must not have left one. Written last, a folder with a manifest is a folder with its records.
     [Fact]
     public void The_manifest_is_the_last_file_written()
     {
@@ -289,8 +244,6 @@ public class RestoreTests
         Assert.Equal(Exporter.ManifestFile, step.Files[^1].Path);
     }
 
-    // A corpus consuming a sibling it builds beside itself, which is what the corpora under `examples/`
-    // do. The folder is the whole source: no service index is read and no token is needed.
     [Fact]
     public void A_folder_source_resolves_against_the_packages_the_folder_holds()
     {
@@ -305,8 +258,6 @@ public class RestoreTests
         Assert.Empty(asked);
     }
 
-    // A folder is listed rather than addressed, so the name is matched the way a registry matches an id
-    // and a version: without regard to case.
     [Fact]
     public void A_package_file_named_in_another_case_is_still_found()
         => Assert.Equal("0.1.0", Assert.Single(Plan(
@@ -314,8 +265,6 @@ public class RestoreTests
             Feed([]),
             folder: Packages(["0.1.0"], named: v => $"Example-Engineering.{v}.NUPKG")).Steps).Version);
 
-    // A package id may carry dots, so `example-engineering` is a prefix of a longer id a producer might
-    // build beside it. A version opens on a digit, and that is what keeps the sibling out.
     [Fact]
     public void A_longer_package_id_in_the_same_folder_is_not_read_as_a_version()
     {
@@ -328,8 +277,6 @@ public class RestoreTests
         Assert.DoesNotContain("extras", problem, StringComparison.Ordinal);
     }
 
-    // The two forms a `source:` may take are both named, because a path with nothing on it and a
-    // mistyped URL land here alike.
     [Fact]
     public void A_source_naming_no_folder_is_refused_naming_both_forms_a_source_takes()
     {
@@ -340,8 +287,6 @@ public class RestoreTests
         Assert.Contains("service index", problem, StringComparison.Ordinal);
     }
 
-    // A folder cannot be hiding the package behind a token, so the sentence a registry gets would send
-    // the reader after a credential that would change nothing. `kac pack` is what fills the folder.
     [Fact]
     public void A_folder_holding_no_package_names_the_command_that_fills_it()
     {
@@ -354,8 +299,6 @@ public class RestoreTests
         Assert.DoesNotContain(Registry.TokenVariable, problem, StringComparison.Ordinal);
     }
 
-    // The path through `Unpack` is the registry's own, so a package a folder served is held to every
-    // identity check one a registry served is.
     [Fact]
     public void A_package_a_folder_served_is_held_to_the_shortcode_it_stamped()
     {
@@ -372,10 +315,8 @@ public class RestoreTests
         Func<string, Imported?>? installed = null, FolderFeed? folder = null) =>
         Restore.Plan(declared, new Registry(feed, folder ?? Empty), installed ?? (_ => null));
 
-    // A machine holding no folder at all, for the scenarios declaring a registry source.
     private static readonly FolderFeed Empty = new(_ => null, _ => null);
 
-    // A folder under `.imports/` holding one corpus at one version, whatever shortcode is asked about.
     private static Func<string, Imported?> Holding(string version, string corpus = "example-engineering") =>
         _ => new Imported(corpus, version);
 
@@ -433,8 +374,6 @@ public class RestoreTests
             : new Fetched(null, 404, "404 Not Found");
     }
 
-    // A feed serving one package at every address a restore could ask a package for, for the cases about
-    // an archive rather than about resolution.
     private static Func<string, Fetched> Serving(byte[] package)
     {
         var feed = Feed(["0.1.0"]);
@@ -464,7 +403,6 @@ public class RestoreTests
         return Packer.Archive(Packer.Plan(export));
     }
 
-    // An export manifest carrying the four keys a restore reads from it.
     private static string ManifestJson(string id, string shortcode, string version, int format) =>
         $$"""
           {
@@ -492,7 +430,6 @@ public class RestoreTests
         return buffer.ToArray();
     }
 
-    // Every restored file and its bytes, as one comparable value.
     private static IReadOnlyList<(string, string)> Read(string root)
     {
         var imports = Path.Combine(root, Restore.ImportsDir);

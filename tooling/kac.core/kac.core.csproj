@@ -1,14 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- The mechanics of kac, held apart from the entrypoint (tooling/kac/) so they can be unit-tested
-       in-process rather than through a subprocess. Nothing here writes to the console or decides an
-       exit code: each pass answers in values, and `Commands` turns those into output through `Out`. -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <!-- Keep the core AOT-friendly: turns on the trim/AOT/single-file analyzers so any
-         reflection-based or otherwise AOT-hostile code fails the build here, up front. -->
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 

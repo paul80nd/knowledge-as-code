@@ -2,17 +2,6 @@ using System.Text.RegularExpressions;
 using kac.core;
 using YamlDotNet.RepresentationModel;
 
-// In-process unit tests for what one frontmatter value is held to.
-//
-// Each drives a `FieldSpec` the test declares itself against a scrap of YAML, because that is the whole
-// of what `ValueChecks` reads: no corpus, no document, no schema file. The declarations here are
-// deliberately not any real type's. What is being shown is that the checks act on what the schema
-// declares rather than on anything they assume about policies or glossaries.
-//
-// The golden fixtures cover each check id once, which is what the coverage gate asks. The branches
-// below are the ones a fixture could only duplicate: the two ways a date fails, the near misses a
-// timestamp meets, the two ways an enum fails, and every arm of the template exemption.
-
 namespace kac.tests;
 
 public class ValueCheckTests
@@ -21,8 +10,6 @@ public class ValueCheckTests
 
     private static FieldSpec Field(string type, string name = "field") => new() { Name = name, Type = type };
 
-    // A field declaring `object` holds one mapping, and its keys are judged as a list's entries are.
-    // Every other field reads a mapping as an unquoted placeholder, which is what `bare-key` reports.
     [Fact]
     public void An_object_field_holds_a_mapping()
         => Assert.Empty(Run("field: { at: 2026-06-12T09:00:00Z, by: kac/0.24.0 }\n", Event()));
@@ -40,14 +27,10 @@ public class ValueCheckTests
     public void A_key_an_object_field_requires_and_omits_is_reported()
         => Assert.Equal(["entry-key"], Ids(Run("field: { at: 2026-06-12T09:00:00Z }\n", Event())));
 
-    // A scalar under a field declared an object never reaches the mapping arm, so `Entry` reports the
-    // shape and names the keys the field wanted.
     [Fact]
     public void A_scalar_under_an_object_field_is_reported_as_the_wrong_shape()
         => Assert.Equal(["entry-shape"], Ids(Run("field: today\n", Event())));
 
-    // A bare key is absent for an object exactly as it is for everything else, so a template writing
-    // the key with nothing under it is not read as a malformed object.
     [Fact]
     public void A_bare_object_field_is_absent()
         => Assert.False(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"), Event()));
@@ -57,8 +40,7 @@ public class ValueCheckTests
         => Assert.True(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"),
             Field("string")));
 
-    // The `event` shape as `_shapes.yaml` declares it, written out here because these tests read no
-    // schema file.
+    // The `event` shape as `_shapes.yaml` declares it, written out because these tests read no schema file.
     private static FieldSpec Event() => new()
     {
         Name = "field",
@@ -71,8 +53,7 @@ public class ValueCheckTests
     };
 
 
-    // The value under `field:`, read from a real parse so quoting style and node positions are the
-    // parser's rather than the test's.
+    // Read from a real parse, so quoting style and node positions are the parser's rather than the test's.
     private static YamlNode Value(string yaml)
     {
         var stream = new YamlStream();
@@ -95,7 +76,6 @@ public class ValueCheckTests
         Assert.Empty(Run("field: \"2027-08-04\"\n", Field("date")));
     }
 
-    // Both fire: an unquoted date is also being read as something other than a string.
     [Fact]
     public void An_unquoted_date_is_reported_as_unquoted()
     {
@@ -110,7 +90,6 @@ public class ValueCheckTests
         Assert.Contains("must be a YYYY-MM-DD date", date.Message);
     }
 
-    // The distinct wording is the whole reason the shape and the calendar are asked separately.
     [Fact]
     public void A_date_that_is_not_on_the_calendar_says_something_else()
     {
@@ -125,8 +104,6 @@ public class ValueCheckTests
         Assert.Empty(Run("field: 2027-08-04T09:30:00Z\n", Field("timestamp")));
     }
 
-    // A day is a well-formed value of a different type, and the commonest thing written where a moment
-    // belongs. Nothing about it names an hour, so it fails on shape rather than on the calendar.
     [Fact]
     public void A_day_written_where_a_moment_belongs_says_so()
     {
@@ -135,8 +112,6 @@ public class ValueCheckTests
         Assert.Contains("must be a YYYY-MM-DDThh:mm:ssZ moment in UTC", moment.Message);
     }
 
-    // A local time is the other near miss. It is written as a moment and names no zone, so two readers
-    // would take it as two different instants.
     [Fact]
     public void A_moment_without_its_zone_is_refused()
     {
@@ -184,8 +159,6 @@ public class ValueCheckTests
         Assert.Equal("list", found.Check.Value);
     }
 
-    // Reported before the entries are read, so an author fixing a short list is not also told an entry
-    // is malformed and made to re-run to find the floor.
     [Fact]
     public void A_list_under_its_floor_counts_what_is_there()
     {
@@ -195,7 +168,6 @@ public class ValueCheckTests
         Assert.Contains("has 2 entries", found.Message);
     }
 
-    // The message reads as English at one entry or it does not.
     [Fact]
     public void One_entry_is_an_entry_not_entries()
     {
@@ -212,7 +184,6 @@ public class ValueCheckTests
         Assert.Contains("'alpha' should come before 'zebra'", found.Message);
     }
 
-    // Alphabetical as a reader means it, which is `Natural`'s answer rather than a byte-wise one.
     [Fact]
     public void Digit_runs_in_a_list_compare_as_numbers()
     {
@@ -228,7 +199,6 @@ public class ValueCheckTests
         Assert.Contains("entry 'NotAnId'", found.Message);
     }
 
-    // The shape test reads the record and leaves the scope and the part alone. See ValueChecks.cs.
     [Theory]
     [InlineData("pol-KNOW")]
     [InlineData("adr-0007")]
@@ -240,7 +210,6 @@ public class ValueCheckTests
     public void Every_id_style_is_id_shaped_in_a_list(string id)
         => Assert.Empty(Run($"field: [ {id} ]\n", new FieldSpec { Name = "field", Type = "list", Of = "id" }));
 
-    // The record in front of a part still carries the taxonomy's spelling.
     [Theory]
     [InlineData("Pol-KNOW")]
     [InlineData("pol-Know")]
@@ -298,8 +267,6 @@ public class ValueCheckTests
         Assert.Equal(["empty-optional-key"], Ids(Run("field:\n", Field("date"))));
     }
 
-    // Whether the field is optional here depends on another field's value, and this pass reads one
-    // value at a time.
     [Fact]
     public void A_required_when_field_is_exempt_from_the_optional_reading()
     {
@@ -307,8 +274,6 @@ public class ValueCheckTests
         Assert.Empty(Run("field:\n", spec));
     }
 
-    // Two findings would be one omission reported twice, so the spelling is the finding and the
-    // optional reading is not reached.
     [Fact]
     public void A_value_that_is_absent_and_misspelt_is_reported_once()
     {
@@ -325,7 +290,6 @@ public class ValueCheckTests
         Assert.Equal("bare-key", found.Check.Value);
     }
 
-    // An empty sequence is the one absent value that is not a scalar.
     [Fact]
     public void An_empty_sequence_is_absent()
     {
@@ -361,7 +325,6 @@ public class ValueCheckTests
         Assert.Empty(Run("field: [ \"svc-{{a}}\", NotAnId ]\n", spec, DocKind.Template));
     }
 
-    // A record holding a placeholder is an unfinished copy, so the field's checks report the malformed date.
     [Fact]
     public void The_same_placeholder_in_a_record_is_not_exempt()
     {
@@ -378,7 +341,6 @@ public class ValueCheckTests
         Assert.Contains("read as a YAML mapping", found.Message);
     }
 
-    // The same spelling in a record, under the id a reader already looks to for a field nobody filled in.
     [Fact]
     public void The_same_mapping_in_a_record_is_reported_as_a_bare_key()
     {
@@ -387,8 +349,6 @@ public class ValueCheckTests
         Assert.Contains("read as a YAML mapping", found.Message);
     }
 
-    // A mapping reaches neither the declared pattern nor any other value check, so `bare-key` is the
-    // whole of the finding.
     [Fact]
     public void A_mapping_in_a_pattern_field_is_not_passed_over()
     {
@@ -400,8 +360,6 @@ public class ValueCheckTests
         Assert.Equal(["bare-key"], Ids(Run("field: {{owner}}\n", spec)));
     }
 
-    // An object entry recurses into `Check` under the path it reached the entry by, and the fix has to
-    // quote the key the file writes rather than that path.
     [Fact]
     public void The_fix_quotes_the_key_an_entry_carries()
     {
@@ -412,7 +370,6 @@ public class ValueCheckTests
         Assert.Contains("has to be quoted: at: \"{{…}}\".", Assert.Single(findings).Message);
     }
 
-    // The parser reads a frontmatter block on its own, so its line 1 is the block's first key.
     [Fact]
     public void A_finding_names_the_line_in_the_document_not_in_the_block()
     {

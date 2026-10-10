@@ -129,5 +129,4 @@ rules:
     severity: warning
   - id: alternatives-have-verdicts
     description: Every bullet in Alternatives Considered states an outcome.
-    # An alternative left open means the decision has not been made.
     severity: warning

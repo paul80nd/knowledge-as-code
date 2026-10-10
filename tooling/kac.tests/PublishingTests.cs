@@ -1,12 +1,6 @@
 using kac.core;
 using Xunit.Sdk;
 
-// In-process unit tests for how a publishing target addresses what it publishes.
-//
-// The link forms cannot be shown by a golden fixture: the harness assembles a corpus that is not a git
-// repository, so no run there resolves a ref and no run there writes a link. That is the right shape
-// for the fixture: it proves the no-links path, and leaves the rules themselves to be proven here.
-
 namespace kac.tests;
 
 public class PublishingTests
@@ -44,8 +38,6 @@ public class PublishingTests
         Assert.NotNull(Publishing.For(Descriptor(target, published), Sha));
     }
 
-    // The caller's question is whether it can write a link, and a null says no without asking it to tell
-    // the cases apart.
     [Theory]
     [InlineData(Publishing.None, GitHubBase, Sha)]    // publishes nowhere
     [InlineData(Publishing.MkDocs, GitHubBase, Sha)]  // a target nothing addresses yet
@@ -129,7 +121,6 @@ public class PublishingTests
         Assert.DoesNotContain("/main/", link, StringComparison.Ordinal);
     }
 
-    // A corpus should not have to know that the mechanism is about to append a slash.
     [Fact]
     public void A_trailing_slash_on_a_base_does_not_double()
     {
@@ -138,7 +129,6 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
-    // The prefix lands between the commit and the record, which is the one place it can go.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase,
         GitHubBase + "/blob/" + Sha + "/example/glossary/search.md#query")]
@@ -155,7 +145,6 @@ public class PublishingTests
         Assert.Equal(expected, link);
     }
 
-    // Whether the descriptor wrote the prefix with slashes says nothing about where the corpus sits.
     [Theory]
     [InlineData("example")]
     [InlineData("/example")]
@@ -169,8 +158,6 @@ public class PublishingTests
         Assert.Equal("example", publishing.PathPrefix);
     }
 
-    // The link carries no empty segment where a prefix would sit, and the manifest states no prefix for
-    // an agent to join.
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -183,8 +170,6 @@ public class PublishingTests
         Assert.Null(publishing.PathPrefix);
     }
 
-    // The anchor rule is the target's, and GitHub's is the discarding form the corpus's own links
-    // already use. That is what lets one citation name a term and a link land on it.
     [Fact]
     public void The_anchor_is_the_form_the_corpus_already_links_with()
     {
@@ -192,8 +177,6 @@ public class PublishingTests
         Assert.Equal(Md.Slug("Identity line"), Publishing.Anchor("Identity line"));
     }
 
-    // The commit is settled too: a ref a reader has to copy is forty characters that can be mistyped
-    // into a plausible 404. The wrong one answers as confidently as the right one.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, GitHubBase + "/blob/" + Sha + "/{path}#{anchor}")]
     [InlineData(Publishing.AzureDevOps, RepoBase, RepoBase + "?path=/{path}&version=GC" + Sha + "#{anchor}")]
@@ -204,8 +187,6 @@ public class PublishingTests
         Assert.Equal(expected, For(Descriptor(target, published)).Template());
     }
 
-    // A reader holding a record's path supplies the path alone, and cannot join it to the prefix in the
-    // wrong order.
     [Fact]
     public void A_template_settles_the_subdirectory_too()
     {
@@ -214,7 +195,6 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/example/{{path}}#{{anchor}}", template);
     }
 
-    // One rule builds both, so a corpus reading the export cannot be handed two addresses for one part.
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, "query")]
     [InlineData(Publishing.GitHub, GitHubBase, null)]

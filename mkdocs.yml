@@ -1,8 +1,4 @@
 # The documentation site for `kac`, published to GitHub Pages by .github/workflows/publish-docs.yml.
-#
-# The site documents the tool. It is not a corpus, and `publishing-target: mkdocs` in a corpus descriptor is a
-# separate thing that this build does not exercise. MkDocs is here because it is what tool documentation uses.
-#
 # `docs/` holds every page and nothing else does: a page in both trees is the drift this site exists to end.
 
 site_name: knowledge-as-code
@@ -24,8 +20,7 @@ validation:
   links:
     anchors: warn
 
-# The pins the workflow installs from. It sits beside the pages so Dependabot finds one directory, and the
-# site is not a place to serve it from.
+# The pins the workflow installs from sit beside the pages, so Dependabot finds one directory.
 exclude_docs: |
   requirements.txt
 
@@ -48,7 +43,6 @@ theme:
     - navigation.tracking
     - toc.follow
   palette:
-    # The reader's own setting decides, and the two toggles below override it either way.
     - media: "(prefers-color-scheme)"
       toggle:
         icon: material/brightness-auto
@@ -79,10 +73,7 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.details
-  # A ```mermaid block is rendered as a diagram rather than as code. The fence is the plain one GitHub
-  # renders natively, so one file draws the same picture on the site and in the repository, and a corpus
-  # publishing to an Azure DevOps wiki needs nothing else. `docs/design/generation.md` carries the subset
-  # every diagram here is held to, which is narrower than Mermaid's own.
+  # A ```mermaid block renders as a diagram. `docs/design/generation.md` holds the subset every diagram keeps to.
   #
   # The theme fetches https://unpkg.com/mermaid@11/dist/mermaid.min.js at page load, and only for a page
   # carrying one of these. It is the one thing this site asks of a host other than Pages, the version is
@@ -93,14 +84,12 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  # Publishes tooling/kac/CHANGELOG.md without a second copy of it, so the file stays beside the project whose
-  # versions it records. `check_paths` fails a moved path rather than publishing an empty page.
+  # Publishes tooling/kac/CHANGELOG.md without a second copy. `check_paths` fails a moved path.
   - pymdownx.snippets:
       base_path: ['.']
       check_paths: true
 
-# The verb alone in the sidebar. Each page's own heading then says what that verb does, which is the line
-# a reader wants once they are on the page and noise in a list of eight.
+# The verb alone in the sidebar. Each page's own heading then says what that verb does.
 nav:
   - Introduction: index.md
   - Getting started: getting-started.md

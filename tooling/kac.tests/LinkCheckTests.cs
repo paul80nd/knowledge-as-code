@@ -1,14 +1,5 @@
 using kac.core;
 
-// In-process unit tests for the decision the link pass turns on: whether a target names something the
-// corpus holds. It is fiddly, it is quiet when wrong, and the goldens can only reach it through a whole
-// corpus. Whether a bracketed label is an id is asked here too, but answered in IdChecks and tested
-// beside it.
-//
-// Driven through `LinkChecks.Check`, which is what the validator calls, against a `Tree` built from a
-// listing. The resolver reads the corpus and never the disk, so the corpus a test needs is a set of
-// paths and the text behind them.
-
 namespace kac.tests;
 
 public class LinkCheckTests
@@ -35,20 +26,16 @@ public class LinkCheckTests
         Assert.Single(Unresolved("index.md", "[pics](/pictures)")); // a folder with no page
     }
 
-    // An ignored file is on the disk of whoever created it and in no clone, so a link to one is dead
-    // everywhere the corpus is read.
     [Fact]
     public void A_target_the_corpus_does_not_hold_does_not_resolve()
         => Assert.Single(Unresolved("index.md", "[draft](/_plan/notes.md)"));
 
-    // A fragment or a query addresses within a target. It never names a different one.
     [Theory]
     [InlineData("[b](/adrs/0002-b.md#context)")]
     [InlineData("[b](/adrs/0002-b.md?raw=1)")]
     public void A_fragment_or_query_is_stripped_before_the_target_is_looked_up(string markdown)
         => Assert.Empty(Unresolved("adrs/0001-a.md", markdown));
 
-    // A bare fragment never reaches the resolver.
     [Fact]
     public void A_bare_fragment_names_a_heading_in_this_document()
     {
@@ -64,7 +51,6 @@ public class LinkCheckTests
     public void An_external_target_is_left_alone(string target, bool external)
         => Assert.Equal(external, LinkChecks.IsExternal(target));
 
-    // The other half of the pass: what a bracketed label shows the reader.
     [Fact]
     public void A_label_shaped_like_an_id_is_held_against_the_record_it_leads_to()
         => Assert.Equal(
@@ -97,7 +83,6 @@ public class LinkCheckTests
         => Assert.Equal(["reference '[STD-ci]' should be written as the id 'std-CI'."],
             Labels("[STD-ci] says so.\n\n[std-CI]: /standards/workflows.md\n"));
 
-    // A collapsed reference displays its label too, so it is read the same way as a shortcut.
     [Fact]
     public void A_collapsed_reference_is_judged_on_its_label()
         => Assert.Equal(
@@ -106,8 +91,6 @@ public class LinkCheckTests
             "link definition '[std-ci]' should be written as the id 'std-CI'."
         ], Labels("[std-ci][] says so.\n\n[std-ci]: /standards/workflows.md\n"));
 
-    // A full reference displays its own text, so its label reaches no reader. The definition is the
-    // one place the label is written for anyone to read, and the only place the fault is reported.
     [Fact]
     public void A_full_reference_is_judged_on_its_definition_alone()
         => Assert.Equal(
@@ -122,7 +105,6 @@ public class LinkCheckTests
         => Assert.Empty(Labels("[std-BOGUS] says so.\n\n[std-BOGUS]: /standards.md\n"
                                + "[std-BOGUS]: /standards/workflows.md\n"));
 
-    // A template's definitions demonstrate the form, so the label is one nobody has chosen yet.
     [Fact]
     public void A_template_is_not_held_to_the_record_its_exemplar_points_at()
         => Assert.Empty(Labels("[an example] says so.\n\n[an example]: /standards/workflows.md\n",
@@ -136,7 +118,6 @@ public class LinkCheckTests
     public void A_label_that_names_what_it_leads_to_is_silent(string markdown)
         => Assert.Empty(Labels(markdown));
 
-    // Everything `label-canonical` said about one document, in the order it was reported.
     private static List<string> Labels(string markdown, DocKind kind = DocKind.Record) =>
     [
         .. Cited(markdown, kind).Where(f => f.Check.Value == "label-canonical").Select(f => f.Message)

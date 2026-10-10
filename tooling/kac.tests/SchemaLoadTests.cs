@@ -1,5 +1,3 @@
-// Built from strings rather than a `.schema/` on disk, so each case is a declaration nobody would commit.
-
 using kac.core;
 
 namespace kac.tests;
@@ -15,9 +13,6 @@ public class SchemaLoadTests
         ["_universal.yaml"] = "fields: {}"
     };
 
-    // A shape is declared once and taken whole, so a field naming one carries the shape's keys as
-    // though it had written them out. Nothing narrows a shape here: a type holding one of its keys to a
-    // narrower value writes a rule.
     [Fact]
     public void A_field_naming_a_shape_takes_its_keys()
     {
@@ -34,8 +29,6 @@ public class SchemaLoadTests
         => Assert.Contains("_shapes.yaml declares no such shape",
             Schema.Load(WithShapes("shape: occurrence")).ByFolder["adrs"].Fields["verified"].Problem);
 
-    // A shape and an `entry:` block are two accounts of one thing, and merging them is deliberately not
-    // a mechanism this language has.
     [Fact]
     public void A_field_naming_a_shape_and_declaring_an_entry_block_says_so()
     {
@@ -56,7 +49,6 @@ public class SchemaLoadTests
             Schema.Load(files).ByFolder["adrs"].Fields["verified"].Problem);
     }
 
-    // A type declaring one object field, over a `_shapes.yaml` holding the shape it may name.
     private static Dictionary<string, string> WithShapes(string declaration)
     {
         var files = Blocks();
@@ -123,8 +115,6 @@ public class SchemaLoadTests
         Assert.Empty(Schema.Load(files).ByFolder);
     }
 
-    // `New` iterates `ByFolder` without sorting first, so the order the loader inserts in is the order
-    // it reports.
     [Fact]
     public void Types_are_read_in_ordinal_name_order_whatever_order_the_map_is_in()
     {
@@ -157,7 +147,6 @@ public class SchemaLoadTests
         Assert.Null(status.Problem);
     }
 
-    // A field loaded with no range would go unchecked while the schema went on claiming it has one.
     [Fact]
     public void A_field_drawing_on_an_enum_nothing_declares_records_the_problem()
     {
@@ -176,8 +165,6 @@ public class SchemaLoadTests
         Assert.Contains("declares no 'status'", status.Problem);
     }
 
-    // A `.schema/` short of one of its shared blocks fails through the findings naming what is missing,
-    // rather than on the file the loader could not open.
     [Fact]
     public void A_file_the_map_does_not_hold_reads_as_an_empty_document()
     {
@@ -194,7 +181,6 @@ public class SchemaLoadTests
         Assert.Contains("declares no 'status'", problem);
     }
 
-    // A check's `notes:` carries its whitespace through untouched, where a rule's is collapsed at load.
     private static string Notes(string block, string ending)
     {
         var files = Blocks();
@@ -203,9 +189,8 @@ public class SchemaLoadTests
         return Assert.Single(Schema.Load(files).Checks).Notes;
     }
 
-    // Only a value holding a real line break can show a stray `\r`, and every other style folds its
-    // break into a space. So the cases are a literal block, and the folded block with a blank line that
-    // `.schema/_checks.yaml` writes a `notes:` of more than one paragraph as.
+    // Only a value holding a real line break can show a stray `\r`, so the cases are a literal block and the
+    // folded block with a blank line that `.schema/_checks.yaml` writes a `notes:` of more than one paragraph as.
     [Theory]
     [InlineData("    notes: |-\n      First line\n      and a second.\n")]
     [InlineData("    notes: >\n      First line.\n\n      A second paragraph.\n")]
@@ -288,8 +273,6 @@ public class SchemaLoadTests
         Assert.Contains("has-a-title", rule.Problem);
     }
 
-    // A severity the tool does not recognise reads as absent too, which leaves the rule declared but not
-    // enforced.
     [Fact]
     public void A_rule_declaring_only_an_id_is_a_statement_of_intent()
     {
@@ -303,7 +286,6 @@ public class SchemaLoadTests
         Assert.Null(rule.Compiled);
     }
 
-    // A key nothing reads is a declaration in a file documented as the contract the tool enforces.
     [Fact]
     public void A_key_the_loader_never_asks_for_is_named_with_its_file_and_its_level()
     {
@@ -322,7 +304,6 @@ public class SchemaLoadTests
         Assert.Equal("widht", unread.Key);
     }
 
-    // `notes:` is the one key admitted at every level and required at none.
     [Fact]
     public void The_commentary_key_is_never_reported_as_unread()
     {
@@ -338,8 +319,6 @@ public class SchemaLoadTests
         Assert.Empty(Schema.Load(files).UnreadKeys);
     }
 
-    // `Yaml.Str` answers null for a sequence, so every declaration using the list form would look like an
-    // absent key if it were read as a scalar.
     [Theory]
     [InlineData("ref: adrs", new[] { "adrs" })]
     [InlineData("ref: [adrs, policies]", new[] { "adrs", "policies" })]
@@ -355,7 +334,6 @@ public class SchemaLoadTests
         Assert.Equal(expected, Schema.Load(files).Universal["supersedes"].Refs);
     }
 
-    // A description is rendered into a table cell as one line.
     [Fact]
     public void A_description_written_over_several_lines_collapses_to_one()
     {

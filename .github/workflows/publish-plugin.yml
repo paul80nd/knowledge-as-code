@@ -1,19 +1,7 @@
-# Publishes what landed. On every push to main it rebuilds each worked corpus's export and bundle from
-# the merge commit and writes them to the `marketplace` branch, which is what a reader adds to Claude
-# Code. One marketplace, one directory per plugin, assembled here because `bundle` runs in one corpus
-# and knows only that corpus's own.
-#
-# The corpora are here so that somebody deciding whether to adopt the framework can install one and ask
-# it questions. Every one but `dog-fooding` describes an invented estate and is meant to. `dog-fooding`
-# describes the repository they all come from. Each plugin's description says which it is, and
-# `.corpus.yaml` is where the corpus states it.
-#
-# One job here holds write, and the branch is what makes that safe: orphaned, never merged back, and
-# holding no file anyone authors, so nothing CI builds can reach the source a human edits. The one
-# place that could go wrong is the emptied worktree below, which is asserted rather than assumed.
-#
-# The two jobs exist so nothing unpinned runs beside the token. The Claude Code CLI is installed at
-# `latest` on purpose, so it belongs where a moved tag cannot reach a push. Do not merge them back.
+# Rebuilds each worked corpus's bundle from the merge commit and writes one marketplace to the `marketplace`
+# branch, which is what a reader adds to Claude Code. The branch is orphaned, never merged back and holds no
+# file anyone authors, so the one job holding write cannot reach the source; the emptied worktree is asserted.
+# Two jobs so nothing unpinned runs beside the token. Do not merge them back.
 
 name: publish-plugin
 
@@ -33,8 +21,7 @@ concurrency:
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
-  # The corpora that publish a plugin, in the order the marketplace lists them. A corpus joins by
-  # adopting a type something in the plugin tree reads, or it ships a plugin with no component in it.
+  # In the order the marketplace lists them. A corpus joins by adopting a type the plugin tree reads.
   CORPORA: 'library engineering payments dog-fooding'
 
 jobs:
@@ -64,9 +51,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      # payments and dog-fooding name `../engineering/.dist/package` as their `source:`, and `kac pack`
-      # is what writes there. Each job holds its own checkout, so this step packs engineering itself
-      # rather than taking what the engineering job already produced.
+      # Each job holds its own checkout, so this packs the `source:` payments and dog-fooding name itself.
       - name: Build the package this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/engineering
@@ -74,8 +59,7 @@ jobs:
           dotnet run --project ../../tooling/kac -- export
           dotnet run --project ../../tooling/kac -- pack
 
-      # .imports/ is not committed, so a fresh checkout holds none of it and `validate` fails naming
-      # this command. A corpus consuming nothing skips the step.
+      # .imports/ is not committed, so a fresh checkout has to restore before `validate` can pass.
       - name: Restore what this corpus consumes
         if: matrix.corpus == 'payments' || matrix.corpus == 'dog-fooding'
         working-directory: examples/${{ matrix.corpus }}
@@ -98,27 +82,23 @@ jobs:
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 
-      # The last thing between a broken bundle and the people who have it installed.
       - name: Validate the assembled plugin and its marketplace
         working-directory: examples/${{ matrix.corpus }}
         run: |
           claude plugin validate ./.dist/plugin --strict
           claude plugin validate ./.dist --strict
 
-  # The only job granted write. It rebuilds rather than taking an artifact from `verify`: two runs
-  # from one commit produce identical bytes but for the manifest's `generatedAt`, so a hand-off would
-  # preserve nothing and add a second way for the two trees to disagree.
+  # The only job granted write. It rebuilds rather than taking an artifact from `verify`, because two runs from
+  # one commit differ only in `generatedAt`, and a hand-off would add a second way for the trees to disagree.
   publish:
     needs: verify
     runs-on: ubuntu-latest
-    # Shorter than `verify` because there is no npm here, and long enough that a push waiting on a
-    # remote lock fails rather than parking the concurrency group for six hours.
+    # Long enough for a push waiting on a remote lock, short enough not to park the group for six hours.
     timeout-minutes: 15
     permissions:
       contents: write
     steps:
-      # Whole history: the publish commits on top of a fetched branch tip, and a shallow parent is
-      # the one shape of push worth not discovering in production.
+      # Whole history: the publish commits on top of a fetched branch tip, and a shallow parent breaks the push.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -128,9 +108,7 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
-      # An export carries what its corpus consumes, and refuses where nothing is restored for one. So
-      # the producer's package is built and restored before the loop below reaches a consumer, as
-      # `verify` already does. This job holds its own checkout, so nothing `verify` did is on it.
+      # This job holds its own checkout, so the producer is packed and restored again before a consumer exports.
       - name: Build and restore the package a corpus here consumes
         run: |
           set -e
@@ -143,9 +121,7 @@ jobs:
             ( cd "examples/$consumer" && dotnet run --project ../../tooling/kac -- restore )
           done
 
-      # Each corpus in turn, because the branch holds one marketplace offering every plugin. `bundle`
-      # writes a marketplace naming the corpus it ran in, which is what installs a plugin from a path
-      # while it is being proved. The published one offers them all at once, and is assembled below.
+      # `bundle` writes a marketplace naming only its own corpus, so each is built here and one is assembled below.
       - name: Build every plugin the marketplace offers
         run: |
           set -e
@@ -206,9 +182,7 @@ jobs:
             EXISTS=yes
           fi
 
-          # A worktree rather than a second clone, so the branch is built with the credentials the
-          # checkout already holds. The push at the foot names the ref it writes, so neither arm
-          # needs a local branch whatever shape it leaves HEAD in.
+          # A worktree rather than a second clone, so the branch is built with the checkout's credentials.
           if [ -n "$EXISTS" ]; then
             git worktree add --detach "$WORKTREE" "origin/$BRANCH"
           else
@@ -226,9 +200,7 @@ jobs:
             exit 1
           fi
 
-          # One directory per plugin, named for the plugin, because that is what the marketplace
-          # entries below point at. The export is left behind: each plugin already carries the same
-          # bytes under `corpus/`.
+          # One directory per plugin, named for the plugin, which is what the marketplace entries point at.
           ENTRIES=''
           ROWS=''
           for corpus in $CORPORA; do
@@ -246,8 +218,7 @@ jobs:
           "
           done
 
-          # One marketplace offering every plugin, which `bundle` does not write because it runs in one
-          # corpus and knows only that corpus's own.
+          # One marketplace offering every plugin, which `bundle` does not write.
           mkdir -p "$WORKTREE/.claude-plugin"
           echo "[${ENTRIES%,}]" | jq \
             --arg marketplace "$MARKETPLACE" \
@@ -257,8 +228,7 @@ jobs:
             owner: {name: "Paul Law"},
             plugins: .}' > "$WORKTREE/.claude-plugin/marketplace.json"
 
-          # Tells someone arriving in a browser where the source is, that these corpora are invented,
-          # and that editing here is pointless.
+          # Tells someone arriving in a browser where the source is, and that editing here is pointless.
           cat > "$WORKTREE/README.md" <<EOF
           # knowledge-as-code — the plugin marketplace
 

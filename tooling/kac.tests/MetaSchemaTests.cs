@@ -1,12 +1,6 @@
 using System.Text.Json;
 using kac.core;
 
-// The editor's copy of the two field vocabularies, held to the tool's own.
-//
-// `meta/type.schema.json` is read by an editor through the `$schema` line each type file opens with, and by nothing in
-// CI. So it is the one place a value the tool dropped goes on being offered, and the offer is what an author writes
-// their schema against. `ValueChecks` holds the lists it is compared with, beside the code dispatching them.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
@@ -24,9 +18,8 @@ public class MetaSchemaTests
         Assert.Equal(ValueChecks.EntryTypes.Order(StringComparer.Ordinal), EnumOf("of"));
     }
 
-    // A line source naming one thing, as `export.parts.line:` offers them. The prefixed families are patterns in
-    // the same `anyOf` and are not tested here: a pattern admits a name the type supplies, so there is no list to
-    // compare. Dropping a source from the tool and leaving it in the enum is what this catches.
+    // The prefixed families are patterns in the same `anyOf` and are not tested here: a pattern admits a name
+    // the type supplies, so there is no list to compare.
     [Fact]
     public void The_line_source_enum_offers_what_the_exporter_fills()
     {

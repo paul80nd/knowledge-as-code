@@ -1,5 +1,3 @@
-// The console sits on the other side of `IAsker`, so every case here runs without a terminal.
-
 using kac.core;
 
 namespace kac.tests;
@@ -8,7 +6,6 @@ public class AskingTests
 {
     private static readonly IReadOnlyList<string> Declared = ["adrs", "glossary", "policies"];
 
-    // An asker that answers with whatever it was built with, and records what it was asked.
     private sealed class Scripted(
         string? text = null,
         string? choice = null,
@@ -17,8 +14,6 @@ public class AskingTests
     {
         public readonly List<string> Asked = [];
 
-        // What each confirm was offered as its bare-Enter answer. `fallback: false` is what makes Enter
-        // mean "leave it alone" on a question standing in front of a deletion.
         public readonly List<bool> Fallbacks = [];
 
         public string Text(string question, string fallback)
@@ -55,8 +50,6 @@ public class AskingTests
         Name = "acme", Types = Asking.AllTypes, Publishing = Publishing.None, Ci = CiSystem.None
     };
 
-    // Both ways of having nobody to ask, and the one way of having somebody. Read once per command, so
-    // the two readings a command used to hold cannot disagree.
     [Theory]
     [InlineData(false, true, true)]   // a terminal, and nothing answered in advance
     [InlineData(true, true, false)]   // `--yes` answered everything, terminal or not
@@ -82,7 +75,6 @@ public class AskingTests
     public void A_question_standing_in_front_of_a_deletion_stops_a_run_with_nobody_to_ask()
         => Assert.Equal(Consent.Unattended, Asking.OrRefuse(null, yes: false, "Give up glossary?"));
 
-    // `--yes` is the caller answering in advance, which is the one thing that gets past this unattended.
     [Fact]
     public void A_question_standing_in_front_of_a_deletion_takes_yes_in_advance()
         => Assert.Equal(Consent.Given, Asking.OrRefuse(null, yes: true, "Give up glossary?"));
@@ -96,7 +88,6 @@ public class AskingTests
             Asking.OrRefuse(new Scripted(confirm: true), yes: false, "Give up glossary?"));
     }
 
-    // Each question is offered the answer a bare Enter gives, and the two kinds differ in it.
     [Fact]
     public void A_question_carries_the_answer_a_bare_Enter_gives()
     {
@@ -162,7 +153,6 @@ public class AskingTests
     public void All_names_every_type_the_template_declares()
         => Assert.Equal(Declared, Resolve(Flagged()).Resolved().Types);
 
-    // Two corpora adopting the same types write the same descriptor.
     [Fact]
     public void A_named_subset_is_kept_in_the_order_the_schema_declares()
         => Assert.Equal(["adrs", "policies"],

@@ -1,7 +1,3 @@
-// Where a generated block goes in a page, over pages built for the purpose. `CliReferenceTests` and
-// `SkillReferenceTests` ask the same method about the real documentation, and can only report the answer the
-// pages happen to give.
-
 using kac.core;
 using Xunit.Sdk;
 
@@ -35,9 +31,6 @@ public class GeneratedPageTests
             written);
     }
 
-    // `Markers.SpliceBlock` hands back a page it could not splice untouched, and the caller reads an
-    // untouched page as one in step. So a block that lost its end marker would report itself fresh for as
-    // long as nobody opened it.
     [Fact]
     public void A_block_that_opens_and_never_closes_is_reported()
     {

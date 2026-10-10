@@ -1,8 +1,6 @@
 namespace kac.core;
 
-// The registry. Explicit rather than discovered by reflection, for the same reason `RuleExpr.Functions`
-// is: what runs should be readable in one place, and a rule that silently stopped being found would look
-// exactly like a rule that never fires.
+// Explicit, not discovered by reflection: a rule that stopped being found would look like a rule that never fires.
 public static class DocumentRules
 {
     public static readonly IReadOnlyList<IDocumentRule> All =

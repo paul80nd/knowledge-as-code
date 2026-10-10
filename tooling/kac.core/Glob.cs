@@ -8,10 +8,7 @@ namespace kac.core;
 
 public static class Glob
 {
-    // One cache for the process: whoever asks for a pattern first compiles it, and everyone after reads
-    // what they left. Several threads ask at once, because a spec suite runs its scenarios side by side
-    // and each loads a corpus of its own. A `Dictionary` corrupts itself under that, and it throws in
-    // whichever scenario happened to be running, which is never the one that explains why.
+    // Concurrent, because the spec suite runs scenarios side by side and a `Dictionary` corrupts itself under that.
     private static readonly ConcurrentDictionary<string, Regex> Cache = new(StringComparer.Ordinal);
 
     public static bool IsMatch(string path, string pattern) =>

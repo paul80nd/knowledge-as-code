@@ -8,9 +8,6 @@ using Xunit.Sdk;
 
 namespace kac.tests;
 
-// The generated blocks of the CLI reference: a usage block at the head of each command's page, and the table of
-// commands on the overview that indexes them.
-//
 // `Spectre.Console.Cli` carries a hidden `cli xmldoc` command that prints its command model, so a page shows the usage
 // the tool accepts and not a second statement of it. The model is asked of the built `kac`, because one assembled here
 // would prove the renderer and nothing else.
@@ -20,7 +17,6 @@ namespace kac.tests;
 // no global option, because `--help` and `--version` belong to the parser. The overview carries those.
 internal static partial class CliReference
 {
-    // The folder holding one page per command, and the overview that indexes them.
     internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");
     internal static readonly string Index = Path.Combine(Cli, "index.md");
 
@@ -29,18 +25,15 @@ internal static partial class CliReference
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
 
-    // A command page opens `# `verb` what running it does`, and the overview's table is built from both halves.
     [GeneratedRegex(@"^# `(?<verb>[a-z]+)` (?<does>.+)$")]
     private static partial Regex PageHeading();
 
-    // Every verb the parser declares, in the order it declares them. Read once, however many tests ask.
     internal static IReadOnlyList<Verb> Verbs() => Model.Value;
 
-    // Every page of the reference, in the order the parser declares its commands.
     internal static IReadOnlyList<string> Pages() => [.. Verbs().Select(v => v.Name)];
 
-    // The overview's index of the commands, one row each, taking what a command does from that command's own heading.
-    // The heading is the one statement of it, and a second wording here would be the copy that goes stale.
+    // The overview's index of the commands, taking what a command does from that command's own heading.
+    // The heading is the one statement of it, so a second wording here would be the copy that goes stale.
     internal static string CommandTable()
     {
         var rows = Pages().Select(page =>
@@ -61,10 +54,8 @@ internal static partial class CliReference
         return Gfm.RenderTable(["Command", "What it does"], rows);
     }
 
-    // The block body for one verb: the invocation it accepts, then a table for what it takes.
-    //
-    // Arguments come first and in the order the parser declares them, because that order is the one a
-    // reader has to type. Options are alphabetical, because their order on the line is free.
+    // Arguments come first and in the order the parser declares them, because that is the order a reader
+    // types. Options are alphabetical, because their order on the line is free.
     internal static string Render(Verb verb)
     {
         var invocation = new StringBuilder($"kac {verb.Name}");
@@ -130,16 +121,14 @@ internal static partial class CliReference
         ];
     }
 
-    // The value of an attribute the generated XML always carries. A null means that file's shape moved,
-    // and naming the attribute says which one to go looking for.
     private static string Value(this XElement element, string attribute) =>
         element.Attribute(attribute)?.Value
         ?? throw new XunitException($"<{element.Name}> carries no '{attribute}' attribute.");
 
     private static string OneLine(string? text) => Whitespace().Replace(text?.Trim() ?? string.Empty, " ");
 
-    // The built `kac`. Its path is stamped into this assembly by kac.tests.csproj, and the project reference beside
-    // that is what guarantees a build has produced one.
+    // The built `kac`. Its path is stamped into this assembly by kac.tests.csproj, and the project reference
+    // beside that is what guarantees a build has produced one.
     private static string XmlDoc()
     {
         var kac = Repo.KacAssembly;

@@ -3,18 +3,16 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// A few lines injected at the start of a session, saying which corpus is installed, how much of it
-// there is and what to ask. `docs/design/plugin.md` says why it is rendered here rather than computed
-// at runtime, and why nothing in the render names a record type.
+// A few lines injected at the start of a session, saying which corpus is installed, how much of it there is and what
+// to ask. `docs/design/plugin.md` says why it is rendered at bundle time.
 public static class Breadcrumb
 {
-    // Where the rendered file lands inside the plugin: in the hook directory, beside the two scripts
-    // that print it. `Bundler` decides whether it is written at all, from that directory surviving.
+    // Where the rendered file lands inside the plugin, beside the two hook scripts that print it. `Bundler` writes it
+    // only where that directory survived the trim.
     public const string RenderedFile = "hooks/breadcrumb.txt";
 
-    // The breadcrumb as it will be printed. `exportFiles` is the export as it will travel, which is
-    // where the record names come from: the manifest counts records without naming them, and a count
-    // alone does not tell a reader which contexts are covered.
+    // The breadcrumb as it will be printed. `exportFiles` is the export as it will travel, which is where the record
+    // names come from, because the manifest counts records without naming them.
     public static string Render(
         ExportManifest exportManifest,
         IReadOnlyList<BundleFile> exportFiles,
@@ -36,16 +34,8 @@ public static class Breadcrumb
         foreach (var held in Contributions(type, exportFiles, sources))
             lines.Add(Line(type.Type, held));
 
-        // What to ask, named from the components that actually survived the trim rather than from a
-        // name written here. A plugin carrying no skill has nothing to point at, and says nothing.
-        //
-        // Only the components whose manifest entry says `announce`. The line exists to create a
-        // question a session would not otherwise think to ask, and a skill somebody asks for by name
-        // already has its question. `docs/design/plugin.md` argues the split.
-        //
-        // What it warns against is answering from memory, which is the one failure every announcing
-        // skill shares. Naming the question instead would name a type, and the skills that announce
-        // ask three different ones: what a word means, what a rule requires, what we committed to.
+        // What to ask, named from the surviving components whose manifest entry says `announce`. A plugin carrying no
+        // such skill says nothing. `docs/design/plugin.md` explains the split.
         var skills = included
             .Where(c => c.Announce)
             .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))
@@ -60,34 +50,18 @@ public static class Breadcrumb
         return string.Join("\n", lines) + "\n";
     }
 
-    // The most things one line will name, the remainder counted among them. What a session pays for one
-    // line is fixed here rather than by however many records the corpus behind it holds: a line names
-    // six titles whether it counts three records or three hundred, and every line is read at every
-    // start, resume, clear and compact.
-    //
-    // The bound is per line, so a type merged from several corpora costs a line each. That is the
-    // price of saying whose the records are, and it grows with how many corpora a corpus consumes
-    // rather than with how much any of them wrote.
-    //
-    // Six because the names are doing a job that stops at a handful. A reader scanning three or six
-    // titles learns which contexts a type covers; one scanning two hundred has been handed the corpus
-    // where a breadcrumb was meant.
+    // The most things one line will name, the remainder counted among them. It fixes what a line costs a session,
+    // whatever the size of the corpus behind it.
     private const int MostNamed = 6;
 
-    // The key the maps below file this corpus's own records under. Empty because no shortcode can be,
-    // so nothing a source is called collides with it.
+    // The key this corpus's own records are filed under. Empty, because no shortcode can be.
     private const string Mine = "";
 
-    // How much of one type came from one corpus, and which of its records those are. `Source` is the
-    // shortcode of the corpus that wrote them, and null where this corpus wrote them itself.
+    // How much of one type came from one corpus, and which of its records those are. `Source` is null where this
+    // corpus wrote them.
     private sealed record Contribution(string? Source, int Records, int Parts, IReadOnlyList<string> Names);
 
-    // A type's lines: this corpus's own records first, then one for each corpus it consumes that wrote
-    // some of them. A merged type adds several corpora's records into one count, and a reader handed
-    // that number under their own corpus's name goes looking for records nobody here wrote.
-    //
-    // A type nothing was merged into keeps the single line it always had, because the loop below finds
-    // no source claiming any of it.
+    // A type's lines: this corpus's own records first, then one for each corpus it consumes that wrote some of them.
     private static IEnumerable<Contribution> Contributions(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles,
@@ -106,9 +80,8 @@ public static class Breadcrumb
             if (held.Count > 0 || count > 0) inherited.Add(new Contribution(code, held.Count, count, held));
         }
 
-        // The manifest counts a type whole and the files are the only account of whose the records are,
-        // so each answers the half it holds. Whatever no source claims belongs to this corpus. The floor
-        // is there because a disagreement between the two accounts must not print a negative count.
+        // Whatever no source claims belongs to this corpus. The floor stops a disagreement between the manifest and
+        // the files printing a negative count.
         var mine = new Contribution(
             null,
             Math.Max(0, type.Records - inherited.Sum(c => c.Records)),
@@ -125,11 +98,8 @@ public static class Breadcrumb
     private static IReadOnlyList<string> Held(IReadOnlyDictionary<string, List<string>> names, string source) =>
         names.TryGetValue(source, out var held) ? held : [];
 
-    // One line: whose records these are, how much of the type they make up, and which records hold them.
-    //
-    // Either count can be zero. A corpus that contributed part lines and no record file to a type has
-    // entries and nothing to count them across. "across 0 records" would read as an export that lost
-    // them on the way.
+    // One line: whose records these are, how much of the type they make up, and which records hold them. Either count
+    // can be zero, and "across 0 records" is never printed.
     private static string Line(string type, Contribution held)
     {
         var records = $"{held.Records} record{(held.Records == 1 ? "" : "s")}";
@@ -150,12 +120,8 @@ public static class Breadcrumb
             : $"{label}. {body}.";
     }
 
-    // The names as the line will carry them: all of them where a type holds few, and the first of them
-    // followed by a count of what is left where it holds many.
-    //
-    // The remainder is named rather than dropped. A list cut short silently reads as the whole of what
-    // the type covers, which is the one thing a reader would carry away wrongly. It is the count,
-    // not the titles, that the line exists to make.
+    // The names as the line will carry them: all of them where a type holds few, and the first few followed by a count
+    // of the rest where it holds many.
     private static IReadOnlyList<string> Named(IReadOnlyList<string> names)
     {
         if (names.Count <= MostNamed) return names;
@@ -165,13 +131,8 @@ public static class Breadcrumb
         return named;
     }
 
-    // The records of one type, named as the export names them and keyed by the corpus that wrote them.
-    // A record this corpus wrote sits directly in the type's directory, and one it consumes sits under
-    // the shortcode of the corpus that published it.
-    //
-    // Read from the per-record files rather than from the flat parts file: a part line carries the
-    // record's id and never its title, and an id is what a reader decodes where a title is what they
-    // recognise.
+    // The records of one type, named as the export names them and keyed by the corpus that wrote them. Read from the
+    // per-record files, because a part line carries the record's id and never its title.
     private static Dictionary<string, List<string>> NamesBySource(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles)
@@ -181,9 +142,7 @@ public static class Breadcrumb
 
         foreach (var file in exportFiles)
         {
-            // A record file, which is every `.json` in the type's directory bar the two flat files the
-            // manifest names. Both tests are asked: today a flat file is `.jsonl` and the extension
-            // alone would settle it, but the names are the manifest's to choose and this reads them.
+            // A record file is every `.json` in the type's directory bar the two flat files the manifest names.
             if (!file.Path.StartsWith(prefix, StringComparison.Ordinal)) continue;
             if (file.Path == type.PartsFile || file.Path == type.FrameworksFile) continue;
             if (!file.Path.EndsWith(".json", StringComparison.Ordinal)) continue;
@@ -195,8 +154,7 @@ public static class Breadcrumb
             var record = JsonRead.Parse(new UTF8Encoding(false).GetString(file.Content));
             var fields = record?["fields"] as JsonObject;
 
-            // Title, then id, then the filename. A type whose `export:` block withholds both still gets
-            // a name in the breadcrumb rather than a gap where one record should be.
+            // Title, then id, then the filename, so a type withholding both still names the record.
             var name = JsonRead.Str(fields?["title"])
                        ?? JsonRead.Str(fields?["id"])
                        ?? Path.GetFileNameWithoutExtension(file.Path);
@@ -208,9 +166,8 @@ public static class Breadcrumb
         return names;
     }
 
-    // How many parts each corpus contributed, counted off the flat file. A merged line names its
-    // producer under `shortcode` and a line this corpus wrote carries no such key, so the file is the
-    // only account of the split: the manifest counts the merged type whole.
+    // How many parts each corpus contributed, counted off the flat file, which is the only account of the split: a
+    // merged line carries `shortcode`.
     private static Dictionary<string, int> PartsBySource(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles)
@@ -228,8 +185,6 @@ public static class Breadcrumb
         return counted;
     }
 
-    // An English list, because the breadcrumb is read by a person as often as by an agent and a
-    // comma-separated tail reads as a fragment where the last pair is joined.
     private static string Join(IReadOnlyList<string> items) =>
         items.Count switch
         {

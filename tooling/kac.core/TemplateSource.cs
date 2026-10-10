@@ -2,36 +2,26 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kac.core;
 
-// Where `new` and `update` read a template from.
-//
-// The template is fetched rather than carried inside the package, so the tool and the framework version
-// apart. `docs/cli/new.md` argues that, and argues the clone over an HTTP fetch: an Azure DevOps
-// repository answers a raw GET with a sign-in redirect, where `git clone` uses the credential helper the
-// person already has. The clone hands back a commit for free, and git is already required, because a
-// corpus is a repository.
+// Where `new` and `update` read a template from. The template is cloned with git, because an Azure DevOps repository
+// answers a raw GET with a sign-in redirect. `docs/cli/new.md` says why.
 public sealed class TemplateSource : IDisposable
 {
-    // The folder holding `manifest.yaml`. Every path the manifest names is read from here, so a fork
-    // keeping its manifest below the repository root says so with `--path` and nothing else moves.
+    // The folder holding `manifest.yaml`, which every path the manifest names is read from.
     public required string Root { get; init; }
 
-    // What the ref resolved to, or null where the template was read from a folder. A folder has no ref to
-    // follow, so the descriptor records the take without a commit rather than with one that was guessed.
+    // What the ref resolved to, or null where the template was read from a folder.
     public string? Commit { get; init; }
 
-    // The clone to remove afterwards, or null where nothing was cloned. It sits above `Root` whenever
-    // `--path` named a subfolder, so the two are carried apart.
+    // The clone to remove afterwards, or null where nothing was cloned. It sits above `Root` whenever `--path` named a
+    // subfolder.
     private string? Clone { get; init; }
 
-    // A temporary clone is worth nothing once the corpus is written, and a folder somebody passed is not
-    // the tool's to delete.
+    // A folder somebody passed is not the tool's to delete.
     public void Dispose()
     {
         if (Clone is not null) Discard(Clone);
     }
 
-    // A removal that fails is left alone. Git leaves read-only files behind on Windows, and a temporary
-    // folder outliving a run is not a reason to fail a run that worked.
     private static void Discard(string dir)
     {
         try
@@ -56,14 +46,9 @@ public sealed class TemplateSource : IDisposable
         public bool Failed => Problem is not null;
     }
 
-    // Read the template `from` names, which is either a folder on this machine or a repository to clone.
-    //
-    // A folder is used where it sits, and is the offline escape hatch as well as what the tool's own
-    // tests read. Everything else is cloned shallow at `gitRef`, into a folder of its own under `into`.
-    //
-    // `prompt` says whether git may ask for a credential. False where nobody is watching, so a clone that
-    // needs a password fails rather than waiting for one nobody can type. `verb` opens each problem, so a
-    // reader meets the message as the tail of the command they ran.
+    // Read the template `from` names: a folder, used where it sits, or a repository cloned shallow at `gitRef` under
+    // `into`. `prompt` says whether git may ask for a credential, so an unattended clone fails rather than waits.
+    // `verb` opens each problem.
     public static Fetch Read(string verb, string from, string? gitRef, string? path, string into, bool prompt)
     {
         if (Directory.Exists(from))
@@ -72,8 +57,8 @@ public sealed class TemplateSource : IDisposable
         var clone = Path.Combine(into, "kac-template-" + Guid.NewGuid().ToString("n")[..12]);
         Directory.CreateDirectory(clone);
 
-        // Quoted, because a path is as likely to hold a space as a URL is to hold none. `--` closes the
-        // option list, so a repository whose name opens on a hyphen is read as a repository.
+        // Quoted, because a path may hold a space. `--` closes the option list, so a repository whose name opens on a
+        // hyphen is read as one.
         var branch = gitRef is { Length: > 0 } r ? $"--branch \"{r}\" " : "";
         var environment = prompt ? null : new Dictionary<string, string> { ["GIT_TERMINAL_PROMPT"] = "0" };
         var run = Attempt($"clone --depth 1 {branch}-- \"{from}\" \"{clone}\"", environment);
@@ -105,12 +90,8 @@ public sealed class TemplateSource : IDisposable
             null);
     }
 
-    // A template read whole: the manifest it carries, the schema it serves, and the types that schema
-    // declares. `Problem` is set instead where any of that could not be read, which is the contract
-    // `Fetch` states for its own pair.
-    //
-    // Disposable, because the fetch beneath it may have cloned. A take that reported a problem holds
-    // nothing to remove, so disposing one costs nothing.
+    // A template read whole: its manifest, its schema, and the types the schema declares. `Problem` is set instead
+    // where any of that could not be read.
     public sealed class Taken(
         TemplateSource? source,
         Manifest? manifest,
@@ -118,9 +99,8 @@ public sealed class TemplateSource : IDisposable
         IReadOnlyList<string>? declared,
         string? problem) : IDisposable
     {
-        // Each value below is set exactly where `Problem` is not, which is the contract above. A caller
-        // reads `Problem` first, so reaching one of these on a take that failed is a defect in that
-        // caller, and the message says which value it went for.
+        // Each value below is set exactly where `Problem` is not. Reaching one on a failed take is a defect in the
+        // caller.
         private static T Held<T>(T? value, string what) where T : class =>
             value ?? throw new InvalidOperationException(
                 $"this take reported a problem and holds no {what}. read Problem first.");
@@ -136,12 +116,9 @@ public sealed class TemplateSource : IDisposable
         public void Dispose() => source?.Dispose();
     }
 
-    // The template, and everything both verbs then ask of it: that it carries a manifest, that the
-    // manifest admits this version of the tool, and what schema it serves.
-    //
-    // `from` is fetched and `named` is printed. The two differ for `update`, where a relative
-    // `upstream.url` is resolved against the corpus root before the fetch, and the corpus is answered in
-    // the terms it wrote rather than in the path they resolved to.
+    // The template, checked to carry a manifest that admits this version of the tool, with the schema it serves.
+    // `from` is fetched and `named` is printed: for `update`, a relative `upstream.url` is resolved before the fetch
+    // and reported as written.
     public static Taken Take(string verb, string from, string named, string? gitRef, string? path,
         string into, bool prompt, string toolVersion)
     {
@@ -166,30 +143,25 @@ public sealed class TemplateSource : IDisposable
             return new Taken(null, null, null, null, tooOld);
         }
 
-        // The schema the template serves, which is the one account of what types there are to adopt.
         var serves = Schema.LoadNearest(source.Root);
         return new Taken(source, held, serves,
             [.. serves.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal)], null);
     }
 
-    // Every file the template holds, relative to `Root` and forward-slashed.
-    //
-    // Read through git where the template is a repository, so what a clone ignores the manifest never
-    // sees: a folder passed with `--from` is somebody's working tree, and `bin/`, `obj/` and `.dist/` are
-    // in it. `Walk` is the fallback for a folder that is not a repository, which is what a fixture is.
+    // Every file the template holds, relative to `Root` and forward-slashed. Read through git where the template is a
+    // repository, so what a clone ignores never reaches the manifest. `Walk` is the fallback for a folder that is not
+    // a repository.
     public IReadOnlySet<string> Files() =>
         (GitFiles.Tracked(Root) ?? GitFiles.Walk(Root, "*", ".git")).ToHashSet(StringComparer.Ordinal);
 
     private static string Below(string root, string? path) =>
         path is { Length: > 0 } ? Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar)) : root;
 
-    // Run the clone from a directory that exists whatever the arguments say. The command names both ends
-    // itself, so the working directory decides nothing.
+    // The command names both ends itself, so the working directory decides nothing.
     private static GitRun? Attempt(string args, IReadOnlyDictionary<string, string>? environment) =>
         Git.Attempt(Path.GetTempPath(), args, environment);
 
-    // git's own account of the failure, set in from the message carrying it. Its first line is usually
-    // the whole answer, and the rest is a hint worth keeping.
+    // git's own account of the failure, indented under the message carrying it.
     private static string Indent(string error) =>
         string.Join('\n', error.TrimEnd().Split('\n').Select(l => "  " + l.TrimEnd()));
 }

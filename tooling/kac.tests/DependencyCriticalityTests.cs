@@ -1,9 +1,5 @@
 using kac.core;
 
-// The rule compares a value on one record with the same value on another, so every scenario needs at
-// least two records. These hand it the graph directly. A fixture would repeat a whole mini-corpus for
-// each shape.
-
 namespace kac.tests;
 
 public class DependencyCriticalityTests
@@ -26,7 +22,6 @@ public class DependencyCriticalityTests
         Assert.Equal("services/svc-a.md", Single(found).File);
     }
 
-    // Both grades and the id, because the reader judging the edge weighs two values on two documents.
     [Fact]
     public void The_message_names_the_field_the_target_and_both_grades()
         => Assert.Equal(
@@ -34,8 +29,6 @@ public class DependencyCriticalityTests
             + "one of the two, or write down what degrades when it is gone.",
             Single(Check(("svc-a", "critical", ["svc-b"]), ("svc-b", "important", []))).Message);
 
-    // One entry of a list is at fault, so each finding gets a line of its own. The numbers sit one above
-    // the entry each names, as every frontmatter finding does. See Yaml.LineOf.
     [Fact]
     public void Each_finding_names_the_line_the_entry_sits_on()
     {
@@ -45,41 +38,34 @@ public class DependencyCriticalityTests
             ("svc-c", "important", []),
             ("svc-d", "supporting", []));
 
+        // The numbers sit one above the entry each names, as every frontmatter finding does. See Yaml.LineOf.
         Assert.Equal([5, 6], found.Select(f => f.Line));
     }
 
-    // Each occurrence is its own entry, so a record cited twice is reported once for each line it sits on.
     [Fact]
     public void A_dependency_cited_twice_is_reported_on_each_line()
         => Assert.Equal([4, 5],
             Check(("svc-a", "critical", ["svc-b", "svc-b"]), ("svc-b", "important", []))
                 .Select(f => f.Line));
 
-    // Two places down is the same fault as one.
     [Fact]
     public void A_grade_two_places_above_the_target_is_reported()
         => Assert.Single(Check(("svc-a", "critical", ["svc-b"]), ("svc-b", "supporting", [])));
 
-    // The ranking is the enum's to declare. Without it the values are a set, and a set has no order.
     [Fact]
     public void An_enum_that_declares_no_ranking_is_not_compared()
         => Assert.Empty(Check(Type(Unranked, DependsOn),
             ("svc-a", "critical", ["svc-b"]), ("svc-b", "supporting", [])));
 
-    // The graph is read off the schema, as `no-dependency-cycles` reads it: the field whose `ref:` names
-    // the type's own key.
     [Fact]
     public void A_field_pointing_at_another_type_is_not_walked()
         => Assert.Empty(Check(Type(Criticality, Stores),
             ("svc-a", "critical", ["svc-b"]), ("svc-b", "supporting", [])));
 
-    // `ref-resolves` reports an id nothing declares. There is no grade at the far end to read.
     [Fact]
     public void An_edge_pointing_at_nothing_is_not_this_rules_business()
         => Assert.Empty(Check(("svc-a", "critical", ["svc-missing"])));
 
-    // `enum` reports a value outside the range. Comparing against it would turn one malformed value
-    // into a finding on every record citing it.
     [Fact]
     public void A_grade_outside_the_range_is_passed_over_at_either_end()
     {
@@ -153,11 +139,9 @@ public class DependencyCriticalityTests
         return found;
     }
 
-    // A record with no grade is written as a bare key, which is how a corpus states an absent value.
     private static string Written(string? grade) => grade is null ? "" : $" {grade}";
 
-    // The rule reads the records and never the tree, so an empty corpus of files is the honest thing to
-    // hand it.
+    // The rule reads the records and never the tree.
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

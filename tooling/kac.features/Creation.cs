@@ -1,5 +1,5 @@
-// Runs `new` in-process through `Commands.New`, so a precondition cannot stop the command and go unnoticed
-// here. The template is this repository read as a folder, so nothing reaches the network.
+// Runs `new` through `Commands.New`, so a precondition that stops the command fails a spec. The template is this
+// repository read as a folder, so nothing reaches the network.
 
 using kac.core;
 
@@ -7,9 +7,7 @@ public static class Creation
 {
     private static readonly string RepoRoot = Harness.RepoRoot;
 
-    // A version the template can always be read by, taken from the template's own floor. What a tool too
-    // old for a manifest does is settled in the unit tests, and pinning a number here would break these
-    // specs every time that floor moved.
+    // Read from the template's own floor, because a pinned number would break these specs whenever that floor moved.
     private static string NewEnough =>
         Manifest.LoadFrom(Path.Combine(RepoRoot, Manifest.FileName)).MinimumTool ?? "0.0.0";
 
@@ -20,8 +18,6 @@ public static class Creation
             NewEnough,
             "2026-01-01");
 
-    // What a corpus is held to under `full`, asked without writing. `--check` reads a tree in any state,
-    // so nothing here has to be committed first.
     public static int WouldChangeUnderFull(string folder) =>
         Commands.Update(
             folder,

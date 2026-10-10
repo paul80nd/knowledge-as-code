@@ -1,10 +1,5 @@
-// `!` turns off a compiler check one site at a time, and says nothing where it was wrong. A repository
-// with `Nullable` enabled throughout has two better answers, both used here: a type that carries its own
-// invariant through `MemberNotNullWhen`, and a read that names what it expected. `Required.cs` holds the
-// second for tests, and `kac.core` holds it wherever a caller has already established a value.
-//
-// Held at nothing rather than at a ceiling. A budget above zero is a number nobody can argue about, and
-// the first site under it is the one that teaches the next reader that `!` is available.
+// `!` turns off a compiler check one site at a time. Use `MemberNotNullWhen` or a read that names what it
+// expected instead. Held at nothing rather than at a ceiling.
 
 using System.Text;
 

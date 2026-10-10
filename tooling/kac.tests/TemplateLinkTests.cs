@@ -1,31 +1,12 @@
 using System.Text.RegularExpressions;
 using kac.core;
 
-// The links a seed page may carry, held at the source.
-//
-// A seed reaches a corpus that has adopted some of the types and turned the rest down. `SeedLinks` unlinks
-// a reference to a declined type's page as the page is written, which is what lets a type page keep the
-// cross-references that make a full corpus navigable. That repair only works on a link whose text is the
-// type's own noun.
-//
-// A link into a type's folder has no such repair. Its text names a record, so unlinking it would leave a
-// sentence pointing at nothing, and every corpus deletes the records it inherits anyway. There is nowhere
-// to fix that but here.
-//
-// A target holding a placeholder is exempt, on the same reading `LinkChecks` takes for one: it addresses
-// no page in any corpus, so there is nothing to dangle.
-//
-// Two more forms have no repair either, for the opposite reason: the unlinking reads raw Markdown, so a
-// reference definition carries no `](` for it to match and a fenced example carries one it should have
-// left alone. Both are refused here rather than taught to the transform.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
 public partial class TemplateLinkTests
 {
-    // An inline Markdown link, with the anchor split off: what is asked below is which folder the target
-    // opens, and a heading inside the page has no bearing on that.
+    // An inline Markdown link, with the anchor split off.
     [GeneratedRegex(@"\[(?<text>[^\]\r\n]+)\]\((?<target>[^)\r\n#]+)(?:#[^)\r\n]*)?\)")]
     private static partial Regex Link();
 
@@ -64,13 +45,9 @@ public partial class TemplateLinkTests
             + "such folder, and the link cannot be unlinked into a word. name the type and drop the link.");
     }
 
-    // A reference link's definition, which the unlinking never matches: it looks for `](`, and a definition
-    // separates its label from its target with a colon.
     [GeneratedRegex(@"^\[[^\]\r\n]+\]:\s*(?<target>\S+)", RegexOptions.Multiline)]
     private static partial Regex Definition();
 
-    // Every target a page addresses, whichever form carries it. The folder question is the same for both:
-    // a corpus that declined the type holds no folder, and neither form has a repair once it is there.
     private static IEnumerable<string> Targets(string markdown) =>
         Link().Matches(markdown).Select(m => m.Groups["target"].Value)
             .Concat(Definition().Matches(markdown).Select(m => m.Groups["target"].Value));
@@ -118,14 +95,11 @@ public partial class TemplateLinkTests
         }
     }
 
-    // The targets that address a file in the corpus, each climbed back to a corpus-root path. An external
-    // link addresses somebody else's site, and a placeholder addresses no page in any corpus.
     private static IEnumerable<string> Local(IEnumerable<string> targets) =>
         targets
             .Where(t => !LinkChecks.IsExternal(t) && !Placeholder.In(t))
             .Select(Climbed);
 
-    // The type pages among a run of link targets, by the page each type declares.
     private static List<string> Named(IEnumerable<string> targets) =>
     [
         .. Local(targets)
@@ -145,12 +119,9 @@ public partial class TemplateLinkTests
         return target;
     }
 
-    // The type's folder this seed may reach into, because the page and the folder arrive together or not
-    // at all. A file inside a type's folder owns the folder holding it.
-    //
-    // A root page owns the folder of the type whose page it is, and that is a lookup rather than its own
-    // name. A type may declare a `page:` that does not match its `folder:`, which is the same reason
-    // `SeedLinks.Declined` keys on the page. A page no type claims owns nothing.
+    // The type's folder this seed may reach into. A file inside a type's folder owns the folder holding it.
+    // A root page owns the folder of the type whose page it is, by lookup, because a type may declare a
+    // `page:` that does not match its `folder:`. A page no type claims owns nothing.
     private static string? Owner(string rel)
     {
         var parts = rel.Split('/');

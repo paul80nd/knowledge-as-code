@@ -2,28 +2,16 @@ using System.Text;
 
 namespace kac.core;
 
-// The `new` engine: what standing a corpus up in an empty folder comes to.
-//
-// Deciding and doing stay apart, as they do either side of `GeneratedFiles`. `Plan` names every file a
-// creation writes, composes the two no template can supply, and touches nothing. `Apply` carries that
-// plan out. So a creation is decidable from a listing and a manifest, with no template on disk and no
-// network, which is what lets the unit tests ask about a corpus nobody wrote.
-//
-// `docs/cli/new.md` is the reference for the order the command runs in and for what each answer means.
+// `Plan` decides and touches nothing, and `Apply` carries the plan out, so a creation is decidable from
+// a listing and a manifest with no template on disk. `docs/cli/new.md` is the reference for the order.
 
-// One file a creation copies: where the template holds it, where it lands, and the layer that sent it.
 public sealed record PlannedFile(string From, string To, string Layer);
 
-// One file a creation writes rather than copies. A descriptor cannot be copied without carrying somebody
-// else's name in it, and the template's own `README.md` describes the template.
+// Written rather than copied: a copied descriptor carries somebody else's name.
 public sealed record ComposedFile(string Path, string Content);
 
-// Where the framework came from, as the descriptor records it.
-//
-// `Url` is what `--from` was given, written back unresolved: a corpus takes from wherever it was told,
-// and an absolute path resolved here would be a fact about the machine that ran the command. `Ref` and
-// `Commit` are null where the template was read from a folder, which has no ref to follow and no commit
-// to resolve.
+// `Url` is written back unresolved: an absolute path would be a fact about the machine that ran the
+// command. `Ref` and `Commit` are null where the template was read from a folder.
 public sealed record Upstream(
     string Url,
     string? Path,
@@ -32,9 +20,7 @@ public sealed record Upstream(
     int TemplateVersion,
     string TakenOn);
 
-// The continuous integration systems a corpus can be created for, which is what `--ci` is held to and
-// what a template's `ci:` may name. Read from here by both, so a system the tool cannot offer is refused
-// at the flag and reported in the template, rather than quietly taking a starter nobody can run.
+// Both `--ci` and a template's `ci:` are checked against this list.
 public static class CiSystem
 {
     public const string GitHub = "github";
@@ -44,52 +30,33 @@ public static class CiSystem
     public static readonly IReadOnlyList<string> All = [GitHub, AzureDevOps, None];
 }
 
-// What the invocation was told, however it was told: a flag, a prompt, or a default.
 public sealed record NewAnswers
 {
-    // What the corpus calls itself, defaulting to the name of the folder it is created in.
     public required string Name { get; init; }
 
-    // The types the corpus adopts, named as the schema names them. Always written out, even where the
-    // answer was every type the template declares. A corpus created by `new` has made the decision, and
-    // the descriptor records it so that validation can hold the corpus to it.
+    // Always written out, even where every type was adopted, so validation can hold the corpus to it.
     public required IReadOnlyList<string> Types { get; init; }
 
-    // How the corpus is published, and where the published form is served from. `Publishing.Targets`
-    // names every target a descriptor may state. The base is null where the corpus publishes nowhere,
-    // which is the one target needing none.
+    // The base is null where the corpus publishes nowhere.
     public string PublishingTarget { get; init; } = Publishing.None;
     public string? Base { get; init; }
 
-    // Which continuous integration system the corpus is built by. Asked apart from publishing, because a
-    // corpus can be built by one system and read on another.
     public string Ci { get; init; } = CiSystem.None;
 }
 
-// What `new` found in the folder before it asked anything.
-//
-// Everything that can stop a run is read here, so that nobody answers six questions and is then told the
-// folder was not empty. What each state comes to is the command's to decide: two of them are a refusal,
-// and two are a question.
+// Everything that can stop a run is read before anything is asked.
 public sealed record Ground
 {
-    // The corpus this folder already sits in, or null. A descriptor at or above the working directory
-    // means the framework is here already, and taking a newer one into it is `update`.
+    // A descriptor at or above the working directory means this is `update`'s job.
     public string? Corpus { get; init; }
 
-    // Whether git reads this folder as a repository, and whether that repository holds changes its last
-    // commit does not. `Dirty` is null where there is no repository to ask, or where git could not
-    // answer, and a tree nobody can ask about is not the same as a clean one.
+    // `Dirty` is null where there is no repository or git could not answer, which is not the same as clean.
     public bool Repository { get; init; }
     public bool? Dirty { get; init; }
 
-    // What the folder already holds, `.git` aside. Named rather than counted: the warning is worth
-    // reading only where it says what a creation is about to be mixed in with.
     public IReadOnlyList<string> Holds { get; init; } = [];
 }
 
-// What creating a corpus comes to. Every list names paths in the corpus about to exist, except `Copied`,
-// which also carries where each file was read from.
 public sealed record NewPlan(
     IReadOnlyList<PlannedFile> Copied,
     IReadOnlyList<ComposedFile> Composed,
@@ -97,8 +64,7 @@ public sealed record NewPlan(
     IReadOnlyList<string> DeclinedCi,
     TemplateFaults Faults)
 {
-    // Every path the creation writes, in the order a listing reads them. What a golden snapshots, and
-    // what a caller reports.
+    // In ordinal order, which is what a golden snapshots.
     public IEnumerable<string> Paths =>
         Copied.Select(f => f.To).Concat(Composed.Select(f => f.Path)).OrderBy(p => p, StringComparer.Ordinal);
 }
@@ -108,11 +74,9 @@ public static class New
     private const string DescriptorFile = ".corpus.yaml";
     private const string ReadmeFile = "README.md";
 
-    // The version a corpus starts on. Semantically versioned and moved by hand, so the tool supplies a
-    // first number and never a later one.
+    // Moved by hand afterwards, so the tool supplies a first number and never a later one.
     private const string FirstContentVersion = "0.1.0";
 
-    // Read the folder `new` was run in, before anything is asked and before anything is written.
     public static Ground Survey(string dir)
     {
         var repository = Git.Run(dir, "rev-parse --is-inside-work-tree")?.Trim() == "true";
@@ -126,7 +90,6 @@ public static class New
         };
     }
 
-    // What a folder holds, `.git` aside, or nothing at all where the folder is not there yet.
     private static IReadOnlyList<string> Holdings(string dir)
     {
         if (!Directory.Exists(dir)) return [];
@@ -141,16 +104,9 @@ public static class New
         ];
     }
 
-    // Why this tool cannot read this template, or null where it can.
-    //
-    // The template is fetched rather than shipped inside the package, so the two version independently. A
-    // tool meeting a manifest it is too old for stops here rather than half-reading it: every key it does
-    // not know is one it would ignore in silence, and a rule it ignores is a file a corpus loses.
-    //
-    // `tool` is the running version, which the entry point reads off its own assembly. Build metadata is
-    // dropped from it, so `0.6.0+abc123` and `0.6.0` are one version. A version neither side can parse
-    // does not stop a run: the tool's own is a build stamp, and refusing over it would ground a tool that
-    // works. `verb` opens the message, because `new` and `update` both read a template.
+    // A tool meeting a manifest it is too old for stops rather than ignoring keys it does not know. Build
+    // metadata is dropped, so `0.6.0+abc123` and `0.6.0` are one version. A version neither side can parse
+    // does not stop a run.
     public static string? TooOldFor(string? minimum, string tool, string verb)
     {
         if (minimum is not { Length: > 0 }) return null;
@@ -165,15 +121,11 @@ public static class New
             : $"{verb}: this template needs kac {minimum} or newer, and this is {tool}. "
               + "update the tool, or name an older ref with --ref.";
 
-        // The release the version names, without the build metadata or the pre-release tag beside it.
         static string Release(string version) => version.Split('+', '-')[0];
     }
 
-    // What creating a corpus from this template comes to.
-    //
-    // `manifest` is the template's, because the boundary arrives with the files it describes. `declines`
-    // answers whether a destination belongs to a type the corpus did not adopt; `DeclinesTypes` builds
-    // one from the template's schema.
+    // `declines` answers whether a destination belongs to a type the corpus did not adopt. `DeclinesTypes`
+    // builds one from the template's schema.
     public static NewPlan Plan(IReadOnlySet<string> templateFiles, Manifest manifest, NewAnswers answers,
         Upstream upstream, Func<string, bool> declines)
     {
@@ -191,9 +143,7 @@ public static class New
                 continue;
             }
 
-            // `withheld` is the template's own machinery and reaches no corpus. `removed` is a tombstone
-            // for a file an update deletes, so writing one into a corpus being created would hand it a
-            // file the first update takes straight back.
+            // `withheld` reaches no corpus, and a `removed` tombstone would be deleted again by the first update.
             if (placement.Layer is Manifest.Withheld or Manifest.Removed) continue;
 
             if (declines(placement.Path))
@@ -202,8 +152,7 @@ public static class New
                 continue;
             }
 
-            // A starter for a system this corpus does not build on. Not written rather than written and
-            // deleted unread, and a GitHub workflow is the one that would otherwise run uninvited.
+            // Not written at all, so a GitHub workflow for another system never runs uninvited.
             if (placement.Ci is { } ci)
             {
                 if (!CiSystem.All.Contains(ci, StringComparer.Ordinal))
@@ -219,8 +168,7 @@ public static class New
                 }
             }
 
-            // A template that sends its own descriptor sends its own name, publishing bases and adopted
-            // types with it. Composed always wins here, where a `README.md` the template sends does not.
+            // The composed descriptor always wins over one the template sends.
             if (placement.Path == DescriptorFile) continue;
 
             copied.Add(new PlannedFile(from, placement.Path, placement.Layer));
@@ -228,8 +176,7 @@ public static class New
 
         var composed = new List<ComposedFile> { new(DescriptorFile, Descriptor(answers, upstream)) };
 
-        // The template's own `README.md` is withheld, so a corpus taking everything would arrive with
-        // none. A template that does send one has written it for a corpus to keep, and that copy wins.
+        // A `README.md` the template sends wins over the composed one.
         if (copied.All(f => f.To != ReadmeFile))
             composed.Add(new ComposedFile(ReadmeFile, Readme(answers)));
 
@@ -240,12 +187,7 @@ public static class New
             TemplateFaults.Of(unclassified, unknownCi));
     }
 
-    // Whether a destination belongs to a type the corpus declined: the type's schema file, its root page,
-    // and everything in its folder.
-    //
-    // Judged on where a file lands rather than on where the template holds it. A template serving its
-    // pages from a subfolder places them at a corpus's root, so the source path says nothing about which
-    // type a file belongs to.
+    // Judged on where a file lands, because a template may serve its pages from a subfolder.
     public static Func<string, bool> DeclinesTypes(Schema schema, IReadOnlyList<string> adopted)
     {
         var files = new HashSet<string>(StringComparer.Ordinal);
@@ -262,11 +204,7 @@ public static class New
         return rel => files.Contains(rel) || folders.Any(f => rel.StartsWith(f, StringComparison.Ordinal));
     }
 
-    // Carry the plan out, and answer with every path written.
-    //
-    // The plan decided all of it, so this asks the template nothing beyond the bytes and the mode of each
-    // file it was told to copy. `declined` is the one thing the bytes alone cannot answer: a seed page
-    // cross-references types this corpus turned down, and `SeedLinks` is what takes those links out.
+    // `declined` is for `SeedLinks`, which takes out a seed page's links to types this corpus turned down.
     public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot,
         IReadOnlySet<string> declined)
     {
@@ -282,12 +220,7 @@ public static class New
         return [.. plan.Paths];
     }
 
-    // `.corpus.yaml` as a corpus receives it: what the invocation was told, and the block saying where the
-    // framework came from.
-    //
-    // Written rather than copied, because a copied descriptor carries somebody else's name, publishing
-    // bases and adopted types. Each key takes a line of comment and the reference carries the rest, so a
-    // corpus that has to change one has somewhere to read before it does.
+    // Each key takes a line of comment, so a corpus changing one has somewhere to read first.
     public static string Descriptor(NewAnswers answers, Upstream upstream)
     {
         var sb = new StringBuilder();
@@ -305,16 +238,12 @@ public static class New
         sb.Append($"corpus: {Scalar(answers.Name)}\n");
         sb.Append($"content-version: \"{FirstContentVersion}\"\n\n");
 
-        // Written bare, and never filled in here. A shortcode is what another corpus cites this one by,
-        // and it cannot be changed once anything has, so it is declared when something is about to cite
-        // this corpus rather than invented at creation.
+        // Never filled in here: a shortcode cannot change once something cites it.
         sb.Append("# The shorthand another corpus cites this one by. Fill it in when one does, and never"
                   + " change it after.\n");
         sb.Append("shortcode:\n\n");
 
-        // Written bare for the same reason `shortcode` is: each is a claim about somebody, and a value
-        // supplied here would be inherited rather than chosen. A plugin built from a corpus that has
-        // stated none carries none, so the corpus asserts nothing it did not say.
+        // Written bare: a value supplied here would be inherited rather than chosen.
         sb.Append("# What this corpus is, carried into the package it packs and the plugin it"
                   + " bundles.\n");
         sb.Append("# A key left bare is carried into neither.\n");
@@ -336,9 +265,7 @@ public static class New
             sb.Append($"  base: {Scalar(published)}\n");
         }
 
-        // Written bare, because only the corpus knows where its code is. A corpus adopting `services`
-        // fills it in, and `mirrors-repo-links` then checks each `repos` entry against the link the
-        // record writes. Every other corpus leaves it, and the check stays silent.
+        // Written bare, because only the corpus knows where its code is.
         sb.Append("\n# Where this estate's code repositories are addressed from. A `repos` entry on a"
                   + " service is appended to it.\n");
         sb.Append("repos-base:\n");
@@ -369,10 +296,8 @@ public static class New
         sb.Append("types:\n");
         foreach (var type in answers.Types) sb.Append($"  - {Scalar(type)}\n");
 
-        // Opened and left empty, because the values are derived from an estate this corpus has not
-        // described yet. A field drawing on this reports `corpus-enum-undeclared` from the first record
-        // of its type where the field is required, and from the first document that states it where the
-        // field is optional. Either way, that is the moment somebody can answer.
+        // Left empty: the values come from an estate not yet described, and `corpus-enum-undeclared` asks for
+        // them when the first record needs them.
         sb.Append("\n# The ranges this corpus states, for the fields whose values are its estate's rather"
                   + " than the framework's.\n");
         sb.Append("# Each type's page says how to reach its own. A field drawing on one is judged against"
@@ -391,12 +316,8 @@ public static class New
         return sb.ToString();
     }
 
-    // `README.md` as a corpus receives it: the corpus's name, what it holds, and how to run the tool
-    // against it. A starting point rather than a document, and the corpus's own from the moment it lands.
-    //
-    // It arrives carrying the markers for every block `README.md` is declared to hold, and says so. That
-    // file is the one a corpus may decline a block on, by deleting the markers, so a README written
-    // without them would decline on every corpus's behalf without anybody choosing to.
+    // Carries the markers for every block `README.md` is declared to hold. A README without them would
+    // decline those blocks on every corpus's behalf.
     public static string Readme(NewAnswers answers)
     {
         var sb = new StringBuilder();
@@ -406,8 +327,7 @@ public static class New
                   + " a type and\nevery type has a schema.\n\n");
         sb.Append("Rewrite this page to say what your corpus is for.\n");
 
-        // Asked of the declaration rather than named here, so a second block on this file arrives with its
-        // markers and needs no change. `GeneratedFiles` is the one account of what `generate` writes.
+        // Asked of the declaration, so a second block on this file needs no change here.
         var blocks = GeneratedFiles.Blocks([]).Where(f => f.Path == ReadmeFile).SelectMany(f => f.Blocks);
         foreach (var block in blocks)
         {
@@ -425,24 +345,17 @@ public static class New
         return sb.ToString();
     }
 
-    // A key inside the upstream block whose value the take could not answer. Written bare, which YAML
-    // reads as absent, so the key is there to fill in rather than there holding an empty string.
+    // Written bare, which YAML reads as absent.
     private static string Optional(string key, string? value) =>
         value is { Length: > 0 } ? $"  {key}: {Scalar(value)}\n" : $"  {key}:\n";
 
-    // The tracker a new corpus starts with. A `--from` naming a repository is the framework a finding
-    // belongs on, fork or not. A `--from` naming a folder is a path on one disk, so the framework's own
-    // repository stands in and the corpus edits the line where that is wrong.
-    //
-    // A null commit is what tells the two apart, because `TemplateSource.Read` resolves one for a clone
-    // and none for a folder. Reading the URL here instead would call an ssh remote a folder and point
-    // that corpus's findings at a repository its owners do not hold.
+    // A null commit tells a folder from a clone: `TemplateSource.Read` resolves one for a clone alone.
+    // Reading the URL instead would call an ssh remote a folder. A folder's corpus files on the framework's
+    // own repository.
     private static string Tracker(Upstream upstream) =>
         upstream.Commit is { Length: > 0 } ? upstream.Url : Asking.DefaultFrom;
 
-    // Which client files against that tracker, read off the host. `gh` and `az boards` are the two a
-    // skill can reach, so any other host is written as `none` for the corpus to answer. A guess here
-    // would send a finding through a client that cannot see the repository.
+    // Any host other than GitHub or Azure DevOps is written as `none` for the corpus to answer.
     private static string Target(string tracker) =>
         tracker.Contains("github.com", StringComparison.OrdinalIgnoreCase) ? Publishing.GitHub
         : tracker.Contains("dev.azure.com", StringComparison.OrdinalIgnoreCase)

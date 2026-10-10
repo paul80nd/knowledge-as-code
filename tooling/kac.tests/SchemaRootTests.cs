@@ -1,6 +1,3 @@
-// The walk `LoadNearest` takes, over a real folder tree. Where a schema sits relative to the corpus it
-// judges is a fact about the filesystem, so each case builds one.
-
 using kac.core;
 
 namespace kac.tests;
@@ -29,9 +26,6 @@ public class SchemaRootTests
         Assert.Equal(["own"], Schema.LoadNearest(corpus).IdPrefixes);
     }
 
-    // The fallback the walk takes where it lands on nothing. `kac` declines such a corpus before it
-    // reaches the loader, so what this pins is the failure a caller of `kac.core` gets: the missing
-    // folder, named.
     [Fact]
     public void A_root_with_no_schema_anywhere_above_it_fails_on_the_folder()
     {
@@ -42,7 +36,6 @@ public class SchemaRootTests
         Assert.Contains(".schema", thrown.Message, StringComparison.Ordinal);
     }
 
-    // A schema declaring one type, which is enough to tell two of them apart by what they hold.
     private static void WriteSchema(string root, string prefix)
     {
         var dir = Path.Combine(root, ".schema");

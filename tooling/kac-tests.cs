@@ -1,13 +1,8 @@
 #:property TargetFramework=net10.0
 #:property Nullable=enable
 
-// kac-tests: the golden-file test suite for kac.
-//
-// `tooling/tests/README.md` is the reference: how a scenario runs, what each mode asserts, what the exit
-// codes mean, and what every fixture covers.
-//
-// The schema a fixture is assembled over is the real one, copied in per run rather than a committed
-// copy, so a schema change that alters behaviour surfaces in this suite rather than after it.
+// The golden-file suite for kac. `tooling/tests/README.md` says how a scenario runs, what each mode asserts and
+// what every fixture covers.
 
 using System.Diagnostics;
 using System.IO.Compression;
@@ -23,20 +18,18 @@ if (repoRoot is null)
 
 var kacProject = Path.Combine(repoRoot, "tooling", "kac", "kac.csproj");
 
-// One of the corpora in this repository, which the coverage and checks-table gates below run `kac`
-// against. Any of the three answers the same, because `kac checks` reads the schema and never the
-// corpus's adoption. No scenario uses it: each assembles a fixture of its own.
+// The corpus the coverage and checks-table gates run `kac checks` in. `kac checks` reads the schema and never the
+// corpus's adoption, so any corpus here answers the same.
 var libraryRoot = Path.Combine(repoRoot, "examples", "library");
 
-// The schema every fixture is assembled from, read at the repository root where it is authored. One
-// copy serves the template, the corpora under `examples/` and every fixture, so a schema edit surfaces
-// as a broken golden in the same run that made it.
+// The real schema rather than a committed copy, so a schema edit that changes behaviour breaks a golden in the
+// same run.
 var schemaDir = Path.Combine(repoRoot, ".schema");
 var fixturesDir = Path.Combine(repoRoot, "tooling", "tests", "fixtures");
 
 var rawArgs = args.ToList();
 var update = rawArgs.RemoveAll(a => a is "--update" or "-u") > 0;
-var filters = rawArgs; // remaining positional args narrow which scenarios run
+var filters = rawArgs;
 
 if (!Directory.Exists(fixturesDir))
 {
@@ -44,8 +37,6 @@ if (!Directory.Exists(fixturesDir))
     return 2;
 }
 
-// A scenario is a directory holding a corpus to run against, or a `mode` naming a command that builds
-// its own. `new` is the second: it creates a corpus rather than reading one.
 var scenarios = Directory.EnumerateDirectories(fixturesDir)
     .Where(d => Directory.Exists(Path.Combine(d, "corpus")) || File.Exists(Path.Combine(d, "mode")))
     .Where(d => filters.Count == 0 || filters.Any(f => Path.GetFileName(d).Contains(f, StringComparison.OrdinalIgnoreCase)))
@@ -73,8 +64,6 @@ foreach (var scenario in scenarios)
 {
     var name = Path.GetFileName(scenario);
     var corpusDir = Path.Combine(scenario, "corpus");
-    // A scenario's `mode` file selects what is asserted; absent means the default, a validate diff.
-    // `tooling/tests/README.md` says what each mode asserts and which files it reads.
     var modePath = Path.Combine(scenario, "mode");
     var mode = File.Exists(modePath) ? File.ReadAllText(modePath).Trim() : "validate";
 
@@ -122,10 +111,8 @@ foreach (var scenario in scenarios)
     }
 }
 
-// `report --out` is the one thing about a report that no unit test reaches: it writes a file, and it
-// refuses a path something already holds. What it writes has to be the report and nothing else, which is
-// asserted against the same run printed to stdout rather than against a golden, because the frontmatter
-// carries the moment the run happened.
+// `report --out` asserted against the same run's stdout rather than a golden, because the frontmatter has the
+// moment the run happened.
 void RunReportScenario(string name, string scenario, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
@@ -147,10 +134,8 @@ void RunReportScenario(string name, string scenario, string corpusDir)
         if (!wroteOut.Contains(target.Replace('\\', '/'), StringComparison.Ordinal))
             problems.Add($"--out did not name what it wrote: {wroteOut.Trim()}");
 
-        // The stamp moves between two runs a second apart, so it is dropped from both sides. Everything
-        // else the file holds is what stdout held, which is what says the flag changes the destination
-        // and nothing about the document. The console closes on a blank line and a record does not, so
-        // the end of each is trimmed and the file's own ending is asserted below.
+        // The console ends on a blank line and a record does not, so both are trimmed and the file's own ending is
+        // asserted below.
         if (Stamped(written) != Stamped(printed))
             problems.Add("the file --out wrote is not what the same report printed");
         if (!written.EndsWith("\n", StringComparison.Ordinal) || written.EndsWith("\n\n", StringComparison.Ordinal))
@@ -179,9 +164,7 @@ void RunReportScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// A report's text with the moment it was stamped taken out, which is the one line two runs disagree on.
-// `generated:` opens a block, so the key and the `at:` indented under it both go, and the rest of the
-// block is compared like every other line.
+// The report without its stamp. `generated:` opens a block, so the key and the `at:` under it both go.
 static string Stamped(string report)
 {
     var kept = new List<string>();
@@ -227,9 +210,8 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
 
     var diff = Diff(ParseFindings(File.ReadAllText(expectedPath)), actual);
 
-    // Exit-code contract: validate exits 1 exactly when it produced an error-severity finding, 0
-    // otherwise (warnings never fail). The feature tests assert the findings but bypass the CLI, so
-    // this is the one place the process exit code of `validate` is checked.
+    // The one place `validate`'s exit code is checked: 1 exactly when it found an error. The feature specs bypass
+    // the CLI.
     var expectedExit = actual.Findings.Any(f => f.Severity == "error") ? 1 : 0;
     if (actualExit != expectedExit)
         diff.Add($"exit code {actualExit}, expected {expectedExit} ({(expectedExit == 1 ? "errors present" : "no errors")})");
@@ -246,9 +228,6 @@ void RunValidateScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// generate and generate-stale, told apart by `mustBeStale`. Fresh: `--update` regenerates the committed
-// files and a normal run asserts they are fresh. Stale: the fixture is broken by hand, `--update` leaves
-// it alone, and the run asserts the staleness is caught. `tooling/tests/README.md` says the rest.
 void RunGenerateScenario(string name, string scenario, bool mustBeStale)
 {
     var corpusDir = Path.Combine(scenario, "corpus");
@@ -310,14 +289,8 @@ void RunGenerateScenario(string name, string scenario, bool mustBeStale)
     }
 }
 
-// `new` builds its own corpus, so this scenario has no `corpus/` tree to read. It runs the real template
-// at the repository root, because what is worth proving is the command people will actually run.
-//
-// Two things are asserted and no more: every path the creation wrote, and the descriptor it composed.
-// Eighty file bodies would be a second copy of the template, and the template has tests of its own.
-//
-// The exit code is the third. `new` runs `validate` before it returns, so exit 0 says the corpus it
-// created validates, which is the whole exit check for this command.
+// Asserts the paths written and the descriptor, and no file bodies, which would be a second copy of the template.
+// `new` runs `validate` before it returns, so exit 0 says the corpus it created validates.
 void RunNewScenario(string name, string scenario)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-new-" + Guid.NewGuid().ToString("N"));
@@ -369,8 +342,6 @@ void RunNewScenario(string name, string scenario)
     }
 }
 
-// Every path the corpus holds, `.git` aside, relative and forward-slashed. Ordered so that the file is
-// read as a listing and a diff against it names the paths that moved.
 static List<string> Listing(string root) =>
 [
     .. Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
@@ -379,8 +350,7 @@ static List<string> Listing(string root) =>
         .OrderBy(rel => rel, StringComparer.Ordinal)
 ];
 
-// The descriptor with the two facts about this machine taken out of it: where the repository sits, and
-// what day it is. Both are right in the file and neither can be committed to a golden.
+// The descriptor without this machine's repository path and today's date.
 static string Stable(string descriptor, string repoRoot) =>
     string.Join('\n', descriptor
         .Replace(repoRoot, "<repository>", StringComparison.Ordinal)
@@ -388,8 +358,6 @@ static string Stable(string descriptor, string repoRoot) =>
         .Split('\n')
         .Select(l => l.StartsWith("  taken-on:", StringComparison.Ordinal) ? "  taken-on: <today>" : l));
 
-// The first lines that differ, named rather than dumped. A whole-file diff of a hundred paths buries
-// the one that moved.
 static List<string> Differences(string what, string expectedPath, string actual)
 {
     if (!File.Exists(expectedPath))
@@ -409,13 +377,7 @@ static List<string> Differences(string what, string expectedPath, string actual)
     ];
 }
 
-// update, over a corpus this scenario stands up itself.
-//
-// The two commands are proved as a round trip rather than apart, because the promise worth pinning is
-// that one leaves the other with nothing to say. A corpus is created from the real template, committed,
-// broken in the three ways an update answers for, and then taken back.
-//
-// `tooling/tests/README.md` says what `expected-check.txt` carries.
+// `new` and `update` proved as a round trip: the promise pinned is that one leaves the other nothing to say.
 void RunUpdateScenario(string name, string scenario)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-update-" + Guid.NewGuid().ToString("N"));
@@ -425,14 +387,12 @@ void RunUpdateScenario(string name, string scenario)
         Run(temp, "dotnet", kac, "new", "--yes", "--from", repoRoot, "--name", "acme-corpus", "--ci", "github");
         Commit(temp, "the corpus as created");
 
-        // An overlay file edited here, and a seed deleted. One is drift the framework takes back, and the
-        // other is a starting point the corpus never wrote over, so the two answer to different rules.
+        // An overlay file edited and a seed deleted, which answer to different rules.
         File.AppendAllText(Path.Combine(temp, "knowledge-as-code.md"), "\nAn edit this corpus made.\n");
         File.Delete(Path.Combine(temp, ".editorconfig"));
 
-        // A third, and the one nothing above it covers: a seeded record filed under a category folder,
-        // which is how a corpus sets a record's category. The corpus still holds that record, so it is
-        // in step, and an update offering it again would leave two copies carrying one id.
+        // A seeded record filed under a category folder is still in step. Offering it again would leave two copies of
+        // one id.
         var filed = Path.Combine(temp, "policies", "governance");
         Directory.CreateDirectory(filed);
         File.Move(Path.Combine(temp, "policies", "devi-deviations.md"),
@@ -460,8 +420,7 @@ void RunUpdateScenario(string name, string scenario)
         if (applyExit != 0)
             problems.Add($"expected the update to succeed (exit 0), got exit {applyExit}\n{applyErr}{applyOut}");
 
-        // Nothing is committed, which is the whole safety model, so the tree is dirty by design and the
-        // second check runs over it as it stands.
+        // Nothing is committed, so the second check runs over the dirty tree as it stands.
         var (_, _, againExit) = Run(temp, "dotnet", kac, "update", "--check", "--from", repoRoot);
         if (againExit != 0)
             problems.Add($"expected the corpus to be in step after an update (exit 0), got exit {againExit}");
@@ -483,16 +442,14 @@ void RunUpdateScenario(string name, string scenario)
     }
 }
 
-// Commit whatever the tree holds, under an identity of this run's own. A clean tree is what `update`
-// asks for, and the machine running this suite is not required to have configured one.
+// Under an identity of this run's own, because the machine running the suite may have none configured.
 void Commit(string dir, string message)
 {
     Run(dir, "git", "add", "-A");
     Run(dir, "git", "-c", "user.email=kac@example.invalid", "-c", "user.name=kac", "commit", "-q", "-m", message);
 }
 
-// What a run said, with this machine taken out of it: the repository's own path, and the tallies that
-// move whenever the template gains a file. What is left is the lines naming what the update decided.
+// The output without the repository path and the tallies that move whenever the template gains a file.
 static string Reportable(string output, string root) =>
     string.Join('\n', output.Replace(root, "<template>").Split('\n')
         .Select(l => l.TrimEnd())
@@ -500,9 +457,6 @@ static string Reportable(string output, string root) =>
         .Where(l => !l.Contains("file(s) compared", StringComparison.Ordinal))
         .Where(l => !l.Contains("withheld", StringComparison.Ordinal))) + "\n";
 
-// export, over the fixture corpus. The golden is the whole export, committed under `expected-dist/` and
-// diffed file for file, because this is where a change to what a consumer reads becomes visible.
-// `tooling/tests/README.md` says what sits beside it and why two fields are normalised away.
 void RunExportScenario(string name, string scenario, string corpusDir)
 {
     var typePath = Path.Combine(scenario, "export-type");
@@ -536,8 +490,7 @@ void RunExportScenario(string name, string scenario, string corpusDir)
 
         problems.AddRange(CheckGoldenExport(name, dist, golden));
 
-        // A file no record backs, left in the output before the second run. An export nobody reviews
-        // would otherwise carry a deleted record's entry indefinitely.
+        // A file no record backs, left in the output for the second run to remove.
         var orphan = Path.Combine(dist, "orphan.json");
         Directory.CreateDirectory(FolderOf(orphan));
         File.WriteAllText(orphan, "{}\n");
@@ -546,9 +499,7 @@ void RunExportScenario(string name, string scenario, string corpusDir)
         if (second != 0) problems.Add($"expected a clean second export (exit 0), got exit {second}");
         if (File.Exists(orphan)) problems.Add("a file no record backs survived a second export");
 
-        // The same golden again, over the second run's output. Two exports from one commit differ only
-        // in the manifest fields the comparison already replaces, so a value that varies between runs
-        // fails here rather than reaching a consumer as churn nobody can account for.
+        // The second run against the same golden, so a value that varies between runs fails here.
         problems.AddRange(CheckGoldenExport(name, dist, golden).Select(p => $"second run: {p}"));
 
         problems.AddRange(CheckTree(temp, scenario));
@@ -571,10 +522,6 @@ void RunExportScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// pack, over the export beneath it. What a consumer receives is one archive, so the golden is that
-// archive read back: every entry named, and the envelope's own document committed whole.
-// `tooling/tests/README.md` says why the payload is asserted against the export rather than committed
-// a second time.
 void RunPackScenario(string name, string scenario, string corpusDir)
 {
     var entriesPath = Path.Combine(scenario, "expected-entries.txt");
@@ -591,8 +538,7 @@ void RunPackScenario(string name, string scenario, string corpusDir)
         var output = stderr + stdout;
         var dir = Path.Combine(temp, ".dist", "package");
 
-        // A run that produced nothing has no archive to read, so the two goldens below would compare
-        // against an absence and a `--update` would bless it.
+        // Without an archive the goldens below compare against an absence, and `--update` would bless it.
         var built = Directory.Exists(dir) ? Directory.GetFiles(dir, "*.nupkg") : [];
         if (exit != 0 || built.Length != 1)
         {
@@ -628,30 +574,22 @@ void RunPackScenario(string name, string scenario, string corpusDir)
             return;
         }
 
-        // The whole entry list, both ways round, because an entry the pack stopped writing is as much a
-        // change to what a consumer imports as one it started writing.
         var wanted = ReadLines(entriesPath).ToList();
         problems.AddRange(wanted.Where(e => !entries.ContainsKey(e))
             .Select(e => $"the package no longer holds {e}: what a consumer imports has changed"));
         problems.AddRange(entries.Keys.Where(e => !wanted.Contains(e))
             .Select(e => $"the package holds {e}, which the committed list does not: a new entry for a consumer"));
 
-        // The envelope committed whole. It is the one part of the archive the corpus did not author, so
-        // nothing else in the suite would show a change to it.
+        // The envelope is the one part of the archive the corpus did not author, so nothing else would show it change.
         var got = Encoding.UTF8.GetString(entries[nuspec]);
         var want = File.Exists(nuspecPath) ? File.ReadAllText(nuspecPath) : null;
         if (want is null) problems.Add($"no committed envelope at {Path.GetFileName(nuspecPath)}");
         else if (!string.Equals(Unix(want), Unix(got), StringComparison.Ordinal))
             problems.Add($"{nuspec} differs from the committed envelope");
 
-        // The payload against the export it was sealed from. Committing the export a second time here
-        // would be a second thing to keep in step, and the property worth pinning is that the pack
-        // carried it unedited.
         problems.AddRange(SamePayload(Path.Combine(temp, ".dist", "export"), entries));
 
-        // A file no run backs, left in the directory before the second run. `pack` replaces its own
-        // directory whole, so a version built and then bumped must not stay behind for a publish step
-        // to find beside the new one.
+        // `pack` replaces its directory whole, so a version built and then bumped must not stay beside the new one.
         var orphan = Path.Combine(dir, "orphan.0.0.1.nupkg");
         File.WriteAllBytes(orphan, [0]);
 
@@ -659,8 +597,7 @@ void RunPackScenario(string name, string scenario, string corpusDir)
         if (second != 0) problems.Add($"expected a clean second pack (exit 0), got exit {second}");
         if (File.Exists(orphan)) problems.Add("a package no run backs survived a second pack");
 
-        // Two packs of one export are the same bytes. A registry keeps a published version forever, so
-        // a byte that moved between runs is a byte nobody could account for afterwards.
+        // Two packs of one export are the same bytes, because a registry keeps a published version forever.
         if (!archive.SequenceEqual(File.ReadAllBytes(built[0])))
             problems.Add("two packs of one export produced different archives");
 
@@ -692,8 +629,6 @@ void RunPackScenario(string name, string scenario, string corpusDir)
 // hand the golden back with `\r\n`.
 static string Unix(string content) => content.Replace("\r\n", "\n");
 
-// The archive read back as the paths a consumer would address and the bytes behind each. Ordinal order,
-// so the committed list is stable whatever order the entries were written in.
 static SortedDictionary<string, byte[]> ZipEntries(byte[] archive)
 {
     var entries = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
@@ -710,8 +645,6 @@ static SortedDictionary<string, byte[]> ZipEntries(byte[] archive)
     return entries;
 }
 
-// The export as written, held against the copy the package carries. Every file in either tree is named,
-// so a file the pack dropped fails as loudly as one it invented, and content is compared whole.
 static List<string> SamePayload(string exportDir, SortedDictionary<string, byte[]> entries)
 {
     const string payload = "corpus/";
@@ -735,8 +668,6 @@ static List<string> SamePayload(string exportDir, SortedDictionary<string, byte[
     return problems;
 }
 
-// bundle, over the plugin tree and the export beneath it. `tooling/tests/README.md` says what it asserts
-// and why no committed copy of the plugin sits beside the export's.
 void RunBundleScenario(string name, string scenario, string corpusDir)
 {
     var pluginDir = Path.Combine(scenario, "plugin");
@@ -773,9 +704,7 @@ void RunBundleScenario(string name, string scenario, string corpusDir)
         problems.AddRange(ReadLines(Path.Combine(scenario, "expected-bundle.txt"))
             .Where(l => !output.Contains(l)).Select(l => $"not reported: {l}"));
 
-        // The copy is the seam between the two commands, so a difference between the two copies is a
-        // defect rather than something to interpret. `corpus-root` names where the copy landed, which is
-        // the fixture plugin's `metadata.corpusRoot` and is the one thing this cannot read for itself.
+        // `corpus-root` is the fixture plugin's `metadata.corpusRoot`, the one thing this cannot read for itself.
         var corpusRoot = File.ReadAllText(Path.Combine(scenario, "corpus-root")).Trim();
         problems.AddRange(SameTree(
             Path.Combine(temp, ".dist", "export"),
@@ -783,8 +712,7 @@ void RunBundleScenario(string name, string scenario, string corpusDir)
 
         problems.AddRange(CheckTree(temp, scenario));
 
-        // A file no component backs, left in the plugin before the second run. The same failure mode the
-        // export has, and the same answer: the directory is replaced whole rather than written over.
+        // A file no component backs, left in the plugin for the second run to remove.
         var orphan = Path.Combine(temp, ".dist", "plugin", "skills", "orphan", "SKILL.md");
         Directory.CreateDirectory(FolderOf(orphan));
         File.WriteAllText(orphan, "orphan\n");
@@ -811,9 +739,7 @@ void RunBundleScenario(string name, string scenario, string corpusDir)
     }
 }
 
-// Whether two trees hold the same files with the same bytes. Bytes rather than text, because what is
-// being asserted is that a copy was a copy: a comparison that normalised line endings would pass over
-// exactly the edit it exists to catch.
+// Bytes rather than text: a comparison normalising line endings would pass over the edit it exists to catch.
 static List<string> SameTree(string expected, string actual)
 {
     if (!Directory.Exists(actual)) return [$"the bundle wrote no copy of the export at {actual}"];
@@ -843,9 +769,6 @@ static SortedDictionary<string, byte[]> TreeBytes(string root)
     return files;
 }
 
-// The tree a scenario expects: every path in expected-files.txt present (or absent, prefixed `!`), and
-// every `<path> :: <text>` in expected-content.txt holding (or not, prefixed `!`). Shared by `sync`,
-// `export` and `bundle`, which assert the same kind of thing about three different trees.
 static List<string> CheckTree(string root, string scenario)
 {
     var problems = new List<string>();
@@ -877,12 +800,6 @@ static List<string> CheckTree(string root, string scenario)
     return problems;
 }
 
-// The export as written, held against the copy committed beside the fixture. Every file in either tree
-// is named, so a file the export stopped writing fails as loudly as one it started writing. Content is
-// compared whole, so a key that moved fails too.
-//
-// A difference here is a change to a published contract, and each message says so. The reflex on a red
-// golden is to regenerate it, and this is the one golden where that reflex is expensive.
 static List<string> CheckGoldenExport(string name, string dist, string golden)
 {
     if (!Directory.Exists(golden))
@@ -908,9 +825,7 @@ static List<string> CheckGoldenExport(string name, string dist, string golden)
     return problems;
 }
 
-// Replace the committed export whole, as the exporter replaces `.dist/export/` whole. Anything the
-// export stopped writing has to leave the golden with it, or the next run reads it as a file the export
-// lost.
+// Replaces the committed export whole, or a file the export stopped writing reads as one it lost.
 static int WriteGoldenExport(string dist, string golden)
 {
     if (Directory.Exists(golden)) Directory.Delete(golden, recursive: true);
@@ -926,9 +841,7 @@ static int WriteGoldenExport(string dist, string golden)
     return files.Count;
 }
 
-// One export tree read into memory, keyed by the path a consumer would address, with the manifest
-// normalised. Both sides go through it, so the golden on disk is already normalised. The comparison is
-// then a string equality, and no rule is applied to one side and remembered for the other.
+// Both sides go through this, so the golden on disk is already normalised and the comparison is string equality.
 static SortedDictionary<string, string> ExportTree(string root)
 {
     var files = new SortedDictionary<string, string>(StringComparer.Ordinal);
@@ -943,13 +856,7 @@ static SortedDictionary<string, string> ExportTree(string root)
     return files;
 }
 
-// The two fields of the manifest that differ between two runs over one tree, replaced by their own
-// names. `generatedAt` moves every run and `commit` moves with the branch, so a golden carrying either
-// would fail for a reason that says nothing about the export's shape.
-//
-// The value goes whatever it is, a string and a null alike, so the rule fires in every corpus rather
-// than only in one that has a commit to name. `expected-content.txt` pins what a corpus with no
-// repository writes there, against the file the run emitted.
+// The value goes whatever it is, a null included, so the rule fires in a corpus with no commit too.
 static string Normalise(string rel, string content)
 {
     if (rel != "manifest.json") return content;
@@ -970,9 +877,6 @@ static string Normalise(string rel, string content)
     }));
 }
 
-// Where two versions of one file part company, as the first line that differs. A whole-file diff of an
-// indented JSON document is unreadable in a test log. One line is what a person needs to
-// decide whether they meant it.
 static string FirstDifference(string expected, string actual)
 {
     var want = expected.Split('\n');
@@ -999,16 +903,10 @@ static List<string> ReadLines(string path) =>
 
 Console.WriteLine();
 
-// Every reachable check must be exercised by some fixture, and both directions fail the build: a
-// check with no fixture, and a golden naming a check the catalogue does not hold, which is a rename
-// that left a stale golden. Coverage is a property of the whole suite, so it is only computed on a
-// full run. A filtered run would undercount and read as a regression.
+// Coverage is a property of the whole suite. A filtered run would undercount and read as a regression.
 if (filters.Count == 0)
 {
-    // Checks that no discovered document can reach, so no fixture can exercise them. `type` fires
-    // only for a document whose folder maps to no schema, but discovery excludes non-type folders.
-    // A validated document therefore always has a type. Accounted for here so the coverage gate can
-    // demand every *reachable* check has a fixture.
+    // `type` fires only for a document in no type folder, and discovery never yields one, so no fixture reaches it.
     var unreachable = new HashSet<string>(["type"], StringComparer.Ordinal);
 
     var catalogue = CheckCatalogue(kac, libraryRoot);
@@ -1031,9 +929,7 @@ if (filters.Count == 0)
         failures.Add("(coverage: stale check ids)");
     }
 
-    // The reader-facing "What CI checks" table must stay a faithful view of the catalogue. `kac
-    // checks` self-verifies its curated rows against the catalogue and exits non-zero on any drift
-    // (a new check with no row, a row naming a check that no longer exists, a stale waiver).
+    // `kac checks` verifies its curated rows against the catalogue and exits non-zero on drift.
     var (_, checksErr, checksExit) = Run(libraryRoot, "dotnet", kac, "checks");
     if (checksExit != 0)
     {
@@ -1041,10 +937,7 @@ if (filters.Count == 0)
         failures.Add("(checks table vs catalogue)");
     }
 
-    // `--version` and `--help` are answered by the parser, so an installed `kac` says what it is from
-    // wherever it was typed; every verb needs a corpus and exits 2 without one. Asserted from a temp
-    // directory with no `.corpus.yaml` above it. The fault this catches is a corpus lookup running before
-    // the parse, and that passes every other test here, all of which run inside a corpus.
+    // From a folder with no corpus above it. A corpus lookup running before the parse passes every other test here.
     var nowhere = Directory.CreateTempSubdirectory("kac-tests-nowhere-").FullName;
     try
     {
@@ -1085,10 +978,7 @@ if (failures.Count > 0)
 Console.WriteLine($"all {scenarios.Count} scenario(s) passed.");
 return 0;
 
-// The repository, found by the solution at its root rather than by the corpus beside it. `kac` itself walks
-// up for a `.corpus.yaml` because what it wants is a corpus; this suite wants the tree that holds the engine,
-// the fixtures and the corpus at once, and only one folder answers to that. The solution file is the right
-// marker for it: it names every project in the tree, and a corpus that installed the tool holds no such thing.
+// Found by the solution file, not a `.corpus.yaml`: the suite needs the engine, the fixtures and the corpus at once.
 static string? FindRepoRoot(string start)
 {
     var dir = new DirectoryInfo(start);
@@ -1102,9 +992,8 @@ static string? FindRepoRoot(string start)
     return null;
 }
 
-// Assemble a throwaway repo root: the real schema plus the fixture corpus. The temp dir is not a
-// git repo, so kac's discovery falls back to a filesystem walk. That walk is deterministic, and
-// generated and finding paths stay corpus-relative (no temp path leaks into a golden). Caller deletes it.
+// The real schema plus the fixture corpus, outside git, so discovery walks the filesystem and no temp path reaches
+// a golden. The caller deletes it.
 static string AssembleTemp(string schemaDir, string corpusDir)
 {
     var temp = Path.Combine(Path.GetTempPath(), "kac-tests-" + Guid.NewGuid().ToString("N"));
@@ -1114,9 +1003,8 @@ static string AssembleTemp(string schemaDir, string corpusDir)
     return temp;
 }
 
-// A descriptor holding a comment and nothing else, which is what an absent one comes to: every value
-// stays at its default, so no golden moves for the file being there. A fixture with something to declare
-// carries its own, copied over this one.
+// A descriptor holding only a comment, which is what an absent one comes to. A fixture with something to declare
+// copies its own over it.
 static void MarkCorpus(string temp)
 {
     Directory.CreateDirectory(temp);
@@ -1124,8 +1012,6 @@ static void MarkCorpus(string temp)
         "# Written by the golden suite so that kac reads this tree as a corpus.\n");
 }
 
-// Run `kac validate --json` against an assembled corpus. The exit code comes back beside the JSON,
-// because the scenario holds the tool to both.
 static (string json, int exit) RunValidate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
@@ -1143,9 +1029,6 @@ static (string json, int exit) RunValidate(string kac, string schemaDir, string 
     }
 }
 
-// Run `kac generate` (optionally --check) against an assembled corpus; return exit code and combined
-// output. With check:true, exit 0 means the generated files match the generator, non-zero means
-// stale (the stale files are named in the output).
 static (int exit, string output) RunGenerate(string kac, string schemaDir, string corpusDir, bool check)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
@@ -1163,9 +1046,6 @@ static (int exit, string output) RunGenerate(string kac, string schemaDir, strin
     }
 }
 
-// Regenerate a scenario's committed generated files: run `kac generate` (writing) in a temp assembled
-// from the corpus, then copy what the corpus owns back over it. `generate` leaves source docs untouched,
-// so only _index.md and the spliced <type>.md change.
 static void Regenerate(string kac, string schemaDir, string corpusDir)
 {
     var temp = AssembleTemp(schemaDir, corpusDir);
@@ -1174,10 +1054,7 @@ static void Regenerate(string kac, string schemaDir, string corpusDir)
         var (stdout, stderr, exit) = Run(temp, "dotnet", kac, "generate");
         if (exit != 0) throw new Exception($"kac generate failed (exit {exit}).\n{Indent(stderr)}");
 
-        // Only what the corpus itself owns comes back. `.schema/` and `.corpus.yaml` were both put there
-        // to assemble the run, and writing either back would commit into the fixture a file it never had.
-        // Everything else in the temp tree came from the fixture, including a `knowledge-as-code/`
-        // page a fixture stands up to assert what is generated into it.
+        // Only what the fixture owns comes back. `.schema/` and `.corpus.yaml` were put there to assemble the run.
         foreach (var dir in Directory.EnumerateDirectories(temp))
             if (Path.GetFileName(dir) is not ".schema")
                 CopyTree(dir, Path.Combine(corpusDir, Path.GetFileName(dir)));
@@ -1226,13 +1103,9 @@ static IReadOnlySet<string> CheckCatalogue(string kac, string corpusRoot)
     return set;
 }
 
-// The folder holding a file. `Path.GetDirectoryName` answers null for a path naming no folder above
-// it, which a path this suite builds never is, so the null is a defect rather than a case.
 static string FolderOf(string path) =>
     Path.GetDirectoryName(path) ?? throw new Exception($"'{path}' names no folder above it.");
 
-// The text of a property `kac` always writes. Naming the property says which field went missing when
-// the shape of that output moves.
 static string Text(JsonElement element, string property) =>
     element.TryGetProperty(property, out var found) && found.GetString() is { } text
         ? text
@@ -1253,8 +1126,6 @@ static Report ParseFindings(string json)
     return new Report(findings);
 }
 
-// A structural diff keyed on (file, line, severity, check, message): what the golden expected but
-// kac did not produce, and what kac produced that the golden did not expect.
 static List<string> Diff(Report expected, Report actual)
 {
     string Key(F f) => $"{f.File}:{f.Line?.ToString() ?? "-"}  {f.Severity}  [{f.Check}] {f.Message}";
@@ -1291,8 +1162,6 @@ static (string stdout, string stderr, int exit) Run(string workingDir, string fi
     return (outTask.Result, errTask.Result, p.ExitCode);
 }
 
-// Take the JSON from the first '{', so anything the runtime prints ahead of the report does not
-// have to be anticipated to be tolerated.
 static string? FromFirstBrace(string s)
 {
     var i = s.IndexOf('{');

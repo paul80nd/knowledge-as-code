@@ -1,14 +1,9 @@
-// Every creation here is decided from a listing and a manifest written in the test, so nothing writes a
-// tree, clones a repository or reads the network. `tooling/tests/fixtures/new/` runs the real command.
-
 using kac.core;
 
 namespace kac.tests;
 
 public class NewTests
 {
-    // A template laid out as this repository lays one out: a `template/` folder relocated to the corpus
-    // root, a schema shared from the repository root, and the repository's own machinery withheld.
     private static Manifest Sample() => new()
     {
         Version = 4,
@@ -156,8 +151,6 @@ public class NewTests
         Assert.True(plan.Faults.Unsound);
     }
 
-    // Named in the order a reader meets them rather than the order the walk did, so the same template
-    // reads the same way whichever verb reported it. `TemplateFaults.Of` is where that happens.
     [Fact]
     public void The_systems_the_tool_cannot_offer_are_named_in_order()
     {
@@ -269,8 +262,6 @@ public class NewTests
                         + "  base: https://github.com/paul80nd/knowledge-as-code\n", yaml);
     }
 
-    // A folder resolves no commit, and nobody files against a path on one disk, so the framework's own
-    // repository is what a corpus created from a local template starts with.
     [Fact]
     public void A_corpus_taking_from_a_folder_is_pointed_at_the_frameworks_own_tracker()
     {
@@ -279,8 +270,6 @@ public class NewTests
         Assert.Contains($"framework:\n  target: {Publishing.GitHub}\n  base: {Asking.DefaultFrom}\n", yaml);
     }
 
-    // `TemplateSource.Read` clones anything that is not a folder, so an ssh remote is a repository and
-    // its owners are who a finding about their fork belongs to.
     [Fact]
     public void A_corpus_taking_from_an_ssh_remote_is_pointed_at_that_remote()
     {
@@ -311,7 +300,6 @@ public class NewTests
     public void A_name_yaml_would_misread_is_quoted(string name, string expected)
         => Assert.Contains(expected, New.Descriptor(Answers() with { Name = name }, Taken()));
 
-    // Every line of the descriptor a corpus receives, so a comment cannot arrive wrapped by an editor.
     [Fact]
     public void No_descriptor_line_runs_past_120_characters()
         => Assert.DoesNotContain(New.Descriptor(Answers(), Taken()).Split('\n'), l => l.Length > 120);
@@ -363,9 +351,6 @@ public class NewTests
     public void A_tool_version_nothing_can_parse_stops_nothing()
         => Assert.Null(New.TooOldFor("0.6.0", "dev", "new"));
 
-    // The manifest this repository ships, which is the one thing here read from disk. A rule naming a
-    // system the tool cannot offer withholds its files from every corpus, and the fault is easiest to
-    // read beside the vocabulary rather than in a golden diff.
     [Fact]
     public void Every_system_this_repositorys_manifest_names_is_one_the_tool_offers()
     {
@@ -375,8 +360,7 @@ public class NewTests
         Assert.All(named, ci => Assert.Contains(ci, CiSystem.All));
     }
 
-    // A schema holding nothing but the folder, page and key of each type, which is all `DeclinesTypes`
-    // reads. Building one here keeps the test off the real `.schema/`, whose types change.
+    // Building the schema here keeps the test off the real `.schema/`, whose types change.
     private static Schema SchemaOf(params (string Key, string Page, string Folder)[] types) => new()
     {
         ByFolder = types.ToDictionary(

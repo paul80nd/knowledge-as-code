@@ -4,13 +4,6 @@ using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 
-// The field table in each lookup skill, held to the line the exporter writes.
-//
-// A skill is the whole of what a consumer is told about the export. It reads a vendored copy of the data, with no
-// access to this repository and no schema beside the file, so a table calling `obligations` a list is somebody
-// looping over a string. `tooling/tests/round-trip.sh` asserts what the export carries and never what a skill says
-// about it.
-
 namespace kac.tests;
 
 [Trait(Kind.Of, Kind.Repository)]
@@ -28,8 +21,7 @@ public class PluginSkillFieldTests
     private static readonly MarkdownPipeline Pipeline =
         new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
 
-    // Which type each skill reads, taken from the plugin manifest rather than from a list here. `requires` is what
-    // the bundler trims a component against, so the manifest is already the answer and a second copy would drift.
+    // Which type each skill reads, taken from the plugin manifest rather than from a list here.
     public static TheoryData<string, string> Each()
     {
         var manifest = JsonRead.Parse(Files.ReadLf(Path.Combine(Plugin, ".claude-plugin", "plugin.json")));
@@ -46,8 +38,7 @@ public class PluginSkillFieldTests
             var requires = (component?["requires"] as JsonArray)?
                 .Select(r => JsonRead.Str(r)).OfType<string>().ToList() ?? [];
 
-            // A skill naming no type reads no parts file and holds no field table. `corpus-retrieval`
-            // reaches a record's published source, which every lookup skill needs and no line describes.
+            // A skill naming no type reads no parts file and holds no field table.
             if (requires.Count == 0) continue;
 
             if (requires.Count != 1)
@@ -56,9 +47,7 @@ public class PluginSkillFieldTests
 
             var type = requires[0].Split('@')[0];
 
-            // A type exporting no parts writes no line, so its skill describes the record's own keys and
-            // there is nothing here to hold them to. `processes` is the case: a step means nothing lifted
-            // out of its order, so the record travels and the steps are read from the published source.
+            // A type exporting no parts writes no line, so there is nothing here to hold its skill to.
             if (!schema.ByFolder[type].DeclaredExport.PartsDeclared) continue;
 
             data.Add(path["skills/".Length..], type);
@@ -67,8 +56,6 @@ public class PluginSkillFieldTests
         return data;
     }
 
-    // Every key the line carries has a row, every row names a key the line carries, and each says the shape the
-    // exporter wrote. A reader has nothing else to go on: a field described as a list is read with a loop.
     [Theory]
     [MemberData(nameof(Each))]
     public void Its_field_table_states_the_type_the_exporter_writes(string skill, string type)
@@ -79,14 +66,11 @@ public class PluginSkillFieldTests
         Assert.Equal(Sorted(Expected(schema, schema.ByFolder[type])), Sorted(Stated(file)));
     }
 
-    // One entry per field, as `<field>: <type>`, so a mismatch reads as a diff of two lists rather than as two
-    // dictionaries the runner prints whole.
     private static string Sorted(IEnumerable<KeyValuePair<string, string>> fields) =>
         string.Join('\n', fields
             .OrderBy(f => f.Key, StringComparer.Ordinal)
             .Select(f => $"{f.Key}: {f.Value}"));
 
-    // What the exporter writes for one type, key by key.
     private static Dictionary<string, string> Expected(Schema schema, TypeSchema type)
     {
         var expected = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -112,8 +96,7 @@ public class PluginSkillFieldTests
 
         if (PartLineSource.Argument(source, PartLineSource.ColumnPrefix) is not null) return OrNull;
 
-        // A part carrying no such footnote writes null rather than an empty array, so a reader has one
-        // absence to test rather than two.
+        // A part carrying no such footnote writes null rather than an empty array.
         if (PartLineSource.Argument(source, PartLineSource.CitationPrefix) is not null) return List;
 
         // A part carrying no block under that label writes null, the same absence as a missing lead.

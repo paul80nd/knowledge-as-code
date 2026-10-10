@@ -1,6 +1,3 @@
-// In-process unit tests for the manifest glob matcher: the kind of focused, table-driven coverage
-// the golden and subprocess suites cannot express. Exercises the kac.core Glob type directly.
-
 using kac.core;
 
 namespace kac.tests;

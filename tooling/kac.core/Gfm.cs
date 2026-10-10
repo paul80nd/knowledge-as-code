@@ -2,20 +2,15 @@ using System.Text;
 
 namespace kac.core;
 
-// GitHub Flavoured Markdown, written the one way this repository writes it.
-//
-// `Generator` and `ChecksTable` fill the blocks a corpus holds, and `kac.tests` fills the CLI reference
-// under `docs/cli/`. A second renderer for any of them would be free to drift from this one, and the
-// drift would read as a page somebody had edited by hand.
+// `Generator`, `ChecksTable` and the CLI reference under `docs/cli/` all render through this, so none
+// can drift from another.
 //
 // Written out rather than taken from Markdig, which `Md` already depends on to read markdown. Markdig
 // renders an AST to HTML or back to normalised markdown, and neither pass writes a pipe table:
 // `Markdown.Normalize` returns one as the run of its cell text.
 public static class Gfm
 {
-    // Deterministic GFM table: columns padded to a fixed width, single-space padding, LF joins and no
-    // trailing newline, because callers add their own. A cell that changes length inside its column moves
-    // one row and leaves the rest alone.
+    // No trailing newline, because callers add their own.
     public static string RenderTable(List<string> headers, List<List<string>> rows)
     {
         var n = headers.Count;
@@ -52,7 +47,6 @@ public static class Gfm
         return sb.ToString();
     }
 
-    // A newline or a pipe inside a cell breaks the row it sits in.
     public static string Escape(string cell)
         => cell.Replace("\r", " ").Replace("\n", " ").Replace("|", "\\|");
 }

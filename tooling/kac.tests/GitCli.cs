@@ -3,12 +3,8 @@ using System.Diagnostics;
 
 namespace kac.tests;
 
-// git, for the tests that need a real repository rather than a folder. Two of them do: the file listing
-// differs from a walk only where git is answering, and `new` clones its template.
-//
-// Every method answers false where git could not be run, which is a machine with no git on it. A test
-// meeting that returns rather than failing, because what it is asking about is git's behaviour and there
-// is none to ask about.
+// git, for the tests that need a real repository rather than a folder. Every method answers false where
+// git could not be run or did not succeed, and a test meeting that returns rather than failing.
 internal static class GitCli
 {
     // A repository with one commit in it, holding whatever the caller has already written there. The
@@ -39,7 +35,6 @@ internal static class GitCli
             p.WaitForExit();
             return p.ExitCode == 0;
         }
-        // A machine with no git on it, which is what this answers false for.
         catch (Win32Exception)
         {
             return false;

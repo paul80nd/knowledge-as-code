@@ -1,9 +1,5 @@
 using kac.core;
 
-// In-process unit tests for the one case where `required-field` says nothing: a field pointing only at
-// types nothing in the corpus supplies. The fixture corpus cannot cover it, because every corpus there
-// adopts the types its own schema declares.
-
 namespace kac.tests;
 
 public class UnfillableFieldTests
@@ -17,7 +13,6 @@ public class UnfillableFieldTests
     public void A_required_ref_field_is_skipped_where_the_corpus_declined_every_type_it_points_at()
         => Assert.Null(RequiredField(Ref("implemented-by", required: true), fillable: ["offerings"]));
 
-    // One fillable target is enough. The record can fill the field with an id of that type.
     [Fact]
     public void A_ref_field_naming_two_types_is_reported_where_the_corpus_adopted_either()
         => Assert.Equal("missing required field 'explains'.",
@@ -38,16 +33,12 @@ public class UnfillableFieldTests
                 Ref("nfrs", required: false, refs: ["nfrs"], requiredWhen: "status == live"),
                 fillable: ["offerings", "nfrs"]));
 
-    // `allow-literal` gives the field a value that resolves against nothing, so declining the type it
-    // points at leaves it fillable.
     [Fact]
     public void A_ref_field_taking_a_literal_is_reported_whatever_the_corpus_adopted()
         => Assert.Equal("missing required field 'applies-to'.",
             RequiredField(
                 Ref("applies-to", required: true, allowLiteral: ["all"]), fillable: ["offerings"]));
 
-    // The default for every caller that validates one document on its own, and for the three test
-    // harnesses that do.
     [Fact]
     public void A_caller_that_names_no_adopted_types_is_told_about_every_missing_field()
         => Assert.Equal("missing required field 'implemented-by'.",
@@ -69,9 +60,7 @@ public class UnfillableFieldTests
             RequiredWhenCondition = requiredWhen is null ? null : new RequiredWhen("status", false, ["live"])
         };
 
-    // The whole document pass runs, so the finding under test is picked out of what it produced. The
-    // record carries `status: live` to turn a `required-when` on, and nothing else: whatever else the
-    // pass says about a document this bare is about other fields and other checks.
+    // The record carries `status: live` to turn a `required-when` on, and nothing else.
     private static string? RequiredField(FieldSpec spec, string[]? fillable)
     {
         var type = new TypeSchema
@@ -95,9 +84,6 @@ public class UnfillableFieldTests
             ?.Message;
     }
 
-    // A type the corpus declined is still one an import can supply, and a record may then cite an id of
-    // it. This runs the whole pass, because the set of fillable folders is built where a corpus is, and
-    // `CheckDocument` is handed the answer.
     [Fact]
     public void A_type_an_import_supplies_is_one_a_record_here_can_cite()
         => Assert.Equal("missing required field 'implements'.",

@@ -1,6 +1,3 @@
-// Unit tests for the page renderers. The full index and `<type>.md` generation is covered by the golden
-// `generate` scenario; these pin in-process what one renderer makes of a schema built for the question.
-
 using kac.core;
 
 namespace kac.tests;
@@ -20,8 +17,6 @@ public class GeneratorTests
         Assert.DoesNotContain("| Id |", page); // …rather than a table with headers and no rows
     }
 
-    // A heading is the field name in sentence case. An initialism inside one is the exception, and `id` is
-    // not the only field that has one.
     [Fact]
     public void IndexPage_spells_a_column_heading_in_sentence_case_with_its_initialisms_in_capitals()
     {
@@ -49,15 +44,13 @@ public class GeneratorTests
     }
 
     // The three sorts a type can declare, over one set of rows: no `sort:` at all, several columns, and
-    // a direction. Each is a value the loader reads and the golden 'generate' scenario cannot reach, because
-    // the fixture corpora it runs over hold one type whose index sorts by id.
+    // a direction.
     private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
     [
         .. rows.Select(r => Required.Parsed($"runbooks/{r.Id}.md",
             $"---\nid: {r.Id}\nseverity: {r.Severity}\n---\n\n# {r.Id}\n", new Schema()))
     ];
 
-    // A link naming the file alone would land beside the index rather than on the record.
     [Fact]
     public void IndexPage_links_a_record_through_the_category_folder_holding_it()
     {
@@ -115,8 +108,8 @@ public class GeneratorTests
                     < page.IndexOf("rbk-b", StringComparison.Ordinal));
     }
 
-    // A type deriving a field from where its records sit, which is what an index groups on. The schema
-    // is built rather than loaded so each test below can file records wherever it wants to.
+    // A type deriving a field from where its records sit. The schema is built rather than loaded so each
+    // test below can file records wherever it wants to.
     private static Schema Located() => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
@@ -146,8 +139,6 @@ public class GeneratorTests
         ]);
     }
 
-    // The grouping, and the reason a reader gets headings at all: a type with folders reads as one
-    // undifferentiated list without them.
     [Fact]
     public void IndexPage_heads_a_table_per_folder_where_the_type_derives_one()
     {
@@ -161,8 +152,6 @@ public class GeneratorTests
                     < page.IndexOf("## Security", StringComparison.Ordinal));
     }
 
-    // Only the first level heads a table. A heading per level would give Node one of its own, and a
-    // reader scanning for it has to already know that Node sits under Platform.
     [Fact]
     public void IndexPage_groups_a_record_nested_deeper_under_its_first_folder()
     {
@@ -174,7 +163,6 @@ public class GeneratorTests
         Assert.DoesNotContain("## Node", page);
     }
 
-    // The derived column earns its place only where it says more than the heading does.
     [Fact]
     public void IndexPage_drops_the_derived_column_where_it_repeats_the_heading()
     {
@@ -196,8 +184,6 @@ public class GeneratorTests
         Assert.Contains("platform/node", page);
     }
 
-    // A corpus that has never used a folder reads as it always did, bar the column that had nothing in
-    // it to read.
     [Fact]
     public void IndexPage_heads_nothing_where_every_record_is_filed_flat()
     {
@@ -209,8 +195,6 @@ public class GeneratorTests
         Assert.DoesNotContain("Category", page);
     }
 
-    // Folders alone group nothing. A type that derives no field from where its records sit has no
-    // grouping key, so its index reads as one table however deep the records are filed.
     [Fact]
     public void IndexPage_heads_nothing_where_the_type_derives_no_field_from_the_path()
     {
@@ -223,8 +207,6 @@ public class GeneratorTests
         Assert.DoesNotContain("## ", page);
     }
 
-    // Records filed flat beside foldered ones lead, in a table with no heading, because there is no
-    // folder to name one after.
     [Fact]
     public void IndexPage_leads_with_the_records_no_folder_holds()
     {
@@ -313,8 +295,6 @@ public class GeneratorTests
         var table = Generator.SchemaTable(t, new Schema(), "");
         var row = table.Split('\n').Single(l => l.StartsWith("| `status`", StringComparison.Ordinal));
 
-        // The set is what an author came to the page for, so it is what the column carries. The word
-        // `enum` is not something anyone can write into frontmatter.
         var header = table.Split('\n')[0];
         Assert.Contains("Value", header);
         Assert.DoesNotContain("Type", header);
@@ -347,8 +327,6 @@ public class GeneratorTests
         var row = Generator.SchemaTable(t, s, "").Split('\n')
             .Single(l => l.StartsWith("| `tier`", StringComparison.Ordinal));
 
-        // Every document in the folder carries this one, and CI fails any that does not: the other
-        // values are not choices the author has.
         Assert.Contains("`normative`", row);
         Assert.DoesNotContain("`decided`", row);
         Assert.DoesNotContain("`descriptive`", row);
@@ -373,8 +351,7 @@ public class GeneratorTests
         var table = Generator.SchemaTable(t, new Schema(), "");
         var row = table.Split('\n').Single(l => l.StartsWith("| `retention`", StringComparison.Ordinal));
 
-        // The condition is quoted exactly, and closes the note it qualifies rather than sitting in a
-        // second table the reader has to look away to.
+        // The condition is quoted exactly, and closes the note it qualifies.
         Assert.Contains("SHORT PROSE Required when `personal-data in [personal, special-category]`.", row);
         Assert.DoesNotContain("**Conditionally required**", table);
     }
@@ -419,7 +396,6 @@ public class GeneratorTests
     private static List<int> PositionsOf(string text, params string[] needles) =>
         [.. needles.Select(n => text.IndexOf(n, StringComparison.Ordinal))];
 
-    // The decision table is read down its left column.
     [Fact]
     public void The_decision_table_is_sorted_by_what_the_reader_is_holding()
     {
@@ -429,7 +405,6 @@ public class GeneratorTests
         Assert.Equal(order.Order(), order);
     }
 
-    // The link points at the collection.
     [Fact]
     public void The_decision_table_names_a_type_in_the_plural()
     {
@@ -439,7 +414,6 @@ public class GeneratorTests
         Assert.DoesNotContain("[ADR](", rows);
     }
 
-    // Tier is a column, not a grouping.
     [Fact]
     public void The_corpus_index_is_sorted_by_type_name()
     {
@@ -469,7 +443,6 @@ public class GeneratorTests
         Assert.Equal(order.Order(), order);
     }
 
-    // A heading with nothing under it reads as a gap in the corpus rather than as a choice it made.
     [Fact]
     public void A_tier_no_stood_up_type_sits_in_gets_no_heading()
     {
@@ -496,14 +469,10 @@ public class GeneratorTests
         Assert.Contains("**[ADRs](../adrs.md).** What a adr holds. And the edge", catalogue);
     }
 
-    // A table cell cannot be broken and is exempt, which is why the wrap belongs to the prose renderers
-    // rather than to RenderTable.
     [Fact]
     public void Catalogue_prose_wraps_at_the_corpus_margin()
         => Assert.All(Generator.TypeCatalogue(Tiers, Four(), "../").Split('\n'), l => Assert.True(l.Length <= 120));
 
-    // A link broken after its label's first word still renders, but it reads badly and a formatter meeting
-    // it puts it back. The generator then writes it out broken again on the next run.
     [Fact]
     public void A_link_label_is_never_broken_across_lines()
     {
@@ -547,8 +516,6 @@ public class GeneratorTests
         Assert.Contains("**ADR vs Standard.** The ADR is the decision, frozen.", text);
     }
 
-    // A corpus with no standards is not helped by being told how one differs from an ADR, and the
-    // heading would name a page it cannot open.
     [Fact]
     public void A_pair_whose_other_half_is_not_stood_up_is_left_out()
     {
@@ -600,7 +567,6 @@ public class GeneratorTests
         Assert.Contains("Ours spans repos", table);
     }
 
-    // An empty cell would read as unfinished.
     [Fact]
     public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
     {
@@ -631,7 +597,6 @@ public class GeneratorTests
         Assert.DoesNotContain("### ADR", text);
     }
 
-    // A blank line in the folded scalar comes back as a newline, and each paragraph is wrapped on its own.
     [Fact]
     public void A_collision_of_several_paragraphs_renders_as_several()
     {
@@ -690,15 +655,14 @@ public class GeneratorTests
 
         Assert.Contains("| Standard | `verified-by`", table);
         Assert.Contains("| Control  | `verifies`", table);
-        Assert.Contains("`verifies`    |", table); // …each naming the other in the last column
+        // Each half names the other in the last column.
+        Assert.Contains("`verifies`    |", table);
     }
 
-    // A one-directional edge has nobody obliged to answer it.
     [Fact]
     public void A_one_directional_edge_names_no_counterpart()
         => Assert.Matches(@"\| Standard \| `implements`\s+\| Policy\s+\|\s+\|", Generator.RelationTable(Graph()));
 
-    // The field would resolve against no document, so the row would promise an edge that cannot exist.
     [Fact]
     public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
     {
@@ -720,12 +684,10 @@ public class GeneratorTests
         Assert.DoesNotContain("subgraph", diagram);
         Assert.DoesNotContain("--->", diagram);
 
-        // No pipes: a markdown formatter scanning for tables reformats what it finds between them, and a
-        // fenced block is no protection.
+        // No pipes: a markdown formatter reformats what it finds between them, even inside a fence.
         Assert.DoesNotContain("|", diagram);
     }
 
-    // The table carries two rows for the pair, because an author has two fields.
     [Fact]
     public void A_reciprocal_pair_is_drawn_once()
     {

@@ -1,8 +1,3 @@
-// JSON Lines is one complete object per line, and a formatter pretty-printing one of these files destroys that
-// while leaving valid JSON behind. The golden suite diffs the two export fixtures byte for byte, so it catches
-// the damage as an export that moved. This asks the invariant instead, whichever tool broke the file and
-// whether or not a golden holds a copy of it.
-
 using System.Text.Json;
 using kac.core;
 
@@ -24,8 +19,7 @@ public class JsonLinesTests
                 line++;
                 if (Fault(text) is not { } fault) continue;
 
-                // The first fault in the file and no more. A pretty-printer breaks every line, and one
-                // cause repeated down the file buries the other files in the list.
+                // The first fault in the file and no more. A pretty-printer breaks every line.
                 broken.Add($"{rel}:{line} {fault}");
                 break;
             }

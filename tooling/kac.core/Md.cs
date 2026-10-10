@@ -30,9 +30,7 @@ public static class Md
         return sb.ToString().Trim();
     }
 
-    // The same reading with every code span left out, for a check asking what a sentence says rather
-    // than what it names. A term in backticks is being named, so a rule about the words has no
-    // business in it. `Bullets` drops them from its `Plain` reading for the same reason.
+    // For a check about the words of a sentence. A term in backticks is named, not used.
     public static string PlainTextWithoutCode(ContainerInline? container)
     {
         if (container is null) return "";
@@ -54,10 +52,7 @@ public static class Md
         return sb.ToString().Trim();
     }
 
-    // Whether a stretch of a document says anything: a letter or a digit somewhere in it. Read on the
-    // source as written, so that a horizontal rule, a bullet marker left behind or an em dash standing
-    // in for the words counts as nothing written. The rendered blocks would offer all three as
-    // content.
+    // Read on the source, so a horizontal rule, a leftover bullet marker or an em dash counts as nothing written.
     public static bool HasContent(ReadOnlySpan<char> text)
     {
         foreach (var c in text)
@@ -66,24 +61,16 @@ public static class Md
         return false;
     }
 
-    // A fragment of a document quoted back in a finding, cut to what a terminal line can hold beside
-    // the rest of the message.
     public static string Snippet(string s, int max = 60) => s.Length > max ? s[..(max - 3)] + "…" : s;
 
-    // Every heading in a document, in the order it is written, with the level it is written at.
-    //
-    // Beside `Anchors`, which answers what a link may reach. This answers how the headings nest, which
-    // is what a reader takes from a page grouping its subject under `##` and naming each one under
-    // `###`.
     public static IEnumerable<(int Level, string Text)> Headings(string markdown) =>
         Parse(markdown).Descendants<HeadingBlock>()
             .Select(h => (h.Level, PlainText(h.Inline)));
 
-    // The anchors a document offers a link: one per heading, at every level.
+    // One anchor per heading, at every level.
     public static HashSet<string> Anchors(string markdown) => Anchors(Parse(markdown));
 
-    // Beside the overload above, for a document already parsed. A check holding a `Doc` has its AST,
-    // and parsing the text again would make two readings of one file.
+    // For a document already parsed, so one file has one reading.
     public static HashSet<string> Anchors(MarkdownDocument ast)
     {
         var set = new HashSet<string>(StringComparer.Ordinal);
@@ -114,16 +101,13 @@ public static class Md
         return sb.ToString();
     }
 
-    // The bullets one heading gathers: the items of the first list beneath it, read off the document's
-    // own parse. A later list under the same heading is a second run of points, and a heading's
-    // obligations are the first.
+    // The items of the first list beneath a heading. A later list under the same heading is not read.
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         MarkdownDocument ast, int start, int end) =>
         FirstList(ast, start, end) is { } list ? Bullets(list) : [];
 
-    // The same bullets in the markdown the author wrote them in, each with the bold runs `Bullets` reads
-    // from it. The marker is dropped and a wrapped bullet's lines are joined, so the keyword sits on the
-    // one line a reader takes. Both walk `Leads`, so the two pair item for item.
+    // The same bullets as written, marker dropped and wrapped lines joined. Both walk `Leads`, so the two pair
+    // item for item.
     public static IEnumerable<(string Markdown, IReadOnlyList<string> Bold)> BulletSources(
         MarkdownDocument ast, string text, int start, int end)
     {
@@ -137,8 +121,7 @@ public static class Md
         });
     }
 
-    // The line of each list written inside a bullet, between two offsets. Only the outermost is
-    // returned, so a list nested three deep is one place to fix and not three.
+    // Only the outermost nested list is returned, so a list nested three deep is one finding.
     public static IEnumerable<int> NestedLists(MarkdownDocument ast, int start, int end) =>
         ast.Descendants<ListBlock>()
             .Where(l => l.Span.Start >= start && l.Span.End <= end)
@@ -148,7 +131,7 @@ public static class Md
     private static ListBlock? FirstList(MarkdownDocument ast, int start, int end) =>
         ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
 
-    // Each item of a list with its first paragraph. An item opening on no paragraph is no bullet.
+    // An item opening on no paragraph is no bullet.
     private static IEnumerable<(ListItemBlock Item, ParagraphBlock Paragraph, ContainerInline Inline)> Leads(
         ListBlock list)
     {
@@ -157,16 +140,8 @@ public static class Md
                 yield return (item, paragraph, inline);
     }
 
-    // The items of one list, for a caller that has found the list itself rather than the heading above
-    // it. A bullet wrapped over three lines arrives as one item, and a bullet inside a fenced block is
-    // no bullet at all, because the parse decides both and a line scan decides neither.
-    //
-    // `Plain` is the item with its bold runs and its code spans left out. A modal surviving into it was
-    // written in capitals and left unbolded, which under BCP 14 is a keyword and under this corpus's
-    // grammar is nothing: bold is what binds. A modal inside backticks is being named rather than used.
-    //
-    // Direct children throughout: the list's own items, and each item's own first paragraph. A nested
-    // list is not a bullet of this list, and under a part `part-nested` refuses it outright.
+    // `Plain` is the item without its bold runs and code spans, so a capitalised modal left in it is unbolded.
+    // Direct children only: a nested list is not a bullet of this list.
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         ListBlock list)
     {
@@ -189,8 +164,7 @@ public static class Md
         }
     }
 
-    // `code` says whether a code span contributes its content. A link's target never does, under
-    // either reading: the label is a child inline and the target is not.
+    // `code` says whether a code span contributes its content. A link's target never does.
     private static void Walk(Inline inline, StringBuilder sb, bool code)
     {
         switch (inline)

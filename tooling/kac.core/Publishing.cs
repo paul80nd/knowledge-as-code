@@ -1,16 +1,8 @@
 namespace kac.core;
 
-// How a publishing target addresses what it publishes: the rule joining a base to a record's path, and
-// the anchor rule for a part inside it.
-//
-// The rules live here rather than in `.corpus.yaml` because they are a property of the target and not of
-// the corpus. Two corpora published to GitHub build a link the same way and differ only in where their
-// repository sits, so the descriptor supplies the base and nothing else.
-//
-// One address is built, the one a person opens. An agent reads a record's source through a client that
-// authenticates to the target, from the base, the path and the ref an export carries. There is no host
-// serving a corpus's raw source to an anonymous caller except GitHub's, and only for a public
-// repository. See `docs/design/export.md`.
+// How a publishing target addresses what it publishes: the rule joining a base to a record's path, and the
+// anchor rule for a part inside it. Only the address a person opens is built. An agent reads the source
+// through a client that authenticates to the target. See `docs/design/export.md`.
 public sealed class Publishing
 {
     public const string AzureDevOps = "azure-devops";
@@ -19,44 +11,35 @@ public sealed class Publishing
     public const string MkDocs = "mkdocs";
     public const string None = "none";
 
-    // Every target a descriptor may name. `new` offers this list and holds `--publishing` to it, so a
-    // target the tool cannot act on is refused at the flag rather than written into a corpus.
+    // Every target a descriptor may name. `new` refuses any other at `--publishing`.
     public static readonly IReadOnlyList<string> Targets =
         [AzureDevOps, AzureDevOpsWiki, GitHub, MkDocs, None];
 
-    // The two placeholders a template leaves for its reader to fill.
     public const string PathToken = "{path}";
     public const string AnchorToken = "{anchor}";
 
-    // What sits between `_wiki/wikis/` and the wiki's identifier in an Azure DevOps wiki URL. The
-    // identifier is the last segment a base may carry, so this is where `For` starts counting.
+    // The wiki identifier after this is the last segment a wiki base may carry.
     private const string WikiSegment = "/_wiki/wikis/";
 
-    // The targets that build a link today. `mkdocs` is named by the descriptor and addressed by
-    // nothing, so a corpus on it exports without links rather than with links built on a convention no
-    // one has settled.
+    // `mkdocs` is named by the descriptor and addressed by nothing, so a corpus on it exports without links.
     private static readonly IReadOnlyList<string> Addressable = [AzureDevOps, AzureDevOpsWiki, GitHub];
 
     private readonly string _base;
 
-    // The corpus root's place inside the published repository, carrying its own leading slash, or empty
-    // where the corpus is the repository. Normalised on the way in so the rest of the class joins it the
-    // same way whether the descriptor wrote it with slashes or without.
+    // With its own leading slash, or empty where the corpus is the repository.
     private readonly string _prefix;
 
     public required string Target { get; init; }
 
-    // The commit every link resolves against. A link naming a branch answers a later question than the
-    // one the export was built to answer: what the corpus said when it was read.
+    // The commit every link resolves against, so a link reads the corpus as it was exported.
     //
     // `azure-devops-wiki` is the exception it cannot help. No `?pagePath=` URL takes a commit, so a
     // person following that target's link reads whatever the wiki holds now. An agent still reads the
     // pinned version, because the ref reaches it through the export rather than through the link.
     public required string Ref { get; init; }
 
-    // Where the corpus sits inside its repository, without a leading slash, or null where the corpus is
-    // the repository. An agent joins it to a record's path to reach the file, which is why it is carried
-    // separately as well as baked into the template.
+    // Without a leading slash, or null where the corpus is the repository. Carried separately as well as baked
+    // into the template, because an agent joins it to a record's path.
     public string? PathPrefix => _prefix is { Length: > 0 } ? _prefix[1..] : null;
 
     private Publishing(string publishedBase, string? pathPrefix)
@@ -65,13 +48,8 @@ public sealed class Publishing
         _prefix = pathPrefix?.Trim('/') is { Length: > 0 } p ? "/" + p : "";
     }
 
-    // How this corpus addresses its published form, or null where it has no addressable one: it
-    // publishes nowhere, it names a target nothing builds links for, it names one and supplies no base,
-    // or the base it supplies is not one that target can join to. Null in every case, because a caller's
-    // question is whether it can write a link at all, and four ways of being unable to are one answer.
-    //
-    // `gitRef` is the commit the export was built from. Null where git could not say, which is a corpus
-    // whose records have no stable address, so it takes the same answer as the rest.
+    // Null where the corpus has no addressable published form: no target, a target nothing builds links for, no
+    // base, a base the target cannot join, or no `gitRef`.
     public static Publishing? For(CorpusDescriptor descriptor, string? gitRef)
     {
         if (descriptor.PublishingTarget is not { } target) return null;
@@ -83,8 +61,6 @@ public sealed class Publishing
         return new Publishing(published, descriptor.PathPrefix) { Target = target, Ref = gitRef };
     }
 
-    // Whether this target can join a record's path to the base it was handed.
-    //
     // Only the wiki has anything to check. Azure DevOps assigns a page a numeric id when it is first
     // created and shows that id in the URL, so a base copied out of the address bar carries one and
     // names a page rather than the wiki. Nothing derives the id of a second page from the id of the
@@ -100,16 +76,8 @@ public sealed class Publishing
         return identifier.Length > 0 && !identifier.Contains('/');
     }
 
-    // The base a repository's origin implies, or null where nothing here can derive one.
-    //
-    // A URL nobody can recall is a URL nobody should be made to type, so `new` fills the answer in and
-    // asks the person to confirm it.
-    //
-    // Both SSH and HTTPS remotes are read, because which one a clone used is a fact about the person
-    // rather than about the repository.
-    //
-    // `azure-devops-wiki` is absent deliberately. A repository's remote says nothing about which wiki,
-    // if any, publishes it, so that base is typed in.
+    // The base a repository's origin implies, or null where nothing here can derive one. SSH and HTTPS remotes
+    // are both read. `azure-devops-wiki` is absent, because a remote says nothing about which wiki publishes it.
     public static string? BaseFrom(string target, string? origin)
     {
         if (origin?.Trim() is not { Length: > 0 } url) return null;
@@ -154,8 +122,6 @@ public sealed class Publishing
         };
     }
 
-    // What follows the host, however the remote spelled the separator: `:` after an SSH host, `/` after
-    // an HTTPS one.
     private static string Rest(string repo, int from) =>
         repo[from..].TrimStart(':', '/').TrimEnd('/');
 
@@ -163,27 +129,13 @@ public sealed class Publishing
     // punctuation it meets, which is the form `Md.Slug` writes and the form the corpus's own links
     // already use.
     //
-    // Azure DevOps percent-encodes that punctuation instead, so a heading carrying `/`, `:` or `.` has
-    // an anchor this returns the wrong spelling of. The rule has not been read off a live wiki, and a
-    // second function written on a guess buys a wrong anchor rather than a missing one. What holds the
-    // cost down meanwhile is the corpus's own convention: a heading meant to be linked to is written
-    // without punctuation. See `Md.cs` and `frameworks.md`.
+    // Azure DevOps percent-encodes that punctuation, so a heading with `/`, `:` or `.` gets the wrong anchor
+    // there. Its rule is unverified, so the corpus writes a linked heading without punctuation. See `Md.cs`.
     public static string Anchor(string heading) => Md.Slug(heading);
 
-    // The link rule as one string a reader substitutes into, so an export states the address once and a
-    // line carries only what varies: the record's path, and the anchor of the part inside it.
-    //
-    // The ref is baked in rather than left as a placeholder. `docs/design/export.md` argues it, and the
-    // template carries the decision so no reader has to remember it.
-    //
-    // **The path prefix is baked in for the same reason the ref is.** It is a property of where the
-    // corpus sits and never varies between two records, so a reader substituting into the template has
-    // one thing to supply and cannot put it on the wrong side of the commit.
-    //
-    // **What `{path}` takes is the target's business.** GitHub and Azure Repos address a file and take
-    // the record's path whole. An Azure DevOps wiki addresses a page, so it takes the same path with
-    // `.md` removed and its separators percent-encoded. `Link` performs that transform, and
-    // `docs/corpus-descriptor.md` states it for whoever substitutes by hand.
+    // The link rule as one string with `{path}` and `{anchor}` left to fill. The ref and the path prefix are
+    // baked in, as `docs/design/export.md` argues. An Azure DevOps wiki takes the path with `.md` removed and its
+    // separators encoded, which `Link` does and `docs/corpus-descriptor.md` states.
     public string Template() => Target switch
     {
         GitHub => $"{_base}/blob/{Ref}{_prefix}/{PathToken}#{AnchorToken}",
@@ -192,12 +144,7 @@ public sealed class Publishing
         _ => throw new InvalidOperationException($"'{Target}' builds no link.")
     };
 
-    // Where a record is read, resolved. `anchor` names a part inside it, and a link with no anchor drops
-    // the anchor along with it.
-    //
-    // Built by substituting into the template above, so a link this method resolves and a link a
-    // consumer assembles for the same record are the same string. Two constructions of one address would
-    // be two places for the rule to live.
+    // Built by substituting into `Template`, so this and a consumer's own link for a record are the same string.
     public string Link(string relPath, string? anchor = null)
     {
         var template = Template();
@@ -209,9 +156,7 @@ public sealed class Publishing
         return human.Replace(PathToken, PathFor(relPath), StringComparison.Ordinal);
     }
 
-    // What introduces the anchor in this target's template, so dropping the anchor drops what named it.
-    // A wiki takes a query parameter because `?pagePath=` has already opened the query string, where the
-    // other two take a fragment.
+    // A wiki takes a query parameter because `?pagePath=` has already opened the query string.
     private string AnchorMark =>
         Target.Equals(AzureDevOpsWiki, StringComparison.Ordinal) ? "&anchor=" : "#";
 

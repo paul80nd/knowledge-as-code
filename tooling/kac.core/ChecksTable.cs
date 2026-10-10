@@ -1,28 +1,15 @@
 namespace kac.core;
 
-// The reader-facing "What CI checks" table on a type page, and the gate holding it to the catalogue.
-//
-// Apart from the renderers in `Generator` because nothing calls the two together: `generate` splices this
-// table into a page, and `kac checks` runs the gate over the schema alone.
+// The "What CI checks" table on a type page, and the gate that checks it against the catalogue.
 public static class ChecksTable
 {
-    // What a description may run to. A reader scans the checks table to find the row they tripped, not to
-    // read a paragraph about every check on the page. A cell running to several sentences has taken on the
-    // message's job as well as its own. A description says what is verified. A rule's `message:` says what
-    // to do about it, and is where the author who tripped it reads the reasoning. Held here because the
-    // table is what makes this a limit, and read by SchemaChecks so a schema's own rules are held to the
-    // same bound as the rows written below.
+    // A description says what is verified, and a rule's `message:` says what to do about it. `SchemaChecks`
+    // applies the same bound to a schema's own rules.
     public const int DescriptionMax = 120;
 
-    // The rows, curated rather than taken from the catalogue as it stands: related checks fold into one
-    // row (the three `id-*` checks read as one `id` row) and each is worded for a human skim. Generating
-    // them from the catalogue would change what the table means, so a row names the catalogue ids it
-    // stands for, `Problems` verifies the coverage, and the wording stays hand-tuned.
-    //
-    // `When` is the row's applicability: null fires for every type, otherwise the predicate asks the
-    // type's own schema whether the check can fire at all, so a policy page does not advertise that its
-    // documents are checked for Y-statements. Read from the schema rather than hand-listed per type, so
-    // declaring a rule remains the only thing needed to document it.
+    // Hand-curated, not generated from the catalogue: related checks fold into one row, each worded for a skim.
+    // `Problems` verifies the coverage. `When` is null for a row that applies to every type, and otherwise asks
+    // the type's schema whether the check can fire.
     private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
         ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.",
@@ -59,8 +46,6 @@ public static class ChecksTable
         ("type-matches-folder", [new("type-matches-folder")],
             "`type` matches the singular type name the record's folder declares.", null),
         ("tier-matches-type", [new("tier-matches-type")], "`tier` matches the tier the type declares.", null),
-        // Which of the three shapes an id takes is the type's to decide, so the row says a shape is held
-        // to rather than naming the three a reader might be on.
         ("id", [new("id-prefix"), new("id-format"), new("id-matches-filename")],
             "`id` carries the type's prefix, takes the shape the type declares, and names the same document "
             + "as the filename.", null),
@@ -83,31 +68,24 @@ public static class ChecksTable
         ("clause-order / clause-compound", [new("clause-order"), new("clause-compound")],
             "Clause rows are grouped by binding level, and no row states a second modal.",
             t => t.Parts?.Source == PartSpec.Table),
-        // What the `clauses` rows ask of a table, asked of the source that writes its parts as headings.
         ("part-none / part-empty", [new("part-none"), new("part-empty")],
             "The parts section holds at least one heading, and each has something under it.",
             t => t.Parts?.Source == PartSpec.Headings),
-        // Shown only where the type declares modals, which is what turns the bullets beneath a heading
-        // into obligations. A glossary sources headings too and is asked nothing of the kind.
+        // Only where the type declares modals: a glossary has heading parts too, and no obligations.
         ("part-modal / part-nested", [new("part-modal"), new("part-nested")],
             "A part heading states its obligations as bullets, each with a declared modal in bold and no "
             + "list inside it.",
             t => t.Parts is { Source: PartSpec.Headings, Binding.Count: > 0 }),
-        // The same question asked of the sections around the parts, and shown wherever the rule is
-        // declared rather than wherever modals are, because a type may declare the modals and accept a
-        // bullet outside the section that carries one.
+        // Shown wherever the rule is declared, not wherever modals are: a type may declare modals and still accept
+        // a bullet outside the parts.
         ("modal-outside-rules", [new("modal-outside-rules")],
             "Only the parts section binds: no bullet outside it names a declared modal.",
             t => t.Rules.Any(r => r.Id == new RuleId("binds-only-under-rules"))),
-        // Shown on the pages of the types that keep addressable parts, rather than on every page. Both
-        // checks run corpus-wide, since a citation is checked where it is written and any document may
-        // carry one. This predicate scopes the documentation, and a type whose records have no parts has
-        // no reason to describe how one is cited.
+        // This scopes the documentation only. Both checks run corpus-wide, because any document may carry a citation.
         ("part-id-unique / part-ref", [new("part-id-unique"), new("part-ref")],
             "No two parts of a record share an address, and a `record-id.part` citation reaches the part "
             + "it names.", t => t.Parts is not null),
-        // Shown wherever the rule is declared, which `Applies` decides from the registry. A record of
-        // any type may quote a clause, and the type page is where its author reads what is asked of one.
+        // Shown wherever the rule is declared, which `Applies` decides from the registry.
         ("clause-quoted-faithfully", [new("clause-quoted-faithfully")],
             "A span quoted beside a clause citation is still in the clause it cites.", null),
         ("link-resolves", [new("link-resolves"), new("fragment-resolves")],
@@ -180,28 +158,18 @@ public static class ChecksTable
             null)
     ];
 
-    // Which rule class reports under which check id, read from the registries rather than written out.
-    // A row whose checks come from a rule class belongs on a type page only where that type declares the
-    // rule. Naming the rule id here instead would let a rename stop a page advertising the check,
-    // silently and with nothing looking wrong.
+    // Read from the registries, so renaming a rule cannot stop a page advertising its check.
     private static readonly IReadOnlyDictionary<CheckId, RuleId> RuleByCheck =
         DocumentRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId)))
             .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
             .ToDictionary(x => x.Check, x => x.RuleId);
 
-    // A row applies where its own predicate allows it and where the type declares whatever rule class
-    // reports its checks. A row naming no rule-class check always passes the second half.
     private static bool Applies((string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row,
         TypeSchema t) =>
         (row.When is null || row.When(t))
         && row.Ids.All(id => !RuleByCheck.TryGetValue(id, out var rule) || t.HasRule(rule));
 
-    // The curated rows, then a row for each expression rule the type declares. A core check is worded
-    // here because several ids fold into one reader-facing row. An expression rule is one id reporting
-    // under its own name, and its `description:` in the schema is already that row written out. Copying
-    // it here would be the same sentence in two files, drifting apart at the first edit.
-    //
-    // Beneath both, the rules the type declares and nothing runs. See Intentions.
+    // The curated rows, then one per expression rule the type declares, worded by its schema `description:`.
     public static string Render(Schema schema, TypeSchema t)
     {
         var severity = schema.Checks.ToDictionary(c => c.Id, c => c.Severity);
@@ -223,15 +191,8 @@ public static class ChecksTable
         return Gfm.RenderTable(headers, rows) + Intentions(t);
     }
 
-    // The rules the type declares that nothing runs: no `expr:`, no implementation. Each is a real
-    // decision about what this type should be held to, and each is unenforced, so a page that showed
-    // only the table above would say the schema promises nothing more than CI delivers. It promises
-    // rather a lot more, and that is worth a reader knowing before they rely on it.
-    //
-    // Kept apart from the table rather than folded in as rows, because the two answer different
-    // questions: one is what a build will say about a document, the other is what has been written down
-    // and not built. A rule leaves this block by gaining an `expr:` or a class, at which point it
-    // appears above under its own name.
+    // The rules the type declares that nothing runs: no `expr:`, no class. Kept out of the table, which says only
+    // what a build reports.
     private static string Intentions(TypeSchema t)
     {
         var intended = t.Rules
@@ -249,9 +210,7 @@ public static class ChecksTable
                + Gfm.RenderTable(headers, rows);
     }
 
-    // Reconcile the curated table with the catalogue. Empty means the reader-facing table is a faithful,
-    // complete view of what the validator enforces, and any entry is a drift a human must resolve.
-    // `kac checks` calls this and fails on a non-empty result, which the test suite asserts.
+    // Empty where the table covers the catalogue exactly. `kac checks` fails on anything else.
     public static IReadOnlyList<string> Problems(Schema schema)
     {
         var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();
@@ -269,9 +228,7 @@ public static class ChecksTable
             problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. drop the flag, "
                          + "or drop the row from the table kac ships.");
 
-        // The rows written above, held to the bound a schema's rules are held to. Nothing else would
-        // notice: these are C# literals rendered into a generated table, so a row that grows past it
-        // reads as intentional in the diff and as noise on the page.
+        // Nothing else checks these C# rows against the bound a schema's rules meet.
         foreach (var row in DocRows.Where(r => r.Description.Length > DescriptionMax))
             problems.Add($"the checks table row '{row.Label}' has a {row.Description.Length}-character "
                          + $"description. the limit is {DescriptionMax}.");

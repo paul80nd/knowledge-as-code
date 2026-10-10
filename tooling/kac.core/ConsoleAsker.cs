@@ -2,11 +2,7 @@ using Spectre.Console;
 
 namespace kac.core;
 
-// The console half of `IAsker`: how a question is drawn and how a keystroke is read. It sits on this side
-// of the boundary with `Commands` and `Out`, and nothing in the tool decides anything here.
-//
-// Every prompt is asked on `Out.Terminal`, so a question is coloured the way every other line is and
-// `--no-color` reaches it.
+// Every prompt goes through `Out.Terminal`, so `--no-color` reaches it.
 public sealed class ConsoleAsker : IAsker
 {
     public string Text(string question, string fallback)
@@ -36,8 +32,7 @@ public sealed class ConsoleAsker : IAsker
     public bool Confirm(string question, bool fallback = true) =>
         Out.Terminal.Prompt(new ConfirmationPrompt(question) { DefaultValue = fallback });
 
-    // The default offered first, because a selection prompt opens on its first choice and the answer
-    // most people want should be the one already under the cursor.
+    // The default goes first, because a selection prompt opens on its first choice.
     private static IEnumerable<string> Ordered(IReadOnlyList<string> options, string fallback) =>
         options.Contains(fallback, StringComparer.Ordinal)
             ? [fallback, .. options.Where(o => !o.Equals(fallback, StringComparison.Ordinal))]

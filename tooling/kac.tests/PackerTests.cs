@@ -3,13 +3,6 @@ using System.Text;
 using kac.core;
 using Xunit.Sdk;
 
-// In-process unit tests for the package.
-//
-// The golden fixture packs one export and pins what a consumer receives. What it cannot hold is the
-// refusals: each needs an export manifest missing or malformed in one particular way, and an export is
-// written by the exporter rather than by hand. So the fixture proves the shape and these prove the
-// rules, which is the division `BundlerTests` already draws.
-
 namespace kac.tests;
 
 public class PackerTests
@@ -24,8 +17,6 @@ public class PackerTests
         => Assert.Contains("Run the export first",
             Assert.Single(Plan([(Exporter.ManifestFile, "not json at all")]).Problems));
 
-    // The same question `Bundler.Plan` asks, and for the same reason. A package is a contract, and one
-    // built from an envelope this build has never read would publish a shape nobody agreed to.
     [Fact]
     public void An_export_at_another_format_version_is_refused()
         => Assert.Contains("Rebuild it: kac export",
@@ -41,16 +32,11 @@ public class PackerTests
         => Assert.Contains("states no content version",
             Assert.Single(Plan([Manifest(contentVersion: null)]).Problems));
 
-    // Refused where the export leaves it null, unlike everything else the manifest carries. A consumer
-    // files an import under its shortcode and resolves `eng:pol-VURM` against it, so a package without
-    // one is a package nothing downstream can address.
     [Fact]
     public void An_export_declaring_no_shortcode_is_refused()
         => Assert.Contains("cites what it imports by one",
             Assert.Single(Plan([Manifest(shortcode: null)]).Problems));
 
-    // A corpus may call itself anything until the day it publishes. These are the spellings a registry
-    // will not file, and the refusal happens here rather than in the schema for that reason.
     [Theory]
     [InlineData("has spaces")]
     [InlineData("slash/es")]
@@ -59,8 +45,6 @@ public class PackerTests
         => Assert.Contains("cannot be a package id",
             Assert.Single(Plan([Manifest(corpus: name)]).Problems));
 
-    // An empty string reads as an absent value throughout `JsonRead`, so a corpus that wrote `corpus:`
-    // and left it blank is told it named none rather than told the blank is an illegal id.
     [Fact]
     public void A_corpus_name_written_as_nothing_reads_as_absent()
         => Assert.Contains("names no corpus",
@@ -85,8 +69,6 @@ public class PackerTests
     public void The_file_is_named_for_the_corpus_and_its_content_version()
         => Assert.Equal("example-engineering.0.1.0.nupkg", Plan([Manifest()]).FileName);
 
-    // The whole payload sits under one directory, so the envelope's files are never among the corpus's
-    // and a consumer strips a known prefix rather than filtering by name.
     [Fact]
     public void Every_export_file_travels_under_the_payload_directory()
     {
@@ -97,9 +79,6 @@ public class PackerTests
             plan.Entries.Select(e => e.Path).Where(p => p.StartsWith("corpus/")).Order(StringComparer.Ordinal));
     }
 
-    // What makes the archive a package rather than a zip. Without the relationship nothing points at
-    // the part describing the package, and without the content types a strict reader cannot say what
-    // any part is.
     [Fact]
     public void The_envelope_is_the_three_files_a_registry_reads()
     {
@@ -110,9 +89,6 @@ public class PackerTests
             plan.Entries.Select(e => e.Path).Where(p => !p.StartsWith("corpus/")).Order(StringComparer.Ordinal));
     }
 
-    // The envelope names the package and nothing else about the corpus. Everything a consumer acts on
-    // is in the copied manifest, so a second statement of it here would be a second thing to keep in
-    // step. The description is the exception, because a registry requires one.
     [Fact]
     public void The_nuspec_carries_the_id_the_version_and_the_shortcode()
     {
@@ -123,9 +99,6 @@ public class PackerTests
         Assert.Contains("'eng:'", nuspec);
     }
 
-    // A file with no extension has nothing for a content-type default to key on, so it takes an
-    // override. Nothing the exporter writes today is one, and the rule is here rather than in the
-    // exporter because a type declares its own file names.
     [Theory]
     [InlineData("NOTICE")]
     [InlineData("NOTICE.")]
@@ -144,8 +117,6 @@ public class PackerTests
         Assert.DoesNotContain("""Extension="JSON" """, types);
     }
 
-    // Left out where nobody named one, because the export states where a record is published and that
-    // is a different address from where its source lives.
     [Fact]
     public void No_repository_is_named_where_none_was_given()
         => Assert.DoesNotContain("<repository", Text(Plan([Manifest()]), "example-engineering.nuspec"));
@@ -163,8 +134,6 @@ public class PackerTests
             Text(plan, "example-engineering.nuspec"));
     }
 
-    // Two packs of one export are the same bytes. A registry keeps a published version forever, so
-    // "is what I am about to push the thing I proved" has to be answerable by comparing files.
     [Fact]
     public void Two_archives_from_one_export_are_identical()
     {
@@ -173,8 +142,6 @@ public class PackerTests
         Assert.Equal(Packer.Archive(Plan(export)), Packer.Archive(Plan(export)));
     }
 
-    // The payload is the export, byte for byte. A package that edited what it carried would publish
-    // something the golden fixture never saw.
     [Fact]
     public void The_payload_is_the_export_unchanged()
     {
@@ -195,8 +162,7 @@ public class PackerTests
     private static string Text(PackPlan plan, string path) =>
         Encoding.UTF8.GetString(plan.Entries.Single(e => e.Path == path).Content);
 
-    // An export manifest as `kac export` writes one, carrying the four keys a pack reads from it. Each
-    // argument is nullable so a case can take one away and leave the rest standing.
+    // Each argument is nullable, so a case can take one away and leave the rest standing.
     private static (string, string) Manifest(
         int? format = null,
         string? corpus = "example-engineering",

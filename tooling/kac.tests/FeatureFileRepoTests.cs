@@ -1,10 +1,5 @@
 using kac.core;
 
-// A feature file path is judged against records other than the one carrying it, so every case here is
-// two types at once: an offering writing the paths, and the services whose `repos:` the first segment is
-// held to. The fixture exercises one of these; the rest are the shapes a second fixture corpus would
-// only repeat.
-
 namespace kac.tests;
 
 public class FeatureFileRepoTests
@@ -32,7 +27,6 @@ public class FeatureFileRepoTests
             found.Message);
     }
 
-    // Two services sharing a monorepo is the ordinary case, so a path opening in either is right.
     [Fact]
     public void Any_of_the_listed_services_repositories_will_do()
         => Assert.Empty(Check(
@@ -40,8 +34,6 @@ public class FeatureFileRepoTests
             services: ["svc-catalogue", "svc-search"],
             repos: [("svc-catalogue", ["platform"]), ("svc-search", ["search"])]));
 
-    // A service lists every repository a change to it is made in, so a path opening in the second one is as
-    // right as a path opening in the first.
     [Fact]
     public void Any_repository_one_service_lists_will_do()
         => Assert.Empty(Check(
@@ -49,8 +41,6 @@ public class FeatureFileRepoTests
             services: ["svc-covers-cdn"],
             repos: [("svc-covers-cdn", ["covers-import", "infrastructure"])]));
 
-    // The message is what the author acts on, so the repositories it offers read in one order however the
-    // services were listed.
     [Fact]
     public void The_repositories_the_message_offers_are_sorted()
         => Assert.Contains("Those services are in: alpha, zulu.",
@@ -59,8 +49,6 @@ public class FeatureFileRepoTests
                 services: ["svc-z", "svc-a"],
                 repos: [("svc-z", ["zulu"]), ("svc-a", ["alpha"])])).Message);
 
-    // A path with no separator names a file and no repository, which is the fault this reports rather than
-    // a case to pass over.
     [Fact]
     public void A_bare_filename_names_no_repository()
         => Assert.Contains("starts in 'renewal.feature'",
@@ -76,8 +64,6 @@ public class FeatureFileRepoTests
             services: ["svc-lending"],
             repos: [("svc-lending", ["lending"])]).Count);
 
-    // A repository name is a value two records write by hand, and holding one to the other's casing would
-    // report a fault the author cannot see.
     [Fact]
     public void A_repository_is_matched_without_regard_to_casing()
         => Assert.Empty(Check(
@@ -85,8 +71,6 @@ public class FeatureFileRepoTests
             services: ["svc-lending"],
             repos: [("svc-lending", ["lending"])]));
 
-    // An offering whose services state no repository between them has nothing to be compared against.
-    // Saying so once per path would report the services' silence over and over.
     [Fact]
     public void A_record_whose_services_state_no_repository_is_passed_over()
         => Assert.Empty(Check(
@@ -94,8 +78,6 @@ public class FeatureFileRepoTests
             services: ["svc-lending"],
             repos: [("svc-lending", null)]));
 
-    // A dangling id is `ref-resolves`'s to report. Reading it as a repository nobody named would report one
-    // fault twice.
     [Fact]
     public void An_id_naming_no_service_contributes_no_repository()
         => Assert.Empty(Check(
@@ -110,8 +92,6 @@ public class FeatureFileRepoTests
             services: ["svc-lending"],
             repos: [("svc-lending", ["lending"])]));
 
-    // The services are read off whichever field references them, so a type declaring none has no graph to
-    // walk and the rule stops rather than reaching for a field by name.
     [Fact]
     public void A_type_with_no_field_referencing_services_is_left_alone()
     {
@@ -199,7 +179,6 @@ public class FeatureFileRepoTests
             => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
-    // The rule reads the records and never the tree, so an empty corpus of files is the honest thing to
-    // hand it.
+    // The rule reads the records and never the tree.
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 }

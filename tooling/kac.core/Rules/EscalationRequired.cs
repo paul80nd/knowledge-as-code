@@ -3,16 +3,6 @@ using Markdig.Syntax.Inlines;
 
 namespace kac.core;
 
-// A diagnosis tree is followed during an incident, one branch at a time, so a branch that sends the
-// reader nowhere strands them. Each branch either routes, by linking to `#resolution` or `#escalation`,
-// or falls through to the next question by saying `continue`. The last question has nothing to fall
-// through to, so `continue` strands the reader there as surely as a branch with no route at all.
-//
-// The message quotes the branch that failed, which is why this stays in C#. The grammar has no
-// collections, and an author told that some branch in the tree is wrong has to find it themselves.
-//
-// Reported per branch, and once for a tree with no escalation in it. `failure-route-stated` asks the
-// same of `Resolution`, for the reader whose fix did not work rather than whose diagnosis ran out.
 public sealed class EscalationRequired : IDocumentRule
 {
     public RuleId RuleId => new("escalation-required");
@@ -26,8 +16,6 @@ public sealed class EscalationRequired : IDocumentRule
     {
         var lists = Branches(ctx.Doc).ToList();
 
-        // A Diagnosis written as prose has no branches to judge. Whether a tree is owed at all is a
-        // question about the section, and this rule reads the branches under it.
         if (lists.Count == 0) return;
 
         var anyEscalation = false;
@@ -62,9 +50,7 @@ public sealed class EscalationRequired : IDocumentRule
                 ctx.Doc.FrontStartLine);
     }
 
-    // Every list under `## Diagnosis`, each as its own group, because whether `continue` strands the
-    // reader depends on a list being the last one. Only a list's own items are read: a nested list is
-    // one branch's workings and routes nowhere of its own.
+    // Each list is its own group, because whether `continue` strands the reader depends on the list being the last one.
     private static IEnumerable<List<Branch>> Branches(Doc d)
     {
         var inSection = false;
@@ -98,13 +84,10 @@ public sealed class EscalationRequired : IDocumentRule
 
     private sealed record Branch(string Text, IReadOnlyList<string> Urls, int Line)
     {
-        // The anchor as any renderer writes it, matched without regard to case because a runbook writes
-        // the label both ways: `[escalate](#escalation)` and `[Escalate](#escalation)`.
+        // Case-insensitive, because a runbook writes the label both ways.
         public bool LinksTo(string anchor) =>
             Urls.Any(u => u.EndsWith(anchor, StringComparison.OrdinalIgnoreCase));
 
-        // The bare word the template teaches, at the end of the branch. A branch continuing into prose
-        // of its own is told to write the word, which is the form a reader skims for.
         public bool FallsThrough =>
             Text.TrimEnd('.', ' ').EndsWith("continue", StringComparison.OrdinalIgnoreCase);
     }

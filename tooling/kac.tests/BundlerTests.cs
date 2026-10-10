@@ -3,13 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using kac.core;
 
-// In-process unit tests for the bundle.
-//
-// The golden fixtures hold two plugins between them and pin what the CLI assembles from each. They
-// cannot hold a third cheaply, and several rules need one: a manifest may be malformed in several
-// ways, a component may name a path that is a file rather than a directory, and a corpus may write
-// keys into `plugin.json` that this tool has never heard of. That is what these build.
-
 namespace kac.tests;
 
 public class BundlerTests
@@ -24,9 +17,6 @@ public class BundlerTests
         => Assert.Contains("not a JSON object",
             Assert.Single(Plan(plugin: [(Bundler.ManifestFile, "not json at all")], export: [Manifest()]).Problems));
 
-    // The name is what a marketplace installs by and what a user types for it afterwards. It is the
-    // corpus's own name rather than a second one beside it, so an export naming no corpus has no plugin
-    // to build.
     [Fact]
     public void An_export_naming_no_corpus_is_refused()
         => Assert.Contains("names no corpus",
@@ -38,8 +28,6 @@ public class BundlerTests
                         $$"""{"formatVersion": {{Exporter.FormatVersion}}, "types": []}""")
                 ]).Problems));
 
-    // The export is copied under `corpusRoot`, so the only other answer is to merge it into the plugin
-    // tree.
     [Fact]
     public void A_corpus_root_the_plugin_tree_already_uses_is_refused()
         => Assert.Contains("would overwrite the other",
@@ -47,9 +35,6 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source()), ("corpus/notes.md", "mine")],
                 export: [Manifest()]).Problems));
 
-    // The skills address the export as `${CLAUDE_PLUGIN_ROOT}/<corpusRoot>/…` by name. A default here
-    // would be the tool quietly disagreeing with the words the corpus wrote in its own skill, and the
-    // disagreement would only show up when someone asked the installed plugin a question.
     [Fact]
     public void A_manifest_with_no_corpus_root_is_refused()
         => Assert.Contains("metadata.corpusRoot",
@@ -66,7 +51,6 @@ public class BundlerTests
     public void A_refused_plan_names_no_files()
         => Assert.Empty(Plan(plugin: [("README.md", "# nothing")], export: [Manifest()]).Files);
 
-    // Both numbers are named, because the reader's next move differs.
     [Fact]
     public void An_export_whose_format_version_this_tool_does_not_read_is_refused()
     {
@@ -78,7 +62,6 @@ public class BundlerTests
         Assert.Contains(Exporter.FormatVersion.ToString(), problem);
     }
 
-    // A document that does not say which contract it is written to is not one to guess about.
     [Fact]
     public void An_export_declaring_no_format_version_is_refused()
         => Assert.Contains("format version none",
@@ -86,7 +69,6 @@ public class BundlerTests
                 plugin: [(Bundler.ManifestFile, Source())],
                 export: [(Exporter.ManifestFile, """{"corpus":"c","types":[]}""")]).Problems));
 
-    // The hook is one `cat`, and the consumer's shell is asked for nothing else.
     [Fact]
     public void The_breadcrumb_travels_beside_the_hook_that_prints_it()
         => Assert.Contains("example-libraries", Text(Plan(
@@ -97,7 +79,6 @@ public class BundlerTests
             ],
             export: [Manifest("glossary")]), Breadcrumb.RenderedFile));
 
-    // The file exists to be printed, and one nothing prints is weight in an artefact nobody reviews.
     [Fact]
     public void A_plugin_with_no_hook_carries_no_breadcrumb()
         => Assert.DoesNotContain(
@@ -105,7 +86,6 @@ public class BundlerTests
             Plan(plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary")))],
                 export: [Manifest("glossary")]).Files.Select(f => f.Path));
 
-    // The other answer is a hook printing a file that says the corpus knows nothing.
     [Fact]
     public void A_trimmed_hook_takes_the_breadcrumb_with_it()
     {
@@ -143,7 +123,6 @@ public class BundlerTests
         Assert.Equal("the export carries no adrs", trimmed.Reason);
     }
 
-    // The author's next move is to export the type the reason names.
     [Fact]
     public void A_component_needing_two_types_is_trimmed_on_the_one_that_is_missing()
         => Assert.Equal("the export carries no adrs",
@@ -161,8 +140,6 @@ public class BundlerTests
         Assert.Empty(plan.Problems);
     }
 
-    // Both numbers are named, because the author cannot tell from one whether to rebuild the export or
-    // rewrite the component.
     [Fact]
     public void A_component_reading_a_shape_the_export_does_not_carry_stops_the_run()
     {
@@ -174,14 +151,12 @@ public class BundlerTests
         Assert.Contains("carries version 1", problem);
     }
 
-    // A bare name needs the type present and opens none of its files, which is what a breadcrumb hook does.
     [Fact]
     public void A_component_naming_no_shape_is_untouched_by_one()
         => Assert.Empty(Plan(
             plugin: [(Bundler.ManifestFile, Source(Component("hooks", "glossary")))],
             export: [Manifest("glossary")]).Problems);
 
-    // A plugin that does less is the answer here, and refusing the run would be the wrong one.
     [Fact]
     public void A_component_reading_a_shape_of_a_type_the_export_omits_is_trimmed()
     {
@@ -198,8 +173,6 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary@one")))],
             export: [Manifest("glossary")]).Problems));
 
-    // A component naming no type reads no export, so the trim above cannot reach it. It is there to
-    // support the ones that do, and it travels wherever one of those did.
     [Fact]
     public void A_component_requiring_nothing_travels_beside_one_that_earned_its_place()
     {
@@ -215,9 +188,6 @@ public class BundlerTests
         Assert.Empty(plan.Trimmed);
     }
 
-    // And it follows the last of them out. A plugin shipping it alone would carry a skill supporting
-    // nothing the reader can reach, and `bundle.json` would report a component included where the run
-    // in fact left nothing that answers a question.
     [Fact]
     public void A_component_requiring_nothing_follows_the_last_one_it_supports_out()
     {
@@ -235,9 +205,6 @@ public class BundlerTests
             plan.Trimmed.Single(c => c.Path == "skills/support").Reason);
     }
 
-    // A standalone component reads no export and supports nothing, so the sweep above has no claim on
-    // it. `raise-finding` is that case: a corpus holding no record is the one a session most needs a
-    // route to report, and trimming it would take that route away.
     [Fact]
     public void A_standalone_component_stays_when_every_component_reading_a_type_has_gone()
     {
@@ -254,8 +221,6 @@ public class BundlerTests
         Assert.Equal(["skills/look", "skills/support"], plan.Trimmed.Select(c => c.Path));
     }
 
-    // A type it named is still a type it reads, so the ordinary trim reaches it. Standalone says the
-    // sweep does not, and says nothing about the trim above.
     [Fact]
     public void A_standalone_component_naming_a_type_the_export_left_out_is_still_trimmed()
     {
@@ -271,8 +236,6 @@ public class BundlerTests
         Assert.Equal("the export carries no glossary", plan.Trimmed.Single().Reason);
     }
 
-    // The one a corpus declares on its own. Nothing supports it and nothing it supports, so the plugin
-    // carries the export and no reader of it, which is what the warning below says.
     [Fact]
     public void A_component_requiring_nothing_and_standing_alone_is_trimmed()
     {
@@ -297,7 +260,6 @@ public class BundlerTests
         Assert.DoesNotContain(plan.Files, f => f.Path.EndsWith("hooks/hooks.json", StringComparison.Ordinal));
     }
 
-    // A path beginning with a component's name but not beneath it is a different component.
     [Fact]
     public void Trimming_a_component_leaves_a_sibling_whose_name_starts_the_same_way()
     {
@@ -322,7 +284,6 @@ public class BundlerTests
         Assert.Contains(plan.Files, f => f.Path.EndsWith(Bundler.ManifestFile, StringComparison.Ordinal));
     }
 
-    // A plugin declaring none is equally useless, and there is nothing to blame the corpus for.
     [Fact]
     public void A_plugin_declaring_no_component_warns_in_its_own_words()
         => Assert.Contains("declares no components",
@@ -335,16 +296,12 @@ public class BundlerTests
             plugin: [(Bundler.ManifestFile, Source())],
             export: [Versioned("2.3.4")]), Bundler.ManifestFile).GetProperty("version").GetString());
 
-    // Stamping the format version onto the plugin would tell a reader which parser to use, over data
-    // whose meaning had changed underneath it.
     [Fact]
     public void The_export_format_version_is_not_the_plugin_version()
         => Assert.NotEqual("2", Written(Plan(
             plugin: [(Bundler.ManifestFile, Source())],
             export: [Versioned("2.3.4")]), Bundler.ManifestFile).GetProperty("version").GetString());
 
-    // There is nothing to fall back to. The version is the corpus's `content-version` and no second copy
-    // of it exists, so a corpus that states none builds a manifest nothing will install, and is told.
     [Fact]
     public void A_corpus_with_no_content_version_builds_a_manifest_with_none_and_says_so()
     {
@@ -354,8 +311,6 @@ public class BundlerTests
         Assert.Contains(plan.Warnings, w => w.Contains("no contentVersion"));
     }
 
-    // The fault this generation exists to prevent. A corpus copies its manifest from a template, and a
-    // template naming an author hands every copy somebody else's identity to publish under.
     [Fact]
     public void An_identity_key_the_corpus_never_declared_is_removed_rather_than_inherited()
     {
@@ -376,8 +331,7 @@ public class BundlerTests
         Assert.False(written.TryGetProperty("license", out _));
         Assert.False(written.TryGetProperty("keywords", out _));
 
-        // `author` is asked for by the format rather than removable, so the corpus stands in for the
-        // person it never named. What matters is that the name from the template is gone.
+        // `author` stays, because the format asks for one. What matters is that the template's name is gone.
         Assert.Equal("example-libraries", written.GetProperty("author").GetProperty("name").GetString());
     }
 
@@ -395,8 +349,6 @@ public class BundlerTests
         Assert.Equal("https://example.com/corpus", written.GetProperty("repository").GetString());
     }
 
-    // A plugin advertising a type its corpus declined sends a reader looking for records that are not
-    // in it, so the words come from what the export actually carried.
     [Fact]
     public void The_keywords_are_the_types_the_export_carried()
         => Assert.Equal(["knowledge-as-code", "glossary", "policies"],
@@ -404,8 +356,6 @@ public class BundlerTests
                     Bundler.ManifestFile)
                 .GetProperty("keywords").EnumerateArray().Select(k => k.Text()).ToArray());
 
-    // A reader meets the plugin's identity before its declarations, whatever order the keys were added
-    // in. `metadata` is last of the ones named, and anything this tool never heard of follows it.
     [Fact]
     public void The_manifest_is_written_identity_first()
     {
@@ -420,8 +370,6 @@ public class BundlerTests
             written.EnumerateObject().Select(p => p.Name).ToArray());
     }
 
-    // The manifest is the corpus's own file. Reading it into a shape known here and writing that back
-    // would delete whatever the corpus had added, without a word.
     [Fact]
     public void A_key_this_tool_does_not_know_survives_the_rewrite()
     {
@@ -457,8 +405,6 @@ public class BundlerTests
                 .Files,
             f => f.Path == "plugin/corpus/glossary/terms.jsonl");
 
-    // The copy is the seam between the two commands. A bundle that edited what it copied would make a
-    // difference between the two copies something to interpret rather than a defect.
     [Fact]
     public void The_export_is_copied_byte_for_byte()
     {
@@ -483,9 +429,6 @@ public class BundlerTests
         Assert.DoesNotContain("..", source);
     }
 
-    // The marketplace and the plugin it offers are the two words a reader types to install. Nothing in
-    // the name says where this copy sits: the same file is what gets published, so a name qualified by
-    // the path it was built at would be wrong the moment it moved.
     [Fact]
     public void The_marketplace_takes_the_name_of_the_plugin_it_offers()
     {
@@ -511,9 +454,6 @@ public class BundlerTests
         Assert.Equal("the export carries no adrs", record.GetProperty("trimmed")[0].GetProperty("reason").GetString());
     }
 
-    // The export inside the plugin states when it was taken and from which commit. A second clock here
-    // would be a second answer to one question, and the two would disagree the first time one was
-    // rebuilt without the other.
     [Fact]
     public void The_record_carries_no_clock()
     {
@@ -532,8 +472,7 @@ public class BundlerTests
     private static BundleFile File((string Path, string Content) f) =>
         new(f.Path, Encoding.UTF8.GetBytes(f.Content));
 
-    // A plugin manifest as a corpus writes one: the corpus root the skills address the export through,
-    // and whatever components the case needs. Identity is generated from the export, so a corpus writes
+    // A plugin manifest as a corpus writes one. Identity is generated from the export, so a corpus writes
     // none of it and this carries none.
     private static string Source(params string[] components) =>
         $$"""
@@ -548,9 +487,6 @@ public class BundlerTests
     private static string Standalone(string path) =>
         $$"""{"path":"{{path}}","requires":[],"standalone":true}""";
 
-    // An export manifest as `kac export` writes one, carrying the four keys a bundle reads from it.
-    // A corpus naming a person and no address. The plugin manifest says what the export said, rather
-    // than reading a key the corpus left empty as a key it never wrote.
     [Fact]
     public void An_author_with_no_address_travels_with_the_key_the_export_states()
     {
@@ -583,7 +519,6 @@ public class BundlerTests
 
     private static (string, string) Manifest(params string[] types) => Versioned(null, types);
 
-    // An export from a corpus that said who it is, so the generated half has something to carry.
     private static (string, string) About() =>
         (Exporter.ManifestFile,
             $$"""
@@ -613,13 +548,10 @@ public class BundlerTests
               }
               """);
 
-    // The manifest's type entries. Every type is at shape 1, which is what a component naming a shape
-    // is held against.
+    // Every type is at shape 1, which is what a component naming a shape is held against.
     private static string Entries(string[] types) =>
         string.Join(",", types.Select(t => $$"""{"type":"{{t}}","shapeVersion":1,"records":1}"""));
 
-    // Several corpora in one repository share a plugin tree, and each may still write a component of
-    // its own. The corpus's copy is the one that travels.
     [Fact]
     public void A_file_the_corpus_holds_wins_over_the_shared_tree()
     {
@@ -631,8 +563,6 @@ public class BundlerTests
         Assert.Equal("ours", Encoding.UTF8.GetString(merged.Single(f => f.Path.EndsWith("SKILL.md")).Content));
     }
 
-    // The manifest carries the name a plugin installs under, so two corpora sharing a tree would ship
-    // one name between them. A corpus that wrote none of its own is refused by `Plan` instead.
     [Fact]
     public void The_shared_tree_s_manifest_is_left_behind()
     {
@@ -644,8 +574,6 @@ public class BundlerTests
             Encoding.UTF8.GetString(merged.Single(f => f.Path == Bundler.ManifestFile).Content));
     }
 
-    // A corpus taking the whole of a shared tree writes nothing of its own bar the manifest, so the
-    // merge has to stand up to an empty second tree.
     [Fact]
     public void A_corpus_holding_nothing_takes_the_shared_tree_whole()
         => Assert.Equal(["hooks/hooks.json"],
@@ -654,8 +582,6 @@ public class BundlerTests
     private static BundleFile File(string path, string content) =>
         new(path, Encoding.UTF8.GetBytes(content));
 
-    // One file the plan would write, as text. The breadcrumb is prose rather than a document, so it is
-    // read whole rather than picked apart.
     private static string Text(BundlePlan plan, string path)
     {
         var full = $"{Dist.PluginDir}/{path}";
@@ -666,8 +592,8 @@ public class BundlerTests
         return Encoding.UTF8.GetString(file.Content);
     }
 
-    // One file the plan would write, parsed. Paths are relative to `.dist/`, so a file inside the
-    // plugin is addressed through the plugin directory and the marketplace is not.
+    // Paths are relative to `.dist/`, so a file inside the plugin is addressed through the plugin
+    // directory and the marketplace is not.
     private static JsonElement Written(BundlePlan plan, string path, bool underPlugin = true)
     {
         var full = underPlugin ? $"{Dist.PluginDir}/{path}" : path;

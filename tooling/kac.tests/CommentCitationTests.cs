@@ -1,6 +1,3 @@
-// Citing a page rather than restating it holds one account of an argument, and leaves a path that rots
-// when the page moves. Nothing reads a comment, so the paths are resolved here instead.
-
 using System.Text.RegularExpressions;
 using kac.core;
 

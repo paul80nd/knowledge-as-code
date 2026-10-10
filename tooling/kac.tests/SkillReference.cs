@@ -6,13 +6,6 @@ using Xunit.Sdk;
 namespace kac.tests;
 
 // The three trees a skill can live in, read from the files that already decide which is which.
-//
-// A skill travels where it governs a surface a corpus holds. `plugin.json` states the bundled set, `manifest.yaml`
-// states the overlaid one, and what is left in `.claude/skills/` never leaves. Nothing else states the split, so a
-// page restating it by hand would be a fourth answer that can disagree with the other three.
-//
-// The summary is the first sentence of each skill's own `description:`. A `note` in `plugin.json` says what a
-// component reads, which is the maintainer's question rather than the reader's, and only ten of the sixteen have one.
 internal static partial class SkillReference
 {
     internal static readonly string Page = Path.Combine(Repo.Root, "docs", "skills.md");
@@ -28,19 +21,16 @@ internal static partial class SkillReference
     [GeneratedRegex(@"\s+")]
     private static partial Regex Whitespace();
 
-    // Which skills the overlay sends, read once however many tests ask. `InThisRepository` asks as well, to
-    // subtract them, so an uncached read would parse `manifest.yaml` twice for every test that calls either.
     private static readonly Lazy<IReadOnlyList<Skill>> Overlay = new(ReadOverlay);
 
     // The overlay rule's patterns name a skill directory each, as `.claude/skills/<name>/**`.
     [GeneratedRegex(@"^\.claude/skills/(?<name>[^/]+)/\*\*$")]
     private static partial Regex Overlaid();
 
-    // One row of a table: the skill, what it answers, and for a bundled one what its component requires.
     internal record Skill(string Name, string Summary, string? Requires);
 
-    // The ten that travel inside a plugin, in the order `plugin.json` declares them. The order is the bundler's, so
-    // a component added to the manifest appears where its author put it.
+    // The skills that travel inside a plugin, in the order `plugin.json` declares them. The order is the
+    // bundler's, so a component added to the manifest appears where its author put it.
     internal static IReadOnlyList<Skill> InThePlugin()
     {
         var manifest = JsonRead.Parse(Files.ReadLf(Path.Combine(Bundled, ".claude-plugin", "plugin.json")));
@@ -72,7 +62,6 @@ internal static partial class SkillReference
         return skills;
     }
 
-    // The ones a corpus receives into its own working tree, named by the overlay rule that sends them.
     internal static IReadOnlyList<Skill> InACorpus() => Overlay.Value;
 
     private static IReadOnlyList<Skill> ReadOverlay()
@@ -89,13 +78,10 @@ internal static partial class SkillReference
         return [.. names.Select(name => new Skill(name, Summary(Path.Combine(Own, name, "SKILL.md")), null))];
     }
 
-    // What is left in this repository's own tree once the overlay has taken its share. Derived rather than listed,
-    // so a skill added here appears without this file changing.
     internal static IReadOnlyList<Skill> InThisRepository()
     {
         var travelling = InACorpus().Select(skill => skill.Name).ToHashSet(StringComparer.Ordinal);
 
-        // `EnumerateDirectories` returns a path with no trailing separator, so every entry has a last segment.
         return
         [
             .. Directory.EnumerateDirectories(Own)
@@ -124,10 +110,8 @@ internal static partial class SkillReference
         return (stop < 0 ? described : described[..stop]).TrimEnd('.');
     }
 
-    // One table, rendered by the one renderer this repository has. `Gfm` states why the separator takes the form it
-    // does, and escaping a cell matters here because a summary is prose somebody wrote into a `description:`.
-    //
-    // A bundled table carries the third column and the other two do not.
+    // One table, rendered by the one renderer this repository has. `Gfm` states why the separator takes the form
+    // it does.
     internal static string Table(IReadOnlyList<Skill> skills)
     {
         var bundled = skills.Any(skill => skill.Requires is not null);

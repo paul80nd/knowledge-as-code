@@ -1,9 +1,3 @@
-// A hand-written usage drifts from the parser inside two pull requests and nothing notices, so each page
-// carries a generated block and these hold it to the parser's own command model.
-//
-// `KAC_UPDATE_DOCS=1` rewrites the blocks instead of asserting on them. Read the diff afterwards: the
-// update blesses a regression as happily as a fix.
-
 using System.Text.RegularExpressions;
 
 namespace kac.tests;
@@ -13,17 +7,14 @@ public partial class CliReferenceTests
 {
     private static bool Updating => Environment.GetEnvironmentVariable("KAC_UPDATE_DOCS") == "1";
 
-    // The fenced block holding the flow chart, opened by the plain fence GitHub renders natively.
     [GeneratedRegex(@"^```mermaid$.*?^```$", RegexOptions.Multiline | RegexOptions.Singleline)]
     private static partial Regex Mermaid();
 
-    // A node whose label is a command, as `kac validate`. The chart also holds nodes that are not
-    // commands, and those are what the label rather than the pattern tells apart.
+    // A node whose label is a command, as `kac validate`.
     [GeneratedRegex(@"\bkac (?<verb>[a-z]+)\b")]
     private static partial Regex Invocation();
 
-    // One node declaration, as `id[label];` or `id(label);`. An edge line carries no bracket, so this
-    // reads the declarations and passes over the arrows between them.
+    // One node declaration, as `id[label];` or `id(label);`. An edge line carries no bracket.
     [GeneratedRegex(@"^\s*\w+(?<open>[\[(])(?<label>[^\])]+)[\])];$", RegexOptions.Multiline)]
     private static partial Regex Node();
 
@@ -61,13 +52,6 @@ public partial class CliReferenceTests
             + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 
-    // The three headings a command page may carry, in the order it carries them. The set is fixed so that a reader can
-    // ask the same question of any command and find the answer in the same place. `Known limits` is left out where a
-    // command has none, and nothing else may be added or reordered: deeper structure goes underneath one of these
-    // rather than beside it, which is what keeps a page with several worked examples from growing a fourth section.
-    //
-    // Why a command works the way it does is not on these pages. It is under docs/design/, which each one links, so
-    // what a reader meets here is what they need to type the command and read what it printed.
     private static readonly string[] Sections = ["What it does", "Examples", "Known limits"];
 
     [Fact]
@@ -85,17 +69,10 @@ public partial class CliReferenceTests
         }
     }
 
-    // The verbs the flow chart deliberately leaves out, each because it is not a step in any sequence.
-    // `checks` reads the schema and prints what could ever fire, which is a question about the schema.
-    // `report` reads the corpus and prints what it found, which is a question about the corpus.
-    //
-    // A list rather than an absence, so a verb added to the parser fails the test below until somebody
-    // decides which it is. That is the bargain `on-type-page: false` already strikes for a check the type
-    // pages do not advertise.
+    // The verbs the flow chart leaves out, because neither is a step in any sequence. A verb added to the
+    // parser fails the test below until somebody decides which it is.
     private static readonly string[] NotSteps = ["checks", "report"];
 
-    // The chart is drawn by hand, and nothing in MkDocs would notice a verb missing from it. A new
-    // command that nobody placed in the sequence is exactly what a reader comes to this page to find.
     [Fact]
     public void The_flow_chart_places_every_command_that_is_a_step()
     {
@@ -115,11 +92,6 @@ public partial class CliReferenceTests
     // Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers
     // to. `docs/design/generation.md` argues it: a diagram exceeding that subset renders nothing at all,
     // with no error to say why. So the generator writes `graph` and this is held to the same.
-    //
-    // This page is read on the documentation site and on github.com, and never by a wiki, so the rule is
-    // followed here because it costs nothing rather than because it binds. Node shapes are the exception
-    // the test below states: nothing has held a wiki to one, and this page is where that is safe to find
-    // out. The three constraints named here are the ones the rule actually names.
     [Fact]
     public void The_flow_chart_stays_inside_the_subset_the_narrowest_renderer_reads()
     {
@@ -131,12 +103,6 @@ public partial class CliReferenceTests
         Assert.DoesNotContain("==>", chart, StringComparison.Ordinal);
     }
 
-    // What tells a command from the rest of the chart, which is the shape and nothing else. Colour alone
-    // would say nothing to a reader who cannot see it, and a fill that reads on a light background reads
-    // as a hole on a dark one.
-    //
-    // Asserted because a node added in the wrong shape is invisible to every other check here, and the
-    // convention only works while every node keeps it. The page states it in a line above the diagram.
     [Fact]
     public void A_command_is_drawn_as_a_box_and_everything_else_is_rounded()
     {
@@ -149,8 +115,6 @@ public partial class CliReferenceTests
         }
     }
 
-    // Each row's wording comes from the page it indexes, so a command whose page is added, renamed or
-    // retitled drops out of step here rather than quietly out of the list.
     [Fact]
     public void The_overview_indexes_every_page()
     {

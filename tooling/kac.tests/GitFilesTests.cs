@@ -1,5 +1,3 @@
-// The golden suite assembles a non-git tree, so what git itself reports is only asked here.
-
 using kac.core;
 
 namespace kac.tests;

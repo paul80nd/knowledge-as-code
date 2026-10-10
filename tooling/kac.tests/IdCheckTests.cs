@@ -1,10 +1,5 @@
 using kac.core;
 
-// In-process unit tests for the id and the filename that carries it. Three styles, each asking two
-// questions behind two check ids: is this id the shape the type declares, and does it name the file
-// it sits in. The coverage gate reads ids, so a fixture tripping `id-format` on one style leaves the
-// other two branches green without ever having run them. These are where the styles are told apart.
-
 namespace kac.tests;
 
 public class IdCheckTests
@@ -25,8 +20,6 @@ public class IdCheckTests
         FilenameCarriesId = false
     };
 
-    // The two part sources, each with the id shape its own declaration gives a part. A policy's clauses
-    // are written to a pattern; a glossary's terms are the anchors their headings slug to.
     private static TypeSchema Clauses() => new()
     {
         Folder = "policies", IdPrefix = "pol", IdStyle = "mnemonic", IdWidth = new(4, 4),
@@ -84,7 +77,6 @@ public class IdCheckTests
     public void A_slug_id_is_lower_case_letters_digits_and_hyphens(string id)
         => Assert.Equal("id-format", Assert.Single(Run(id, "tools/site-server.md", Slug())).Check.Value);
 
-    // The filename a malformed id fails to match is not worth saying while the id itself is unreadable.
     [Fact]
     public void A_malformed_id_is_not_also_held_to_the_filename()
         => Assert.Equal("id-format", Assert.Single(Run("adr-7", "adrs/0004-a.md", Numbered())).Check.Value);
@@ -103,14 +95,11 @@ public class IdCheckTests
     public void An_id_agreeing_with_its_filename_is_silent(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // A leading-segment match would accept `svc-search` in `search-service.md`, which names another
-    // document.
     [Fact]
     public void A_slug_is_compared_whole_and_not_as_a_prefix()
         => Assert.Equal("id-matches-filename",
             Assert.Single(Run("tol-site", "tools/site-server.md", Slug())).Check.Value);
 
-    // One broken name earns one finding.
     [Theory]
     [InlineData("adr-0004", "adrs/no-digits-at-all.md")]
     [InlineData("pol-VURM", "policies/toolong-a.md")]
@@ -124,15 +113,12 @@ public class IdCheckTests
     public void A_filename_carrying_no_id_is_not_held_to_the_agreement()
         => Assert.Empty(Run("std-VCS", "standards/common/secret-handling.md", Span()));
 
-    // A standard's filename is a topical slug, so a link to one is a link and cites nothing.
     [Fact]
     public void A_link_to_a_record_whose_filename_carries_no_id_cites_nothing()
         => Assert.Null(Cite("/standards/card-data.md", "controls/0001-a.md", Span()));
 
     private const string TooLong = "slug-that-is-definitely-way-too-long";
 
-    // A numbered type's `0003-` is a discriminator the author did not choose, so it is not counted. Under
-    // a slug type the whole stem is the name they did choose.
     [Fact]
     public void The_discriminator_is_excluded_from_the_slug_but_a_slug_id_is_measured_whole()
     {
@@ -149,7 +135,6 @@ public class IdCheckTests
         => Assert.Contains($"slug '{TooLong}' is 36 characters",
             Assert.Single(Filename($"policies/mexp-{TooLong}.md", Mnemonic())).Message);
 
-    // Nothing is cut from the head where nothing there belongs to the id.
     [Fact]
     public void A_filename_carrying_no_id_is_measured_whole()
         => Assert.Contains($"slug 'secr-{TooLong}' is 41 characters",
@@ -159,7 +144,6 @@ public class IdCheckTests
     public void A_slug_within_the_limit_is_silent()
         => Assert.Empty(Filename("tools/ripgrep.md", Slug()));
 
-    // `label-canonical` is the difference between a label and the id as a document carries it.
     [Theory]
     [InlineData("adr-0001", "adr-0001")]
     [InlineData("ADR-0001", "adr-0001")] // the prefix is matched without case and written back lower
@@ -172,7 +156,6 @@ public class IdCheckTests
         Assert.Equal(expected, canonical);
     }
 
-    // Prose in brackets warns as `bracket-literal`.
     [Theory]
     [InlineData("adr-001")]   // too few digits for the declared width
     [InlineData("adr-00011")] // too many
@@ -185,8 +168,6 @@ public class IdCheckTests
     public void Anything_else_is_prose_in_brackets(string label)
         => Assert.False(IdChecks.TryCanonicalId(label, SchemaWith(Numbered(), Mnemonic(), Slug()), out _));
 
-    // The record half canonicalises as any id does. The part half is judged against the type's own `parts:`
-    // block, because only that says what a part id looks like.
     [Theory]
     [InlineData("pol-scrt.TIMEBOX", "pol-SCRT.TIMEBOX")] // the record half is written back upper
     [InlineData("POL-SCRT.TIMEBOX", "pol-SCRT.TIMEBOX")]
@@ -197,7 +178,6 @@ public class IdCheckTests
         Assert.Equal(expected, canonical);
     }
 
-    // The declaration is what keeps a filename in brackets, such as `pol-DEVI.md`, out of this.
     [Theory]
     [InlineData("pol-SCRT.timebox")] // the declared pattern is upper-case
     [InlineData("pol-SCRT.md")]      // a file extension is not a clause
@@ -217,20 +197,18 @@ public class IdCheckTests
     public void A_link_to_a_numbered_record_is_read_as_its_id(string target, string expected)
         => Assert.Equal(expected, Cite(target, "adrs/0001-first.md", Numbered()));
 
-    // The filename carries the mnemonic lower-case.
     [Fact]
     public void A_link_to_a_mnemonic_record_is_written_back_upper_case()
         => Assert.Equal("pol-VURM", Cite("/policies/vurm-vulnerability.md", "adrs/0001-first.md", Mnemonic()));
 
-    // A slug filename carries nothing distinctive to recognise, so the folder is load-bearing here.
     [Theory]
     [InlineData("/tools/ripgrep.md", "tol-ripgrep")]
     [InlineData("ripgrep.md", "tol-ripgrep")]
     public void A_link_to_a_slug_record_is_read_as_its_id(string target, string expected)
         => Assert.Equal(expected, Cite(target, "tools/fd.md", Slug()));
 
-    // A type page is not a record, and under a slug type its name is shaped exactly like one. The folder
-    // is what tells them apart: `tools.md` sits beside the folder rather than in it.
+    // Under a slug type a type page is shaped exactly like a record. The folder tells them apart:
+    // `tools.md` sits beside the folder rather than in it.
     [Theory]
     [InlineData("/tools.md", "tools/fd.md")]
     [InlineData("../tools.md", "tools/fd.md")]
@@ -267,8 +245,6 @@ public class IdCheckTests
     private static List<Finding> Filename(string rel, TypeSchema t) => Collect(report =>
         IdChecks.CheckFilename(rel, t, report));
 
-    // These read an id and a filename, never a document, so the file a finding is against is left
-    // empty.
     private static List<Finding> Collect(Action<Report> check)
     {
         var found = new List<Finding>();

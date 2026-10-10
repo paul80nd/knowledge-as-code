@@ -1,20 +1,12 @@
 using System.Text.Json;
 using kac.core;
 
-// The facts a verb reads from outside the corpus arrive as parameters, and these prove they are used.
-// `Program.cs` reads the clock, git and the network and passes them down, so a verb can be run here over
-// a fixture corpus with a day, a commit and a registry chosen by the test, and none read from the machine.
-//
-// The fixture is copied under the temp directory with the real schema beside it, which is the tree
-// `kac-tests.cs` assembles for the golden suite. Each verb still writes through `Out`, so what these read
-// back is the exit code and what landed on disk.
+// Each verb writes through `Out`, so what these read back is the exit code and what landed on disk.
 
 namespace kac.tests;
 
 public class CommandsTests
 {
-    // The temp tree is no git repository, so a commit and a dirtiness the manifest names can only have
-    // come from the call.
     [Fact]
     public void Export_stamps_the_manifest_with_the_commit_day_and_dirtiness_it_is_given()
     {
@@ -30,9 +22,6 @@ public class CommandsTests
         Assert.True(manifest.GetProperty("dirty").GetBoolean());
     }
 
-    // Three imports, each locked, so each is asked about once at the source its entry names. An import
-    // with no lock is skipped before the registry is reached, which `Freshness.Read` says.
-    // A refusal is the plan's, and the verb writes nothing for it.
     [Fact]
     public void Export_writes_nothing_for_a_type_the_corpus_has_not_adopted()
     {
@@ -55,7 +44,6 @@ public class CommandsTests
         Assert.Equal(["feed", "feed", "nowhere"], asked.Select(Path.GetFileName));
     }
 
-    // A corpus consuming nothing is every corpus standing on its own, and the check costs it no read.
     [Fact]
     public void Validate_reads_no_registry_for_a_corpus_consuming_nothing()
     {
@@ -68,7 +56,6 @@ public class CommandsTests
         Assert.Empty(asked);
     }
 
-    // A registry whose every source is a folder that records the ask and holds nothing.
     private static Registry Recording(List<string> asked) =>
         new(_ => new Fetched(null, 0, "not a feed."),
             new FolderFeed(source =>

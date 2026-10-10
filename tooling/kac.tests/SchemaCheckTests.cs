@@ -1,19 +1,13 @@
 using kac.core;
 
-// In-process unit tests for the pass that reads the schema itself. Built from in-memory objects,
-// because what each case pins is a single declaration held against a single dispatch table, and a
-// fixture would have to carry a whole broken type file to say the same thing. The fixture that does
-// carry one is tests/fixtures/schema-declarations, and it is there to prove the findings reach the CLI.
-//
-// Every case is a declaration a schema can carry that nothing else would report. The types are invented,
-// because a case naming a real one would move whenever that type did.
+// The types are invented, because a case naming a real one would move whenever that type did.
 
 namespace kac.tests;
 
 public class SchemaCheckTests
 {
     // The defaults are what a sound type carries, so that a case reports the one fault it declares and
-    // nothing else. Each is overridable, because each has its own cases further down.
+    // nothing else.
     private static TypeSchema Widgets(string idStyle = "slug", string folder = "widgets",
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
@@ -42,13 +36,8 @@ public class SchemaCheckTests
         Export = export
     };
 
-    // The tiers a type may claim, and the field that admits them, as a sound schema carries them. So a
-    // case declaring nothing about tiers reports nothing about them. CheckTiers has its own cases below.
     private static readonly string[] TierNames = ["decided", "normative", "descriptive", "procedural"];
 
-    // What `_checks.yaml` carries in a sound schema: an entry for every id the rule classes report
-    // under. Defaulted here for the same reason the tiers are: a case about a field should not also
-    // report that the catalogue is incomplete.
     private static IReadOnlyList<CheckDef> SoundChecks() =>
         [.. CheckCatalogue.EmittedByRules().Select(id => new CheckDef(id, Sev.Warning, "It is checked."))];
 
@@ -76,8 +65,6 @@ public class SchemaCheckTests
         return findings;
     }
 
-    // The registry names what a rule class reports under, so an id missing from the file is a check a
-    // reader would meet with no entry behind it.
     [Fact]
     public void A_check_a_rule_class_reports_under_and_the_schema_omits_is_reported()
     {
@@ -90,7 +77,6 @@ public class SchemaCheckTests
         Assert.Contains(CheckCatalogue.EmittedByRules()[0].Value, finding.Message);
     }
 
-    // The arrangement where `generate` writes into one folder and discovery reads another.
     [Fact]
     public void A_folder_that_is_not_the_files_own_name_is_reported()
     {
@@ -101,7 +87,6 @@ public class SchemaCheckTests
         Assert.Contains("gadgets", finding.Message);
     }
 
-    // The arrangement that reads as enforced from every angle and is not.
     [Fact]
     public void A_rule_claiming_a_severity_that_nothing_dispatches_is_reported()
     {
@@ -113,14 +98,11 @@ public class SchemaCheckTests
         Assert.Contains("widgets-are-blue", finding.Message);
     }
 
-    // Nothing about a rule with no severity is a defect: it is the state most of the taxonomy's rules
-    // are honestly in.
     [Fact]
     public void A_rule_with_no_severity_is_an_intention_and_passes()
         => Assert.Empty(Check(Widgets(
             rules: [new RuleSpec { Id = new RuleId("widgets-are-blue"), Description = "One day." }])));
 
-    // The loader records the fault rather than throwing.
     [Fact]
     public void A_rule_the_loader_could_not_read_is_reported_against_its_file()
     {
@@ -142,8 +124,6 @@ public class SchemaCheckTests
             ("stored-in", new FieldSpec { Name = "stored-in", Type = "list", Of = "id", Refs = ["data"] })
         ])));
 
-    // A scalar `ref:` parses to a one-entry list, so both forms arrive here the same way, and a list
-    // mixing an adopted type with a declined one is the case a corpus meets first.
     [Fact]
     public void A_list_ref_naming_an_adopted_type_and_a_declined_one_is_left_alone()
         => Assert.Empty(Check(Widgets(fields:
@@ -152,7 +132,6 @@ public class SchemaCheckTests
                 new FieldSpec { Name = "departs-from", Type = "list", Of = "id", Refs = ["widgets", "gadgets"] })
         ])));
 
-    // Only an enum's range is applied, so a vocabulary declared anywhere else enforces nothing.
     [Fact]
     public void A_values_list_on_anything_but_an_enum_is_reported()
     {
@@ -173,8 +152,6 @@ public class SchemaCheckTests
                 { Name = "status", Type = "enum", Values = ["draft", "active"], InForce = "active" })
         ])));
 
-    // The settled value is one of the range, so a name outside it selects nothing and every reader of the
-    // key takes every value as unsettled.
     [Fact]
     public void An_in_force_value_the_range_does_not_include_is_reported()
     {
@@ -189,8 +166,6 @@ public class SchemaCheckTests
         Assert.Contains("'active'", finding.Message);
     }
 
-    // A field that is not an enum has no range to select from, so the key promises a distinction nothing
-    // could draw.
     [Fact]
     public void An_in_force_value_on_anything_but_an_enum_is_reported()
     {
@@ -203,8 +178,6 @@ public class SchemaCheckTests
         Assert.Contains("'status'", finding.Message);
     }
 
-    // Asked of the type rather than of the field, because a type refining `status` and a type taking the
-    // universal declaration owe the same answer.
     [Fact]
     public void A_status_with_a_range_and_no_in_force_value_is_reported()
     {
@@ -217,8 +190,6 @@ public class SchemaCheckTests
         Assert.Contains("'in-force:'", finding.Message);
     }
 
-    // A range the type never states leaves nothing to name, and `status` then holds no record to anything,
-    // which is a fault of its own.
     [Fact]
     public void A_status_stating_no_range_is_asked_for_no_in_force_value()
         => Assert.Empty(Check(Widgets(fields:
@@ -226,8 +197,6 @@ public class SchemaCheckTests
             ("status", new FieldSpec { Name = "status", Type = "enum", Values = [] })
         ])));
 
-    // The section a field mirrors is read from the record, so the reconciliation runs against a heading
-    // no record may carry.
     [Fact]
     public void A_mirrors_section_the_type_does_not_declare_is_reported()
     {
@@ -241,8 +210,6 @@ public class SchemaCheckTests
         Assert.Contains("See also", finding.Message);
     }
 
-    // The labelled line gathers citations of another record, so a field pointing at no type carries
-    // nothing the line could ever be held against.
     [Fact]
     public void A_mirrors_citations_on_a_field_with_no_ref_is_reported()
     {
@@ -259,9 +226,6 @@ public class SchemaCheckTests
         Assert.Contains("Covers", finding.Message);
     }
 
-    // A description is rendered into the type page's checks table, which is read by scanning. The bound
-    // is held here rather than left to review because the table is generated: an over-long cell reads as
-    // deliberate in the diff, and there is nowhere else it would be noticed.
     [Fact]
     public void A_rule_description_longer_than_the_table_allows_is_reported()
     {
@@ -275,8 +239,6 @@ public class SchemaCheckTests
         Assert.Contains($"the limit is {ChecksTable.DescriptionMax}", finding.Message);
     }
 
-    // A dispatched rule is precisely the one whose description reaches the table, and CheckRule lets
-    // those go early.
     [Fact]
     public void The_bound_holds_for_a_rule_that_is_dispatched_too()
     {
@@ -296,7 +258,6 @@ public class SchemaCheckTests
             new RuleSpec { Id = new RuleId("just-fits"), Description = new string('x', ChecksTable.DescriptionMax) }
         ])));
 
-    // Any section the type declares reconciles, not one fixed name.
     [Fact]
     public void A_mirrors_section_the_type_declares_passes()
         => Assert.Empty(Check(Widgets(fields:
@@ -337,7 +298,6 @@ public class SchemaCheckTests
     public void Every_style_the_id_checks_apply_passes(string style)
         => Assert.Empty(Check(Widgets(idStyle: style)));
 
-    // Reversed, the span admits nothing, so every record of the type fails on an unmeetable range.
     [Fact]
     public void A_span_of_widths_the_wrong_way_round_is_reported()
     {
@@ -348,7 +308,6 @@ public class SchemaCheckTests
         Assert.Contains("above its 'max:' of 2", finding.Message);
     }
 
-    // A number is padded to one width so that ids sort, so a span there is two ids for one record.
     [Fact]
     public void A_span_of_widths_on_a_numbered_type_is_reported()
     {
@@ -359,7 +318,6 @@ public class SchemaCheckTests
         Assert.Contains("padded to one width", finding.Message);
     }
 
-    // A span admits several lengths, so the head of a topical filename binds to whichever id it spells.
     [Fact]
     public void A_span_of_widths_beside_a_filename_that_carries_the_id_is_reported()
     {
@@ -373,7 +331,6 @@ public class SchemaCheckTests
     public void A_span_of_widths_passes_where_the_filename_carries_no_id()
         => Assert.Empty(Check(Widgets(idStyle: "mnemonic", width: new WidthSpec(2, 7), carriesId: false)));
 
-    // A slug id is the filename stem, so a slug type withholding it has withheld the id itself.
     [Fact]
     public void A_slug_type_that_withholds_its_id_from_the_filename_is_reported()
     {
@@ -383,7 +340,6 @@ public class SchemaCheckTests
         Assert.Contains("nothing left for the id to be", finding.Message);
     }
 
-    // An absent key and a deliberate `folder: null` are the same empty string by the time this reads it.
     [Fact]
     public void A_type_with_no_folder_is_reported()
     {
@@ -401,7 +357,6 @@ public class SchemaCheckTests
     public void Every_declared_tier_passes(string tier)
         => Assert.Empty(Check(Widgets(tier: tier)));
 
-    // A type claiming a tier nothing declares has no heading to sit under and no behaviour to inherit.
     [Fact]
     public void A_tier_no_file_declares_is_reported()
     {
@@ -444,8 +399,6 @@ public class SchemaCheckTests
         Assert.Contains("declares no 'label:'", finding.Message);
     }
 
-    // Required where `label:` is not, because a singular can be derived from the type name and a plural
-    // cannot: an `s` appended to `nfr` is not "NFRs".
     [Fact]
     public void A_type_that_does_not_name_its_collection_is_reported()
     {
@@ -473,7 +426,6 @@ public class SchemaCheckTests
         Assert.Contains("no 'goes-here:'", finding.Message);
     }
 
-    // Held to the bound a rule's description is held to, and for the same reason: both are table cells.
     [Fact]
     public void A_summary_too_long_for_the_cell_it_becomes_is_reported()
     {
@@ -496,7 +448,6 @@ public class SchemaCheckTests
         Assert.Contains("no 'detail:'", finding.Message);
     }
 
-    // The paragraph is prose, not a cell, so the bound the other three are held to does not apply to it.
     [Fact]
     public void A_detail_longer_than_a_table_cell_passes()
         => Assert.Empty(Check(Widgets(detail: new string('x', ChecksTable.DescriptionMax * 3))));
@@ -510,13 +461,10 @@ public class SchemaCheckTests
         Assert.Contains("no 'lineage.prior-art:'", finding.Message);
     }
 
-    // An empty pair beside "None" is a settled state rather than an unfinished one.
     [Fact]
     public void A_prior_art_of_none_with_nothing_beside_it_passes()
         => Assert.Empty(Check(Widgets()));
 
-    // A type declaring `parts:` is the only reason a citation into its records resolves, so every way of
-    // getting the block wrong ends with the type silently offering none.
     [Fact]
     public void A_part_source_nothing_extracts_names_the_ones_that_are_read()
     {
@@ -528,8 +476,6 @@ public class SchemaCheckTests
         Assert.Contains("'headings', 'table'", found.Message);
     }
 
-    // The walk runs to a heading no record may carry, and every citation into the type fails against
-    // what it did not find.
     [Fact]
     public void A_part_section_the_type_does_not_declare_is_reported()
     {
@@ -540,8 +486,6 @@ public class SchemaCheckTests
         Assert.Contains("'parts.section: Glossary'", found.Message);
     }
 
-    // A table with no binding modals reports every row as opening with none of them, and lists the
-    // modals to write as nothing at all.
     [Fact]
     public void A_table_source_declaring_no_binding_modals_is_reported()
     {
@@ -552,7 +496,6 @@ public class SchemaCheckTests
         Assert.Contains("declares no 'binding:'", found.Message);
     }
 
-    // The modals belong to the table source.
     [Fact]
     public void A_heading_source_is_not_asked_for_modals()
         => Assert.Empty(Check(Widgets(sections: ["Terms"],
@@ -562,8 +505,6 @@ public class SchemaCheckTests
     public void A_type_declaring_no_parts_is_asked_nothing_about_them()
         => Assert.Empty(Check(Widgets()));
 
-    // A section the export names and the type does not declare is a projection promising words no
-    // record carries.
     [Fact]
     public void An_exported_section_the_type_does_not_declare_is_reported()
     {
@@ -574,7 +515,6 @@ public class SchemaCheckTests
         Assert.Contains("'export.sections: Provenance'", found.Message);
     }
 
-    // The author is often one letter from one of the three that work.
     [Fact]
     public void An_exported_fidelity_nothing_carries_names_the_ones_that_are_written()
     {
@@ -586,7 +526,6 @@ public class SchemaCheckTests
         Assert.Contains("'full', 'reference', 'summary'", found.Message);
     }
 
-    // The two vocabularies are separate, so a fidelity sound against a section is reported against a line.
     [Fact]
     public void A_part_line_reaching_for_a_reduced_fidelity_is_reported()
     {
@@ -606,7 +545,6 @@ public class SchemaCheckTests
         Assert.Contains("An export carries 'full'.", found.Message);
     }
 
-    // Fidelity is what a consumer reads the export for, so there is no default to fall back on.
     [Fact]
     public void An_export_entry_declaring_no_fidelity_is_reported()
     {
@@ -627,14 +565,10 @@ public class SchemaCheckTests
         Assert.Contains("'export.fields: colour'", found.Message);
     }
 
-    // A field the type inherits is a field its records carry, so the universal layer answers as well as
-    // the type's own declarations.
     [Fact]
     public void An_exported_field_the_type_inherits_passes()
         => Assert.Empty(Check(Widgets(export: new ExportSpec { Version = 1, Fields = ["tier"] })));
 
-    // A consumer holds a type's files to its shape version, and without one has nothing to refuse a
-    // moved shape by.
     [Fact]
     public void An_export_block_declaring_no_shape_version_is_reported()
     {
@@ -644,8 +578,6 @@ public class SchemaCheckTests
         Assert.Contains("no 'version:' above 0", found.Message);
     }
 
-    // Parts are taken from wherever the `parts:` block locates them, so a type exporting them without
-    // one has named a source that does not exist.
     [Fact]
     public void Exported_parts_on_a_type_that_locates_none_are_reported()
     {
@@ -656,8 +588,6 @@ public class SchemaCheckTests
         Assert.Contains("carries no 'parts:' block", found.Message);
     }
 
-    // The line is the whole of what a consumer greps, so a type exporting parts and naming none of its
-    // keys writes a file of empty objects.
     [Fact]
     public void Exported_parts_with_no_line_are_reported()
     {
@@ -670,8 +600,6 @@ public class SchemaCheckTests
         Assert.Contains("no 'line:' beneath it", found.Message);
     }
 
-    // A source outside the vocabulary fills nothing, so the key would be null on every line while the
-    // schema goes on saying the type carries it.
     [Fact]
     public void A_line_source_nothing_fills_is_reported()
     {
@@ -691,8 +619,6 @@ public class SchemaCheckTests
         Assert.Contains("with no source", found.Message);
     }
 
-    // `front.` resolves against the same declarations `export.fields:` does, so a field neither the type
-    // nor the universal layer declares is reported rather than exported as a null.
     [Fact]
     public void A_line_source_naming_a_field_no_record_carries_is_reported()
     {
@@ -706,12 +632,10 @@ public class SchemaCheckTests
     public void A_line_source_naming_an_inherited_field_passes()
         => Assert.Empty(Check(Line(("tier", "front.tier"))));
 
-    // A record's heading is a part's own text here.
     [Fact]
     public void A_line_source_naming_the_title_as_a_field_is_reported()
         => Assert.Contains("'front.title'", Assert.Single(Check(Line(("title", "front.title")))).Message);
 
-    // A heading-sourced type stands under no headers, so a column source on one names nothing.
     [Fact]
     public void A_line_source_naming_a_column_the_type_does_not_declare_is_reported()
     {
@@ -728,9 +652,8 @@ public class SchemaCheckTests
             parts: new PartSpec(PartSpec.Table, "", ["MUST"], [])
                 { Section = "Terms", Columns = ["Id", "Clause", "Alignment"] })));
 
-    // A table row is its own body, so a source reading a body has nothing to read and would write null on
-    // every line. Asked of the lead here and of an aside below, because each reaches the refusal by its own
-    // arm: the lead through the fixed vocabulary, an aside through the prefixed one.
+    // Asked of the lead here and of an aside below, because each reaches the refusal by its own arm: the lead
+    // through the fixed vocabulary, an aside through the prefixed one.
     [Fact]
     public void A_line_source_reading_a_lead_against_a_table_is_reported()
     {
@@ -753,8 +676,6 @@ public class SchemaCheckTests
         Assert.Contains("A row is its own body", found.Message);
     }
 
-    // A label the type never declared marks a block nothing looks for, so the key would be null on every
-    // line while the schema went on saying the type carries it.
     [Fact]
     public void A_line_source_naming_an_undeclared_aside_is_reported()
     {
@@ -770,9 +691,6 @@ public class SchemaCheckTests
             ("not", "part.aside.Not"),
             parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms", Asides = ["Not"] })));
 
-    // The level is matched against the modals the type declares, so a type declaring none carries a key
-    // that is null wherever it appears. A heading-sourced type is the case with nothing else to say it:
-    // a table-sourced one declaring no modals is already reported against its `parts:` block.
     [Fact]
     public void A_line_source_taking_a_level_from_a_type_declaring_none_is_reported()
     {
@@ -782,8 +700,6 @@ public class SchemaCheckTests
         Assert.Contains("no binding or advisory levels", found.Message);
     }
 
-    // Each bullet's level is read against the declared modals too, so a type declaring none writes a null
-    // level on every bullet.
     [Fact]
     public void A_line_source_taking_bullets_from_a_type_declaring_no_levels_is_reported()
     {
@@ -793,7 +709,6 @@ public class SchemaCheckTests
         Assert.Contains("no binding or advisory levels", found.Message);
     }
 
-    // A table row has no bullets at all, so this is the body refusal again.
     [Fact]
     public void A_line_source_reading_bullets_against_a_table_is_reported()
     {
@@ -868,8 +783,6 @@ public class SchemaCheckTests
         Assert.Contains("against itself", finding.Message);
     }
 
-    // A pair both sides declare renders twice, with two accounts of one distinction and nothing keeping
-    // them in step.
     [Fact]
     public void A_pair_declared_from_both_sides_is_reported()
     {
@@ -887,8 +800,6 @@ public class SchemaCheckTests
             ("adrs", [("widgets", "One account, written once.")]),
             ("widgets", []))));
 
-    // A source nothing resolves leaves the field empty in every record of the type, which reads on the
-    // page as a column the corpus never fills in rather than as a schema that will not do what it says.
     [Fact]
     public void A_field_deriving_from_a_source_nothing_resolves_is_reported()
     {
@@ -906,8 +817,6 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Widgets(
             fields: [("shelf", new FieldSpec { Name = "shelf", From = "sub-path" })])));
 
-    // Requiring a derived field asks for a line the author must not supply, so every record of the type
-    // fails `required-field` and `derived-key` in turn and the way out of one is the way into the other.
     [Fact]
     public void A_derived_field_that_is_also_required_is_reported()
     {
@@ -919,8 +828,6 @@ public class SchemaCheckTests
         Assert.Contains("'shelf'", finding.Message);
     }
 
-    // The value checks switch on `type:`, so a value outside the switch reaches nothing. A misspelling
-    // is one of those, and it is the case that reads as validated: the corpus goes green.
     [Fact]
     public void A_field_whose_type_no_check_reads_is_reported()
     {
@@ -933,9 +840,6 @@ public class SchemaCheckTests
         Assert.Contains("'timestamp'", finding.Message);
     }
 
-    // An entry's checks are written into the walk `Sequence` makes, which is narrower than the switch.
-    // So a value a field may take is not one an entry may, and `date` is the one that reads as though
-    // it were.
     [Fact]
     public void A_list_whose_entries_no_check_reads_is_reported()
     {
@@ -946,8 +850,6 @@ public class SchemaCheckTests
         Assert.Contains("of: date", finding.Message);
     }
 
-    // `Entry` sends each key's value back through `Check`, so a key's `type:` dispatches exactly as a
-    // field's does and answers to the same vocabulary.
     [Fact]
     public void An_entry_key_whose_type_no_check_reads_is_reported()
     {
@@ -965,8 +867,6 @@ public class SchemaCheckTests
         Assert.Contains("type: moment", finding.Message);
     }
 
-    // `ParseField` recurses into an `entry:` block, and so does `Entry` when it walks one, so a key two
-    // levels in is held to its own declaration. A question asked one level down would go quiet here.
     [Fact]
     public void An_entry_key_nested_two_levels_in_is_reported()
     {
@@ -990,9 +890,6 @@ public class SchemaCheckTests
         Assert.Contains("entry key 'signoffs' entry key 'at'", finding.Message);
     }
 
-    // `of:` is read from a list's entries and nowhere else, so a scalar carrying one states a shape its
-    // value can never take. Reported as the misplaced key rather than as an entry type, which would
-    // point the author at the wrong half of the declaration.
     [Fact]
     public void An_of_on_a_field_that_is_not_a_list_is_reported()
     {
@@ -1014,8 +911,6 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Widgets(
             fields: [("value", new FieldSpec { Name = "value", Type = type })])));
 
-    // An id is the one type that declares only half of itself. The folders it resolves against are the
-    // other half, so it is left alone only once a `ref:` states them.
     [Theory]
     [InlineData("id", null)]
     [InlineData("list", "id")]
@@ -1035,9 +930,6 @@ public class SchemaCheckTests
         Assert.Contains($"field 'sponsor' declares '{declared}' and no 'ref:'", finding.Message);
     }
 
-    // The reference pass reads a field's own value and never an entry of one, so an id inside an object
-    // is reported whatever the key declares. A `ref:` is asked for at the field alone, because that is
-    // the only place declaring one changes anything.
     [Theory]
     [InlineData(null)]
     [InlineData("widgets")]
@@ -1057,8 +949,6 @@ public class SchemaCheckTests
         Assert.DoesNotContain("Declare a 'ref:'", finding.Message);
     }
 
-    // A part is read out of the record a reference names, so a field declaring no `ref:` leaves the key
-    // with nothing to be resolved against.
     [Fact]
     public void A_field_requiring_a_part_and_naming_no_reference_is_reported()
     {
@@ -1071,8 +961,6 @@ public class SchemaCheckTests
         Assert.Equal("schema-dispatch", finding.Check.Value);
     }
 
-    // Every id the field carries would fail, and the way out of it is an edit to the type at the other
-    // end rather than to the record carrying the field.
     [Fact]
     public void A_field_requiring_a_part_of_a_type_that_keeps_none_is_reported()
     {
@@ -1097,8 +985,6 @@ public class SchemaCheckTests
             sections: ["Terms"],
             parts: new PartSpec(PartSpec.Headings, "", [], []) { Section = "Terms" })));
 
-    // A `ref:` naming a type this corpus declined is left alone everywhere in this pass, and the part it
-    // requires is no exception: adopting the type starts both without an edit here.
     [Fact]
     public void A_field_requiring_a_part_of_a_type_this_corpus_declined_is_left_alone()
         => Assert.Empty(Check(Widgets(fields:
