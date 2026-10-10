@@ -12,11 +12,13 @@ public partial class DocumentationTests
     private static string Page(string name) =>
         File.ReadAllText(Path.Combine(Repo.Root, "docs", "design", name));
 
-    // A row of the fact table opens with the call it documents: `| \`section_count('Title')\` | int |`.
+    /// <summary>
+    /// A row of the fact table opens with the call it documents: <c>| \</c>section_count('Title')\<c> | int |</c>.
+    /// </summary>
     [GeneratedRegex(@"^\| `([a-z_]+)\(", RegexOptions.Multiline)]
     private static partial Regex FactRow();
 
-    // A row of the held-to table closes with the check it reports under.
+    /// <summary>A row of the held-to table closes with the check it reports under.</summary>
     [GeneratedRegex(@"\| `(schema-[a-z-]+)`\s*\|\s*$", RegexOptions.Multiline)]
     private static partial Regex HeldToRow();
 

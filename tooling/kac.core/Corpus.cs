@@ -1,22 +1,26 @@
 namespace kac.core;
 
-// The single account of what "the corpus" is. `checks`, `bundle` and `update` ask about something else
-// and each says so where it skips this.
+/// <summary>
+/// The single account of what "the corpus" is. <c>checks</c>, <c>bundle</c> and <c>update</c> ask about something else
+/// and each says so where it skips this.
+/// </summary>
 public sealed class LoadedCorpus
 {
     public required Schema Schema;
 
-    // `Adopted` below is the resolved answer, which the rest of the tool reads.
+    /// <summary><c>Adopted</c> below is the resolved answer, which the rest of the tool reads.</summary>
     public required CorpusDescriptor Descriptor;
 
     public required Tree Tree;
 
-    // Resolved once, here: two entry points asking separately could answer differently.
+    /// <summary>Resolved once, here: two entry points asking separately could answer differently.</summary>
     public required List<TypeSchema> Adopted;
 
     public required List<Doc> Docs;
 
-    // Discovered here, so the count the summary reports and the files the validator reads are one list.
+    /// <summary>
+    /// Discovered here, so the count the summary reports and the files the validator reads are one list.
+    /// </summary>
     public required List<string> Templates;
 
     public required int SkippedNoFrontmatter;
@@ -28,10 +32,12 @@ public static class Corpus
 {
     private static readonly string[] SkipDirs = [".git", ".idea", ".claude"];
 
-    // `kac` walks up for this rather than for `.schema/`, because one schema may sit above several corpora.
+    /// <summary>
+    /// <c>kac</c> walks up for this rather than for <c>.schema/</c>, because one schema may sit above several corpora.
+    /// </summary>
     public const string Descriptor = ".corpus.yaml";
 
-    // `new` is the one verb that refuses what this finds.
+    /// <summary><c>new</c> is the one verb that refuses what this finds.</summary>
     public static string? FindRoot(string start)
     {
         var dir = new DirectoryInfo(start);
@@ -44,12 +50,16 @@ public static class Corpus
         return null;
     }
 
-    // `GitFiles` says why the listing is the git one where there is one. The walk lists markdown alone, so
-    // in a corpus git has never seen a link to an image resolves to nothing.
+    /// <summary>
+    /// <c>GitFiles</c> says why the listing is the git one where there is one. The walk lists markdown alone, so in a
+    /// corpus git has never seen a link to an image resolves to nothing.
+    /// </summary>
     private static List<string> AllFiles(string corpusRoot) =>
         GitFiles.Tracked(corpusRoot) ?? GitFiles.Walk(corpusRoot, "*.md", SkipDirs);
 
-    // The listing is taken once: a second `git ls-files` costs more than every check put together.
+    /// <summary>
+    /// The listing is taken once: a second <c>git ls-files</c> costs more than every check put together.
+    /// </summary>
     public static LoadedCorpus Load(string corpusRoot)
     {
         var descriptor = CorpusDescriptor.Load(corpusRoot);
@@ -64,8 +74,10 @@ public static class Corpus
             Imports.Load(corpusRoot, descriptor.Consumes));
     }
 
-    // The schema handed over must be built with the descriptor's `enums:`, as the overload above builds it.
-    // One built without them gives a field with no range and no finding to say so.
+    /// <summary>
+    /// The schema handed over must be built with the descriptor's <c>enums:</c>, as the overload above builds it. One
+    /// built without them gives a field with no range and no finding to say so.
+    /// </summary>
     public static LoadedCorpus Load(
         Tree tree, Schema schema, CorpusDescriptor descriptor, ImportGraph? imports = null)
     {
@@ -96,8 +108,10 @@ public static class Corpus
         };
     }
 
-    // `types:` answers where the corpus declares it. Otherwise a type counts as adopted where its page and
-    // folder are both there, the bar CheckTypeSetup holds a type to.
+    /// <summary>
+    /// <c>types:</c> answers where the corpus declares it. Otherwise a type counts as adopted where its page and folder
+    /// are both there, the bar CheckTypeSetup holds a type to.
+    /// </summary>
     private static List<TypeSchema> Adopted(Schema schema, Tree tree, CorpusDescriptor descriptor)
     {
         var declared = descriptor.Types;
@@ -109,13 +123,15 @@ public static class Corpus
         ];
     }
 
-    // Asked of the listing, as `CheckTypeSetup` asks it, so generate and validate agree.
+    /// <summary>Asked of the listing, as <c>CheckTypeSetup</c> asks it, so generate and validate agree.</summary>
     public static bool StoodUp(TypeSchema t, Tree tree) =>
         !string.IsNullOrEmpty(t.Page)
         && tree.Exists(t.Page)
         && tree.HasFolder(t.Folder);
 
-    // Asked with `OnDisk`, as type-setup asks it. A type with no template is type-setup's to report.
+    /// <summary>
+    /// Asked with <c>OnDisk</c>, as type-setup asks it. A type with no template is type-setup's to report.
+    /// </summary>
     private static List<string> DiscoverTemplates(Tree tree, Schema schema)
     {
         var result = new List<string>();
@@ -128,7 +144,7 @@ public static class Corpus
         return result;
     }
 
-    // The extension is matched however it is cased, which a glob cannot do.
+    /// <summary>The extension is matched however it is cased, which a glob cannot do.</summary>
     private static List<string> Discover(Tree tree, Schema schema)
     {
         var typePages = new HashSet<string>(

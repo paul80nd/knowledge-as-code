@@ -26,9 +26,11 @@ public class PlaceholderTests
     public void The_dialects_the_mark_replaced_are_not_placeholders(string value)
         => Assert.False(Placeholder.In(value));
 
-    // A brace is a YAML indicator only at the head of a value, so where the mark falls decides whether
-    // the field is text at all. This is the whole reason a template quotes some placeholders and not
-    // others, and the reason `template-fields` reports the unquoted case with the fix in the message.
+    /// <summary>
+    /// A brace is a YAML indicator only at the head of a value, so where the mark falls decides whether the field is
+    /// text at all. This is the whole reason a template quotes some placeholders and not others, and the reason
+    /// <c>template-fields</c> reports the unquoted case with the fix in the message.
+    /// </summary>
     [Fact]
     public void A_mark_that_opens_a_value_is_read_as_a_mapping_unless_it_is_quoted()
     {
@@ -37,8 +39,10 @@ public class PlaceholderTests
         Assert.Equal("svc-{{slug}}", Scalar("id: svc-{{slug}}"));
     }
 
-    // The same indicator inside a flow sequence. There a plain scalar may carry no brace anywhere, so
-    // the whole document fails to parse and the list has to be written as a block sequence.
+    /// <summary>
+    /// The same indicator inside a flow sequence. There a plain scalar may carry no brace anywhere, so the whole
+    /// document fails to parse and the list has to be written as a block sequence.
+    /// </summary>
     [Fact]
     public void A_mark_in_a_flow_sequence_is_a_parse_error_and_a_block_sequence_is_not()
     {

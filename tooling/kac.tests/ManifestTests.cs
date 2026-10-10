@@ -11,7 +11,8 @@ public class ManifestTests
         [
             new ManifestRule(["knowledge-as-code/**"], "synced"),
             new ManifestRule(["**/*.md"], "forked"),
-            new ManifestRule(["**"], "local") // catch-all
+            // Catch-all.
+            new ManifestRule(["**"], "local")
         ]
     };
 
@@ -101,7 +102,7 @@ public class ManifestTests
     [InlineData("README.md")]
     public void Nothing_but_a_type_file_is_ever_declined(string path) => Assert.False(Declines(path));
 
-    // Read against the real schema, so a type folder renamed there reaches this test.
+    /// <summary>Read against the real schema, so a type folder renamed there reaches this test.</summary>
     private static bool Declines(string path) => New.DeclinesTypes(Schema.Load(Repo.Root), ["adrs"])(path);
 
     [Fact]
@@ -321,13 +322,17 @@ public class ManifestTests
         Assert.Contains("  template-version: 3\n", after);
         Assert.Contains("  taken-on: \"2026-08-11\"\n", after);
         Assert.Contains("  commit: 9c4e1d2a\n", after);
-        Assert.Contains("  url: ../src\n", after);              // untouched: the update does not own it
-        Assert.Contains("content-version: \"2.1.0\"\n", after); // untouched: only the corpus knows this one
+        // Untouched: the update does not own it.
+        Assert.Contains("  url: ../src\n", after);
+        // Untouched: only the corpus knows this one.
+        Assert.Contains("content-version: \"2.1.0\"\n", after);
         Assert.Contains("# Why owning a file is worth declaring.", after);
     }
 
-    // The corpus runs `yamllint --strict` over the file this writes, and its `colons` rule allows one
-    // space. A descriptor an older stamp aligned is repaired on the next run, key by key.
+    /// <summary>
+    /// The corpus runs <c>yamllint --strict</c> over the file this writes, and its <c>colons</c> rule allows one space.
+    /// A descriptor an older stamp aligned is repaired on the next run, key by key.
+    /// </summary>
     [Theory]
     [InlineData("descriptor-version: 0\n\nupstream:\n  url: ../src\n  template-version: 1\n"
                 + "  commit: 5fa039b0\n  taken-on: \"2026-01-01\"\n")] // every stamped key already there
@@ -504,7 +509,9 @@ public class ManifestTests
         Assert.Equal(written, File.GetLastWriteTimeUtc(path));
     }
 
-    // Two entries, one locked and one not, and a comment inside the block that a rewrite has to leave standing.
+    /// <summary>
+    /// Two entries, one locked and one not, and a comment inside the block that a rewrite has to leave standing.
+    /// </summary>
     private const string Consumes =
         """
         corpus: sample

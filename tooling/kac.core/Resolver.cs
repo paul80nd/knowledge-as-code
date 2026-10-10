@@ -1,7 +1,9 @@
 namespace kac.core;
 
-// What looking a citation up came to. `Missing` is nothing answering to it anywhere. The two spelling answers are a
-// record that does exist, written the other way.
+/// <summary>
+/// What looking a citation up came to. <c>Missing</c> is nothing answering to it anywhere. The two spelling answers are
+/// a record that does exist, written the other way.
+/// </summary>
 public enum Landing
 {
     Local,
@@ -11,21 +13,29 @@ public enum Landing
     NeedsNoScope,
     UnknownScope,
 
-    // The scope names a corpus that is not on disk. `import-restored` reports that once against the descriptor, so
-    // every citation into it stays quiet.
+    /// <summary>
+    /// The scope names a corpus that is not on disk. <c>import-restored</c> reports that once against the descriptor,
+    /// so every citation into it stays quiet.
+    /// </summary>
     NotRestored
 }
 
-// Where a citation landed, and everything a check asks about the record it found, for a local `Doc` and an
-// `ImportedRecord` alike.
+/// <summary>
+/// Where a citation landed, and everything a check asks about the record it found, for a local <c>Doc</c> and an
+/// <c>ImportedRecord</c> alike.
+/// </summary>
 public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, string? Scope)
 {
-    // The record a message names: a path where this corpus holds the file, and the citation itself where another
-    // corpus does.
+    /// <summary>
+    /// The record a message names: a path where this corpus holds the file, and the citation itself where another
+    /// corpus does.
+    /// </summary>
     public string Where => Local?.Rel ?? $"{Scope}:{Imported?.Id}";
 
-    // What one part of this record is called, in the word the type's own readers use. Null where the type keeps no
-    // parts at all.
+    /// <summary>
+    /// What one part of this record is called, in the word the type's own readers use. Null where the type keeps no
+    /// parts at all.
+    /// </summary>
     public string? Noun(Schema schema)
     {
         if (Local is { } local) return local.Type?.Parts?.Noun;
@@ -34,27 +44,35 @@ public sealed record Landed(Landing How, Doc? Local, ImportedRecord? Imported, s
         return schema.ByFolder.GetValueOrDefault(imported.Type)?.Parts?.Noun ?? "part";
     }
 
-    // The imported record, for a caller that has already established the citation landed on one. Throws otherwise.
+    /// <summary>
+    /// The imported record, for a caller that has already established the citation landed on one. Throws otherwise.
+    /// </summary>
     private ImportedRecord Found => Imported
                                     ?? throw new InvalidOperationException(
                                         $"a citation that landed {How} holds no imported record.");
 
-    // Compared ordinally, as a part id is everywhere else.
+    /// <summary>Compared ordinally, as a part id is everywhere else.</summary>
     public bool Carries(string part) =>
         Local is { } local
             ? local.Parts.Any(p => string.Equals(p.Id, part, StringComparison.Ordinal))
             : Found.Parts.Any(p => string.Equals(p, part, StringComparison.Ordinal));
 
-    // The type this record is, as the schema names it, and null where nothing in the schema covers it.
+    /// <summary>
+    /// The type this record is, as the schema names it, and null where nothing in the schema covers it.
+    /// </summary>
     public TypeSchema? Type(Schema schema) =>
         Local is { } local ? local.Type : schema.ByFolder.GetValueOrDefault(Found.Type);
 }
 
-// Every record a citation can land on, local and imported alike, behind one lookup. A local record is cited bare and
-// an imported one with its producer's shortcode, and each spelling is refused on the other's records.
+/// <summary>
+/// Every record a citation can land on, local and imported alike, behind one lookup. A local record is cited bare and
+/// an imported one with its producer's shortcode, and each spelling is refused on the other's records.
+/// </summary>
 public sealed class Resolver
 {
-    // Case-insensitive throughout, as `byId` and `id-unique` are, so a mis-cased import still resolves.
+    /// <summary>
+    /// Case-insensitive throughout, as <c>byId</c> and <c>id-unique</c> are, so a mis-cased import still resolves.
+    /// </summary>
     private readonly Dictionary<string, Doc> _local;
     private readonly Dictionary<string, ImportedRecord> _imported = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _scopes = new(StringComparer.OrdinalIgnoreCase);
@@ -83,10 +101,12 @@ public sealed class Resolver
         }
     }
 
-    // Whether anything was imported at all. A corpus standing on its own skips the spelling rules.
+    /// <summary>Whether anything was imported at all. A corpus standing on its own skips the spelling rules.</summary>
     public bool Any => _imported.Count > 0;
 
-    // Where this citation's record lands. Whether the record carries the part is the caller's question.
+    /// <summary>
+    /// Where this citation's record lands. Whether the record carries the part is the caller's question.
+    /// </summary>
     public Landed Resolve(Citation citation)
     {
         if (citation.Scope is not { } scope)

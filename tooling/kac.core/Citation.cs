@@ -1,7 +1,9 @@
 namespace kac.core;
 
-// `eng:pol-VURM.TIMEBOX` carries a scope, a record and a part. `docs/framework/metadata.md` settles the
-// notation.
+/// <summary>
+/// <c>eng:pol-VURM.TIMEBOX</c> carries a scope, a record and a part. <c>docs/framework/metadata.md</c> settles the
+/// notation.
+/// </summary>
 public readonly record struct Citation(string? Scope, string Record, string? Part)
 {
     public override string ToString() =>
@@ -9,10 +11,12 @@ public readonly record struct Citation(string? Scope, string Record, string? Par
 
     public string Whole => (Scope is null ? "" : Scope + ":") + Record;
 
-    // Keeps the part, so a suggested spelling never turns a clause reference into a whole-record one.
+    /// <summary>
+    /// Keeps the part, so a suggested spelling never turns a clause reference into a whole-record one.
+    /// </summary>
     public Citation In(string? scope) => this with { Scope = scope };
 
-    // Reads the form alone. The validator answers whether the scope and the record exist.
+    /// <summary>Reads the form alone. The validator answers whether the scope and the record exist.</summary>
     public static Citation Read(string text)
     {
         var (scope, after) = Split(text);
@@ -23,8 +27,10 @@ public readonly record struct Citation(string? Scope, string Record, string? Par
             : new Citation(scope, after[..dot], after[(dot + 1)..]);
     }
 
-    // A shortcode is lower-case letters and digits, as `CorpusDescriptor.ShortcodeFault` requires, so a
-    // colon anywhere else belongs to the text.
+    /// <summary>
+    /// A shortcode is lower-case letters and digits, as <c>CorpusDescriptor.ShortcodeFault</c> requires, so a colon
+    /// anywhere else belongs to the text.
+    /// </summary>
     public static (string? Scope, string After) Split(string text)
     {
         var colon = text.IndexOf(':', StringComparison.Ordinal);

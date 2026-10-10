@@ -266,8 +266,10 @@ public class PartCheckTests
         => Assert.DoesNotContain(Run(Header + "| `LOGS` | **MUST** be retained. |\n"),
             f => f.Check.Value == "part-empty");
 
-    // A heading source that declares modals, which is what turns the bullets beneath a heading into
-    // obligations. `Headings()` above declares none.
+    /// <summary>
+    /// A heading source that declares modals, which is what turns the bullets beneath a heading into obligations.
+    /// <c>Headings()</c> above declares none.
+    /// </summary>
     private static PartSpec Rules() =>
         new(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
             { Section = "Rules", Noun = "rule", Level = 3 };
@@ -383,8 +385,10 @@ public class PartCheckTests
         return found;
     }
 
-    // The schema carries the type's prefix, because the parser tells a citation from a filename of the same
-    // shape by asking whether the half before the dot opens with one.
+    /// <summary>
+    /// The schema carries the type's prefix, because the parser tells a citation from a filename of the same shape by
+    /// asking whether the half before the dot opens with one.
+    /// </summary>
     private static (Doc, TypeSchema) Parse(string body, PartSpec? spec, string folder)
     {
         var type = new TypeSchema { Folder = folder, IdPrefix = folder == "glossary" ? "gls" : "pol", Parts = spec };

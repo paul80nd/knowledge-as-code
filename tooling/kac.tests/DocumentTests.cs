@@ -142,9 +142,11 @@ public class DocumentTests
         Assert.Equal(["ADR-0099", "a placeholder", "x"], doc.BareBracketTokens.Select(t => t.inner));
     }
 
-    // A schema sourcing a type's parts from a table, for the parse tests below. The folder must map to a
-    // type carrying a PartSpec, since a type that declares none is never read for parts at all, and the
-    // prefix must be there, since that is what tells a citation from a filename of the same shape.
+    /// <summary>
+    /// A schema sourcing a type's parts from a table, for the parse tests below. The folder must map to a type carrying
+    /// a PartSpec, since a type that declares none is never read for parts at all, and the prefix must be there, since
+    /// that is what tells a citation from a filename of the same shape.
+    /// </summary>
     private static Schema WithClauses()
     {
         return new Schema
@@ -187,9 +189,11 @@ public class DocumentTests
             },
             second =>
             {
-                Assert.Null(second.Id); // written as prose, so no span to read an id from
+                // Written as prose, so no span to read an id from.
+                Assert.Null(second.Id);
                 Assert.Equal("PLAIN", second.IdText);
-                Assert.Null(second.BoldLead); // …and no bold run opening the clause
+                // …and no bold run opening the clause.
+                Assert.Null(second.BoldLead);
             });
     }
 
@@ -287,8 +291,10 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX"], doc.PartRefs.Select(r => r.Ref));
     }
 
-    // A pipe table re-parses its cells, and the part id is found by its offset in the document. A cell whose
-    // spans did not survive that re-parse would read the wrong character.
+    /// <summary>
+    /// A pipe table re-parses its cells, and the part id is found by its offset in the document. A cell whose spans did
+    /// not survive that re-parse would read the wrong character.
+    /// </summary>
     [Fact]
     public void A_part_id_hard_against_a_link_in_a_table_cell_is_read_as_a_citation()
     {
@@ -514,8 +520,10 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX"], footnote.Citations);
     }
 
-    // The definitions render as nothing and markdig gathers them at the end of every document, so a line
-    // closing the last section would read as standing in the middle of one.
+    /// <summary>
+    /// The definitions render as nothing and markdig gathers them at the end of every document, so a line closing the
+    /// last section would read as standing in the middle of one.
+    /// </summary>
     [Fact]
     public void A_line_closing_the_last_section_closes_it_despite_the_definitions_beneath()
     {
@@ -571,8 +579,10 @@ public class DocumentTests
         Assert.Equal(["pol-VURM.TIMEBOX"], Assert.Single(doc.CitationFootnotes["Covers:"]).Citations);
     }
 
-    // A field derived from where a record sits. The path arithmetic is what these pin: the type's own
-    // folder comes off the front, the filename comes off the back, and whatever is left is the value.
+    /// <summary>
+    /// A field derived from where a record sits. The path arithmetic is what these pin: the type's own folder comes off
+    /// the front, the filename comes off the back, and whatever is left is the value.
+    /// </summary>
     private static Schema DerivedCategory() => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>

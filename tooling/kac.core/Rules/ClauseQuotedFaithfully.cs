@@ -2,8 +2,10 @@ using System.Text;
 
 namespace kac.core;
 
-// One quotation is read per citation: a reference link is collected once, so a second quotation of the same clause in
-// one record is not compared.
+/// <summary>
+/// One quotation is read per citation: a reference link is collected once, so a second quotation of the same clause in
+/// one record is not compared.
+/// </summary>
 public sealed class ClauseQuotedFaithfully : ICorpusRule
 {
     public RuleId RuleId => new("clause-quoted-faithfully");
@@ -43,8 +45,10 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
     private static PartRow? Part(Doc cited, string id) =>
         cited.Parts.FirstOrDefault(p => string.Equals(p.Id, id, StringComparison.Ordinal));
 
-    // Three readings, because a policy writes a part as a table row and a standard writes one as a heading with the
-    // obligation in the body beneath it.
+    /// <summary>
+    /// Three readings, because a policy writes a part as a table row and a standard writes one as a heading with the
+    /// obligation in the body beneath it.
+    /// </summary>
     private static IEnumerable<string> Readings(Doc cited, PartRow part, string[] lines)
     {
         yield return part.Text;
@@ -56,8 +60,10 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         if (!body.IsEmpty) yield return body.ToString();
     }
 
-    // Prose wraps at 120 characters, so a quotation runs past its citation's line. A blank line or a new block ends the
-    // wrap.
+    /// <summary>
+    /// Prose wraps at 120 characters, so a quotation runs past its citation's line. A blank line or a new block ends
+    /// the wrap.
+    /// </summary>
     private static string Sentence(string[] lines, int at)
     {
         if (at < 1 || at > lines.Length) return "";
@@ -74,13 +80,17 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         return joined.ToString();
     }
 
-    // A list marker takes a space after it, which tells a new bullet from a wrapped line opening `**MUST**`.
+    /// <summary>
+    /// A list marker takes a space after it, which tells a new bullet from a wrapped line opening <c>**MUST**</c>.
+    /// </summary>
     private static bool Opens(string line) =>
         line[0] is '#' or '>' or '|'
         || line.StartsWith("```", StringComparison.Ordinal)
         || (line[0] is '*' or '-' or '+' && (line.Length == 1 || line[1] == ' '));
 
-    // An unclosed mark ends the reading, so the words after it are never taken as a second quotation.
+    /// <summary>
+    /// An unclosed mark ends the reading, so the words after it are never taken as a second quotation.
+    /// </summary>
     private static IEnumerable<string> Quoted(string sentence)
     {
         var from = 0;
@@ -95,7 +105,7 @@ public sealed class ClauseQuotedFaithfully : ICorpusRule
         }
     }
 
-    // Case and punctuation are kept: a quotation is word for word.
+    /// <summary>Case and punctuation are kept: a quotation is word for word.</summary>
     private static string Flat(string text)
     {
         var flat = new StringBuilder(text.Length);

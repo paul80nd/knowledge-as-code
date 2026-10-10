@@ -3,12 +3,16 @@ using Spectre.Console.Rendering;
 
 namespace kac.core;
 
-// Stdout carries what a command produced and stderr why it stopped. `--json` does not come through
-// here: it goes straight to the stream, so no renderer can wrap it.
+/// <summary>
+/// Stdout carries what a command produced and stderr why it stopped. <c>--json</c> does not come through here: it goes
+/// straight to the stream, so no renderer can wrap it.
+/// </summary>
 public static class Out
 {
-    // A redirected stream has no width, and Spectre's guess of 80 wraps a message mid-word. A width no line reaches
-    // keeps redirected output to one line per fact, which a golden captures and `grep` expects.
+    /// <summary>
+    /// A redirected stream has no width, and Spectre's guess of 80 wraps a message mid-word. A width no line reaches
+    /// keeps redirected output to one line per fact, which a golden captures and <c>grep</c> expects.
+    /// </summary>
     private const int RedirectedWidth = 1000;
 
     private static IAnsiConsole? s_std;
@@ -17,26 +21,32 @@ public static class Out
     private static IAnsiConsole Std => s_std ??= Make(Console.Out, Console.IsOutputRedirected);
     private static IAnsiConsole Err => s_err ??= Make(Console.Error, Console.IsErrorRedirected);
 
-    // The same console as every other line, so `--no-color` reaches a prompt.
+    /// <summary>The same console as every other line, so <c>--no-color</c> reaches a prompt.</summary>
     public static IAnsiConsole Terminal => Std;
 
-    // Whether there is somebody to ask. Spectre's own `Interactive` answers for the terminal it would
-    // draw on and not for the keyboard, so a redirected stdin passes it and reads back nothing.
+    /// <summary>
+    /// Whether there is somebody to ask. Spectre's own <c>Interactive</c> answers for the terminal it would draw on and
+    /// not for the keyboard, so a redirected stdin passes it and reads back nothing.
+    /// </summary>
     public static bool Interactive =>
         Std.Profile.Capabilities.Interactive && !System.Console.IsInputRedirected;
 
-    // Markup is not read, so a message quoting '[ADR-0004]' or a regex reaches the reader intact.
+    /// <summary>Markup is not read, so a message quoting '[ADR-0004]' or a regex reaches the reader intact.</summary>
     public static void Line(string text = "") => Std.WriteLine(text);
 
     public static void ErrLine(string text) => Err.WriteLine(text);
 
-    // Every interpolated value needs `EscapeMarkup()`: the check messages are full of square brackets.
+    /// <summary>
+    /// Every interpolated value needs <c>EscapeMarkup()</c>: the check messages are full of square brackets.
+    /// </summary>
     public static void Markup(string markup) => Std.MarkupLine(markup);
 
     public static void ErrMarkup(string markup) => Err.MarkupLine(markup);
 
-    // A grid, or anything else Spectre lays out. Buffered first, because Spectre pads every row to its widest column,
-    // and trimmed per line: the padding is plain spaces written after the colour reset, so the trim takes only it.
+    /// <summary>
+    /// A grid, or anything else Spectre lays out. Buffered first, because Spectre pads every row to its widest column,
+    /// and trimmed per line: the padding is plain spaces written after the colour reset, so the trim takes only it.
+    /// </summary>
     public static void Write(IRenderable renderable)
     {
         var buffer = new StringWriter();
@@ -54,7 +64,7 @@ public static class Out
             writer.WriteLine(line.TrimEnd());
     }
 
-    // Spectre already honours `NO_COLOR`, so this serves `--no-color`.
+    /// <summary>Spectre already honours <c>NO_COLOR</c>, so this serves <c>--no-color</c>.</summary>
     public static void NoColor()
     {
         Std.Profile.Capabilities.ColorSystem = ColorSystem.NoColors;

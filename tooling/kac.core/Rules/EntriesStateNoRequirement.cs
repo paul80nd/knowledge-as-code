@@ -32,7 +32,7 @@ public sealed partial class EntriesStateNoRequirement : IDocumentRule
         }
     }
 
-    // The two-word keywords first, so a `MUST NOT` is never reported as a `MUST`.
+    /// <summary>The two-word keywords first, so a <c>MUST NOT</c> is never reported as a <c>MUST</c>.</summary>
     [GeneratedRegex(@"\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b", RegexOptions.CultureInvariant)]
     private static partial Regex ModalRegex();
 }

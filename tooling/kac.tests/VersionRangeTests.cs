@@ -58,7 +58,9 @@ public class VersionRangeTests
     public void Naming_a_prerelease_exactly_is_how_a_corpus_opts_in()
         => Assert.True(VersionRange.Admits("1.1.0-rc.1", "1.1.0-rc.1"));
 
-    // Ordered as versions rather than as strings, which is what `10` above `9` is here to catch.
+    /// <summary>
+    /// Ordered as versions rather than as strings, which is what <c>10</c> above <c>9</c> is here to catch.
+    /// </summary>
     [Fact]
     public void The_highest_admitted_version_is_the_one_taken()
         => Assert.Equal("1.10.0", VersionRange.Best("^1.0.0", ["1.2.0", "1.10.0", "1.9.3", "2.0.0"]));

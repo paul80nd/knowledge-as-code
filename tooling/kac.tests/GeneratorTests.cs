@@ -13,8 +13,10 @@ public class GeneratorTests
 
         Assert.Contains("# Control Index (CTL)", page);
         Assert.Contains("Nothing here yet", page);
-        Assert.Contains("_template.md", page); // an empty index points at the way to fill it
-        Assert.DoesNotContain("| Id |", page); // …rather than a table with headers and no rows
+        // An empty index points at the way to fill it.
+        Assert.Contains("_template.md", page);
+        // …rather than a table with headers and no rows.
+        Assert.DoesNotContain("| Id |", page);
     }
 
     [Fact]
@@ -43,8 +45,10 @@ public class GeneratorTests
         Assert.Contains("# ADR Index\n", Generator.IndexPage(t, []));
     }
 
-    // The three sorts a type can declare, over one set of rows: no `sort:` at all, several columns, and
-    // a direction.
+    /// <summary>
+    /// The three sorts a type can declare, over one set of rows: no <c>sort:</c> at all, several columns, and a
+    /// direction.
+    /// </summary>
     private static List<Doc> Rows(params (string Id, string Severity)[] rows) =>
     [
         .. rows.Select(r => Required.Parsed($"runbooks/{r.Id}.md",
@@ -108,8 +112,10 @@ public class GeneratorTests
                     < page.IndexOf("rbk-b", StringComparison.Ordinal));
     }
 
-    // A type deriving a field from where its records sit. The schema is built rather than loaded so each
-    // test below can file records wherever it wants to.
+    /// <summary>
+    /// A type deriving a field from where its records sit. The schema is built rather than loaded so each test below
+    /// can file records wherever it wants to.
+    /// </summary>
     private static Schema Located() => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
@@ -235,8 +241,10 @@ public class GeneratorTests
         var table = Generator.SchemaTable(t, new Schema(), "");
 
         Assert.Contains("SHORT", table);
-        Assert.DoesNotContain("LONG", table); // description wins outright: the two are not concatenated
-        Assert.Contains("FALLBACK", table);   // notes still render where no description exists
+        // Description wins outright: the two are not concatenated.
+        Assert.DoesNotContain("LONG", table);
+        // Notes still render where no description exists.
+        Assert.Contains("FALLBACK", table);
     }
 
     [Fact]
@@ -264,15 +272,19 @@ public class GeneratorTests
 
         var table = Generator.SchemaTable(t, s, "");
 
-        Assert.Contains("`id` *†", table);    // universal fields are marked, required ones twice…
-        Assert.Contains("`status` †", table); // …including one the type redeclares
+        // Universal fields are marked, required ones twice…
+        Assert.Contains("`id` *†", table);
+        // …including one the type redeclares.
+        Assert.Contains("`status` †", table);
         Assert.Contains("`own-field`", table);
         Assert.DoesNotContain("`own-field` †", table);
         Assert.Contains("\\* Field is required", table);
-        Assert.Contains("REFINED", table); // EffectiveField wins over the universal declaration
+        // EffectiveField wins over the universal declaration.
+        Assert.Contains("REFINED", table);
         Assert.DoesNotContain("VARIES BY TYPE", table);
         Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)
-                    < table.IndexOf("`own-field`", StringComparison.Ordinal)); // universal first
+                    // Universal first.
+                    < table.IndexOf("`own-field`", StringComparison.Ordinal));
         Assert.Contains("† Carried by every document", table);
     }
 
@@ -410,7 +422,8 @@ public class GeneratorTests
     {
         var rows = Generator.PlacementTable(Four(), "../");
 
-        Assert.Contains("[ADRs](../adrs.md)", rows); // relative to the block's own file, and naming the file
+        // Relative to the block's own file, and naming the file.
+        Assert.Contains("[ADRs](../adrs.md)", rows);
         Assert.DoesNotContain("[ADR](", rows);
     }
 
@@ -666,14 +679,17 @@ public class GeneratorTests
     [Fact]
     public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
     {
-        var table = Generator.RelationTable(Graph()[..2]); // policies not stood up
+        // Policies not stood up.
+        var table = Generator.RelationTable(Graph()[..2]);
 
         Assert.DoesNotContain("implements", table);
         Assert.Contains("verifies", table);
     }
 
-    // The subset of Mermaid an Azure DevOps wiki renders: `graph`, never `flowchart`; no subgraphs; and
-    // no arrow longer than `-->`. Exceeding it fails silently in the wiki, so it is pinned here.
+    /// <summary>
+    /// The subset of Mermaid an Azure DevOps wiki renders: <c>graph</c>, never <c>flowchart</c>; no subgraphs; and no
+    /// arrow longer than <c>--&gt;</c>. Exceeding it fails silently in the wiki, so it is pinned here.
+    /// </summary>
     [Fact]
     public void The_diagram_stays_inside_what_an_ADO_wiki_renders()
     {

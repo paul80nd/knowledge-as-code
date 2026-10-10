@@ -2,21 +2,25 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kac.core;
 
-// Where `new` and `update` read a template from. The template is cloned with git, because an Azure DevOps repository
-// answers a raw GET with a sign-in redirect. `docs/cli/new.md` says why.
+/// <summary>
+/// Where <c>new</c> and <c>update</c> read a template from. The template is cloned with git, because an Azure DevOps
+/// repository answers a raw GET with a sign-in redirect. <c>docs/cli/new.md</c> says why.
+/// </summary>
 public sealed class TemplateSource : IDisposable
 {
-    // The folder holding `manifest.yaml`, which every path the manifest names is read from.
+    /// <summary>The folder holding <c>manifest.yaml</c>, which every path the manifest names is read from.</summary>
     public required string Root { get; init; }
 
-    // What the ref resolved to, or null where the template was read from a folder.
+    /// <summary>What the ref resolved to, or null where the template was read from a folder.</summary>
     public string? Commit { get; init; }
 
-    // The clone to remove afterwards, or null where nothing was cloned. It sits above `Root` whenever `--path` named a
-    // subfolder.
+    /// <summary>
+    /// The clone to remove afterwards, or null where nothing was cloned. It sits above <c>Root</c> whenever
+    /// <c>--path</c> named a subfolder.
+    /// </summary>
     private string? Clone { get; init; }
 
-    // A folder somebody passed is not the tool's to delete.
+    /// <summary>A folder somebody passed is not the tool's to delete.</summary>
     public void Dispose()
     {
         if (Clone is not null) Discard(Clone);
@@ -36,19 +40,23 @@ public sealed class TemplateSource : IDisposable
         }
     }
 
-    // What a fetch came to: the template, or why there is none. Exactly one of the two is set.
+    /// <summary>What a fetch came to: the template, or why there is none. Exactly one of the two is set.</summary>
     public sealed record Fetch(TemplateSource? Source, string? Problem)
     {
-        // `Source` is null exactly where `Problem` is set, told to the compiler so a caller that
-        // branches on it reads the other half without asserting anything.
+        /// <summary>
+        /// <c>Source</c> is null exactly where <c>Problem</c> is set, told to the compiler so a caller that branches on
+        /// it reads the other half without asserting anything.
+        /// </summary>
         [MemberNotNullWhen(true, nameof(Problem))]
         [MemberNotNullWhen(false, nameof(Source))]
         public bool Failed => Problem is not null;
     }
 
-    // Read the template `from` names: a folder, used where it sits, or a repository cloned shallow at `gitRef` under
-    // `into`. `prompt` says whether git may ask for a credential, so an unattended clone fails rather than waits.
-    // `verb` opens each problem.
+    /// <summary>
+    /// Read the template <c>from</c> names: a folder, used where it sits, or a repository cloned shallow at
+    /// <c>gitRef</c> under <c>into</c>. <c>prompt</c> says whether git may ask for a credential, so an unattended clone
+    /// fails rather than waits. <c>verb</c> opens each problem.
+    /// </summary>
     public static Fetch Read(string verb, string from, string? gitRef, string? path, string into, bool prompt)
     {
         if (Directory.Exists(from))
@@ -90,8 +98,10 @@ public sealed class TemplateSource : IDisposable
             null);
     }
 
-    // A template read whole: its manifest, its schema, and the types the schema declares. `Problem` is set instead
-    // where any of that could not be read.
+    /// <summary>
+    /// A template read whole: its manifest, its schema, and the types the schema declares. <c>Problem</c> is set
+    /// instead where any of that could not be read.
+    /// </summary>
     public sealed class Taken(
         TemplateSource? source,
         Manifest? manifest,
@@ -99,8 +109,10 @@ public sealed class TemplateSource : IDisposable
         IReadOnlyList<string>? declared,
         string? problem) : IDisposable
     {
-        // Each value below is set exactly where `Problem` is not. Reaching one on a failed take is a defect in the
-        // caller.
+        /// <summary>
+        /// Each value below is set exactly where <c>Problem</c> is not. Reaching one on a failed take is a defect in
+        /// the caller.
+        /// </summary>
         private static T Held<T>(T? value, string what) where T : class =>
             value ?? throw new InvalidOperationException(
                 $"this take reported a problem and holds no {what}. read Problem first.");
@@ -116,9 +128,11 @@ public sealed class TemplateSource : IDisposable
         public void Dispose() => source?.Dispose();
     }
 
-    // The template, checked to carry a manifest that admits this version of the tool, with the schema it serves.
-    // `from` is fetched and `named` is printed: for `update`, a relative `upstream.url` is resolved before the fetch
-    // and reported as written.
+    /// <summary>
+    /// The template, checked to carry a manifest that admits this version of the tool, with the schema it serves.
+    /// <c>from</c> is fetched and <c>named</c> is printed: for <c>update</c>, a relative <c>upstream.url</c> is
+    /// resolved before the fetch and reported as written.
+    /// </summary>
     public static Taken Take(string verb, string from, string named, string? gitRef, string? path,
         string into, bool prompt, string toolVersion)
     {
@@ -148,20 +162,22 @@ public sealed class TemplateSource : IDisposable
             [.. serves.ByFolder.Keys.OrderBy(k => k, StringComparer.Ordinal)], null);
     }
 
-    // Every file the template holds, relative to `Root` and forward-slashed. Read through git where the template is a
-    // repository, so what a clone ignores never reaches the manifest. `Walk` is the fallback for a folder that is not
-    // a repository.
+    /// <summary>
+    /// Every file the template holds, relative to <c>Root</c> and forward-slashed. Read through git where the template
+    /// is a repository, so what a clone ignores never reaches the manifest. <c>Walk</c> is the fallback for a folder
+    /// that is not a repository.
+    /// </summary>
     public IReadOnlySet<string> Files() =>
         (GitFiles.Tracked(Root) ?? GitFiles.Walk(Root, "*", ".git")).ToHashSet(StringComparer.Ordinal);
 
     private static string Below(string root, string? path) =>
         path is { Length: > 0 } ? Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar)) : root;
 
-    // The command names both ends itself, so the working directory decides nothing.
+    /// <summary>The command names both ends itself, so the working directory decides nothing.</summary>
     private static GitRun? Attempt(string args, IReadOnlyDictionary<string, string>? environment) =>
         Git.Attempt(Path.GetTempPath(), args, environment);
 
-    // git's own account of the failure, indented under the message carrying it.
+    /// <summary>Git's own account of the failure, indented under the message carrying it.</summary>
     private static string Indent(string error) =>
         string.Join('\n', error.TrimEnd().Split('\n').Select(l => "  " + l.TrimEnd()));
 }

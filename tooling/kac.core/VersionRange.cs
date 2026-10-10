@@ -1,16 +1,20 @@
 namespace kac.core;
 
-// Two forms: `1.2.0` takes exactly that version, and `^1.2.0` the newest with the same major, or below
-// `1.0.0` the same minor. A caret never resolves to a prerelease. Naming one exactly is how a corpus opts in.
+/// <summary>
+/// Two forms: <c>1.2.0</c> takes exactly that version, and <c>^1.2.0</c> the newest with the same major, or below
+/// <c>1.0.0</c> the same minor. A caret never resolves to a prerelease. Naming one exactly is how a corpus opts in.
+/// </summary>
 public static class VersionRange
 {
     private const char Caret = '^';
 
-    // Whether this range is one of the two forms. A caret over a prerelease is not, because it would admit nothing.
+    /// <summary>
+    /// Whether this range is one of the two forms. A caret over a prerelease is not, because it would admit nothing.
+    /// </summary>
     public static bool Legible(string range) =>
         Parsed(Bare(range)) is { } version && (!range.StartsWith(Caret) || version.Prerelease is null);
 
-    // A version the parser cannot read is admitted by nothing.
+    /// <summary>A version the parser cannot read is admitted by nothing.</summary>
     public static bool Admits(string range, string version)
     {
         var bare = Bare(range);
@@ -23,7 +27,9 @@ public static class VersionRange
         return Compare(candidate, floor) >= 0 && Compare(candidate, Ceiling(floor)) < 0;
     }
 
-    // The highest version this range admits, or null where it admits none. `available` may be in any order.
+    /// <summary>
+    /// The highest version this range admits, or null where it admits none. <c>available</c> may be in any order.
+    /// </summary>
     public static string? Best(string range, IEnumerable<string> available)
     {
         string? best = null;
@@ -41,11 +47,13 @@ public static class VersionRange
         return best;
     }
 
-    // False where either is a version this tool cannot order.
+    /// <summary>False where either is a version this tool cannot order.</summary>
     public static bool Newer(string candidate, string than) =>
         Parsed(candidate) is { } a && Parsed(than) is { } b && Compare(a, b) > 0;
 
-    // The highest release a feed listed, or null. A prerelease is left out, because no caret can take one.
+    /// <summary>
+    /// The highest release a feed listed, or null. A prerelease is left out, because no caret can take one.
+    /// </summary>
     public static string? Newest(IEnumerable<string> available)
     {
         string? best = null;
@@ -57,14 +65,16 @@ public static class VersionRange
         return best;
     }
 
-    // Below `1.0.0` the minor carries the promise a major carries above it.
+    /// <summary>Below <c>1.0.0</c> the minor carries the promise a major carries above it.</summary>
     private static Version Ceiling(Version floor) =>
         floor.Major > 0
             ? new Version(floor.Major + 1, 0, 0, null)
             : new Version(0, floor.Minor + 1, 0, null);
 
-    // Two prereleases compare as strings, not identifier by identifier. Only an exact range reaches one, so the
-    // order decides nothing a corpus asked for.
+    /// <summary>
+    /// Two prereleases compare as strings, not identifier by identifier. Only an exact range reaches one, so the order
+    /// decides nothing a corpus asked for.
+    /// </summary>
     private static int Compare(Version a, Version b)
     {
         if (a.Major != b.Major) return a.Major.CompareTo(b.Major);
@@ -83,7 +93,7 @@ public static class VersionRange
     private static string Bare(string range) =>
         range.StartsWith(Caret) ? range[1..] : range;
 
-    // `major.minor.patch`, with an optional prerelease after a hyphen. Null for anything else.
+    /// <summary><c>major.minor.patch</c>, with an optional prerelease after a hyphen. Null for anything else.</summary>
     private static Version? Parsed(string version)
     {
         var hyphen = version.IndexOf('-', StringComparison.Ordinal);

@@ -62,7 +62,10 @@ public partial class ChangelogTests
                 "no '<Version>' in kac.csproj: this pass reads the changelog against it.");
     }
 
-    // A released section opens `## 0.1.1 - 2026-08-20`. `## Unreleased` carries no date and is deliberately not one.
+    /// <summary>
+    /// A released section opens <c>## 0.1.1 - 2026-08-20</c>. <c>## Unreleased</c> carries no date and is deliberately
+    /// not one.
+    /// </summary>
     private static string Opening(string version) => $"## {version} - ";
 
     private static IEnumerable<(string Heading, string Body)> Sections()

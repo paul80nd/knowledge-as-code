@@ -92,8 +92,10 @@ public class RestoreTests
             Assert.Single(Plan([Declared(corpus: "example-payments")],
                 Feed(["0.1.0"], id: "example-payments", stamped: "example-engineering")).Problems));
 
-    // Zipped by hand rather than sealed, because `pack` refuses to seal an export at a format version it
-    // does not itself write.
+    /// <summary>
+    /// Zipped by hand rather than sealed, because <c>pack</c> refuses to seal an export at a format version it does not
+    /// itself write.
+    /// </summary>
     [Fact]
     public void A_package_at_another_export_format_version_is_refused()
         => Assert.Contains("Upgrade kac",
@@ -158,8 +160,10 @@ public class RestoreTests
         => Assert.Contains("It holds 0.1.0, 0.2.0",
             Assert.Single(Plan([Declared(range: "^1.0.0")], Feed(["0.1.0", "0.2.0"])).Problems));
 
-    // A private feed answers an anonymous read the same way an empty one does, and nothing here can tell
-    // them apart, so the message carries both readings.
+    /// <summary>
+    /// A private feed answers an anonymous read the same way an empty one does, and nothing here can tell them apart,
+    /// so the message carries both readings.
+    /// </summary>
     [Fact]
     public void A_corpus_the_registry_has_never_held_names_the_token_as_well()
     {
@@ -328,8 +332,10 @@ public class RestoreTests
         string source = Source) =>
         new(corpus, shortcode, range, resolved, source);
 
-    // A folder holding one package per version, under the names `kac pack` writes. Anything but `Shelf`
-    // is a path with no folder on it, which is the case a source pointing at nothing takes.
+    /// <summary>
+    /// A folder holding one package per version, under the names <c>kac pack</c> writes. Anything but <c>Shelf</c> is a
+    /// path with no folder on it, which is the case a source pointing at nothing takes.
+    /// </summary>
     private static FolderFeed Packages(
         string[] versions,
         string id = "example-engineering",
@@ -346,8 +352,10 @@ public class RestoreTests
             path => held.TryGetValue(Path.GetFileName(path), out var body) ? body : null);
     }
 
-    // A feed answering the three requests a restore makes: the service index, the version listing, and
-    // the package itself at every version listed.
+    /// <summary>
+    /// A feed answering the three requests a restore makes: the service index, the version listing, and the package
+    /// itself at every version listed.
+    /// </summary>
     private static Func<string, Fetched> Feed(
         string[] versions,
         string[]? files = null,
@@ -390,8 +398,10 @@ public class RestoreTests
             return feed(url);
         };
 
-    // A package as `kac pack` would have sealed it, so what these tests refuse is what a producer could
-    // really have published.
+    /// <summary>
+    /// A package as <c>kac pack</c> would have sealed it, so what these tests refuse is what a producer could really
+    /// have published.
+    /// </summary>
     private static byte[] Package(string id, string shortcode, string version, string[] files)
     {
         var export = new List<BundleFile>
@@ -414,8 +424,10 @@ public class RestoreTests
           }
           """;
 
-    // An archive built entry by entry, for the shapes `pack` would never produce and a restore still has
-    // to survive.
+    /// <summary>
+    /// An archive built entry by entry, for the shapes <c>pack</c> would never produce and a restore still has to
+    /// survive.
+    /// </summary>
     private static byte[] Zip((string Path, string Content)[] entries)
     {
         using var buffer = new MemoryStream();

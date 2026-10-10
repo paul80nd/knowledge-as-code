@@ -60,7 +60,7 @@ public class UnfillableFieldTests
             RequiredWhenCondition = requiredWhen is null ? null : new RequiredWhen("status", false, ["live"])
         };
 
-    // The record carries `status: live` to turn a `required-when` on, and nothing else.
+    /// <summary>The record carries <c>status: live</c> to turn a <c>required-when</c> on, and nothing else.</summary>
     private static string? RequiredField(FieldSpec spec, string[]? fillable)
     {
         var type = new TypeSchema
@@ -99,7 +99,10 @@ public class UnfillableFieldTests
                 [new ImportedRecord("eng", "pol-KNOW", type, "policies/pol-KNOW.md", false, [])])
         ], [], []);
 
-    // A corpus adopting `standards` and not `policies`, holding one standard that names no `implements`.
+    /// <summary>
+    /// A corpus adopting <c>standards</c> and not <c>policies</c>, holding one standard that names no
+    /// <c>implements</c>.
+    /// </summary>
     private static string? RequiredFieldInCorpus(ImportGraph imports)
     {
         var standards = new TypeSchema

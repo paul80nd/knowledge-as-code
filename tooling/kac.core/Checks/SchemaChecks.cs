@@ -1,6 +1,8 @@
 namespace kac.core;
 
-// Each vocabulary is read from the code that dispatches it, never restated. `../../CLAUDE.md` says why.
+/// <summary>
+/// Each vocabulary is read from the code that dispatches it, never restated. <c>../../CLAUDE.md</c> says why.
+/// </summary>
 public static class SchemaChecks
 {
     public static void Check(Schema schema, List<Finding> f)
@@ -108,7 +110,9 @@ public static class SchemaChecks
         }
     }
 
-    // Reported against `_tiers.yaml` whichever side is short, because its entries are the cheap side to add.
+    /// <summary>
+    /// Reported against <c>_tiers.yaml</c> whichever side is short, because its entries are the cheap side to add.
+    /// </summary>
     private static void CheckTiers(Schema schema, List<Finding> f)
     {
         if (!schema.Universal.TryGetValue("tier", out var field)) return;
@@ -330,7 +334,9 @@ public static class SchemaChecks
                 + $"'{t.Folder}/' would reach nothing. Make the two names agree."));
     }
 
-    // `label:` is not required, because it falls back to the type name capitalised. Nothing derives a plural.
+    /// <summary>
+    /// <c>label:</c> is not required, because it falls back to the type name capitalised. Nothing derives a plural.
+    /// </summary>
     private static void CheckProse(string at, string key, TypeSchema t, List<Finding> f)
     {
         Line("label-plural", t.LabelPlural, "what a folder of these is called (\"ADRs\", \"Policies\", \"NFRs\")");
@@ -365,7 +371,9 @@ public static class SchemaChecks
         }
     }
 
-    // `t` is null for a universal field, which belongs to no type and is asked none of a type's own questions.
+    /// <summary>
+    /// <c>t</c> is null for a universal field, which belongs to no type and is asked none of a type's own questions.
+    /// </summary>
     private static void CheckField(string at, string name, FieldSpec spec, TypeSchema? t, Schema schema,
         List<Finding> f)
     {
@@ -474,8 +482,10 @@ public static class SchemaChecks
                          + "declared as an intention.", f);
     }
 
-    // One direction only. An entry nothing reports is the coverage gate's to fail, because a core check reports through
-    // a literal no registry holds.
+    /// <summary>
+    /// One direction only. An entry nothing reports is the coverage gate's to fail, because a core check reports
+    /// through a literal no registry holds.
+    /// </summary>
     private static void CheckDeclaredChecks(Schema schema, List<Finding> f)
     {
         const string at = ".schema/_checks.yaml";
@@ -487,8 +497,10 @@ public static class SchemaChecks
                          + "no description, and nothing to render.", f);
     }
 
-    // The vocabularies are `ValueChecks`'s, kept beside the switch dispatching them. Asked of entry keys too, to
-    // whatever depth the field nests, because `Entry` sends each key back through `Check`.
+    /// <summary>
+    /// The vocabularies are <c>ValueChecks</c>'s, kept beside the switch dispatching them. Asked of entry keys too, to
+    /// whatever depth the field nests, because <c>Entry</c> sends each key back through <c>Check</c>.
+    /// </summary>
     private static void CheckDeclaredTypes(string at, string what, FieldSpec spec, List<Finding> f,
         bool insideAnObject = false)
     {
@@ -532,7 +544,7 @@ public static class SchemaChecks
     private static string List(IEnumerable<string> values)
         => string.Join(", ", values.Order(StringComparer.Ordinal).Select(v => $"'{v}'"));
 
-    // Quoted as declared, because sorting the tiers would misstate them.
+    /// <summary>Quoted as declared, because sorting the tiers would misstate them.</summary>
     private static string Ordered(IEnumerable<string> values)
         => string.Join(", ", values.Select(v => $"'{v}'"));
 }

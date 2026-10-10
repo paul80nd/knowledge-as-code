@@ -33,8 +33,10 @@ public static class PartChecks
         return false;
     }
 
-    // `Md.HasContent` reads the source as written, so a horizontal rule or an em dash standing in for a definition
-    // counts as nothing written.
+    /// <summary>
+    /// <c>Md.HasContent</c> reads the source as written, so a horizontal rule or an em dash standing in for a
+    /// definition counts as nothing written.
+    /// </summary>
     private static void CheckBodies(Doc d, PartSpec spec, Report report)
     {
         foreach (var row in d.Parts.Where(row => !Md.HasContent(row.Body(d.Text))))
@@ -43,7 +45,7 @@ public static class PartChecks
                 row.Line);
     }
 
-    // Each fault stops the pass, because nothing beneath a broken table can be judged.
+    /// <summary>Each fault stops the pass, because nothing beneath a broken table can be judged.</summary>
     private static bool TableIsSound(Doc d, PartSpec spec, Report report)
     {
         var headers = string.Join(" | ", spec.Columns);
@@ -100,7 +102,9 @@ public static class PartChecks
         }
     }
 
-    // A part with nothing under it is passed over, because `part-empty` has already reported it.
+    /// <summary>
+    /// A part with nothing under it is passed over, because <c>part-empty</c> has already reported it.
+    /// </summary>
     private static void CheckBullets(Doc d, PartSpec spec, Report report)
     {
         if (spec.Binding.Count == 0) return;
@@ -183,7 +187,9 @@ public static class PartChecks
         }
     }
 
-    // Asked of every document, because a citation is rarely written in a record of the same type as the part it names.
+    /// <summary>
+    /// Asked of every document, because a citation is rarely written in a record of the same type as the part it names.
+    /// </summary>
     public static void CheckNotation(Doc d, Report report)
     {
         foreach (var (citation, line) in d.ColonCitations)

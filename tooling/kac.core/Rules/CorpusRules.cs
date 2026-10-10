@@ -1,6 +1,8 @@
 namespace kac.core;
 
-// Explicit, as `DocumentRules.All` is: a rule that stopped being found would look like a rule that never fires.
+/// <summary>
+/// Explicit, as <c>DocumentRules.All</c> is: a rule that stopped being found would look like a rule that never fires.
+/// </summary>
 public static class CorpusRules
 {
     public static readonly IReadOnlyList<ICorpusRule> All =

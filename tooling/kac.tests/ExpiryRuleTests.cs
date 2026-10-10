@@ -26,7 +26,9 @@ public class ExpiryRuleTests
         Assert.True(Holds("status: active\nreview-by:"));
     }
 
-    // Whether the rule is satisfied: true where it has nothing to say, as an `expr:` is written.
+    /// <summary>
+    /// Whether the rule is satisfied: true where it has nothing to say, as an <c>expr:</c> is written.
+    /// </summary>
     private static bool Holds(string frontmatter)
     {
         var doc = Required.Parsed("deviations/a-slug.md",

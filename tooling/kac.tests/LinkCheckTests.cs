@@ -13,8 +13,10 @@ public class LinkCheckTests
         Assert.Single(Unresolved("adrs/0001-a.md", "[gone](/adrs/0099-gone.md)"));
     }
 
-    // Azure DevOps resolves a link with the extension left off, so the corpus is written that way and
-    // the check has to follow.
+    /// <summary>
+    /// Azure DevOps resolves a link with the extension left off, so the corpus is written that way and the check has to
+    /// follow.
+    /// </summary>
     [Fact]
     public void The_md_extension_may_be_omitted()
         => Assert.Empty(Unresolved("adrs/0001-a.md", "[b](/adrs/0002-b)"));
@@ -22,8 +24,10 @@ public class LinkCheckTests
     [Fact]
     public void A_directory_is_not_a_target_but_the_page_beside_it_is()
     {
-        Assert.Empty(Unresolved("index.md", "[adrs](/adrs)"));      // resolves as adrs.md
-        Assert.Single(Unresolved("index.md", "[pics](/pictures)")); // a folder with no page
+        // Resolves as adrs.md.
+        Assert.Empty(Unresolved("index.md", "[adrs](/adrs)"));
+        // A folder with no page.
+        Assert.Single(Unresolved("index.md", "[pics](/pictures)"));
     }
 
     [Fact]
@@ -59,7 +63,9 @@ public class LinkCheckTests
             "link definition '[std-BOGUS]' leads to 'standards/workflows.md', whose id is 'std-CI'."
         ], Labels("[std-BOGUS] says so.\n\n[std-BOGUS]: /standards/workflows.md\n"));
 
-    // `WORKFLOWS` is longer than the width the type declares, so nothing reads it as an id at all.
+    /// <summary>
+    /// <c>WORKFLOWS</c> is longer than the width the type declares, so nothing reads it as an id at all.
+    /// </summary>
     [Fact]
     public void A_label_too_long_to_be_an_id_is_held_against_the_record_too()
         => Assert.Equal(
@@ -76,8 +82,10 @@ public class LinkCheckTests
             "link definition '[std-ci]' should be written as the id 'std-CI'."
         ], Labels("[std-ci] says so.\n\n[std-ci]: /standards/workflows.md\n"));
 
-    // A reference resolves to its definition case-insensitively, so the two may be spelled differently.
-    // The reader is shown the use site's spelling, and the definition here is already canonical.
+    /// <summary>
+    /// A reference resolves to its definition case-insensitively, so the two may be spelled differently. The reader is
+    /// shown the use site's spelling, and the definition here is already canonical.
+    /// </summary>
     [Fact]
     public void A_shortcut_is_judged_on_the_spelling_its_use_site_gives_it()
         => Assert.Equal(["reference '[STD-ci]' should be written as the id 'std-CI'."],
@@ -98,8 +106,10 @@ public class LinkCheckTests
             Labels("[the workflows standard][std-BOGUS] says so.\n\n"
                    + "[std-BOGUS]: /standards/workflows.md\n"));
 
-    // A renderer resolves a reference to the first definition of a repeated label, so the second is
-    // not what the reader follows and is not what the label is held against.
+    /// <summary>
+    /// A renderer resolves a reference to the first definition of a repeated label, so the second is not what the
+    /// reader follows and is not what the label is held against.
+    /// </summary>
     [Fact]
     public void A_label_defined_twice_is_held_against_the_first_definition()
         => Assert.Empty(Labels("[std-BOGUS] says so.\n\n[std-BOGUS]: /standards.md\n"
@@ -158,8 +168,10 @@ public class LinkCheckTests
         return findings;
     }
 
-    // What the corpus holds, as a listing. `_plan/notes.md` is deliberately absent: it is the file on
-    // disk that git ignores, and the test above turns on those being two questions.
+    /// <summary>
+    /// What the corpus holds, as a listing. <c>_plan/notes.md</c> is deliberately absent: it is the file on disk that
+    /// git ignores, and the test above turns on those being two questions.
+    /// </summary>
     private static Tree Corpus() => new(
         new HashSet<string>(StringComparer.Ordinal)
         {

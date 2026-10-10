@@ -27,8 +27,10 @@ public class TrackerTests
         Assert.Equal(GitHubBase, tracker.Base);
     }
 
-    // One Azure DevOps project holds the backlog, the repositories and the wikis, so both bases below
-    // reach the same place and neither of them is it.
+    /// <summary>
+    /// One Azure DevOps project holds the backlog, the repositories and the wikis, so both bases below reach the same
+    /// place and neither of them is it.
+    /// </summary>
     [Theory]
     [InlineData(Publishing.AzureDevOps, RepoBase)]
     [InlineData(Publishing.AzureDevOpsWiki, WikiBase)]

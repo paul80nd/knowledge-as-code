@@ -4,8 +4,10 @@ namespace kac.tests;
 
 public class InheritedTests
 {
-    // The order is asserted, because two runs over one tree have to write the same bytes. This producer's own
-    // records come first, then each folder by name.
+    /// <summary>
+    /// The order is asserted, because two runs over one tree have to write the same bytes. This producer's own records
+    /// come first, then each folder by name.
+    /// </summary>
     [Fact]
     public void A_record_a_producer_inherited_is_read_from_the_folder_it_was_filed_in()
     {
@@ -36,8 +38,10 @@ public class InheritedTests
           }
           """;
 
-    // Two producer folders, named so that neither the order they are written in nor a reverse of it is
-    // the order the reader has to return.
+    /// <summary>
+    /// Two producer folders, named so that neither the order they are written in nor a reverse of it is the order the
+    /// reader has to return.
+    /// </summary>
     private static readonly Dictionary<string, string> Chain = new(StringComparer.Ordinal)
     {
         ["mid/manifest.json"] = Manifest("glossary/terms.jsonl"),

@@ -67,8 +67,10 @@ public class CommandsTests
     private static JsonElement Manifest(string root) =>
         JsonDocument.Parse(File.ReadAllText(Path.Combine(root, Dist.Export, Exporter.ManifestFile))).RootElement;
 
-    // A golden fixture's corpus, assembled the way `kac-tests.cs` assembles it: the real schema above it,
-    // and an empty descriptor to mark it as a corpus where the fixture carries none.
+    /// <summary>
+    /// A golden fixture's corpus, assembled the way <c>kac-tests.cs</c> assembles it: the real schema above it, and an
+    /// empty descriptor to mark it as a corpus where the fixture carries none.
+    /// </summary>
     private static string Fixture(string name)
     {
         var root = Path.Combine(Path.GetTempPath(), "kac-commands-" + Guid.NewGuid().ToString("n")[..12]);

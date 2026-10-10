@@ -34,7 +34,10 @@ public sealed class ValidationSteps
     public void ThenNoWarningsAreReported()
         => Assert.DoesNotContain(Result.Findings, f => f.Severity == Sev.Warning);
 
-    // A stray or missing finding on the file fails. A table with no `severity` column reads every row as an error.
+    /// <summary>
+    /// A stray or missing finding on the file fails. A table with no <c>severity</c> column reads every row as an
+    /// error.
+    /// </summary>
     [Then(@"the findings for ""(.*)"" are exactly:")]
     public void ThenTheFindingsForFileAreExactly(string file, Table table)
     {

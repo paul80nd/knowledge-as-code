@@ -33,9 +33,11 @@ public sealed partial class DefinitionsDoNotRepeatTheTerm : IDocumentRule
     public static string FirstSentence(string text) =>
         SentenceRegex().Match(text) is { Success: true } m ? m.Groups[1].Value : text;
 
-    // Whether the term appears in the sentence as a whole word, without regard to casing. A boundary
-    // is asked for only at an end the term spells with a word character, or a term such as `C#` could
-    // never match: `\b` after `#` sits between two non-word characters and fails.
+    /// <summary>
+    /// Whether the term appears in the sentence as a whole word, without regard to casing. A boundary is asked for only
+    /// at an end the term spells with a word character, or a term such as <c>C#</c> could never match: <c>\b</c> after
+    /// <c>#</c> sits between two non-word characters and fails.
+    /// </summary>
     private static bool Repeats(string term, string sentence)
     {
         if (term.Length == 0) return false;

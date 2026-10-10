@@ -8,7 +8,9 @@ namespace kac.features;
 [Binding]
 public sealed class CreationSteps
 {
-    // Two levels, so a descriptor written above the folder is still inside this scenario's tree and deleted with it.
+    /// <summary>
+    /// Two levels, so a descriptor written above the folder is still inside this scenario's tree and deleted with it.
+    /// </summary>
     private string _root = "";
     private string _folder = "";
     private int _exit = -1;
@@ -58,7 +60,9 @@ public sealed class CreationSteps
         _before = Count();
     }
 
-    // Committed, so the dirty-tree refusal does not fire and the folder-not-empty warning is what runs.
+    /// <summary>
+    /// Committed, so the dirty-tree refusal does not fire and the folder-not-empty warning is what runs.
+    /// </summary>
     [Given(@"it holds a committed ""(.*)""")]
     public void GivenItHoldsACommitted(string name)
     {

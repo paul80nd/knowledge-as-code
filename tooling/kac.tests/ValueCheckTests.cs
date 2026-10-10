@@ -6,7 +6,8 @@ namespace kac.tests;
 
 public class ValueCheckTests
 {
-    private const int FrontStart = 2; // the line a `---` block's first key sits on
+    /// <summary>The line a <c>---</c> block's first key sits on.</summary>
+    private const int FrontStart = 2;
 
     private static FieldSpec Field(string type, string name = "field") => new() { Name = name, Type = type };
 
@@ -40,7 +41,9 @@ public class ValueCheckTests
         => Assert.True(ValueChecks.IsAbsent(Value("field: { at: 2026-06-12T09:00:00Z, by: x }\n"),
             Field("string")));
 
-    // The `event` shape as `_shapes.yaml` declares it, written out because these tests read no schema file.
+    /// <summary>
+    /// The <c>event</c> shape as <c>_shapes.yaml</c> declares it, written out because these tests read no schema file.
+    /// </summary>
     private static FieldSpec Event() => new()
     {
         Name = "field",
@@ -53,7 +56,9 @@ public class ValueCheckTests
     };
 
 
-    // Read from a real parse, so quoting style and node positions are the parser's rather than the test's.
+    /// <summary>
+    /// Read from a real parse, so quoting style and node positions are the parser's rather than the test's.
+    /// </summary>
     private static YamlNode Value(string yaml)
     {
         var stream = new YamlStream();
@@ -331,8 +336,10 @@ public class ValueCheckTests
         Assert.Contains("date-format", Ids(Run("field: \"{{date}}\"\n", Field("date"))));
     }
 
-    // An unquoted placeholder opens a YAML flow mapping, so the value never arrives as text. Reported
-    // with the fix, rather than left to the date check to quote an empty string back at the author.
+    /// <summary>
+    /// An unquoted placeholder opens a YAML flow mapping, so the value never arrives as text. Reported with the fix,
+    /// rather than left to the date check to quote an empty string back at the author.
+    /// </summary>
     [Fact]
     public void An_unquoted_placeholder_is_reported_as_a_mapping()
     {

@@ -2,8 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace kac.core;
 
-// What is asked, in what order, and what a flag or default answers instead are decisions, and testable
-// without a terminal. A test hands over scripted answers.
+/// <summary>
+/// What is asked, in what order, and what a flag or default answers instead are decisions, and testable without a
+/// terminal. A test hands over scripted answers.
+/// </summary>
 public interface IAsker
 {
     string Text(string question, string fallback);
@@ -12,31 +14,35 @@ public interface IAsker
 
     IReadOnlyList<string> ChooseMany(string question, IReadOnlyList<string> options);
 
-    /// `fallback` is the answer a bare Enter gives. Yes for a question standing between somebody and the
-    /// thing they asked for, and no for one standing in front of a deletion.
+    /// <summary>Asks a yes or no question.</summary>
+    /// <param name="fallback">The answer a bare Enter gives. Yes for a question standing between somebody and the
+    /// thing they asked for, and no for one standing in front of a deletion.</param>
     bool Confirm(string question, bool fallback = true);
 }
 
-// `Unattended` exists because taking the default is right where the step is what the caller asked for,
-// and stopping is right where it is a deletion they did not.
+/// <summary>
+/// <c>Unattended</c> exists because taking the default is right where the step is what the caller asked for, and
+/// stopping is right where it is a deletion they did not.
+/// </summary>
 public enum Consent
 {
     Given,
 
-    // The run stops, having written nothing.
+    /// <summary>The run stops, having written nothing.</summary>
     Withheld,
 
-    // Nobody was there to ask, and this question has no default worth taking.
+    /// <summary>Nobody was there to ask, and this question has no default worth taking.</summary>
     Unattended
 }
 
-// Every answer has a flag, so nothing is reachable only by typing. `docs/cli/new.md` carries the
-// defaults.
+/// <summary>
+/// Every answer has a flag, so nothing is reachable only by typing. <c>docs/cli/new.md</c> carries the defaults.
+/// </summary>
 public sealed record NewRequest
 {
     public string? Name { get; init; }
 
-    // Null where the flag was not given.
+    /// <summary>Null where the flag was not given.</summary>
     public string? Types { get; init; }
 
     public string? Publishing { get; init; }
@@ -51,28 +57,32 @@ public sealed record NewRequest
 
 public static class Asking
 {
-    // A corpus taking its framework from elsewhere passes `--from` once, and `.corpus.yaml` remembers.
+    /// <summary>
+    /// A corpus taking its framework from elsewhere passes <c>--from</c> once, and <c>.corpus.yaml</c> remembers.
+    /// </summary>
     public const string DefaultFrom = "https://github.com/paul80nd/knowledge-as-code";
 
     public const string AllTypes = "all";
 
-    // Read once per command, so a run cannot be interactive in one decision and unattended in the next.
+    /// <summary>
+    /// Read once per command, so a run cannot be interactive in one decision and unattended in the next.
+    /// </summary>
     public static bool Asks(bool yes, bool interactive) => interactive && !yes;
 
-    // Goes ahead unattended: the step is the one the caller asked for.
+    /// <summary>Goes ahead unattended: the step is the one the caller asked for.</summary>
     public static Consent OrDefault(IAsker? asker, string question, bool fallback = true) =>
         asker is null || asker.Confirm(question, fallback) ? Consent.Given : Consent.Withheld;
 
-    // Refused unattended, because the step takes something away. Only `--yes` gets past it.
+    /// <summary>Refused unattended, because the step takes something away. Only <c>--yes</c> gets past it.</summary>
     public static Consent OrRefuse(IAsker? asker, bool yes, string question, bool fallback = true) =>
         Unattended(asker, yes) ? Consent.Unattended
         : asker is null || asker.Confirm(question, fallback) ? Consent.Given
         : Consent.Withheld;
 
-    // Refused rather than waited on: a hung pipeline is worse than a failed one.
+    /// <summary>Refused rather than waited on: a hung pipeline is worse than a failed one.</summary>
     private static bool Unattended(IAsker? asker, bool yes) => asker is null && !yes;
 
-    // Exactly one of the two is set.
+    /// <summary>Exactly one of the two is set.</summary>
     public sealed record Answered(NewAnswers? Answers, string? Problem)
     {
         [MemberNotNullWhen(true, nameof(Problem))]
@@ -80,8 +90,10 @@ public static class Asking
         public bool Failed => Problem is not null;
     }
 
-    // `asker` is null where nobody can be asked. `origin` is the repository's own remote, or null where
-    // there is none yet.
+    /// <summary>
+    /// <c>asker</c> is null where nobody can be asked. <c>origin</c> is the repository's own remote, or null where
+    /// there is none yet.
+    /// </summary>
     public static Answered Resolve(NewRequest request, string folderName, IReadOnlyList<string> declared,
         string? origin, IAsker? asker)
     {
@@ -127,7 +139,7 @@ public static class Asking
             null);
     }
 
-    // Every question missing its flag is named at once, so one fix answers all of them.
+    /// <summary>Every question missing its flag is named at once, so one fix answers all of them.</summary>
     private static string? Unanswerable(NewRequest request)
     {
         List<string> missing = [];
@@ -142,7 +154,7 @@ public static class Asking
               + "pass every answer as a flag, or pass --yes to take the defaults.";
     }
 
-    // `types: []` is a valid answer: a corpus that adopted none.
+    /// <summary><c>types: []</c> is a valid answer: a corpus that adopted none.</summary>
     private static IReadOnlyList<string>? Types(NewRequest request, IReadOnlyList<string> declared,
         IAsker? asker)
     {

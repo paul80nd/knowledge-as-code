@@ -50,7 +50,10 @@ public sealed class EscalationRequired : IDocumentRule
                 ctx.Doc.FrontStartLine);
     }
 
-    // Each list is its own group, because whether `continue` strands the reader depends on the list being the last one.
+    /// <summary>
+    /// Each list is its own group, because whether <c>continue</c> strands the reader depends on the list being the
+    /// last one.
+    /// </summary>
     private static IEnumerable<List<Branch>> Branches(Doc d)
     {
         var inSection = false;
@@ -74,8 +77,10 @@ public sealed class EscalationRequired : IDocumentRule
         }
     }
 
-    // The literals concatenated, then split and rejoined on whitespace. A branch opens `**Yes** ->`, so
-    // the bold run and the arrow arrive as separate literals and the message would quote a double space.
+    /// <summary>
+    /// The literals concatenated, then split and rejoined on whitespace. A branch opens <c>**Yes** -&gt;</c>, so the
+    /// bold run and the arrow arrive as separate literals and the message would quote a double space.
+    /// </summary>
     private static Branch Read(ListItemBlock li) => new(
         string.Join(" ", string.Concat(li.Descendants<LiteralInline>().Select(x => x.Content.ToString()))
             .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)),
@@ -84,7 +89,7 @@ public sealed class EscalationRequired : IDocumentRule
 
     private sealed record Branch(string Text, IReadOnlyList<string> Urls, int Line)
     {
-        // Case-insensitive, because a runbook writes the label both ways.
+        /// <summary>Case-insensitive, because a runbook writes the label both ways.</summary>
         public bool LinksTo(string anchor) =>
             Urls.Any(u => u.EndsWith(anchor, StringComparison.OrdinalIgnoreCase));
 

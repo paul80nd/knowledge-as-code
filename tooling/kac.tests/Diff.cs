@@ -6,12 +6,16 @@ namespace kac.tests;
 
 internal static class Diff
 {
-    // The branch a pull request targets. CI knows it and a working tree does not, so the job passes it in.
+    /// <summary>
+    /// The branch a pull request targets. CI knows it and a working tree does not, so the job passes it in.
+    /// </summary>
     private const string BaseRef = "KAC_BASE_REF";
 
-    // The commit this branch grew from, or null where git named none and there is nothing to compare. A
-    // named base is used alone, so a job that sets `KAC_BASE_REF` and gets no answer fails here instead of
-    // falling back to a branch that would compare the wrong thing.
+    /// <summary>
+    /// The commit this branch grew from, or null where git named none and there is nothing to compare. A named base is
+    /// used alone, so a job that sets <c>KAC_BASE_REF</c> and gets no answer fails here instead of falling back to a
+    /// branch that would compare the wrong thing.
+    /// </summary>
     internal static string? Against()
     {
         var named = Environment.GetEnvironmentVariable(BaseRef);
@@ -30,14 +34,19 @@ internal static class Diff
         return before;
     }
 
-    // Every file the working tree keeps that git does not track, forward-slashed. `git diff` reports none
-    // of them, so a record written on this branch and not yet committed is invisible to `Changed`.
+    /// <summary>
+    /// Every file the working tree keeps that git does not track, forward-slashed. <c>git diff</c> reports none of
+    /// them, so a record written on this branch and not yet committed is invisible to <c>Changed</c>.
+    /// </summary>
     internal static IEnumerable<string> Untracked() =>
         (Git.Run(Repo.Root, "ls-files --others --exclude-standard -z") ?? "")
             .Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
-    // Every tracked file changed since `before`, as its path then and now. `filter` is git's `--diff-filter`. `-z`
-    // keeps a path with a quote, a tab or a non-ASCII character as git stored it, rather than escaped.
+    /// <summary>
+    /// Every tracked file changed since <c>before</c>, as its path then and now. <c>filter</c> is git's
+    /// <c>--diff-filter</c>. <c>-z</c> keeps a path with a quote, a tab or a non-ASCII character as git stored it,
+    /// rather than escaped.
+    /// </summary>
     internal static IEnumerable<(string Was, string Now)> Changed(string before, string filter)
     {
         var fields =

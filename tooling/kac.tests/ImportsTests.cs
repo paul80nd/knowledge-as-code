@@ -113,8 +113,10 @@ public class ImportsTests
         Assert.Equal(text, citation.ToString());
     }
 
-    // A shortcode is lower-case letters and digits alone. Reading a scope off `std-A11Y:WCAG` would hide
-    // the wrong separator the corpus reports as `part-separator`.
+    /// <summary>
+    /// A shortcode is lower-case letters and digits alone. Reading a scope off <c>std-A11Y:WCAG</c> would hide the
+    /// wrong separator the corpus reports as <c>part-separator</c>.
+    /// </summary>
     [Theory]
     [InlineData("std-A11Y:WCAG")]
     [InlineData("Policy: pol-SCRT")]
@@ -146,8 +148,10 @@ public class ImportsTests
             .Where(k => k.StartsWith(folder + "/", StringComparison.Ordinal))
             .Select(k => k[(folder.Length + 1)..]);
 
-    // One import's folder, as `restore` writes it: the manifest, one record, and the parts file the
-    // manifest names. `partsFile: null` is the same corpus with a type that keeps no parts.
+    /// <summary>
+    /// One import's folder, as <c>restore</c> writes it: the manifest, one record, and the parts file the manifest
+    /// names. <c>partsFile: null</c> is the same corpus with a type that keeps no parts.
+    /// </summary>
     private static Dictionary<string, string> Files(
         string? partsFile = "policies/clauses.jsonl",
         string recordKey = "record",

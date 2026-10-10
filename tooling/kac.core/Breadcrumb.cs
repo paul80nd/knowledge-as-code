@@ -3,16 +3,22 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// A few lines injected at the start of a session, saying which corpus is installed, how much of it there is and what
-// to ask. `docs/design/plugin.md` says why it is rendered at bundle time.
+/// <summary>
+/// A few lines injected at the start of a session, saying which corpus is installed, how much of it there is and what
+/// to ask. <c>docs/design/plugin.md</c> says why it is rendered at bundle time.
+/// </summary>
 public static class Breadcrumb
 {
-    // Where the rendered file lands inside the plugin, beside the two hook scripts that print it. `Bundler` writes it
-    // only where that directory survived the trim.
+    /// <summary>
+    /// Where the rendered file lands inside the plugin, beside the two hook scripts that print it. <c>Bundler</c>
+    /// writes it only where that directory survived the trim.
+    /// </summary>
     public const string RenderedFile = "hooks/breadcrumb.txt";
 
-    // The breadcrumb as it will be printed. `exportFiles` is the export as it will travel, which is where the record
-    // names come from, because the manifest counts records without naming them.
+    /// <summary>
+    /// The breadcrumb as it will be printed. <c>exportFiles</c> is the export as it will travel, which is where the
+    /// record names come from, because the manifest counts records without naming them.
+    /// </summary>
     public static string Render(
         ExportManifest exportManifest,
         IReadOnlyList<BundleFile> exportFiles,
@@ -50,18 +56,24 @@ public static class Breadcrumb
         return string.Join("\n", lines) + "\n";
     }
 
-    // The most things one line will name, the remainder counted among them. It fixes what a line costs a session,
-    // whatever the size of the corpus behind it.
+    /// <summary>
+    /// The most things one line will name, the remainder counted among them. It fixes what a line costs a session,
+    /// whatever the size of the corpus behind it.
+    /// </summary>
     private const int MostNamed = 6;
 
-    // The key this corpus's own records are filed under. Empty, because no shortcode can be.
+    /// <summary>The key this corpus's own records are filed under. Empty, because no shortcode can be.</summary>
     private const string Mine = "";
 
-    // How much of one type came from one corpus, and which of its records those are. `Source` is null where this
-    // corpus wrote them.
+    /// <summary>
+    /// How much of one type came from one corpus, and which of its records those are. <c>Source</c> is null where this
+    /// corpus wrote them.
+    /// </summary>
     private sealed record Contribution(string? Source, int Records, int Parts, IReadOnlyList<string> Names);
 
-    // A type's lines: this corpus's own records first, then one for each corpus it consumes that wrote some of them.
+    /// <summary>
+    /// A type's lines: this corpus's own records first, then one for each corpus it consumes that wrote some of them.
+    /// </summary>
     private static IEnumerable<Contribution> Contributions(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles,
@@ -98,8 +110,10 @@ public static class Breadcrumb
     private static IReadOnlyList<string> Held(IReadOnlyDictionary<string, List<string>> names, string source) =>
         names.TryGetValue(source, out var held) ? held : [];
 
-    // One line: whose records these are, how much of the type they make up, and which records hold them. Either count
-    // can be zero, and "across 0 records" is never printed.
+    /// <summary>
+    /// One line: whose records these are, how much of the type they make up, and which records hold them. Either count
+    /// can be zero, and "across 0 records" is never printed.
+    /// </summary>
     private static string Line(string type, Contribution held)
     {
         var records = $"{held.Records} record{(held.Records == 1 ? "" : "s")}";
@@ -120,8 +134,10 @@ public static class Breadcrumb
             : $"{label}. {body}.";
     }
 
-    // The names as the line will carry them: all of them where a type holds few, and the first few followed by a count
-    // of the rest where it holds many.
+    /// <summary>
+    /// The names as the line will carry them: all of them where a type holds few, and the first few followed by a count
+    /// of the rest where it holds many.
+    /// </summary>
     private static IReadOnlyList<string> Named(IReadOnlyList<string> names)
     {
         if (names.Count <= MostNamed) return names;
@@ -131,8 +147,10 @@ public static class Breadcrumb
         return named;
     }
 
-    // The records of one type, named as the export names them and keyed by the corpus that wrote them. Read from the
-    // per-record files, because a part line carries the record's id and never its title.
+    /// <summary>
+    /// The records of one type, named as the export names them and keyed by the corpus that wrote them. Read from the
+    /// per-record files, because a part line carries the record's id and never its title.
+    /// </summary>
     private static Dictionary<string, List<string>> NamesBySource(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles)
@@ -166,8 +184,10 @@ public static class Breadcrumb
         return names;
     }
 
-    // How many parts each corpus contributed, counted off the flat file, which is the only account of the split: a
-    // merged line carries `shortcode`.
+    /// <summary>
+    /// How many parts each corpus contributed, counted off the flat file, which is the only account of the split: a
+    /// merged line carries <c>shortcode</c>.
+    /// </summary>
     private static Dictionary<string, int> PartsBySource(
         ExportedType type,
         IReadOnlyList<BundleFile> exportFiles)

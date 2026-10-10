@@ -2,7 +2,9 @@ using System.Text;
 
 namespace kac.core;
 
-// The generated-block markers, spelled here alone. A marker nothing matches stops a block being written, silently.
+/// <summary>
+/// The generated-block markers, spelled here alone. A marker nothing matches stops a block being written, silently.
+/// </summary>
 public static class Markers
 {
     private const string BeginMarker = "<!-- BEGIN GENERATED: ";
@@ -28,9 +30,11 @@ public static class Markers
         return text[..(bi + begin.Length)] + body + text[ei..];
     }
 
-    // A page with its generated blocks emptied, leaving the markers and everything a person wrote. `update`
-    // compares this. The markers stay, so a deleted block is still drift, and an unclosed marker leaves the rest
-    // of the page compared as written.
+    /// <summary>
+    /// A page with its generated blocks emptied, leaving the markers and everything a person wrote. <c>update</c>
+    /// compares this. The markers stay, so a deleted block is still drift, and an unclosed marker leaves the rest of
+    /// the page compared as written.
+    /// </summary>
     public static string Authored(string text)
     {
         var sb = new StringBuilder();

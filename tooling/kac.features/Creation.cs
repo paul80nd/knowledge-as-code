@@ -7,7 +7,9 @@ public static class Creation
 {
     private static readonly string RepoRoot = Harness.RepoRoot;
 
-    // Read from the template's own floor, because a pinned number would break these specs whenever that floor moved.
+    /// <summary>
+    /// Read from the template's own floor, because a pinned number would break these specs whenever that floor moved.
+    /// </summary>
     private static string NewEnough =>
         Manifest.LoadFrom(Path.Combine(RepoRoot, Manifest.FileName)).MinimumTool ?? "0.0.0";
 

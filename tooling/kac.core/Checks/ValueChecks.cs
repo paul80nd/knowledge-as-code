@@ -6,8 +6,10 @@ namespace kac.core;
 
 public static class ValueChecks
 {
-    // `SchemaChecks` reads it to reject a `type:` nothing dispatches. `id` has no arm below: the reference pass in
-    // `Validator` reads it once a `ref:` has selected the field.
+    /// <summary>
+    /// <c>SchemaChecks</c> reads it to reject a <c>type:</c> nothing dispatches. <c>id</c> has no arm below: the
+    /// reference pass in <c>Validator</c> reads it once a <c>ref:</c> has selected the field.
+    /// </summary>
     public static readonly IReadOnlyList<string> FieldTypes =
         ["date", "enum", "id", "list", "object", "string", "timestamp"];
 
@@ -70,7 +72,9 @@ public static class ValueChecks
             Pattern(name, "value", node, spec, frontStart, report);
     }
 
-    // Pass the field's `spec` wherever there is one. Without it, every mapping reads as absent.
+    /// <summary>
+    /// Pass the field's <c>spec</c> wherever there is one. Without it, every mapping reads as absent.
+    /// </summary>
     public static bool IsAbsent(YamlNode node, FieldSpec? spec = null) =>
         node switch
         {
@@ -84,7 +88,9 @@ public static class ValueChecks
     private static bool IsBareKey(YamlNode node)
         => node is YamlScalarNode { Style: ScalarStyle.Plain } sc && string.IsNullOrEmpty(sc.Value);
 
-    // Asked of the whole field, not each entry: a list in a template demonstrates the field's shape.
+    /// <summary>
+    /// Asked of the whole field, not each entry: a list in a template demonstrates the field's shape.
+    /// </summary>
     private static bool HasPlaceholder(YamlNode node) =>
         node switch
         {
@@ -114,9 +120,11 @@ public static class ValueChecks
         => v.Length == 10 && v[4] == '-' && v[7] == '-'
            && v[..4].All(char.IsDigit) && v[5..7].All(char.IsDigit) && v[8..].All(char.IsDigit);
 
-    // Style is not read. A date is held to being quoted because an unquoted one is reread as a datetime
-    // and shifted into the reader's zone; a `Z` instant names the same moment either way. `_checks.yaml`
-    // carries that argument in full.
+    /// <summary>
+    /// Style is not read. A date is held to being quoted because an unquoted one is reread as a datetime and shifted
+    /// into the reader's zone; a <c>Z</c> instant names the same moment either way. <c>_checks.yaml</c> carries that
+    /// argument in full.
+    /// </summary>
     private static void Timestamp(string name, YamlNode node, int frontStart, Report report)
     {
         var v = Yaml.Raw(node) ?? "";
@@ -238,13 +246,17 @@ public static class ValueChecks
             ? $"'{value}'"
             : "here";
 
-    // An entry with nothing readable to sort on is skipped, because `entry-key` has already reported it.
+    /// <summary>
+    /// An entry with nothing readable to sort on is skipped, because <c>entry-key</c> has already reported it.
+    /// </summary>
     private static string? SortKey(YamlNode item, FieldSpec spec) =>
         spec.Of == "object"
             ? spec.Entry is [{ } first, ..] && Yaml.Get(item, first.Name) is { } named ? Yaml.Raw(named) : null
             : Yaml.Raw(item);
 
-    // A shape, not an identity. Whether the entry names a document is the reference pass's question.
+    /// <summary>
+    /// A shape, not an identity. Whether the entry names a document is the reference pass's question.
+    /// </summary>
     private static bool LooksLikeId(string v)
     {
         // A shortcode may open the entry and a part may close it. Only the record between them has a shape to read. See

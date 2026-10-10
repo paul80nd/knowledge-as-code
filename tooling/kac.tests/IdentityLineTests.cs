@@ -22,8 +22,10 @@ public class IdentityLineTests
     private static TypeSchema Type(string key, string label, string plural) =>
         new() { Key = key, Folder = key, Label = label, LabelPlural = plural };
 
-    // The finding under test is picked out of what the whole document pass produced. Nothing here links
-    // anywhere, which is what leaves the corpus free to be an empty one.
+    /// <summary>
+    /// The finding under test is picked out of what the whole document pass produced. Nothing here links anywhere,
+    /// which is what leaves the corpus free to be an empty one.
+    /// </summary>
     private static string IdentityType(TypeSchema type, string id)
     {
         var schema = new Schema { ByFolder = new Dictionary<string, TypeSchema> { [type.Key] = type } };

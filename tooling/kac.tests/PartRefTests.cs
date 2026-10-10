@@ -49,8 +49,10 @@ public class PartRefTests
     public void A_citation_in_the_wrong_case_reaches_nothing(string citation)
         => Assert.Equal("part-ref", Assert.Single(Cite(citation)).Check.Value);
 
-    // Three types: a policy keeping its parts in a table, a glossary keeping its as headings, and an ADR
-    // keeping none. The citation under test is written into a fourth document whose own type keeps nothing.
+    /// <summary>
+    /// Three types: a policy keeping its parts in a table, a glossary keeping its as headings, and an ADR keeping none.
+    /// The citation under test is written into a fourth document whose own type keeps nothing.
+    /// </summary>
     private static List<Finding> Cite(string citation)
     {
         var policies = new TypeSchema
@@ -81,7 +83,8 @@ public class PartRefTests
             Parse(schema, "adrs/adr-0001.md", "adr-0001", $"Answering `{citation}` in full.\n")
         }.OfType<Doc>().ToList();
 
-        Assert.Equal(4, docs.Count); // a document that did not parse would quietly shrink the corpus
+        // A document that did not parse would quietly shrink the corpus.
+        Assert.Equal(4, docs.Count);
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);

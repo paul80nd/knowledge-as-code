@@ -1,14 +1,16 @@
 namespace kac.core;
 
-// One address with `Publishing` on GitHub, and two on Azure DevOps, where a project holds the backlog.
-// `docs/design/export.md` sets out what `Id` drops and why.
+/// <summary>
+/// One address with <c>Publishing</c> on GitHub, and two on Azure DevOps, where a project holds the backlog.
+/// <c>docs/design/export.md</c> sets out what <c>Id</c> drops and why.
+/// </summary>
 public static class Tracker
 {
     public static readonly IReadOnlyList<string> Targets = [Publishing.AzureDevOps, Publishing.GitHub];
 
     public static readonly IReadOnlyList<string> Areas = [Publishing.AzureDevOps];
 
-    // `validate` holds `tracker:` and `framework:` to this list.
+    /// <summary><c>validate</c> holds <c>tracker:</c> and <c>framework:</c> to this list.</summary>
     public static readonly IReadOnlyList<string> Stated =
         [Publishing.AzureDevOps, Publishing.GitHub, Publishing.None];
 
@@ -16,8 +18,10 @@ public static class Tracker
 
     public static ExportTracker None => new(Publishing.None, null, null, null);
 
-    // A stated key wins over the derived one. The base falls back only where the stated target agrees
-    // with the derived one: a corpus naming another platform's client knows an address nobody else does.
+    /// <summary>
+    /// A stated key wins over the derived one. The base falls back only where the stated target agrees with the derived
+    /// one: a corpus naming another platform's client knows an address nobody else does.
+    /// </summary>
     public static ExportTracker Own(CorpusDescriptor descriptor)
     {
         var derived = Derived(descriptor.PublishingTarget, descriptor.Base);
@@ -27,17 +31,19 @@ public static class Tracker
         return For(target, descriptor.TrackerBase ?? (agreed ? derived.Base : null), descriptor.TrackerArea);
     }
 
-    // Never derived: where a corpus publishes says nothing about who maintains `kac`.
+    /// <summary>Never derived: where a corpus publishes says nothing about who maintains <c>kac</c>.</summary>
     public static ExportTracker Framework(CorpusDescriptor descriptor) =>
         For(descriptor.FrameworkTarget, descriptor.FrameworkBase, descriptor.FrameworkArea);
 
-    // For an export that states no tracker.
+    /// <summary>For an export that states no tracker.</summary>
     public static ExportTracker From(ExportPublishing publishing) =>
         Derived(publishing.Target, publishing.Base);
 
-    // The target is written through as stated, so a misspelling stays visible in the manifest. `Base` and
-    // `Id` are null together wherever the pair addresses no backlog. `Area` is dropped on the same terms,
-    // and on GitHub. `validate` reports a dropped area under `descriptor-area`.
+    /// <summary>
+    /// The target is written through as stated, so a misspelling stays visible in the manifest. <c>Base</c> and
+    /// <c>Id</c> are null together wherever the pair addresses no backlog. <c>Area</c> is dropped on the same terms,
+    /// and on GitHub. <c>validate</c> reports a dropped area under <c>descriptor-area</c>.
+    /// </summary>
     public static ExportTracker For(string? target, string? published, string? area)
     {
         var named = target is { Length: > 0 } ? target : Publishing.None;
@@ -50,11 +56,11 @@ public static class Tracker
             : new ExportTracker(named, null, null, null);
     }
 
-    // Whitespace alone is no area, and a stray separator would build an empty segment.
+    /// <summary>Whitespace alone is no area, and a stray separator would build an empty segment.</summary>
     private static string? Written(string? area) =>
         area?.Trim().Trim('/') is { Length: > 0 } stated ? stated : null;
 
-    // A publishing block says nothing about areas, so no arm derives one.
+    /// <summary>A publishing block says nothing about areas, so no arm derives one.</summary>
     private static ExportTracker Derived(string? publishingTarget, string? published) =>
         publishingTarget switch
         {
@@ -67,9 +73,11 @@ public static class Tracker
             _ => None
         };
 
-    // The base as a backlog is addressed, or null where nothing stated one. An Azure DevOps base is cut back to the
-    // project, because the segment below names a repository or a wiki and no ticket is filed on either. A GitHub base
-    // loses only a trailing separator.
+    /// <summary>
+    /// The base as a backlog is addressed, or null where nothing stated one. An Azure DevOps base is cut back to the
+    /// project, because the segment below names a repository or a wiki and no ticket is filed on either. A GitHub base
+    /// loses only a trailing separator.
+    /// </summary>
     private static string? Project(string target, string? published)
     {
         if (published?.Trim().TrimEnd('/') is not { Length: > 0 } url) return null;
@@ -84,9 +92,11 @@ public static class Tracker
         return at < 0 ? url : url[..at];
     }
 
-    // One base written one way, so two spellings of one address compare equal: no scheme, no `www.`, no
-    // `.git` suffix, and lower case throughout. Both hosts route case-insensitively and serve the same
-    // repository over either scheme, so every part this drops is one that never told two backlogs apart.
+    /// <summary>
+    /// One base written one way, so two spellings of one address compare equal: no scheme, no <c>www.</c>, no
+    /// <c>.git</c> suffix, and lower case throughout. Both hosts route case-insensitively and serve the same repository
+    /// over either scheme, so every part this drops is one that never told two backlogs apart.
+    /// </summary>
     private static string Identity(string url)
     {
         var at = url.IndexOf("://", StringComparison.Ordinal);

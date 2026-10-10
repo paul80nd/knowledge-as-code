@@ -4,7 +4,7 @@ namespace kac.tests;
 
 public class SchemaLoadTests
 {
-    // The shared blocks, each declaring nothing. A case adds only the keys it is about.
+    /// <summary>The shared blocks, each declaring nothing. A case adds only the keys it is about.</summary>
     private static Dictionary<string, string> Blocks() => new(StringComparer.Ordinal)
     {
         ["_enums.yaml"] = "enums: {}",
@@ -189,8 +189,11 @@ public class SchemaLoadTests
         return Assert.Single(Schema.Load(files).Checks).Notes;
     }
 
-    // Only a value holding a real line break can show a stray `\r`, so the cases are a literal block and the
-    // folded block with a blank line that `.schema/_checks.yaml` writes a `notes:` of more than one paragraph as.
+    /// <summary>
+    /// Only a value holding a real line break can show a stray <c>\r</c>, so the cases are a literal block and the
+    /// folded block with a blank line that <c>.schema/_checks.yaml</c> writes a <c>notes:</c> of more than one
+    /// paragraph as.
+    /// </summary>
     [Theory]
     [InlineData("    notes: |-\n      First line\n      and a second.\n")]
     [InlineData("    notes: >\n      First line.\n\n      A second paragraph.\n")]

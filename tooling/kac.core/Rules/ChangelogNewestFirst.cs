@@ -27,7 +27,7 @@ public sealed class ChangelogNewestFirst : IDocumentRule
         }
     }
 
-    // The section's own items only. A nested list is one entry's workings and states no date.
+    /// <summary>The section's own items only. A nested list is one entry's workings and states no date.</summary>
     private static IEnumerable<(string Date, int Line)> Entries(Doc d)
     {
         var inSection = false;

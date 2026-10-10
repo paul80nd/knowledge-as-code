@@ -76,7 +76,7 @@ public class ExporterTests
     private static readonly ExportRun Run =
         new("2026-08-17T00:00:00Z", new DateOnly(2026, 8, 17), "abc123", false);
 
-    // A caller naming no sections gets `Scope` whole, which is what a glossary declares.
+    /// <summary>A caller naming no sections gets <c>Scope</c> whole, which is what a glossary declares.</summary>
     private static TypeSchema GlossaryType(params (string Section, string Fidelity)[] sections) => new()
     {
         Key = "glossary",
@@ -829,8 +829,10 @@ public class ExporterTests
         Assert.False(line.TryGetProperty(Exporter.ShortcodeKey, out _));
     }
 
-    // A line as it reaches a grandchild: `eng` merged `gp` and stamped it, so the line arrives naming the
-    // corpus that wrote it rather than the one it came through.
+    /// <summary>
+    /// A line as it reaches a grandchild: <c>eng</c> merged <c>gp</c> and stamped it, so the line arrives naming the
+    /// corpus that wrote it rather than the one it came through.
+    /// </summary>
     private const string TheirInheritedLine =
         """{"id":"gp:gls-old.alpha","record":"gp:gls-old","seeAlso":null,"part":"alpha","shortcode":"gp"}""";
 
@@ -974,14 +976,14 @@ public class ExporterTests
         Assert.Equal(3, Assert.Single(plan.Types).Records);
     }
 
-    // gp's record as eng published it: filed under gp, because gp wrote it.
+    /// <summary>Gp's record as eng published it: filed under gp, because gp wrote it.</summary>
     private static readonly InheritedRecord Old = new("gp", "gls-old.json", "{}\n");
 
-    // A consumed corpus with these records added to the ones `Consumed` gives it.
+    /// <summary>A consumed corpus with these records added to the ones <c>Consumed</c> gives it.</summary>
     private static InheritedCorpus Carrying(InheritedCorpus corpus, params InheritedRecord[] records) =>
         Records(corpus, [.. corpus.Types[0].Records, .. records]);
 
-    // A consumed corpus with these records in place of the ones `Consumed` gives it.
+    /// <summary>A consumed corpus with these records in place of the ones <c>Consumed</c> gives it.</summary>
     private static InheritedCorpus Holding(InheritedCorpus corpus, params InheritedRecord[] records) =>
         Records(corpus, records);
 
@@ -1178,8 +1180,10 @@ public class ExporterTests
         ], bullets);
     }
 
-    // The policy type is declared and holds no record. A citation is read against the id prefixes the
-    // schema knows, so a rule citing `pol-AUTV` gathers nothing where nothing declares `pol`.
+    /// <summary>
+    /// The policy type is declared and holds no record. A citation is read against the id prefixes the schema knows, so
+    /// a rule citing <c>pol-AUTV</c> gathers nothing where nothing declares <c>pol</c>.
+    /// </summary>
     private static List<JsonElement> RuleLines()
     {
         var standards = StandardType();
@@ -1316,9 +1320,11 @@ public class ExporterTests
         Assert.Null(Assert.Single(plan.Types).FrameworksFile);
     }
 
-    // A policy citing a framework by link, beside the register that link reaches. The definition at the
-    // foot is what makes the cell a reference: without one the brackets are literal text and the
-    // exporter reads no framework at all.
+    /// <summary>
+    /// A policy citing a framework by link, beside the register that link reaches. The definition at the foot is what
+    /// makes the cell a reference: without one the brackets are literal text and the exporter reads no framework at
+    /// all.
+    /// </summary>
     private static LoadedCorpus Aligned()
     {
         var corpus = Corpus(PolicyType("frameworks.jsonl"), ("pol-BKUP", AlignedPolicy));
@@ -1416,7 +1422,7 @@ public class ExporterTests
 
         """;
 
-    // A policy whose clauses share a level, written in an order alphabetising would not produce.
+    /// <summary>A policy whose clauses share a level, written in an order alphabetising would not produce.</summary>
     private static string Unsorted() =>
         """
         ---
@@ -1577,7 +1583,9 @@ public class ExporterTests
         Assert.Equal(JsonValueKind.Null, line.GetProperty("definition").ValueKind);
     }
 
-    // Declared rather than merely present, because the exporter reads the labels off the declared list.
+    /// <summary>
+    /// Declared rather than merely present, because the exporter reads the labels off the declared list.
+    /// </summary>
     private static TypeSchema Covering()
     {
         var type = GlossaryType();
@@ -1622,8 +1630,10 @@ public class ExporterTests
         };
     }
 
-    // A loaded corpus holding the glossaries given, in the order given. That is deliberately not the
-    // order the export writes them in, so a passing ordering test is not reading its input back.
+    /// <summary>
+    /// A loaded corpus holding the glossaries given, in the order given. That is deliberately not the order the export
+    /// writes them in, so a passing ordering test is not reading its input back.
+    /// </summary>
     private static LoadedCorpus Corpus(params string[] glossaries) =>
         Corpus(GlossaryType(), [.. glossaries.Select(t => (t.Split('\n')[1]["id: ".Length..], t))]);
 

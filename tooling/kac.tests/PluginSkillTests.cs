@@ -32,8 +32,10 @@ public class PluginSkillTests
         Assert.False(string.IsNullOrWhiteSpace(Yaml.Str(Yaml.Get(frontmatter, "description"))));
     }
 
-    // A file with no block at all fails here, rather than returning an empty mapping that would pass every
-    // assertion above it.
+    /// <summary>
+    /// A file with no block at all fails here, rather than returning an empty mapping that would pass every assertion
+    /// above it.
+    /// </summary>
     private static YamlNode Frontmatter(string path)
     {
         var lines = Files.ReadLf(path).Split('\n');

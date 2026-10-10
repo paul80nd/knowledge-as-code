@@ -109,8 +109,10 @@ public class DependencyCriticalityTests
     private static List<Finding> Check(params (string Id, string? Grade, string[] Targets)[] records)
         => Check(Type(Criticality, DependsOn), records);
 
-    // The grade and the edges are written under whichever fields the type declares, so the same graph
-    // can be laid on a ranked field and on an unranked one.
+    /// <summary>
+    /// The grade and the edges are written under whichever fields the type declares, so the same graph can be laid on a
+    /// ranked field and on an unranked one.
+    /// </summary>
     private static List<Finding> Check(TypeSchema type,
         params (string Id, string? Grade, string[] Targets)[] records)
     {
@@ -141,7 +143,7 @@ public class DependencyCriticalityTests
 
     private static string Written(string? grade) => grade is null ? "" : $" {grade}";
 
-    // The rule reads the records and never the tree.
+    /// <summary>The rule reads the records and never the tree.</summary>
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);

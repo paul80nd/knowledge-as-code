@@ -2,7 +2,9 @@ namespace kac.core;
 
 public static class LinkChecks
 {
-    // A type page is checked with `kind` left at its default, so only its prose is asked about.
+    /// <summary>
+    /// A type page is checked with <c>kind</c> left at its default, so only its prose is asked about.
+    /// </summary>
     public static void Check(Doc d, Schema schema, Tree tree, Report report, DocKind kind = DocKind.Record)
     {
         foreach (var link in d.Links)
@@ -84,8 +86,10 @@ public static class LinkChecks
                         $"link definition '[{label}]' is never referenced.");
     }
 
-    // The id is read from the target's frontmatter, not its filename, because a type may keep its id nowhere else.
-    // `ids` keeps each target's answer, since reading a record parses it whole.
+    /// <summary>
+    /// The id is read from the target's frontmatter, not its filename, because a type may keep its id nowhere else.
+    /// <c>ids</c> keeps each target's answer, since reading a record parses it whole.
+    /// </summary>
     private static (string Id, string Page)? Misnamed(
         string? label, string target, string fromRel, Schema schema, Tree tree,
         Dictionary<string, string?> ids)
@@ -107,7 +111,7 @@ public static class LinkChecks
     public static bool IsExternal(string t)
         => t.StartsWith("http://") || t.StartsWith("https://") || t.StartsWith("mailto:") || t.StartsWith("tel:");
 
-    // Judged on the anchor every renderer agrees on. See `Md.Slug`.
+    /// <summary>Judged on the anchor every renderer agrees on. See <c>Md.Slug</c>.</summary>
     private static void CheckFragment(HashSet<string> anchors, string fragment, string page, int? line,
         Report report)
     {
@@ -115,8 +119,10 @@ public static class LinkChecks
         report.Err(new CheckId("fragment-resolves"), $"'#{fragment}' names no heading in '{page}'.", line);
     }
 
-    // Asked of the corpus, never of the disk, so a link resolves in a fresh clone as it does here. The export follows
-    // links through this too, so the two keep one account of what a target names.
+    /// <summary>
+    /// Asked of the corpus, never of the disk, so a link resolves in a fresh clone as it does here. The export follows
+    /// links through this too, so the two keep one account of what a target names.
+    /// </summary>
     public static string? Resolve(Tree tree, string fromRel, string target)
     {
         var hash = target.IndexOf('#');
@@ -134,7 +140,8 @@ public static class LinkChecks
         // A directory is not a target: in Azure DevOps `data.md` and `data/` are one node, so `/data` links the page,
         // which the `.md` form resolves. Accepting the directory would resolve a link to a type whose page has gone.
         if (tree.Exists(rel)) return rel;
-        return tree.Exists(rel + ".md") ? rel + ".md" : null; // ADO resolves links with .md omitted
+        // ADO resolves links with .md omitted.
+        return tree.Exists(rel + ".md") ? rel + ".md" : null;
     }
 
     private static string Folder(string rel)
@@ -143,7 +150,7 @@ public static class LinkChecks
         return slash < 0 ? "" : rel.Replace('\\', '/')[..slash];
     }
 
-    // Null where '..' climbs above the root, so the path never wraps round to one that exists.
+    /// <summary>Null where '..' climbs above the root, so the path never wraps round to one that exists.</summary>
     private static string? Descend(string baseDir, string target)
     {
         var parts = new List<string>();

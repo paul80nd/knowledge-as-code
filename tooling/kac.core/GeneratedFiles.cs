@@ -1,32 +1,43 @@
 namespace kac.core;
 
-// The one account of which files carry generated blocks and which blocks each one carries. `generate` writes the
-// blocks and `validate` checks the markers, and both read this. The names and the renderers are declared together, and
-// `Blocks` projects the names out without calling a renderer.
+/// <summary>
+/// The one account of which files carry generated blocks and which blocks each one carries. <c>generate</c> writes the
+/// blocks and <c>validate</c> checks the markers, and both read this. The names and the renderers are declared
+/// together, and <c>Blocks</c> projects the names out without calling a renderer.
+/// </summary>
 public static class GeneratedFiles
 {
-    // A file carrying generated blocks, as `validate` needs it. `MarkersRequired` is false where deleting the markers
-    // is how a corpus declines the block, which is true of `README.md` alone. `tooling/CLAUDE.md` says why.
+    /// <summary>
+    /// A file carrying generated blocks, as <c>validate</c> needs it. <c>MarkersRequired</c> is false where deleting
+    /// the markers is how a corpus declines the block, which is true of <c>README.md</c> alone.
+    /// <c>tooling/CLAUDE.md</c> says why.
+    /// </summary>
     public readonly record struct BlockFile(string Path, IReadOnlyList<string> Blocks, bool MarkersRequired);
 
-    // Which blocks each file carries. Reads no disk and renders nothing. Takes the adopted types, resolved once in
-    // `Corpus.Adopted`.
+    /// <summary>
+    /// Which blocks each file carries. Reads no disk and renders nothing. Takes the adopted types, resolved once in
+    /// <c>Corpus.Adopted</c>.
+    /// </summary>
     public static List<BlockFile> Blocks(IReadOnlyList<TypeSchema> adopted) =>
     [
         .. Declare(adopted).Select(spec =>
             new BlockFile(spec.Path, [.. spec.Blocks.Select(b => b.Name)], spec.MarkersRequired))
     ];
 
-    // One generated file: where it goes, what the corpus holds there now, and what it should hold. `Current` is null
-    // where the corpus holds nothing at that path yet.
+    /// <summary>
+    /// One generated file: where it goes, what the corpus holds there now, and what it should hold. <c>Current</c> is
+    /// null where the corpus holds nothing at that path yet.
+    /// </summary>
     public readonly record struct GeneratedFile(string Path, string? Current, string Wanted)
     {
         public bool Stale => Current != Wanted;
     }
 
-    // Every generated file and what it should hold, in the order `generate` writes them. Reads nothing and writes
-    // nothing. A file the corpus does not hold is skipped, except an `_index.md`, which is written because each type
-    // page links to one.
+    /// <summary>
+    /// Every generated file and what it should hold, in the order <c>generate</c> writes them. Reads nothing and writes
+    /// nothing. A file the corpus does not hold is skipped, except an <c>_index.md</c>, which is written because each
+    /// type page links to one.
+    /// </summary>
     public static List<GeneratedFile> Plan(Schema schema, IReadOnlyList<TypeSchema> adopted,
         IEnumerable<Doc> docs, Tree tree)
     {
@@ -65,7 +76,10 @@ public static class GeneratedFiles
         return plan;
     }
 
-    // Write every entry whose content has moved, and return what was written. `generate` and `update` both end here.
+    /// <summary>
+    /// Write every entry whose content has moved, and return what was written. <c>generate</c> and <c>update</c> both
+    /// end here.
+    /// </summary>
     public static List<string> Write(string corpusRoot, IEnumerable<GeneratedFile> plan)
     {
         var written = new List<string>();
@@ -83,11 +97,13 @@ public static class GeneratedFiles
 
     private readonly record struct FileSpec(string Path, bool MarkersRequired, Block[] Blocks);
 
-    // How far a block's own file sits below the corpus root, as the prefix a relative link from it climbs by.
+    /// <summary>
+    /// How far a block's own file sits below the corpus root, as the prefix a relative link from it climbs by.
+    /// </summary>
     private static string Up(string path) =>
         string.Concat(Enumerable.Repeat("../", path.Count(c => c == '/')));
 
-    // The declaration itself. Everything above reads this and nothing else.
+    /// <summary>The declaration itself. Everything above reads this and nothing else.</summary>
     private static List<FileSpec> Declare(IReadOnlyList<TypeSchema> adopted)
     {
         // The schema and checks blocks derive from the schema alone, so every adopted type gets them whether or not it

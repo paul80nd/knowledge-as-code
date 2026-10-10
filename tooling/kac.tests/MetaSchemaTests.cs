@@ -18,8 +18,10 @@ public class MetaSchemaTests
         Assert.Equal(ValueChecks.EntryTypes.Order(StringComparer.Ordinal), EnumOf("of"));
     }
 
-    // The prefixed families are patterns in the same `anyOf` and are not tested here: a pattern admits a name
-    // the type supplies, so there is no list to compare.
+    /// <summary>
+    /// The prefixed families are patterns in the same <c>anyOf</c> and are not tested here: a pattern admits a name the
+    /// type supplies, so there is no list to compare.
+    /// </summary>
     [Fact]
     public void The_line_source_enum_offers_what_the_exporter_fills()
     {
@@ -32,8 +34,10 @@ public class MetaSchemaTests
         Assert.Equal(PartLineSource.Fixed.Order(StringComparer.Ordinal), offered);
     }
 
-    // One key of the shared `field` definition, which an entry key is declared with as well: the `entry:` block
-    // points every key at this same definition, so one list answers for both.
+    /// <summary>
+    /// One key of the shared <c>field</c> definition, which an entry key is declared with as well: the <c>entry:</c>
+    /// block points every key at this same definition, so one list answers for both.
+    /// </summary>
     private static IEnumerable<string> EnumOf(string key)
     {
         using var json = JsonDocument.Parse(

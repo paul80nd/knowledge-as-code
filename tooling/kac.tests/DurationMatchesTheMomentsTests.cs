@@ -75,6 +75,6 @@ public class DurationMatchesTheMomentsTests
         return found;
     }
 
-    // A key left out entirely, which is the shape a record short of the field actually has.
+    /// <summary>A key left out entirely, which is the shape a record short of the field actually has.</summary>
     private static string Line(string key, string? value) => value is null ? "" : $"{key}: {value}\n";
 }

@@ -124,8 +124,10 @@ public class FeatureFileRepoTests
         string[] paths, string[] services, (string Id, string[]? Repos)[] repos)
         => Run(OfferingType(ImplementedBy), paths, services, repos);
 
-    // One offering and the services it names, written as frontmatter so the rule reads them exactly as
-    // it reads a corpus.
+    /// <summary>
+    /// One offering and the services it names, written as frontmatter so the rule reads them exactly as it reads a
+    /// corpus.
+    /// </summary>
     private static List<Finding> Run(
         TypeSchema offerings, string[] paths, string[] services, (string Id, string[]? Repos)[] repos)
     {
@@ -179,6 +181,6 @@ public class FeatureFileRepoTests
             => found.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
-    // The rule reads the records and never the tree.
+    /// <summary>The rule reads the records and never the tree.</summary>
     private static readonly Tree Empty = new(new HashSet<string>(StringComparer.Ordinal), _ => "");
 }

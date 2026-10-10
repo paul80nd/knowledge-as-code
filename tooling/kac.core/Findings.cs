@@ -1,7 +1,9 @@
 namespace kac.core;
 
-// `Error` fails the build and the other two do not. `Info` is for something true that is nobody's
-// fault, such as a corpus capped at a version deliberately.
+/// <summary>
+/// <c>Error</c> fails the build and the other two do not. <c>Info</c> is for something true that is nobody's fault,
+/// such as a corpus capped at a version deliberately.
+/// </summary>
 public enum Sev
 {
     Error,
@@ -11,8 +13,10 @@ public enum Sev
 
 public record Finding(string File, int? Line, Sev Severity, CheckId Check, string Message);
 
-// Passes with no one file to read, such as `id-unique` and `min-records`, build their `Finding`s
-// directly.
+/// <summary>
+/// Passes with no one file to read, such as <c>id-unique</c> and <c>min-records</c>, build their <c>Finding</c>s
+/// directly.
+/// </summary>
 public readonly record struct Report(string File, List<Finding> Findings)
 {
     public void Err(CheckId check, string message, int? line = null) =>
@@ -22,8 +26,10 @@ public readonly record struct Report(string File, List<Finding> Findings)
         Findings.Add(new Finding(File, line, Sev.Warning, check, message));
 }
 
-// `OnTypePage` says whether the check belongs in the table generated onto a type page, which lists what
-// a record's author can act on. True unless a check says otherwise.
+/// <summary>
+/// <c>OnTypePage</c> says whether the check belongs in the table generated onto a type page, which lists what a
+/// record's author can act on. True unless a check says otherwise.
+/// </summary>
 public readonly record struct CheckDef(
     CheckId Id,
     Sev Severity,
@@ -33,8 +39,10 @@ public readonly record struct CheckDef(
 
 public static class CheckCatalogue
 {
-    // Every check `_checks.yaml` declares, in its order, then one per expression rule grouped by type. An
-    // expression rule reports under its own id, so the coverage gate holds it to a fixture like any check.
+    /// <summary>
+    /// Every check <c>_checks.yaml</c> declares, in its order, then one per expression rule grouped by type. An
+    /// expression rule reports under its own id, so the coverage gate holds it to a fixture like any check.
+    /// </summary>
     public static IReadOnlyList<CheckDef> For(Schema schema) =>
     [
         .. schema.Checks,
@@ -45,7 +53,7 @@ public static class CheckCatalogue
                 r.Description ?? r.Message ?? r.Id.Value))
     ];
 
-    // Every other check reports through a literal written where the check is.
+    /// <summary>Every other check reports through a literal written where the check is.</summary>
     public static IReadOnlyList<CheckId> EmittedByRules() =>
     [
         .. DocumentRules.All.SelectMany(r => r.Emits),

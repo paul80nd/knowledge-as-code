@@ -1,7 +1,9 @@
 namespace kac.core;
 
-// The graph is whichever field points back at the type declaring the rule, read from the schema, so a rename of
-// `depends-on` cannot leave the rule walking nothing.
+/// <summary>
+/// The graph is whichever field points back at the type declaring the rule, read from the schema, so a rename of
+/// <c>depends-on</c> cannot leave the rule walking nothing.
+/// </summary>
 public sealed class NoDependencyCycles : ICorpusRule
 {
     public RuleId RuleId => new("no-dependency-cycles");
@@ -19,7 +21,7 @@ public sealed class NoDependencyCycles : ICorpusRule
         }
     }
 
-    // `Unseen` is the default, so a record the walk has no entry for yet reads as unseen.
+    /// <summary><c>Unseen</c> is the default, so a record the walk has no entry for yet reads as unseen.</summary>
     private enum Step
     {
         Unseen,

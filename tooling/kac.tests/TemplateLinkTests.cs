@@ -6,7 +6,7 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public partial class TemplateLinkTests
 {
-    // An inline Markdown link, with the anchor split off.
+    /// <summary>An inline Markdown link, with the anchor split off.</summary>
     [GeneratedRegex(@"\[(?<text>[^\]\r\n]+)\]\((?<target>[^)\r\n#]+)(?:#[^)\r\n]*)?\)")]
     private static partial Regex Link();
 
@@ -77,8 +77,10 @@ public partial class TemplateLinkTests
             + "drop the link from the example.");
     }
 
-    // Every line inside a fenced block. The fence is read at the start of a line, indented or not, which
-    // is how a fence nested in a list item opens.
+    /// <summary>
+    /// Every line inside a fenced block. The fence is read at the start of a line, indented or not, which is how a
+    /// fence nested in a list item opens.
+    /// </summary>
     private static IEnumerable<string> Fenced(IEnumerable<string> lines)
     {
         var inside = false;
@@ -108,20 +110,24 @@ public partial class TemplateLinkTests
             .Distinct(StringComparer.Ordinal)
     ];
 
-    // LF-normalised, so a line count and a fence are the same on a CRLF checkout.
+    /// <summary>LF-normalised, so a line count and a fence are the same on a CRLF checkout.</summary>
     private static string Read(string rel) => Files.ReadLf(Path.Combine(Repo.Root, rel));
 
-    // A target with every leading `../` taken off, so a link climbing twice is read the same way as one
-    // climbing once rather than resolving to `..` and passing.
+    /// <summary>
+    /// A target with every leading <c>../</c> taken off, so a link climbing twice is read the same way as one climbing
+    /// once rather than resolving to <c>..</c> and passing.
+    /// </summary>
     private static string Climbed(string target)
     {
         while (target.StartsWith("../", StringComparison.Ordinal)) target = target[3..];
         return target;
     }
 
-    // The type's folder this seed may reach into. A file inside a type's folder owns the folder holding it.
-    // A root page owns the folder of the type whose page it is, by lookup, because a type may declare a
-    // `page:` that does not match its `folder:`. A page no type claims owns nothing.
+    /// <summary>
+    /// The type's folder this seed may reach into. A file inside a type's folder owns the folder holding it. A root
+    /// page owns the folder of the type whose page it is, by lookup, because a type may declare a <c>page:</c> that
+    /// does not match its <c>folder:</c>. A page no type claims owns nothing.
+    /// </summary>
     private static string? Owner(string rel)
     {
         var parts = rel.Split('/');

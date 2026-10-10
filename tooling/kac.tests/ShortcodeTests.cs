@@ -31,8 +31,10 @@ public class ShortcodeTests
     public void A_shortcode_opening_on_anything_but_a_lower_case_letter_is_refused(string shortcode)
         => Assert.Contains("does not open on a lower-case letter", Assert.Single(Shortcode(shortcode)).Message);
 
-    // `my-corp` is the case to hold. A hyphen inside a shortcode would make a scoped reference look like an
-    // id on the left of the colon, which is how `Document.cs` collects a citation.
+    /// <summary>
+    /// <c>my-corp</c> is the case to hold. A hyphen inside a shortcode would make a scoped reference look like an id on
+    /// the left of the colon, which is how <c>Document.cs</c> collects a citation.
+    /// </summary>
     [Theory]
     [InlineData("my-corp")]
     [InlineData("eng.uk")]

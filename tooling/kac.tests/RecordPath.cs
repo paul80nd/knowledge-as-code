@@ -2,12 +2,16 @@ namespace kac.tests;
 
 internal static class RecordPath
 {
-    // The folder holding the corpora this repository publishes. `template/` states no `content-version`,
-    // and a fixture corpus under `tooling/` states one as part of the fixture, so neither is read here.
+    /// <summary>
+    /// The folder holding the corpora this repository publishes. <c>template/</c> states no <c>content-version</c>, and
+    /// a fixture corpus under <c>tooling/</c> states one as part of the fixture, so neither is read here.
+    /// </summary>
     internal const string Published = "examples";
 
-    // The type folder is looked for anywhere above the file, because a corpus may file records in
-    // subfolders. `_index.md` and `_template.md` are not records.
+    /// <summary>
+    /// The type folder is looked for anywhere above the file, because a corpus may file records in subfolders.
+    /// <c>_index.md</c> and <c>_template.md</c> are not records.
+    /// </summary>
     internal static bool IsRecord(string rel, IReadOnlySet<string> folders)
     {
         var parts = rel.Split('/');
@@ -17,8 +21,10 @@ internal static class RecordPath
                && parts[..^1].Any(folders.Contains);
     }
 
-    // The corpus whose export includes `rel`, or null where none does. `corpora` names each corpus folder
-    // under `examples/`, and `exported` each type folder declaring an `export:` block.
+    /// <summary>
+    /// The corpus whose export includes <c>rel</c>, or null where none does. <c>corpora</c> names each corpus folder
+    /// under <c>examples/</c>, and <c>exported</c> each type folder declaring an <c>export:</c> block.
+    /// </summary>
     internal static string? CorpusOf(string rel, IReadOnlySet<string> corpora, IReadOnlySet<string> exported)
     {
         var parts = rel.Split('/');

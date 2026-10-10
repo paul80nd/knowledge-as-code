@@ -16,9 +16,10 @@ public class BaseFromTests
     public void A_github_remote_gives_the_repository_url(string origin)
         => Assert.Equal("https://github.com/acme/corpus", Publishing.BaseFrom(Publishing.GitHub, origin));
 
-    // Azure DevOps spells its two remotes differently enough that neither reduces to the other: an SSH
-    // remote opens with the protocol version, and an HTTPS one carries `_git` and may prefix the host
-    // with a user name.
+    /// <summary>
+    /// Azure DevOps spells its two remotes differently enough that neither reduces to the other: an SSH remote opens
+    /// with the protocol version, and an HTTPS one carries <c>_git</c> and may prefix the host with a user name.
+    /// </summary>
     [Theory]
     [InlineData("https://acme@dev.azure.com/acme/Standards/_git/corpus")]
     [InlineData("https://dev.azure.com/acme/Standards/_git/corpus")]

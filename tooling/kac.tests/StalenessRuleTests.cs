@@ -9,11 +9,14 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public class StalenessRuleTests
 {
-    // Counted back from `Required.Today`, which is 2026-06-15.
-    private const string QuarterlyLastDayInside = "2026-03-15";   // 92 days
-    private const string QuarterlyFirstDayPast = "2026-03-14";    // 93 days
-    private const string AnnualLastDayInside = "2025-06-14";      // 366 days
-    private const string AnnualFirstDayPast = "2025-06-13";       // 367 days
+    /// <summary>92 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string QuarterlyLastDayInside = "2026-03-15";
+    /// <summary>93 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string QuarterlyFirstDayPast = "2026-03-14";
+    /// <summary>366 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string AnnualLastDayInside = "2025-06-14";
+    /// <summary>367 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string AnnualFirstDayPast = "2025-06-13";
 
     [Theory]
     [InlineData("quarterly", QuarterlyLastDayInside, true)]
@@ -32,7 +35,7 @@ public class StalenessRuleTests
     public void A_process_nobody_has_walked_is_reported_whatever_it_states(string frequency)
         => Assert.False(Holds(frequency, "\"never\""));
 
-    // A date old enough to fail both cycles shows the rule reads the frequency and not the gap.
+    /// <summary>A date old enough to fail both cycles shows the rule reads the frequency and not the gap.</summary>
     [Theory]
     [InlineData("on-change")]
     [InlineData("per-release")]
@@ -50,7 +53,9 @@ public class StalenessRuleTests
     public void A_rehearsal_date_in_the_future_is_not_reported()
         => Assert.True(Holds("quarterly", "\"2029-06-01\""));
 
-    // Whether the rule is satisfied: true where it has nothing to say, as an `expr:` is written.
+    /// <summary>
+    /// Whether the rule is satisfied: true where it has nothing to say, as an <c>expr:</c> is written.
+    /// </summary>
     private static bool Holds(string frequency, string? lastRehearsed)
     {
         var doc = Required.Parsed("processes/a-slug.md",

@@ -11,7 +11,9 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public partial class FixtureDateTests
 {
-    // Long enough that whoever meets a failure here moves the date and has years before the next one.
+    /// <summary>
+    /// Long enough that whoever meets a failure here moves the date and has years before the next one.
+    /// </summary>
     private static readonly TimeSpan Clearance = TimeSpan.FromDays(365 * 2);
 
     [Fact]
@@ -43,8 +45,10 @@ public partial class FixtureDateTests
             + "that golden.");
     }
 
-    // The quoted ISO dates under the fields given, with their lines. Anything that is not a date is left
-    // to the validator.
+    /// <summary>
+    /// The quoted ISO dates under the fields given, with their lines. Anything that is not a date is left to the
+    /// validator.
+    /// </summary>
     private static IEnumerable<(int Line, string Field, DateOnly Date)> Dates(
         string path, IReadOnlySet<string> fields)
     {
@@ -78,7 +82,9 @@ public partial class FixtureDateTests
                 yield return (rel, fields);
     }
 
-    // `OfType` drops the rules declaring no expression, which are intentions rather than checks.
+    /// <summary>
+    /// <c>OfType</c> drops the rules declaring no expression, which are intentions rather than checks.
+    /// </summary>
     private static IReadOnlySet<string> Measured(TypeSchema type) =>
         type.Rules
             .Select(rule => rule.Expr)

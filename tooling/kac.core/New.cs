@@ -7,11 +7,13 @@ namespace kac.core;
 
 public sealed record PlannedFile(string From, string To, string Layer);
 
-// Written rather than copied: a copied descriptor carries somebody else's name.
+/// <summary>Written rather than copied: a copied descriptor carries somebody else's name.</summary>
 public sealed record ComposedFile(string Path, string Content);
 
-// `Url` is written back unresolved: an absolute path would be a fact about the machine that ran the
-// command. `Ref` and `Commit` are null where the template was read from a folder.
+/// <summary>
+/// <c>Url</c> is written back unresolved: an absolute path would be a fact about the machine that ran the command.
+/// <c>Ref</c> and <c>Commit</c> are null where the template was read from a folder.
+/// </summary>
 public sealed record Upstream(
     string Url,
     string? Path,
@@ -20,7 +22,7 @@ public sealed record Upstream(
     int TemplateVersion,
     string TakenOn);
 
-// Both `--ci` and a template's `ci:` are checked against this list.
+/// <summary>Both <c>--ci</c> and a template's <c>ci:</c> are checked against this list.</summary>
 public static class CiSystem
 {
     public const string GitHub = "github";
@@ -34,23 +36,27 @@ public sealed record NewAnswers
 {
     public required string Name { get; init; }
 
-    // Always written out, even where every type was adopted, so validation can hold the corpus to it.
+    /// <summary>
+    /// Always written out, even where every type was adopted, so validation can hold the corpus to it.
+    /// </summary>
     public required IReadOnlyList<string> Types { get; init; }
 
-    // The base is null where the corpus publishes nowhere.
+    /// <summary>The base is null where the corpus publishes nowhere.</summary>
     public string PublishingTarget { get; init; } = Publishing.None;
     public string? Base { get; init; }
 
     public string Ci { get; init; } = CiSystem.None;
 }
 
-// Everything that can stop a run is read before anything is asked.
+/// <summary>Everything that can stop a run is read before anything is asked.</summary>
 public sealed record Ground
 {
-    // A descriptor at or above the working directory means this is `update`'s job.
+    /// <summary>A descriptor at or above the working directory means this is <c>update</c>'s job.</summary>
     public string? Corpus { get; init; }
 
-    // `Dirty` is null where there is no repository or git could not answer, which is not the same as clean.
+    /// <summary>
+    /// <c>Dirty</c> is null where there is no repository or git could not answer, which is not the same as clean.
+    /// </summary>
     public bool Repository { get; init; }
     public bool? Dirty { get; init; }
 
@@ -64,7 +70,7 @@ public sealed record NewPlan(
     IReadOnlyList<string> DeclinedCi,
     TemplateFaults Faults)
 {
-    // In ordinal order, which is what a golden snapshots.
+    /// <summary>In ordinal order, which is what a golden snapshots.</summary>
     public IEnumerable<string> Paths =>
         Copied.Select(f => f.To).Concat(Composed.Select(f => f.Path)).OrderBy(p => p, StringComparer.Ordinal);
 }
@@ -74,7 +80,7 @@ public static class New
     private const string DescriptorFile = ".corpus.yaml";
     private const string ReadmeFile = "README.md";
 
-    // Moved by hand afterwards, so the tool supplies a first number and never a later one.
+    /// <summary>Moved by hand afterwards, so the tool supplies a first number and never a later one.</summary>
     private const string FirstContentVersion = "0.1.0";
 
     public static Ground Survey(string dir)
@@ -104,9 +110,11 @@ public static class New
         ];
     }
 
-    // A tool meeting a manifest it is too old for stops rather than ignoring keys it does not know. Build
-    // metadata is dropped, so `0.6.0+abc123` and `0.6.0` are one version. A version neither side can parse
-    // does not stop a run.
+    /// <summary>
+    /// A tool meeting a manifest it is too old for stops rather than ignoring keys it does not know. Build metadata is
+    /// dropped, so <c>0.6.0+abc123</c> and <c>0.6.0</c> are one version. A version neither side can parse does not stop
+    /// a run.
+    /// </summary>
     public static string? TooOldFor(string? minimum, string tool, string verb)
     {
         if (minimum is not { Length: > 0 }) return null;
@@ -124,8 +132,10 @@ public static class New
         static string Release(string version) => version.Split('+', '-')[0];
     }
 
-    // `declines` answers whether a destination belongs to a type the corpus did not adopt. `DeclinesTypes`
-    // builds one from the template's schema.
+    /// <summary>
+    /// <c>declines</c> answers whether a destination belongs to a type the corpus did not adopt. <c>DeclinesTypes</c>
+    /// builds one from the template's schema.
+    /// </summary>
     public static NewPlan Plan(IReadOnlySet<string> templateFiles, Manifest manifest, NewAnswers answers,
         Upstream upstream, Func<string, bool> declines)
     {
@@ -187,7 +197,7 @@ public static class New
             TemplateFaults.Of(unclassified, unknownCi));
     }
 
-    // Judged on where a file lands, because a template may serve its pages from a subfolder.
+    /// <summary>Judged on where a file lands, because a template may serve its pages from a subfolder.</summary>
     public static Func<string, bool> DeclinesTypes(Schema schema, IReadOnlyList<string> adopted)
     {
         var files = new HashSet<string>(StringComparer.Ordinal);
@@ -204,7 +214,9 @@ public static class New
         return rel => files.Contains(rel) || folders.Any(f => rel.StartsWith(f, StringComparison.Ordinal));
     }
 
-    // `declined` is for `SeedLinks`, which takes out a seed page's links to types this corpus turned down.
+    /// <summary>
+    /// <c>declined</c> is for <c>SeedLinks</c>, which takes out a seed page's links to types this corpus turned down.
+    /// </summary>
     public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot,
         IReadOnlySet<string> declined)
     {
@@ -220,7 +232,7 @@ public static class New
         return [.. plan.Paths];
     }
 
-    // Each key takes a line of comment, so a corpus changing one has somewhere to read first.
+    /// <summary>Each key takes a line of comment, so a corpus changing one has somewhere to read first.</summary>
     public static string Descriptor(NewAnswers answers, Upstream upstream)
     {
         var sb = new StringBuilder();
@@ -316,8 +328,10 @@ public static class New
         return sb.ToString();
     }
 
-    // Carries the markers for every block `README.md` is declared to hold. A README without them would
-    // decline those blocks on every corpus's behalf.
+    /// <summary>
+    /// Carries the markers for every block <c>README.md</c> is declared to hold. A README without them would decline
+    /// those blocks on every corpus's behalf.
+    /// </summary>
     public static string Readme(NewAnswers answers)
     {
         var sb = new StringBuilder();
@@ -345,26 +359,31 @@ public static class New
         return sb.ToString();
     }
 
-    // Written bare, which YAML reads as absent.
+    /// <summary>Written bare, which YAML reads as absent.</summary>
     private static string Optional(string key, string? value) =>
         value is { Length: > 0 } ? $"  {key}: {Scalar(value)}\n" : $"  {key}:\n";
 
-    // A null commit tells a folder from a clone: `TemplateSource.Read` resolves one for a clone alone.
-    // Reading the URL instead would call an ssh remote a folder. A folder's corpus files on the framework's
-    // own repository.
+    /// <summary>
+    /// A null commit tells a folder from a clone: <c>TemplateSource.Read</c> resolves one for a clone alone. Reading
+    /// the URL instead would call an ssh remote a folder. A folder's corpus files on the framework's own repository.
+    /// </summary>
     private static string Tracker(Upstream upstream) =>
         upstream.Commit is { Length: > 0 } ? upstream.Url : Asking.DefaultFrom;
 
-    // Any host other than GitHub or Azure DevOps is written as `none` for the corpus to answer.
+    /// <summary>
+    /// Any host other than GitHub or Azure DevOps is written as <c>none</c> for the corpus to answer.
+    /// </summary>
     private static string Target(string tracker) =>
         tracker.Contains("github.com", StringComparison.OrdinalIgnoreCase) ? Publishing.GitHub
         : tracker.Contains("dev.azure.com", StringComparison.OrdinalIgnoreCase)
           || tracker.Contains("visualstudio.com", StringComparison.OrdinalIgnoreCase) ? Publishing.AzureDevOps
         : Publishing.None;
 
-    // The words a YAML reader takes for a boolean or for nothing at all, rather than for a name. Held
-    // wider than the 1.2 core schema, which reads only the first pair: a folder called `no` or `off` is a
-    // corpus whose name loads as `false` under a reader on 1.1, and quoting costs the name nothing.
+    /// <summary>
+    /// The words a YAML reader takes for a boolean or for nothing at all, rather than for a name. Held wider than the
+    /// 1.2 core schema, which reads only the first pair: a folder called <c>no</c> or <c>off</c> is a corpus whose name
+    /// loads as <c>false</c> under a reader on 1.1, and quoting costs the name nothing.
+    /// </summary>
     private static readonly string[] Reserved =
         ["true", "false", "y", "n", "yes", "no", "on", "off", "null", "~"];
 

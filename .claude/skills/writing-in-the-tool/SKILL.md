@@ -37,12 +37,22 @@ below say where this repository differs.
 
 ## `///` and `//`
 
-* `///` is read by a caller. The IDE shows it beside the call. Write what a caller must know to use the member
-  correctly: what a null means, what it throws, an order two calls must keep, a cost. A member whose name and signature
-  already say it needs none.
-* `//` is read by a maintainer. Write the constraint the implementation answers to, inside a body or above a
-  private member.
-* Keep the two apart. A caller must not have to open the file to learn what a method promises.
+Follow Microsoft's [comment style] for C# and its [recommended XML tags]. The rules below are what they mean here.
+
+* **A comment on a type or a member is an XML doc comment, `///`, with a `<summary>`.** That includes a private member.
+  The IDE shows it beside every call. Write what a caller must know: what a null means, what it throws, an order two
+  calls must keep, a cost. A member whose name and signature already say it needs none.
+* **Add `<param>`, `<returns>` or `<exception>` only where it says something the summary does not.**
+* **A doc comment is XML.** Write code as `<c>`, and escape `<` as `&lt;` and `&` as `&amp;`.
+* **`//` belongs inside a body**, on the line above the statement it explains.
+* **Put a comment on a line of its own.** A label on an `[InlineData]` row is the one exception, because it annotates
+  one case of a table.
+* **Write a comment as a sentence.** Open it with a capital letter and close it with a full stop.
+* `CommentPlacementTests` fails a `//` on a member, a comment trailing code, and a doc comment that is not well-formed
+  XML.
+
+[comment style]: https://learn.microsoft.com/dotnet/csharp/fundamentals/coding-style/coding-conventions#comment-style
+[recommended XML tags]: https://learn.microsoft.com/dotnet/csharp/language-reference/xmldoc/recommended-tags
 
 ## Messages the tool prints
 

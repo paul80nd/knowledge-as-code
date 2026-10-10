@@ -177,8 +177,10 @@ public class BreadcrumbTests
           }
           """;
 
-    // The flat parts file, one line per part. Each argument is the shortcode the line arrived under, or
-    // null for a part this corpus wrote itself.
+    /// <summary>
+    /// The flat parts file, one line per part. Each argument is the shortcode the line arrived under, or null for a
+    /// part this corpus wrote itself.
+    /// </summary>
     private static (string, string) Parts(params string?[] sources) =>
         ("glossary/terms.jsonl", string.Join("\n", sources.Select((c, i) =>
             c is null
@@ -191,8 +193,10 @@ public class BreadcrumbTests
            "dir":"{{type}}","partsFile":"{{type}}/terms.jsonl"}
           """;
 
-    // `count` records named `Context1` upward, in the order the export writes them, which decides which
-    // of them a bounded line names.
+    /// <summary>
+    /// <c>count</c> records named <c>Context1</c> upward, in the order the export writes them, which decides which of
+    /// them a bounded line names.
+    /// </summary>
     private static (string Path, string Content)[] Contexts(int count) =>
         [.. Enumerable.Range(1, count).Select(i => Record($"glossary/gls-{i:D3}.json", $"Context{i}"))];
 

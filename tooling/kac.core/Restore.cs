@@ -3,8 +3,10 @@ using System.Text;
 
 namespace kac.core;
 
-// `Files` are relative to the corpus's folder under `.imports/`, payload prefix stripped. `Current`
-// says the folder already holds this version, and `Files` is then empty.
+/// <summary>
+/// <c>Files</c> are relative to the corpus's folder under <c>.imports/</c>, payload prefix stripped. <c>Current</c>
+/// says the folder already holds this version, and <c>Files</c> is then empty.
+/// </summary>
 public sealed record RestoreStep(
     string Corpus,
     string Shortcode,
@@ -12,29 +14,36 @@ public sealed record RestoreStep(
     bool Current,
     IReadOnlyList<BundleFile> Files);
 
-// A plan carrying a problem writes nothing: a half-restored corpus validates against a graph nobody
-// declared.
+/// <summary>
+/// A plan carrying a problem writes nothing: a half-restored corpus validates against a graph nobody declared.
+/// </summary>
 public sealed record RestorePlan(IReadOnlyList<RestoreStep> Steps, IReadOnlyList<string> Problems);
 
-// The corpus is carried beside the version: a repointed entry keeps its shortcode, and a folder judged
-// by version alone would keep the wrong corpus's records.
+/// <summary>
+/// The corpus is carried beside the version: a repointed entry keeps its shortcode, and a folder judged by version
+/// alone would keep the wrong corpus's records.
+/// </summary>
 public sealed record Imported(string Corpus, string Version);
 
-// `.imports/` is a restored artefact and is never committed. A lock its range still admits is taken
-// without asking the registry, so two restores of an unchanged descriptor write the same bytes.
-// `docs/cli/restore.md` says what a run writes and what it refuses.
+/// <summary>
+/// <c>.imports/</c> is a restored artefact and is never committed. A lock its range still admits is taken without
+/// asking the registry, so two restores of an unchanged descriptor write the same bytes. <c>docs/cli/restore.md</c>
+/// says what a run writes and what it refuses.
+/// </summary>
 public static class Restore
 {
-    // One folder per shortcode, the name a citation carries.
+    /// <summary>One folder per shortcode, the name a citation carries.</summary>
     public const string ImportsDir = ".imports";
 
-    // What a package may unpack to. A zip entry declares its uncompressed size and a hostile one is free
-    // to understate it, so both caps are counted against the bytes actually read. A corpus is prose, and
-    // the largest export any corpus here produces is under a megabyte, so these refuse nothing real.
+    /// <summary>
+    /// What a package may unpack to. A zip entry declares its uncompressed size and a hostile one is free to understate
+    /// it, so both caps are counted against the bytes actually read. A corpus is prose, and the largest export any
+    /// corpus here produces is under a megabyte, so these refuse nothing real.
+    /// </summary>
     private const long MaxEntryBytes = 16L * 1024 * 1024;
     private const long MaxPackageBytes = 256L * 1024 * 1024;
 
-    // `installed` is a function rather than a path, so the decision is testable from strings.
+    /// <summary><c>installed</c> is a function rather than a path, so the decision is testable from strings.</summary>
     public static RestorePlan Plan(
         IReadOnlyList<Consumed> declared, Registry registry, Func<string, Imported?> installed)
     {
@@ -76,7 +85,7 @@ public static class Restore
         return new RestorePlan(steps, problems);
     }
 
-    // Replaced whole, so a record withdrawn upstream leaves. A current folder is not rewritten.
+    /// <summary>Replaced whole, so a record withdrawn upstream leaves. A current folder is not rewritten.</summary>
     public static IReadOnlyList<string> Write(string corpusRoot, RestorePlan plan)
     {
         var written = new List<string>();
@@ -100,7 +109,7 @@ public static class Restore
         return written;
     }
 
-    // The unpacked export's own manifest answers, because it is what actually arrived.
+    /// <summary>The unpacked export's own manifest answers, because it is what actually arrived.</summary>
     public static Imported? Installed(string corpusRoot, string shortcode)
     {
         var path = Path.Combine(Folder(corpusRoot, shortcode), Exporter.ManifestFile);
@@ -116,7 +125,9 @@ public static class Restore
     private static string Folder(string corpusRoot, string shortcode) =>
         Path.Combine(corpusRoot, ImportsDir, shortcode);
 
-    // All are judged before any is fetched, so a refusal never leaves `.imports/` half-written.
+    /// <summary>
+    /// All are judged before any is fetched, so a refusal never leaves <c>.imports/</c> half-written.
+    /// </summary>
     private static List<Declaration>? Declarations(IReadOnlyList<Consumed> declared, List<string> problems)
     {
         var entries = new List<Declaration>();
@@ -208,7 +219,9 @@ public static class Restore
         return new Registry.Answer<string>(best, null);
     }
 
-    // The envelope is dropped: everything under the payload prefix `kac pack` wrote is the corpus.
+    /// <summary>
+    /// The envelope is dropped: everything under the payload prefix <c>kac pack</c> wrote is the corpus.
+    /// </summary>
     private static Registry.Answer<IReadOnlyList<BundleFile>> Unpack(
         byte[] bytes, Declaration entry, string version)
     {
@@ -289,16 +302,20 @@ public static class Restore
         ], null);
     }
 
-    // Read off the string rather than the disk, so the answer is the same where the folder does not exist.
+    /// <summary>
+    /// Read off the string rather than the disk, so the answer is the same where the folder does not exist.
+    /// </summary>
     private static bool Contained(string path) =>
         path.Length > 0
         && !Path.IsPathRooted(path)
         && !path.Contains(':', StringComparison.Ordinal)
         && !path.Split('/', '\\').Any(s => s is ".." or "");
 
-    // Copies until the cap is passed, and answers whether it stayed inside it. `CopyTo` reads an entry
-    // whole before anything can object, which is the point: what a package costs to open has to be
-    // decidable while it is being opened rather than afterwards.
+    /// <summary>
+    /// Copies until the cap is passed, and answers whether it stayed inside it. <c>CopyTo</c> reads an entry whole
+    /// before anything can object, which is the point: what a package costs to open has to be decidable while it is
+    /// being opened rather than afterwards.
+    /// </summary>
     private static bool CopyCapped(Stream from, Stream to, long cap)
     {
         var chunk = new byte[81920];

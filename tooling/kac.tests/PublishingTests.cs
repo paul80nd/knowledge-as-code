@@ -14,8 +14,10 @@ public class PublishingTests
         string? target = Publishing.GitHub, string? published = GitHubBase, string? prefix = null) =>
         new() { PublishingTarget = target, Base = published, PathPrefix = prefix };
 
-    // The publishing a descriptor resolves to. Every descriptor above names a target and a base, so a
-    // null is this file's own arrangement being wrong rather than the case a test is making.
+    /// <summary>
+    /// The publishing a descriptor resolves to. Every descriptor above names a target and a base, so a null is this
+    /// file's own arrangement being wrong rather than the case a test is making.
+    /// </summary>
     private static Publishing For(CorpusDescriptor descriptor) =>
         Publishing.For(descriptor, Sha)
         ?? throw new XunitException($"'{descriptor.PublishingTarget}' resolved to no publishing.");
@@ -55,9 +57,11 @@ public class PublishingTests
         Assert.Null(Publishing.For(Descriptor(target: null), Sha));
     }
 
-    // Azure DevOps shows a page's numeric id in the address bar, and nothing derives the id of a second
-    // page from the id of the first. A base copied from there addresses one record and misaddresses
-    // every other, which is worse than addressing none.
+    /// <summary>
+    /// Azure DevOps shows a page's numeric id in the address bar, and nothing derives the id of a second page from the
+    /// id of the first. A base copied from there addresses one record and misaddresses every other, which is worse than
+    /// addressing none.
+    /// </summary>
     [Theory]
     [InlineData(WikiBase + "/880/Knowledge-as-code")]
     [InlineData(WikiBase + "/880")]
@@ -75,7 +79,9 @@ public class PublishingTests
         Assert.Equal($"{GitHubBase}/blob/{Sha}/glossary/search.md", link);
     }
 
-    // A wiki addresses a page rather than a file, so the extension goes and the separators are encoded.
+    /// <summary>
+    /// A wiki addresses a page rather than a file, so the extension goes and the separators are encoded.
+    /// </summary>
     [Fact]
     public void A_wiki_record_is_read_at_an_encoded_page_path()
     {
@@ -94,8 +100,10 @@ public class PublishingTests
         Assert.Equal($"{RepoBase}?path=/glossary/search.md&version=GC{Sha}", link);
     }
 
-    // A wiki takes its anchor as a query parameter, because `?pagePath=` opened the query string first.
-    // A fragment there is discarded and the reader lands at the top of the page.
+    /// <summary>
+    /// A wiki takes its anchor as a query parameter, because <c>?pagePath=</c> opened the query string first. A
+    /// fragment there is discarded and the reader lands at the top of the page.
+    /// </summary>
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase, "#query")]
     [InlineData(Publishing.AzureDevOps, RepoBase, "#query")]
@@ -108,8 +116,10 @@ public class PublishingTests
         Assert.EndsWith(expected, link, StringComparison.Ordinal);
     }
 
-    // A citation says what the agent read. A wiki is the one target that cannot keep this, because no
-    // `?pagePath=` URL takes a commit.
+    /// <summary>
+    /// A citation says what the agent read. A wiki is the one target that cannot keep this, because no
+    /// <c>?pagePath=</c> URL takes a commit.
+    /// </summary>
     [Theory]
     [InlineData(Publishing.GitHub, GitHubBase)]
     [InlineData(Publishing.AzureDevOps, RepoBase)]

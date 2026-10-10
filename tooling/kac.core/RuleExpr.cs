@@ -19,7 +19,7 @@ internal sealed record Bin(string Op, Expr Left, Expr Right) : Expr;
 
 internal sealed record Call(string Name, IReadOnlyList<Expr> Args) : Expr;
 
-// Enough to catch an expression that could never mean anything, and no more.
+/// <summary>Enough to catch an expression that could never mean anything, and no more.</summary>
 internal enum ValueType
 {
     Str,
@@ -27,7 +27,7 @@ internal enum ValueType
     Bool
 }
 
-// Stops the schema load, rather than leaving a check that never fires.
+/// <summary>Stops the schema load, rather than leaving a check that never fires.</summary>
 public sealed class RuleExprException(string message) : Exception(message);
 
 public static class RuleExpr
@@ -37,12 +37,14 @@ public static class RuleExpr
         ValueType Returns,
         Func<Facts, object?[], object?> Fn);
 
-    // `TypeOf` has already held every argument to its declared type, so anything else is a defect there.
+    /// <summary>
+    /// <c>TypeOf</c> has already held every argument to its declared type, so anything else is a defect there.
+    /// </summary>
     private static string Str(object?[] args, int index) =>
         args[index] as string
         ?? throw new RuleExprException($"argument {index + 1} did not reach the call as a string.");
 
-    // The row carries the call beside the signature, so a fact nothing answers cannot be declared.
+    /// <summary>The row carries the call beside the signature, so a fact nothing answers cannot be declared.</summary>
     private static readonly Dictionary<string, FactSpec> Functions =
         new(StringComparer.Ordinal)
         {
@@ -73,7 +75,7 @@ public static class RuleExpr
             ["today"] = new([], ValueType.Str, (f, _) => f.Today())
         };
 
-    // For the meta-test holding the table in `docs/design/expressions.md` against what runs.
+    /// <summary>For the meta-test holding the table in <c>docs/design/expressions.md</c> against what runs.</summary>
     public static IReadOnlyCollection<string> FunctionNames => Functions.Keys;
 
     public static Expr Compile(string source)
@@ -86,7 +88,9 @@ public static class RuleExpr
         return expr;
     }
 
-    // The expression states the condition that ought to hold, so a finding is emitted when this is false.
+    /// <summary>
+    /// The expression states the condition that ought to hold, so a finding is emitted when this is false.
+    /// </summary>
     public static bool Eval(Expr expr, Facts facts) => Value(expr, facts) is true;
 
     private static object? Value(Expr expr, Facts f) =>
@@ -254,7 +258,7 @@ public static class RuleExpr
             return left;
         }
 
-        // At most one comparison per level, so `a < b < c` is a parse error.
+        /// <summary>At most one comparison per level, so <c>a &lt; b &lt; c</c> is a parse error.</summary>
         private Expr Comparison()
         {
             var left = Additive();

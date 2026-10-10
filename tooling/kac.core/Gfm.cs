@@ -2,11 +2,14 @@ using System.Text;
 
 namespace kac.core;
 
-// `Generator`, `ChecksTable` and the CLI reference under `docs/cli/` all render tables through this, so none drifts.
-// Written out because Markdig writes no pipe table: `Markdown.Normalize` returns one as the run of its cell text.
+/// <summary>
+/// <c>Generator</c>, <c>ChecksTable</c> and the CLI reference under <c>docs/cli/</c> all render tables through this, so
+/// none drifts. Written out because Markdig writes no pipe table: <c>Markdown.Normalize</c> returns one as the run of
+/// its cell text.
+/// </summary>
 public static class Gfm
 {
-    // No trailing newline, because callers add their own.
+    /// <summary>No trailing newline, because callers add their own.</summary>
     public static string RenderTable(List<string> headers, List<List<string>> rows)
     {
         var n = headers.Count;
@@ -32,9 +35,11 @@ public static class Gfm
         return sb.ToString();
     }
 
-    // Dashes fill the cell, padding spaces included: |------| rather than | ---- |. Both are valid
-    // GFM and the row width is identical, but this is the form markdown formatters normalise to, and
-    // a generated file that an editor reformats on save is a permanently dirty working tree.
+    /// <summary>
+    /// Dashes fill the cell, padding spaces included: |------| rather than | ---- |. Both are valid GFM and the row
+    /// width is identical, but this is the form markdown formatters normalise to, and a generated file that an editor
+    /// reformats on save is a permanently dirty working tree.
+    /// </summary>
     private static string Sep(int[] w)
     {
         var sb = new StringBuilder("|");

@@ -93,8 +93,10 @@ public class RefCheckTests
     private static FieldSpec Reciprocating(string name, params string[] refs) =>
         new() { Name = name, Type = "id", Refs = refs, Reciprocal = "superseded-by" };
 
-    // The labels are the real ones, because a message names a type from its label. An id outside the cast
-    // is the target that does not exist.
+    /// <summary>
+    /// The labels are the real ones, because a message names a type from its label. An id outside the cast is the
+    /// target that does not exist.
+    /// </summary>
     private static List<Finding> Refs(FieldSpec field, string target)
     {
         var adrs = new TypeSchema
@@ -119,15 +121,18 @@ public class RefCheckTests
             .Prepend(Parse(schema, "adrs/adr-0001.md", "adr-0001", $"{field.Name}: {target}"))
             .OfType<Doc>()
             .ToList();
-        Assert.Equal(cast.Length + 1, docs.Count); // a document that did not parse would quietly shrink the corpus
+        // A document that did not parse would quietly shrink the corpus.
+        Assert.Equal(cast.Length + 1, docs.Count);
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);
         return found;
     }
 
-    // A standard carries `implements:` and a policy keeps clauses for it to name. The ADR is the target of
-    // the wrong type, and its type keeps no parts.
+    /// <summary>
+    /// A standard carries <c>implements:</c> and a policy keeps clauses for it to name. The ADR is the target of the
+    /// wrong type, and its type keeps no parts.
+    /// </summary>
     private static List<Finding> Implements(string target)
     {
         var field = new FieldSpec
@@ -162,7 +167,8 @@ public class RefCheckTests
                 $"---\nid: std-TEST\nimplements:\n  - {target}\n---\n\n# std-TEST\n", schema)
         }.OfType<Doc>().ToList();
 
-        Assert.Equal(3, docs.Count); // a document that did not parse would quietly shrink the corpus
+        // A document that did not parse would quietly shrink the corpus.
+        Assert.Equal(3, docs.Count);
 
         var found = new List<Finding>();
         Validator.CheckCorpus(schema, docs, found);

@@ -41,8 +41,11 @@ public class FreshnessTests
     public void An_exact_range_holding_an_older_version_is_capped()
         => Assert.Equal(Standing.Capped, Read(range: "0.1.1", resolved: "0.1.1", holds: ["0.1.2"]).How);
 
-    // A feed answers 404 for an unpublished package and for a private one refusing an anonymous read, so the empty
-    // listing must not read as current. The words are `Registry.Absent`'s, which differ for a folder and a registry.
+    /// <summary>
+    /// A feed answers 404 for an unpublished package and for a private one refusing an anonymous read, so the empty
+    /// listing must not read as current. The words are <c>Registry.Absent</c>'s, which differ for a folder and a
+    /// registry.
+    /// </summary>
     [Fact]
     public void A_source_listing_no_versions_at_all_is_unreachable()
     {
@@ -108,8 +111,10 @@ public class FreshnessTests
         string shortcode = "eng") =>
         new(corpus, shortcode, range, resolved, Shelf);
 
-    // A shelf holding one file per version, named as `kac pack` names them, or no folder at all where
-    // `holds` is null.
+    /// <summary>
+    /// A shelf holding one file per version, named as <c>kac pack</c> names them, or no folder at all where
+    /// <c>holds</c> is null.
+    /// </summary>
     private static Registry Feed(string[]? holds) =>
         new(
             _ => new Fetched(null, 0, "no registry stands behind these tests."),

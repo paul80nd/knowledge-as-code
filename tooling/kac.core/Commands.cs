@@ -19,8 +19,10 @@ public static class Commands
         return Report(findings, corpus.Docs.Count, corpus.Templates.Count, corpus.SkippedNoFrontmatter, json);
     }
 
-    // Null for a corpus consuming nothing, so no source is read. The one place `validate` leaves the
-    // working tree: an unreachable registry reports `import-unreachable` rather than the lock as current.
+    /// <summary>
+    /// Null for a corpus consuming nothing, so no source is read. The one place <c>validate</c> leaves the working
+    /// tree: an unreachable registry reports <c>import-unreachable</c> rather than the lock as current.
+    /// </summary>
     private static IReadOnlyList<ImportStanding>? Standings(CorpusDescriptor descriptor, Registry registry) =>
         descriptor.Consumes.Count == 0 ? null : Freshness.Read(descriptor.Consumes, registry);
 
@@ -84,9 +86,11 @@ public static class Commands
         return 0;
     }
 
-    // Takes the working directory rather than a corpus root, because the corpus is not there yet.
-    // Everything that can fail is settled before the first question. `docs/cli/new.md` argues each step.
-    // `today` is passed in so a golden can pin what the descriptor says.
+    /// <summary>
+    /// Takes the working directory rather than a corpus root, because the corpus is not there yet. Everything that can
+    /// fail is settled before the first question. <c>docs/cli/new.md</c> argues each step. <c>today</c> is passed in so
+    /// a golden can pin what the descriptor says.
+    /// </summary>
     public static int New(string dir, NewRequest request, string toolVersion, string today)
     {
         var ground = kac.core.New.Survey(dir);
@@ -155,13 +159,17 @@ public static class Commands
         return 1;
     }
 
-    // The template declares no `consumes:`. Should one appear, every import reports `import-unreachable`
-    // rather than `new` fetching from a network nobody asked it to use.
+    /// <summary>
+    /// The template declares no <c>consumes:</c>. Should one appear, every import reports <c>import-unreachable</c>
+    /// rather than <c>new</c> fetching from a network nobody asked it to use.
+    /// </summary>
     private static readonly Registry Unreachable = new(
         _ => new Fetched(null, 0, "new does not read a registry."),
         new FolderFeed(_ => null, _ => null));
 
-    // Discovery reads the git listing, so the choice is between running `git init` and cancelling.
+    /// <summary>
+    /// Discovery reads the git listing, so the choice is between running <c>git init</c> and cancelling.
+    /// </summary>
     private static int? Initialise(string dir, NewRequest request, IAsker? asker) =>
         Asking.OrRefuse(asker, request.Yes, $"{dir} is not a git repository. Run `git init` here?") switch
         {
@@ -174,8 +182,10 @@ public static class Commands
                 : null
         };
 
-    // Asked rather than refused: the pages naming the type are the corpus's own words, and only the
-    // person running this knows what else points at it. A no ends the whole run, not the drop alone.
+    /// <summary>
+    /// Asked rather than refused: the pages naming the type are the corpus's own words, and only the person running
+    /// this knows what else points at it. A no ends the whole run, not the drop alone.
+    /// </summary>
     private static int? Relinquish(string dropping, UpdateRequest request)
     {
         var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
@@ -213,7 +223,9 @@ public static class Commands
         static string Ref(string? name) => name is { Length: > 0 } r ? $" at {r}" : "";
     }
 
-    // A failure here is a note and not a stop: the files are written either way, and staging can be redone.
+    /// <summary>
+    /// A failure here is a note and not a stop: the files are written either way, and staging can be redone.
+    /// </summary>
     private static void Stage(string dir)
     {
         if (Git.Run(dir, "add -A") is null)
@@ -237,25 +249,27 @@ public static class Commands
         return 1;
     }
 
-    // The verb is the caller's, because `update` gives a type up through this too.
+    /// <summary>The verb is the caller's, because <c>update</c> gives a type up through this too.</summary>
     private static int Cancelled(string verb)
     {
         Note($"{verb}: cancelled. nothing was written.");
         return 1;
     }
 
-    // Nothing where the template was read from a folder.
+    /// <summary>Nothing where the template was read from a folder.</summary>
     private static string At(string? commit) => commit is { Length: >= 7 } c ? $" at {c[..7]}" : "";
 
-    // Against the corpus root, so every verb answers the same from any folder inside the corpus. A path
-    // the platform cannot parse comes back as given, and the caller reports a folder that is not there.
+    /// <summary>
+    /// Against the corpus root, so every verb answers the same from any folder inside the corpus. A path the platform
+    /// cannot parse comes back as given, and the caller reports a folder that is not there.
+    /// </summary>
     private static string Rooted(string corpusRoot, string path)
     {
         try { return Path.GetFullPath(path, corpusRoot); }
         catch (ArgumentException) { return path; }
     }
 
-    // The corpus is never loaded bar its descriptor, which says where the plugin tree is read from.
+    /// <summary>The corpus is never loaded bar its descriptor, which says where the plugin tree is read from.</summary>
     public static int Bundle(string corpusRoot)
     {
         var descriptor = CorpusDescriptor.Load(corpusRoot);
@@ -311,7 +325,9 @@ public static class Commands
         return 0;
     }
 
-    // Reads the export alone, so the tree that was proved and the tree that is published cannot come apart.
+    /// <summary>
+    /// Reads the export alone, so the tree that was proved and the tree that is published cannot come apart.
+    /// </summary>
     public static int Pack(string corpusRoot, string? repository)
     {
         var export = Bundler.Read(Path.Combine(corpusRoot, Dist.Export.Replace('/', Path.DirectorySeparatorChar)));
@@ -409,7 +425,7 @@ public static class Commands
         return 0;
     }
 
-    // Shared with `update`, which ends by regenerating.
+    /// <summary>Shared with <c>update</c>, which ends by regenerating.</summary>
     private static void ReportWritten(IReadOnlyList<GeneratedFiles.GeneratedFile> plan, List<string> written)
     {
         var created = plan.Where(f => f.Current is null).Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
@@ -518,7 +534,7 @@ public static class Commands
         return 1;
     }
 
-    // `docs/cli/report.md` says what each report carries.
+    /// <summary><c>docs/cli/report.md</c> says what each report carries.</summary>
     public static int Report(string corpusRoot, string name, string toolVersion, string at, string? outPath)
     {
         if (!Reports.Names.Contains(name, StringComparer.Ordinal))
@@ -565,8 +581,10 @@ public static class Commands
         return 0;
     }
 
-    // Everything that can stop the run is settled before anything is written, as in `New`. Nothing is
-    // committed. `docs/cli/update.md` argues each step. `today` is passed in so a golden can pin it.
+    /// <summary>
+    /// Everything that can stop the run is settled before anything is written, as in <c>New</c>. Nothing is committed.
+    /// <c>docs/cli/update.md</c> argues each step. <c>today</c> is passed in so a golden can pin it.
+    /// </summary>
     public static int Update(string corpusRoot, UpdateRequest request, string toolVersion, string today)
     {
         if (kac.core.Update.Contradiction(request) is { } contradiction) return Fail(contradiction);
@@ -638,7 +656,7 @@ public static class Commands
             request.DropType, request.AddType);
     }
 
-    // Only the message column wraps, so a check id is never split across lines.
+    /// <summary>Only the message column wraps, so a check id is never split across lines.</summary>
     private static Grid Rows()
     {
         var grid = new Grid();
@@ -648,7 +666,7 @@ public static class Commands
         return grid;
     }
 
-    // The word carries the severity where colour cannot, into a pipe or under `--no-color`.
+    /// <summary>The word carries the severity where colour cannot, into a pipe or under <c>--no-color</c>.</summary>
     private static (string Word, string Colour) Severity(Sev severity) => severity switch
     {
         Sev.Error => ("error", "red"),
@@ -665,7 +683,7 @@ public static class Commands
         return $"[{colour}]{word}[/]";
     }
 
-    // Zero stays plain: a red zero reads as a failed run.
+    /// <summary>Zero stays plain: a red zero reads as a failed run.</summary>
     private static string Tally(int count, Sev severity)
     {
         var (word, colour) = Severity(severity);
@@ -771,7 +789,7 @@ public static class Commands
         return Regenerate(corpusRoot);
     }
 
-    // A type this run has just given up is left out of the offer.
+    /// <summary>A type this run has just given up is left out of the offer.</summary>
     private static void Aside(UpdatePlan plan, string? dropped)
     {
         if (plan.Skipped.Count > 0)
@@ -797,8 +815,10 @@ public static class Commands
                     + "kac update --add-type <name>.");
     }
 
-    // Loaded here, after the schema was replaced. A schema this corpus cannot read yet is reported rather
-    // than thrown, because the files are already in place.
+    /// <summary>
+    /// Loaded here, after the schema was replaced. A schema this corpus cannot read yet is reported rather than thrown,
+    /// because the files are already in place.
+    /// </summary>
     private static int Regenerate(string corpusRoot)
     {
         try

@@ -7,8 +7,11 @@ using System.Xml.Linq;
 
 namespace kac.core;
 
-// What a pack comes to, named before the archive is built, as `ExportPlan` and `BundlePlan` are. `Entries` are the
-// archive's whole contents, named relative to the package root. A plan carrying `Problems` is never written.
+/// <summary>
+/// What a pack comes to, named before the archive is built, as <c>ExportPlan</c> and <c>BundlePlan</c> are.
+/// <c>Entries</c> are the archive's whole contents, named relative to the package root. A plan carrying <c>Problems</c>
+/// is never written.
+/// </summary>
 public sealed record PackPlan(
     string Id,
     string Version,
@@ -17,12 +20,14 @@ public sealed record PackPlan(
     IReadOnlyList<BundleFile> Entries,
     IReadOnlyList<string> Problems);
 
-// An export sealed into one versioned file. The envelope is NuGet's and the payload is ours: the `.nuspec` carries only
-// the id and the version, and everything a consumer acts on is in `corpus/manifest.json`. `docs/cli/pack.md` says what
-// a run writes and what it refuses.
+/// <summary>
+/// An export sealed into one versioned file. The envelope is NuGet's and the payload is ours: the <c>.nuspec</c>
+/// carries only the id and the version, and everything a consumer acts on is in <c>corpus/manifest.json</c>.
+/// <c>docs/cli/pack.md</c> says what a run writes and what it refuses.
+/// </summary>
 public static class Packer
 {
-    // Where the export lands inside the package, so a consumer strips one known prefix.
+    /// <summary>Where the export lands inside the package, so a consumer strips one known prefix.</summary>
     public const string PayloadDir = "corpus";
 
     private static readonly Regex IdShape = new(@"^\w+([_.-]\w+)*$", RegexOptions.Compiled);
@@ -32,9 +37,11 @@ public static class Packer
 
     private static readonly DateTimeOffset Epoch = new(1980, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-    // What a pack comes to, given the export tree read off the disk. The corpus is never loaded, so the package and the
-    // export cannot disagree. `repository` is where the corpus's source lives, supplied by the caller, and null leaves
-    // the element out.
+    /// <summary>
+    /// What a pack comes to, given the export tree read off the disk. The corpus is never loaded, so the package and
+    /// the export cannot disagree. <c>repository</c> is where the corpus's source lives, supplied by the caller, and
+    /// null leaves the element out.
+    /// </summary>
     public static PackPlan Plan(IReadOnlyList<BundleFile> export, string? repository = null)
     {
         var problems = new List<string>();
@@ -101,7 +108,9 @@ public static class Packer
         return new PackPlan(id, version, shortcode, fileName, entries, problems);
     }
 
-    // The plan sealed into bytes. Nothing here reads a clock or the disk, so one plan always produces one archive.
+    /// <summary>
+    /// The plan sealed into bytes. Nothing here reads a clock or the disk, so one plan always produces one archive.
+    /// </summary>
     public static byte[] Archive(PackPlan plan)
     {
         using var buffer = new MemoryStream();
@@ -118,7 +127,9 @@ public static class Packer
         return buffer.ToArray();
     }
 
-    // Replace the package directory whole, so a publish step never picks up the previous version beside the new one.
+    /// <summary>
+    /// Replace the package directory whole, so a publish step never picks up the previous version beside the new one.
+    /// </summary>
     public static string Write(string corpusRoot, PackPlan plan)
     {
         var root = Path.Combine(corpusRoot, Dist.Package.Replace('/', Path.DirectorySeparatorChar));
@@ -129,8 +140,10 @@ public static class Packer
         return $"{Dist.Package}/{plan.FileName}";
     }
 
-    // The id, the version, and the elements a registry refuses a package without; `corpus/manifest.json` carries the
-    // content. `authors` is required, so a corpus naming nobody is filed under its own id.
+    /// <summary>
+    /// The id, the version, and the elements a registry refuses a package without; <c>corpus/manifest.json</c> carries
+    /// the content. <c>authors</c> is required, so a corpus naming nobody is filed under its own id.
+    /// </summary>
     private static string Nuspec(
         string id, string version, string shortcode, string? repository, ExportAbout? about)
     {
@@ -160,7 +173,9 @@ public static class Packer
         return Xml(new XDocument(new XElement(ns + "package", metadata)));
     }
 
-    // What the corpus said about itself, read back off the export. Null where the export has no `about` block.
+    /// <summary>
+    /// What the corpus said about itself, read back off the export. Null where the export has no <c>about</c> block.
+    /// </summary>
     private static ExportAbout? About(System.Text.Json.Nodes.JsonObject manifest)
     {
         if (JsonRead.Object(manifest["about"]) is not { } about) return null;
@@ -174,8 +189,10 @@ public static class Packer
             JsonRead.Str(about["license"]));
     }
 
-    // The OPC relationship naming the manifest. Its id must be unique in the document and open on a letter, and is
-    // derived from the part rather than generated, so two packs of one export match.
+    /// <summary>
+    /// The OPC relationship naming the manifest. Its id must be unique in the document and open on a letter, and is
+    /// derived from the part rather than generated, so two packs of one export match.
+    /// </summary>
     private static string Rels(string nuspecPath)
     {
         XNamespace ns = "http://schemas.openxmlformats.org/package/2006/relationships";
@@ -188,7 +205,7 @@ public static class Packer
                     new XAttribute("Id", RelationshipId(nuspecPath))))));
     }
 
-    // A stable id for the one relationship, as sixteen hex characters behind an `R`.
+    /// <summary>A stable id for the one relationship, as sixteen hex characters behind an <c>R</c>.</summary>
     private static string RelationshipId(string nuspecPath) =>
         "R" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(nuspecPath)))[..16];
 
@@ -230,8 +247,10 @@ public static class Packer
         return Xml(new XDocument(root));
     }
 
-    // A line ending stated, so a package built on Windows and one built on Linux are the same bytes, and no byte-order
-    // mark, which a `.nuspec` reader does not expect.
+    /// <summary>
+    /// A line ending stated, so a package built on Windows and one built on Linux are the same bytes, and no byte-order
+    /// mark, which a <c>.nuspec</c> reader does not expect.
+    /// </summary>
     private static string Xml(XDocument document)
     {
         var settings = new XmlWriterSettings

@@ -43,12 +43,12 @@ public class EscalationRequiredTests
             Assert.Single(Run("* **Yes** → continue.\n" + Escalates,
                 c => c.Check == new CheckId("diagnosis-dead-end"))).Message);
 
-    // `restore-cannot-find-version.md` writes the label this way.
+    /// <summary><c>restore-cannot-find-version.md</c> writes the label this way.</summary>
     [Fact]
     public void An_escalation_link_labelled_in_capitals_is_read()
         => Assert.Empty(Run(Routes + "* **No** → [Escalate](#escalation).\n"));
 
-    // `goldens-disagree.md` writes the link mid-sentence.
+    /// <summary><c>goldens-disagree.md</c> writes the link mid-sentence.</summary>
     [Fact]
     public void A_link_before_the_end_of_the_branch_is_read()
         => Assert.Empty(Run("* **Yes** → go to [Resolution](#resolution) and start at step 4.\n" + Escalates));
@@ -60,7 +60,7 @@ public class EscalationRequiredTests
             + "nowhere to go. Close one branch with `[escalate](#escalation)`.",
             Assert.Single(Run(Routes + "* **No** → go to [Resolution](#resolution).\n")).Message);
 
-    // `database-connections-exhausted.md` writes its diagnosis as prose.
+    /// <summary><c>database-connections-exhausted.md</c> writes its diagnosis as prose.</summary>
     [Fact]
     public void A_diagnosis_written_as_prose_is_left_alone()
         => Assert.Empty(Run("Check the pool size against the connection count.\n"));

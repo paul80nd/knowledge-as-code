@@ -124,8 +124,10 @@ public class ResolverTests
         return found;
     }
 
-    // A governance corpus holding one policy with two clauses, and a service, so a field declaring
-    // `ref: policies` has something of the wrong type to be aimed at.
+    /// <summary>
+    /// A governance corpus holding one policy with two clauses, and a service, so a field declaring <c>ref:
+    /// policies</c> has something of the wrong type to be aimed at.
+    /// </summary>
     private static ImportGraph Consuming() =>
         new([
             new Import("eng", "example-engineering", "0.1.0", null, [
@@ -138,7 +140,7 @@ public class ResolverTests
             ])
         ], [], []);
 
-    // The parts declaration is what gives a message the word "clause" rather than "part".
+    /// <summary>The parts declaration is what gives a message the word "clause" rather than "part".</summary>
     private static Schema Schema()
     {
         var implements = new FieldSpec { Name = "implements", Type = "id", Refs = ["policies"] };

@@ -7,15 +7,19 @@ namespace kac.core;
 
 public static class Md
 {
-    // Frontmatter, pipe tables and task lists. With task lists on, a `[ ]` heading a list item parses as a checkbox
-    // and breaks the literal run the bracket scan in `Doc` reads, while a `[x]` mid-sentence still reaches it. Built
-    // once and shared, because a built pipeline is immutable.
+    /// <summary>
+    /// Frontmatter, pipe tables and task lists. With task lists on, a <c>[ ]</c> heading a list item parses as a
+    /// checkbox and breaks the literal run the bracket scan in <c>Doc</c> reads, while a <c>[x]</c> mid-sentence still
+    /// reaches it. Built once and shared, because a built pipeline is immutable.
+    /// </summary>
     private static readonly MarkdownPipeline Pipeline =
         new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().UseTaskLists().Build();
 
-    // Every read of a document goes through here, so one file has one reading. Markdig's own default
-    // leaves the frontmatter block unparsed. The `---` closing the block then reads as a setext heading
-    // carrying the whole block as its text, and `fragment-resolves` accepts an anchor no renderer offers.
+    /// <summary>
+    /// Every read of a document goes through here, so one file has one reading. Markdig's own default leaves the
+    /// frontmatter block unparsed. The <c>---</c> closing the block then reads as a setext heading carrying the whole
+    /// block as its text, and <c>fragment-resolves</c> accepts an anchor no renderer offers.
+    /// </summary>
     internal static MarkdownDocument Parse(string text) => Markdown.Parse(text, Pipeline);
 
     public static string PlainText(ContainerInline? container)
@@ -26,7 +30,7 @@ public static class Md
         return sb.ToString().Trim();
     }
 
-    // For a check about the words of a sentence. A term in backticks is named, not used.
+    /// <summary>For a check about the words of a sentence. A term in backticks is named, not used.</summary>
     public static string PlainTextWithoutCode(ContainerInline? container)
     {
         if (container is null) return "";
@@ -48,7 +52,9 @@ public static class Md
         return sb.ToString().Trim();
     }
 
-    // Read on the source, so a horizontal rule, a leftover bullet marker or an em dash counts as nothing written.
+    /// <summary>
+    /// Read on the source, so a horizontal rule, a leftover bullet marker or an em dash counts as nothing written.
+    /// </summary>
     public static bool HasContent(ReadOnlySpan<char> text)
     {
         foreach (var c in text)
@@ -63,10 +69,10 @@ public static class Md
         Parse(markdown).Descendants<HeadingBlock>()
             .Select(h => (h.Level, PlainText(h.Inline)));
 
-    // One anchor per heading, at every level.
+    /// <summary>One anchor per heading, at every level.</summary>
     public static HashSet<string> Anchors(string markdown) => Anchors(Parse(markdown));
 
-    // For a document already parsed, so one file has one reading.
+    /// <summary>For a document already parsed, so one file has one reading.</summary>
     public static HashSet<string> Anchors(MarkdownDocument ast)
     {
         var set = new HashSet<string>(StringComparer.Ordinal);
@@ -79,9 +85,11 @@ public static class Md
         return set;
     }
 
-    // The anchor a renderer derives from a heading: lower-cased, spaces hyphenated, all but letters, digits, `-` and
-    // `_` dropped. Azure DevOps percent-encodes the punctuation GitHub drops, so a heading meant to be linked to
-    // carries none, which is why `frameworks.md` keeps its version in the opening line.
+    /// <summary>
+    /// The anchor a renderer derives from a heading: lower-cased, spaces hyphenated, all but letters, digits, <c>-</c>
+    /// and <c>_</c> dropped. Azure DevOps percent-encodes the punctuation GitHub drops, so a heading meant to be linked
+    /// to carries none, which is why <c>frameworks.md</c> keeps its version in the opening line.
+    /// </summary>
     public static string Slug(string heading)
     {
         var sb = new StringBuilder();
@@ -92,13 +100,17 @@ public static class Md
         return sb.ToString();
     }
 
-    // The items of the first list beneath a heading. A later list under the same heading is not read.
+    /// <summary>
+    /// The items of the first list beneath a heading. A later list under the same heading is not read.
+    /// </summary>
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         MarkdownDocument ast, int start, int end) =>
         FirstList(ast, start, end) is { } list ? Bullets(list) : [];
 
-    // The same bullets as written, marker dropped and wrapped lines joined. Both walk `Leads`, so the two pair
-    // item for item.
+    /// <summary>
+    /// The same bullets as written, marker dropped and wrapped lines joined. Both walk <c>Leads</c>, so the two pair
+    /// item for item.
+    /// </summary>
     public static IEnumerable<(string Markdown, IReadOnlyList<string> Bold)> BulletSources(
         MarkdownDocument ast, string text, int start, int end)
     {
@@ -112,7 +124,7 @@ public static class Md
         });
     }
 
-    // Only the outermost nested list is returned, so a list nested three deep is one finding.
+    /// <summary>Only the outermost nested list is returned, so a list nested three deep is one finding.</summary>
     public static IEnumerable<int> NestedLists(MarkdownDocument ast, int start, int end) =>
         ast.Descendants<ListBlock>()
             .Where(l => l.Span.Start >= start && l.Span.End <= end)
@@ -122,7 +134,7 @@ public static class Md
     private static ListBlock? FirstList(MarkdownDocument ast, int start, int end) =>
         ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
 
-    // An item opening on no paragraph is no bullet.
+    /// <summary>An item opening on no paragraph is no bullet.</summary>
     private static IEnumerable<(ListItemBlock Item, ParagraphBlock Paragraph, ContainerInline Inline)> Leads(
         ListBlock list)
     {
@@ -131,8 +143,10 @@ public static class Md
                 yield return (item, paragraph, inline);
     }
 
-    // `Plain` is the item without its bold runs and code spans, so a capitalised modal left in it is unbolded.
-    // Direct children only: a nested list is not a bullet of this list.
+    /// <summary>
+    /// <c>Plain</c> is the item without its bold runs and code spans, so a capitalised modal left in it is unbolded.
+    /// Direct children only: a nested list is not a bullet of this list.
+    /// </summary>
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         ListBlock list)
     {
@@ -155,7 +169,7 @@ public static class Md
         }
     }
 
-    // `code` says whether a code span contributes its content. A link's target never does.
+    /// <summary><c>code</c> says whether a code span contributes its content. A link's target never does.</summary>
     private static void Walk(Inline inline, StringBuilder sb, bool code)
     {
         switch (inline)

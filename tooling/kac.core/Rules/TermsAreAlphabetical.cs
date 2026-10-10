@@ -24,7 +24,9 @@ public sealed class TermsAreAlphabetical : IDocumentRule
         }
     }
 
-    // Every H3, not only those under `Terms`: an entry filed outside the list is reported for its position.
+    /// <summary>
+    /// Every H3, not only those under <c>Terms</c>: an entry filed outside the list is reported for its position.
+    /// </summary>
     private static IEnumerable<(string Term, int Line)> Entries(Doc d)
     {
         foreach (var block in d.Ast)

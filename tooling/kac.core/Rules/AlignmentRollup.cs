@@ -234,8 +234,10 @@ public static class Alignment
     public static string Join(string framework, string? reference) =>
         reference is { Length: > 0 } ? $"{framework}.{reference}" : framework;
 
-    // Every bracketed label the flattened cell still shows, in order. A resolved reference flattens to its display
-    // text and loses its brackets, so a surviving bracket has no definition behind it.
+    /// <summary>
+    /// Every bracketed label the flattened cell still shows, in order. A resolved reference flattens to its display
+    /// text and loses its brackets, so a surviving bracket has no definition behind it.
+    /// </summary>
     public static IEnumerable<string> UndefinedLabels(string cell)
     {
         var at = 0;

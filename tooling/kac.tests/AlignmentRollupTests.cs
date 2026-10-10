@@ -74,8 +74,10 @@ public class AlignmentRollupTests
             "| `ONE` | **MUST** do one thing. | [FinOps 2024].cost |",
             "| `TWO` | **MUST** do another.   | [FinOps 2024].waste |"));
 
-    // A cell citing a framework whose label nothing defines. Markdig leaves the brackets as text, so the
-    // row contributes no link and the citation is invisible to every other question the rule asks.
+    /// <summary>
+    /// A cell citing a framework whose label nothing defines. Markdig leaves the brackets as text, so the row
+    /// contributes no link and the citation is invisible to every other question the rule asks.
+    /// </summary>
     [Fact]
     public void A_citation_whose_label_has_no_definition_is_reported()
     {
@@ -125,7 +127,7 @@ public class AlignmentRollupTests
             "aligns-with:",
             "| `STORE` | **MUST** hold secrets. | [ISO 27001:2022].A.5.17 |")).Line);
 
-    // The field is line 3 of the fixture below.
+    /// <summary>The field is line 3 of the fixture below.</summary>
     [Fact]
     public void The_roll_up_side_reports_against_the_field()
         => Assert.Equal(3, Assert.Single(Run(
@@ -149,8 +151,10 @@ public class AlignmentRollupTests
             "aligns-with:\n  - framework: ISO 27001:2022\n    clauses: [A.8.31]",
             "| `GATE` | **MUST** gate the pipeline. | [ISO 27001:2022].A.8.31, [Azure WAF].reliability |"));
 
-    // `NIST SSDF 1.1.PO.5` gives no clue where the framework ends. Read as text, it would take
-    // `NIST SSDF 1` or `NIST SSDF 1.1.PO`.
+    /// <summary>
+    /// <c>NIST SSDF 1.1.PO.5</c> gives no clue where the framework ends. Read as text, it would take <c>NIST SSDF 1</c>
+    /// or <c>NIST SSDF 1.1.PO</c>.
+    /// </summary>
     [Theory]
     [InlineData("NIST SSDF 1.1", "PO.5")]
     [InlineData("NIST AI RMF 1.0", "MAP")]
@@ -176,7 +180,9 @@ public class AlignmentRollupTests
             Alignment.References("ISO 27001:2022.A.5.17, ISO 27001:2022.A.8.24",
                 ["ISO 27001:2022", "ISO 27001:2022"]));
 
-    // The register the rule reads. `Loose Framework` sits above the first standing deliberately.
+    /// <summary>
+    /// The register the rule reads. <c>Loose Framework</c> sits above the first standing deliberately.
+    /// </summary>
     private const string Frameworks = """
                                       # Frameworks
 
@@ -240,9 +246,11 @@ public class AlignmentRollupTests
     public void A_policy_citing_nothing_leaves_the_register_unread()
         => Assert.Empty(Uncited("aligns-with:", "| `ZEROSEC` | COULD reach zero secrets. | |"));
 
-    // Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make
-    // a cell's labels links, and a label names the register page and heading. `undefined` names the labels left
-    // without one, which is how a case states a citation markdown never made into a link.
+    /// <summary>
+    /// Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make a
+    /// cell's labels links, and a label names the register page and heading. <c>undefined</c> names the labels left
+    /// without one, which is how a case states a citation markdown never made into a link.
+    /// </summary>
     private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
         params string[] rows)
     {
@@ -273,21 +281,25 @@ public class AlignmentRollupTests
         return found;
     }
 
-    // Drops `framework-uncited`, which fires in every case here and is asked its own questions further up.
+    /// <summary>
+    /// Drops <c>framework-uncited</c>, which fires in every case here and is asked its own questions further up.
+    /// </summary>
     private static List<Finding> Run(string frontmatter, params string[] rows) =>
         [.. Findings(frontmatter, [], rows).Where(f => f.Check != Unreferenced)];
 
     private static List<Finding> Uncited(string frontmatter, params string[] rows) =>
         [.. Findings(frontmatter, [], rows).Where(f => f.Check == Unreferenced)];
 
-    // The same run with `UK GDPR` left undefined. No other case cites that label.
+    /// <summary>The same run with <c>UK GDPR</c> left undefined. No other case cites that label.</summary>
     private static List<Finding> Unlinked(string frontmatter, params string[] rows) =>
         [.. Findings(frontmatter, ["UK GDPR"], rows).Where(f => f.Check != Unreferenced)];
 
     private static readonly CheckId Unreferenced = new("framework-uncited");
 
-    // The framework's heading without the version the label carries. `FinOps 2024` deliberately names a
-    // heading the register does not hold.
+    /// <summary>
+    /// The framework's heading without the version the label carries. <c>FinOps 2024</c> deliberately names a heading
+    /// the register does not hold.
+    /// </summary>
     private static string Anchor(string label) => label switch
     {
         "ISO 27001:2022" => "iso-27001",

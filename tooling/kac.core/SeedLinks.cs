@@ -2,13 +2,17 @@ using System.Text.RegularExpressions;
 
 namespace kac.core;
 
-// The cross-references a corpus receives on the seed pages it is sent. A link to a type the corpus declined is taken
-// out and its text left standing. Seeds only: an overlay file is identical in every corpus, and
-// `framework-names-types` refuses such a link there outright.
+/// <summary>
+/// The cross-references a corpus receives on the seed pages it is sent. A link to a type the corpus declined is taken
+/// out and its text left standing. Seeds only: an overlay file is identical in every corpus, and
+/// <c>framework-names-types</c> refuses such a link there outright.
+/// </summary>
 public static partial class SeedLinks
 {
-    // A link to a type's root page, from the corpus root or from inside a type's own folder. A path into a type's
-    // folder is left alone, and `TemplateLinkTests` refuses one at the source.
+    /// <summary>
+    /// A link to a type's root page, from the corpus root or from inside a type's own folder. A path into a type's
+    /// folder is left alone, and <c>TemplateLinkTests</c> refuses one at the source.
+    /// </summary>
     [GeneratedRegex(@"\[(?<text>[^\]\r\n]+)\]\((?:\.\./)?(?<page>[A-Za-z0-9][A-Za-z0-9._-]*)\.md(?:#[^)\r\n]*)?\)")]
     private static partial Regex PageLink();
 

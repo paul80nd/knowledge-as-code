@@ -15,15 +15,20 @@ public partial class SkillInstructionTests
         Path.Combine(Repo.Root, "template", ".plugin", "skills")
     ];
 
-    // A clause forbidding something, up to its closing punctuation, in the verbs the writing skills use. `does not`
-    // is left out: it describes what the tool writes, around a sentence telling the reader to supply the field.
+    /// <summary>
+    /// A clause forbidding something, up to its closing punctuation, in the verbs the writing skills use. <c>does
+    /// not</c> is left out: it describes what the tool writes, around a sentence telling the reader to supply the
+    /// field.
+    /// </summary>
     [GeneratedRegex(@"\b(?:never|do not|don[''’]t) (?:write|set|fill|state|give)\b[^.,;\n]*"
                     + @"|\bleaves? [^.,;\n]{0,40}?\bout\b[^.,;\n]*"
                     + @"|\bomits?\b[^.,;\n]*", RegexOptions.IgnoreCase)]
     private static partial Regex Forbids();
 
-    // A code span naming a frontmatter field, bare or with the key's own colon. A span carrying a value names that
-    // value, and forbidding one value of `status` leaves the field on the record.
+    /// <summary>
+    /// A code span naming a frontmatter field, bare or with the key's own colon. A span carrying a value names that
+    /// value, and forbidding one value of <c>status</c> leaves the field on the record.
+    /// </summary>
     [GeneratedRegex(@"`(?<field>[a-z][a-z0-9-]*):?`")]
     private static partial Regex FieldSpan();
 
@@ -57,8 +62,10 @@ public partial class SkillInstructionTests
             $"{skill} tells a reader to leave out a field every type requires.\n{string.Join('\n', forbidden)}");
     }
 
-    // Every field required of every record in the corpus. A universal field is the only one that can reach all of
-    // them, and a type may refine one of those to optional, so both halves are read rather than assumed.
+    /// <summary>
+    /// Every field required of every record in the corpus. A universal field is the only one that can reach all of
+    /// them, and a type may refine one of those to optional, so both halves are read rather than assumed.
+    /// </summary>
     private static IReadOnlySet<string> Required(Schema schema) =>
         schema.Universal.Keys
             .Where(name => schema.ByFolder.Values.All(type =>

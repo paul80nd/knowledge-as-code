@@ -142,8 +142,10 @@ public class ReportsTests
         return plan.Body;
     }
 
-    // What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the
-    // bare ids gp wrote, in the folder eng filed it under.
+    /// <summary>
+    /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
+    /// wrote, in the folder eng filed it under.
+    /// </summary>
     private static readonly InheritedCorpus Grandparent =
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),

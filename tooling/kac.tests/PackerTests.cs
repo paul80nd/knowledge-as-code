@@ -63,8 +63,10 @@ public class PackerTests
     public void A_prerelease_content_version_is_taken()
         => Assert.Equal("1.2.0-rc.1", Plan([Manifest(contentVersion: "1.2.0-rc.1")]).Version);
 
-    // The name a registry stores the package under, which is also how every NuGet client on either
-    // registry expects to find it on disk.
+    /// <summary>
+    /// The name a registry stores the package under, which is also how every NuGet client on either registry expects to
+    /// find it on disk.
+    /// </summary>
     [Fact]
     public void The_file_is_named_for_the_corpus_and_its_content_version()
         => Assert.Equal("example-engineering.0.1.0.nupkg", Plan([Manifest()]).FileName);
@@ -106,8 +108,10 @@ public class PackerTests
         => Assert.Contains($"""PartName="/corpus/{file}" """,
             Text(Plan([Manifest(), (file, "read me")]), "[Content_Types].xml"));
 
-    // OPC compares an extension without regard to case, so two spellings of one extension must not
-    // become two declarations of it. A package carrying both is invalid.
+    /// <summary>
+    /// OPC compares an extension without regard to case, so two spellings of one extension must not become two
+    /// declarations of it. A package carrying both is invalid.
+    /// </summary>
     [Fact]
     public void One_extension_spelled_two_ways_is_declared_once()
     {
@@ -121,8 +125,10 @@ public class PackerTests
     public void No_repository_is_named_where_none_was_given()
         => Assert.DoesNotContain("<repository", Text(Plan([Manifest()]), "example-engineering.nuspec"));
 
-    // A registry may act on it: GitHub Packages reads the URL to decide which repository a package
-    // belongs to, and a token scoped to a repository refuses a package naming none.
+    /// <summary>
+    /// A registry may act on it: GitHub Packages reads the URL to decide which repository a package belongs to, and a
+    /// token scoped to a repository refuses a package naming none.
+    /// </summary>
     [Fact]
     public void A_repository_given_is_written_into_the_envelope()
     {
@@ -162,7 +168,7 @@ public class PackerTests
     private static string Text(PackPlan plan, string path) =>
         Encoding.UTF8.GetString(plan.Entries.Single(e => e.Path == path).Content);
 
-    // Each argument is nullable, so a case can take one away and leave the rest standing.
+    /// <summary>Each argument is nullable, so a case can take one away and leave the rest standing.</summary>
     private static (string, string) Manifest(
         int? format = null,
         string? corpus = "example-engineering",

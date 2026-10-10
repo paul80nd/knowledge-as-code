@@ -8,8 +8,10 @@ public enum Standing
     Unreachable
 }
 
-// `Available` is the version to move to, and null where `How` is `Current` or `Unreachable`. `Problem` is set
-// exactly where `How` is `Unreachable`.
+/// <summary>
+/// <c>Available</c> is the version to move to, and null where <c>How</c> is <c>Current</c> or <c>Unreachable</c>.
+/// <c>Problem</c> is set exactly where <c>How</c> is <c>Unreachable</c>.
+/// </summary>
 public sealed record ImportStanding(
     string Shortcode,
     string Range,
@@ -18,12 +20,16 @@ public sealed record ImportStanding(
     string? Available,
     string? Problem);
 
-// What each import's source now publishes, against the locked version. `validate` asks this once per run
-// and never reports it as an error: being a version behind is not a broken corpus.
+/// <summary>
+/// What each import's source now publishes, against the locked version. <c>validate</c> asks this once per run and
+/// never reports it as an error: being a version behind is not a broken corpus.
+/// </summary>
 public static class Freshness
 {
-    // Every declared import that can be compared. An incomplete entry is skipped, because `restore` refuses it
-    // by name, and so is one with no lock or a lock its range no longer admits.
+    /// <summary>
+    /// Every declared import that can be compared. An incomplete entry is skipped, because <c>restore</c> refuses it by
+    /// name, and so is one with no lock or a lock its range no longer admits.
+    /// </summary>
     public static List<ImportStanding> Read(IReadOnlyList<Consumed> declared, Registry registry)
     {
         var standings = new List<ImportStanding>();
@@ -62,7 +68,9 @@ public static class Freshness
         return standings;
     }
 
-    // The range is asked first, because a version it admits is one `restore` moves to with no other change.
+    /// <summary>
+    /// The range is asked first, because a version it admits is one <c>restore</c> moves to with no other change.
+    /// </summary>
     private static ImportStanding Compare(
         string shortcode, string range, string locked, IReadOnlyList<string> versions)
     {

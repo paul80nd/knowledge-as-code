@@ -116,7 +116,9 @@ public class ClauseQuotedFaithfullyTests
         => Assert.Single(Clauses(
             "* [pol-SCRT.STORE] says a secret \"**MUST NOT** be written into a build log\"."));
 
-    // The standard's parts are headings, so the clause is the bullet under the one the citation names.
+    /// <summary>
+    /// The standard's parts are headings, so the clause is the bullet under the one the citation names.
+    /// </summary>
     private static List<Finding> Run(string clause, string control) => Findings(
         "standards/error-responses.md",
         "---\nid: std-ERRORS\ntype: standard\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
@@ -124,7 +126,7 @@ public class ClauseQuotedFaithfullyTests
         + $"### A failure says what happened\n\n{clause}\n",
         "std-ERRORS", control);
 
-    // The policy's parts are table rows, so the clause is the row the citation names.
+    /// <summary>The policy's parts are table rows, so the clause is the row the citation names.</summary>
     private static List<Finding> Clauses(string control) => Findings(
         "policies/secrets.md",
         "---\nid: pol-SCRT\ntype: policy\ntier: normative\nstatus: active\nowner: human:alex.doe\n---\n\n"
@@ -163,7 +165,7 @@ public class ClauseQuotedFaithfullyTests
         return found;
     }
 
-    // A control keeps no parts of its own, so the citing type declares none.
+    /// <summary>A control keeps no parts of its own, so the citing type declares none.</summary>
     private static readonly Schema Types = new()
     {
         ByFolder = new Dictionary<string, TypeSchema>

@@ -2,9 +2,10 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// A question the export cannot answer is one no check may ask across a boundary. `Scope` is the
-// shortcode a citation writes for the record. `KeepsParts` tells a type keeping no parts from a record
-// carrying none.
+/// <summary>
+/// A question the export cannot answer is one no check may ask across a boundary. <c>Scope</c> is the shortcode a
+/// citation writes for the record. <c>KeepsParts</c> tells a type keeping no parts from a record carrying none.
+/// </summary>
 public sealed record ImportedRecord(
     string Scope,
     string Id,
@@ -13,7 +14,9 @@ public sealed record ImportedRecord(
     bool KeepsParts,
     IReadOnlyList<string> Parts);
 
-// `Link` is the producer's own template: one built from this corpus's publishing would resolve to nothing.
+/// <summary>
+/// <c>Link</c> is the producer's own template: one built from this corpus's publishing would resolve to nothing.
+/// </summary>
 public sealed record Import(
     string Shortcode,
     string Corpus,
@@ -21,7 +24,9 @@ public sealed record Import(
     string? Link,
     IReadOnlyList<ImportedRecord> Records);
 
-// `Undeclared` holds the entries naming no shortcode, each named by its corpus or by its position.
+/// <summary>
+/// <c>Undeclared</c> holds the entries naming no shortcode, each named by its corpus or by its position.
+/// </summary>
 public sealed record ImportGraph(
     IReadOnlyList<Import> Imports,
     IReadOnlyList<string> NotRestored,
@@ -30,11 +35,15 @@ public sealed record ImportGraph(
     public static readonly ImportGraph None = new([], [], []);
 }
 
-// `.imports/` is not the corpus: `Tree` lists what git tracks, and a restored artefact is not committed.
-// The reading is a pair of functions, as `Tree` takes, so resolution is decidable from strings.
+/// <summary>
+/// <c>.imports/</c> is not the corpus: <c>Tree</c> lists what git tracks, and a restored artefact is not committed. The
+/// reading is a pair of functions, as <c>Tree</c> takes, so resolution is decidable from strings.
+/// </summary>
 public static class Imports
 {
-    // Each of `names`, `folders` and `read` returns null where there is nothing there.
+    /// <summary>
+    /// Each of <c>names</c>, <c>folders</c> and <c>read</c> returns null where there is nothing there.
+    /// </summary>
     public static ImportGraph Load(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
@@ -61,7 +70,7 @@ public static class Imports
         return new ImportGraph(imports, missing, nameless);
     }
 
-    // The manifest is the last file a restore writes, so a folder carrying one carries its records.
+    /// <summary>The manifest is the last file a restore writes, so a folder carrying one carries its records.</summary>
     private static Import? Read(
         string shortcode,
         Func<string, IReadOnlyList<string>?> names,
@@ -101,8 +110,10 @@ public static class Imports
             records);
     }
 
-    // Inherited records sit in a folder named for the corpus that wrote them. See the chain section of
-    // docs/design/export.md.
+    /// <summary>
+    /// Inherited records sit in a folder named for the corpus that wrote them. See the chain section of
+    /// docs/design/export.md.
+    /// </summary>
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,
         Dictionary<string, List<string>> parts,
@@ -143,7 +154,9 @@ public static class Imports
         }
     }
 
-    // A line this build cannot read is skipped: the producer's own build holds its export to its shape.
+    /// <summary>
+    /// A line this build cannot read is skipped: the producer's own build holds its export to its shape.
+    /// </summary>
     private static Dictionary<string, List<string>> PartsIn(string? text, string recordKey, string partKey)
     {
         var parts = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);

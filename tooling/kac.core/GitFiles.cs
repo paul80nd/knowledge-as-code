@@ -2,8 +2,10 @@ namespace kac.core;
 
 public static class GitFiles
 {
-    // Null when git is unavailable or this is not a repository, and the caller falls back to `Walk`. A file
-    // the index holds and the working tree no longer does is dropped, so both listings answer the same.
+    /// <summary>
+    /// Null when git is unavailable or this is not a repository, and the caller falls back to <c>Walk</c>. A file the
+    /// index holds and the working tree no longer does is dropped, so both listings answer the same.
+    /// </summary>
     public static List<string>? Tracked(string root)
     {
         if (Git.Run(root, "ls-files --cached --others --exclude-standard") is not { } listing) return null;

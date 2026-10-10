@@ -8,9 +8,10 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public class StalenessLoudRuleTests
 {
-    // Counted back from `Required.Today`, which is 2026-06-15.
-    private const string LastDayInside = "2026-03-15";   // 92 days
-    private const string FirstDayPast = "2026-03-14";    // 93 days
+    /// <summary>92 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string LastDayInside = "2026-03-15";
+    /// <summary>93 days before <c>Required.Today</c>, which is 2026-06-15.</summary>
+    private const string FirstDayPast = "2026-03-14";
 
     [Theory]
     [InlineData("on-change")]

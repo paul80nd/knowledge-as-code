@@ -45,7 +45,9 @@ public class TemplateCheckTests
         ]
     };
 
-    // `tracked` says whether the corpus holds the template or it is merely on the disk of whoever wrote it.
+    /// <summary>
+    /// <c>tracked</c> says whether the corpus holds the template or it is merely on the disk of whoever wrote it.
+    /// </summary>
     private static List<Finding> Fields(string template, bool tracked = true)
     {
         const string rel = "adrs/_template.md";

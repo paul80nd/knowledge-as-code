@@ -86,7 +86,9 @@ public class CorpusEnumTests
     public void A_name_the_corpus_answers_nothing_to_is_no_fault_in_the_schema()
         => Assert.Empty(Schema.Load(Files("$corpus.platform"), Declared(null)).UnreadKeys);
 
-    // Required, as the real `platform` is, so the range is owed from the first record of the type.
+    /// <summary>
+    /// Required, as the real <c>platform</c> is, so the range is owed from the first record of the type.
+    /// </summary>
     private const string PlatformField =
         "fields:\n  platform:\n    required: true\n    type: enum\n    values: $corpus.platform\n";
 
@@ -97,7 +99,9 @@ public class CorpusEnumTests
     private static List<Finding> Undeclared(string fields, string front = "") =>
         Findings(fields, null, front);
 
-    // One service and its template. `front` is what the record states and `template` what the template does.
+    /// <summary>
+    /// One service and its template. <c>front</c> is what the record states and <c>template</c> what the template does.
+    /// </summary>
     private static List<Finding> Findings(string fields, IReadOnlyList<string>? declared, string front = "",
         string template = "", IReadOnlyList<string>? channels = null)
     {
@@ -148,7 +152,9 @@ public class CorpusEnumTests
             ? new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
             : new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal) { ["platform"] = platform };
 
-    // One type and one field, so that what the loader made of `values:` is the only thing under test.
+    /// <summary>
+    /// One type and one field, so that what the loader made of <c>values:</c> is the only thing under test.
+    /// </summary>
     private static Dictionary<string, string> Files(string values) =>
         new(StringComparer.Ordinal)
         {

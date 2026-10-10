@@ -2,14 +2,18 @@ using System.Reflection;
 
 namespace kac.tests;
 
-// `kac.features/Harness.cs` and `kac-tests.cs` hold their own copies, because neither references this assembly.
-// `tooling/CLAUDE.md` says why none of the three may be unified with the tool's own walk-ups.
+/// <summary>
+/// <c>kac.features/Harness.cs</c> and <c>kac-tests.cs</c> hold their own copies, because neither references this
+/// assembly. <c>tooling/CLAUDE.md</c> says why none of the three may be unified with the tool's own walk-ups.
+/// </summary>
 internal static class Repo
 {
     internal static readonly string Root = Find();
 
-    // The `kac` the CLI reference asks for its usage. Its path is stamped into this assembly by kac.tests.csproj,
-    // because only the build knows which configuration it put the executable in.
+    /// <summary>
+    /// The <c>kac</c> the CLI reference asks for its usage. Its path is stamped into this assembly by kac.tests.csproj,
+    /// because only the build knows which configuration it put the executable in.
+    /// </summary>
     internal static readonly string KacAssembly =
         typeof(Repo).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
             .First(a => a.Key == "KacAssembly").Value

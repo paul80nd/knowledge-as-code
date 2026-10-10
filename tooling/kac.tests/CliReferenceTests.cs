@@ -10,11 +10,13 @@ public partial class CliReferenceTests
     [GeneratedRegex(@"^```mermaid$.*?^```$", RegexOptions.Multiline | RegexOptions.Singleline)]
     private static partial Regex Mermaid();
 
-    // A node whose label is a command, as `kac validate`.
+    /// <summary>A node whose label is a command, as <c>kac validate</c>.</summary>
     [GeneratedRegex(@"\bkac (?<verb>[a-z]+)\b")]
     private static partial Regex Invocation();
 
-    // One node declaration, as `id[label];` or `id(label);`. An edge line carries no bracket.
+    /// <summary>
+    /// One node declaration, as <c>id[label];</c> or <c>id(label);</c>. An edge line carries no bracket.
+    /// </summary>
     [GeneratedRegex(@"^\s*\w+(?<open>[\[(])(?<label>[^\])]+)[\])];$", RegexOptions.Multiline)]
     private static partial Regex Node();
 
@@ -69,8 +71,10 @@ public partial class CliReferenceTests
         }
     }
 
-    // The verbs the flow chart leaves out, because neither is a step in any sequence. A verb added to the
-    // parser fails the test below until somebody decides which it is.
+    /// <summary>
+    /// The verbs the flow chart leaves out, because neither is a step in any sequence. A verb added to the parser fails
+    /// the test below until somebody decides which it is.
+    /// </summary>
     private static readonly string[] NotSteps = ["checks", "report"];
 
     [Fact]
@@ -89,9 +93,11 @@ public partial class CliReferenceTests
             drawn.Order(StringComparer.Ordinal));
     }
 
-    // Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers
-    // to. `docs/design/generation.md` argues it: a diagram exceeding that subset renders nothing at all,
-    // with no error to say why. So the generator writes `graph` and this is held to the same.
+    /// <summary>
+    /// Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers to.
+    /// <c>docs/design/generation.md</c> argues it: a diagram exceeding that subset renders nothing at all, with no
+    /// error to say why. So the generator writes <c>graph</c> and this is held to the same.
+    /// </summary>
     [Fact]
     public void The_flow_chart_stays_inside_the_subset_the_narrowest_renderer_reads()
     {

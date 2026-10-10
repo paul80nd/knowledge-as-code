@@ -10,7 +10,10 @@ public partial class NavigationTests
 {
     private static readonly string[] Nav = File.ReadAllLines(Path.Combine(Repo.Root, "mkdocs.yml"));
 
-    // A nav entry names its page last, whether or not it carries a title: `- cli/index.md`, `- validate: cli/x.md`.
+    /// <summary>
+    /// A nav entry names its page last, whether or not it carries a title: <c>- cli/index.md</c>, <c>- validate:
+    /// cli/x.md</c>.
+    /// </summary>
     [GeneratedRegex(@"([\w./-]+\.md)\s*$")]
     private static partial Regex Entry();
 
@@ -35,7 +38,7 @@ public partial class NavigationTests
         Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal))]);
     }
 
-    // The block runs to the next top-level key, and `nav:` is the last thing in the file.
+    /// <summary>The block runs to the next top-level key, and <c>nav:</c> is the last thing in the file.</summary>
     private static List<string> Listed()
     {
         var listed = new List<string>();

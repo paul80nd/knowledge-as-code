@@ -9,7 +9,9 @@ namespace kac.tests;
 [Trait(Kind.Of, Kind.Repository)]
 public class PluginSkillFieldTests
 {
-    // The vocabulary a Type cell is written in. Five words, because the exporter writes five shapes.
+    /// <summary>
+    /// The vocabulary a Type cell is written in. Five words, because the exporter writes five shapes.
+    /// </summary>
     private const string Text = "string";
     private const string OrNull = "string or null";
     private const string List = "list of strings, or null";
@@ -21,7 +23,7 @@ public class PluginSkillFieldTests
     private static readonly MarkdownPipeline Pipeline =
         new MarkdownPipelineBuilder().UseYamlFrontMatter().UsePipeTables().Build();
 
-    // Which type each skill reads, taken from the plugin manifest rather than from a list here.
+    /// <summary>Which type each skill reads, taken from the plugin manifest rather than from a list here.</summary>
     public static TheoryData<string, string> Each()
     {
         var manifest = JsonRead.Parse(Files.ReadLf(Path.Combine(Plugin, ".claude-plugin", "plugin.json")));
@@ -85,8 +87,10 @@ public class PluginSkillFieldTests
         return expected;
     }
 
-    // The shape one declared source arrives in. A source with no answer here throws rather than defaulting, so a
-    // source added to `PartLineSource` forces a decision about what the three skills have to say about it.
+    /// <summary>
+    /// The shape one declared source arrives in. A source with no answer here throws rather than defaulting, so a
+    /// source added to <c>PartLineSource</c> forces a decision about what the three skills have to say about it.
+    /// </summary>
     private static string Written(Schema schema, TypeSchema type, string source)
     {
         // A frontmatter field the schema requires unconditionally is on every record, so the line always holds it.
@@ -117,8 +121,10 @@ public class PluginSkillFieldTests
         };
     }
 
-    // The Field and Type columns of the skill's field table. A row may name several fields sharing one type, so
-    // `status`, `reviewBy` arrives as two entries and a wrong type reads against the field that holds it.
+    /// <summary>
+    /// The Field and Type columns of the skill's field table. A row may name several fields sharing one type, so
+    /// <c>status</c>, <c>reviewBy</c> arrives as two entries and a wrong type reads against the field that holds it.
+    /// </summary>
     private static Dictionary<string, string> Stated(string file)
     {
         var table = Markdown.Parse(Files.ReadLf(file), Pipeline).Descendants<Table>()

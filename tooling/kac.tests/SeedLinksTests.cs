@@ -21,7 +21,7 @@ public class SeedLinksTests
     public void A_link_to_an_adopted_type_is_left_alone(string sent)
         => Assert.Equal(sent, SeedLinks.Unlinked(sent, Declined));
 
-    // The closed set. `SeedLinks.cs` says why each of these is left alone.
+    /// <summary>The closed set. <c>SeedLinks.cs</c> says why each of these is left alone.</summary>
     [Theory]
     [InlineData("Read the [index](policies/_index.md).")]
     [InlineData("Read the [index](../policies/_index.md).")]
@@ -61,7 +61,7 @@ public class SeedLinksTests
     public void The_unlinking_reads_markdown_seeds_and_nothing_else(string to, string layer, bool reaches)
         => Assert.Equal(reaches, SeedLinks.Reaches(new PlannedFile($"template/{to}", to, layer)));
 
-    // `catalogue` here is what a link to the declined `services` type writes.
+    /// <summary><c>catalogue</c> here is what a link to the declined <c>services</c> type writes.</summary>
     [Fact]
     public void A_type_is_declined_under_the_name_its_page_carries()
     {

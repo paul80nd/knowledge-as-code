@@ -280,8 +280,10 @@ public class NewTests
                         + "  base: git@github.com:acme/framework.git\n", yaml);
     }
 
-    // The client that files the issue is read off the host, because `gh` cannot open one on Azure. A host
-    // neither client serves is written as `none` rather than guessed at.
+    /// <summary>
+    /// The client that files the issue is read off the host, because <c>gh</c> cannot open one on Azure. A host neither
+    /// client serves is written as <c>none</c> rather than guessed at.
+    /// </summary>
     [Theory]
     [InlineData("https://dev.azure.com/acme/kac/_git/framework", Publishing.AzureDevOps)]
     [InlineData("https://git.acme.example/framework", Publishing.None)]
@@ -360,7 +362,7 @@ public class NewTests
         Assert.All(named, ci => Assert.Contains(ci, CiSystem.All));
     }
 
-    // Building the schema here keeps the test off the real `.schema/`, whose types change.
+    /// <summary>Building the schema here keeps the test off the real <c>.schema/</c>, whose types change.</summary>
     private static Schema SchemaOf(params (string Key, string Page, string Folder)[] types) => new()
     {
         ByFolder = types.ToDictionary(

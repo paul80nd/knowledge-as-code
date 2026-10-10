@@ -1,11 +1,16 @@
 namespace kac.core;
 
-// A rule whose question no single document answers. `../../CLAUDE.md` says which interface a new rule wants.
+/// <summary>
+/// A rule whose question no single document answers. <c>../../CLAUDE.md</c> says which interface a new rule wants.
+/// </summary>
 public interface ICorpusRule
 {
     RuleId RuleId { get; }
 
-    // Usually not `RuleId`, as `IDocumentRule.Emits` explains. What each id means is `_checks.yaml`'s to say.
+    /// <summary>
+    /// Usually not <c>RuleId</c>, as <c>IDocumentRule.Emits</c> explains. What each id means is <c>_checks.yaml</c>'s
+    /// to say.
+    /// </summary>
     IReadOnlyList<CheckId> Emits { get; }
 
     void Check(CorpusRuleContext ctx);

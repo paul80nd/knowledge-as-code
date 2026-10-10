@@ -22,8 +22,10 @@ public sealed class BindsOnlyUnderRules : IDocumentRule
                 line);
     }
 
-    // Top-level lists only. A nested list is one bullet's workings, and a list inside a block quote quotes somebody
-    // else's rule.
+    /// <summary>
+    /// Top-level lists only. A nested list is one bullet's workings, and a list inside a block quote quotes somebody
+    /// else's rule.
+    /// </summary>
     private static IEnumerable<(string Modal, string Text, int Line)> Strays(Doc d, PartSpec spec)
     {
         var inSection = false;

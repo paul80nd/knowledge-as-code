@@ -337,8 +337,10 @@ public class DocumentRuleTests
         => Assert.Empty(Run(new DefinitionsDoNotRepeatTheTerm(),
             Glossary("### Record\n\nOne of the records a corpus keeps."), type: GlossaryType()));
 
-    // A term spelling its last character with punctuation gets no boundary there. `\b` after `#` sits
-    // between two non-word characters and fails, so `C#` would never match its own definition.
+    /// <summary>
+    /// A term spelling its last character with punctuation gets no boundary there. <c>\b</c> after <c>#</c> sits
+    /// between two non-word characters and fails, so <c>C#</c> would never match its own definition.
+    /// </summary>
     [Fact]
     public void A_term_ending_in_punctuation_is_still_matched()
     {
@@ -433,7 +435,7 @@ public class DocumentRuleTests
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);
 
-    // Parsed against an empty schema, because no rule given an ADR asks anything of the type.
+    /// <summary>Parsed against an empty schema, because no rule given an ADR asks anything of the type.</summary>
     private static Doc Adr(string body)
     {
         var text = $"---\nid: adr-0001\nstatus: accepted\n---\n\n# A title\n\n`ADR: adr-0001` `ACCEPTED`\n\n{body}\n";
@@ -442,7 +444,7 @@ public class DocumentRuleTests
         return doc;
     }
 
-    // Written out rather than loaded, so a test states the declaration it depends on.
+    /// <summary>Written out rather than loaded, so a test states the declaration it depends on.</summary>
     private static TypeSchema Standards(string section = "Rules") => new()
     {
         Parts = new PartSpec(PartSpec.Headings, "", ["MUST", "MUST NOT"], ["SHOULD", "SHOULD NOT", "MAY"])
@@ -452,7 +454,7 @@ public class DocumentRuleTests
         }
     };
 
-    // Written out rather than loaded, so a test states the declaration it depends on.
+    /// <summary>Written out rather than loaded, so a test states the declaration it depends on.</summary>
     private static TypeSchema GlossaryType() => new()
     {
         Parts = new PartSpec(PartSpec.Headings, "", [], [])
@@ -463,8 +465,9 @@ public class DocumentRuleTests
         }
     };
 
-    // The parser fills in a document's parts only where the schema declares the type, so this parse is
-    // given one.
+    /// <summary>
+    /// The parser fills in a document's parts only where the schema declares the type, so this parse is given one.
+    /// </summary>
     private static Doc Glossary(string body, string scope = "One context and no other.")
     {
         var text = $"---\nid: gls-test\nstatus: draft\n---\n\n# A title\n\n`Glossary: gls-test` `DRAFT`\n\n"

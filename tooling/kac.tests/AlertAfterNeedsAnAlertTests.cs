@@ -111,12 +111,12 @@ public class AlertAfterNeedsAnAlertTests
         };
     }
 
-    // One target binding the services directly, which is what a property of a deployment does.
+    /// <summary>One target binding the services directly, which is what a property of a deployment does.</summary>
     private static List<Finding> Bound(
         string? delay, (string Id, string? Output)[] services, string[]? appliesTo = null)
         => Run(NfrType(AppliesTo), delay, appliesTo ?? [.. services.Select(s => s.Id)], null, services);
 
-    // One target binding an offering, which is what a wait a customer feels does.
+    /// <summary>One target binding an offering, which is what a wait a customer feels does.</summary>
     private static List<Finding> Through(
         string offering, string? delay, (string Id, string? Output)[] services)
         => Run(NfrType(AppliesTo), delay, [offering], offering, services);

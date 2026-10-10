@@ -5,13 +5,18 @@ using System.Text.Json.Nodes;
 
 namespace kac.core;
 
-// Bytes, because the plugin tree and the export are copied through untouched. `Executable` travels with them:
-// a hook copied without its permission bit installs and then fails at the first session.
+/// <summary>
+/// Bytes, because the plugin tree and the export are copied through untouched. <c>Executable</c> travels with them: a
+/// hook copied without its permission bit installs and then fails at the first session.
+/// </summary>
 public sealed record BundleFile(string Path, byte[] Content, bool Executable = false);
 
-// `Requires` names the record types the component reads, each optionally at a shape version, as `glossary@1`.
-// A component naming no type supports the ones that do, and is trimmed when none of them survives unless it is
-// `Standalone`. `Announce` puts it in the session breadcrumb. `docs/design/plugin.md` says which earn it.
+/// <summary>
+/// <c>Requires</c> names the record types the component reads, each optionally at a shape version, as
+/// <c>glossary@1</c>. A component naming no type supports the ones that do, and is trimmed when none of them survives
+/// unless it is <c>Standalone</c>. <c>Announce</c> puts it in the session breadcrumb. <c>docs/design/plugin.md</c> says
+/// which earn it.
+/// </summary>
 public sealed record PluginComponent(
     string Path,
     IReadOnlyList<string> Requires,
@@ -19,11 +24,13 @@ public sealed record PluginComponent(
     bool Announce = false,
     bool Standalone = false);
 
-// The reason is carried, because the assembled plugin cannot say why a component is missing.
+/// <summary>The reason is carried, because the assembled plugin cannot say why a component is missing.</summary>
 public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Requires, string Reason);
 
-// Named before anything is written, so a test can ask what a bundle would contain without a filesystem.
-// `Files` are relative to `Dist.Root`. A plan with `Problems` is not written. `docs/cli/bundle.md` says why.
+/// <summary>
+/// Named before anything is written, so a test can ask what a bundle would contain without a filesystem. <c>Files</c>
+/// are relative to <c>Dist.Root</c>. A plan with <c>Problems</c> is not written. <c>docs/cli/bundle.md</c> says why.
+/// </summary>
 public sealed record BundlePlan(
     IReadOnlyList<BundleFile> Files,
     string PluginName,
@@ -33,31 +40,39 @@ public sealed record BundlePlan(
     IReadOnlyList<string> Warnings,
     IReadOnlyList<string> Problems);
 
-// `PluginTree` is `.plugin/` and `Export` is what `kac export` left, each relative to its own root. The
-// corpus is never loaded: assembling against it would ship a skill for a type the export did not carry.
+/// <summary>
+/// <c>PluginTree</c> is <c>.plugin/</c> and <c>Export</c> is what <c>kac export</c> left, each relative to its own
+/// root. The corpus is never loaded: assembling against it would ship a skill for a type the export did not carry.
+/// </summary>
 public sealed record BundleSource(IReadOnlyList<BundleFile> PluginTree, IReadOnlyList<BundleFile> Export);
 
 public static class Bundler
 {
-    // Shared by every corpus running the framework, bar the manifest, which each corpus owns.
+    /// <summary>Shared by every corpus running the framework, bar the manifest, which each corpus owns.</summary>
     public const string SourceDir = ".plugin";
 
-    // The shape of `bundle.json`, versioned because something other than this tool will read it.
+    /// <summary>
+    /// The shape of <c>bundle.json</c>, versioned because something other than this tool will read it.
+    /// </summary>
     public const int RecordVersion = 1;
 
-    // Where the plugin manifest sits inside the plugin tree, and where it will sit inside the bundle.
-    // The directory name is Claude Code's, not this tool's, so a component placed inside it loads wrong.
+    /// <summary>
+    /// Where the plugin manifest sits inside the plugin tree, and where it will sit inside the bundle. The directory
+    /// name is Claude Code's, not this tool's, so a component placed inside it loads wrong.
+    /// </summary>
     public const string ManifestFile = ".claude-plugin/plugin.json";
 
-    // At the plugin root, because `.claude-plugin/` holds the manifest and nothing else.
+    /// <summary>At the plugin root, because <c>.claude-plugin/</c> holds the manifest and nothing else.</summary>
     public const string RecordFile = "bundle.json";
 
     public static bool InSourceTree(string rel) =>
         rel.Equals(SourceDir, StringComparison.Ordinal)
         || rel.StartsWith(SourceDir + "/", StringComparison.Ordinal);
 
-    // A file the corpus holds wins over the shared one. The manifest never comes from the shared tree, because
-    // it carries the name a plugin installs under.
+    /// <summary>
+    /// A file the corpus holds wins over the shared one. The manifest never comes from the shared tree, because it
+    /// carries the name a plugin installs under.
+    /// </summary>
     public static IReadOnlyList<BundleFile> Merge(
         IReadOnlyList<BundleFile> shared, IReadOnlyList<BundleFile> own)
     {
@@ -217,8 +232,10 @@ public static class Bundler
             pluginName, version ?? JsonRead.Str(manifest["version"]), included, trimmed, warnings, problems);
     }
 
-    // Replaces the bundle whole, so a dropped component is not left behind. It deletes only its own two
-    // directories, because the export shares `.dist/`.
+    /// <summary>
+    /// Replaces the bundle whole, so a dropped component is not left behind. It deletes only its own two directories,
+    /// because the export shares <c>.dist/</c>.
+    /// </summary>
     public static List<string> Write(string corpusRoot, BundlePlan plan)
     {
         foreach (var owned in new[] { Dist.Plugin, $"{Dist.Root}/{Dist.MarketplaceDir}" })
@@ -241,7 +258,7 @@ public static class Bundler
         return written;
     }
 
-    // Null where the directory is missing, so a caller can tell no plugin tree from an empty one.
+    /// <summary>Null where the directory is missing, so a caller can tell no plugin tree from an empty one.</summary>
     public static IReadOnlyList<BundleFile>? Read(string root)
     {
         if (!Directory.Exists(root)) return null;
@@ -255,14 +272,16 @@ public static class Bundler
         ];
     }
 
-    // Whether the file is run rather than read. Windows has no such bit and .NET throws if you ask for
-    // one there, so the question is not put. Nothing is lost by that. A file checked out on Windows never
-    // carried the bit either. The `.cmd` twin beside each script needs no permission to be a command.
+    /// <summary>
+    /// Whether the file is run rather than read. Windows has no such bit and .NET throws if you ask for one there, so
+    /// the question is not put. Nothing is lost by that. A file checked out on Windows never carried the bit either.
+    /// The <c>.cmd</c> twin beside each script needs no permission to be a command.
+    /// </summary>
     private static bool IsExecutable(string path) =>
         !OperatingSystem.IsWindows()
         && (File.GetUnixFileMode(path) & UnixFileMode.UserExecute) != 0;
 
-    // Execute for everyone, because a plugin may be installed into a shared cache.
+    /// <summary>Execute for everyone, because a plugin may be installed into a shared cache.</summary>
     private static void MakeExecutable(string path)
     {
         if (OperatingSystem.IsWindows()) return;
@@ -272,9 +291,11 @@ public static class Bundler
             | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
     }
 
-    // The plugin manifest as it will travel. Identity keys are written from the export, and removed where the
-    // corpus declared nothing, so no corpus publishes under its template's identity. `docs/cli/bundle.md` says
-    // where each key comes from. Edited as a DOM, so a key this tool does not know survives.
+    /// <summary>
+    /// The plugin manifest as it will travel. Identity keys are written from the export, and removed where the corpus
+    /// declared nothing, so no corpus publishes under its template's identity. <c>docs/cli/bundle.md</c> says where
+    /// each key comes from. Edited as a DOM, so a key this tool does not know survives.
+    /// </summary>
     private static JsonObject Rewrite(
         JsonObject manifest, ExportManifest exportManifest, string? version, List<PluginComponent> included)
     {
@@ -338,25 +359,29 @@ public static class Bundler
         "license", "keywords", "metadata"
     ];
 
-    // Removes a key the corpus did not state, so nothing is inherited from the template it copied.
+    /// <summary>Removes a key the corpus did not state, so nothing is inherited from the template it copied.</summary>
     private static void Set(JsonObject manifest, string key, JsonNode? value)
     {
         if (value is null) manifest.Remove(key);
         else manifest[key] = value;
     }
 
-    // A manifest stating no version reads as 0, so it is reported as none.
+    /// <summary>A manifest stating no version reads as 0, so it is reported as none.</summary>
     private static string Declared(int version) => version == 0 ? "none" : version.ToString();
 
-    // Null where the corpus named nobody. Both keys are written even when empty, as the export states them.
+    /// <summary>
+    /// Null where the corpus named nobody. Both keys are written even when empty, as the export states them.
+    /// </summary>
     private static JsonObject? Author(ExportAuthor? author) =>
         author is null ? null : new JsonObject { ["name"] = author.Name, ["url"] = author.Url };
 
     private static void State(JsonObject manifest, string key, string? value) =>
         Set(manifest, key, value is { Length: > 0 } said ? JsonValue.Create(said) : null);
 
-    // One definition serves a local path and a published branch, because a marketplace addresses its plugins
-    // relative to itself. It takes the plugin's own name, which is what a reader types to install.
+    /// <summary>
+    /// One definition serves a local path and a published branch, because a marketplace addresses its plugins relative
+    /// to itself. It takes the plugin's own name, which is what a reader types to install.
+    /// </summary>
     private static string Marketplace(JsonObject travelling, string pluginName) =>
         Serialize(new MarketplaceManifest(
             "https://anthropic.com/claude-code/marketplace.schema.json",
@@ -370,21 +395,24 @@ public static class Bundler
                     $"./{Dist.PluginDir}")
             ]));
 
-    // Who the marketplace belongs to, taken from whoever the plugin says wrote it. `author` is a string
-    // in some manifests and an object with a `name` in others. Both are read rather than one declared
-    // correct.
+    /// <summary>
+    /// Who the marketplace belongs to, taken from whoever the plugin says wrote it. <c>author</c> is a string in some
+    /// manifests and an object with a <c>name</c> in others. Both are read rather than one declared correct.
+    /// </summary>
     private static string? Owner(JsonObject manifest) =>
         JsonRead.Str(manifest["author"]) ?? JsonRead.Str(JsonRead.Object(manifest["author"])?["name"]);
 
-    // The shape is null where the entry names none. A bare `glossary` needs the type and opens none of its
-    // files, so a shape change must not refuse it. The version stays a string, so a bad one is reported.
+    /// <summary>
+    /// The shape is null where the entry names none. A bare <c>glossary</c> needs the type and opens none of its files,
+    /// so a shape change must not refuse it. The version stays a string, so a bad one is reported.
+    /// </summary>
     private static (string Type, string? Shape) Need(string entry)
     {
         var at = entry.IndexOf('@');
         return at < 0 ? (entry, null) : (entry[..at], entry[(at + 1)..]);
     }
 
-    // A component with no `path` is skipped, because a trim acts on the path.
+    /// <summary>A component with no <c>path</c> is skipped, because a trim acts on the path.</summary>
     private static List<PluginComponent> Components(JsonNode? node)
     {
         var components = new List<PluginComponent>();
@@ -406,7 +434,9 @@ public static class Bundler
         return components;
     }
 
-    // The path itself or anything beneath it, because a component may be a directory or a single file.
+    /// <summary>
+    /// The path itself or anything beneath it, because a component may be a directory or a single file.
+    /// </summary>
     private static bool Owns(string component, string path) =>
         string.Equals(component, path, StringComparison.Ordinal)
         || path.StartsWith(component + "/", StringComparison.Ordinal);
@@ -425,9 +455,11 @@ public static class Bundler
             ? new UTF8Encoding(false).GetString(file.Content).TrimStart('\uFEFF')
             : null;
 
-    // How the plugin manifest is written back out. Stated here rather than borrowed from `KacJson`,
-    // because this is a DOM write rather than a serialized record. Two rules matter: a person reads the
-    // file, and an em dash in a corpus's own description reaches them as itself.
+    /// <summary>
+    /// How the plugin manifest is written back out. Stated here rather than borrowed from <c>KacJson</c>, because this
+    /// is a DOM write rather than a serialized record. Two rules matter: a person reads the file, and an em dash in a
+    /// corpus's own description reaches them as itself.
+    /// </summary>
     private static readonly JsonSerializerOptions Indented = new()
     {
         WriteIndented = true,

@@ -2,16 +2,18 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
-// One rule from a manifest: a set of path globs that all resolve to one layer. `To` is where the rule's files land in a
-// corpus, and null where they land on the path they were read from. `Ci` names the CI system the files serve, and is
-// null for files every corpus receives.
+/// <summary>
+/// One rule from a manifest: a set of path globs that all resolve to one layer. <c>To</c> is where the rule's files
+/// land in a corpus, and null where they land on the path they were read from. <c>Ci</c> names the CI system the files
+/// serve, and is null for files every corpus receives.
+/// </summary>
 public record ManifestRule(IReadOnlyList<string> Patterns, string Layer, string? To = null, string? Ci = null);
 
 public record Placement(string Layer, string Path, string? Ci = null);
 
 public class Manifest
 {
-    // The layers a manifest sorts its files into, and the whole of what a rule may declare.
+    /// <summary>The layers a manifest sorts its files into, and the whole of what a rule may declare.</summary>
     public const string Overlay = "overlay";
     public const string Seed = "seed";
     public const string Withheld = "withheld";
@@ -19,17 +21,21 @@ public class Manifest
 
     public List<ManifestRule> Rules = [];
 
-    // The template's version, which an update stamps into the receiving corpus's descriptor.
+    /// <summary>The template's version, which an update stamps into the receiving corpus's descriptor.</summary>
     public int Version;
 
-    // The oldest `kac` that can read this template, or null where the manifest names none. An older tool meeting a
-    // newer template stops on this.
+    /// <summary>
+    /// The oldest <c>kac</c> that can read this template, or null where the manifest names none. An older tool meeting
+    /// a newer template stops on this.
+    /// </summary>
     public string? MinimumTool;
 
     public const string FileName = "manifest.yaml";
 
-    // Read from a path, because a template repository keeps its manifest at the root or in the folder `upstream.path`
-    // names.
+    /// <summary>
+    /// Read from a path, because a template repository keeps its manifest at the root or in the folder
+    /// <c>upstream.path</c> names.
+    /// </summary>
     public static Manifest LoadFrom(string manifestFile)
     {
         var m = new Manifest();
@@ -58,8 +64,10 @@ public class Manifest
         return m;
     }
 
-    // The first rule with a matching glob wins, as the manifest's "evaluated in order" contract says. Null where
-    // nothing matches, which the check reports as an error.
+    /// <summary>
+    /// The first rule with a matching glob wins, as the manifest's "evaluated in order" contract says. Null where
+    /// nothing matches, which the check reports as an error.
+    /// </summary>
     public Placement? Place(string relPath)
     {
         foreach (var rule in Rules)
@@ -71,12 +79,15 @@ public class Manifest
 
     public string? Resolve(string relPath) => Place(relPath)?.Layer;
 
-    // The patterns a rule's files land on: its own patterns with `to:` applied to each.
+    /// <summary>The patterns a rule's files land on: its own patterns with <c>to:</c> applied to each.</summary>
     public static IEnumerable<string> Destinations(ManifestRule rule) =>
         rule.Patterns.Select(p => Destination(p, p, rule.To));
 
-    // Where a matched file lands. `to:` replaces the pattern's directory prefix, which is everything up to and
-    // including the last `/` before its first wildcard. A pattern with no directory prefix lands on `to:` itself.
+    /// <summary>
+    /// Where a matched file lands. <c>to:</c> replaces the pattern's directory prefix, which is everything up to and
+    /// including the last <c>/</c> before its first wildcard. A pattern with no directory prefix lands on <c>to:</c>
+    /// itself.
+    /// </summary>
     internal static string Destination(string relPath, string pattern, string? to)
     {
         if (to is null) return relPath;
@@ -90,12 +101,16 @@ public class Manifest
     }
 }
 
-// One file a corpus holds differently from the framework, on purpose. Nothing in the tool reads the reason.
+/// <summary>
+/// One file a corpus holds differently from the framework, on purpose. Nothing in the tool reads the reason.
+/// </summary>
 public record SkippedFile(string Path, string? Reason);
 
-// One corpus this one consumes, as its entry in `consumes:` states it. `Version` is the range the corpus meant, and
-// `Resolved` is what the last restore took. Every field is nullable because this is what the file said, and
-// `Restore.Plan` refuses an entry short of a key by name.
+/// <summary>
+/// One corpus this one consumes, as its entry in <c>consumes:</c> states it. <c>Version</c> is the range the corpus
+/// meant, and <c>Resolved</c> is what the last restore took. Every field is nullable because this is what the file
+/// said, and <c>Restore.Plan</c> refuses an entry short of a key by name.
+/// </summary>
 public record Consumed(
     string? Corpus,
     string? Shortcode,
@@ -105,12 +120,14 @@ public record Consumed(
 
 public class CorpusDescriptor
 {
-    // The format `.corpus.yaml` is written in, which an update stamps alongside what it took.
+    /// <summary>The format <c>.corpus.yaml</c> is written in, which an update stamps alongside what it took.</summary>
     public const int Format = 6;
 
-    // Keys the descriptor once used, beside what each is called now. The tool names the old key, the new one and the
-    // file, and rewrites nothing. A key is named by the block it sits in. `New` is null where the key was dropped, and
-    // `Gone` says so instead.
+    /// <summary>
+    /// Keys the descriptor once used, beside what each is called now. The tool names the old key, the new one and the
+    /// file, and rewrites nothing. A key is named by the block it sits in. <c>New</c> is null where the key was
+    /// dropped, and <c>Gone</c> says so instead.
+    /// </summary>
     private static readonly (string Section, string Old, string? New, string Gone)[] Renamed =
     [
         ("", "version", "descriptor-version", ""),
@@ -123,58 +140,79 @@ public class CorpusDescriptor
             "where the framework is taken from is `upstream.url`, and what was taken is `upstream.commit`.")
     ];
 
-    // Where the framework comes from, and what was last taken from it. `Path` is null where the manifest
-    // sits at the upstream repository's root. `docs/corpus-descriptor.md` covers the rest of the block.
+    /// <summary>
+    /// Where the framework comes from, and what was last taken from it. <c>Path</c> is null where the manifest sits at
+    /// the upstream repository's root. <c>docs/corpus-descriptor.md</c> covers the rest of the block.
+    /// </summary>
     public string? UpstreamUrl;
     public string? UpstreamPath;
     public string? UpstreamRef;
     public string? UpstreamCommit;
     public string? TakenOn;
 
-    // How far an update goes. `docs/cli/update.md` argues the default.
+    /// <summary>How far an update goes. <c>docs/cli/update.md</c> argues the default.</summary>
     public const string Cautious = "cautious";
     public const string Full = "full";
     public static readonly IReadOnlyList<string> Policies = [Cautious, Full];
     public string UpdatePolicy = Cautious;
 
-    // Files this corpus holds differently on purpose, neither read nor written in either direction.
-    // `docs/cli/update.md` says what that buys a corpus.
+    /// <summary>
+    /// Files this corpus holds differently on purpose, neither read nor written in either direction.
+    /// <c>docs/cli/update.md</c> says what that buys a corpus.
+    /// </summary>
     public readonly List<SkippedFile> Skipped = [];
 
-    // The corpora this one consumes, in the order the descriptor lists them, and empty for a corpus standing on its
-    // own. `docs/corpus-descriptor.md` sets this beside `upstream:`.
+    /// <summary>
+    /// The corpora this one consumes, in the order the descriptor lists them, and empty for a corpus standing on its
+    /// own. <c>docs/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
+    /// </summary>
     public readonly List<Consumed> Consumes = [];
 
-    // Where `kac bundle` reads the plugin tree from, relative to this corpus's root, and null where the corpus keeps
-    // its own `.plugin/`. `docs/cli/bundle.md` says how the shared tree and this corpus's own are merged.
+    /// <summary>
+    /// Where <c>kac bundle</c> reads the plugin tree from, relative to this corpus's root, and null where the corpus
+    /// keeps its own <c>.plugin/</c>. <c>docs/cli/bundle.md</c> says how the shared tree and this corpus's own are
+    /// merged.
+    /// </summary>
     public string? PluginFrom;
 
-    // What this corpus calls itself. An export states it, so a consumer holding several exports can tell whose
-    // vocabulary it is reading.
+    /// <summary>
+    /// What this corpus calls itself. An export states it, so a consumer holding several exports can tell whose
+    /// vocabulary it is reading.
+    /// </summary>
     public string? Name;
 
-    // The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TIMEBOX`, and null where the corpus
-    // declares none. `docs/framework/metadata.md` carries the notation.
+    /// <summary>
+    /// The shorthand another corpus cites this one by, as the <c>eng</c> in <c>eng:pol-VURM.TIMEBOX</c>, and null where
+    /// the corpus declares none. <c>docs/framework/metadata.md</c> carries the notation.
+    /// </summary>
     public string? Shortcode;
 
-    // What a person calls this corpus, and what it is. Both travel into the plugin manifest and the package
-    // description. A corpus stating neither gets a sentence built from its own name.
+    /// <summary>
+    /// What a person calls this corpus, and what it is. Both travel into the plugin manifest and the package
+    /// description. A corpus stating neither gets a sentence built from its own name.
+    /// </summary>
     public string? DisplayName;
     public string? Description;
 
-    // Who publishes this corpus, and under what licence. Null where the corpus has not said, so nothing is asserted
-    // about somebody who did not say it.
+    /// <summary>
+    /// Who publishes this corpus, and under what licence. Null where the corpus has not said, so nothing is asserted
+    /// about somebody who did not say it.
+    /// </summary>
     public string? AuthorName;
     public string? AuthorUrl;
     public string? License;
 
-    // How long a shortcode may be. `.schema/_checks.yaml` gives the reason for each part of the spelling under
-    // `shortcode`.
+    /// <summary>
+    /// How long a shortcode may be. <c>.schema/_checks.yaml</c> gives the reason for each part of the spelling under
+    /// <c>shortcode</c>.
+    /// </summary>
     public const int ShortcodeMin = 2;
     public const int ShortcodeMax = 8;
 
-    // How a shortcode is spelled wrong, or null where it is spelled correctly. The wording completes "shortcode 'x'
-    // ..." and names the first fault alone. `validate` and `restore` both ask it.
+    /// <summary>
+    /// How a shortcode is spelled wrong, or null where it is spelled correctly. The wording completes "shortcode 'x'
+    /// ..." and names the first fault alone. <c>validate</c> and <c>restore</c> both ask it.
+    /// </summary>
     public static string? ShortcodeFault(string shortcode)
     {
         if (shortcode.Length < ShortcodeMin) return "is too short";
@@ -186,58 +224,79 @@ public class CorpusDescriptor
             : null;
     }
 
-    // How this corpus is published, and the URL a person opens to browse it. `Publishing` holds the link-building rules
-    // for each target. Both are null where the descriptor states none, and an export from such a corpus carries no
-    // links.
+    /// <summary>
+    /// How this corpus is published, and the URL a person opens to browse it. <c>Publishing</c> holds the link-building
+    /// rules for each target. Both are null where the descriptor states none, and an export from such a corpus carries
+    /// no links.
+    /// </summary>
     public string? PublishingTarget;
     public string? Base;
 
-    // Where to report a problem with the framework itself: `kac`, the schema, the template or a skill. Takes the same
-    // values `PublishingTarget` does, and is `none` where the descriptor states none. `docs/corpus-descriptor.md` sets
-    // this beside `upstream:`.
+    /// <summary>
+    /// Where to report a problem with the framework itself: <c>kac</c>, the schema, the template or a skill. Takes the
+    /// same values <c>PublishingTarget</c> does, and is <c>none</c> where the descriptor states none.
+    /// <c>docs/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
+    /// </summary>
     public string FrameworkTarget = Publishing.None;
     public string? FrameworkBase;
     public string? FrameworkArea;
 
-    // Where work about this corpus's own records is filed. Null where the descriptor states no block, and `Tracker.Own`
-    // then derives the pair from `publishing:`.
+    /// <summary>
+    /// Where work about this corpus's own records is filed. Null where the descriptor states no block, and
+    /// <c>Tracker.Own</c> then derives the pair from <c>publishing:</c>.
+    /// </summary>
     public string? TrackerTarget;
     public string? TrackerBase;
 
-    // The Azure DevOps area path a filed work item belongs to, written below the project and separated by `/`, or null
-    // for the project's default area. `Tracker.For` drops it beside any other target.
+    /// <summary>
+    /// The Azure DevOps area path a filed work item belongs to, written below the project and separated by <c>/</c>, or
+    /// null for the project's default area. <c>Tracker.For</c> drops it beside any other target.
+    /// </summary>
     public string? TrackerArea;
 
-    // Where the corpus root sits inside the published repository, and null where the corpus is the repository. Kept
-    // apart from the base, because the commit a link resolves against goes between the two.
+    /// <summary>
+    /// Where the corpus root sits inside the published repository, and null where the corpus is the repository. Kept
+    /// apart from the base, because the commit a link resolves against goes between the two.
+    /// </summary>
     public string? PathPrefix;
 
-    // Where this estate's code repositories are addressed from: a service's `repos` entry resolves to
-    // `<ReposBase>/<entry>`. Null where the corpus states none, and `mirrors-repo-links` then checks nothing.
+    /// <summary>
+    /// Where this estate's code repositories are addressed from: a service's <c>repos</c> entry resolves to
+    /// <c>&lt;ReposBase&gt;/&lt;entry&gt;</c>. Null where the corpus states none, and <c>mirrors-repo-links</c> then
+    /// checks nothing.
+    /// </summary>
     public string? ReposBase;
 
-    // What an export leaves behind: `draft`, `overdue`, or neither. Empty by default.
+    /// <summary>What an export leaves behind: <c>draft</c>, <c>overdue</c>, or neither. Empty by default.</summary>
     public readonly List<string> ExportExclude = [];
 
-    // The two things an export can be told to leave behind. The exporter reads them from here, so a corpus naming a
-    // third is told.
+    /// <summary>
+    /// The two things an export can be told to leave behind. The exporter reads them from here, so a corpus naming a
+    /// third is told.
+    /// </summary>
     public const string ExcludeDraft = "draft";
     public const string ExcludeOverdue = "overdue";
     public static readonly IReadOnlyList<string> Excludable = [ExcludeDraft, ExcludeOverdue];
 
-    // The three versions the descriptor states, each null where it states none. `DescriptorVersion` is this file's
-    // format and `TemplateVersion` the template last taken, and an update stamps both. `ContentVersion` is the corpus's
-    // own semantic version, which only a person writes.
+    /// <summary>
+    /// The three versions the descriptor states, each null where it states none. <c>DescriptorVersion</c> is this
+    /// file's format and <c>TemplateVersion</c> the template last taken, and an update stamps both.
+    /// <c>ContentVersion</c> is the corpus's own semantic version, which only a person writes.
+    /// </summary>
     public int? DescriptorVersion;
     public string? ContentVersion;
     public int? TemplateVersion;
 
-    // The types this corpus has adopted, named as the schema names them. Null where the descriptor says nothing, which
-    // differs from an empty list: the types are then read off the corpus's own folders.
+    /// <summary>
+    /// The types this corpus has adopted, named as the schema names them. Null where the descriptor says nothing, which
+    /// differs from an empty list: the types are then read off the corpus's own folders.
+    /// </summary>
     public List<string>? Types;
 
-    // The ranges this corpus states, keyed as a field's `values: $corpus.<name>` names them. See
-    // docs/corpus-descriptor.md.
+    /// <summary>
+    /// The ranges this corpus states, keyed as a field's <c>values: $corpus.&lt;name&gt;</c> names them. See
+    /// docs/corpus-descriptor.md.
+    /// </summary>
     public readonly Dictionary<string, IReadOnlyList<string>> Enums = new(StringComparer.Ordinal);
 
     public static CorpusDescriptor Load(string corpusRoot)
@@ -314,8 +373,10 @@ public class CorpusDescriptor
         static string? Said(string? value) => Blank(value)?.Trim();
     }
 
-    // What to tell an author whose descriptor still uses a renamed key, or null where none is in use. `update` stops on
-    // it.
+    /// <summary>
+    /// What to tell an author whose descriptor still uses a renamed key, or null where none is in use. <c>update</c>
+    /// stops on it.
+    /// </summary>
     public static string? RenamedKeyInUse(string corpusRoot)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
@@ -339,8 +400,10 @@ public class CorpusDescriptor
         return null;
     }
 
-    // Rewrite the `types:` block, replacing its items whole and leaving everything around them. Line-oriented for the
-    // reason `Stamp` is. A descriptor stating no `types:` is left alone.
+    /// <summary>
+    /// Rewrite the <c>types:</c> block, replacing its items whole and leaving everything around them. Line-oriented for
+    /// the reason <c>Stamp</c> is. A descriptor stating no <c>types:</c> is left alone.
+    /// </summary>
     public static void SetTypes(string corpusRoot, IReadOnlyList<string> types)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
@@ -359,9 +422,11 @@ public class CorpusDescriptor
         File.WriteAllText(path, string.Join('\n', lines).TrimEnd('\n') + "\n");
     }
 
-    // Record what an update took: format, resolved commit, template version and day. `content-version` is left alone,
-    // and so is `commit` where the template was read from a folder. Rewrites lines rather than re-serialising, so the
-    // descriptor's commentary survives; a rewritten line loses its own trailing comment.
+    /// <summary>
+    /// Record what an update took: format, resolved commit, template version and day. <c>content-version</c> is left
+    /// alone, and so is <c>commit</c> where the template was read from a folder. Rewrites lines rather than
+    /// re-serialising, so the descriptor's commentary survives; a rewritten line loses its own trailing comment.
+    /// </summary>
     public static void Stamp(string corpusRoot, int templateVersion, string takenOn, string? commit = null)
     {
         var path = Path.Combine(corpusRoot, ".corpus.yaml");
@@ -418,9 +483,11 @@ public class CorpusDescriptor
         }
     }
 
-    // Record the version each consumed corpus was resolved at, on that corpus's own entry. An entry the map does not
-    // name is left as it stands. Line-oriented for the reason `Stamp` is. Returns the corpora whose lock was written,
-    // because a flow-style sequence the YAML loader accepts is a shape this pass does not read.
+    /// <summary>
+    /// Record the version each consumed corpus was resolved at, on that corpus's own entry. An entry the map does not
+    /// name is left as it stands. Line-oriented for the reason <c>Stamp</c> is. Returns the corpora whose lock was
+    /// written, because a flow-style sequence the YAML loader accepts is a shape this pass does not read.
+    /// </summary>
     public static IReadOnlyList<string> SetResolved(
         string corpusRoot, IReadOnlyDictionary<string, string> versions)
     {
@@ -453,8 +520,10 @@ public class CorpusDescriptor
         return written;
     }
 
-    // Where each entry of the `consumes:` block sits: the corpus it names, the column its keys are
-    // written at, the line holding its `resolved:` if it has one, and the line after its last key.
+    /// <summary>
+    /// Where each entry of the <c>consumes:</c> block sits: the corpus it names, the column its keys are written at,
+    /// the line holding its <c>resolved:</c> if it has one, and the line after its last key.
+    /// </summary>
     private static List<(string? Corpus, int Indent, int? Resolved, int End)> Entries(
         List<string> lines, int start)
     {

@@ -1,11 +1,15 @@
 namespace kac.core;
 
-// The shape of a discriminator is stated once here and read three ways. `../../CLAUDE.md` says why a second copy is not
-// written.
+/// <summary>
+/// The shape of a discriminator is stated once here and read three ways. <c>../../CLAUDE.md</c> says why a second copy
+/// is not written.
+/// </summary>
 public static class IdChecks
 {
-    // The styles dispatched below, not a list of spellings. `SchemaChecks` reads it to reject a style nothing acts on,
-    // so a name added here needs its branch.
+    /// <summary>
+    /// The styles dispatched below, not a list of spellings. <c>SchemaChecks</c> reads it to reject a style nothing
+    /// acts on, so a name added here needs its branch.
+    /// </summary>
     public static readonly IReadOnlySet<string> IdStyles =
         new HashSet<string>(["numbered", "mnemonic", "slug"], StringComparer.Ordinal);
 
@@ -75,8 +79,10 @@ public static class IdChecks
                 $"slug '{slug}' is {slug.Length} characters; the limit is {t.SlugMax}.");
     }
 
-    // Null where the type keeps its id out of the filename, or the name does not open with a discriminator in the
-    // style's shape.
+    /// <summary>
+    /// Null where the type keeps its id out of the filename, or the name does not open with a discriminator in the
+    /// style's shape.
+    /// </summary>
     private static string? FilenameDiscriminator(string rel, TypeSchema t)
     {
         if (!t.FilenameCarriesId) return null;
@@ -110,9 +116,11 @@ public static class IdChecks
         }
     }
 
-    // Deliberately laxer about case than the checks above, so a mis-cased label in prose is recognised and can be
-    // reported. A part is addressed as `<record>.<part>`, and the part half is judged against the type's own `parts:`
-    // declaration.
+    /// <summary>
+    /// Deliberately laxer about case than the checks above, so a mis-cased label in prose is recognised and can be
+    /// reported. A part is addressed as <c>&lt;record&gt;.&lt;part&gt;</c>, and the part half is judged against the
+    /// type's own <c>parts:</c> declaration.
+    /// </summary>
     public static bool TryCanonicalId(string label, Schema schema, out string canonical)
     {
         var dot = label.IndexOf('.');
@@ -157,7 +165,7 @@ public static class IdChecks
         }
     }
 
-    // A type declaring no parts has none to name, so `pol-DEVI.md` is not read as a citation.
+    /// <summary>A type declaring no parts has none to name, so <c>pol-DEVI.md</c> is not read as a citation.</summary>
     private static bool NamesAPart(string record, string part, Schema schema)
     {
         var prefix = record[..record.IndexOf('-')];
@@ -169,8 +177,10 @@ public static class IdChecks
         return part.Length > 0 && part == Md.Slug(part);
     }
 
-    // Null where the target is not a record of that type, which is the common answer. The folder decides the type, not
-    // the filename, because a slug is shaped like any other word.
+    /// <summary>
+    /// Null where the target is not a record of that type, which is the common answer. The folder decides the type, not
+    /// the filename, because a slug is shaped like any other word.
+    /// </summary>
     public static string? IdFromLink(LinkRef link, string fromRel, TypeSchema refType)
     {
         var target = link.Target;
@@ -195,7 +205,9 @@ public static class IdChecks
         };
     }
 
-    // String work, not a filesystem walk: whether the file is there is `link-resolves`'s question.
+    /// <summary>
+    /// String work, not a filesystem walk: whether the file is there is <c>link-resolves</c>'s question.
+    /// </summary>
     private static string Folder(string target, string fromRel)
     {
         target = target.Replace('\\', '/');
@@ -218,7 +230,7 @@ public static class IdChecks
         return string.Join('/', segments);
     }
 
-    // ASCII, because a slug is also a URL path segment and a filename.
+    /// <summary>ASCII, because a slug is also a URL path segment and a filename.</summary>
     private static bool IsSlug(string s) =>
         s.Length > 0 && s.All(c => char.IsAsciiLetterLower(c) || char.IsAsciiDigit(c) || c == '-');
 }

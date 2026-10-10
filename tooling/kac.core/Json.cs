@@ -21,9 +21,11 @@ public record CheckInfo(string Check, string Severity, string Summary);
 // A consumer reads these instead of cloning the corpus, so their shape is a contract once published.
 // `docs/design/export.md` says what moves `FormatVersion` and each `ShapeVersion`.
 
-// Everything that varies between two runs over one commit is confined here, so the rest of the output
-// is byte-identical run to run. `Commit` and `Dirty` are null where git could not answer. `Shortcode`,
-// `ReposBase` and every `About` field are null where the corpus stated none.
+/// <summary>
+/// Everything that varies between two runs over one commit is confined here, so the rest of the output is
+/// byte-identical run to run. <c>Commit</c> and <c>Dirty</c> are null where git could not answer. <c>Shortcode</c>,
+/// <c>ReposBase</c> and every <c>About</c> field are null where the corpus stated none.
+/// </summary>
 public record ExportManifest(
     int FormatVersion,
     string? Corpus,
@@ -41,13 +43,17 @@ public record ExportManifest(
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<ExportedType> Types);
 
-// `Area` is null on every target but Azure DevOps. `Base` and `Id` are null together, where the block
-// addresses no backlog. `Id` leaves `Area` out: one project is one backlog however many areas divide it.
-// `Tracker.cs` states what each one is written from.
+/// <summary>
+/// <c>Area</c> is null on every target but Azure DevOps. <c>Base</c> and <c>Id</c> are null together, where the block
+/// addresses no backlog. <c>Id</c> leaves <c>Area</c> out: one project is one backlog however many areas divide it.
+/// <c>Tracker.cs</c> states what each one is written from.
+/// </summary>
 public record ExportTracker(string Target, string? Base, string? Area, string? Id);
 
-// Each source carries its producer's own publishing, tracker and repos base: a record of `eng` is read
-// at eng's commit, in eng's repository, and filed on eng's backlog.
+/// <summary>
+/// Each source carries its producer's own publishing, tracker and repos base: a record of <c>eng</c> is read at eng's
+/// commit, in eng's repository, and filed on eng's backlog.
+/// </summary>
 public record ExportSource(
     string Shortcode,
     string? Corpus,
@@ -56,7 +62,7 @@ public record ExportSource(
     string? ReposBase,
     ExportTracker Tracker);
 
-// Every field is null where the corpus has not said. Nothing is invented from a neighbour's value.
+/// <summary>Every field is null where the corpus has not said. Nothing is invented from a neighbour's value.</summary>
 public record ExportAbout(
     string? DisplayName,
     string? Description,
@@ -65,9 +71,11 @@ public record ExportAbout(
 
 public record ExportAuthor(string? Name, string? Url);
 
-// `HumanTemplate`, `Base` and `Ref` are null together, where the corpus publishes nowhere or names a
-// target nothing builds links for. `PathPrefix` is null where the corpus is its repository.
-// `docs/design/export.md` sets out how a client reads a record's source from these.
+/// <summary>
+/// <c>HumanTemplate</c>, <c>Base</c> and <c>Ref</c> are null together, where the corpus publishes nowhere or names a
+/// target nothing builds links for. <c>PathPrefix</c> is null where the corpus is its repository.
+/// <c>docs/design/export.md</c> sets out how a client reads a record's source from these.
+/// </summary>
 public record ExportPublishing(
     string Target,
     string? HumanTemplate,
@@ -75,9 +83,11 @@ public record ExportPublishing(
     string? PathPrefix,
     string? Ref);
 
-// `PartsFile`, `RecordKey`, `PartKey` and `IdKey` are null where the type keeps no parts, and `Parts`
-// is then zero. `SeeAlsoKey` is also null where the type declares no such key. `FrameworksFile` is null
-// for every type that declares none. `docs/design/export.md` sets out what moves `ShapeVersion`.
+/// <summary>
+/// <c>PartsFile</c>, <c>RecordKey</c>, <c>PartKey</c> and <c>IdKey</c> are null where the type keeps no parts, and
+/// <c>Parts</c> is then zero. <c>SeeAlsoKey</c> is also null where the type declares no such key. <c>FrameworksFile</c>
+/// is null for every type that declares none. <c>docs/design/export.md</c> sets out what moves <c>ShapeVersion</c>.
+/// </summary>
 public record ExportedType(
     string Type,
     int ShapeVersion,
@@ -92,9 +102,11 @@ public record ExportedType(
     IReadOnlyDictionary<string, string> Sections,
     string? FrameworksFile = null);
 
-// `Trust` is null where the type's export declares no `verified` field. A section carried at
-// `reference` is null, and a section the record never wrote is absent from the map.
-// `Exporter.Absent` decides absence and `Exporter.Value` the shape of a field.
+/// <summary>
+/// <c>Trust</c> is null where the type's export declares no <c>verified</c> field. A section carried at
+/// <c>reference</c> is null, and a section the record never wrote is absent from the map. <c>Exporter.Absent</c>
+/// decides absence and <c>Exporter.Value</c> the shape of a field.
+/// </summary>
 public record ExportRecord(
     string Type,
     string Path,
@@ -110,8 +122,10 @@ public record ExportLinks(string Human);
 
 // `plugin.json` is not here: it is edited as a DOM, so keys this tool has never heard of survive.
 
-// No timestamp and no commit: the copied export's manifest states both. `docs/cli/bundle.md` says why
-// the component set is stated rather than inferred.
+/// <summary>
+/// No timestamp and no commit: the copied export's manifest states both. <c>docs/cli/bundle.md</c> says why the
+/// component set is stated rather than inferred.
+/// </summary>
 public record BundleRecord(
     int BundleVersion,
     string Plugin,
@@ -157,14 +171,18 @@ public partial class KacJson : JsonSerializerContext
     private static KacJson? s_relaxed;
     private static KacJson? s_line;
 
-    // CLI output with relaxed escaping, so a quote or an em dash reaches the reader as itself. Lazy, so it does not
-    // touch `Default` during static construction, whose order across the partial is unspecified.
+    /// <summary>
+    /// CLI output with relaxed escaping, so a quote or an em dash reaches the reader as itself. Lazy, so it does not
+    /// touch <c>Default</c> during static construction, whose order across the partial is unspecified.
+    /// </summary>
     public static KacJson Relaxed => s_relaxed ??= new KacJson(Escaped(indented: true));
 
-    // One object per line, so a grep hands back a complete one.
+    /// <summary>One object per line, so a grep hands back a complete one.</summary>
     public static KacJson Line => s_line ??= new KacJson(Escaped(indented: false));
 
-    // `Options` is the generator's own name on this partial, so this one is named for what it does.
+    /// <summary>
+    /// <c>Options</c> is the generator's own name on this partial, so this one is named for what it does.
+    /// </summary>
     private static JsonSerializerOptions Escaped(bool indented) => new(Default.Options)
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

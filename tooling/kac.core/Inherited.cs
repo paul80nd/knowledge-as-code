@@ -1,8 +1,10 @@
 namespace kac.core;
 
-// One type of a consumed corpus, as that corpus published it. Lines and records stay text, so a consumer
-// stamps its producer's shortcode onto the id keys and carries the rest through untouched. `Json.cs` says
-// why the four key names are read from the manifest.
+/// <summary>
+/// One type of a consumed corpus, as that corpus published it. Lines and records stay text, so a consumer stamps its
+/// producer's shortcode onto the id keys and carries the rest through untouched. <c>Json.cs</c> says why the four key
+/// names are read from the manifest.
+/// </summary>
 public sealed record InheritedType(
     string Type,
     int ShapeVersion,
@@ -16,12 +18,16 @@ public sealed record InheritedType(
     IReadOnlyList<string> PartLines,
     IReadOnlyList<InheritedRecord> Records);
 
-// `Producer` is the corpus that wrote the record, which for an inherited one is further up the chain.
+/// <summary>
+/// <c>Producer</c> is the corpus that wrote the record, which for an inherited one is further up the chain.
+/// </summary>
 public sealed record InheritedRecord(string Producer, string Name, string Content);
 
-// `Publishing`, `Tracker` and `ReposBase` are the producer's own, because a record of theirs is read and
-// reported in their repository. `Sources` is what the producer inherited in turn, carried forward so a chain
-// of any depth needs no code.
+/// <summary>
+/// <c>Publishing</c>, <c>Tracker</c> and <c>ReposBase</c> are the producer's own, because a record of theirs is read
+/// and reported in their repository. <c>Sources</c> is what the producer inherited in turn, carried forward so a chain
+/// of any depth needs no code.
+/// </summary>
 public sealed record InheritedCorpus(
     string Shortcode,
     int FormatVersion,
@@ -33,13 +39,17 @@ public sealed record InheritedCorpus(
     IReadOnlyList<ExportSource> Sources,
     IReadOnlyList<InheritedType> Types);
 
-// The exports a corpus consumes, read as the bytes an export carries. `Imports.cs` reads the same folders
-// for `validate`.
+/// <summary>
+/// The exports a corpus consumes, read as the bytes an export carries. <c>Imports.cs</c> reads the same folders for
+/// <c>validate</c>.
+/// </summary>
 public static class Inherited
 {
-    // `names` lists the files directly inside a folder under `.imports/`, `folders` the folders inside one, and
-    // `read` returns one file's text. Each returns null where there is nothing there. An entry with no shortcode
-    // is skipped, because `validate` reports it.
+    /// <summary>
+    /// <c>names</c> lists the files directly inside a folder under <c>.imports/</c>, <c>folders</c> the folders inside
+    /// one, and <c>read</c> returns one file's text. Each returns null where there is nothing there. An entry with no
+    /// shortcode is skipped, because <c>validate</c> reports it.
+    /// </summary>
     public static (IReadOnlyList<InheritedCorpus> Carried, IReadOnlyList<string> Missing) Read(
         IReadOnlyList<Consumed> declared,
         Func<string, IReadOnlyList<string>?> names,
@@ -60,8 +70,10 @@ public static class Inherited
         return (carried, missing);
     }
 
-    // Null where the folder has no manifest. A restore writes the manifest last, so a folder with one has every
-    // file it describes.
+    /// <summary>
+    /// Null where the folder has no manifest. A restore writes the manifest last, so a folder with one has every file
+    /// it describes.
+    /// </summary>
     private static InheritedCorpus? One(
         string shortcode,
         Func<string, IReadOnlyList<string>?> names,
@@ -101,8 +113,10 @@ public static class Inherited
     private static List<string> Lines(string? text) =>
         text is null ? [] : [.. text.Split('\n').Where(l => l.Length > 0)];
 
-    // A record is a `.json` named for its id, and the parts file beside them is not one. Inherited records sit
-    // one folder deep, named for their writer. See docs/design/export.md.
+    /// <summary>
+    /// A record is a <c>.json</c> named for its id, and the parts file beside them is not one. Inherited records sit
+    /// one folder deep, named for their writer. See docs/design/export.md.
+    /// </summary>
     private static List<InheritedRecord> RecordsIn(
         string shortcode, string dir, string? partsFile,
         Func<string, IReadOnlyList<string>?> names,

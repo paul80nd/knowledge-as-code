@@ -56,7 +56,8 @@ public class ChecksTableTests
         Assert.DoesNotContain("alternatives-verdict", table);
         Assert.DoesNotContain("related-matches-section", table);
         Assert.DoesNotContain("reciprocal", table);
-        Assert.Contains("frontmatter-parses", table); // unconditional rows still render
+        // Unconditional rows still render.
+        Assert.Contains("frontmatter-parses", table);
     }
 
     [Fact]

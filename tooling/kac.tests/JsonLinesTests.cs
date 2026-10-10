@@ -31,8 +31,10 @@ public class JsonLinesTests
             "a .jsonl file is no longer one object per line:\n  " + string.Join("\n  ", broken));
     }
 
-    // What is wrong with the line, or null where nothing is. The kind is asked because a file can parse and
-    // still not be JSON Lines: the objects gathered into one array is valid JSON on a single line.
+    /// <summary>
+    /// What is wrong with the line, or null where nothing is. The kind is asked because a file can parse and still not
+    /// be JSON Lines: the objects gathered into one array is valid JSON on a single line.
+    /// </summary>
     private static string? Fault(string text)
     {
         try
@@ -48,9 +50,11 @@ public class JsonLinesTests
         }
     }
 
-    // Every .jsonl git would list, so a fixture added and not yet staged counts. What a .gitignore covers
-    // does not: each corpus's own .dist/ and .imports/ stay out, and `kac export` rebuilds those on every
-    // run. The walk is the fallback for a tree with no git in it.
+    /// <summary>
+    /// Every .jsonl git would list, so a fixture added and not yet staged counts. What a .gitignore covers does not:
+    /// each corpus's own .dist/ and .imports/ stay out, and <c>kac export</c> rebuilds those on every run. The walk is
+    /// the fallback for a tree with no git in it.
+    /// </summary>
     private static IEnumerable<string> Files() =>
         (GitFiles.Tracked(Repo.Root) ?? GitFiles.Walk(Repo.Root, "*.jsonl", ".git"))
         .Where(rel => rel.EndsWith(".jsonl", StringComparison.Ordinal));

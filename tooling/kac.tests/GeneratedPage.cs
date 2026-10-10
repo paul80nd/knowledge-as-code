@@ -4,19 +4,22 @@ using Xunit.Sdk;
 
 namespace kac.tests;
 
-// A generated block inside a hand-written page, between the `Markers` pair. A page with no blocks gets an empty pair
-// under its first heading; one with other blocks is refused, as nothing says which heading the new one goes under. An
-// unclosed block is refused because `SpliceBlock` returns that page untouched, which reads as up to date.
+/// <summary>
+/// A generated block inside a hand-written page, between the <c>Markers</c> pair. A page with no blocks gets an empty
+/// pair under its first heading; one with other blocks is refused, as nothing says which heading the new one goes
+/// under. An unclosed block is refused because <c>SpliceBlock</c> returns that page untouched, which reads as up to
+/// date.
+/// </summary>
 internal static partial class GeneratedPage
 {
-    // The first heading of a page, under which a missing marker pair is inserted.
+    /// <summary>The first heading of a page, under which a missing marker pair is inserted.</summary>
     [GeneratedRegex(@"^# .*$", RegexOptions.Multiline)]
     private static partial Regex Heading();
 
     [GeneratedRegex(@"^<!-- BEGIN GENERATED: ", RegexOptions.Multiline)]
     private static partial Regex AnyBlock();
 
-    // The page is returned unchanged where it already holds `body`.
+    /// <summary>The page is returned unchanged where it already holds <c>body</c>.</summary>
     internal static string Replaced(string page, string name, string body)
     {
         var begin = Markers.Begin(name);

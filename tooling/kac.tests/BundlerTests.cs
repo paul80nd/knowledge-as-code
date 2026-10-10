@@ -417,7 +417,9 @@ public class BundlerTests
         Assert.Equal(line, Encoding.UTF8.GetString(copied.Content));
     }
 
-    // A marketplace refuses a source path containing `..`. `Dist.Root` says what follows from that.
+    /// <summary>
+    /// A marketplace refuses a source path containing <c>..</c>. <c>Dist.Root</c> says what follows from that.
+    /// </summary>
     [Fact]
     public void The_marketplace_names_the_plugin_as_a_path_beneath_itself()
     {
@@ -472,8 +474,10 @@ public class BundlerTests
     private static BundleFile File((string Path, string Content) f) =>
         new(f.Path, Encoding.UTF8.GetBytes(f.Content));
 
-    // A plugin manifest as a corpus writes one. Identity is generated from the export, so a corpus writes
-    // none of it and this carries none.
+    /// <summary>
+    /// A plugin manifest as a corpus writes one. Identity is generated from the export, so a corpus writes none of it
+    /// and this carries none.
+    /// </summary>
     private static string Source(params string[] components) =>
         $$"""
           {
@@ -548,7 +552,7 @@ public class BundlerTests
               }
               """);
 
-    // Every type is at shape 1, which is what a component naming a shape is held against.
+    /// <summary>Every type is at shape 1, which is what a component naming a shape is held against.</summary>
     private static string Entries(string[] types) =>
         string.Join(",", types.Select(t => $$"""{"type":"{{t}}","shapeVersion":1,"records":1}"""));
 
@@ -592,8 +596,10 @@ public class BundlerTests
         return Encoding.UTF8.GetString(file.Content);
     }
 
-    // Paths are relative to `.dist/`, so a file inside the plugin is addressed through the plugin
-    // directory and the marketplace is not.
+    /// <summary>
+    /// Paths are relative to <c>.dist/</c>, so a file inside the plugin is addressed through the plugin directory and
+    /// the marketplace is not.
+    /// </summary>
     private static JsonElement Written(BundlePlan plan, string path, bool underPlugin = true)
     {
         var full = underPlugin ? $"{Dist.PluginDir}/{path}" : path;

@@ -8,9 +8,11 @@ using Xunit.Sdk;
 
 namespace kac.tests;
 
-// Usage as `Spectre.Console.Cli`'s hidden `cli xmldoc` prints it from the built `kac`. Its output is hard-wrapped to
-// eighty columns even when redirected, so every description is put back onto one line, and it names no global option,
-// because `--help` and `--version` belong to the parser.
+/// <summary>
+/// Usage as <c>Spectre.Console.Cli</c>'s hidden <c>cli xmldoc</c> prints it from the built <c>kac</c>. Its output is
+/// hard-wrapped to eighty columns even when redirected, so every description is put back onto one line, and it names no
+/// global option, because <c>--help</c> and <c>--version</c> belong to the parser.
+/// </summary>
 internal static partial class CliReference
 {
     internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");
@@ -28,8 +30,10 @@ internal static partial class CliReference
 
     internal static IReadOnlyList<string> Pages() => [.. Verbs().Select(v => v.Name)];
 
-    // The overview's index of the commands, taking what a command does from that command's own heading.
-    // The heading is the one statement of it, so a second wording here would be the copy that goes stale.
+    /// <summary>
+    /// The overview's index of the commands, taking what a command does from that command's own heading. The heading is
+    /// the one statement of it, so a second wording here would be the copy that goes stale.
+    /// </summary>
     internal static string CommandTable()
     {
         var rows = Pages().Select(page =>
@@ -50,8 +54,10 @@ internal static partial class CliReference
         return Gfm.RenderTable(["Command", "What it does"], rows);
     }
 
-    // Arguments come first and in the order the parser declares them, because that is the order a reader
-    // types. Options are alphabetical, because their order on the line is free.
+    /// <summary>
+    /// Arguments come first and in the order the parser declares them, because that is the order a reader types.
+    /// Options are alphabetical, because their order on the line is free.
+    /// </summary>
     internal static string Render(Verb verb)
     {
         var invocation = new StringBuilder($"kac {verb.Name}");
@@ -123,8 +129,10 @@ internal static partial class CliReference
 
     private static string OneLine(string? text) => Whitespace().Replace(text?.Trim() ?? string.Empty, " ");
 
-    // The built `kac`. Its path is stamped into this assembly by kac.tests.csproj, and the project reference
-    // beside that is what guarantees a build has produced one.
+    /// <summary>
+    /// The built <c>kac</c>. Its path is stamped into this assembly by kac.tests.csproj, and the project reference
+    /// beside that is what guarantees a build has produced one.
+    /// </summary>
     private static string XmlDoc()
     {
         var kac = Repo.KacAssembly;

@@ -76,8 +76,10 @@ if (args.Length == 0)
 var exit = app.Run(args);
 return exit == -1 ? 1 : exit;
 
-// A verb finds its corpus inside its own Execute, not before the parse, so `--version` and `--help` answer from
-// any folder.
+/// <summary>
+/// A verb finds its corpus inside its own Execute, not before the parse, so <c>--version</c> and <c>--help</c> answer
+/// from any folder.
+/// </summary>
 internal static class Cli
 {
     public static readonly string Version =
@@ -105,7 +107,7 @@ internal static class Cli
         return run(corpusRoot);
     }
 
-    // The caller owns the client, because the timeout is the caller's to choose.
+    /// <summary>The caller owns the client, because the timeout is the caller's to choose.</summary>
     public static Registry RegistryFor(string corpusRoot, HttpClient client) =>
         new(Registry.Over(client), Registry.OnDisk(corpusRoot));
 }
@@ -119,8 +121,10 @@ internal class KacSettings : CommandSettings
 
 internal sealed class CorpusSettings : KacSettings;
 
-// `new` takes the working directory and never `Cli.InCorpus`: finding a corpus there is what stops it. Every
-// answer has a flag, so a run with no terminal exits rather than waits. `docs/cli/new.md` has the defaults.
+/// <summary>
+/// <c>new</c> takes the working directory and never <c>Cli.InCorpus</c>: finding a corpus there is what stops it. Every
+/// answer has a flag, so a run with no terminal exits rather than waits. <c>docs/cli/new.md</c> has the defaults.
+/// </summary>
 internal sealed class NewSettings : KacSettings
 {
     [CommandOption("--name <NAME>")]
@@ -179,7 +183,10 @@ internal sealed class NewCommand : Command<NewSettings>
     }
 }
 
-// `validate` takes no paths: several of its checks ask about the shape of the corpus, and a subset cannot answer them.
+/// <summary>
+/// <c>validate</c> takes no paths: several of its checks ask about the shape of the corpus, and a subset cannot answer
+/// them.
+/// </summary>
 internal sealed class ValidateSettings : KacSettings
 {
     [CommandOption("--json")]
@@ -225,7 +232,7 @@ internal sealed class RestoreCommand : Command<CorpusSettings>
         });
 }
 
-// `--type` narrows what is written and never what is read. `docs/cli/export.md` says why.
+/// <summary><c>--type</c> narrows what is written and never what is read. <c>docs/cli/export.md</c> says why.</summary>
 internal sealed class ExportSettings : KacSettings
 {
     [CommandOption("--type <TYPE>")]
@@ -290,8 +297,10 @@ internal sealed class ReportCommand : Command<ReportSettings>
             DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), settings.OutPath));
 }
 
-// `update` asks nothing, because it runs in a pipeline as often as under somebody watching. `docs/cli/update.md`
-// has the defaults and what each layer means.
+/// <summary>
+/// <c>update</c> asks nothing, because it runs in a pipeline as often as under somebody watching.
+/// <c>docs/cli/update.md</c> has the defaults and what each layer means.
+/// </summary>
 internal sealed class UpdateSettings : KacSettings
 {
     [CommandOption("--from <URL|PATH>")]

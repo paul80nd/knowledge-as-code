@@ -4,9 +4,11 @@ namespace kac.core;
 
 public static class Validator
 {
-    // The whole of `validate`, so no caller runs a subset and believes it ran the lot. `today` is the day a rule
-    // written against `today()` judges by (see `docs/design/expressions.md`). A null `standings` reports no import's
-    // freshness, rather than every import as current.
+    /// <summary>
+    /// The whole of <c>validate</c>, so no caller runs a subset and believes it ran the lot. <c>today</c> is the day a
+    /// rule written against <c>today()</c> judges by (see <c>docs/design/expressions.md</c>). A null <c>standings</c>
+    /// reports no import's freshness, rather than every import as current.
+    /// </summary>
     public static List<Finding> CheckAll(
         LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
     {
@@ -35,7 +37,8 @@ public static class Validator
         foreach (var (_, t) in schema.ByFolder.OrderBy(kv => kv.Key, StringComparer.Ordinal))
         {
             if (string.IsNullOrEmpty(t.Page)) continue;
-            if (!tree.Exists(t.Page)) continue; // absence is type-setup's to report, not this pass's
+            // Absence is type-setup's to report, not this pass's.
+            if (!tree.Exists(t.Page)) continue;
 
             var page = Doc.Parse(t.Page, tree.Read(t.Page), schema, requireFrontmatter: false);
             if (page is null) continue;
@@ -148,7 +151,8 @@ public static class Validator
         foreach (var (name, node) in present)
         {
             var spec = schema.EffectiveField(t, name);
-            if (spec is null) continue; // unknown key already reported
+            // Unknown key already reported.
+            if (spec is null) continue;
 
             ValueChecks.Check(name, node, spec, kind, d.FrontStartLine, report);
         }
@@ -222,9 +226,11 @@ public static class Validator
             CheckRules(d, t, report, today);
     }
 
-    // `Markers.SpliceBlock` returns the text untouched when a marker is missing, so a file that loses one
-    // stops being generated into and `generate --check` agrees it is fresh. Nothing else can notice.
-    // `README.md` is the exception and answers for itself. See `BlockFile.MarkersRequired`.
+    /// <summary>
+    /// <c>Markers.SpliceBlock</c> returns the text untouched when a marker is missing, so a file that loses one stops
+    /// being generated into and <c>generate --check</c> agrees it is fresh. Nothing else can notice. <c>README.md</c>
+    /// is the exception and answers for itself. See <c>BlockFile.MarkersRequired</c>.
+    /// </summary>
     public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names,
         List<Finding> f)
     {
@@ -243,8 +249,10 @@ public static class Validator
         }
     }
 
-    // A declared type with nothing behind it is valid; half of one is not. A folder needs its page and template, and a
-    // page its folder. A folder counts as present when it holds tracked files, so a fresh clone answers the same.
+    /// <summary>
+    /// A declared type with nothing behind it is valid; half of one is not. A folder needs its page and template, and a
+    /// page its folder. A folder counts as present when it holds tracked files, so a fresh clone answers the same.
+    /// </summary>
     private static void CheckTypeSetup(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         CheckAdoption(schema, tree, descriptor, f);
@@ -276,7 +284,7 @@ public static class Validator
         }
     }
 
-    // Not asked of a corpus that declares no `types:`, whose adoption is read off its folders.
+    /// <summary>Not asked of a corpus that declares no <c>types:</c>, whose adoption is read off its folders.</summary>
     private static void CheckAdoption(Schema schema, Tree tree, CorpusDescriptor descriptor, List<Finding> f)
     {
         if (descriptor.Types is not { } declared) return;
@@ -305,8 +313,10 @@ public static class Validator
         }
     }
 
-    // See docs/corpus-descriptor.md. Reported once, against the descriptor, because that is the file to
-    // edit. Asked of the types holding a record: an empty folder has no estate to derive a list from.
+    /// <summary>
+    /// See docs/corpus-descriptor.md. Reported once, against the descriptor, because that is the file to edit. Asked of
+    /// the types holding a record: an empty folder has no estate to derive a list from.
+    /// </summary>
     private static void CheckCorpusEnums(Schema schema, IReadOnlyList<Doc> docs, IReadOnlyList<Doc> templates,
         CorpusDescriptor descriptor, List<Finding> f)
     {
@@ -357,14 +367,18 @@ public static class Validator
         }
     }
 
-    // A required field owes a range from the type's first record. An optional one owes it from the first
-    // document that states it.
+    /// <summary>
+    /// A required field owes a range from the type's first record. An optional one owes it from the first document that
+    /// states it.
+    /// </summary>
     private static bool Owed(FieldSpec root, IReadOnlyList<Doc> written) =>
         root.Required || root.RequiredWhen is not null
                       || written.Any(d => d.FrontNode(root.Name) is { } v && !ValueChecks.IsAbsent(v, root));
 
-    // A `shape:` is resolved into `Entry` at load, so its keys need no walk of their own. The path tells
-    // `interfaces.type` apart from the frontmatter key `type`.
+    /// <summary>
+    /// A <c>shape:</c> is resolved into <c>Entry</c> at load, so its keys need no walk of their own. The path tells
+    /// <c>interfaces.type</c> apart from the frontmatter key <c>type</c>.
+    /// </summary>
     private static IEnumerable<(string Path, FieldSpec Field)> Reachable(FieldSpec field, string prefix = "")
     {
         var path = prefix + field.Name;
@@ -372,8 +386,10 @@ public static class Validator
             .Concat((field.Entry ?? []).SelectMany(key => Reachable(key, path + ".")));
     }
 
-    // `.schema/_checks.yaml` argues the spelling under `shortcode`. Both faults are reported at once, which
-    // is why the prefix comparison ignores case.
+    /// <summary>
+    /// <c>.schema/_checks.yaml</c> argues the spelling under <c>shortcode</c>. Both faults are reported at once, which
+    /// is why the prefix comparison ignores case.
+    /// </summary>
     private static void CheckShortcode(Schema schema, CorpusDescriptor descriptor, List<Finding> f)
     {
         if (descriptor.Shortcode is not { } shortcode) return;
@@ -394,7 +410,7 @@ public static class Validator
                     + "reads as that type rather than as this corpus. Pick a shorthand no type has taken."));
     }
 
-    // `.schema/_checks.yaml` argues both vocabularies under `descriptor-target`.
+    /// <summary><c>.schema/_checks.yaml</c> argues both vocabularies under <c>descriptor-target</c>.</summary>
     private static void CheckTargets(CorpusDescriptor descriptor, List<Finding> f)
     {
         Held("publishing-target", descriptor.PublishingTarget, Publishing.Targets, "publish to");
@@ -414,9 +430,11 @@ public static class Validator
         }
     }
 
-    // An area is an Azure DevOps area path, so `github` and `none` have nowhere to put one. Held against the
-    // effective target, because a corpus publishing to Azure Repos states an area and no `tracker:`.
-    // `Tracker.For` drops an unusable area from the export, so this is what tells the corpus.
+    /// <summary>
+    /// An area is an Azure DevOps area path, so <c>github</c> and <c>none</c> have nowhere to put one. Held against the
+    /// effective target, because a corpus publishing to Azure Repos states an area and no <c>tracker:</c>.
+    /// <c>Tracker.For</c> drops an unusable area from the export, so this is what tells the corpus.
+    /// </summary>
     private static void CheckAreas(CorpusDescriptor descriptor, List<Finding> f)
     {
         Divided("tracker", descriptor.TrackerArea, Tracker.Own(descriptor).Target);
@@ -435,13 +453,15 @@ public static class Validator
         }
     }
 
-    // Globs `Tree.Match` answers. The framework's own glossary is also a record.
+    /// <summary>Globs <c>Tree.Match</c> answers. The framework's own glossary is also a record.</summary>
     private static readonly string[] FrameworkDocs =
         ["knowledge-as-code.md", "knowledge-as-code/*.md", "glossary/knowledge-as-code.md"];
 
-    // A framework document is shared byte-for-byte, so it names a type and never links to one: the link
-    // resolves only where the type was adopted. A generated block is exempt, being written against this
-    // corpus. `link-resolves` cannot catch it here, where every type page exists.
+    /// <summary>
+    /// A framework document is shared byte-for-byte, so it names a type and never links to one: the link resolves only
+    /// where the type was adopted. A generated block is exempt, being written against this corpus. <c>link-resolves</c>
+    /// cannot catch it here, where every type page exists.
+    /// </summary>
     private static void CheckFrameworkDocs(Schema schema, Tree tree, IEnumerable<Doc> docs, List<Finding> f)
     {
         // Already validated as records. A second link pass would report every dead link twice.
@@ -485,7 +505,9 @@ public static class Validator
         }
     }
 
-    // Returns which document each id names, first writer winning. The corpus rules read that index next.
+    /// <summary>
+    /// Returns which document each id names, first writer winning. The corpus rules read that index next.
+    /// </summary>
     public static Dictionary<string, Doc> CheckCorpus(
         Schema schema, List<Doc> docs, List<Finding> f, ImportGraph? imports = null)
     {
@@ -655,7 +677,9 @@ public static class Validator
         return byId;
     }
 
-    // An error rather than a skip. A run that quietly checks less than CI lets a broken reference reach main.
+    /// <summary>
+    /// An error rather than a skip. A run that quietly checks less than CI lets a broken reference reach main.
+    /// </summary>
     private static void CheckImports(ImportGraph imports, List<Finding> f)
     {
         foreach (var shortcode in imports.NotRestored)
@@ -669,8 +693,10 @@ public static class Validator
                 + "citation can reach it. Run `kac restore`, which says which key is missing."));
     }
 
-    // Never an error. A version behind is not a broken corpus, and somebody else's release must not turn
-    // a downstream build red.
+    /// <summary>
+    /// Never an error. A version behind is not a broken corpus, and somebody else's release must not turn a downstream
+    /// build red.
+    /// </summary>
     private static void CheckFreshness(IReadOnlyList<ImportStanding> standings, List<Finding> f)
     {
         foreach (var s in standings)
@@ -696,7 +722,9 @@ public static class Validator
             }
     }
 
-    // The three ways a citation misspells a record that exists, and null where the spelling is right.
+    /// <summary>
+    /// The three ways a citation misspells a record that exists, and null where the spelling is right.
+    /// </summary>
     private static string? Spelled(Citation citation, Landed landed) => landed.How switch
     {
         Landing.NeedsScope =>
@@ -714,7 +742,7 @@ public static class Validator
     private static List<TypeSchema> Admitted(FieldSpec spec, Schema schema) =>
         [.. spec.Refs.Select(schema.ByFolder.GetValueOrDefault).OfType<TypeSchema>()];
 
-    // A document in a folder no type covers is admitted. `type` is the check that reports it.
+    /// <summary>A document in a folder no type covers is admitted. <c>type</c> is the check that reports it.</summary>
     private static bool Admits(List<TypeSchema> admitted, Doc target) =>
         target.Type is null || admitted.Contains(target.Type);
 
@@ -732,8 +760,10 @@ public static class Validator
         };
     }
 
-    // The content version this corpus reads under each corpus name: its own from the descriptor, and a
-    // consumed corpus's from the version restore resolved. An entry with no name or no version is left out.
+    /// <summary>
+    /// The content version this corpus reads under each corpus name: its own from the descriptor, and a consumed
+    /// corpus's from the version restore resolved. An entry with no name or no version is left out.
+    /// </summary>
     private static Dictionary<string, string> Versions(CorpusDescriptor descriptor)
     {
         var found = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -748,8 +778,10 @@ public static class Validator
         return found;
     }
 
-    // Driven from the schema, so a rule runs whether or not the corpus has stood its type up. A rule with
-    // no implementation is skipped in silence.
+    /// <summary>
+    /// Driven from the schema, so a rule runs whether or not the corpus has stood its type up. A rule with no
+    /// implementation is skipped in silence.
+    /// </summary>
     private static void CheckCorpusRules(Schema schema, List<Doc> docs, Dictionary<string, Doc> byId,
         Tree tree, IReadOnlyDictionary<string, string> versions, string? reposBase, List<Finding> f)
     {
@@ -765,9 +797,10 @@ public static class Validator
             => f.Add(new Finding(at.Rel, line, severity, check, message));
     }
 
-    // Documents paired with the type they were read as, dropping those read as no type. `Where` cannot
-    // tell `GroupBy` that it settled the key, so the pair is made here, where the narrowing survives
-    // into it.
+    /// <summary>
+    /// Documents paired with the type they were read as, dropping those read as no type. <c>Where</c> cannot tell
+    /// <c>GroupBy</c> that it settled the key, so the pair is made here, where the narrowing survives into it.
+    /// </summary>
     private static IEnumerable<(Doc Doc, TypeSchema Type)> Typed(IEnumerable<Doc> docs)
     {
         foreach (var d in docs)
@@ -775,7 +808,9 @@ public static class Validator
                 yield return (d, type);
     }
 
-    // A warning, and permanently one: a value newly introduced is below the floor on the day it is written.
+    /// <summary>
+    /// A warning, and permanently one: a value newly introduced is below the floor on the day it is written.
+    /// </summary>
     private static void CheckMinRecords(List<Doc> docs, List<Finding> f)
     {
         foreach (var group in Typed(docs).GroupBy(x => x.Type, x => x.Doc))
@@ -807,9 +842,11 @@ public static class Validator
         }
     }
 
-    // Would a copy of this template pass its own frontmatter checks? A missing optional field is an
-    // editorial choice. A missing required field fails every copy. `required-when` is not asked, and
-    // `title` is admitted but never expected.
+    /// <summary>
+    /// Would a copy of this template pass its own frontmatter checks? A missing optional field is an editorial choice.
+    /// A missing required field fails every copy. <c>required-when</c> is not asked, and <c>title</c> is admitted but
+    /// never expected.
+    /// </summary>
     private static void CheckTemplateFields(Doc d, TypeSchema t, Report report)
     {
         foreach (var k in d.FrontKeys.Where(k => !t.KnownKeys.Contains(k)))
@@ -848,14 +885,16 @@ public static class Validator
                     $"'{a}' must appear before '{b}' in the frontmatter.", d.FrontStartLine);
     }
 
-    // `CheckIdentity` depends on this having run first. With no H1 there is no identity line, and
-    // reporting both would count one fault twice.
+    /// <summary>
+    /// <c>CheckIdentity</c> depends on this having run first. With no H1 there is no identity line, and reporting both
+    /// would count one fault twice.
+    /// </summary>
     private static void CheckH1(Doc d, Report report)
     {
         if (d.H1 is null) report.Err(new CheckId("h1"), "document has no H1.", 1);
     }
 
-    // Each half is checked separately: a wrong type and a wrong id are different mistakes.
+    /// <summary>Each half is checked separately: a wrong type and a wrong id are different mistakes.</summary>
     private static void CheckIdentity(Doc d, TypeSchema t, Dictionary<string, YamlNode> present,
         Report report)
     {
@@ -1025,16 +1064,20 @@ public static class Validator
         }
     }
 
-    // Null where the citation belongs to none of the types, as a line citing another standard's rule
-    // does. That is prose rather than coverage.
+    /// <summary>
+    /// Null where the citation belongs to none of the types, as a line citing another standard's rule does. That is
+    /// prose rather than coverage.
+    /// </summary>
     private static TypeSchema? Gathered(List<TypeSchema> targets, string citation)
     {
         var record = Citation.Read(citation).Record;
         return targets.FirstOrDefault(target => record.StartsWith(target.IdPrefix + "-", StringComparison.Ordinal));
     }
 
-    // An `expr:` rule is evaluated, and any other is looked up in `DocumentRules` by id.
-    // `tooling/CLAUDE.md` draws the line between them.
+    /// <summary>
+    /// An <c>expr:</c> rule is evaluated, and any other is looked up in <c>DocumentRules</c> by id.
+    /// <c>tooling/CLAUDE.md</c> draws the line between them.
+    /// </summary>
     private static void CheckRules(Doc d, TypeSchema t, Report report, DateOnly today)
     {
         // Built only where a rule asks something of the document.
@@ -1064,14 +1107,14 @@ public static class Validator
            && present.TryGetValue(condition.Field, out var node)
            && condition.Holds(Yaml.Raw(node));
 
-    // Dropped in silence, as `ref:` resolution is. See Checks/SchemaChecks.cs.
+    /// <summary>Dropped in silence, as <c>ref:</c> resolution is. See Checks/SchemaChecks.cs.</summary>
     private static bool Unfillable(FieldSpec spec, IReadOnlySet<string>? fillable)
         => fillable is not null
            && spec.Refs.Count > 0
            && spec.AllowLiteral.Count == 0
            && !spec.Refs.Any(fillable.Contains);
 
-    // A type the corpus declined may still be supplied by an import.
+    /// <summary>A type the corpus declined may still be supplied by an import.</summary>
     private static HashSet<string> Fillable(LoadedCorpus corpus)
     {
         var folders = corpus.Adopted.Select(t => t.Folder).ToHashSet(StringComparer.Ordinal);
@@ -1090,8 +1133,10 @@ public static class Validator
 
     private static string Count(int n, string one, string many) => $"{n} {(n == 1 ? one : many)}";
 
-    // A label used for singular and plural alike is a mass noun and takes no article. A label in
-    // capitals takes the article its first letter's name wants: "an ADR", "an NFR".
+    /// <summary>
+    /// A label used for singular and plural alike is a mass noun and takes no article. A label in capitals takes the
+    /// article its first letter's name wants: "an ADR", "an NFR".
+    /// </summary>
     private static string WithArticle(TypeSchema t)
     {
         var name = t.DisplayName;

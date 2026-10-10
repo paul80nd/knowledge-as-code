@@ -19,7 +19,8 @@ public class SchemaTests
     {
         FieldOrder = ["status", "date"],
         Fields = new Dictionary<string, FieldSpec>
-            { ["status"] = new() { Name = "status", Required = true } } // per-type override
+            // Per-type override.
+            { ["status"] = new() { Name = "status", Required = true } }
     };
 
     [Fact]
@@ -47,10 +48,12 @@ public class SchemaTests
     {
         var edges = TypeSchema.DeriveKeyOrderEdges(["id", "status", "owner"], []);
 
-        Assert.Contains(("id", "owner"), edges); // not neighbours, still ordered
+        // Not neighbours, still ordered.
+        Assert.Contains(("id", "owner"), edges);
         Assert.Contains(("id", "status"), edges);
         Assert.Contains(("status", "owner"), edges);
-        Assert.DoesNotContain(("owner", "id"), edges); // the constraint has a direction
+        // The constraint has a direction.
+        Assert.DoesNotContain(("owner", "id"), edges);
         Assert.Equal(3, edges.Count);
     }
 

@@ -36,7 +36,9 @@ public sealed class YStatementPresent : IDocumentRule
     private static readonly string[] Moves =
         ["in the context of", "facing", "we decided", "rather than", "to achieve", "accepting"];
 
-    // Asked of the rendered text, in whole words, so `facing` is not found inside `surfacing`.
+    /// <summary>
+    /// Asked of the rendered text, in whole words, so <c>facing</c> is not found inside <c>surfacing</c>.
+    /// </summary>
     public static List<string> MissingMoves(string text)
     {
         var words = new string(text.Select(c => char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ').ToArray())

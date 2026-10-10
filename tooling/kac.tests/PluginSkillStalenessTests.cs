@@ -8,14 +8,18 @@ public class PluginSkillStalenessTests
 {
     private static readonly string Plugin = Path.Combine(Repo.Root, "template", ".plugin");
 
-    // Every lookup skill writes this heading about its own noun, so the words after it are the type's.
+    /// <summary>
+    /// Every lookup skill writes this heading about its own noun, so the words after it are the type's.
+    /// </summary>
     private const string Opens = "## Say when ";
     private const string Closes = " is unsettled";
 
     private const string Taken = "generatedAt";
 
-    // Which type each skill reads, taken from the plugin manifest. `requires` is what the bundler trims a
-    // component against, so a second list here would be free to disagree with the one that ships.
+    /// <summary>
+    /// Which type each skill reads, taken from the plugin manifest. <c>requires</c> is what the bundler trims a
+    /// component against, so a second list here would be free to disagree with the one that ships.
+    /// </summary>
     public static TheoryData<string, string> Each()
     {
         var manifest = JsonRead.Parse(Files.ReadLf(Path.Combine(Plugin, ".claude-plugin", "plugin.json")));
@@ -88,8 +92,10 @@ public class PluginSkillStalenessTests
             .Order(StringComparer.Ordinal);
     }
 
-    // A type declaring parts writes the line's own keys, and one without them exports the record's
-    // frontmatter under the schema's names.
+    /// <summary>
+    /// A type declaring parts writes the line's own keys, and one without them exports the record's frontmatter under
+    /// the schema's names.
+    /// </summary>
     private static IEnumerable<string> Carried(TypeSchema type)
     {
         var line = type.DeclaredExport.Line.Select(f => f.Key).ToHashSet(StringComparer.Ordinal);

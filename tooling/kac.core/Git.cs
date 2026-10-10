@@ -3,17 +3,19 @@ using System.Diagnostics;
 
 namespace kac.core;
 
-// What one git command came to. `Error` is git's stderr, which says why a clone failed.
+/// <summary>What one git command came to. <c>Error</c> is git's stderr, which says why a clone failed.</summary>
 public sealed record GitRun(int ExitCode, string Output, string Error)
 {
     public bool Ok => ExitCode == 0;
 }
 
-// Most of these return null where git is unavailable or the tree is not a repository, because the tool goes
-// on working in both. `Attempt` also returns a failed run, for the caller that reports it.
+/// <summary>
+/// Most of these return null where git is unavailable or the tree is not a repository, because the tool goes on working
+/// in both. <c>Attempt</c> also returns a failed run, for the caller that reports it.
+/// </summary>
 public static class Git
 {
-    // Everything a git command said, or null where git could not be started.
+    /// <summary>Everything a git command said, or null where git could not be started.</summary>
     public static GitRun? Attempt(string root, string args,
         IReadOnlyDictionary<string, string>? environment = null)
     {
@@ -49,16 +51,16 @@ public static class Git
         }
     }
 
-    // Standard output, or null where the command could not be run or exited non-zero.
+    /// <summary>Standard output, or null where the command could not be run or exited non-zero.</summary>
     public static string? Run(string root, string args) =>
         Attempt(root, args) is { Ok: true } run ? run.Output : null;
 
-    // The full commit id the tree stands on.
+    /// <summary>The full commit id the tree stands on.</summary>
     public static string? Head(string root) => Run(root, "rev-parse HEAD")?.Trim() is { Length: > 0 } sha
         ? sha
         : null;
 
-    // Null where git could not answer, which is not the same as clean.
+    /// <summary>Null where git could not answer, which is not the same as clean.</summary>
     public static bool? Dirty(string root) =>
         Run(root, "status --porcelain") is { } status ? status.Trim().Length > 0 : null;
 }

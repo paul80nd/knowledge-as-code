@@ -9,60 +9,81 @@ namespace kac.core;
 
 public class LinkRef
 {
-    public string Target = ""; // the url, taken from the definition where a label stands in for it
+    /// <summary>The url, taken from the definition where a label stands in for it.</summary>
+    public string Target = "";
     public int Line;
-    public bool IsReference; // a reference or shortcut link, which names a definition rather than a url
-    public string? Label; // the definition's label, which is what resolved the target
+    /// <summary>A reference or shortcut link, which names a definition rather than a url.</summary>
+    public bool IsReference;
+    /// <summary>The definition's label, which is what resolved the target.</summary>
+    public string? Label;
 
-    // Spelled as the use site spells it, which may differ from `Label` in case. Null where the reader is shown
-    // something else: an inline link, or a full reference displaying its own words.
+    /// <summary>
+    /// Spelled as the use site spells it, which may differ from <c>Label</c> in case. Null where the reader is shown
+    /// something else: an inline link, or a full reference displaying its own words.
+    /// </summary>
     public string? DisplayedLabel;
 
-    // Offset in the document's text, so a rule can compare it with a part's body span.
+    /// <summary>Offset in the document's text, so a rule can compare it with a part's body span.</summary>
     public int Position;
 }
 
-// One part as the parser found it, not as it should be. The validator makes every judgement. A table row's
-// `Id` is null where the parser read none, and a heading's only where its slug is empty. `BoldLead` is always
-// null for a heading.
+/// <summary>
+/// One part as the parser found it, not as it should be. The validator makes every judgement. A table row's <c>Id</c>
+/// is null where the parser read none, and a heading's only where its slug is empty. <c>BoldLead</c> is always null for
+/// a heading.
+/// </summary>
 public class PartRow
 {
-    public string? Id;         // the part's own id: the Id cell's code span, or a heading's slug
-    public string IdText = ""; // the Id cell flattened, for quoting back when it is not a span
-    public string Text = "";   // the Clause cell flattened, or the heading as written
-    public string? BoldLead;   // the leading bold run's text, when the cell opens with one
+    /// <summary>The part's own id: the Id cell's code span, or a heading's slug.</summary>
+    public string? Id;
+    /// <summary>The Id cell flattened, for quoting back when it is not a span.</summary>
+    public string IdText = "";
+    /// <summary>The Clause cell flattened, or the heading as written.</summary>
+    public string Text = "";
+    /// <summary>The leading bold run's text, when the cell opens with one.</summary>
+    public string? BoldLead;
     public int Line;
 
-    // Null for a heading. The first two cells are read into `Id` and `Text`. Further columns reach a reader
-    // through `parts.columns:` and an export line's `column.<Header>`.
+    /// <summary>
+    /// Null for a heading. The first two cells are read into <c>Id</c> and <c>Text</c>. Further columns reach a reader
+    /// through <c>parts.columns:</c> and an export line's <c>column.&lt;Header&gt;</c>.
+    /// </summary>
     public IReadOnlyDictionary<string, string>? Cells;
 
-    // The link labels each cell writes, in order. Flattening drops where a label ended, so
-    // `[ISO 27001:2022].A.8.24` arrives in `Cells` as `ISO 27001:2022.A.8.24`.
+    /// <summary>
+    /// The link labels each cell writes, in order. Flattening drops where a label ended, so <c>[ISO
+    /// 27001:2022].A.8.24</c> arrives in <c>Cells</c> as <c>ISO 27001:2022.A.8.24</c>.
+    /// </summary>
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? CellLinks;
 
-    // The body of a part written as a heading: up to the next part, the end of its section or the end of the
-    // document. Both zero for a table row, whose body is the row.
+    /// <summary>
+    /// The body of a part written as a heading: up to the next part, the end of its section or the end of the document.
+    /// Both zero for a table row, whose body is the row.
+    /// </summary>
     public int BodyStart;
     public int BodyEnd;
 
     public ReadOnlySpan<char> Body(string text) =>
         BodyEnd > BodyStart ? text.AsSpan()[BodyStart..Math.Min(BodyEnd, text.Length)] : default;
 
-    // False for a part written as a table row.
+    /// <summary>False for a part written as a table row.</summary>
     public bool Contains(Markdig.Syntax.SourceSpan span) =>
         BodyEnd > BodyStart && span.Start >= BodyStart && span.End <= BodyEnd;
 }
 
-// One labelled footnote and its citations: `_**Covers:** [pol-SCRT].EMBED_`, the last block of its section.
-// `Italic` is false where a space inside the underscores stopped markdown reading them. A line failing either
-// flag is kept, so it is reported and its citations still count.
+/// <summary>
+/// One labelled footnote and its citations: <c>_**Covers:** [pol-SCRT].EMBED_</c>, the last block of its section.
+/// <c>Italic</c> is false where a space inside the underscores stopped markdown reading them. A line failing either
+/// flag is kept, so it is reported and its citations still count.
+/// </summary>
 public record CitationFootnote(int Line, bool Italic, bool ClosesSection, IReadOnlyList<string> Citations);
 
-// One H2. Its body runs to the next H1 or H2, so a sub-heading stands inside the section above it.
+/// <summary>One H2. Its body runs to the next H1 or H2, so a sub-heading stands inside the section above it.</summary>
 public record Section(string Title, int Line, int BodyStart, int BodyEnd);
 
-// A template has no id, no filename to agree with and no values filled in, so checks branch on the kind.
+/// <summary>
+/// A template has no id, no filename to agree with and no values filled in, so checks branch on the kind.
+/// </summary>
 public enum DocKind
 {
     Record,
@@ -77,63 +98,76 @@ public partial class Doc
     public required string Text;
     public required MarkdownDocument Ast;
 
-    public YamlMappingNode? Front; // the frontmatter mapping, read with the representation model
+    /// <summary>The frontmatter mapping, read with the representation model.</summary>
+    public YamlMappingNode? Front;
     public readonly List<string> FrontKeys = [];
-    public int FrontStartLine; // 1-based line where the frontmatter block begins
+    /// <summary>1-based line where the frontmatter block begins.</summary>
+    public int FrontStartLine;
 
-    // The first character after the frontmatter, or 0 where there is none. A check reads the source from here,
-    // because a credential is likeliest in a fenced block, which the flattened text drops.
+    /// <summary>
+    /// The first character after the frontmatter, or 0 where there is none. A check reads the source from here, because
+    /// a credential is likeliest in a fenced block, which the flattened text drops.
+    /// </summary>
     public int BodyStart;
 
     public string? H1;
     public int H1Line;
 
-    // The raw code spans of the paragraph directly beneath the H1, in order: "`Policy: pol-A11Y` `DRAFT`". Null
-    // where that paragraph does not open with a code span. Never an empty list.
+    /// <summary>
+    /// The raw code spans of the paragraph directly beneath the H1, in order: "<c>Policy: pol-A11Y</c> <c>DRAFT</c>".
+    /// Null where that paragraph does not open with a code span. Never an empty list.
+    /// </summary>
     public List<string>? IdentitySpans;
     public int IdentityLine;
 
-    // `PartTableHeaders` is null where the part section holds no table, which tells a missing section from one
-    // holding prose. `PartRefs` collects every citation of a part, in every form, from anywhere in the document.
+    /// <summary>
+    /// <c>PartTableHeaders</c> is null where the part section holds no table, which tells a missing section from one
+    /// holding prose. <c>PartRefs</c> collects every citation of a part, in every form, from anywhere in the document.
+    /// </summary>
     public List<string>? PartTableHeaders;
     public readonly List<PartRow> Parts = [];
     public int PartSectionLine;
     public int PartTableLine;
     public readonly List<(string Ref, int Line)> PartRefs = [];
 
-    // Citations written with a colon, kept apart so the validator can name the right separator.
+    /// <summary>Citations written with a colon, kept apart so the validator can name the right separator.</summary>
     public readonly List<(string Ref, int Line)> ColonCitations = [];
 
     public readonly List<Section> Sections = [];
     public readonly List<LinkRef> Links = [];
     public readonly List<string> DefinedLabels = [];
 
-    // Keyed by label, because a reference holds only the label. A label defined twice keeps the first target, which
-    // is the one a renderer resolves.
+    /// <summary>
+    /// Keyed by label, because a reference holds only the label. A label defined twice keeps the first target, which is
+    /// the one a renderer resolves.
+    /// </summary>
     public readonly Dictionary<string, string> DefinedTargets = new(StringComparer.OrdinalIgnoreCase);
 
-    // Definitions render as nothing, so an export leaves these spans out of a section's prose.
+    /// <summary>Definitions render as nothing, so an export leaves these spans out of a section's prose.</summary>
     public readonly List<(int Start, int End)> DefinitionSpans = [];
     public readonly HashSet<string> UsedLabels = new(StringComparer.OrdinalIgnoreCase);
     public readonly List<(string inner, int line)> BareBracketTokens = [];
     public QuoteBlock? YStatement;
 
-    // Keyed by the mirrored section, because a type may mirror two. A section the document lacks arrives as an
-    // empty list, so every id in the field is reported.
+    /// <summary>
+    /// Keyed by the mirrored section, because a type may mirror two. A section the document lacks arrives as an empty
+    /// list, so every id in the field is reported.
+    /// </summary>
     public IReadOnlyDictionary<string, List<LinkRef>> MirroredSectionLinks =
         new Dictionary<string, List<LinkRef>>(StringComparer.OrdinalIgnoreCase);
 
-    // Keyed by label, for the same reason. A label no line carries arrives as an empty list.
+    /// <summary>Keyed by label, for the same reason. A label no line carries arrives as an empty list.</summary>
     public IReadOnlyDictionary<string, List<CitationFootnote>> CitationFootnotes =
         new Dictionary<string, List<CitationFootnote>>(StringComparer.OrdinalIgnoreCase);
 
-    // `requireFrontmatter: false` reads a type page or a framework document for its prose.
+    /// <summary><c>requireFrontmatter: false</c> reads a type page or a framework document for its prose.</summary>
     public static Doc? Parse(string rel, string text, Schema schema, bool requireFrontmatter = true)
     {
         var ast = Md.Parse(text);
 
         var fmBlock = ast.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-        if (fmBlock is null && requireFrontmatter) return null; // not migrated, so the caller counts and skips
+        // Not migrated, so the caller counts and skips.
+        if (fmBlock is null && requireFrontmatter) return null;
 
         var top = rel.Split('/')[0];
         schema.ByFolder.TryGetValue(top, out var type);
@@ -258,14 +292,21 @@ public partial class Doc
         return doc;
     }
 
-    // Named so the schema's word, the arm resolving it and the index grouping on it cannot drift apart.
+    /// <summary>
+    /// Named so the schema's word, the arm resolving it and the index grouping on it cannot drift apart.
+    /// </summary>
     public const string SubPath = "sub-path";
 
-    // `SchemaChecks` refuses a `from:` not in this list, so an unresolvable source is reported at the schema.
+    /// <summary>
+    /// <c>SchemaChecks</c> refuses a <c>from:</c> not in this list, so an unresolvable source is reported at the
+    /// schema.
+    /// </summary>
     public static readonly IReadOnlySet<string> DerivedSources =
         new HashSet<string>([SubPath], StringComparer.Ordinal);
 
-    // Null where the type derives nothing for this key. One arm per source in `DerivedSources`.
+    /// <summary>
+    /// Null where the type derives nothing for this key. One arm per source in <c>DerivedSources</c>.
+    /// </summary>
     public string? Derived(string key) =>
         Type?.Fields.GetValueOrDefault(key)?.From switch
         {
@@ -273,8 +314,10 @@ public partial class Doc
             _ => null
         };
 
-    // Empty for a record sitting directly in its type folder, which every caller reads as unset. See
-    // `docs/design/discovery.md`.
+    /// <summary>
+    /// Empty for a record sitting directly in its type folder, which every caller reads as unset. See
+    /// <c>docs/design/discovery.md</c>.
+    /// </summary>
     private string SubPathValue()
     {
         if (Folder.Length == 0 || Rel.Length <= Folder.Length) return "";
@@ -284,15 +327,20 @@ public partial class Doc
         return cut < 0 ? "" : under[..cut];
     }
 
-    // Derived first, because a derived key is never the author's: `derived-key` reports one written, and this
-    // keeps the two from disagreeing. `FrontList` reads the same way, so `field()` and `present()` agree.
+    /// <summary>
+    /// Derived first, because a derived key is never the author's: <c>derived-key</c> reports one written, and this
+    /// keeps the two from disagreeing. <c>FrontList</c> reads the same way, so <c>field()</c> and <c>present()</c>
+    /// agree.
+    /// </summary>
     public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null
         : (from kv in Front.Children
             where ((YamlScalarNode)kv.Key).Value == key
             select (kv.Value as YamlScalarNode)?.Value).FirstOrDefault());
 
-    // A scalar is the one-entry case, so a check asks the same of `depends-on: [a, b]` and `successor: x`.
+    /// <summary>
+    /// A scalar is the one-entry case, so a check asks the same of <c>depends-on: [a, b]</c> and <c>successor: x</c>.
+    /// </summary>
     public List<string> FrontList(string key)
     {
         // An empty derivation is no entries, which makes `present()` false for a record filed flat.
@@ -313,7 +361,7 @@ public partial class Doc
         return values;
     }
 
-    // For display. A mapping entry reads as its `naming` key, which the schema chooses.
+    /// <summary>For display. A mapping entry reads as its <c>naming</c> key, which the schema chooses.</summary>
     public List<string> FrontEntries(string key, string? naming)
     {
         var values = new List<string>();
@@ -341,8 +389,10 @@ public partial class Doc
         return values;
     }
 
-    // The node as written, for an export, which needs mappings intact. A derived field comes back as a scalar,
-    // and an empty derivation as null, so a flat record exports the field as unset.
+    /// <summary>
+    /// The node as written, for an export, which needs mappings intact. A derived field comes back as a scalar, and an
+    /// empty derivation as null, so a flat record exports the field as unset.
+    /// </summary>
     public YamlNode? FrontNode(string key)
     {
         if (Derived(key) is { } derived)
@@ -355,8 +405,10 @@ public partial class Doc
                 select kv.Value).FirstOrDefault();
     }
 
-    // A paragraph after the H1 that opens with a code span is an attempted identity line, so a wrong span count
-    // is reported as malformed rather than missing. The span count also catches stray prose between spans.
+    /// <summary>
+    /// A paragraph after the H1 that opens with a code span is an attempted identity line, so a wrong span count is
+    /// reported as malformed rather than missing. The span count also catches stray prose between spans.
+    /// </summary>
     private static void ReadIdentity(MarkdownDocument ast, Doc doc)
     {
         var blocks = ast.ToList();
@@ -369,20 +421,27 @@ public partial class Doc
         doc.IdentityLine = p.Line + 1;
     }
 
-    // `pol-VURM.TIMEBOX` or `gls-knowledge-as-code.corpus`, optionally scoped as `eng:pol-VURM.TIMEBOX`.
-    // Loose on case and width after the prefix, so the validator reports a mis-cased id the parser still sees.
+    /// <summary>
+    /// <c>pol-VURM.TIMEBOX</c> or <c>gls-knowledge-as-code.corpus</c>, optionally scoped as
+    /// <c>eng:pol-VURM.TIMEBOX</c>. Loose on case and width after the prefix, so the validator reports a mis-cased id
+    /// the parser still sees.
+    /// </summary>
     [System.Text.RegularExpressions.GeneratedRegex(
         @"^(?:[a-z0-9]+:)?[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z0-9][A-Za-z0-9_-]*$")]
     private static partial System.Text.RegularExpressions.Regex PartCitationRegex();
 
-    // An imported record cited whole, as `eng:pol-VURM`. A local id in a code span is a mention, not a citation,
-    // so only a scoped one is collected.
+    /// <summary>
+    /// An imported record cited whole, as <c>eng:pol-VURM</c>. A local id in a code span is a mention, not a citation,
+    /// so only a scoped one is collected.
+    /// </summary>
     [System.Text.RegularExpressions.GeneratedRegex(@"^[a-z0-9]+:[a-z]{2,4}-[A-Za-z0-9][A-Za-z0-9-]*$")]
     private static partial System.Text.RegularExpressions.Regex ScopedRecordRegex();
 
-    // The `.TIMEBOX` after `[pol-VURM].TIMEBOX`, read off the following text so a closing emphasis delimiter
-    // is not taken into the id. Nothing may stand between separator and id, so `See [pol-VURM]. The` cites no
-    // part. A colon is collected too, for `ColonCitationRegex` to word.
+    /// <summary>
+    /// The <c>.TIMEBOX</c> after <c>[pol-VURM].TIMEBOX</c>, read off the following text so a closing emphasis delimiter
+    /// is not taken into the id. Nothing may stand between separator and id, so <c>See [pol-VURM]. The</c> cites no
+    /// part. A colon is collected too, for <c>ColonCitationRegex</c> to word.
+    /// </summary>
     private static string PartSuffix(LinkInline link)
     {
         if (link.NextSibling is not LiteralInline next) return "";
@@ -396,8 +455,10 @@ public partial class Doc
         return after[..end];
     }
 
-    // Null where the link cites nothing. A label already carrying a part id ends the citation, so no second
-    // one is read onto it.
+    /// <summary>
+    /// Null where the link cites nothing. A label already carrying a part id ends the citation, so no second one is
+    /// read onto it.
+    /// </summary>
     private static string? LinkCitation(LinkInline link, Schema schema)
     {
         var cited = link.Reference?.Label ?? (link.FirstChild as LiteralInline)?.Content.ToString();
@@ -406,7 +467,9 @@ public partial class Doc
         return PartCitationRegex().IsMatch(cited) ? cited : cited + PartSuffix(link);
     }
 
-    // Asks the schema's prefixes, so `vurm-vulnerability-remediation.md` in a code span is not a citation.
+    /// <summary>
+    /// Asks the schema's prefixes, so <c>vurm-vulnerability-remediation.md</c> in a code span is not a citation.
+    /// </summary>
     private static bool NamesARecord(string content, Schema schema)
     {
         // The scope comes off first: a shortcode has no hyphen, so `eng:pol` would match no type.
@@ -417,7 +480,7 @@ public partial class Doc
     private static bool Cites(string text) =>
         PartCitationRegex().IsMatch(text) || ScopedRecordRegex().IsMatch(text);
 
-    // `std-A11Y:WCAG`. An id must sit left of the colon, which keeps `eng:pol-VURM` out.
+    /// <summary><c>std-A11Y:WCAG</c>. An id must sit left of the colon, which keeps <c>eng:pol-VURM</c> out.</summary>
     [System.Text.RegularExpressions.GeneratedRegex("^[a-z]{2,4}-[A-Za-z0-9]+:[A-Za-z0-9]+$")]
     private static partial System.Text.RegularExpressions.Regex ColonCitationRegex();
 
@@ -467,8 +530,10 @@ public partial class Doc
         }
     }
 
-    // The id is the heading's slug, the anchor a link would use, so a citation and a link name one entry. A
-    // heading of punctuation alone leaves the id null.
+    /// <summary>
+    /// The id is the heading's slug, the anchor a link would use, so a citation and a link name one entry. A heading of
+    /// punctuation alone leaves the id null.
+    /// </summary>
     private static PartRow AddHeading(Doc doc, HeadingBlock h)
     {
         var text = Md.PlainText(h.Inline);
@@ -486,7 +551,9 @@ public partial class Doc
         return row;
     }
 
-    // Every row gives a `PartRow`, however malformed, so "no table here" is the only thing the parser decides.
+    /// <summary>
+    /// Every row gives a <c>PartRow</c>, however malformed, so "no table here" is the only thing the parser decides.
+    /// </summary>
     private static void ReadTable(Doc doc, Markdig.Extensions.Tables.Table table)
     {
         doc.PartTableLine = table.Line + 1;
@@ -557,7 +624,7 @@ public partial class Doc
         return string.Join("\n", lines);
     }
 
-    // Only direct children are joined at each level, so a literal is scanned once.
+    /// <summary>Only direct children are joined at each level, so a literal is scanned once.</summary>
     private static void ScanContainer(ContainerInline container, List<(string, int)> outp)
     {
         var run = new StringBuilder();
@@ -617,8 +684,10 @@ public partial class Doc
         return line;
     }
 
-    // The form is a whole line in italic opening on a bold label: `**Not:**` alone is prose. Nested paragraphs
-    // are read too, so a footnote inside a list item is reported where it sits, not dropped.
+    /// <summary>
+    /// The form is a whole line in italic opening on a bold label: <c>**Not:**</c> alone is prose. Nested paragraphs
+    /// are read too, so a footnote inside a list item is reported where it sits, not dropped.
+    /// </summary>
     private static Dictionary<string, List<CitationFootnote>> Footnotes(
         MarkdownDocument ast, Schema schema, IEnumerable<string?>? labels)
     {
@@ -679,14 +748,14 @@ public partial class Doc
         return result;
     }
 
-    // Either mark, since an author may reach for the wrong pair.
+    /// <summary>Either mark, since an author may reach for the wrong pair.</summary>
     private static bool Unpaired(string text)
     {
         var run = text.Trim();
         return run.Length > 0 && (run.All(c => c == '_') || run.All(c => c == '*'));
     }
 
-    // A soft line break ends it, because the prose after one is not the footnote's.
+    /// <summary>A soft line break ends it, because the prose after one is not the footnote's.</summary>
     private static IEnumerable<MarkdownObject> OnTheLine(Inline? from)
     {
         for (var node = from; node is not null and not LineBreakInline; node = node.NextSibling)
@@ -698,16 +767,18 @@ public partial class Doc
         }
     }
 
-    // The label this link shows a reader, or null where it shows something else. `IsShortcut` does not separate a
-    // collapsed reference from a full one, so the flattened text does. A label carrying emphasis or a code span
-    // answers null, and is judged at its definition alone.
+    /// <summary>
+    /// The label this link shows a reader, or null where it shows something else. <c>IsShortcut</c> does not separate a
+    /// collapsed reference from a full one, so the flattened text does. A label carrying emphasis or a code span
+    /// answers null, and is judged at its definition alone.
+    /// </summary>
     private static string? Displayed(LinkInline link) =>
         link.Label is { } label && Md.PlainText(link) == label ? label : null;
 
-    // Without the colon the form puts after it, so schema and document compare equal.
+    /// <summary>Without the colon the form puts after it, so schema and document compare equal.</summary>
     private static string Label(string text) => text.Trim().TrimEnd(':').TrimEnd();
 
-    // An H1 ends the open section, and a heading deeper than H2 leaves it open.
+    /// <summary>An H1 ends the open section, and a heading deeper than H2 leaves it open.</summary>
     private static Dictionary<string, List<LinkRef>> SectionLinks(
         MarkdownDocument ast, IEnumerable<string?>? sectionTitles)
     {
@@ -744,8 +815,10 @@ public partial class Doc
         return result;
     }
 
-    // The inline content of each leaf carrying any. A `where` in a query cannot tell the `from` after
-    // it that it settled the value, so the leaves without content are dropped here instead.
+    /// <summary>
+    /// The inline content of each leaf carrying any. A <c>where</c> in a query cannot tell the <c>from</c> after it
+    /// that it settled the value, so the leaves without content are dropped here instead.
+    /// </summary>
     private static IEnumerable<ContainerInline> Inlines(IEnumerable<LeafBlock> leaves)
     {
         foreach (var leaf in leaves)
@@ -753,7 +826,9 @@ public partial class Doc
                 yield return inline;
     }
 
-    // Itself included when it is a leaf. Inlines hang off leaves, so this reaches a link written as prose.
+    /// <summary>
+    /// Itself included when it is a leaf. Inlines hang off leaves, so this reaches a link written as prose.
+    /// </summary>
     private static IEnumerable<LeafBlock> Leaves(Block block) =>
         block is LeafBlock leaf ? [leaf] : ((ContainerBlock)block).Descendants<LeafBlock>();
 }

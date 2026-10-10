@@ -72,13 +72,15 @@ public class ContentVersionTests
             .Select(dir => new DirectoryInfo(dir).Name)
             .ToHashSet(StringComparer.Ordinal);
 
-    // A stamp edited downwards has not risen. A corpus this branch created has no descriptor at `before`,
-    // so its first stamp stands.
+    /// <summary>
+    /// A stamp edited downwards has not risen. A corpus this branch created has no descriptor at <c>before</c>, so its
+    /// first stamp stands.
+    /// </summary>
     private static bool Rose(string corpus, string before) =>
         Git.Run(Repo.Root, $"show {before}:{RecordPath.Published}/{corpus}/{Descriptor}") is not { } then
         || VersionRange.Newer(Stated(corpus) ?? "", Version(then) ?? "");
 
-    // Null where the descriptor states none.
+    /// <summary>Null where the descriptor states none.</summary>
     private static string? Stated(string corpus) =>
         Version(Files.ReadLf(Path.Combine(Repo.Root, RecordPath.Published, corpus, Descriptor)));
 

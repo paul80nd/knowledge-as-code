@@ -9,8 +9,10 @@ public static class Harness
 {
     internal static readonly string RepoRoot = FindRepoRoot();
 
-    // The day every scenario is judged against, fixed so a rule written against `today()` gives one answer.
-    // `FixtureDateTests` in `kac.tests` keeps the fixtures' dates clear of it.
+    /// <summary>
+    /// The day every scenario is judged against, fixed so a rule written against <c>today()</c> gives one answer.
+    /// <c>FixtureDateTests</c> in <c>kac.tests</c> keeps the fixtures' dates clear of it.
+    /// </summary>
     internal static readonly DateOnly Today = new(2026, 6, 15);
 
     public static ValidationResult Validate(string fixtureName)
@@ -44,7 +46,10 @@ public static class Harness
         }
     }
 
-    // Found by the solution file, not a `.corpus.yaml`: the specs need the engine, the fixtures and the schema at once.
+    /// <summary>
+    /// Found by the solution file, not a <c>.corpus.yaml</c>: the specs need the engine, the fixtures and the schema at
+    /// once.
+    /// </summary>
     private static string FindRepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);

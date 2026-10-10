@@ -66,7 +66,10 @@ public class RuleExprTests
     public void Field_reads_a_frontmatter_scalar()
         => Assert.True(Eval("field('status') == 'deprecated'", "id: adr-0001\nstatus: deprecated"));
 
-    // The literal is `Required.Today` written out, so a move of that day fails here rather than everywhere at once.
+    /// <summary>
+    /// The literal is <c>Required.Today</c> written out, so a move of that day fails here rather than everywhere at
+    /// once.
+    /// </summary>
     [Fact]
     public void Today_is_the_run_day_as_an_iso_date()
         => Assert.True(Eval("today() == '2026-06-15'"));
@@ -163,7 +166,8 @@ public class RuleExprTests
         const string rule = "present('detected-at') and present('occurred-at') "
                             + "implies field('detected-at') >= field('occurred-at')";
 
-        Assert.True(Eval(rule)); // neither present
+        // Neither present.
+        Assert.True(Eval(rule));
         Assert.True(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-12\"\noccurred-at: \"2026-06-11\""));
         Assert.False(Eval(rule, "id: adr-0001\ndetected-at: \"2026-06-10\"\noccurred-at: \"2026-06-11\""));
     }
@@ -173,7 +177,9 @@ public class RuleExprTests
         => Assert.True(Eval("span('occurred-at', 'restored-at') == 'PT40M'",
             "id: pmt-0001\noccurred-at: 2026-06-12T09:00:00Z\nrestored-at: 2026-06-12T09:40:00Z"));
 
-    // What `span()` promises a rule that calls it. docs/design/expressions.md says why never days.
+    /// <summary>
+    /// What <c>span()</c> promises a rule that calls it. docs/design/expressions.md says why never days.
+    /// </summary>
     [Theory]
     [InlineData("2026-06-03T21:14:00Z", "2026-06-03T21:26:00Z", "PT12M")]
     [InlineData("2026-08-12T18:05:00Z", "2026-08-12T22:25:00Z", "PT4H20M")]
@@ -196,7 +202,7 @@ public class RuleExprTests
         => Assert.True(Eval("days('accepted-on', 'review-by') == 184",
             "id: dev-a\naccepted-on: \"2026-03-07\"\nreview-by: \"2026-09-07\""));
 
-    // Six calendar months runs from 181 days to 184.
+    /// <summary>Six calendar months runs from 181 days to 184.</summary>
     [Theory]
     [InlineData("2026-01-07", "2026-07-07", 181)]
     [InlineData("2026-03-07", "2026-09-07", 184)]
@@ -215,13 +221,15 @@ public class RuleExprTests
     public void A_gap_nothing_can_measure_is_zero(string? from, string? to)
         => Assert.Equal(0, Instants.Days(from, to));
 
-    // `Required.Today` is 2026-06-15, so the record states the day 92 before it.
+    /// <summary><c>Required.Today</c> is 2026-06-15, so the record states the day 92 before it.</summary>
     [Fact]
     public void An_age_in_days_is_callable_from_an_expression()
         => Assert.True(Eval("days_since('last-rehearsed') == 92",
             "id: prc-a\nlast-rehearsed: \"2026-03-15\""));
 
-    // Measured against `Required.Today`, 2026-06-15. A date the run has not reached measures nothing and is zero.
+    /// <summary>
+    /// Measured against <c>Required.Today</c>, 2026-06-15. A date the run has not reached measures nothing and is zero.
+    /// </summary>
     [Theory]
     [InlineData("2026-03-15", 92)]
     [InlineData("2025-06-14", 366)]
@@ -320,7 +328,9 @@ public class RuleExprTests
         Assert.Contains(expected, ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    // A doubled quote is one quote, as in YAML and SQL. The pattern below is the character class ["'].
+    /// <summary>
+    /// A doubled quote is one quote, as in YAML and SQL. The pattern below is the character class ["'].
+    /// </summary>
     [Fact]
     public void A_doubled_quote_is_one_quote()
     {

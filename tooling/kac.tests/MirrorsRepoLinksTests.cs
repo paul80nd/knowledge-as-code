@@ -99,7 +99,9 @@ public class MirrorsRepoLinksTests
                + $"# Lending\n\n## What it does\n\nLends.\n\n## Where it lives\n\n{section}\n{after}",
             reposBase);
 
-    // One service record, written as a corpus holds it, so the rule reads it exactly as it reads one.
+    /// <summary>
+    /// One service record, written as a corpus holds it, so the rule reads it exactly as it reads one.
+    /// </summary>
     private static List<Finding> Run(string text, string? reposBase)
     {
         var services = new TypeSchema

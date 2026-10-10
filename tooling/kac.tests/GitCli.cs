@@ -3,12 +3,16 @@ using System.Diagnostics;
 
 namespace kac.tests;
 
-// git, for the tests that need a real repository rather than a folder. Every method answers false where
-// git could not be run or did not succeed, and a test meeting that returns rather than failing.
+/// <summary>
+/// git, for the tests that need a real repository rather than a folder. Every method answers false where git could not
+/// be run or did not succeed, and a test meeting that returns rather than failing.
+/// </summary>
 internal static class GitCli
 {
-    // A repository with one commit in it, holding whatever the caller has already written there. The
-    // branch is named rather than left to `init.defaultBranch`, so a test cloning a ref knows which.
+    /// <summary>
+    /// A repository with one commit in it, holding whatever the caller has already written there. The branch is named
+    /// rather than left to <c>init.defaultBranch</c>, so a test cloning a ref knows which.
+    /// </summary>
     internal const string Branch = "main";
 
     internal static bool Repository(string root) =>

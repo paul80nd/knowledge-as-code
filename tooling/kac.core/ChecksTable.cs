@@ -1,15 +1,19 @@
 namespace kac.core;
 
-// The "What CI checks" table on a type page, and the gate that checks it against the catalogue.
+/// <summary>The "What CI checks" table on a type page, and the gate that checks it against the catalogue.</summary>
 public static class ChecksTable
 {
-    // A description says what is verified, and a rule's `message:` says what to do about it. `SchemaChecks`
-    // applies the same bound to a schema's own rules.
+    /// <summary>
+    /// A description says what is verified, and a rule's <c>message:</c> says what to do about it. <c>SchemaChecks</c>
+    /// applies the same bound to a schema's own rules.
+    /// </summary>
     public const int DescriptionMax = 120;
 
-    // Hand-curated, not generated from the catalogue: related checks fold into one row, each worded for a skim.
-    // `Problems` verifies the coverage. `When` is null for a row that applies to every type, and otherwise asks
-    // the type's schema whether the check can fire.
+    /// <summary>
+    /// Hand-curated, not generated from the catalogue: related checks fold into one row, each worded for a skim.
+    /// <c>Problems</c> verifies the coverage. <c>When</c> is null for a row that applies to every type, and otherwise
+    /// asks the type's schema whether the check can fire.
+    /// </summary>
     private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
         ("frontmatter-parses", [new("frontmatter-parses")], "Frontmatter is present and is a valid YAML mapping.",
@@ -158,7 +162,7 @@ public static class ChecksTable
             null)
     ];
 
-    // Read from the registries, so renaming a rule cannot stop a page advertising its check.
+    /// <summary>Read from the registries, so renaming a rule cannot stop a page advertising its check.</summary>
     private static readonly IReadOnlyDictionary<CheckId, RuleId> RuleByCheck =
         DocumentRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId)))
             .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
@@ -169,7 +173,9 @@ public static class ChecksTable
         (row.When is null || row.When(t))
         && row.Ids.All(id => !RuleByCheck.TryGetValue(id, out var rule) || t.HasRule(rule));
 
-    // The curated rows, then one per expression rule the type declares, worded by its schema `description:`.
+    /// <summary>
+    /// The curated rows, then one per expression rule the type declares, worded by its schema <c>description:</c>.
+    /// </summary>
     public static string Render(Schema schema, TypeSchema t)
     {
         var severity = schema.Checks.ToDictionary(c => c.Id, c => c.Severity);
@@ -191,8 +197,10 @@ public static class ChecksTable
         return Gfm.RenderTable(headers, rows) + Intentions(t);
     }
 
-    // The rules the type declares that nothing runs: no `expr:`, no class. Kept out of the table, which says only
-    // what a build reports.
+    /// <summary>
+    /// The rules the type declares that nothing runs: no <c>expr:</c>, no class. Kept out of the table, which says only
+    /// what a build reports.
+    /// </summary>
     private static string Intentions(TypeSchema t)
     {
         var intended = t.Rules
@@ -210,7 +218,7 @@ public static class ChecksTable
                + Gfm.RenderTable(headers, rows);
     }
 
-    // Empty where the table covers the catalogue exactly. `kac checks` fails on anything else.
+    /// <summary>Empty where the table covers the catalogue exactly. <c>kac checks</c> fails on anything else.</summary>
     public static IReadOnlyList<string> Problems(Schema schema)
     {
         var catalogue = schema.Checks.Select(c => c.Id).ToHashSet();

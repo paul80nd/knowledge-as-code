@@ -5,12 +5,16 @@ using kac.core;
 
 namespace kac.tests;
 
-// Reads a value a test has already arranged to be there. The read throws where it happened and says
-// what it expected, rather than leaving a `NullReferenceException` several lines further on.
+/// <summary>
+/// Reads a value a test has already arranged to be there. The read throws where it happened and says what it expected,
+/// rather than leaving a <c>NullReferenceException</c> several lines further on.
+/// </summary>
 internal static class Required
 {
-    // For a case about something else, where any day would do. A named day, so a rule written against
-    // `today()` cannot make an unrelated case start failing on a date nobody chose.
+    /// <summary>
+    /// For a case about something else, where any day would do. A named day, so a rule written against <c>today()</c>
+    /// cannot make an unrelated case start failing on a date nobody chose.
+    /// </summary>
     internal static readonly DateOnly Today = new(2026, 6, 15);
 
     internal static string Text(this JsonElement element, string property) =>

@@ -52,8 +52,10 @@ public class MirrorsCitationsTests
         => Assert.Equal(2,
             Reconcile("_**Covers:**_\n\nMore prose under the same heading.").Count);
 
-    // Markdown will not read an underscore with a space against it, so the line is not italic and the
-    // underscores reach the page. The citations still parse, so the field reports nothing about them.
+    /// <summary>
+    /// Markdown will not read an underscore with a space against it, so the line is not italic and the underscores
+    /// reach the page. The citations still parse, so the field reports nothing about them.
+    /// </summary>
     [Theory]
     [InlineData("_**Covers:** [pol-SCRT].ROTATE _")]
     [InlineData("_ **Covers:** [pol-SCRT].ROTATE_")]
@@ -184,8 +186,10 @@ public class MirrorsCitationsTests
         }
     };
 
-    // A standard whose `implements:` reconciles against a `Covers` line, and the policy its clause ids
-    // point at. Two types, because the reconciliation is scoped to the types the field references.
+    /// <summary>
+    /// A standard whose <c>implements:</c> reconciles against a <c>Covers</c> line, and the policy its clause ids point
+    /// at. Two types, because the reconciliation is scoped to the types the field references.
+    /// </summary>
     private static Schema Schema(bool partRequired = true) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
@@ -210,8 +214,10 @@ public class MirrorsCitationsTests
         }
     };
 
-    // The definitions are what make each label a link. A shortcut reference with none behind it is a
-    // bracket in prose, and the citation would never be collected at all.
+    /// <summary>
+    /// The definitions are what make each label a link. A shortcut reference with none behind it is a bracket in prose,
+    /// and the citation would never be collected at all.
+    /// </summary>
     private static List<Finding> Reconcile(string body, params string[] implements)
         => Reconcile(Schema(), body, implements);
 

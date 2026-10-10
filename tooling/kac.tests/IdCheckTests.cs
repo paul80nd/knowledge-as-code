@@ -13,7 +13,7 @@ public class IdCheckTests
     private static TypeSchema Slug() => new()
         { Folder = "tools", IdPrefix = "tol", IdStyle = "slug" };
 
-    // A mnemonic as long as the word it names, filed under a topical slug that carries none of it.
+    /// <summary>A mnemonic as long as the word it names, filed under a topical slug that carries none of it.</summary>
     private static TypeSchema Span() => new()
     {
         Folder = "standards", IdPrefix = "std", IdStyle = "mnemonic", IdWidth = new(2, 7),
@@ -107,8 +107,10 @@ public class IdCheckTests
     public void A_filename_that_carries_no_discriminator_is_left_to_filename_pattern(string id, string rel)
         => Assert.Empty(Run(id, rel, TypeFor(rel)));
 
-    // `secret-handling.md` opens with six letters and a hyphen. Under a type that reads the head of a
-    // filename, any span reaching six binds it to a `std-SECRET` nobody wrote.
+    /// <summary>
+    /// <c>secret-handling.md</c> opens with six letters and a hyphen. Under a type that reads the head of a filename,
+    /// any span reaching six binds it to a <c>std-SECRET</c> nobody wrote.
+    /// </summary>
     [Fact]
     public void A_filename_carrying_no_id_is_not_held_to_the_agreement()
         => Assert.Empty(Run("std-VCS", "standards/common/secret-handling.md", Span()));
@@ -207,8 +209,10 @@ public class IdCheckTests
     public void A_link_to_a_slug_record_is_read_as_its_id(string target, string expected)
         => Assert.Equal(expected, Cite(target, "tools/fd.md", Slug()));
 
-    // Under a slug type a type page is shaped exactly like a record. The folder tells them apart:
-    // `tools.md` sits beside the folder rather than in it.
+    /// <summary>
+    /// Under a slug type a type page is shaped exactly like a record. The folder tells them apart: <c>tools.md</c> sits
+    /// beside the folder rather than in it.
+    /// </summary>
     [Theory]
     [InlineData("/tools.md", "tools/fd.md")]
     [InlineData("../tools.md", "tools/fd.md")]
@@ -228,7 +232,7 @@ public class IdCheckTests
     private static Schema SchemaWith(params TypeSchema[] types) =>
         new() { ByFolder = types.ToDictionary(t => t.Folder) };
 
-    // The style follows the folder, so a theory can name a file and mean a type.
+    /// <summary>The style follows the folder, so a theory can name a file and mean a type.</summary>
     private static TypeSchema TypeFor(string rel) => rel.Split('/')[0] switch
     {
         "adrs" => Numbered(),

@@ -54,7 +54,7 @@ public class TypeSetupTests
         => Assert.Contains(".schema/widgets.yaml",
             Setup(Holding("README.md"), "adrs", "widgets").Select(f => f.Message).First(m => m.Contains("widgets")));
 
-    // Two types, because the last case needs a corpus that has adopted something.
+    /// <summary>Two types, because the last case needs a corpus that has adopted something.</summary>
     private static TypeSchema Type(string key) => new()
     {
         Key = key,
@@ -65,15 +65,19 @@ public class TypeSetupTests
 
     private static Tree Holding(params string[] held) => Holding(held, null);
 
-    // `onDisk` is the file that is there and untracked, which is the state that separates the pass's two
-    // presence questions.
+    /// <summary>
+    /// <c>onDisk</c> is the file that is there and untracked, which is the state that separates the pass's two presence
+    /// questions.
+    /// </summary>
     private static Tree Holding(string[] held, string? onDisk) => new(
         new HashSet<string>(held, StringComparer.Ordinal),
         rel => rel.EndsWith("_template.md") ? "# Template\n" : "# A\n",
         rel => held.Contains(rel, StringComparer.Ordinal) || rel == onDisk);
 
-    // Every `type-setup` finding the corpus produces. `declared` is the corpus's `types:` block, and none
-    // means the corpus has not declared one.
+    /// <summary>
+    /// Every <c>type-setup</c> finding the corpus produces. <c>declared</c> is the corpus's <c>types:</c> block, and
+    /// none means the corpus has not declared one.
+    /// </summary>
     private static List<Finding> Setup(Tree tree, params string[] declared)
     {
         var schema = new Schema

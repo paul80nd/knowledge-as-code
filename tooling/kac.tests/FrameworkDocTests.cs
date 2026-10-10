@@ -48,8 +48,10 @@ public class FrameworkDocTests
         => Assert.Empty(Framework(
             ("knowledge-as-code/draft.md", "# Draft\n\nSee the [ADRs](/adrs).\n"), tracked: false));
 
-    // `adrs` is what the documents above link to, and `glossary` is where the framework's own shared
-    // glossary is filed.
+    /// <summary>
+    /// <c>adrs</c> is what the documents above link to, and <c>glossary</c> is where the framework's own shared
+    /// glossary is filed.
+    /// </summary>
     private static Schema Schema() => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>(StringComparer.Ordinal)
@@ -60,8 +62,10 @@ public class FrameworkDocTests
         }
     };
 
-    // Both types stood up, so every link in the cases above resolves and `framework-names-types` is the
-    // only thing left to report.
+    /// <summary>
+    /// Both types stood up, so every link in the cases above resolves and <c>framework-names-types</c> is the only
+    /// thing left to report.
+    /// </summary>
     private static List<Finding> Framework((string Path, string Text) doc, bool tracked = true)
     {
         string[] corpus =

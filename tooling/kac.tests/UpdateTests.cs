@@ -71,8 +71,10 @@ public class UpdateTests
         Assert.Equal(CorpusDescriptor.Full, settled.Settings.Policy);
     }
 
-    // A manifest holding one rule per layer, and one that relocates. Written here rather than read from
-    // the repository, so a case says what it is about and a rule added upstream cannot rewrite it.
+    /// <summary>
+    /// A manifest holding one rule per layer, and one that relocates. Written here rather than read from the
+    /// repository, so a case says what it is about and a rule added upstream cannot rewrite it.
+    /// </summary>
     private static Manifest Rules() => new()
     {
         Version = 4,

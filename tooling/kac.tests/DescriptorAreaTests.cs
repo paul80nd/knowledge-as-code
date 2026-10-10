@@ -27,7 +27,7 @@ public class DescriptorAreaTests
             TrackerArea = "kac-it-swdev"
         }));
 
-    // GitHub divides one repository's issue list with labels, so it has nothing an area path names.
+    /// <summary>GitHub divides one repository's issue list with labels, so it has nothing an area path names.</summary>
     [Fact]
     public void An_area_beside_a_github_tracker_names_the_target_it_files_on()
     {

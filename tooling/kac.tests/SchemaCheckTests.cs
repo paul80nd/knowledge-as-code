@@ -6,8 +6,9 @@ namespace kac.tests;
 
 public class SchemaCheckTests
 {
-    // The defaults are what a sound type carries, so that a case reports the one fault it declares and
-    // nothing else.
+    /// <summary>
+    /// The defaults are what a sound type carries, so that a case reports the one fault it declares and nothing else.
+    /// </summary>
     private static TypeSchema Widgets(string idStyle = "slug", string folder = "widgets",
         (string Name, FieldSpec Spec)[]? fields = null, RuleSpec[]? rules = null,
         string[]? sections = null, string tier = "descriptive", string summary = "A widget.",
@@ -652,8 +653,10 @@ public class SchemaCheckTests
             parts: new PartSpec(PartSpec.Table, "", ["MUST"], [])
                 { Section = "Terms", Columns = ["Id", "Clause", "Alignment"] })));
 
-    // Asked of the lead here and of an aside below, because each reaches the refusal by its own arm: the lead
-    // through the fixed vocabulary, an aside through the prefixed one.
+    /// <summary>
+    /// Asked of the lead here and of an aside below, because each reaches the refusal by its own arm: the lead through
+    /// the fixed vocabulary, an aside through the prefixed one.
+    /// </summary>
     [Fact]
     public void A_line_source_reading_a_lead_against_a_table_is_reported()
     {
@@ -741,8 +744,10 @@ public class SchemaCheckTests
                 Line = [("id", PartLineSource.PartId), ("title", PartLineSource.PartText)]
             })));
 
-    // A type whose parts and export are otherwise sound, carrying the one line entry under test. Every
-    // other key resolves, so the single finding a test asserts is the one it declared.
+    /// <summary>
+    /// A type whose parts and export are otherwise sound, carrying the one line entry under test. Every other key
+    /// resolves, so the single finding a test asserts is the one it declared.
+    /// </summary>
     private static TypeSchema Line((string Key, string Source) entry, PartSpec? parts = null)
         => Widgets(
             sections: ["Terms"],

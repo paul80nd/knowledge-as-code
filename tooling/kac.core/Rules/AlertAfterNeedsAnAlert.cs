@@ -8,7 +8,9 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
 
     public IReadOnlyList<CheckId> Emits => [Reports];
 
-    // Renaming the field in `.schema/nfrs.yaml` means renaming it here, and nothing holds the two together.
+    /// <summary>
+    /// Renaming the field in <c>.schema/nfrs.yaml</c> means renaming it here, and nothing holds the two together.
+    /// </summary>
     private const string AlertAfter = "alert-after";
 
     private const string MonitoringOutput = "monitoring-output";
@@ -51,8 +53,10 @@ public sealed class AlertAfterNeedsAnAlert : ICorpusRule
         }
     }
 
-    // Answered only where the type declares exactly one such field. With two, which graph the walk follows would turn
-    // on declaration order.
+    /// <summary>
+    /// Answered only where the type declares exactly one such field. With two, which graph the walk follows would turn
+    /// on declaration order.
+    /// </summary>
     private static FieldSpec? PointingField(TypeSchema t)
     {
         var found = t.FieldOrder.Select(n => t.Fields[n])

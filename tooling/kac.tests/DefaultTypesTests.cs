@@ -46,7 +46,7 @@ public partial class DefaultTypesTests
             + string.Join("\n  ", missing));
     }
 
-    // The count the page opens on, spelled as prose spells it.
+    /// <summary>The count the page opens on, spelled as prose spells it.</summary>
     private static readonly string[] Numbers =
     [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
@@ -63,8 +63,10 @@ public partial class DefaultTypesTests
             Page, StringComparison.Ordinal);
     }
 
-    // Tracked files rather than a folder walk, so a worktree under `.claude/` and an untracked scratch
-    // file are somebody else's business.
+    /// <summary>
+    /// Tracked files rather than a folder walk, so a worktree under <c>.claude/</c> and an untracked scratch file are
+    /// somebody else's business.
+    /// </summary>
     [Fact]
     public void No_other_file_states_that_count()
     {

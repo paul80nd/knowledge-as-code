@@ -32,9 +32,11 @@ public class YamlTests : IDisposable
         Assert.Equal(42, Yaml.Int(Yaml.Get(root, "absent"), fallback: 42));
     }
 
-    // Read literally, an unquoted `null` is the string "null", and it passes every emptiness test
-    // downstream, far enough that the glossary's checks table advertises an identity line it can never
-    // carry. Quoting is how someone says they mean the word itself.
+    /// <summary>
+    /// Read literally, an unquoted <c>null</c> is the string "null", and it passes every emptiness test downstream, far
+    /// enough that the glossary's checks table advertises an identity line it can never carry. Quoting is how someone
+    /// says they mean the word itself.
+    /// </summary>
     [Theory]
     [InlineData("folder: null\n", null)]
     [InlineData("folder: NULL\n", null)]

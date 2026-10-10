@@ -5,17 +5,21 @@ using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
-// `{{…}}` is what a template marks as the author's to supply: an id, a value, a filename, a phrase. It is the only
-// placeholder the tool recognises. A record carrying one is an unfinished copy.
+/// <summary>
+/// <c>{{…}}</c> is what a template marks as the author's to supply: an id, a value, a filename, a phrase. It is the
+/// only placeholder the tool recognises. A record carrying one is an unfinished copy.
+/// </summary>
 public static partial class Placeholder
 {
     private const string Mark = "{{";
 
     public static bool In(string? value) => value?.Contains(Mark, StringComparison.Ordinal) ?? false;
 
-    // Every placeholder a record still carries, in document order: the frontmatter, the identity line, the prose and
-    // the link targets. Code is not read, because a fenced block or code span may quote a templating language such as
-    // `${{ … }}`. The identity line is the exception, read through its code spans on purpose.
+    /// <summary>
+    /// Every placeholder a record still carries, in document order: the frontmatter, the identity line, the prose and
+    /// the link targets. Code is not read, because a fenced block or code span may quote a templating language such as
+    /// <c>${{ … }}</c>. The identity line is the exception, read through its code spans on purpose.
+    /// </summary>
     public static IEnumerable<(string Token, int Line)> Occurrences(Doc d)
     {
         if (d.Front is not null)
@@ -36,8 +40,10 @@ public static partial class Placeholder
     private static IEnumerable<(string, int)> From(string? text, int line) =>
         text is null ? [] : TokenRegex().Matches(text).Select(m => (m.Value, line));
 
-    // Every scalar the mapping holds at any depth, values only. A key carrying the mark is already reported by
-    // `unknown-key`.
+    /// <summary>
+    /// Every scalar the mapping holds at any depth, values only. A key carrying the mark is already reported by
+    /// <c>unknown-key</c>.
+    /// </summary>
     private static IEnumerable<YamlScalarNode> Scalars(YamlNode node) =>
         node switch
         {
@@ -50,7 +56,7 @@ public static partial class Placeholder
     private static int NodeLine(YamlNode node, Doc d)
         => node.Start.Line > 0 ? (int)node.Start.Line + d.FrontStartLine - 1 : d.FrontStartLine;
 
-    // A whole placeholder, for quoting back. Tolerant of an unclosed mark.
+    /// <summary>A whole placeholder, for quoting back. Tolerant of an unclosed mark.</summary>
     [GeneratedRegex(@"\{\{[^}\n]*\}?\}?")]
     private static partial Regex TokenRegex();
 }

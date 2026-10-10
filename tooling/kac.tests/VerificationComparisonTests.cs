@@ -14,7 +14,7 @@ public class VerificationComparisonTests
             Record("Restart the runner.", Paul),
             Record("Clear the cache and restart the runner.", Paul, Alex)));
 
-    // The dates differ, which is what separates the two entries.
+    /// <summary>The dates differ, which is what separates the two entries.</summary>
     [Fact]
     public void A_second_reading_by_the_same_person_is_left_alone()
         => Assert.False(Verification.Unverified(
@@ -38,8 +38,10 @@ public class VerificationComparisonTests
         => Assert.False(Verification.Unverified(Record("Restart the runner.", Paul, Alex),
             Record("Restart the runner.", Paul)));
 
-    // Rider rewraps markdown here from `.editorconfig`, in files a session never opened. The words are
-    // the ones somebody verified, so the entry beside them still answers for the record.
+    /// <summary>
+    /// Rider rewraps markdown here from <c>.editorconfig</c>, in files a session never opened. The words are the ones
+    /// somebody verified, so the entry beside them still answers for the record.
+    /// </summary>
     [Fact]
     public void A_reflowed_paragraph_is_left_alone()
         => Assert.False(Verification.Unverified(
