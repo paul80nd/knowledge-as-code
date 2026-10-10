@@ -191,7 +191,7 @@ internal sealed class NewSettings : KacSettings
 
 internal sealed class NewCommand : Command<NewSettings>
 {
-    protected override int Execute(CommandContext context, NewSettings settings, CancellationToken token)
+    public override int Execute(CommandContext context, NewSettings settings, CancellationToken token)
     {
         if (settings.NoColor) Out.NoColor();
 
@@ -223,7 +223,7 @@ internal sealed class ValidateSettings : KacSettings
 
 internal sealed class ValidateCommand : Command<ValidateSettings>
 {
-    protected override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, ValidateSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
         {
             // Shorter than the two minutes `restore` allows itself. That one fetches packages and is run
@@ -248,7 +248,7 @@ internal sealed class GenerateSettings : KacSettings
 
 internal sealed class GenerateCommand : Command<GenerateSettings>
 {
-    protected override int Execute(CommandContext context, GenerateSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, GenerateSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Generate(corpus, settings.Check));
 }
 
@@ -258,7 +258,7 @@ internal sealed class GenerateCommand : Command<GenerateSettings>
 // environment, which `docs/cli/restore.md` names.
 internal sealed class RestoreCommand : Command<CorpusSettings>
 {
-    protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
         {
             using var client = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
@@ -278,7 +278,7 @@ internal sealed class ExportSettings : KacSettings
 
 internal sealed class ExportCommand : Command<ExportSettings>
 {
-    protected override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, ExportSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus =>
             Commands.Export(corpus, settings.Type, DateTime.UtcNow, Git.Head(corpus), Git.Dirty(corpus)));
 }
@@ -288,7 +288,7 @@ internal sealed class ExportCommand : Command<ExportSettings>
 // differently: an export is wrong about the corpus, and a bundle is wrong about what it shipped.
 internal sealed class BundleCommand : Command<CorpusSettings>
 {
-    protected override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, CorpusSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, Commands.Bundle);
 }
 
@@ -304,7 +304,7 @@ internal sealed class PackSettings : KacSettings
 
 internal sealed class PackCommand : Command<PackSettings>
 {
-    protected override int Execute(CommandContext context, PackSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, PackSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Pack(corpus, settings.Repository));
 }
 
@@ -319,7 +319,7 @@ internal sealed class ChecksSettings : KacSettings
 
 internal sealed class ChecksCommand : Command<ChecksSettings>
 {
-    protected override int Execute(CommandContext context, ChecksSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, ChecksSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Checks(corpus, settings.Json));
 }
 
@@ -340,7 +340,7 @@ internal sealed class ReportSettings : KacSettings
 
 internal sealed class ReportCommand : Command<ReportSettings>
 {
-    protected override int Execute(CommandContext context, ReportSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, ReportSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Report(corpus, settings.Name, Cli.Version,
             DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"), settings.OutPath));
 }
@@ -388,7 +388,7 @@ internal sealed class UpdateSettings : KacSettings
 
 internal sealed class UpdateCommand : Command<UpdateSettings>
 {
-    protected override int Execute(CommandContext context, UpdateSettings settings, CancellationToken token) =>
+    public override int Execute(CommandContext context, UpdateSettings settings, CancellationToken token) =>
         Cli.InCorpus(settings, corpus => Commands.Update(corpus, new UpdateRequest
         {
             From = settings.From,
