@@ -198,5 +198,5 @@ not list. Three files carry that configuration:
   `paul80nd/knowledge-as-code`, reached with the `gh` CLI.
 * [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, each label string equal to
   its name.
-* [`domain.md`](.claude/agents-config/domain.md): single-context, and the domain is described by the four `CLAUDE.md`
-  files rather than by a `CONTEXT.md`.
+* [`domain.md`](.claude/agents-config/domain.md): single-context. The four `CLAUDE.md` files describe the domain, and
+  `glossary-lookup` stands in for the `GLOSSARY.md` the skills read and write.
