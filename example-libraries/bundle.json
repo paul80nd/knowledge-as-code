@@ -80,7 +80,7 @@
     {
       "path": "skills/standards-lookup",
       "requires": [
-        "standards@1"
+        "standards@2"
       ],
       "reason": "the export carries no standards"
     }
