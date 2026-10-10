@@ -308,10 +308,10 @@ separately, and `level` is the field a reader acts on, so `pol-VURM.SHIP` is ass
 rebuilt by matching the first word of the wording would file that prohibition as an obligation and pass every other
 check here.
 
-The standards assertions ask it of a type with no `level` at all. A rule line holds several obligations and the keyword
-sits inside the markdown, so the bold `**MUST**` and `**MUST NOT**` are what is asserted. `std-IDEM` is also where a
-part addressing itself is proved: a rule is a heading, so its `anchor` is its own key, where a clause resolves to the
-section holding its table.
+The standards assertions ask it of a line holding several obligations, each entry with a `level` of its own. So
+`std-IDEM` is asserted to carry an entry at `MUST` and another at `MUST NOT`, each with its keyword still bold in
+`text`. `std-IDEM` is also where a part addressing itself is proved: a rule is a heading, so its `anchor` is its own
+key, where a clause resolves to the section holding its table.
 
 payments is the corpus in this set that consumes another, so the merge is asserted there. An engineering rule has to
 arrive in payments' own `rules.jsonl` carrying `eng:` on its `id` and on its `record`, and its source has to fetch from
