@@ -19,6 +19,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A list written inside a rule's bullet is refused.** `kac validate` fails a bullet under a standard's rule heading
+  that holds a list of its own, and reports it once at the outermost nested list. One bullet is one obligation, so a
+  point nested inside it is cited by nothing and exported nowhere. Write each point as a bullet of its own with its own
+  modal. The check id is `part-nested`, and a type declaring no modals, as a glossary does, may still nest a list.
 - **A modal written outside `Rules` is reported.** `binds-only-under-rules` runs on `standards`. `kac validate` warns
   where a bullet in any other section names one of the type's declared keywords, in bold or in plain capitals, and quotes
   the bullet back. No citation reaches a rule written there, so the message offers the two fixes: move the bullet under

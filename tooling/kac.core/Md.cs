@@ -137,6 +137,14 @@ public static class Md
         });
     }
 
+    // The line of each list written inside a bullet, between two offsets. Only the outermost is
+    // returned, so a list nested three deep is one place to fix and not three.
+    public static IEnumerable<int> NestedLists(MarkdownDocument ast, int start, int end) =>
+        ast.Descendants<ListBlock>()
+            .Where(l => l.Span.Start >= start && l.Span.End <= end)
+            .Where(l => l.Parent is ListItemBlock { Parent: ListBlock { Parent: not ListItemBlock } })
+            .Select(l => l.Line + 1);
+
     private static ListBlock? FirstList(MarkdownDocument ast, int start, int end) =>
         ast.Descendants<ListBlock>().FirstOrDefault(b => b.Span.Start >= start && b.Span.End <= end);
 
@@ -158,8 +166,7 @@ public static class Md
     // grammar is nothing: bold is what binds. A modal inside backticks is being named rather than used.
     //
     // Direct children throughout: the list's own items, and each item's own first paragraph. A nested
-    // list is one bullet's workings, and asking each of its points for a modal would hold a rule's
-    // detail to the shape of a rule.
+    // list is not a bullet of this list, and under a part `part-nested` refuses it outright.
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(
         ListBlock list)
     {

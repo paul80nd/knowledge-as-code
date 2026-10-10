@@ -281,6 +281,14 @@ checks:
       first. BCP 14 makes capitals normative and this corpus makes bold the weight a reader skims, so a keyword
       written with one of the two and not the other is reported as well.
 
+  part-nested:
+    severity: error
+    description: No bullet under a part heading holds a list of its own.
+    notes: >
+      Asked only of a type declaring `binding:`, so a glossary term may nest its examples. One bullet is one
+      obligation, and a citation names the heading above it, so a point nested inside a bullet is addressed by nothing
+      and exported nowhere. Reported once at the outermost nested list, whose points are not asked for a modal.
+
   modal-outside-rules:
     severity: warning
     description: 'Only the parts section binds: no bullet outside it names a declared modal.'

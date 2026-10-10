@@ -89,8 +89,9 @@ public static class ChecksTable
             t => t.Parts?.Source == PartSpec.Headings),
         // Shown only where the type declares modals, which is what turns the bullets beneath a heading
         // into obligations. A glossary sources headings too and is asked nothing of the kind.
-        ("part-modal", [new("part-modal")],
-            "A part heading states its obligations as bullets, each with a declared modal in bold.",
+        ("part-modal / part-nested", [new("part-modal"), new("part-nested")],
+            "A part heading states its obligations as bullets, each with a declared modal in bold and no "
+            + "list inside it.",
             t => t.Parts is { Source: PartSpec.Headings, Binding.Count: > 0 }),
         // The same question asked of the sections around the parts, and shown wherever the rule is
         // declared rather than wherever modals are, because a type may declare the modals and accept a

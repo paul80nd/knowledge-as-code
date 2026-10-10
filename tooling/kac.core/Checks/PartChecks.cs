@@ -165,6 +165,13 @@ public static class PartChecks
                 continue;
             }
 
+            // One bullet is one obligation, and a citation names the heading above it. A list inside a bullet
+            // is detail nothing addresses and nothing exports, so it is refused and its points go unasked.
+            foreach (var line in Md.NestedLists(d.Ast, part.BodyStart, part.BodyEnd))
+                report.Err(new CheckId("part-nested"),
+                    $"{spec.Noun} '{Md.Snippet(part.Text)}' has a list inside a bullet. Write each point as a "
+                    + "bullet of its own with its own modal, or fold it into the sentence above it.", line);
+
             foreach (var (text, plain, bold, line) in bullets)
             {
                 // The unbolded keyword is asked first, because a bullet with one and nothing else would
