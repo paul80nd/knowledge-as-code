@@ -134,6 +134,7 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 | `review-after-acceptance`   | error   | The review date falls after the day the risk was accepted.                                                      |
 | `not-open-ended`            | warning | The record does not claim the departure is permanent or open-ended.                                             |
 | `expiry`                    | warning | An active deviation is still inside its review date.                                                            |
+| `draft-expiry`              | warning | A draft deviation is still inside its review date.                                                              |
 | `high-risk-review-window`   | warning | A deviation rated high is reviewed within six months of acceptance.                                             |
 
 <!-- END GENERATED: checks-deviations -->

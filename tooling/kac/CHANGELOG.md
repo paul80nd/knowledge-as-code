@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A draft deviation past its review date is reported.** `draft-expiry` runs on `deviations`. `kac validate` warns
+  where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
+  sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
+  record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
+
 ## 0.32.0 - 2026-10-10
 
 ### Added

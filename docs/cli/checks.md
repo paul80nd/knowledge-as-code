@@ -40,7 +40,7 @@ One check to a line, with the severity it reports at and what it proves, and a t
   error    unknown-key                    Every frontmatter key is a universal field, a type field, or a reserved ADO key.
   warning  deprecated-has-successor       A deprecated tool states what replaces it.
 
-143 checks: 88 error(s), 53 warning(s), 2 info.
+144 checks: 88 error(s), 54 warning(s), 2 info.
 ```
 
 Only an error fails the build. A warning is something to act on. An info reports something true that is nobody's fault,
@@ -64,7 +64,8 @@ kac checks | grep -i expiry
 The catalogue is flat and keyed by id, so a grep over it answers faster than reading `.schema/`:
 
 ```text
-  warning  expiry                         An active deviation is still inside the review date it carries.
+  warning  expiry                         An active deviation is still inside its review date.
+  warning  draft-expiry                   A draft deviation is still inside its review date.
 ```
 
 ## Known limits

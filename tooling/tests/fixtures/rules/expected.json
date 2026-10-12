@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 64,
+    "validated": 65,
     "templates": 17,
     "skipped": 0,
     "errors": 31,
-    "warnings": 53,
+    "warnings": 54,
     "infos": 0
   },
   "findings": [
@@ -56,6 +56,13 @@
       "severity": "warning",
       "check": "classification-in-date",
       "message": "this document's `review-by` has passed. Check the classification and the retention against the store, then set `review-by` to the next day someone looks at it."
+    },
+    {
+      "file": "deviations/draft-review-date-passed.md",
+      "line": 1,
+      "severity": "warning",
+      "check": "draft-expiry",
+      "message": "this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active` with a new `review-by`, set a new date, or delete the record if nothing departs from the rule."
     },
     {
       "file": "deviations/high-risk-review-window.md",
