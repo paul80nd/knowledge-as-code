@@ -157,7 +157,7 @@ a departure left standing is the state worth seeing. Two checks warn on it inste
 
 * `expiry` reports an `active` record past its date, whose acceptance is due for review.
 * `draft-expiry` reports a `draft` record past its date. Nobody finished accepting that departure, and the code may
-  already be taking it. A draft still being written is silent, because its author set `review-by` ahead of today.
+  already be taking it. A draft whose date is still ahead is silent, so a record still being agreed is not reported.
 
 A `closed` record is silent, because the departure is over.
 

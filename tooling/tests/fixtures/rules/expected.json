@@ -62,7 +62,7 @@
       "line": 1,
       "severity": "warning",
       "check": "draft-expiry",
-      "message": "this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active`, set a new date, or delete the record if nothing departs from the rule."
+      "message": "this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active` with a new `review-by`, set a new date, or delete the record if nothing departs from the rule."
     },
     {
       "file": "deviations/high-risk-review-window.md",

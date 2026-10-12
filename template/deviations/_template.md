@@ -31,8 +31,8 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 * **`risk`**: how bad the risk is once what compensates is working, and never how bad the rule's authors thought it
   was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
-* **`review-by`**: the day somebody has to look at this again. Every deviation has one, a draft included, and
-  `expiry` or `draft-expiry` warns once it passes.
+* **`review-by`**: the day somebody has to look at this again. Every deviation has one, a draft included. Once it
+  passes, `expiry` warns on an active record and `draft-expiry` on a draft.
 * **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is
   `closed`.
 * **`owner`**: the individual who accepts the risk, and has the authority to accept it. Write `human:alex.doe`. This

@@ -21,7 +21,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **A draft deviation past its review date is reported.** `draft-expiry` runs on `deviations`. `kac validate` warns
   where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
-  sit unnoticed. The message offers three fixes: accept it and move it to `active`, set a new date, or delete the
+  sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
   record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
 
 ## 0.32.0 - 2026-10-10

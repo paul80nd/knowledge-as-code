@@ -59,8 +59,8 @@ fields:
     in-force: active
     description: '`draft` while it is being agreed, `closed` once it no longer applies.'
     notes: >
-      A deviation whose review date has passed keeps its status. Nothing moves it, and `expiry` or `draft-expiry`
-      warns instead.
+      A deviation whose review date has passed keeps its status. Nothing moves it. `expiry` warns on an active one,
+      and `draft-expiry` on a draft.
 
   departs-from:
     required: true
@@ -168,8 +168,8 @@ rules:
     message: >
       this record reads as a standing departure. Say what has to be true for it to close, and put the date
       in `review-by`.
-  # `expiry` reports `active`, `draft-expiry` reports `draft`, and `closed` is silent because the departure ended.
-  # Both warn, because an error would make deleting the record the cheapest way back to green.
+  # `expiry` reports `active`, whose acceptance is due again. `draft-expiry` reports `draft`, which nobody accepted.
+  # `closed` is silent, because the departure ended. Both warn, so deleting a record is never the cheap way to green.
   - id: expiry
     description: An active deviation is still inside its review date.
     severity: warning
@@ -184,8 +184,8 @@ rules:
     expr: >-
       field('status') == 'draft' and present('review-by') implies field('review-by') >= today()
     message: >
-      this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active`, set a
-      new date, or delete the record if nothing departs from the rule.
+      this deviation is still a draft and its `review-by` has passed. Accept it and move it to `active` with a
+      new `review-by`, set a new date, or delete the record if nothing departs from the rule.
   - id: high-risk-review-window
     description: A deviation rated high is reviewed within six months of acceptance.
     severity: warning
