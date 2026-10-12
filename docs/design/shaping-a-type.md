@@ -152,8 +152,14 @@ and stays behind, because a consumer reads who carries the risk and not who is c
 and it decides how soon `review-by` may fall.
 
 `accepted-on`, `review-by` and `closed-on` say whether a departure is live, overdue or over. They travel beside
-`status`, which stays `active` past its review date, so you can compare the two accounts of one record. Nothing moves
-the status on that date, because a departure left standing is the state worth seeing. The `expiry` check warns on it.
+`status`, so you can compare the two accounts of one record. Nothing moves the status when `review-by` passes, because
+a departure left standing is the state worth seeing. Two checks warn on it instead:
+
+* `expiry` reports an `active` record past its date, whose acceptance is due for review.
+* `draft-expiry` reports a `draft` record past its date. Nobody finished accepting that departure, and the code may
+  already be taking it. A draft still being written is silent, because its author set `review-by` ahead of today.
+
+A `closed` record is silent, because the departure is over.
 
 ### nfrs
 

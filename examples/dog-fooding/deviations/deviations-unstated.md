@@ -49,13 +49,15 @@ a record that exists. Nothing asks whether the record exists at all, so a habit 
 * The schema requires an owner, a review date and four sections, and `kac validate` fails a record missing any of them.
 * `review-after-acceptance` fails a record that would expire as it was written.
 * `expiry` warns on an active record whose `review-by` has gone by, so every run reports a review nobody has done.
+* `draft-expiry` warns on a draft whose `review-by` has gone by, so a departure nobody finished accepting is reported
+  too.
 * The register is a folder in a public repository, so anybody reading the corpus finds it.
 
 ## How it closes
 
 A standard states what a deviation here has to say, who may accept the risk, and what closing means. It requires the
-record to be written before the departure, where there was time. It cites `expiry` as the check behind the review
-date.
+record to be written before the departure, where there was time. It cites `expiry` and `draft-expiry` as the checks
+behind the review date, and states that a `closed` record owes no review.
 
 ## Scope
 
