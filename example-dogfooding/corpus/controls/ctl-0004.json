@@ -28,6 +28,6 @@
     "Coverage and gaps": "yamllint checks shape. A reviewer judges three things: whether a value is correct, whether a comment gives a reason, and whether that reason is true.\n\nyamllint covers one of the five rules [std-CONFIG] states, and [ctl-0005] covers a second. The other three have no check of their own. Dependabot moves the pin in `.github/requirements.txt`, so a yamllint release arrives as a pull request."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/36713d43086fec496edd492842c4433ea2158134/examples/dog-fooding/controls/0004-yamllint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7f2a708e15a56e14bf254e4b52eea6d44ec5c862/examples/dog-fooding/controls/0004-yamllint.md"
   }
 }
