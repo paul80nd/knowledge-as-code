@@ -23,8 +23,22 @@ Read these in order to go from a clone to a published fork.
 * **[Checks in C#](checks.md)** says when a rule needs C#, how to add a fact to the expression grammar, and why a rule
   is data wherever it can be.
 * **[Adding a report](reports.md)** is the order to follow when you add a report to `kac report`.
-* **[The plugin bundle](plugin.md)** says how `kac bundle` lays out what it writes, what the breadcrumb hook says, and
-  how the plugin manifest is edited.
+
+## What `kac` is specified to do
+
+Each specification page lists what one part of `kac` does, refuses and promises a consumer. It ends with the Reqnroll
+scenarios that prove each behaviour, and the behaviours no scenario proves yet. `ScenarioCitationTests` fails a
+scenario no page cites.
+
+* **[Discovery](discovery.md)**: how `kac` finds a corpus, its schema and its files.
+* **[Validation](validation.md)**: what `kac validate` reports, and what `kac checks` lists.
+* **[Generation](generation.md)**: what `kac generate` writes.
+* **[Export](export.md)**: what `kac export` writes for a consumer.
+* **[The plugin bundle](plugin.md)**: what `kac bundle` assembles, and how it lays the plugin out.
+* **[Pack and restore](packages.md)**: how a corpus is packaged, and how a consumer fetches one.
+* **[Imports](imports.md)**: what a corpus consuming another receives.
+* **[Layers and update](layers.md)**: how `kac new` and `kac update` apply the template.
+* **[Reporting](reporting.md)**: what `kac report` writes.
 
 ## Where to go next
 
