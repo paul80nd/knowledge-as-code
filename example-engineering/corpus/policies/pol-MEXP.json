@@ -15,6 +15,6 @@
     "Exceptions": "Some services are meant to be reached by anyone. The rest of this policy still applies to them. They are exposed through an intended route, and everything behind them stays private. Any other exposure requires a recorded deviation under [pol-DEVI]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6df1b43ad493f1cc6c54d66bd855c8d6c36af706/examples/engineering/policies/security/mexp-minimised-exposure.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0004412830734703bd109d407ff74bc74b16587a/examples/engineering/policies/security/mexp-minimised-exposure.md"
   }
 }

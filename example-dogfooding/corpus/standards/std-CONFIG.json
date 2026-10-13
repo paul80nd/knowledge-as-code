@@ -37,6 +37,6 @@
     "Conformance checklist": "- [ ] `yamllint --strict .` passes.\n- [ ] Every file the change touches is tracked, and contains no credential.\n- [ ] Every dependency it adds names one exact version.\n- [ ] `.github/dependabot.yml` names the directory that manifest sits in.\n- [ ] Every new value has a comment giving its reason, and no comment restates its value.\n- [ ] Any new `.yamllint` override gives the reason it departs from the baseline.\n- [ ] `kac update --check --from ../../` passes in each corpus the change reaches."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6df1b43ad493f1cc6c54d66bd855c8d6c36af706/examples/dog-fooding/standards/configuration.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0004412830734703bd109d407ff74bc74b16587a/examples/dog-fooding/standards/configuration.md"
   }
 }
