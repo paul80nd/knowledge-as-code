@@ -45,5 +45,5 @@ what, and what the generator writes from each. It travels with the schema, so a 
 
 ## Where to go next
 
-[Shaping a type](../framework/shaping-a-type.md) says why each type the framework ships chose the fields, sections and
-export it did.
+[Shaping a type](../framework/shaping-a-type.md) says what a record of each type is for, and why its fields and sections
+serve that.
