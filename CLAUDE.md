@@ -143,8 +143,9 @@ write the issue where they say one belongs. The record itself lands in
 [`examples/dog-fooding/deviations/`](examples/dog-fooding/deviations/) once they have accepted it.
 
 **Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
-it to know about. This repository does: project 3, with a `Status` and a `Phase`. An issue left off it is one the
-developer never sees.
+it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
+sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. An epic is `1`, and its stories count up
+from `2` in delivery order. An issue left off the board is one the developer never sees.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
