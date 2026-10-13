@@ -17,9 +17,6 @@ public sealed partial class GenerationSteps(Workspace ws)
         ws.Write(path, emptied);
     }
 
-    [Given(@"""(.*)"" ends with ""(.*)""")]
-    public void GivenEndsWith(string path, string line) => ws.Write(path, ws.Read(path) + "\n" + line + "\n");
-
     [Given(@"the descriptor adopts ""(.*)"" as well")]
     public void GivenTheDescriptorAdoptsAsWell(string type)
     {

@@ -1,6 +1,3 @@
-// `Validate` runs `Corpus.Load` then `Validator.CheckAll`, which are the two calls `kac validate` makes. Assembling a
-// subset of that sequence would leave checks unreachable from a spec while every spec went on passing.
-
 using kac.core;
 
 public sealed record ValidationResult(List<Finding> Findings, int Validated, int Skipped);
@@ -40,6 +37,10 @@ public static class Harness
         return temp;
     }
 
+    /// <summary>
+    /// Runs <c>Corpus.Load</c> then <c>Validator.CheckAll</c>, the two calls <c>kac validate</c> makes. A subset of that
+    /// sequence would leave checks unreachable from a spec while every spec went on passing.
+    /// </summary>
     public static ValidationResult Validate(string corpusRoot)
     {
         var corpus = Corpus.Load(corpusRoot);

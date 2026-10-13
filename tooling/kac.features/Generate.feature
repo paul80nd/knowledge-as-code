@@ -12,15 +12,20 @@ Scenario: A run rewrites a stale index whole, and no other file
   And "adrs/_index.md" does not contain "A line nothing generated."
   And the generated files are fresh
 
-Scenario: A run rewrites a block between its markers and keeps the words around it
+Scenario Outline: A run rewrites a block between its markers and keeps the words around it
   Given the generate fixture corpus
-  And the generated blocks in "adrs.md" are emptied
-  And "adrs.md" ends with "Words the corpus wrote."
+  And the generated blocks in "<page>" are emptied
+  And "<page>" ends with "Words the corpus wrote."
   When I generate
   Then it succeeds
-  And only "adrs.md" changed
-  And "adrs.md" contains "Words the corpus wrote."
+  And only "<page>" changed
+  And "<page>" contains "Words the corpus wrote."
   And the generated files are fresh
+
+Examples:
+  | page                          |
+  | adrs.md                       |
+  | knowledge-as-code/taxonomy.md |
 
 Scenario: A run over a fresh corpus writes nothing
   Given the generate fixture corpus

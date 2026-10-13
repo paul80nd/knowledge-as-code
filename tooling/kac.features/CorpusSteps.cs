@@ -4,7 +4,9 @@ using Xunit;
 
 namespace kac.features;
 
-/// <summary>The steps every command's scenarios share: the corpus they start from, and what a run left on disk.</summary>
+/// <summary>
+/// The steps every command's scenarios share: the corpus they start from, and what a run left on disk.
+/// </summary>
 [Binding]
 public sealed class CorpusSteps(Workspace ws)
 {
@@ -19,7 +21,9 @@ public sealed class CorpusSteps(Workspace ws)
         else File.Delete(full);
     }
 
-    /// <summary><paramref name="key"/> is a dotted path through nested objects, and <paramref name="value"/> is JSON.</summary>
+    /// <summary>
+    /// <paramref name="key"/> is a dotted path through nested objects, and <paramref name="value"/> is JSON.
+    /// </summary>
     [Given(@"""(.*)"" states ""(.*)"" as (.*)")]
     public void GivenStatesAs(string path, string key, string value)
     {
@@ -38,13 +42,21 @@ public sealed class CorpusSteps(Workspace ws)
         ws.WriteJson(path, json);
     }
 
+    [Given(@"""(.*)"" is left from an earlier run")]
+    public void GivenIsLeftFromAnEarlierRun(string path) => ws.Write(path, "{}\n");
+
+    [Given(@"""(.*)"" ends with ""(.*)""")]
+    public void GivenEndsWith(string path, string line) => ws.Write(path, ws.Read(path) + "\n" + line + "\n");
+
     [Given(@"""(.*)"" is replaced with ""(.*)""")]
     public void GivenIsReplacedWith(string path, string content) => ws.Write(path, content);
 
     [Then("it refuses")]
     public void ThenItRefuses() => Assert.Equal(1, ws.Exit);
 
-    /// <summary>A check that ran and found a fault, where <c>it refuses</c> is a command that stopped before acting.</summary>
+    /// <summary>
+    /// A check that ran and found a fault, where <c>it refuses</c> is a command that stopped before acting.
+    /// </summary>
     [Then("it fails")]
     public void ThenItFails() => Assert.Equal(1, ws.Exit);
 
@@ -110,7 +122,8 @@ public sealed class CorpusSteps(Workspace ws)
         var steps = key.Split('.');
         var parent = json;
         foreach (var step in steps[..^1])
-            parent = parent[step] as JsonObject ?? throw new InvalidOperationException($"no object at '{step}' in '{key}'");
+            parent = parent[step] as JsonObject
+                     ?? throw new InvalidOperationException($"no object at '{step}' in '{key}'");
         return (parent, steps[^1]);
     }
 }

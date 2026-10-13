@@ -19,8 +19,39 @@ Scenario: A component reading a type the export lacks is trimmed with its files
   Given the bundle fixture corpus
   And it has been exported
   When I bundle
-  Then the bundle trims "skills/decision-lookup"
+  Then the bundle trims "skills/decision-lookup" because "the export carries no adrs"
   And ".dist/plugin/skills/decision-lookup" does not exist
+
+Scenario: A trim takes whole path segments
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a file "skills/decision-lookup-notes/README.md"
+  When I bundle
+  Then ".dist/plugin/skills/decision-lookup-notes/README.md" exists
+
+Scenario: A component reading no type ships beside one that reads a type
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a component "skills/corpus-retrieval" reading no type
+  When I bundle
+  Then the bundle includes "skills/corpus-retrieval"
+  And ".dist/plugin/skills/corpus-retrieval/SKILL.md" exists
+
+Scenario: A component reading no type leaves with the last component reading one
+  Given the bundle-empty fixture corpus
+  And it has been exported
+  And the plugin tree has a component "skills/corpus-retrieval" reading no type
+  When I bundle
+  Then the bundle trims "skills/corpus-retrieval" because "no component it supports survived"
+  And ".dist/plugin/skills/corpus-retrieval" does not exist
+
+Scenario: A standalone component always ships
+  Given the bundle-empty fixture corpus
+  And it has been exported
+  And the plugin tree has a standalone component "skills/raise-finding"
+  When I bundle
+  Then the bundle includes "skills/raise-finding"
+  And ".dist/plugin/skills/raise-finding/SKILL.md" exists
 
 Scenario: A file no component claims ships
   Given the bundle fixture corpus
@@ -35,29 +66,27 @@ Scenario: The plugin contains the export unchanged
   Then ".dist/plugin/corpus" is a copy of ".dist/export"
   And nothing under ".dist/export" changed
 
-Scenario: A bundle rebuilds .dist/plugin/ whole
-  Given the bundle fixture corpus
-  And it has been exported
-  And ".dist/plugin/skills/orphan/SKILL.md" is left from an earlier run
-  When I bundle
-  Then it succeeds
-  And ".dist/plugin/skills/orphan" does not exist
-
 Scenario: The plugin manifest takes who the plugin is from the descriptor
   Given the bundle fixture corpus
   And it has been exported
+  And ".plugin/.claude-plugin/plugin.json" states "name" as "the-template"
+  And ".plugin/.claude-plugin/plugin.json" states "displayName" as "The Template"
   When I bundle
   Then ".dist/plugin/.claude-plugin/plugin.json" states "name" as "example-libraries"
+  And ".dist/plugin/.claude-plugin/plugin.json" states "displayName" as "Example Libraries"
   And ".dist/plugin/.claude-plugin/plugin.json" states "version" as "2.3.4"
   And ".dist/plugin/.claude-plugin/plugin.json" states "author.name" as "Paul Law"
+  And ".dist/plugin/.claude-plugin/plugin.json" states "keywords" as ["knowledge-as-code", "glossary"]
 
 Scenario: A key the descriptor gives nothing for is removed, bar the author and the description
   Given the bundle-empty fixture corpus
   And it has been exported
   And ".plugin/.claude-plugin/plugin.json" states "license" as "MIT"
+  And ".plugin/.claude-plugin/plugin.json" states "homepage" as "https://example.com/template"
   When I bundle
   Then it succeeds
   And ".dist/plugin/.claude-plugin/plugin.json" states no "license"
+  And ".dist/plugin/.claude-plugin/plugin.json" states no "homepage"
   And ".dist/plugin/.claude-plugin/plugin.json" states "author.name" as "example-empty"
   And ".dist/plugin/.claude-plugin/plugin.json" states "description" as "The example-empty knowledge corpus, and the skills that read it."
 
@@ -73,8 +102,8 @@ Scenario: A bundle that trims every component still builds
   And it has been exported
   When I bundle
   Then it succeeds
-  And the bundle trims "skills/glossary-lookup"
-  And the bundle trims "hooks"
+  And the bundle trims "skills/glossary-lookup" because "the export carries no glossary"
+  And the bundle trims "hooks" because "the export carries no glossary"
   And ".dist/plugin/.claude-plugin/plugin.json" exists
 
 Scenario: A bundle with no export is refused

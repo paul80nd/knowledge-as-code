@@ -36,18 +36,42 @@ public sealed class BundleSteps(Workspace ws)
         ws.WriteJson(PluginManifest, manifest);
     }
 
+    [Given(@"the plugin tree has a file ""(.*)""")]
+    public void GivenThePluginTreeHasAFile(string path) => ws.Write($".plugin/{path}", "A file no component claims.\n");
+
+    [Given(@"the plugin tree has a component ""(.*)"" reading no type")]
+    public void GivenThePluginTreeHasAComponentReadingNoType(string path) => AddComponent(path, standalone: false);
+
+    [Given(@"the plugin tree has a standalone component ""(.*)""")]
+    public void GivenThePluginTreeHasAStandaloneComponent(string path) => AddComponent(path, standalone: true);
+
     [When("I bundle")]
     public void WhenIBundle() => ws.Run(Commands.Bundle);
 
     [Then(@"the bundle includes ""(.*)""")]
     public void ThenTheBundleIncludes(string path) => Assert.Contains(path, Paths("included"));
 
-    [Then(@"the bundle trims ""(.*)""")]
-    public void ThenTheBundleTrims(string path) => Assert.Contains(path, Paths("trimmed"));
+    [Then(@"the bundle trims ""(.*)"" because ""(.*)""")]
+    public void ThenTheBundleTrimsBecause(string path, string reason)
+    {
+        var trimmed = Entries("trimmed").Single(c => JsonRead.Str(c["path"]) == path);
+        Assert.Equal(reason, JsonRead.Str(trimmed["reason"]));
+    }
 
-    private IEnumerable<string?> Paths(string list) =>
-        (ws.ReadJson(".dist/plugin/bundle.json")[list] as JsonArray ?? [])
-        .Select(c => JsonRead.Str(c?["path"]));
+    private IEnumerable<string?> Paths(string list) => Entries(list).Select(c => JsonRead.Str(c["path"]));
+
+    private IEnumerable<JsonObject> Entries(string list) =>
+        (ws.ReadJson(".dist/plugin/bundle.json")[list] as JsonArray ?? []).OfType<JsonObject>();
+
+    private void AddComponent(string path, bool standalone)
+    {
+        ws.Write($".plugin/{path}/SKILL.md", "A skill.\n");
+        var manifest = ws.ReadJson(PluginManifest);
+        var component = new JsonObject { ["path"] = path, ["requires"] = new JsonArray() };
+        if (standalone) component["standalone"] = true;
+        Components(manifest).Add(component);
+        ws.WriteJson(PluginManifest, manifest);
+    }
 
     private static JsonArray Components(JsonObject manifest) =>
         manifest["metadata"]?["components"] as JsonArray

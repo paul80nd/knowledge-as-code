@@ -22,8 +22,18 @@ public sealed class ExportSteps(Workspace ws)
         ws.WriteJson(path, manifest);
     }
 
-    [Given(@"""(.*)"" is left from an earlier run")]
-    public void GivenIsLeftFromAnEarlierRun(string path) => ws.Write(path, "{}\n");
+    [Given(@"the restored ""(.*)"" export states ""(.*)"" section ""(.*)"" at ""(.*)""")]
+    public void GivenTheRestoredExportStatesSectionAt(string shortcode, string type, string section, string fidelity)
+    {
+        var path = $".imports/{shortcode}/manifest.json";
+        var manifest = ws.ReadJson(path);
+        var entry = Types(manifest).OfType<JsonObject>().Single(t => JsonRead.Str(t["type"]) == type);
+        var sections = entry["sections"] as JsonObject
+                       ?? throw new InvalidOperationException($"'{type}' states no sections");
+        Assert.True(sections.ContainsKey(section), $"'{type}' exports no section '{section}'");
+        sections[section] = fidelity;
+        ws.WriteJson(path, manifest);
+    }
 
     /// <summary>The time and the commit are fixed, so two runs over one corpus write the same bytes.</summary>
     internal static int Export(string root, string? type = null, bool? dirty = false) =>

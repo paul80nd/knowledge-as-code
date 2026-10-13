@@ -69,6 +69,13 @@ Scenario: An export refuses a consumed corpus at a format it cannot read
   Then it refuses
   And nothing is written
 
+Scenario: An export refuses a consumed corpus exporting a section at another fidelity
+  Given the export-inherited fixture corpus
+  And the restored "eng" export states "glossary" section "Scope" at "summary"
+  When I export
+  Then it refuses
+  And nothing is written
+
 Scenario: An export refuses a consumed corpus exporting a type at another shape
   Given the export-inherited fixture corpus
   And the restored "eng" export states "glossary" at shape version 99

@@ -270,8 +270,7 @@ passing.
 
 Every other command's spec calls the `Commands` method its verb runs, over a copy of a fixture the golden suite also
 reads. `Workspace` snapshots that copy before the command runs, so a scenario can say which files the run wrote, and
-that a refusal wrote none. A scenario states a behaviour its `docs/use/cli/` page promises. It does not repeat the
-golden's bytes or the unit tests' rules.
+that a refusal wrote none. A scenario states a behaviour its `docs/use/cli/` page promises.
 
 **A scenario reads the exit code and the disk, never the output**, because `Out` keeps the console it first meets. A
 behaviour visible only in what a command prints belongs to the golden suite.

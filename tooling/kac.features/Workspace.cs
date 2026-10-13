@@ -1,9 +1,10 @@
 using System.Text.Json.Nodes;
 using kac.core;
 
-// One scenario's corpus. Reqnroll builds one per scenario, hands the same instance to every binding class that asks for
-// it, and disposes it when the scenario ends.
-
+/// <summary>
+/// One scenario's corpus. Reqnroll builds one per scenario, hands the same instance to every binding class that asks for
+/// it, and disposes it when the scenario ends.
+/// </summary>
 public sealed class Workspace : IDisposable
 {
     private string? _root;

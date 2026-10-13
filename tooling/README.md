@@ -109,7 +109,8 @@ the template to exercise the tool. Nothing else would catch a guard written with
 The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
 command can emit is reachable from a spec. Every other spec calls the `Commands` method its verb runs, which is the
 whole of what that command does, so a refusal cannot stop it and go unnoticed here. Those specs assert the exit code
-and the files the run left. They cannot read what the command printed, because `Out` keeps the console it first meets.
+and the files the run left, and [`CLAUDE.md`](CLAUDE.md#the-feature-specs-pin-more-than-findings) says why not the
+output.
 
 The golden layer builds `kac/` once per run and invokes the built assembly. Each scenario is then a real process,
 without paying `dotnet run`'s up-to-date check for every one.
