@@ -77,6 +77,19 @@ public sealed class CreationSteps(Workspace ws)
     public void WhenICreateACorpusFromATemplateThatIsNotThere() =>
         ws.Exit = Creation.Create(_folder, "https://example.invalid/no/such/repository.git");
 
+    [When("I create a corpus there with nobody to answer")]
+    public void WhenICreateACorpusThereWithNobodyToAnswer() => ws.Exit = Creation.Create(_folder, yes: false);
+
+    [When("I create a corpus there with a kac older than the template needs")]
+    public void WhenICreateACorpusThereWithAKacOlderThanTheTemplateNeeds()
+        => ws.Exit = Creation.Create(_folder, tool: Creation.TooOld);
+
+    [When(@"I create a corpus there named ""(.*)""")]
+    public void WhenICreateACorpusThereNamed(string name) => ws.Exit = Creation.Create(_folder, name: name);
+
+    [When(@"I create a corpus there built by ""(.*)""")]
+    public void WhenICreateACorpusThereBuiltBy(string ci) => ws.Exit = Creation.Create(_folder, ci: ci);
+
     [When(@"I create a corpus there adopting ""(.*)""")]
     public void WhenICreateACorpusThereAdopting(string types)
         => ws.Exit = Creation.Create(_folder, types: types);
@@ -107,9 +120,31 @@ public sealed class CreationSteps(Workspace ws)
     public void ThenTheFolderIsAGitRepository()
         => Assert.True(Directory.Exists(Path.Combine(_folder, ".git")));
 
+    [Then("the folder is not a git repository")]
+    public void ThenTheFolderIsNotAGitRepository()
+        => Assert.False(Directory.Exists(Path.Combine(_folder, ".git")));
+
+    [Then(@"""(.*)"" in the new corpus says ""(.*)""")]
+    public void ThenInTheNewCorpusSays(string path, string text)
+        => Assert.Contains(text, File.ReadAllText(At(path)));
+
+    [Then(@"the new corpus holds ""(.*)""")]
+    public void ThenTheNewCorpusHolds(string path) => Assert.True(File.Exists(At(path)), $"no {path}");
+
+    [Then(@"the new corpus has no ""(.*)""")]
+    public void ThenTheNewCorpusHasNo(string path) => Assert.False(File.Exists(At(path)), $"{path} is there");
+
+    /// <summary>Passes on Windows, which keeps no mode bits.</summary>
+    [Then(@"""(.*)"" in the new corpus can be run")]
+    public void ThenInTheNewCorpusCanBeRun(string path)
+        => Assert.True(OperatingSystem.IsWindows()
+                       || (File.GetUnixFileMode(At(path)) & UnixFileMode.UserExecute) != 0, $"{path} cannot be run");
+
     [Then(@"""(.*)"" is still there")]
     public void ThenIsStillThere(string name)
         => Assert.True(File.Exists(Path.Combine(_folder, name)));
+
+    private string At(string path) => Path.Combine(_folder, path.Replace('/', Path.DirectorySeparatorChar));
 
     private int Count() =>
         Directory.EnumerateFileSystemEntries(_folder).Count(e => Path.GetFileName(e) != ".git");

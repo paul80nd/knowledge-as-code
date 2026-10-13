@@ -20,6 +20,13 @@ Scenario: A folder with no repository has one initialised
   Then it succeeds
   And the folder is a git repository
 
+Scenario: A folder with no repository and nobody to ask is refused
+  Given an empty folder
+  When I create a corpus there with nobody to answer
+  Then it refuses
+  And the folder holds nothing new
+  And the folder is not a git repository
+
 Scenario: A repository holding its own committed files keeps them
   Given a git repository
   And it holds a committed "NOTICE.txt"
@@ -32,6 +39,32 @@ Scenario: A template that cannot be read is refused
   When I create a corpus from a template that is not there
   Then it refuses
   And the folder holds nothing new
+
+Scenario: A template needing a newer kac is refused
+  Given a git repository
+  When I create a corpus there with a kac older than the template needs
+  Then it refuses
+  And the folder holds nothing new
+
+Scenario: A new corpus is given a descriptor and a README of its own
+  Given a git repository
+  When I create a corpus there named "field-notes"
+  Then it succeeds
+  And ".corpus.yaml" in the new corpus says "corpus: field-notes"
+  And "README.md" in the new corpus says "# field-notes"
+
+Scenario: A corpus built by GitHub is sent the GitHub starter alone
+  Given a git repository
+  When I create a corpus there built by "github"
+  Then it succeeds
+  And the new corpus holds ".github/workflows/kac.yml"
+  And the new corpus has no "azure-pipelines.yml"
+
+Scenario: The breadcrumb hook arrives with its execute bit
+  Given a git repository
+  When I create a corpus there
+  Then it succeeds
+  And ".plugin/hooks/breadcrumb" in the new corpus can be run
 
 Scenario: A corpus that declined types is sent no link it cannot follow
   Given a git repository

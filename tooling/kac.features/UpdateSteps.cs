@@ -12,6 +12,7 @@ namespace kac.features;
 public sealed class UpdateSteps(Workspace ws)
 {
     private string _root = "";
+    private string _head = "";
 
     private string Folder => Path.Combine(_root, "corpus");
 
@@ -45,6 +46,62 @@ public sealed class UpdateSteps(Workspace ws)
         Commit();
     }
 
+    [Given(@"the corpus to update commits a file ""(.*)""")]
+    public void GivenTheCorpusToUpdateCommitsAFile(string path)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(At(path)) ?? Folder);
+        File.WriteAllText(At(path), "Left by the corpus.\n");
+        Commit();
+    }
+
+    [Given(@"the corpus to update commits a move of ""(.*)"" to ""(.*)""")]
+    public void GivenTheCorpusToUpdateCommitsAMoveOfTo(string from, string to)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(At(to)) ?? Folder);
+        File.Move(At(from), At(to));
+        Commit();
+    }
+
+    [Given(@"the corpus to update commits a skip of ""(.*)""")]
+    public void GivenTheCorpusToUpdateCommitsASkipOf(string path)
+    {
+        var descriptor = File.ReadAllText(At(".corpus.yaml"));
+        Assert.Contains("skip: []", descriptor);
+        File.WriteAllText(At(".corpus.yaml"),
+            descriptor.Replace("skip: []", $"skip:\n  - path: {path}\n    reason: the corpus owns it"));
+        Commit();
+    }
+
+    [Given(@"the corpus to update reads its plugin tree from ""(.*)""")]
+    public void GivenTheCorpusToUpdateReadsItsPluginTreeFrom(string from)
+    {
+        File.AppendAllText(At(".corpus.yaml"), $"\nplugin:\n  from: {from}\n");
+        Commit();
+    }
+
+    /// <summary>Keeps the manifest, which is the corpus's own seed.</summary>
+    [Given("the corpus to update commits the deletion of its copy of the shared plugin tree")]
+    public void GivenTheCorpusToUpdateCommitsTheDeletionOfItsCopyOfTheSharedPluginTree()
+    {
+        var manifest = At(".plugin/.claude-plugin/plugin.json");
+        var copies = Directory.EnumerateFiles(At(".plugin"), "*", SearchOption.AllDirectories)
+            .Where(f => f != manifest)
+            .ToList();
+        Assert.NotEmpty(copies);
+        foreach (var f in copies) File.Delete(f);
+        Commit();
+    }
+
+    [Given("the corpus to update commits an older descriptor-version")]
+    public void GivenTheCorpusToUpdateCommitsAnOlderDescriptorVersion()
+    {
+        var descriptor = File.ReadAllText(At(".corpus.yaml"));
+        var current = $"descriptor-version: {CorpusDescriptor.Format}\n";
+        Assert.Contains(current, descriptor);
+        File.WriteAllText(At(".corpus.yaml"), descriptor.Replace(current, "descriptor-version: 1\n"));
+        Commit();
+    }
+
     [Given(@"the corpus to update commits ""(.*)"" in its descriptor")]
     public void GivenTheCorpusToUpdateCommitsInItsDescriptor(string line)
     {
@@ -58,6 +115,10 @@ public sealed class UpdateSteps(Workspace ws)
 
     [When("I update the corpus")]
     public void WhenIUpdateTheCorpus() => Run(new UpdateRequest());
+
+    [When("I update the corpus with a kac older than the template needs")]
+    public void WhenIUpdateTheCorpusWithAKacOlderThanTheTemplateNeeds()
+        => Run(new UpdateRequest(), Creation.TooOld);
 
     [When("I check the corpus for an update")]
     public void WhenICheckTheCorpusForAnUpdate() => Run(new UpdateRequest { Check = true });
@@ -100,13 +161,30 @@ public sealed class UpdateSteps(Workspace ws)
     public void ThenInTheUpdatedCorpusStillSays(string path, string text)
         => Assert.Contains(text, File.ReadAllText(At(path)));
 
+    [Then("the update committed and staged nothing")]
+    public void ThenTheUpdateCommittedAndStagedNothing()
+    {
+        Assert.Equal(_head, Head());
+        Assert.Equal("", Git("diff", "--cached", "--name-only").Trim());
+    }
+
+    [Then("the updated descriptor states the format this tool writes")]
+    public void ThenTheUpdatedDescriptorStatesTheFormatThisToolWrites()
+        => Assert.Contains($"descriptor-version: {CorpusDescriptor.Format}\n", File.ReadAllText(At(".corpus.yaml")));
+
     [Then(@"the updated corpus adopts ""(.*)""")]
     public void ThenTheUpdatedCorpusAdopts(string type) => Assert.Contains(type, Adopted());
 
     [Then(@"the updated corpus does not adopt ""(.*)""")]
     public void ThenTheUpdatedCorpusDoesNotAdopt(string type) => Assert.DoesNotContain(type, Adopted());
 
-    private void Run(UpdateRequest request) => ws.Exit = Creation.Update(Folder, request);
+    private void Run(UpdateRequest request, string? tool = null)
+    {
+        _head = Head();
+        ws.Exit = Creation.Update(Folder, request, tool);
+    }
+
+    private string Head() => Git("rev-parse", "HEAD").Trim();
 
     private List<string> Adopted() =>
         CorpusDescriptor.Load(Folder).Types ?? throw new InvalidOperationException("the descriptor states no types");

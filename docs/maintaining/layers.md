@@ -18,6 +18,8 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 * It removes the links to the types the corpus declined, and keeps the links between the types it adopted.
   [`new`](../use/cli/new.md#what-it-does)
 * It writes the CI starter for the system named, and no other. [CI starters](../use/layers.md#ci-starters)
+* It writes `.plugin/hooks/breadcrumb` with its execute bit.
+  [Three files no template can send](../use/layers.md#three-files-no-template-can-send)
 
 ### `update`
 
@@ -28,8 +30,8 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
   [A seeded record that moved](../use/layers.md#a-seeded-record-that-moved)
 * It deletes only what `layer: removed` names. [Deletions](../use/layers.md#deletions)
 * It never writes a path under `skip:`. [`skip:`](../use/layers.md#skip)
-* It writes none of a shared plugin tree to a corpus naming `plugin.from`.
-  [A shared plugin tree](../use/layers.md#a-shared-plugin-tree)
+* It writes none of a shared plugin tree to a corpus naming `plugin.from`, and `--check` fails on an old copy left
+  under `.plugin/`. [A shared plugin tree](../use/layers.md#a-shared-plugin-tree)
 * It leaves every change in the working tree and commits nothing. [`update`](../use/cli/update.md#what-it-does)
 * `--check` writes nothing, exits non-zero where anything would change, and runs over a tree in any state.
   [A check that writes nothing](../use/cli/update.md#a-check-that-writes-nothing)
@@ -79,8 +81,13 @@ Each refusal exits `1` and writes nothing.
 * A folder already inside a corpus is refused
 * A repository holding uncommitted work is refused
 * A folder with no repository has one initialised
+* A folder with no repository and nobody to ask is refused
 * A repository holding its own committed files keeps them
 * A template that cannot be read is refused
+* A template needing a newer kac is refused
+* A new corpus is given a descriptor and a README of its own
+* A corpus built by GitHub is sent the GitHub starter alone
+* The breadcrumb hook arrives with its execute bit
 * A corpus that declined types is sent no link it cannot follow
 * A corpus adopting a single type validates
 * A corpus adopting every type keeps the links between its type pages
@@ -91,8 +98,17 @@ Each refusal exits `1` and writes nothing.
 * A check over a corpus in step passes and writes nothing
 * A check over a corpus behind its framework fails and writes nothing
 * An update takes the framework's copy of a file the corpus holds differently
+* An update commits nothing and stages nothing
 * An update leaves a seed file the corpus changed
 * An update under the full policy writes the seed files again
+* An update leaves a seeded record the corpus filed deeper
+* An update deletes what the manifest retires, and nothing else
+* An update never writes a path the corpus skips
+* An update writes none of a plugin tree the corpus reads from elsewhere
+* A check over a corpus keeping a copy of a plugin tree it reads from elsewhere fails
+* A check over a corpus keeping a framework file the template does not send fails
+* An update stamps the descriptor format this tool writes
+* An update from a template needing a newer kac is refused
 * An update over a tree with uncommitted changes is refused
 * A check runs over a tree with uncommitted changes
 * A type the corpus has not adopted is not adopted by an update
@@ -104,22 +120,6 @@ Each refusal exits `1` and writes nothing.
 
 ## Unspecified
 
-* `new` composing `.corpus.yaml` and `README.md`, and writing the CI starter for the system named.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `new` refusing a folder with no repository when there is nobody to ask.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A seeded record filed deeper being left alone. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `layer: removed` deleting what it names, and nothing else.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A path under `skip:` never being written. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A corpus naming `plugin.from` receiving none of the shared plugin tree.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `--check` reporting an overlay file the template sends nothing to.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `update` stamping `descriptor-version`. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A template whose `minimum-tool` is newer than this `kac` being refused.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The breadcrumb hook arriving with its execute bit. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
 * `--drop-type` asking before it deletes, and taking no for an answer. The specs have no terminal to answer on.
 * The plan `--check` prints, and the note that an arriving type's pages are not linked from the pages already there.
   A scenario cannot read what a command prints.
