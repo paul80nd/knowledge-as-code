@@ -16,9 +16,12 @@ An agent writes back by filing an issue on your tracker. A person decides whethe
 
 ## Where to start
 
-This site has one section for each reader. A type is one kind of record, such as a runbook. Its schema is a YAML file
-under `.schema/` that says what a record of that type has in it.
+This site has one section for each reader, and one page for whoever is still deciding whether to adopt KaC. A type is
+one kind of record, such as a runbook. Its schema is a YAML file under `.schema/` that says what a record of that type
+has in it.
 
+* **I am deciding whether to adopt it.** [Compared with alternatives](compared.md) says what KaC adds to a `CLAUDE.md`,
+  an organisation's managed instructions, a documentation server or a wiki, and when one of those is enough.
 * **I want to use `kac`.** [Use it](use/index.md) shows you how to install the tool, run it over a corpus, wire it into
   CI and build the plugin. [Getting started](use/getting-started.md) is its first page.
 * **I want to understand the framework.** [The framework](framework/index.md) explains how the types are laid out,

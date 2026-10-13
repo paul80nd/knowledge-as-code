@@ -129,6 +129,7 @@ plugins:
 # The verb alone in the sidebar. Each page's own heading then says what that verb does.
 nav:
   - Introduction: index.md
+  - Compared with alternatives: compared.md
   - Use it:
       - use/index.md
       - Getting started: use/getting-started.md

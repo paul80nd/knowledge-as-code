@@ -27,6 +27,9 @@ An agent writes back by filing an issue on your tracker. A person decides whethe
 * **Teams share one set of rules.** A team's corpus can consume an organisation's corpus, so a standard written once
   applies in every repository that takes it.
 
+[Compared with alternatives](https://paul80nd.github.io/knowledge-as-code/compared/) says what KaC adds to a
+`CLAUDE.md`, an organisation's managed instructions, a documentation server or a wiki, and when one of those is enough.
+
 ## A record, and what `kac validate` reports
 
 This is a standard from [`examples/engineering`](examples/engineering/standards/common/secret-handling.md), cut short.

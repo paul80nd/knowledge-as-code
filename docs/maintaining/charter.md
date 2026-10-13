@@ -20,7 +20,8 @@ corpus publishes for another corpus to consume.
 | The maintainer       | how `kac` is built and released, and what it is specified to do             | Maintaining `kac` |
 
 One more reader, the evaluator, owns no section. They are deciding whether to adopt `kac` at all. They read the root
-`README.md` and the opening of [the introduction](../index.md). A page written for them beyond that sits in Use it.
+`README.md`, [the introduction](../index.md) and [Compared with alternatives](../compared.md). The two site pages sit
+at the top of the nav, beside the four sections, and either may explain and compare.
 
 ## The page kinds
 
