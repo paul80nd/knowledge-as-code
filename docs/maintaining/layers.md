@@ -34,7 +34,7 @@ do, and the scenario proving each behaviour. [Layers](../use/layers.md), [`new`]
 * `--check` writes nothing, exits non-zero where anything would change, and runs over a tree in any state.
   [A check that writes nothing](../use/cli/update.md#a-check-that-writes-nothing)
 * `--check` reports an overlay file the corpus holds that the template sends nothing to.
-  [`--check`](../use/layers.md#--check)
+  [`--check`](../use/layers.md#-check)
 * It reports a type the corpus has not adopted, and adopts nothing. [`update`](../use/cli/update.md#known-limits)
 * `--add-type` writes the type's page, template and schema, and adds it to `types:`.
   [A type adopted, or given up](../use/cli/update.md#a-type-adopted-or-given-up)
