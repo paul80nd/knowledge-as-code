@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Reqnroll;
 using Xunit;
 
@@ -16,6 +17,16 @@ public sealed class CorpusSteps(Workspace ws)
         var full = ws.PathOf(path);
         if (Directory.Exists(full)) Directory.Delete(full, recursive: true);
         else File.Delete(full);
+    }
+
+    /// <summary><paramref name="key"/> is a dotted path through nested objects, and <paramref name="value"/> is JSON.</summary>
+    [Given(@"""(.*)"" states ""(.*)"" as (.*)")]
+    public void GivenStatesAs(string path, string key, string value)
+    {
+        var json = ws.ReadJson(path);
+        var (parent, last) = Walk(json, key);
+        parent[last] = JsonNode.Parse(value);
+        ws.WriteJson(path, json);
     }
 
     [Then("it refuses")]
@@ -48,6 +59,24 @@ public sealed class CorpusSteps(Workspace ws)
     [Then(@"""(.*)"" contains ""(.*)""")]
     public void ThenContains(string path, string text) => Assert.Contains(text, ws.Read(path));
 
+    [Then(@"""(.*)"" states ""(.*)"" as (.*)")]
+    public void ThenStatesAs(string path, string key, string value)
+    {
+        var (parent, last) = Walk(ws.ReadJson(path), key);
+        var actual = parent[last];
+        Assert.True(JsonNode.DeepEquals(JsonNode.Parse(value), actual),
+            $"{path} states '{key}' as {actual?.ToJsonString() ?? "null"}");
+    }
+
     [Then(@"""(.*)"" does not contain ""(.*)""")]
     public void ThenDoesNotContain(string path, string text) => Assert.DoesNotContain(text, ws.Read(path));
+
+    private static (JsonObject Parent, string Last) Walk(JsonObject json, string key)
+    {
+        var steps = key.Split('.');
+        var parent = json;
+        foreach (var step in steps[..^1])
+            parent = parent[step] as JsonObject ?? throw new InvalidOperationException($"no object at '{step}' in '{key}'");
+        return (parent, steps[^1]);
+    }
 }

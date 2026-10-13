@@ -1,3 +1,6 @@
+using System.Text.Json.Nodes;
+using kac.core;
+
 // One scenario's corpus. Reqnroll builds one per scenario, hands the same instance to every binding class that asks for
 // it, and disposes it when the scenario ends.
 
@@ -27,9 +30,15 @@ public sealed class Workspace : IDisposable
 
     public void Write(string relative, string content)
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(PathOf(relative))!);
-        File.WriteAllText(PathOf(relative), content);
+        var full = PathOf(relative);
+        Directory.CreateDirectory(Path.GetDirectoryName(full) ?? Root);
+        File.WriteAllText(full, content);
     }
+
+    public JsonObject ReadJson(string relative) =>
+        JsonRead.Parse(Read(relative)) ?? throw new InvalidOperationException($"{relative} is not a JSON object");
+
+    public void WriteJson(string relative, JsonObject json) => Write(relative, json.ToJsonString());
 
     /// <summary>Every path added, removed or rewritten by the last command, with <c>/</c> as the separator.</summary>
     public List<string> Changed()
