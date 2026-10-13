@@ -55,11 +55,11 @@ order of work in the framework's own repository.
 
 <!-- BEGIN GENERATED: skills-here -->
 
-| Skill                 | What it answers                                                                               |
-|-----------------------|-----------------------------------------------------------------------------------------------|
-| `i-want-to`           | Route a piece of work in this repository to the process record or playbook carrying its steps |
-| `writing-in-the-tool` | The shape of prose inside `tooling/`                                                          |
-| `writing-the-docs`    | The shape of the public documentation                                                         |
+| Skill                 | What it answers                                                                                                                     |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| `i-want-to`           | Route a piece of work in this repository to the process record or playbook with its steps, and to the writing skill for its surface |
+| `writing-in-the-tool` | The shape of prose inside `tooling/`                                                                                                |
+| `writing-the-docs`    | The shape of the public documentation                                                                                               |
 
 <!-- END GENERATED: skills-here -->
 
