@@ -14,8 +14,8 @@ or the repository. They decide in the first paragraph whether to keep reading.
 
 ## Match the model page
 
-`docs/design/discovery.md` is the model. Match its voice, its section length and its headings. Where a page and the
-model differ, change the page.
+`docs/design/discovery.md` is the model for voice and headings. Where a page and the model differ in either, change
+the page. It is not the model for length. Keep each section to what its reader needs.
 
 ## What this page overrides in the floor
 

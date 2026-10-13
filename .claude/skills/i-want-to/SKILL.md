@@ -1,13 +1,13 @@
 ---
 name: i-want-to
-description: Route a piece of work in this repository to the process record or playbook carrying its steps. Load it before planning any change here, however the request was phrased: "tidy up", "have a look at", "get rid of", "review", "clean up", "fix" and "add" all land somewhere in it. Covers writing and reviewing a record, changing the schema, changing `kac`, adding a knowledge type, sweeping prose, writing the public documentation, and opening a pull request. Also whenever somebody types /i-want-to.
+description: Route a piece of work in this repository to the process record or playbook carrying its steps. Load it before planning any change here, however the request was phrased: "tidy up", "have a look at", "get rid of", "review", "clean up", "fix" or "add". Where no row fits the work, you work without a process. Covers writing and reviewing a record, changing the schema, changing `kac`, adding a knowledge type, sweeping prose, writing the public documentation, and opening a pull request. Also whenever somebody types /i-want-to.
 ---
 
 # I want to
 
-Match the work to a row below, open what it names, and copy those steps into your task list **before** you plan
-anything task-specific. The failure this prevents is reading the steps and then writing a bespoke plan that quietly
-drops them.
+Match the work to a row below. Where one fits, open what it names, and copy those steps into your task list
+**before** you plan anything task-specific. The failure this prevents is reading the steps and then writing a bespoke
+plan that quietly drops them.
 
 **A step you decide not to do stays in the list**, with `skip:` and one line saying why. Dropping it silently is not
 allowed.
@@ -32,14 +32,21 @@ than an order.
 | review records against the rules                         | [reviewing-records](playbooks/reviewing-records.md)                                       |
 | change the schema, or write a rule                       | [prc-change-the-schema](../../../examples/dog-fooding/processes/change-the-schema.md)     |
 | change `kac`, or add a check                             | [prc-change-the-tool](../../../examples/dog-fooding/processes/change-the-tool.md)         |
+| write a feature spec for behaviour `kac` already has     | [feature specs](../../../tooling/CLAUDE.md#the-feature-specs-pin-more-than-findings)      |
+| change the docs build, or a test, and leave `kac` alone  | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)               |
 | add a knowledge type                                     | [prc-add-a-type](../../../examples/dog-fooding/processes/add-a-type.md)                   |
-| apply the writing rules across a folder                  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)                 |
+| bring a folder's prose into line with the writing rules  | [prc-sweep-prose](../../../examples/dog-fooding/processes/sweep-prose.md)                 |
 | publish a report, or bring one up to date                | [writing-a-report](../writing-a-report/SKILL.md)                                          |
 | triage the findings filed here, or draft one             | [harvest-findings](../harvest-findings/SKILL.md)                                          |
 | review and tidy a lane of the project board              | [prc-review-a-board-lane](../../../examples/dog-fooding/processes/review-a-board-lane.md) |
 | write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md)     |
+| move, split or merge pages of the docs site              | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md)     |
 | change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)           |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)               |
+
+**A page that moves takes its URL with it.** A file under `template/` or `.schema/` citing the old URL is an overlay
+file, and every corpus holds a copy. Rewrite each citation, then run what
+[four trees](../../../CLAUDE.md#four-trees-hold-the-same-file) says that file owes.
 
 **Every row that changes a file ends by running `prc-pull-request`.** It is where the version, the changelog and
 the pages your change made wrong are dealt with. The board row is the one exception: it writes to the tracker and
