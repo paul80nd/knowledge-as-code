@@ -14,23 +14,19 @@ built from the same files, so nothing has to be kept true twice.
 
 An agent writes back by filing an issue on your tracker. A person decides whether what it found becomes a record.
 
-## A type declares its own schema
+## Where to start
 
-A **type** is a category such as a policy, a runbook or a glossary. Its **schema** is the machine-readable statement of
-what a record of that type has in it. The schema travels inside the corpus, in `.schema/`, so adding a type is adding a
-YAML file rather than changing the tool.
+This site has one section for each reader. A type is one kind of record, such as a runbook. Its schema is a YAML file
+under `.schema/` that says what a record of that type has in it.
 
-## What this site is
-
-The reference for KaC: what a corpus holds, and what `kac` does to one. It has four sections, one for each reader.
-
-* **[Use it](use/index.md)** is for whoever installs `kac`, runs it over a corpus, wires it into CI, and builds the
-  plugin. [Getting started](use/getting-started.md) is its first page.
-* **[The framework](framework/index.md)** is the ideas the tool serves: what a type and a tier are, the types that ship,
-  what a record has in it, and how knowledge is contributed.
-* **[Schema reference](reference/index.md)** is for whoever writes a type file: the keys, the rule expression grammar,
-  the checks, and the export contract.
-* **[Maintaining `kac`](maintaining/index.md)** is for whoever builds, releases or forks the tool.
+* **I want to use `kac`.** [Use it](use/index.md) shows you how to install the tool, run it over a corpus, wire it into
+  CI and build the plugin. [Getting started](use/getting-started.md) is its first page.
+* **I want to understand the framework.** [The framework](framework/index.md) explains how the types are laid out,
+  where they came from, and how to write a record.
+* **I own a schema.** [Schema reference](reference/index.md) covers the keys a type file takes, the rule expression
+  grammar, the checks and the export contract.
+* **I want to work on `kac`.** [Maintaining `kac`](maintaining/index.md) explains how to add a check in C# or a report,
+  and how the plugin bundle is laid out.
 
 ## What lives elsewhere
 

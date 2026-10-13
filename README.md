@@ -94,14 +94,13 @@ kac bundle      # packages that export as a Claude Code plugin under .dist/plugi
 
 Read next:
 
-* [The documentation site](https://paul80nd.github.io/knowledge-as-code/) covers every command, the framework and its
-  design.
-* [Getting started](https://paul80nd.github.io/knowledge-as-code/use/getting-started/) walks you through your first
-  record.
-* [Running it in CI](https://paul80nd.github.io/knowledge-as-code/use/ci/) pins the tool version and fails a pull
-  request that breaks the corpus.
-* [The default types](https://paul80nd.github.io/knowledge-as-code/framework/types/) lists the kinds of record a
-  corpus can adopt.
+* [Use it](https://paul80nd.github.io/knowledge-as-code/use/) shows you how to install the tool, run it over a corpus,
+  wire it into CI and build the plugin.
+  [Getting started](https://paul80nd.github.io/knowledge-as-code/use/getting-started/) is its first page.
+* [The framework](https://paul80nd.github.io/knowledge-as-code/framework/) explains how the types are laid out, where
+  they came from, and how to write a record.
+* [Schema reference](https://paul80nd.github.io/knowledge-as-code/reference/) covers the keys a type file takes, the
+  rule expression grammar, the checks and the export contract.
 * [`examples/`](examples/README.md) has worked corpora. Read them to see real records, and start your own with
   `kac new`.
 
@@ -153,8 +152,12 @@ cd examples/library
 dotnet run --project ../../tooling/kac -- validate
 ```
 
-[`tooling/README.md`](tooling/README.md) covers building, packing and testing `kac`, and how a release is made.
-[`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) says what each version brought.
+To change `kac`, read:
+
+* [`tooling/README.md`](tooling/README.md) for building, packing and testing it, and how a release is made.
+* [Maintaining `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/) on the documentation site, for how to
+  add a check in C# or a report, and how the plugin bundle is laid out.
+* [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) for what each version brought.
 
 ## Licence
 
