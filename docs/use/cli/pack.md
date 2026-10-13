@@ -112,7 +112,9 @@ A package is named and cited by three facts. `pack` says which one is missing, a
 pack: the export declares no shortcode, and a consumer cites what it imports by one. Write `shortcode:` in .corpus.yaml and export again.
 ```
 
-The other two are `corpus:`, which becomes the package id, and `content-version:`, which becomes the version.
+The other two are `corpus:`, which becomes the package id, and `content-version:`, which becomes the version. A
+`content-version` that is not `major.minor.patch`, with an optional prerelease suffix, is refused as well, because a
+registry cannot order it.
 
 ## Known limits
 

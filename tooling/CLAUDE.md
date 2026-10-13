@@ -275,6 +275,10 @@ that a refusal wrote none. A scenario states a behaviour its `docs/use/cli/` pag
 **A scenario reads the exit code and the disk, never the output**, because `Out` keeps the console it first meets. A
 behaviour visible only in what a command prints belongs to the golden suite.
 
+**Cite a new scenario on the specification page for its part**, under `docs/maintaining/`, in `## Specified by`.
+`ScenarioCitationTests` fails a scenario no page cites, and a cited name its feature file no longer holds. Renaming a
+scenario means renaming its citation in the same change.
+
 **Mutate the Given behind every refusal.** Set the value it breaks back to a sound one and run the spec. A refusal that
 still fires is refusing for a reason the scenario does not name.
 
