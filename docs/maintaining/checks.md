@@ -1,27 +1,91 @@
 # Checks in C\#
 
 This page is for whoever adds a check to `kac` that the schema cannot declare on its own. It says when a rule needs C#,
-how to add a fact the expression grammar can ask for, and why the numbers in the calibrated rules are what they are.
+how to write one, how to add a fact the expression grammar can ask for, and why the numbers in the calibrated rules are
+what they are.
 
 A corpus is one repository of knowledge records kept in git. A type is one kind of record, declared by one file under
 `.schema/`. [Checks](../reference/checks.md) is the reference for what a schema owner declares.
 
 ## When a rule needs C\#
 
-A question the [expression grammar](../reference/expressions.md) cannot ask needs a rule written in C#, and that rule
-states the check id it reports under. `no-dependency-cycles` reports as `dependency-cycle`.
+A rule needs C# when one fixed message cannot tell the author what the code could. An `expr:` rule reports the one
+`message:` its schema declares, whichever part of the document failed. A rule class can name the part.
 
-Some rules read every record at once, and some read what sits beside them:
+* **The grammar cannot ask the question.** A loop over records, a join between documents or a quantifier over a
+  document's parts is beyond the [expression grammar](../reference/expressions.md), so only code can answer it.
+* **The grammar can ask it, and its answer is only "something here is wrong".** Where code could name the missing
+  piece, write the code. A rule written as an expression to save a class is cheaper and worse, and no check fails it.
 
-* `dependency-cycle` reports a loop once, against the lowest id on that loop.
-* `dependency-criticality` compares a record's grade with the grade on each record it depends on, reading the ranking
-  from `ordered: true` on the enum.
-* `alignment-rollup` reads the framework register.
-* `mirrors-repo-links` reads `repos-base` from [`.corpus.yaml`](../use/corpus-descriptor.md#repos-base), because no
-  record states where the estate keeps its code.
+Cost comes second. It argues for turning a class into an `expr:` only where one fixed message already says everything
+the class would.
 
-[`tooling/CLAUDE.md`][adding-a-check] says which interface a rule class takes, and the three places that must agree
-once it exists.
+| Rule                         | What its message names                                                                        |
+|------------------------------|-----------------------------------------------------------------------------------------------|
+| `y-statement-present`        | the moves missing from a Y-statement, where an expression could only say it is not one        |
+| `alternatives-have-verdicts` | the Alternatives Considered bullet with no verdict                                            |
+| `terms-are-alphabetical`     | the glossary term out of order, and the term it belongs before                                |
+| `no-dependency-cycles`       | the route of a dependency loop, reported once against the lowest id on it                     |
+| `dependency-criticality`     | the record cited, and the grade of each end, reading the ranking from `ordered: true`         |
+| `mirrors-repo-links`         | a repository in `repos:` with no link, or a link with no entry, built from [`repos-base`][rb] |
+
+[rb]: ../use/corpus-descriptor.md#repos-base
+
+## Writing a rule class
+
+A rule class is one file under `tooling/kac.core/Rules/`, its own unit tests, and a line in `DocumentRules.All` or
+`CorpusRules.All`. Which interface it takes follows from what it reads:
+
+| Interface       | Given                                                            | Runs from                    | Reports                                       |
+|-----------------|------------------------------------------------------------------|------------------------------|-----------------------------------------------|
+| `IDocumentRule` | one document, through a `RuleContext`                            | `Validator.CheckRules`       | against that document                         |
+| `ICorpusRule`   | every record and the `byId` index, through a `CorpusRuleContext` | `Validator.CheckCorpusRules` | against the document it names, rarely its own |
+
+Take the narrower one wherever it will do. A rule handed every record to judge one document reads as though it needs
+them all. A rule needing git history fits neither interface.
+
+## Rule ids and check ids
+
+A dispatcher finds a rule class by the id the schema's `rules:` block declares, which is a `RuleId`. The class reports
+under a `CheckId`, which is usually different: `no-dependency-cycles` reports as `dependency-cycle`. The two types keep
+that difference deliberate.
+
+* The class lists the check ids it reports in `Emits`.
+* Each check id needs an entry in `.schema/_checks.yaml`. `schema-dispatch` reports one that has none.
+* A finding goes to the `Report` the pass hands down, as `RuleContext.Report` in a rule class. Write the id as a
+  `CheckId` at the call, so the compiler stops a message landing in the id's place.
+
+A rule id that no class implements and no `expr:` states is an intention. It declares no `severity:`, and the type
+page renders it as declared but not yet enforced.
+
+## The three places that must agree
+
+Each one fails a meta-test, not the test you were looking at.
+
+1. **An entry in `.schema/_checks.yaml`.** Its `description:` is what `kac checks` prints. A check id a rule class
+   reports with no entry fails `schema-dispatch` when the schema loads.
+2. **A row in `ChecksTable.DocRows`, or `on-type-page: false` on the entry.** `ChecksTable.Problems` fails a check with
+   neither. The flag is for a check that reads the schema, the template or the type page, which an author of a record
+   cannot act on.
+3. **A fixture that trips it.** The coverage gate fails a reachable check no fixture exercises. It counts ids, not
+   branches, so a rule reporting three faults under one id needs a fixture for each, and unit tests for the rest.
+
+## Core checks
+
+A core check runs on every document, in the order `Validator.CheckDocument` reads one, and is never looked up in a
+registry. Several return early, so a later check does not report on a document already known to be broken.
+
+A self-contained group with logic worth testing becomes a static class under `tooling/kac.core/Checks/`:
+
+* **`IdChecks`** states the shape of an id once. Three passes read it, and a second copy would let them disagree.
+* **`ValueChecks`** judges one frontmatter value against its `FieldSpec` alone. It reads a template's unfilled marks as
+  absent before a field's own check sees them, so a placeholder is never reported as a malformed date. `IsAbsent` is
+  public because the required-field pass asks the same question.
+* **`SchemaChecks`** reads no document. It runs once, before the corpus, and asks whether the schema declares anything
+  the tool cannot act on.
+
+`SchemaChecks` reads each vocabulary it tests from the code that dispatches it: `IdChecks.IdStyles`,
+`Generator.IndexOrders` and the two `ByRuleId` maps. A copy would list what is spelled correctly, and not what runs.
 
 ## Adding a fact
 
@@ -32,7 +96,11 @@ against the function table, so a fact missing from the page fails the build. The
 A new fact usually serves one rule at first, and answers a question the next corpus will ask again. Extending the
 grammar for one rule is almost always the wrong move.
 
-A question that genuinely needs loops, joins or quantifiers is a rule written in C#, as [above](#when-a-rule-needs-c).
+`Facts.cs` holds the fact functions, and nothing else an expression can reach. `RuleExpr.cs` parses, type-checks and
+evaluates an expression. A `Facts` is built for one document and discarded after that document's rules run, which is
+what makes `words()` safe to memoise.
+
+A question that needs loops, joins or quantifiers is a rule class, as [above](#when-a-rule-needs-c).
 
 ## The calibrated windows
 
@@ -69,11 +137,12 @@ pipeline, leaving all the markdown and frontmatter extraction untouched. It woul
 dependency to the tool. The one property worth having is new rules as data, and a small hand-rolled evaluator buys it at
 a fraction of that cost. `RuleExpr.cs` says when that judgement expires.
 
+**`ChecksTable.DocRows` is written by hand.** Several catalogue ids fold into one row a reader of a type page can act
+on, so the rows are grouped and worded for that reader. An `expr:` rule's row comes from its `description:` instead.
+
 **A text pattern lives in `.schema/`.** A rule that matches text is a heuristic, and a heuristic gets tuned. Tuning a
 regex in the schema costs a schema edit. Moving it in the tool would cost a release every corpus has to take.
 
 ## Where to go next
 
 [Adding a report](reports.md) is the other way `kac` grows a question it can answer about a corpus.
-
-[adding-a-check]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/CLAUDE.md#adding-or-changing-a-check

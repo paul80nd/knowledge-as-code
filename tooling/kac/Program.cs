@@ -1,5 +1,5 @@
 // The clock, git and the network are read here and passed down, so a test calls a verb with a fixed day and a
-// registry that answers from memory. `tooling/CLAUDE.md` says which file answers what.
+// registry that answers from memory. `docs/maintaining/architecture.md` says which file answers what.
 
 using System.ComponentModel;
 using System.Reflection;

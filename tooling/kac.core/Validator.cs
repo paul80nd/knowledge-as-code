@@ -1076,7 +1076,7 @@ public static class Validator
 
     /// <summary>
     /// An <c>expr:</c> rule is evaluated, and any other is looked up in <c>DocumentRules</c> by id.
-    /// <c>tooling/CLAUDE.md</c> draws the line between them.
+    /// <c>docs/maintaining/checks.md</c> draws the line between them.
     /// </summary>
     private static void CheckRules(Doc d, TypeSchema t, Report report, DateOnly today)
     {

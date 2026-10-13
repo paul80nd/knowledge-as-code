@@ -29,7 +29,7 @@ The command surface is `new`, `validate`, `generate`, `restore`, `export`, `bund
 `update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/use/cli/>.
 
 Two walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the corpus, then walks up again for
-`.schema/` to find what to judge the corpus against. Taken from `tooling/CLAUDE.md`.
+`.schema/` to find what to judge the corpus against. Taken from `docs/maintaining/architecture.md`.
 
 ## Where it lives
 

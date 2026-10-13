@@ -44,9 +44,8 @@ A rule fires against the documents of the type whose schema declares it. A rule 
 condition the schema states and the tool evaluates, reports under its own id. Adding one is adding YAML rather than
 editing this tool, and [Rule expressions](expressions.md) is the reference for what one may say.
 
-A question the grammar cannot ask needs a rule written in C#, and that rule names the check id it reports under.
-`no-dependency-cycles` reports as `dependency-cycle`. [Checks in C#](../maintaining/checks.md) says how such a rule is
-written.
+A rule written in C# names the check id it reports under: `no-dependency-cycles` reports as `dependency-cycle`.
+[Checks in C#](../maintaining/checks.md#when-a-rule-needs-c) says when a rule needs one, and how it is written.
 
 A list the schema asks an author to fill takes a floor, set with `min-items:`. A rule with no `severity:` runs nothing,
 as [A rule with no `severity:`](held-to.md#a-rule-with-no-severity) says.

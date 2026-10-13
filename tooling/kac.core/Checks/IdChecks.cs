@@ -1,8 +1,8 @@
 namespace kac.core;
 
 /// <summary>
-/// The shape of a discriminator is stated once here and read three ways. <c>../../CLAUDE.md</c> says why a second copy
-/// is not written.
+/// The shape of a discriminator is stated once here and read three ways. <c>docs/maintaining/checks.md</c> says why a
+/// second copy is not written.
 /// </summary>
 public static class IdChecks
 {

@@ -73,8 +73,9 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.
 
-* **A rule whose question needs C# is a class, not an `expr:`.** `tooling/CLAUDE.md` has the test for which, and the two
-  interfaces to write it against.
+* **A rule whose question needs C# is a class, not an `expr:`.**
+  <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#when-a-rule-needs-c> has the test for which, and
+  the two interfaces to write it against.
 
 ## Where the reasoning lives
 
