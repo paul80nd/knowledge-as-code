@@ -19,11 +19,8 @@ the page. It is not the model for length. Keep each section to what its reader n
 
 ## What this page overrides in the floor
 
-* **"we".** Never, on a public page. Say "you", or name `kac`, the framework or the corpus. Write: "`kac` builds each
-  index from the records." Not: "We generate the indexes for you."
-* **Gloss a framework term on first use.** On every page, not once per site. A reader arrives from search in the
-  middle of the set. The vocabulary is in
-  [`knowledge-as-code.md`](../../../examples/library/glossary/knowledge-as-code.md).
+**Never write "we" on a public page.** Say "you", or name `kac`, the framework or the corpus. Write: "`kac` builds each
+index from the records." Not: "We generate the indexes for you."
 
 ## The first paragraph
 
@@ -36,19 +33,10 @@ the page. It is not the model for length. Keep each section to what its reader n
 
 ## Which section holds a page
 
-The site has four sections, one for each reader:
+[The documentation charter](../../../docs/maintaining/charter.md) says which reader each of the four sections serves,
+which kinds of page it may contain, and where an argument goes. Read it before you add a page, move one or argue
+anything on one.
 
-* Use it
-* The framework
-* Schema reference
-* Maintaining `kac`
-
-[The documentation charter](../../../docs/maintaining/charter.md) says which reader each section serves, which kinds of
-page it may contain, and where an argument goes. Read it before you add a page, move one or argue anything on one.
-
-* Maintaining `kac` covers building, testing, releasing and forking `kac`. `tooling/README.md` keeps what a reader
-  needs only while changing the code, and links back to those pages.
-* A command page says what the command does. It argues nothing.
 * A second page is earned by a second reader. `use/cli/checks.md` is for somebody running the command.
   `reference/checks.md` is for somebody declaring a check, and `maintaining/checks.md` for somebody writing one in C#.
   One reader who wants more detail gets a deeper heading, not a page.
@@ -57,16 +45,13 @@ page it may contain, and where an argument goes. Read it before you add a page, 
 
 ## The command page
 
-The page has fixed sections in a fixed order.
-[`tooling/README.md`](../../../tooling/README.md#the-documentation-site) is the reference for the set.
+[`tooling/README.md`](../../../tooling/README.md#the-documentation-site) states the fixed sections, the generated usage
+block and where the examples' output comes from. It leaves these to you:
 
-* The usage block at the top is generated. Do not edit it.
 * The H1 is the verb and what running it does, with no colon: ``# `checks` list every check the validator can report``.
   `CliReference.cs` parses that form to build the overview table, and `CliReferenceTests` fails any other.
 * **What it does** opens on the fact. The first sentence says what the command reads and what it writes.
-* **Examples** sit at `###`, one per example, each with the output the command printed. Take the output from a run.
 * **Known limits** states what the command does not do, and the exit code for each refusal.
-* Put the rule before the reason in every section.
 * An example heading is a noun phrase naming the case: "A first restore", "A refusal".
 
 ## Headings and sections
@@ -75,8 +60,6 @@ The page has fixed sections in a fixed order.
   topic passes: "What discovery excludes", "`from: sub-path`". A claim fails: "The fallback walk honours nothing".
   Test it on its own. A reader who has read nothing else on the page can tell whether their answer is under it.
 * Keep a section under about 120 words, unless it is a list or a table.
-* Use a numbered list for steps, a table for values, and bullets for parallel items.
-* Write a list of three or more things as a list, not as a sentence.
 * Renaming a heading breaks every link to its anchor. Search the whole repository before you rename one.
 
 ## Facts
