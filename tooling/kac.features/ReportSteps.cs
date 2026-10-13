@@ -20,13 +20,16 @@ public sealed class ReportSteps(Workspace ws)
         ws.Write(path, content + "\n");
     }
 
-    /// <summary>Writes the restored export's framework file, and points its manifest entry for the type at it.</summary>
+    /// <summary>
+    /// Writes the restored export's framework file, and points its manifest entry for the type at it.
+    /// </summary>
     [Given(@"the restored ""(.*)"" export cites ""(.*)"" reference ""(.*)"" from ""(.*)""")]
     public void GivenTheRestoredExportCites(string shortcode, string framework, string reference, string clause)
     {
         var manifestPath = $".imports/{shortcode}/manifest.json";
         var manifest = ws.ReadJson(manifestPath);
-        var types = manifest["types"] as JsonArray ?? throw new InvalidOperationException("the manifest lists no types");
+        var types = manifest["types"] as JsonArray
+                    ?? throw new InvalidOperationException("the manifest lists no types");
         var entry = types.OfType<JsonObject>().Single(t => JsonRead.Str(t["type"]) == "policies");
         entry["frameworksFile"] = "policies/frameworks.jsonl";
         ws.WriteJson(manifestPath, manifest);

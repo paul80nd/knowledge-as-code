@@ -69,7 +69,9 @@ public sealed partial class GenerationSteps(Workspace ws)
         }
     }
 
-    /// <summary>One row per table, in the order the file has them, each row the header cells joined by a comma.</summary>
+    /// <summary>
+    /// One row per table, in the order the file has them, each row the header cells joined by a comma.
+    /// </summary>
     [Then(@"the tables in ""(.*)"" are headed:")]
     public void ThenTheTablesAreHeaded(string path, Table table)
     {

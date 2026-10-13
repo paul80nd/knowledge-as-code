@@ -16,7 +16,9 @@ public static class Creation
     /// <summary>Older than the floor this repository's manifest states.</summary>
     public const string TooOld = "0.0.0";
 
-    /// <summary><paramref name="tool"/> is the version of <c>kac</c> the run claims to be, where not new enough.</summary>
+    /// <summary>
+    /// <paramref name="tool"/> is the version of <c>kac</c> the run claims to be, where not new enough.
+    /// </summary>
     public static int Create(string folder, string? from = null, string? types = null, string? name = null,
         string ci = CiSystem.None, bool yes = true, string? tool = null) =>
         Commands.New(

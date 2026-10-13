@@ -181,7 +181,7 @@ report states that limit in its own text.
 **A redirect into `reports/` can collide with the run.** `kac` reads every file in that folder, including the one a
 shell has just opened. On Windows the run stops. Use `--out`, which writes after the corpus is read.
 
-**`frameworks` reports on this corpus's own clauses alone.** The export carries a producer's framework references in
+**`frameworks` reports on this corpus's own clauses alone.** The export includes a producer's framework references in
 `frameworks.jsonl`, and `report` reads none of them, so a consumer's report leaves them out.
 
 [Adding a report](../../maintaining/reports.md) is the page for adding a report to `kac`.
