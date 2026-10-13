@@ -15,7 +15,8 @@ export is built to do, and the scenario proving each behaviour. [`export`](../us
 * It writes only under `.dist/export/`, and never into the corpus. [The tree](../reference/export.md#the-tree)
 * It records the commit and whether the tree was dirty, unknown where git could not say.
   [A dirty tree](../use/cli/export.md#a-dirty-tree)
-* It exports a draft or a lapsed record with its own state, and withholds what `export.exclude:` names.
+* It exports a draft or a lapsed record with its own state. `export.exclude:` withholds either from this corpus's own
+  records, and never an inherited one.
   [How a run writes it](../reference/export.md#how-a-run-writes-it)
 * It merges what the corpus consumes into each flat file, and files an inherited record under its producer's
   shortcode. [A consumer inherits](../reference/export.md#a-consumer-inherits-what-its-producers-published)
@@ -40,7 +41,8 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
   [What holds in every file](../reference/export.md#what-holds-in-every-file)
 * Two runs from one commit write identical bytes but for `generatedAt`.
   [What holds in every file](../reference/export.md#what-holds-in-every-file)
-* `formatVersion`, `shapeVersion` and `contentVersion` each move for their own reason.
+* `formatVersion` comes from the build, `shapeVersion` from each type's schema and `contentVersion` from
+  `.corpus.yaml`, so none moves another.
   [Three versions](../reference/export.md#three-versions-and-none-implies-another)
 
 ## Specified by
@@ -52,20 +54,20 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
 * An export of a type the corpus has not adopted is refused
 * An export rebuilds .dist/export/ whole
 * The manifest records whether the tree was dirty
+* A draft or a lapsed record travels with its own state
+* export.exclude withholds the records it names
+* A cross-reference adds to seeAlso only where it names a part
+* Each of the three versions is read from its own source
 * What the corpus consumes travels under the shortcode of the corpus that wrote it
+* export.exclude withholds this corpus's own records alone
 * An export refuses a consumed corpus that has not been restored
 * An export refuses a consumed corpus at a format it cannot read
 * An export refuses a consumed corpus exporting a section at another fidelity
 * An export refuses a consumed corpus exporting a type at another shape
+* An export refuses one corpus arriving twice, at two versions
 
 ## Unspecified
 
-* A draft or lapsed record travelling, and `export.exclude:` withholding it. A fixture could reach both.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A cross-reference naming no part adding nothing to `seeAlso`. Only the run's output names the link, so a scenario can
-  read the absence alone. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* One corpus arriving twice, at two versions. A fixture restoring both could reach it.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
 * What every file holds, and two runs writing identical bytes. The golden suite diffs the export against
   `expected-dist/` twice per run, and no scenario restates it.
 
