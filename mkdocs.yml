@@ -129,9 +129,9 @@ plugins:
 # The verb alone in the sidebar. Each page's own heading then says what that verb does.
 nav:
   - Introduction: index.md
+  - Compared with alternatives: compared.md
   - Use it:
       - use/index.md
-      - Compared with alternatives: use/compared.md
       - Getting started: use/getting-started.md
       - One corpus or several: use/one-corpus-or-several.md
       - Running it in CI: use/ci.md

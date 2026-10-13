@@ -18,7 +18,7 @@ Each option below gives an agent text to read. KaC adds four things to that text
 * **A record is checked.** `kac validate` checks every record against the schema its type declares. A broken
   reference fails CI.
 * **One standard applies in every repository that takes it.** A team's corpus consumes an organisation's corpus. It
-  cites those records under the organisation's [shortcode](../framework/metadata.md#the-shortcode).
+  cites those records under the organisation's [shortcode](framework/metadata.md#the-shortcode).
 * **A policy links to the standard and the control.** A standard's `implements:` cites the policy clauses it
   implements. A control is a record saying what checks a rule, and its `verifies:` cites the standards it checks.
 
@@ -84,7 +84,7 @@ plugin ships.
 
 ## Where to go next
 
-[One corpus or several](one-corpus-or-several.md) helps you decide how many corpora to keep, once you have decided to
+[One corpus or several](use/one-corpus-or-several.md) helps you decide how many corpora to keep, once you have decided to
 keep one.
 
 [agents-md]: https://agents.md/
