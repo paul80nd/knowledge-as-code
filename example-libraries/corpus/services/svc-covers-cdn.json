@@ -34,6 +34,6 @@
     "Data": "Backed by the `covers` container in the shared storage account. The thumbnailer reads it on the edge's behalf."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/0004412830734703bd109d407ff74bc74b16587a/examples/library/services/covers-cdn.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/29c8a76e06b422913d76455791288e6ee78b1266/examples/library/services/covers-cdn.md"
   }
 }
