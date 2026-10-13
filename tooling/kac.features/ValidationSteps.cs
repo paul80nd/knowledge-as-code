@@ -16,6 +16,9 @@ public sealed class ValidationSteps(Workspace ws)
     [When("I validate the corpus")]
     public void WhenIValidateTheCorpus() => _result = Harness.Validate(ws.Root);
 
+    [When(@"I validate the corpus in ""(.*)""")]
+    public void WhenIValidateTheCorpusIn(string folder) => _result = Harness.Validate(ws.PathOf(folder));
+
     [Then(@"validation reports (\d+) documents? and (\d+) skipped")]
     public void ThenValidationReports(int validated, int skipped)
     {

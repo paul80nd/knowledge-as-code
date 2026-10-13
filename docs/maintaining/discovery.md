@@ -13,7 +13,8 @@ and the scenario proving each behaviour. [Discovery](../use/discovery.md) and
   [Where a command runs](../use/cli/index.md#where-a-command-runs)
 * It lists files with `git ls-files`, so a file git ignores is a file no command sees.
   [What `git ls-files` lists](../use/discovery.md#what-git-ls-files-lists)
-* It walks the tree for Markdown where the tree is not a repository, and obeys no exclude file there.
+* It walks the tree for Markdown where the tree is not a repository. The walk obeys no exclude file and skips `.git/`,
+  `.idea/` and `.claude/` at the root. It lists Markdown alone, so a link to any other file fails there.
   [The fallback walk](../use/discovery.md#the-fallback-walk)
 * It reads a path with a `_`-prefixed segment as no record, and still checks a type's `_template.md`.
   [What discovery excludes](../use/discovery.md#what-discovery-excludes)
@@ -54,6 +55,18 @@ and the scenario proving each behaviour. [Discovery](../use/discovery.md) and
 * A field the type derives from the folder is not the author's to write
 * A template carrying a derived field is reported, not only a record
 
+[`Discovery.feature`][Discovery.feature]:
+
+* A schema above the corpus judges it
+* A file git ignores is not read
+* A file the corpus ignores is read where the corpus is not a repository
+* A link to a file that is not Markdown resolves in a repository
+* A link to a file that is not Markdown fails where the corpus is not a repository
+* A folder discovery skips at the corpus root is read inside a type folder
+* A link into a folder the fallback walk skips fails
+* A Markdown file outside every type folder is not a record
+* A file in a type folder with no frontmatter is skipped, and the run passes
+
 [`Shape.feature`][Shape.feature]:
 
 * A type's template is checked without being counted as a record
@@ -61,21 +74,10 @@ and the scenario proving each behaviour. [Discovery](../use/discovery.md) and
 
 ## Unspecified
 
-* The walk up for `.schema/`. Every scenario copies the schema beside the corpus, and a fixture could put it above.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The `git ls-files` listing, and a file `.gitignore` hides. The specs read a temporary folder with no repository, so
-  every one runs the fallback walk. A scenario could initialise one.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The fallback walk reading an ignored file, and a link to a non-Markdown file failing under it. A fixture could reach
-  both. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `.git/`, `.idea/` and `.claude/` at the root read as nothing, and a deeper `.claude/` read.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A root `README.md` or `CLAUDE.md`, and a Markdown file outside every type folder, read as no record.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A file with no frontmatter counted as skipped. Every scenario reports none skipped.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
+* `.git/`, `.idea/` and `.claude/` at the root read as nothing in a repository. `git ls-files` lists a root `.claude/`,
+  so a link into it resolves there, and the use page says nothing reads it.
 * A command other than `new` refusing a folder outside any corpus. The refusal comes before a command runs, in
-  `tooling/kac/Program.cs`, which no scenario calls. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
+  `tooling/kac/Program.cs`, which the feature layer does not reference.
 
 ## Where to go next
 
@@ -83,5 +85,6 @@ and the scenario proving each behaviour. [Discovery](../use/discovery.md) and
 
 [Clean.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Clean.feature
 [Creation.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Creation.feature
+[Discovery.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Discovery.feature
 [Shape.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Shape.feature
 [Structure.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Structure.feature
