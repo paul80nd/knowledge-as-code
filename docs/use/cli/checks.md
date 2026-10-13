@@ -70,13 +70,11 @@ The catalogue is flat and keyed by id, so a grep over it answers faster than rea
 
 ## Known limits
 
-**A run also compares the catalogue against the rows the generator would write onto a type page.** `kac` reports a
-mismatch on stderr and exits `1`, whether or not you asked for `--json`. A drift there fails this command even though
-nothing is wrong with the catalogue itself. Those rows are worded by hand for whoever writes a record, and several
-catalogue ids fold into one row, so `kac` compares the two lists and builds neither from the other.
+**A run also compares the catalogue against the rows `generate` writes onto each type page.** A mismatch is reported
+on stderr and exits `1`, whether or not you asked for `--json`.
 
-**A rule with no compiled `expr:` does not appear under its own rule id.** A rule with no severity is an intention, and
-the type page renders it under **Declared, not yet enforced**. A rule implemented in C# reports under the check id it
-emits instead, and the catalogue does list that one.
+**A rule with no compiled `expr:` does not appear under its own rule id.** A rule implemented in C# reports under the
+check id it emits, which the catalogue lists. A rule with no severity runs nothing, so `checks` does not list
+it. [A rule with no `severity:`](../../reference/held-to.md#a-rule-with-no-severity) says where it appears.
 
-[Checks](../../reference/checks.md) is the page for adding a check, and says why a rule is data wherever it can be.
+[Checks](../../reference/checks.md) is the page for adding a check.

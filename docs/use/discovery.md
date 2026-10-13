@@ -17,11 +17,8 @@ it has.
 The listing obeys `.gitignore`, `.git/info/exclude` and your global excludes. It never includes `.git/`. A file git does
 not list is a file no command sees.
 
-The listing includes every file, not only the Markdown. The records come from the Markdown in it. The other files are
-what a link resolves against.
-
-This is why [Running it in CI](ci.md) asks you to check the repository out with git. An archive download has no git
-repository, so `kac` falls back to [the fallback walk](#the-fallback-walk) instead, and that walk lists Markdown alone.
+The listing includes every file. The records come from the Markdown in it, and a link resolves against the rest. A
+tree with no git repository, such as an archive download, gets [the fallback walk](#the-fallback-walk).
 
 ## What discovery excludes
 
@@ -38,17 +35,14 @@ Five rules narrow the listing. A file matching any of them is not a record.
 * **Anything outside a folder that maps to a type.** A record lives in its type's folder, and discovery reads those
   folders and nothing else.
 
-[Running it in CI](ci.md#what-is-not-a-record) lists what is not a record.
-
 ## `from: sub-path`
 
 The first folder in a record's path decides its type. You arrange the folders below that one, and `kac` reads them too.
 A field declaring `from: sub-path` takes its value from them. So `policies/security/accs-access-by-identity.md` gets
 `category: security`, and `standards/platform/dotnet/testing.md` gets `category: platform/dotnet`.
 
-Nest those folders as deep as you want. A record saved straight into its type folder gets an empty value, so a corpus
-that files everything at the top of each type folder declares nothing and reads no differently.
-[Metadata](../framework/metadata.md#a-derived-field) explains what an author does about it.
+Nest those folders as deep as you want. A record saved straight into its type folder gets an empty value.
+[Metadata](../framework/metadata.md#a-derived-field) says what an author writes.
 
 ## Frontmatter
 
@@ -57,15 +51,9 @@ one as skipped without frontmatter, reports that count in the summary, and does 
 
 ## The framework's own documentation
 
-`knowledge-as-code.md` and the documents below it are not records, and discovery excludes them. They are still Markdown
-with links in it. So `kac` reads them for link and fragment resolution, the way it reads a type page, and for
-`framework-names-types`.
-
-`kac` empties the generated blocks before it reads. `generate --check` checks those blocks instead. Their links are
-written from this corpus, not from the framework.
-
-The framework's own glossary sits in that set and is also a record, filed under a type and validated like any other.
-`kac` applies the naming rule to it, and not a second link pass. A second pass would report every dead link in it twice.
+`knowledge-as-code.md` and the documents below it are not records. `kac` reads them for link and fragment resolution,
+the way it reads a type page, and for `framework-names-types`. It empties their generated blocks first, which
+`generate --check` checks instead.
 
 ## Type pages
 
@@ -78,23 +66,18 @@ frontmatter it should not have at all.
 `kac` checks that every type page and every framework document still has both markers of each block `generate` writes
 into it. The list of blocks is the one `generate` writes from.
 
-If a block loses its markers, `generate` no longer writes it. This check is the only thing that reports the loss.
-`generate --check` compares a file against what the generator would produce. For a file with no marker in it, that is
-the file as it stands. [Generation](../reference/generation.md) explains what each block is built from.
+If a block loses its markers, `generate` no longer writes it, and `generate --check` sees no difference. This check is
+the only thing that reports the loss. [Generation](../reference/generation.md) says what each block is built from.
 
 ## The fallback walk
 
 `kac` walks the tree for `*.md` when the tree is not a repository, or when git cannot be run. The walk skips `.git`,
 `.idea` and `.claude` at the root. It obeys no exclude file.
 
-Two things change, and the second one is easy to miss:
+Two things change:
 
 * A Markdown file the corpus had ignored is discovered and validated.
-* The walk lists Markdown alone, where `git ls-files` lists everything. A link to an image or a YAML file then resolves
-  against nothing and fails `link-resolves`.
-
-The tool's own test harness builds such a tree on purpose. A corpus outside version control meets the walk without
-asking for it. The walk is the fallback, so do not rely on it.
+* The walk lists Markdown alone, so a link to an image or a YAML file fails `link-resolves`.
 
 ## Where to go next
 

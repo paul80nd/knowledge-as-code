@@ -24,10 +24,6 @@ the command does, works through examples with the output they print, and lists i
 
 ## The order the commands run in
 
-Most commands sit in one sequence. You stand a corpus up, write records, check them against the schema, and rebuild what
-the corpus derives from them. Everything after that is optional, and which branch you take depends on whether one corpus
-serves you or several.
-
 A square box is a command you type. A rounded one is what you do, or what you get.
 
 ```mermaid
@@ -58,29 +54,17 @@ graph TD;
   restore --> consumer;
 ```
 
-**The loop is the part you live in.** Write a record, run [`validate`](validate.md), run [`generate`](generate.md),
-write the next one. CI runs the same two, and [Running it in CI](../ci.md) wires them into a pull request.
+Write a record, run [`validate`](validate.md), run [`generate`](generate.md), and write the next one.
+[Running it in CI](../ci.md) runs the same two on a pull request. Run [`update`](update.md) when the framework moves,
+or to adopt a type.
 
-**[`update`](update.md) rejoins the loop rather than opening it.** It takes a newer framework into a corpus that already
-has one, and it is where a corpus adopts a type. Run it when the framework moves.
-
-**[`export`](export.md) is the fork.** Both branches below read what it wrote, and neither runs without it.
-
-**One corpus, publishing to an agent.** [`bundle`](bundle.md) assembles the export and your `.plugin/` tree into a
-plugin somebody installs. This is the whole path for a corpus that stands alone, which is the ordinary case.
-
-**Layered corpora, publishing to each other.** [`pack`](pack.md) zips the export into a versioned package. You put that
-on a registry or in a folder, and the corpus that consumes it runs [`restore`](restore.md) before it validates.
-[`validate`](validate.md) then resolves a citation carrying the producer's shortcode against what arrived, so the
-consuming corpus runs the same loop over its own records and over the ones it inherited.
-
-[`checks`](checks.md) is on no branch of this. It reads the schema and prints what could ever fire, which is a question
-about the schema rather than a step in any sequence.
+Everything after [`export`](export.md) is optional. A corpus that stands alone runs [`bundle`](bundle.md) to build a
+plugin. A corpus another one consumes runs [`pack`](pack.md), and the consumer runs [`restore`](restore.md) before it
+validates. [`checks`](checks.md) is on no branch: it reads the schema and prints what could fire.
 
 ## Which command to run
 
-Four questions get asked about a corpus, and one command answers each. Two of them take a `--check`. A corpus can fail
-one question while passing the others.
+Each question about a corpus has one command. A corpus can fail one while passing the others.
 
 | You want to know                                | Run                    |
 |-------------------------------------------------|------------------------|
@@ -89,34 +73,25 @@ one question while passing the others.
 | has this corpus fallen behind its framework     | `kac update --check`   |
 | what could CI report against this corpus at all | `kac checks`           |
 
-A corpus can be fresh and behind, or in step and stale. `validate` asks whether your records are correct, and a corpus a
-long way behind its framework can still be entirely valid.
-
-`checks` reads the schema and prints what *could* fire. `validate` fires it against documents. A check absent from a
-validate run has either not been declared or not been tripped, and `checks` is what tells those two apart.
+A check absent from a `validate` run has either not been declared or not been tripped, and `checks` tells the two
+apart.
 
 ## Where a command runs
 
-Every command but `new` answers a question about a **corpus**, meaning one repository of knowledge records kept in git.
-Each one finds that corpus by walking up from the working directory for a `.corpus.yaml`, the corpus's own descriptor.
-It then walks up again from there for the `.schema/` that says what a record of each type must have, so one schema can
-serve several corpora in one repository. Where the tool's own files sit says nothing about which corpus it reads.
+Every command but `new` reads a **corpus**, meaning one repository of knowledge records kept in git. It finds the
+corpus by walking up from the working directory for a `.corpus.yaml`. It then walks up again from there for `.schema/`,
+so one schema can serve several corpora in one repository.
 
-`new` stands a corpus up where there is none, so it is the one command that expects neither file above it. `--help` and
-`--version` are answered by the parser and need no corpus at all.
+`new` expects neither file above it. `--help` and `--version` need no corpus at all.
 
 ## Options every command takes
 
-`--no-color` turns colour off, and every command reads `NO_COLOR` from the environment for the same request. `NO_COLOR`
-is the cross-tool standard, and the flag is there for a caller who cannot set a variable.
-
-A redirected stream has no colour on its own. An environment that identifies a runner rendering escapes in its logs
-turns it back on, and GitHub Actions is one such runner. Set `NO_COLOR` wherever the bytes have to be the same
+`--no-color` turns colour off, and so does `NO_COLOR` in the environment. A redirected stream has no colour, except on
+a runner that renders colour in its logs, such as GitHub Actions. Set `NO_COLOR` where the output must be the same
 everywhere.
 
-`--help` and `--version` belong to the parser rather than to any one command. `kac --help` lists the commands, and
-`kac <command> --help` prints that command's options. Each page's usage block is generated from the same command model.
-`--version` prints the release and the commit it was built from:
+`kac --help` lists the commands, and `kac <command> --help` prints that command's options. `--version` prints the
+release and the commit it was built from:
 
 ```text
 0.25.0+037426e8e60b7756f6883f307334a3368b80779d

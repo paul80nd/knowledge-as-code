@@ -55,7 +55,7 @@ run:  kac generate
 ```
 
 An index or a generated table no longer matches the records it was built from. Run `kac generate` on your own machine
-and commit what it writes. CI never commits, so this is always yours to fix locally.
+and commit what it writes. [CI never commits](ci.md#read-only-permission).
 
 Where an index still looks wrong, the frontmatter it was built from is wrong.
 
