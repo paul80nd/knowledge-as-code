@@ -103,6 +103,10 @@ kac new --from ../knowledge-as-code
 **It is not idempotent and does not try to be.** Run it twice in the same folder and it stops on the first check. A
 `.corpus.yaml` at or above the working directory means the corpus is already there.
 
+**It refuses a repository with uncommitted changes**, and exits `1`. Commit or stash them first, so that what `new`
+writes reads as a diff of its own. A folder that is not yet a repository gets `git init`, once you agree or pass
+`--yes`. A file the folder already holds stays where it is.
+
 **It does not decide what your repository looks like.** Branch protection, reviewers and issue templates are questions
 about your repository, and `new` asks none of them.
 
