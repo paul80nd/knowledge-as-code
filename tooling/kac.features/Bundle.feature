@@ -1,7 +1,8 @@
 Feature: What `bundle` assembles, and what makes it refuse
 `bundle` assembles the export and the plugin tree into a Claude Code plugin under `.dist/plugin/`, and the marketplace
 that offers it under `.dist/`. docs/use/cli/bundle.md states each behaviour below. Driven against the bundle and
-bundle-empty fixtures, whose `plugin/` is the corpus's `.plugin/`, through `Commands.Bundle`.
+bundle-empty fixtures, whose `plugin/` is the corpus's `.plugin/`, through `Commands.Bundle`. The export-inherited
+fixture takes the bundle fixture's plugin tree, so a bundle reads an export carrying what a corpus consumes.
 
 Scenario: A bundle writes the plugin, its account of itself and the marketplace
   Given the bundle fixture corpus
@@ -14,6 +15,44 @@ Scenario: A bundle writes the plugin, its account of itself and the marketplace
   And ".dist/plugin/skills/glossary-lookup/SKILL.md" exists
   And the bundle includes "skills/glossary-lookup"
   And nothing outside .dist/ changed
+
+Scenario: A bundle reads the export and never the corpus
+  Given the bundle fixture corpus
+  And it has been exported
+  And "glossary" is deleted
+  And ".schema" is deleted
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/glossary-lookup"
+  And ".dist/plugin/corpus/glossary/terms.jsonl" exists
+
+Scenario: A bundle reads a shared plugin tree and keeps this corpus's own manifest
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree is shared from "shared/.plugin"
+  And "shared/.plugin/.claude-plugin/plugin.json" states "metadata.components" as []
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/glossary-lookup"
+  And the bundle trims "skills/decision-lookup" because "the export carries no adrs"
+  And ".dist/plugin/skills/glossary-lookup/SKILL.md" exists
+  And ".dist/plugin/hooks/breadcrumb" exists
+
+Scenario: A file this corpus keeps wins over the shared tree's copy
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree is shared from "shared/.plugin"
+  And the corpus keeps its own "skills/glossary-lookup/SKILL.md"
+  When I bundle
+  Then ".dist/plugin/skills/glossary-lookup/SKILL.md" contains "This corpus's own copy."
+
+Scenario: A bundle rebuilds .dist/plugin/ whole
+  Given the bundle fixture corpus
+  And it has been exported
+  And ".dist/plugin/orphan.json" is left from an earlier run
+  When I bundle
+  Then it succeeds
+  And ".dist/plugin/orphan.json" does not exist
 
 Scenario: A component reading a type the export lacks is trimmed with its files
   Given the bundle fixture corpus
@@ -28,6 +67,16 @@ Scenario: A trim takes whole path segments
   And the plugin tree has a file "skills/decision-lookup-notes/README.md"
   When I bundle
   Then ".dist/plugin/skills/decision-lookup-notes/README.md" exists
+
+Scenario: A component reading a type only a consumed corpus exports ships
+  Given the export-inherited fixture corpus
+  And it has been exported
+  And the corpus keeps the bundle fixture's plugin tree
+  And the plugin tree has a component "skills/policy-lookup" reading "policies"
+  When I bundle
+  Then it succeeds
+  And the bundle includes "skills/policy-lookup"
+  And ".dist/plugin/skills/policy-lookup/SKILL.md" exists
 
 Scenario: A component reading no type ships beside one that reads a type
   Given the bundle fixture corpus
@@ -90,6 +139,24 @@ Scenario: A key the descriptor gives nothing for is removed, bar the author and 
   And ".dist/plugin/.claude-plugin/plugin.json" states "author.name" as "example-empty"
   And ".dist/plugin/.claude-plugin/plugin.json" states "description" as "The example-empty knowledge corpus, and the skills that read it."
 
+Scenario: The plugin manifest takes its homepage and repository from the publishing base
+  Given the bundle fixture corpus
+  And the descriptor publishes to github at "https://github.com/example/libraries"
+  And it has been exported
+  When I bundle
+  Then it succeeds
+  And ".dist/plugin/.claude-plugin/plugin.json" states "homepage" as "https://github.com/example/libraries"
+  And ".dist/plugin/.claude-plugin/plugin.json" states "repository" as "https://github.com/example/libraries"
+
+Scenario: The plugin manifest lists the components that survived, and keeps every key the tool does not know
+  Given the bundle fixture corpus
+  And it has been exported
+  And ".plugin/.claude-plugin/plugin.json" states "x-maintainer" as {"team": "libraries"}
+  When I bundle
+  Then the plugin manifest lists the components "skills/glossary-lookup, hooks"
+  And ".dist/plugin/.claude-plugin/plugin.json" states "x-maintainer" as {"team": "libraries"}
+  And ".dist/plugin/.claude-plugin/plugin.json" states "metadata.corpusRoot" as "corpus"
+
 Scenario: A corpus stating no content version keeps the version its plugin manifest states
   Given the bundle-empty fixture corpus
   And it has been exported
@@ -105,6 +172,67 @@ Scenario: A bundle that trims every component still builds
   And the bundle trims "skills/glossary-lookup" because "the export carries no glossary"
   And the bundle trims "hooks" because "the export carries no glossary"
   And ".dist/plugin/.claude-plugin/plugin.json" exists
+
+Scenario: bundle.json states the plugin and the export it was built around
+  Given the bundle fixture corpus
+  And it has been exported
+  When I bundle
+  Then ".dist/plugin/bundle.json" states "bundleVersion" as 1
+  And ".dist/plugin/bundle.json" states "plugin" as "example-libraries"
+  And ".dist/plugin/bundle.json" states "version" as "2.3.4"
+  And ".dist/plugin/bundle.json" states "corpusRoot" as "corpus"
+  And ".dist/plugin/bundle.json" states "export.corpus" as "example-libraries"
+  And ".dist/plugin/bundle.json" states "export.contentVersion" as "2.3.4"
+  And ".dist/plugin/bundle.json" states "export.types" as ["glossary"]
+  And ".dist/plugin/bundle.json" states no "generatedAt"
+  And ".dist/plugin/bundle.json" states no "commit"
+
+Scenario: The marketplace offers the plugin from the directory beneath it
+  Given the bundle fixture corpus
+  And it has been exported
+  When I bundle
+  Then ".dist/.claude-plugin/marketplace.json" states "name" as "example-libraries"
+  And ".dist/.claude-plugin/marketplace.json" states "owner.name" as "Paul Law"
+  And ".dist/.claude-plugin/marketplace.json" states "plugins" as [{"name": "example-libraries", "description": "A worked example corpus, holding an invented estate.", "source": "./plugin"}]
+
+Scenario: The breadcrumb names at most six records of a type
+  Given the bundle fixture corpus
+  And the glossary holds 8 records
+  And it has been exported
+  When I bundle
+  Then the breadcrumb has the line "glossary. 15 entries across 8 records: Estate, Extra 4, Extra 5, Extra 6, Extra 7 and 3 more."
+
+Scenario: The breadcrumb gives a type a line for each corpus that wrote some of it
+  Given the export-inherited fixture corpus
+  And it has been exported
+  And the corpus keeps the bundle fixture's plugin tree
+  When I bundle
+  Then the breadcrumb has the line "glossary. 1 entry across 1 record: Local."
+  And the breadcrumb has the line "glossary (from eng). 1 entry across 1 record: Shared."
+  And the breadcrumb has the line "glossary (from gp). 1 entry across 1 record: Old."
+  And the breadcrumb has the line "policies (from eng). 1 entry across 1 record: Keeping what we are asked to keep."
+
+Scenario: The breadcrumb asks for each announced skill that survived
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a component "skills/corpus-retrieval" reading no type
+  When I bundle
+  Then the breadcrumb has the line "Ask the glossary-lookup skill before you answer from what you already know."
+  And the breadcrumb does not mention "corpus-retrieval"
+  And the breadcrumb does not mention "decision-lookup"
+
+Scenario: The breadcrumb leaves with a trimmed hook
+  Given the bundle-empty fixture corpus
+  And it has been exported
+  When I bundle
+  Then the bundle trims "hooks" because "the export carries no glossary"
+  And ".dist/plugin/hooks/breadcrumb.txt" does not exist
+
+Scenario: The hook keeps its permission bit
+  Given the bundle fixture corpus
+  And it has been exported
+  When I bundle
+  Then ".dist/plugin/hooks/breadcrumb" is executable
 
 Scenario: A bundle with no export is refused
   Given the bundle fixture corpus
@@ -188,6 +316,14 @@ Scenario: A bundle whose component reads a shape the export does not have is ref
   Given the bundle fixture corpus
   And it has been exported
   And the component "skills/glossary-lookup" requires "glossary@9"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A bundle whose component reads a shape that is not a whole number is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And the component "skills/glossary-lookup" requires "glossary@one"
   When I bundle
   Then it refuses
   And nothing is written
