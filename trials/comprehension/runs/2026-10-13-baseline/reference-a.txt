@@ -1,0 +1,44 @@
+S01. False. A comparison where either side is absent is false. `!=` is the negation of `==`, so it gives true. Guard the rule with `present(...) and present(...) implies ...`.
+Page: expressions.md
+
+S02. It gives a value. Division by zero gives zero, so the check neither crashes nor errors.
+Page: expressions.md
+
+S03. No. `days_since()` answers zero for a date in the future, so `<= 92` passes the record.
+Page: expressions.md
+
+S04. A type's own rules can report only at `error` or `warning`, because `meta/type.schema.json` limits `severity:` to those two. `info` is only for a check declared in `_checks.yaml`. Only an error fails the build.
+Page: checks.md
+
+S05. 184 days from `accepted-on` to `review-by`. The rule is `high-risk-review-window`.
+Page: checks.md
+
+S06. `date-format` reports it. A day the calendar does not have is reported under the same id as a malformed date, so the id is not different.
+Page: checks.md
+
+S07. Yes, if the key is `notes:`. The loader exempts it. `schema-unknown-key` reports any other key the loader never reads, at any level.
+Page: held-to.md
+
+S08. No. A `from:` on a field that is also `required: true` is a `schema-shape` fault, because the author cannot write the field. Writing the field in a record trips `derived-key`.
+Page: held-to.md
+
+S09. `label-plural:`, `summary:`, `goes-here:`, `detail:` and `lineage.prior-art:` must all be present, and a missing one is `schema-shape`. A type must also declare `folder:`.
+Page: held-to.md
+
+S10. The heading is the field name in sentence case, so it reads "Mttr target". MTTR will not be capitalised, because `kac` recognises only `id` and `sla` as initialisms; the page says to open an issue when you declare another.
+Page: generation.md
+
+S11. Yes. A type with no records yet gets an index saying so, not an empty table. A type whose folder does not exist gets no index at all.
+Page: generation.md
+
+S12. Its records carry `trust` as `null`. Where the type exports `verified`, `trust` is derived from that field: an empty list is `unverified`, agents alone are `machine-confirmed`, and one `human:` actor is `human-reviewed`. Verifications taken before `generated.at` are left out.
+Page: export.md
+
+S13. Something else: the consumer sees `null`. Absent is `null`, an empty list counts as absent, and no key arrives as `[]`.
+Page: export.md
+
+S14. No. A `parts:` entry carries `full` alone. To make the line thinner, drop a key from `line:`.
+Page: export.md
+
+S15. Adding a key moves nothing. Renaming a key moves the type's `shapeVersion`, because a key on its part line belongs to that type's files.
+Page: export.md

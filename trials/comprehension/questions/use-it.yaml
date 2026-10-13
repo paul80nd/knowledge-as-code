@@ -1,0 +1,251 @@
+# Asked of docs/use/ alone. ../README.md says how a run is staged, prompted and scored.
+reader: kac user
+section: docs/use/
+questions:
+  - id: U01
+    topic: start a corpus
+    question: >-
+      I ran kac new in a folder inside a repo that already has a corpus higher up, and it told me there was nothing to
+      create. What should I have run instead?
+    answer: >-
+      kac update. kac new refuses wherever a .corpus.yaml sits at or above the working directory, because a corpus is
+      already there; taking a newer framework into an existing corpus is kac update.
+    doc:
+      page: docs/use/troubleshooting.md
+      anchor: is-already-a-corpus-so-there-is-nothing-here-to-create
+      quote: "`new` stands a corpus up where there is none. Taking a newer framework into one that exists is"
+    source:
+      path: tooling/kac.core/Commands.cs
+      line: 98
+      shows: "new fails with 'is already a corpus ... taking a newer framework into one is `kac update`' when Survey
+        finds a corpus (Corpus.FindRoot walks up, Corpus.cs:41)"
+  - id: U02
+    topic: start a corpus
+    question: >-
+      Once kac new finishes, do I still need to commit anything myself, or has it already made the first commit?
+    answer: >-
+      You commit it yourself. new runs generate, then validate, then git add -A, so everything is staged but not
+      committed; the first commit is yours, after reading what is staged.
+    doc:
+      page: docs/use/getting-started.md
+      anchor: start-a-corpus
+      quote: "The first commit is yours to make, once you have read what is staged."
+    source:
+      path: tooling/kac.core/Commands.cs
+      line: 231
+      shows: "Stage runs `git add -A` and prints 'staged ... the first commit is yours'; no commit is ever run"
+  - id: U03
+    topic: start a corpus
+    question: >-
+      If I just press enter through every question kac new asks, which types do I end up with, and does it set up
+      publishing or a CI pipeline?
+    answer: >-
+      Every type the template declares; publishing target none; CI system none (so no pipeline file). Partial if the
+      types are right but publishing or CI is wrong.
+    doc:
+      page: docs/use/cli/new.md
+      anchor: a-corpus-answering-the-questions
+      quote: "| Which types        | every type the template declares | `--types`      |"
+    source:
+      path: tooling/kac.core/ConsoleAsker.cs
+      line: 29
+      shows: "the type prompt preselects every choice; Asking.cs:115 and :121 open publishing and CI on none"
+  - id: U04
+    topic: start a corpus
+    question: >-
+      Our build machines can't reach GitHub. Is there a way to create a corpus without kac new fetching the template
+      over the network?
+    answer: >-
+      Yes. Pass --from with a local path to a checkout of the framework, as kac new --from ../knowledge-as-code; a
+      local --from needs no network.
+    doc:
+      page: docs/use/cli/new.md
+      anchor: a-corpus-with-no-network
+      quote: "`--from` takes a local path as well as a URL. This is the offline route, and it is what the tool's own
+        tests use."
+    source:
+      path: tooling/kac.core/TemplateSource.cs
+      line: 62
+      shows: "Take uses a folder where it sits when Directory.Exists(from), and only otherwise runs git clone"
+  - id: U05
+    topic: wire CI
+    question: >-
+      Can I have the pipeline regenerate the indexes itself and push them back, so nobody has to remember to run
+      generate?
+    answer: >-
+      No. CI never commits: generate --check recomputes the generated files, lists the stale ones and exits 1, writing
+      nothing. Give the job read-only permission, and run kac generate locally and commit what it writes.
+    doc:
+      page: docs/use/ci.md
+      anchor: read-only-permission
+      quote: "**CI never commits.** `generate --check` recomputes every generated file, lists the ones that differ, and
+        exits `1`."
+    source:
+      path: tooling/kac.core/Commands.cs
+      line: 409
+      shows: "Generate with check lists stale paths, prints 'run:  kac generate' and returns 1 without writing"
+  - id: U06
+    topic: wire CI
+    question: >-
+      To save time our pipeline downloads the repo as a zip instead of cloning it. Is that a problem for kac?
+    answer: >-
+      Yes. kac lists the corpus with git ls-files, so .gitignore and the other exclude files count; a tree with no
+      .git falls back to a directory walk that obeys none of them, so ignored files get checked. Check out with git.
+    doc:
+      page: docs/use/ci.md
+      anchor: checking-out-with-git
+      quote: "Check out with git, not a tarball. `kac` lists a corpus with `git ls-files`, so `.gitignore` and the
+        other exclude files"
+    source:
+      path: tooling/kac.core/GitFiles.cs
+      line: 11
+      shows: "listing is `git ls-files --cached --others --exclude-standard`; null (not a repo) makes the caller fall
+        back to Walk"
+  - id: U07
+    topic: wire CI
+    question: >-
+      I added the Azure Pipelines file with its pr: trigger, but it never runs on our pull requests. What am I
+      missing?
+    answer: >-
+      Azure Repos ignores the pr: trigger in the YAML. Add the pipeline as a branch policy: Build Validation on main,
+      marked Required.
+    doc:
+      page: docs/use/ci.md
+      anchor: azure-pipelines
+      quote: "Wire the pipeline up as a branch policy, or it never runs on a pull request and nothing says so."
+    source:
+      path: template/azure-pipelines.yml
+      line: 8
+      shows: "template comment says the pr: trigger is ignored on Azure Repos and walks the Branch Policies -> Build
+        Validation path"
+  - id: U08
+    topic: wire CI
+    question: >-
+      Our kac step failed with exit code 2 rather than 1. What does 2 mean, and what usually fixes it?
+    answer: >-
+      Exit 2 means the command found no corpus: there is no .corpus.yaml at or above the working directory. Run the
+      step from inside the corpus (1 would mean a corpus error or a bad invocation).
+    doc:
+      page: docs/use/cli/index.md
+      anchor: exit-codes
+      quote: "A command found no corpus. `new`, `--version` and `--help` need none and answer anyway."
+    source:
+      path: tooling/kac/Program.cs
+      line: 96
+      shows: "prints 'could not locate a corpus (no .corpus.yaml above the cwd)' and returns 2"
+  - id: U09
+    topic: build and install the plugin
+    question: >-
+      If kac bundle finishes without errors, can I trust the plugin is well-formed, or should CI check it some other
+      way?
+    answer: >-
+      bundle validates nothing it assembles. Install the Claude Code CLI and run claude plugin validate --strict on
+      both ./.dist/plugin and ./.dist (the marketplace). Partial if only one of the two is validated.
+    doc:
+      page: docs/use/cli/bundle.md
+      anchor: a-pipeline-check
+      quote: "`bundle` validates nothing it assembles, so this is the layer that does."
+    source:
+      path: .github/workflows/kac.yml
+      line: 93
+      shows: "CI runs `claude plugin validate ./.dist/plugin --strict` and `claude plugin validate ./.dist --strict`
+        after bundling"
+  - id: U10
+    topic: build and install the plugin
+    question: >-
+      kac bundle stops straight away complaining there is no export. What did I skip?
+    answer: >-
+      Run kac export first. bundle (and pack) read .dist/export/, which export writes, and never load the corpus.
+    doc:
+      page: docs/use/troubleshooting.md
+      anchor: no-export-at-distexport
+      quote: "`bundle` and `pack` both read what `export` wrote, and neither loads the corpus itself. Run `export`
+        first:"
+    source:
+      path: tooling/kac.core/Commands.cs
+      line: 298
+      shows: "bundle fails with 'no export at .dist/export/. Run it first: kac export' when the export is missing"
+  - id: U11
+    topic: build and install the plugin
+    question: >-
+      I've built the plugin. How do I install it on my own laptop to try it, without publishing it anywhere first?
+    answer: >-
+      claude plugin marketplace add ./.dist, pointing at .dist (the marketplace bundle writes above the plugin), not
+      .dist/plugin. Partial if the command is right but the path is .dist/plugin.
+    doc:
+      page: docs/use/cli/bundle.md
+      anchor: an-install
+      quote: "claude plugin marketplace add ./.dist"
+    source:
+      path: tooling/kac.core/Commands.cs
+      line: 324
+      shows: "bundle ends by printing that .dist/ is a marketplace and to install with `claude plugin marketplace add
+        ./.dist`"
+  - id: U12
+    topic: build and install the plugin
+    question: >-
+      Which of the bundled skills ends up in every plugin, whatever record types my corpus exports?
+    answer: >-
+      raise-finding. It is standalone: it reads no export, so it ships whatever the corpus adopted. The supporting
+      skills (corpus-retrieval, request-deviation) leave with the last lookup skill.
+    doc:
+      page: docs/use/skills.md
+      anchor: what-travels-inside-a-plugin
+      quote: "**`standalone`** reads no export and serves whoever is holding the plugin, so it ships whatever the
+        corpus adopted."
+    source:
+      path: template/.plugin/.claude-plugin/plugin.json
+      line: 22
+      shows: "the skills/raise-finding component declares \"standalone\": true"
+  - id: U13
+    topic: consume another corpus
+    question: >-
+      We depend on the engineering corpus at ^0.16.0 and they've just released 0.17.0. Will restore pick the new one
+      up?
+    answer: >-
+      No. Below 1.0.0 a caret range admits only the same minor, so ^0.16.0 takes 0.16.x and never 0.17.0. Change the
+      range to ^0.17.0 and restore again.
+    doc:
+      page: docs/use/cli/restore.md
+      anchor: the-consumes-block
+      quote: "Below `1.0.0` it admits the same minor version instead"
+    source:
+      path: tooling/kac.core/VersionRange.cs
+      line: 69
+      shows: "Ceiling is the next major above 1.0.0, and 0.(minor+1).0 below it, so a 0.x caret stops at the next
+        minor"
+  - id: U14
+    topic: consume another corpus
+    question: >-
+      Both corpora live in one repo and the consumer reads the producer's .dist/package folder. After the producer
+      bumped and repacked, restore in the consumer fails. Why, and how do I fix it?
+    answer: >-
+      pack rebuilds the folder whole, so it contains only the last version packed, and restore refuses a resolved: lock
+      naming the earlier one. Move the lock (and range) to the new version, or delete resolved: and restore again.
+      Partial if only the cause or only the fix is given.
+    doc:
+      page: docs/use/cli/restore.md
+      anchor: known-limits
+      quote: "folder contains the last one packed, so `restore` refuses a consumer locked to an earlier one."
+    source:
+      path: tooling/kac.core/Registry.cs
+      line: 129
+      shows: "a folder source with no package at the locked version answers 'holds no package for <id> <version>';
+        Restore.cs:206 takes the lock without listing, and Packer.cs:136 deletes the package folder before writing"
+  - id: U15
+    topic: consume another corpus
+    question: >-
+      Our corpus consumes another one. Can I run kac export on a fresh checkout before running restore, and just get
+      our own records?
+    answer: >-
+      No. export refuses, writes nothing and exits 1, saying nothing is restored for that shortcode; run kac restore
+      first. It will not write a smaller export that reads as whole.
+    doc:
+      page: docs/use/cli/export.md
+      anchor: what-it-does
+      quote: "`export` refuses instead of writing a smaller export that reads as whole."
+    source:
+      path: tooling/kac.core/Exporter.cs
+      line: 221
+      shows: "a missing import adds the refusal 'nothing is restored for ... Run kac restore.'; Commands.cs:44 returns
+        1 on any refusal"
