@@ -19,8 +19,6 @@ proving each behaviour. [`report`](../use/cli/report.md) owns the full statement
 * It stamps `generated`, and writes `status: draft`, an empty `verified`, and an empty `id` and `owner`.
   [The provenance frontmatter](../use/cli/report.md#the-provenance-frontmatter)
 * It lists this corpus first in `sources`, then each corpus it imports, with the `content-version` each answered at.
-  A corpus with no `corpus:` writes its absolute path there instead, which
-  [#863](https://github.com/paul80nd/knowledge-as-code/issues/863) reports as a bug.
   [The provenance frontmatter](../use/cli/report.md#the-provenance-frontmatter)
 * `--out` writes the report to a path relative to where the command was typed. [`--out`](../use/cli/report.md#-out)
 * `validate` reports a kept report's empty `id` and `owner`.
@@ -42,7 +40,9 @@ Each refusal exits `1` and writes nothing.
 [`Report.feature`][Report.feature]:
 
 * A coverage report marks each clause covered or uncovered and leaves the judgement blank
+* A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
 * A frameworks report counts the clauses citing each reference
+* A frameworks report leaves out the references an imported corpus cites
 * A report's frontmatter states the run that wrote it and leaves the rest to a person
 * A corpus that imports policies reports on them, and names this corpus first among its sources
 * Two runs over an unchanged corpus write the same report
@@ -53,10 +53,8 @@ Each refusal exits `1` and writes nothing.
 
 ## Unspecified
 
-* The deviations, controls and candidate pairs a coverage row fills. No fixture holds them, and one could.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `frameworks` leaving out an imported corpus's alignment. The fixture's import states none, and one could.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
+* What `sources` lists for a corpus whose descriptor states no `corpus:`. A run writes the corpus's absolute path,
+  which [#863](https://github.com/paul80nd/knowledge-as-code/issues/863) reports as a bug.
 * `--out` resolving against where the command was typed. Scenarios share one working directory, so none can move it
   safely.
 * What a run prints without `--out`. A scenario reads the disk and the exit code, never the output.

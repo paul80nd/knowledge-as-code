@@ -13,12 +13,63 @@ Scenario: A coverage report marks each clause covered or uncovered and leaves th
   And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER` |  |  |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  |  |  |  | uncovered | |"
 
+Scenario: A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
+  Given the report fixture corpus
+  And the corpus has a record "deviations/open-door.md" reading:
+    """
+    ---
+    id: dev-open-door
+    type: deviation
+    departs-from:
+      - pol-COVR.OPEN
+    ---
+
+    # The door stays open
+    """
+  And the corpus has a record "controls/0001-coverage-check.md" reading:
+    """
+    ---
+    id: ctl-0001
+    type: control
+    verifies: [std-COVER]
+    ---
+
+    # The coverage check
+    """
+  And the corpus has a record "policies/pair-paired-fixture.md" reading:
+    """
+    ---
+    id: pol-PAIR
+    type: policy
+    ---
+
+    # A policy sharing a key
+
+    ## Clauses
+
+    | Id     | Clause                                     | Alignment |
+    |--------|--------------------------------------------|-----------|
+    | `OPEN` | **MUST** share its key with another clause |           |
+    """
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  Then it succeeds
+  And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER` |  | `ctl-0001` |  | covered | |"
+  And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | `dev-open-door` |  | `pol-PAIR.OPEN` | uncovered | |"
+
 Scenario: A frameworks report counts the clauses citing each reference
   Given the export-policies fixture corpus
   When I write the "frameworks" report to "frameworks-report.md"
   Then it succeeds
   And "frameworks-report.md" contains "| ISO 27001:2022 | Obliged | 1 | 0 |"
   And "frameworks-report.md" contains "| A.8.13 | 2 | `pol-BKUP.COPY`, `pol-BKUP.SHARED` | `pol-BKUP` | |"
+
+Scenario: A frameworks report leaves out the references an imported corpus cites
+  Given the export-inherited fixture corpus
+  And the restored "eng" export cites "ISO 27001:2022" reference "A.5.33" from "pol-KEEP.HOLD"
+  When I write the "frameworks" report to "frameworks-report.md"
+  Then it succeeds
+  And "frameworks-report.md" does not contain "ISO 27001:2022"
+  And "frameworks-report.md" does not contain "A.5.33"
 
 Scenario: A report's frontmatter states the run that wrote it and leaves the rest to a person
   Given the report fixture corpus

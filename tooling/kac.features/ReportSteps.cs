@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using kac.core;
 using Reqnroll;
 using Xunit;
@@ -11,6 +12,33 @@ public sealed class ReportSteps(Workspace ws)
     private const string ToolVersion = "9.9.9";
 
     private const string At = "2026-06-15T09:00:00Z";
+
+    [Given(@"the corpus has a record ""(.*)"" reading:")]
+    public void GivenTheCorpusHasARecordReading(string path, string content)
+    {
+        Assert.False(File.Exists(ws.PathOf(path)), $"{path} is there already");
+        ws.Write(path, content + "\n");
+    }
+
+    /// <summary>Writes the restored export's framework file, and points its manifest entry for the type at it.</summary>
+    [Given(@"the restored ""(.*)"" export cites ""(.*)"" reference ""(.*)"" from ""(.*)""")]
+    public void GivenTheRestoredExportCites(string shortcode, string framework, string reference, string clause)
+    {
+        var manifestPath = $".imports/{shortcode}/manifest.json";
+        var manifest = ws.ReadJson(manifestPath);
+        var types = manifest["types"] as JsonArray ?? throw new InvalidOperationException("the manifest lists no types");
+        var entry = types.OfType<JsonObject>().Single(t => JsonRead.Str(t["type"]) == "policies");
+        entry["frameworksFile"] = "policies/frameworks.jsonl";
+        ws.WriteJson(manifestPath, manifest);
+
+        var record = clause[..clause.LastIndexOf('.')];
+        var line = new JsonObject
+        {
+            ["framework"] = framework, ["reference"] = reference, ["standing"] = "Obliged",
+            ["clauses"] = new JsonArray(clause), ["records"] = new JsonArray(record)
+        };
+        ws.Write($".imports/{shortcode}/policies/frameworks.jsonl", line.ToJsonString() + "\n");
+    }
 
     /// <summary>
     /// The path is passed rooted, because <c>--out</c> resolves against the process's working directory and a spec
