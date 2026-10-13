@@ -21,7 +21,6 @@ for Claude Code.
 * **[Skills](skills.md)** says which skills `kac` ships, where each one lives, and who can read it.
 * **[CLI reference](cli/index.md)** gives a page to each command, saying what it does, what it refuses and what it
   leaves alone.
-* **[Changelog](../changelog.md)** says what each published version of `kac` brought.
 
 ## Where to go next
 

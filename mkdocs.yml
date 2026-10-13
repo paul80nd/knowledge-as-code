@@ -152,7 +152,6 @@ nav:
           - checks: use/cli/checks.md
           - report: use/cli/report.md
           - update: use/cli/update.md
-      - Changelog: changelog.md
   - The framework:
       - framework/index.md
       - Principles: framework/principles.md
@@ -175,3 +174,4 @@ nav:
       - Checks in C#: maintaining/checks.md
       - Adding a report: maintaining/reports.md
       - The plugin bundle: maintaining/plugin.md
+  - Changelog: changelog.md
