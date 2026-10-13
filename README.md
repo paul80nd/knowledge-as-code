@@ -132,7 +132,13 @@ Stated openly, because each one shapes the design:
 * **You own the content, and install the tool.** An organisation adopting this gets its own copy of the schema and the
   documentation, free to diverge. `kac` arrives from nuget.org as a version they pin.
 
-## Working on KaC itself
+## Contributing
+
+Pull requests open once `kac` reaches version 1.0.0. Until then, an issue is the way to help: a bug, a question or a
+correction is welcome, and each one is read.
+[Contributing to `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/contributing/) says what a pull request
+owes and which checks gate it. To publish a version of your own,
+[Forking `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/forking/) lists what to replace.
 
 This repository contains the tool, the framework a corpus receives, the corpora that prove both, and the trials that
 measure its documentation.
@@ -156,9 +162,9 @@ dotnet run --project ../../tooling/kac -- validate
 
 To change `kac`, read:
 
-* [`tooling/README.md`](tooling/README.md) for building, packing and testing it, and how a release is made.
-* [Maintaining `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/) on the documentation site, for how to
-  add a check in C# or a report, and how the plugin bundle is laid out.
+* [Maintaining `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/) on the documentation site, for how
+  `kac` is put together, built, tested and released, and how to add a check in C# or a report.
+* [`tooling/README.md`](tooling/README.md) for what to know while changing the code.
 * [`tooling/kac/CHANGELOG.md`](tooling/kac/CHANGELOG.md) for what each version brought.
 
 ## Licence

@@ -25,8 +25,8 @@ under `.schema/` that says what a record of that type has in it.
   where they came from, and how to write a record.
 * **I own a schema.** [Schema reference](reference/index.md) covers the keys a type file takes, the rule expression
   grammar, the checks and the export contract.
-* **I want to work on `kac`.** [Maintaining `kac`](maintaining/index.md) explains how to add a check in C# or a report,
-  and how the plugin bundle is laid out.
+* **I want to work on `kac`.** [Maintaining `kac`](maintaining/index.md) covers building, testing, releasing and
+  forking `kac`, and adding a check in C# or a report.
 
 ## What lives elsewhere
 
@@ -34,9 +34,9 @@ Two documents sit outside this site, each written for a different reader. A corp
 [`knowledge-as-code.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/template/knowledge-as-code.md), which
 is its way in to everything here.
 
-**How to change the tool** is
+**What to know while changing the code** is
 [`tooling/README.md`](https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/README.md), beside the code. It
-covers building `kac`, its three test layers, and what bites you while editing any of it.
+covers what each test layer checks inside, and how the round-trip scripts choose a corpus.
 
 ## Maturity
 

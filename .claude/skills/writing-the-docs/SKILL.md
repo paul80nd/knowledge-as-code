@@ -46,7 +46,8 @@ The site has four sections, one for each reader:
 [The documentation charter](../../../docs/maintaining/charter.md) says which reader each section serves, which kinds of
 page it may contain, and where an argument goes. Read it before you add a page, move one or argue anything on one.
 
-* `tooling/README.md` covers changing `kac` itself, and the site links out to it.
+* Maintaining `kac` covers building, testing, releasing and forking `kac`. `tooling/README.md` keeps what a reader
+  needs only while changing the code, and links back to those pages.
 * A command page says what the command does. It argues nothing.
 * A second page is earned by a second reader. `use/cli/checks.md` is for somebody running the command.
   `reference/checks.md` is for somebody declaring a check, and `maintaining/checks.md` for somebody writing one in C#.

@@ -3,7 +3,7 @@
 `kac-tests` runs `kac` against deliberately broken (and deliberately clean) mini-corpora and diffs the findings against
 a committed golden. It is an **integration** suite: it exercises the real rules end to end, not the C# internals. The
 unit tests (`kac.tests`) and the Reqnroll behaviour specs (`kac.features`) live alongside it.
-[`../README.md`](../README.md#tests) says what each layer is for.
+`docs/maintaining/build-test-release.md` says what each layer proves.
 
 ```bash
 dotnet run tooling/kac-tests.cs                 # run every scenario, fail on any mismatch

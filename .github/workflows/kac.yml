@@ -184,7 +184,7 @@ jobs:
             exit 1
           fi
 
-      # tooling/README.md#tests says what each layer covers and why all three are here.
+      # docs/maintaining/build-test-release.md says what each layer proves.
       - name: Run kac.core unit tests
         # Empty on a push, where there is no base to compare, so the guards reading git history read nothing.
         env:

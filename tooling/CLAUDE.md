@@ -1,7 +1,10 @@
 # Working on `kac`
 
 The [documentation site](https://paul80nd.github.io/knowledge-as-code/) is the reference for what each command does, one
-page apiece, and [`README.md`](README.md) says how it is built. This is what will bite you while changing it.
+page apiece. Its Maintaining `kac` section says how the tool is
+[put together](../docs/maintaining/architecture.md), [built, tested and released](../docs/maintaining/build-test-release.md)
+and [forked](../docs/maintaining/forking.md), and [what a pull request owes](../docs/maintaining/contributing.md).
+[`README.md`](README.md) says what each test layer checks inside. This is what will bite you while changing it.
 
 ## Writing here
 

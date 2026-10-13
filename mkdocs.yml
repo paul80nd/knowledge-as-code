@@ -170,6 +170,10 @@ nav:
       - The export format: reference/export.md
   - Maintaining kac:
       - maintaining/index.md
+      - Architecture: maintaining/architecture.md
+      - Build, test and release: maintaining/build-test-release.md
+      - Forking: maintaining/forking.md
+      - Contributing: maintaining/contributing.md
       - The documentation charter: maintaining/charter.md
       - Checks in C#: maintaining/checks.md
       - Adding a report: maintaining/reports.md

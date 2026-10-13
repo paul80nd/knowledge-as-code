@@ -50,7 +50,7 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
    comment you touch.
 8. Load `technical-writing`, then `writing-the-docs`, for the pages a reader outside this repository reads.
 9. Update the command's page under `docs/use/cli/`.
-10. Update `tooling/README.md` where the change affects it.
+10. Update `tooling/README.md` and the pages under `docs/maintaining/` where the change affects them.
 11. Regenerate the usage block with `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`.
 12. Write the changelog entry under `## Unreleased`, because a user can observe this change.
 13. Run all four layers, one `kac` invocation at a time: unit, behaviour specs, golden fixtures, then `validate` and
