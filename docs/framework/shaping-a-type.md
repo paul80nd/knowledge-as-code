@@ -65,20 +65,17 @@ The sections follow the order a reader asks their questions in:
   factors.
 * `Timeline` and `Actions` record this estate's own clocks, alerts and work items.
 
-**The three lessons each take a heading of their own.** Google groups `What went well`, `What went wrong` and `Where we
-got lucky` under one `Lessons Learned`, and a group is a heading an author satisfies by writing under any part of it.
-Declared separately, each is asked for and a bare one is refused, so `Where we got lucky` gets answered. A record that
-states only what failed leaves out what worked.
+**The three lessons each take a heading of their own.** `What went well`, `What went wrong` and `Where we got lucky` are
+each asked for, and a bare one is refused, so a record states what worked as well as what failed.
 
 **Three moments fix the incident, each as a timestamp.** `occurred-at` is when the impairment began, `detected-at` when
 somebody first knew, and `restored-at` when service was back for users. Each is a timestamp, because the gap between the
 first two is usually measured in minutes.
 
-**`restored-at` is recovery, not resolution.** The acronym MTTR names four measures at once: time to respond, to repair,
-to recover and to resolve. This field is recovery, which is the span an availability budget counts and the one the [DORA
-metrics](https://dora.dev/guides/dora-metrics-four-keys/) of DevOps Research and Assessment ask about. An incident whose
-actions run for weeks still has a `restored-at` on the day. Nothing requires `restored-at` to follow `detected-at`: an
-incident can recover before anybody notices, and one found later in the logs is written that way.
+**`restored-at` is recovery, not resolution.** It is the span an availability budget counts, and the one the [DORA
+metrics](https://dora.dev/guides/dora-metrics-four-keys/) ask about, so an incident whose actions run for weeks still
+has a `restored-at` on the day. Nothing requires it to follow `detected-at`, because an incident can recover before
+anybody notices.
 
 `duration` restates the span those moments already fix, so that an index can show it without computing one.
 `duration-matches-the-moments` fails a value the moments refuse, and its message gives the value to write. `prompted`
@@ -216,20 +213,14 @@ target and a recovery target has two.
 something over a stated period. A recovery, scalability or accuracy target binds each event or each value, so it needs
 none.
 
-**`alert-after` states the alert's configured delay, and never a detection time somebody measured.** No source found
-asks an estate to commit to how fast a fault is noticed. The SRE workbook computes a detection time from an alerting
-window and a burn rate, and treats it as one of four attributes for comparing alerting strategies. Azure's
-[Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/reliability/monitoring) defines
-the recovery time objective as "the maximum acceptable time to detect, respond to, and recover from a failure or
-incident", so detection sits inside a target this type already has. What an estate can state before anything breaks is
-the delay it configured, which is [OpenSLO](https://github.com/OpenSLO/OpenSLO)'s `alertAfter`.
+**`alert-after` states the alert's configured delay, and never a detection time somebody measured.** That delay is what
+an estate can state before anything breaks, as [OpenSLO](https://github.com/OpenSLO/OpenSLO)'s `alertAfter` does. A
+recovery target already covers how fast a fault is noticed.
 
-**A delay claims an alert exists, and `alert-after-needs-an-alert` asks the services whether one does.** `applies-to`
-names an offering as often as a service, and an offering emits nothing itself, so the check follows its
-`implemented-by` to the services behind it. A service stating `monitoring-output: alert` or `ticket` satisfies the
-check. One service the schema does not oblige to state the field leaves the whole target unjudged, because a target
-bound to something still in build has not claimed anything yet. It warns rather than fails, because a target can state
-the delay an alert will have before anybody builds it.
+**A delay claims an alert exists, and `alert-after-needs-an-alert` asks the services whether one does.** Where
+`applies-to` names an offering, the check follows its `implemented-by` to the services behind it. A service stating
+`monitoring-output: alert` or `ticket` satisfies the check. One service not yet obliged to state the field leaves the
+whole target unjudged.
 
 `Constraints` states the limits a target sits under, because a target read without them reads as a stronger promise
 than the estate made. It states them in words, because `constrained-by` resolves only where the corpus adopted
@@ -239,11 +230,8 @@ than the estate made. It states them in words, because `constrained-by` resolves
 stands.
 
 **`status: aspirational` says nobody is held to the target.** The SRE workbook keeps an aspirational objective measured
-and tracked, and exempts it from the error budget policy a missed objective otherwise triggers. Here that exemption is
-`What we do about a breach` saying nobody is paged, and `status` is what a reader sees first. A `basis` field beside
-`target` could not be held in step with `Current actual`, because `target` is free text such as `p95 under 800ms` and
-no rule compares it against a reading written in prose. Whether anybody is held to a number is a decision, which is what
-`status` records for every type here.
+and tracked, and exempts it from the error budget policy. Here that exemption is `What we do about a breach` saying
+nobody is paged, and `status` is what a reader sees first.
 
 **In the export:** the fields and every section travel except `Current actual` and `Related`. `Current actual` is a
 reading taken on the day somebody wrote it, and an export cannot say how old it has since become.
@@ -291,9 +279,7 @@ to it. Backstage, OpsLevel and Cortex each do the same, leaving the value a bare
 
 `Where it lives` keeps its link, so the repository is stated twice: once as a join key and once as a URL a person
 follows. `mirrors-repo-links` builds `<repos-base>/<entry>`, compares the result against the links under the heading in
-both directions, and warns where they disagree. It warns rather than fails, because a service can sit outside the
-estate's usual host, and an error would make that one service drop `repos-base` for every other record. A corpus stating
-no base runs no check.
+both directions, and warns where they disagree, since a service can sit outside the estate's usual host.
 
 **`depends-on` is the estate's own graph.** A reader walks the edges without opening a record. The edges run one way,
 downward: a service records what it calls, and the reverse view is a question asked of the whole graph.
@@ -305,28 +291,20 @@ message read off a bus, or a build that never calls the service it builds. So `d
 
 **`criticality` is ranked, and the graph is where the ranking is read.** `critical` sits above `important`, which sits
 above `supporting`. `ordered: true` on the enum in `.schema/_enums.yaml` declares that the first value listed is the
-most significant. `dependency-criticality` then warns where a service outranks a service its `depends-on` cites. It
-warns rather than fails, because the edge is often a degradation the estate accepts: a catalogue graded `critical` calls
-a search service graded `important` and still renders every item page without it. The warning asks the record to say
-so.
+most significant. `dependency-criticality` then warns where a service outranks a service its `depends-on` cites. The
+edge is often a degradation the estate accepts, and the warning asks the record to say so.
 
 `data-stores` lists the data records this service keeps, and `Data` says in prose what it does with each.
 `component-type` and `platform` draw their range from the corpus. An estate lists its own deployables and the runtimes a
 contributor has to learn, so one schema above several estates can state no range at all.
 
-**`interfaces` points at a contract, and never copies one.** Backstage's `spec.definition` embeds the contract text in
-the catalogue, so the address it was fetched from does not survive. A corpus is a document, so this field states that
-address. The value is a whole URL because nothing derives one: `repos` states a bare repository name, and [OpenAPI
-3.1.1](https://spec.openapis.org/oas/v3.1.1.html) recommends a filename and prescribes no path. The field is optional on
-every service, because a machine-readable format exists for an HTTP API and an event stream and not for a command line
-tool or a web page. `component-type` cannot make it required either: an estate spells that range itself, so a condition
-naming `api` never fires for an estate that writes `http-api`. Each interface's `type` draws its range from the estate
-for the same reason. No rule checks that a contract is there, because `kac` reads one corpus and cannot open a source
-repository.
+**`interfaces` points at a contract, and never copies one.** The value is a whole URL, because nothing derives one:
+[OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html) prescribes no path. The field is optional on every service,
+because a command line tool or a web page has no machine-readable contract. Each interface's `type` draws its range from
+the estate. No rule checks that a contract is there, because `kac` cannot open a source repository.
 
-**`monitoring-output` states a commitment, and never a rota.** Backstage, OpsLevel and Cortex each keep a paging tool's
-id and dereference it through that tool's API. A reader of a corpus has no such API, so the id tells them nothing.
-This field says what a live problem raises instead:
+**`monitoring-output` states a commitment, and never a rota.** A paging tool's id tells a reader of a corpus nothing,
+so this field says what a live problem raises instead:
 
 | Value    | What a live problem raises                         |
 |----------|----------------------------------------------------|
@@ -361,12 +339,8 @@ the use it supports. `Entities` names the domain's objects in the estate's own w
 
 **`data` requires `review-by`, and `services`, `integrations` and `offerings` do not.** A data record's
 `classification`, `personal-data`, `retention` and `region` are claims about a store, and nothing in the corpus checks
-one. A domain that gained a column of special-category data still reads `personal` until a person opens the record. A
-`criticality` and a `their-sla` go stale as quietly, and what separates them is the source. The [ICO][ico-storage]
-asks you to review retained personal data regularly and to justify how often. [NIST SP 800-53r5][nist-80053] RA-2 asks
-that a categorisation be revisited so it stays accurate. ISO/IEC 27002:2022 5.12 asks the same, read here through a
-secondary summary because the standard is paywalled. None of the three sets an interval, so each record sets its own
-date.
+one. The [ICO][ico-storage] asks you to review retained personal data regularly, and [NIST SP 800-53r5][nist-80053]
+RA-2 asks that a categorisation be revisited. Neither sets an interval, so each record sets its own date.
 
 **In the export:** every section travels except `Related`, which is navigation a reader replaces with the record's own
 links.
@@ -387,11 +361,9 @@ a reader holding an old citation finds the system that took the traffic.
 
 **`Exit` is required of a `critical` or `important` integration still in use.** `exit-required` warns on one that has
 none. Article 30(3)(f) of the EU's [Digital Operational Resilience Act](https://eur-lex.europa.eu/eli/reg/2022/2554/oj)
-asks a contract for information and communication technology services to state an exit strategy. What a record is
-missing is rarely the notice period: it is the wording, the history or the identities the vendor keeps, which no
-contract lists. A `retired` integration is excluded, because leaving is already done, and a `supporting` one, because
-nothing a customer feels depends on it. A `trial` integration is asked like any other: it is the one most likely to be
-left.
+asks a contract for such a service to state an exit strategy. A `retired` integration is excluded, because leaving is
+already done, and a `supporting` one, because nothing a customer feels depends on it. A `trial` integration is asked
+like any other: it is the one most likely to be left.
 
 **Data protection belongs to `data`.** Article 30(2) of the same Act puts data location and personal data in the vendor
 contract. Here a data record states them, through `region`, `personal-data` and `flows-to`, which resolves against an
@@ -407,10 +379,9 @@ constrains it. It is what a stranger asks about first. `hub-not-specification` w
 outbound links, which keeps it short.
 
 **The consumer group decides where one offering ends and the next begins.** `Who it is for` is required, and it names
-that group. ITIL 4 defines a service offering the same way, and the type takes the definition from there. It does not
-take ITIL's other tests: two groups served in two different ways are two offerings here, however much they share
-underneath. `spans-more-than-one-service` warns where one service delivers the whole of an offering, because a record
-that names one service restates the service record beside it.
+that group, as ITIL 4 defines a service offering. Two groups served in two different ways are two offerings, however
+much they share underneath. `spans-more-than-one-service` warns where one service delivers the whole of an offering,
+because a record that names one service restates the service record beside it.
 
 **`nfrs` is required once an offering is `live`.** A customer already has it, and no other field says how well it has
 to work. A corpus that declined `nfrs` is not asked, and adopting the type starts the obligation with no edit to
@@ -443,9 +414,7 @@ range sits on the package, because a family chosen together is often pinned apar
 `Spectre.Console.Cli` are one decision at two version ranges.
 
 **`licence` and `licence-declared` split what a person concluded from what the package states about itself.** SPDX
-splits it the same way, at `PackageLicenseConcluded` and `PackageLicenseDeclared`. CycloneDX writes one list with a
-`declared` or `concluded` tag on each entry, which does not fit here: an `expr:` compares two fields and cannot compare
-two entries of one list.
+splits it the same way, at `PackageLicenseConcluded` and `PackageLicenseDeclared`.
 
 `licence` is required and accepts `NOASSERTION`. A register that can leave the field out hides an entry nobody screened,
 and `NOASSERTION` shows one. `licence-declared` keeps a string SPDX has no expression for, so npm's
@@ -453,9 +422,8 @@ and `NOASSERTION` shows one. `licence-declared` keeps a string SPDX has no expre
 all. `Licence and obligations` says what the licence obliges you to, and `conclusion-states-a-reason` asks for it where
 the two values differ.
 
-`homepage` is required. SPDX makes a download location mandatory and leaves a home page optional. This register asks for
-the home page, because the first question the OpenSSF evaluation guide puts is whether you have the project you think
-you have, and not a fork of it.
+`homepage` is required, so a reader can tell the project from a fork of it, the first question the OpenSSF evaluation
+guide puts.
 
 **`decided-on` and `review-by` are the two dates an approval needs.** `decided-on` says when the current stance was
 settled. `review-by` expires it, and `review-in-date` warns once the day has passed. Without the second, an approval
@@ -532,8 +500,7 @@ Five sections are required, in the order a reader uses them: `When to use this`,
 `Verification` and `If it goes wrong`. A reader decides from the first two whether they may start, before step 1.
 `Prerequisites` states the access, the tooling, the prior process and the skills a reader needs.
 
-No field records the skills. EPA QA/G-6 is the only source this type cites that asks a procedure to state them, and one
-source is not enough for a field. `Prerequisites` states them in prose, and nothing checks that a process names them.
+No field records the skills. `Prerequisites` states them in prose, and nothing checks that a process names them.
 
 **In the export:** `When to use this`, `Prerequisites` and the rehearsal dates travel. The steps stay behind, and so
 does `requires-access`, because `Prerequisites` already states the access in prose.
@@ -546,9 +513,8 @@ exists so whoever is paged can restore service without working out the steps.
 **`Symptoms` comes first.** A reader arrives holding a symptom and no id, and `symptoms-first` fails a runbook that
 opens on anything else. `Impact` says who is affected, so the reader can tell whether this is worth waking somebody for.
 
-The required sections after them are `Immediate actions`, `Diagnosis`, `Resolution`, `Escalation` and `Communication`.
-AWS splits this document in two, a playbook that finds the cause and a runbook that resolves it, and this type is both
-on one page. AWS also asks a runbook to state its desired outcome. Here it is the last line of `Resolution`, opening
+The required sections after them are `Immediate actions`, `Diagnosis`, `Resolution`, `Escalation` and `Communication`,
+so one page both finds the cause and resolves it. The desired outcome is the last line of `Resolution`, opening
 `Confirmed when`, so the reader reads it where they stop.
 
 `requires-tools` and `requires-access` decide whether a reader may start at all. `severity` is what an agent sorts on
@@ -564,28 +530,22 @@ certification, and four checks keep it true. `alignment-unlinked` asks whether a
 three read `frameworks.md`, the corpus's own register of the frameworks it has taken a standing against.
 
 **`aligns-with` summarises the references a policy's clauses cite, grouped by framework.** Grouping is what keeps the
-frontmatter short: a data protection policy maps to two frameworks and twenty of their references, and a flat list would
-spend twenty lines saying which two. The framework is named by the label its `Alignment` cell uses, version included, so
-`[ISO 27001:2022].A.8.24` in the table is `ISO 27001:2022` in the roll-up. Naming it by the `frameworks.md` anchor
-would drop the version, and a coverage claim depends on the version.
+frontmatter short. The framework is named by the label its `Alignment` cell uses, version included, so
+`[ISO 27001:2022].A.8.24` in the table is `ISO 27001:2022` in the roll-up.
 
 **`alignment-rollup` compares the roll-up against the cells in both directions.** A reference in a cell and not in the
 roll-up leaves the generated index under-reporting what the policy covers. A reference in the roll-up and not in any
-cell is a claim of coverage no clause can show, and that is the worse of the two, because it reads as evidence. It is an
-error, where `clause-order` and `clause-compound` only warn: those two question an author's judgement, and this one
-reports two copies of one fact disagreeing.
+cell is a claim of coverage no clause can show, which reads as evidence, so it is an error.
 
 **`alignment-unlinked` reports a citation Markdown never made into a link.** `[UK GDPR].Art.5(1)(e)` with no definition
 behind it stays on the page as text. The cell then states no mapping, and `alignment-rollup`, `framework-posture` and
-`framework-uncited` each see a clause that cites nothing. A policy could bind itself to UK GDPR across its clauses and
-claim nothing in `aligns-with`. While the definition is missing, `alignment-rollup` does not report `aligns-with` as
-claiming that framework, because a clause may well cite it.
+`framework-uncited` each see a clause that cites nothing. While the definition is missing, `alignment-rollup` does not
+report `aligns-with` as claiming that framework.
 
 **`framework-posture` and `framework-uncited` check the register and the clauses against each other.** The register says
 whether you are obliged to a framework, self-obligated to it, or borrowing from it. `alignment-rollup` reads that
-standing to decide which references it includes, so a framework the register never placed would be dropped with nothing
-saying so. From the other side, a register entry no clause cites is a standing nothing acts on, and it reads to an
-auditor as coverage.
+standing to decide which references it includes. A register entry no clause cites is a standing nothing acts on, and
+reads to an auditor as coverage.
 
 Only a binding standing obliges a summary. A clause may cite a framework you took ideas from, and that citation is
 provenance rather than obligation. [Lineage](lineage.md#alignment-not-compliance) says what the three standings mean.
