@@ -78,7 +78,6 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 
 ## Where the reasoning lives
 
-A `notes:` states what is local to one field or one check, in one paragraph. The argument behind a type's shape lives on
-the site, at <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/>. The argument behind a check lives
-at <https://paul80nd.github.io/knowledge-as-code/design/checks/>. Put a new argument on the page and cite the URL,
-rather than growing a `notes:` into a design page.
+A `notes:` states what is local to one field or one check, in one paragraph, and stops. The argument behind a type's
+shape or a check goes in the commit message and the pull request. [The documentation
+charter](../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains) says which page a `notes:` may cite.

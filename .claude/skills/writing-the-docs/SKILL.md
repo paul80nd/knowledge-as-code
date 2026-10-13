@@ -34,22 +34,20 @@ the page. It is not the model for length. Keep each section to what its reader n
 * A command runs on a clean machine, or the line above it names what must be installed first.
 * A comment beside a command says what the command does. Write: `kac validate     # frontmatter, links, structure`
 
-## Which page holds a fact
+## Which section holds a page
 
-The site follows Diátaxis: a tutorial, a how-to, a reference and an explanation, each on its own page.
+The site has four sections, one for each reader:
 
-| The reader wants                                  | The page                                                |
-|---------------------------------------------------|---------------------------------------------------------|
-| to decide whether to install it at all            | `README.md` and `docs/index.md`                         |
-| to run it once, having installed nothing          | `docs/getting-started.md`                               |
-| to wire it into a pipeline                        | `docs/ci.md`                                            |
-| to find the flags a command takes                 | `kac <command> --help`, and the page's generated block  |
-| to learn what a command does and what it rejects  | `docs/cli/<verb>.md`                                    |
-| to learn why it works the way it does             | `docs/design/`                                          |
-| to learn what a type, a tier or a record is       | `docs/framework/`                                       |
-| to change `kac` itself                            | `tooling/README.md`, which the site links out to        |
+* Use it
+* The framework
+* Schema reference
+* Maintaining `kac`
 
-* A command page says what the command does. It links the design page for why. It does not argue the design.
+[The documentation charter](../../../docs/maintaining/charter.md) says which reader each section serves, which kinds of
+page it may contain, and where an argument goes. Read it before you add a page, move one or argue anything on one.
+
+* `tooling/README.md` covers changing `kac` itself, and the site links out to it.
+* A command page says what the command does. It argues nothing.
 * A second page is earned by a second reader. `cli/checks.md` is for somebody running the command. `design/checks.md`
   is for somebody adding a check. One reader who wants more detail gets a deeper heading, not a page.
 * `README.md` and `docs/index.md` open on the same four paragraphs, byte for byte. Edit one and copy the change. Nothing
