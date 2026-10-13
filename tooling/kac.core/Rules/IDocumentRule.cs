@@ -1,7 +1,7 @@
 namespace kac.core;
 
 /// <summary>
-/// A rule whose message names which part of a document is at fault. <c>../../CLAUDE.md</c> states the test.
+/// A rule whose message names which part of a document is at fault. <c>docs/maintaining/checks.md</c> states the test.
 /// </summary>
 public interface IDocumentRule
 {

@@ -528,8 +528,8 @@ public static class Commands
 
         Stop("checks: the reader-facing checks table is out of step with the catalogue:");
         foreach (var p in problems) Out.ErrLine($"  {p}");
-        // Only the flag is named by a path: the row lives in a table this tool ships. `tooling/CLAUDE.md` says
-        // where it sits.
+        // Only the flag is named by a path: the row lives in a table this tool ships. `docs/maintaining/checks.md`
+        // says where it sits.
         Out.ErrLine("'on-type-page:' sits beside the check in .schema/_checks.yaml.");
         return 1;
     }

@@ -54,10 +54,24 @@ In this repository, each corpus under `examples/` and `template/` finds the one 
 ## Where the console is
 
 `kac.core` returns values, and only `Commands` writes to the console. `Validator.CheckAll` returns findings,
-`New.Plan` returns a plan, and `GeneratedFiles.Plan` returns the files `generate` would write.
+`New.Plan` and `Update.Plan` each return a plan, and `GeneratedFiles.Plan` returns the files `generate` would write.
+`Commands` derives the exit code from the value it was handed.
 
-`Tree` stands between every check and the disk. It is a listing of paths and a function that reads one. A test builds a
-`Tree` from strings, so it can validate a corpus that was never written to disk.
+A plan is decided before anything is done. `New.Apply`, `Update.Apply` and `GeneratedFiles.Write` act on exactly the
+files their plan reports, so nothing is decided twice.
+
+### Testing without a disk
+
+`Tree` stands between every check and the disk. It is a listing of paths, a function that reads one, and a function
+that says whether a path is on the disk. A test builds a `Tree` from strings, so it can validate a corpus that was never
+written to disk. A check asks the listing whether a file is present, and calls `Tree.OnDisk` only where `Tree` says to.
+
+The rest of `kac.core` follows the same pattern:
+
+* `New.Plan` and `Update.Plan` take file listings, a manifest and a function saying whether two copies of a path match.
+  A new case in either is a unit test, not a fixture corpus.
+* `Corpus.Load` and `Schema.Load` each take either values or a path. The path overload is the only place a path becomes
+  a corpus or a schema.
 
 ## Where a check lives
 

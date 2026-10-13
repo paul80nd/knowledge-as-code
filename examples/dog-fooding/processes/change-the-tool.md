@@ -23,8 +23,7 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
 
 ## Prerequisites
 
-* The tool guidance at `tooling/CLAUDE.md`, which states the test for expression against class and the two rule
-  interfaces.
+* `docs/maintaining/checks.md`, which states the test for expression against class and the two rule interfaces.
 * The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.
 * The fact table in `docs/reference/expressions.md`, which lists what an expression can already read.
 * Writing C# and its unit tests, which steps 2 to 4 need.
@@ -36,7 +35,8 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
    * An `expr:` over facts that already exist is schema alone. Run [prc-change-the-schema] and stop.
    * A new fact plus an `expr:` is both. Adding a fact is one method on `Facts`, one row in `RuleExpr.Functions` and
      one row in the fact table, which `DocumentationTests` keeps equal.
-   * A question no expression can ask is a rule class. Continue with this page.
+   * A question no expression can ask is a rule class. So is one an expression could ask, where one fixed message
+     cannot name the part of the document at fault. Continue with this page.
 
    Read the fact table before you settle on a route. `words()` is whole-document, and no fact measures a section.
 2. Write the class under `kac.core/Rules/`. Take the narrower interface wherever it will do.

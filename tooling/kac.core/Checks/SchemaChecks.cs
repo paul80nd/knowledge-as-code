@@ -1,7 +1,8 @@
 namespace kac.core;
 
 /// <summary>
-/// Each vocabulary is read from the code that dispatches it, never restated. <c>../../CLAUDE.md</c> says why.
+/// Each vocabulary is read from the code that dispatches it, never restated. <c>docs/maintaining/checks.md</c> says
+/// why.
 /// </summary>
 public static class SchemaChecks
 {

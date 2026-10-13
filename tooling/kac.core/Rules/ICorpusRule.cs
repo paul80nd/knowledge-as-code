@@ -1,7 +1,8 @@
 namespace kac.core;
 
 /// <summary>
-/// A rule whose question no single document answers. <c>../../CLAUDE.md</c> says which interface a new rule wants.
+/// A rule whose question no single document answers. <c>docs/maintaining/checks.md</c> says which interface a new
+/// rule wants.
 /// </summary>
 public interface ICorpusRule
 {
