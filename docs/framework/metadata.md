@@ -177,6 +177,10 @@ _**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LEAKED, [pol-SCRT].LOGS_
 The line is italic with the label bold, and it closes the section it covers. A section covering nothing has no line.
 `kac validate` reports a line that is not italic, names no clause, or names a policy whole.
 
+**A field declaring `reciprocal:` agrees with its counterpart.** `supersedes` and `superseded-by` are one such pair,
+and `replaces` and `successor` another. `kac validate` reports `reciprocal` where one record points at another and the
+other does not point back. [Knowledge is a graph](principles.md#knowledge-is-a-graph) says why.
+
 **`:` scopes a reference to the corpus supplying the record.** `eng:pol-VURM.TIMEBOX` reads scope, record, part. A
 record the reading corpus keeps is cited bare, and qualifying one is an error. [Spelling a
 citation](../use/imports.md#spelling-a-citation) says how a scoped reference resolves.
