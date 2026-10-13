@@ -134,8 +134,8 @@ Stated openly, because each one shapes the design:
 
 ## Contributing
 
-This repository is not open to contributions of code. Raise an issue instead. A pull request opened without a prior
-conversation is closed unmerged.
+Pull requests open once `kac` reaches version 1.0.0. Until then, an issue is the way to help: a bug, a question or a
+correction is welcome, and each one is read.
 [Contributing to `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/contributing/) says what a pull request
 owes and which checks gate it. To publish a version of your own,
 [Forking `kac`](https://paul80nd.github.io/knowledge-as-code/maintaining/forking/) lists what to replace.
