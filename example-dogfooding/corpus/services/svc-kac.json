@@ -25,12 +25,12 @@
     ]
   },
   "sections": {
-    "What it does": "`kac` reads one corpus and judges it against the schema above it. `Program.cs` wires Spectre.Console.Cli to the verbs\nand runs the corpus pre-flight. Every verb's logic is in `kac.core`. Taken from the header comment in\n`tooling/kac/kac.csproj`.\n\nThe command surface is `new`, `validate`, `generate`, `restore`, `export`, `bundle`, `pack`, `checks`, `report` and\n`update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/cli/>.\n\nTwo walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the corpus, then walks up again for\n`.schema/` to find what to judge the corpus against. Taken from `tooling/CLAUDE.md`.",
+    "What it does": "`kac` reads one corpus and judges it against the schema above it. `Program.cs` wires Spectre.Console.Cli to the verbs\nand runs the corpus pre-flight. Every verb's logic is in `kac.core`. Taken from the header comment in\n`tooling/kac/kac.csproj`.\n\nThe command surface is `new`, `validate`, `generate`, `restore`, `export`, `bundle`, `pack`, `checks`, `report` and\n`update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/use/cli/>.\n\nTwo walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the corpus, then walks up again for\n`.schema/` to find what to judge the corpus against. Taken from `tooling/CLAUDE.md`.",
     "Where it lives": "* **Repository**: [`knowledge-as-code`](https://github.com/paul80nd/knowledge-as-code), at `tooling/kac`, with the\n  engine beside it at `tooling/kac.core`\n* **Platform**: .NET 10, packed as a dotnet tool\n* **Deployed as**: a NuGet package on nuget.org, installed by `dotnet tool install`",
     "Dependencies": "None in this catalogue. `kac` reads a corpus from the filesystem. It calls nothing at run time.\n\nThe packages it is built from are in the tool register: [tol-spectre-console], [tol-yamldotnet] and [tol-markdig].",
     "Data": "None of its own. Every input is a file in the corpus it was pointed at. Every output is written back beside that corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in [std-CONFIG]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4af3d2e7b5140e6ba5787293777b9b0aa07c6d1c/examples/dog-fooding/services/kac.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f5cafbf05cf8f962af49364bc74d97a6cb45174e/examples/dog-fooding/services/kac.md"
   }
 }

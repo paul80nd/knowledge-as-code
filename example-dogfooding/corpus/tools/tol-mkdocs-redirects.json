@@ -1,0 +1,37 @@
+{
+  "type": "tools",
+  "path": "tools/docs/mkdocs-redirects.md",
+  "trust": null,
+  "fields": {
+    "id": "tol-mkdocs-redirects",
+    "title": "mkdocs-redirects",
+    "status": "approved",
+    "category": "docs",
+    "packages": [
+      {
+        "purl": "pkg:pypi/mkdocs-redirects",
+        "versions": "1.2.x"
+      }
+    ],
+    "homepage": "https://github.com/mkdocs/mkdocs-redirects",
+    "licence": "MIT",
+    "licence-declared": "MIT",
+    "decided-on": "2026-10-13",
+    "review-by": "2027-10-13",
+    "decided-in": null,
+    "replaces": null,
+    "successor": null,
+    "tags": [
+      "documentation",
+      "redirects"
+    ]
+  },
+  "sections": {
+    "What we use it for": "Files under `template/` and `.schema/` cite the documentation site by URL, and every corpus that took the framework keeps a copy of them. A page that moves would break each of those links in every such corpus, and no check here reads an external URL. The plugin keeps each old URL working.\n\n`redirect_maps` in `mkdocs.yml` lists each moved page and the page that replaced it. The page it writes keeps the\nanchor. `NavigationTests` in `kac.tests` fails a redirect whose target the nav does not list.",
+    "Licence and obligations": "MIT. It asks that the copyright notice travel with a copy of the software. The site is generated output and not a copy of the plugin, so nothing follows for what is published.",
+    "Where it is used": "* [svc-docs-site] is built with it."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f5cafbf05cf8f962af49364bc74d97a6cb45174e/examples/dog-fooding/tools/docs/mkdocs-redirects.md"
+  }
+}
