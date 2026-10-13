@@ -1,0 +1,44 @@
+F01. No. No record states its lifecycle, because immutable and living can be read off the tier table. A record states `tier` and nothing that could disagree with it.
+Page: taxonomy.md
+
+F02. It is a fix, a problem with a resolution somebody has verified, kept in `fixes/`. Fixes sit in the Normative tier, so they answer to its rules: living, owned, and edited in place with a changelog.
+Page: types.md
+
+F03. No. A leading underscore is reserved for the framework's own artefacts. The tool reads the prefix, so anything under it is excluded from discovery and never validated as a record.
+Page: taxonomy.md
+
+F04. A process. Processes are planned procedures followed deliberately, and rotating a secret is one of the examples given. Runbooks are for incident-time procedures read under pressure.
+Page: types.md
+
+F05. No. `category` is derived from the folder through `from: sub-path`, so this policy gets `category: security` without your writing it. Writing the key by hand is an error, reported as `derived-key`.
+Page: metadata.md
+
+F06. Two letters is not too short. Standards set `id.width` to `min: 2` and `max: 7`, so `std-PR` is well formed and seven characters is the longest you can go.
+Page: metadata.md
+
+F07. No. A shortcode is two to eight characters, lower case, opening on a letter with only letters and digits after it, and it may not contain a hyphen. `kac validate` refuses `eng-core`.
+Page: metadata.md
+
+F08. No. A finished record has no `{{placeholder}}` left in it, and none of the template's DELETE FROM HERE / DELETE TO HERE guidance either.
+Page: contributing.md
+
+F09. No. An observation nobody has verified goes to the tracker, not to the corpus, because an agent cannot verify its own observations.
+Page: contributing.md
+
+F10. Yes, if the field declares `reciprocal:`. `kac validate` reports `reciprocal` where one record points at another and the other does not point back. Examples are `supersedes`/`superseded-by` and `replaces`/`successor`.
+Page: metadata.md
+
+F11. Yes. It adds a fifth status, `rejected`, for a proposal the team turned down. It also departs from Nygard in two other ways: an ADR here affects more than one repository, and every alternative states a verdict.
+Page: lineage.md
+
+F12. None. No framework found divides its procedural layer by reading conditions, and both HCGF and Diátaxis have only one procedural type. The split has no precedent and is the framework's own.
+Page: lineage.md
+
+F13. No. A deviation's `owner` takes the `human:` form only, because accepting a risk is a person putting their name to a consequence and a post cannot do that. A post is allowed only in `assigned-to`.
+Page: shaping-a-type.md
+
+F14. Yes. `Exit` is required of a `critical` or `important` integration still in use, and a `trial` integration is asked like any other because it is the one most likely to be left. `exit-required` warns when it is missing.
+Page: shaping-a-type.md
+
+F15. Write it with `status: draft`. `verified` is required of every status except a draft, because an agent writing a fix from a filed observation cannot name who will verify it.
+Page: shaping-a-type.md

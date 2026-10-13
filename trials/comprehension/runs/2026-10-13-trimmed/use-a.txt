@@ -1,0 +1,44 @@
+U01. `kac new` sees the `.corpus.yaml` higher up and treats the corpus as already there. To take a newer framework into an existing corpus, run `kac update`.
+Page: troubleshooting.md
+
+U02. You still have to commit. `new` stages what it wrote but does not commit, so you read what is staged and make the first commit yourself (for example `git commit -m "Start a corpus"`).
+Page: cli/new.md
+
+U03. You get every type the template declares. Publishing defaults to `none` and CI defaults to `none`, so it sets up neither.
+Page: cli/new.md
+
+U04. Yes. Pass a local path to `--from` (for example `kac new --from ../knowledge-as-code`), which is the offline route. Without a local `--from`, `new` needs a network and a git client.
+Page: cli/new.md
+
+U05. No. CI never commits: `generate --check` lists the stale files and exits `1` without writing anything, and the job should have read-only permission. Run `kac generate` on your own machine and commit what it writes.
+Page: ci.md
+
+U06. Yes. `kac` lists a corpus with `git ls-files`, so CI has to check out with git rather than download an archive or tarball. Without git, `.gitignore` and the other exclude files are not applied.
+Page: ci.md
+
+U07. Azure Repos ignores the `pr:` trigger in the pipeline file. Wire the pipeline up as a branch policy: Project settings, Repositories, your repository, Policies, Branch Policies, `main`.
+Page: ci.md
+
+U08. Exit code `2` means no corpus was found, rather than a fault in one. `kac` walks up from the working directory and found no `.corpus.yaml`, so run it from inside the corpus and check that CI checks out with git.
+Page: troubleshooting.md
+
+U09. No. `bundle` validates nothing it assembles. Have CI install the Claude Code CLI and run `claude plugin validate ./.dist/plugin --strict` and `claude plugin validate ./.dist --strict`.
+Page: ci.md
+
+U10. You did not run `kac export` first. `bundle` reads what `export` wrote, so run `kac export` and then `kac bundle`.
+Page: troubleshooting.md
+
+U11. Run `claude plugin marketplace add ./.dist`. `bundle` writes a marketplace into `.dist/` that holds the plugin, and it needs no branch or credential.
+Page: cli/bundle.md
+
+U12. `raise-finding`. It is the only `standalone` skill, so it ships whatever the corpus adopted.
+Page: skills.md
+
+U13. No. Below `1.0.0` a caret admits only the same minor version, so `^0.16.0` never takes `0.17.0`. Edit `version` to `^0.17.0` and restore again.
+Page: cli/restore.md
+
+U14. `pack` rebuilds its output folder whole, so the folder now holds only the new version, and `restore` refuses a consumer still locked to the earlier one. Move the lock along with the range to the producer's new `content-version`, or delete `resolved:` and restore again.
+Page: cli/restore.md
+
+U15. No. `export` carries what the corpus consumes, so on a fresh checkout it refuses with "nothing is restored for eng ... Run kac restore". It does not write a smaller export of your own records alone.
+Page: cli/export.md

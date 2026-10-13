@@ -119,6 +119,7 @@ Where a set fails, the run names the page whose change cost the answer.
 
 ## Runs
 
-| Run                                       | Site at    | What it measured                                   |
-|-------------------------------------------|------------|----------------------------------------------------|
-| [Baseline](runs/2026-10-13-baseline.md)   | `6df1b43a` | The four-section site from #821, before #824 trims |
+| Run                                     | Site at    | What it measured                                                                 |
+|-----------------------------------------|------------|----------------------------------------------------------------------------------|
+| [Baseline](runs/2026-10-13-baseline.md) | `6df1b43a` | The four-section site from #821, before #824 trims                               |
+| [Trimmed](runs/2026-10-13-trimmed.md)   | `e0d55c52` | The site #824 trimmed. Use it and Schema reference pass, and The framework fails |

@@ -1,0 +1,44 @@
+S01. It evaluates to false: a comparison where either side is absent is false, so the rule fires on that record (which `required-field` already reports). A `!=` comparison is the negation of `==`, so it gives true. Guard it with `present(...) and present(...) implies ...`.
+Page: expressions.md
+
+S02. It neither crashes nor errors: division by zero gives zero.
+Page: expressions.md
+
+S03. No. `days_since()` answers zero for a date in the future, so `days_since('last-rehearsed') <= 92` passes that record.
+Page: expressions.md
+
+S04. A type's own rules may use only `error` or `warning`, which is the limit `meta/type.schema.json` sets. `info` is only for a check declared in `_checks.yaml`. Only `error` fails the build.
+Page: checks.md
+
+S05. 184 days from `accepted-on` to `review-by`. That is the `high-risk-review-window` rule, which applies to a deviation whose `risk` is `high`.
+Page: checks.md
+
+S06. `date-format` reports it. It is the same id as a date written in the wrong format, because a day the calendar does not have is reported under the same id as a malformed date.
+Page: checks.md
+
+S07. Yes, under `notes:`, the one key exempt from the unknown-key check. Any other key the loader never reads, at any level, is reported as `schema-unknown-key`.
+Page: held-to.md
+
+S08. No. A `from:` on a field that is also `required: true` is reported as `schema-shape`. No author can write a derived field, and writing one trips `derived-key`.
+Page: held-to.md
+
+S09. `label-plural:`, `summary:`, `goes-here:`, `detail:` and `lineage.prior-art:`. Leaving one out is `schema-shape`, and `label-plural:`, `summary:` and `goes-here:` also fail past 120 characters.
+Page: held-to.md
+
+S10. A heading is the field name in sentence case, and `kac` capitalises only the initialisms `id` and `sla`. So the heading would be "Mttr target", and MTTR would not be capitalised. The page says to open an issue on the repository when you declare such a field.
+Page: generation.md
+
+S11. Yes. A type with no records yet gets an index saying so, not a table with no rows. A type with no folder gets no index at all.
+Page: generation.md
+
+S12. If the type's `fields:` does not name `verified`, `trust` is `null`. Where it does, the exporter derives `trust` from `verified`: `unverified` when it holds nothing, `machine-confirmed` when it holds agents alone, and `human-reviewed` when it holds at least one `human:` actor. Verifications taken before `generated.at` are left out.
+Page: export.md
+
+S13. Neither: the consumer sees `null`. An empty list counts as absent, absent is `null`, and no key ever arrives as `[]`.
+Page: export.md
+
+S14. No. A part line travels at `full` only, and a type that declares `summary` or `reference` against its parts fails the schema pass. To make the line thinner, drop a key from `line:`.
+Page: export.md
+
+S15. Adding a key moves no version. Renaming a key moves the number, and for a type's part line that number is that type's `shapeVersion`.
+Page: export.md

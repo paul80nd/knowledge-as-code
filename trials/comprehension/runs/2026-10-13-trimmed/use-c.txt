@@ -1,0 +1,44 @@
+U01. `new` finds a `.corpus.yaml` at or above the working directory and so treats the corpus as already there. To take a newer framework into an existing corpus, run `kac update`.
+Page: troubleshooting.md (also cli/new.md)
+
+U02. Yes, you commit it yourself. `new` stages everything and stops short of committing ("the first commit is yours"), so read what is staged and then run `git commit`.
+Page: cli/new.md
+
+U03. You get every type the template declares. Publishing defaults to `none` and CI defaults to `none`, so it sets up neither.
+Page: cli/new.md
+
+U04. Yes. Pass a local path to `--from` (for example `kac new --from ../knowledge-as-code`), which is the offline route; otherwise `new` needs a network and a git client.
+Page: cli/new.md
+
+U05. No. CI never commits: `generate --check` lists the stale files and exits 1 without writing anything, and the job should have read-only permission. Run `kac generate` on your own machine and commit what it writes.
+Page: ci.md
+
+U06. Yes. `kac` lists a corpus with `git ls-files`, and a tree with no `.git/` falls back to a directory walk that ignores `.gitignore` and the other exclude files. Check out with git, not a downloaded archive.
+Page: ci.md
+
+U07. Azure Repos ignores the `pr:` trigger in that file. Wire the pipeline up as a branch policy: under Build Validation, select **+**, choose this pipeline and mark it Required.
+Page: ci.md
+
+U08. Exit code 2 means no corpus was found, not a fault in one: the step ran outside a corpus, with no `.corpus.yaml` above the working directory. `cd` into the corpus and run it again.
+Page: troubleshooting.md
+
+U09. No. `bundle` validates nothing it assembles, so CI should run `claude plugin validate ./.dist/plugin --strict` and `claude plugin validate ./.dist --strict`.
+Page: cli/bundle.md (also ci.md)
+
+U10. You did not run `kac export` first. `bundle` reads `.dist/export/`, so run `kac export` and then `kac bundle`.
+Page: troubleshooting.md
+
+U11. Run `claude plugin marketplace add ./.dist`. `bundle` writes a marketplace into `.dist/`, and the install needs no branch or credential.
+Page: cli/bundle.md
+
+U12. `raise-finding`. It declares itself standalone, so it ships whatever the corpus exports or adopted.
+Page: skills.md (also cli/bundle.md)
+
+U13. No. Below 1.0.0 a caret admits only the same minor version, so `^0.16.0` never takes `0.17.0`. Change the range to `^0.17.0` and commit the rewritten `resolved` line with it.
+Page: cli/restore.md
+
+U14. `pack` rebuilds its output folder whole, so the folder now holds only the new version, and `restore` refuses a consumer still locked to the earlier one. Move the lock along with the range to match the producer's new `content-version`, or delete `resolved:` and restore again.
+Page: cli/restore.md
+
+U15. No. `export` refuses and writes nothing ("nothing is restored for eng, which this corpus consumes and an export carries. Run kac restore."), because an export carries the consumed records merged with your own. Run `restore` first.
+Page: cli/export.md
