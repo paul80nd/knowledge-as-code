@@ -23,12 +23,10 @@ Read `tier` in the frontmatter. Find its row below and follow that section. Igno
 
 The reader is under pressure and may be new to the system. They skim.
 
-* Write one action per step. A step containing "and" is usually two steps. Nothing checks this, so it is yours to
-  catch.
+* Write one action per step. A step containing "and" is usually two steps, and nothing checks it.
 * Open the step with the action. Put a purpose or a condition first only where it decides whether to act at all.
   Write: "If the queue depth exceeds 1000, restart the consumer."
-* Put the reason for a step after the action, in its own sentence. A reason explains a step you take anyway, so it
-  never opens one.
+* Put the reason for a step after the action, in its own sentence.
 * State the outcome of each step, so the reader can tell it worked.
 * Put a warning before the step it guards.
 * Do not hedge an order. Cut "typically", "usually" and "normally". If the order depends on something, say what.
@@ -201,14 +199,12 @@ Each key in `.schema/` has one reader. Write to that reader.
 | `notes:`                                                | a schema maintainer, in the file       | A comment. One paragraph. What the code cannot show: a boundary, a case it skips, a form it borrows.         |
 | `# comment`                                             | a schema maintainer                    | One line. One short paragraph above a block such as `parts:` or `export:`.                                   |
 
-The two corpus-reader rows are what reaches somebody who never opens `.schema/`. A tier's `note:` in `_tiers.yaml` is
-the one easiest to mistake for a maintainer's note, because it sits beside a top-level `notes:` that is one. `kac
-generate` writes each tier's `note:` into every corpus's `knowledge-as-code/taxonomy.md`, and each type's `lineage:`
-into `lineage.md`.
+`kac generate` writes each tier's `note:` into every corpus's `knowledge-as-code/taxonomy.md`, and each type's
+`lineage:` into `lineage.md`. A tier's `note:` sits beside a top-level `notes:` in `_tiers.yaml`, and only the second is
+a maintainer's note.
 
-* Do not argue in a `notes:`. State the constraint and stop. The argument goes in the commit message.
-* A `notes:` may cite the page that owns the behaviour, as
-  [the documentation charter](../../../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains) says. End the
-  `notes:` with the URL alone, or with "See <URL>." Do not write "<URL> says why".
+* State a `notes:`'s constraint in one paragraph and stop. The argument goes in the commit message.
+* A `notes:` may cite the page that owns the behaviour, as [the documentation
+  charter](https://paul80nd.github.io/knowledge-as-code/maintaining/charter/#what-a-comment-or-a-notes-contains) says.
+  End the `notes:` with the URL alone, or with "See <URL>." Do not write "<URL> says why".
 * Say a thing once. Not in a comment, a `notes:` and `export.notes` as well.
-* A `notes:` over one paragraph is arguing. Cut it to the constraint, and put the argument in the commit message.
