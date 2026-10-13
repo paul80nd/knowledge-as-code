@@ -132,9 +132,10 @@ export:
 | `homepage`, `repository`                          | `publishing.base`            |
 | `keywords`                                        | the types the export carried |
 
-**`bundle` removes a key the corpus declared nothing for.** `author` is the exception, because
-`claude plugin validate --strict` fails a manifest with none. A corpus that named nobody is filed under its own name.
-Every other key in the manifest survives untouched.
+**`bundle` removes a key the corpus declared nothing for.** `author` and `description` are the exceptions. A corpus
+that named nobody is filed under its own name, because `claude plugin validate --strict` fails a manifest with no
+`author`. A corpus with no `description` gets one built from its name. Every other key in the manifest survives
+untouched.
 
 ## Known limits
 
@@ -142,9 +143,8 @@ Every other key in the manifest survives untouched.
 
 * a plugin tree with no manifest
 * a `plugin.from` naming a folder that is not there
-* a manifest that is not JSON, or that states no name, or no `corpusRoot`, or a `corpusRoot` the plugin tree already
-  uses
-* an export with no manifest
+* a manifest that is not JSON, or that states no `corpusRoot`, or a `corpusRoot` the plugin tree already uses
+* an export with no manifest, or one naming no corpus because `.corpus.yaml` states no `corpus`
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry
 
