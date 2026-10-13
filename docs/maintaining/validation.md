@@ -154,8 +154,7 @@ full statement of each one.
   and `import-versions`.
   [#247](https://github.com/paul80nd/knowledge-as-code/issues/247)
 * Most rules a type declares for itself, and core checks such as `key-order`, are tripped by a golden fixture and named
-  in no scenario. `kac checks` lists them, and the golden suite's coverage gate holds each to a fixture.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
+  in no scenario. `kac checks` lists them, and the golden suite's coverage gate fails a check no fixture trips.
 * `validate` exiting `1` exactly when it finds an error. The scenarios call the validator and not the command, so the
   golden suite is where the exit code is asserted.
 * How `validate` groups its findings, and the shape of `--json`. Both are printed only.
