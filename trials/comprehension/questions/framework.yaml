@@ -1,0 +1,257 @@
+# Asked of docs/framework/ alone. ../README.md says how a run is staged, prompted and scored.
+reader: framework reader
+section: docs/framework/
+questions:
+  - id: F01
+    topic: tiers
+    question: >-
+      My runbook is a living document and my ADR is frozen once accepted. Should I add a field to each record saying
+      which, so readers know whether they can edit it?
+    answer: >-
+      No. A record states its `tier` and nothing else about lifecycle. Immutable or living follows from the tier, so a
+      second field could only disagree with it. Partial: says "no" without saying the tier already states it.
+    doc:
+      page: docs/framework/taxonomy.md
+      anchor: the-four-tiers
+      quote: "No record states its lifecycle."
+    source:
+      path: .schema/_universal.yaml
+      line: 6
+      shows: "The universal fields' notes say `lifecycle` follows from `tier`; no record-level lifecycle field exists."
+
+  - id: F02
+    topic: which type
+    question: >-
+      We tracked down why a build kept failing, and a colleague has confirmed the workaround works. What type of record
+      is that, and which tier's rules does it answer to?
+    answer: >-
+      A fix, filed in `fixes/`, in the Normative tier (living, owned, edited in place with a changelog). Partial: names
+      the type but not the tier, or the tier but not the type.
+    doc:
+      page: docs/framework/types.md
+      anchor: normative
+      quote: "A problem with a resolution somebody has verified, and the record of who verified it"
+    source:
+      path: .schema/fixes.yaml
+      line: 8
+      shows: "The fix type declares `tier: normative`."
+
+  - id: F03
+    topic: ids, citations and metadata
+    question: >-
+      I want to keep a scratch file of half-written notes inside a type folder, named `_scratch.md`. Will `kac` try to
+      validate it as a record?
+    answer: >-
+      No. A leading underscore is reserved for the framework's own artefacts; the tool reads the prefix, so anything
+      under it is excluded from discovery and never validated as a record.
+    doc:
+      page: docs/framework/taxonomy.md
+      anchor: the-shape-on-disk
+      quote: "anything under it is excluded from discovery and never validated as a record."
+    source:
+      path: tooling/kac.core/Artefact.cs
+      line: 25
+      shows: "`IsReserved` treats any path segment starting with `_` as reserved, never discovered as a record."
+
+  - id: F04
+    topic: which type
+    question: >-
+      I'm writing down how we rotate the database password every quarter. Does that go in as a runbook or a process?
+    answer: >-
+      A process (`processes/`, Procedural tier): a planned procedure followed deliberately, and rotating a secret is
+      one of its named examples. A runbook is for incident time, read under pressure.
+    doc:
+      page: docs/framework/types.md
+      anchor: procedural
+      quote: "A planned procedure followed deliberately: releasing, onboarding, provisioning, rotating a secret"
+    source:
+      path: .schema/processes.yaml
+      line: 10
+      shows: "The process type's summary names rotating a secret as a planned procedure; line 8 sets tier procedural."
+
+  - id: F05
+    topic: ids, citations and metadata
+    question: >-
+      My policy lives at `policies/security/`. Should I write `category: security` in its frontmatter so the index
+      picks it up?
+    answer: >-
+      No. `category` is derived from the folder (`from: sub-path`), so it is already `security`. Writing the key by
+      hand is an error, reported as `derived-key`. Partial: says it is unnecessary without saying it is an error.
+    doc:
+      page: docs/framework/metadata.md
+      anchor: a-derived-field
+      quote: "reported as `derived-key`, because the folder and the line could then say different things."
+    source:
+      path: tooling/kac.core/Validator.cs
+      line: 129
+      shows: "A frontmatter key whose field declares `from:` raises `derived-key`; policies.yaml:54 sets sub-path."
+
+  - id: F06
+    topic: ids, citations and metadata
+    question: >-
+      I want to give a new standard the id `std-PR`. Is two letters too short for a standard's mnemonic, and what is
+      the longest I could go?
+    answer: >-
+      Not too short. A standard's discriminator runs from 2 to 7 characters, so `std-PR` and `std-SECRET` are both
+      well formed. Partial: gives only one bound.
+    doc:
+      page: docs/framework/metadata.md
+      anchor: the-three-id-styles
+      quote: "Standards set `min: 2` and `max: 7`"
+    source:
+      path: .schema/standards.yaml
+      line: 64
+      shows: "The standard type's `id.width` is a span with `min: 2` and `max: 7`."
+
+  - id: F07
+    topic: ids, citations and metadata
+    question: >-
+      We want our corpus to be cited as `eng-core:pol-VURM`. Can we declare `eng-core` as our shortcode?
+    answer: >-
+      No. A shortcode is 2 to 8 characters, lower case, opening on a letter with only letters and digits after it, so
+      the hyphen is refused (the parser would read a hyphen before a colon as an id). Partial: says no without naming
+      the hyphen as the reason.
+    doc:
+      page: docs/framework/metadata.md
+      anchor: the-shortcode
+      quote: "It is two to eight characters, lower case, opening on a letter with letters and digits after it."
+    source:
+      path: tooling/kac.core/Manifest.cs
+      line: 216
+      shows: "`ShortcodeFault` enforces length 2 to 8, a lower-case first letter, then letters or digits."
+
+  - id: F08
+    topic: contributing
+    question: >-
+      I copied a type's template and left a couple of `{{...}}` bits to fill in after review. Is that acceptable in a
+      record I open a pull request for?
+    answer: >-
+      No. A finished record has no `{{placeholder}}` left in it, and none of the template's guidance between the
+      DELETE FROM HERE and DELETE TO HERE comments either.
+    doc:
+      page: docs/framework/contributing.md
+      anchor: the-shape-of-a-contribution
+      quote: "A finished record has neither left in it."
+    source:
+      path: tooling/kac.core/Validator.cs
+      line: 871
+      shows: "A record still carrying a `{{...}}` placeholder raises error `placeholder-left`."
+
+  - id: F09
+    topic: contributing (agents)
+    question: >-
+      I'm an AI session and I've noticed a service seems to retry far too aggressively, but I haven't been able to
+      confirm it. Should I write it up as a record?
+    answer: >-
+      No. An unverified observation goes to the tracker, because an agent cannot verify its own observations. A pull
+      request to the corpus is for a record a human will accept.
+    doc:
+      page: docs/framework/contributing.md
+      anchor: what-an-agent-may-write
+      quote: "An observation goes to the tracker, because an agent cannot verify its own"
+    source:
+      path: template/CLAUDE.md
+      line: 30
+      shows: "The guidance a corpus receives says an observation nobody has checked goes to the issue tracker."
+
+  - id: F10
+    topic: ids, citations and metadata
+    question: >-
+      I added a link from one record to another through a field that is meant to be mirrored, but didn't update the
+      other record to point back. Will anything complain?
+    answer: >-
+      Yes. Reciprocal edges must agree in both directions, and a one-sided link fails the build.
+    doc:
+      page: docs/framework/principles.md
+      anchor: knowledge-is-a-graph
+      quote: "So reciprocal edges must agree in both directions, and a one-sided link"
+    source:
+      path: tooling/kac.core/Validator.cs
+      line: 671
+      shows: "A field declaring `reciprocal:` whose target does not list the record back raises error `reciprocal`."
+
+  - id: F11
+    topic: lineage
+    question: >-
+      Our team turned down a proposed architecture decision. Nygard's ADR statuses have nowhere to put that. Does this
+      framework's ADR, and how else does it depart from Nygard?
+    answer: >-
+      Yes: a fifth status, `rejected`, keeps a proposal the team turned down. It also departs in that an ADR here
+      affects more than one repository, and every alternative states a verdict. Partial: names `rejected` alone.
+    doc:
+      page: docs/framework/lineage.md
+      anchor: what-a-row-says
+      quote: "a fifth status, `rejected`, keeps a proposal the team turned down"
+    source:
+      path: .schema/adrs.yaml
+      line: 35
+      shows: "The ADR divergence names more than one repository, a verdict per alternative and the fifth status."
+
+  - id: F12
+    topic: lineage
+    question: >-
+      Which outside framework did the split between processes and runbooks come from?
+    answer: >-
+      None. The split by reading conditions (planned and deliberate against incident-time and under pressure) is the
+      framework's own; HCGF and Diataxis each have a single procedural type.
+    doc:
+      page: docs/framework/lineage.md
+      anchor: what-has-no-precedent
+      quote: "No framework found here divides its procedural layer by *reading conditions*"
+    source:
+      path: .schema/processes.yaml
+      line: 38
+      shows: "The process lineage says splitting the procedural layer by reading conditions is this framework's own."
+
+  - id: F13
+    topic: why a type has its shape
+    question: >-
+      Can I set a deviation's owner to a post such as `role:head-of-security`, so it doesn't go stale when people
+      leave?
+    answer: >-
+      No. A deviation's `owner` takes the `human:` form alone, because accepting a risk is a person putting their name
+      to it, and whoever holds a post on the day would be accepting something they never read. `assigned-to` admits a
+      post. Partial: says no without the reason.
+    doc:
+      page: docs/framework/shaping-a-type.md
+      anchor: deviations
+      quote: "This type takes the `human:` form alone."
+    source:
+      path: .schema/deviations.yaml
+      line: 127
+      shows: "The deviation type refines `owner` to the pattern `^human:[a-z0-9.-]+$`, refusing `role:`."
+
+  - id: F14
+    topic: why a type has its shape
+    question: >-
+      We're only trialling a new vendor, graded `important`. Do I need to write the `Exit` section on its integration
+      record yet?
+    answer: >-
+      Yes. `Exit` is asked of any critical or important integration still in use, and a trial is asked like any other
+      because it is the one most likely to be left. Only a `retired` or a `supporting` integration is excluded
+      (`exit-required` warns).
+    doc:
+      page: docs/framework/shaping-a-type.md
+      anchor: integrations
+      quote: "A `trial` integration is asked like any other"
+    source:
+      path: .schema/integrations.yaml
+      line: 131
+      shows: "`exit-required` asks for `Exit` unless status is retired or criticality is supporting; trial not exempt."
+
+  - id: F15
+    topic: why a type has its shape
+    question: >-
+      I'm an agent writing up a fix from a filed issue, and I can't say who will check the resolution. What do I do
+      about the `verified` field?
+    answer: >-
+      Write the record with `status: draft` and leave `verified` out. It is required of every status except draft.
+      Partial: names draft status without saying `verified` is then not required, or the reverse.
+    doc:
+      page: docs/framework/shaping-a-type.md
+      anchor: fixes
+      quote: "`status: draft` is the value an author writes before anybody checks the resolution."
+    source:
+      path: .schema/fixes.yaml
+      line: 73
+      shows: "`verified` has `required-when: 'status != draft'`."

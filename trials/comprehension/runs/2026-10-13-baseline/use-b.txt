@@ -1,0 +1,44 @@
+U01. You don't need `new` there, because a `.corpus.yaml` at or above the working directory means the corpus already exists. To take a newer framework into that corpus, run `kac update`.
+Page: troubleshooting.md
+
+U02. Nothing is committed yet. `new` generates, validates and stages the files, then stops short of committing, so you make the first commit (e.g. `git commit -m "Start a corpus"`) once you have read what is staged.
+Page: cli/new.md
+
+U03. You get every type the template declares. Publishing defaults to `none` and CI defaults to `none`, so neither is set up.
+Page: cli/new.md
+
+U04. Yes. Pass a local path to `--from` (e.g. `kac new --from ../knowledge-as-code`). This is the offline route, and without it `new` needs a network and a git client.
+Page: cli/new.md
+
+U05. No. CI never commits: `generate --check` only lists the stale files and exits 1, and the job should have read-only permission. Run `kac generate` on your own machine and commit what it writes.
+Page: ci.md
+
+U06. Yes, it is a problem. `kac` lists the corpus with `git ls-files`, and a tree with no `.git/` falls back to a directory walk that ignores `.gitignore` and the other exclude files. Check out with git, not a downloaded archive.
+Page: ci.md
+
+U07. Azure Repos ignores the `pr:` trigger in the YAML file. Add the pipeline as a branch policy (Project settings > Repositories > your repo > Policies > Branch Policies > `main` > Build Validation > +), select the pipeline and mark it Required.
+Page: ci.md
+
+U08. Exit code 2 means no corpus was found: the command could not find a `.corpus.yaml` walking up from the working directory. `cd` into your corpus and run it again.
+Page: troubleshooting.md
+
+U09. No. `bundle` validates nothing it assembles. Have CI install the Claude Code CLI and run `claude plugin validate ./.dist/plugin --strict` and `claude plugin validate ./.dist --strict`.
+Page: ci.md
+
+U10. You didn't run `kac export` first. `bundle` reads what `export` wrote to `.dist/export/` and does not load the corpus itself.
+Page: troubleshooting.md
+
+U11. Run `claude plugin marketplace add ./.dist`. It installs from the local path and needs no branch or credential.
+Page: cli/bundle.md
+
+U12. `raise-finding`. It is the one standalone skill: it reads no export, so it ships whatever the corpus adopted.
+Page: skills.md
+
+U13. No. Below 1.0.0, `^0.16.0` only admits the same minor version, so 0.17.0 is out of range, and `restore` never asks the registry while the lock still satisfies the range. Edit `version` to `^0.17.0` and commit the `resolved` line that the next restore rewrites.
+Page: cli/restore.md
+
+U14. A folder source holds only the last version packed, so `restore` refuses a `resolved:` lock that names the earlier version. Move the lock along with the range to the new `content-version`, or delete `resolved:` and let the next restore write it.
+Page: cli/restore.md
+
+U15. No. `export` refuses with nothing written ("nothing is restored for eng ... Run kac restore"), because an export carries the consumed corpus's records merged with your own. Run `kac restore` first.
+Page: cli/export.md

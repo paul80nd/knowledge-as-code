@@ -1,0 +1,252 @@
+# Asked of docs/reference/ alone. ../README.md says how a run is staged, prompted and scored.
+reader: schema owner
+section: docs/reference/
+questions:
+  - id: S01
+    topic: expressions
+    question: >-
+      My rule compares field('detected-at') >= field('occurred-at'). What does that evaluate to on a record where one
+      of the two fields is missing, and what would a != comparison give in the same case?
+    answer: >-
+      Any comparison with an absent side is false, so the >= rule fires; != is the negation of == and so is true. The
+      fix is to guard with present(...) and present(...) implies .... Partial: gives only one of the two operators.
+    doc:
+      page: docs/reference/expressions.md
+      anchor: an-absent-field
+      quote: "A comparison where either side is absent is **false**, and `!=` is the"
+    source:
+      path: tooling/kac.core/RuleExpr.cs
+      line: 131
+      shows: "`!=` negates the null-guarded `==`; line 134 returns false for any other op with a null side"
+
+  - id: S02
+    topic: expressions
+    question: >-
+      If I write a ratio rule like links() * 40 / words() and a record has no words, does the check crash, error, or
+      give some value?
+    answer: >-
+      It gives a value: division by zero yields zero, so the rule reads as a threshold nobody meets rather than a crash.
+    doc:
+      page: docs/reference/expressions.md
+      anchor: the-grammar
+      quote: "**Division by zero gives zero.**"
+    source:
+      path: tooling/kac.core/RuleExpr.cs
+      line: 150
+      shows: "the \"/\" operator evaluates to 0 when the right-hand side is 0"
+
+  - id: S03
+    topic: expressions
+    question: >-
+      I'm checking rehearsal age with days_since('last-rehearsed') <= 92. Someone writes a last-rehearsed date in the
+      future. Does my rule catch it?
+    answer: >-
+      No. days_since() answers zero for a future date (as it does for an absent or non-date value), so the rule passes;
+      a missing value is required-field's to report, not this rule's.
+    doc:
+      page: docs/reference/expressions.md
+      anchor: the-facts-an-expression-can-ask-for
+      quote: "It answers zero on everything `days()` answers zero on, and a date in the future is one"
+    source:
+      path: tooling/kac.core/Instants.cs
+      line: 32
+      shows: "Days returns end - start only when end >= start, else 0; Facts.cs:54 passes Today() as the end date"
+
+  - id: S04
+    topic: checks
+    question: >-
+      What severity values can I put on a rule in my type file, can I use info there, and which of them actually
+      fails the build?
+    answer: >-
+      error or warning only; info is reserved for checks declared in _checks.yaml. Only error fails the build.
+      Partial: gets the allowed values but not which fails the build, or vice versa.
+    doc:
+      page: docs/reference/checks.md
+      anchor: what-it-is-for
+      quote: "Only an error fails the build. `info` is for a check declared in `_checks.yaml`."
+    source:
+      path: .schema/meta/type.schema.json
+      line: 784
+      shows: "a rule's severity enum is [error, warning]; kac.core/Findings.cs:4 says only Error fails the build"
+
+  - id: S05
+    topic: checks
+    question: >-
+      For a deviation rated high risk, how far after the accepted date is the review date allowed to fall before a
+      check complains?
+    answer: >-
+      184 days from accepted-on to review-by (high-risk-review-window).
+    doc:
+      page: docs/reference/checks.md
+      anchor: a-types-own-rules
+      quote: "184 days from `accepted-on` to `review-by`, on a deviation whose `risk` is `high`"
+    source:
+      path: .schema/deviations.yaml
+      line: 193
+      shows: "expr is field('risk') == 'high' implies days('accepted-on', 'review-by') <= 184"
+
+  - id: S06
+    topic: checks
+    question: >-
+      A record has review-by: "2025-02-30". Which check reports that, and is it a different id from a date written in
+      the wrong format?
+    answer: >-
+      date-format, under the same id as a malformed date, because the author rewrites the value either way.
+    doc:
+      page: docs/reference/checks.md
+      anchor: which-check-reports-a-fault
+      quote: "`date-format` reports a day the calendar does not have under the same id as a malformed"
+    source:
+      path: tooling/kac.core/Checks/ValueChecks.cs
+      line: 115
+      shows: "a well-shaped value that fails DateOnly.TryParseExact reports date-format, the same id as the shape test"
+
+  - id: S07
+    topic: held-to
+    question: >-
+      Can I leave a free-text commentary key on a field in my type file without the schema load failing, and what
+      reports any other key the tool doesn't read?
+    answer: >-
+      Yes, notes: is admitted at any level; any other key the loader never reads is reported as schema-unknown-key.
+      Partial: names only one of the two.
+    doc:
+      page: docs/reference/held-to.md
+      anchor: what-the-pass-reports
+      quote: "A key at any level the loader never reads, `notes:` excepted"
+    source:
+      path: tooling/kac.core/Schema.cs
+      line: 561
+      shows: "Unread() returns every key not asked for, excluding Schema.Commentary, which line 609 sets to \"notes\""
+
+  - id: S08
+    topic: held-to
+    question: >-
+      I've got a field derived from the folder path (from: sub-path). Can I also mark it required: true so every
+      record must have it?
+    answer: >-
+      No. Declaring both is schema-shape: the author cannot write a derived field, so nothing can satisfy the
+      requirement (writing it trips derived-key).
+    doc:
+      page: docs/reference/held-to.md
+      anchor: a-derived-field
+      quote: "Declaring it `required: true` as well is `schema-shape`."
+    source:
+      path: tooling/kac.core/Checks/SchemaChecks.cs
+      line: 426
+      shows: "spec.From is not null && spec.Required adds a schema-shape error"
+
+  - id: S09
+    topic: type keys
+    question: >-
+      Beyond fields and rules, which descriptive keys must every type file carry or the schema load fails?
+    answer: >-
+      label-plural:, summary:, goes-here:, detail: and lineage.prior-art: (missing any is schema-shape; the first three
+      also fail past 120 characters). Partial: names three or four of the five.
+    doc:
+      page: docs/reference/held-to.md
+      anchor: what-the-pass-reports
+      quote: "A missing `label-plural:`, `summary:`, `goes-here:`, `detail:` or `lineage.prior-art:`"
+    source:
+      path: tooling/kac.core/Checks/SchemaChecks.cs
+      line: 342
+      shows: "CheckProse reports schema-shape for each missing label-plural, summary, goes-here, detail, prior-art"
+
+  - id: S10
+    topic: generation
+    question: >-
+      I'm adding a field called mttr-target. How will its column heading appear in the generated index, and will MTTR
+      be capitalised?
+    answer: >-
+      Sentence case from the field name (Mttr target); kac capitalises only the initialisms id and sla, so MTTR is not
+      recognised (the page suggests opening an issue).
+    doc:
+      page: docs/reference/generation.md
+      anchor: what-is-generated-and-from-what
+      quote: "`kac` recognises `id` and `sla`."
+    source:
+      path: tooling/kac.core/Generator.cs
+      line: 480
+      shows: "Initialisms is the set [\"id\", \"sla\"]; line 484 upper-cases only those words"
+
+  - id: S11
+    topic: generation
+    question: >-
+      I've adopted a type that has no records yet. Does generate still write an _index.md for it, and what if its
+      folder doesn't exist at all?
+    answer: >-
+      Yes, it writes an index saying there is nothing here yet rather than an empty table; a type with no folder gets
+      no index. Partial: answers only one of the two cases.
+    doc:
+      page: docs/reference/generation.md
+      anchor: what-is-generated-and-from-what
+      quote: "A type with no records yet gets an index saying so, rather than a table with no rows."
+    source:
+      path: tooling/kac.core/GeneratedFiles.cs
+      line: 58
+      shows: "a type whose folder is absent is skipped; Generator.cs:25 writes 'Nothing here yet' for zero records"
+
+  - id: S12
+    topic: export
+    question: >-
+      My type's export fields don't include verified. What does the trust key say on its exported records, and how is
+      it worked out for a type that does export verified?
+    answer: >-
+      null. Where verified is exported, trust is derived from it: an empty list is unverified, agents alone are
+      machine-confirmed, one human: actor is human-reviewed. Partial: gets the null case or the derivation, not both.
+    doc:
+      page: docs/reference/export.md
+      anchor: trust
+      quote: "A type whose `fields:` does not name `verified` carries `trust` as `null`"
+    source:
+      path: tooling/kac.core/Exporter.cs
+      line: 509
+      shows: "Trust returns null unless export.Fields contains verified; lines 527-531 map human:, agents and none"
+
+  - id: S13
+    topic: export
+    question: >-
+      A record leaves a list field empty. Will my consumer see an empty JSON array for it, an empty string, or
+      something else?
+    answer: >-
+      null. Every absence is null, and an empty list is that same absence, so no key arrives as [].
+    doc:
+      page: docs/reference/export.md
+      anchor: what-holds-in-every-file
+      quote: "A list a record left empty is that same absence, so no key arrives as `[]`."
+    source:
+      path: tooling/kac.core/Exporter.cs
+      line: 605
+      shows: "Value returns the array only when it has entries, and null otherwise"
+
+  - id: S14
+    topic: export
+    question: >-
+      Can I export my type's parts at summary or reference fidelity to keep the flat file small?
+    answer: >-
+      No. A parts: entry carries full alone; declaring summary or reference fails the schema pass. To thin a part line,
+      drop a key from line:.
+    doc:
+      page: docs/reference/export.md
+      anchor: what-each-fidelity-carries
+      quote: "**A `parts:` entry carries `full` alone.**"
+    source:
+      path: tooling/kac.core/Schema.cs
+      line: 267
+      shows: "CarriedByParts is [Full]; SchemaChecks.cs:305 reports schema-dispatch for any other parts fidelity"
+
+  - id: S15
+    topic: export
+    question: >-
+      I'm adding a new key to my type's part line, and separately renaming an existing one. Which of those needs a
+      version bump, and which version number is it?
+    answer: >-
+      Adding a key moves nothing. Renaming one moves that type's shapeVersion (export.version in its type file), not
+      formatVersion, which covers the manifest, tree layout and link building. Partial: one of the two halves.
+    doc:
+      page: docs/reference/export.md
+      anchor: what-moves-either-number
+      quote: "key to a file, or a file to a type's directory, leaves that reader correct and moves nothing."
+    source:
+      path: .schema/meta/type.schema.json
+      line: 394
+      shows: "export.version moves on a renamed or dropped key; 'Adding a key moves nothing. Each type has its own.'"
