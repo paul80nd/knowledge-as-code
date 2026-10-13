@@ -36,11 +36,13 @@ so.
 
 Run each step from the root of the repository.
 
-1. **Stage each section twice**, as readers A and B. Each copy goes to its own empty directory outside the repository:
+1. **Stage each section three times**, as readers A, B and C. Each copy goes to its own empty directory outside the
+   repository:
 
    ```sh
    trials/comprehension/stage.sh use "$TMP/use-a"
    trials/comprehension/stage.sh use "$TMP/use-b"
+   trials/comprehension/stage.sh use "$TMP/use-c"
    ```
 
    The section names are `use`, `framework` and `reference`.
@@ -64,8 +66,8 @@ Run each step from the root of the repository.
    scores partial, even where the key names no partial case. Where the key does not settle a score, the run says how
    it was scored.
 
-5. **Write the run** to `runs/`, under the date and a name. Give each question's score from readers A and B, and keep
-   each reader's reply verbatim in a folder of the same name.
+5. **Write the run** to `runs/`, under the date and a name. Give each question's score from readers A, B and C, and
+   keep each reader's reply verbatim in a folder of the same name.
 
 ### The prompt
 
@@ -99,19 +101,19 @@ Page: {the file the answer came from}
 ## Scoring
 
 A correct answer scores 1, a partial answer scores 0.5, and a wrong answer scores 0. A reader's score is the sum over
-its fifteen answers. A set's score is the mean of readers A and B.
+its fifteen answers. A set's score is the sum over readers A, B and C, out of 45.
 
-Words read is reported for reader A, for reader B, and as their mean. The share of the staged section that mean
-represents is reported beside it.
+Words read is reported for each reader and as the median of the three. One reader with an unusual reading habit cannot
+move a median. The share of the staged section that median represents is reported beside it.
 
 ## The pass rule
 
 A later run passes a set when all three of these are true against the baseline:
 
-* **No question is lost.** Every question that both baseline readers answered correctly is answered correctly by both
-  readers of the later run.
+* **No question is lost.** Every question that all three baseline readers answered correctly is answered correctly by
+  all three readers of the later run.
 * **The set scores at least the baseline.** Its score is no lower.
-* **The words read fall.** The mean of readers A and B is lower than the baseline's.
+* **The words read fall.** The median of readers A, B and C is lower than the baseline's.
 
 Where a set fails, the run names the page whose change cost the answer.
 
