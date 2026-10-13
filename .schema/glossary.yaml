@@ -116,7 +116,7 @@ export:
       anchor: part.anchor
   notes: >
     A term travels whole: the definition, and each labelled line beneath it as a piece of its own.
-    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#glossary>.
+    See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#glossary>.
 index:
   columns: [id, title, narrows, status, owner, review-by]
   sort: id

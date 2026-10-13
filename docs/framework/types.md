@@ -1,8 +1,8 @@
 # The default types
 
 Eighteen knowledge types ship with the framework. A corpus adopts the ones it needs by naming them in `types:` in
-[`.corpus.yaml`](../corpus-descriptor.md). `kac` never writes a declined type's schema file, so nothing arrives to be
-ignored.
+[`.corpus.yaml`](../use/corpus-descriptor.md). `kac` never writes a declined type's schema file, so nothing arrives to
+be ignored.
 
 Adopting all of them is not expected. A corpus running one product might stand up four and never want the rest. It can
 also declare a type of its own that the framework has never heard of. What follows is what you get without deciding

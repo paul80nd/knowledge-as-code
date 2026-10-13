@@ -5,7 +5,7 @@ namespace kac.core;
 
 /// <summary>
 /// A few lines injected at the start of a session, saying which corpus is installed, how much of it there is and what
-/// to ask. <c>docs/design/plugin.md</c> says why it is rendered at bundle time.
+/// to ask. <c>docs/maintaining/plugin.md</c> says why it is rendered at bundle time.
 /// </summary>
 public static class Breadcrumb
 {
@@ -41,7 +41,7 @@ public static class Breadcrumb
             lines.Add(Line(type.Type, held));
 
         // What to ask, named from the surviving components whose manifest entry says `announce`. A plugin carrying no
-        // such skill says nothing. `docs/design/plugin.md` explains the split.
+        // such skill says nothing. `docs/maintaining/plugin.md` explains the split.
         var skills = included
             .Where(c => c.Announce)
             .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))

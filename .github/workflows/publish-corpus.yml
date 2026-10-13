@@ -1,7 +1,7 @@
 # Publishes each worked corpus to GitHub Packages, at the version .corpus.yaml states, on a push to main that
 # touched it. A version the registry already holds ends the job at exit 0, because the path filter cannot tell an
 # edited record from an edited CLAUDE.md. Nothing retries or forces: a registry keeps a published version forever.
-# A pack is refused without a shortcode, so a corpus joins this matrix by declaring one. docs/cli/pack.md says why.
+# A pack is refused without a shortcode, so a corpus joins this matrix by declaring one. docs/use/cli/pack.md says why.
 
 name: publish-corpus
 

@@ -14,8 +14,8 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 /// <summary>
 /// <c>Requires</c> names the record types the component reads, each optionally at a shape version, as
 /// <c>glossary@1</c>. A component naming no type supports the ones that do, and is trimmed when none of them survives
-/// unless it is <c>Standalone</c>. <c>Announce</c> puts it in the session breadcrumb. <c>docs/design/plugin.md</c> says
-/// which earn it.
+/// unless it is <c>Standalone</c>. <c>Announce</c> puts it in the session breadcrumb. <c>docs/maintaining/plugin.md</c>
+/// says which earn it.
 /// </summary>
 public sealed record PluginComponent(
     string Path,
@@ -29,7 +29,7 @@ public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Require
 
 /// <summary>
 /// Named before anything is written, so a test can ask what a bundle would contain without a filesystem. <c>Files</c>
-/// are relative to <c>Dist.Root</c>. A plan with <c>Problems</c> is not written. <c>docs/cli/bundle.md</c> says why.
+/// are relative to <c>Dist.Root</c>. A plan with <c>Problems</c> is not written. See <c>docs/use/cli/bundle.md</c>.
 /// </summary>
 public sealed record BundlePlan(
     IReadOnlyList<BundleFile> Files,
@@ -137,7 +137,7 @@ public static class Bundler
         var trimmed = new List<TrimmedComponent>();
 
         // A missing type trims the component. A type at another shape stops the run, because the component would
-        // read keys that have moved. `docs/cli/bundle.md` says why.
+        // read keys that have moved. `docs/use/cli/bundle.md` says why.
         foreach (var component in declared)
         {
             var missing = new List<string>();
@@ -191,7 +191,7 @@ public static class Bundler
                 : $"every component was trimmed. The plugin carries the export and nothing that reads it. "
                   + $"{RecordFile} names each one and the type it needed.");
 
-        // `docs/cli/bundle.md` says why the plugin takes the content version and not the format version.
+        // `docs/use/cli/bundle.md` says why the plugin takes the content version and not the format version.
         var version = exportManifest.ContentVersion;
         if (version is null)
             warnings.Add("the export states no contentVersion, so the plugin manifest carries no version "
@@ -210,7 +210,7 @@ public static class Bundler
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}", Serialize(travelling)));
 
         // Asks the surviving files, not the components, which ties it to the hook directory. See
-        // `docs/design/plugin.md`.
+        // `docs/maintaining/plugin.md`.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",
@@ -293,7 +293,7 @@ public static class Bundler
 
     /// <summary>
     /// The plugin manifest as it will travel. Identity keys are written from the export, and removed where the corpus
-    /// declared nothing, so no corpus publishes under its template's identity. <c>docs/cli/bundle.md</c> says where
+    /// declared nothing, so no corpus publishes under its template's identity. <c>docs/use/cli/bundle.md</c> says where
     /// each key comes from. Edited as a DOM, so a key this tool does not know survives.
     /// </summary>
     private static JsonObject Rewrite(

@@ -96,17 +96,17 @@ Read next:
 
 * [The documentation site](https://paul80nd.github.io/knowledge-as-code/) covers every command, the framework and its
   design.
-* [Getting started](https://paul80nd.github.io/knowledge-as-code/getting-started/) walks you through your first
+* [Getting started](https://paul80nd.github.io/knowledge-as-code/use/getting-started/) walks you through your first
   record.
-* [Running it in CI](https://paul80nd.github.io/knowledge-as-code/ci/) pins the tool version and fails a pull request
-  that breaks the corpus.
+* [Running it in CI](https://paul80nd.github.io/knowledge-as-code/use/ci/) pins the tool version and fails a pull
+  request that breaks the corpus.
 * [The default types](https://paul80nd.github.io/knowledge-as-code/framework/types/) lists the kinds of record a
   corpus can adopt.
 * [`examples/`](examples/README.md) has worked corpora. Read them to see real records, and start your own with
   `kac new`.
 
-Later, [`kac update`](https://paul80nd.github.io/knowledge-as-code/cli/update/) takes a newer framework. It leaves every
-change in the working tree, so `git diff` is your review.
+Later, [`kac update`](https://paul80nd.github.io/knowledge-as-code/use/cli/update/) takes a newer framework. It leaves
+every change in the working tree, so `git diff` is your review.
 
 ## Maturity
 

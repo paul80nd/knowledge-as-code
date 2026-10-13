@@ -88,8 +88,8 @@ public static class Commands
 
     /// <summary>
     /// Takes the working directory rather than a corpus root, because the corpus is not there yet. Everything that can
-    /// fail is settled before the first question. <c>docs/cli/new.md</c> argues each step. <c>today</c> is passed in so
-    /// a golden can pin what the descriptor says.
+    /// fail is settled before the first question. <c>docs/use/cli/new.md</c> argues each step. <c>today</c> is passed
+    /// in so a golden can pin what the descriptor says.
     /// </summary>
     public static int New(string dir, NewRequest request, string toolVersion, string today)
     {
@@ -348,7 +348,7 @@ public static class Commands
         Account($"pack: sealed {plan.Entries.Count} file(s) as {plan.Id} {plan.Version}, cited as "
                 + $"'{plan.Shortcode}:'.");
 
-        // `docs/cli/pack.md` says what to do when a registry rejects the push.
+        // `docs/use/cli/pack.md` says what to do when a registry rejects the push.
         Note($"pack: {plan.Version} is content-version from .corpus.yaml. A registry never replaces a "
              + "published version.");
         return 0;
@@ -534,7 +534,7 @@ public static class Commands
         return 1;
     }
 
-    /// <summary><c>docs/cli/report.md</c> says what each report carries.</summary>
+    /// <summary><c>docs/use/cli/report.md</c> says what each report carries.</summary>
     public static int Report(string corpusRoot, string name, string toolVersion, string at, string? outPath)
     {
         if (!Reports.Names.Contains(name, StringComparer.Ordinal))
@@ -583,7 +583,7 @@ public static class Commands
 
     /// <summary>
     /// Everything that can stop the run is settled before anything is written, as in <c>New</c>. Nothing is committed.
-    /// <c>docs/cli/update.md</c> argues each step. <c>today</c> is passed in so a golden can pin it.
+    /// <c>docs/use/cli/update.md</c> argues each step. <c>today</c> is passed in so a golden can pin it.
     /// </summary>
     public static int Update(string corpusRoot, UpdateRequest request, string toolVersion, string today)
     {

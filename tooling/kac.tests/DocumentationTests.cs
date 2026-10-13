@@ -10,7 +10,7 @@ namespace kac.tests;
 public partial class DocumentationTests
 {
     private static string Page(string name) =>
-        File.ReadAllText(Path.Combine(Repo.Root, "docs", "design", name));
+        File.ReadAllText(Path.Combine(Repo.Root, "docs", "reference", name));
 
     /// <summary>
     /// A row of the fact table opens with the call it documents: <c>| \</c>section_count('Title')\<c> | int |</c>.

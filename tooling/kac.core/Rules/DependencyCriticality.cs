@@ -4,7 +4,7 @@ namespace kac.core;
 
 /// <summary>
 /// Both fields are read from the schema, so a rename of <c>criticality</c> or <c>depends-on</c> cannot leave the rule
-/// walking nothing. See docs/design/shaping-a-type.md for why this warns rather than fails.
+/// walking nothing. See docs/framework/shaping-a-type.md for why this warns rather than fails.
 /// </summary>
 public sealed class DependencyCriticality : ICorpusRule
 {

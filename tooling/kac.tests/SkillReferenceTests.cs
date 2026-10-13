@@ -54,7 +54,7 @@ public class SkillReferenceTests
         if (Updating) File.WriteAllText(SkillReference.Page, wanted);
 
         Assert.True(Updating,
-            $"the '{block}' table is stale in docs/skills.md. "
+            $"the '{block}' table is stale in docs/use/skills.md. "
             + "Run the suite again with KAC_UPDATE_DOCS=1 and read the diff.");
     }
 }

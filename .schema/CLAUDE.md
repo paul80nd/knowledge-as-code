@@ -52,23 +52,23 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   obligation is `required-when`, and a should-have-done-this is a rule.
 
 * **The grammar an `expr:` is written in is frozen.**
-  <https://paul80nd.github.io/knowledge-as-code/design/expressions/> is the reference for it: what the grammar allows,
-  the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a new fact
-  rather than a wider grammar.
+  <https://paul80nd.github.io/knowledge-as-code/reference/expressions/> is the reference for it: what the grammar
+  allows, the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a
+  new fact rather than a wider grammar.
 
 * **Thresholds are judgements**, and each one is pinned so moving it is visible. A fixture pins a threshold
   read from what a record states. A unit test naming the day pins one measured against the day of the run,
   which no fixture can: its date drifts further from today every day it sits there.
-  <https://paul80nd.github.io/knowledge-as-code/design/checks/> says where the numbers came from. A ratio such as
+  <https://paul80nd.github.io/knowledge-as-code/reference/checks/> says where the numbers came from. A ratio such as
   `words() <= links() * 40` fails a document that links to nothing, at any length. For an offering or an explanation,
   that is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns live here rather than in C# for that
-  reason, argued at <https://paul80nd.github.io/knowledge-as-code/design/checks/>.
+  reason, argued at <https://paul80nd.github.io/knowledge-as-code/reference/checks/>.
 
 * **One fault is reported once, by whichever check owns it.** Before you add an arm to a rule, check that no existing id
   already reports the same thing.
-  <https://paul80nd.github.io/knowledge-as-code/design/checks/#which-check-reports-a-fault> says how the set divides.
+  <https://paul80nd.github.io/knowledge-as-code/reference/checks/#which-check-reports-a-fault> says how the set divides.
 
 * **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
   green.

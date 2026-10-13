@@ -30,10 +30,13 @@ CI builds the site the way `publish-docs.yml` builds it, before it publishes.
 The `docs` job installs what `docs/requirements.txt` pins and runs `mkdocs build`. `mkdocs.yml` sets `strict: true`,
 so a dead link or an unreachable page exits non-zero.
 
-`NavigationTests` in `tooling/kac.tests` covers two faults the build lets through. It fails a page under `docs/` that
-`mkdocs.yml` does not list, which the build reports at INFO and exits 0 on. It fails a nav listing the CLI reference
-pages in an order the parser does not declare, which the build says nothing about. `DocumentationTests` compares two
-tables on the site against the names in the code.
+`NavigationTests` in `tooling/kac.tests` fails three faults the build lets through:
+
+* a page under `docs/` that `mkdocs.yml` does not list, which the build reports at INFO and exits 0 on
+* a nav listing the CLI reference pages in an order the parser does not declare, which the build says nothing about
+* a redirect in `redirect_maps` whose target the nav does not list
+
+`DocumentationTests` compares two tables on the site against the names in the code.
 
 ## Coverage and gaps
 

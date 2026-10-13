@@ -3,7 +3,7 @@ using System.Text;
 namespace kac.core;
 
 // `Plan` decides and touches nothing, and `Apply` carries the plan out, so a creation is decidable from
-// a listing and a manifest with no template on disk. `docs/cli/new.md` is the reference for the order.
+// a listing and a manifest with no template on disk. `docs/use/cli/new.md` is the reference for the order.
 
 public sealed record PlannedFile(string From, string To, string Layer);
 
@@ -239,7 +239,7 @@ public static class New
 
         sb.Append("# What this corpus is, and where it stands against the framework it took.\n");
         sb.Append("#\n");
-        sb.Append("# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key"
+        sb.Append("# https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/ says what every key"
                   + " here means.\n\n");
 
         sb.Append("# The format of this file, which the tool owns rather than the corpus.\n");

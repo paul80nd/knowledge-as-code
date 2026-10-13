@@ -1,5 +1,5 @@
 // `staleness-loud` is the runbook twin of `staleness`. Its 92 days are named here, for the reason
-// `docs/design/checks.md` gives, and the expression is read from the real `.schema/runbooks.yaml`.
+// `docs/reference/checks.md` gives, and the expression is read from the real `.schema/runbooks.yaml`.
 
 using kac.core;
 

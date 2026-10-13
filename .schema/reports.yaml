@@ -82,7 +82,7 @@ fields:
       `report` and `tool` describe the run the content started from, and both stay absent where nobody ran one.
       A hand-raised `sources` version moves neither `at` nor `by`. Nor does rewriting the `Imported:` bullet an
       imported entry's raise touches: the tool restates that line from `sources`, so no meaning moves with it.
-      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
+      See <https://paul80nd.github.io/knowledge-as-code/use/cli/report/#the-provenance-frontmatter>.
 
   sources:
     required: true
@@ -115,21 +115,21 @@ fields:
       again moves the `at` on the entry they have. The keys come from the `event` shape, and `verified` is the name
       the Open Knowledge Format gives the same list. The `by` prefix decides the exported `trust` tier, so
       `verified-by-a-known-actor` below limits an entry to a known actor.
-      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
+      See <https://paul80nd.github.io/knowledge-as-code/use/cli/report/#the-provenance-frontmatter>.
 
 sections:
   required: []
   optional: []
   notes: >
     Free-form throughout. `kac report` writes the headings the question needs.
-    See <https://paul80nd.github.io/knowledge-as-code/design/export/#a-type-declaring-no-sections>.
+    See <https://paul80nd.github.io/knowledge-as-code/reference/export/#a-type-declaring-no-sections>.
 
 export:
   version: 2
   fields: [id, title, status, generated, sources, verified, tags]
   notes: >
     The body never travels, and a reader follows the record's own links for it.
-    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#reports>.
+    See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#reports>.
 index:
   columns: [id, title, status]
   sort: id

@@ -39,7 +39,7 @@ way in. Where a build broke, read a [runbook](../runbooks.md).
    * A change to a command affects `docs/`, and often `tooling/README.md`.
    * A change to what the tool is for affects the root `README.md` and `PACKAGE.md`.
    * A change to the schema affects `.schema/README.md`, `.schema/meta/type.schema.json`,
-     `docs/framework/metadata.md` and `docs/design/held-to.md`.
+     `docs/framework/metadata.md` and `docs/reference/held-to.md`.
 2. Where `kac` changed, write the changelog entry on this branch. An entry written after the merge is too late.
 3. Where `kac` changed, put the release call to the branch owner and recommend an answer. Recommend releasing where the
    change is useful on its own. Recommend holding where it is one part of a group that is no use apart.

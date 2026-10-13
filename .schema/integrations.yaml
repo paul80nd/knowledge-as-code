@@ -102,7 +102,7 @@ export:
     Exit: full
   notes: >
     The sections left behind describe owning the account, which is the estate's own business and not a
-    consumer's. See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#integrations>.
+    consumer's. See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#integrations>.
 
 index:
   columns: [id, title, vendor, criticality, their-sla, status]

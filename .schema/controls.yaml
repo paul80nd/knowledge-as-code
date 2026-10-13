@@ -108,7 +108,7 @@ fields:
     notes: >
       `control-in-date` warns once the date has passed. `frequency` states how often the check runs,
       which is a different question. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#controls>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#controls>.
 
 sections:
   required: [What it checks, How it works, Coverage and gaps]
@@ -124,7 +124,7 @@ export:
     Coverage and gaps: full
   notes: >
     Every section of a control travels, `not-enforced` records included. See
-    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#controls>.
+    <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#controls>.
 index:
   columns: [id, title, mechanism, frequency, verifies, status]
   sort: id

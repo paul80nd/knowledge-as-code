@@ -30,9 +30,9 @@ therefore states `tier` and nothing that could disagree with it. A type declares
 ## Which types a corpus holds
 
 The framework declares more types than any one corpus stands up, and [The default types](types.md) introduces every one
-of them. A corpus names the ones it adopted in `types:` in [`.corpus.yaml`](../corpus-descriptor.md). Its own taxonomy
-page then has a decision table covering those and no others. What you are holding goes in the left column, and where it
-belongs in the right.
+of them. A corpus names the ones it adopted in `types:` in [`.corpus.yaml`](../use/corpus-descriptor.md). Its own
+taxonomy page then has a decision table covering those and no others. What you are holding goes in the left column, and
+where it belongs in the right.
 
 Most mistakes here are placement mistakes rather than writing mistakes. Somebody writes a good record and files it where
 it either duplicates something or is never found. Where nothing fits, the answer is a taxonomy conversation, and

@@ -70,7 +70,7 @@ fields:
     notes: >
       Service back for users, which is what an availability budget counts. Not the moment the cause was
       fixed, and not the moment the actions closed. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#postmortems>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems>.
 
   duration:
     required: false
@@ -133,7 +133,7 @@ export:
     Where we got lucky: full
   notes: >
     `Timeline` and `Actions` stay behind, because both name this estate's own clocks, systems and work
-    items. <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#postmortems> says what else
+    items. <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#postmortems> says what else
     travels, and what stays behind.
 
 index:
@@ -171,7 +171,7 @@ rules:
     # In C# rather than an `expr:`, because the message carries the span the moments give.
     notes: >
       The span is written in hours, minutes and seconds, and never in days. See
-      <https://paul80nd.github.io/knowledge-as-code/design/expressions/>.
+      <https://paul80nd.github.io/knowledge-as-code/reference/expressions/>.
   - id: recurring-root-causes
     description: >
       Scheduled. Reports root causes recurring across postmortems.

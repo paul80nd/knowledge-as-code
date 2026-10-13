@@ -105,7 +105,7 @@ export:
     Prerequisites: full
   notes: >
     The steps are left out on purpose.
-    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#processes>.
+    See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#processes>.
 index:
   columns: [id, title, status, last-rehearsed, owner]
   sort: id

@@ -3,8 +3,8 @@ using System.Globalization;
 namespace kac.core;
 
 /// <summary>
-/// Shared so a rule written as an <c>expr:</c> and one written in C# measure the same way. See
-/// https://paul80nd.github.io/knowledge-as-code/design/expressions/ for what <c>span()</c> and <c>days()</c> promise.
+/// Shared so a rule written as an <c>expr:</c> and one written in C# measure the same way. What <c>span()</c> and
+/// <c>days()</c> promise is at https://paul80nd.github.io/knowledge-as-code/reference/expressions/.
 /// </summary>
 public static class Instants
 {

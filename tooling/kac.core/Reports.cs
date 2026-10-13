@@ -5,13 +5,13 @@ namespace kac.core;
 
 /// <summary>
 /// One corpus a report answers for, and the version of it the run read, which <c>report-stale</c> compares against.
-/// <c>docs/design/reports.md</c> says why a source carries a version.
+/// <c>docs/use/cli/report.md</c> says why a source carries a version.
 /// </summary>
 public sealed record ReportSource(string Resource, string? Version);
 
 /// <summary>
 /// What produced a report and when, as the frontmatter of the record it becomes. <c>By</c> takes any of OKF's actor
-/// forms. <c>docs/design/reports.md</c> carries the handover.
+/// forms. <c>docs/use/cli/report.md</c> carries the handover.
 /// </summary>
 public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSource> Sources)
 {
@@ -26,7 +26,7 @@ public sealed record ReportStamp(string By, string At, IReadOnlyList<ReportSourc
 
 /// <summary>
 /// What a report comes to, decided before anything is written, as <c>ExportPlan</c> and <c>BundlePlan</c> are. Every
-/// judgement is left open. <c>docs/cli/report.md</c> carries that division.
+/// judgement is left open. <c>docs/use/cli/report.md</c> carries that division.
 /// </summary>
 public sealed record ReportPlan(string Name, string Title, string Frontmatter, string Body)
 {
@@ -226,7 +226,7 @@ public static class Reports
 
     /// <summary>
     /// Every reference the clause tables cite, keyed so a reference six clauses reach is one row. Local clauses alone,
-    /// because an inherited clause left its <c>Alignment</c> cell behind. <c>docs/design/export.md</c> says why.
+    /// because an inherited clause left its <c>Alignment</c> cell behind. <c>docs/reference/export.md</c> says why.
     /// </summary>
     public static List<FrameworkRow> FrameworkRows(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
@@ -349,7 +349,7 @@ public static class Reports
     /// <summary>
     /// What the tool can answer, and a blank for everything else. <c>status</c> is <c>draft</c>, and
     /// <c>generated.by</c> names this run. Every blank is a YAML null, because <c>owner: human:</c> does not parse and
-    /// would fail <c>frontmatter-parses</c> over the whole document. <c>docs/design/reports.md</c> carries the
+    /// would fail <c>frontmatter-parses</c> over the whole document. <c>docs/use/cli/report.md</c> carries the
     /// handover.
     /// </summary>
     private static string Frontmatter(ReportStamp stamp, string report)

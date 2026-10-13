@@ -26,7 +26,7 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
 * The tool guidance at `tooling/CLAUDE.md`, which states the test for expression against class and the two rule
   interfaces.
 * The .NET SDK, and `dotnet run --project tooling/kac --` in place of a `kac` on your path.
-* The fact table in `docs/design/expressions.md`, which lists what an expression can already read.
+* The fact table in `docs/reference/expressions.md`, which lists what an expression can already read.
 * Writing C# and its unit tests, which steps 2 to 4 need.
 * Reading a failing Reqnroll scenario, which step 13 needs.
 
@@ -49,7 +49,7 @@ length is an `expr:` on a rule, and costs the YAML and a fixture.
 7. Load `technical-writing`, then `writing-in-the-tool`, for the comments and the test names. Read the code under every
    comment you touch.
 8. Load `technical-writing`, then `writing-the-docs`, for the pages a reader outside this repository reads.
-9. Update the command's page under `docs/cli/`.
+9. Update the command's page under `docs/use/cli/`.
 10. Update `tooling/README.md` where the change affects it.
 11. Regenerate the usage block with `KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests`.
 12. Write the changelog entry under `## Unreleased`, because a user can observe this change.

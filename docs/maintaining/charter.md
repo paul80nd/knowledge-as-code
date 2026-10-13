@@ -53,7 +53,6 @@ An argument is the reasoning behind a choice: why it was made, and why not the a
 * The argument behind the change goes in the commit message and the pull request.
 * A choice a contributor would plausibly propose reversing earns one "Why not" paragraph on its specification page.
 * Use it and Schema reference argue nothing.
-* Nothing new is written into [Design](../design/index.md).
 
 The commit keeps the argument beside the change it explains, where a reader of the site never has to read past it.
 

@@ -27,7 +27,7 @@ public sealed record Imported(string Corpus, string Version);
 
 /// <summary>
 /// <c>.imports/</c> is a restored artefact and is never committed. A lock its range still admits is taken without
-/// asking the registry, so two restores of an unchanged descriptor write the same bytes. <c>docs/cli/restore.md</c>
+/// asking the registry, so two restores of an unchanged descriptor write the same bytes. <c>docs/use/cli/restore.md</c>
 /// says what a run writes and what it refuses.
 /// </summary>
 public static class Restore

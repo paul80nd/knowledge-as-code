@@ -209,18 +209,18 @@ obligation defeat search. `kac validate` resolves a scoped reference against the
 ### The shortcode
 
 It is the half before the colon. A corpus declares it as `shortcode:` in
-[`.corpus.yaml`](../corpus-descriptor.md#identity). The producer declares it, and a corpus citing that one writes what
-the producer chose. A consumer picking an alias of its own would put two consumers on two spellings of one obligation,
-which the colon exists to prevent.
+[`.corpus.yaml`](../use/corpus-descriptor.md#identity). The producer declares it, and a corpus citing that one writes
+what the producer chose. A consumer picking an alias of its own would put two consumers on two spellings of one
+obligation, which the colon exists to prevent.
 
 **A shortcode is immutable**, for the reason an id is and more strictly. A rename invalidates citations in repositories
 its owner cannot edit. So a corpus declares one when something is about to cite it, rather than at creation.
-[`kac new`](../cli/new.md) writes the key bare and leaves the value to you.
+[`kac new`](../use/cli/new.md) writes the key bare and leaves the value to you.
 
 **It is two to eight characters, lower case, opening on a letter with letters and digits after it.** No hyphen. The
 parser reads a hyphen before a colon as an id, and would take the reference for a citation written with the wrong
 separator. No type's prefix either, since `std:pol-VURM` reads as a standard. `kac validate` refuses both, and
-[`kac export`](../cli/export.md) states the declared shortcode in its manifest.
+[`kac export`](../use/cli/export.md) states the declared shortcode in its manifest.
 
 ## Adding a field
 
@@ -229,7 +229,7 @@ that. Then check that git, the folder, the H1 or an existing link does not alrea
 
 Where the field is new, declare it in the type's `.schema/<folder>.yaml` and add it to that type's `_template.md`. A
 field every type has goes in `.schema/_universal.yaml` instead, and a type file may refine it with a declaration of its
-own. Then run [`kac generate`](../cli/generate.md) so the generated tables pick it up. The validator reads the schema,
-so it needs no change of its own.
+own. Then run [`kac generate`](../use/cli/generate.md) so the generated tables pick it up. The validator reads the
+schema, so it needs no change of its own.
 
 [Taxonomy](taxonomy.md) is the page for deciding which type a new field belongs to.

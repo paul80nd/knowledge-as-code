@@ -112,7 +112,7 @@ public static class Imports
 
     /// <summary>
     /// Inherited records sit in a folder named for the corpus that wrote them. See the chain section of
-    /// docs/design/export.md.
+    /// docs/reference/export.md.
     /// </summary>
     private static List<ImportedRecord> RecordsIn(
         string shortcode, string type, string dir, string? partsFile,

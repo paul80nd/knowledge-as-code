@@ -51,7 +51,11 @@ separate feature, and this build does not exercise it. Taken from the header com
 
 None in this catalogue. The site is static HTML. It calls nothing.
 
-The packages that build it are in the tool register: [tol-mkdocs] and [tol-mkdocs-material].
+The packages that build it are in the tool register:
+
+* [tol-mkdocs]
+* [tol-mkdocs-material]
+* [tol-mkdocs-redirects]
 
 ## Data
 
@@ -68,3 +72,4 @@ None of its own. Every page is built from a file in the repository.
 
 [tol-mkdocs]: ../tools/docs/mkdocs.md
 [tol-mkdocs-material]: ../tools/docs/mkdocs-material.md
+[tol-mkdocs-redirects]: ../tools/docs/mkdocs-redirects.md

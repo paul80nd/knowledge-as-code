@@ -45,6 +45,8 @@ redistribution of the generator, so nothing follows for what is published.
 ## Related
 
 * [tol-mkdocs-material] is the theme it renders with.
+* [tol-mkdocs-redirects] keeps the URL of a moved page working.
 
 [svc-docs-site]: ../../services/docs-site.md
 [tol-mkdocs-material]: mkdocs-material.md
+[tol-mkdocs-redirects]: mkdocs-redirects.md

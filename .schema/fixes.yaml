@@ -78,7 +78,7 @@ fields:
     notes: >
       A draft states no verification, and every other status must. An actor is written once, and a check they make
       again moves the `at` on the entry they have. The entries take the same shape as a report's.
-      <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter> gives that shape,
+      <https://paul80nd.github.io/knowledge-as-code/use/cli/report/#the-provenance-frontmatter> gives that shape,
       the actors it refuses, and the trust tier derived from the list.
 
   review-by:
@@ -101,8 +101,7 @@ export:
     Why it happens: full
   notes: >
     `symptom-keywords` is what a lookup searches on, and the field this type exports for.
-    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#fixes> says what else travels, and what stays
-    behind.
+    See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#fixes>.
 index:
   columns: [id, title, applies-to, status, review-by]
   sort: id

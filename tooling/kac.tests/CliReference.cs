@@ -15,7 +15,7 @@ namespace kac.tests;
 /// </summary>
 internal static partial class CliReference
 {
-    internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "cli");
+    internal static readonly string Cli = Path.Combine(Repo.Root, "docs", "use", "cli");
     internal static readonly string Index = Path.Combine(Cli, "index.md");
 
     private static readonly Lazy<IReadOnlyList<Verb>> Model = new(Read);
@@ -41,7 +41,7 @@ internal static partial class CliReference
             var heading = PageHeading().Match(File.ReadLines(Path.Combine(Cli, page + ".md")).First());
             if (!heading.Success)
                 throw new InvalidOperationException(
-                    $"kac.tests: docs/cli/{page}.md opens on no `# `verb` what running it does` heading.");
+                    $"kac.tests: docs/use/cli/{page}.md opens on no `# `verb` what running it does` heading.");
 
             var does = heading.Groups["does"].Value.TrimEnd('.');
             return new List<string>

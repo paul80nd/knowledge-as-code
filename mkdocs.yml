@@ -73,7 +73,7 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.details
-  # A ```mermaid block renders as a diagram. `docs/design/generation.md` holds the subset every diagram keeps to.
+  # A ```mermaid block renders as a diagram. `docs/reference/generation.md` holds the subset every diagram keeps to.
   #
   # The theme fetches https://unpkg.com/mermaid@11/dist/mermaid.min.js at page load, and only for a page
   # carrying one of these. It is the one thing this site asks of a host other than Pages, the version is
@@ -89,13 +89,69 @@ markdown_extensions:
       base_path: ['.']
       check_paths: true
 
+# Declaring `plugins:` drops the default `search`, so it is listed by name.
+plugins:
+  - search
+  # A moved page, then the page that replaced it. `NavigationTests` fails a target the nav does not list.
+  - redirects:
+      redirect_maps:
+        'ci.md': 'use/ci.md'
+        'cli/bundle.md': 'use/cli/bundle.md'
+        'cli/checks.md': 'use/cli/checks.md'
+        'cli/export.md': 'use/cli/export.md'
+        'cli/generate.md': 'use/cli/generate.md'
+        'cli/index.md': 'use/cli/index.md'
+        'cli/new.md': 'use/cli/new.md'
+        'cli/pack.md': 'use/cli/pack.md'
+        'cli/report.md': 'use/cli/report.md'
+        'cli/restore.md': 'use/cli/restore.md'
+        'cli/update.md': 'use/cli/update.md'
+        'cli/validate.md': 'use/cli/validate.md'
+        'corpus-descriptor.md': 'use/corpus-descriptor.md'
+        'design/checks.md': 'reference/checks.md'
+        'design/discovery.md': 'use/discovery.md'
+        'design/export.md': 'reference/export.md'
+        'design/expressions.md': 'reference/expressions.md'
+        'design/generation.md': 'reference/generation.md'
+        'design/held-to.md': 'reference/held-to.md'
+        'design/imports.md': 'use/imports.md'
+        'design/index.md': 'reference/index.md'
+        'design/layers.md': 'use/layers.md'
+        'design/plugin.md': 'maintaining/plugin.md'
+        'design/reports.md': 'use/cli/report.md'
+        'design/shaping-a-type.md': 'framework/shaping-a-type.md'
+        'framework/automation.md': 'use/ci.md#what-the-checks-ask'
+        'getting-started.md': 'use/getting-started.md'
+        'one-corpus-or-several.md': 'use/one-corpus-or-several.md'
+        'skills.md': 'use/skills.md'
+        'troubleshooting.md': 'use/troubleshooting.md'
+
 # The verb alone in the sidebar. Each page's own heading then says what that verb does.
 nav:
   - Introduction: index.md
-  - Getting started: getting-started.md
-  - One corpus or several: one-corpus-or-several.md
-  - Running it in CI: ci.md
-  - Troubleshooting: troubleshooting.md
+  - Use it:
+      - use/index.md
+      - Getting started: use/getting-started.md
+      - One corpus or several: use/one-corpus-or-several.md
+      - Running it in CI: use/ci.md
+      - Troubleshooting: use/troubleshooting.md
+      - The corpus descriptor: use/corpus-descriptor.md
+      - Discovery: use/discovery.md
+      - Layers: use/layers.md
+      - Imports: use/imports.md
+      - Skills: use/skills.md
+      - CLI reference:
+          - use/cli/index.md
+          - new: use/cli/new.md
+          - validate: use/cli/validate.md
+          - generate: use/cli/generate.md
+          - restore: use/cli/restore.md
+          - export: use/cli/export.md
+          - bundle: use/cli/bundle.md
+          - pack: use/cli/pack.md
+          - checks: use/cli/checks.md
+          - report: use/cli/report.md
+          - update: use/cli/update.md
   - The framework:
       - framework/index.md
       - Principles: framework/principles.md
@@ -103,35 +159,19 @@ nav:
       - The default types: framework/types.md
       - Metadata: framework/metadata.md
       - Contributing: framework/contributing.md
-      - Automation: framework/automation.md
       - Lineage: framework/lineage.md
-  - CLI reference:
-      - cli/index.md
-      - new: cli/new.md
-      - validate: cli/validate.md
-      - generate: cli/generate.md
-      - restore: cli/restore.md
-      - export: cli/export.md
-      - bundle: cli/bundle.md
-      - pack: cli/pack.md
-      - checks: cli/checks.md
-      - report: cli/report.md
-      - update: cli/update.md
-  - Skills: skills.md
-  - Design:
-      - design/index.md
-      - Discovery: design/discovery.md
-      - Checks: design/checks.md
-      - Rule expressions: design/expressions.md
-      - What the schema is held to: design/held-to.md
-      - Shaping a type: design/shaping-a-type.md
-      - Generation: design/generation.md
-      - Reports: design/reports.md
-      - The export format: design/export.md
-      - The plugin bundle: design/plugin.md
-      - Imports: design/imports.md
-      - Layers: design/layers.md
-  - The corpus descriptor: corpus-descriptor.md
+      - Shaping a type: framework/shaping-a-type.md
+  - Schema reference:
+      - reference/index.md
+      - Rule expressions: reference/expressions.md
+      - Checks: reference/checks.md
+      - What the schema is held to: reference/held-to.md
+      - Generation: reference/generation.md
+      - The export format: reference/export.md
   - Maintaining kac:
+      - maintaining/index.md
       - The documentation charter: maintaining/charter.md
+      - Checks in C#: maintaining/checks.md
+      - Adding a report: maintaining/reports.md
+      - The plugin bundle: maintaining/plugin.md
   - Changelog: changelog.md

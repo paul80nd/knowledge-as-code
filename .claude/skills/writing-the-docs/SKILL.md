@@ -14,7 +14,7 @@ or the repository. They decide in the first paragraph whether to keep reading.
 
 ## Match the model page
 
-`docs/design/discovery.md` is the model for voice and headings. Where a page and the model differ in either, change
+`docs/use/discovery.md` is the model for voice and headings. Where a page and the model differ in either, change
 the page. It is not the model for length. Keep each section to what its reader needs.
 
 ## What this page overrides in the floor
@@ -48,8 +48,9 @@ page it may contain, and where an argument goes. Read it before you add a page, 
 
 * `tooling/README.md` covers changing `kac` itself, and the site links out to it.
 * A command page says what the command does. It argues nothing.
-* A second page is earned by a second reader. `cli/checks.md` is for somebody running the command. `design/checks.md`
-  is for somebody adding a check. One reader who wants more detail gets a deeper heading, not a page.
+* A second page is earned by a second reader. `use/cli/checks.md` is for somebody running the command.
+  `reference/checks.md` is for somebody declaring a check, and `maintaining/checks.md` for somebody writing one in C#.
+  One reader who wants more detail gets a deeper heading, not a page.
 * `README.md` and `docs/index.md` open on the same four paragraphs, byte for byte. Edit one and copy the change. Nothing
   in CI checks it.
 
@@ -90,7 +91,7 @@ The page has fixed sections in a fixed order.
 
 * Inside `docs/`, link by relative path to the `.md` file. `mkdocs build --strict` fails a dead link. `NavigationTests`
   fails a page the nav does not list.
-* From a file under `tooling/`, cite a page by path, as `docs/cli/export.md`.
+* From a file under `tooling/`, cite a page by path, as `docs/use/cli/export.md`.
 * From the overlay layer (`.schema/`, `knowledge-as-code/`, `.plugin/`), cite the site by URL. Those files reach every
   corpus and `docs/` reaches none.
 * End each page with one link to read next, chosen for where the reader now is.

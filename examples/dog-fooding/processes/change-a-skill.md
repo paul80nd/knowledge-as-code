@@ -68,14 +68,14 @@ one says moves neither. One nothing sends moves nothing.
 11. Fix the pages your change made wrong. Nothing in CI reads prose for meaning, and the list below is what a session
     adding one skill found wrong by grep after it thought it was finished.
     * A skill added or removed affects the skill list in the root `CLAUDE.md`, the component prose in
-      `docs/design/plugin.md`, the sample transcript and component counts in `docs/cli/bundle.md`, and the
-      `new: wrote N file(s)` line in both `docs/cli/new.md` and `docs/getting-started.md`.
+      `docs/maintaining/plugin.md`, the sample transcript and component counts in `docs/use/cli/bundle.md`, and the
+      `new: wrote N file(s)` line in both `docs/use/cli/new.md` and `docs/use/getting-started.md`.
     * A standalone skill added or removed affects the loop naming them in `.github/workflows/kac.yml`, and the
       prose describing that job in [ctl-0008].
     * A skill a corpus receives affects `template/knowledge-as-code/contributing.md`, the copy of it every corpus
       under `examples/` holds, and the overlay note in `manifest.yaml` that names them.
     * A change to what a skill does affects whichever of those describe it.
-    * `docs/skills.md` needs no edit. Its three tables are generated from `plugin.json`, `manifest.yaml` and the
+    * `docs/use/skills.md` needs no edit. Its three tables are generated from `plugin.json`, `manifest.yaml` and the
       `.claude/skills/` directory, and `SkillReferenceTests` fails a stale one. Never hand-edit a generated block.
 12. Run `kac update --check --from ../../` inside every corpus under `examples/`. It withholds the plugin tree, so it
     proves the rest of the overlay and nothing about step 6.
@@ -116,7 +116,7 @@ it from the working tree to read your change, as this corpus's own `README.md` d
 * [prc-pull-request] merges the change.
 * [svc-marketplace] is what a bundled skill is published through.
 
-[Skills]: https://paul80nd.github.io/knowledge-as-code/skills/
+[Skills]: https://paul80nd.github.io/knowledge-as-code/use/skills/
 [ctl-0008]: ../controls/0008-publish-round-trip.md
 [prc-pull-request]: pull-request.md
 [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved]: ../standards/configuration.md#a-value-living-in-more-than-one-tree-is-copied-and-proved

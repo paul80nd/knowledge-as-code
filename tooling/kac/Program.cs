@@ -72,7 +72,7 @@ if (args.Length == 0)
 }
 
 // Spectre answers a parse failure with -1, which a shell reads as 255. No verb returns -1, so nothing
-// else can be caught by this. `docs/cli/index.md` carries the exit codes.
+// else can be caught by this. `docs/use/cli/index.md` carries the exit codes.
 var exit = app.Run(args);
 return exit == -1 ? 1 : exit;
 
@@ -123,7 +123,7 @@ internal sealed class CorpusSettings : KacSettings;
 
 /// <summary>
 /// <c>new</c> takes the working directory and never <c>Cli.InCorpus</c>: finding a corpus there is what stops it. Every
-/// answer has a flag, so a run with no terminal exits rather than waits. <c>docs/cli/new.md</c> has the defaults.
+/// answer has a flag, so a run with no terminal exits rather than waits. <c>docs/use/cli/new.md</c> has the defaults.
 /// </summary>
 internal sealed class NewSettings : KacSettings
 {
@@ -232,7 +232,7 @@ internal sealed class RestoreCommand : Command<CorpusSettings>
         });
 }
 
-/// <summary><c>--type</c> narrows what is written and never what is read. <c>docs/cli/export.md</c> says why.</summary>
+/// <summary><c>--type</c> narrows what is written and never what is read. See <c>docs/use/cli/export.md</c>.</summary>
 internal sealed class ExportSettings : KacSettings
 {
     [CommandOption("--type <TYPE>")]
@@ -299,7 +299,7 @@ internal sealed class ReportCommand : Command<ReportSettings>
 
 /// <summary>
 /// <c>update</c> asks nothing, because it runs in a pipeline as often as under somebody watching.
-/// <c>docs/cli/update.md</c> has the defaults and what each layer means.
+/// <c>docs/use/cli/update.md</c> has the defaults and what each layer means.
 /// </summary>
 internal sealed class UpdateSettings : KacSettings
 {

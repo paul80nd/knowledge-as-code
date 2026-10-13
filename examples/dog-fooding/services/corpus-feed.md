@@ -24,7 +24,7 @@ states.
 
 One publisher builds four packages: `example-libraries`, `example-engineering`, `example-payments` and
 `example-dogfooding`. A package id is the `corpus:` value in the descriptor. The version is `content-version`. Taken
-from `docs/cli/pack.md`.
+from `docs/use/cli/pack.md`.
 
 `publish-corpus.yml` runs on a push to `main` that touched one of the corpora. A `verify` job with no write permission
 validates, exports and packs all four. A second job rebuilds the same package and pushes it. Taken from the header

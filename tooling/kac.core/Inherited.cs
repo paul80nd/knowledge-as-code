@@ -115,7 +115,7 @@ public static class Inherited
 
     /// <summary>
     /// A record is a <c>.json</c> named for its id, and the parts file beside them is not one. Inherited records sit
-    /// one folder deep, named for their writer. See docs/design/export.md.
+    /// one folder deep, named for their writer. See docs/reference/export.md.
     /// </summary>
     private static List<InheritedRecord> RecordsIn(
         string shortcode, string dir, string? partsFile,

@@ -1,5 +1,5 @@
 # Every check the validator reports. A type's own rules are declared beside the type, in `.schema/<type>.yaml`.
-# <https://paul80nd.github.io/knowledge-as-code/design/checks/> says what each key means and when to add an entry.
+# <https://paul80nd.github.io/knowledge-as-code/reference/checks/> says what each key means and when to add an entry.
 # `description` is one sentence under 120 characters. It renders into a table cell.
 
 checks:
@@ -12,7 +12,7 @@ checks:
     description: Every key in a schema file is one the loader reads.
     notes: >
       `notes:` is the exception, admitted at every level as commentary. No list of permitted keys exists anywhere.
-      See <https://paul80nd.github.io/knowledge-as-code/design/held-to/#whether-code-acts-on-the-value>.
+      See <https://paul80nd.github.io/knowledge-as-code/reference/held-to/#whether-code-acts-on-the-value>.
 
   schema-unreadable:
     severity: error
@@ -20,7 +20,7 @@ checks:
     description: Every declaration in a schema file is one the loader can read as written.
     notes: >
       An `expr:` that will not compile arrives here, along with the other unreadable declarations listed at
-      <https://paul80nd.github.io/knowledge-as-code/design/held-to/#what-the-pass-reports>.
+      <https://paul80nd.github.io/knowledge-as-code/reference/held-to/#what-the-pass-reports>.
 
   schema-dispatch:
     severity: error
@@ -31,7 +31,7 @@ checks:
       field declaring an id and no `ref:` at all is reported, because its ids resolve against nothing, and so is an id
       on an entry key, which that pass never walks. The opposite
       fault, a check declared here that nothing reports, is the coverage gate's to fail. See
-      <https://paul80nd.github.io/knowledge-as-code/design/held-to/#ref-and-versus>.
+      <https://paul80nd.github.io/knowledge-as-code/reference/held-to/#ref-and-versus>.
 
   schema-shape:
     severity: error
@@ -39,7 +39,7 @@ checks:
     description: A type's declarations are well-formed and agree with one another.
     notes: >
       The lookup from folder to schema goes by file name, so a type naming any other folder hides every record
-      beneath it. See <https://paul80nd.github.io/knowledge-as-code/design/held-to/#what-schema-shape-asks>.
+      beneath it. See <https://paul80nd.github.io/knowledge-as-code/reference/held-to/#what-schema-shape-asks>.
 
   # ── frontmatter ──────────────────────────────────────────────────────────────
 
@@ -69,14 +69,14 @@ checks:
       A derived field is declared, so `unknown-key` admits it and this check reports the written value instead. A
       template is asked the same, since a template writing the key teaches every copy to write one. See
       <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#a-derived-field> and
-      <https://paul80nd.github.io/knowledge-as-code/design/discovery/#from-sub-path>.
+      <https://paul80nd.github.io/knowledge-as-code/use/discovery/#from-sub-path>.
 
   key-order:
     severity: error
     description: Key order is a topological extension of the schema's declared field orders.
     notes: >
       A document is read against both declared orders at once, so a pair neither order states is free. See
-      <https://paul80nd.github.io/knowledge-as-code/design/checks/#the-key-order-rule>.
+      <https://paul80nd.github.io/knowledge-as-code/reference/checks/#the-key-order-rule>.
 
   required-field:
     severity: error
@@ -378,7 +378,7 @@ checks:
       corpus this one consumes nothing from. A citation into an unrestored import reports nothing here, and
       `import-restored` states it once instead. See
       <https://paul80nd.github.io/knowledge-as-code/framework/metadata/#referring-to-an-id> and
-      <https://paul80nd.github.io/knowledge-as-code/design/imports/#spelling-a-citation>.
+      <https://paul80nd.github.io/knowledge-as-code/use/imports/#spelling-a-citation>.
 
   ref-resolves:
     severity: error
@@ -448,7 +448,7 @@ checks:
       wrote, and one with a value that is not lower case. Reported once against the descriptor, since nobody
       writing a record can fix either. A required field is asked from the first record of its type, and an
       optional one from the first record that states it. See
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#enums>.
+      <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/#enums>.
 
   shortcode:
     severity: error
@@ -468,7 +468,7 @@ checks:
       Two vocabularies, because the keys answer two questions. `publishing-target` says how a record is read, so a
       wiki and a documentation site belong to it. `tracker.target` and `framework.target` name the client that opens
       a ticket, and neither of those is one. A key the descriptor leaves out is asked nothing. See
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#tracker>.
+      <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/#tracker>.
 
   descriptor-area:
     severity: error
@@ -479,7 +479,7 @@ checks:
       labels. So `area` beside `github` or `none` names nothing the client that files can set, and the export drops it.
       A `tracker:` block stating no target is asked about the target `publishing:` implies, because that is the one a
       filing client will use. See
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#tracker>.
+      <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/#tracker>.
 
   import-restored:
     severity: error
@@ -487,7 +487,7 @@ checks:
     description: Every corpus this one declares in `consumes:` has been restored into `.imports/`.
     notes: >
       An unrestored import is an error, and every citation into it stays quiet once this is reported. See
-      <https://paul80nd.github.io/knowledge-as-code/design/imports/#a-missing-restore>.
+      <https://paul80nd.github.io/knowledge-as-code/use/imports/#a-missing-restore>.
 
   import-behind:
     severity: warning
@@ -495,7 +495,7 @@ checks:
     description: Every corpus in `consumes:` is locked at the newest version its own range admits.
     notes: >
       Asked once per `validate` run, and reported against the source. See
-      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
+      <https://paul80nd.github.io/knowledge-as-code/use/imports/#an-import-that-has-fallen-behind>.
 
   import-capped:
     severity: info
@@ -503,7 +503,7 @@ checks:
     description: A newer version of a consumed corpus is published, and this corpus's range keeps it out.
     notes: >
       Reported apart from `import-behind`, since somebody chose the range. See
-      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
+      <https://paul80nd.github.io/knowledge-as-code/use/imports/#an-import-that-has-fallen-behind>.
 
   import-unreachable:
     severity: info
@@ -512,7 +512,7 @@ checks:
     notes: >
       A source replying with no versions at all reports here, and never as a lock that is current: a registry
       replies to a private feed's anonymous reader exactly as it replies about a package nobody has published. See
-      <https://paul80nd.github.io/knowledge-as-code/design/imports/#an-import-that-has-fallen-behind>.
+      <https://paul80nd.github.io/knowledge-as-code/use/imports/#an-import-that-has-fallen-behind>.
 
   framework-names-types:
     severity: error
@@ -596,7 +596,7 @@ checks:
       Checked in both directions, and the message states the reference and the side it is missing from. A framework
       cited with no reference into it compares as the framework alone, so `[WCAG 2.2 AA]` in a cell matches an
       `aligns-with` entry with no `clauses:`. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#the-framework-register>.
 
   alignment-unlinked:
     severity: error
@@ -605,14 +605,14 @@ checks:
       Brackets that never became a link leave the citation invisible to `alignment-rollup`, `framework-posture` and
       `framework-uncited`. Reported once per label. While the definition is missing, `alignment-rollup` does not
       report `aligns-with` as claiming that framework. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#the-framework-register>.
 
   framework-posture:
     severity: error
     description: A framework a clause cites is placed on the corpus's framework register.
     notes: >
       Reported once per framework, however many clauses cite it. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#the-framework-register>.
 
   framework-uncited:
     severity: error
@@ -621,14 +621,14 @@ checks:
       The register is found by following a clause's own link to it, so a corpus whose clauses cite nothing has no
       register in view and reports nothing. Reported against the policy that linked to the page, since the register
       has no frontmatter and is no record, and the message states the page instead. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#the-framework-register>.
 
   report-stale:
     severity: warning
     description: Each corpus a report lists in `sources` is still at the version the report states.
     notes: >
       A `resource` this corpus does not read is skipped, and reports nothing. See
-      <https://paul80nd.github.io/knowledge-as-code/design/reports/#moving-the-version-without-regenerating>.
+      <https://paul80nd.github.io/knowledge-as-code/use/cli/report/#moving-the-version-without-regenerating>.
 
   self-verification:
     severity: error
@@ -637,7 +637,7 @@ checks:
       Reported against the entry, so the message points at the line to delete. The comparison is exact, so
       `kac/0.25.0` verifying a report `kac/0.24.0` generated stands: a later version reading the corpus again is a
       second look.
-      See <https://paul80nd.github.io/knowledge-as-code/design/reports/#the-provenance-frontmatter>.
+      See <https://paul80nd.github.io/knowledge-as-code/use/cli/report/#the-provenance-frontmatter>.
 
   duration-matches-the-moments:
     severity: error
@@ -736,4 +736,4 @@ checks:
       mismatch. The grading field is whichever one draws on an enum declaring `ordered: true`, and the edge is
       whichever field points back at the type's own records. A grade outside its range, and an id that resolves to
       nothing, each go to the check already reporting them. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.

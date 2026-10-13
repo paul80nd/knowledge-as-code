@@ -25,13 +25,13 @@ public sealed record ExportPlan(
 public sealed record ExportRun(string GeneratedAt, DateOnly Today, string? Commit, bool? Dirty);
 
 /// <summary>
-/// Reads each type's <c>export:</c> block and holds no list of its own. See <c>docs/design/export.md</c>.
+/// Reads each type's <c>export:</c> block and holds no list of its own. See <c>docs/reference/export.md</c>.
 /// </summary>
 public static class Exporter
 {
     /// <summary>
     /// Versioned apart from the corpus. <c>Bundler</c> refuses an export at another version, so moving it means
-    /// rebuilding every export on disk. <c>docs/design/export.md</c> says what moves it.
+    /// rebuilding every export on disk. <c>docs/reference/export.md</c> says what moves it.
     /// </summary>
     public const int FormatVersion = 4;
 
@@ -42,8 +42,8 @@ public static class Exporter
 
     /// <summary>
     /// <c>type</c> narrows what is written, never what is read. Two runs from one tree write identical bytes but for
-    /// the timestamp. <c>inherited</c> is what <c>.imports/</c> holds. <c>docs/design/export.md</c> says what merging
-    /// settles.
+    /// the timestamp. <c>inherited</c> is what <c>.imports/</c> holds. <c>docs/reference/export.md</c> says what
+    /// merging settles.
     /// </summary>
     public static ExportPlan Plan(LoadedCorpus corpus, Publishing? publishing, string? type, ExportRun run,
         IReadOnlyList<InheritedCorpus>? inherited = null, IReadOnlyList<string>? missing = null)
@@ -90,7 +90,7 @@ public static class Exporter
             {
                 if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
 
-                // Filed under the corpus that wrote the record. See the chain section of docs/design/export.md.
+                // Filed under the corpus that wrote the record. See the chain section of docs/reference/export.md.
                 // A corpus consuming a producer and that producer's own producer meets a record twice at one path, so
                 // the second copy is skipped.
                 foreach (var record in theirs.Records)
@@ -201,7 +201,7 @@ public static class Exporter
 
     /// <summary>
     /// What stops an export before a file is planned. A missing restore is a hole in the export, not a smaller one: see
-    /// <c>docs/design/imports.md</c>. An unknown envelope is refused because its key names cannot be trusted.
+    /// <c>docs/use/imports.md</c>. An unknown envelope is refused because its key names cannot be trusted.
     /// </summary>
     private static List<string> Refusals(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
         IReadOnlyList<string> missing, string? type)
@@ -298,7 +298,7 @@ public static class Exporter
 
     /// <summary>
     /// None where the type declares no file for them. This corpus's own clauses alone, because an inherited clause left
-    /// its <c>Alignment</c> cell behind. See <c>docs/design/export.md</c>.
+    /// its <c>Alignment</c> cell behind. See <c>docs/reference/export.md</c>.
     /// </summary>
     private static List<string> FrameworkLines(TypeSchema? local, LoadedCorpus corpus)
     {
@@ -379,8 +379,8 @@ public static class Exporter
         id.Contains(':', StringComparison.Ordinal) ? id : $"{shortcode}:{id}";
 
     /// <summary>
-    /// Deletes the export, then writes, so a deleted record cannot stay readable. <c>docs/cli/export.md</c> says why.
-    /// Deletes <c>Dist.Export</c> and never <c>.dist/</c>, because the bundle sits beside it.
+    /// Deletes the export, then writes, so a deleted record cannot stay readable. <c>docs/use/cli/export.md</c> says
+    /// why. Deletes <c>Dist.Export</c> and never <c>.dist/</c>, because the bundle sits beside it.
     /// </summary>
     public static List<string> Write(string corpusRoot, ExportPlan plan)
     {
@@ -400,8 +400,8 @@ public static class Exporter
     }
 
     /// <summary>
-    /// Every record travels unless the corpus excludes drafts or overdue records. <c>docs/cli/export.md</c> says why
-    /// carrying both is the default.
+    /// Every record travels unless the corpus excludes drafts or overdue records. <c>docs/use/cli/export.md</c> says
+    /// why carrying both is the default.
     /// </summary>
     private static bool Travels(Doc doc, CorpusDescriptor descriptor, DateOnly today)
     {
@@ -419,7 +419,7 @@ public static class Exporter
 
     /// <summary>
     /// Roots by id, each root's chain depth-first beneath it. A record narrowing something outside the set is a root.
-    /// See <c>docs/design/export.md</c>. Two records sharing an id keep the first, and <c>id-unique</c> reports it.
+    /// See <c>docs/reference/export.md</c>. Two records sharing an id keep the first, and <c>id-unique</c> reports it.
     /// </summary>
     private static List<Doc> Ordered(List<Doc> docs)
     {
@@ -501,7 +501,7 @@ public static class Exporter
     /// <summary>
     /// The Open Knowledge Format's three tiers: no entries is <c>unverified</c>, agents alone <c>machine-confirmed</c>,
     /// and one <c>human:</c> actor <c>human-reviewed</c>. Null where the export declares no <c>verified</c>. A
-    /// verification taken before <c>generated.at</c> is left out. See docs/design/reports.md. One mapping is the
+    /// verification taken before <c>generated.at</c> is left out. See docs/use/cli/report.md. One mapping is the
     /// one-entry case.
     /// </summary>
     private static string? Trust(Doc doc, ExportSpec export)
@@ -564,7 +564,7 @@ public static class Exporter
     }
 
     /// <summary>
-    /// <c>docs/design/export.md</c> says what each fidelity promises. Unwrapped first, so a summary is the author's
+    /// <c>docs/reference/export.md</c> says what each fidelity promises. Unwrapped first, so a summary is the author's
     /// paragraph.
     /// </summary>
     private static string? Carry(string body, string fidelity)
@@ -581,7 +581,7 @@ public static class Exporter
 
     /// <summary>
     /// In the shape its type declared: a list field is always an array and an object field an object, so a consumer
-    /// reads one key one way. See <c>docs/design/export.md</c>.
+    /// reads one key one way. See <c>docs/reference/export.md</c>.
     /// </summary>
     private static JsonNode? Value(YamlNode? node, FieldSpec? spec)
     {
@@ -625,12 +625,12 @@ public static class Exporter
         return obj;
     }
 
-    /// <summary>Blank and missing both arrive as <c>null</c>. See <c>docs/design/export.md</c>.</summary>
+    /// <summary>Blank and missing both arrive as <c>null</c>. See <c>docs/reference/export.md</c>.</summary>
     private static string? Absent(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
     /// <summary>
     /// Takes the source's wrap column out. Blank lines stay, and a block a joiner would mangle is left as written. See
-    /// <c>docs/design/export.md</c>.
+    /// <c>docs/reference/export.md</c>.
     /// </summary>
     private static string Unwrap(string text)
     {
@@ -681,8 +681,8 @@ public static class Exporter
         export.Line.FirstOrDefault(l => string.Equals(l.Source, source, StringComparison.Ordinal)).Key;
 
     /// <summary>
-    /// One line per part of this corpus's own records. <c>docs/design/export.md</c> says why JSONL. The type declares
-    /// what a line holds, so a second type exporting parts needs no C#.
+    /// One line per part of this corpus's own records. <c>docs/reference/export.md</c> says why JSONL. The type
+    /// declares what a line holds, so a second type exporting parts needs no C#.
     /// </summary>
     private static List<string> PartLines(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
     {
@@ -715,7 +715,7 @@ public static class Exporter
 
     /// <summary>
     /// Heading parts sort on the heading. Table rows keep their author's order, which carries the binding levels. See
-    /// <c>docs/design/export.md</c>.
+    /// <c>docs/reference/export.md</c>.
     /// </summary>
     private static IEnumerable<PartRow> Ordered(IEnumerable<PartRow> parts, PartSpec spec) =>
         spec.Source == PartSpec.Table
@@ -811,7 +811,7 @@ public static class Exporter
 
     /// <summary>
     /// Full part ids, or null where the part points at none. Read from link anchors and never inferred: a link naming a
-    /// record and no part is reported by <c>Unread</c>. See <c>docs/design/export.md</c>.
+    /// record and no part is reported by <c>Unread</c>. See <c>docs/reference/export.md</c>.
     /// </summary>
     private static IReadOnlyList<string>? SeeAlso(Doc doc, PartRow part, Dictionary<string, Doc> byPath, Tree tree)
     {

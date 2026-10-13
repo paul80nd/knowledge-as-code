@@ -65,9 +65,9 @@ keeps a copy: the gate above covers them.
 ## Adding or changing a check
 
 **Ask first whether it needs C# at all.** A check that is a predicate over frontmatter, sections, links or length is an
-`expr:` on a rule in `.schema/<type>.yaml`. See [`docs/design/expressions.md`](../docs/design/expressions.md) for what
-one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks table
-and `kac checks` all pick it up from the schema.
+`expr:` on a rule in `.schema/<type>.yaml`. See [`docs/reference/expressions.md`](../docs/reference/expressions.md) for
+what one may say. That costs the YAML and a fixture, and nothing else on this page applies: the catalogue, the checks
+table and `kac checks` all pick it up from the schema.
 
 **What decides it is what the author is told.** Write the expression where one fixed message says everything the code
 would have said. Write the code where it can name *which* part of the document is at fault and a single string cannot. A
@@ -169,7 +169,7 @@ Wherever it lives, three places have to agree, and each fails a meta-test rather
 3. **A fixture that trips it.** The coverage gate fails on any reachable check no fixture exercises, and that is also
    what catches a check declared in the schema and reported by nothing.
 
-[Checks](https://paul80nd.github.io/knowledge-as-code/design/checks/) carries no table of checks: it points at the
+[Checks](https://paul80nd.github.io/knowledge-as-code/reference/checks/) carries no table of checks: it points at the
 schema, so there is nothing there to go quietly out of date. No page here states how many checks there are either:
 `kac checks` reports that, and [`std-PROSE`](../examples/dog-fooding/standards/prose.md) is the rule.
 

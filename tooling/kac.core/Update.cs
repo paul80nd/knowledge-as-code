@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace kac.core;
 
 // The `update` engine. `Plan` names every file an update writes and deletes, and touches nothing. `Apply`
-// carries it out. `docs/cli/update.md` says what each layer means.
+// carries it out. `docs/use/cli/update.md` says what each layer means.
 
 /// <summary>
 /// What the invocation was told. <c>From</c>, <c>Ref</c> and <c>Path</c> are null where <c>.corpus.yaml</c> is to
