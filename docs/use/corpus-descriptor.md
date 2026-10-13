@@ -4,18 +4,11 @@
 is, which types it adopted, where it is published, and where it takes the shared framework from.
 
 [`new`](cli/new.md) writes the file when the corpus is created, commented key by key. You edit it by hand after that.
-`update` rewrites four of the keys below and never replaces the file. Every other file in a corpus arrives from a
-template and `update` can take it again; this one is the corpus's own.
-
-The longer worked copy is
+`update` rewrites four of the keys below and never replaces the file. A worked copy is
 [`examples/library/.corpus.yaml`](https://github.com/paul80nd/knowledge-as-code/blob/main/examples/library/.corpus.yaml).
-Read that one while you change yours.
 
-**It is not the schema.** `.schema/` states what a record of each type must have. This file states which of those types
-the corpus adopted. It says nothing about their shape.
-
-**It is not configuration for a run.** It records decisions, and a command reads them. `--from`, `--ref`, `--path` and
-`--policy` each replace a value here for one run only.
+The file says which types the corpus adopted, and `.schema/` says what a record of each type must have. `--from`,
+`--ref`, `--path` and `--policy` each replace a value here for one run only.
 
 ## Every key
 
@@ -47,8 +40,8 @@ the corpus adopted. It says nothing about their shape.
 
 ## Identity
 
-No key here is called `version` alone, because three of them say different things: the format of this file, the version
-of what the corpus knows, and the template shape it last took.
+Three keys state a version: `descriptor-version` for the format of this file, `content-version` for what the corpus
+knows, and [`upstream.template-version`](#upstream) for the template shape it last took.
 
 ### `corpus`
 
@@ -58,8 +51,7 @@ The name this corpus publishes under.
 corpus: knowledge-as-code
 ```
 
-An export states it, so a consumer with several exports can tell whose vocabulary it is reading. The folder it vendored
-the files into may not say.
+An export states it, so a consumer with several exports can tell whose vocabulary it is reading.
 
 ### `shortcode`
 
@@ -69,11 +61,9 @@ The shorthand another corpus cites this one by, as the `eng` in `eng:pol-VURM.TI
 shortcode: kac
 ```
 
-You choose it, and a corpus citing yours writes what you chose. [`validate`](cli/validate.md) checks the spelling.
-[The shortcode](../framework/metadata.md#the-shortcode) says what a legal one looks like, and why it never changes.
-
-Leave it out until something cites this corpus, which is the ordinary case. [`new`](cli/new.md) writes it bare, and an
-export from a corpus that has not chosen one states `null`.
+[`validate`](cli/validate.md) checks the spelling, and [the shortcode](../framework/metadata.md#the-shortcode) says what
+a legal one looks like. Leave it out until something cites this corpus. [`new`](cli/new.md) writes it bare, and an
+export from a corpus with none states `null`.
 
 ### `content-version`
 
@@ -84,13 +74,11 @@ content-version: "0.1.0"
 ```
 
 It is semantically versioned. Move the major where a meaning changed or a published URL broke. Move the minor for
-additions, and the patch for wording. Quote it when one corpus tells another which version of the content it has.
-
-Nothing refuses to load because the number moved. It is a notification.
+additions, and the patch for wording. Nothing refuses to load because the number moved.
 
 ### `descriptor-version`
 
-The format of this file, which the tool owns rather than the corpus.
+The format of this file.
 
 ```yaml
 descriptor-version: 5
@@ -100,7 +88,7 @@ descriptor-version: 5
 
 ## What a reader sees outside the repository
 
-These four keys are for a reader who meets this corpus as a package or an installed plugin, not as a repository.
+These four keys are for a reader who meets this corpus as a package or an installed plugin.
 
 ```yaml
 display-name: Knowledge as Code
@@ -115,22 +103,20 @@ author:
 [`export`](cli/export.md) writes all four into the export, [`pack`](cli/pack.md) writes them into the package a registry
 lists, and [`bundle`](cli/bundle.md) writes them into the plugin manifest somebody installs.
 
-Leave a key bare and all three omit it. [`new`](cli/new.md) writes all four bare, because a licence and an author
-supplied by the tool would be inherited instead of chosen.
+Leave a key bare and all three omit it. [`new`](cli/new.md) writes all four bare.
 
 ## Where the corpus is published
 
 ### `publishing-target`
 
-How the corpus is published, which decides whether `export` can build a link at all and which form to build.
+How the corpus is published, which decides whether `export` builds a link to each record and in which form.
 
 ```yaml
 publishing-target: github
 ```
 
-State it instead of leaving it to be guessed. [The export format](../reference/export.md#the-link-and-the-ingredients)
-says what an export writes, and how a record's path and a part's anchor join the base. Every corpus on one target builds
-the same link, and none of them writes the rule down a second time.
+[The export format](../reference/export.md#the-link-and-the-ingredients) says how a record's path and a part's anchor
+join the base.
 
 **`github`** means the repository is itself the published form, and a record is read rendered on github.com. Write the
 repository's own URL, with no `/blob` on the end. `export` adds that segment along with the commit.
@@ -140,18 +126,13 @@ repository's own URL, with no `/blob` on the end. `export` adds that segment alo
 
 **`azure-devops-wiki`** means an Azure DevOps wiki publishes it. Write the wiki's own URL, as
 `https://dev.azure.com/{org}/{project}/_wiki/wikis/{wiki}`, and nothing after it. Once you open a page, the address bar
-shows a numeric page id. A base with one of those in it addresses that page and misaddresses every other record, so
-`export` refuses it and builds no links at all.
+shows a numeric page id. `export` refuses a base with one in it and builds no links. A link to a wiki page is not
+pinned to a commit, so a person following it reads whatever the wiki has now. The commit travels in the manifest.
 
-This is also the one target whose link is not pinned to a commit. No `?pagePath=` URL takes one, so a person following
-the link reads whatever the wiki has now. An agent still reads the version the export was built from, because the commit
-travels in the manifest instead of in the link.
+**`mkdocs`** is accepted, and nothing addresses it yet, so an export from a corpus on it has no links.
 
-**`mkdocs`** is accepted, and nothing addresses it yet, so an export from a corpus on it has no links. No link is better
-than a link built on a convention nobody has settled.
-
-**`none`** means the corpus is not published. Its export has no links and says so in its manifest, so a reader is never
-handed an address that resolves nowhere. It is the one value that needs no `publishing:` block.
+**`none`** means the corpus is not published. Its export has no links and says so in its manifest. It is the one value
+that needs no `publishing:` block.
 
 [`validate`](cli/validate.md) refuses any other value, and names these five in the message.
 
@@ -170,12 +151,8 @@ publishing:
 | `base`        | the URL a person opens to browse the corpus          | `new`, then you |
 | `path-prefix` | where the corpus root sits inside that repository    | you             |
 
-There is one base, whatever the target. An agent reads a record's source from the same place, through a client that
-authenticates.
-
-Set `path-prefix` where the repository contains more than the corpus. Do not append that folder to `base` instead.
-`export` inserts the commit between `base` and the record's path, so there is no room for it there. Leave the key out
-where the corpus is the repository, which is the ordinary case.
+Set `path-prefix` where the repository contains more than the corpus. Do not append that folder to `base`: `export`
+inserts the commit between `base` and the record's path. Leave the key out where the corpus is the repository.
 
 ## Where the code is
 
@@ -199,8 +176,7 @@ repos-base: https://dev.azure.com/acme/platform/_git
 directions, and warns where the two disagree. It reports nothing in a corpus that states no base, and nothing in a
 corpus that has not adopted `services`.
 
-One base covers one host and one organisation. Leave it bare where the estate spans several. The check then stops,
-rather than reporting every repository outside the one host you could name.
+One base covers one host and one organisation. Leave it bare where the estate spans several, and the check stops.
 
 ## Where work is filed
 
@@ -221,18 +197,16 @@ tracker:
 | `base`   | the repository or project the backlog belongs to        | you           |
 | `area`   | the area path inside an Azure DevOps project to file in | you           |
 
-**Leave the block out where the backlog belongs to what `publishing:` already names.** [`export`](cli/export.md) derives
-the address from that block instead, by the table below. A corpus published on GitHub therefore states nothing: a
-repository there has an issue list of its own.
+**Leave the block out where the backlog belongs to what `publishing:` already names.** [`export`](cli/export.md) then
+derives the address by [the table below](#what-export-derives). A corpus published on GitHub states nothing.
 
-**State the block where the backlog and the published form are two places.** One Azure DevOps project holds one backlog
-and many repositories, so a repository URL does not address the backlog.
+**State the block where the backlog and the published form are two places**, as an Azure DevOps project is.
 
-`target` is one of `github`, `azure-devops` or `none`, the same three values [`framework`](#framework) takes. Write
-`none` where the corpus has no tracker at all. [`validate`](cli/validate.md) refuses any other value.
+`target` is one of `github`, `azure-devops` or `none`. Write `none` where the corpus has no tracker at all.
+[`validate`](cli/validate.md) refuses any other value.
 
 Write the project URL for `azure-devops`, as `https://dev.azure.com/{org}/{project}`. A URL naming a repository or a
-wiki inside the project is cut back to the project, because that is where the backlog is.
+wiki inside the project is cut back to the project.
 
 #### `area`
 
@@ -240,21 +214,14 @@ wiki inside the project is cut back to the project, because that is where the ba
 already written, as `kac-it-swdev` or `kac-it-swdev/subteam`. The client that files converts it to the backslashes Azure
 Boards uses.
 
-**State it where one Azure DevOps project holds several corpora.** One project has one backlog, so without an area every
-corpus's work lands in one undifferentiated queue. With one, a team sees its own.
+State it where one Azure DevOps project contains several corpora, so each team sees its own work. Leave it out and an
+item lands in the project's default area.
 
-**Leave it out and an item lands in the project's default area.** That is the ordinary case for a project holding one
-corpus.
+`area` applies to `azure-devops` alone, and [`validate`](cli/validate.md) refuses it beside `github` or `none`. A block
+stating no `target` is judged by the target [`publishing-target`](#publishing-target) implies. Nothing derives `area`,
+and [`new`](cli/new.md) and [`update`](cli/update.md) never write it.
 
-`area` applies to `azure-devops` alone. GitHub divides one repository's issue list with labels, so
-[`validate`](cli/validate.md) refuses an `area` stated beside `github` or `none`. A block stating no `target` is asked
-about the one [`publishing-target`](#publishing-target) implies, because that is the client that will file.
-
-Nothing derives `area`, and [`new`](cli/new.md) and [`update`](cli/update.md) never write it. Only the corpus knows
-which area inside a shared project is its own. Set it by hand.
-
-`area` is not checked against Azure DevOps. `validate` reaches no network. An area path that does not exist, or one the
-identity filing has no rights to, fails at the point the item is created.
+`validate` does not check the path against Azure DevOps. An area that does not exist fails when the item is created.
 
 #### What `export` derives
 
@@ -269,8 +236,7 @@ Write `base` alone where your backlog moved inside the platform you publish on, 
 `publishing-target`. Write `target` alone where the corpus has no tracker, and nothing states a base.
 
 **State both keys where you state a target `publishing-target` does not imply.** A base is taken from the publishing
-block only where the two targets agree. A corpus published on GitHub and filing on Azure Boards is filing somewhere only
-it knows, so `export` writes no base rather than the repository it publishes from.
+block only where the two targets agree, and otherwise `export` writes no base.
 
 ### `framework`
 
@@ -289,27 +255,21 @@ framework:
 | `area`   | the area path inside an Azure DevOps project to file in | you           |
 
 [`export`](cli/export.md) writes the block into the manifest, so an agent that meets your corpus as an installed plugin
-has the address. Without it, the only address that agent has is your own `publishing.base`.
+has the address.
 
-`area` means here what it means on [`tracker`](#area), and is held to the same rule. `new` writes none.
+`target` takes the three values [`tracker`](#tracker) takes, and `area` follows the [`tracker` rule](#area). Write
+`none`, or leave the block out, where you know of no tracker.
 
-`target` takes the same three values [`tracker`](#tracker) takes. Write `github` for a tracker on github.com, and
-`azure-devops` for one on Azure Boards. Write `none`, or leave the block out, where you know of no tracker.
-`azure-devops-wiki` and `mkdocs`, which [`publishing-target`](#publishing-target) also takes, address no tracker, so
-neither belongs here.
-
-[`new`](cli/new.md) writes both keys when the corpus is created. It takes `base` from `--from` where that named a
-repository, and from the framework's own repository where it named a folder. It reads `target` from the host, and writes
-`none` for a host that neither `gh` nor `az boards` serves.
-
-Nothing derives this block. Where a corpus publishes says nothing about who maintains what it took.
+[`new`](cli/new.md) writes `target` and `base` when the corpus is created. It takes `base` from `--from` where that
+named a repository, and from the framework's own repository where it named a folder. It reads `target` from the host,
+and writes `none` for a host that neither `gh` nor `az boards` serves. Nothing derives this block.
 
 #### Three addresses, and telling them apart
 
 `tracker.base` is where a problem with one of your records goes. `framework.base` is where a problem with `kac`, the
-schema, the template or a skill goes. Each corpus in [`consumes:`](#consumes) brings a third, which is its producer's. A
-corpus whose records and framework are maintained by the same team writes one address twice, and [the export
-format](../reference/export.md#id-and-the-trackers-it-compares) says how a reader tells that case from the other.
+schema, the template or a skill goes. Each corpus in [`consumes:`](#consumes) brings a third, which is its producer's.
+[The export format](../reference/export.md#id-and-the-trackers-it-compares) says how a reader tells them apart when one
+team writes the same address twice.
 
 ## Where the framework comes from
 
@@ -336,23 +296,14 @@ upstream:
 | `template-version` | the template shape that take was on                      | `update`      |
 | `taken-on`         | the day the framework last came down                     | `update`      |
 
-`update` reads `url` when no `--from` is passed, and a run with neither has nothing to take. Leave `path` out where the
-manifest sits at the repository root, which is where this project keeps it.
+`update` reads `url` when no `--from` is passed. Leave `path` out where the manifest sits at the repository root.
 
-`update` follows `ref` and never reads `commit` back. Together the two say that the corpus tracks a moving line, and
-that you can still see exactly what arrived. A template read from a folder resolves no commit, so `commit` is left as it
-stands, and [`new`](cli/new.md) leaves `ref` beside it bare.
+`update` follows `ref`. It writes `commit` for your information and never reads it. A template read from a folder
+resolves no commit, so `commit` is left as it stands, and [`new`](cli/new.md) leaves `ref` beside it bare.
 
-Real content is the only thing that reveals a schema is wrong, so the corpus that found the problem is often the one
-best placed to fix it. A change is settled once the repository serving the template accepts it.
-
-**`upstream` is not [`consumes`](#consumes).** `upstream` is one framework this corpus receives as files and keeps.
-`consumes` is a graph of records this corpus reads and never keeps. A corpus has one upstream, and any number of
-consumed corpora.
-
-**`upstream.url` is not [`framework.base`](#framework).** `upstream.url` says where `kac` copied the template from, and
-it is often a folder on the same disk. `framework.base` says where to report a problem with what arrived, and it is
-always a tracker.
+A corpus has one `upstream`, which it receives as files and keeps. It may have any number of [`consumes`](#consumes)
+entries, whose records it reads and never commits. `upstream.url` says where the template was copied from, and
+[`framework.base`](#framework) says where to report a problem with it.
 
 ### `update-policy`
 
@@ -362,11 +313,12 @@ How far an update goes. One of `cautious` or `full`, and `cautious` is the defau
 update-policy: cautious
 ```
 
-A seed file is your own words: a type's root page, its `_template.md`, the agent guidance. `cautious` writes a seed file
-only where the corpus has none, so an update does not open with three dozen files to revert by hand. `full` refreshes
-them too, and you reconcile the result from the diff.
+| Value      | Seed files (a type's root page, its `_template.md`, the agent guidance)     |
+|------------|-----------------------------------------------------------------------------|
+| `cautious` | written only where the corpus has none                                      |
+| `full`     | refreshed as well, and you reconcile the result from the diff               |
 
-`update` writes overlay files either way. They belong to the framework, not to the corpus, and an edit to one is drift.
+`update` writes overlay files under either value. [Layers](layers.md) says which files are which.
 
 ## `types`
 
@@ -380,17 +332,14 @@ types:
 
 Validation, index generation and what an update writes all cover the types listed here and no others.
 
-[`new`](cli/new.md) writes the list, because a corpus it created has already been asked. Omit the key and you have not
-declared yet, so `kac` reads adoption off the folders it finds. A type counts where both halves are there, meaning the
-page and the folder.
+[`new`](cli/new.md) writes the list. Omit the key and `kac` reads adoption off the folders it finds, counting a type
+where both its page and its folder are there.
 
-Once the key is declared, [`validate`](cli/validate.md) checks the corpus against it in both directions. It reports a
-type in the list that is not stood up, and a type stood up that is not in the list. A corpus that declares nothing is
-asked neither question.
+Once the key is declared, [`validate`](cli/validate.md) reports a type in the list that has no page or folder, and a
+type with both that is not in the list.
 
 Use [`update --add-type`](cli/update.md) and `update --drop-type` to change the list. Each moves the name and the type's
-files together. Editing the list by hand leaves the corpus with a type it does not claim, or claiming one it does not
-have.
+files together.
 
 ## `enums`
 
@@ -402,28 +351,19 @@ enums:
   platform: [dotnet, static]
 ```
 
-Some fields take a value the framework cannot know. What a service is built on, and what sort of component it is, are
-one pair of lists in a library and another in a payments platform. So `.schema/services.yaml` declares
-`values: $corpus.platform` and `values: $corpus.component-type`, and lists no values of its own. You write each range
-here, and [`validate`](cli/validate.md) checks every record against it.
+A field declaring `values: $corpus.<name>` in `.schema/` takes its range from here. `.schema/services.yaml` declares
+`platform` and `component-type` that way. Write each range here, and [`validate`](cli/validate.md) checks every record
+against it. The `services` type page says how to derive the two lists from your own deployables.
 
-Walk your own deployables, group them by the runtime and framework a contributor has to know, and close the list on what
-you found. Group them a second time by what they are, and close that list the same way. The type page gives the method
-in full, and each corpus's copy records the values it settled on.
+**Write each value in lower case.** `enum-lowercase` refuses a value such as `Dotnet-Web` in a record, so no record can
+satisfy a range containing one.
 
-**Write each value in lower case.** An enum value is a grep target first and prose second. A range with `Dotnet-Web` in
-it refuses `dotnet-web` from one side and `Dotnet-Web` from the other, because `enum-lowercase` refuses the value in the
-record. No record can satisfy such a range, which is the same state as a range you never wrote.
+[`new`](cli/new.md) writes the key with nothing under it. Write a record with such a field before you write the range,
+and `validate` reports `corpus-enum-undeclared` once, against `.corpus.yaml`. A required field is asked from the first
+record of its type, and an optional one from the first record that states it.
 
-A corpus created by [`new`](cli/new.md) receives the key with nothing under it, because a corpus with no records has no
-estate to derive a range from. Write a record with such a field before you write the range, and `validate` reports
-`corpus-enum-undeclared` once, against `.corpus.yaml`. Nobody who wrote a record can fix that, so it is reported where
-the person who can fix it works. A required field is asked from the first record of its type, because every record of
-that type must carry a value. An optional one is asked from the first record that states it, because a record satisfies
-an optional field by leaving the key out.
-
-A value the range does not admit is an ordinary `enum` failure, reported against the record. The message quotes the
-values your descriptor lists, so an author reads back the list they are being checked against.
+A value the range does not admit is an ordinary `enum` failure, reported against the record, and the message quotes
+the range.
 
 ## `consumes`
 
@@ -446,15 +386,11 @@ consumes:
 | `source`    | the registry or folder the package is fetched from      | you           |
 | `resolved`  | the version the last restore took                       | `restore`     |
 
-One organisation often keeps its policies in one corpus and each team's knowledge in another. A team's corpus cites
-those policies without keeping a copy, and this block says which corpus it takes them from.
-[`restore`](cli/restore.md) fetches each one and unpacks it under `.imports/<shortcode>/`, which is not committed.
+[`restore`](cli/restore.md) fetches each entry and unpacks it under `.imports/<shortcode>/`, which is not committed.
+`resolved` is the lock, so there is no lock file. A `source` is a registry's service index, or a path to a folder
+holding what a producer packed. [`restore`](cli/restore.md) says how a range resolves and what a run refuses.
 
-The range says what you meant. `resolved` says what your build used. Both sit on the entry, so there is no lock file
-beside this one. A `source` is a registry's service index, or a path to a folder holding what a producer built.
-[`restore`](cli/restore.md) covers how a range resolves, what a folder source takes, and what a run refuses.
-
-Leave the key out entirely where this corpus stands on its own, which is the ordinary case.
+Leave the key out where this corpus stands on its own.
 
 ## `export`
 
@@ -465,17 +401,15 @@ export:
   exclude: [ ]
 ```
 
-It is empty by default, and that is the important part. A record still in draft travels, and so does one whose review
-date has passed. Each record states its own status, so a consumer reads what the corpus actually has and decides for
-itself how far to trust it.
+It is empty by default, so a record in draft travels, and so does one whose review date has passed. Each states its own
+status. A consumer sees no sign of a record the list withheld.
 
-Filter here and the corpus's own state becomes invisible downstream. Your consumer sees a smaller, tidier vocabulary and
-no sign that anything was withheld. Reach for it where you cannot warn the audience you publish to. Reach for it as well
-where a draft would be read as an answer: a `fix` in draft is a resolution nobody has checked, and `fix-lookup` hands
-one over as it would any other.
+| Value     | Drops a record                       |
+|-----------|--------------------------------------|
+| `draft`   | whose `status` is `draft`            |
+| `overdue` | whose `review-by` is in the past     |
 
-Two values are accepted. `draft` drops a record whose status says so. `overdue` drops one whose `review-by` is in the
-past.
+Set it where a draft would be read as an answer, as a `fix` in draft would be by `fix-lookup`.
 
 ## `plugin`
 
@@ -486,15 +420,12 @@ plugin:
   from: ../../shared/.plugin
 ```
 
-It reads them from `.plugin/` at the corpus root by default. Set `plugin.from` and it reads them from one tree
-elsewhere, resolved against the corpus root. Several corpora in a repository then share one copy, and `update` withholds
-the shared half instead of writing it here.
+Omit the key and `bundle` reads `.plugin/` at the corpus root, which is what [`new`](cli/new.md) creates. Set it and
+`bundle` reads one tree elsewhere, resolved against the corpus root, so several corpora in a repository share one copy.
+`update` then withholds the plugin files it would otherwise write here.
 
-`kac` never reads the manifest from the shared tree. The manifest gives the name the plugin installs under, so it stays
-at `.plugin/.claude-plugin/plugin.json` in each corpus, along with the components that corpus declares. A file a corpus
-writes beside it wins over the shared tree's copy of the same path, so one skill can be overridden.
-
-Omit the key and the corpus keeps its own tree, which is what [`new`](cli/new.md) creates.
+The manifest, `.plugin/.claude-plugin/plugin.json`, stays in each corpus and is never read from the shared tree. A file
+a corpus writes under its own `.plugin/` wins over the shared tree's copy of the same path.
 
 ## `skip`
 
@@ -506,11 +437,8 @@ skip:
     reason: Patched for our proxy.
 ```
 
-`update` neither reads nor writes a path listed here, in either direction, so an entry is how you keep a file the
-framework would otherwise reclaim on every run. `update` reports each file it stepped over. Delete an entry once the
-file matches the framework again.
-
-Each entry gives a path and a reason. The reason is for whoever opens the file next.
-[Layers](layers.md#skip) says what it separates.
+`update` neither reads nor writes a path listed here, and reports each file it stepped over. Each entry gives a path
+and a reason, for whoever opens the file next. Delete an entry once the file matches the framework again.
+[Layers](layers.md) says which files `update` would otherwise write.
 
 [The export format](../reference/export.md) is the page for what a consumer reads out of a corpus.

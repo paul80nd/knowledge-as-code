@@ -1,12 +1,8 @@
 # What the schema is held to
 
-Before `kac` validates a single record, it validates the schema. A declaration the tool does nothing with is not
-harmlessly inert. `rules:` reads as behaviour the validator applies, and `id.style:` reads as a spelling every id must
-match. Either one can sit in a file for a year while nobody notices it does nothing.
-
-This matters most in a corpus that copied the framework from somewhere else. A **corpus** is one repository of knowledge
-records kept in git, and if you hold a copied `.schema/` you cannot ask what a key was meant to do. The pass answers for
-you, and every finding names the file and the key.
+Before `kac` validates a single record, it validates the schema. It reports any declaration the tool does nothing with,
+such as a `rules:` entry nothing runs or an `id.style:` no code reads. Every finding names the file and the key. A
+**corpus** is one repository of knowledge records kept in git, and its `.schema/` may have been copied from elsewhere.
 
 ## What the pass reports
 
@@ -63,82 +59,56 @@ you, and every finding names the file and the key.
 | A rule `description:` past 120 characters, for the same reason                           | `schema-shape`       |
 | A `versus:` against the declaring type itself, or one both sides declare                 | `schema-shape`       |
 
-The rows are grouped by what trips them, where the catalogue holds one entry per check, so the table is written by hand.
-A test compares the check ids in it against the catalogue in both directions, which catches one renamed, retired or
-introduced. What it cannot catch is an id growing a second way to fail, because nothing in the code tells one arm from
-another.
+Each row is grouped by what trips it, so one check id can appear on several rows.
 
 ## Whether code acts on the value
 
-**The question is whether code acts on the value, not whether the key is spelled correctly.** `style: mnemonic` is a
-real style and would pass a spelling test. What makes it sound is the branch that reads it. `kac` reads each vocabulary
-in the table above out of the code that dispatches it, so adding a name with no branch beneath it is the mistake this
-pass exists to prevent.
+A `schema-dispatch` row asks whether code acts on the value. `style: mnemonic` passes because a branch reads it, and a
+name with no branch beneath it fails. A key the loader never asks for is `schema-unknown-key`.
 
-There is no list of permitted keys anywhere. The loader records what it asked each mapping for, and reports whatever is
-left over. So a key gains its meaning and its admission in the same edit, and a key that stops being read stops being
-admitted without anyone having to remember.
-
-[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json) does
-hold a list, and that list can be behind, which is why it advises an author and gates nothing.
+[`meta/type.schema.json`](https://github.com/paul80nd/knowledge-as-code/blob/main/.schema/meta/type.schema.json) lists
+the keys for an editor. It advises an author and gates nothing.
 
 ### A derived field
 
-`from: sub-path` says the field's value comes from the folders a record sits in. The source is a vocabulary, so a name
-no derivation reads is `schema-dispatch`. The field would then be empty on every record, and the page would show a
-column the corpus never fills in.
+`from: sub-path` says the field's value comes from the folders a record sits in. A source name no derivation reads is
+`schema-dispatch`.
 
-Declaring it `required: true` as well is `schema-shape`. The two declarations contradict each other. The author cannot
-write the field, so they cannot meet the requirement, and writing the line to try trips `derived-key` instead.
-[Discovery](../use/discovery.md#from-sub-path) says how the value is read.
+Declaring it `required: true` as well is `schema-shape`. No author can write a derived field, and writing it trips
+`derived-key`. [Discovery](../use/discovery.md#from-sub-path) says how the value is read.
 
 ## What `schema-shape` asks
 
-The `schema-shape` rows ask a different question. There the tool acts on whatever the value says: any section is
-reconciled, any folder is read, any sentence is rendered. What makes one sound is a second declaration in the same file,
-or the shape of the page the value lands on. A `sections:` block sits beside a `mirrors-section:`, and the width of a
-table cell bounds the `summary:` that becomes it.
+A `schema-shape` row asks whether the value agrees with a second declaration in the same file, or with the page it
+lands on. A `mirrors-section:` must name a section the `sections:` block declares, and a `summary:` must fit the table
+cell it becomes.
 
 ## `ref:` and `versus:`
 
-The value of either is outside the pass. A field's `ref:` names the type its ids point at, and a type's `versus:` names
-the type it is most often confused with. A corpus adopts as many of the framework's types as it has use for, so either
-one may name a type this corpus turned down. A field declaring an id and no `ref:` at all is reported, because its ids
-resolve against nothing. So is an id on an entry key, with a `ref:` or without: the reference pass reads a field's own
-value and never walks an `entry:` block, so declaring one there changes nothing.
+The value of either is outside the pass, because a corpus may have declined the type it names. A field's `ref:` names
+the type its ids point at, and a type's `versus:` names the type it is most often confused with. The pass reports a
+field declaring an id and no `ref:` at all, and an id on an entry key, which the reference pass never walks.
 
-`kac` reports nothing when it does. The disambiguation renders nothing, and `kac update --add-type` starts the reference
-without an edit to `.schema/`. `kac` also drops a required field that points only at types nothing here supplies. No
-record can fill one, so `required-field` says nothing until the corpus adopts one of those types or imports a corpus
-publishing them. A `required-when:` on such a field is quiet for the same reason. A field taking a word under
-`allow-literal:` is fillable without any of those types, so its obligation stands.
+Where a `ref:` names only types this corpus neither adopted nor imports:
 
-What a record does write is held to the same standard. `ref-resolves` still asks that a cited id exists, and it refuses
-one of a type the field never named. A field whose every type this corpus declined admits nothing at all, and says which
-types it wanted.
+* `required-field` and `required-when:` say nothing about it, unless it takes a word under `allow-literal:`.
+* `ref-resolves` still refuses a cited id, and says which types the field wanted.
+* `kac update --add-type` starts the reference without an edit to `.schema/`.
 
-The cost is a misspelled name, which reads the same way from inside a corpus that holds a subset of the types. `kac`
-reports it nowhere. What catches it is a test over the authored `.schema/`, held in the repository that writes the
-framework, where every type is present. This repository runs one. A fork writing its own framework schema needs its own,
-and the shape to copy is `tooling/kac.tests/SchemaReferenceTests.cs`.
+A misspelled type name in either key is reported nowhere in a corpus. A test over the authored `.schema/`, where every
+type is present, is what catches it.
 
 ## `values: $corpus.x`
 
-The corpus answers this one, not the schema. `$enums.x` draws a field's range from `_enums.yaml`, and a name declared
-nowhere is a schema fault, because the declaration says the values are written down and they are not. `$corpus.x` draws
-it from `enums:` in `.corpus.yaml` instead, for a field whose range belongs to the estate rather than to the framework.
-What a service is built on is one list in a library and another in a payments platform, so one `.schema/` above both can
-state neither.
-
-A name the corpus answers nothing to is outside this pass. The schema is right and the corpus has not written its list
-yet, so `validate` reports `corpus-enum-undeclared` once against `.corpus.yaml`, from the first record with the field.
-[The descriptor reference](../use/corpus-descriptor.md) says what to write there.
+`$enums.x` draws a field's range from `_enums.yaml`, and a name declared there nowhere is `schema-unreadable`.
+`$corpus.x` draws it from [`enums:`](../use/corpus-descriptor.md#enums) in `.corpus.yaml`, which this pass does not
+read.
 
 ## A rule with no `severity:`
 
 A rule you have not built yet keeps its `description:`, drops its `severity:`, and the type page renders it under
-**Declared, not yet enforced**. A rule naming a severity that nothing dispatches would read as enforced from every angle
-and not be, so the load fails on it.
+**Declared, not yet enforced**. `kac checks` does not list it. A rule naming a severity that nothing dispatches is
+`schema-dispatch`.
 
 ## Where to go next
 

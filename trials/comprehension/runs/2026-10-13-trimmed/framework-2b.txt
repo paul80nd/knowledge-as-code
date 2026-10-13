@@ -1,0 +1,44 @@
+F01. No. No record states its lifecycle: immutable or living can be read off the tier table, so a record states `tier` and nothing that could disagree with it.
+Page: taxonomy.md
+
+F02. It is a fix, meaning a problem with a resolution somebody has verified. Fixes sit in the Normative tier: living and owned, edited in place with a changelog.
+Page: types.md
+
+F03. No. A leading underscore is reserved for the framework's own artefacts, so anything under that prefix is excluded from discovery and never validated as a record.
+Page: taxonomy.md
+
+F04. A process. Processes are planned procedures followed deliberately, and rotating a secret is one of the listed examples. Runbooks are incident-time procedures.
+Page: types.md
+
+F05. No. `category` is derived from the sub-folder, so `policies/security/` already gives `category: security`. Writing the key by hand is an error, reported as `derived-key`.
+Page: metadata.md
+
+F06. Two letters is fine. Standards set `min: 2` and `max: 7`, so `std-PR` is well formed and the longest mnemonic is seven characters (for example `std-SECRET`).
+Page: metadata.md
+
+F07. No. A shortcode is two to eight lower-case characters with no hyphen, and `kac validate` refuses a hyphen.
+Page: metadata.md
+
+F08. No. A finished record has no `{{placeholder}}` and no DELETE FROM HERE / DELETE TO HERE guidance left in it.
+Page: contributing.md
+
+F09. No. An observation nobody has verified has no tier and does not belong in a corpus. It goes to the tracker.
+Page: taxonomy.md
+
+F10. Not stated. The pages name pairs such as `supersedes`/`superseded-by` and `replaces`/`successor`, but say nothing about a check on a missing back-link between two records. The `mirrors-section`/`mirrors-citations` checks compare a field with a section or the prose in the same record.
+Page: shaping-a-type.md
+
+F11. Yes. It adds a fifth status, `rejected`, which keeps a proposal the team turned down. Its other departures from Nygard are that an ADR here affects more than one repository, and every alternative states a verdict.
+Page: lineage.md
+
+F12. None. No framework found divides its procedural layer by reading conditions, and both HCGF and Diátaxis have one procedural type. The split is the framework's own and has no precedent.
+Page: lineage.md
+
+F13. No. A deviation's `owner` takes the `human:` form only, because accepting a risk needs a person to put their name to it. `assigned-to`, which names whoever does the work, does accept a post.
+Page: shaping-a-type.md
+
+F14. Yes. `Exit` is required of a `critical` or `important` integration still in use, and `exit-required` warns when one has none. A `trial` integration is treated like any other because it is the one most likely to be left.
+Page: shaping-a-type.md
+
+F15. Set `status: draft`. `verified` is required of every other status but not of a draft, because an agent writing a fix from a filed observation cannot name who will verify it.
+Page: shaping-a-type.md

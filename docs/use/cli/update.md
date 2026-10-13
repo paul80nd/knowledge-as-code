@@ -120,8 +120,8 @@ update: giving up tools needs an answer, and there is no terminal to ask on. pas
 kac update --policy full
 ```
 
-`cautious` is the default and writes a seed file only where the corpus has none. `full` writes them all.
-[Layers](../layers.md#seed-files) says why a seed is left alone by default.
+`full` writes every seed file, for this run only. [`update-policy`](../corpus-descriptor.md#update-policy) gives both
+values.
 
 ## Known limits
 

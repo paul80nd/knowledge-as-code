@@ -4,11 +4,8 @@ The knowledge types are derived from first principles, meaning what kinds of kno
 actually holds and how each behaves. Most of them still have a close analogue in an established framework. Lineage is
 the register of those analogues: what each one lends, and where this framework parts company with it.
 
-## Why the register is kept
-
-Three reasons. An auditor arriving cold recognises the concepts faster for being told what they are near. A future
-naming decision answers to precedent. And several of these words already mean something else to a reader with a
-governance or agile background, which is a defect the register exists to close.
+The register helps an auditor arriving cold recognise each concept by what it is near. It also warns a reader where one
+of these words already means something else in governance or agile practice.
 
 ## Alignment, not compliance
 
@@ -16,8 +13,7 @@ Naming a framework in a lineage row says the thinking is near theirs. It does no
 that a record would satisfy an assessment against theirs.
 
 A corpus may also have a *standing* against an external framework, meaning obligations it accepts and is measured on. It
-records that in its own `frameworks.md` and nowhere else. The two registers are kept apart deliberately, because
-standing belongs wholly to the corpus holding it.
+records that in its own `frameworks.md`, apart from lineage.
 
 ## What a row says
 
@@ -38,9 +34,8 @@ A type with a fourth part, `collision`, means the word already denotes something
 framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens
 the lineage page still needs it.
 
-**The rows themselves live in the corpus, not here.** Each corpus's lineage page renders them from the schema it holds,
-so it shows the types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too. It owns
-the sourcing behind it exactly as the framework owns the sourcing below.
+**The rows themselves live in the corpus.** Each corpus's lineage page renders them from the schema it has, for the
+types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too.
 
 **Lineage is not a record's `sources`.** A row says where the type came from. The `sources` field on a record says where
 that one record's content came from. [Filling `sources`](metadata.md#filling-sources) says which of them a document
@@ -60,25 +55,13 @@ The split exists because the two are written differently, rehearsed differently,
 ## Where the language rules come from
 
 The `technical-writing` skill, and the tier rules in `writing-a-record`, follow the
-[Microsoft Writing Style Guide][mswsg] with a short list of local changes. It is the base because it is public,
-complete, and known in depth by the models that write here. `std-PROSE` in this repository's own corpus is the record
-that states the same rules for the estate.
-
-The rules are written in this framework's own words and set at its own limits. They are not an implementation of the
-Microsoft guide, and no output of a corpus is described as conforming to it.
-
-## What a licence permits
-
-[Diátaxis][diataxis] is licensed CC BY-SA, and that share-alike condition does not sit comfortably with this
-repository's MIT licence. It is linked and attributed, and not quoted at length.
-
-The same care applies to every row of the register. This framework cites its prior art, learns from it, and reproduces
-none of it. That is [Alignment, not compliance](#alignment-not-compliance) again, read as a rule about quoting.
+[Microsoft Writing Style Guide][mswsg] with a short list of local changes. The rules are written in this framework's own
+words, and no output of a corpus is described as conforming to that guide. Diátaxis is linked and attributed, and not
+quoted at length.
 
 ## What is not verified
 
-Honesty about sourcing is part of the point of the register. Every row the framework declares was checked against a
-primary source, except these:
+Every row the framework declares was checked against a primary source, except these:
 
 * **ITIL** publications are paywalled, so the known-error definition behind the fix row and the service offering
   behind the offering row both rest on the publisher's own summary.

@@ -1,16 +1,10 @@
 # Contributing
 
 A corpus, meaning one repository of knowledge records, grows at the rate work happens only if a person and an AI session
-can both write to it. It stays worth reading only if both answer to the same bar. So the rules below are the same
-whichever is holding the keyboard.
+can both write to it. So the rules below are the same whichever is holding the keyboard.
 
-This page is the model. The rules for the words themselves are skills. An agent loads one beside the work at the moment
-of writing, so a session that writes no prose pays nothing for them. A person contributing by hand reads them as the
-full rule list.
-
-[Skills](../use/skills.md) lists every one of them, what each answers, and which of them a corpus receives. Start with
-`technical-writing`, which is the floor under all the others, and load the one for the surface you are writing on top
-of it.
+The rules for the words themselves are skills, which an agent loads at the moment of writing and a person reads as the
+full rule list. [Skills](../use/skills.md) lists them. Start with `technical-writing`, the floor under all the others.
 
 ## What outranks what
 
@@ -25,8 +19,7 @@ Four sources of rules, in this order.
 4. **The skills**, for the prose.
 
 **Report a contradiction, do not act on it.** Where a prose rule contradicts the schema, say which of the two is wrong
-and leave both alone. Read literally, one wrong bullet in a rulebook can strip a keyword from every normative record in
-a corpus while claiming the rulebook's authority.
+and leave both alone.
 
 ## The shape of a contribution
 
@@ -44,8 +37,8 @@ Do not edit generated content by hand. Where an index looks wrong, the frontmatt
 
 ## Review by tier
 
-The bar below follows what a record *is*, and never who wrote it. It is what each tier asks for. How much rigour a
-corpus actually requires is that corpus's to set, and its own contributing page has the branch policy it starts from.
+The bar below follows what a record *is*, and never who wrote it. Each corpus sets how much of it a branch policy
+enforces, on its own contributing page.
 
 | Tier            | Review required                    | Merge criteria                                                                   |
 |-----------------|------------------------------------|----------------------------------------------------------------------------------|
@@ -54,10 +47,8 @@ corpus actually requires is that corpus's to set, and its own contributing page 
 | **Descriptive** | One reviewer                       | Cross-references resolve. Content matches the estate as it actually is           |
 | **Procedural**  | One reviewer who has done the task | Someone who has never done it can follow the steps. Rollback stated              |
 
-**The table covers what the corpus keeps.** An observation nobody has checked goes to the tracker instead, where
-nothing gates it and somebody triages it later. It becomes a record once somebody settles the question and verifies the
-answer. [In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export)
-is where that argument lives.
+**The table covers what the corpus keeps.** An observation nobody has checked goes to the tracker, as
+[In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) says.
 
 **A decision is immutable after merge.** Change it only by writing a new record that supersedes it. Edit everything
 else in place: a status transition, a typo, a broken link, or a sentence that no longer matches the decision. The commit
@@ -76,9 +67,8 @@ never found by the search that needed it.
 
 ## What a pipeline will not do
 
-**CI does not commit.** Where generated content is stale the build fails and names the command to run locally. A
-pipeline that pushed fixes into the branch would produce bot commits, re-trigger itself, and make "who changed this"
-unanswerable.
+[A pipeline never commits](../use/ci.md#read-only-permission). One that pushed fixes would re-trigger itself, and make
+"who changed this" unanswerable.
 
 ## What does not belong in a corpus
 

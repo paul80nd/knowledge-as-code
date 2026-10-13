@@ -59,12 +59,12 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
 * **Thresholds are judgements**, and each one is pinned so moving it is visible. A fixture pins a threshold
   read from what a record states. A unit test naming the day pins one measured against the day of the run,
   which no fixture can: its date drifts further from today every day it sits there.
-  <https://paul80nd.github.io/knowledge-as-code/reference/checks/> says where the numbers came from. A ratio such as
-  `words() <= links() * 40` fails a document that links to nothing, at any length. For an offering or an explanation,
-  that is the intended reading.
+  <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#the-calibrated-windows> says where the numbers
+  came from. A ratio such as `words() <= links() * 40` fails a document that links to nothing, at any length. For an
+  offering or an explanation, that is the intended reading.
 
 * **The text rules are heuristics** and will be tuned wrong first. Their patterns live here rather than in C# for that
-  reason, argued at <https://paul80nd.github.io/knowledge-as-code/reference/checks/>.
+  reason, argued at <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#decisions>.
 
 * **One fault is reported once, by whichever check owns it.** Before you add an arm to a rule, check that no existing id
   already reports the same thing.

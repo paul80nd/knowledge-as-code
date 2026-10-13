@@ -1,28 +1,19 @@
 # Skills
 
-A skill is a document an agent loads when it recognises the work in front of it. Every skill `kac` ships lives in one
-of three trees, and which tree it lives in decides who can read it and what moving it costs.
-
-**A skill travels into a corpus (one repository of knowledge records kept in git) where it governs a surface that
-corpus holds.** A skill about C# or about this documentation site governs nothing a corpus has, so it stays here.
-
-Every table below is written from the file that decides it, so none of them is a second answer that can drift.
+A skill is a document an agent loads when it recognises the work in front of it. A skill `kac` ships either travels
+inside the plugin (the corpus packaged for Claude Code), or arrives in the working tree of a corpus (one repository of
+knowledge records kept in git). A few stay in the framework's own repository. Each table below is generated from the
+file that decides it.
 
 ## What travels inside a plugin
 
-These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export. They answer
-from that export rather than from a network call.
-
-**An install gets a subset of these.** A skill reading a record type the corpus did not export is trimmed, so what
-somebody receives follows from what that corpus adopted. `bundle` prints what shipped and what it trimmed, and
-`bundle.json` inside the plugin lists both.
+These ship in the plugin [`bundle`](cli/bundle.md) assembles, beside a frozen copy of the corpus export, and read
+that export. An install gets the ones whose record types the corpus exported.
 
 `Requires` names the record types a skill opens a file of. A skill requiring none is one of two things.
 **`standalone`** reads no export and serves whoever is holding the plugin, so it ships whatever the corpus adopted.
-**`supporting`** exists for the lookup skills and follows the last of them out. [The plugin
-bundle](../maintaining/plugin.md#a-component-naming-no-type) says what the trim does to each.
-
-A change to one of these moves the `content-version` of every corpus whose bundle ships it.
+**`supporting`** exists for the lookup skills and follows the last of them out.
+[What decides whether a component ships](cli/bundle.md#what-decides-whether-a-component-ships) gives the trim rules.
 
 <!-- BEGIN GENERATED: skills-in-the-plugin -->
 
@@ -43,16 +34,8 @@ A change to one of these moves the `content-version` of every corpus whose bundl
 ## What travels into a corpus
 
 These arrive in a corpus's own working tree, under `.claude/skills/`. [`new`](cli/new.md) writes them when the corpus
-is created and [`update`](cli/update.md) keeps them current, so a corpus owns a copy rather than reading this
-repository.
-
-The writing skills are for whoever is writing records, which is a different reader from the one who installed a
-plugin. `harvest-findings` is for the corpus's maintainer: it triages the findings filed against the corpus and drafts
-the record one of them asks for, so it writes to the tracker and to the records. Nothing here reads an export.
-
-Adding, removing or renaming one of these moves `version:` in `manifest.yaml`, and `upstream.template-version` in
-every corpus that took it, because a corpus has to respond. Rewording one moves neither: `update` sends the new words
-and nothing about the corpus changes.
+is created and [`update`](cli/update.md) keeps them current. The writing skills are for whoever writes records.
+`harvest-findings` is for the corpus's maintainer, and writes to the tracker and to the records.
 
 <!-- BEGIN GENERATED: skills-in-a-corpus -->
 
@@ -67,11 +50,8 @@ and nothing about the corpus changes.
 
 ## What stays in this repository
 
-These never leave. Each governs a surface no corpus has: the C# behind `kac`, the pages of this site, or the order of
-work in the repository that publishes the framework.
-
-They are listed so that their absence from a corpus is a stated answer rather than something you go looking for. A
-change to one moves no version stamp at all.
+These never go into a corpus. Each governs a surface no corpus has: the C# behind `kac`, the pages of this site, or the
+order of work in the framework's own repository.
 
 <!-- BEGIN GENERATED: skills-here -->
 
@@ -85,9 +65,7 @@ change to one moves no version stamp at all.
 
 ## Reading one
 
-A skill is a Markdown file, and nothing stops you reading it. Whichever of the bundled ones survived the trim sit
-under `skills/` inside an installed plugin, and `bundle.json` beside them names the ones that did not. The rest are in
-`.claude/skills/` of whichever repository holds them.
+A skill is a Markdown file. A bundled skill sits under `skills/` inside an installed plugin, and `bundle.json` beside
+them lists the ones the trim dropped. The rest are in `.claude/skills/` of whichever repository has them.
 
-A skill states its own rules in full rather than citing a standard, because it has to work in a checkout that holds no
-corpus. Where a corpus states the same rule, both say it, and the record is what a reviewer reads.
+A skill states its own rules in full, because it has to work in a checkout that has no corpus.

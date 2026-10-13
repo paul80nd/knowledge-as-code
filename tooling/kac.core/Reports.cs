@@ -226,7 +226,7 @@ public static class Reports
 
     /// <summary>
     /// Every reference the clause tables cite, keyed so a reference six clauses reach is one row. Local clauses alone,
-    /// because an inherited clause left its <c>Alignment</c> cell behind. <c>docs/reference/export.md</c> says why.
+    /// because an inherited clause left its <c>Alignment</c> cell behind. See <c>docs/reference/export.md</c>.
     /// </summary>
     public static List<FrameworkRow> FrameworkRows(
         LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)

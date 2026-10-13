@@ -19,10 +19,8 @@ split to make.
 
 [Contributing](contributing.md#review-by-tier) says what review each tier asks for.
 
-**Cheap capture has no tier.** An observation nobody has verified goes into the tracker the corpus already uses, and
-never into the corpus itself.
-[In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) is where
-that argument lives.
+**An observation has no tier.** Nobody has verified it, so it goes to the tracker, as
+[In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) says.
 
 **No record states its lifecycle.** Immutable and living are readable off the table above. A record
 therefore states `tier` and nothing that could disagree with it. A type declares both, and the schema requires it.
@@ -34,13 +32,12 @@ of them. A corpus names the ones it adopted in `types:` in [`.corpus.yaml`](../u
 taxonomy page then has a decision table covering those and no others. What you are holding goes in the left column, and
 where it belongs in the right.
 
-Most mistakes here are placement mistakes rather than writing mistakes. Somebody writes a good record and files it where
-it either duplicates something or is never found. Where nothing fits, the answer is a taxonomy conversation, and
-sometimes the adoption of a type the corpus declined. A `misc/` folder is a failure nobody notices until it is large.
+Most mistakes here are placement mistakes: a good record filed where it duplicates something or is never found. Where
+nothing fits, the answer is a taxonomy conversation, and sometimes the adoption of a type the corpus declined, never a
+`misc/` folder.
 
-**Session state is the one thing with no type.** Where a piece of work got to, for handover between sessions, stays
-local and never reaches a corpus. Session logs routinely hold stack traces, connection strings and customer identifiers.
-Only a distilled, reviewed record travels.
+**Session state has no type.** Where a piece of work got to stays local and never reaches a corpus, because session logs
+routinely contain stack traces, connection strings and customer identifiers.
 
 ## The shape on disk
 
@@ -58,28 +55,25 @@ Each type is a page and a folder beside it, named for the type in the plural:
 a type folder, and the scaffolding directories alongside them. The tool reads the prefix rather than the names, so
 anything under it is excluded from discovery and never validated as a record.
 
-The prefix also sorts ahead of letters, whether or not a listing folds case. That keeps the framework's files together
-at the top of a folder you are scanning for content.
+Alongside the types sit the corpus's own root files:
 
-Alongside the types sit the corpus's own root files. A README and agent guidance. The register of external frameworks it
-stands against. The framework's own documentation, and the machine-readable schema in `.schema/`. And
-`.corpus.yaml`, which says what this corpus is and where it takes the framework from.
+* a README and agent guidance
+* the register of external frameworks it stands against
+* the framework's own documentation, and the machine-readable schema in `.schema/`
+* `.corpus.yaml`, which says what this corpus is and where it takes the framework from
 
 ## An offering and a spec
 
-An offering lives in the corpus and a spec lives with the code. A **offering** is the product surface (Billing,
-Search, Notifications), described once, above the epic layer, as a hub of links. A **spec** is the per-feature
-application of standards to a concrete contract. It belongs in the repository that owns the feature, next to the API
-description and the feature files it describes.
+An offering lives in the corpus and a spec lives with the code. An **offering** is the product surface (Billing,
+Search, Notifications), described once, above the epic layer, as a hub of links. A **spec** applies the standards to
+one feature's contract, in the repository that owns the feature, next to its API description and feature files.
 
-That is the same central-versus-local rule a decision record follows. Cross-repo synthesis lives in the corpus, and
-feature-level detail lives with the code. Every other close call is between two types a corpus holds. Each is written on
-the type its heading names first, and appears on that corpus's own page.
+Every other close call is between two types a corpus has, and that corpus's own taxonomy page states it.
 
 ## Changing the taxonomy
 
 Adding a type, merging two, or moving a type between tiers is a larger act than editing any record within it. Where a
 corpus holds ADRs, that change belongs in one, amending whichever recorded the taxonomy in the first place.
 
-Adding a type is adding a YAML file to `.schema/`, and a corpus adopts it by naming it in `types:` and syncing. Nothing
-in the tool changes, which [Principles](principles.md#schema-before-prose) argues is the point.
+Adding a type is adding a YAML file to `.schema/`, and a corpus adopts it with
+[`update --add-type`](../use/cli/update.md). Nothing in the tool changes.

@@ -25,17 +25,15 @@ Two reports are built in. `coverage` lists every policy clause and what discharg
 framework reference the clause tables cite, and the clauses citing each one.
 
 Both read the corpus you are standing in and everything under `.imports/`, the folder [`restore`](restore.md) unpacks a
-consumed corpus into. So a corpus that inherits the policies it answers to reports on those policies, and on the
-standards that arrived with them.
+consumed corpus into. A corpus that inherits its policies reports on them.
 
 ### What the tool fills, and what it leaves open
 
 A report is a template. `report` fills every cell it can read out of the corpus and leaves the rest blank. It prints
 nothing it cannot justify from a record.
 
-`coverage` prints `covered` or `uncovered` against each clause, and nothing else. Whether an uncovered clause is a gap
-worth closing, or something that does not exist in this estate, is a judgement about the estate. The tool cannot tell
-the two apart. The `Verdict` column is where somebody writes which, and the `Note` beside it is where they say why.
+`coverage` prints `covered` or `uncovered` against each clause, and nothing else. In the `Verdict` column, a person
+writes whether an uncovered clause is a gap or does not apply to this estate. The `Note` beside it says why.
 
 Each coverage row arrives with four values read from frontmatter:
 
@@ -44,11 +42,8 @@ Each coverage row arrives with four values read from frontmatter:
 * the controls verifying those standards
 * any clause elsewhere in the corpus sharing its key
 
-The shared key is a candidate. One obligation stated from both sides is written as two clauses with one key, so a match
-is usually a pair. Only a person can tell a pair from two policies that chose the same word.
-
-The mechanical half is the same on every run, so two people reading one corpus get one report. A diff between two runs
-is a change in the corpus.
+A shared key is a candidate pair: one obligation written from both sides as two clauses with one key. `report` lists
+the match and never decides it. Two runs over an unchanged corpus print the same report.
 
 ### The provenance frontmatter
 
@@ -75,15 +70,14 @@ verified:
 | `verified`  | who has checked the report, one entry per actor, oldest first                                      |
 
 A run writes itself into `generated.by`, and writes `status: draft` and an empty `verified`. Write yourself into `by`
-once you answer a judgement cell, because `by` is whoever wrote the content a reader now meets. Leave `report` and
-`tool` as the run left them, so a reader can run the same report again.
+once you answer a judgement cell. Leave `report` and `tool` as the run left them.
 
 An actor takes one of three forms: a person as `human:alex.doe`, a process as `process:nightly-sweep`, or a tool or an
 agent with its version as `kac/0.25.0`. `generated-by-a-known-actor` checks it.
 
 `kac validate` checks `verified` four ways:
 
-* Every status but `draft` needs at least one entry. A report nobody has read stays a draft.
+* Every status but `draft` needs at least one entry.
 * An actor appears once, and a second check moves the `at` on their entry. `one-verification-per-actor` is the rule.
 * An entry is a person, a process or a versioned tool, and never a `role:`. `verified-by-a-known-actor` is the rule.
 * No entry is the actor in `generated.by`. `no-self-verification` is the rule, and it reports as
@@ -92,13 +86,12 @@ agent with its version as `kac/0.25.0`. `generated-by-a-known-actor` checks it.
 The entries decide the report's trust tier. No entry is unverified, agents alone are machine-confirmed, and one `human:`
 entry is human-reviewed. [`export`](export.md) ships the tier as `trust`.
 
-`id` and `owner` arrive empty, because a report is a record somebody owns. Fill both in before you commit the file.
-`kac validate` reports either one you miss.
+`id` and `owner` arrive empty. Fill both in before you commit the file, and `kac validate` reports either one you miss.
 
 ### Moving the version without regenerating
 
-Edit `sources[].version` by hand where you have checked that the report is still true at a newer `content-version`. Most
-changes to a corpus touch no report, so you raise the version and keep every verdict.
+Edit `sources[].version` by hand where you have checked that the report is still true at a newer `content-version`. You
+keep every verdict.
 
 Which entry you raise decides what else you edit:
 
@@ -109,16 +102,14 @@ Which entry you raise decides what else you edit:
 
 Neither raise moves `generated`. Nothing checks the `Imported:` bullet against the frontmatter.
 
-`validate` warns where a version falls behind its corpus. A report carried forward across several versions is one to
-run again. A verification taken before `generated.at` counts toward no trust tier.
+`validate` warns where a version falls behind its corpus. A verification taken before `generated.at` counts toward no
+trust tier.
 
 ### `--out`
 
-Without the flag the report goes to standard output, and you send it wherever you want it. With it, `kac` writes the
-file at the path you name, relative to where you typed the command.
-
-`kac` refuses a path a file already occupies, and writes nothing. A finished report holds verdicts and notes somebody
-wrote, and a run cannot tell those from output of its own. Write this run somewhere else, and merge the two by hand.
+`--out` writes the report to the path you name, relative to where you typed the command. It refuses a path a file
+already occupies, and writes nothing, so a run never overwrites a person's verdicts. Write the run somewhere else, and
+merge the two by hand.
 
 ## Examples
 
@@ -156,15 +147,13 @@ kac report frameworks
 ```
 
 Read `Cited once` before you remove a citation. A reference cited by a single clause loses its last coverage when that
-clause stops citing it, and nothing else in the corpus reports that.
+clause stops citing it, and nothing else reports that.
 
-`Standing` comes from the corpus's own register of frameworks, which says whether the corpus is obliged to a framework,
-self-obligated to it, or borrowing from it. A framework the register does not place leaves the cell empty.
+`Standing` comes from the corpus's own register of frameworks: obliged, self-obligated or borrowing. A framework the
+register does not place leaves the cell empty.
 
-Each framework then gets a section of its own. The line under the heading repeats that standing and links the register
-entry behind it, so a reader working down one table never scrolls back for it. The table gives one row per reference,
-and its `Citations` count says how many clauses reach that reference. A count of `1` is one of the rows `Cited once`
-counted.
+Each framework then gets a section of its own, with one row per reference. Its `Citations` count says how many clauses
+cite that reference.
 
 ### A report kept as a record
 
@@ -180,24 +169,19 @@ The filename says which question the report answers. The `rpt-` prefix belongs t
 repeating it fails `id-matches-filename`.
 
 Fill in `id`, `owner` and the verdicts, then confirm it. `validate` warns once the corpus moves past the
-`content-version` the report names, so a stale report says so on the page.
+`content-version` the report names.
 
 ## Known limits
 
-**A producer cannot see its consumers.** A clause uncovered here may well be covered in a corpus that consumes this one,
-and every consumer answers for its own coverage. Each report states that limit in its own text.
+**A producer cannot see its consumers.** A clause uncovered here may be covered in a corpus that consumes this one. Each
+report states that limit in its own text.
 
-**Coverage is not verification.** A control points at a standard, not at a rule, so it vouches for a whole document
-whatever it checks inside it. No column claims a clause is verified.
-
-**A pair candidate is a candidate.** Where one obligation is written from both sides, this corpus gives both clauses the
-same key. `report` reports the match and never decides it. Two policies may reach for one word by coincidence.
+**Coverage is not verification.** A control points at a whole standard, so no column claims a clause is verified.
 
 **A redirect into `reports/` can collide with the run.** `kac` reads every file in that folder, including the one a
-shell has just opened for the redirect. On Windows the two share one file and the run stops. `--out` has no such trap,
-because `kac` writes the file after it has read the corpus.
+shell has just opened. On Windows the run stops. Use `--out`, which writes after the corpus is read.
 
 **A framework reference does not travel to a consumer.** The `Alignment` column stays in the corpus that wrote it, so
-`frameworks` reports on local clauses alone. [Export](../../reference/export.md) says why.
+`frameworks` reports on local clauses alone.
 
 [Adding a report](../../maintaining/reports.md) is the page for adding a report to `kac`.

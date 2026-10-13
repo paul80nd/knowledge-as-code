@@ -53,7 +53,7 @@ generated files are stale. These differ from the schema/frontmatter:
 run:  kac generate
 ```
 
-Run `kac generate` on your own machine and commit the result. CI never commits.
+Run `kac generate` on your own machine and commit the result. [CI never commits](../ci.md#read-only-permission).
 
 ### A pipeline step
 
