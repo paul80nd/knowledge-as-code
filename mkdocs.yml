@@ -89,6 +89,14 @@ markdown_extensions:
       base_path: ['.']
       check_paths: true
 
+# Declaring `plugins:` drops the default `search`, so it is listed by name.
+plugins:
+  - search
+  # Each key is a page that moved, and its value is the page now answering the same question. `NavigationTests`
+  # fails a value the nav does not list.
+  - redirects:
+      redirect_maps: {}
+
 # The verb alone in the sidebar. Each page's own heading then says what that verb does.
 nav:
   - Introduction: index.md

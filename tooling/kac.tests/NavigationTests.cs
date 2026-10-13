@@ -38,6 +38,50 @@ public partial class NavigationTests
         Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal))]);
     }
 
+    [Fact]
+    public void Every_redirect_lands_on_a_page_in_the_nav()
+    {
+        var listed = Listed().ToHashSet(StringComparer.Ordinal);
+
+        Assert.All(Redirects(), redirect => Assert.Contains(redirect.To, listed));
+    }
+
+    /// <summary>
+    /// A line inside <c>redirect_maps:</c> that is not a redirect fails here, so a malformed one is never skipped.
+    /// </summary>
+    private static List<(string From, string To)> Redirects()
+    {
+        var redirects = new List<(string From, string To)>();
+        var indent = -1;
+
+        foreach (var line in Nav)
+        {
+            if (indent < 0)
+            {
+                if (line.TrimStart().StartsWith("redirect_maps:", StringComparison.Ordinal))
+                    indent = line.Length - line.TrimStart().Length;
+                continue;
+            }
+
+            if (line.Trim().Length == 0 || line.TrimStart().StartsWith('#')) continue;
+            if (line.Length - line.TrimStart().Length <= indent) break;
+
+            var redirect = Redirect().Match(line);
+            Assert.True(redirect.Success, $"Not a redirect: {line.Trim()}");
+            redirects.Add((redirect.Groups["from"].Value, redirect.Groups["to"].Value));
+        }
+
+        Assert.True(indent >= 0, "mkdocs.yml declares no redirect_maps:");
+        return redirects;
+    }
+
+    /// <summary>
+    /// One redirect: <c>'design/x.md': 'reference/x.md'</c>. An anchor on the target is dropped, since the nav
+    /// lists pages.
+    /// </summary>
+    [GeneratedRegex(@"^\s+'(?<from>[\w./-]+\.md)':\s*'(?<to>[\w./-]+\.md)(#[\w-]+)?'\s*$")]
+    private static partial Regex Redirect();
+
     /// <summary>The block runs to the next top-level key, and <c>nav:</c> is the last thing in the file.</summary>
     private static List<string> Listed()
     {
