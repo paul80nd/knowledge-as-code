@@ -1,4 +1,4 @@
-# Checks in C#
+# Checks in C\#
 
 This page is for whoever adds a check to `kac` that the schema cannot declare on its own. It says when a rule needs C#,
 how to add a fact the expression grammar can ask for, and why the numbers in the calibrated rules are what they are.
@@ -6,7 +6,7 @@ how to add a fact the expression grammar can ask for, and why the numbers in the
 A corpus is one repository of knowledge records kept in git. A type is one kind of record, declared by one file under
 `.schema/`. [Checks](../reference/checks.md) is the reference for what a schema owner declares.
 
-## When a rule needs C#
+## When a rule needs C\#
 
 A question the [expression grammar](../reference/expressions.md) cannot ask needs a rule written in C#, and that rule
 states the check id it reports under. `no-dependency-cycles` reports as `dependency-cycle`.
