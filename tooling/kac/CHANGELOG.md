@@ -31,6 +31,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   address of the corpus descriptor page into `.corpus.yaml`, and `kac update` updates framework files to cite the new
   addresses. Every old address redirects to the page that replaced it.
 
+### Removed
+
+- **A corpus no longer receives `.schema/CLAUDE.md`.** That file is guidance for changing the framework's own schema,
+  and it points at the tool's source and tests, which a corpus does not hold. `kac new` no longer writes it, and
+  `kac update` deletes the copy an existing corpus holds unless `skip:` in `.corpus.yaml` names it. `.schema/README.md`
+  still arrives, and says where the rules for changing a schema file are written. The template version moves to 19, and
+  `kac new` stamps `template-version: 19`.
+
 ## 0.32.0 - 2026-10-10
 
 ### Added

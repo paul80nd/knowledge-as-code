@@ -61,5 +61,6 @@ produce materially different work. Where the request looks mistaken, say so in a
 
 ## Going deeper
 
-* [`.schema/CLAUDE.md`](.schema/CLAUDE.md) covers changing the schema, or writing a rule.
+* [`.schema/README.md`](.schema/README.md) says what each schema file is for, and where the rules for changing one
+  are written.
 * `kac --help`, and the repository the tool is built in, cover changing the validator or the generator themselves.

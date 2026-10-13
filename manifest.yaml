@@ -3,7 +3,7 @@
 # wildcard. The first matching rule wins, so a rule carving a file out of a folder sits above the folder's rule.
 
 # The template's shape. Increment when a corpus has to respond: a file added, removed, renamed or moved between layers.
-version: 18
+version: 19
 
 # The oldest kac that reads this manifest. The template is fetched rather than shipped, so the two version apart.
 minimum-tool: "0.6.0"
@@ -56,6 +56,12 @@ rules:
       Present so that `kac` reads `template/` as a corpus and can validate it here. A corpus's own
       descriptor is written fresh when the corpus is created, from what the invocation was told, rather
       than copied from a file carrying somebody else's name.
+
+  - path: ".schema/CLAUDE.md"
+    layer: removed
+    note: >
+      Agent guidance for changing the framework's schema, which points at the tool's source and tests. A
+      corpus holds neither, and its sessions load the file each time they read a schema file.
 
   - path: ".schema/**"
     layer: overlay
