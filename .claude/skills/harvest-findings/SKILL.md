@@ -2,76 +2,55 @@
 name: harvest-findings
 description: Triage the findings filed against this corpus, and draft the record one of them asks for. Use when
   someone says "triage the findings", "harvest the findings", "what findings are open", "turn that finding into a
-  record", or gives you an issue number and asks for the record behind it. Both invocations write to this corpus's
-  tracker, and neither runs unasked. `raise-finding` files an observation and stops there. This is what moves it.
+  record", or gives you an issue number and asks for the record behind it. Neither invocation runs unasked.
+  `raise-finding` files an observation and stops there. This is what moves it.
 ---
 
 # Triaging findings, and drafting what they ask for
 
-A finding is an observation an agent filed as an issue on the tracker. `raise-finding` writes it and stops. Nothing
-after that decides where the observation belongs, so findings pile up and none of them becomes a record.
+A finding is an observation an agent filed as an issue on the tracker. `raise-finding` writes it and stops, and nothing
+after that decides where it belongs. This skill has two invocations:
 
-This skill has two invocations. Each is run by a person who agrees what it is about to do.
-
-* **`triage`** reads every finding nobody has triaged, sorts each one into a route, and shows you a table. It writes
-  nothing until you say yes. Then it labels each issue and comments the reason.
+* **`triage`** reads every finding nobody has triaged, sorts each one into a route, and shows you a table. Once you say
+  yes, it labels each issue and comments the reason.
 * **`draft <issue>`** takes one triaged finding and writes the record it asks for, as a pull request.
-
-```text
-.corpus.yaml   # which corpus this is, and where work about it is filed
-```
-
-Walk up from where you are to find it. This skill travels into a corpus, so the file is above you.
-
-**Both invocations need the client that already signs in to the tracker.** Where it is missing, print what you produced
-and say which invocation you could not finish.
 
 ## Never write unasked
 
-**Show every verdict and wait for a yes.** One reply covers the whole table, and a person who changes three rows has
-answered for all of them. What you are about to write goes out under their name, onto a tracker other people read.
+**Start only when somebody asks, and show what you will write before you write it.** It goes out under their name, onto
+a tracker other people read.
 
-**A silent no is a no.** Where nobody answers, print the table and stop. Do not label anything and mention it
-afterwards.
+* **One yes covers the whole triage table.** A person who changes three rows has answered for all of them.
+* **A silent no is a no.** Where nobody answers, print the table and stop.
+* **Creating a label is a write**, so it waits for the same yes.
+* **`draft` shows the record before it commits.** It writes a file, a branch and a pull request.
 
-**Creating a label is a write.** It changes the repository whether or not a finding ever gets it, so it waits for the
-same yes everything else waits for.
+## Find the corpus first
 
-**Show the record before you commit it.** `draft` writes a file, a branch and a pull request. The person sees the record
-first.
+Only the corpus's own maintainer runs this. A session holding the corpus's source is its maintainer, and a session
+holding the export alone is not.
 
-## Only the corpus's own maintainer runs this
+**Walk up from where you are to `.corpus.yaml`.** Start from a file inside the corpus you mean, because one repository
+may hold several. Its `corpus:` names the corpus to triage, and its tracker address names the backlog. Say both in your
+reply before you write anything.
 
-A lookup skill answers from a frozen export and writes nothing. This one writes to a tracker, so it has a boundary the
-others do not need. The boundary is the working tree: a session holding a corpus's source is its maintainer, and a
-session holding the export alone is not.
+* **Where you find no `.corpus.yaml`, refuse.** You are outside a corpus. Somebody holding an export alone uses
+  `raise-finding`, which files one issue and asks first.
+* **Where it will not parse, stop and say so.** A broken corpus is not something to triage.
+* **Test the corpus, never the publishing address.** A corpus published as a wiki or a documentation site has no
+  repository in `publishing.base`, and its maintainer still has a tracker and the source.
 
-**Find `.corpus.yaml` before either invocation.** Walk up from where you are. Its `corpus:` names the corpus you are
-about to triage, and its tracker address names the backlog you are about to write on. Say both in your reply before
-you write anything.
-
-**Where one repository has several corpora, the walk-up decides which one you get.** Start from a file inside the
-corpus you mean.
-
-**Test the corpus, never the publishing address.** A corpus publishes where it is read and files where work is
-tracked, and the two are different places. One published as a wiki or a documentation site has no repository in
-`publishing.base`, and its maintainer still has a tracker and still has the source.
-
-**Refuse where you find no `.corpus.yaml`.** You are outside a corpus, and there is nothing to triage. Somebody
-holding an export alone uses `raise-finding`, which files one issue and asks first.
-
-**Refuse where you were not asked.** Neither invocation starts on its own.
+**Both invocations need the tracker's client, signed in.** `gh auth status` says whether you are signed in to the host.
+Where the client is missing, print what you produced and say which invocation you could not finish.
 
 ## Triage does not decide whether a finding is true
 
-A session's own account of its own work is not evidence. Checking every claim on a backlog turns one run into as many
-investigations, and none of them ends in anything a person can rely on.
+**Check two things, and neither is the claim**: whether this finding says what another open one says, and whether a
+record here already covers it. A session's account of its own work is not evidence, and checking every claim turns one
+run into as many investigations.
 
-**Check two things, and neither is the claim.** Whether this finding says what another open one says, and whether a
-record here already covers it.
-
-**Whether the claim is true is settled at the pull request.** That is where a person takes accountability for what an
-agent wrote. So a verdict says where the observation belongs, never whether it is right.
+**Whether the claim is true is settled at the pull request**, where a person takes accountability for what an agent
+wrote. A verdict says where the observation belongs, never whether it is right.
 
 ## Read the addresses
 
@@ -119,13 +98,9 @@ as well, because one URL under two clients is two backlogs.
 `kac restore` writes the folder, so it is missing until somebody runs it. A finding you route to another corpus needs
 that address, so say where you could not read one.
 
-**Where `.corpus.yaml` is missing or will not parse, stop and say so.** You are either outside a corpus or in a broken
-one, and neither is something to triage.
-
 ## Two label axes
 
-`kac:finding` says what the ticket is. It never comes off. A finding filed two years ago and settled last week still
-has it, so every finding ever filed stays one query away.
+`kac:finding` says what the ticket is. It never comes off, so every finding ever filed stays one query away.
 
 `kac:triaged` plus one route label says what triage decided. The queue is `kac:finding` without `kac:triaged`, so
 nothing is triaged twice.
@@ -187,9 +162,8 @@ gh label create kac:route-unclear --repo <owner>/<repo> --color D876E3 --force \
 
 `--force` updates a label that is already there, so running this every time costs one call each and changes nothing.
 
-**A command that fails on sign-in or on permission is not a failure to report.** `gh auth status` says whether you are
-signed in to that host. An account that cannot create a label can still read the issues, so carry on and say in your
-reply that you will apply no labels.
+**An account that cannot create a label can still read the issues.** Carry on, and say in your reply that you will
+apply no labels.
 
 ### Azure DevOps
 
@@ -211,7 +185,7 @@ read. Say so, name the corpus, and ask whoever is with you where its findings go
 ### 1. Read the queue
 
 The queue takes three reads: the findings waiting, the findings a label never reached, and the findings already
-routed. The third is not work. You need it to spot a duplicate of something settled last month.
+routed. The third is not work: it is how you spot a duplicate of something already settled.
 
 #### GitHub
 
@@ -244,8 +218,7 @@ backlog has no unmarked case. Mark what survives the filter `kac:finding` before
 **Read every one before you classify any of them.** Duplicates are only visible against the whole queue, and two
 findings that are halves of one problem read as two unrelated tickets on their own.
 
-**Say so where a query filled its limit.** A backlog longer than the limit is a backlog you read part of, and a run
-that does not say which part read the rest as nothing.
+**Say so where a query filled its limit.** You read only part of that backlog.
 
 **An empty queue is an answer.** Say the queue is empty and stop.
 
@@ -319,10 +292,8 @@ what changes is which corpus answers. Say which of the two this is.
 Print one row per finding: the issue number, its title cut short, the route, and the reason in under a dozen words. Put
 the `kac:route-unclear` rows at the top, because those are the ones needing an answer.
 
-**Say what you are about to write.** Every label the repository is missing, and then one `kac:triaged` label, one
-route label and one comment on each issue.
-
-Then wait. A person who changes a row has answered for the table.
+**Say what you are about to write**: every label the repository is missing, and then one `kac:triaged` label, one
+route label and one comment on each issue. Then wait for the yes.
 
 ### 7. Label, and comment the reason
 
@@ -361,8 +332,7 @@ Three sentences is plenty. The route, why, and what happens next.
   `kac:route-none`.
 * **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
 * **Name both routes** where you chose `kac:route-unclear` because two fitted, and say what a person has to decide.
-* **Say nothing about whether the claim is true.** You did not check, and writing as though you did is the one thing
-  this verdict must not do.
+* **Say nothing about whether the claim is true.** You did not check it.
 
 **Do not repeat the route as machine-readable data.** The label is the data. A second copy in the comment is a second
 thing that can disagree with the first.
@@ -430,8 +400,8 @@ One issue, one pull request.
 * `kac:route-unclear` needs a person first.
 * An issue with no `kac:triaged` label has not been triaged. Run `triage`.
 
-**Refuse a finding that already has a pull request, open or merged.** The record it asked for is written, and a
-second one would answer the same observation twice. Read that alongside the labels:
+**Refuse a finding that already has a pull request, open or merged.** The record it asked for is written. Read that
+alongside the labels:
 
 ```bash
 gh issue view <issue> --repo <owner>/<repo> --json state,closedByPullRequestsReferences
@@ -444,8 +414,7 @@ and stop. On Azure DevOps the linked pull requests are on the work item.
 
 ### 2. Check where the pull request goes
 
-The records are in front of you, so what is left is the repository the branch goes to. The tracker and the repository
-are two addresses, and on Azure DevOps they are two different things.
+The tracker and the repository are two addresses, and on Azure DevOps they differ.
 
 **Read `publishing-target` first.** Only `github` and `azure-devops` address a repository a pull request can open
 against, and `publishing.base` names it. `azure-devops-wiki` addresses a wiki, `mkdocs` a documentation site, and
@@ -464,12 +433,11 @@ the record's `## Changelog` where it has one, newest first, naming the issue.
 **A new record: start from the type's `_template.md`.** It sits in the folder the record goes in, and states every field
 that type needs and what each one takes. Follow it rather than copying a neighbouring record.
 
-**Load `technical-writing`, then `writing-a-record`.** Both travel into a corpus, so both are beside this one under
-`.claude/skills/`. A record written in some other voice reads as an import.
+**Load `technical-writing`, then `writing-a-record`.** Both sit beside this one under `.claude/skills/`.
 
-**Name the issue in `sources`.** Every type accepts the field. The entry gives a reviewer the observation to check
-the record against. Write the address, on either tracker. No type renders `sources`, so a short form such as
-`<owner>/<repo>#<issue>` is a link nowhere.
+**Name the issue in `sources`.** Every type accepts the field, and it gives a reviewer the observation to check the
+record against. Write the full address on either tracker, because no type renders `sources` and a short form such as
+`<owner>/<repo>#<issue>` links nowhere.
 
 ```yaml
 sources:
@@ -493,11 +461,11 @@ post as `role:head-of-engineering`. Never guess it, and never copy the owner of 
 **Never write a verification line naming somebody.** A `verified` entry says a person checked the answer, and nobody
 has.
 
-**Run `kac validate` where the checkout has the tool.** A record failing its own schema wastes the reviewer's time.
+**Run `kac validate` where the checkout has the tool.**
 
 ### 4. Open the pull request
 
-Branch, commit and open it. The body closes the finding and names the record.
+The body closes the finding and names the record.
 
 ```bash
 gh pr create --repo <owner>/<repo> --title "<the record, in one line>" --body-file <path>
@@ -527,5 +495,5 @@ After `draft`, name the pull request and its URL, and the issue it answers. Say 
 `sources`, and that merging the pull request closes it. Say which fields you left empty, and that the record is a
 draft until somebody accepts it.
 
-**Say what you could not do.** A missing client, a label you could not create, an issue the tracker refused to update. A
-finding you read out to somebody is worth more than one lost to a missing tool.
+**Name what you could not do**: a missing client, a label you could not create, an issue the tracker refused to
+update.
