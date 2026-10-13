@@ -3,8 +3,8 @@
 You are reading existing records against the rules and proposing rewrites. You are not adding knowledge, correcting
 facts, or moving documents between types.
 
-**The prose rules live in the skills.** `technical-writing` is the floor and `writing-a-record` is the corpus voice and
-the tier rules. This page is the procedure for applying them and restates none of them.
+**The prose rules live in the skills.** `technical-writing` is the floor, and its *What you must not change* binds a
+review. `writing-a-record` is the corpus voice and the tier rules. This page is the procedure for applying them.
 
 ## What outranks what
 
@@ -17,16 +17,12 @@ the tier rules. This page is the procedure for applying them and restates none o
 4. **`technical-writing`, then `writing-a-record`.** Load both, every time.
 
 **Where a prose rule contradicts the schema, that is a finding to report and never an instruction to act on.** Report
-which of the two is wrong and change neither. Read literally, one wrong bullet would have stripped **MUST** from
-twenty-two documents that `clause-modal` requires it in.
+which of the two is wrong and change neither.
 
 ## Never
 
 * **Never rewrite the substance of a settled Decided record.** An ADR at `accepted`, a postmortem at `published`. The
   `status` field is the test rather than the tier. Fix a typo or a broken link; report anything else and stop.
-* **Never edit between the generated markers.** Change the frontmatter or the schema, then regenerate.
-* **Never change an identifier.** A document id, a clause id or a link label is cited from elsewhere in the graph and
-  from other corpora. The validator cannot see a citation from outside this one.
 * **Never change meaning to save words.** A lost qualifier, exception or scope boundary is a defect. Where a sentence is
   long because the obligation is genuinely conditional, leave it long.
 * **Never change frontmatter**, beyond a demonstrable error in the record in front of you, and say so where you do. The
@@ -44,21 +40,16 @@ twenty-two documents that `clause-modal` requires it in.
    nothing.** Most hold no record at all, so a folder named in a request may have only its `_index.md` and
    `_template.md`, both of which the never-list puts out of reach. Say so, and say what the candidates are: where the
    request meant the type page or the template, it belongs to
-   [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md) rather than here. **Test the claim the
-   request makes.** "These are verbose" and
-   "there are semicolons everywhere" are counts, and a count that comes back small or empty is the answer rather than
-   the start of one.
+   [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md) rather than here.
 2. **Run `kac validate` and expect it clean.** CI gates the branch, so a clean corpus is the normal state. It is your
    regression baseline rather than a source of findings, and it hands you no starting list.
 3. **Establish which text rules reach this type.** `kac checks` lists what the validator implements; the type's `rules:`
-   block lists what the type declares. A declared rule with no code behind it binds you exactly as much as one that
-   fails the build. Most types declare none, and for `services/` not one fires. **A rule can bind and appear in
-   neither.** The prose rules live only in the skills, so a mark the floor governs is invisible to `kac checks` and to
-   the schema. Read the floor before concluding that nothing reaches this type.
+   block lists what the type declares, and both bind you. Most types declare none, and for `services/` not one fires.
+   **A rule can bind and appear in neither.** The prose rules live only in the skills, so a mark the floor governs is
+   invisible to `kac checks` and to the schema. Read the floor before concluding that nothing reaches this type.
 4. **Load `technical-writing` and `writing-a-record`**, then the type's root page and its template.
-5. **Per record:** read the frontmatter for `tier` and `status`, then read the record whole before changing anything.
-   Edit at the scale the findings interact at. What must be whole is the result, so a reader arriving cold cannot tell
-   which paragraph is newest.
+5. **Per record:** read the frontmatter for `tier` and `status`. Edit at the scale the findings interact at, so a reader
+   arriving cold cannot tell which paragraph is newest.
 6. **Then read the set.** Siblings against each other: one fact in two records, one caveat worded three ways, two
    records that disagree. Nothing inside a single record shows these. Where two contradict on fact, report it and change
    neither.
@@ -67,8 +58,7 @@ twenty-two documents that `clause-modal` requires it in.
 8. **Check the second tree.** `template/` holds its own copy of every type page and template. Those are `seed`, so
    `kac update --check` does not hold them equal and nothing catches drift. A record under `examples/` has no twin.
 9. **Run `kac validate` again**, and `kac generate` where any frontmatter changed.
-10. **Propose rather than commit.** Run
-    [prc-pull-request](../../../../examples/dog-fooding/processes/pull-request.md) only if asked.
+10. **Run [prc-pull-request](../../../../examples/dog-fooding/processes/pull-request.md) only if asked.**
 
 ## What to look for
 
@@ -76,14 +66,13 @@ The floor and the voice carry the sentence-level rules. These are the findings a
 a reader.
 
 1. **Not record content.** The highest-yield finding. A paragraph that would appear unchanged in a second record of the
-   type is corpus guidance in the wrong place. So is commentary on the record's own editorial choices, an explanation of
-   what a metadata field means, prose restating frontmatter, and placeholder text describing an absent relationship. Say
-   where it belongs instead.
+   type is corpus guidance in the wrong place. So is commentary on the record's own editorial choices, and anything
+   `writing-a-record` keeps out under *Keep the administration out*. Say where it belongs instead.
 2. **Restated rather than cited.** Prose reproducing what an ADR, a standard, a type page or a glossary entry already
    says. Replace it with a link.
 3. **Duplicated across records.** Two records in a folder carrying near-identical paragraphs. Flag both.
-4. **Aspiration.** Content describing what is intended. This is a correctness finding rather than a style one, so flag
-   it prominently. One exception: a schema rule the tool does not implement.
+4. **Aspiration.** Content describing what is intended. This is a correctness finding, so flag it prominently.
+   `writing-a-record` states the one exception.
 5. **Tier violation.** Read against the tier's section of `writing-a-record`, whose rules these are.
 6. **Template defect.** Below.
 7. **Rulebook contradiction.** Above.
@@ -94,8 +83,8 @@ Most records here are examples, and a type page often says so. That pulls agains
 awkward case and the lecture about it arrive in one paragraph. Separate them.
 
 **Keep the awkward case in full.** A service changed in two repositories, a bare `depends-on` on a service that
-depends on plenty, a `critical` service depending on an `important` one. The fact is what makes the example worth shipping, and the
-demonstration is the shape of the record.
+depends on plenty, a `critical` service depending on an `important` one. The fact is what makes the example worth
+shipping, and the demonstration is the shape of the record.
 
 **Cut the convention it restates, and cite the type page instead.** Nine copies is nine things to keep in step.
 
