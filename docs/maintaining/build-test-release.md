@@ -41,11 +41,11 @@ Run one `kac` at a time. Two runs build the same project at once and contend ove
 
 Each layer proves something the others cannot. CI runs all three on every pull request.
 
-| Layer   | Run                                | What it proves                                                                                |
-|---------|------------------------------------|-----------------------------------------------------------------------------------------------|
-| Unit    | `dotnet test tooling/kac.tests`    | Each piece of `kac.core` behaves, and the pages and comments in this repository agree with it |
-| Feature | `dotnet test tooling/kac.features` | Each check reports what its Reqnroll scenario says, run in-process over a fixture corpus      |
-| Golden  | `dotnet run tooling/kac-tests.cs`  | Each command, run as a real process, prints the output and writes the files a fixture expects |
+| Layer   | Run                                | What it proves                                                                                                           |
+|---------|------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| Unit    | `dotnet test tooling/kac.tests`    | Each piece of `kac.core` behaves, and the pages and comments in this repository agree with it                            |
+| Feature | `dotnet test tooling/kac.features` | Each check, and each command a `.feature` file covers, does what its scenarios say, run in-process over a fixture corpus |
+| Golden  | `dotnet run tooling/kac-tests.cs`  | Each command, run as a real process, prints the output and writes the files a fixture expects                            |
 
 The golden suite also fails two things no other layer sees: a check that no fixture trips, and a type page whose
 checks table is out of date.

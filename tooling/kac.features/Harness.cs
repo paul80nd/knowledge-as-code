@@ -1,6 +1,3 @@
-// Runs `Corpus.Load` then `Validator.CheckAll`, which are the two calls `kac validate` makes. Assembling a
-// subset of that sequence would leave checks unreachable from a spec while every spec went on passing.
-
 using kac.core;
 
 public sealed record ValidationResult(List<Finding> Findings, int Validated, int Skipped);
@@ -15,34 +12,48 @@ public static class Harness
     /// </summary>
     internal static readonly DateOnly Today = new(2026, 6, 15);
 
-    public static ValidationResult Validate(string fixtureName)
+    /// <summary>
+    /// Copies the schema and a fixture's <c>corpus/</c> into a new temporary folder, and returns its path. A fixture's
+    /// <c>plugin/</c> lands at <c>.plugin/</c>, where <c>bundle</c> reads it. The caller deletes the folder.
+    /// </summary>
+    public static string Assemble(string fixtureName)
     {
-        var schemaDir = Path.Combine(RepoRoot, ".schema");
-        var corpusDir = Path.Combine(RepoRoot, "tooling", "tests", "fixtures", fixtureName, "corpus");
+        var fixture = Path.Combine(RepoRoot, "tooling", "tests", "fixtures", fixtureName);
+        if (!Directory.Exists(fixture))
+            throw new InvalidOperationException($"kac.features: no fixture named '{fixtureName}'");
+
         var temp = Path.Combine(Path.GetTempPath(), "kac-features-" + Guid.NewGuid().ToString("N"));
-        try
+        CopyTree(Path.Combine(RepoRoot, ".schema"), Path.Combine(temp, ".schema"));
+
+        // The marker that makes the assembled tree a corpus. `kac-tests.cs` says why it is empty.
+        File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
+            "# Written by the behaviour specs so that kac reads this tree as a corpus.\n");
+
+        CopyTree(Path.Combine(fixture, "corpus"), temp);
+
+        var plugin = Path.Combine(fixture, "plugin");
+        if (Directory.Exists(plugin)) CopyTree(plugin, Path.Combine(temp, ".plugin"));
+
+        return temp;
+    }
+
+    /// <summary>
+    /// Runs <c>Corpus.Load</c> then <c>Validator.CheckAll</c>, the two calls <c>kac validate</c> makes. A subset of that
+    /// sequence would leave checks unreachable from a spec while every spec went on passing.
+    /// </summary>
+    public static ValidationResult Validate(string corpusRoot)
+    {
+        var corpus = Corpus.Load(corpusRoot);
+        return new ValidationResult(Validator.CheckAll(corpus, Today), corpus.Docs.Count, corpus.SkippedNoFrontmatter);
+    }
+
+    public static void Delete(string folder)
+    {
+        try { Directory.Delete(folder, recursive: true); }
+        // A file still open leaves the tree for the machine to clear.
+        // Failing here would report cleanup as a corpus fault.
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or DirectoryNotFoundException)
         {
-            CopyTree(schemaDir, Path.Combine(temp, ".schema"));
-
-            // The marker that makes the assembled tree a corpus. `kac-tests.cs` says why it is empty.
-            Directory.CreateDirectory(temp);
-            File.WriteAllText(Path.Combine(temp, ".corpus.yaml"),
-                "# Written by the behaviour specs so that kac reads this tree as a corpus.\n");
-
-            CopyTree(corpusDir, temp);
-
-            var corpus = Corpus.Load(temp);
-            return new ValidationResult(Validator.CheckAll(corpus, Today), corpus.Docs.Count,
-                corpus.SkippedNoFrontmatter);
-        }
-        finally
-        {
-            try { Directory.Delete(temp, recursive: true); }
-            // A file still open leaves the tree for the machine to clear.
-            // Failing here would report cleanup as a corpus fault.
-            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
-            {
-            }
         }
     }
 

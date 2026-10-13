@@ -6,14 +6,13 @@ using Reqnroll;
 namespace kac.features;
 
 [Binding]
-public sealed class CreationSteps
+public sealed class CreationSteps(Workspace ws)
 {
     /// <summary>
     /// Two levels, so a descriptor written above the folder is still inside this scenario's tree and deleted with it.
     /// </summary>
     private string _root = "";
     private string _folder = "";
-    private int _exit = -1;
     private int _before;
 
     [AfterScenario]
@@ -72,15 +71,15 @@ public sealed class CreationSteps
     }
 
     [When("I create a corpus there")]
-    public void WhenICreateACorpusThere() => _exit = Creation.Create(_folder);
+    public void WhenICreateACorpusThere() => ws.Exit = Creation.Create(_folder);
 
     [When("I create a corpus from a template that is not there")]
     public void WhenICreateACorpusFromATemplateThatIsNotThere() =>
-        _exit = Creation.Create(_folder, "https://example.invalid/no/such/repository.git");
+        ws.Exit = Creation.Create(_folder, "https://example.invalid/no/such/repository.git");
 
     [When(@"I create a corpus there adopting ""(.*)""")]
     public void WhenICreateACorpusThereAdopting(string types)
-        => _exit = Creation.Create(_folder, types: types);
+        => ws.Exit = Creation.Create(_folder, types: types);
 
     [Then("no link fails to resolve")]
     public void ThenNoLinkFailsToResolve()
@@ -100,12 +99,6 @@ public sealed class CreationSteps
     [Then(@"""(.*)"" links to ""(.*)""")]
     public void ThenLinksTo(string page, string target)
         => Assert.Contains($"]({target})", File.ReadAllText(Path.Combine(_folder, page)));
-
-    [Then("it refuses")]
-    public void ThenItRefuses() => Assert.NotEqual(0, _exit);
-
-    [Then("it succeeds")]
-    public void ThenItSucceeds() => Assert.Equal(0, _exit);
 
     [Then("the folder holds nothing new")]
     public void ThenTheFolderHoldsNothingNew() => Assert.Equal(_before, Count());

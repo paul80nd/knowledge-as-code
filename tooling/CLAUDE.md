@@ -268,17 +268,23 @@ will not tell you: the golden layer and the feature layer assert different thing
 harness assembling its own subset of the sequence leaves whole checks unreachable from a spec, and every spec goes on
 passing.
 
-That also decides which commands get a spec. A spec asserts findings, so `Schema.feature` covers what a type declares in
-its `export:` block. What the exporter then writes is not a finding: the golden holds those bytes, the unit tests beside
-`Exporter` hold the rules behind them, and a feature file would only say it a third time.
+Every other command's spec calls the `Commands` method its verb runs, over a copy of a fixture the golden suite also
+reads. `Workspace` snapshots that copy before the command runs, so a scenario can say which files the run wrote, and
+that a refusal wrote none. A scenario states a behaviour its `docs/use/cli/` page promises.
+
+**A scenario reads the exit code and the disk, never the output**, because `Out` keeps the console it first meets. A
+behaviour visible only in what a command prints belongs to the golden suite.
+
+**Mutate the Given behind every refusal.** Set the value it breaks back to a sound one and run the spec. A refusal that
+still fires is refusing for a reason the scenario does not name.
 
 ## The round-trip is the layer above them all
 
 [`tests/round-trip.sh`](tests/round-trip.sh) is the only test that leaves the repository. The layers above prove the
-export and the bundle over data: the goldens diff the tree file for file, the unit tests hold the rules that built
-it, and the specs hold what the validator says about it. None of them can show that the thing assembled installs, that
-the paths its skill names resolve inside the installed copy, or that a link built from its template fetches the record
-it points at.
+export and the bundle over data: the goldens diff the tree file for file, the unit tests hold the rules that built it,
+and the specs hold what the validator says about it and what each command does to it. None of them can show that the
+thing assembled installs, that the paths its skill names resolve inside the installed copy, or that a link built from
+its template fetches the record it points at.
 
 So it installs the plugin into a Claude config directory of its own and asks it those questions.
 [`README.md`](README.md#the-round-trip) says what it asserts, how to run it and which corpus proves which skill, and the
