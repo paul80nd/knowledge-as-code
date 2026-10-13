@@ -2,10 +2,9 @@
 
 A **rule** is a check a type declares about its own records, and most of them are one line of YAML. The line is an
 expression, `kac` evaluates it against every record of that type, and the fault it reports carries the rule's own id.
-Adding a check is adding YAML rather than editing the tool.
 
-An expression asks a small, fixed set of questions about one record. It has no variables, no loops and no way to reach
-another record. That boundary is the point: a rule this small can be read by whoever trips it.
+An expression asks a fixed set of questions about one record. It has no variables, no loops and no way to read another
+record.
 
 ## How a rule is declared
 
@@ -23,18 +22,14 @@ rules:
 ```
 
 `description:` is what the rule means, and the generated checks table on the type's page renders it. `message:` is what
-an author is told when the rule fires. One is a definition and the other is a diagnosis, so do not write the same
-sentence twice.
+an author is told when the rule fires. Do not write the same sentence in both.
 
-A rule with an `expr:` must also declare a **severity**, meaning the level it reports at, and a message. A rule that
-claims to be finished must be able to report.
-
-A rule with no `expr:` keeps its `id` and `description`, declares no severity, and renders as an **intention**: a
-behaviour written down that no code answers to yet.
+A rule with an `expr:` must also declare a **severity**, meaning the level it reports at, and a message. A rule with no
+`expr:` keeps its `id` and `description`, declares no severity, and renders as an **intention**.
 
 ## The grammar
 
-It is frozen. Extend it only on a deliberate decision, and never for convenience.
+It is frozen.
 
 ```
 expr    := implies
@@ -52,47 +47,33 @@ call    := IDENT "(" ( expr ("," expr)* )? ")"
 * **Three types:** string, int and bool. There are no boolean literals, so every condition starts from something the
   record says.
 * **Strings are single-quoted**, and a doubled quote is one quote, as in YAML and SQL. There are no backslash escapes.
-  The strings that most need a quote in them are regular expressions, and a second layer of escaping over those is how
-  they stop being readable.
-* **A comparison is not chainable.** `1 < words() < 40` is a sentence rather than a condition, and the parser declines
-  it instead of choosing an associativity nobody asked for.
+* **A comparison is not chainable.** The parser refuses `1 < words() < 40`.
 * **Dates compare as ISO strings**, so `field('a') >= field('b')` works without a date type.
-* **Division by zero gives zero.** Nothing in the default types divides, and the operator exists because the grammar is
-  frozen. A rule that trips over it reads as a threshold nobody meets.
+* **Division by zero gives zero.**
 * **No variables, user-defined functions, quantifiers or collections.**
-
-An expression is written as a string. Several rules are conditionals or ratios, and those read cleanly on one line and
-badly as a tree of nested YAML objects.
 
 ## An absent field
 
 `field(...)` returns either a string or nothing. A comparison where either side is absent is **false**, and `!=` is the
 negation of `==`, so `!=` is true. That is one rule for every operator.
 
-The consequence is an idiom. `field('detected-at') >= field('occurred-at')` fires on a record missing a value, where
-`required-field` has already said so in better words. So a rule about a field that may be absent guards it:
+So `field('detected-at') >= field('occurred-at')` fires on a record missing a value, which `required-field` already
+reports. Guard a rule about a field that may be absent:
 
 ```yaml
 expr: "present('detected-at') and present('occurred-at') implies field('detected-at') >= field('occurred-at')"
 ```
-
-This is why a written rule runs longer than a first sketch of it. The alternative is each operator guessing which way
-silence should fall, which trades one visible guard for a table of special cases nobody remembers.
 
 ## When an expression is checked
 
 `kac` parses and type-checks each expression before it opens a single record, and anything wrong stops the load and
 names the rule. That covers a syntax error, an unknown fact, the wrong number of arguments and a number too large to
 hold. It also covers a comparison between a number and text, arithmetic on text, and a whole expression that is not a
-yes/no question.
-
-Without it, `words() == 'three'` compiles and then evaluates false for the life of the schema. That is a check which
-appears wired up and never fires, the exact failure this layer exists to end.
+yes/no question, such as `words() == 'three'`.
 
 ## The facts an expression can ask for
 
-These are the whole callable surface. Each reads what the parse pass already produced, so the evaluator never re-parses
-markdown. `today()` is the last row because it is the one that reads nothing about the record.
+These are the whole callable surface.
 
 | Function                         | Returns | Reads                                                                                                                |
 |----------------------------------|---------|----------------------------------------------------------------------------------------------------------------------|
@@ -114,28 +95,21 @@ markdown. `today()` is the last row because it is the one that reads nothing abo
 | `days_since('a')`                | int     | the whole days from a date field to the day of the run, so a rule can compare a record's age                         |
 | `today()`                        | string  | the day the run happens, as an ISO date, so a rule compares it against a date field                                  |
 
-**`span()` answers in hours, never days.** ISO 8601 gives a day no fixed length, so `P1DT2H` and `PT26H` are one span
-written two ways, and a rule comparing the text would take one and refuse the other. It answers with the empty string
-where either field is absent, is not a moment, or where the second is before the first. Each of those is another check's
-to report, so a rule asking for a span guards on them rather than reporting the same fault twice.
+**`span()` returns hours, never days**, so `P1DT2H` is written `PT26H`. It returns the empty string where
+either field is absent, is not a moment, or where the second is before the first. Guard on those, which another check
+reports.
 
-**`days()` reads date fields, where `span()` reads timestamps.** A date has no time of day to lose, so the count is
-exact and a rule compares it against a plain number. It answers zero where a field is absent, where a value is not a
-date, and where the second date is the earlier, so a rule asking for a gap guards on those the way one asking for a span
-does. A same-day gap is zero as well, and no caller here needs to tell the two apart.
+**`days()` reads date fields, where `span()` reads timestamps.** It returns zero where a field is absent, where a value
+is not a date, where the second date is the earlier, and where both are the same day.
 
-**`days_since()` measures one date field against the day of the run**, which is how a rule asks whether a record has
-gone past a cadence it states. It answers zero on everything `days()` answers zero on, and a date in the future is one
-of them. So a rule comparing it against a threshold passes a record nothing can be measured about. The missing value is
-`required-field`'s to report.
+**`days_since()` measures one date field against the day of the run.** It answers zero on everything `days()` answers
+zero on, and a date in the future is one of them. So a rule comparing it against a threshold passes such a record.
 
-**`today()` answers with the day the run happens**, which is how a rule asks whether a date the record carries has gone
-by. `kac validate` reads that day once and hands it down, so a corpus validated across midnight gives its first record
-and its last the same answer.
+**`today()` returns the day the run happens.** `kac validate` reads that day once, so every record in one run gets
+the same day.
 
-**`words()` and `matches()` deliberately see different documents.** One walks the rendered text and the other the
-source. That is what lets `matches()` find a credential pasted into a fenced block, the case those rules exist for. It
-also finds `**MUST**`, an obligation the rendered text would have flattened into an ordinary word.
+**`words()` and `matches()` read different documents.** `words()` counts the rendered text. `matches()` reads the
+source, so it finds a credential pasted into a fenced block, and `**MUST**` with its markup.
 
 A question no fact answers yet needs a new fact in `kac`.
 [Checks in C#](../maintaining/checks.md#adding-a-fact) says how one is added.

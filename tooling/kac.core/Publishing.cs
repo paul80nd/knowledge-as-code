@@ -144,9 +144,9 @@ public sealed class Publishing
     public static string Anchor(string heading) => Md.Slug(heading);
 
     /// <summary>
-    /// The link rule as one string with <c>{path}</c> and <c>{anchor}</c> left to fill. The ref and the path prefix are
-    /// baked in, as <c>docs/reference/export.md</c> argues. An Azure DevOps wiki takes the path with <c>.md</c> removed
-    /// and its separators encoded, which <c>Link</c> does and <c>docs/use/corpus-descriptor.md</c> states.
+    /// The link rule as one string with <c>{path}</c> and <c>{anchor}</c> left to fill, with the ref and the path prefix
+    /// baked in. An Azure DevOps wiki takes the path with <c>.md</c> removed and its separators encoded, which
+    /// <c>Link</c> does. <c>docs/reference/export.md</c> states the template.
     /// </summary>
     public string Template() => Target switch
     {
