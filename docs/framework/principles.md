@@ -1,10 +1,8 @@
 # Principles
 
-Why the framework is shaped the way it is. A corpus's own taxonomy page says what its types are. This page says what
-they are for, and what the design will not trade away.
-
-These are meant to outlast the implementation. Each describes how the framework works today. The
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) says what is to come.
+This page says why the framework is shaped the way it is, and what the design will not trade away. Each principle
+describes how the framework works today. The [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues)
+says what is to come.
 
 ## Behaviour before subject
 
@@ -24,12 +22,8 @@ A corpus has two halves. The **mechanism** is the schema, the validator, the gen
 identical everywhere. The **knowledge** is the organisation's, and it is shared with nobody.
 
 That split lets the mechanism improve without touching anyone's content, and lets an organisation take a copy without
-inheriting someone else's retention policy. It also turns *which of these files are mine?* into a question
-[`kac update --check`](../use/cli/update.md) answers.
-
-The framework's own `manifest.yaml` declares which files fall on which side, so no prose has to assert it. Every file
-resolves to exactly one **layer**, meaning who owns a file and what happens when it differs from upstream. Each layer
-has its own rule about what divergence means.
+inheriting someone else's retention policy. The framework's own `manifest.yaml` declares which side each file falls
+on, and [Layers](../use/layers.md) says what an update does with each.
 
 ## Schema before prose
 
@@ -66,27 +60,14 @@ is visible and a contradiction is not.
 
 Knowledge arrives as a work item and leaves as a record. Each route has its own bar.
 
-Inbound is the tracker the corpus already uses. What you file there is not a record, so nothing in the corpus has to
-stand behind it.
-
-Outbound is what `kac` formalises: the **export**, meaning the machine-readable copy of a corpus that another
-repository installs, and the agent skills that read it. Only a record travels that way.
-
-Separating the routes is what lets the bar on each differ. Capture stays free, and what reaches the export stays worth
-believing.
-
-## Cheap capture, deliberate promotion
-
 Capture has to be nearly free or it does not happen. Nobody writes up a gotcha if doing so needs a template, an owner
-and two reviewers.
+and two reviewers. So **observed knowledge**, what somebody noticed and nobody has checked, goes to the tracker the
+corpus already uses. It is not a record, it has no tier, and nothing in the corpus has to stand behind it.
 
-**Observed knowledge** is what somebody noticed and nobody has checked: a gotcha, a symptom, a claim about the estate
-that may not survive contact. The framework describes it and gives it no tier, because a corpus keeps answers. Handle
-it in the tracker the corpus already uses. File it cheaply, gate nothing, and triage the queue rather than reviewing
-each entry.
-
-The rigour lives at promotion. An observation becomes a fix once somebody verifies it, and the fix names where the
-content came from in `sources`. That gradient lets a corpus grow without its average trustworthiness falling.
+Outbound is the **export**, meaning the machine-readable copy of a corpus that another repository installs, and the
+agent skills that read it. Only a record travels that way. The rigour lives at promotion: an observation becomes a
+fix once somebody verifies it, and the fix names where the content came from in `sources`. So capture stays free, and
+what reaches the export stays worth believing.
 
 ## Trust is what a corpus is for
 
@@ -105,9 +86,9 @@ if they later go their own way.
 What comes from upstream is `kac` itself, installed as a versioned tool and pinned the way any other dependency is. A
 newer one is a version they choose to take.
 
-The cost is **drift** in the half they own, meaning a file that no longer matches the upstream it came from. A manifest
-and a descriptor record it. A corpus states which version of the shared layer it is on, and which divergences it has
-deliberately accepted. A necessary deviation therefore does not look like an accident.
+The cost is **drift** in the half they own, meaning a file that no longer matches the upstream it came from. The
+descriptor records which version of the shared layer the corpus is on, and which divergences it has accepted, so a
+necessary deviation does not look like an accident.
 
 ## Readable and writable by agents
 
@@ -126,8 +107,6 @@ None of it replaces human ownership.
 A corpus is one repository holding everything: policies, standards, services, runbooks and the rest, with the mechanism
 alongside.
 
-Most of this page rests on that boundary. The validator fails a one-sided link because it can see both ends of it. An
-owner is authoritative because there is a single place the record could be. A session clones the repository and has the
-whole graph, with nobody to ask for the rest of it.
-
-A corpus that needs nothing outside itself is one a session can clone and read whole.
+The validator fails a one-sided link because it can see both ends of it, and an owner is authoritative because there
+is a single place the record could be. A session clones the repository and has the whole graph, with nobody to ask for
+the rest of it. [One corpus or several](../use/one-corpus-or-several.md) says when to split.

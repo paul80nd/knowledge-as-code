@@ -288,9 +288,6 @@ repository and served from another has two answers to where its code lives, so t
 framework is a bare key, and a repository name follows that design: `repos-base` in
 [`.corpus.yaml`](../use/corpus-descriptor.md#repos-base) states the host and the organisation once, and an entry appends
 to it. Backstage, OpsLevel and Cortex each do the same, leaving the value a bare `org/repo`.
-[purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses a repository
-as `pkg:git/<host>/<owner>/<repo>`, and was declined: `feature-file-repo` reads the first segment of a `feature-files`
-path as a repository name, and for `pkg:git/x/y` that segment is `pkg:git`.
 
 `Where it lives` keeps its link, so the repository is stated twice: once as a join key and once as a URL a person
 follows. `mirrors-repo-links` builds `<repos-base>/<entry>`, compares the result against the links under the heading in
