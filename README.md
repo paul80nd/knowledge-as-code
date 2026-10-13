@@ -134,7 +134,8 @@ Stated openly, because each one shapes the design:
 
 ## Working on KaC itself
 
-This repository contains the tool, the framework a corpus receives, and the corpora that prove both.
+This repository contains the tool, the framework a corpus receives, the corpora that prove both, and the trials that
+measure its documentation.
 
 | Path                                     | What it contains                                                         |
 |------------------------------------------|--------------------------------------------------------------------------|
@@ -144,6 +145,7 @@ This repository contains the tool, the framework a corpus receives, and the corp
 | [`manifest.yaml`](manifest.yaml)         | which files a corpus receives, and where each one lands                  |
 | [`examples/`](examples/README.md)        | the worked corpora, which CI validates on every commit                   |
 | [`docs/`](docs/)                         | the [documentation site](https://paul80nd.github.io/knowledge-as-code/)  |
+| [`trials/`](trials/README.md)            | repeatable experiments on the documentation, with every run kept         |
 
 Run the tool this checkout contains from inside one of the example corpora:
 

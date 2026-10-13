@@ -2,9 +2,9 @@
 
 This repository is not a corpus. It holds `kac`, the documentation site published beside it, the schema every corpus
 below is judged against, the template `kac new` sends a corpus, and four worked corpora under `examples/`. Three of
-them stand in for corpora that took the framework, and `dog-fooding` holds this repository to it. The tool finds a
-corpus by walking up for a `.corpus.yaml`, so it reads one of the corpora under `examples/`, or `template/`, and never
-this root.
+them stand in for corpora that took the framework, and `dog-fooding` holds this repository to it. `trials/` keeps the
+experiments that measure the site, with every run. The tool finds a corpus by walking up for a `.corpus.yaml`, so it
+reads one of the corpora under `examples/`, or `template/`, and never this root.
 
 **Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing skill
 for the surface you are on.
@@ -15,6 +15,7 @@ for the surface you are on.
 | the schema, or a rule it declares           | [`.schema/CLAUDE.md`](.schema/CLAUDE.md)                                         |
 | `kac`, its checks, or the tests behind them | [`tooling/CLAUDE.md`](tooling/CLAUDE.md)                                         |
 | a page of the documentation site            | [`tooling/README.md`](tooling/README.md#the-documentation-site) and `mkdocs.yml` |
+| a trial, or a run of one                    | [`trials/README.md`](trials/README.md)                                           |
 
 [`template/CLAUDE.md`](template/CLAUDE.md) is the fourth, and it is addressed to somebody working in a corpus that
 copied the template. It describes that corpus rather than this repository, so read it as content you may need to change.

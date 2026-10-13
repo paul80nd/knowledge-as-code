@@ -41,6 +41,7 @@ than an order.
 | review and tidy a lane of the project board              | [prc-review-a-board-lane](../../../examples/dog-fooding/processes/review-a-board-lane.md) |
 | write the root README, the package page or the docs site | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md)     |
 | move, split or merge pages of the docs site              | [prc-write-public-docs](../../../examples/dog-fooding/processes/write-public-docs.md)     |
+| measure whether a docs section lets its reader act       | [the comprehension trial](../../../trials/comprehension/README.md)                        |
 | change a skill, a hook or `plugin.json`                  | [prc-change-a-skill](../../../examples/dog-fooding/processes/change-a-skill.md)           |
 | open a pull request                                      | [prc-pull-request](../../../examples/dog-fooding/processes/pull-request.md)               |
 
