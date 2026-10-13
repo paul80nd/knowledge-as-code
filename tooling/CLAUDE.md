@@ -16,8 +16,9 @@ renders it for somebody who has installed nothing, so it takes `writing-the-docs
 
 ## Running `kac` here
 
-**Run the build, not the install.** `dotnet run --project tooling/kac -- <verb>` is the tool this branch holds. A bare
-`kac` rewrites generated files with an older wording without saying so.
+**Run the build, not the install**, as
+[Run `kac` from source](../docs/maintaining/build-test-release.md#run-kac-from-source) shows. A bare `kac` rewrites
+generated files with an older wording without saying so.
 
 **Run every corpus**, with the commands the [root `CLAUDE.md`](../CLAUDE.md#before-you-commit) gives. Each corpus under
 `examples/` proves the tool against what it holds, and `template/` is what a new corpus receives.
@@ -50,8 +51,8 @@ because the catalogue, the checks table and `kac checks` read it from the schema
 ## Where the console is
 
 [How `kac` is put together](../docs/maintaining/architecture.md#where-the-console-is) says which parts return values and
-which write. Read a file's presence from `Tree`, and call `Tree.OnDisk` only where `Tree` says to. A check that asks the
-disk directly passes for whoever wrote the file and fails in CI, by which time they have stopped looking.
+which write, and [how a check reads the disk](../docs/maintaining/architecture.md#testing-without-a-disk). A check that
+asks the disk directly passes for whoever wrote the file and fails in CI, by which time they have stopped looking.
 
 ## Adding a generated block
 
@@ -112,11 +113,9 @@ still fires is refusing for a reason the scenario does not name.
 ## The round-trip is the layer above them all
 
 [`tests/round-trip.sh`](tests/round-trip.sh) installs the plugin and fetches a record's source from GitHub.
-[`README.md`](README.md#the-round-trip) says what it asserts and which corpus proves which skill. Add an assertion in
-the corpus that already holds what it asks about.
-
-**Keep the script to the shell Git Bash and older macOS bash agree on**: no arrays, no `[[`, no process substitution.
-CI runs it on Linux and Windows.
+[`README.md`](README.md#the-round-trip) says what it asserts, which corpus proves which skill, and which shell it keeps
+to. Add an assertion in the corpus that already holds what it asks about. Write no arrays, no `[[` and no process
+substitution.
 
 ## What has already cost a session
 

@@ -23,6 +23,9 @@ One more reader, the evaluator, owns no section. They are deciding whether to ad
 `README.md`, [the introduction](../index.md) and [Compared with alternatives](../compared.md). The two site pages sit
 at the top of the nav, beside the four sections, and either may explain and compare.
 
+[The changelog](../changelog.md) is the one other page outside the sections, at the foot of the nav. It lists what each
+release of `kac` changed, for whichever reader is upgrading.
+
 ## The page kinds
 
 Each section may contain only the kinds of page in its row.

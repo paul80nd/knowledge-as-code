@@ -8,11 +8,10 @@ Adopting all of them is not expected. A corpus running one product might stand u
 also declare a type of its own that the framework has never heard of. What follows is what you get without deciding
 anything.
 
-They are grouped by [tier](taxonomy.md#the-four-tiers), because tier is what sets the rules each one answers to.
+They are grouped by tier, because a type's tier sets the rules its records follow.
+[The four tiers](taxonomy.md#the-four-tiers) says what each tier asks of a record.
 
 ## Decided
-
-Immutable once accepted. What was decided is superseded, never rewritten.
 
 | Type            | Folder         | What it holds                                                                                           |
 |-----------------|----------------|---------------------------------------------------------------------------------------------------------|
@@ -20,8 +19,6 @@ Immutable once accepted. What was decided is superseded, never rewritten.
 | **Postmortems** | `postmortems/` | What actually happened during an incident: timeline, impact, root cause, contributing factors, actions  |
 
 ## Normative
-
-Living and owned. Edited in place, with a changelog.
 
 | Type           | Folder        | What it holds                                                                                         |
 |----------------|---------------|-------------------------------------------------------------------------------------------------------|
@@ -33,8 +30,6 @@ Living and owned. Edited in place, with a changelog.
 | **Fixes**      | `fixes/`      | A problem with a resolution somebody has verified, and the record of who verified it                  |
 
 ## Descriptive
-
-Living, and must mirror reality. Verifiable against the estate.
 
 | Type             | Folder          | What it holds                                                                                                   |
 |------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
@@ -48,8 +43,6 @@ Living, and must mirror reality. Verifiable against the estate.
 | **Reports**      | `reports/`      | A question about the corpus answered over the whole of it, with the judgement a person added                    |
 
 ## Procedural
-
-Living, and must be rehearsed to stay true.
 
 | Type          | Folder       | What it holds                                                                                     |
 |---------------|--------------|---------------------------------------------------------------------------------------------------|

@@ -12,13 +12,15 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 
 * It reads the export, the plugin tree and one key of `.corpus.yaml`, and never loads the corpus.
   [What it does](../use/cli/bundle.md#what-it-does)
-* It reads the plugin tree from `plugin.from` where the descriptor states one, and keeps this corpus's own manifest.
+* It reads the plugin tree from `plugin.from` where the descriptor states one, and keeps this corpus's own manifest. A
+  file this corpus keeps under `.plugin/` wins over the shared tree's copy.
   [`plugin`](../use/corpus-descriptor.md#plugin)
 * It writes the plugin, `bundle.json` and the marketplace. [A built plugin](../use/cli/bundle.md#a-built-plugin)
 * It copies the export into the plugin under `metadata.corpusRoot`, byte for byte.
   [What it does](../use/cli/bundle.md#what-it-does)
 * It trims a component whose `requires` names a type the export lacks, with every file under its path, on whole
-  segments. [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
+  segments. The export includes what the corpus consumes, so a type only a consumed corpus wrote meets a `requires`.
+  [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It ships a component reading no type while a component reading one survives, and trims it with the last of them,
   unless the component is standalone.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
@@ -26,9 +28,11 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It builds a plugin with every component trimmed, and warns.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
-* It fills the plugin manifest's identity from the descriptor, through the export, and removes a key the corpus declared
-  nothing for, bar `author`, `description` and `version`.
+* It fills the plugin manifest's identity from the descriptor, through the export, with `homepage` and `repository`
+  from `publishing.base`. It removes a key the corpus declared nothing for, bar `author`, `description` and `version`.
   [The plugin manifest](../use/cli/bundle.md#the-plugin-manifest)
+* It cuts the plugin manifest's components to the ones that survived, and keeps every key it does not know.
+  [The plugin manifest](#the-plugin-manifest)
 * It renders the breadcrumb the hook prints, and keeps the hook's permission bit. [The breadcrumb](#the-breadcrumb)
 * It replaces `.dist/plugin/` whole. [The `.dist/` layout](#the-dist-layout)
 
@@ -108,6 +112,8 @@ inside the plugin states both.
 
 `.dist/` is the marketplace. A marketplace resolves each plugin's source against the directory holding
 `.claude-plugin/marketplace.json`, and refuses a source containing `..`, so it sits at the root above the plugin.
+`marketplace.json` takes the plugin's name, names the plugin's author as its owner, and offers the one plugin from
+`./plugin` with the plugin's description.
 
 ## `corpusRoot`
 
@@ -132,8 +138,13 @@ type trim.
 [`Bundle.feature`][Bundle.feature]:
 
 * A bundle writes the plugin, its account of itself and the marketplace
+* A bundle reads the export and never the corpus
+* A bundle reads a shared plugin tree and keeps this corpus's own manifest
+* A file this corpus keeps wins over the shared tree's copy
+* A bundle rebuilds .dist/plugin/ whole
 * A component reading a type the export lacks is trimmed with its files
 * A trim takes whole path segments
+* A component reading a type only a consumed corpus exports ships
 * A component reading no type ships beside one that reads a type
 * A component reading no type leaves with the last component reading one
 * A standalone component always ships
@@ -141,8 +152,17 @@ type trim.
 * The plugin contains the export unchanged
 * The plugin manifest takes who the plugin is from the descriptor
 * A key the descriptor gives nothing for is removed, bar the author and the description
+* The plugin manifest takes its homepage and repository from the publishing base
+* The plugin manifest lists the components that survived, and keeps every key the tool does not know
 * A corpus stating no content version keeps the version its plugin manifest states
 * A bundle that trims every component still builds
+* bundle.json states the plugin and the export it was built around
+* The marketplace offers the plugin from the directory beneath it
+* The breadcrumb names at most six records of a type
+* The breadcrumb gives a type a line for each corpus that wrote some of it
+* The breadcrumb asks for each announced skill that survived
+* The breadcrumb leaves with a trimmed hook
+* The hook keeps its permission bit
 * A bundle with no export is refused
 * A bundle with no plugin tree is refused
 * A bundle reading the plugin tree from a folder that is not there is refused
@@ -154,25 +174,10 @@ type trim.
 * A bundle over an export naming no corpus is refused
 * A bundle over an export at another format is refused
 * A bundle whose component reads a shape the export does not have is refused
+* A bundle whose component reads a shape that is not a whole number is refused
 
 ## Unspecified
 
-* A `requires` met by a type the export carries from a consumed corpus. No fixture has both a plugin tree and an
-  import. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A shared plugin tree read through `plugin.from`, merged with this corpus's own manifest.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A shape version that is not a whole number refused. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `homepage` and `repository` taken from `publishing.base`.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The plugin manifest's components cut to the survivors, and every unknown key kept.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* What the breadcrumb says: the bound of six, a line per contributing corpus, the announce line.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The breadcrumb leaving with a trimmed hook. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The hook's permission bit kept. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* What `marketplace.json` and `bundle.json` state, beyond the paths of components.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `.dist/plugin/` replaced whole. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
 * A skill reading the parts file of the type it requires. `bundle` never reads a component's files, and
   `tooling/tests/round-trip.sh` checks it over the installed copy.
 * The `.cmd` half of the hook running on Windows. A scenario runs on the machine that runs the suite.

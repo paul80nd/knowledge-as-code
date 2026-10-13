@@ -96,6 +96,8 @@ Each refusal exits `1` and writes nothing.
 * A lock the range admits is kept when a newer version exists
 * A move of the range re-resolves the lock
 * A prerelease is restored where the range names it exactly
+* A restore sends the registry token to an https source
+* A restore sends no registry token over plain HTTP
 * A restore refuses a shortcode the package does not carry
 * A restore refuses a range no version in the source satisfies
 * A restore refuses a range of any other form
@@ -107,10 +109,6 @@ Each refusal exits `1` and writes nothing.
 
 ## Unspecified
 
-* Two entries claiming one shortcode, refused for that reason alone. The scenario's feed holds no package for the
-  second entry, so it refuses either way. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A private feed, and the token sent only to an `https://` source. A scenario needs a feed served over HTTPS.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
 * A package past 256MB in all. A scenario would read that much on every run.
 * What either command prints: the `wrote` line, the "consumes nothing" line, and the versions a refusal lists. A
   scenario cannot read the output.

@@ -2,7 +2,7 @@ Feature: What `restore` fetches, and what makes it refuse
 `restore` fetches each corpus `.corpus.yaml` lists under `consumes:`, unpacks it under `.imports/<shortcode>/`, and
 writes the version it resolved back as `resolved:`. docs/use/cli/restore.md states each behaviour below. Driven
 against the export fixture as the consumer and the pack fixture as the producer, packed into a folder source,
-through `Commands.Restore`.
+through `Commands.Restore`. The token scenarios serve that folder as a private registry held in memory.
 
 Scenario: A corpus that consumes nothing restores nothing
   Given the export fixture corpus
@@ -89,6 +89,22 @@ Scenario: A prerelease is restored where the range names it exactly
   Then it succeeds
   And "lib" was restored at "2.4.0-rc.1"
 
+Scenario: A restore sends the registry token to an https source
+  Given the export fixture corpus
+  And the producer is packed for restore at "2.3.4"
+  And the corpus restores "example-libraries" as "lib" at "^2.3.0" from "https://feed.example/v3/index.json"
+  When I restore from a private feed with the registry token "s3cret"
+  Then it succeeds
+  And "lib" was restored at "2.3.4"
+
+Scenario: A restore sends no registry token over plain HTTP
+  Given the export fixture corpus
+  And the producer is packed for restore at "2.3.4"
+  And the corpus restores "example-libraries" as "lib" at "^2.3.0" from "http://feed.example/v3/index.json"
+  When I restore from a private feed with the registry token "s3cret"
+  Then it refuses
+  And nothing is written
+
 Scenario: A restore refuses a shortcode the package does not carry
   Given the export fixture corpus
   And the producer is packed for restore at "2.3.4"
@@ -123,6 +139,7 @@ Examples:
 Scenario: A restore refuses two entries claiming one shortcode
   Given the export fixture corpus
   And the producer is packed for restore at "2.3.4"
+  And "example-other" is packed for restore at "1.0.0"
   And the corpus restores the producer as "lib" at "^2.3.0"
   And the corpus restores "example-other" as "lib" at "^1.0.0" from "feed"
   When I restore

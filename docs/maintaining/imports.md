@@ -42,6 +42,16 @@ package is fetched.
 
 ## Specified by
 
+[`Imports.feature`][Imports.feature]:
+
+* A citation resolves into a restored import, and is checked against what it carries
+* A citation spelt the wrong way round fails with the spelling to write
+* A record arriving through a chain resolves under the shortcode of the corpus that wrote it
+* A declared import with nothing restored fails in one finding naming kac restore
+* A citation into an import with nothing restored reports nothing of its own
+* An import behind its source is a warning, and one capped or unreachable is information
+* An imported record is held to none of this corpus's rules
+
 [`Restore.feature`][Restore.feature]:
 
 * A first restore unpacks the corpus and locks its version
@@ -49,6 +59,7 @@ package is fetched.
 [`Export.feature`][Export.feature]:
 
 * What the corpus consumes travels under the shortcode of the corpus that wrote it
+* export.exclude withholds this corpus's own records alone
 * An export refuses a consumed corpus that has not been restored
 
 [`Pack.feature`][Pack.feature]:
@@ -60,30 +71,11 @@ package is fetched.
 * A corpus that imports policies reports on them, and names this corpus first among its sources
 * A report refuses a consumed corpus that has not been restored
 
-## Unspecified
-
-#247 says the `imports` and `import-versions` validate fixtures have no feature spec, so every behaviour `validate`
-owns here is unspecified. A scenario could reach each one through `Harness.Validate` over those fixtures.
-
-* `validate` resolving a citation into a restored import.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A citation spelt the wrong way round, in either direction, failing with the spelling to write.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A chained record resolving under the shortcode of the corpus that wrote it.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A declared import with nothing restored failing in one finding.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `import-behind`, `import-capped` and `import-unreachable`, which need a registry a scenario answers for.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A check reading nothing of an imported record but its id, type, path and parts.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* `export.exclude` leaving inherited records in the export.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-
 ## Where to go next
 
 [Imports](../use/imports.md) follows a citation from the producer's export to the consumer's build.
 
+[Imports.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Imports.feature
 [Restore.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Restore.feature
 [Export.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Export.feature
 [Pack.feature]: https://github.com/paul80nd/knowledge-as-code/blob/main/tooling/kac.features/Pack.feature

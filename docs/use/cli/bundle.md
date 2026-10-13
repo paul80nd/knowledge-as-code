@@ -150,7 +150,7 @@ Every other key in the manifest survives untouched.
 * a manifest that is not JSON, or that states no `corpusRoot`, or a `corpusRoot` the plugin tree already uses
 * an export with no manifest, or one naming no corpus because `.corpus.yaml` states no `corpus`
 * an export whose `formatVersion` is not the one this build reads
-* a component reading a type at a shape version the export does not carry
+* a component reading a type at a shape version the export does not carry, or at one that is not a whole number
 
 Where the format versions differ, the message gives both. Rebuild an export that is behind the tool with
 [`export`](export.md). An export ahead of the tool means your `kac` is the older of the two. A shape mismatch means the

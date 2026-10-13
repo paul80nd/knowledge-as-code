@@ -9,12 +9,19 @@ statement of each one.
 
 * It rebuilds each adopted type's `_index.md` whole from the frontmatter in the type's folder.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
+* An index has a do-not-edit banner, and takes its columns and its sort from the schema's `index` block. It heads a
+  table for each folder a `from: sub-path` field reads, and says so where the type has no records.
+  [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It writes the type pages' blocks, the framework pages' blocks and the README's `types-index` block.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
+* A type page's frontmatter reference lists the universal fields first. Its checks table lists only the checks the
+  type can trip. [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It writes a block only between its markers, and keeps the rest of the file byte for byte.
   [The region between the markers](../reference/generation.md#the-region-between-the-markers)
 * It leaves a block whose markers are gone unwritten, and `validate` reports the loss.
   [The region between the markers](../reference/generation.md#the-region-between-the-markers)
+* A corpus declines the README's block by deleting its markers, and `validate` reports nothing.
+  [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It covers only the types `types:` lists, and leaves a declined type's files alone.
   [Which types are generated](../reference/generation.md#which-types-are-generated)
 * It creates no page, folder or index for an adopted type that has no folder.
@@ -36,10 +43,18 @@ statement of each one.
 * A run rewrites a stale index whole, and no other file
 * A run rewrites a block between its markers and keeps the words around it
 * A run over a fresh corpus writes nothing
+* A second run over a corpus the first run rewrote writes nothing
 * A check over a fresh corpus passes
 * A check over a stale corpus fails and writes nothing
 * A type the descriptor does not adopt gets no index
 * A type adopted with no folder is not created
+* An index takes its columns and its order from the schema, under a banner
+* An index heads a table for each folder below the type
+* A type with no records gets an index saying so
+* A type page lists the universal fields first, and only the checks its type can trip
+* A block whose markers are gone is left unwritten, and validate reports it
+* A corpus declines the README block by deleting its markers
+* The types graph keeps to the Mermaid subset
 
 [`Shape.feature`][Shape.feature]:
 
@@ -47,16 +62,6 @@ statement of each one.
 
 ## Unspecified
 
-* What an index holds: its columns and sort, its banner, a table per sub-path folder, and the message for a type with
-  no records. A scenario could read `_index.md`. [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* What the frontmatter reference and the checks table on a type page hold.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A block whose markers are gone left unwritten by `generate`.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* A corpus declining the README block by deleting its markers.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
-* The types graph keeping to the Mermaid subset. A scenario could read the taxonomy's `types-graph` block.
-  [#827](https://github.com/paul80nd/knowledge-as-code/issues/827)
 * What a run prints: the up-to-date line, each stale file `--check` names, and the `run: kac generate` hint. A scenario
   cannot read printed output.
 

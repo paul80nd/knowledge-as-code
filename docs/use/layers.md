@@ -53,8 +53,9 @@ layer.
 ## A shared plugin tree
 
 A corpus naming [`plugin.from`](corpus-descriptor.md#plugin) receives none of the shared plugin tree from an update.
-Its own `.plugin/.claude-plugin/plugin.json` is a seed, and arrives all the same. An old copy left on disk wins over the
-shared tree, so `update` reports each one as a file the template sends nothing to, and `--check` fails on it.
+Its own `.plugin/.claude-plugin/plugin.json` is a seed, and arrives all the same. `update` reports an old copy of a
+shared file, left under the corpus's `.plugin/`, as one the template sends nothing to. `--check` fails on it, because
+`bundle` would read that copy over the shared one.
 
 ## CI starters
 
