@@ -6,8 +6,8 @@ them stand in for corpora that took the framework, and `dog-fooding` holds this 
 experiments that measure the site, with every run. The tool finds a corpus by walking up for a `.corpus.yaml`, so it
 reads one of the corpora under `examples/`, or `template/`, and never this root.
 
-**Load `i-want-to` before you plan.** It routes the work to the playbook carrying its steps, and names the writing skill
-for the surface you are on.
+**Load `i-want-to` before you plan.** It routes the work to the process or playbook with its steps, and picks the
+writing skill for the surface you are on.
 
 | Working on                                  | Read                                                                             |
 |---------------------------------------------|----------------------------------------------------------------------------------|
@@ -17,12 +17,8 @@ for the surface you are on.
 | a page of the documentation site            | [`tooling/README.md`](tooling/README.md#the-documentation-site) and `mkdocs.yml` |
 | a trial, or a run of one                    | [`trials/README.md`](trials/README.md)                                           |
 
-[`template/CLAUDE.md`](template/CLAUDE.md) is the fourth, and it is addressed to somebody working in a corpus that
-copied the template. It describes that corpus rather than this repository, so read it as content you may need to change.
-
-**Load `technical-writing`, then `writing-the-docs`, before you change [`README.md`](README.md) or
-[`tooling/kac/PACKAGE.md`](tooling/kac/PACKAGE.md).** Both are read by somebody who has installed nothing and has nobody
-here to ask.
+[`template/CLAUDE.md`](template/CLAUDE.md) goes to every corpus that copies the template, and describes that corpus.
+Read it as content you may need to change, not as guidance for this repository.
 
 ## Four trees hold the same file
 
@@ -42,36 +38,22 @@ to.
 
 ## Before you commit
 
-Run the layers your change touches, **one `kac` invocation at a time**: concurrent runs build the same project and
-contend over its output.
+Run one `kac` invocation at a time. In each corpus you changed under `examples/`, run these. In `template/`, which is
+one level up, write `../` for each `../../`.
 
-```bash
-# in each corpus you changed, and in template/
+```sh
 dotnet run --project ../../tooling/kac -- validate         # the corpus
 dotnet run --project ../../tooling/kac -- generate --check # generated output is fresh
 dotnet run --project ../../tooling/kac -- update --check --from ../../
-
-# from this root, which holds the tool and the tests that prove it
-dotnet test tooling/kac.tests      # unit
-dotnet test tooling/kac.features   # Reqnroll behaviour specs
-dotnet run tooling/kac-tests.cs    # golden fixtures, plus the coverage and checks-table gates
-
-# from this root, where you changed a YAML file or a workflow
-yamllint --strict .
-actionlint
 ```
 
 A corpus declaring `consumes:` needs `restore` ahead of `validate`, and `restore` needs a package to take. That corpus's
 own `CLAUDE.md` names the producer to `export` and `pack` first.
 
-A bare `kac` runs the published tool rather than this one. [`tooling/CLAUDE.md`](tooling/CLAUDE.md) says what that
-costs, and carries the `template/` runs that go beside these.
-
-All three test layers gate the branch and assert different things about the same corpus, so regenerating goldens can
-leave you green locally and red in CI.
-
-**Install the two linters once.** `brew install yamllint actionlint` takes the versions the `lint` job pins. That job's
-own `pip install -r .github/requirements.txt` needs Python 3.10 or newer, and macOS ships an older `python3`.
+Where `kac` or a test changed, run the unit, feature and golden
+[test layers](docs/maintaining/build-test-release.md#the-three-test-layers). Each asserts something the others do not,
+so goldens regenerated alone can pass locally and fail in CI. Where a YAML file or a workflow changed, run the
+[linters](docs/maintaining/build-test-release.md#check-the-site-and-the-configuration).
 
 ## Your working style
 
@@ -82,7 +64,7 @@ the supporting detail after it.
 ## Ask this repository's own corpus
 
 `example-dogfooding` is what this repository knows about itself, installed here as a plugin. The rules you build to are
-records in it rather than lines on this page.
+records in it. Each of its skills says in its description when to ask it.
 
 | Before you change                                       | Read                                                                                                                                                              |
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -97,33 +79,17 @@ records in it rather than lines on this page.
 `eng:std-CSSTY` and `eng:std-NETTST` are authored in `examples/engineering` and arrive through `consumes:`, so a clause
 of either is cited as `eng:`.
 
-[`.claude/settings.json`](.claude/settings.json) names the `marketplace` branch the plugin is served from and turns it
-on, so a clone has it without anyone adding a marketplace by hand. These skills come with it:
-
-* **`standards-lookup`** finds the rule you have to build to. Ask it before you change a workflow, a YAML file, or any
-  prose published here.
-* **`policy-lookup`** finds what the estate is committed to, in the clauses `examples/engineering` states. Ask it
-  before you propose anything touching secrets, access, dependencies, or what reaches production.
-* **`glossary-lookup`** says what a word here means. Ask it before you infer a meaning from usage.
-* **`controls-lookup`** says what proves a rule, and which rules nothing checks. Ask it before you change a job in a
-  workflow, or before you tell anybody a rule here is enforced.
-* **`process-lookup`** finds the procedure for a planned task. Ask it before you invent an order of your own.
-* **`fix-lookup`** says whether somebody here has already solved a problem. Ask it before you debug anything, and
-  before you file a finding about a problem you just met.
-* **`raise-finding`** files what you noticed back on this repository. It is the route for every one of them.
-* **`request-deviation`** asks the owner of a clause to accept a departure from it. Reach for it before you build
-  something that breaks one of the inherited clauses in `examples/engineering`.
+[`.claude/settings.json`](.claude/settings.json) turns the plugin on from the `marketplace` branch, so a clone has it
+without anyone adding a marketplace by hand.
 
 **`harvest-findings` is in the working tree, under
 [`.claude/skills/`](.claude/skills/harvest-findings/SKILL.md).** It triages the findings already filed and drafts the
-record one of them asks for, so it writes to the tracker and to the records. Ask it before you plan a session's work
-here, because a finding nobody triaged is work nobody has seen. **Start it from inside a corpus**, as
-`examples/dog-fooding`: it walks up for a `.corpus.yaml` to learn which corpus it is triaging, and this root has
-none.
+record one of them asks for. Ask it before you plan a session's work here, because a finding nobody triaged is work
+nobody has seen. Start it from inside a corpus, such as `examples/dog-fooding`, because this root has no `.corpus.yaml`.
 
-**Use them, and then raise a finding where they let you down.** This is the one corpus whose subject is the repository
-you are working in, so a session here is the only reader who can tell what it is missing. Raise one for whichever of
-these happened:
+**Use the skills, and then raise a finding where they let you down.** This is the one corpus whose subject is the
+repository you are working in, so a session here is the only reader who can tell what it is missing. Raise one for
+whichever of these happened:
 
 * a question one of the skills should have answered and could not
 * a record that is missing, or one whose wording sent you the wrong way
@@ -132,11 +98,8 @@ these happened:
 * something about the agent configuration under [`.claude/agents-config/`](.claude/agents-config/), which a session
   meets the same way and by using it
 
-**Load `raise-finding` and let it write the issue.** It carries the body, the provenance and the label, so a finding
-arrives in a shape the next run can act on. Filing one by hand costs the same and lands a shape nothing reads.
-
-**It asks before it files, every time.** Say what you are about to raise in the reply that closes the session, and let
-the developer answer. A finding filed unasked is the one thing this skill must never do.
+**Load `raise-finding` and let it write the issue.** It writes the body, the provenance and the label in the shape the
+next run reads. Say what you are about to raise in the reply that closes the session, and let the developer answer.
 
 **The clause owner here is the developer you are talking to.** A consumer elsewhere files a deviation request because
 they cannot reach that person. You can, so put the departure to them in the conversation, and let `request-deviation`
@@ -156,7 +119,7 @@ skill does.
 
 ## Where a page or a skill let you down
 
-The plugin is a read-only copy, so an issue is the only way an agent writes back to it. The guidance is not. The four
+The plugin is a read-only copy, so an issue is the only way an agent writes back to it. The guidance is not. The
 `CLAUDE.md` files, the playbooks under [`.claude/skills/i-want-to/`](.claude/skills/i-want-to/) and the four writing
 skills all sit in the working tree, one edit from whoever is reading your reply.
 
@@ -176,15 +139,13 @@ worth making, and says so where it is.
 
 ## Before you raise a pull request
 
-**The changelog entry and the version are two separate calls, and only the second is yours to ask about.**
-[`std-CI`](examples/dog-fooding/standards/workflows.md) carries the entry, the version and the `content-version` each
-corpus you changed owes. [`std-VERS`](examples/dog-fooding/standards/versioning.md) carries what a move of each of
-those means, and the lock and range every consumer of that corpus owes back. Whether the entry you wrote ships is the
-question that belongs to whoever owns the branch. A push to `main` publishes `kac` whenever
-[`tooling/kac/kac.csproj`](tooling/kac/kac.csproj) names a version nuget.org does not already hold, so moving
-`<Version>` **is** the release. Put the call to them before you open the pull request, with a recommendation: release
-where the change stands on its own, and hold where it is one part of a group that is no use apart. Where the tool did
-not change there is nothing to ask.
+[What a pull request owes](docs/maintaining/contributing.md#what-a-pull-request-owes) lists the changelog entry, the
+`content-version` and the consumer locks. [`std-CI`](examples/dog-fooding/standards/workflows.md) and
+[`std-VERS`](examples/dog-fooding/standards/versioning.md) state the rules behind them.
+
+**Moving `<Version>` is the release, and that call belongs to the developer.** Where `kac` changed, put it to them
+before you open the pull request, with a recommendation. Release where the change stands on its own. Hold where it is
+one part of a group that is no use apart.
 
 `ChangelogTests` fails a version that has no section. A local run passes over the consumer's lock, because `.imports/`
 is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` in
@@ -200,5 +161,5 @@ not list. Three files carry that configuration:
   `paul80nd/knowledge-as-code`, reached with the `gh` CLI.
 * [`triage-labels.md`](.claude/agents-config/triage-labels.md): the five canonical roles, each label string equal to
   its name.
-* [`domain.md`](.claude/agents-config/domain.md): single-context. The four `CLAUDE.md` files describe the domain, and
+* [`domain.md`](.claude/agents-config/domain.md): single-context. The `CLAUDE.md` files describe the domain, and
   `glossary-lookup` stands in for the `GLOSSARY.md` the skills read and write.
