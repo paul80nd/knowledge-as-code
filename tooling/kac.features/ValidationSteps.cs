@@ -59,6 +59,21 @@ public sealed class ValidationSteps(Workspace ws)
         Assert.Equal(expected, actual);
     }
 
+    /// <summary>A source answers from the folder it names, and a scenario reaching for the network fails.</summary>
+    [When("I validate the corpus against its sources")]
+    public void WhenIValidateTheCorpusAgainstItsSources()
+        => _result = Harness.Validate(ws.Root, new Registry(
+            url => throw new InvalidOperationException($"a validate spec reached for the network: {url}"),
+            Registry.OnDisk(ws.Root)));
+
+    [Then(@"no findings are reported for ""(.*)""")]
+    public void ThenNoFindingsAreReportedFor(string file)
+        => Assert.DoesNotContain(Result.Findings, f => f.File == file);
+
+    [Then(@"no finding is reported under ""(.*)""")]
+    public void ThenNoFindingIsReportedUnder(string folder)
+        => Assert.DoesNotContain(Result.Findings, f => f.File.StartsWith(folder + "/", StringComparison.Ordinal));
+
     private static (string, int?, string, string) Row(Finding f)
         => (f.Severity.ToString().ToLowerInvariant(), f.Line, f.Check.Value, f.Message);
 

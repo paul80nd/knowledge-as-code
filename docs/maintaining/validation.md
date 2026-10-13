@@ -149,8 +149,9 @@ full statement of each one.
 
 ## Unspecified
 
-* Ten `validate` fixtures with no scenario: frontmatter that breaks, `values: $corpus.x` in its three forms, the
-  descriptor's targets, imports and their versions, expression rules, shortcodes, and type adoption.
+* Eight `validate` fixtures with no scenario: frontmatter that breaks, `values: $corpus.x` in its three forms, the
+  descriptor's targets, expression rules, shortcodes, and type adoption. [Imports](imports.md) specifies `imports`
+  and `import-versions`.
   [#247](https://github.com/paul80nd/knowledge-as-code/issues/247)
 * Most rules a type declares for itself, and core checks such as `key-order`, are tripped by a golden fixture and named
   in no scenario. `kac checks` lists them, and the golden suite's coverage gate holds each to a fixture.

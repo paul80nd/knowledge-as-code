@@ -82,4 +82,16 @@ public static class Harness
         foreach (var file in Directory.EnumerateFiles(src, "*", SearchOption.AllDirectories))
             File.Copy(file, Path.Combine(dst, Path.GetRelativePath(src, file)), overwrite: true);
     }
+
+    /// <summary>
+    /// <see cref="Validate(string)"/> with each import's source asked what it publishes, as <c>kac validate</c> asks
+    /// it. <paramref name="registry"/> decides what a scenario's sources answer.
+    /// </summary>
+    public static ValidationResult Validate(string corpusRoot, Registry registry)
+    {
+        var corpus = Corpus.Load(corpusRoot);
+        var standings = Freshness.Read(corpus.Descriptor.Consumes, registry);
+        return new ValidationResult(
+            Validator.CheckAll(corpus, Today, standings), corpus.Docs.Count, corpus.SkippedNoFrontmatter);
+    }
 }
