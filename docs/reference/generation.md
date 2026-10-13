@@ -33,8 +33,9 @@ all sit directly in its folder gets a single table and no headings.
 and `their-sla` heads Their SLA. `kac` recognises `id` and `sla`. A field whose initialism is neither of those heads a
 column in sentence case, so open an issue on this repository where you declare one.
 
-**`kac` drops the derived column where the heading already gives it.** A record filed deeper keeps it, so
-`platform/dotnet` under a heading of Platform still shows `dotnet`.
+**`kac` drops the derived column where every row in a table repeats its heading.** One record filed deeper keeps the
+column for the whole table, with each full value. Under Platform, `platform/containers.md` shows `platform` and
+`platform/dotnet/testing.md` shows `platform/dotnet`.
 
 **The frontmatter reference lists the universal fields first, marked `†`, then the type's own.** Each row renders that
 field's `description`, falling back to `notes` where the schema declares none.
