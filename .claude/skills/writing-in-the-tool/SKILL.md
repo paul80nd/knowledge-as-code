@@ -20,18 +20,16 @@ Write comments to John Ousterhout's *A Philosophy of Software Design*, chapters 
 below say where this repository differs.
 
 * **Comment a constraint a maintainer could break by tidying the code.** Where deleting a line would still compile
-  and still pass the tests, say what the line protects. One or two lines is enough. Most code needs no comment.
-* **State the constraint. Do not argue for it.** A comment that defends a choice against the alternatives is an
-  argument, and the argument goes in the commit message. The comment may cite the specification page that owns the
-  behaviour, as [the documentation charter](../../../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains)
-  says. A "because" or a "rather than" in a comment is usually the argument starting. Cut the clause.
+  and still pass the tests, say what the line protects. One or two lines is enough.
+* **State the constraint and stop.** [The documentation
+  charter](../../../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains) says what a comment may cite, and
+  the argument goes in the commit message. A "because" or a "rather than" in a comment is usually the argument
+  starting. Cut the clause.
 * **Keep a comment to one paragraph of three lines.** `CommentLengthTests` fails a `//` block that runs longer. Where
   the reason needs more, it is an argument. Put it in the commit message.
 * **A comment at the same level as the code repeats it. Delete it.**
 * **Describe the design as it stands.** A comment never says what the code used to do. The commit message holds
   that.
-* **Read the code under every comment you touch.** Fix a comment that has drifted. A wrong comment is worse than
-  none, because it is believed.
 * **Use no banner and no `#region`.** A region collapses by default and hides structure. StyleCop bans it under
   `SA1124`. A file that wants section headings wants splitting.
 * **Do not apologise.** Cut `hacky`, `sorry` and `for now`. Name the constraint instead.
@@ -81,4 +79,5 @@ Follow Microsoft's [comment style] for C# and its [recommended XML tags]. The ru
 
 * Write one entry per behaviour a reader can observe. A refactor nobody can see from outside gets no entry.
 * Name the verb and the flag, not the class. Write `kac export --json`. Not `Exporter.WriteJson`.
-* Write the entry under `## Unreleased`. Moving the version is a separate decision.
+* [What a pull request owes](../../../docs/maintaining/contributing.md#what-a-pull-request-owes) says where the entry
+  goes, and that `<Version>` stays as it is.
