@@ -46,14 +46,13 @@ schema derives.
 
 A type can also take a field's value from the folder a record is saved in. A field declaring `from: sub-path` takes the
 folders between the type's own folder and the file. So a policy at `policies/security/accs-access-by-identity.md` gets
-`category: security` with no line of frontmatter saying so. Folders can nest, so `standards/platform/dotnet/testing.md`
-gets `platform/dotnet`.
+`category: security` with no line of frontmatter saying so. Writing the key by hand is an error, reported as
+`derived-key`, because the folder and the line could then say different things. Folders can nest, so
+`standards/platform/dotnet/testing.md` gets `platform/dotnet`.
 
 Save a record straight into its type folder and the field is empty, which is a normal state. You start using
-categories by making a folder.
-
-The value reaches everything that reads the field: the generated index, its sort, and `kac export`. Writing the key by
-hand is an error, reported as `derived-key`, because the folder and the line could then say different things.
+categories by making a folder. The value reaches everything that reads the field: the generated index, its sort, and
+`kac export`.
 
 ## Filling `sources`
 
