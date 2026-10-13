@@ -2,7 +2,8 @@
 
 ## What it is for
 
-`kac` declares every check it can report in the schema, and prints that declaration back with `kac checks`. The schema
+`kac` declares every check it can report against a corpus (one repository of knowledge records kept in git) in the
+schema, and prints that declaration back with `kac checks`. The schema
 decides what runs and against which type, so nothing is hard-coded per type.
 
 Only an error fails the build. `info` is for a check declared in `_checks.yaml`. A type's own rules report at `error`

@@ -67,9 +67,8 @@ never found by the search that needed it.
 
 ## What a pipeline will not do
 
-A pipeline never commits. Where generated content is stale the build fails and names the command to run locally, as
-[Read-only permission](../use/ci.md#read-only-permission) says. A pipeline that pushed fixes would re-trigger itself,
-and make "who changed this" unanswerable.
+[A pipeline never commits](../use/ci.md#read-only-permission). One that pushed fixes would re-trigger itself, and make
+"who changed this" unanswerable.
 
 ## What does not belong in a corpus
 

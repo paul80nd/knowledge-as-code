@@ -12,13 +12,13 @@ corpus.
 
 ## The three layers
 
-| Layer             | Holds                                                                        | Owned by                    |
-|-------------------|------------------------------------------------------------------------------|-----------------------------|
-| framework         | the schema, the validator and the agent skills                               | the framework's maintainers |
-| governance corpus | what the whole organisation is bound by: policies, standards and controls    | the organisation            |
+| Layer             | Contains                                                                    | Owned by                    |
+|-------------------|-----------------------------------------------------------------------------|-----------------------------|
+| framework         | the schema, the validator and the agent skills                              | the framework's maintainers |
+| governance corpus | what the whole organisation is bound by: policies, standards and controls   | the organisation            |
 | domain corpus     | one bounded context's own knowledge, such as its services and its decisions | the team running it         |
 
-`kac` reaches a corpus from nuget.org, and the rest of the framework arrives as a template. A domain corpus consumes a
+`kac` is installed from nuget.org, and the rest of the framework arrives as a template. A domain corpus consumes a
 governance corpus, and the governance corpus keeps no list of who reads it.
 
 ## The round trip
@@ -41,7 +41,7 @@ It prints one line for that corpus and none for each citation into it.
 
 ## What an export inherits
 
-An export carries the corpora its own corpus consumes, so a third corpus consuming this one inherits them too, at any
+An export includes the corpora its own corpus consumes, so a third corpus consuming this one inherits them too, at any
 depth. [The export format](../reference/export.md#a-consumer-inherits-what-its-producers-published) says what the merge
 settles and what it refuses.
 
@@ -54,11 +54,11 @@ where the two corpora sit under different licences or owners.
 `restore` keeps the locked version for as long as the range admits it. `validate` asks each source what it publishes
 now, once per run:
 
-| The newest version                     | `validate` reports           |
-|----------------------------------------|------------------------------|
-| sits inside the declared range         | `import-behind`, a warning   |
-| sits outside the range                 | `import-capped`, an info     |
-| could not be asked of the source       | `import-unreachable`, an info |
+| The newest version               | `validate` reports            |
+|----------------------------------|-------------------------------|
+| sits inside the declared range   | `import-behind`, a warning    |
+| sits outside the range           | `import-capped`, an info      |
+| could not be asked of the source | `import-unreachable`, an info |
 
 A version behind is never an error.
 

@@ -1,8 +1,8 @@
 # The export format
 
-`kac export` writes `.dist/export/` for something that will never open a corpus's Markdown. This page is the contract:
-what each file contains, what a type decides about its own records, and which version number moves when any of that
-changes.
+`kac export` writes `.dist/export/` for something that will never open the Markdown of a corpus (one repository of
+knowledge records kept in git). This page is the contract: what each file contains, what a type decides about its own
+records, and which version number moves when any of that changes.
 
 It is for whoever declares the `export:` block of a type, meaning one kind of knowledge record, and for whoever writes a
 consumer against the output. [`export`](../use/cli/export.md) is the page for running the command.
@@ -54,7 +54,7 @@ the [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-cat
 
 A type whose `fields:` does not name `verified` carries `trust` as `null`. `reports` and `fixes` name it.
 
-A record a consumer inherited carries no `trust` key at all, because it is copied from the producer's export byte for
+A record a consumer inherited has no `trust` key at all, because it is copied from the producer's export byte for
 byte. Test for the key on an inherited record, as you do for `shortcode`.
 
 ### What each fidelity carries
@@ -143,7 +143,7 @@ Each of these ends the run with a reason and nothing written:
 
 * a declared import with nothing restored
 * a consumed corpus at an export format this build does not read
-* two corpora exporting one type at two shapes, or carrying its sections at two fidelities
+* two corpora exporting one type at two shapes, or sending its sections at two fidelities
 * one corpus arriving twice, at two versions
 
 ### `sources`
@@ -325,7 +325,7 @@ It contains one line per external framework reference, for the type declaring a 
 
 ### A cross-reference is read, never inferred
 
-A `**Not:**` line linking a term in another glossary is carried in `seeAlso`, as `gls-search.title`. A link naming a
+A `**Not:**` line linking a term in another glossary goes into `seeAlso`, as `gls-search.title`. A link naming a
 record and no term inside it adds nothing to `seeAlso`, and the run names each link it could not read.
 
 ## What holds in every file

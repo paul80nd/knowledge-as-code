@@ -51,7 +51,7 @@ folders between the type's own folder and the file. So a policy at `policies/sec
 `standards/platform/dotnet/testing.md` gets `platform/dotnet`.
 
 Save a record straight into its type folder and the field is empty, which is a normal state. You start using
-categories by making a folder. The value reaches everything that reads the field: the generated index, its sort, and
+categories by making a folder. Everything that reads the field gets the value: the generated index, its sort, and
 `kac export`.
 
 ## Filling `sources`
