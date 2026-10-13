@@ -1,18 +1,18 @@
 # knowledge-as-code
 
-Knowledge as Code (KaC) is a framework for knowledge that people and AI sessions both read from and contribute to. It is
-plain Markdown in git, reviewed by pull request. But every document has a type, and every type declares a schema.
+Knowledge as Code (KaC) keeps your engineering knowledge in git, where people and AI coding sessions can both find it.
+Standards, decisions, runbooks, known fixes and the glossary each become a **record**: a Markdown document with a
+declared type, reviewed by pull request like any other change.
 
-`kac` is the tool that checks each document against the schema its type declares. It reports every fault against the
-file that caused it. A broken cross-reference fails CI. `kac` writes the indexes and tables nobody should be keeping by
-hand. It also writes the documents out as an **export**: data an agent can read.
+`kac` is the command-line tool that checks every record against the schema its type declares. It reports each fault
+against the file that caused it, and a broken cross-reference fails CI. It writes the indexes nobody should keep by
+hand. It also packages the records as a Claude Code **plugin**, so an agent can look up a standard before it writes
+code.
 
-A repository of those documents, with the schema it runs, is a **corpus**. A document filed under a type is a
-**record**. A corpus has two readers and one set of files. A person reads the rendered wiki. An agent reads the export,
-built from the same documents. Nothing has to be kept true twice.
+A repository of records, with the schema it runs, is a **corpus**. People read it as a wiki. Agents read the plugin,
+built from the same files, so nothing has to be kept true twice.
 
-An agent can therefore find the standard it needs before it writes code, and leave what it learns where a reviewer will
-see it.
+An agent writes back by filing an issue on your tracker. A person decides whether what it found becomes a record.
 
 ## A type declares its own schema
 

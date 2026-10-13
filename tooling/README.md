@@ -28,6 +28,15 @@ dotnet build kac.slnx                      # kac, kac.core, kac.tests and kac.fe
 dotnet pack tooling/kac/kac.csproj -o .dist/pack   # the tool as a package, which is how a corpus receives it
 ```
 
+Install what you packed to try a change exactly as a corpus will receive it, before any release includes it:
+
+```bash
+dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
+cd examples/library && ../../.dist/tools/kac validate
+```
+
+`--tool-path` keeps the install inside this repository, where `.dist/` is untracked.
+
 The solution sits at the repository root. It names projects in this folder, and an IDE opening it should see
 `template/` and `examples/` too. This page names it rather than linking it. The solution is in the verification layer,
 so a corpus running a tool proven upstream holds no such file for a link to reach.
