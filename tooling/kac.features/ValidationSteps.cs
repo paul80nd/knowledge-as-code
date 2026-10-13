@@ -5,20 +5,16 @@ using Xunit;
 namespace kac.features;
 
 [Binding]
-public sealed class ValidationSteps
+public sealed class ValidationSteps(Workspace ws)
 {
-    private string _fixture = "";
     private ValidationResult? _result;
 
     private ValidationResult Result =>
         _result ?? throw new InvalidOperationException(
             "validate the corpus first (missing 'When I validate the corpus')");
 
-    [Given("the (.*) fixture corpus")]
-    public void GivenTheFixtureCorpus(string name) => _fixture = name;
-
     [When("I validate the corpus")]
-    public void WhenIValidateTheCorpus() => _result = Harness.Validate(_fixture);
+    public void WhenIValidateTheCorpus() => _result = Harness.Validate(ws.Root);
 
     [Then(@"validation reports (\d+) documents? and (\d+) skipped")]
     public void ThenValidationReports(int validated, int skipped)
