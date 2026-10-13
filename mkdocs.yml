@@ -178,5 +178,14 @@ nav:
       - The documentation charter: maintaining/charter.md
       - Checks in C#: maintaining/checks.md
       - Adding a report: maintaining/reports.md
-      - The plugin bundle: maintaining/plugin.md
+      - Specification:
+          - Discovery: maintaining/discovery.md
+          - Validation: maintaining/validation.md
+          - Generation: maintaining/generation.md
+          - Export: maintaining/export.md
+          - The plugin bundle: maintaining/plugin.md
+          - Pack and restore: maintaining/packages.md
+          - Imports: maintaining/imports.md
+          - Layers and update: maintaining/layers.md
+          - Reporting: maintaining/reporting.md
   - Changelog: changelog.md
