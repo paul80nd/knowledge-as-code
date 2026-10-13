@@ -2,14 +2,15 @@
 
 This page says which reader each section of the site serves and which kinds of page each section may contain. It also
 says where the argument behind a change is written. Check a page against it before you add, move or argue anything on
-one. The writing rules in the repository cite this page and do not restate it.
+one. The writing rules in the repository cite this page for the readers and the page kinds, and do not restate either.
 
 A corpus is one repository of knowledge records kept in git. A record is one Markdown document in it, and a type is one
 kind of record.
 
 ## The readers
 
-Four readers use the site, and each one owns a section.
+Four readers each own a section. The plugin is a corpus packaged for Claude Code. The export is the set of files a
+corpus publishes for another corpus to consume.
 
 | Reader               | What they want                                                              | Section           |
 |----------------------|-----------------------------------------------------------------------------|-------------------|
@@ -18,11 +19,8 @@ Four readers use the site, and each one owns a section.
 | The schema owner     | the keys, the expression grammar, the checks and the export contract        | Schema reference  |
 | The maintainer       | how `kac` is built and released, and what it is specified to do             | Maintaining `kac` |
 
-The plugin is a corpus packaged for Claude Code. The export is the set of files a corpus publishes for another corpus
-to consume.
-
-The evaluator is deciding whether to adopt `kac` at all. They read the root `README.md` and the opening of
-[the introduction](../index.md). A page written for them beyond that sits in Use it.
+One more reader, the evaluator, owns no section. They are deciding whether to adopt `kac` at all. They read the root
+`README.md` and the opening of [the introduction](../index.md). A page written for them beyond that sits in Use it.
 
 ## The page kinds
 
@@ -33,7 +31,7 @@ Each section may contain only the kinds of page in its row.
 | Use it            | A tutorial, a how-to, and reference for what a user types or writes, such as a command or the corpus descriptor |
 | The framework     | Explanation, which may say why                                                                                  |
 | Schema reference  | Reference for what a schema owner declares                                                                      |
-| Maintaining `kac` | Specification, and the maintainer's how-tos for building, releasing and forking `kac`                           |
+| Maintaining `kac` | Specification, the maintainer's how-tos for building, releasing and forking `kac`, and this charter             |
 
 The first four kinds are [Diátaxis](https://diataxis.fr/)'s. A specification page states what `kac` is built to do,
 and each behaviour on it links the Reqnroll scenario in
