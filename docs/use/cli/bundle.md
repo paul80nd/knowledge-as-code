@@ -132,10 +132,14 @@ export:
 | `homepage`, `repository`                          | `publishing.base`            |
 | `keywords`                                        | the types the export carried |
 
-**`bundle` removes a key the corpus declared nothing for.** `author` and `description` are the exceptions. A corpus
-that named nobody is filed under its own name, because `claude plugin validate --strict` fails a manifest with no
-`author`. A corpus with no `description` gets one built from its name. Every other key in the manifest survives
-untouched.
+**`bundle` removes a key the corpus declared nothing for.** Three keys are the exceptions:
+
+* `author`: a corpus that named nobody is filed under its own name, because `claude plugin validate --strict` fails a
+  manifest with no `author`.
+* `description`: a corpus with no description gets one built from its name.
+* `version`: a corpus with no `content-version` keeps the version the manifest states.
+
+Every other key in the manifest survives untouched.
 
 ## Known limits
 
