@@ -19,8 +19,8 @@ fills it with its own knowledge.
 * **[Contributing](contributing.md)** says how knowledge is added, reviewed and merged, and where the rules for the
   words themselves live.
 * **[Lineage](lineage.md)** says how the types relate to their prior art, and on what terms.
-* **[Shaping a type](shaping-a-type.md)** says why each type the framework ships chose the fields, sections and export
-  it did.
+* **[Shaping a type](shaping-a-type.md)** says what a record of each type is for, and why its fields and sections
+  serve that.
 
 ## What a corpus has beside these
 

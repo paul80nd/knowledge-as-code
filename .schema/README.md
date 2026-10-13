@@ -63,8 +63,8 @@ documents those:
 * <https://paul80nd.github.io/knowledge-as-code/reference/expressions/> is what a rule's `expr:` may say.
 * <https://paul80nd.github.io/knowledge-as-code/reference/held-to/> is what `kac` refuses when it loads these files, and
   why a declaration the tool ignores counts as a defect.
-* <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/> is why each type the framework ships chose
-  the fields, sections and export it did.
+* <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/> is what a record of each type the
+  framework ships is for, and why its fields and sections serve that.
 
 ## Open question
 
