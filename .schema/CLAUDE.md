@@ -4,31 +4,20 @@
 [`README.md`](README.md) says what is in this folder and where the rest is written down. This page says what has already
 cost a session here.
 
-In a corpus created from a template, these files arrive with it, so a local edit is drift. Make the change in the
-template and take it down with `kac update`. Where a line below points at a C# file, it means this same repository,
-because a corpus has `.schema/` and an installed `kac` and nothing else.
-
 **After any change, run `kac generate` and then the golden suite.** Every type page has generated `schema-<type>` and
 `checks-<type>` blocks derived from these files. A schema edit alone leaves the corpus stale and fails
 `generate --check` in CI. The fixtures validate against these files rather than against copies, so the same edit can
 move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/kac-tests.cs` as well as `kac validate`.
 
-* **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The key space is closed at every
-  level. The loader records what it asked each mapping for, and anything left over fails as `schema-unknown-key`. A new
-  key means an edit to `tooling/kac.core/Schema.cs` **and** to the code that reads what it parsed. Finding it parsed is
-  not enough: a value nothing dispatches fails the same pass one step later. Declare it in
-  [`meta/type.schema.json`](meta/type.schema.json) in the same edit. Nothing in CI reads that file, so a key missing
-  from it is one an editor marks red while the build stays green.
+* **A key you invent is rejected, and `notes:` is how you say the thing anyway.** The loader reports any key it never
+  asked for as `schema-unknown-key`. A new key means an edit to `tooling/kac.core/Schema.cs` **and** to the code that
+  reads what it parsed, because a value nothing dispatches fails the same pass one step later. Declare it in
+  [`meta/type.schema.json`](meta/type.schema.json) in the same edit. No build reads that file, so a key missing from it
+  is one an editor marks red while the build stays green.
 
-* **Field order is load-bearing.** `key-order` requires a document's frontmatter to be a topological extension of the
-  universal order followed by the type's. Reordering fields here can invalidate documents that were correct. The failure
-  appears in the corpus rather than here.
-
-* **A template does not follow a schema change.** Nothing generates `<type>/_template.md`, so you add a field there by
-  hand. A **required** one is caught: `template-fields` fails when the template omits it, because every document copied
-  from it would fail `required-field`. An **optional** one is not, because a template is curated and leaving one out is
-  an editorial choice. A field *removed* here is caught from the other side, since the template would then have a key
-  the type does not declare.
+* **Reordering fields can invalidate documents that were correct.** The
+  [key-order rule](../docs/reference/checks.md#the-key-order-rule) holds every document to both orders at once, and
+  the failure appears in the corpora rather than here.
 
 * **Prose here reaches further than you think.** A field's `description:` renders into the `schema-<type>` table on
   every adopting corpus's type page. A `summary:`, `detail:`, `versus:`, `collision:` or `lineage:` value renders into
@@ -42,43 +31,25 @@ move golden expectations in `tooling/tests/fixtures/`. Run `dotnet run tooling/k
   as a bare heading. Each has been written out as a rule at some point, and each read as outstanding work for as long as
   it survived.
 
-* **A rule you have not built declares no `severity:`.** That absence is what says "declared, not enforced", and the
-  type page renders it as such. Naming a level nothing fires at fails the schema-load pass, because it would read as
-  enforced in the checks table, in `kac checks` and in the catalogue.
-
 * **`required-when` is a different language and stays one.** It reads `==`, `!=` and `in [...]`, tests one field against
   one other, and lives on the field. A condition needing more than that is a rule with an `expr:`. It also produces an
   *error* at the moment its condition is true, where a rule chooses its own severity. So a fill-this-in-or-else
   obligation is `required-when`, and a should-have-done-this is a rule.
 
-* **The grammar an `expr:` is written in is frozen.**
-  <https://paul80nd.github.io/knowledge-as-code/reference/expressions/> is the reference for it: what the grammar
-  allows, the facts a rule may call, and the guard a field that may be absent needs. A rule that will not fit wants a
-  new fact rather than a wider grammar.
+* **A ratio such as `words() <= links() * 40` fails a document that links to nothing, at any length.** For an offering
+  or an explanation, that is the intended reading.
 
-* **Thresholds are judgements**, and each one is pinned so moving it is visible. A fixture pins a threshold
-  read from what a record states. A unit test naming the day pins one measured against the day of the run,
-  which no fixture can: its date drifts further from today every day it sits there.
-  <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#the-calibrated-windows> says where the numbers
-  came from. A ratio such as `words() <= links() * 40` fails a document that links to nothing, at any length. For an
-  offering or an explanation, that is the intended reading.
+* **Before you add an arm to a rule, check that no existing id already reports the same fault.**
+  [Which check reports a fault](../docs/reference/checks.md#which-check-reports-a-fault) says how the set divides.
 
-* **The text rules are heuristics** and will be tuned wrong first. Their patterns live here rather than in C# for that
-  reason, argued at <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#decisions>.
+The site states the rest. Each row links the section that states it.
 
-* **One fault is reported once, by whichever check owns it.** Before you add an arm to a rule, check that no existing id
-  already reports the same thing.
-  <https://paul80nd.github.io/knowledge-as-code/reference/checks/#which-check-reports-a-fault> says how the set divides.
-
-* **A rule reporting several faults under one id needs a fixture for each**, because one fixture turns the whole id
-  green.
-
-* **A rule whose question needs C# is a class, not an `expr:`.**
-  <https://paul80nd.github.io/knowledge-as-code/maintaining/checks/#when-a-rule-needs-c> has the test for which, and
-  the two interfaces to write it against.
-
-## Where the reasoning lives
-
-A `notes:` states what is local to one field or one check, in one paragraph, and stops. The argument behind a type's
-shape or a check goes in the commit message and the pull request. [The documentation
-charter](../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains) says which page a `notes:` may cite.
+| Before you                                    | Read                                                                                               |
+|-----------------------------------------------|----------------------------------------------------------------------------------------------------|
+| declare a rule nothing implements yet         | [A rule with no `severity:`](../docs/reference/held-to.md#a-rule-with-no-severity)                 |
+| write an `expr:` the grammar will not take    | [Adding a fact](../docs/maintaining/checks.md#adding-a-fact)                                       |
+| write a rule one fixed message cannot explain | [When a rule needs C#](../docs/maintaining/checks.md#when-a-rule-needs-c)                          |
+| report several faults under one id            | [The three places that must agree](../docs/maintaining/checks.md#the-three-places-that-must-agree) |
+| move a threshold                              | [The calibrated windows](../docs/maintaining/checks.md#the-calibrated-windows)                     |
+| move a text rule's pattern into C#            | [Decisions](../docs/maintaining/checks.md#decisions)                                               |
+| write a `notes:`                              | [What a `notes:` contains](../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains)      |
