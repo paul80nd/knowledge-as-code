@@ -4,7 +4,7 @@ namespace kac.core;
 
 /// <summary>
 /// Where <c>new</c> and <c>update</c> read a template from. The template is cloned with git, because an Azure DevOps
-/// repository answers a raw GET with a sign-in redirect. <c>docs/cli/new.md</c> says why.
+/// repository answers a raw GET with a sign-in redirect. <c>docs/use/cli/new.md</c> says why.
 /// </summary>
 public sealed class TemplateSource : IDisposable
 {

@@ -80,7 +80,7 @@ fields:
     description: The binding frameworks this policy's clauses map to, grouped with the references they cite.
     notes: >
       A framework cited with no reference into it takes no `clauses:`, as `[WCAG 2.2 AA]` does. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#the-framework-register>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#the-framework-register>.
 
   active-from:
     required: false
@@ -138,7 +138,7 @@ export:
       anchor: part.anchor
   notes: >
     A clause sends no `seeAlso`. A cross-reference is read from the body beneath a part, and a table row has no
-    body. <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#policies> says what travels, and
+    body. <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#policies> says what travels, and
     what stays behind.
 index:
   columns: [id, title, category, status, aligns-with, review-by]

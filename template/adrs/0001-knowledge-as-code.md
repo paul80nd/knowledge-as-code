@@ -121,4 +121,5 @@ We treat knowledge as code:
 * [Taxonomy](../knowledge-as-code/taxonomy.md) lists the types and how to choose between them.
 * [Metadata](../knowledge-as-code/metadata.md) defines the frontmatter schema.
 * [Contributing](../knowledge-as-code/contributing.md) covers the review model and the promotion path.
-* [Automation](https://paul80nd.github.io/knowledge-as-code/framework/automation/) says what CI validates and generates.
+* [Running it in CI](https://paul80nd.github.io/knowledge-as-code/use/ci/#what-the-checks-ask) says what CI validates
+  and generates.

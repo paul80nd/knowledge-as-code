@@ -84,7 +84,7 @@ fields:
       A list, because an asset surface can be filled by one repository and served from another. Every entry is
       a repository a contributor edits to change this service, named as the host names it and never as a path.
       `repos-base` in `.corpus.yaml` is what resolves one.
-      See <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/#repos-base>.
+      See <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/#repos-base>.
 
   platform:
     required: true
@@ -93,7 +93,7 @@ fields:
     description: What it is built on. Drives which standards apply.
     notes: >
       The range belongs to the estate, so `.corpus.yaml` states it under `enums:` and this file states none.
-      <https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/> describes that block.
+      <https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/> describes that block.
 
   criticality:
     required: true
@@ -111,7 +111,7 @@ fields:
       A standing commitment, and never a rota or a paging tool's id. Backstage, OpsLevel and Cortex each store that
       id because a program dereferences it, where a reader of this record gets a dead string. Required once a service
       runs, so `building` and `retired` are exempt. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.
 
   interfaces:
     required: false
@@ -133,7 +133,7 @@ fields:
       A pointer to the contract, and never a copy of it. The value is a whole URL, because `repos`
       states a bare repository name and no convention derives a path from one. The range belongs to the
       estate, so `.corpus.yaml` states it under `enums:` and this file states none. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.
 
   depends-on:
     required: false
@@ -144,7 +144,7 @@ fields:
     notes: >
       An edge means this service is configured to call that one. A message over a bus is not an edge, because the
       publisher does not know its consumers. The field records outward calls only. See
-      <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services>.
+      <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services>.
 
   data-stores:
     required: false
@@ -190,7 +190,7 @@ export:
     Data: full
   notes: >
     `depends-on` is the estate's own graph, and the reason this type exports at all.
-    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#services> says what else travels, and what
+    <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#services> says what else travels, and what
     stays behind.
 index:
   columns: [id, title, component-type, platform, criticality, monitoring-output, status, owner]

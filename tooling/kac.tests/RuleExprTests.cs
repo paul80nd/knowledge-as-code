@@ -178,7 +178,7 @@ public class RuleExprTests
             "id: pmt-0001\noccurred-at: 2026-06-12T09:00:00Z\nrestored-at: 2026-06-12T09:40:00Z"));
 
     /// <summary>
-    /// What <c>span()</c> promises a rule that calls it. docs/design/expressions.md says why never days.
+    /// What <c>span()</c> promises a rule that calls it. docs/reference/expressions.md says why never days.
     /// </summary>
     [Theory]
     [InlineData("2026-06-03T21:14:00Z", "2026-06-03T21:26:00Z", "PT12M")]

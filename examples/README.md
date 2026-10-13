@@ -29,8 +29,8 @@ Every example names no real organisation, and every hostname those hold is under
 [RFC 2606](https://www.rfc-editor.org/rfc/rfc2606) reserves so that it can never be registered. `dog-fooding/` takes
 this repository as its estate, so anything written there is checkable against the tree around it.
 
-[One corpus or several](https://paul80nd.github.io/knowledge-as-code/one-corpus-or-several/) is the page for choosing
-between one corpus or tiering several, and says what the split costs.
+[One corpus or several](https://paul80nd.github.io/knowledge-as-code/use/one-corpus-or-several/) is the page for
+choosing between one corpus or tiering several, and says what the split costs.
 
 ## What each example is for
 

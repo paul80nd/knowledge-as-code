@@ -60,11 +60,11 @@ meets the same gate as one written in it, and passing the JSON alone admits neit
 It answers shape and vocabulary. It cannot answer anything that spans two files or reads the code, and the site
 documents those:
 
-* <https://paul80nd.github.io/knowledge-as-code/design/expressions/> is what a rule's `expr:` may say.
-* <https://paul80nd.github.io/knowledge-as-code/design/held-to/> is what `kac` refuses when it loads these files, and
+* <https://paul80nd.github.io/knowledge-as-code/reference/expressions/> is what a rule's `expr:` may say.
+* <https://paul80nd.github.io/knowledge-as-code/reference/held-to/> is what `kac` refuses when it loads these files, and
   why a declaration the tool ignores counts as a defect.
-* <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/> is why each type the framework ships chose the
-  fields, sections and export it did.
+* <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/> is why each type the framework ships chose
+  the fields, sections and export it did.
 
 ## Open question
 

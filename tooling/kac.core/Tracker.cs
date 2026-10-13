@@ -2,7 +2,7 @@ namespace kac.core;
 
 /// <summary>
 /// One address with <c>Publishing</c> on GitHub, and two on Azure DevOps, where a project holds the backlog.
-/// <c>docs/design/export.md</c> sets out what <c>Id</c> drops and why.
+/// <c>docs/reference/export.md</c> sets out what <c>Id</c> drops and why.
 /// </summary>
 public static class Tracker
 {

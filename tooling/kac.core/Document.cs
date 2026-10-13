@@ -316,7 +316,7 @@ public partial class Doc
 
     /// <summary>
     /// Empty for a record sitting directly in its type folder, which every caller reads as unset. See
-    /// <c>docs/design/discovery.md</c>.
+    /// <c>docs/use/discovery.md</c>.
     /// </summary>
     private string SubPathValue()
     {

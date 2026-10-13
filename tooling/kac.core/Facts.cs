@@ -54,8 +54,8 @@ public sealed class Facts(Doc doc, DateOnly today)
     public int DaysSince(string from) => Instants.Days(Field(from), Today());
 
     /// <summary>
-    /// Read on the source, so code fences, link targets and markdown syntax are in scope. <c>docs/design/checks.md</c>
-    /// says which rules need that. Frontmatter is excluded.
+    /// Read on the source, so code fences, link targets and markdown syntax are in scope.
+    /// <c>docs/reference/checks.md</c> says which rules need that. Frontmatter is excluded.
     /// </summary>
     public bool Matches(string pattern) => Pattern(pattern).IsMatch(Body);
 

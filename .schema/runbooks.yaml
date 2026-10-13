@@ -105,7 +105,7 @@ fields:
     description: "Which walk the date records: `live` caused the fault, `tabletop` read the steps against the system."
     notes: >
       `staleness-loud` does not read this field, so a tabletop takes the same window as a live walk.
-      See <https://paul80nd.github.io/knowledge-as-code/design/checks/>.
+      See <https://paul80nd.github.io/knowledge-as-code/reference/checks/>.
 
   requires-tools:
     required: false
@@ -139,7 +139,7 @@ export:
     Impact: full
   notes: >
     The steps are left out on purpose.
-    See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#runbooks>.
+    See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#runbooks>.
 index:
   columns: [id, title, severity, status, last-rehearsed]
   sort: [severity, id]

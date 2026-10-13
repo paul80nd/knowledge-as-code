@@ -166,8 +166,8 @@ restore keeps a folder that already contains 0.10.0.
 ## Rationale and provenance
 
 `content-version` is a notification and never a gate. Nothing refuses to load because it moved, so a reader that does
-not know the number reads on. A count works the other way. It moves exactly where the shape a reader was written
-against changed meaning, and reading on would be reading something else. `docs/design/export.md` gives the argument for
+not know the number reads on. A count works the other way. It moves exactly where the shape a reader was written against
+changed meaning, and reading on would be reading something else. `docs/reference/export.md` gives the argument for
 splitting `formatVersion` from a `shapeVersion`: one number across every type would stop a reader over a change to a
 type it never opens.
 

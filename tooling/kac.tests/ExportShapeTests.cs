@@ -5,7 +5,7 @@ namespace kac.tests;
 
 /// <summary>
 /// What every type publishes, written out and pinned. A shape edit fails this; update the block below in the same
-/// commit, and see <c>docs/design/export.md</c> for which edits oblige <c>export.version:</c> to move.
+/// commit, and see <c>docs/reference/export.md</c> for which edits oblige <c>export.version:</c> to move.
 /// </summary>
 [Trait(Kind.Of, Kind.Repository)]
 public class ExportShapeTests

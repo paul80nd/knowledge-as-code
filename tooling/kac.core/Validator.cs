@@ -6,8 +6,8 @@ public static class Validator
 {
     /// <summary>
     /// The whole of <c>validate</c>, so no caller runs a subset and believes it ran the lot. <c>today</c> is the day a
-    /// rule written against <c>today()</c> judges by (see <c>docs/design/expressions.md</c>). A null <c>standings</c>
-    /// reports no import's freshness, rather than every import as current.
+    /// rule written against <c>today()</c> judges by (see <c>docs/reference/expressions.md</c>). A null
+    /// <c>standings</c> reports no import's freshness, rather than every import as current.
     /// </summary>
     public static List<Finding> CheckAll(
         LoadedCorpus corpus, DateOnly today, IReadOnlyList<ImportStanding>? standings = null)
@@ -314,8 +314,8 @@ public static class Validator
     }
 
     /// <summary>
-    /// See docs/corpus-descriptor.md. Reported once, against the descriptor, because that is the file to edit. Asked of
-    /// the types holding a record: an empty folder has no estate to derive a list from.
+    /// See docs/use/corpus-descriptor.md. Reported once, against the descriptor, because that is the file to edit.
+    /// Asked of the types holding a record: an empty folder has no estate to derive a list from.
     /// </summary>
     private static void CheckCorpusEnums(Schema schema, IReadOnlyList<Doc> docs, IReadOnlyList<Doc> templates,
         CorpusDescriptor descriptor, List<Finding> f)

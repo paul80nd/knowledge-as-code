@@ -77,7 +77,7 @@ dotnet run --project ../../tooling/kac -- validate
 That is the form CI runs, and the one you want while changing the tool. A `kac` already on your `PATH` is the published
 tool at whatever version you installed last, and it rewrites generated files with an older wording without saying so.
 
-[The CLI reference](https://paul80nd.github.io/knowledge-as-code/cli/) carries every verb, its options and the exit
+[The CLI reference](https://paul80nd.github.io/knowledge-as-code/use/cli/) carries every verb, its options and the exit
 codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
 development. The golden suite sets `NO_COLOR` on every process it starts, because a runner that renders escapes in its
 logs turns colour back on where a redirected stream would have dropped it. And `--version` and `--help` are answered by

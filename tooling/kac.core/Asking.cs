@@ -36,7 +36,7 @@ public enum Consent
 }
 
 /// <summary>
-/// Every answer has a flag, so nothing is reachable only by typing. <c>docs/cli/new.md</c> carries the defaults.
+/// Every answer has a flag, so nothing is reachable only by typing. <c>docs/use/cli/new.md</c> carries the defaults.
 /// </summary>
 public sealed record NewRequest
 {

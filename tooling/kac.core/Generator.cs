@@ -55,7 +55,7 @@ public static class Generator
 
     /// <summary>
     /// One group's table. The derived column is dropped where every row repeats the heading above it, and where every
-    /// row leaves it empty. <c>docs/design/generation.md</c> states the rule.
+    /// row leaves it empty. <c>docs/reference/generation.md</c> states the rule.
     /// </summary>
     private static string Table(TypeSchema t, string? located, string key, List<Doc> rows)
     {
@@ -221,7 +221,7 @@ public static class Generator
 
     /// <summary>
     /// The same edges as a diagram, a reciprocal pair as one edge, in the Mermaid subset
-    /// <c>docs/design/generation.md</c> names. Labels are <c>-- text --&gt;</c>, because a markdown formatter reads
+    /// <c>docs/reference/generation.md</c> names. Labels are <c>-- text --&gt;</c>, because a markdown formatter reads
     /// the pipes in <c>--&gt;|text|</c> as table cells. The fence is <c>```mermaid</c>, which GitHub renders too.
     /// </summary>
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
@@ -474,7 +474,7 @@ public static class Generator
     /// <summary>
     /// The words a column heading spells in capitals. <c>id</c> is the field every type has, and <c>sla</c> is one word
     /// of <c>their-sla</c>. A corpus declaring a field whose initialism is not in this set gets sentence case, and
-    /// <c>docs/design/generation.md</c> tells its author so.
+    /// <c>docs/reference/generation.md</c> tells its author so.
     /// </summary>
     private static readonly IReadOnlySet<string> Initialisms =
         new HashSet<string>(["id", "sla"], StringComparer.Ordinal);

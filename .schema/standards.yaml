@@ -132,7 +132,7 @@ fields:
       The citation points one way, upward. A standard cites the clause it puts into practice, and the
       policy lists no standards back. A policy that no standard cites is a normal state. No second
       field lists the policies, because the clause ids already give them.
-      See <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
+      See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#standards>.
 
   depends-on:
     required: false
@@ -206,7 +206,7 @@ export:
   notes: >
     A rule travels as its heading and one entry for each bullet beneath it. An entry states the bullet's
     level and its text, in the Markdown the standard wrote it in. See
-    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#standards>.
+    <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#standards>.
 index:
   columns: [id, title, category, status, derived-from, review-by]
   sort: id

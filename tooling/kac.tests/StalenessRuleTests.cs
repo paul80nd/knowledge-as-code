@@ -1,4 +1,4 @@
-// The two windows are named here, for the reason `docs/design/checks.md` gives, so moving 92 or 366 fails
+// The two windows are named here, for the reason `docs/reference/checks.md` gives, so moving 92 or 366 fails
 // here. The expression is read from the real `.schema/processes.yaml`, so a rewrite there is judged by
 // these cases.
 

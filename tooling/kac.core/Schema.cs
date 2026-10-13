@@ -221,12 +221,12 @@ public sealed class PartSpec(string source, string idPattern, List<string> bindi
 
 /// <summary>
 /// What a record of this type contributes to a published export, and how much of each piece travels. A type declaring
-/// no block contributes nothing. <c>docs/design/export.md</c> says what each declaration promises.
+/// no block contributes nothing. <c>docs/reference/export.md</c> says what each declaration promises.
 /// </summary>
 public sealed class ExportSpec
 {
     /// <summary>
-    /// The shape a consumer holds this type's export to, moved by hand. <c>docs/design/export.md</c> says what moves
+    /// The shape a consumer holds this type's export to, moved by hand. <c>docs/reference/export.md</c> says what moves
     /// it.
     /// </summary>
     public int Version { get; init; }
@@ -256,7 +256,7 @@ public sealed class ExportSpec
     public IReadOnlyList<(string Key, string Source)> Line { get; init; } = [];
 
     /// <summary>
-    /// How much of a piece travels. <c>docs/design/export.md</c> says what each one promises a consumer.
+    /// How much of a piece travels. <c>docs/reference/export.md</c> says what each one promises a consumer.
     /// </summary>
     public const string Full = "full";
     public const string Summary = "summary";

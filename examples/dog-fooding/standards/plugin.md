@@ -396,7 +396,7 @@ That third state covers two different questions, so `standalone` separates them.
 other asks the owner of a clause a lookup found, so a bundle that kept either after the last lookup skill left would
 ship a skill nothing can call. `raise-finding` reads no export and serves whoever installed the plugin, and a corpus
 with no record at all is the one a session most needs a route to report. Declaring it standalone keeps that route open.
-`docs/design/plugin.md` describes how `kac bundle` acts on all of them.
+`docs/maintaining/plugin.md` describes how `kac bundle` acts on all of them.
 
 A finding is an observation, and it proposes no record. A session cannot see what the receiving corpus already
 contains, so an id it invents and an expiry it guesses are decisions taken by the wrong reader. The block states what

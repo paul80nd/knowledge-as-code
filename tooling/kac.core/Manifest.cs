@@ -142,7 +142,7 @@ public class CorpusDescriptor
 
     /// <summary>
     /// Where the framework comes from, and what was last taken from it. <c>Path</c> is null where the manifest sits at
-    /// the upstream repository's root. <c>docs/corpus-descriptor.md</c> covers the rest of the block.
+    /// the upstream repository's root. <c>docs/use/corpus-descriptor.md</c> covers the rest of the block.
     /// </summary>
     public string? UpstreamUrl;
     public string? UpstreamPath;
@@ -150,7 +150,7 @@ public class CorpusDescriptor
     public string? UpstreamCommit;
     public string? TakenOn;
 
-    /// <summary>How far an update goes. <c>docs/cli/update.md</c> argues the default.</summary>
+    /// <summary>How far an update goes. <c>docs/use/cli/update.md</c> argues the default.</summary>
     public const string Cautious = "cautious";
     public const string Full = "full";
     public static readonly IReadOnlyList<string> Policies = [Cautious, Full];
@@ -158,19 +158,19 @@ public class CorpusDescriptor
 
     /// <summary>
     /// Files this corpus holds differently on purpose, neither read nor written in either direction.
-    /// <c>docs/cli/update.md</c> says what that buys a corpus.
+    /// <c>docs/use/cli/update.md</c> says what that buys a corpus.
     /// </summary>
     public readonly List<SkippedFile> Skipped = [];
 
     /// <summary>
     /// The corpora this one consumes, in the order the descriptor lists them, and empty for a corpus standing on its
-    /// own. <c>docs/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
+    /// own. <c>docs/use/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
     /// </summary>
     public readonly List<Consumed> Consumes = [];
 
     /// <summary>
     /// Where <c>kac bundle</c> reads the plugin tree from, relative to this corpus's root, and null where the corpus
-    /// keeps its own <c>.plugin/</c>. <c>docs/cli/bundle.md</c> says how the shared tree and this corpus's own are
+    /// keeps its own <c>.plugin/</c>. <c>docs/use/cli/bundle.md</c> says how the shared tree and this corpus's own are
     /// merged.
     /// </summary>
     public string? PluginFrom;
@@ -235,7 +235,7 @@ public class CorpusDescriptor
     /// <summary>
     /// Where to report a problem with the framework itself: <c>kac</c>, the schema, the template or a skill. Takes the
     /// same values <c>PublishingTarget</c> does, and is <c>none</c> where the descriptor states none.
-    /// <c>docs/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
+    /// <c>docs/use/corpus-descriptor.md</c> sets this beside <c>upstream:</c>.
     /// </summary>
     public string FrameworkTarget = Publishing.None;
     public string? FrameworkBase;
@@ -295,7 +295,7 @@ public class CorpusDescriptor
 
     /// <summary>
     /// The ranges this corpus states, keyed as a field's <c>values: $corpus.&lt;name&gt;</c> names them. See
-    /// docs/corpus-descriptor.md.
+    /// docs/use/corpus-descriptor.md.
     /// </summary>
     public readonly Dictionary<string, IReadOnlyList<string>> Enums = new(StringComparer.Ordinal);
 

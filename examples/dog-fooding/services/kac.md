@@ -26,7 +26,7 @@ and runs the corpus pre-flight. Every verb's logic is in `kac.core`. Taken from 
 `tooling/kac/kac.csproj`.
 
 The command surface is `new`, `validate`, `generate`, `restore`, `export`, `bundle`, `pack`, `checks`, `report` and
-`update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/cli/>.
+`update`. The documentation site has a page for each verb, at <https://paul80nd.github.io/knowledge-as-code/use/cli/>.
 
 Two walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the corpus, then walks up again for
 `.schema/` to find what to judge the corpus against. Taken from `tooling/CLAUDE.md`.

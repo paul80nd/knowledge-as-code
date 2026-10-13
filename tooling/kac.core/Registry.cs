@@ -192,7 +192,7 @@ public sealed class Registry(Func<string, Fetched> get, FolderFeed folder)
     /// <summary>
     /// How a fetch is actually performed. Tests hand <c>Registry</c> a function of their own. The token is read from
     /// the environment here, the only place it is used, and travels to every <c>https://</c> source and to none over
-    /// plain HTTP. <c>docs/cli/restore.md</c> says so where somebody sets the variable.
+    /// plain HTTP. <c>docs/use/cli/restore.md</c> says so where somebody sets the variable.
     /// </summary>
     public static Func<string, Fetched> Over(HttpClient client)
     {

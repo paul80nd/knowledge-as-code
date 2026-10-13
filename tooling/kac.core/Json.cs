@@ -19,7 +19,7 @@ public record ChecksReport(IReadOnlyList<CheckInfo> Checks);
 public record CheckInfo(string Check, string Severity, string Summary);
 
 // A consumer reads these instead of cloning the corpus, so their shape is a contract once published.
-// `docs/design/export.md` says what moves `FormatVersion` and each `ShapeVersion`.
+// `docs/reference/export.md` says what moves `FormatVersion` and each `ShapeVersion`.
 
 /// <summary>
 /// Everything that varies between two runs over one commit is confined here, so the rest of the output is
@@ -74,7 +74,7 @@ public record ExportAuthor(string? Name, string? Url);
 /// <summary>
 /// <c>HumanTemplate</c>, <c>Base</c> and <c>Ref</c> are null together, where the corpus publishes nowhere or names a
 /// target nothing builds links for. <c>PathPrefix</c> is null where the corpus is its repository.
-/// <c>docs/design/export.md</c> sets out how a client reads a record's source from these.
+/// <c>docs/reference/export.md</c> sets out how a client reads a record's source from these.
 /// </summary>
 public record ExportPublishing(
     string Target,
@@ -86,7 +86,7 @@ public record ExportPublishing(
 /// <summary>
 /// <c>PartsFile</c>, <c>RecordKey</c>, <c>PartKey</c> and <c>IdKey</c> are null where the type keeps no parts, and
 /// <c>Parts</c> is then zero. <c>SeeAlsoKey</c> is also null where the type declares no such key. <c>FrameworksFile</c>
-/// is null for every type that declares none. <c>docs/design/export.md</c> sets out what moves <c>ShapeVersion</c>.
+/// is null for every type that declares none. <c>docs/reference/export.md</c> sets out what moves <c>ShapeVersion</c>.
 /// </summary>
 public record ExportedType(
     string Type,
@@ -117,13 +117,13 @@ public record ExportRecord(
 
 public record ExportLinks(string Human);
 
-// The type declares a part line's keys in its own `export.parts.line:` block. `docs/design/export.md`
+// The type declares a part line's keys in its own `export.parts.line:` block. `docs/reference/export.md`
 // says why a line carries a `path` and an `anchor` rather than two resolved links.
 
 // `plugin.json` is not here: it is edited as a DOM, so keys this tool has never heard of survive.
 
 /// <summary>
-/// No timestamp and no commit: the copied export's manifest states both. <c>docs/cli/bundle.md</c> says why the
+/// No timestamp and no commit: the copied export's manifest states both. <c>docs/use/cli/bundle.md</c> says why the
 /// component set is stated rather than inferred.
 /// </summary>
 public record BundleRecord(

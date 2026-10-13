@@ -1,8 +1,8 @@
 # The framework
 
-Knowledge as Code is a way of keeping engineering knowledge: plain Markdown in git, where every document has a type and
-every type declares a schema. `kac` is the tool that checks a corpus against that schema. This section is the framework
-itself, meaning the ideas the tool serves rather than the commands serving them.
+This section is for the framework reader: whoever wants to know how the types are laid out, where they came from, and
+how to write a record. Knowledge as Code keeps engineering knowledge as plain Markdown in git, where every document has
+a type and every type declares a schema. `kac` is the tool that checks a corpus against that schema.
 
 A **corpus** is one repository of knowledge records, with the schema it runs. Every corpus takes the same framework and
 fills it with its own knowledge.
@@ -18,8 +18,9 @@ fills it with its own knowledge.
   part of one.
 * **[Contributing](contributing.md)** says how knowledge is added, reviewed and merged, and where the rules for the
   words themselves live.
-* **[Automation](automation.md)** says what a pipeline does for a corpus, and what it leaves alone.
 * **[Lineage](lineage.md)** says how the types relate to their prior art, and on what terms.
+* **[Shaping a type](shaping-a-type.md)** says why each type the framework ships chose the fields, sections and export
+  it did.
 
 ## What a corpus has beside these
 

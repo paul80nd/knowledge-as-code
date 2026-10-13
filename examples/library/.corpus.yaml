@@ -1,7 +1,7 @@
 # knowledge-as-code: corpus descriptor. What this corpus is, and where it stands against the framework
 # it took. Never overlaid and never reconciled: this file is the corpus's own.
 #
-# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means. The
+# https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/ says what every key here means. The
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
@@ -15,7 +15,7 @@ shortcode: lib
 
 # What this corpus knows. Moved by hand, and it is the number a consumer resolves a version range
 # against.
-content-version: "0.20.2"
+content-version: "0.20.3"
 
 # Carried into the package `kac pack` seals and the plugin `kac bundle` assembles. A key left bare is
 # carried into neither.

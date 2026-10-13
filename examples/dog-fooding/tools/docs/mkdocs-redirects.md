@@ -26,9 +26,8 @@ Files under `template/` and `.schema/` cite the documentation site by URL, and e
 keeps a copy of them. A page that moves would break each of those links in every such corpus, and no check here reads
 an external URL. The plugin keeps each old URL working.
 
-`redirect_maps` in `mkdocs.yml` lists each moved page and the page that now answers its question. The page it writes
-carries the anchor on to the new page. `NavigationTests` in `kac.tests` fails a redirect whose target the nav does not
-list.
+`redirect_maps` in `mkdocs.yml` lists each moved page and the page that replaced it. The page it writes keeps the
+anchor. `NavigationTests` in `kac.tests` fails a redirect whose target the nav does not list.
 
 ## Where it is used
 

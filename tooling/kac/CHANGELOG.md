@@ -24,6 +24,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
   record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
 
+### Changed
+
+- **The documentation site is split into four sections, one for each reader.** Use it, The framework, Schema reference
+  and Maintaining `kac` each open on who the section is for, and most pages have a new address. `kac new` writes the new
+  address of the corpus descriptor page into `.corpus.yaml`, and `kac update` updates framework files to cite the new
+  addresses. Every old address redirects to the page that replaced it.
+
 ## 0.32.0 - 2026-10-10
 
 ### Added

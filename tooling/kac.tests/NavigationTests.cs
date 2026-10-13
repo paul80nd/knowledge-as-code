@@ -11,8 +11,8 @@ public partial class NavigationTests
     private static readonly string[] Nav = File.ReadAllLines(Path.Combine(Repo.Root, "mkdocs.yml"));
 
     /// <summary>
-    /// A nav entry names its page last, whether or not it carries a title: <c>- cli/index.md</c>, <c>- validate:
-    /// cli/x.md</c>.
+    /// A nav entry names its page last, whether or not it carries a title: <c>- use/cli/index.md</c>, <c>- validate:
+    /// use/cli/x.md</c>.
     /// </summary>
     [GeneratedRegex(@"([\w./-]+\.md)\s*$")]
     private static partial Regex Entry();
@@ -31,11 +31,11 @@ public partial class NavigationTests
     [Fact]
     public void The_cli_reference_reads_in_the_order_the_parser_declares()
     {
-        var wanted = new[] { "cli/index.md" }
-            .Concat(CliReference.Pages().Select(page => $"cli/{page}.md"))
+        var wanted = new[] { "use/cli/index.md" }
+            .Concat(CliReference.Pages().Select(page => $"use/cli/{page}.md"))
             .ToList();
 
-        Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("cli/", StringComparison.Ordinal))]);
+        Assert.Equal(wanted, [.. Listed().Where(page => page.StartsWith("use/cli/", StringComparison.Ordinal))]);
     }
 
     [Fact]

@@ -8,7 +8,7 @@ namespace kac.tests;
 /// <summary>The three trees a skill can live in, read from the files that already decide which is which.</summary>
 internal static partial class SkillReference
 {
-    internal static readonly string Page = Path.Combine(Repo.Root, "docs", "skills.md");
+    internal static readonly string Page = Path.Combine(Repo.Root, "docs", "use", "skills.md");
 
     private static readonly string Own = Path.Combine(Repo.Root, ".claude", "skills");
     private static readonly string Bundled = Path.Combine(Repo.Root, "template", ".plugin");
@@ -55,7 +55,7 @@ internal static partial class SkillReference
                 .ToList();
 
             // An empty `requires` reads no export, and `standalone` says which of two reasons that is. The words
-            // are `docs/design/plugin.md`'s, so a reader meets one vocabulary across both pages.
+            // are `docs/maintaining/plugin.md`'s, so a reader meets one vocabulary across both pages.
             var reads = requires.Count > 0
                 ? string.Join(", ", requires)
                 : component?["standalone"]?.GetValue<bool>() == true

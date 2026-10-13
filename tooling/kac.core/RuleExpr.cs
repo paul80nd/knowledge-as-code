@@ -1,4 +1,4 @@
-// `docs/design/expressions.md` is the reference for what an expression may say. The grammar is frozen:
+// `docs/reference/expressions.md` is the reference for what an expression may say. The grammar is frozen:
 // a rule that will not fit wants one method on `Facts` and one row in `Functions`, or a rule class in
 // `Rules/`.
 
@@ -75,7 +75,9 @@ public static class RuleExpr
             ["today"] = new([], ValueType.Str, (f, _) => f.Today())
         };
 
-    /// <summary>For the meta-test holding the table in <c>docs/design/expressions.md</c> against what runs.</summary>
+    /// <summary>
+    /// For the meta-test checking the table in <c>docs/reference/expressions.md</c> against what runs.
+    /// </summary>
     public static IReadOnlyCollection<string> FunctionNames => Functions.Keys;
 
     public static Expr Compile(string source)

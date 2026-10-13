@@ -23,7 +23,7 @@ public sealed record PackPlan(
 /// <summary>
 /// An export sealed into one versioned file. The envelope is NuGet's and the payload is ours: the <c>.nuspec</c>
 /// carries only the id and the version, and everything a consumer acts on is in <c>corpus/manifest.json</c>.
-/// <c>docs/cli/pack.md</c> says what a run writes and what it refuses.
+/// <c>docs/use/cli/pack.md</c> says what a run writes and what it refuses.
 /// </summary>
 public static class Packer
 {
@@ -164,7 +164,7 @@ public static class Packer
         if (about?.License is { Length: > 0 } licence)
             metadata.Add(new XElement(ns + "license", new XAttribute("type", "expression"), licence));
 
-        // GitHub Packages reads this URL to decide which repository owns the package. `docs/cli/pack.md` says when.
+        // GitHub Packages reads this URL to decide which repository owns the package. `docs/use/cli/pack.md` says when.
         if (repository is { Length: > 0 })
             metadata.Add(new XElement(ns + "repository",
                 new XAttribute("type", "git"),

@@ -110,7 +110,7 @@ export:
     Consequences: full
   notes: >
     `Context` travels as its opening paragraph, where an ADR states the problem it answered.
-    <https://paul80nd.github.io/knowledge-as-code/design/shaping-a-type/#adrs> says what else travels, and what
+    <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#adrs> says what else travels, and what
     stays behind.
 index:
   columns: [id, title, status, decided-on]

@@ -1,7 +1,7 @@
 # knowledge-as-code: corpus descriptor. What this corpus is, and where it stands against the framework
 # it took. Never overlaid and never reconciled: this file is the corpus's own.
 #
-# https://paul80nd.github.io/knowledge-as-code/corpus-descriptor/ says what every key here means. The
+# https://paul80nd.github.io/knowledge-as-code/use/corpus-descriptor/ says what every key here means. The
 # comments below say only what each value means for this corpus.
 
 # The file's own format, stamped by `kac update`.
@@ -46,7 +46,7 @@ consumes:
     shortcode: eng
     version: ^0.28.0
     source: ../engineering/.dist/package
-    resolved: "0.28.1"
+    resolved: "0.28.2"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.

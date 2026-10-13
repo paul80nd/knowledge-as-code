@@ -3,7 +3,7 @@ namespace kac.core;
 /// <summary>
 /// How a publishing target addresses what it publishes: the rule joining a base to a record's path, and the anchor rule
 /// for a part inside it. Only the address a person opens is built. An agent reads the source through a client that
-/// authenticates to the target. See <c>docs/design/export.md</c>.
+/// authenticates to the target. See <c>docs/reference/export.md</c>.
 /// </summary>
 public sealed class Publishing
 {
@@ -145,8 +145,8 @@ public sealed class Publishing
 
     /// <summary>
     /// The link rule as one string with <c>{path}</c> and <c>{anchor}</c> left to fill. The ref and the path prefix are
-    /// baked in, as <c>docs/design/export.md</c> argues. An Azure DevOps wiki takes the path with <c>.md</c> removed
-    /// and its separators encoded, which <c>Link</c> does and <c>docs/corpus-descriptor.md</c> states.
+    /// baked in, as <c>docs/reference/export.md</c> argues. An Azure DevOps wiki takes the path with <c>.md</c> removed
+    /// and its separators encoded, which <c>Link</c> does and <c>docs/use/corpus-descriptor.md</c> states.
     /// </summary>
     public string Template() => Target switch
     {

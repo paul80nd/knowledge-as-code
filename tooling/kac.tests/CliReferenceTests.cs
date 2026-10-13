@@ -46,7 +46,7 @@ public partial class CliReferenceTests
             if (page == wanted) continue;
 
             if (Updating) File.WriteAllText(path, wanted);
-            else stale.Add($"docs/cli/{verb.Name}.md");
+            else stale.Add($"docs/use/cli/{verb.Name}.md");
         }
 
         Assert.True(stale.Count == 0 || Updating,
@@ -81,7 +81,7 @@ public partial class CliReferenceTests
     public void The_flow_chart_places_every_command_that_is_a_step()
     {
         var chart = Mermaid().Match(File.ReadAllText(CliReference.Index));
-        Assert.True(chart.Success, "docs/cli/index.md carries no ```mermaid block for the flow chart.");
+        Assert.True(chart.Success, "docs/use/cli/index.md carries no ```mermaid block for the flow chart.");
 
         var drawn = Invocation().Matches(chart.Value)
             .Select(m => m.Groups["verb"].Value)
@@ -95,7 +95,7 @@ public partial class CliReferenceTests
 
     /// <summary>
     /// Held to the subset an Azure DevOps wiki renders, which every diagram this repository writes answers to.
-    /// <c>docs/design/generation.md</c> argues it: a diagram exceeding that subset renders nothing at all, with no
+    /// <c>docs/reference/generation.md</c> argues it: a diagram exceeding that subset renders nothing at all, with no
     /// error to say why. So the generator writes <c>graph</c> and this is held to the same.
     /// </summary>
     [Fact]
@@ -131,7 +131,7 @@ public partial class CliReferenceTests
 
         if (Updating) File.WriteAllText(CliReference.Index, wanted);
         else
-            Assert.Fail("the command table is stale in docs/cli/index.md. "
+            Assert.Fail("the command table is stale in docs/use/cli/index.md. "
                         + "Run: KAC_UPDATE_DOCS=1 dotnet test tooling/kac.tests");
     }
 }

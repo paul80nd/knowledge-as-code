@@ -3,9 +3,9 @@ using System.Text;
 namespace kac.core;
 
 /// <summary>
-/// <c>Generator</c>, <c>ChecksTable</c> and the CLI reference under <c>docs/cli/</c> all render tables through this, so
-/// none drifts. Written out because Markdig writes no pipe table: <c>Markdown.Normalize</c> returns one as the run of
-/// its cell text.
+/// <c>Generator</c>, <c>ChecksTable</c> and the CLI reference under <c>docs/use/cli/</c> all render tables through
+/// this, so none drifts. Written out because Markdig writes no pipe table: <c>Markdown.Normalize</c> returns one as the
+/// run of its cell text.
 /// </summary>
 public static class Gfm
 {
