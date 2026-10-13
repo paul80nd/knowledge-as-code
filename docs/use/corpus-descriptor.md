@@ -422,7 +422,7 @@ plugin:
 
 Omit the key and `bundle` reads `.plugin/` at the corpus root, which is what [`new`](cli/new.md) creates. Set it and
 `bundle` reads one tree elsewhere, resolved against the corpus root, so several corpora in a repository share one copy.
-`update` then withholds the plugin files it would otherwise write here.
+[A shared plugin tree](layers.md#a-shared-plugin-tree) says what `update` sends a corpus that sets it.
 
 The manifest, `.plugin/.claude-plugin/plugin.json`, stays in each corpus and is never read from the shared tree. A file
 a corpus writes under its own `.plugin/` wins over the shared tree's copy of the same path.

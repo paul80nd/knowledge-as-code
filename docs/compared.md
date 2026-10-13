@@ -55,8 +55,8 @@ The agent queries a server for documentation through the Model Context Protocol 
 * **What it does well.** The Microsoft Learn MCP Server lets an agent search Microsoft's documentation, fetch a whole
   article and search code samples. It needs no authentication. Its index refreshes after content updates, and in full
   once a day ([Microsoft Learn MCP Server][ms-learn-mcp]). The agent asks for what it needs, when it needs it.
-* **What KaC adds.** A documentation server returns what a vendor published. A corpus states what your organisation
-  decided, in records you write and review.
+* **What KaC adds.** The Microsoft Learn server returns what Microsoft published. A corpus states what your
+  organisation decided, in records you write and review.
 * **When it is enough.** The agent needs a product's public documentation, and none of your own rules.
 
 ## A wiki the agent is pointed at
@@ -66,8 +66,8 @@ The agent searches the pages people already keep, through a connector.
 * **What it does well.** The Atlassian Rovo MCP Server searches Jira and Confluence in natural language. It fetches a
   page's content with the permissions the user already has ([Atlassian: Rovo search and fetch][rovo]). The knowledge
   stays where people already write it.
-* **What KaC adds.** A wiki page has no declared type, and no schema to check it against. A corpus can be published
-  as a wiki too, from the same files the plugin is built from.
+* **What KaC adds.** CI checks each record against its type's schema, and fails a citation that no longer resolves.
+  A corpus can be published as a wiki too, from the same files the plugin is built from.
 * **When it is enough.** The readers are people, and nobody needs to cite a rule or prove it is checked.
 
 ## What KaC does not do

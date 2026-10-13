@@ -38,8 +38,8 @@ to.
 
 ## Before you commit
 
-Run one `kac` invocation at a time. In each corpus you changed under `examples/`, run these. In `template/`, which is
-one level up, write `../` for each `../../`.
+Run [one `kac` at a time](docs/maintaining/build-test-release.md#run-kac-from-source). In each corpus you changed
+under `examples/`, run these. In `template/`, which is one level up, write `../` for each `../../`.
 
 ```sh
 dotnet run --project ../../tooling/kac -- validate         # the corpus
@@ -143,13 +143,13 @@ worth making, and says so where it is.
 `content-version` and the consumer locks. [`std-CI`](examples/dog-fooding/standards/workflows.md) and
 [`std-VERS`](examples/dog-fooding/standards/versioning.md) state the rules behind them.
 
-**Moving `<Version>` is the release, and that call belongs to the developer.** Where `kac` changed, put it to them
-before you open the pull request, with a recommendation. Release where the change stands on its own. Hold where it is
-one part of a group that is no use apart.
+**[The release](docs/maintaining/build-test-release.md#release-a-version) is the developer's call.** Where `kac`
+changed, put it to them before you open the pull request, with a recommendation. Release where the change stands on its
+own. Hold where it is one part of a group that is no use apart.
 
-`ChangelogTests` fails a version that has no section. A local run passes over the consumer's lock, because `.imports/`
-is untracked and a restore keeps a folder already holding the version it resolved to. Delete `.imports/` in
-`examples/payments` and `examples/dog-fooding`, repack the producer, and restore again to see what CI sees.
+A local run passes over the consumer's lock, because `.imports/` is untracked and a restore keeps a folder already
+holding the version it resolved to. Delete `.imports/` in `examples/payments` and `examples/dog-fooding`, repack the
+producer, and restore again to see what CI sees.
 
 ## Agent skills
 

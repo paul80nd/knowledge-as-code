@@ -30,14 +30,14 @@ GitHub turns Actions off in a new fork. Turn them on from the fork's **Actions**
 nuget.org gives a package id to whoever publishes it first, so a fork needs an id of its own. Replace
 `KnowledgeAsCode.Tool` with yours in these places:
 
-| File                                 | What to change                                                                                        |
-|--------------------------------------|-------------------------------------------------------------------------------------------------------|
-| `tooling/kac/kac.csproj`             | `<PackageId>`, `<Authors>`, `<PackageProjectUrl>`, `<RepositoryUrl>` and `<PackageReleaseNotes>`      |
-| `tooling/kac/PACKAGE.md`             | The repository link at the foot of the page nuget.org shows                                           |
-| `.github/workflows/publish-tool.yml` | The flat-container URL, which takes the id in lower case, the `.nupkg` name and the environment `url` |
-| `.github/workflows/kac.yml`          | The `dotnet tool install` line in the `tool` job                                                      |
-| `template/.github/workflows/kac.yml` | The `dotnet tool install` line a new corpus runs                                                      |
-| `template/azure-pipelines.yml`       | The same line, for a corpus on Azure Pipelines                                                        |
+| File                                 | What to change                                                                                                    |
+|--------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| `tooling/kac/kac.csproj`             | `<PackageId>`, `<Authors>`, `<PackageProjectUrl>`, `<RepositoryUrl>` and `<PackageReleaseNotes>`                  |
+| `tooling/kac/PACKAGE.md`             | The repository link at the foot of the page nuget.org shows                                                       |
+| `.github/workflows/publish-tool.yml` | The `dotnet tool install` line, the flat-container URL in lower case, the `.nupkg` name and the environment `url` |
+| `.github/workflows/kac.yml`          | The `dotnet tool install` line in the `tool` job                                                                  |
+| `template/.github/workflows/kac.yml` | The `dotnet tool install` line a new corpus runs                                                                  |
+| `template/azure-pipelines.yml`       | The same line, for a corpus on Azure Pipelines                                                                    |
 
 Then set up the publish itself:
 
@@ -55,7 +55,7 @@ The trusted publishing policy replaces an API key. The job exchanges its GitHub 
 `--from` is not given. `kac new` writes it into the new corpus's `.corpus.yaml` twice:
 
 * `upstream.url` is where `kac update` later takes a newer framework from.
-* `framework.base`, as [above](#where-kac-new-takes-the-framework-from).
+* `framework.base` is where the corpus's readers report a problem with `kac`, the schema, the template or a skill.
 
 Point `Asking.DefaultFrom` at your fork, or every corpus your tool creates takes the upstream framework.
 
@@ -75,14 +75,20 @@ dotnet run tooling/kac-tests.cs -- --update new
 `tooling/kac.core/New.cs`. Pages under `template/` and comments under `.schema/` cite the site by URL too.
 `git grep -l "paul80nd.github.io"` lists every one.
 
+Each specification page under `docs/maintaining/` links its feature files on GitHub. Change those links and
+`FeatureUrl` in `tooling/kac.tests/ScenarioCitationTests.cs` together. The test reads only the links that start with
+`FeatureUrl`.
+
 ## The corpora and the plugin
 
 Each corpus under `examples/` points at this repository in its `.corpus.yaml`:
 
 * `publishing.base` is where a link in the corpus's export points. `tooling/tests/round-trip.sh` fetches a record from
   it at your commit, so the script fails until `publishing.base` points at your fork.
-* `framework.base`, as [above](#where-kac-new-takes-the-framework-from).
+* `framework.base` is where a problem with the framework is reported, as
+  [`kac new` writes it](#where-kac-new-takes-the-framework-from).
 * `author.url` is credited in the package and the plugin.
+* `repos-base`, in `examples/dog-fooding` alone, is where a `services` record's repositories resolve.
 
 `publish-corpus.yml` and `publish-plugin.yml` publish under whichever repository runs them, and need no secret.
 `publish-plugin.yml` writes `owner: {name: "Paul Law"}` into the marketplace it publishes. Change the name to yours.
