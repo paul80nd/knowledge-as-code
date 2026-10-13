@@ -21,12 +21,9 @@ public static class Creation
             "2026-01-01");
 
     public static int WouldChangeUnderFull(string folder) =>
-        Commands.Update(
-            folder,
-            new UpdateRequest
-            {
-                From = RepoRoot, Check = true, Policy = CorpusDescriptor.Full, Yes = true
-            },
-            NewEnough,
-            "2026-01-01");
+        Update(folder, new UpdateRequest { Check = true, Policy = CorpusDescriptor.Full, Yes = true });
+
+    /// <summary>The template is this repository, whatever <paramref name="request"/> names as its source.</summary>
+    public static int Update(string folder, UpdateRequest request) =>
+        Commands.Update(folder, request with { From = RepoRoot }, NewEnough, "2026-01-01");
 }
