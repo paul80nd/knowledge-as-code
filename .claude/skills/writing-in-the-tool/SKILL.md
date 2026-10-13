@@ -21,11 +21,12 @@ below say where this repository differs.
 
 * **Comment a constraint a maintainer could break by tidying the code.** Where deleting a line would still compile
   and still pass the tests, say what the line protects. One or two lines is enough. Most code needs no comment.
-* **State the constraint. Do not argue for it.** A comment that defends a choice against the alternatives is a
-  design page in the wrong place. The reasoning goes under `docs/design/`, and the comment cites the path. A
-  "because" or a "rather than" in a comment is usually the argument starting. Cut the clause.
+* **State the constraint. Do not argue for it.** A comment that defends a choice against the alternatives is an
+  argument, and the argument goes in the commit message. The comment may cite the specification page that owns the
+  behaviour, as [the documentation charter](../../../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains)
+  says. A "because" or a "rather than" in a comment is usually the argument starting. Cut the clause.
 * **Keep a comment to one paragraph of three lines.** `CommentLengthTests` fails a `//` block that runs longer. Where
-  the reason needs more, move it to a page and cite the path.
+  the reason needs more, it is an argument. Put it in the commit message.
 * **A comment at the same level as the code repeats it. Delete it.**
 * **Describe the design as it stands.** A comment never says what the code used to do. The commit message holds
   that.

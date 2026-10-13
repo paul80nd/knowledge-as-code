@@ -4,7 +4,7 @@ namespace kac.tests;
 public class CommentLengthTests
 {
     /// <summary>
-    /// Past this, a comment is a design page in the wrong place. writing-in-the-tool says to move it and cite the path.
+    /// Past this, a comment is arguing. writing-in-the-tool sends the argument to the commit message.
     /// </summary>
     private const int MaxLines = 3;
 

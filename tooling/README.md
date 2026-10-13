@@ -109,9 +109,9 @@ examples keeps each at `###`. `CliReferenceTests` holds every page to that set, 
 **Examples carry the output the command prints**, taken from a real run rather than written by hand. A reader deciding
 whether they have a clean run needs to see one.
 
-Why a command works the way it does belongs under [`../docs/design/`](../docs/design/), one page per feature area,
-which each command page links. That split is what keeps a command page the length somebody reads while running it, and
-it gives the reasoning one home instead of scattering it over the command pages.
+A command page argues nothing, which keeps it the length somebody reads while running the command.
+[The documentation charter](../docs/maintaining/charter.md#where-an-argument-goes) says where the argument behind a
+command goes.
 
 It is prose throughout and not a form. **Known limits** is left out where a command has none, because filler reads as
 an answer where an absence reads as work not yet done.

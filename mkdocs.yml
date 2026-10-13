@@ -132,4 +132,6 @@ nav:
       - Imports: design/imports.md
       - Layers: design/layers.md
   - The corpus descriptor: corpus-descriptor.md
+  - Maintaining kac:
+      - The documentation charter: maintaining/charter.md
   - Changelog: changelog.md

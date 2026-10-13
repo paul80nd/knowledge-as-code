@@ -206,8 +206,9 @@ the one easiest to mistake for a maintainer's note, because it sits beside a top
 generate` writes each tier's `note:` into every corpus's `knowledge-as-code/taxonomy.md`, and each type's `lineage:`
 into `lineage.md`.
 
-* Do not argue in a `notes:`. Put the reason on a design page and cite the URL. End the `notes:` with the URL alone, or
-  with "See <URL>." Do not write "<URL> says why".
+* Do not argue in a `notes:`. State the constraint and stop. The argument goes in the commit message.
+* A `notes:` may cite the page that owns the behaviour, as
+  [the documentation charter](../../../docs/maintaining/charter.md#what-a-comment-or-a-notes-contains) says. End the
+  `notes:` with the URL alone, or with "See <URL>." Do not write "<URL> says why".
 * Say a thing once. Not in a comment, a `notes:` and `export.notes` as well.
-* A `notes:` over one paragraph is a design page in the wrong place. Move it.
-* A design page that takes moved reasoning is a docs page. Load `writing-the-docs` and write it to the model page.
+* A `notes:` over one paragraph is arguing. Cut it to the constraint, and put the argument in the commit message.
