@@ -15,67 +15,26 @@ rules, and what each tier asks of a document. A corpus consumer, who installs th
 document nothing here provides, tracked as
 [issue #203](https://github.com/paul80nd/knowledge-as-code/issues/203).
 
-## Building
+## Building, testing and releasing
 
-Requires the **.NET 10 SDK**. `dotnet run --project` builds and runs the entrypoint, so there is no build step to
-manage. The first run restores the packages and is slow; later runs are cached. Those packages are
-`Spectre.Console.Cli` on the entrypoint, and `YamlDotNet` and `Markdig` through `kac.core`.
+[Build, test and release][site-build] on the documentation site says how to build `kac`, run its test layers and
+publish a version. [Architecture][site-architecture] says how the projects fit together, and [Forking][site-forking]
+lists what a fork replaces before it can publish.
 
-These run from the repository root, as the test commands further down do:
+The solution, `kac.slnx`, sits at the repository root. It names projects in this folder, and an IDE opening it should
+see `template/` and `examples/` too. This page names it rather than linking it. The solution is in the verification
+layer, so a corpus running a tool proven upstream holds no such file for a link to reach.
 
-```bash
-dotnet build kac.slnx                      # kac, kac.core, kac.tests and kac.features together
-dotnet pack tooling/kac/kac.csproj -o .dist/pack   # the tool as a package, which is how a corpus receives it
-```
-
-Install what you packed to try a change exactly as a corpus will receive it, before any release includes it:
-
-```bash
-dotnet tool install --tool-path .dist/tools --add-source .dist/pack KnowledgeAsCode.Tool
-cd examples/library && ../../.dist/tools/kac validate
-```
-
-`--tool-path` keeps the install inside this repository, where `.dist/` is untracked.
-
-The solution sits at the repository root. It names projects in this folder, and an IDE opening it should see
-`template/` and `examples/` too. This page names it rather than linking it. The solution is in the verification layer,
-so a corpus running a tool proven upstream holds no such file for a link to reach.
-
-The package's version is `<Version>` in [`kac/kac.csproj`](kac/kac.csproj), moved by hand.
 [`kac/PACKAGE.md`](kac/PACKAGE.md) is what nuget.org shows, written for whoever installs the tool rather than for
-whoever changes it, which is this page. CI packs on every run and installs what it packed, so metadata that has gone
-missing fails a pull request long before it could fail a publish.
-
-**Releasing is moving that version.** A push to `main` publishes the version it carries, unless nuget.org already holds
-that one. So moving `<Version>` is the release, and whoever owns the branch decides whether to make one. A change not
-released yet takes its line under `## Unreleased` and waits there. What is published is permanent: nuget.org will
-unlist a version but never free the number, so a mistake is followed by the next patch. That is why
-[`.github/workflows/publish-tool.yml`](../.github/workflows/publish-tool.yml) runs all three test layers again against
-the commit that merged, and pushes the same package it proved. A required reviewer on the `nuget.org` environment
-holds the job before any of that runs, so a merge asks a person before it reaches anybody else.
-
-The publish then tags the commit `v<version>` and opens a release carrying that version's section of
-[`kac/CHANGELOG.md`](kac/CHANGELOG.md), which `ChangelogTests` holds the version to having.
-
-Run **one `kac` invocation at a time**: concurrent runs build the same project and contend over its output.
-
-Argument parsing is [`Spectre.Console.Cli`](https://www.nuget.org/packages/Spectre.Console.Cli), so every command and
-option carries generated `--help`. `Program.cs` says why that library and not another.
+whoever changes it. CI packs on every run and installs what it packed, so metadata that has gone missing fails a pull
+request long before it could fail a publish.
 
 ## Running it against a corpus
 
 `kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so it is run from inside one.
-Running it from here reaches no corpus at all. Every folder under [`../examples/`](../examples/) is one, and so is
-[`../template/`](../template/), which holds most of what `kac new` sends a corpus. The template manifest at the
-repository root names the rest, and is the only account of which files a corpus receives and where each one lands.
-
-```bash
-cd ../examples/library
-dotnet run --project ../../tooling/kac -- validate
-```
-
-That is the form CI runs, and the one you want while changing the tool. A `kac` already on your `PATH` is the published
-tool at whatever version you installed last, and it rewrites generated files with an older wording without saying so.
+Every folder under [`../examples/`](../examples/) is one, and so is [`../template/`](../template/), which holds most of
+what `kac new` sends a corpus. [Run `kac` from source][site-run] has the command, and says why a `kac` on your `PATH`
+is the wrong one to run here.
 
 [The CLI reference](https://paul80nd.github.io/knowledge-as-code/use/cli/) carries every verb, its options and the exit
 codes, written for whoever installed the tool. Two things there are worth repeating here because they bite during
@@ -120,14 +79,9 @@ an answer where an absence reads as work not yet done.
 
 ## Tests
 
-Three layers, all run from the repository root and all run in CI, through
-[`.github/workflows/kac.yml`](../.github/workflows/kac.yml):
-
-| Layer       | Project / file            | Run                                | Covers                                                                                                                                                           |
-|-------------|---------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Unit**    | `kac.tests` (xUnit v3)    | `dotnet test tooling/kac.tests`    | `kac.core`'s shared primitives (`Glob`, `Yaml`, `Schema` helpers, `Manifest.Resolve`, `Md`, …). Fast, precise localisation.                                      |
-| **Feature** | `kac.features` (Reqnroll) | `dotnet test tooling/kac.features` | **Behaviour**, as Gherkin specs driving `kac.core` in-process: what findings a document produces, and what `new` settles before it writes anything.              |
-| **Golden**  | `kac-tests.cs`            | `dotnet run tooling/kac-tests.cs`  | Fixtures diffed against committed goldens, plus the coverage and checks-table gates and the CLI contract (exit codes). See [`tests/README.md`](tests/README.md). |
+[The three test layers][site-layers] on the documentation site says what each layer proves and how to run it. All
+three run in CI through [`.github/workflows/kac.yml`](../.github/workflows/kac.yml). What follows is what you need while
+changing one.
 
 ### The unit layer holds two kinds of thing
 
@@ -140,13 +94,8 @@ changed moved its `content-version`. Those fail when content here drifts, when t
 change goes in unread, and never when the tool's logic is wrong. No corpus consuming `kac` carries one, because none of
 it ships. The last two read git history, so the job running them checks out with `fetch-depth: 0`.
 
-A `Kind` trait separates them, so a tight loop can leave the second out:
-
-```sh
-dotnet test tooling/kac.tests --filter "Kind!=Repository"   # the tool alone, while you change it
-dotnet test tooling/kac.tests --filter "Kind=Repository"    # the guards alone, after you touch a page
-dotnet test tooling/kac.tests                               # both, which is what CI runs
-```
+A `Kind` trait separates them, so a tight loop can leave the second out.
+[Run the unit layer in part][site-filters] has the filters.
 
 A trait rather than a project of its own, because the guards are a small tail rather than half the suite, `Repo` and
 `CliReference` are read from both sides, and the whole suite runs in under a second. A second project would buy a name
@@ -155,9 +104,7 @@ and cost a build.
 `KindTests` holds the convention: a test reading `Repo.Root` either carries the trait or is named as one that reads
 the template to exercise the tool. Nothing else would catch a guard written without it, because the class still runs.
 
-The unit layer catches breakage in the pieces early. The feature layer is the readable regression net for what the
-validator does. The golden layer owns the end-to-end CLI contract that the in-process layers bypass. Regenerate golden
-expectations after an intended rule change with `dotnet run tooling/kac-tests.cs -- --update`.
+### The feature and golden layers
 
 The feature layer runs `Corpus.Load` then `Validator.CheckAll`, the pair `kac validate` itself calls, so every check the
 command can emit is reachable from a spec. Its creation specs call `Commands.New`, which is the whole of what `kac new`
@@ -170,6 +117,9 @@ Every layer reads the schema from [`../.schema/`](../.schema/), the one copy at 
 therefore ripples into every fixture in the same run, rather than into a copy someone has to keep in step.
 
 ### The round-trip
+
+[The round-trip scripts][site-round-trips] on the documentation site says what each script proves. This section says
+how this one is built.
 
 [`tests/round-trip.sh`](tests/round-trip.sh) sits above them all, and is the only test that leaves the repository.
 It installs the built plugin into a Claude config directory of its own, checks that the components `bundle.json` kept
@@ -210,3 +160,11 @@ sh tooling/tests/import-round-trip.sh
 It edits one file under `../examples/engineering/` and puts it back from a copy rather than from git, so an uncommitted
 edit of your own survives a run. Both pipelines run it, this one on Linux and Windows, because it is held to the same
 shell subset as the script above.
+
+[site-architecture]: ../docs/maintaining/architecture.md
+[site-build]: ../docs/maintaining/build-test-release.md
+[site-filters]: ../docs/maintaining/build-test-release.md#run-the-unit-layer-in-part
+[site-forking]: ../docs/maintaining/forking.md
+[site-layers]: ../docs/maintaining/build-test-release.md#the-three-test-layers
+[site-run]: ../docs/maintaining/build-test-release.md#run-kac-from-source
+[site-round-trips]: ../docs/maintaining/build-test-release.md#the-round-trip-scripts

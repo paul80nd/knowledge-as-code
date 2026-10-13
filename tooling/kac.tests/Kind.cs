@@ -1,8 +1,8 @@
 namespace kac.tests;
 
 /// <summary>
-/// What a test in this project is about, so that the two kinds here can be run apart. <c>tooling/README.md</c> lists
-/// the commands.
+/// What a test in this project is about, so that the two kinds here can be run apart.
+/// <c>docs/maintaining/build-test-release.md</c> lists the commands.
 /// </summary>
 public static class Kind
 {

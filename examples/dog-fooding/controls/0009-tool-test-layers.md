@@ -39,7 +39,8 @@ The `tool` job runs three commands:
 * `dotnet test tooling/kac.features` for the Reqnroll behaviour specs.
 * `dotnet run tooling/kac-tests.cs` for the golden fixtures.
 
-`tooling/README.md` says what each layer covers.
+[Build, test and release](https://paul80nd.github.io/knowledge-as-code/maintaining/build-test-release/) says what
+each layer proves.
 
 The golden suite adds two checks of its own. It fails a reachable check id that no fixture exercises. It fails a type
 page whose generated checks table has drifted from the catalogue. Each fixture is built over the real `.schema/`,

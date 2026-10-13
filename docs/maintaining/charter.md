@@ -26,12 +26,12 @@ One more reader, the evaluator, owns no section. They are deciding whether to ad
 
 Each section may contain only the kinds of page in its row.
 
-| Section           | Page kinds                                                                                                      |
-|-------------------|-----------------------------------------------------------------------------------------------------------------|
-| Use it            | A tutorial, a how-to, and reference for what a user types or writes, such as a command or the corpus descriptor |
-| The framework     | Explanation, which may say why                                                                                  |
-| Schema reference  | Reference for what a schema owner declares                                                                      |
-| Maintaining `kac` | Specification, the maintainer's how-tos for building, releasing and forking `kac`, and this charter             |
+| Section           | Page kinds                                                                                                                                      |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| Use it            | A tutorial, a how-to, and reference for what a user types or writes, such as a command or the corpus descriptor                                 |
+| The framework     | Explanation, which may say why                                                                                                                  |
+| Schema reference  | Reference for what a schema owner declares                                                                                                      |
+| Maintaining `kac` | Specification, how `kac` is put together, the maintainer's how-tos for building, releasing, forking and contributing to `kac`, and this charter |
 
 The first four kinds are [Diátaxis](https://diataxis.fr/)'s. A specification page states what `kac` is built to do,
 and each behaviour on it links the Reqnroll scenario in
