@@ -29,6 +29,18 @@ public sealed class CorpusSteps(Workspace ws)
         ws.WriteJson(path, json);
     }
 
+    [Given(@"""(.*)"" states no ""(.*)""")]
+    public void GivenStatesNo(string path, string key)
+    {
+        var json = ws.ReadJson(path);
+        var (parent, last) = Walk(json, key);
+        Assert.True(parent.Remove(last), $"{path} states no '{key}' to remove");
+        ws.WriteJson(path, json);
+    }
+
+    [Given(@"""(.*)"" is replaced with ""(.*)""")]
+    public void GivenIsReplacedWith(string path, string content) => ws.Write(path, content);
+
     [Then("it refuses")]
     public void ThenItRefuses() => Assert.Equal(1, ws.Exit);
 
@@ -45,6 +57,10 @@ public sealed class CorpusSteps(Workspace ws)
     [Then(@"^nothing outside \.dist/ changed$")]
     public void ThenNothingOutsideDistChanged()
         => Assert.DoesNotContain(ws.Changed(), p => !p.StartsWith(".dist/", StringComparison.Ordinal));
+
+    [Then(@"nothing under ""(.*)"" changed")]
+    public void ThenNothingUnderChanged(string folder)
+        => Assert.DoesNotContain(ws.Changed(), p => p.StartsWith(folder + "/", StringComparison.Ordinal));
 
     [Then(@"only ""(.*)"" changed")]
     public void ThenOnlyChanged(string path) => Assert.Equal([path], ws.Changed());
@@ -66,6 +82,24 @@ public sealed class CorpusSteps(Workspace ws)
         var actual = parent[last];
         Assert.True(JsonNode.DeepEquals(JsonNode.Parse(value), actual),
             $"{path} states '{key}' as {actual?.ToJsonString() ?? "null"}");
+    }
+
+    [Then(@"""(.*)"" states no ""(.*)""")]
+    public void ThenStatesNo(string path, string key)
+    {
+        var (parent, last) = Walk(ws.ReadJson(path), key);
+        Assert.False(parent.ContainsKey(last), $"{path} states '{key}'");
+    }
+
+    /// <summary>Compared as bytes, so a copy that normalised line endings fails.</summary>
+    [Then(@"""(.*)"" is a copy of ""(.*)""")]
+    public void ThenIsACopyOf(string copy, string original)
+    {
+        var want = ws.Snapshot(original);
+        var got = ws.Snapshot(copy);
+        Assert.NotEmpty(want);
+        Assert.Equal(want.Keys, got.Keys);
+        Assert.All(want, kv => Assert.True(kv.Value.AsSpan().SequenceEqual(got[kv.Key]), $"{copy}/{kv.Key} differs"));
     }
 
     [Then(@"""(.*)"" does not contain ""(.*)""")]

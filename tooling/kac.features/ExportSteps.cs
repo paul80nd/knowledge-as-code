@@ -25,17 +25,21 @@ public sealed class ExportSteps(Workspace ws)
     [Given(@"""(.*)"" is left from an earlier run")]
     public void GivenIsLeftFromAnEarlierRun(string path) => ws.Write(path, "{}\n");
 
+    /// <summary>The time and the commit are fixed, so two runs over one corpus write the same bytes.</summary>
+    internal static int Export(string root, string? type = null, bool? dirty = false) =>
+        Commands.Export(root, type, Now, Commit, dirty);
+
     [When("I export")]
-    public void WhenIExport() => ws.Run(root => Commands.Export(root, null, Now, Commit, dirty: false));
+    public void WhenIExport() => ws.Run(root => Export(root));
 
     [When(@"I export the ""(.*)"" type")]
-    public void WhenIExportTheType(string type) => ws.Run(root => Commands.Export(root, type, Now, Commit, false));
+    public void WhenIExportTheType(string type) => ws.Run(root => Export(root, type));
 
     [When("^I export from a tree git reports as (dirty|clean|unknown)$")]
     public void WhenIExportFromATreeGitReportsAs(string tree)
     {
         bool? dirty = tree switch { "dirty" => true, "clean" => false, _ => null };
-        ws.Run(root => Commands.Export(root, null, Now, Commit, dirty));
+        ws.Run(root => Export(root, dirty: dirty));
     }
 
     [Then(@"the export lists the types ""(.*)""")]
