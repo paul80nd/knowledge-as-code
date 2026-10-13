@@ -131,6 +131,7 @@ nav:
   - Introduction: index.md
   - Use it:
       - use/index.md
+      - Compared with alternatives: use/compared.md
       - Getting started: use/getting-started.md
       - One corpus or several: use/one-corpus-or-several.md
       - Running it in CI: use/ci.md

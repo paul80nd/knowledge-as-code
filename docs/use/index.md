@@ -6,6 +6,8 @@ for Claude Code.
 
 ## The pages here
 
+* **[Compared with alternatives](compared.md)** says what KaC adds to a `CLAUDE.md`, an organisation's managed
+  instructions, a documentation server or a wiki, and when one of those is enough.
 * **[Getting started](getting-started.md)** installs the tool and runs it against a corpus.
 * **[One corpus or several](one-corpus-or-several.md)** helps you decide how many corpora to keep, and how they share
   what they know.
