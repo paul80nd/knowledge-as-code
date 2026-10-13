@@ -38,6 +38,6 @@
     "Data": "The index itself, stored by the search engine and rebuildable from the bus. Nothing here is a system of record. A lost index is rebuilt, and no other service reads it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f5cafbf05cf8f962af49364bc74d97a6cb45174e/examples/library/services/search.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6df1b43ad493f1cc6c54d66bd855c8d6c36af706/examples/library/services/search.md"
   }
 }

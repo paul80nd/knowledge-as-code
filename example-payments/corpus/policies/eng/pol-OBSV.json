@@ -15,6 +15,6 @@
     "Exceptions": "The depth of monitoring is proportionate to how critical the system is. The commitment to monitor at all is not. Where a system seems too unimportant to monitor, question whether it should exist."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f5cafbf05cf8f962af49364bc74d97a6cb45174e/examples/engineering/policies/operations/obsv-observability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6df1b43ad493f1cc6c54d66bd855c8d6c36af706/examples/engineering/policies/operations/obsv-observability.md"
   }
 }

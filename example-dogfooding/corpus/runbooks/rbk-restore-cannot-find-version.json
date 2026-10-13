@@ -28,6 +28,6 @@
     "Impact": "Nothing in production. `examples/payments` and `examples/dog-fooding` cannot validate, so the `corpora` job fails and nothing merges."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f5cafbf05cf8f962af49364bc74d97a6cb45174e/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6df1b43ad493f1cc6c54d66bd855c8d6c36af706/examples/dog-fooding/runbooks/restore-cannot-find-version.md"
   }
 }
