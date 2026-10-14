@@ -35,7 +35,7 @@ Not the place for:
 
 * **A component.** That is a [service](services.md). The glossary may define the *concept* the service is named after.
 * **A rule about using the term.** That is a [standard](standards.md).
-* **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a sentence, and
+* **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a paragraph, and
   links out for the rest.
 
 **Split by bounded context or product surface, never by topic.** A glossary covers the language of one context: the
@@ -58,7 +58,7 @@ the shared one still reads correctly in a corpus that never had the other half.
 2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md) to a kebab-case filename named for
    the context, and set `narrows` to the glossary it sits inside.
 3. Add an H3 in alphabetical position.
-4. One sentence of definition. If it needs a paragraph, the paragraph belongs in an
+4. One paragraph of definition, usually one or two sentences. If it needs more, the rest belongs in an
    [explanation](explanations.md) and the entry links to it.
 5. Add an `**Also:**` line where the thing has a second name: an acronym, an abbreviation, or another word for it.
    A reader searching that name reaches the entry.
@@ -95,12 +95,6 @@ follows. Two of them run as checks, and the table says what becomes of the rest.
 | A term a qualified reader knows is not defined      | Yours. Scope above says which reader that is.                           |
 | A definition opens with no article                  | Does not apply. An entry here is read as a sentence, not substituted.   |
 | A definition closes with no full stop               | Does not apply, for the same reason.                                    |
-
-**Declared.** `carried-in-full-by-digest` holds an entry to one paragraph, and orders the glossaries in the digest
-`adr-0001` describes. That digest cuts off when its budget is spent, and three glossaries are enough to spend it. So the
-ordering decides which vocabulary a session arrives holding. It orders a `narrows` chain and nothing else, so which of
-two unrelated glossaries loses its tail is a question the ordering does not answer. Nothing generates a digest, so
-nothing runs the rule and the limit is yours to keep.
 
 ## Metadata
 
@@ -162,12 +156,11 @@ nothing runs the rule and the limit is yours to keep.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                                     |
-|--------------------------------|----------------------------------------------------------------------------------------------------------|
-| `redefinitions-are-reciprocal` | Where one glossary redefines a term another defines, each entry links to the other entry's anchor.       |
-| `carried-in-full-by-digest`    | No entry runs beyond one paragraph. The digest takes the glossaries in the order the export writes them. |
-| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                      |
-| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.                   |
+| Rule                           | What it would verify                                                                               |
+|--------------------------------|----------------------------------------------------------------------------------------------------|
+| `redefinitions-are-reciprocal` | Where one glossary redefines a term another defines, each entry links to the other entry's anchor. |
+| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                |
+| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.             |
 
 <!-- END GENERATED: checks-glossary -->
 
