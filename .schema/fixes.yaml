@@ -122,12 +122,6 @@ rules:
     message: >
       this actor already states a verification on this record. Move the `at` on the entry they have.
 
-  - id: raiser-does-not-verify
-    description: An agent does not verify a fix it raised.
-    notes: >
-      Nothing on a fix states who raised it. `owner` gives the person answerable for it now, and `sources` points
-      outside the corpus, which a rule reading one document cannot follow. The rule is declared and does not run.
-
   - id: one-problem-per-document
     description: A fix has one Symptom section, and a record with two is two fixes.
     severity: warning

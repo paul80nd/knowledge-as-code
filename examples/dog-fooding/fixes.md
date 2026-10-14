@@ -129,10 +129,4 @@ Other boundaries:
 | `one-problem-per-document`   | warning | A fix has one Symptom section, and a record with two is two fixes.                                              |
 | `fix-in-date`                | warning | A fix names a review date that has not passed.                                                                  |
 
-**Declared, not yet enforced**: carried by the schema, run by nothing.
-
-| Rule                     | What it would verify                      |
-|--------------------------|-------------------------------------------|
-| `raiser-does-not-verify` | An agent does not verify a fix it raised. |
-
 <!-- END GENERATED: checks-fixes -->

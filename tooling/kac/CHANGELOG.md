@@ -46,6 +46,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   under **Declared, not yet enforced**. Nothing ran it, and the digest it protected is not generated. The type page and
   `_template.md` now ask for one paragraph of definition, usually one or two sentences, where they asked for one
   sentence. Most definitions in the example corpora already run to two.
+- **`raiser-does-not-verify` is gone from the `fixes` schema.** It no longer appears on the fixes type page under
+  **Declared, not yet enforced**. Nothing ran it, because no field on a fix records who raised it. The type page still
+  says that a session never verifies its own fix.
 
 ## 0.32.0 - 2026-10-10
 
