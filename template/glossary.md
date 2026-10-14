@@ -151,16 +151,16 @@ follows. Two of them run as checks, and the table says what becomes of the rest.
 | `unused-definition`         | warning | A link definition that nothing references.                                                                      |
 | `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                                |
 | `definition-circular`       | warning | A glossary entry's definition does not repeat the term it defines.                                              |
+| `redefinition-unlinked`     | warning | Where two glossaries define one term, at least one of the entries links to the other's anchor.                  |
 | `entry-requirement`         | warning | No bold RFC 2119 keyword states a requirement inside a glossary entry.                                          |
 | `glossary-in-date`          | warning | A glossary names a review date that has not passed.                                                             |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                           | What it would verify                                                                               |
-|--------------------------------|----------------------------------------------------------------------------------------------------|
-| `redefinitions-are-reciprocal` | Where one glossary redefines a term another defines, each entry links to the other entry's anchor. |
-| `undefined-terms`              | Reports terms appearing more than N times across the corpus with no glossary entry.                |
-| `unused-terms`                 | Reports entries nothing uses, where a use inside the term's own context counts as one.             |
+| Rule              | What it would verify                                                                   |
+|-------------------|----------------------------------------------------------------------------------------|
+| `undefined-terms` | Reports terms appearing more than N times across the corpus with no glossary entry.    |
+| `unused-terms`    | Reports entries nothing uses, where a use inside the term's own context counts as one. |
 
 <!-- END GENERATED: checks-glossary -->
 

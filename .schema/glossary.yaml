@@ -123,10 +123,9 @@ index:
   sort: id
 
 rules:
-  - id: redefinitions-are-reciprocal
-    description: >
-      Where one glossary redefines a term another defines, each entry links to the other entry's anchor.
-    # Where the general glossary is a synced file, only the narrower entry states the reference.
+  - id: redefinitions-are-linked
+    description: Where two glossaries define one term, at least one of the entries links to the other's anchor.
+    severity: warning
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.

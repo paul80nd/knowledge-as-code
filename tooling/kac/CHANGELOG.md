@@ -23,6 +23,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
   sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
   record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
+- **A term two glossaries define, linked from neither, is reported.** `redefinitions-are-linked` runs on `glossary`, in
+  place of the unrun `redefinitions-are-reciprocal`. `kac validate` warns where two glossaries in one corpus define the
+  same term and neither entry links to the other at the term's anchor. It reports against the glossary further down its
+  `narrows` chain, because a glossary every corpus shares cannot link back. The check id is `redefinition-unlinked`.
 - **Each line of an export's flat files has its link.** `kac export` writes `links.human` on every line of
   `terms.jsonl`, `clauses.jsonl`, `rules.jsonl` and `frameworks.jsonl`, built for the corpus's publishing target. It is
   the same shape a record file has. A reader quotes it, and no longer fills in `humanTemplate`, whose Azure DevOps wiki
@@ -46,6 +50,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   under **Declared, not yet enforced**. Nothing ran it, and the digest it protected is not generated. The type page and
   `_template.md` now ask for one paragraph of definition, usually one or two sentences, where they asked for one
   sentence. Most definitions in the example corpora already run to two.
+- **`raiser-does-not-verify` is gone from the `fixes` schema.** It no longer appears on the fixes type page under
+  **Declared, not yet enforced**. Nothing ran it, because no field on a fix records who raised it. The type page still
+  says that a session never verifies its own fix.
 
 ## 0.32.0 - 2026-10-10
 
