@@ -140,11 +140,11 @@ Two things stay behind whatever `types` says:
 
 ## Link to the fix, and read its source
 
-**Load the `corpus-retrieval` skill.** It says which publishing block addresses the corpus that wrote the record, how to
-fetch the file through the client that authenticates to that platform, and what to say where nothing reaches it.
+**Quote the record's `links.human` to link the fix.** The record already has it, built for the corpus that wrote it.
 
-**Bring it the record's `path`.** A fix has no anchor of its own, because the whole record is the unit. The record's
-`links.human` is the URL to quote to a person.
+**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
+authenticates to that platform, and what to say where nothing reaches it. Bring it the record's `path`. A fix has no
+anchor of its own, because the whole record is the unit.
 
 ## Say when the fix is about a different problem
 

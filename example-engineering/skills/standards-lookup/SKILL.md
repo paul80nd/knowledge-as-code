@@ -70,7 +70,8 @@ Each line carries one heading of a standard's Rules section, with everything wri
 | `part`               | string                   | the rule's key inside that standard                                          |
 | `shortcode`          | string, or absent        | the corpus that published the rule. A rule written here carries no such key  |
 | `status`, `reviewBy` | string                   | how far the standard has settled, and the date it was meant to be read again |
-| `path`, `anchor`     | string                   | the two values `corpus-retrieval` builds a link from                         |
+| `links`              | object or null           | `human`, the link to the rule. `null` where nothing can address it           |
+| `path`, `anchor`     | string                   | the record's file in its corpus, and the fragment the rule sits at           |
 
 Each entry in `obligations` has two keys:
 
@@ -79,8 +80,9 @@ Each entry in `obligations` has two keys:
 | `level` | string | the bullet's keyword: `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` or `MAY` |
 | `text`  | string | the bullet as markdown, with its keyword in bold and its lines joined     |
 
-**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
-one exception, and the row above says so.
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is one
+exception, and the row above says so. `links` is the other: a line another corpus exported before the key existed has
+none.
 
 ## Read the prefix on an id
 
@@ -137,11 +139,11 @@ matters.
 
 ## Link to the rule, and read its source
 
-**Load the `corpus-retrieval` skill.** It carries the whole of this: which publishing block addresses the corpus that
-wrote the line, how to substitute a template without breaking it, how to fetch the file through the client that
-authenticates to that platform, and what to say where nothing reaches it.
+**Quote `links.human` to link the rule.** The line already has it, built for the corpus that wrote the rule.
 
-**Bring it two values.** A line holds `path` and `anchor`, and those are what a template takes.
+**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
+authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
+the line's `path` and `anchor`.
 
 **A rule is written as a heading**, so it has an anchor of its own and the link lands on the rule rather than at the
 top of the standard.
