@@ -11,6 +11,7 @@ public static class CorpusRules
         new AlertAfterNeedsAnAlert(),
         new AlignmentRollup(),
         new ClauseQuotedFaithfully(),
+        new DecisionsCiteNoDescriptiveRecord(),
         new DependencyCriticality(),
         new FeatureFileRepo(),
         new MirrorsRepoLinks(),

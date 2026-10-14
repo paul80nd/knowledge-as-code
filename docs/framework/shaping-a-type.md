@@ -47,6 +47,11 @@ longest section.
 `supersedes` and `superseded-by` are a pair. A superseded decision still binds whatever was built under it, so a reader
 meeting one needs the id that replaced it.
 
+**A decision states its constraint, and cites a descriptive record only for background.** A descriptive record, such as
+a service or a glossary, changes as the estate does. An ADR is not rewritten once accepted. `decision-cites-descriptive`
+warns where a link in `Decision` or `Consequences` lands on a record of a descriptive type. A link in any other section
+passes. The section stands in for why the link is there, so the check is a warning.
+
 **In the export:** `Decision` and `Consequences` travel whole and `Context` as its opening paragraph, while
 `Alternatives Considered` and `deciders` stay behind.
 

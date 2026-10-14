@@ -566,6 +566,14 @@ checks:
       A heuristic, matching an explicit verdict word or a contrastive or negative-outcome cue. An option a bullet
       dismisses in one clause was never genuinely considered.
 
+  decision-cites-descriptive:
+    severity: warning
+    description: No link in Decision or Consequences lands on a record of a descriptive type.
+    notes: >
+      A descriptive record changes as the estate does, and an ADR is not rewritten once accepted, so a constraint
+      resting on one goes out of date unreported. A link in Context, Alternatives Considered, Related or References is
+      background and is passed over. A warning, because the section stands in for why the link is there.
+
   clause-quoted-faithfully:
     severity: error
     description: A quoted span beside a clause citation is still in the clause it cites.
