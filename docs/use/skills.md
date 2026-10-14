@@ -19,7 +19,7 @@ that export. An install gets the ones whose record types the corpus exported.
 
 | Skill               | What it answers                                                                                                                      | Requires      |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| `corpus-retrieval`  | Reach the published source of a record this corpus export summarises, and build a link somebody can follow                           | supporting    |
+| `corpus-retrieval`  | Fetch the published source of a record this corpus export summarises                                                                 | supporting    |
 | `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                        | `glossary@1`  |
 | `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone    |
 | `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | supporting    |

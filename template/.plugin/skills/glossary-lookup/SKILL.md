@@ -83,9 +83,9 @@ you build the filename. The owning record for `eng:gls-estate.borrower` is
 
 **Quote `links.human` to link the term.** The line already has it, built for the corpus that wrote the term.
 
-**Load the `corpus-retrieval` skill for the rest.** It says how to link a line with no `links`, how to fetch the file
-through the client that authenticates to that platform, and what to say where nothing reaches it. Bring it the line's
-`path` and `anchor`.
+**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
+authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
+the line's `path` and `anchor`.
 
 **A term is written as a heading**, so it has an anchor of its own and the link lands on the entry rather than at
 the top of the glossary.

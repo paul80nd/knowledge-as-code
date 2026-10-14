@@ -61,9 +61,9 @@ have run.
 because a procedure is followed in order against the version in force rather than against a copy taken on some earlier
 day.
 
-**Load the `corpus-retrieval` skill and fetch the record.** It says which publishing block addresses this corpus, how
-to fetch the file through the client that authenticates to that platform, and what to do where nothing can reach it.
-The record's own `links.human` is the URL to quote to a person.
+**Load the `corpus-retrieval` skill and fetch the record.** It says how to fetch the file through the client that
+authenticates to that platform, and what to do where nothing can reach it. Quote the record's own `links.human` to a
+person.
 
 **Do not reconstruct the steps.** Neither from the trigger, nor from what the task usually involves elsewhere. A
 plausible procedure is worse than none, because whoever asked cannot tell it from the one their colleagues follow.

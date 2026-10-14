@@ -113,9 +113,9 @@ The clause table is not among those sections. Its rows travelled as the lines in
 
 **Quote `links.human` to link the clause.** The line already has it, built for the corpus that wrote the clause.
 
-**Load the `corpus-retrieval` skill for the rest.** It says how to link a line with no `links`, how to fetch the file
-through the client that authenticates to that platform, and what to say where nothing reaches it. Bring it the line's
-`path` and `anchor`.
+**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
+authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
+the line's `path` and `anchor`.
 
 **Every clause of one policy carries the same anchor**, because a table row is not a heading and no renderer gives it
 a fragment of its own. The link lands on the clause table, and the reader finds the row by the id you quoted.
