@@ -1,6 +1,7 @@
 # Enums used by more than one type. Referenced as $enums.<name>.
 # An enum used by exactly one type lives in that type's file.
 # `ordered: true` says the values rank, most significant first.
+# `dependency-criticality` compares that rank across a `depends-on` edge.
 
 notes: >
   Nothing here records which types use an enum. A list would be a second place to keep in step, and it would be
