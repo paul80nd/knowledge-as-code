@@ -23,6 +23,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
   sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
   record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
+- **A term two glossaries define, linked from neither, is reported.** `redefinitions-are-linked` runs on `glossary`, in
+  place of the unrun `redefinitions-are-reciprocal`. `kac validate` warns where two glossaries in one corpus define the
+  same term and neither entry links to the other at the term's anchor. It reports against the glossary further down its
+  `narrows` chain, because a glossary every corpus shares cannot link back. The check id is `redefinition-unlinked`.
 - **Each line of an export's flat files has its link.** `kac export` writes `links.human` on every line of
   `terms.jsonl`, `clauses.jsonl`, `rules.jsonl` and `frameworks.jsonl`, built for the corpus's publishing target. It is
   the same shape a record file has. A reader quotes it, and no longer fills in `humanTemplate`, whose Azure DevOps wiki

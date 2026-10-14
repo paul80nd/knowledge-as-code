@@ -459,6 +459,11 @@ lines follow it, each answering a different question:
 A reader searching an acronym finds the term through `Also`, which the heading alone could not give them. SKOS calls
 that an `altLabel` and DITA calls it a `glossAlt`.
 
+**A redefinition links the entry it departs from.** Where two glossaries in one corpus define the same term,
+`redefinition-unlinked` warns unless one of the entries links to the other at the term's anchor. A glossary every corpus
+shares cannot link a record only one corpus has, so the rule asks for one link. It reports against the glossary further
+down its `narrows` chain.
+
 **In the export:** each term travels whole as its own entry, each labelled line under its own key, with the record's
 `status` and `review-by` repeated on every term. A copy taken a year ago reads as it did on the day, so the date on each
 grepped line is the signal a reader otherwise lacks.

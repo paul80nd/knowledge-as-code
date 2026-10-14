@@ -14,6 +14,7 @@ public static class CorpusRules
         new DependencyCriticality(),
         new FeatureFileRepo(),
         new MirrorsRepoLinks(),
+        new RedefinitionsAreLinked(),
         new ReportStale()
     ];
 

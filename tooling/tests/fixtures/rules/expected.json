@@ -1,10 +1,10 @@
 {
   "summary": {
-    "validated": 65,
+    "validated": 66,
     "templates": 17,
     "skipped": 0,
     "errors": 31,
-    "warnings": 54,
+    "warnings": 55,
     "infos": 0
   },
   "findings": [
@@ -154,6 +154,13 @@
       "severity": "warning",
       "check": "terms-alphabetical",
       "message": "'Branch' is out of order: it belongs before 'Item'."
+    },
+    {
+      "file": "glossary/redefines-a-term.md",
+      "line": 29,
+      "severity": "warning",
+      "check": "redefinition-unlinked",
+      "message": "'Export' is defined here and in 'glossary/circular-definition.md', and neither entry links to the other. Link one entry to the other's anchor, as `circular-definition.md#export`, in its `**Not:**` line."
     },
     {
       "file": "glossary/review-overdue.md",

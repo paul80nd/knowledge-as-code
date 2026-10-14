@@ -661,6 +661,14 @@ checks:
       around it. Whole words and no stemming, so a definition using the plural of its term is passed over. A
       warning rather than an error, because a compound term may repeat its head noun and still define it.
 
+  redefinition-unlinked:
+    severity: warning
+    description: Where two glossaries define one term, at least one of the entries links to the other's anchor.
+    notes: >
+      A link counts where it is written in the entry's own body and lands on the other glossary at the term's
+      anchor. Reported once per pair, against the glossary further down its `narrows` chain, or else the one whose
+      path sorts first.
+
   entry-requirement:
     severity: warning
     description: No bold RFC 2119 keyword states a requirement inside a glossary entry.
