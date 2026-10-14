@@ -289,6 +289,8 @@ public static class PartLineSource
     public const string PartSeeAlso = "part.see-also";
     /// <summary>The fragment the part resolves at.</summary>
     public const string PartAnchor = "part.anchor";
+    /// <summary>The part's URL, built for the corpus's publishing target. Null where the corpus has no address.</summary>
+    public const string PartLinks = "part.links";
     public const string RecordId = "record.id";
     public const string RecordType = "record.type";
     public const string RecordPath = "record.path";
@@ -315,7 +317,7 @@ public static class PartLineSource
     /// <summary>The sources naming one thing each, so the prefixed families are tested separately.</summary>
     public static readonly IReadOnlyList<string> Fixed =
     [
-        PartId, PartKey, PartText, PartLead, PartLevel, PartBullets, PartSeeAlso, PartAnchor,
+        PartId, PartKey, PartText, PartLead, PartLevel, PartBullets, PartSeeAlso, PartAnchor, PartLinks,
         RecordId, RecordType, RecordPath
     ];
 

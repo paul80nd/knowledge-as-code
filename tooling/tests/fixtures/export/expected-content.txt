@@ -49,10 +49,9 @@
 # One term, one line, one whole object — carrying the definition and each labelled line apart, the state
 # of the glossary it came from, and the record it belongs to, because a grep hands back a line and
 # nothing around it. `also` and `avoid` are what let a search reach a term by a name its heading does not
-# carry. The address is the exception: a line carries the `path` and `anchor` that go into the manifest's
-# template, and no URL, so one host and one commit are stated once for the whole export.
-.dist/export/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","also":null,"avoid":"search string. The parsed form is what every service here passes around.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query"}
-.dist/export/glossary/terms.jsonl :: !"links"
+# carry. The address travels whole too: `path` and `anchor` to fetch the source, and `links` built from
+# them. This corpus publishes nowhere a link can address, so `links` is null.
+.dist/export/glossary/terms.jsonl :: {"id":"gls-search.query","title":"Query","definition":"What a reader typed, after parsing and before matching.","also":null,"avoid":"search string. The parsed form is what every service here passes around.","not":"the request the service received. One request carries a query and its paging.","seeAlso":null,"type":"glossary","record":"gls-search","part":"query","status":"draft","reviewBy":"2030-01-01","path":"glossary/search.md","anchor":"query","links":null}
 
 # A cross-reference travels as a part id the consumer can look up, read from the anchor the link names.
 # The prose keeps the reference its author wrote.

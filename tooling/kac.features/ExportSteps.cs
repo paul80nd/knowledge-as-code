@@ -44,6 +44,11 @@ public sealed class ExportSteps(Workspace ws)
     public void GivenTheCorpusExcludesFromItsExport(string value)
         => ws.Write(".corpus.yaml", ws.Read(".corpus.yaml") + $"\nexport:\n  exclude: [ {value} ]\n");
 
+    [Given(@"the corpus publishes to ""(.*)"" at ""(.*)""")]
+    public void GivenTheCorpusPublishesToAt(string target, string published)
+        => ws.Write(".corpus.yaml",
+            ws.Read(".corpus.yaml") + $"\npublishing-target: {target}\npublishing:\n  base: {published}\n");
+
     [Given(@"the schema declares ""(.*)"" at export version (\d+)")]
     public void GivenTheSchemaDeclaresAtExportVersion(string type, int version)
     {

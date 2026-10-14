@@ -74,6 +74,7 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+            links: part.links
         integrations@2
           fields: id, title, status, vendor, used-by, criticality, their-sla, replaces, successor, tags
           sections:
@@ -116,6 +117,7 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+            links: part.links
         postmortems@1
           fields: id, title, status, occurred-at, detected-at, restored-at, duration, severity, affected, prompted, tags
           sections:
@@ -164,6 +166,7 @@ public class ExportShapeTests
             reviewBy: front.review-by
             path: record.path
             anchor: part.anchor
+            links: part.links
         tools@3
           fields: id, title, status, category, packages, homepage, licence, licence-declared, decided-on, review-by, decided-in, replaces, successor, tags
           sections:

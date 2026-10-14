@@ -10,13 +10,14 @@ namespace kac.tests;
 public class PluginSkillFieldTests
 {
     /// <summary>
-    /// The vocabulary a Type cell is written in. Five words, because the exporter writes five shapes.
+    /// The vocabulary a Type cell is written in. Six words, because the exporter writes six shapes.
     /// </summary>
     private const string Text = "string";
     private const string OrNull = "string or null";
     private const string List = "list of strings, or null";
     private const string Bullets = "list of objects, or null";
     private const string OrMissing = "string, or absent";
+    private const string Links = "object or null";
 
     private static readonly string Plugin = Path.Combine(Repo.Root, "template", ".plugin");
 
@@ -113,6 +114,9 @@ public class PluginSkillFieldTests
                 or PartLineSource.RecordPath => Text,
             PartLineSource.PartLead or PartLineSource.PartLevel => OrNull,
             PartLineSource.PartSeeAlso => List,
+
+            // Null where the corpus publishes nowhere the export can address.
+            PartLineSource.PartLinks => Links,
 
             // A part with no list beneath it writes null, the same absence as a missing lead.
             PartLineSource.PartBullets => Bullets,

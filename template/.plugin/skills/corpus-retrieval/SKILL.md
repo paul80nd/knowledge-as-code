@@ -1,18 +1,18 @@
 ---
 name: corpus-retrieval
-description: Reach the published source of a record this corpus export summarises, and build a link somebody can
-  follow. Load it from a lookup skill that has found what it was asked for and needs the words the export left behind,
-  or a URL to quote. It says which publishing block addresses a record, how to fetch the file through the client that
-  authenticates to that platform, and what to do where nothing here can reach it.
+description: Fetch the published source of a record this corpus export summarises. Load it from a lookup skill that
+  has found what it was asked for and needs the words the export left behind. It says which publishing block addresses
+  a record, how to fetch the file through the client that authenticates to that platform, what to do where nothing
+  here can reach it, and how to link a line that arrived without a link.
 ---
 
 # Reading a record's published source
 
 An export is a copy taken on a day. A type carries as much of a record as a reader needs to judge it, and the rest
-stays in the corpus that published it. This is how you reach that.
+stays in the corpus that published it. This is how you fetch the rest.
 
-**The skill that sent you here says what it needs.** It names the record, and it says whether the address wants an
-anchor. Everything below is the same for every type.
+**The skill that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came from a
+parts file. Everything below is the same for every type.
 
 ## Take the publishing block belonging to the corpus that wrote it
 
@@ -22,24 +22,6 @@ top-level `publishing` block.
 
 Read the wrong one and you address the right path in the wrong repository at the wrong commit. That fetches a 404 or
 somebody else's file, and both read as plausible.
-
-## Send a reader to the record
-
-**A record file already holds the link.** `links.human` on the record's own JSON is a built URL with the commit inside
-it. Quote it as it stands.
-
-**A parts line holds no URL.** It carries `path` and `anchor`, which are the two values the block's `humanTemplate`
-takes. Copy the template exactly as it stands, replace `{path}` and `{anchor}`, and change nothing else. Do not retype
-the commit, shorten it, swap the host or judge whether it looks right. A template with one character altered gives a
-404 that reads as plausible, or a page from a version of the corpus nobody asked about.
-
-**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
-wiki page rather than a file, so substitute `path` with `.md` removed and every `/` written as `%2F`. Every other
-target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose above,
-every time.
-
-**Where `links.human` or `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so,
-and quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.
 
 ## Read the source yourself
 
@@ -92,3 +74,18 @@ with a success exit code from something. A record opens with its own heading.
 **Say when the copy is old.** `generatedAt` and `commit` in `manifest.json` say when the export was taken, and the
 source you just fetched is at the `ref` that export named. Where a reader is about to act on a procedure or an
 obligation, say which commit you read it at.
+
+## Send a reader to the record
+
+**The record file and the line already have the link.** `links.human`, on a record's own JSON and on each line of a
+parts file, is a built URL with the commit inside it. Quote it as it stands. Do not retype the commit, shorten it, swap
+the host or judge whether it looks right. An inherited line keeps the link its producer built, so it opens the corpus
+that wrote the part.
+
+**A line with no `links` key needs the template.** A producer that exported before lines had the key sends a line
+without it. Copy the `humanTemplate` of the block chosen above exactly, replace `{path}` and `{anchor}`, and change
+nothing else. Where that block's `target` is `azure-devops-wiki`, remove `.md` from `path` and write every `/` as
+`%2F`. Every other target takes `path` whole.
+
+**Where `links` or `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so,
+and quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.

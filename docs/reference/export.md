@@ -286,7 +286,8 @@ that record, and its cross-references as ids.
 
 ### The address
 
-A line has the record's `path` and the part's `anchor`, and the manifest has the template they go into.
+A line has the record's `path`, the part's `anchor`, and `links.human`, the link built from both for the corpus that
+wrote the part. An inherited line keeps the link its producer built.
 
 `part` is what a citation resolves against, and `anchor` is the fragment a link lands on. A glossary term's heading slug
 is both, so each line has the pair equal. A policy clause id such as `TIMEBOX` is authored and has no fragment, so
@@ -314,12 +315,13 @@ It contains one line per external framework reference, for the type declaring a 
 ```json
 {"framework":"ISO 27001:2022","reference":"A.8.13","standing":"Obliged",
  "clauses":["pol-BKUP.COPY","pol-BKUP.SHARED"],"records":["pol-BKUP"],
- "path":"frameworks.md","anchor":"iso-27001"}
+ "path":"frameworks.md","anchor":"iso-27001","links":{"human":"https://…/frameworks.md#iso-27001"}}
 ```
 
 * **The exporter writes these keys, and the type names only the file.** A reference is read from a clause's `Alignment`
   cell and from the register, the corpus's own `frameworks.md`, that the cell links to.
-* **`standing` is the register's word, verbatim.** `path` and `anchor` address the register entry.
+* **`standing` is the register's word, verbatim.** `path` and `anchor` address the register entry, and `links.human`
+  is the link to it, as on a part line.
 * **A line names its own corpus's clauses alone.** An inherited clause left its `Alignment` cell behind, so read the
   producer's own file for that half.
 
@@ -361,8 +363,9 @@ GitHub and `az rest` for both Azure DevOps targets. Where you have no such clien
 
 ### The human form as a template
 
-The manifest states it. The template is `https://…/blob/<sha>/{path}#{anchor}` for GitHub, and its own shape for each
-other target. Substitute the `path` and `anchor` a line has.
+The manifest states it, and `export` fills it in for every record and every line. The template is
+`https://…/blob/<sha>/{path}#{anchor}` for GitHub, and its own shape for each other target. You fill it in yourself
+only for a line from a producer that exported before lines had `links`.
 
 * **The ref is inside the template**, so a link resolves against the commit the export was built from.
 * **`publishing.path-prefix` is inside it too**, between the commit and the record's path.
@@ -372,15 +375,15 @@ other target. Substitute the `path` and `anchor` a line has.
 `azure-devops-wiki` cannot pin its link to a commit, because no `?pagePath=` URL takes one. The manifest still gives an
 agent the `ref`.
 
-### A per-record file
+### Resolved links
 
-It has its links already resolved, so the file rewrites on every export from a new commit.
+A per-record file and a part line each have their links resolved, so both rewrite on every export from a new commit.
 
 ### Five kinds of corpus with no address
 
 A corpus that publishes nowhere, names a target nothing builds links for, states a target but no base, states a base
 that target cannot join to, or is one git cannot answer for. Each exports without links, and the manifest states the
-target it was given with nulls beside it. A part line still has `path` and `anchor`.
+target it was given with nulls beside it. A part line still has `path` and `anchor`, and its `links` is `null`.
 
 ## Three versions, and none implies another
 
