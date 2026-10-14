@@ -23,8 +23,9 @@ public sealed class FieldSpec
     public IReadOnlyList<string>? Values { get; init; }
 
     /// <summary>
-    /// Whether <c>Values</c> is a ranking, taken from the enum that declared it. A field writing its values inline is
-    /// never ranked, because the flag sits on the enum. See EnumSpec.
+    /// Whether <c>Values</c> is a ranking that a record's dependencies should meet, taken from the enum that declared
+    /// it. Only a shared enum declares one, so a field writing its values inline or drawing them from a corpus enum is
+    /// never ranked. See <c>EnumSpec</c> and <c>DependencyCriticality</c>.
     /// </summary>
     public bool Ordered { get; init; }
 
