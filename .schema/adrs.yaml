@@ -130,3 +130,6 @@ rules:
   - id: alternatives-have-verdicts
     description: Every bullet in Alternatives Considered states an outcome.
     severity: warning
+  - id: decisions-cite-no-descriptive-record
+    description: No link in Decision or Consequences lands on a record of a descriptive type.
+    severity: warning

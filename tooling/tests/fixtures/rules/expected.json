@@ -1,13 +1,20 @@
 {
   "summary": {
-    "validated": 66,
-    "templates": 17,
+    "validated": 67,
+    "templates": 18,
     "skipped": 0,
     "errors": 31,
-    "warnings": 55,
+    "warnings": 56,
     "infos": 0
   },
   "findings": [
+    {
+      "file": "adrs/0001-rests-on-a-service.md",
+      "line": 24,
+      "severity": "warning",
+      "check": "decision-cites-descriptive",
+      "message": "'Decision' rests on 'services/notifications.md', a service record. A service changes as the estate does, and an ADR is not rewritten once accepted. State the constraint itself here, and cite the service from Context or References."
+    },
     {
       "file": "controls/0001-frequency-not-stated.md",
       "line": 1,

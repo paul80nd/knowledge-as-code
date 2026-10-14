@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **An ADR whose decision rests on a descriptive record is reported.** `decisions-cite-no-descriptive-record` runs on
+  `adrs`. `kac validate` warns where a link in `Decision` or `Consequences` lands on a record of a descriptive type,
+  such as a service or a glossary. That record changes as the estate does, and an ADR is not rewritten once accepted. A
+  link in `Context`, `Alternatives Considered`, `Related` or `References` passes. The check id is
+  `decision-cites-descriptive`.
 - **A draft deviation past its review date is reported.** `draft-expiry` runs on `deviations`. `kac validate` warns
   where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
   sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the

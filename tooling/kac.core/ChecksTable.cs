@@ -115,6 +115,9 @@ public static class ChecksTable
             null),
         ("alternatives-verdict", [new("alternatives-verdict")], "Each Alternatives Considered bullet states a verdict.",
             null),
+        ("decision-cites-descriptive", [new("decision-cites-descriptive")],
+            "No link in Decision or Consequences lands on a record of a descriptive type.",
+            t => t.Rules.Any(r => r.Id == new RuleId("decisions-cite-no-descriptive-record"))),
         ("alignment-rollup / framework-posture", [new("alignment-rollup"), new("framework-posture")],
             "`aligns-with` carries every binding reference the `Alignment` column cites, and the register "
             + "places each framework.",
