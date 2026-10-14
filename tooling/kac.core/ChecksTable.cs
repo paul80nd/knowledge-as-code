@@ -233,16 +233,16 @@ public static class ChecksTable
         foreach (var id in documented.Where(id => !catalogue.Contains(id)).Order())
             problems.Add($"the checks table documents '{id}', which the schema does not declare (stale row).");
         foreach (var id in advertised.Where(id => !documented.Contains(id)).Order())
-            problems.Add($"check '{id}' has no row in the checks table. declare 'on-type-page: false' where "
+            problems.Add($"check '{id}' has no row in the checks table. Declare 'on-type-page: false' where "
                          + "the schema declares the check, or give it a row in the table kac ships.");
         foreach (var id in documented.Where(id => catalogue.Contains(id) && !advertised.Contains(id)).Order())
-            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. drop the flag, "
+            problems.Add($"check '{id}' declares 'on-type-page: false' and has a row anyway. Drop the flag, "
                          + "or drop the row from the table kac ships.");
 
         // Nothing else checks these C# rows against the bound a schema's rules meet.
         foreach (var row in DocRows.Where(r => r.Description.Length > DescriptionMax))
             problems.Add($"the checks table row '{row.Label}' has a {row.Description.Length}-character "
-                         + $"description. the limit is {DescriptionMax}.");
+                         + $"description. The limit is {DescriptionMax}.");
 
         return problems;
     }

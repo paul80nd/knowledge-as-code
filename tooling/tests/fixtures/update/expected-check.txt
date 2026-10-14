@@ -1,5 +1,5 @@
 update: comparing this corpus against <template>.
-this corpus is behind its framework. these would change:
+this corpus is behind its framework. These would change:
 WRITE, framework files this corpus holds differently:
   knowledge-as-code.md
 SEED, files the corpus has none of:

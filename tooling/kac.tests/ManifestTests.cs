@@ -286,7 +286,7 @@ public class ManifestTests
 
         Assert.NotNull(message);
         Assert.Contains(names, message);
-        Assert.Contains("delete it", message);
+        Assert.Contains("Delete it", message);
         Assert.Contains(because, message);
     }
 

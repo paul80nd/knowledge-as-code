@@ -13,14 +13,14 @@
       "line": null,
       "severity": "error",
       "check": "descriptor-target",
-      "message": "publishing-target 'gihtub' is not a target kac can publish to. write one of: azure-devops, azure-devops-wiki, github, mkdocs, none."
+      "message": "publishing-target 'gihtub' is not a target kac can publish to. Write one of: azure-devops, azure-devops-wiki, github, mkdocs, none."
     },
     {
       "file": ".corpus.yaml",
       "line": null,
       "severity": "error",
       "check": "descriptor-target",
-      "message": "tracker.target 'azure-devops-wiki' is not a target kac can file on. write one of: azure-devops, github, none."
+      "message": "tracker.target 'azure-devops-wiki' is not a target kac can file on. Write one of: azure-devops, github, none."
     }
   ]
 }

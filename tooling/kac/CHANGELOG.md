@@ -38,6 +38,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   and Maintaining `kac` each open on who the section is for, and most pages have a new address. `kac new` writes the new
   address of the corpus descriptor page into `.corpus.yaml`, and `kac update` updates framework files to cite the new
   addresses. Every old address redirects to the page that replaced it.
+- **Every sentence after the first in a message opens with a capital.** `kac new`, `kac update` and the descriptor
+  checks in `kac validate` started a message's later sentences in lower case, as in `nothing was written`. They now
+  write `Nothing was written`, as the record checks already did. A script matching the old wording needs the capital.
 
 ### Removed
 

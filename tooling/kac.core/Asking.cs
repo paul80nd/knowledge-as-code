@@ -105,7 +105,7 @@ public static class Asking
             : asker.Text("What is this corpus called?", folderName));
 
         if (string.IsNullOrWhiteSpace(name))
-            return Problem("new: a corpus needs a name. pass --name, or answer the question.");
+            return Problem("new: a corpus needs a name. Pass --name, or answer the question.");
 
         if (Types(request, declared, asker) is not { } types) return Problem(UnknownTypes(request, declared));
 
@@ -114,7 +114,7 @@ public static class Asking
             : asker.Choose("Where is this corpus published?", Publishing.Targets, Publishing.None));
 
         if (!Publishing.Targets.Contains(publishing, StringComparer.Ordinal))
-            return Problem($"new: --publishing '{publishing}' is not a target. it is one of "
+            return Problem($"new: --publishing '{publishing}' is not a target. It is one of "
                            + $"{string.Join(", ", Publishing.Targets)}.");
 
         var ci = request.Ci ?? (asker is null
@@ -122,7 +122,7 @@ public static class Asking
             : asker.Choose("What builds this corpus?", CiSystem.All, CiSystem.None));
 
         if (!CiSystem.All.Contains(ci, StringComparer.Ordinal))
-            return Problem($"new: --ci '{ci}' is not a system this tool offers. it is one of "
+            return Problem($"new: --ci '{ci}' is not a system this tool offers. It is one of "
                            + $"{string.Join(", ", CiSystem.All)}.");
 
         var published = Base(publishing, origin, asker);
@@ -151,7 +151,7 @@ public static class Asking
         return missing.Count == 0
             ? null
             : $"new: there is no terminal to ask on, and {string.Join(", ", missing)} was not given. "
-              + "pass every answer as a flag, or pass --yes to take the defaults.";
+              + "Pass every answer as a flag, or pass --yes to take the defaults.";
     }
 
     /// <summary><c>types: []</c> is a valid answer: a corpus that adopted none.</summary>
@@ -178,7 +178,7 @@ public static class Asking
         var unknown = asked.Where(t => !declared.Contains(t, StringComparer.Ordinal));
 
         return $"new: this template declares no type called {string.Join(" or ", unknown.Select(t => $"'{t}'"))}. "
-               + $"it declares {string.Join(", ", declared)}.";
+               + $"It declares {string.Join(", ", declared)}.";
     }
 
     private static string? Base(string target, string? origin, IAsker? asker)

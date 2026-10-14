@@ -57,8 +57,8 @@ a tree in any state:
 ```text
 update: comparing this corpus against https://github.com/paul80nd/knowledge-as-code at 3b812bb.
 update: withheld 31 file(s) for types this corpus has not adopted.
-update: withheld 2 continuous integration starter(s) this corpus does not hold. which system builds it is not an update's to decide.
-this corpus is behind its framework. these would change:
+update: withheld 2 continuous integration starter(s) this corpus does not hold. Which system builds it is not an update's to decide.
+this corpus is behind its framework. These would change:
 WRITE, framework files this corpus holds differently:
   .schema/adrs.yaml
 run:  kac update
@@ -84,14 +84,14 @@ links to the types the corpus already has. The pages already there name the new 
 was written while the type was still declined. The run says so:
 
 ```text
-update: policies arrives linking to the types this corpus holds. the pages already here name policies without linking
+update: policies arrives linking to the types this corpus holds. The pages already here name policies without linking
 to it, and they are yours to change.
 ```
 
 Dropping is the asymmetric half. `update` refuses while the folder still holds records:
 
 ```text
-update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. delete them yourself and run this
+update: tools/ holds 3 record(s), and deleting a record is deleting knowledge. Delete them yourself and run this
 again, or leave 'tools' adopted.
 ```
 
@@ -101,9 +101,9 @@ Where the folder is empty, dropping asks first. The page is about to go, and eve
 that no longer resolves:
 
 ```text
-update: giving up tools deletes its page. every page still linking to it is left holding a dead link, and `kac
+update: giving up tools deletes its page. Every page still linking to it is left holding a dead link, and `kac
 validate` reports the ones it can reach.
-update: a reference it cannot parse is reported by nobody. search the corpus for the name as well, and fix what you
+update: a reference it cannot parse is reported by nobody. Search the corpus for the name as well, and fix what you
 find.
 ```
 
@@ -111,7 +111,7 @@ That question takes no for an answer by default, because the run deletes files. 
 run with no terminal and no `--yes` refuses rather than guessing:
 
 ```text
-update: giving up tools needs an answer, and there is no terminal to ask on. pass --yes to give it up anyway.
+update: giving up tools needs an answer, and there is no terminal to ask on. Pass --yes to give it up anyway.
 ```
 
 ### The seed files refreshed

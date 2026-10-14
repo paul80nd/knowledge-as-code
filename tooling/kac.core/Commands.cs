@@ -97,11 +97,11 @@ public static class Commands
 
         if (ground.Corpus is { } already)
             return Fail($"new: {already} is already a corpus, so there is nothing here to create. "
-                        + "taking a newer framework into one is `kac update`.");
+                        + "Taking a newer framework into one is `kac update`.");
 
         // A tree git could not answer for is not reported as clean, and is not stopped either.
         if (ground.Dirty is true)
-            return Fail("new: this repository holds uncommitted changes. commit or stash them first, so "
+            return Fail("new: this repository holds uncommitted changes. Commit or stash them first, so "
                         + "that what `new` writes reads as a diff of its own.");
 
         var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
@@ -110,7 +110,7 @@ public static class Commands
 
         if (ground.Holds.Count > 0)
         {
-            Note($"new: this folder already holds {string.Join(", ", ground.Holds)}. without a committed "
+            Note($"new: this folder already holds {string.Join(", ", ground.Holds)}. Without a committed "
                  + "baseline there is nothing to tell those from the files about to arrive.");
             if (Asking.OrDefault(asker, "Create the corpus here anyway?") is Consent.Withheld)
                 return Cancelled("new");
@@ -154,8 +154,8 @@ public static class Commands
 
         if (validated == 0) return 0;
 
-        Stop("new: the corpus this created does not validate. that is a defect in the template or in the "
-             + "tool, and not in anything you answered. the files are written and staged.");
+        Stop("new: the corpus this created does not validate. That is a defect in the template or in the "
+             + "tool, and not in anything you answered. The files are written and staged.");
         return 1;
     }
 
@@ -174,10 +174,10 @@ public static class Commands
         Asking.OrRefuse(asker, request.Yes, $"{dir} is not a git repository. Run `git init` here?") switch
         {
             Consent.Unattended => Fail("new: this folder is not a git repository, and there is no terminal to ask on. "
-                                       + "run `git init` first, or pass --yes to have it run."),
+                                       + "Run `git init` first, or pass --yes to have it run."),
             Consent.Withheld => Cancelled("new"),
             _ => Git.Run(dir, "init -q") is null
-                ? Fail("new: `git init` failed. the tool reads the git listing to find what a corpus holds, "
+                ? Fail("new: `git init` failed. The tool reads the git listing to find what a corpus holds, "
                        + "so a corpus git cannot see is not one worth writing.")
                 : null
         };
@@ -190,15 +190,15 @@ public static class Commands
     {
         var asker = Asking.Asks(request.Yes, Out.Interactive) ? new ConsoleAsker() : null;
 
-        Note($"update: giving up {dropping} deletes its page. every page still linking to it is left "
+        Note($"update: giving up {dropping} deletes its page. Every page still linking to it is left "
              + "holding a dead link, and `kac validate` reports the ones it can reach.");
-        Note("update: a reference it cannot parse is reported by nobody. search the corpus for the name "
+        Note("update: a reference it cannot parse is reported by nobody. Search the corpus for the name "
              + "as well, and fix what you find.");
 
         return Asking.OrRefuse(asker, request.Yes, $"Give up {dropping}?", fallback: false) switch
         {
             Consent.Unattended => Fail($"update: giving up {dropping} needs an answer, and there is no "
-                                       + "terminal to ask on. pass --yes to give it up anyway."),
+                                       + "terminal to ask on. Pass --yes to give it up anyway."),
             Consent.Withheld => Cancelled("update"),
             _ => null
         };
@@ -229,7 +229,7 @@ public static class Commands
     private static void Stage(string dir)
     {
         if (Git.Run(dir, "add -A") is null)
-            Note("new: `git add -A` did not run, so nothing is staged. the files are written.");
+            Note("new: `git add -A` did not run, so nothing is staged. The files are written.");
         else
             Account("new: staged. `git status` shows everything this wrote, and the first commit is yours.");
     }
@@ -238,13 +238,13 @@ public static class Commands
     {
         if (faults.Unclassified.Count > 0)
         {
-            Stop($"{verb}: {from} has a manifest that does not place its own tree. these files match no rule:");
+            Stop($"{verb}: {from} has a manifest that does not place its own tree. These files match no rule:");
             foreach (var path in faults.Unclassified) Out.ErrLine($"  {path}");
         }
 
         if (faults.UnknownCi.Count > 0)
             Stop($"{verb}: {from} serves {string.Join(" and ", faults.UnknownCi)}, which this tool cannot offer. "
-                 + $"it offers {string.Join(", ", CiSystem.All)}.");
+                 + $"It offers {string.Join(", ", CiSystem.All)}.");
 
         return 1;
     }
@@ -252,7 +252,7 @@ public static class Commands
     /// <summary>The verb is the caller's, because <c>update</c> gives a type up through this too.</summary>
     private static int Cancelled(string verb)
     {
-        Note($"{verb}: cancelled. nothing was written.");
+        Note($"{verb}: cancelled. Nothing was written.");
         return 1;
     }
 
@@ -600,7 +600,7 @@ public static class Commands
         // `--check` writes nothing, so it runs over a tree in any state. A tree git could not answer for is
         // not reported as clean, and is not stopped either.
         if (!request.Check && Git.Dirty(corpusRoot) is true)
-            return Fail("update: this repository holds uncommitted changes. commit or stash them first, "
+            return Fail("update: this repository holds uncommitted changes. Commit or stash them first, "
                         + "so that what `update` writes reads as a diff of its own.");
 
         using var take = TemplateSource.Take("update", kac.core.Update.TemplatePath(from, corpusRoot), from,
@@ -730,7 +730,7 @@ public static class Commands
         }
 
         Stop(HasWrites(plan)
-            ? "this corpus is behind its framework. these would change:"
+            ? "this corpus is behind its framework. These would change:"
             : "this corpus is out of step with its framework:");
         Listed("WRITE, framework files this corpus holds differently", plan.Written.Select(f => f.To));
         Listed("SEED, files the corpus has none of", plan.Seeded.Select(f => f.To));
@@ -738,8 +738,8 @@ public static class Commands
         Listed("UNSHARED, framework files this corpus holds and the template does not send",
             plan.Unshared);
         Out.ErrLine(plan.Unshared.Count > 0 && !HasWrites(plan)
-            ? "an unshared file is a framework change made in the wrong tree. move it upstream, or say "
-              + "the corpus owns it with a skip: entry. one under .plugin/ is a copy left behind by "
+            ? "an unshared file is a framework change made in the wrong tree. Move it upstream, or say "
+              + "the corpus owns it with a skip: entry. One under .plugin/ is a copy left behind by "
               + "adopting plugin.from, and it wins over the shared tree until it is deleted."
             : "run:  kac update");
         return 1;
@@ -774,14 +774,14 @@ public static class Commands
         }
 
         Account($"update: wrote {plan.Written.Count}, seeded {plan.Seeded.Count}, deleted "
-                + $"{plan.Deleted.Count}; {plan.InStep} already in step. recorded in .corpus.yaml as "
+                + $"{plan.Deleted.Count}; {plan.InStep} already in step. Recorded in .corpus.yaml as "
                 + $"template version {templateVersion}, taken {today}.");
         Account("update: nothing is committed. `git diff` is the review step, and `git checkout` on a "
                 + "file is how to decline one.");
 
         // Said rather than repaired: the pages already here hold the corpus's own words.
         if (added is not null)
-            Note($"update: {added} arrives linking to the types this corpus holds. the pages already "
+            Note($"update: {added} arrives linking to the types this corpus holds. The pages already "
                  + $"here name {added} without linking to it, and they are yours to change.");
 
         // Overlay pages carry generated blocks built from this corpus's types, so a passing
@@ -803,7 +803,7 @@ public static class Commands
 
         if (plan.DeclinedCi > 0)
             Account($"update: withheld {plan.DeclinedCi} continuous integration starter(s) this corpus "
-                    + "does not hold. which system builds it is not an update's to decide.");
+                    + "does not hold. Which system builds it is not an update's to decide.");
 
         if (plan.DeclinedPlugin > 0)
             Account($"update: withheld {plan.DeclinedPlugin} plugin file(s) this corpus reads from "
@@ -811,7 +811,7 @@ public static class Commands
 
         var offered = plan.Offered.Where(t => !t.Equals(dropped, StringComparison.Ordinal)).ToList();
         if (offered.Count > 0)
-            Account($"update: this template also declares {string.Join(", ", offered)}. take one with "
+            Account($"update: this template also declares {string.Join(", ", offered)}. Take one with "
                     + "kac update --add-type <name>.");
     }
 
@@ -833,7 +833,7 @@ public static class Commands
             Out.ErrLine($"update: regeneration failed: {ex.Message}");
             Out.ErrLine(
                 "update: the files are in place but the generated blocks were not rebuilt. "
-                + "run kac validate to see what the corpus is missing, then kac generate.");
+                + "Run kac validate to see what the corpus is missing, then kac generate.");
             return 1;
         }
     }

@@ -425,7 +425,7 @@ public static class Validator
             if (allowed.Contains(stated, StringComparer.Ordinal)) return;
 
             f.Add(new Finding(".corpus.yaml", null, Sev.Error, new CheckId("descriptor-target"),
-                $"{key} '{stated}' is not a target kac can {verb}. write one of: "
+                $"{key} '{stated}' is not a target kac can {verb}. Write one of: "
                 + $"{string.Join(", ", allowed)}."));
         }
     }
@@ -449,7 +449,7 @@ public static class Validator
 
             f.Add(new Finding(".corpus.yaml", null, Sev.Error, new CheckId("descriptor-area"),
                 $"{block}.area '{area}' names an area path, and {block} files on '{target}', which has "
-                + $"no area paths. only {string.Join(", ", Tracker.Areas)} does."));
+                + $"no area paths. Only {string.Join(", ", Tracker.Areas)} does."));
         }
     }
 

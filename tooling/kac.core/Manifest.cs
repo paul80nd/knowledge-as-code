@@ -390,9 +390,9 @@ public class CorpusDescriptor
 
             var name = section.Length == 0 ? old : $"{section}.{old}";
             return replacement is null
-                ? $"update: {path} still says `{name}:`, which nothing reads. delete it: {gone}"
-                : $"update: {path} still says `{name}:`. rename it to `{replacement}:`, which says what "
-                  + "the value is about. this corpus states three versions: `descriptor-version` for the "
+                ? $"update: {path} still says `{name}:`, which nothing reads. Delete it: {gone}"
+                : $"update: {path} still says `{name}:`. Rename it to `{replacement}:`, which says what "
+                  + "the value is about. This corpus states three versions: `descriptor-version` for the "
                   + "file's own format, `content-version` for what the corpus knows, and "
                   + "`upstream.template-version` for the template it took.";
         }

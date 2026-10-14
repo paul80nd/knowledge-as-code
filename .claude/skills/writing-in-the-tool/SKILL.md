@@ -57,8 +57,9 @@ Follow Microsoft's [comment style] for C# and its [recommended XML tags]. The ru
 
 * A message opens lower case and closes with a full stop. The reader meets it at the tail of the command they ran.
   Write: `id 'adr-7' must start with 'adr-'.`
-* The second sentence of a split message opens lower case too. An interpolated path or id keeps its own case. Write:
-  `the index is stale. {path} changed after it was built.`
+* Every sentence after the first opens with a capital. Only the first meets the tail of the command. Write:
+  ``this fix's `review-by` has passed. Check the steps still clear the symptom.``
+* An interpolated path or id keeps its own case wherever it falls.
 * A message names a change to the corpus the reader holds. It does not name a template or a transform they never saw.
 * Changing what a command prints makes its docs page stale. `docs/use/cli/<verb>.md` quotes real output. Re-read
   it, run the command, and paste what it printed now.
