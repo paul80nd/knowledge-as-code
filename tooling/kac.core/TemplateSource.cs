@@ -74,7 +74,7 @@ public sealed class TemplateSource : IDisposable
         if (run is null)
         {
             Discard(clone);
-            return new Fetch(null, $"{verb}: could not run git. the template is cloned rather than carried, "
+            return new Fetch(null, $"{verb}: could not run git. The template is cloned rather than carried, "
                                    + "and a corpus is a git repository, so git has to be on the path.");
         }
 
@@ -82,7 +82,7 @@ public sealed class TemplateSource : IDisposable
         {
             Discard(clone);
             var at = gitRef is { Length: > 0 } named ? $" at '{named}'" : "";
-            return new Fetch(null, $"{verb}: could not clone {from}{at}. git said:\n{Indent(run.Error)}");
+            return new Fetch(null, $"{verb}: could not clone {from}{at}, and git said:\n{Indent(run.Error)}");
         }
 
         var root = Below(clone, path);
@@ -115,7 +115,7 @@ public sealed class TemplateSource : IDisposable
         /// </summary>
         private static T Held<T>(T? value, string what) where T : class =>
             value ?? throw new InvalidOperationException(
-                $"this take reported a problem and holds no {what}. read Problem first.");
+                $"this take reported a problem and holds no {what}. Read Problem first.");
 
         public string? Problem => problem;
         public string Root => Held(source, "template").Root;

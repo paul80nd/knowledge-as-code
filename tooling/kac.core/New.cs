@@ -127,7 +127,7 @@ public static class New
         return running >= wanted
             ? null
             : $"{verb}: this template needs kac {minimum} or newer, and this is {tool}. "
-              + "update the tool, or name an older ref with --ref.";
+              + "Update the tool, or name an older ref with --ref.";
 
         static string Release(string version) => version.Split('+', '-')[0];
     }

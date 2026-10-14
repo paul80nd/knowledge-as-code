@@ -38,7 +38,7 @@ public class DescriptorAreaTests
 
         Assert.Contains("tracker.area 'kac-it-swdev' names an area path", message);
         Assert.Contains("tracker files on 'github', which has no area paths.", message);
-        Assert.Contains("only azure-devops does.", message);
+        Assert.Contains("Only azure-devops does.", message);
     }
 
     [Fact]

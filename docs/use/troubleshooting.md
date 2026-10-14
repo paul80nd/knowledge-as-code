@@ -40,7 +40,7 @@ are outside one. The exit code is `2`, which means no corpus rather than a fault
 
 ```text
 new: /path/to/corpus is already a corpus, so there is nothing here to create.
-taking a newer framework into one is `kac update`.
+Taking a newer framework into one is `kac update`.
 ```
 
 `new` stands a corpus up where there is none. Taking a newer framework into one that exists is
@@ -62,7 +62,7 @@ Where an index still looks wrong, the frontmatter it was built from is wrong.
 ## `this repository holds uncommitted changes`
 
 ```text
-update: this repository holds uncommitted changes. commit or stash them first,
+update: this repository holds uncommitted changes. Commit or stash them first,
 so that what `update` writes reads as a diff of its own.
 ```
 

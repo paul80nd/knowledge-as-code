@@ -112,7 +112,7 @@ public static class Update
     /// </summary>
     public static string? Contradiction(UpdateRequest request) =>
         request.AddType is not null && request.DropType is not null
-            ? "update: --add-type and --drop-type change the same list. ask for one."
+            ? "update: --add-type and --drop-type change the same list. Ask for one."
             : null;
 
     public static Settled Settle(UpdateRequest request, CorpusDescriptor descriptor)
@@ -120,11 +120,11 @@ public static class Update
         var from = request.From ?? descriptor.UpstreamUrl;
         if (from is null)
             return new Settled(null, "update: this corpus names no template, so there is nothing to take. "
-                                     + "pass --from, or set upstream.url in .corpus.yaml.");
+                                     + "Pass --from, or set upstream.url in .corpus.yaml.");
 
         var policy = request.Policy ?? descriptor.UpdatePolicy;
         if (!CorpusDescriptor.Policies.Contains(policy, StringComparer.Ordinal))
-            return new Settled(null, $"update: '{policy}' is not an update policy. it is "
+            return new Settled(null, $"update: '{policy}' is not an update policy. It is "
                                      + $"{string.Join(" or ", CorpusDescriptor.Policies)}.");
 
         return new Settled(new UpdateSettings(from, policy), null);
@@ -339,13 +339,13 @@ public static class Update
         if (add is null && drop is null) return new Adoption(held, [], null, null);
 
         if (held is null)
-            return Refuse("update: this corpus states no `types:`, so there is no list to change. declare "
+            return Refuse("update: this corpus states no `types:`, so there is no list to change. Declare "
                           + "what it has adopted first.");
 
         if (add is { } adding)
         {
             if (!declared.Contains(adding, StringComparer.Ordinal))
-                return Refuse($"update: this template declares no type called '{adding}'. it declares "
+                return Refuse($"update: this template declares no type called '{adding}'. It declares "
                               + $"{string.Join(", ", declared)}.");
 
             if (held.Contains(adding, StringComparer.Ordinal))
@@ -353,7 +353,7 @@ public static class Update
 
             return new Adoption(
                 [.. held.Append(adding).OrderBy(t => t, StringComparer.Ordinal)], [],
-                $"update: adopted {adding}. its schema, root page and template arrived with this run.", null);
+                $"update: adopted {adding}. Its schema, root page and template arrived with this run.", null);
         }
 
         // Unreachable with `drop` unset. Asked again so the compiler knows.
@@ -364,19 +364,19 @@ public static class Update
 
         if (!schema.ByFolder.TryGetValue(dropping, out var type))
             return Refuse($"update: this template declares no type called '{dropping}', so there is no "
-                          + "folder to read. take the name out of `types:` by hand.");
+                          + "folder to read. Take the name out of `types:` by hand.");
 
         var folder = type.Folder;
         var records = RecordsUnder(corpusFiles, folder);
         if (records.Count > 0)
             return Refuse($"update: {folder}/ holds {records.Count} record(s), and deleting a record is "
-                          + $"deleting knowledge. delete them yourself and run this again, or leave "
+                          + $"deleting knowledge. Delete them yourself and run this again, or leave "
                           + $"'{dropping}' adopted.");
 
         return new Adoption(
             [.. held.Where(t => !t.Equals(dropping, StringComparison.Ordinal))],
             FilesOf(corpusFiles, type, dropping),
-            $"update: gave up {dropping}. its schema, its page and {folder}/ went with it.", null);
+            $"update: gave up {dropping}. Its schema, its page and {folder}/ went with it.", null);
 
         static Adoption Refuse(string message) => new(null, [], null, message);
     }

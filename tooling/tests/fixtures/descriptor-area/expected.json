@@ -13,14 +13,14 @@
       "line": null,
       "severity": "error",
       "check": "descriptor-area",
-      "message": "tracker.area 'kac-it-swdev' names an area path, and tracker files on 'github', which has no area paths. only azure-devops does."
+      "message": "tracker.area 'kac-it-swdev' names an area path, and tracker files on 'github', which has no area paths. Only azure-devops does."
     },
     {
       "file": ".corpus.yaml",
       "line": null,
       "severity": "error",
       "check": "descriptor-area",
-      "message": "framework.area 'kac-framework' names an area path, and framework files on 'none', which has no area paths. only azure-devops does."
+      "message": "framework.area 'kac-framework' names an area path, and framework files on 'none', which has no area paths. Only azure-devops does."
     }
   ]
 }
