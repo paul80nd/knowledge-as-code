@@ -42,6 +42,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `kac update` deletes the copy an existing corpus holds unless `skip:` in `.corpus.yaml` names it. `.schema/README.md`
   still arrives, and says where the rules for changing a schema file are written. The template version moves to 19, and
   `kac new` stamps `template-version: 19`.
+- **`carried-in-full-by-digest` is gone from the `glossary` schema.** It no longer appears on the glossary type page
+  under **Declared, not yet enforced**. Nothing ran it, and the digest it protected is not generated. The type page and
+  `_template.md` now ask for one paragraph of definition, usually one or two sentences, where they asked for one
+  sentence. Most definitions in the example corpora already run to two.
 
 ## 0.32.0 - 2026-10-10
 

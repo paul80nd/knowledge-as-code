@@ -64,7 +64,7 @@ glossary that admits it, so say what makes this context its own rather than list
 
 ### {{Term}}
 
-A one-sentence definition of what the word means in this context.
+A one-paragraph definition of what the word means in this context.
 
 **Also:** the acronym, abbreviation or second word this thing goes by.
 

@@ -127,11 +127,6 @@ rules:
     description: >
       Where one glossary redefines a term another defines, each entry links to the other entry's anchor.
     # Where the general glossary is a synced file, only the narrower entry states the reference.
-  - id: carried-in-full-by-digest
-    description: >
-      No entry runs beyond one paragraph. The digest takes the glossaries in the order the export writes
-      them.
-    # A glossary is read end to end, so every entry's length is read by every reader.
   - id: undefined-terms
     description: >
       Reports terms appearing more than N times across the corpus with no glossary entry.
