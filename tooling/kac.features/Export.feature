@@ -74,6 +74,13 @@ Scenario: A cross-reference adds to seeAlso only where it names a part
   And the "gls-estate.record" line of ".dist/export/glossary/terms.jsonl" states "seeAlso" as ["gls-framework.record"]
   And the "gls-framework.record" line of ".dist/export/glossary/terms.jsonl" states "seeAlso" as null
 
+Scenario: A part line carries the link to its part, spelled for the target
+  Given the export fixture corpus
+  And the corpus publishes to "azure-devops-wiki" at "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
+  When I export
+  Then it succeeds
+  And the "gls-search.query" line of ".dist/export/glossary/terms.jsonl" states "links" as {"human":"https://dev.azure.com/acme/Standards/_wiki/wikis/KaC?pagePath=%2Fglossary%2Fsearch&anchor=query"}
+
 Scenario: Each of the three versions is read from its own source
   Given the export fixture corpus
   And the corpus states content-version "2.3.4"

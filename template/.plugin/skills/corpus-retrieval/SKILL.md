@@ -25,20 +25,17 @@ somebody else's file, and both read as plausible.
 
 ## Send a reader to the record
 
-**A record file already holds the link.** `links.human` on the record's own JSON is a built URL with the commit inside
-it. Quote it as it stands.
+**The record file and the line already have the link.** `links.human`, on a record's own JSON and on each line of a
+parts file, is a built URL with the commit inside it. Quote it as it stands. Do not retype the commit, shorten it, swap
+the host or judge whether it looks right. An inherited line keeps the link its producer built, so it opens the corpus
+that wrote the part.
 
-**A parts line holds no URL.** It carries `path` and `anchor`, which are the two values the block's `humanTemplate`
-takes. Copy the template exactly as it stands, replace `{path}` and `{anchor}`, and change nothing else. Do not retype
-the commit, shorten it, swap the host or judge whether it looks right. A template with one character altered gives a
-404 that reads as plausible, or a page from a version of the corpus nobody asked about.
+**A line with no `links` key needs the template.** A producer that exported before lines had the key sends a line
+without it. Copy the `humanTemplate` of the block chosen above exactly, replace `{path}` and `{anchor}`, and change
+nothing else. Where that block's `target` is `azure-devops-wiki`, remove `.md` from `path` and write every `/` as
+`%2F`. Every other target takes `path` whole.
 
-**One target spells `{path}` differently.** Where the block's `target` is `azure-devops-wiki`, the template addresses a
-wiki page rather than a file, so substitute `path` with `.md` removed and every `/` written as `%2F`. Every other
-target takes the `path` whole. Two corpora can publish to two targets, so read `target` from the block you chose above,
-every time.
-
-**Where `links.human` or `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so,
+**Where `links` or `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so,
 and quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.
 
 ## Read the source yourself

@@ -203,6 +203,7 @@ export:
       reviewBy: front.review-by
       path: record.path
       anchor: part.anchor
+      links: part.links
   notes: >
     A rule travels as its heading and one entry for each bullet beneath it. An entry states the bullet's
     level and its text, in the Markdown the standard wrote it in. See

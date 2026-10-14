@@ -109,7 +109,8 @@ public class ExporterTests
                 ("status", $"{PartLineSource.FrontPrefix}status"),
                 ("reviewBy", $"{PartLineSource.FrontPrefix}review-by"),
                 ("path", PartLineSource.RecordPath),
-                ("anchor", PartLineSource.PartAnchor)
+                ("anchor", PartLineSource.PartAnchor),
+                ("links", PartLineSource.PartLinks)
             ]
         }
     };
@@ -592,13 +593,40 @@ public class ExporterTests
     }
 
     [Fact]
-    public void A_term_line_carries_the_two_substitutions_and_no_resolved_link()
+    public void A_term_line_carries_the_link_to_its_term()
+    {
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Published, null, Run);
+
+        Assert.Equal(
+            "https://github.com/example/corpus/blob/0123456789abcdef0123456789abcdef01234567/glossary/gls-one.md#alpha",
+            Assert.Single(Lines(plan)).GetProperty("links").Text("human"));
+    }
+
+    [Fact]
+    public void A_wiki_line_links_the_page_rather_than_the_file()
+    {
+        var wiki = Publishing.For(
+            new CorpusDescriptor
+            {
+                PublishingTarget = Publishing.AzureDevOpsWiki,
+                Base = "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC"
+            },
+            "0123456789abcdef0123456789abcdef01234567");
+
+        var plan = Exporter.Plan(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), wiki, null, Run);
+
+        Assert.Equal(
+            "https://dev.azure.com/acme/Standards/_wiki/wikis/KaC?pagePath=%2Fglossary%2Fgls-one&anchor=alpha",
+            Assert.Single(Lines(plan)).GetProperty("links").Text("human"));
+    }
+
+    [Fact]
+    public void A_corpus_that_publishes_nowhere_writes_null_links_on_its_part_lines()
     {
         var line = Assert.Single(TermLines(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n"))));
 
-        Assert.Equal("glossary/gls-one.md", line.GetProperty("path").GetString());
-        Assert.Equal("alpha", line.GetProperty("anchor").GetString());
-        Assert.False(line.TryGetProperty("links", out _));
+        Assert.Equal(JsonValueKind.Null, line.GetProperty("links").ValueKind);
     }
 
     [Fact]
@@ -817,6 +845,19 @@ public class ExporterTests
         Assert.Equal(["eng:gls-other.beta"],
             line.GetProperty("seeAlso").EnumerateArray().Select(v => v.GetString()));
         Assert.Equal("eng", line.GetProperty(Exporter.ShortcodeKey).GetString());
+    }
+
+    [Fact]
+    public void An_inherited_line_keeps_the_link_its_producer_built()
+    {
+        const string linked =
+            """{"id":"gls-theirs.alpha","record":"gls-theirs","seeAlso":null,"part":"alpha","links":{"human":"https://example.com/eng/glossary/theirs.md#alpha"}}""";
+
+        var plan = Exporter.Plan(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), Published, null, Run,
+            [Consumed("eng", linked)]);
+        var line = Lines(plan).Single(l => l.Text("id").StartsWith("eng:"));
+
+        Assert.Equal("https://example.com/eng/glossary/theirs.md#alpha", line.GetProperty("links").Text("human"));
     }
 
     [Fact]
@@ -1304,6 +1345,16 @@ public class ExporterTests
         Assert.Equal("Obliged", line.GetProperty("standing").GetString());
         Assert.Equal("frameworks.md", line.GetProperty("path").GetString());
         Assert.Equal("iso-27001", line.GetProperty("anchor").GetString());
+    }
+
+    [Fact]
+    public void A_framework_line_carries_the_link_to_its_entry()
+    {
+        var line = Assert.Single(FrameworkLines(Exporter.Plan(Aligned(), Published, null, Run)));
+
+        Assert.Equal(
+            "https://github.com/example/corpus/blob/0123456789abcdef0123456789abcdef01234567/frameworks.md#iso-27001",
+            line.GetProperty("links").Text("human"));
     }
 
     [Fact]

@@ -23,6 +23,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   where a record is still `draft` and its `review-by` has passed, so a departure nobody finished accepting does not
   sit unnoticed. The message offers three fixes: accept it with a new `review-by`, set a new date, or delete the
   record. `expiry` still reports an `active` record alone, and a `closed` one is reported by neither.
+- **Each line of an export's flat files has its link.** `kac export` writes `links.human` on every line of
+  `terms.jsonl`, `clauses.jsonl`, `rules.jsonl` and `frameworks.jsonl`, built for the corpus's publishing target. It is
+  the same shape a record file has. A reader quotes it, and no longer fills in `humanTemplate`, whose Azure DevOps wiki
+  form needs `.md` removed and every `/` encoded. It is `null` where the corpus publishes nowhere `kac` can address.
 
 ### Changed
 

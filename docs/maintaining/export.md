@@ -24,6 +24,8 @@ export is built to do, and the scenario proving each behaviour. [`export`](../us
   [A chain of any depth](../reference/export.md#a-chain-of-any-depth)
 * It reads a cross-reference into `seeAlso` only where the link names a part.
   [A cross-reference is read](../reference/export.md#a-cross-reference-is-read-never-inferred)
+* It writes each part line's link, spelled for the publishing target.
+  [The address](../reference/export.md#the-address)
 
 ## What it refuses
 
@@ -57,6 +59,7 @@ Each refusal exits `1` and writes nothing. [What stops the run](../reference/exp
 * A draft or a lapsed record travels with its own state
 * export.exclude withholds the records it names
 * A cross-reference adds to seeAlso only where it names a part
+* A part line carries the link to its part, spelled for the target
 * Each of the three versions is read from its own source
 * What the corpus consumes travels under the shortcode of the corpus that wrote it
 * export.exclude withholds this corpus's own records alone

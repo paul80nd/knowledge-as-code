@@ -114,6 +114,7 @@ export:
       reviewBy: front.review-by
       path: record.path
       anchor: part.anchor
+      links: part.links
   notes: >
     A term travels whole: the definition, and each labelled line beneath it as a piece of its own.
     See <https://paul80nd.github.io/knowledge-as-code/framework/shaping-a-type/#glossary>.

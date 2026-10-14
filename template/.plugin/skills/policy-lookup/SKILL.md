@@ -54,11 +54,12 @@ Each line carries the clause whole:
 | `part`               | string            | the clause's key inside that policy                                             |
 | `shortcode`          | string, or absent | the corpus that published the clause. A clause written here carries no such key |
 | `status`, `reviewBy` | string            | how far the policy has settled, and the date it was meant to be read again      |
-| `path`, `anchor`     | string            | the two values `corpus-retrieval` builds a link from                            |
+| `links`              | object or null    | `human`, the link to the clause. `null` where nothing can address it            |
+| `path`, `anchor`     | string            | the record's file in its corpus, and the fragment the clause sits at            |
 
-**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
-one exception, and the row above says so. A clause opening with no modal carries `"level": null`, so read the level
-before you rank the clause.
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is one
+exception, and the row above says so. `links` is the other: a line another corpus exported before the key existed has
+none. A clause opening with no modal carries `"level": null`, so read the level before you rank the clause.
 
 ## Read the prefix on an id
 
@@ -110,11 +111,11 @@ The clause table is not among those sections. Its rows travelled as the lines in
 
 ## Link to the clause, and read its source
 
-**Load the `corpus-retrieval` skill.** It carries the whole of this: which publishing block addresses the corpus that
-wrote the line, how to substitute a template without breaking it, how to fetch the file through the client that
-authenticates to that platform, and what to say where nothing reaches it.
+**Quote `links.human` to link the clause.** The line already has it, built for the corpus that wrote the clause.
 
-**Bring it two values.** A line holds `path` and `anchor`, and those are what a template takes.
+**Load the `corpus-retrieval` skill for the rest.** It says how to link a line with no `links`, how to fetch the file
+through the client that authenticates to that platform, and what to say where nothing reaches it. Bring it the line's
+`path` and `anchor`.
 
 **Every clause of one policy carries the same anchor**, because a table row is not a heading and no renderer gives it
 a fragment of its own. The link lands on the clause table, and the reader finds the row by the id you quoted.

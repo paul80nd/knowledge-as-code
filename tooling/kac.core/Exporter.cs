@@ -81,7 +81,7 @@ public static class Exporter
                         Serialize(Record(doc, local, corpus.Schema, publishing))));
 
                 if (export.Parts.Length > 0 && local.Parts is not null)
-                    lines.AddRange(PartLines(own, local, corpus.Tree, unread));
+                    lines.AddRange(PartLines(own, local, corpus.Tree, publishing, unread));
             }
 
             // Consumed corpora after this one's own, each in its producer's order. Sorting across corpora would
@@ -111,7 +111,7 @@ public static class Exporter
             if (partsFile is not null)
                 files.Add(new ExportFile(partsFile, string.Concat(lines.Select(l => l + "\n"))));
 
-            var frameworks = FrameworkLines(local, corpus);
+            var frameworks = FrameworkLines(local, corpus, publishing);
             var frameworksFile = frameworks.Count > 0 && local?.Export is { Frameworks: { Length: > 0 } named }
                 ? $"{key}/{named}"
                 : null;
@@ -300,7 +300,7 @@ public static class Exporter
     /// None where the type declares no file for them. This corpus's own clauses alone, because an inherited clause left
     /// its <c>Alignment</c> cell behind. See <c>docs/reference/export.md</c>.
     /// </summary>
-    private static List<string> FrameworkLines(TypeSchema? local, LoadedCorpus corpus)
+    private static List<string> FrameworkLines(TypeSchema? local, LoadedCorpus corpus, Publishing? publishing)
     {
         if (local?.Export is not { Frameworks.Length: > 0 }) return [];
 
@@ -314,7 +314,8 @@ public static class Exporter
                 ["clauses"] = new JsonArray([.. row.Clauses.Select(c => (JsonNode?)JsonValue.Create(c))]),
                 ["records"] = new JsonArray([.. row.Records.Select(r => (JsonNode?)JsonValue.Create(r))]),
                 ["path"] = row.Path,
-                ["anchor"] = row.Anchor
+                ["anchor"] = row.Anchor,
+                ["links"] = LineLinks(publishing, row.Path, row.Anchor)
             }))
         ];
     }
@@ -684,7 +685,8 @@ public static class Exporter
     /// One line per part of this corpus's own records. <c>docs/reference/export.md</c> says why JSONL. The type
     /// declares what a line holds, so a second type exporting parts needs no C#.
     /// </summary>
-    private static List<string> PartLines(List<Doc> records, TypeSchema t, Tree tree, List<string> unread)
+    private static List<string> PartLines(
+        List<Doc> records, TypeSchema t, Tree tree, Publishing? publishing, List<string> unread)
     {
         var spec = t.DeclaredParts;
         var byPath = records.ToDictionary(d => d.Rel, StringComparer.Ordinal);
@@ -703,7 +705,7 @@ public static class Exporter
                     SeeAlso(doc, row, byPath, tree), Citations(doc, row, footnotes));
 
                 var line = new JsonObject();
-                foreach (var (key, source) in t.DeclaredExport.Line) line[key] = Value(source, part, t);
+                foreach (var (key, source) in t.DeclaredExport.Line) line[key] = Value(source, part, t, publishing);
 
                 lines.Add(Serialize(line));
                 unread.AddRange(Unread(doc, row, partId, byPath, tree));
@@ -737,7 +739,7 @@ public static class Exporter
     /// <summary>
     /// A source outside <c>PartLineSource</c> writes null. <c>SchemaChecks</c> has already refused one.
     /// </summary>
-    private static JsonNode? Value(string source, Part part, TypeSchema t)
+    private static JsonNode? Value(string source, Part part, TypeSchema t, Publishing? publishing)
     {
         if (PartLineSource.Argument(source, PartLineSource.FrontPrefix) is { } field)
             return JsonValue.Create(Absent(part.Doc.FrontScalar(field)));
@@ -772,6 +774,7 @@ public static class Exporter
                 : new JsonArray([.. part.SeeAlso.Select(v => (JsonNode?)JsonValue.Create(v))]),
 
             PartLineSource.PartAnchor => JsonValue.Create(t.DeclaredParts.Anchor(part.Id)),
+            PartLineSource.PartLinks => LineLinks(publishing, part.Doc.Rel, t.DeclaredParts.Anchor(part.Id)),
 
             PartLineSource.RecordId => JsonValue.Create(part.Record),
             PartLineSource.RecordType => JsonValue.Create(t.Key),
@@ -909,6 +912,14 @@ public static class Exporter
 
     private static ExportLinks? Links(string? link) =>
         link is null ? null : new ExportLinks(link);
+
+    /// <summary>
+    /// The <c>links</c> a record file has, built for one part. Null where <c>publishing</c> or <c>path</c> is null.
+    /// </summary>
+    private static JsonNode? LineLinks(Publishing? publishing, string? path, string? anchor) =>
+        path is null
+            ? null
+            : JsonSerializer.SerializeToNode(Links(publishing?.Link(path, anchor)), KacJson.Relaxed.ExportLinks);
 
     private static string Id(Doc doc) => doc.FrontScalar("id") ?? doc.Rel;
 
