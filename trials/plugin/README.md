@@ -60,6 +60,21 @@ corpus it runs against.
 | `control/label-printer-image`    | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`  |
 | `control/stock-reserve-endpoint` | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint |
 
+## What leaves the organisation
+
+A run against your own corpus writes three kinds of output:
+
+* **The cases** contain your team's tasks, and the scaffold each one starts from. They stay with the organisation
+  that wrote them. Never publish them.
+* **The raw results** are `sessions.tsv`, each `aggregate-result.json`, and the workspaces and traces `--keep-temp`
+  keeps. They contain case names, prompt text, the code each session wrote, and graders' explanations quoting it.
+  They stay with the organisation that ran the trial. Never publish them.
+* **`aggregate.md`** contains only counts, rates, the model and the cost, under the fields
+  [defined below](#the-aggregate). It contains no case name, prompt or code, so you can publish it without a review.
+
+Publish `aggregate.md` alone. Pass `--no-publish` to every `claude plugin eval` command. Without it, the tool
+publishes its report to claude.ai wherever your account supports it, and the report contains the prompts.
+
 ## What you need
 
 | Tool                         | Why                                                                   |
