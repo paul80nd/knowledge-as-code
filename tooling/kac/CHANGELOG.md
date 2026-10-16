@@ -17,6 +17,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ## Unreleased
 
+### Added
+
+- **A template link into a folder the corpus lacks is reported.** `kac validate` warns where a `_template.md` link
+  carries a placeholder and points into a folder this corpus does not have, such as `../policies/{{a}}.md` in a
+  corpus with no `policies/`. `link-resolves` still skips the placeholder itself. A record written from the template
+  would fail `link-resolves` once an author filled it in. The check id is `template-folder-resolves`.
+
 ### Changed
 
 - **`kac new` and `kac update --add-type` drop a template's links to the types you declined.** A template line citing
