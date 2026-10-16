@@ -46,7 +46,7 @@ _**Covers:** [pol-TRUS].LICENCE, [pol-TRUS].SCREEN_
 
 - A pipeline **MUST** scan the dependency tree on every build and on a weekly schedule.
 - A team **MUST** rank a finding by its severity and by whether the affected path runs.
-- A team **MUST** close a critical finding within 7 days and a high finding within 30.
+- A team **MUST** close a critical finding within 7 days and a high finding within 14.
 - A team **MUST NOT** release with an open critical finding, absent a recorded deviation naming who accepts the risk.
 
 _**Covers:** [pol-VURM].RANK, [pol-VURM].SCAN, [pol-VURM].SHIP, [pol-VURM].TIMEBOX_

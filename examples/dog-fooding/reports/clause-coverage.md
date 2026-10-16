@@ -5,13 +5,13 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-09-21T14:45:00Z
-  by: claude-code/opus-5
+  at: 2026-10-16T14:50:00Z
+  by: claude-code/opus-5.5
   report: coverage
-  tool: kac/0.30.0
+  tool: kac/0.34.0
 sources:
-  - { resource: example-dogfooding, version: "0.61.4" }
-  - { resource: example-engineering, version: "0.29.0" }
+  - { resource: example-dogfooding, version: "0.61.5" }
+  - { resource: example-engineering, version: "0.30.0" }
 verified:
   - { at: 2026-10-14T08:38:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.29.0.
+* `eng`, example-engineering, at 0.30.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it.
@@ -472,7 +472,7 @@ where the rule and the practice differ.
 |-----------|----------|----------------|------------------------------------|----------|------------------------|---------------------|----------------------------------------------------------------------------|
 | `SCAN`    | MUST     | `eng:std-DEPS` |                                    |          |                        | Covered             | The dependency tree is scanned on every build and weekly.                  |
 | `RANK`    | MUST     | `eng:std-DEPS` |                                    |          |                        | Covered             | A finding is ranked by severity and by whether the path runs.              |
-| `TIMEBOX` | MUST     | `eng:std-DEPS` |                                    |          |                        | Covered             | Critical closes in 7 days and high in 30. Nothing here tracks that.        |
+| `TIMEBOX` | MUST     | `eng:std-DEPS` |                                    |          |                        | Covered             | Critical closes in 7 days and high in 14. Nothing here tracks that.        |
 | `DISCLOS` | MUST     |                | `dev-vulnerability-route-unstated` |          |                        | Gap                 | A private advisory is the route in, and no standard states it.             |
 | `REGRESS` | MUST     |                |                                    |          | `eng:pol-AUTV.REGRESS` | Covered by its pair | Covered through `eng:pol-AUTV.REGRESS`, the same duty from the other side. |
 | `INDEP`   | MUST     |                |                                    |          |                        | Out of scope        | One maintainer, and nobody else to test what they built.                   |
