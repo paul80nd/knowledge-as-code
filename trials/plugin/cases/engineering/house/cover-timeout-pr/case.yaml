@@ -1,0 +1,5 @@
+---
+schema_version: "1.1"
+name: cover-timeout-pr
+context:
+  scaffold_script: scaffold.sh

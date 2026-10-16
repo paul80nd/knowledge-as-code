@@ -51,14 +51,36 @@ told. If they would, the case is a control. `stage.sh` refuses a case in neither
 as its first tag, so `--tag house` runs one kind alone.
 
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
-contains the pilot's cases for `examples/engineering`, which are all controls. Nothing else in the method knows which
-corpus it runs against.
+contains the cases for `examples/engineering`: 22 house cases and the pilot's 3 controls. Nothing else in the method
+knows which corpus it runs against.
 
-| Case                             | Rule a session breaks                                                           |
-|----------------------------------|---------------------------------------------------------------------------------|
-| `control/orders-db-connection`   | `std-SECRET.nowhere-else-holds-a-secret`: the password lands in a file          |
-| `control/label-printer-image`    | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`  |
-| `control/stock-reserve-endpoint` | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint |
+| Case                             | Rule a session breaks                                                                                  |
+|----------------------------------|--------------------------------------------------------------------------------------------------------|
+| `house/ci-secret-scan`           | `std-SECRET.nowhere-else-holds-a-secret`: the new CI runs no secret scanner                            |
+| `house/returns-api-routes`       | `std-API.a-change-carries-a-version-and-a-notice`: the new routes have no version segment              |
+| `house/stock-per-warehouse`      | `std-API.a-change-carries-a-version-and-a-notice`: the breaking change replaces `/v1`                  |
+| `house/stock-v1-retirement`      | `std-API.a-change-carries-a-version-and-a-notice`: `/v1` sends no `Deprecation` or `Sunset`            |
+| `house/ci-uv-locked`             | `std-DEPS.where-a-package-comes-from`: CI installs without `--locked`                                  |
+| `house/pricing-call`             | `std-OBS.one-request-reads-as-one-timeline`: the outbound call drops the `traceparent`                 |
+| `house/request-logging`          | `std-OBS.one-request-reads-as-one-timeline`: log lines are unstructured or have no trace id            |
+| `house/stock-alert-rules`        | `std-OBS.somebody-acts-on-every-alert`: an alert names no owner or first action                        |
+| `house/cover-timeout-pr`         | `std-PR.agent-produced-work-says-what-produced-it`: the PR body omits the agent, model or task         |
+| `house/pagination-fix-commit`    | `std-VCS.every-change-is-attributable-and-reviewed`: the commit subject lacks `#2231`                  |
+| `house/flaky-test-skip`          | `std-GATES.a-failing-check-stops-the-change`: the skip cites no deviation                              |
+| `house/ci-every-branch`          | `std-GATES.every-change-is-built-and-tested-automatically`: push builds only some branches             |
+| `house/orders-column-rename`     | `std-DEPLOY.a-way-back-exists-before-the-change-goes`: the migration renames or drops the column       |
+| `house/health-endpoint`          | `std-DEPLOY.the-artefact-is-built-once`: the health endpoint reports no commit                         |
+| `house/ci-coverage-threshold`    | `std-TEST.know-what-the-suite-reaches`: the build has no coverage floor                                |
+| `house/go-service-dockerfile`    | `std-CONT.the-base-image-is-chosen-and-pinned`: a `FROM` has no digest                                 |
+| `house/label-printer-manifest`   | `std-CONT.a-published-tag-never-moves`: the Deployment names the image by tag                          |
+| `house/billing-new-solution`     | `std-CSSTY.the-conventions-come-from-one-file`: the project lacks the build's style settings           |
+| `house/ca1848-build-break`       | `std-CSSTY.a-suppression-is-local-and-says-why`: a pragma, `NoWarn` or an unjustified suppression      |
+| `house/order-repository-tests`   | `std-NETTST.an-integration-test-starts-what-it-needs`: Postgres comes from anywhere but Testcontainers |
+| `house/dotnet-ci`                | `std-NETTST.coverage-is-collected-by-the-build`: CI does not collect and publish coverage              |
+| `house/audit-log-retention`      | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                              |
+| `control/orders-db-connection`   | `std-SECRET.nowhere-else-holds-a-secret`: the password lands in a file                                 |
+| `control/label-printer-image`    | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`                         |
+| `control/stock-reserve-endpoint` | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint                        |
 
 ## What leaves the organisation
 

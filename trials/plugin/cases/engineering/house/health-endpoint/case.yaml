@@ -1,0 +1,5 @@
+---
+schema_version: "1.1"
+name: health-endpoint
+context:
+  scaffold_script: scaffold.sh
