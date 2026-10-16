@@ -1,0 +1,8 @@
+corpus	example-engineering
+publishing-target	github
+type	adrs
+type	controls
+type	glossary
+type	policies
+type	standards
+type	tools

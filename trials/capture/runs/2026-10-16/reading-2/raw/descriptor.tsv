@@ -1,0 +1,9 @@
+corpus	example-engineering
+publishing-target	github
+publishing-base	https://github.com/paul80nd/knowledge-as-code
+type	adrs
+type	controls
+type	glossary
+type	policies
+type	reports
+type	standards

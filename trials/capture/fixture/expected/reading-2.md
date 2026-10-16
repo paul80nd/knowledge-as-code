@@ -1,0 +1,35 @@
+# Capture trial, reading 2
+
+| Field                               |        Value |
+|-------------------------------------|-------------:|
+| `trial`                             |      capture |
+| `method`                            |            2 |
+| `reading`                           |            2 |
+| `days_since_first_record`           |          100 |
+| `types_adopted`                     |            3 |
+| `types_without_record`              |            1 |
+| `records`                           |            6 |
+| `records.glossary`                  |            0 |
+| `records.policies`                  |            2 |
+| `records.standards`                 |            4 |
+| `records_by_owner`                  |            3 |
+| `records_by_others`                 |            2 |
+| `records_by_excluded`               |            1 |
+| `records_by_others_rate`            |         0.33 |
+| `authors`                           |            3 |
+| `authors_not_owner`                 |            2 |
+| `new_authors`                       |            3 |
+| `new_authors_with_record`           |            2 |
+| `days_to_first_record_median`       |            7 |
+| `days_to_first_record_min`          |            5 |
+| `days_to_first_record_max`          |            9 |
+| `tracker_target`                    | azure-devops |
+| `findings_source`                   |         file |
+| `findings_filed`                    |            3 |
+| `findings_became_records`           |            1 |
+| `findings_became_records_rate`      |         0.33 |
+| `records_moved`                     |            1 |
+| `moved.policies.standards`          |            1 |
+| `questions_logged`                  |            3 |
+| `questions_answered_with_link`      |            2 |
+| `questions_answered_with_link_rate` |         0.67 |
