@@ -4,7 +4,29 @@ This trial measures whether a team's knowledge is getting written down in a corp
 records). It takes two readings of one corpus. The first is on the day the corpus took its first record. The second is
 three months later.
 
-The corpus owner runs it, in the repository where the corpus lives. The owner needs only `capture.sh` and
+## On the day
+
+Follow these steps to take one reading. Each links to the section that explains it.
+
+1. Check that `sh`, `git` and `jq` are installed, with `gh` or `az` for the tracker.
+   See [What you need](#what-you-need).
+2. Copy `capture.sh` and `question-log.csv` into a clone of the repository that contains the corpus.
+3. Before reading 1, check whether the repository squash-merges. Run `git log -1 --format='%an <%aE>' <commit>` on the
+   commits that landed three pull requests other people opened. See [Squash merges](#squash-merges).
+4. Run `git fetch origin`, then `git remote set-head origin --auto`. See [Taking a reading](#taking-a-reading).
+5. For reading 1, find the day of the first record: run the script with today's date into a scratch folder, and read
+   `first_record` in `raw/reading.tsv`.
+6. Choose the as-of date and the log's days from [When to take each reading](#when-to-take-each-reading).
+7. Run `git log --format='%aE' -- <corpus> | sort | uniq -c`. Your addresses go to `-o`, and a bot's to `-x`.
+8. Keep the question log for its 14 days. See [The question log](#the-question-log).
+9. Where the tracker is on Azure DevOps, write the findings file. See [The findings file](#the-findings-file).
+10. Run `./capture.sh -c <corpus> -d <as-of> -r <1 or 2> -o <emails> -l <log> <empty folder>`, with `-x` and `-f`
+    where they apply. See [The script's arguments](#the-scripts-arguments).
+11. Where the script stops, fix what its message says, and run it again into an empty folder.
+12. Copy only `aggregate.md` out of the organisation. Keep `raw/`. See
+    [What leaves the organisation](#what-leaves-the-organisation).
+
+The corpus owner runs the trial, in the repository where the corpus lives. The owner needs only `capture.sh` and
 `question-log.csv` from this folder, and nobody to ask. Whoever decides what the framework changes reads the result.
 
 Each reading counts these, from git and from the tracker the corpus states:
@@ -364,6 +386,39 @@ so beside that verdict.
 
 The per-type counts, the types with no record and the moves are read separately, to decide which types the corpus has
 earned.
+
+## The fixture
+
+`fixture/test.sh` tests the script against a corpus whose every count is known. Run it after you change `capture.sh`:
+
+```sh
+sh trials/capture/fixture/test.sh
+```
+
+It exits non-zero where any check fails. It needs `git` and `jq`, and no network.
+
+`fixture/build.sh` creates the corpus in a temporary folder, from a fixed recipe of authors, dates and merges. Every
+address ends in `@example.invalid`. The runner takes both readings, and compares each `aggregate.md` with the file in
+`fixture/expected/`. Each value in those files was worked out by hand from the recipe, before the script ran.
+
+The recipe covers:
+
+* an owner who commits under two addresses, one in mixed case
+* an author whose first commit changes no record, and whose first record lands five days later
+* a new author after reading 1 who gets a record merged, and one who never adds a record
+* a bot under `-x` with a record
+* a record moved from one type's folder to another's, and a rename inside one type, which is no move
+* a type with no record, a record whose name is outside ASCII, and a record with CRLF line endings
+* an Azure DevOps tracker whose project's name has a space, read through `-f`
+* a finding that became a record, and findings filed after each as-of date
+* a commit late on the as-of day, which counts, and one just after it, which does not
+* a question log for each reading, with lines outside the log and a line marked neither `yes` nor `no`
+
+It also checks that the script stops, with its message, for an `-o` matching no commit, an Azure DevOps tracker with
+no `-f`, and a findings line with no tab.
+
+Where a definition on this page changes, change the recipe or the expected files by hand to match. Do not copy the
+script's output into them, because then the fixture tests nothing.
 
 ## Runs
 
