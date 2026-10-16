@@ -15,7 +15,7 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
-## Unreleased
+## 0.34.0 - 2026-10-16
 
 ### Added
 
@@ -41,8 +41,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   declined type's root page is still unlinked and its text left standing.
 - **`kac bundle` refuses a skill or hook that `plugin.json` does not declare.** A directory under `skills/` or
   `hooks/` in the plugin tree that no `metadata.components` entry claims stops the run, and the message names it.
-  Before, it shipped even where the export lacked the types it reads, because no trim could reach it. Declare it with the types it
-  reads in `requires`. A file outside those two directories, such as a README or a licence, still ships undeclared.
+  Before, it shipped even where the export lacked the types it reads, because no trim could reach it. Declare it with
+  the types it reads in `requires`. A file outside those two directories, such as a README or a licence, still ships
+  undeclared.
 
 ## 0.33.0 - 2026-10-14
 
