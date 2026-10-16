@@ -3,4 +3,5 @@
 # Write the day you were asked as YYYY-MM-DD, then a comma.
 # Then write yes where your answer included a link to a record, and no where it did not.
 # Write nothing else on the line: no name, and no words of the question.
+# Edit this file in a text editor. A spreadsheet can rewrite the dates.
 date,linked

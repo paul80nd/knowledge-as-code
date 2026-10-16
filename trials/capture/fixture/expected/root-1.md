@@ -6,10 +6,11 @@
 | `method`                            |            2 |
 | `reading`                           |            1 |
 | `days_since_first_record`           |            8 |
-| `types_adopted`                     |            2 |
-| `types_without_record`              |            0 |
+| `types_adopted`                     |            3 |
+| `types_without_record`              |            1 |
 | `records`                           |            3 |
 | `records.glossary`                  |            1 |
+| `records.guides`                    |            0 |
 | `records.standards`                 |            2 |
 | `records_by_owner`                  |            2 |
 | `records_by_others`                 |            1 |
@@ -17,7 +18,7 @@
 | `records_by_others_rate`            |         0.33 |
 | `authors`                           |            2 |
 | `authors_not_owner`                 |            1 |
-| `new_authors`                       |            2 |
+| `new_authors`                       |            4 |
 | `new_authors_with_record`           |            1 |
 | `days_to_first_record_median`       |            1 |
 | `days_to_first_record_min`          |            1 |

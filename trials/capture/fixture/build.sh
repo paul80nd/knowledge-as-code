@@ -117,11 +117,11 @@ mkdir -p kb/standards/style
 git mv kb/standards/naming.md kb/standards/style/naming.md
 commit 'File the naming standard under style'
 
-# Carol is new after reading 1. Her record has CRLF line endings and cites finding 12.
+# Carol is new after reading 1. Her record has CRLF line endings, and cites finding 12 on visualstudio.com.
 git switch -q -c carol-review
 by Carol carol@example.invalid 2026-04-01T09:00:00
 printf -- '---\r\nid: std-REV\r\ntitle: Review\r\nsources:\r\n  - { resource: %s }\r\n---\r\n\r\n# Review\r\n' \
-  'https://dev.azure.com/example/Knowledge%20Base/_workitems/edit/12' >kb/standards/review.md
+  'https://example.visualstudio.com/Knowledge%20Base/_workitems/edit/12' >kb/standards/review.md
 commit 'Add the review standard'
 by Carol carol@example.invalid 2026-04-03T09:00:00
 printf 'Review every change.\r\n' >>kb/standards/review.md
@@ -160,42 +160,42 @@ base='https://dev.azure.com/example/Knowledge Base/_workitems/edit'
   printf '2026-06-11\t%s/14\n' "$base"
 } | crlf >"$dir/findings.tsv"
 
-# Each log runs for 14 days from its reading's as-of date. Each has lines the script leaves out: a day before the log,
-# a day after it, and a mark that is neither yes nor no. The second log has CRLF line endings.
+# Each log runs for 14 days from its reading's as-of date. Each has a line the day before the log and the day after it,
+# which the script leaves out. The second log starts with a byte-order mark and has CRLF, as a spreadsheet saves it.
 cat >"$dir/log-1.csv" <<'EOF'
 date,linked
 2026-03-09,no
 2026-03-10,yes
 2026-03-11,no
 2026-03-12, no
-2026-03-13,maybe
 2026-03-23,yes
 2026-03-24,yes
 EOF
-crlf >"$dir/log-2.csv" <<'EOF'
+{ printf '\357\273\277'; crlf <<'EOF'
 date,linked
 2026-06-09,no
 2026-06-10,yes
 2026-06-15,no
-2026-06-16,unsure
 2026-06-23,yes
 2026-06-24,no
 EOF
+} >"$dir/log-2.csv"
 
-# A second corpus, at the root of its repository. Its tracker is derived from its publishing block.
+# A second corpus, at the root of its repository. Its tracker is derived from its publishing block. It adopts guides,
+# whose folder is spelled Guides, so nothing in it is a record. It adopts decisions until 8 March.
 mkdir "$dir/root-upstream"
 cd "$dir/root-upstream"
 git init -q -b main
 by "$olive" olive@example.invalid 2026-03-01T10:00:00
-mkdir standards glossary
-cat >.corpus.yaml <<'EOF'
-descriptor-version: 6
-corpus: root-fixture
-publishing: { target: azure-devops-wiki, base: "https://dev.azure.com/example/Root/_wiki/wikis/Root.wiki" }
-types: [standards, glossary]
-EOF
+mkdir standards glossary decisions Guides
+root_descriptor() {
+  printf 'descriptor-version: 6\ncorpus: root-fixture\n'
+  printf 'publishing: { target: azure-devops-wiki, base: "https://dev.azure.com/example/Root/_wiki/wikis/Root.wiki" }\n'
+  printf 'types: [%s]\n' "$1"
+}
+root_descriptor 'standards, glossary, decisions, guides' >.corpus.yaml
 echo '# Root fixture' >README.md
-for t in standards glossary; do echo "# $t" >"$t/_index.md"; done
+for t in standards glossary decisions Guides; do echo "# $t" >"$t/_index.md"; done
 commit 'Add the corpus'
 
 by "$olive" olive@example.invalid 2026-03-02T10:00:00
@@ -222,6 +222,17 @@ by Erin erin@example.invalid 2026-03-06T09:00:00
 echo 'Erin was here.' >>README.md
 commit 'Update the README'
 
+# Frank adds a record to decisions, which the corpus then drops. Neither he nor Grace, in Guides, is an author.
+by Frank frank@example.invalid 2026-03-07T09:00:00
+record decisions/first.md DEC-1 First
+commit 'Add the first decision'
+by Grace grace@example.invalid 2026-03-07T10:00:00
+record Guides/setup.md GDE-1 Setup
+commit 'Add the setup guide'
+by "$olive" olive@example.invalid 2026-03-08T10:00:00
+root_descriptor 'standards, glossary, guides' >.corpus.yaml
+commit 'Drop decisions'
+
 # The reading is as of 10 March, so this record is after it.
 by "$olive" olive@example.invalid 2026-03-11T10:00:00
 record standards/gamma.md std-GAMMA Gamma
@@ -232,3 +243,19 @@ git clone -q "$dir/root-upstream" "$dir/root"
   printf '2026-03-06\thttps://dev.azure.com/example/Root/_git/findings\n'
   printf '2026-03-12\thttps://dev.azure.com/example/Root/_git/later\n'
 } >"$dir/root-findings.tsv"
+
+# A third corpus, whose types block takes a different wrong shape on each of three days. Each reading must stop.
+mkdir "$dir/mapping-upstream"
+cd "$dir/mapping-upstream"
+git init -q -b main
+mapping() { printf 'descriptor-version: 6\ncorpus: mapping-fixture\npublishing-target: none\n%s\n' "$1" >.corpus.yaml; }
+by "$olive" olive@example.invalid 2026-03-01T10:00:00
+mapping "$(printf 'types:\n  standards: 2')"
+commit 'Adopt standards as a mapping'
+by "$olive" olive@example.invalid 2026-03-02T10:00:00
+mapping 'types: { standards: 2 }'
+commit 'Adopt standards as a flow mapping'
+by "$olive" olive@example.invalid 2026-03-03T10:00:00
+mapping "$(printf 'types:\n  - Standards')"
+commit 'Adopt standards in capitals'
+git clone -q "$dir/mapping-upstream" "$dir/mapping"

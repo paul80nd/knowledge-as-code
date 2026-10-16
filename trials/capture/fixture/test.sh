@@ -37,6 +37,8 @@ refuses() {
   what=$1 message=$2; shift 2
   if sh "$capture" "$@" "$dir/refused" >/dev/null 2>"$dir/stderr"; then
     echo "FAIL $what: capture.sh did not stop"; failed=1
+  elif [ -f "$dir/refused/aggregate.md" ]; then
+    echo "FAIL $what: capture.sh stopped, and still wrote aggregate.md"; failed=1
   elif grep -qF -- "$message" "$dir/stderr"; then
     echo "pass $what"
   else
@@ -96,6 +98,26 @@ refuses 'a derived azure-devops tracker with no -f' 'the tracker is on Azure Dev
 printf '2026-03-04 no tab here\n' >"$dir/bad-findings.tsv"
 refuses 'a findings line with no tab' 'each line of the findings file takes a date, a tab and an address' \
   -c "$fx/clone/kb" -d 2026-06-10 -r 2 -o "$owners" -f "$dir/bad-findings.tsv"
+
+# A log a spreadsheet saved, with its dates rewritten. The run stops, and gives the line's number.
+printf 'date,linked\r\n10/03/2026,yes\r\n11/03/2026,no\r\n' >"$dir/excel-log.csv"
+for message in 'line 2 of the question log: 10/03/2026,yes' 'A spreadsheet may have rewritten the dates'; do
+  refuses "a log with Excel's dates: $message" "$message" \
+    -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -l "$dir/excel-log.csv"
+done
+printf 'date,linked\n2026-03-10,yes\n2026-03-11,maybe\n' >"$dir/maybe-log.csv"
+refuses 'a log line marked neither yes nor no' 'line 3 of the question log: 2026-03-11,maybe' \
+  -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -l "$dir/maybe-log.csv"
+refuses 'a log with no line inside its days' 'no line of the question log is dated 2026-03-10 to 2026-03-23' \
+  -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -l "$fx/log-2.csv"
+
+# A types block that is not a list of type names, on each day of the third corpus.
+refuses 'a types block that is a mapping' 'the descriptor at 2026-03-01 has line 5:   standards: 2.' \
+  -c "$fx/mapping" -d 2026-03-01 -r 1 -o olive@example.invalid
+refuses 'a types block that is a flow mapping' 'the descriptor at 2026-03-02 has line 4: types: { standards: 2 }.' \
+  -c "$fx/mapping" -d 2026-03-02 -r 1 -o olive@example.invalid
+refuses 'a type name in capitals' 'the descriptor at 2026-03-03 has line 5:   - Standards.' \
+  -c "$fx/mapping" -d 2026-03-03 -r 1 -o olive@example.invalid
 
 [ "$failed" = 0 ] && echo "every case passed"
 exit "$failed"

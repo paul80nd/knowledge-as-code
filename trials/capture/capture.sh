@@ -68,7 +68,7 @@ asof_day=$(day_of "$asof_start")
 # The question log runs for the 14 days starting on the as-of day, so the script waits for its last day.
 log_last=$(date_of $((asof_start + 13 * 86400)))
 if [ -n "$log_file" ] && [ "$(day_of "$(date -u +%s)")" -lt $((asof_day + 13)) ]; then
-  fail "the question log runs to $log_last. Run the script on or after that day."
+  fail "the question log runs to $log_last, a day in UTC. Run the script on or after that day."
 fi
 
 [ -f "$corpus/.corpus.yaml" ] || fail "no .corpus.yaml in $corpus"
@@ -107,11 +107,15 @@ parse_descriptor() {
     }
     function emit(section, key, v) {
       v = clean(v)
-      if (section == "types") { if (v != "") print "type\t" v; return }
+      if (section == "types") { if (v ~ /^[a-z0-9-]+$/) print "type\t" v; else wrong(); return }
       if (key == "target" || key == "base") print section "-" key "\t" v
     }
+    # A line under types: that is not a list of type names, which the run stops at.
+    function wrong() { print "error\t" NR "\t" $0 }
     function flow(section, v,   n, parts, i, at) {
-      v = clean(v); gsub(/^[\[{][ \t]*|[ \t]*[\]}]$/, "", v)
+      v = clean(v)
+      if (section == "types" && v !~ /^\[.*\]$/) { wrong(); return }
+      gsub(/^[\[{][ \t]*|[ \t]*[\]}]$/, "", v)
       n = split(v, parts, ",")
       for (i = 1; i <= n; i++) {
         if (section == "types") { emit(section, "", parts[i]); continue }
@@ -126,11 +130,12 @@ parse_descriptor() {
       if (key == "corpus" || key == "publishing-target") { print key "\t" value; next }
       if (key == "publishing" || key == "tracker" || key == "types") {
         section = key
-        if (value ~ /^[\[{]/) { flow(section, value); section = "" }
+        if (value != "") { flow(section, value); section = "" }
       }
       next
     }
     section == "types" && /^[ \t]+- / { v = $0; sub(/^[ \t]+- /, "", v); emit("types", "", v); next }
+    section == "types" { wrong(); next }
     section != "" && /^[ \t]+[a-z-]+:/ {
       v = $0; sub(/^[ \t]+/, "", v); at = index(v, ":")
       emit(section, substr(v, 1, at - 1), substr(v, at + 1))
@@ -143,6 +148,9 @@ parse_descriptor <"$work/descriptor" >"$raw/descriptor.tsv"
 parse_descriptor <"$top/${prefix}.corpus.yaml" >"$raw/descriptor-today.tsv"
 field() { awk -F'\t' -v k="$1" '$1 == k { print $2; exit }' "$raw/descriptor-today.tsv"; }
 corpus_name=$(field corpus)
+bad_type=$(awk -F'\t' '$1 == "error" { print "line " $2 ": " $3; exit }' "$raw/descriptor.tsv")
+[ -z "$bad_type" ] || fail "the descriptor at $asof has $bad_type. List each type under types: as '  - <name>', \
+in lower-case letters, digits and hyphens."
 types=$(awk -F'\t' '$1 == "type" { print $2 }' "$raw/descriptor.tsv" | sort -u)
 [ -n "$types" ] || fail "the corpus adopted no types at $asof"
 
@@ -279,13 +287,13 @@ while read -r author first; do
   fi
 done <"$work/firsts" >>"$raw/authors.tsv"
 
-# The people who added or changed a record, from every commit reachable from the snapshot.
+# The people who added or changed a record, from every commit reachable from the snapshot. Only the address is
+# lowered, so a path matches a type's folder exactly as it does for the records.
 git log --format='@%aE' --name-only "$snapshot" -- "$spec" >"$work/touched" || fail "git log failed"
-lower <"$work/touched" |
-  awk -v types="$all_types_line" -v prefix="$(echo "$prefix" | lower)" "$is_record_awk"'
-    /^@/ { a = substr($0, 2); next }
-    NF && type_of($0) != "" { print a }
-  ' | sort -u >"$work/record-authors"
+awk -v types="$types_line" -v prefix="$prefix" "$is_record_awk"'
+  /^@/ { a = tolower(substr($0, 2)); next }
+  NF && type_of($0) != "" { print a }
+' "$work/touched" | sort -u >"$work/record-authors"
 
 # Each rename that took a record from one type's folder to another's, between consecutive commits on the branch.
 git log --first-parent -M --diff-filter=R --name-status --format='@%ct' "$snapshot" -- "$spec" >"$work/renames" ||
@@ -303,7 +311,11 @@ while IFS="$tab" read -r when from to old new; do
 done <"$work/moves" >>"$raw/moves.tsv"
 
 # Every address a record cites as a resource in its frontmatter, normalised so two spellings of one issue match.
-normalise() { lower | sed -E 's#^[a-z]+://##; s#^www\.##; s# #%20#g; s#/+$##; s#\.git$##; s#/+$##'; }
+# An Azure DevOps address on <org>.visualstudio.com is written as its dev.azure.com/<org> form.
+normalise() {
+  lower | sed -E 's#^[a-z]+://##; s#^www\.##; s#^([a-z0-9-]+)\.visualstudio\.com/#dev.azure.com/\1/#
+    s# #%20#g; s#/+$##; s#\.git$##; s#/+$##'
+}
 printf 'path\tresource\n' >"$raw/sources.tsv"
 awk -F'\t' 'NR > 1 { print $2 }' "$raw/records.tsv" >"$work/paths"
 while read -r path; do
@@ -367,16 +379,30 @@ if [ "$findings_source" != none ]; then
   done <"$work/filed-sorted" >>"$raw/findings.tsv"
 fi
 
-# The question log, kept for the 14 days from the as-of day.
+# The question log, kept for the 14 days from the as-of day. A spreadsheet can save a byte-order mark before line 1.
 questions='' linked=''
 if [ -n "$log_file" ]; then
-  tr -d ' \r' <"$log_file" | grep -Ev '^(#|$)|^date,' >"$work/log-lines" || true
+  bom=$(printf '\357\273\277')
+  tr -d ' \r' <"$log_file" | LC_ALL=C sed "1s/^$bom//" >"$work/log-lines"
+  log_status=0
   awk -F, -v a="$asof" -v z="$log_last" '
-    function skip(why) { print "capture.sh: left out a question dated " $1 ", which " why > "/dev/stderr" }
-    $1 < a || $1 > z { skip("is outside the log"); next }
-    $2 != "yes" && $2 != "no" { skip("is not marked yes or no"); next }
-    { print }
-  ' "$work/log-lines" >"$raw/question-log.csv"
+    function say(what) { print "capture.sh: " what > "/dev/stderr" }
+    /^#/ || /^$/ || /^date,/ { next }
+    NF != 2 || $1 !~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/ || ($2 != "yes" && $2 != "no") {
+      bad = 1; say("line " NR " of the question log: " $0); next
+    }
+    { seen++ }
+    $1 < a || $1 > z { say("left out line " NR ", dated " $1 ", which is outside the log"); next }
+    { kept++; print }
+    END { if (bad) exit 3; if (seen && !kept) exit 4 }
+  ' "$work/log-lines" >"$raw/question-log.csv" || log_status=$?
+  case $log_status in
+    0) ;;
+    3) fail "each line of the question log takes a date as YYYY-MM-DD, a comma, and yes or no. Fix the lines above. \
+A spreadsheet may have rewritten the dates, as Excel saves 10/03/2026, so edit the log in a text editor." ;;
+    4) fail "no line of the question log is dated $asof to $log_last. Check -d, and that -l is this reading's log." ;;
+    *) fail "awk could not read the question log" ;;
+  esac
   questions=$(wc -l <"$raw/question-log.csv" | tr -d ' ')
   linked=$(grep -c ',yes$' "$raw/question-log.csv" || true)
 fi

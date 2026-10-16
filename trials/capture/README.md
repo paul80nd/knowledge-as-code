@@ -7,15 +7,19 @@ records). It takes two readings of one corpus, three months apart. The corpus ow
 
 Follow these steps to take one reading. Each links to the section that explains it.
 
-1. Copy `capture.sh`, `question-log.csv` and `fixture/` into one folder. Run `sh fixture/test.sh` there, and go on
-   only once it prints `every case passed`. See [What you need](#what-you-need).
-2. Before reading 1, check whom the repository credits for a merged pull request. See [Squash merges](#squash-merges).
-3. In the clone, run `git fetch origin`, then `git remote set-head origin --auto`. See
+1. Copy `README.md`, `capture.sh`, `question-log.csv` and `fixture/` into one folder. Run `sh fixture/test.sh` there,
+   and go on only once it prints `every case passed`. See [What you need](#what-you-need).
+2. In the clone, run `git fetch origin`, then `git remote set-head origin --auto`. See
    [Taking a reading](#taking-a-reading).
-4. Run `git log --format='%aE' -- <corpus> | sort | uniq -c`. Your addresses go to `-o`, and a bot's to `-x`.
-5. Start a copy of `question-log.csv` on the as-of date, and keep it for 14 days. Reading 1's as-of date is the day
-   you start, and reading 2's is three months later. See [When to take each reading](#when-to-take-each-reading).
-6. Where the tracker is on Azure DevOps, write the findings file. See [The findings file](#the-findings-file).
+3. Before reading 1, check whom the platform credits for a merged pull request. Where it credits whoever completed the
+   merge, stop and take no reading. See [Squash merges](#squash-merges).
+4. Run `git -C <corpus> log --format='%aE' origin/HEAD -- . | sort | uniq -c`. At reading 1, your addresses go to `-o`,
+   and a bot's to `-x`. For reading 2, see [Taking a reading](#taking-a-reading).
+5. Start a copy of `question-log.csv` on the as-of date, and keep it for 14 days in a text editor. Reading 1's as-of
+   date is the day you start, and reading 2's is three months later. See
+   [When to take each reading](#when-to-take-each-reading).
+6. Where the tracker is on Azure DevOps, write the findings file. Check that it has one line for each finding your
+   board shows. See [The findings file](#the-findings-file).
 7. On or after the log's last day, run this, with `-x` and `-f` where they apply. See
    [The script's arguments](#the-scripts-arguments).
 
@@ -27,9 +31,9 @@ Follow these steps to take one reading. Each links to the section that explains 
 9. Copy only `aggregate.md` out of the organisation. Keep `raw/`. See
    [What leaves the organisation](#what-leaves-the-organisation).
 
-The corpus owner runs the trial, in the repository where the corpus lives. The owner needs only `capture.sh`,
-`question-log.csv` and `fixture/` from this folder, and nobody to ask. Whoever decides what the framework changes
-reads the result.
+The corpus owner runs the trial, in the repository where the corpus lives. The owner needs only `README.md`,
+`capture.sh`, `question-log.csv` and `fixture/` from this folder, and nobody to ask. Whoever decides what the framework
+changes reads the result.
 
 Each reading counts these, from git and from the tracker the corpus states:
 
@@ -64,8 +68,8 @@ Publish `aggregate.md` alone. Where somebody asked you for the reading, post it 
 | `gh`                                    | the tracker is on GitHub       | The script queries the findings with it. Sign in with `gh auth login` before you start.                                          |
 | `az`, with the `azure-devops` extension | the tracker is on Azure DevOps | You write the findings file with it. Add the extension with `az extension add --name azure-devops`, and sign in with `az login`. |
 
-Copy [`capture.sh`](capture.sh), [`question-log.csv`](question-log.csv) and [`fixture/`](fixture/) out of this folder,
-into one folder of your own. The script needs nothing else from this repository. Run it as `./capture.sh`, or as
+Copy [`README.md`](README.md), [`capture.sh`](capture.sh), [`question-log.csv`](question-log.csv) and
+[`fixture/`](fixture/) out of this folder, into one folder of your own. The script needs nothing else from this repository. Run it as `./capture.sh`, or as
 `sh capture.sh` where the copy lost its execute permission.
 
 Then run `sh fixture/test.sh` in that folder. It builds a small corpus and checks every count against a known value.
@@ -86,11 +90,12 @@ Each reading has an as-of date, which `-d` takes. Its question log runs for the 
 Three months after 3 November is 3 February. Where that month is shorter, take its last day.
 
 The script counts the history as it stood at the end of the as-of day, in UTC. So a run on the log's last day gives the
-same counts as a run on the as-of date. The script stops where you pass `-l` before the log's last day.
+same counts as a run on the as-of date. The script stops where you pass `-l` before the log's last day, which it also
+reads in UTC.
 
 ## Taking a reading
 
-Do every step for each reading. The second reading repeats the first, so use the same addresses for `-o` and `-x`.
+Do every step for each reading.
 
 1. **Update the clone.** Work in a clone of the repository that contains the corpus. Fetch, then point `origin/HEAD`
    at the default branch:
@@ -105,16 +110,23 @@ Do every step for each reading. The second reading repeats the first, so use the
 
 2. **Choose the reading's as-of date** from [When to take each reading](#when-to-take-each-reading).
 
-3. **List the addresses you commit under.** Every one of them goes to `-o`, separated by commas:
+3. **List the addresses that commit to the corpus.** Give `-C` the folder you pass to `-c`. The command reads
+   `origin/HEAD`, as the script does. Where you pass `-b`, write its branch in place of `origin/HEAD`.
 
    ```sh
-   git log --format='%aE' -- <corpus> | sort | uniq -c
+   git -C <corpus> log --format='%aE' origin/HEAD -- . | sort | uniq -c
    ```
 
-   Pass the address of any automation account that commits to the corpus, such as a bot, to `-x`. The script stops
-   where an address under `-o` or `-x` made no commit to the corpus. It also stops where no commit up to the as-of date
-   is by an address under `-o`. Where one person commits under two addresses, a `.mailmap` file at the root of the
-   repository merges them, and the script reads it.
+   At reading 1, pass every address you commit under to `-o`, separated by commas. Pass the address of any automation
+   account that commits to the corpus, such as a bot, to `-x`.
+
+   At reading 2, pass `-o` exactly as at reading 1, and pass reading 1's `-x` again. Where a bot's address appears that
+   reading 1 did not list, add it to `-x` as well. Say in the notes you send with the aggregate that `-x` gained an
+   address, and leave the address out.
+
+   The script stops where an address under `-o` or `-x` made no commit to the corpus. It also stops where no commit up
+   to the as-of date is by an address under `-o`. Where one person commits under two addresses, a `.mailmap` file at
+   the root of the repository merges them, and the script reads it.
 
 4. **Keep the question log for 14 days.** Copy `question-log.csv`, and start it on the as-of date.
    [The question log](#the-question-log) says what goes in it.
@@ -157,13 +169,17 @@ and run it again into an empty folder.
 The snapshot is the last commit on the default branch made on or before the as-of day, following the branch by first
 parents. Every git count reads the history the snapshot contains, and nothing after it.
 
-The corpus's descriptor at the snapshot lists the adopted types. The descriptor in your working tree gives the
-tracker, because the findings are queried where they are today.
+The corpus's descriptor at the snapshot lists the adopted types. The script reads each type from a list item,
+`- <name>`, or from a list on one line, `[<name>, <name>]`. A name has only lower-case letters, digits and hyphens. The
+script stops at anything else under `types:`.
+
+The descriptor in your working tree gives the tracker, because the findings are queried where they are today.
 
 ### Records
 
 A record is a Markdown file in the folder of an adopted type, at any depth, whose name does not start with `_`. So
-`_index.md` and `_template.md` are not records, and neither is a type's root page beside its folder.
+`_index.md` and `_template.md` are not records, and neither is a type's root page beside its folder. The folder's name
+matches the type's exactly, so `Guides/` contains no record of `guides`.
 
 A record's author is the git author of the commit that first added it. The script follows the file back across
 renames to find that commit. It does not follow a copy, so a record started as a copy of another is credited to the
@@ -171,8 +187,12 @@ person who added the copy.
 
 ### Authors
 
-An author is a person who added or changed a record, in any commit up to the snapshot. A person is one email address,
-as `.mailmap` resolves it. The corpus owner is one person, however many addresses you pass to `-o`.
+An author is a person who added or changed a record, in any commit up to the snapshot. A record is a file in the
+folder of a type the descriptor at the snapshot adopts, as for `records`. So a person whose only records are in a type
+dropped before the snapshot is no author. Only [moves](#moves) count every type any version adopted.
+
+A person is one email address, as `.mailmap` resolves it. The corpus owner is one person, however many addresses you
+pass to `-o`.
 
 An address under `-x` is no author. Its records count in `records` and in `records_by_excluded`, and in neither
 `records_by_owner` nor `records_by_others`.
@@ -207,8 +227,9 @@ one, because it leaves the merge commit out:
 git log --no-merges --format='%an <%aE>' '<commit>^1..<commit>'
 ```
 
-Where the pull request's author is not in the list, every author count credits the person who merged. The counts are
-only as good as that attribution.
+Where the pull request's author is not in the list, the platform credits whoever completed the merge. Stop, and take
+no reading 1, because every author count would credit the person who merged. Tell the person who asked you for the
+reading why you stopped.
 
 ### Findings
 
@@ -261,6 +282,9 @@ az boards query --org https://dev.azure.com/<org> --project "<project>" \
 
 Write every finding in the file, whatever its date. The script counts only those filed on or before the as-of day.
 
+Nobody has yet run this command against a real project. So count the lines it wrote with `wc -l <findings.tsv`, and
+check that the count matches the findings your board shows. Run the script only once they match.
+
 #### A finding that became a record
 
 A finding became a record when a record at the snapshot cites the finding's address in its frontmatter, as a
@@ -272,7 +296,8 @@ sources:
 ```
 
 The script compares the two addresses in lower case. It removes the scheme, a leading `www.`, a trailing `/`, a
-trailing `.git` and a trailing `.git/`. It writes each space as `%20`, so `My Project` and `My%20Project` match.
+trailing `.git` and a trailing `.git/`. It writes `<org>.visualstudio.com` as `dev.azure.com/<org>`, so both forms of
+one work item match. It writes each space as `%20`, so `My Project` and `My%20Project` match.
 
 ### Types with no record
 
@@ -302,8 +327,13 @@ date,linked
 2026-11-04,no
 ```
 
-The script counts the lines from the as-of date to 13 days after it. It reports any line outside those days, and any
-line not marked `yes` or `no`, and leaves it out.
+Edit the log in a text editor, such as Notepad. A spreadsheet can rewrite the dates: Excel saves `2026-03-10` as
+`10/03/2026`. Where you must use a spreadsheet, format the date column as `yyyy-mm-dd` before you save it as CSV. In
+Excel, that is Format Cells, then Custom.
+
+The script counts the lines from the as-of date to 13 days after it. It reports each line outside those days and leaves
+it out. It stops where no line is inside them. It also stops at any line that is not a date as `YYYY-MM-DD`, a comma,
+and `yes` or `no`, and gives that line's number.
 
 ## The aggregate
 
@@ -392,17 +422,19 @@ earned.
 ## The fixture
 
 `fixture/test.sh` tests the script against corpora whose every count is known. Run it on any machine before its first
-real reading, and after you change `capture.sh`:
+real reading, and after you change `capture.sh`. Run it in the folder you copied it to, or in `trials/capture/` of this
+repository:
 
 ```sh
-sh trials/capture/fixture/test.sh
+sh fixture/test.sh
 ```
 
 It exits non-zero where any check fails. It needs `git` and `jq`, and no network.
 
-`fixture/build.sh` creates two corpora in a temporary folder, from a fixed recipe of authors, dates and merges. Every
-address ends in `@example.invalid`. The runner takes both readings of the first corpus, and one of the second. It
-compares each `aggregate.md` with the file in `fixture/expected/`. Each value in those files was worked out by hand
+`fixture/build.sh` creates three corpora in a temporary folder, from a fixed recipe of authors, dates and merges.
+Every address ends in `@example.invalid`. The runner takes both readings of the first corpus, and one of the second. It
+compares each `aggregate.md` with the file in `fixture/expected/`. The third corpus has a wrong `types:` block, so every
+reading of it must stop. Each value in those files was worked out by hand
 from the recipe, before the script ran.
 
 The recipe covers:
@@ -414,15 +446,18 @@ The recipe covers:
 * a record moved from one type's folder to another's, and a rename inside one type, which is no move
 * a type with no record, and a record whose name is outside ASCII
 * CRLF line endings in a record, the descriptor, the findings file and a question log
+* a question log that starts with a byte-order mark, as a spreadsheet saves it
 * an Azure DevOps tracker whose project's name has a space, read through `-f`
-* a finding that became a record, and findings filed after each as-of date
+* a finding that became a record, cited in its `visualstudio.com` form, and findings filed after each as-of date
 * a commit late on the as-of day, which counts, and one just after it, which does not
-* a question log for each reading, with lines on each side of its 14 days and a line marked neither `yes` nor `no`
+* a question log for each reading, with lines on each side of its 14 days
 * a second corpus at the root of its repository, whose tracker is derived from `publishing`
 * a new author there who changed no record, and a record citing a finding's address with a trailing `.git/`
+* a type there whose folder is spelled `Guides`, and a type dropped before the reading, each with a record by a person
+  who is then no author
 
 It takes reading 2 again with a `jq` that ends every line with CRLF, as a Windows build can, and expects the same
-aggregate. It also checks that the script stops, with its message, for each of these:
+aggregate. It also checks that the script stops, with its message and no `aggregate.md`, for each of these:
 
 * a `git` older than 2.31
 * a run with `-l` before the log's last day
@@ -430,12 +465,15 @@ aggregate. It also checks that the script stops, with its message, for each of t
 * an `-o` with no commit up to the as-of date
 * an Azure DevOps tracker with no `-f`, stated and derived
 * a findings line with no tab
+* a question log line dated as Excel saves it, or marked neither `yes` nor `no`
+* a question log with no line inside its 14 days
+* a `types:` block that is a mapping, in either form, and a type name in capitals
 
 Where a definition on this page changes, change the recipe or the expected files by hand to match. Do not copy the
 script's output into them, because then the fixture tests nothing.
 
 ## Runs
 
-| Run                           | Corpus                 | What it measured                                                  |
-|-------------------------------|------------------------|-------------------------------------------------------------------|
-| [Dry run](runs/2026-10-16.md) | `examples/engineering` | The method, run over a public example corpus. It is not a result. |
+| Run                           | Method | Corpus                 | What it measured                                                  |
+|-------------------------------|-------:|------------------------|-------------------------------------------------------------------|
+| [Dry run](runs/2026-10-16.md) |      1 | `examples/engineering` | The method, run over a public example corpus. It is not a result. |
