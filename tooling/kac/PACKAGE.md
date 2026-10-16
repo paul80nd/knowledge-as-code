@@ -16,6 +16,8 @@ records as a Claude Code **plugin**, so an agent can look up a standard before i
 * **Agents build to your rules.** A session looks up the standard that applies and cites the rule it followed.
 * **Teams share one set of rules.** A team's corpus can consume an organisation's corpus, so a standard written once
   applies in every repository that takes it.
+* **The schema is yours.** `kac` has no rules about any particular type. You add a knowledge type by writing a YAML
+  file.
 
 ## Get started
 
