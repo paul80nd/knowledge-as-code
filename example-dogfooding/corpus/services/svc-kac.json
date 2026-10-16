@@ -31,6 +31,6 @@
     "Data": "None of its own. Every input is a file in the corpus it was pointed at. Every output is written back beside that corpus under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in [std-CONFIG]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/48ee0ef9e0b96009fb58ad64c024af1feb2b2ef8/examples/dog-fooding/services/kac.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/98f9cfcd760addf2a079b8af416e5ece41c1386b/examples/dog-fooding/services/kac.md"
   }
 }
