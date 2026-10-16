@@ -120,7 +120,7 @@ have happened an hour later.)_
 |--------|-----------|-------|
 |        | #{{item}} |       |
 
-_(Actions live in ADO; this links to them. A postmortem is not a tracker.)_
+_(Actions live in your tracker, and this table links to them. A postmortem is not a tracker.)_
 
 ## Related
 
