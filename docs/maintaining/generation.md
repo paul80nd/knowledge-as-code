@@ -14,8 +14,9 @@ statement of each one.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It writes the type pages' blocks, the framework pages' blocks and the README's `types-index` block.
   [What is generated](../reference/generation.md#what-is-generated-and-from-what)
-* A type page's frontmatter reference lists the universal fields first. Its checks table lists only the checks the
-  type can trip. [What is generated](../reference/generation.md#what-is-generated-and-from-what)
+* A type page's frontmatter reference lists the universal fields the type refines, then its own. Its checks table
+  lists only the checks the type can trip, and links the universal checks, which `metadata.md` lists once.
+  [What is generated](../reference/generation.md#what-is-generated-and-from-what)
 * It writes a block only between its markers, and keeps the rest of the file byte for byte.
   [The region between the markers](../reference/generation.md#the-region-between-the-markers)
 * It leaves a block whose markers are gone unwritten, and `validate` reports the loss.
@@ -51,7 +52,8 @@ statement of each one.
 * An index takes its columns and its order from the schema, under a banner
 * An index heads a table for each folder below the type
 * A type with no records gets an index saying so
-* A type page lists the universal fields first, and only the checks its type can trip
+* A type page lists the universal fields it refines, and only the checks its type can trip
+* The metadata page lists the universal checks once
 * A block whose markers are gone is left unwritten, and validate reports it
 * A corpus declines the README block by deleting its markers
 * The types graph keeps to the Mermaid subset

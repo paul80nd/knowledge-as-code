@@ -23,7 +23,7 @@ public class GeneratedFilesTests
         [
             ("adrs.md", "schema-adrs,checks-adrs", true),
             ("policies.md", "schema-policies,checks-policies", true),
-            ("knowledge-as-code/metadata.md", "schema-universal,types-metadata", true),
+            ("knowledge-as-code/metadata.md", "schema-universal,checks-universal,types-metadata", true),
             ("knowledge-as-code/taxonomy.md",
                 "types-placement,types-detail,types-versus,types-graph,types-edges", true),
             ("knowledge-as-code/lineage.md", "types-lineage,types-collisions", true),
@@ -50,6 +50,16 @@ public class GeneratedFilesTests
         var files = GeneratedFiles.Blocks([Type("glossary", "")]);
 
         Assert.DoesNotContain(files, f => f.Blocks.Any(b => b.StartsWith("schema-glossary")));
+    }
+
+    [Fact]
+    public void Only_the_framework_pages_come_back_with_an_update()
+    {
+        var framework = GeneratedFiles.Blocks(TwoTypes).Where(f => f.FromFramework).Select(f => f.Path);
+
+        Assert.Equal(
+            ["knowledge-as-code/metadata.md", "knowledge-as-code/taxonomy.md", "knowledge-as-code/lineage.md"],
+            framework);
     }
 
     [Fact]
@@ -162,7 +172,7 @@ public class GeneratedBlockCheckTests
     private static List<Finding> Check(string text, params string[] blocks)
     {
         var findings = new List<Finding>();
-        Validator.CheckGeneratedBlocks("page.md", text, blocks, findings);
+        Validator.CheckGeneratedBlocks("page.md", text, blocks, false, findings);
         return findings;
     }
 
@@ -195,6 +205,20 @@ public class GeneratedBlockCheckTests
 
         Assert.Contains("missing its markers", finding.Message);
     }
+
+    [Fact]
+    public void A_framework_page_that_lost_a_marker_names_the_command_restoring_it()
+    {
+        var findings = new List<Finding>();
+        Validator.CheckGeneratedBlocks("knowledge-as-code/metadata.md", "# Metadata\n", ["checks-universal"], true,
+            findings);
+
+        Assert.Contains("`kac update`", Assert.Single(findings).Message);
+    }
+
+    [Fact]
+    public void A_page_the_corpus_owns_names_no_update() =>
+        Assert.DoesNotContain("`kac update`", Assert.Single(Check("# A page\n", "types-index")).Message);
 
     [Fact]
     public void Markers_in_the_wrong_order_are_reported()

@@ -275,7 +275,7 @@ public static class Generator
     /// </summary>
     private const int Margin = 120;
 
-    private static string Wrap(string text)
+    internal static string Wrap(string text)
     {
         var line = new StringBuilder();
         var wrapped = new StringBuilder();
@@ -383,24 +383,27 @@ public static class Generator
     }
 
     /// <summary>
-    /// The frontmatter reference on a type page: every field a document of that type carries, universal ones included.
-    /// Universal fields come first and are read through EffectiveField, so a type's refinement shows in place of the
-    /// universal declaration.
+    /// The frontmatter reference on a type page: the universal fields this type refines, then its own. A universal
+    /// field whose row would read as it does on <c>metadata.md</c> is left to that page. Universal fields are read
+    /// through EffectiveField, so a type's refinement shows in place of the universal declaration.
     /// </summary>
     public static string SchemaTable(TypeSchema t, Schema s, string up)
     {
         List<string> headers = ["Field", "Value", "Notes"];
         var universal = s.UniversalOrder.Where(n => s.EffectiveField(t, n) is not null).ToList();
+        var refined = universal
+            .Where(n => !s.Universal.TryGetValue(n, out var u)
+                        || !FieldRow(n, s.DeclaredField(t, n), false).SequenceEqual(UniversalRow(u)))
+            .ToList();
         var own = t.FieldOrder.Where(n => !universal.Contains(n)).ToList();
 
-        var rows = universal.Select(n => FieldRow(n, s.DeclaredField(t, n), true))
+        var rows = refined.Select(n => FieldRow(n, s.DeclaredField(t, n), true))
             .Concat(own.Select(n => FieldRow(n, t.Fields[n], false)))
             .ToList();
 
-        var order = universal.Concat(own).ToList();
-        var specs = order.Select(n => s.DeclaredField(t, n)).ToList();
+        var specs = refined.Concat(own).Select(n => s.DeclaredField(t, n)).ToList();
         var table = Gfm.RenderTable(headers, rows);
-        return table + Legend(specs.Any(f => f.Required), universal.Count > 0, up);
+        return table + Legend(specs.Any(f => f.Required), refined.Count > 0, universal.Count > 0, up);
 
         // `tier` is the one field whose value a type settles, so its row shows that one value.
         List<string> FieldRow(string name, FieldSpec f, bool universal) =>
@@ -430,12 +433,12 @@ public static class Generator
     {
         List<string> headers = ["Field", "Value", "Notes"];
         var fields = s.UniversalOrder.Where(s.Universal.ContainsKey).Select(n => s.Universal[n]).ToList();
-        var rows = fields
-            .Select(f => new List<string>
-                { $"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f) })
-            .ToList();
-        return Gfm.RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false, "");
+        var rows = fields.Select(UniversalRow).ToList();
+        return Gfm.RenderTable(headers, rows) + Legend(fields.Any(f => f.Required), false, false, "");
     }
+
+    private static List<string> UniversalRow(FieldSpec f) =>
+        [$"`{f.Name}`{Marks(f.Required, false)}", ValueFor(f), NotesFor(f)];
 
     /// <summary>
     /// Required and universal are marked on the field name, in the order the legend below the table explains them.
@@ -446,13 +449,14 @@ public static class Generator
         return marks.Length == 0 ? "" : $" {marks}";
     }
 
-    private static string Legend(bool anyRequired, bool anyUniversal, string up)
+    private static string Legend(bool anyRequired, bool anyRefined, bool anyUniversal, string up)
     {
         List<string> parts = [];
         if (anyRequired) parts.Add("\\* Field is required");
+        if (anyRefined) parts.Add("† Every document has this field, and this type refines it.");
         if (anyUniversal)
-            parts.Add("† Carried by every document in the taxonomy. See "
-                      + $"[Metadata]({up}knowledge-as-code/metadata.md).");
+            parts.Add($"[Metadata]({up}knowledge-as-code/metadata.md#universal-fields) lists the fields every "
+                      + "document has.");
         return parts.Count == 0 ? "" : "\n\n" + string.Join("  \n", parts);
     }
 

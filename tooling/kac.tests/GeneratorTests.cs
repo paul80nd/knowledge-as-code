@@ -248,23 +248,24 @@ public class GeneratorTests
     }
 
     [Fact]
-    public void SchemaTable_leads_with_marked_universal_fields_and_shows_the_type_refinement()
+    public void SchemaTable_leads_with_the_universal_fields_the_type_refines()
     {
         var s = new Schema
         {
-            UniversalOrder = ["id", "status"],
+            UniversalOrder = ["owner", "status"],
             Universal = new Dictionary<string, FieldSpec>
             {
-                ["id"] = new() { Name = "id", Required = true, Description = "UNIVERSAL-ID" },
+                ["owner"] = new() { Name = "owner", Required = true, Description = "UNIVERSAL-OWNER" },
                 ["status"] = new() { Name = "status", Type = "enum", Description = "VARIES BY TYPE" }
             }
         };
         var t = new TypeSchema
         {
-            FieldOrder = ["status", "own-field"],
+            FieldOrder = ["owner", "status", "own-field"],
             Fields = new Dictionary<string, FieldSpec>
             {
-                // The type narrows the universal status; the table must show the narrowing.
+                // The type narrows both universal fields; the table must show each narrowing.
+                ["owner"] = new() { Name = "owner", Required = true, Description = "REFINED-OWNER" },
                 ["status"] = new() { Name = "status", Type = "enum", Values = ["draft"], Description = "REFINED" },
                 ["own-field"] = new() { Name = "own-field", Description = "TYPE-ONLY" }
             }
@@ -272,9 +273,8 @@ public class GeneratorTests
 
         var table = Generator.SchemaTable(t, s, "");
 
-        // Universal fields are marked, required ones twice…
-        Assert.Contains("`id` *†", table);
-        // …including one the type redeclares.
+        // Universal fields are marked, required ones twice.
+        Assert.Contains("`owner` *†", table);
         Assert.Contains("`status` †", table);
         Assert.Contains("`own-field`", table);
         Assert.DoesNotContain("`own-field` †", table);
@@ -282,10 +282,35 @@ public class GeneratorTests
         // EffectiveField wins over the universal declaration.
         Assert.Contains("REFINED", table);
         Assert.DoesNotContain("VARIES BY TYPE", table);
-        Assert.True(table.IndexOf("`id`", StringComparison.Ordinal)
+        Assert.DoesNotContain("UNIVERSAL-OWNER", table);
+        Assert.True(table.IndexOf("`owner`", StringComparison.Ordinal)
                     // Universal first.
                     < table.IndexOf("`own-field`", StringComparison.Ordinal));
-        Assert.Contains("† Carried by every document", table);
+        Assert.Contains("† Every document has this field", table);
+    }
+
+    [Fact]
+    public void SchemaTable_leaves_a_universal_field_the_type_takes_unchanged_to_metadata()
+    {
+        var s = new Schema
+        {
+            UniversalOrder = ["id"],
+            Universal = new Dictionary<string, FieldSpec>
+            {
+                ["id"] = new() { Name = "id", Type = "string", Required = true, Description = "UNIVERSAL-ID" }
+            }
+        };
+        var t = new TypeSchema
+        {
+            FieldOrder = ["own-field"],
+            Fields = new Dictionary<string, FieldSpec> { ["own-field"] = new() { Name = "own-field" } }
+        };
+
+        var table = Generator.SchemaTable(t, s, "../");
+
+        Assert.DoesNotContain("`id`", table);
+        Assert.DoesNotContain("†", table);
+        Assert.Contains("[Metadata](../knowledge-as-code/metadata.md#universal-fields)", table);
     }
 
     [Fact]

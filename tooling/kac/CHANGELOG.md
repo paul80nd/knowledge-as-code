@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **The universal checks print once, on `knowledge-as-code/metadata.md`.** `kac generate` writes them into a new
+  `checks-universal` block there. Each type page's checks table lists only the checks its type adds, under a link to
+  that block. Its frontmatter table leaves out a universal field the type takes unchanged, and keeps `tier`, `status`
+  and any field the type refines. `kac validate` reports a `metadata.md` without the new markers, and the message names
+  `kac update`, which writes the framework's copy of the page. Run `kac update`, then `kac generate`.
+
 ## 0.34.0 - 2026-10-16
 
 ### Added

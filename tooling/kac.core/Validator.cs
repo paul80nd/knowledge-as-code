@@ -30,7 +30,7 @@ public static class Validator
             if (!file.MarkersRequired) continue;
             if (!tree.Exists(file.Path)) continue;
 
-            CheckGeneratedBlocks(file.Path, tree.Read(file.Path), file.Blocks, findings);
+            CheckGeneratedBlocks(file.Path, tree.Read(file.Path), file.Blocks, file.FromFramework, findings);
         }
 
         // A type's page is not a record. It carries no frontmatter, so it takes the link checks alone.
@@ -229,11 +229,13 @@ public static class Validator
     /// <summary>
     /// <c>Markers.SpliceBlock</c> returns the text untouched when a marker is missing, so a file that loses one stops
     /// being generated into and <c>generate --check</c> agrees it is fresh. Nothing else can notice. <c>README.md</c>
-    /// is the exception and answers for itself. See <c>BlockFile.MarkersRequired</c>.
+    /// is the exception and answers for itself. See <c>BlockFile.MarkersRequired</c>. <paramref name="fromFramework"/>
+    /// adds the command that restores the page.
     /// </summary>
-    public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names,
+    public static void CheckGeneratedBlocks(string rel, string text, IEnumerable<string> names, bool fromFramework,
         List<Finding> f)
     {
+        var restore = fromFramework ? " `kac update` writes the framework's copy of this page, which has them." : "";
         foreach (var name in names)
         {
             var begin = text.IndexOf(Markers.Begin(name), StringComparison.Ordinal);
@@ -242,7 +244,7 @@ public static class Validator
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block is missing its "
                     + (begin < 0 && end < 0 ? "markers" : begin < 0 ? "BEGIN marker" : "END marker")
-                    + ": `kac generate` writes between them and leaves the page alone without both."));
+                    + ": `kac generate` writes between them and leaves the page alone without both." + restore));
             else if (end < begin)
                 f.Add(new Finding(rel, null, Sev.Error, new CheckId("generated-block"),
                     $"the '{name}' block's END marker comes before its BEGIN marker."));

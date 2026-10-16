@@ -16,8 +16,8 @@ kac generate [--check] [--no-color]
 ## What it does
 
 `generate` rewrites the parts of your corpus that `kac` derives from frontmatter and the schema. That covers each type's
-index page, the frontmatter reference and the checks table on each type page, and the taxonomy's own tables. `kac`
-builds each one from what the corpus has now.
+index page, the frontmatter reference and the checks table on each type page, and the tables on the framework pages
+under `knowledge-as-code/`. `kac` builds each one from what the corpus has now.
 
 `generate` rewrites a generated block between its markers, so the words around it stay yours. It writes each type's
 `_index.md` whole instead, and that file has no markers. [Generation](../../reference/generation.md) says what each one

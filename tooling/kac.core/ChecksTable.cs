@@ -1,6 +1,9 @@
 namespace kac.core;
 
-/// <summary>The "What CI checks" table on a type page, and the gate that checks it against the catalogue.</summary>
+/// <summary>
+/// The "What CI checks" table on a type page, the universal checks on <c>metadata.md</c>, and the gate that checks both
+/// against the catalogue.
+/// </summary>
 public static class ChecksTable
 {
     /// <summary>
@@ -11,8 +14,8 @@ public static class ChecksTable
 
     /// <summary>
     /// Hand-curated, not generated from the catalogue: related checks fold into one row, each worded for a skim.
-    /// <c>Problems</c> verifies the coverage. <c>When</c> is null for a row that applies to every type, and otherwise
-    /// asks the type's schema whether the check can fire.
+    /// <c>Problems</c> verifies the coverage. <c>When</c> is null for a row that asks nothing of the type's schema,
+    /// and otherwise asks the schema whether the check can fire.
     /// </summary>
     private static readonly (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When)[] DocRows =
     [
@@ -174,24 +177,33 @@ public static class ChecksTable
             .Concat(CorpusRules.All.SelectMany(r => r.Emits.Select(c => (Check: c, r.RuleId))))
             .ToDictionary(x => x.Check, x => x.RuleId);
 
+    private static readonly List<string> Headers = ["Check", "Level", "What it verifies"];
+
     private static bool Applies((string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row,
         TypeSchema t) =>
         (row.When is null || row.When(t))
         && row.Ids.All(id => !RuleByCheck.TryGetValue(id, out var rule) || t.HasRule(rule));
 
     /// <summary>
-    /// The curated rows, then one per expression rule the type declares, worded by its schema <c>description:</c>.
+    /// A row every type shows: it asks nothing of the type's schema, and none of its checks belongs to a rule a type
+    /// has to declare.
     /// </summary>
-    public static string Render(Schema schema, TypeSchema t)
+    private static bool Universal(
+        (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row) =>
+        row.When is null && row.Ids.All(id => !RuleByCheck.ContainsKey(id));
+
+    /// <summary>The rows every type shows, printed once on <c>knowledge-as-code/metadata.md</c>.</summary>
+    public static string RenderUniversal(Schema schema) =>
+        Gfm.RenderTable(Headers, [.. DocRows.Where(Universal).Select(r => CuratedRow(schema, r))]);
+
+    /// <summary>
+    /// A link to the universal rows, then the curated rows this type can trip, then one per expression rule the type
+    /// declares, worded by its schema <c>description:</c>. <paramref name="up"/> climbs from the type page to the
+    /// corpus root.
+    /// </summary>
+    public static string Render(Schema schema, TypeSchema t, string up)
     {
-        var severity = schema.Checks.ToDictionary(c => c.Id, c => c.Severity);
-        List<string> headers = ["Check", "Level", "What it verifies"];
-        var rows = DocRows.Where(r => Applies(r, t)).Select(r => new List<string>
-        {
-            $"`{r.Label}`",
-            severity.GetValueOrDefault(r.Ids[0], Sev.Error).ToString().ToLowerInvariant(),
-            r.Description
-        }).ToList();
+        var rows = DocRows.Where(r => !Universal(r) && Applies(r, t)).Select(r => CuratedRow(schema, r)).ToList();
 
         rows.AddRange(t.Rules.Where(r => r.Compiled is not null).Select(r => new List<string>
         {
@@ -200,8 +212,21 @@ public static class ChecksTable
             Gfm.Escape(r.Description ?? r.Message ?? "")
         }));
 
-        return Gfm.RenderTable(headers, rows) + Intentions(t);
+        var universal = $"[universal checks]({up}knowledge-as-code/metadata.md#universal-checks)";
+        return rows.Count == 0
+            ? Generator.Wrap($"CI runs the {universal} on this type's records, and nothing more.") + Intentions(t)
+            : Generator.Wrap($"CI runs the {universal} on every record, and the checks below on this type's records.")
+              + "\n\n" + Gfm.RenderTable(Headers, rows) + Intentions(t);
     }
+
+    private static List<string> CuratedRow(Schema schema,
+        (string Label, CheckId[] Ids, string Description, Func<TypeSchema, bool>? When) row) =>
+    [
+        $"`{row.Label}`",
+        schema.Checks.Where(c => c.Id == row.Ids[0]).Select(c => c.Severity).DefaultIfEmpty(Sev.Error).First()
+            .ToString().ToLowerInvariant(),
+        row.Description
+    ];
 
     /// <summary>
     /// The rules the type declares that nothing runs: no <c>expr:</c>, no class. Kept out of the table, which says only
