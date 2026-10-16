@@ -64,9 +64,9 @@ Scenario: A component reading a type the export lacks is trimmed with its files
 Scenario: A trim takes whole path segments
   Given the bundle fixture corpus
   And it has been exported
-  And the plugin tree has a file "skills/decision-lookup-notes/README.md"
+  And the plugin tree has a component "skills/decision-lookup-notes" reading "glossary"
   When I bundle
-  Then ".dist/plugin/skills/decision-lookup-notes/README.md" exists
+  Then ".dist/plugin/skills/decision-lookup-notes/SKILL.md" exists
 
 Scenario: A component reading a type only a consumed corpus exports ships
   Given the export-inherited fixture corpus
@@ -102,7 +102,7 @@ Scenario: A standalone component always ships
   Then the bundle includes "skills/raise-finding"
   And ".dist/plugin/skills/raise-finding/SKILL.md" exists
 
-Scenario: A file no component claims ships
+Scenario: A file outside the skill and hook directories ships with no component
   Given the bundle fixture corpus
   And it has been exported
   When I bundle
@@ -324,6 +324,14 @@ Scenario: A bundle whose component reads a shape that is not a whole number is r
   Given the bundle fixture corpus
   And it has been exported
   And the component "skills/glossary-lookup" requires "glossary@one"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A bundle whose plugin tree holds a skill no component declares is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a file "skills/stray/SKILL.md"
   When I bundle
   Then it refuses
   And nothing is written

@@ -266,13 +266,64 @@ public class BundlerTests
         var plan = Plan(
             plugin:
             [
-                (Bundler.ManifestFile, Source(Component("skills/a", "adrs"))),
+                (Bundler.ManifestFile, Source(Component("skills/a", "adrs"), Component("skills/ab", "glossary"))),
                 ("skills/ab/SKILL.md", "kept")
             ],
             export: [Manifest("glossary")]);
 
         Assert.Contains(plan.Files, f => f.Path.EndsWith("skills/ab/SKILL.md", StringComparison.Ordinal));
     }
+
+    [Fact]
+    public void A_skill_directory_no_component_claims_is_refused()
+        => Assert.Contains("'skills/stray'", Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/look", "glossary"))),
+                ("skills/look/SKILL.md", "declared"),
+                ("skills/stray/SKILL.md", "undeclared"),
+                ("skills/stray/references/notes.md", "undeclared")
+            ],
+            export: [Manifest("glossary")]).Problems));
+
+    [Fact]
+    public void A_hook_directory_no_component_claims_is_refused()
+        => Assert.Contains("'hooks'", Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("skills/look", "glossary"))),
+                ("hooks/hooks.json", "{}"),
+                ("hooks/breadcrumb", "#!/bin/sh")
+            ],
+            export: [Manifest("glossary")]).Problems));
+
+    [Fact]
+    public void A_file_beside_a_component_declared_as_one_file_is_refused_by_its_own_path()
+        => Assert.Contains("'hooks/breadcrumb'", Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("hooks/hooks.json", "glossary"))),
+                ("hooks/hooks.json", "{}"),
+                ("hooks/breadcrumb", "#!/bin/sh")
+            ],
+            export: [Manifest("glossary")]).Problems));
+
+    [Fact]
+    public void A_file_outside_the_skill_and_hook_directories_needs_no_component()
+    {
+        var plan = Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/look", "glossary"))), ("LICENSE", "MIT")],
+            export: [Manifest("glossary")]);
+
+        Assert.Empty(plan.Problems);
+        Assert.Contains(plan.Files, f => f.Path.EndsWith("/LICENSE", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void A_skill_directory_a_trimmed_component_claims_is_not_refused()
+        => Assert.Empty(Plan(
+            plugin: [(Bundler.ManifestFile, Source(Component("skills/decide", "adrs"))), ("skills/decide/SKILL.md", "")],
+            export: [Manifest("glossary")]).Problems);
 
     [Fact]
     public void A_plugin_left_with_no_component_warns_and_is_still_assembled()

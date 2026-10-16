@@ -34,6 +34,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   a record of a declined type is removed, with the link definition behind it. Before, the definition arrived intact,
   and every corpus that declined a type received a template offering a link to a folder it does not have. A link to a
   declined type's root page is still unlinked and its text left standing.
+- **`kac bundle` refuses a skill or hook that `plugin.json` does not declare.** A directory under `skills/` or
+  `hooks/` in the plugin tree that no `metadata.components` entry claims stops the run, and the message names it.
+  Before, it shipped even where the export lacked the types it reads, because no trim could reach it. Declare it with the types it
+  reads in `requires`. A file outside those two directories, such as a README or a licence, still ships undeclared.
 
 ## 0.33.0 - 2026-10-14
 
