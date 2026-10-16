@@ -152,7 +152,7 @@ Two things stay behind whatever `types` says:
 
 * **Who stewards the control.** `owner` is a fact about the corpus that wrote it, and whoever holds a vendored copy has
   no standing to ask.
-* **Any Owner section the author wrote.** It stays in the record. `evidence` is a field, and it travels.
+* **Any Owner section the author wrote.** A control's export includes the three required sections and no other.
 
 ## Say when a control is unsettled
 
