@@ -3,7 +3,7 @@
 | Field                               |        Value |
 |-------------------------------------|-------------:|
 | `trial`                             |      capture |
-| `method`                            |            1 |
+| `method`                            |            2 |
 | `reading`                           |            1 |
 | `days_since_first_record`           |            8 |
 | `types_adopted`                     |            3 |
@@ -29,7 +29,6 @@
 | `findings_became_records`           |            0 |
 | `findings_became_records_rate`      |         0.00 |
 | `records_moved`                     |            0 |
-| `question_log_baseline`             |          yes |
 | `questions_logged`                  |            4 |
 | `questions_answered_with_link`      |            2 |
 | `questions_answered_with_link_rate` |         0.50 |

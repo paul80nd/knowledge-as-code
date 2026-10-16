@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds the capture trial's fixture: a corpus repository, a clone of it, its findings file and two question logs.
+# Builds the capture trial's fixture: two corpus repositories, a clone of each, their findings files and two logs.
 set -eu
 
 [ $# -eq 1 ] || { echo "usage: build.sh <empty-directory>" >&2; exit 2; }
@@ -30,6 +30,8 @@ record() {
   printf -- '---\nid: %s\ntitle: %s\n---\n\n# %s\n\nThe %s rule, written for the fixture alone.\n' \
     "$2" "$3" "$3" "$3" >"$1"
 }
+# Ends every line it reads with CRLF, as a file written on Windows does.
+crlf() { awk '{ printf "%s\r\n", $0 }'; }
 
 olive='Olive Owner'
 work='Olive.Work@example.invalid'
@@ -43,10 +45,10 @@ by "$olive" olive@example.invalid 2026-02-15T09:00:00
 echo '# Fixture repository' >README.md
 commit 'Start the repository'
 
-# The corpus adopts three types. Glossary never takes a record.
+# The corpus adopts three types, in a descriptor with CRLF line endings. Glossary never takes a record.
 by "$olive" olive@example.invalid 2026-03-01T10:00:00
 mkdir -p kb/standards kb/policies kb/glossary
-cat >kb/.corpus.yaml <<'EOF'
+crlf >kb/.corpus.yaml <<'EOF'
 descriptor-version: 6
 corpus: fixture
 publishing-target: none
@@ -148,7 +150,7 @@ commit 'Add the later policy'
 # The clone sets origin/HEAD, which the script reads for the default branch.
 git clone -q "$dir/upstream" "$dir/clone"
 
-# The findings file, as the README's az command writes it. The project's name has a space.
+# The findings file, as the README's az command writes it, with CRLF. The project's name has a space.
 base='https://dev.azure.com/example/Knowledge Base/_workitems/edit'
 {
   printf '# filed\taddress\n'
@@ -156,9 +158,10 @@ base='https://dev.azure.com/example/Knowledge Base/_workitems/edit'
   printf '2026-03-09\t%s/12\n' "$base"
   printf '2026-04-20\t%s/13\n' "$base"
   printf '2026-06-11\t%s/14\n' "$base"
-} >"$dir/findings.tsv"
+} | crlf >"$dir/findings.tsv"
 
-# Each log has lines the script leaves out: a day outside the log, and a mark that is neither yes nor no.
+# Each log runs for 14 days from its reading's as-of date. Each has lines the script leaves out: a day before the log,
+# a day after it, and a mark that is neither yes nor no. The second log has CRLF line endings.
 cat >"$dir/log-1.csv" <<'EOF'
 date,linked
 2026-03-09,no
@@ -169,11 +172,63 @@ date,linked
 2026-03-23,yes
 2026-03-24,yes
 EOF
-cat >"$dir/log-2.csv" <<'EOF'
+crlf >"$dir/log-2.csv" <<'EOF'
 date,linked
-2026-05-27,no
-2026-05-28,yes
-2026-06-01,yes
-2026-06-05,no
+2026-06-09,no
 2026-06-10,yes
+2026-06-15,no
+2026-06-16,unsure
+2026-06-23,yes
+2026-06-24,no
 EOF
+
+# A second corpus, at the root of its repository. Its tracker is derived from its publishing block.
+mkdir "$dir/root-upstream"
+cd "$dir/root-upstream"
+git init -q -b main
+by "$olive" olive@example.invalid 2026-03-01T10:00:00
+mkdir standards glossary
+cat >.corpus.yaml <<'EOF'
+descriptor-version: 6
+corpus: root-fixture
+publishing: { target: azure-devops-wiki, base: "https://dev.azure.com/example/Root/_wiki/wikis/Root.wiki" }
+types: [standards, glossary]
+EOF
+echo '# Root fixture' >README.md
+for t in standards glossary; do echo "# $t" >"$t/_index.md"; done
+commit 'Add the corpus'
+
+by "$olive" olive@example.invalid 2026-03-02T10:00:00
+record standards/alpha.md std-ALPHA Alpha
+commit 'Add the alpha standard'
+
+# Bob's record lands the next day, through a merge.
+git switch -q -c bob-term
+by Bob bob@example.invalid 2026-03-03T09:00:00
+record glossary/term.md TERM Term
+commit 'Add a term'
+git switch -q main
+by "$olive" olive@example.invalid 2026-03-04T10:00:00
+merge bob-term
+
+# The record cites the finding's address with a trailing .git/, which the findings file leaves off.
+by "$olive" olive@example.invalid 2026-03-05T10:00:00
+printf -- '---\nid: std-BETA\ntitle: Beta\nsources:\n  - { resource: %s }\n---\n\n# Beta\n' \
+  'https://dev.azure.com/example/Root/_git/findings.git/' >standards/beta.md
+commit 'Add the beta standard'
+
+# Erin changes only the README. The corpus is the whole repository, so she is a new author with no record.
+by Erin erin@example.invalid 2026-03-06T09:00:00
+echo 'Erin was here.' >>README.md
+commit 'Update the README'
+
+# The reading is as of 10 March, so this record is after it.
+by "$olive" olive@example.invalid 2026-03-11T10:00:00
+record standards/gamma.md std-GAMMA Gamma
+commit 'Add the gamma standard'
+
+git clone -q "$dir/root-upstream" "$dir/root"
+{
+  printf '2026-03-06\thttps://dev.azure.com/example/Root/_git/findings\n'
+  printf '2026-03-12\thttps://dev.azure.com/example/Root/_git/later\n'
+} >"$dir/root-findings.tsv"

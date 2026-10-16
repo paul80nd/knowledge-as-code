@@ -3,7 +3,7 @@
 | Field                               |        Value |
 |-------------------------------------|-------------:|
 | `trial`                             |      capture |
-| `method`                            |            1 |
+| `method`                            |            2 |
 | `reading`                           |            2 |
 | `days_since_first_record`           |          100 |
 | `types_adopted`                     |            3 |
@@ -30,7 +30,6 @@
 | `findings_became_records_rate`      |         0.33 |
 | `records_moved`                     |            1 |
 | `moved.policies.standards`          |            1 |
-| `question_log_baseline`             |           no |
-| `questions_logged`                  |            4 |
-| `questions_answered_with_link`      |            3 |
-| `questions_answered_with_link_rate` |         0.75 |
+| `questions_logged`                  |            3 |
+| `questions_answered_with_link`      |            2 |
+| `questions_answered_with_link_rate` |         0.67 |

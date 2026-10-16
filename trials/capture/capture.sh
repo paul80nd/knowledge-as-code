@@ -6,7 +6,7 @@ set -eu
 usage() {
   cat >&2 <<'EOF'
 usage: capture.sh -c <corpus> -d <as-of> -r <1|2> -o <owner-emails> [-x <excluded-emails>]
-                  [-b <branch>] [-f <findings-file>] [-l <question-log>] [-s <log-start>] <empty-directory>
+                  [-b <branch>] [-f <findings-file>] [-l <question-log>] <empty-directory>
 EOF
   exit 2
 }
@@ -16,8 +16,8 @@ fail() { echo "capture.sh: $*" >&2; exit 2; }
 # Every path git prints is printed as it is spelled, so a name outside ASCII matches itself.
 git() { command git -c core.quotePath=false "$@"; }
 
-corpus='' asof='' reading='' owners='' excluded='' branch='' findings_file='' log_file='' log_start=''
-while getopts c:d:r:o:x:b:f:l:s: opt; do
+corpus='' asof='' reading='' owners='' excluded='' branch='' findings_file='' log_file=''
+while getopts c:d:r:o:x:b:f:l: opt; do
   case $opt in
     c) corpus=$OPTARG ;;
     d) asof=$OPTARG ;;
@@ -27,7 +27,6 @@ while getopts c:d:r:o:x:b:f:l:s: opt; do
     b) branch=$OPTARG ;;
     f) findings_file=$OPTARG ;;
     l) log_file=$OPTARG ;;
-    s) log_start=$OPTARG ;;
     *) usage ;;
   esac
 done
@@ -39,6 +38,20 @@ out=$1
 case $reading in 1|2) ;; *) fail "-r takes 1 or 2" ;; esac
 command -v jq >/dev/null || fail "jq is not installed"
 command -v git >/dev/null || fail "git is not installed"
+
+# From git 2.31, `git log --first-parent` lists what a merge changed, which the landings and the moves read.
+git_version=$(command git --version | tr -d '\r')
+git_number=$(echo "$git_version" | sed -E 's/^git version ([0-9]+)\.([0-9]+).*$/\1 \2/')
+git_major=${git_number%% *} git_minor=${git_number#* }
+{ [ "$git_major" -gt 2 ] || { [ "$git_major" -eq 2 ] && [ "$git_minor" -ge 31 ]; }; } 2>/dev/null ||
+  fail "this is $git_version. The script needs git 2.31 or later. Update git, and run it again."
+
+work=$(mktemp -d "${TMPDIR:-/tmp}/capture.XXXXXX")
+trap 'rm -rf "$work"' EXIT
+
+# Prints what a command wrote with every carriage return removed, because a Windows jq or gh can write CRLF.
+lf() { "$@" >"$work/lf" || return; tr -d '\r' <"$work/lf"; }
+jq() { lf command jq "$@"; }
 
 # Every date is a UTC calendar day, and the reading includes the whole of its as-of day.
 day_of() { echo $(($1 / 86400)); }
@@ -52,12 +65,11 @@ epoch_of() {
 asof_start=$(epoch_of "$asof") || fail "-d takes a real date as YYYY-MM-DD"
 asof_day=$(day_of "$asof_start")
 
-# Reading 1's log starts on the as-of day, and reading 2's ends on it, unless -s gives its first day.
-if [ -z "$log_start" ]; then
-  if [ "$reading" = 1 ]; then log_start=$asof; else log_start=$(date_of $((asof_start - 13 * 86400))); fi
+# The question log runs for the 14 days starting on the as-of day, so the script waits for its last day.
+log_last=$(date_of $((asof_start + 13 * 86400)))
+if [ -n "$log_file" ] && [ "$(day_of "$(date -u +%s)")" -lt $((asof_day + 13)) ]; then
+  fail "the question log runs to $log_last. Run the script on or after that day."
 fi
-log_first=$(epoch_of "$log_start") || fail "-s takes a real date as YYYY-MM-DD"
-log_last=$(date_of $((log_first + 13 * 86400)))
 
 [ -f "$corpus/.corpus.yaml" ] || fail "no .corpus.yaml in $corpus"
 [ -z "$findings_file" ] || [ -f "$findings_file" ] || fail "no findings file at $findings_file"
@@ -70,8 +82,6 @@ out=$(cd "$out" && pwd)
 [ -z "$log_file" ] || log_file=$(cd "$(dirname "$log_file")" && pwd)/$(basename "$log_file")
 raw=$out/raw
 mkdir "$raw"
-work=$(mktemp -d "${TMPDIR:-/tmp}/capture.XXXXXX")
-trap 'rm -rf "$work"' EXIT
 
 top=$(git -C "$corpus" rev-parse --show-toplevel) || fail "$corpus is not inside a git repository"
 prefix=$(git -C "$corpus" rev-parse --show-prefix)
@@ -194,15 +204,26 @@ role_of() {
 # Prints the last line git printed, in lower case, and stops the run where git failed.
 last_author() { "$@" >"$work/author" || fail "git failed: $*"; tail -n 1 "$work/author" | lower; }
 
-# Every commit to the corpus folder, and a check that the owner made at least one of them.
+# Each address under -o and -x made a commit to the corpus on the branch, so a mistyped one stops the run.
+git log --format='%aE' "$branch" -- "$spec" >"$work/ever" || fail "git log failed"
+lower <"$work/ever" | sort -u >"$work/ever-lower"
+for e in $owners_line; do
+  grep -qxF "$e" "$work/ever-lower" ||
+    fail "-o gives $e, which made no commit to the corpus. List the addresses as the README says."
+done
+for e in $excluded_line; do
+  grep -qxF "$e" "$work/ever-lower" ||
+    fail "-x gives $e, which made no commit to the corpus. List the addresses as the README says."
+done
+
+# Every commit to the corpus folder up to the snapshot, and a check that the owner made at least one of them.
 git log --format='%aE %at' "$snapshot" -- "$spec" >"$work/commits" || fail "git log failed"
 lower <"$work/commits" >"$work/commits-lower"
 owner_found=''
 for e in $owners_line; do
   awk -v e="$e" '$1 == e { f = 1 } END { exit !f }' "$work/commits-lower" && owner_found=yes
 done
-[ -n "$owner_found" ] ||
-  fail "no commit to the corpus up to $asof is by an address under -o. List them as step 4 says."
+[ -n "$owner_found" ] || fail "no commit to the corpus up to $asof is by an address under -o."
 
 # The records at the snapshot, each with the author of the commit that first added it, followed across renames.
 # `git log --follow` also follows a copy, which would credit a copied record to the author of its source.
@@ -282,7 +303,7 @@ while IFS="$tab" read -r when from to old new; do
 done <"$work/moves" >>"$raw/moves.tsv"
 
 # Every address a record cites as a resource in its frontmatter, normalised so two spellings of one issue match.
-normalise() { lower | sed -E 's#^[a-z]+://##; s#^www\.##; s# #%20#g; s#\.git$##; s#/+$##'; }
+normalise() { lower | sed -E 's#^[a-z]+://##; s#^www\.##; s# #%20#g; s#/+$##; s#\.git$##; s#/+$##'; }
 printf 'path\tresource\n' >"$raw/sources.tsv"
 awk -F'\t' 'NR > 1 { print $2 }' "$raw/records.tsv" >"$work/paths"
 while read -r path; do
@@ -313,17 +334,17 @@ if [ -n "$findings_file" ]; then
     fail "each line of the findings file takes a date, a tab and an address. Fix the lines above."
 elif [ "$tracker_target" = github ]; then
   command -v gh >/dev/null || fail "the tracker is on GitHub and gh is not installed. Install it, or pass -f."
-  repo=$(echo "$tracker_base" | sed -E 's#^[a-z]+://(www\.)?##; s#\.git$##; s#/+$##')
+  repo=$(echo "$tracker_base" | sed -E 's#^[a-z]+://(www\.)?##; s#/+$##; s#\.git$##; s#/+$##')
   echo "$repo" | grep -Eq '^[^/]+/[^/]+/[^/]+$' ||
     fail "the tracker base '$tracker_base' is not a repository address. Pass -f."
   host=${repo%%/*}
   gh auth status --hostname "$host" >/dev/null 2>&1 ||
     fail "gh is not signed in to $host. Run 'gh auth login --hostname $host', or pass -f."
   findings_source='github'
-  gh issue list --repo "$repo" --state all --limit 1000 --label kac:finding \
+  lf gh issue list --repo "$repo" --state all --limit 1000 --label kac:finding \
     --search "created:<=$asof" --json url,createdAt,body >"$work/labelled" ||
     fail "gh could not list the issues on $repo. Check that you can read them, or pass -f."
-  gh issue list --repo "$repo" --state all --limit 1000 --search "kac-finding in:body created:<=$asof" \
+  lf gh issue list --repo "$repo" --state all --limit 1000 --search "kac-finding in:body created:<=$asof" \
     --json url,createdAt,body >"$work/unlabelled" ||
     fail "gh could not search the issues on $repo. Check that you can read them, or pass -f."
   jq -rs --arg corpus "$corpus_name" '
@@ -346,11 +367,11 @@ if [ "$findings_source" != none ]; then
   done <"$work/filed-sorted" >>"$raw/findings.tsv"
 fi
 
-# The question log, kept for the two weeks from its first day.
+# The question log, kept for the 14 days from the as-of day.
 questions='' linked=''
 if [ -n "$log_file" ]; then
   tr -d ' \r' <"$log_file" | grep -Ev '^(#|$)|^date,' >"$work/log-lines" || true
-  awk -F, -v a="$log_start" -v z="$log_last" '
+  awk -F, -v a="$asof" -v z="$log_last" '
     function skip(why) { print "capture.sh: left out a question dated " $1 ", which " why > "/dev/stderr" }
     $1 < a || $1 > z { skip("is outside the log"); next }
     $2 != "yes" && $2 != "no" { skip("is not marked yes or no"); next }
@@ -393,22 +414,15 @@ stats=$(awk -F'\t' 'NR > 1 && $2 == "other" && $5 != "" { print $5 }' "$raw/auth
     m = (n % 2) ? v[(n + 1) / 2] : (v[n / 2] + v[n / 2 + 1]) / 2
     print m "\t" v[1] "\t" v[n] }')
 
-filed='' became='' baseline=''
+filed='' became=''
 if [ "$findings_source" != none ]; then
   filed=$(count 1 "$raw/findings.tsv")
   became=$(count '$3 != ""' "$raw/findings.tsv")
 fi
-if [ -n "$log_file" ]; then
-  if [ "$reading" = 1 ] && [ -n "$first_landed" ] && [ "$(day_of "$log_first")" -gt "$(day_of "$first_landed")" ]; then
-    baseline=yes
-  else
-    baseline=no
-  fi
-fi
 
 {
   printf 'trial\tcapture\n'
-  printf 'method\t1\n'
+  printf 'method\t2\n'
   printf 'reading\t%s\n' "$reading"
   printf 'days_since_first_record\t%s\n' "$since_first"
   printf 'types_adopted\t%s\n' "$types_adopted"
@@ -433,7 +447,6 @@ fi
   printf 'findings_became_records_rate\t%s\n' "$(rate "${became:-0}" "${filed:-0}")"
   printf 'records_moved\t%s\n' "$(count 1 "$raw/moves.tsv")"
   awk -F'\t' 'NR > 1 { n[$2 "." $3]++ } END { for (k in n) print "moved." k "\t" n[k] }' "$raw/moves.tsv" | sort
-  printf 'question_log_baseline\t%s\n' "$baseline"
   printf 'questions_logged\t%s\n' "$questions"
   printf 'questions_answered_with_link\t%s\n' "$linked"
   printf 'questions_answered_with_link_rate\t%s\n' "$(rate "${linked:-0}" "${questions:-0}")"
@@ -454,7 +467,7 @@ awk -F'\t' -v reading="$reading" '
   printf 'branch\t%s\n' "$branch"
   printf 'snapshot\t%s\n' "$snapshot"
   printf 'as_of\t%s\n' "$asof"
-  [ -z "$log_file" ] || printf 'log\t%s to %s\n' "$log_start" "$log_last"
+  [ -z "$log_file" ] || printf 'log\t%s to %s\n' "$asof" "$log_last"
   [ -z "$first_landed" ] || printf 'first_record\t%s\n' "$(date_of "$first_landed")"
   printf 'corpus\t%s\n' "$corpus_name"
   printf 'tracker\t%s %s\n' "$tracker_target" "$tracker_base"
