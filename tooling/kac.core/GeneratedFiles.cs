@@ -10,9 +10,11 @@ public static class GeneratedFiles
     /// <summary>
     /// A file carrying generated blocks, as <c>validate</c> needs it. <c>MarkersRequired</c> is false where deleting
     /// the markers is how a corpus declines the block, which is true of <c>README.md</c> alone.
-    /// <c>tooling/CLAUDE.md</c> says why.
+    /// <c>tooling/CLAUDE.md</c> says why. <c>FromFramework</c> is true for a page <c>kac update</c> writes whole, so a
+    /// lost marker comes back with it.
     /// </summary>
-    public readonly record struct BlockFile(string Path, IReadOnlyList<string> Blocks, bool MarkersRequired);
+    public readonly record struct BlockFile(string Path, IReadOnlyList<string> Blocks, bool MarkersRequired,
+        bool FromFramework);
 
     /// <summary>
     /// Which blocks each file carries. Reads no disk and renders nothing. Takes the adopted types, resolved once in
@@ -21,7 +23,8 @@ public static class GeneratedFiles
     public static List<BlockFile> Blocks(IReadOnlyList<TypeSchema> adopted) =>
     [
         .. Declare(adopted).Select(spec =>
-            new BlockFile(spec.Path, [.. spec.Blocks.Select(b => b.Name)], spec.MarkersRequired))
+            new BlockFile(spec.Path, [.. spec.Blocks.Select(b => b.Name)], spec.MarkersRequired,
+                spec.Path.StartsWith(FrameworkFolder, StringComparison.Ordinal)))
     ];
 
     /// <summary>
@@ -92,6 +95,9 @@ public static class GeneratedFiles
 
         return written;
     }
+
+    /// <summary>The overlay folder <c>kac update</c> writes from the template into every corpus.</summary>
+    private const string FrameworkFolder = "knowledge-as-code/";
 
     private readonly record struct Block(string Name, Func<Schema, string> Render);
 

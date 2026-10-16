@@ -67,7 +67,10 @@ frontmatter it should not have at all.
 into it. The list of blocks is the one `generate` writes from.
 
 If a block loses its markers, `generate` no longer writes it, and `generate --check` sees no difference. This check is
-the only thing that reports the loss. [Generation](../reference/generation.md) says what each block is built from.
+the only thing that reports the loss. On a framework document, the report names `kac update`, which writes the
+framework's copy of the page with its markers. A framework document from an older template also lacks any block a newer
+`kac` writes, so the same report reaches you after you update `kac` alone. [Generation](../reference/generation.md)
+says what each block is built from.
 
 ## The fallback walk
 
