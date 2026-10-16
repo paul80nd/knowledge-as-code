@@ -28,9 +28,11 @@ not the same.
 
 ## The full pass and the pilot
 
-The full pass is about 20 cases, run 3 times each in each of the 3 arms: about 180 graded sessions. The pilot is 3
-cases, run once each in each arm: 9 graded sessions. It measures the cost of a session and checks the grading before
-anyone approves the full pass.
+The full pass is 22 scored cases, run 3 times each in each of the 3 arms: 198 graded sessions. It runs in 3 batches
+of one run each, so that each batch fits one window of a subscription's usage limit.
+[Combining batches](#combining-batches) says how the batches become one scored run. The pilot is 3 cases, run once
+each in each arm: 9 graded sessions. It measures the cost of a session and checks the grading before anyone approves
+the full pass.
 
 ## Choosing cases
 
@@ -53,6 +55,17 @@ as its first tag, so `--tag house` runs one kind alone.
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
 contains the cases for `examples/engineering`: 22 house cases and the pilot's 3 controls. Nothing else in the method
 knows which corpus it runs against.
+
+**A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
+reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
+every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
+[`cases/engineering/excluded.tsv`](cases/engineering/excluded.tsv) lists these:
+
+| Case                           | Why no session can show the rule                                                         |
+|--------------------------------|------------------------------------------------------------------------------------------|
+| `house/billing-new-solution`   | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
+| `house/pagination-fix-commit`  | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
+| `house/ci-coverage-threshold`  | The rule needs a coverage figure the repository records, and the scaffold records none.  |
 
 | Case                             | Rule a session breaks                                                                                  |
 |----------------------------------|--------------------------------------------------------------------------------------------------------|
@@ -99,12 +112,13 @@ publishes its report to claude.ai wherever your account supports it, and the rep
 
 ## What you need
 
-| Tool                         | Why                                                                   |
-|------------------------------|-----------------------------------------------------------------------|
-| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.        |
-| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus.       |
-| `sh`, `jq`                   | The stage and score scripts are POSIX shell, and read JSON with `jq`. |
-| `git`                        | Each scaffold makes its workspace a git repository.                   |
+| Tool                         | Why                                                                        |
+|------------------------------|----------------------------------------------------------------------------|
+| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.             |
+| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus.            |
+| `sh`, `jq`                   | The stage and score scripts are POSIX shell, and read JSON with `jq`.      |
+| Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. |
+| `git`                        | Each scaffold makes its workspace a git repository.                        |
 
 A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. macOS has it. On Linux, install
 `bubblewrap` and `socat`. On Windows, run the trial under WSL2.
@@ -123,7 +137,8 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
    ```
 
 3. **Count the sessions before you start any.** The plugin stage starts cases × runs × 2 sessions, and the prose stage
-   cases × runs. An `llm` grader adds three judge calls per run. No case here has one.
+   cases × runs. Count only the cases `stage.sh` staged. An `llm` grader adds three judge calls per run. No case here
+   has one.
 4. **Run the plugin and none arms:**
 
    ```sh
@@ -144,7 +159,7 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
 
    ```sh
    trials/plugin/score.sh "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" \
-     trials/plugin/runs/<date>
+     trials/plugin/runs/<date> "$CASES/excluded.tsv"
    ```
 
 7. **Read every verdict by hand** against the workspace the session left. Each run prints a `kept temp:` folder,
@@ -155,6 +170,34 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
 
 `--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 7. Without it,
 both are deleted when the stage finishes.
+
+## Combining batches
+
+Run each batch as steps 4 and 5, with `--runs 1` and its own `--output-dir`. Stage once, and run every batch from
+that stage, so every batch has the same plugin and the same prose text. Then merge each stage's result files, and
+score the two merged files as step 6:
+
+```sh
+trials/plugin/merge.sh "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
+trials/plugin/merge.sh "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
+```
+
+[`merge.sh`](merge.sh) gives each case the runs of every batch, sums the cost, and marks the result partial if any
+batch was. It refuses batches that differ in stage, model, Claude Code version or plugin, or that grade a shared case
+by different graders.
+
+## Regrading a batch
+
+Regrade a kept batch when a grader changes after it ran. [`regrade.mjs`](regrade.mjs) applies the graders in the case
+folder to each workspace and trace the batch kept, and writes a result file of the same shape:
+
+```sh
+node trials/plugin/regrade.mjs "$CASES" "$STAGE/out-plugin-r1/aggregate-result.json" "$STAGE/plugin-r1.json"
+```
+
+Open each kept folder with `chmod 700` first, as step 7 says. The script compares its verdict with the tool's for
+every grader whose name and definition did not change, and exits 1 on any disagreement. Trust it on the changed
+graders only where that check passes. Merge and score the regraded file in place of the one the tool wrote.
 
 ## Writing a case
 
@@ -195,6 +238,7 @@ of case on its own.
 * **Compliance is counted over the sessions that did the task**, where every `task-` grader passed. A session that
   did not do the task has written nothing to judge.
 * **A session that ended on an error** is counted under `<kind>.<arm>.errors`, and in no rate.
+* **A session of an excluded case** is counted nowhere. `excluded_cases` says how many cases were left out.
 
 The plugin's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported beside
 it and never added in, because the plugin's skills teach a session to cite and the other arms have nothing that does.
@@ -216,7 +260,8 @@ every kind and every arm, zero included.
 | `method`                       | the version of this method. It moves when a definition on this page changes.        |
 | `model`                        | the model id the sessions ran on                                                    |
 | `claude_version`               | the Claude Code version that ran the plugin stage                                   |
-| `cases`                        | the cases run, of both kinds                                                        |
+| `cases`                        | the cases scored, of both kinds                                                     |
+| `excluded_cases`               | the cases `excluded.tsv` lists, which no count includes                             |
 | `runs_per_case`                | the runs of each case in each arm                                                   |
 | `sessions`                     | the graded sessions, over every kind and arm                                        |
 | `<kind>.<arm>.sessions`        | the sessions of that kind in that arm                                               |
@@ -229,7 +274,7 @@ every kind and every arm, zero included.
 | `<kind>.plugin.fired`          | the plugin sessions of that kind where every `fired-` grader passed                 |
 | `<kind>.lead_over_prose`       | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                |
 | `<kind>.lead_over_none`        | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                 |
-| `cost_usd`                     | the list-price cost both stages report, judge calls included, to two decimal places |
+| `cost_usd`                     | the list-price cost both stages report, judge calls and excluded cases included     |
 | `cost_per_session_usd`         | `cost_usd` divided by `sessions`                                                    |
 
 ## Reading the result
@@ -249,3 +294,4 @@ Where the plugin leads the prose arm, the next measurement is a fourth arm: the 
 | Run                              | Method | Corpus                 | Sessions | What it was                                  |
 |----------------------------------|-------:|------------------------|---------:|----------------------------------------------|
 | [2026-10-16](runs/2026-10-16.md) |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm |
+| [Full pass](runs/full-pass.md)   |      3 | `examples/engineering` |      198 | In progress: batch 1 of 3 run and regraded   |

@@ -1,6 +1,6 @@
 ---
 type: regex
 target: { source: file, path: deploy/label-printer.yaml }
-pattern: 'image:[ \t]*[''"]?(?![^\s''"]*@sha256:)[^\s''"]+'
+pattern: 'image:[ \t]*[''"]?(?![^\s''"]*@(sha256:|\$\{?[A-Za-z_]\w*\}?))[^\s''"]+'
 match: not_contains
 ---

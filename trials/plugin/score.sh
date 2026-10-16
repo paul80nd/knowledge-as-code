@@ -1,21 +1,26 @@
 #!/bin/sh
 # Scores one run of the plugin trial from the two result files `claude plugin eval` wrote.
 #
-#   score.sh <plugin stage aggregate-result.json> <prose stage aggregate-result.json> <run folder>
+#   score.sh <plugin stage aggregate-result.json> <prose stage aggregate-result.json> <run folder> [<excluded.tsv>]
 #
 # Writes sessions.tsv, aggregate.md, and both result files with every absolute path cut to its last part.
+# A case listed in <excluded.tsv> is left out of sessions.tsv and every count, and aggregate.md reports how many.
 set -eu
 
-method=2
+method=3
 
-if [ "$#" -ne 3 ]; then
-  echo "usage: score.sh <plugin stage result> <prose stage result> <run folder>" >&2
+if [ "$#" -ne 3 ] && [ "$#" -ne 4 ]; then
+  echo "usage: score.sh <plugin stage result> <prose stage result> <run folder> [<excluded.tsv>]" >&2
   exit 2
 fi
 
 plugin_json=$1
 prose_json=$2
 out=$3
+excluded=""
+if [ "$#" -eq 4 ]; then
+  excluded=$(cut -f 1 "$4" | sed 's|.*/||' | tr '\n' ' ')
+fi
 
 for f in "$plugin_json" "$prose_json"; do
   if [ "$(jq -r '.partial' "$f")" != "false" ]; then
@@ -34,11 +39,12 @@ mkdir -p "$out/results"
 # A verdict is 1 where every grader or set of alternatives with that prefix passed, 0 where one failed, and empty
 # where the case has none. A case's kind is the folder it sits in, house or control.
 sessions() {
-  jq -r --arg prose "$2" '
+  jq -r --arg prose "$2" --arg excluded "$excluded" '
     def verdict(p): [.graders[]? | select(.name | startswith(p))]
       | group_by(.name | split("--")[0]) | map(any(.passed))
       | if length == 0 then "" elif all then "1" else "0" end;
-    .cases[] | .name as $case | (.dir | split("/") | .[-2]) as $kind | .arms | to_entries[]
+    ($excluded | split(" ")) as $skip
+    | .cases[] | select(.name as $n | $skip | index($n) | not) | .name as $case | (.dir | split("/") | .[-2]) as $kind | .arms | to_entries[]
     | (if $prose == "1" then "prose" elif .key == "with" then "plugin" else "none" end) as $arm
     | .value[]
     | [$kind, $arm, $case, (if .error == null then "0" else "1" end),
@@ -64,7 +70,9 @@ version=$(jq -r '.claudeVersion' "$plugin_json")
 runs=$(jq -r '[.cases[].arms[] | length] | max' "$plugin_json")
 cost=$(jq -s '(.[0].costUsd + .[1].costUsd) * 100 | round / 100' "$plugin_json" "$prose_json")
 
-awk -F '\t' -v method="$method" -v model="$model" -v version="$version" -v runs="$runs" -v cost="$cost" '
+excluded_cases=$(printf "%s" "$excluded" | wc -w | tr -d ' ')
+
+awk -F '\t' -v method="$method" -v excluded="$excluded_cases" -v model="$model" -v version="$version" -v runs="$runs" -v cost="$cost" '
   function rate(n, d) { return d == 0 ? "" : sprintf("%.2f", n / d) }
   function lead(a, b) { return (a == "" || b == "") ? "" : sprintf("%.2f", a - b) }
   function row(field, value) { printf "| `%s` | %s |\n", field, value }
@@ -95,6 +103,7 @@ awk -F '\t' -v method="$method" -v model="$model" -v version="$version" -v runs=
     row("model", "`" model "`")
     row("claude_version", version)
     row("cases", n)
+    row("excluded_cases", excluded)
     row("runs_per_case", runs)
     row("sessions", total)
     split("house control", kinds, " ")
