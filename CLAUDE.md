@@ -143,6 +143,10 @@ worth making, and says so where it is.
 `content-version` and the consumer locks. [`std-CI`](examples/dog-fooding/standards/workflows.md) and
 [`std-VERS`](examples/dog-fooding/standards/versioning.md) state the rules behind them.
 
+**Write the body with `mattpocock-skills:pr`**, so every pull request has the same shape. List each test layer you ran,
+and what it reported, under its Evidence. After Merge Danger, say what you did not do and why, then give the `Closes`
+line.
+
 **[The release](docs/maintaining/build-test-release.md#release-a-version) is the developer's call.** Where `kac`
 changed, put it to them before you open the pull request, with a recommendation. Release where the change stands on its
 own. Hold where it is one part of a group that is no use apart.
