@@ -37,6 +37,12 @@ tells you what to do is a standard.
 A control names the [services](services.md) it applies to, because a control with no scope is one nobody owns. One
 control may verify several rules, and one rule may need several controls.
 
+## A control or a skill
+
+Where a CI job, a pre-commit check or a Claude Code hook can check a rule, write a control for that check. The control
+proves the rule. A skill in the corpus's plugin (the package of skills a Claude Code session installs) only explains it,
+and helps only when a session loads it and acts on it. A check fails a broken rule whether or not anyone read it.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-controls -->

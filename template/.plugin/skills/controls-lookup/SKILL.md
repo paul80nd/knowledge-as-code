@@ -181,3 +181,5 @@ Where no control matches, say nothing in this export claims to check the rule, a
 **An empty search is not evidence that a rule goes unchecked.** It says the estate has not written a control down. A
 pipeline may well run something nobody recorded here, and this export cannot see it. Offer the rule as one worth a
 control, and leave that to whoever owns it.
+
+**Where no control proves a rule and a tool could check it, tell the developer so.**
