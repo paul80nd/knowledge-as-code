@@ -7,6 +7,7 @@ its method and every run, so you can run it again after a large change and compa
 |------------------------------------------|----------------------------------------------------------------------------|
 | [Comprehension](comprehension/README.md) | Whether each section of the documentation site lets its reader act         |
 | [Capture](capture/README.md)             | Whether an adopting team's knowledge is getting written down in its corpus |
+| [Plugin](plugin/README.md)               | Whether a corpus's plugin makes an agent's code follow the corpus's rules  |
 
 ## Adding a trial
 
