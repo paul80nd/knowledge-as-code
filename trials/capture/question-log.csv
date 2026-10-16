@@ -1,0 +1,6 @@
+# The capture trial's question log. Keep one copy for each reading, for the two weeks it runs.
+# Add one line for each question somebody asks you about how something is done.
+# Write the day you were asked as YYYY-MM-DD, then a comma.
+# Then write yes where your answer included a link to a record, and no where it did not.
+# Write nothing else on the line: no name, and no words of the question.
+date,linked

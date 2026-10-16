@@ -3,9 +3,10 @@
 This folder contains repeatable experiments on the documentation in this repository. Each trial keeps its questions,
 its method and every run, so you can run it again after a large change and compare the result with the last run.
 
-| Trial                                    | What it measures                                                   |
-|------------------------------------------|--------------------------------------------------------------------|
-| [Comprehension](comprehension/README.md) | Whether each section of the documentation site lets its reader act |
+| Trial                                    | What it measures                                                           |
+|------------------------------------------|----------------------------------------------------------------------------|
+| [Comprehension](comprehension/README.md) | Whether each section of the documentation site lets its reader act         |
+| [Capture](capture/README.md)             | Whether an adopting team's knowledge is getting written down in its corpus |
 
 ## Adding a trial
 
