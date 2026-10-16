@@ -40,20 +40,16 @@ A process is also not:
 
 | Field                   | Value                                          | Notes                                                                         |
 |-------------------------|------------------------------------------------|-------------------------------------------------------------------------------|
-| `id` *†                 | string                                         | Stable, unique across the corpus, never reused, in the format the type sets.  |
-| `type` *†               | string                                         | The singular name of the type, which CI checks against the folder.            |
 | `tier` *†               | `procedural`                                   | The record's trust level, fixed for the type and checked against the folder.  |
 | `status` *†             | `active` `draft` `retired`                     | Whether the process is current, drafted, or stood down. In force at `active`. |
-| `owner` *†              | string                                         | A person as `human:alex.doe`, or a post as `role:head-of-engineering`.        |
-| `sources` †             | list                                           | Where this record's content came from, one entry per source.                  |
-| `tags` †                | list                                           | Free-form, lowercase and hyphenated. A reader searches on these across types. |
 | `applies-to`            | list                                           | Service ids this process concerns.                                            |
 | `last-rehearsed` *      | date                                           | Quoted. The day somebody last followed the process end to end, or `"never"`.  |
 | `rehearsal-frequency` * | `on-change` `per-release` `quarterly` `annual` | How often, or on what event, to rehearse the process.                         |
 | `requires-access`       | list                                           | The systems or roles the reader needs before step 1.                          |
 
 \* Field is required  
-† Carried by every document in the taxonomy. See [Metadata](knowledge-as-code/metadata.md).
+† Every document has this field, and this type refines it.  
+[Metadata](knowledge-as-code/metadata.md#universal-fields) lists the fields every document has.
 
 <!-- END GENERATED: schema-processes -->
 
@@ -90,33 +86,13 @@ A process is also not:
 
 <!-- BEGIN GENERATED: checks-processes -->
 
-| Check                       | Level   | What it verifies                                                                                                |
-|-----------------------------|---------|-----------------------------------------------------------------------------------------------------------------|
-| `frontmatter-parses`        | error   | Frontmatter is present and is a valid YAML mapping.                                                             |
-| `unknown-key`               | error   | Every frontmatter key is a schema field or a reserved ADO key.                                                  |
-| `key-order`                 | error   | Key order is a topological extension of the schema's field order.                                               |
-| `required-field`            | error   | Required and conditionally-required fields are present.                                                         |
-| `bare-key`                  | error   | An absent value is a bare key, never `null`, `~`, `""`, `—` or an unquoted `{{…}}`.                             |
-| `empty-optional-key`        | warning | An optional field is filled in or left out, rather than written with no value.                                  |
-| `date-quoted / date-format` | error   | Date fields are quoted, and name a day the calendar has: `YYYY-MM-DD`.                                          |
-| `enum`                      | error   | Enum values are in range and lowercase.                                                                         |
-| `field-pattern`             | error   | Values match the pattern their field declares (e.g. `tags`).                                                    |
-| `list-order`                | warning | List entries read in alphabetical order, with numbers compared as numbers.                                      |
-| `type-matches-folder`       | error   | `type` matches the singular type name the record's folder declares.                                             |
-| `tier-matches-type`         | error   | `tier` matches the tier the type declares.                                                                      |
-| `id`                        | error   | `id` carries the type's prefix, takes the shape the type declares, and names the same document as the filename. |
-| `id-unique`                 | error   | `id` is unique across the whole corpus.                                                                         |
-| `filename / slug-length`    | error   | Filename matches the pattern. The slug is within 30 characters.                                                 |
-| `h1`                        | error   | The document has an H1.                                                                                         |
-| `identity`                  | error   | An identity line beneath the H1 names the type, id and status, and all three agree with the frontmatter.        |
-| `sections`                  | error   | Every required section heading is present, and no declared section is left as a bare heading.                   |
-| `placeholder-left`          | error   | No `{{…}}` from the template is left unfilled, outside code.                                                    |
-| `link-resolves`             | error   | Every internal link resolves (all forms, `.md` optional), and a `#fragment` names a heading there.              |
-| `undefined-label`           | error   | Every shortcut reference has a link definition.                                                                 |
-| `label-canonical`           | error   | A link label is the id of the record it leads to, written as that record carries it.                            |
-| `ref-resolves`              | error   | An id in a field that references another document names one that exists, of the type the field names.           |
-| `unused-definition`         | warning | A link definition that nothing references.                                                                      |
-| `staleness`                 | warning | A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.                               |
-| `no-hedged-ordering`        | warning | No step hedged with "typically", "usually" or "normally".                                                       |
+CI runs the [universal checks](knowledge-as-code/metadata.md#universal-checks) on every record, and the checks below on
+this type's records.
+
+| Check                | Level   | What it verifies                                                                                      |
+|----------------------|---------|-------------------------------------------------------------------------------------------------------|
+| `ref-resolves`       | error   | An id in a field that references another document names one that exists, of the type the field names. |
+| `staleness`          | warning | A process past its rehearsal frequency, or one whose `last-rehearsed` is `never`.                     |
+| `no-hedged-ordering` | warning | No step hedged with "typically", "usually" or "normally".                                             |
 
 <!-- END GENERATED: checks-processes -->
