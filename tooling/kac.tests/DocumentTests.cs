@@ -1,6 +1,7 @@
 using kac.core;
 using Markdig;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace kac.tests;
 
@@ -11,6 +12,26 @@ public class DocumentTests
     {
         var h1 = Markdown.Parse("# Hello `code` world").Descendants<HeadingBlock>().First();
         Assert.Equal("Hello code world", Md.PlainText(h1.Inline));
+    }
+
+    [Fact]
+    public void Md_Lists_names_the_H2_above_each_top_level_list()
+    {
+        var ast = Markdown.Parse(
+            "- before\n\n## `Changelog`\n\n- one\n  - nested\n\n### Deeper\n\n- two\n\n# Title\n\n- after\n");
+
+        Assert.Equal(
+            [("before", null), ("one", "Changelog"), ("two", "Changelog"), ("after", null)],
+            Md.Lists(ast).Select(l => (First(l.List), l.Section)));
+
+        static string First(ListBlock list) => list.Descendants<LiteralInline>().First().Content.ToString();
+    }
+
+    [Fact]
+    public void Md_ListsUnder_matches_the_section_name_in_any_case()
+    {
+        var ast = Markdown.Parse("## Changelog\n\n- one\n\n## Notes\n\n- two\n");
+        Assert.Single(Md.ListsUnder(ast, "CHANGELOG"));
     }
 
     [Fact]

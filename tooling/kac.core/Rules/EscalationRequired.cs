@@ -54,28 +54,10 @@ public sealed class EscalationRequired : IDocumentRule
     /// Each list is its own group, because whether <c>continue</c> strands the reader depends on the list being the
     /// last one.
     /// </summary>
-    private static IEnumerable<List<Branch>> Branches(Doc d)
-    {
-        var inSection = false;
-        foreach (var block in d.Ast)
-        {
-            if (block is HeadingBlock h)
-            {
-                inSection = h.Level switch
-                {
-                    2 => string.Equals(Md.PlainText(h.Inline), "Diagnosis", StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
-                };
-                continue;
-            }
-
-            if (!inSection || block is not ListBlock list) continue;
-
-            var branches = list.OfType<ListItemBlock>().Select(Read).ToList();
-            if (branches.Count > 0) yield return branches;
-        }
-    }
+    private static IEnumerable<List<Branch>> Branches(Doc d) =>
+        Md.ListsUnder(d.Ast, "Diagnosis")
+            .Select(list => list.OfType<ListItemBlock>().Select(Read).ToList())
+            .Where(branches => branches.Count > 0);
 
     /// <summary>
     /// The literals concatenated, then split and rejoined on whitespace. A branch opens <c>**Yes** -&gt;</c>, so the
