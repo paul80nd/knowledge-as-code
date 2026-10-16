@@ -778,7 +778,7 @@ public partial class Doc
     /// <summary>Without the colon the form puts after it, so schema and document compare equal.</summary>
     private static string Label(string text) => text.Trim().TrimEnd(':').TrimEnd();
 
-    /// <summary>An H1 ends the open section, and a heading deeper than H2 leaves it open.</summary>
+    /// <summary>The links under each H2 a field mirrors. <c>Md.Blocks</c> says where a section ends.</summary>
     private static Dictionary<string, List<LinkRef>> SectionLinks(
         MarkdownDocument ast, IEnumerable<string?>? sectionTitles)
     {
@@ -788,21 +788,11 @@ public partial class Doc
             .ToDictionary(title => title, _ => new List<LinkRef>(), StringComparer.OrdinalIgnoreCase);
         if (result.Count == 0) return result;
 
-        List<LinkRef>? section = null;
-        foreach (var block in ast)
+        foreach (var (block, title) in Md.Blocks(ast))
         {
-            if (block is HeadingBlock h)
-            {
-                section = h.Level switch
-                {
-                    2 => result.GetValueOrDefault(Md.PlainText(h.Inline)),
-                    < 2 => null,
-                    _ => section
-                };
-                continue;
-            }
+            if (title is null || !result.TryGetValue(title, out var section)) continue;
 
-            section?.AddRange(from inline in Inlines(Leaves(block))
+            section.AddRange(from inline in Inlines(Leaves(block))
                 from link in inline.Descendants<LinkInline>()
                 where !link.IsImage
                 select new LinkRef

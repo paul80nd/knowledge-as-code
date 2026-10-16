@@ -101,6 +101,43 @@ public static class Md
     }
 
     /// <summary>
+    /// Each top-level block other than a heading, with the plain text of the H2 above it. The section is null before the
+    /// first H2 and after an H1. A heading below H2 leaves it as it was.
+    /// </summary>
+    public static IEnumerable<(Block Block, string? Section)> Blocks(MarkdownDocument ast)
+    {
+        string? section = null;
+
+        foreach (var block in ast)
+        {
+            if (block is not HeadingBlock h)
+            {
+                yield return (block, section);
+                continue;
+            }
+
+            section = h.Level switch
+            {
+                2 => PlainText(h.Inline),
+                < 2 => null,
+                _ => section
+            };
+        }
+    }
+
+    /// <summary>The top-level lists among <c>Blocks</c>, each with its section.</summary>
+    public static IEnumerable<(ListBlock List, string? Section)> Lists(MarkdownDocument ast)
+    {
+        foreach (var (block, section) in Blocks(ast))
+            if (block is ListBlock list)
+                yield return (list, section);
+    }
+
+    /// <summary>The top-level lists under the H2 called <c>section</c>, matched case-insensitively.</summary>
+    public static IEnumerable<ListBlock> ListsUnder(MarkdownDocument ast, string section) =>
+        Lists(ast).Where(l => string.Equals(l.Section, section, StringComparison.OrdinalIgnoreCase)).Select(l => l.List);
+
+    /// <summary>
     /// The items of the first list beneath a heading. A later list under the same heading is not read.
     /// </summary>
     public static IEnumerable<(string Text, string Plain, IReadOnlyList<string> Bold, int Line)> Bullets(

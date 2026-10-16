@@ -21,29 +21,12 @@ public sealed class AlternativesHaveVerdicts : IDocumentRule
 
     private static IEnumerable<(string text, int line)> Bullets(Doc d)
     {
-        var inSection = false;
-        foreach (var block in d.Ast)
-        {
-            if (block is HeadingBlock h)
+        foreach (var list in Md.ListsUnder(d.Ast, "Alternatives Considered"))
+            foreach (var li in list.OfType<ListItemBlock>())
             {
-                inSection = h.Level switch
-                {
-                    2 => string.Equals(Md.PlainText(h.Inline), "Alternatives Considered",
-                        StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
-                };
-                continue;
+                var text = string.Join(" ", li.Descendants<LiteralInline>().Select(x => x.Content.ToString()));
+                yield return (text, li.Line + 1);
             }
-
-            if (inSection && block is ListBlock list)
-                foreach (var item in list)
-                    if (item is ListItemBlock li)
-                    {
-                        var text = string.Join(" ", li.Descendants<LiteralInline>().Select(x => x.Content.ToString()));
-                        yield return (text, li.Line + 1);
-                    }
-        }
     }
 
     public static bool HasVerdict(string text)

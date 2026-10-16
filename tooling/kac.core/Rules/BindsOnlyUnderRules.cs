@@ -1,5 +1,3 @@
-using Markdig.Syntax;
-
 namespace kac.core;
 
 public sealed class BindsOnlyUnderRules : IDocumentRule
@@ -28,22 +26,9 @@ public sealed class BindsOnlyUnderRules : IDocumentRule
     /// </summary>
     private static IEnumerable<(string Modal, string Text, int Line)> Strays(Doc d, PartSpec spec)
     {
-        var inSection = false;
-
-        foreach (var block in d.Ast)
+        foreach (var (list, section) in Md.Lists(d.Ast))
         {
-            if (block is HeadingBlock h)
-            {
-                inSection = h.Level switch
-                {
-                    2 => string.Equals(Md.PlainText(h.Inline), spec.Section, StringComparison.OrdinalIgnoreCase),
-                    < 2 => false,
-                    _ => inSection
-                };
-                continue;
-            }
-
-            if (inSection || block is not ListBlock list) continue;
+            if (string.Equals(section, spec.Section, StringComparison.OrdinalIgnoreCase)) continue;
 
             foreach (var (text, plain, bold, line) in Md.Bullets(list))
             {
