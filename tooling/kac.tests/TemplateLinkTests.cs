@@ -29,7 +29,7 @@ public partial class TemplateLinkTests
 
     [Theory]
     [MemberData(nameof(Seeds))]
-    public void A_seed_page_never_links_into_another_types_folder(string rel)
+    public void A_seed_page_never_links_a_named_record_in_another_types_folder(string rel)
     {
         var owner = Owner(rel);
 
@@ -41,8 +41,8 @@ public partial class TemplateLinkTests
             .ToList();
 
         Assert.True(reaching.Count == 0,
-            $"{rel} links into {string.Join(", ", reaching)}. a corpus that declined the type holds no "
-            + "such folder, and the link cannot be unlinked into a word. name the type and drop the link.");
+            $"{rel} links a record in {string.Join(", ", reaching)}. no other corpus holds that record. "
+            + "link the type's root page, or write the target with a placeholder.");
     }
 
     [GeneratedRegex(@"^\[[^\]\r\n]+\]:\s*(?<target>\S+)", RegexOptions.Multiline)]
@@ -97,6 +97,10 @@ public partial class TemplateLinkTests
         }
     }
 
+    /// <summary>
+    /// A placeholder target is how a seed links another type's records. <c>SeedLinks</c> removes its line where a
+    /// corpus declined the type.
+    /// </summary>
     private static IEnumerable<string> Local(IEnumerable<string> targets) =>
         targets
             .Where(t => !LinkChecks.IsExternal(t) && !Placeholder.In(t))

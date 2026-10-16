@@ -32,7 +32,8 @@ default. Whichever types you adopt, the corpus it writes validates before the co
 [Layers](../layers.md) says which files it writes, and who owns each one afterwards.
 
 If you adopt only some types, `new` removes the links to the types you skipped. A type page links the other type pages,
-and `new` drops each dead link and leaves the type's name standing in the sentence. A type's schema points `ref:` and
+and `new` drops each dead link and leaves the type's name standing in the sentence. A type's template links records of
+other types, one to a line, and `new` drops each line that links a type you skipped. A type's schema points `ref:` and
 `versus:` at the types beside it, and each of those points at a type, not at a folder, so a type you declined enforces
 nothing until [`update --add-type`](update.md) brings it in.
 

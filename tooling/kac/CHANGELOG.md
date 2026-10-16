@@ -15,6 +15,15 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac new` and `kac update --add-type` drop a template's links to the types you declined.** A template line citing
+  a record of a declined type is removed, with the link definition behind it. Before, the definition arrived intact,
+  and every corpus that declined a type received a template offering a link to a folder it does not have. A link to a
+  declined type's root page is still unlinked and its text left standing.
+
 ## 0.33.0 - 2026-10-14
 
 ### Added

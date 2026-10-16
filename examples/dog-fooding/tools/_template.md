@@ -98,8 +98,6 @@ What you read, what you concluded from it, and any attribution, copyleft or comm
 ## Related
 
 * [std-{{a}}] mandates or constrains its use.
-* [adr-{{a}}] records the decision, where there was one.
 
-[adr-{{a}}]: ../adrs/{{a}}.md
 [std-{{a}}]: ../standards/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

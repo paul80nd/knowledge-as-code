@@ -115,7 +115,5 @@ _(Escalation wakes the people who can help. This tells the people who are waitin
 ## Related
 
 * [svc-{{a}}] is the service this covers.
-* [exp-{{a}}] explains how the system works. Read it afterwards, not now.
 
-[exp-{{a}}]: ../explanations/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

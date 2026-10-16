@@ -321,7 +321,7 @@ public static class Update
     /// Commits and stages nothing. <c>declined</c> reaches the seed pages alone. <c>SeedLinks</c> says why.
     /// </summary>
     public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
-        IReadOnlySet<string> declined)
+        DeclinedNames declined)
     {
         foreach (var file in plan.Copies) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
 
@@ -414,7 +414,7 @@ public static class Update
     /// first, so <c>full</c> holds a corpus to what <c>new</c> would have written.
     /// </summary>
     internal static bool Same(string templateRoot, string corpusRoot, PlannedFile file,
-        IReadOnlySet<string> declined)
+        DeclinedNames declined)
     {
         var sent = Files.ReadLf(Path.Combine(templateRoot, file.From));
         if (SeedLinks.Reaches(file)) sent = SeedLinks.Unlinked(sent, declined);

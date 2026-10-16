@@ -73,8 +73,7 @@ A one-paragraph definition of what the word means in this context.
 **Not:** the neighbouring term it is most often confused with, and the difference in a few words. See
 [gls-{{b}}.{{term}}].
 
-Owned by [svc-{{a}}]. See [adr-{{a}}].
+See [adr-{{a}}].
 
 [adr-{{a}}]: ../adrs/{{a}}.md
 [gls-{{b}}.{{term}}]: {{b}}.md#{{term}}
-[svc-{{a}}]: ../services/{{a}}.md
