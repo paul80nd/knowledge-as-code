@@ -26,6 +26,6 @@
     "Exit": "Moving to another provider means re-registering every client and pointing both services at a new discovery document. [svc-catalogue-web] and [svc-catalogue-api] read that document at start-up, so the change is configuration at each end.\n\n**The borrower accounts are the hard part.** The vendor runs the tenant and keeps the password every borrower set. Nothing here can read one, so a move ends with every borrower setting a new password at the new provider.\n\nThe contract gives 90 days' notice, and any move has to fit inside it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3e4c20adddae8ff4f6a01a1179614909448f4f23/examples/library/integrations/identity.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3f681ac46865a614bedfd1b6f91a6f04886d0a51/examples/library/integrations/identity.md"
   }
 }
