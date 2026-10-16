@@ -1,0 +1,10 @@
+arm	case	error	task	comply	cite	fired	cost_usd	turns
+plugin	label-printer-image	0	1	1	1	1	0.4214934	13
+none	label-printer-image	0	1	1	0		0.153845	9
+plugin	orders-db-connection	0	1	1	1	1	0.4421916000000001	16
+none	orders-db-connection	0	1	1	0		0.1294316	10
+plugin	stock-reserve-endpoint	0	1	1	1	1	0.39666720000000005	23
+none	stock-reserve-endpoint	0	1	0	0		0.16684339999999998	12
+prose	label-printer-image	0	1	1	1	0	0.3241852	9
+prose	orders-db-connection	0	1	1	1	0	0.283911	10
+prose	stock-reserve-endpoint	0	1	1	0	0	0.433732	12

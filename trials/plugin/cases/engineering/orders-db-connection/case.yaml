@@ -1,0 +1,5 @@
+---
+schema_version: "1.1"
+name: orders-db-connection
+context:
+  scaffold_script: scaffold.sh
