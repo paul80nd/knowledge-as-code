@@ -112,7 +112,7 @@ fields:
 
 sections:
   required: [What it checks, How it works, Coverage and gaps]
-  optional: [Evidence, Owner]
+  optional: [Owner]
 
 export:
   version: 1

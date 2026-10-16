@@ -152,8 +152,7 @@ Two things stay behind whatever `types` says:
 
 * **Who stewards the control.** `owner` is a fact about the corpus that wrote it, and whoever holds a vendored copy has
   no standing to ask.
-* **Any Evidence or Owner section the author wrote.** `evidence` carries the address of the proof, and the sections
-  beneath that heading stay in the record.
+* **Any Owner section the author wrote.** A control's export includes the three required sections and no other.
 
 ## Say when a control is unsettled
 

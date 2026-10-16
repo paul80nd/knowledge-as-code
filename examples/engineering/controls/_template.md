@@ -26,6 +26,8 @@ and how it is reviewed. What is below is only what a control adds to that.
 * **`mechanism`**: pick the real one. `not-enforced` is a first-class value and the whole point of the coverage report,
   so do not invent a mechanism to avoid using it.
 * **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
+* **`evidence`**: where the proof lives, such as the build log, the audit note or the dashboard. Someone asking "how do
+  you know?" should be able to follow it to an artefact. Add it unless `mechanism` is `not-enforced`.
 * **`review-by`**: the day somebody re-reads this record against the check, quoted. `control-in-date` warns once it
   has passed.
 
@@ -54,11 +56,6 @@ conformance checklist item" is.)_
 
 The mechanism, concretely. Which pipeline step, which tool, which checklist, which alert rule. Enough that someone can
 find it and confirm it is running.
-
-## Evidence
-
-Where the proof lives: the build log, the audit note, the dashboard. Someone asking "how do you know?" should be able to
-follow this to an artefact.
 
 ## Coverage and gaps
 
