@@ -103,23 +103,38 @@ Scenario: A type with no records gets an index saying so
   And "adrs/_index.md" contains "_Nothing here yet."
   And "adrs/_index.md" does not contain "|"
 
-Scenario: A type page lists the universal fields first, and only the checks its type can trip
+Scenario: A type page lists the universal fields it refines, and only the checks its type can trip
   Given the generate fixture corpus
   And the generated blocks in "adrs.md" are emptied
   When I generate
   Then it succeeds
   And "adrs.md" lists, in order:
     | text                              |
-    | `id` *†                           |
-    | `owner` *†                        |
-    | `tags` †                          |
+    | `tier` *†                         |
+    | `status` *†                       |
     | `decided-on`                      |
     | The day the decision was settled. |
     | `related`                         |
+    | universal checks                  |
     | `y-statement`                     |
+  And "adrs.md" does not contain "`id` *†"
+  And "adrs.md" does not contain "`tags` †"
+  And "adrs.md" does not contain "`frontmatter-parses`"
   And "adrs.md" does not contain "`derived-key`"
   And "adrs.md" does not contain "`part-id-unique / part-ref`"
   And "adrs.md" does not contain "`draft-expiry`"
+
+Scenario: The metadata page lists the universal checks once
+  Given the generate fixture corpus
+  And the generated blocks in "knowledge-as-code/metadata.md" are emptied
+  When I generate
+  Then it succeeds
+  And only "knowledge-as-code/metadata.md" changed
+  And "knowledge-as-code/metadata.md" lists, in order:
+    | text                 |
+    | `frontmatter-parses` |
+    | `unused-definition`  |
+  And "knowledge-as-code/metadata.md" does not contain "`y-statement`"
 
 Scenario: A block whose markers are gone is left unwritten, and validate reports it
   Given the generate fixture corpus

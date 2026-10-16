@@ -23,7 +23,7 @@ public class GeneratedFilesTests
         [
             ("adrs.md", "schema-adrs,checks-adrs", true),
             ("policies.md", "schema-policies,checks-policies", true),
-            ("knowledge-as-code/metadata.md", "schema-universal,types-metadata", true),
+            ("knowledge-as-code/metadata.md", "schema-universal,checks-universal,types-metadata", true),
             ("knowledge-as-code/taxonomy.md",
                 "types-placement,types-detail,types-versus,types-graph,types-edges", true),
             ("knowledge-as-code/lineage.md", "types-lineage,types-collisions", true),

@@ -119,14 +119,15 @@ public static class GeneratedFiles
             select new FileSpec(t.Page, true,
             [
                 new Block($"schema-{t.Key}", schema => Generator.SchemaTable(t, schema, Up(t.Page))),
-                new Block($"checks-{t.Key}", s => ChecksTable.Render(s, t))
+                new Block($"checks-{t.Key}", s => ChecksTable.Render(s, t, Up(t.Page)))
             ])).ToList();
 
         // The pages that describe the taxonomy to a reader. Each lists only the types this corpus adopted.
-        // `metadata.md` also carries the universal field table.
+        // `metadata.md` also carries the universal field table and the universal checks.
         specs.Add(new FileSpec("knowledge-as-code/metadata.md", true,
         [
             new Block("schema-universal", Generator.UniversalSchemaTable),
+            new Block("checks-universal", ChecksTable.RenderUniversal),
             new Block("types-metadata", _ => Generator.MetadataStrip(adopted, Up("knowledge-as-code/metadata.md")))
         ]));
 

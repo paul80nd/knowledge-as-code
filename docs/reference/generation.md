@@ -14,6 +14,7 @@ under a type, with YAML frontmatter above its prose. A **type** is one kind of r
 | `schema-<type>` block in `<type>.md`                  | `_universal.yaml` and the type's fields |
 | `checks-<type>` block in `<type>.md`                  | the checks the validator implements     |
 | `schema-universal` in `knowledge-as-code/metadata.md` | `_universal.yaml`                       |
+| `checks-universal` in `knowledge-as-code/metadata.md` | the checks every type shares            |
 | `types-metadata` in `knowledge-as-code/metadata.md`   | the adopted types                       |
 | five blocks in `knowledge-as-code/taxonomy.md`        | the adopted types                       |
 | two blocks in `knowledge-as-code/lineage.md`          | the adopted types                       |
@@ -37,14 +38,20 @@ column in sentence case, so open an issue on this repository where you declare o
 column for the whole table, with each full value. Under Platform, `platform/containers.md` shows `platform` and
 `platform/dotnet/testing.md` shows `platform/dotnet`.
 
-**The frontmatter reference lists the universal fields first, marked `†`, then the type's own.** Each row renders that
-field's `description`, falling back to `notes` where the schema declares none.
+**The frontmatter reference lists the universal fields the type refines, marked `†`, then the type's own.** A
+universal field whose row would read as it does on `metadata.md` is left out, and the legend links that page. `tier`
+and `status` always print, because each type sets its own values. Each row renders that field's `description`,
+falling back to `notes` where the schema declares none.
 
 **The checks table leaves out the rows a type cannot trip**: a rule it does not declare, a field shape it does not use,
-and a parts source it does not have.
+and a parts source it does not have. It also leaves out the universal checks, which every type shares, and opens on a
+link to them.
+
+**`checks-universal` lists the universal checks once**, in `knowledge-as-code/metadata.md`. A universal check is one
+that asks nothing of the type's schema and runs on every record.
 
 **`schema-universal` documents the universal fields once for the whole taxonomy**, in `knowledge-as-code/metadata.md`,
-as the schema declares them. A type page lists them again under `†`, narrowed to whatever that type made of them.
+as the schema declares them. A type page lists again only the ones it refines, under `†`.
 
 **The taxonomy has five blocks.** `types-placement` is the decision table, `types-detail` is the catalogue by tier,
 `types-versus` is the disambiguations, and `types-graph` and `types-edges` are the relation diagram and its edges.
