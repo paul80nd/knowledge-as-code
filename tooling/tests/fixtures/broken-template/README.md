@@ -12,6 +12,9 @@ It also links to `0404-superseded-and-deleted.md`, which is not there. A templat
 other document's, because the ones that are not placeholders are real — this is how a template pointing into a
 part of the corpus that has since been deleted is caught.
 
+Its `pol-{{a}}` definition points into `policies/`, which this corpus does not have. A placeholder target cannot
+resolve, but the folder ahead of the placeholder can, so `template-folder-resolves` warns on the line citing it.
+
 **What the golden pins by leaving out is the point of the scenario.** Every one of these would be an error in a
 record and is silent here, so removing an exemption fails this fixture rather than passing quietly:
 

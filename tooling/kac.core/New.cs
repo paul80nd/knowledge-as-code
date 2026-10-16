@@ -218,7 +218,7 @@ public static class New
     /// <c>declined</c> is for <c>SeedLinks</c>, which takes out a seed page's links to types this corpus turned down.
     /// </summary>
     public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot,
-        IReadOnlySet<string> declined)
+        DeclinedNames declined)
     {
         foreach (var file in plan.Copied) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
 

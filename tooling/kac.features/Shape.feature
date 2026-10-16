@@ -38,8 +38,9 @@ Scenario: A type's template is checked without being counted as a record
   When I validate the corpus
   Then validation reports 0 documents and 0 skipped
   And the findings are exactly:
-    | file              | line | check           | message                                                                                                                         |
-    | adrs/_template.md |    1 | template-fields | 'priority' is not a field of the 'adr' type: every document copied from this template would fail unknown-key.                   |
-    | adrs/_template.md |    1 | template-fields | the template does not carry 'owner', which is required: every document copied from it would fail required-field.                |
-    | adrs/_template.md |    5 | template-fields | 'decided-on' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: decided-on: "{{…}}". |
-    | adrs/_template.md |   22 | link-resolves   | link target '0404-superseded-and-deleted.md' does not resolve.                                                                  |
+    | file              | line | severity | check                    | message                                                                                                                         |
+    | adrs/_template.md |    1 | error    | template-fields          | 'priority' is not a field of the 'adr' type: every document copied from this template would fail unknown-key.                   |
+    | adrs/_template.md |    1 | error    | template-fields          | the template does not carry 'owner', which is required: every document copied from it would fail required-field.                |
+    | adrs/_template.md |    5 | error    | template-fields          | 'decided-on' is read as a YAML mapping rather than a value. A placeholder that opens one has to be quoted: decided-on: "{{…}}". |
+    | adrs/_template.md |   22 | error    | link-resolves            | link target '0404-superseded-and-deleted.md' does not resolve.                                                                  |
+    | adrs/_template.md |   23 | warning  | template-folder-resolves | link target '../policies/{{a}}.md' points into 'policies/', which this corpus does not have.                                    |

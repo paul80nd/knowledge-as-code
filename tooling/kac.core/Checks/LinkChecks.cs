@@ -13,7 +13,11 @@ public static class LinkChecks
             if (string.IsNullOrEmpty(target)) continue;
             if (IsExternal(target)) continue;
 
-            if (kind == DocKind.Template && Placeholder.In(target)) continue;
+            if (kind == DocKind.Template && Placeholder.In(target))
+            {
+                CheckTemplateFolder(tree, d.Rel, target, link.Line, report);
+                continue;
+            }
 
             var hash = target.IndexOf('#');
             var fragment = hash >= 0 ? target[(hash + 1)..] : "";
@@ -142,6 +146,24 @@ public static class LinkChecks
         if (tree.Exists(rel)) return rel;
         // ADO resolves links with .md omitted.
         return tree.Exists(rel + ".md") ? rel + ".md" : null;
+    }
+
+    /// <summary>
+    /// A placeholder target cannot resolve until it is filled, but the folders ahead of the first placeholder already
+    /// can. A target that stays in the template's own folder, or climbs to the root, asks nothing.
+    /// </summary>
+    private static void CheckTemplateFolder(Tree tree, string fromRel, string target, int line, Report report)
+    {
+        var slash = target[..target.IndexOf("{{", StringComparison.Ordinal)].LastIndexOf('/');
+        if (slash < 0) return;
+
+        var folder = target.StartsWith('/')
+            ? Descend("", target[..slash].TrimStart('/'))
+            : Descend(Folder(fromRel), target[..slash]);
+        if (string.IsNullOrEmpty(folder) || tree.HasFolder(folder)) return;
+
+        report.Warn(new CheckId("template-folder-resolves"),
+            $"link target '{target}' points into '{folder}/', which this corpus does not have.", line);
     }
 
     private static string Folder(string rel)

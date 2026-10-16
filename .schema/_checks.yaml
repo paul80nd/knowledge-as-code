@@ -352,6 +352,14 @@ checks:
       renderer agrees on. Azure DevOps percent-encodes what GitHub discards, so a heading with `/`, `:` or `.` in
       it has two anchors and fails here, before the wiki publishes it.
 
+  template-folder-resolves:
+    severity: warning
+    on-type-page: false
+    description: A template's placeholder link points into a folder the corpus has.
+    notes: >
+      `link-resolves` passes over a target containing a placeholder. This check reads the folders ahead of the first
+      placeholder, and passes a target that stays in the template's own folder.
+
   undefined-label:
     severity: error
     description: A shortcut label shaped like any type's id has a link definition.

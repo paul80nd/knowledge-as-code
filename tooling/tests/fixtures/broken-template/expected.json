@@ -4,7 +4,7 @@
     "templates": 1,
     "skipped": 0,
     "errors": 4,
-    "warnings": 0,
+    "warnings": 1,
     "infos": 0
   },
   "findings": [
@@ -35,6 +35,13 @@
       "severity": "error",
       "check": "link-resolves",
       "message": "link target '0404-superseded-and-deleted.md' does not resolve."
+    },
+    {
+      "file": "adrs/_template.md",
+      "line": 23,
+      "severity": "warning",
+      "check": "template-folder-resolves",
+      "message": "link target '../policies/{{a}}.md' points into 'policies/', which this corpus does not have."
     }
   ]
 }

@@ -80,7 +80,5 @@ _(Not optional. A reader reads this before step 1, to decide whether to start at
 ## Related
 
 * [svc-{{a}}] is the service this operates on.
-* [std-{{a}}] carries the rules this process must respect.
 
-[std-{{a}}]: ../standards/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

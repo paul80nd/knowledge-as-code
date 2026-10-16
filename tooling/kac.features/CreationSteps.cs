@@ -98,7 +98,7 @@ public sealed class CreationSteps(Workspace ws)
     public void ThenNoLinkFailsToResolve()
     {
         var dangling = Validator.CheckAll(Corpus.Load(_folder), Harness.Today)
-            .Where(f => f.Check.Value == "link-resolves")
+            .Where(f => f.Check.Value is "link-resolves" or "template-folder-resolves")
             .Select(f => $"{f.File}: {f.Message}")
             .ToList();
 

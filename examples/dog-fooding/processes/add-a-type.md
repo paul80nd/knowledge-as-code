@@ -42,8 +42,10 @@ folder and no page fails `type-setup`. Removing a type reverses these steps.
    into [lineage](../knowledge-as-code/lineage.md).
 7. Write the type's root page.
 8. Write the type's `_template.md`.
-9. Link another type by its root page, with that type's own noun as the link text. `TemplateLinkTests` rejects a link
-   into another type's folder.
+9. Link another type's root page with that type's own noun as the link text. Link one of its records with a placeholder
+   definition, such as `[svc-{{a}}]: ../services/{{a}}.md`, and cite it on a line of its own. A corpus that declined
+   the type receives the template without that line. `TemplateLinkTests` rejects a named record in another type's
+   folder.
 10. Copy both pages into every other tree by hand. Both are `seed`, so nothing keeps the trees equal. `kac generate`
     writes the type's `_index.md`, so leave that one alone.
 11. Add the type to `types:` in `.corpus.yaml`, which `kac update --add-type <folder>` writes. Nothing generates or

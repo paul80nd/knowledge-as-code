@@ -128,6 +128,22 @@ public class LinkCheckTests
     public void A_label_that_names_what_it_leads_to_is_silent(string markdown)
         => Assert.Empty(Labels(markdown));
 
+    [Theory]
+    [InlineData("[p](../policies/{{a}}.md)")]
+    [InlineData("[p](/policies/{{a}}.md)")]
+    [InlineData("[p][pol-{{a}}]\n\n[pol-{{a}}]: ../policies/{{a}}.md")]
+    public void A_template_link_into_a_folder_the_corpus_lacks_warns(string markdown)
+        => Assert.Equal(["template-folder-resolves"],
+            Findings("adrs/_template.md", markdown, DocKind.Template).Select(f => f.Check.Value));
+
+    [Theory]
+    [InlineData("[s](../standards/{{a}}.md)")]
+    [InlineData("[a]({{a}}.md)")]
+    [InlineData("[r](../{{a}}.md)")]
+    [InlineData("[r](../../{{a}}.md)")]
+    public void A_template_link_into_a_folder_the_corpus_has_or_no_folder_at_all_is_silent(string markdown)
+        => Assert.Empty(Findings("adrs/_template.md", markdown, DocKind.Template));
+
     private static List<string> Labels(string markdown, DocKind kind = DocKind.Record) =>
     [
         .. Cited(markdown, kind).Where(f => f.Check.Value == "label-canonical").Select(f => f.Message)
@@ -159,12 +175,12 @@ public class LinkCheckTests
         .. Findings(fromRel, markdown).Where(f => f.Check.Value == "link-resolves").Select(f => f.Message)
     ];
 
-    private static List<Finding> Findings(string fromRel, string markdown)
+    private static List<Finding> Findings(string fromRel, string markdown, DocKind kind = DocKind.Record)
     {
         var schema = new Schema();
         var doc = Required.Parsed(fromRel, markdown, schema, requireFrontmatter: false);
         var findings = new List<Finding>();
-        LinkChecks.Check(doc, schema, Corpus(), new Report(doc.Rel, findings));
+        LinkChecks.Check(doc, schema, Corpus(), new Report(doc.Rel, findings), kind);
         return findings;
     }
 

@@ -15,6 +15,22 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **A template link into a folder the corpus lacks is reported.** `kac validate` warns where a `_template.md` link
+  carries a placeholder and points into a folder this corpus does not have, such as `../policies/{{a}}.md` in a
+  corpus with no `policies/`. `link-resolves` still skips the placeholder itself. A record written from the template
+  would fail `link-resolves` once an author filled it in. The check id is `template-folder-resolves`.
+
+### Changed
+
+- **`kac new` and `kac update --add-type` drop a template's links to the types you declined.** A template line citing
+  a record of a declined type is removed, with the link definition behind it. Before, the definition arrived intact,
+  and every corpus that declined a type received a template offering a link to a folder it does not have. A link to a
+  declined type's root page is still unlinked and its text left standing.
+
 ## 0.33.0 - 2026-10-14
 
 ### Added
