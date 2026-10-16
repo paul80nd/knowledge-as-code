@@ -33,6 +33,6 @@
     "Scope": "The `kac` tool, the workflows, and the documentation site's build."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/3f681ac46865a614bedfd1b6f91a6f04886d0a51/examples/dog-fooding/deviations/security-design-unstated.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/8b2920d0d2968abe6b23731f424d546ad8aadce5/examples/dog-fooding/deviations/security-design-unstated.md"
   }
 }
