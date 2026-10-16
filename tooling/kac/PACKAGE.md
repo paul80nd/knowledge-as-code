@@ -1,35 +1,39 @@
 # kac: knowledge as code
 
-`kac` reads a folder of Markdown documents kept in git and checks each one against a schema. The folder a document sits
-in names its type. The corpus's own `.schema/` holds one file per type, saying what fields and rules that type has. A
-repository of those documents, with the schema it runs, is a **corpus**.
+`kac` is the command-line tool for Knowledge as Code (KaC), which keeps your engineering knowledge in git, where people
+and AI coding sessions can both find it. Standards, decisions, runbooks, known fixes and the glossary each become a
+**record**: a Markdown document with a declared type, reviewed by pull request like any other change. A repository of
+records, with the schema it runs, is a **corpus**.
 
-What the structure buys you: indexes built from the documents themselves, and a broken cross-reference that fails CI. An
-agent contributing to the corpus can be told where a document goes.
+`kac` checks every record against the schema its type declares, and reports each fault against the file that caused
+it. A broken cross-reference fails CI. `kac` writes the indexes nobody should keep by hand. It also packages the
+records as a Claude Code **plugin**, so an agent can look up a standard before it writes code.
 
-`kac` has no rules about any particular type. It reads what to enforce from the schema the corpus holds, so you add a
-knowledge type by writing a YAML file.
+## Why use it
 
-## Install
+* **Knowledge gets written down.** A record has a type and an id, so anybody can find it.
+* **You can tell whether to trust a record.** Each one has an owner, a status and a review date.
+* **Agents build to your rules.** A session looks up the standard that applies and cites the rule it followed.
+* **Teams share one set of rules.** A team's corpus can consume an organisation's corpus, so a standard written once
+  applies in every repository that takes it.
+
+## Get started
+
+You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and git.
 
 ```bash
 dotnet tool install --global KnowledgeAsCode.Tool
-```
-
-## Start a corpus
-
-`kac new` turns the folder you are standing in into one. It takes the framework from the repository below, writes what a
-corpus is made of, and stops short of committing so you can read what it staged.
-
-```bash
 mkdir my-corpus && cd my-corpus
-kac new          # asks a few short questions, each with a default
+kac new         # asks what the corpus is called and which types it adopts, each with a default
+kac validate    # checks every record against the schema its type declares
 ```
 
-## Use
+`kac new` turns the folder into a corpus. It writes the framework files and a `.corpus.yaml` that names your corpus. It
+runs `generate` and `validate`, then stages what it wrote. The first commit is yours to make.
 
-`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, the descriptor that names the
-corpus, so run it from anywhere inside one.
+## The commands
+
+`kac` finds a corpus by walking up from the working directory for a `.corpus.yaml`, so run it from anywhere inside one.
 
 ```bash
 kac validate     # frontmatter, links, structure, clauses and the graph
@@ -39,13 +43,14 @@ kac restore      # fetch the corpora this one consumes into .imports/
 kac export       # write the corpus to .dist/export/ as data a consumer reads instead of cloning
 kac bundle       # assemble that export and .plugin/ into an installable plugin
 kac pack         # zip that export into a versioned package a registry can hold
+kac report       # print a report over this corpus and what it imports
 kac checks       # list every check the validator can report
 ```
 
 `kac update` writes into the working tree and commits nothing, so `git diff` is where you read what arrived.
 `kac update --check` reports the same and writes nothing, which is the form a pipeline runs.
 
-`kac --help` lists them, and every command takes its own `--help`.
+`kac --help` lists the commands, and every command takes its own `--help`.
 
 ## Exit codes
 
@@ -55,13 +60,15 @@ kac checks       # list every check the validator can report
 | `1`  | A corpus error, or a bad invocation.                                                    |
 | `2`  | A command found no corpus. `new`, `--version` and `--help` need none and answer anyway. |
 
-## Where to go next
+## Documentation
 
-The repository this tool is built from has the framework's documentation, a page for each record type, and a reference
-for every command:
-
-**<https://github.com/paul80nd/knowledge-as-code>**
-
-It also holds worked corpora you can read before you write your own.
+* [Getting started](https://paul80nd.github.io/knowledge-as-code/use/getting-started/) walks through a first corpus,
+  from install to the first commit.
+* [Compared with alternatives](https://paul80nd.github.io/knowledge-as-code/compared/) says what KaC adds to a
+  `CLAUDE.md`, an organisation's managed instructions, a documentation server or a wiki, and when one of those is
+  enough.
+* [The CLI reference](https://paul80nd.github.io/knowledge-as-code/use/cli/) has a page for every command.
+* [The GitHub repository](https://github.com/paul80nd/knowledge-as-code) has the source, and worked corpora you can read
+  before you write your own.
 
 Released under the MIT licence.
