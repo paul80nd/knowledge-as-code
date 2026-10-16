@@ -32,10 +32,27 @@ default. Whichever types you adopt, the corpus it writes validates before the co
 [Layers](../layers.md) says which files it writes, and who owns each one afterwards.
 
 If you adopt only some types, `new` removes the links to the types you skipped. A type page links the other type pages,
-and `new` drops each dead link and leaves the type's name standing in the sentence. A type's template links records of
-other types, one to a line, and `new` drops each line that links a type you skipped. A type's schema points `ref:` and
-`versus:` at the types beside it, and each of those points at a type, not at a folder, so a type you declined enforces
-nothing until [`update --add-type`](update.md) brings it in.
+and `new` drops each dead link and leaves the type's name standing in the sentence. The sentence may still send a reader
+to a type your corpus does not have, so `new` lists each line it left that way. A corpus adopting `postmortems` alone is
+told:
+
+```text
+new: these lines name a type this corpus declined, and the link to it is gone. Read each one:
+  frameworks.md:5  policies
+  frameworks.md:25  standards
+  postmortems.md:12  adrs
+  postmortems.md:20  fixes, runbooks, nfrs
+  postmortems.md:21  adrs
+  postmortems.md:32  runbooks
+  postmortems.md:34  fixes
+  postmortems.md:86  nfrs
+```
+
+Rewrite each line it lists for your corpus.
+
+A type's template links records of other types, one to a line, and `new` drops each line that links a type you skipped.
+A type's schema points `ref:` and `versus:` at the types beside it, and each of those points at a type, not at a folder,
+so a type you declined enforces nothing until [`update --add-type`](update.md) brings it in.
 
 Use it once, on an empty or nearly empty folder. To take a newer framework into a corpus that already exists, run
 [`update`](update.md).

@@ -79,14 +79,25 @@ kac update --add-type policies
 kac update --drop-type tools
 ```
 
-Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving page
-links to the types the corpus already has. The pages already there name the new type without linking to it, because each
-was written while the type was still declined. The run says so:
+Adopting writes the type's schema, its root page and its template, and adds the name to `types:`. The arriving pages
+link to the types the corpus already has, and name the types it declined without linking to them. The pages already
+there name the new type without linking to it, because each was written while the type was still declined. The run
+says both, and lists each arriving line that lost a link:
 
 ```text
 update: policies arrives linking to the types this corpus holds. The pages already here name policies without linking
 to it, and they are yours to change.
+update: these lines name a type this corpus declined, and the link to it is gone. Read each one:
+  policies.md:13  standards
+  policies.md:14  controls, processes
+  policies.md:36  standards
+  policies.md:43  controls, adrs
+  policies/_template.md:74  standards
+  policies/devi-deviations.md:61  controls
+  policies/devi-deviations.md:63  processes
 ```
+
+A plain `update` that seeds a page the template has gained lists its lines the same way.
 
 Dropping is the asymmetric half. `update` refuses while the folder still holds records:
 

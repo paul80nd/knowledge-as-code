@@ -136,7 +136,8 @@ public static class Commands
         if (plan.Faults.Unsound) return StopUnsound("new", request.From, plan.Faults);
 
         var declined = SeedLinks.Declined(take.Schema, answers.Types);
-        foreach (var path in kac.core.New.Apply(plan, take.Root, dir, declined)) Out.Markup(Wrote(path));
+        var (written, unlinked) = kac.core.New.Apply(plan, take.Root, dir, declined);
+        foreach (var path in written) Out.Markup(Wrote(path));
 
         if (plan.DeclinedTypes.Count > 0)
             Account($"new: {plan.DeclinedTypes.Count} file(s) withheld for the types this corpus declined.");
@@ -146,6 +147,7 @@ public static class Commands
 
         Account($"new: wrote {plan.Copied.Count + plan.Composed.Count} file(s) for {answers.Name}, taken "
                 + $"from {request.From}{At(take.Commit)}.");
+        Unlinked("new", unlinked);
 
         // Generation writes what validation then checks, so it goes first. Staging goes last.
         Generate(dir, check: false);
@@ -645,7 +647,7 @@ public static class Commands
         if (request.DropType is { } dropping && Relinquish(dropping, request) is { } stopped)
             return stopped;
 
-        kac.core.Update.Apply(plan, take.Root, corpusRoot, declined);
+        var unlinked = kac.core.Update.Apply(plan, take.Root, corpusRoot, declined);
         CorpusDescriptor.Stamp(corpusRoot, take.Manifest.Version, today, take.Commit);
 
         // Only where a flag asked for it: `types:` is a block somebody laid out by hand.
@@ -653,7 +655,7 @@ public static class Commands
             CorpusDescriptor.SetTypes(corpusRoot, adopted);
 
         return ReportUpdate(plan, adoption, corpusRoot, origin, take.Manifest.Version, today,
-            request.DropType, request.AddType);
+            request.DropType, request.AddType, unlinked);
     }
 
     /// <summary>Only the message column wraps, so a check id is never split across lines.</summary>
@@ -701,6 +703,17 @@ public static class Commands
     }
 
     private static void Note(string line) => Out.Markup(Prefix(line, "yellow"));
+
+    /// <summary>Said rather than repaired, as with the pages an added type arrives among.</summary>
+    private static void Unlinked(string verb, IReadOnlyList<UnlinkedPage> pages)
+    {
+        if (pages.Count == 0) return;
+
+        Note($"{verb}: these lines name a type this corpus declined, and the link to it is gone. Read each one:");
+        foreach (var page in pages)
+        foreach (var line in page.Lines)
+            Out.Line($"  {page.Path}:{line.Number}  {string.Join(", ", line.Types)}");
+    }
 
     private static void Account(string line) => Out.Markup(Prefix(line, "grey"));
 
@@ -756,7 +769,7 @@ public static class Commands
     }
 
     private static int ReportUpdate(UpdatePlan plan, Adoption adoption, string corpusRoot, string origin,
-        int templateVersion, string today, string? dropped, string? added)
+        int templateVersion, string today, string? dropped, string? added, IReadOnlyList<UnlinkedPage> unlinked)
     {
         Out.Line($"update: taking the framework from {origin}.");
         foreach (var file in plan.Written) Out.Markup(Wrote(file.To));
@@ -783,6 +796,7 @@ public static class Commands
         if (added is not null)
             Note($"update: {added} arrives linking to the types this corpus holds. The pages already "
                  + $"here name {added} without linking to it, and they are yours to change.");
+        Unlinked("update", unlinked);
 
         // Overlay pages carry generated blocks built from this corpus's types, so a passing
         // `generate --check` is the update's postcondition.

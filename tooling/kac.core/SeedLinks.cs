@@ -5,15 +5,25 @@ namespace kac.core;
 
 /// <summary>
 /// The types a corpus turned down, by the two names a link to one of them writes: the page and the folder. They differ
-/// where a type declares a <c>page:</c> that does not match its <c>folder:</c>.
+/// where a type declares a <c>page:</c> that does not match its <c>folder:</c>. <c>Pages</c> maps each page to the
+/// type's folder, which is the name <c>types:</c> spells.
 /// </summary>
-public sealed record DeclinedNames(IReadOnlySet<string> Pages, IReadOnlySet<string> Folders)
+public sealed record DeclinedNames(IReadOnlyDictionary<string, string> Pages, IReadOnlySet<string> Folders)
 {
     public static DeclinedNames None { get; } =
-        new(new HashSet<string>(StringComparer.Ordinal), new HashSet<string>(StringComparer.Ordinal));
+        new(new Dictionary<string, string>(StringComparer.Ordinal), new HashSet<string>(StringComparer.Ordinal));
 
     public bool IsEmpty => Pages.Count == 0 && Folders.Count == 0;
 }
+
+/// <summary>
+/// A line of a seed page that lost its link to a declined type and kept the words. <c>Number</c> counts from 1 on the
+/// page as written. <c>Types</c> lists each declined type the line linked, in the order it linked them.
+/// </summary>
+public sealed record UnlinkedLine(int Number, IReadOnlyList<string> Types);
+
+/// <summary>A seed page as written into a corpus, with each line on it that lost a link.</summary>
+public sealed record UnlinkedPage(string Path, IReadOnlyList<UnlinkedLine> Lines);
 
 /// <summary>
 /// The cross-references a corpus receives on the seed pages it is sent. A link to a declined type's page is taken out
@@ -43,14 +53,14 @@ public static partial class SeedLinks
 
     public static DeclinedNames Declined(Schema schema, IReadOnlyList<string> adopted)
     {
-        var pages = new HashSet<string>(StringComparer.Ordinal);
+        var pages = new Dictionary<string, string>(StringComparer.Ordinal);
         var folders = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var (folder, type) in schema.ByFolder)
         {
             if (adopted.Contains(folder, StringComparer.Ordinal)) continue;
             folders.Add(folder);
-            if (!string.IsNullOrEmpty(type.Page)) pages.Add(Path.GetFileNameWithoutExtension(type.Page));
+            if (!string.IsNullOrEmpty(type.Page)) pages[Path.GetFileNameWithoutExtension(type.Page)] = folder;
         }
 
         return new DeclinedNames(pages, folders);
@@ -64,11 +74,37 @@ public static partial class SeedLinks
     ///
     /// The text of each unlinked reference is kept exactly as it was written, so the noun the sentence was
     /// built around is the noun that remains.
-    public static string Unlinked(string markdown, DeclinedNames declined) =>
-        declined.IsEmpty
-            ? markdown
-            : PageLink().Replace(WithoutFolderLines(markdown, declined.Folders), m =>
-                declined.Pages.Contains(m.Groups["page"].Value) ? m.Groups["text"].Value : m.Value);
+    public static string Unlinked(string markdown, DeclinedNames declined) => Unlink(markdown, declined).Text;
+
+    /// <summary>
+    /// The page as received, and each line on it that kept the words of a link it lost. A line dropped whole is not
+    /// among them, because nothing of it is left to read.
+    /// </summary>
+    public static (string Text, IReadOnlyList<UnlinkedLine> Lines) Unlink(string markdown, DeclinedNames declined)
+    {
+        if (declined.IsEmpty) return (markdown, []);
+
+        var text = new StringBuilder(markdown.Length);
+        var lines = new List<UnlinkedLine>();
+        var number = 0;
+
+        foreach (Match line in Line().Matches(WithoutFolderLines(markdown, declined.Folders)))
+        {
+            if (line.Length == 0) continue;
+            number++;
+
+            var types = new List<string>();
+            text.Append(PageLink().Replace(line.Value, m =>
+            {
+                if (!declined.Pages.TryGetValue(m.Groups["page"].Value, out var type)) return m.Value;
+                if (!types.Contains(type, StringComparer.Ordinal)) types.Add(type);
+                return m.Groups["text"].Value;
+            }));
+            if (types.Count > 0) lines.Add(new UnlinkedLine(number, types));
+        }
+
+        return (text.ToString(), lines);
+    }
 
     /// <summary>
     /// A line goes where it defines a label into a declined folder, cites one of those labels, or links into such a
@@ -110,15 +146,23 @@ public static partial class SeedLinks
     }
 
     /// Copy one planned file into a corpus, taking out the links its owner cannot follow. Only a page the unlinking
-    /// changed is written a second time, so every other file keeps the line endings it was checked out with.
-    public static void Receive(PlannedFile file, string templateRoot, string corpusRoot, DeclinedNames declined)
+    /// changed is written a second time, so every other file keeps the line endings it was checked out with. Returns
+    /// null where no line kept the words of a link it lost.
+    public static UnlinkedPage? Receive(PlannedFile file, string templateRoot, string corpusRoot,
+        DeclinedNames declined)
     {
         var target = Path.Combine(corpusRoot, file.To);
         Files.Copy(Path.Combine(templateRoot, file.From), target);
-        if (!Reaches(file)) return;
+        if (!Reaches(file)) return null;
 
         var sent = File.ReadAllText(target);
-        var received = Unlinked(sent, declined);
+        var (received, lines) = Unlink(sent, declined);
         if (received != sent) File.WriteAllText(target, received);
+        return lines.Count == 0 ? null : new UnlinkedPage(file.To, lines);
     }
+
+    /// <summary>Each file in turn, keeping the pages that lost a link.</summary>
+    public static IReadOnlyList<UnlinkedPage> ReceiveAll(IEnumerable<PlannedFile> files, string templateRoot,
+        string corpusRoot, DeclinedNames declined) =>
+        [.. files.Select(f => Receive(f, templateRoot, corpusRoot, declined)).OfType<UnlinkedPage>()];
 }

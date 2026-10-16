@@ -19,6 +19,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Added
 
+- **A seeded line that lost its link is listed.** `kac new` and `kac update` print each line of a seeded page that
+  linked a type this corpus declined, by file and line number, with the types it named. The link is gone and the words
+  stay, so the sentence may still send a reader to a type the corpus does not have. Read each line and rewrite it for
+  your corpus. A line linking into a declined type's folder is dropped whole, and is not listed.
+
 - **A template link into a folder the corpus lacks is reported.** `kac validate` warns where a `_template.md` link
   carries a placeholder and points into a folder this corpus does not have, such as `../policies/{{a}}.md` in a
   corpus with no `policies/`. `link-resolves` still skips the placeholder itself. A record written from the template
