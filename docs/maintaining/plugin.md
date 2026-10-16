@@ -24,7 +24,7 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 * It ships a component reading no type while a component reading one survives, and trims it with the last of them,
   unless the component is standalone.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
-* It ships a file no component claims.
+* It ships a file no component claims, outside `skills/` and `hooks/`.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
 * It builds a plugin with every component trimmed, and warns.
   [What decides whether a component ships](../use/cli/bundle.md#what-decides-whether-a-component-ships)
@@ -46,6 +46,7 @@ Each refusal exits `1` and writes nothing. [Known limits](../use/cli/bundle.md#k
 * no export, an export with no manifest, or one naming no corpus
 * an export at a format version this build does not read
 * a component reading a type at a shape version the export does not have, or at a shape that is not a whole number
+* a file under `skills/` or `hooks/` that no component claims
 
 ## What it promises a consumer
 
@@ -148,7 +149,7 @@ type trim.
 * A component reading no type ships beside one that reads a type
 * A component reading no type leaves with the last component reading one
 * A standalone component always ships
-* A file no component claims ships
+* A file outside the skill and hook directories ships with no component
 * The plugin contains the export unchanged
 * The plugin manifest takes who the plugin is from the descriptor
 * A key the descriptor gives nothing for is removed, bar the author and the description
@@ -175,6 +176,7 @@ type trim.
 * A bundle over an export at another format is refused
 * A bundle whose component reads a shape the export does not have is refused
 * A bundle whose component reads a shape that is not a whole number is refused
+* A bundle whose plugin tree holds a skill no component declares is refused
 
 ## Unspecified
 

@@ -32,8 +32,10 @@ reads, as `requires`, and ships only where the export contains every one of them
 * **An entry may name a shape, as `glossary@1`.** The component then reads that type's files at shape version 1. A bare
   `glossary` asks only that the type is present. Both are trimmed where the export has no glossary.
 * **A trimmed component's files leave with it.** The trim matches the declared path and everything beneath it, on whole
-  segments, so `skills/a` does not take `skills/ab`. A file no component claims, such as a README or a licence, ships
-  whatever the corpus adopted.
+  segments, so `skills/a` does not take `skills/ab`.
+* **Every skill and hook needs a component.** A run stops on a file under `skills/` or `hooks/` that no component
+  claims, because nothing would trim it. A file anywhere else, such as a README or a licence, ships whatever the corpus
+  adopted.
 * **A component naming no type supports the lookups, unless it is standalone.** `corpus-retrieval` and
   `request-deviation` ship wherever a component reading a type shipped, and leave with the last of them. The trim
   reports that as `no component it supports survived`. `raise-finding` declares `"standalone": true` and always ships.
@@ -151,6 +153,7 @@ Every other key in the manifest survives untouched.
 * an export with no manifest, or one naming no corpus because `.corpus.yaml` states no `corpus`
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry, or at one that is not a whole number
+* a file under `skills/` or `hooks/` that no component claims
 
 Where the format versions differ, the message gives both. Rebuild an export that is behind the tool with
 [`export`](export.md). An export ahead of the tool means your `kac` is the older of the two. A shape mismatch means the

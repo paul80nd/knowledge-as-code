@@ -26,13 +26,16 @@ A corpus that validates can still export a package nobody can install.
   suite, without anyone asking for it".
 * `std-PLUGIN.a-skill-names-the-type-of-every-field-it-describes` says a skill "**MUST** name the parts file of the
   type its component declares, and no other type's".
+* `std-PLUGIN.pluginjson-declares-every-component-and-the-types-it-reads` says every skill directory and hook directory
+  in the plugin tree "**MUST** appear under `metadata.components`".
 
 ## How it works
 
-Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora, then
-`claude plugin validate --strict` over the assembled plugin and over its marketplace. Two more checks follow it: every
-component `bundle.json` lists is a directory in the tree, and `.claude-plugin/` contains `plugin.json` and nothing
-else.
+Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora. `bundle` fails on a
+directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then
+`claude plugin validate --strict` runs over the assembled plugin and over its marketplace. Two more checks follow it:
+every component `bundle.json` lists is a directory in the tree, and `.claude-plugin/` contains `plugin.json` and
+nothing else.
 
 `round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`, then asks each
 skill in it the questions that skill describes. `import-round-trip` publishes from `engineering`, consumes it from
@@ -49,9 +52,6 @@ and that `raise-finding`, the one standalone skill, survived. No job installs th
 `round-trip` reads one sentence of each skill. It greps `SKILL.md` for the parts file the component requires, and
 fails a skill that names another type's. Nothing else `std-PLUGIN` asks of the wording is checked here. Two of its
 rules are checked by [ctl-0009] instead, which is where the unit tests that read a skill's prose run.
-
-The component list comes from `bundle.json`, which records what the manifest declared. So a skill or hook directory
-somebody forgot to declare stays undeclared and fails nothing.
 
 `harvest-findings` travels into a corpus's working tree rather than into a plugin, so no job here reaches it. Every
 check above reads an assembled bundle, and that skill is in none. The clause saying no plugin may declare a component

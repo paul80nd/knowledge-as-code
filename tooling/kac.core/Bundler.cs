@@ -136,6 +136,11 @@ public static class Bundler
         var included = new List<PluginComponent>();
         var trimmed = new List<TrimmedComponent>();
 
+        foreach (var directory in Unclaimed(source.PluginTree, declared))
+            problems.Add($"{ManifestFile} declares no component for '{directory}', so nothing trims it when "
+                         + "the export lacks the types it reads. Add it under metadata.components, naming those "
+                         + "types in requires.");
+
         // A missing type trims the component. A type at another shape stops the run, because the component would
         // read keys that have moved. `docs/use/cli/bundle.md` says why.
         foreach (var component in declared)
@@ -433,6 +438,22 @@ public static class Bundler
 
         return components;
     }
+
+    /// <summary>
+    /// Each file under <c>skills/</c> or <c>hooks/</c> no declared component owns, reported by its directory cut at
+    /// two segments, so <c>skills/a/SKILL.md</c> reports <c>skills/a</c> and <c>hooks/hooks.json</c> reports
+    /// <c>hooks</c>. Where a declared component sits inside that directory, the file is reported by its own path.
+    /// </summary>
+    private static IEnumerable<string> Unclaimed(
+        IReadOnlyList<BundleFile> tree, IReadOnlyList<PluginComponent> declared) =>
+        (from file in tree
+            let segments = file.Path.Split('/')
+            where segments[0] is "skills" or "hooks" && segments.Length > 1
+            where !declared.Any(c => Owns(c.Path, file.Path))
+            let directory = string.Join('/', segments[..Math.Min(2, segments.Length - 1)])
+            select declared.Any(c => Owns(directory, c.Path)) ? file.Path : directory)
+        .Distinct(StringComparer.Ordinal)
+        .Order(StringComparer.Ordinal);
 
     /// <summary>
     /// The path itself or anything beneath it, because a component may be a directory or a single file.
