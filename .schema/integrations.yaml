@@ -133,13 +133,15 @@ rules:
       this integration is critical or important and nothing says how the estate would leave it. Add an
       `## Exit` section stating what would have to move, and what would make the move hard.
   - id: fallback-required
-    description: The Failure modes section mentions a fallback somewhere, or says there is none.
+    description: Every row of the Failure modes table fills its fallback cell, with `None.` where there is none.
     severity: warning
-    # A section-wide match, so this catches a document with no fallback anywhere in it.
-    expr: "section_matches('Failure modes', '(?i)fallback')"
+    # Reads the cells, so a header naming the fallback column cannot satisfy it.
+    expr: >-
+      section_matches('Failure modes', '(?m)^\|') and
+      not section_matches('Failure modes', '(?m)^\|(?:[^|\n]*\|){2}[ \t]*\|[ \t]*$')
     message: >
-      the Failure modes section gives no fallback. Say what happens when this integration fails, or say
-      plainly that nothing does.
+      the Failure modes table leaves a failure without a fallback. Give each failure a row, and fill its
+      fallback cell, writing "None." where nothing takes over.
   - id: no-credentials
     description: Nothing reads as a token, key, password or connection string.
     severity: error

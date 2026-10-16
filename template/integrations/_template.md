@@ -60,8 +60,8 @@ _(Nothing secret goes in this corpus. Name the mechanism and where the credentia
 |         |                 |              |
 
 _("It goes down sometimes" is not a failure mode. "Returns 503 during their Sunday maintenance window; we queue and
-retry with backoff" is. **Every integration names a fallback, or explicitly states there isn't one.** An undocumented
-single point of failure is the most expensive kind.)_
+retry with backoff" is. **Give each failure a row, and fill its fallback cell. Write `None.` where nothing takes
+over.** An undocumented single point of failure is the most expensive kind.)_
 
 ## Trial criteria
 

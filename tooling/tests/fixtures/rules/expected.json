@@ -195,7 +195,7 @@
       "line": 1,
       "severity": "warning",
       "check": "fallback-required",
-      "message": "the Failure modes section gives no fallback. Say what happens when this integration fails, or say plainly that nothing does."
+      "message": "the Failure modes table leaves a failure without a fallback. Give each failure a row, and fill its fallback cell, writing \"None.\" where nothing takes over."
     },
     {
       "file": "integrations/payment-gateway.md",
