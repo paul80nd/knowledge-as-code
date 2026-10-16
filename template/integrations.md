@@ -67,8 +67,8 @@ Not the place for:
 1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids: `itg-sendgrid`.
 2. Record the contract and how the system authenticates us. Name where the credential is held. Nothing secret goes in
    this corpus.
-3. Write down each way the system fails and what we do instead. "It goes down sometimes" is not a failure mode; "returns
-   503 during their maintenance window, we queue and retry" is.
+3. Give each way the system fails a row of the Failure modes table, and say in its fallback cell what we do instead. "It
+   goes down sometimes" is not a failure mode; "returns 503 during their maintenance window, we queue and retry" is.
 4. Copy `their-sla` from the contract, word for word.
 5. Name who to contact when the vendor misses that SLA.
 6. Say how we would leave. Name what would have to be rebuilt, what data would have to move, and what makes the move
@@ -76,8 +76,8 @@ Not the place for:
 
 **Conventions**
 
-* **Every integration names a fallback**, or states plainly that it has none. Where the document says neither, whoever
-  is on call works it out during the incident.
+* **Every failure mode names its fallback**, or writes `None.` in that cell. Where a row says neither, whoever is on call
+  works it out during the incident.
 * **A `critical` or `important` integration says how we would leave it.** `Exit` states what would have to be rebuilt
   and what makes the move hard. A vendor's lock-in rarely appears in the contract.
 * **A `trial` integration says what would end the trial.** A trial with no decision criteria stays a trial forever.
@@ -121,7 +121,7 @@ Not the place for:
 | `retired-has-successor`     | warning | A retired integration states what took over from it.                                                            |
 | `trial-criteria-required`   | warning | An integration on trial states what would end the trial.                                                        |
 | `exit-required`             | warning | A critical or important integration still in use states how the estate would leave it.                          |
-| `fallback-required`         | warning | The Failure modes section mentions a fallback somewhere, or says there is none.                                 |
+| `fallback-required`         | warning | Every row of the Failure modes table fills its fallback cell, with `None.` where there is none.                 |
 | `no-credentials`            | error   | Nothing reads as a token, key, password or connection string.                                                   |
 
 <!-- END GENERATED: checks-integrations -->

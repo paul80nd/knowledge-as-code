@@ -26,6 +26,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
+- **`fallback-required` reads each row of an integration's Failure modes table.** `kac validate` warns where a row
+  leaves its fallback cell empty, and where the section has no table. Write `None.` in the cell where nothing takes
+  over. Before, the rule looked for the word *fallback* anywhere in the section, and the template's own column header
+  supplied it, so a record copied from the template always passed.
 - **`kac new` and `kac update --add-type` drop a template's links to the types you declined.** A template line citing
   a record of a declined type is removed, with the link definition behind it. Before, the definition arrived intact,
   and every corpus that declined a type received a template offering a link to a folder it does not have. A link to a

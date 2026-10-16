@@ -23,6 +23,8 @@ The account is closed, and the token was deleted from the platform secret store 
 
 ## Failure modes
 
-None left. The fallback while it ran was the email every reader on the list also received.
+| Failure                     | How it presents        | Our fallback                                     |
+|-----------------------------|------------------------|--------------------------------------------------|
+| The number was disconnected | The text never arrived | The email every reader on the list also received |
 
 [svc-notifications]: ../services/notifications.md

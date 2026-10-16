@@ -28,6 +28,10 @@ api_key=EXAMPLE-NOT-A-REAL-CREDENTIAL
 
 ## Failure modes
 
-The gateway can be unreachable, or can reject a card. Neither names what happens instead, which is the
-second of the three faults this document carries. The third is the missing `## Exit`, which `exit-required`
-reports against an `active` and `important` vendor.
+| Failure                    | How it presents              | Our fallback |
+|----------------------------|------------------------------|--------------|
+| The gateway is down        | Checkout fails at the basket |              |
+| The gateway rejects a card | The buyer sees the decline   | None.        |
+
+The first row leaves its fallback cell empty, which is the second of the three faults this document carries. The
+third is the missing `## Exit`, which `exit-required` reports against an `active` and `important` vendor.
