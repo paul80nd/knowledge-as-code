@@ -1,0 +1,5 @@
+---
+type: regex
+target: { source: file, path: Dockerfile }
+pattern: '(^|\n)[ \t]*FROM[ \t]'
+---

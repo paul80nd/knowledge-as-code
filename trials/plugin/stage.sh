@@ -3,6 +3,7 @@
 #
 #   stage.sh <plugin dir> <cases dir> <empty stage dir>
 #
+# <cases dir> keeps each case in house/ or control/, which is how score.sh tells the two kinds apart.
 # <stage>/plugin is the plugin with the cases under evals/, for the plugin and none arms.
 # <stage>/prose is a plugin with no components, whose cases append the generated CLAUDE.md to the system prompt.
 set -eu
@@ -26,6 +27,18 @@ if [ -e "$stage" ] && [ -n "$(ls -A "$stage")" ]; then
   exit 1
 fi
 
+misplaced=$(find "$cases" -name prompt.md | while IFS= read -r p; do
+  kind=$(basename "$(dirname "$(dirname "$p")")")
+  if [ "$kind" != house ] && [ "$kind" != control ]; then
+    echo "$p"
+  fi
+done)
+if [ -n "$misplaced" ]; then
+  echo "stage.sh: every case belongs in house/ or control/. These are not:" >&2
+  echo "$misplaced" >&2
+  exit 1
+fi
+
 mkdir -p "$stage/plugin" "$stage/prose/.claude-plugin"
 
 cp -R "$plugin/." "$stage/plugin/"
@@ -38,7 +51,7 @@ cp -R "$cases/." "$stage/prose/evals/"
 "$here/prose-claude-md.sh" "$plugin/corpus" "$stage/CLAUDE.md"
 
 # The tool loads no CLAUDE.md in a run, so the prose arm appends it to the system prompt.
-for case_file in "$stage"/prose/evals/*/case.yaml; do
+find "$stage/prose/evals" -name case.yaml | while IFS= read -r case_file; do
   {
     printf 'execution:\n  append_system_prompt: |\n'
     sed 's/^/    /' "$stage/CLAUDE.md"

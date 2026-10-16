@@ -3,7 +3,7 @@ name: stock-reserve-endpoint
 max_turns: 30
 timeout_seconds: 300
 allowed_tools: [Read, Glob, Grep, Skill]
-tags: [std-API]
+tags: [control, std-API]
 ---
 
 The checkout service needs to reserve stock when an order is placed. Add an endpoint to this service for it: checkout
