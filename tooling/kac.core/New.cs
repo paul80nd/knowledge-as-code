@@ -216,11 +216,12 @@ public static class New
 
     /// <summary>
     /// <c>declined</c> is for <c>SeedLinks</c>, which takes out a seed page's links to types this corpus turned down.
+    /// <c>Unlinked</c> lists the pages it took one out of.
     /// </summary>
-    public static IReadOnlyList<string> Apply(NewPlan plan, string templateRoot, string corpusRoot,
-        DeclinedNames declined)
+    public static (IReadOnlyList<string> Written, IReadOnlyList<UnlinkedPage> Unlinked) Apply(NewPlan plan,
+        string templateRoot, string corpusRoot, DeclinedNames declined)
     {
-        foreach (var file in plan.Copied) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
+        var unlinked = SeedLinks.ReceiveAll(plan.Copied, templateRoot, corpusRoot, declined);
 
         foreach (var file in plan.Composed)
         {
@@ -229,7 +230,7 @@ public static class New
             File.WriteAllText(target, file.Content);
         }
 
-        return [.. plan.Paths];
+        return ([.. plan.Paths], unlinked);
     }
 
     /// <summary>Each key takes a line of comment, so a corpus changing one has somewhere to read first.</summary>

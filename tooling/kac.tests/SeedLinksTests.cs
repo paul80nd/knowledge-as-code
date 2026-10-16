@@ -5,7 +5,7 @@ namespace kac.tests;
 public class SeedLinksTests
 {
     private static readonly DeclinedNames Declined = new(
-        new HashSet<string>(["policies", "catalogue"], StringComparer.Ordinal),
+        new Dictionary<string, string>(StringComparer.Ordinal) { ["policies"] = "policies", ["catalogue"] = "services" },
         new HashSet<string>(["policies", "services"], StringComparer.Ordinal));
 
     [Theory]
@@ -37,7 +37,11 @@ public class SeedLinksTests
             SeedLinks.Unlinked(
                 "A [policy](policies.md) binds, a [standard](standards.md) says how, and an "
                 + "[ADR](adrs.md) records the choice.",
-                new DeclinedNames(new HashSet<string>(["policies", "standards"], StringComparer.Ordinal),
+                new DeclinedNames(
+                    new Dictionary<string, string>(StringComparer.Ordinal)
+                    {
+                        ["policies"] = "policies", ["standards"] = "standards"
+                    },
                     new HashSet<string>(StringComparer.Ordinal))));
 
     [Fact]
@@ -79,7 +83,8 @@ public class SeedLinksTests
 
         var declined = SeedLinks.Declined(Schema.Load(files), ["adrs"]);
 
-        Assert.Equal(["catalogue", "policies"], declined.Pages.Order(StringComparer.Ordinal));
+        Assert.Equal(["catalogue", "policies"], declined.Pages.Keys.Order(StringComparer.Ordinal));
+        Assert.Equal("services", declined.Pages["catalogue"]);
         Assert.Equal(["policies", "services"], declined.Folders.Order(StringComparer.Ordinal));
     }
 
@@ -105,4 +110,39 @@ public class SeedLinksTests
             "Dependencies:\r\n\r\nA note.\r\n",
             SeedLinks.Unlinked("Dependencies:\r\n\r\n* [svc-{{a}}] caps it.\r\n\r\nA note.\r\n"
                                + "[svc-{{a}}]: ../services/{{a}}.md\r\n", Declined));
+
+    /// <summary><c>catalogue</c> is the page of the declined <c>services</c> type.</summary>
+    [Fact]
+    public void A_line_that_lost_a_link_is_reported_by_its_number_and_the_type_it_named()
+    {
+        var (_, lines) = SeedLinks.Unlink("# Title\n\nThat is a [service](catalogue.md).\n", Declined);
+
+        var line = Assert.Single(lines);
+        Assert.Equal(3, line.Number);
+        Assert.Equal(["services"], line.Types);
+    }
+
+    [Fact]
+    public void A_line_is_numbered_on_the_page_as_written_after_a_line_dropped_whole()
+    {
+        var (text, lines) = SeedLinks.Unlink(
+            "Read the [index](policies/_index.md).\nAn [ADR](adrs.md) or a [policy](policies.md).\n", Declined);
+
+        Assert.Equal("An [ADR](adrs.md) or a policy.\n", text);
+        Assert.Equal(1, Assert.Single(lines).Number);
+    }
+
+    [Fact]
+    public void A_line_linking_two_declined_types_names_both_in_the_order_it_linked_them()
+    {
+        var (_, lines) = SeedLinks.Unlink(
+            "A [service](catalogue.md), a [standard](standards.md), a [policy](policies.md) and a "
+            + "[service](catalogue.md).\n", Declined);
+
+        Assert.Equal(["services", "policies"], Assert.Single(lines).Types);
+    }
+
+    [Fact]
+    public void A_page_linking_no_declined_type_reports_no_line()
+        => Assert.Empty(SeedLinks.Unlink("That is a [standard](standards.md).\n", Declined).Lines);
 }

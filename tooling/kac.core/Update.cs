@@ -318,14 +318,16 @@ public static class Update
     private static string Owned(string rel, string? reason) => reason is null ? rel : $"{rel}  ({reason})";
 
     /// <summary>
-    /// Commits and stages nothing. <c>declined</c> reaches the seed pages alone. <c>SeedLinks</c> says why.
+    /// Commits and stages nothing. <c>declined</c> reaches the seed pages alone. <c>SeedLinks</c> says why. Returns the
+    /// pages it took a link out of.
     /// </summary>
-    public static void Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
+    public static IReadOnlyList<UnlinkedPage> Apply(UpdatePlan plan, string templateRoot, string corpusRoot,
         DeclinedNames declined)
     {
-        foreach (var file in plan.Copies) SeedLinks.Receive(file, templateRoot, corpusRoot, declined);
+        var unlinked = SeedLinks.ReceiveAll(plan.Copies, templateRoot, corpusRoot, declined);
 
         foreach (var rel in plan.Deleted) File.Delete(Path.Combine(corpusRoot, rel));
+        return unlinked;
     }
 
     /// <summary>
