@@ -5,6 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-AUTV.BLOCK, pol-AUTV.BYPASS, pol-AUTV.DISABLE, pol-AUTV.INTEG, pol-AUTV.MACHINE, pol-AUTV.REGRESS,
   pol-DEVI.EXPIRY, pol-DEVI.OWNER ]
+verified-by: [ ctl-0004 ]
 applies-to:
   - all
 review-by: "2027-08-26"

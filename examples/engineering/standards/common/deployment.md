@@ -5,6 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-ENVS.PROMOTE, pol-ENVS.SAMEDEF, pol-PIPE.ASCODE, pol-PIPE.CONFIG, pol-PIPE.DEPLOY, pol-PIPE.LOCAL,
   pol-PIPE.MANUAL, pol-PIPE.REVERT, pol-PIPE.SAMEART, pol-PIPE.TRACE ]
+verified-by: [ ctl-0002 ]
 applies-to:
   - all
 review-by: "2027-08-31"
