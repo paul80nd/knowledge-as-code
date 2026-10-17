@@ -28,9 +28,11 @@ not the same.
 
 ## The full pass and the pilot
 
-The full pass is about 20 cases, run 3 times each in each of the 3 arms: about 180 graded sessions. The pilot is 3
-cases, run once each in each arm: 9 graded sessions. It measures the cost of a session and checks the grading before
-anyone approves the full pass.
+The full pass is 22 scored cases, run 3 times each in each of the 3 arms: 198 graded sessions. It runs in 3 batches
+of one run each, so that each batch fits one window of a subscription's usage limit.
+[Combining batches](#combining-batches) says how the batches become one scored run. The pilot is 3 cases, run once
+each in each arm: 9 graded sessions. It measures the cost of a session and checks the grading before anyone approves
+the full pass.
 
 ## Choosing cases
 
@@ -53,6 +55,17 @@ as its first tag, so `--tag house` runs one kind alone.
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
 contains the cases for `examples/engineering`: 22 house cases and the pilot's 3 controls. Nothing else in the method
 knows which corpus it runs against.
+
+**A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
+reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
+every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
+[`cases/engineering/excluded.tsv`](cases/engineering/excluded.tsv) lists these:
+
+| Case                          | Why no session can show the rule                                                         |
+|-------------------------------|------------------------------------------------------------------------------------------|
+| `house/billing-new-solution`  | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
+| `house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
+| `house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
 
 | Case                             | Rule a session breaks                                                                                  |
 |----------------------------------|--------------------------------------------------------------------------------------------------------|
@@ -99,12 +112,13 @@ publishes its report to claude.ai wherever your account supports it, and the rep
 
 ## What you need
 
-| Tool                         | Why                                                                   |
-|------------------------------|-----------------------------------------------------------------------|
-| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.        |
-| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus.       |
-| `sh`, `jq`                   | The stage and score scripts are POSIX shell, and read JSON with `jq`. |
-| `git`                        | Each scaffold makes its workspace a git repository.                   |
+| Tool                         | Why                                                                        |
+|------------------------------|----------------------------------------------------------------------------|
+| Claude Code 2.1.292 or later | `claude plugin eval` runs the cases. The pilot ran on 2.1.292.             |
+| `kac`                        | `kac export` and `kac bundle` build the plugin from the corpus.            |
+| `sh`, `jq`                   | The stage and score scripts are POSIX shell, and read JSON with `jq`.      |
+| Node.js 24 or later          | `regrade.mjs` applies the graders with the tool's own regular expressions. |
+| `git`                        | Each scaffold makes its workspace a git repository.                        |
 
 A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. macOS has it. On Linux, install
 `bubblewrap` and `socat`. On Windows, run the trial under WSL2.
@@ -123,7 +137,8 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
    ```
 
 3. **Count the sessions before you start any.** The plugin stage starts cases × runs × 2 sessions, and the prose stage
-   cases × runs. An `llm` grader adds three judge calls per run. No case here has one.
+   cases × runs. Count only the cases `stage.sh` staged. An `llm` grader adds three judge calls per run. No case here
+   has one.
 4. **Run the plugin and none arms:**
 
    ```sh
@@ -144,17 +159,55 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
 
    ```sh
    trials/plugin/score.sh "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" \
-     trials/plugin/runs/<date>
+     trials/plugin/runs/<date> "$CASES/excluded.tsv"
    ```
 
-7. **Read every verdict by hand** against the workspace the session left. Each run prints a `kept temp:` folder,
-   whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open it. The workspace is
-   `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside the folder.
-8. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and any grader you think is wrong.
-   Where the result file gives no tokens, take them from the `result` line of each trace.
+7. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
+   every house case where the plugin and prose arms disagree, and every pass by a grader you know passes weak output.
+   Each run prints a `kept temp:` folder, whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open
+   it. The workspace is `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside
+   the folder.
+8. **Record each verdict you read** in `adjudication.tsv` in the run folder, as [Adjudication](#adjudication) says.
+   Then score the run again with it:
+
+   ```sh
+   trials/plugin/score.sh -a trials/plugin/runs/<date>/adjudication.tsv "$STAGE/out-plugin/aggregate-result.json" \
+     "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> "$CASES/excluded.tsv"
+   ```
+
+9. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
+   the result file gives no tokens, take them from the `result` line of each trace.
 
 `--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 7. Without it,
 both are deleted when the stage finishes.
+
+## Combining batches
+
+Run each batch as steps 4 and 5, with `--runs 1` and its own `--output-dir`. Stage once, and run every batch from
+that stage, so every batch has the same plugin and the same prose text. Then merge each stage's result files, and
+score the two merged files as step 6:
+
+```sh
+trials/plugin/merge.sh "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
+trials/plugin/merge.sh "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
+```
+
+[`merge.sh`](merge.sh) gives each case the runs of every batch, in the order you pass the batches. It sums the cost,
+and marks the result partial if any batch was. It refuses batches that differ in stage, model, Claude Code version or
+plugin, or that grade a shared case by different graders.
+
+## Regrading a batch
+
+Regrade a kept batch when a grader changes after it ran. [`regrade.mjs`](regrade.mjs) applies the graders in the case
+folder to each workspace and trace the batch kept, and writes a result file of the same shape:
+
+```sh
+node trials/plugin/regrade.mjs "$CASES" "$STAGE/out-plugin-r1/aggregate-result.json" "$STAGE/plugin-r1.json"
+```
+
+Open each kept folder with `chmod 700` first, as step 7 says. The script compares its verdict with the tool's for
+every grader whose name and definition did not change, and exits 1 on any disagreement. Trust it on the changed
+graders only where that check passes. Merge and score the regraded file in place of the one the tool wrote.
 
 ## Writing a case
 
@@ -195,11 +248,35 @@ of case on its own.
 * **Compliance is counted over the sessions that did the task**, where every `task-` grader passed. A session that
   did not do the task has written nothing to judge.
 * **A session that ended on an error** is counted under `<kind>.<arm>.errors`, and in no rate.
+* **A session of an excluded case** is counted nowhere. `excluded_cases` says how many cases were left out.
+* **A verdict read by hand replaces the graders' verdict** in every count but the `graders_` fields.
 
 The plugin's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported beside
 it and never added in, because the plugin's skills teach a session to cite and the other arms have nothing that does.
 The controls are reported in fields of their own, so a none arm that follows general practice by default cannot close
 the gap on the house cases.
+
+## Adjudication
+
+A grader is a regular expression, so it can fail a file that complies in a form nobody foresaw, or pass a placeholder.
+The verdict you read by hand is the result. `adjudication.tsv` has a header line, then one line for each session you
+read:
+
+| Column        | Value                                                                                          |
+|---------------|------------------------------------------------------------------------------------------------|
+| `case`        | the case's folder name                                                                         |
+| `arm`         | `plugin`, `prose` or `none`                                                                    |
+| `run`         | the session's place in its arm, from 1. Where batches were merged, batch 2's session is run 2. |
+| `graders`     | the graders' compliance verdict: `pass`, `fail`, or `no task` where a `task-` grader failed    |
+| `adjudicated` | your verdict, in the same three values                                                         |
+| `reason`      | one sentence on what the workspace shows                                                       |
+
+`score.sh -a` refuses a file whose `graders` column differs from the graders' verdict, or whose line matches no
+session. Either means the file belongs to another run. Adjudication covers compliance only. A `cite-` grader reads the
+final reply for an id, so read its fails, and fix the grader where one is wrong.
+
+When adjudication finds a grader fault, fix the grader for the next run. Prove the fix against the kept workspaces with
+`regrade.mjs`. Do not score the recorded run by the fixed grader, because the adjudication is its result.
 
 ## The aggregate
 
@@ -210,27 +287,34 @@ where it would divide by 0.
 `<kind>` is `house` or `control`, and `<arm>` is `plugin`, `prose` or `none`. Each `<kind>.<arm>` field is written for
 every kind and every arm, zero included.
 
-| Field                          | Value                                                                               |
-|--------------------------------|-------------------------------------------------------------------------------------|
-| `trial`                        | `plugin`                                                                            |
-| `method`                       | the version of this method. It moves when a definition on this page changes.        |
-| `model`                        | the model id the sessions ran on                                                    |
-| `claude_version`               | the Claude Code version that ran the plugin stage                                   |
-| `cases`                        | the cases run, of both kinds                                                        |
-| `runs_per_case`                | the runs of each case in each arm                                                   |
-| `sessions`                     | the graded sessions, over every kind and arm                                        |
-| `<kind>.<arm>.sessions`        | the sessions of that kind in that arm                                               |
-| `<kind>.<arm>.errors`          | of those, the sessions that ended on an error                                       |
-| `<kind>.<arm>.task_done`       | of those, the sessions where every `task-` grader passed                            |
-| `<kind>.<arm>.complied`        | of the sessions that did the task, those that comply                                |
-| `<kind>.<arm>.compliance_rate` | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                         |
-| `<kind>.<arm>.cited`           | the sessions where every `cite-` grader passed                                      |
-| `<kind>.<arm>.citation_rate`   | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`  |
-| `<kind>.plugin.fired`          | the plugin sessions of that kind where every `fired-` grader passed                 |
-| `<kind>.lead_over_prose`       | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                |
-| `<kind>.lead_over_none`        | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                 |
-| `cost_usd`                     | the list-price cost both stages report, judge calls included, to two decimal places |
-| `cost_per_session_usd`         | `cost_usd` divided by `sessions`                                                    |
+| Field                                  | Value                                                                                 |
+|----------------------------------------|---------------------------------------------------------------------------------------|
+| `trial`                                | `plugin`                                                                              |
+| `method`                               | the version of this method. It moves when a definition on this page changes.          |
+| `model`                                | the model id the sessions ran on                                                      |
+| `claude_version`                       | the Claude Code version that ran the plugin stage                                     |
+| `cases`                                | the cases scored, of both kinds                                                       |
+| `excluded_cases`                       | the cases `excluded.tsv` lists, which no count includes                               |
+| `runs_per_case`                        | the runs of each case in each arm                                                     |
+| `sessions`                             | the graded sessions, over every kind and arm                                          |
+| `adjudicated`                          | the sessions whose compliance verdict was read by hand                                |
+| `<kind>.<arm>.sessions`                | the sessions of that kind in that arm                                                 |
+| `<kind>.<arm>.errors`                  | of those, the sessions that ended on an error                                         |
+| `<kind>.<arm>.task_done`               | of those, the sessions that did the task, by the adjudicated verdict where one exists |
+| `<kind>.<arm>.complied`                | of the sessions that did the task, those that comply, by the same verdict             |
+| `<kind>.<arm>.compliance_rate`         | `<kind>.<arm>.complied` divided by `<kind>.<arm>.task_done`                           |
+| `<kind>.<arm>.graders_task_done`       | of the sessions with no error, those where every `task-` grader passed                |
+| `<kind>.<arm>.graders_complied`        | of those, the sessions where every `comply-` grader or set of alternatives passed     |
+| `<kind>.<arm>.graders_compliance_rate` | `<kind>.<arm>.graders_complied` divided by `<kind>.<arm>.graders_task_done`           |
+| `<kind>.<arm>.overturned`              | the sessions whose adjudicated verdict differs from the graders' verdict              |
+| `<kind>.<arm>.cited`                   | the sessions where every `cite-` grader passed                                        |
+| `<kind>.<arm>.citation_rate`           | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
+| `<kind>.plugin.fired`                  | the plugin sessions of that kind where every `fired-` grader passed                   |
+| `<kind>.lead_over_prose`               | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
+| `<kind>.lead_over_none`                | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
+| `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
+| `cost_usd`                             | the list-price cost both stages report, judge calls and excluded cases included       |
+| `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
 
 ## Reading the result
 
@@ -249,3 +333,4 @@ Where the plugin leads the prose arm, the next measurement is a fourth arm: the 
 | Run                              | Method | Corpus                 | Sessions | What it was                                  |
 |----------------------------------|-------:|------------------------|---------:|----------------------------------------------|
 | [2026-10-16](runs/2026-10-16.md) |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm |
+| [Full pass](runs/full-pass.md)   |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each   |

@@ -1,0 +1,3 @@
+house/billing-new-solution	The rule copies the .NET runtime's .editorconfig, and the sandbox blocks the download, so no session can comply.
+house/pagination-fix-commit	The sandbox blocks the git that /usr/bin/git hands off to, so the case measures whether git runs.
+house/ci-coverage-threshold	The rule fails the build below a figure the repository records, and the scaffold records none.
