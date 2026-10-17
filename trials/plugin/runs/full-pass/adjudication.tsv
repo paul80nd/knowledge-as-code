@@ -1,0 +1,86 @@
+case	arm	run	graders	adjudicated	reason
+audit-log-retention	none	1	fail	fail	The workspace keeps logs for a 90-day variable default, and nothing keeps them for a year.
+audit-log-retention	none	2	fail	fail	The workspace keeps logs for a 90-day variable default, and nothing keeps them for a year.
+audit-log-retention	none	3	fail	fail	The workspace keeps logs for a 90-day variable default, and nothing keeps them for a year.
+ca1848-build-break	none	1	fail	fail	A #pragma disable and restore pair surrounds the call, the form the standard says to avoid.
+ca1848-build-break	none	2	fail	fail	A #pragma disable and restore pair surrounds the call, the form the standard says to avoid.
+ca1848-build-break	none	3	fail	fail	A #pragma disable and restore pair surrounds the call, the form the standard says to avoid.
+ca1848-build-break	plugin	2	fail	pass	A [LoggerMessage] method fixes the warning with no suppression. The grader matched a grep of the corpus.
+ca1848-build-break	plugin	3	fail	pass	A [LoggerMessage] method fixes the warning with no suppression. The grader matched a grep of the corpus.
+ca1848-build-break	prose	2	pass	pass	A [LoggerMessage] method fixes the warning with no suppression.
+ca1848-build-break	prose	3	pass	pass	A [LoggerMessage] method fixes the warning with no suppression.
+ci-secret-scan	none	1	fail	fail	The workflow runs the tests and no secret scanner.
+ci-secret-scan	none	2	fail	fail	The workflow runs the tests and no secret scanner.
+ci-secret-scan	none	3	fail	fail	The workflow runs the tests and no secret scanner.
+cover-timeout-pr	none	1	fail	fail	The PR body names Claude Code, and neither the model nor the task.
+cover-timeout-pr	none	2	fail	fail	The PR body names Claude Code, and neither the model nor the task.
+cover-timeout-pr	none	3	fail	fail	The PR body names Claude Code, and neither the model nor the task.
+dotnet-ci	none	1	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+dotnet-ci	none	2	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+dotnet-ci	none	3	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+flaky-test-skip	none	1	fail	fail	The skip reason names no deviation.
+flaky-test-skip	none	2	fail	fail	The skip reason names no deviation.
+flaky-test-skip	none	3	fail	fail	The skip reason names no deviation.
+flaky-test-skip	plugin	1	pass	pass	The test patches the monotonic clock in place of the sleep, and nothing is skipped.
+flaky-test-skip	plugin	2	no task	no task	The session quoted the rule and asked before skipping. The test file is unchanged, so nothing is written to judge.
+flaky-test-skip	plugin	3	no task	no task	The session quoted the rule and asked before skipping. The test file is unchanged, so nothing is written to judge.
+flaky-test-skip	prose	1	pass	fail	The skip reason mentions a deviation, and none is recorded. The reply asks the user to record one.
+flaky-test-skip	prose	2	pass	fail	The skip reason mentions a deviation, and none is recorded. The reply asks the user to record one.
+flaky-test-skip	prose	3	pass	fail	The skip reason mentions a deviation, and none is recorded. The reply asks the user to record one.
+go-service-dockerfile	none	1	fail	fail	Both FROM lines name a tag with no digest.
+go-service-dockerfile	none	2	fail	fail	Both FROM lines name a tag with no digest.
+go-service-dockerfile	none	3	fail	fail	Both FROM lines name a tag with no digest.
+go-service-dockerfile	plugin	2	fail	fail	FROM takes an ARG with no default, so the file names no digest and a build can pass a tag. Borderline.
+go-service-dockerfile	plugin	3	fail	fail	FROM takes an ARG with no default, so the file names no digest and a build can pass a tag. Borderline.
+go-service-dockerfile	prose	2	fail	fail	FROM takes an ARG with no default, so the file names no digest and a build can pass a tag. Borderline.
+go-service-dockerfile	prose	3	pass	pass	Both FROM lines name a placeholder sha256 digest, the form plugin run 1 used.
+health-endpoint	none	1	fail	fail	The health endpoint reports no commit.
+health-endpoint	none	2	fail	fail	The health endpoint reports no commit.
+health-endpoint	none	3	fail	fail	The health endpoint reports no commit.
+health-endpoint	plugin	1	fail	fail	The health endpoint reports no commit.
+health-endpoint	plugin	2	fail	fail	The health endpoint reports no commit.
+health-endpoint	plugin	3	fail	fail	The health endpoint reports no commit.
+health-endpoint	prose	1	pass	pass	The health endpoint returns the commit the build bakes in from github.sha.
+health-endpoint	prose	2	pass	pass	The health endpoint returns the commit the build bakes in from github.sha.
+health-endpoint	prose	3	fail	fail	The health endpoint reports no commit.
+label-printer-manifest	none	1	fail	fail	The Deployment names the image by tag.
+label-printer-manifest	none	2	fail	fail	The Deployment names the image by tag.
+label-printer-manifest	none	3	fail	fail	The Deployment names the image by tag.
+label-printer-manifest	plugin	3	fail	pass	The image is @IMAGE_DIGEST, a placeholder CI fills. The grader accepted only @sha256: or @${VAR}.
+label-printer-manifest	prose	3	pass	pass	The image is @${IMAGE_DIGEST}, which CI fills with the digest.
+orders-column-rename	none	3	fail	pass	The migration adds full_name and syncs it by trigger. The grader matched "drop customer_name" in a SQL comment.
+orders-column-rename	plugin	2	fail	pass	The migration adds full_name and syncs it by trigger. The grader matched "drop customer_name" in a SQL comment.
+orders-column-rename	prose	2	pass	pass	The migration adds full_name and syncs it by trigger, and renames and drops nothing.
+pricing-call	none	1	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	none	2	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	none	3	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	plugin	1	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	plugin	2	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	plugin	3	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	prose	1	pass	pass	The call forwards the inbound traceparent header.
+pricing-call	prose	2	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	prose	3	fail	fail	The outbound requests.get passes no traceparent.
+request-logging	none	1	fail	fail	The log line is a plain format string with no trace id.
+request-logging	none	2	fail	fail	The log line is a plain format string with no trace id.
+request-logging	none	3	fail	fail	The log line is a plain format string with no trace id.
+returns-api-routes	none	1	fail	fail	The new routes sit at /returns with no version segment.
+returns-api-routes	none	2	fail	fail	The new routes sit at /returns with no version segment.
+returns-api-routes	none	3	fail	fail	The new routes sit at /returns with no version segment.
+stock-alert-rules	none	1	fail	fail	Neither alert names an owner or a first action.
+stock-alert-rules	none	2	fail	fail	Neither alert names an owner or a first action.
+stock-alert-rules	none	3	fail	fail	Neither alert names an owner or a first action.
+stock-alert-rules	plugin	1	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	plugin	2	pass	fail	first_action is "TODO: first action to take" on both alerts.
+stock-alert-rules	plugin	3	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	prose	1	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	prose	2	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	prose	3	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-per-warehouse	none	1	fail	fail	The change is made to /v1/stock in place, and there is no /v2.
+stock-per-warehouse	none	2	fail	fail	The change is made to /v1/stock in place, and there is no /v2.
+stock-per-warehouse	none	3	fail	fail	The change is made to /v1/stock in place, and there is no /v2.
+stock-reserve-endpoint	none	1	fail	fail	No contract is written.
+stock-reserve-endpoint	none	2	fail	fail	No contract is written.
+stock-reserve-endpoint	none	3	fail	fail	No contract is written.
+stock-reserve-endpoint	prose	1	fail	fail	No contract is written. The reply says the API has none.
+stock-v1-retirement	none	2	fail	fail	/v1 sends Sunset and Link headers and no Deprecation header.
+stock-v1-retirement	none	3	fail	fail	/v1 sends Sunset and Link headers and no Deprecation header.
