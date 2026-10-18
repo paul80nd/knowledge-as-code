@@ -34,9 +34,9 @@ _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 
 ### Deletion happens without anyone asking
 
-- A scheduled job **MUST** delete data that has passed its period.
-- That job **MUST** run at least weekly.
-- The job **MUST** record what it deleted, by store and by count.
+- A service **MUST** delete data that has passed its period, without anyone asking.
+- A scheduled job **SHOULD** delete it, at least weekly, unless the store expires data itself.
+- A service **MUST** record each deletion, by store and by count.
 - A backup policy **MUST** expire a backup on the same period as the store it came from.
 
 _**Covers:** `eng:pol-DATA.DELETE`_
@@ -71,7 +71,7 @@ which is what a store does when nobody chooses a period for it.
 ## Conformance checklist
 
 - [ ] Every store keeping payment data has a period written against it in the repository.
-- [ ] The retention job has run in the last week, and its record says what it deleted.
+- [ ] Each store's data past its period is gone, and a record says what was deleted.
 - [ ] A query for tokens last used over 13 months ago returns nothing.
 - [ ] The telemetry platform is configured to 90 days.
 - [ ] An erasure request run against a test customer leaves the ledger entry and removes the name.
@@ -92,7 +92,12 @@ to keep the books without keeping the name.
 
 ## Changelog
 
+- 2026-10-18: a service deletes data past its period without anyone asking. A weekly scheduled job becomes a
+  `SHOULD`, for a store that does not expire data itself.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [HMRC record-keeping for VAT]: https://www.gov.uk/vat-record-keeping
 [The ICO guide to the right to erasure]: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/individual-rights/right-to-erasure/

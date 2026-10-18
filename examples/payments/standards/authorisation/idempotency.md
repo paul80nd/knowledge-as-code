@@ -26,7 +26,8 @@ outcome and charges the customer nothing further.
 ### The caller chooses the key
 
 - A request that authorises, captures or refunds **MUST** include an `Idempotency-Key` header.
-- The caller **MUST** derive the key from the order and the operation, so a retry of one attempt produces the same key.
+- The caller **MUST** send the same key on every retry of one attempt.
+- The caller **SHOULD** derive the key from the order and the operation.
 - A service **MUST** reject a request with no key, rather than treating it as a new payment.
 - The contract **MUST** state the key's format and how long it is honoured.
 
@@ -36,7 +37,8 @@ _**Covers:** `eng:pol-INTC.SPEC`, `eng:pol-RECV.IDEMPOT`_
 
 - A service **MUST** store the key with the outcome before it responds to the first request.
 - A service **MUST** return the stored outcome for a repeated key, with the same status and body.
-- A service **MUST** honour a key for at least 24 hours.
+- A service **MUST** honour a key for the period the contract states.
+- That period **SHOULD** be at least 24 hours.
 - A service **MUST** return `422` where a repeated key arrives with a different amount or a different order, rather than
   charging either one.
 - A service **MUST** pass the key to the PSP as the PSP's own idempotency key, so a retry stops at whichever service has
@@ -87,6 +89,11 @@ payment is lost. With a key, the caller can retry, and the payment is only slow.
 
 ## Changelog
 
+- 2026-10-18: a retry sends the same key, and deriving it from the order and the operation becomes a `SHOULD`. A key
+  is honoured for the period the contract states, and 24 hours becomes a `SHOULD` default.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [The IETF Idempotency-Key header field]: https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/

@@ -88,7 +88,11 @@ issuer's response, so a decision made here would be a second, worse copy of the 
 
 ## Changelog
 
+- 2026-10-18: added the route to depart from a rule.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [EMV 3-D Secure]: https://www.emvco.com/emv-technologies/3-d-secure/
 [std-LEDGER.an-entry-says-what-produced-it]: ../ledger/entries.md#an-entry-says-what-produced-it

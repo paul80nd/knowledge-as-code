@@ -37,7 +37,8 @@ pinned, and each has an assessment in its tool record stating what was checked a
 - A table **MUST** have a header row.
 - A table **MUST** contain data, and never a layout.
 - An image **MUST** have alternative text saying what a reader who cannot see it needs.
-- A diagram **MUST** be followed by prose stating the same information.
+- A diagram **MUST** have a text equivalent stating the same information.
+- That text equivalent **SHOULD** be prose following the diagram.
 - A page **MUST NOT** ask a reader to act on a colour, a shape or a position.
 - A change to a page **MUST** pass the conformance checklist below before it merges.
 
@@ -45,9 +46,11 @@ _**Covers:** `eng:pol-A11Y.CONFORM`, `eng:pol-A11Y.UPFRONT`_
 
 ### The theme owns contrast, focus and keyboard reach
 
-- `theme:` in `mkdocs.yml` **MUST** use the colour schemes Material for MkDocs ships.
-- `palette:` **MUST** offer a light scheme, a dark scheme and the reader's own setting.
-- `docs/assets/extra.css` **MUST NOT** set a colour, a focus outline or a font size.
+- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that
+  its colours meet [WCAG 2.2 AA].
+- `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
+- `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that
+  what it sets meets [WCAG 2.2 AA].
 - The site **MUST NOT** include a template override or a script that changes the theme's keyboard behaviour.
 - `features:` **MUST NOT** turn on an entry that hides content behind a pointer gesture.
 
@@ -139,9 +142,8 @@ header row, so a screen reader announces "validate" as the column heading over t
 - [ ] The page opens on one H1, and every heading below it descends one level at a time.
 - [ ] Every link says where it goes without the sentence around it.
 - [ ] Every table has a header row and contains data.
-- [ ] Every image has alternative text, and every diagram has prose beside it stating the same information.
+- [ ] Every image has alternative text, and every diagram has a text equivalent stating the same information.
 - [ ] No instruction on the page depends on a colour, a shape or a position.
-- [ ] `mkdocs.yml` and `docs/assets/extra.css` set no colour, focus outline or font size of their own.
 - [ ] A new `kac` message says in words what its colour says.
 - [ ] A new `kac` prompt has a flag that supplies its answer.
 - [ ] A pin that moved has an assessment against the version it moved to.
@@ -187,9 +189,15 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 
 ## Changelog
 
+- 2026-10-18: a diagram has a text equivalent, which should be the prose after it. The theme's colour schemes and an
+  `extra.css` setting no colour become `SHOULD`, and a check against WCAG 2.2 AA stands in for either. The three-way
+  `palette:` becomes `SHOULD`.
 - 2026-09-07: sent a deviation to the register this corpus now holds, rather than to the record for the thing that
   changed.
 - 2026-09-07: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [Material for MkDocs]: https://squidfunk.github.io/mkdocs-material/setup/
 [WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/

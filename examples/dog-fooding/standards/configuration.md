@@ -42,7 +42,7 @@ _**Covers:** `eng:pol-EVER.ASSETS`, `eng:pol-EVER.ORPHAN`, `eng:pol-SCRT.EMBED`_
 - `.github/dependabot.yml` **MUST** name every directory containing a manifest that builds this repository, which is
   what [OpenSSF Scorecard]'s `Dependency-Update-Tool` check asks for.
 - Every ecosystem it tracks **MUST** have a `schedule:`.
-- Packages that only move as a set **MUST** be raised as one grouped update.
+- Packages that only move as a set **SHOULD** be raised as one grouped update.
 - A pin Dependabot cannot read **MUST** be named in that file's header comment, with what it pins today.
 
 _**Covers:** `eng:pol-SUPL.REVIEW`, `eng:pol-TRUS.INVENT`, `eng:pol-TRUS.SOURCE`_
@@ -60,19 +60,19 @@ _**Covers:** `eng:pol-AUTV.BLOCK`, `eng:pol-AUTV.INTEG`, `eng:pol-EVER.PARITY`_
 
 ### A file says what it is for, and why each value is what it is
 
-- A configuration file **MUST** open with a comment saying what it is for, or with the
+- A configuration file **SHOULD** open with a comment saying what it is for, or with the
   `# yaml-language-server: $schema=` line naming what describes it.
 - A comment **MUST** give the reason a value is what it is.
-- A comment **MUST NOT** restate the value beside it.
+- A comment **SHOULD NOT** restate the value beside it.
 - Where one line states the reason, a comment **SHOULD** run to one line.
 
 _**Covers:** `eng:pol-EVER.PARITY`_
 
 ### A value living in more than one tree is copied and proved
 
-- A setting every project under `tooling/` takes **MUST** sit in `tooling/Directory.Build.props`.
+- A setting every project under `tooling/` takes **SHOULD** sit in `tooling/Directory.Build.props`.
 - You **MUST** copy a file `manifest.yaml` names into `template/` and into each corpus under `examples/`.
-- You **MUST** run `kac update --check --from ../../` in every corpus after that copy.
+- Every copy **MUST** match its source, as `kac update --check --from ../../` reports in that corpus.
 - You **MUST** read `.schema/` and `template/.plugin/` where they are authored.
 - You **MUST NOT** copy `.schema/` or `template/.plugin/` into a corpus here.
 - A corpus's own configuration **MUST** stay in that corpus.
@@ -129,7 +129,7 @@ the departure is still right.
 - [ ] Every file the change touches is tracked, and contains no credential.
 - [ ] Every dependency it adds names one exact version.
 - [ ] `.github/dependabot.yml` names the directory that manifest sits in.
-- [ ] Every new value has a comment giving its reason, and no comment restates its value.
+- [ ] Every new value has a comment giving its reason.
 - [ ] Any new `.yamllint` override gives the reason it departs from the baseline.
 - [ ] `kac update --check --from ../../` passes in each corpus the change reaches.
 
@@ -158,7 +158,13 @@ Adding a fifth is a decision, not a convenience, so they sit in one file a revie
 
 ## Changelog
 
+- 2026-10-18: a grouped update, the opening comment, a comment that leaves its value alone and
+  `tooling/Directory.Build.props` become `SHOULD`. A copy of a manifest file has to match its source, as
+  `kac update --check` reports in that corpus.
 - 2026-09-02: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [EditorConfig]: https://editorconfig.org
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md

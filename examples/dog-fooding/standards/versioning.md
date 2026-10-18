@@ -89,9 +89,11 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
   producer's `content-version`.
 - That consumer **MUST** move its `version:` range as well wherever the producer is below 1.0.0 and its minor moved.
 - A corpus here **MUST NOT** publish a `content-version` that a committed range in this repository refuses.
-- You **MUST** delete `.imports/` in every consumer before you open the pull request.
-- You **MUST** repack the producer after that delete.
-- You **MUST** run `kac restore` again in every consumer, and read what it reports.
+- You **SHOULD** delete `.imports/` in every consumer before you open the pull request, unless you leave the proof to
+  the pull request's CI run.
+- You **SHOULD** repack the producer after that delete, unless you leave the proof to the pull request's CI run.
+- You **SHOULD** run `kac restore` again in every consumer, unless you leave the proof to the pull request's CI run.
+- You **SHOULD** read what each of those restores reports.
 - A `kac restore` over an `.imports/` you did not delete **MUST NOT** be offered as proof.
 
 _**Covers:** `eng:pol-KNOW.SYNC`_
@@ -155,8 +157,7 @@ restore keeps a folder that already contains 0.10.0.
       changed.
 - [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.
 - [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.
-- [ ] `.imports/` is deleted in `examples/payments` and `examples/dog-fooding`, the producer repacked, and
-      `kac restore` run again. That is what CI sees, because `.imports/` is untracked.
+- [ ] No `kac restore` over an `.imports/` nobody deleted is offered as proof.
 - [ ] `version:` in `manifest.yaml` has moved where a corpus has to respond, and every `upstream.template-version`
       matches it.
 - [ ] A type whose exported files changed shape has moved `version:` under `export:` in its `.schema/<type>.yaml`.
@@ -206,10 +207,15 @@ the sections the export takes. Nothing compares a `shapeVersion` against the fil
 
 ## Changelog
 
+- 2026-10-18: deleting `.imports/`, repacking the producer and restoring again become `SHOULD`, because the pull
+  request's CI restores from a clean checkout. A restore over an `.imports/` you did not delete is still no proof.
 - 2026-09-15: a change confined to a section the export leaves out moves no `content-version`.
 - 2026-09-09: `content-version` moves where a bundled skill changes what it tells a reader to do.
 - 2026-09-09: a field's value format, name, addition or removal moves the component the `export:` block decides.
 - 2026-09-07: initial version, taking the stamp semantics and the consumer-repointing rules from [std-CI].
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [Semantic Versioning 2.0.0]: https://semver.org
 [ctl-0007]: ../controls/0007-corpus-validation.md

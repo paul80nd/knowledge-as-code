@@ -88,7 +88,11 @@ and neither can tell that it happened.
 
 ## Changelog
 
+- 2026-10-18: added the route to depart from a rule.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [ISO 4217]: https://www.iso.org/iso-4217-currency-codes.html
 [std-IDEM.the-caller-chooses-the-key]: ../authorisation/idempotency.md#the-caller-chooses-the-key

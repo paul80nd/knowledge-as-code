@@ -33,7 +33,7 @@ _**Covers:** `eng:pol-DATA.LOGS`, `eng:pol-SCRT.LOGS`_
 
 ### The redaction runs before the sink
 
-- A service **MUST** redact against a list of field names kept in code and covered by a test, rather than against a
+- A service **SHOULD** redact against a list of field names kept in code and covered by a test, rather than against a
   pattern applied where the log is read.
 - A service **MUST** redact a request or response body before it is written.
 - A service **MUST NOT** leave redaction to the log platform, which sees the line only after every copy of it exists.
@@ -62,7 +62,6 @@ searched and backed up. Rotating the key leaves all of those copies as they are.
 
 ## Conformance checklist
 
-- [ ] The redaction field list is in the repository and a test asserts each entry is removed.
 - [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.
 - [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.
 - [ ] Error reports include a request id and no request body.
@@ -81,13 +80,18 @@ standards implement that obligation on purpose: the governance layer's own secre
 
 - **Normative.** [OpenTelemetry semantic conventions] define the attributes a span and a log record use. This standard
   says which of them a payment may fill, and renames none of them.
-- **Informative.** [The OpenTelemetry logs data model] describes the fields a log record has. The redaction list is
+- **Informative.** [The OpenTelemetry logs data model] describes the fields a log record has. A redaction list is
   written against those fields.
 
 ## Changelog
 
+- 2026-10-18: redacting against a list of field names in code becomes a `SHOULD`. Redaction still runs before a
+  line is written.
 - 2026-08-31: names the OpenTelemetry semantic conventions as a normative source.
 - 2026-08-28: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [OpenTelemetry semantic conventions]: https://opentelemetry.io/docs/specs/semconv/
 [The OpenTelemetry logs data model]: https://opentelemetry.io/docs/specs/otel/logs/data-model/

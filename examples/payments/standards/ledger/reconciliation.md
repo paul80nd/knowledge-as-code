@@ -83,6 +83,10 @@ turns a slow drift between the file and the ledger into a break somebody sees th
 
 ## Changelog
 
+- 2026-10-18: added the route to depart from a rule.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [std-LEDGER.nothing-amends-an-entry]: entries.md#nothing-amends-an-entry

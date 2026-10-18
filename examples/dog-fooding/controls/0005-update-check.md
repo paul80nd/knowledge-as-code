@@ -22,8 +22,8 @@ The same file lives in the template and in every corpus. A copy that drifted fai
 
 ## What it checks
 
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says you "**MUST** run
-  `kac update --check --from ../../` in every corpus after that copy".
+* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says every copy "**MUST** match its source,
+  as `kac update --check --from ../../` reports in that corpus".
 
 ## How it works
 
