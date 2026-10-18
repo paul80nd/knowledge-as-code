@@ -85,8 +85,8 @@ _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `
 - The publishing job **MUST** declare `timeout-minutes`.
 - A workflow publishing a version **MUST** declare a `concurrency` group that queues rather than cancels.
 - A branch a workflow publishes **MUST** contain only the files that workflow built.
-- A workflow writing to a branch **SHOULD** empty its worktree, and **SHOULD** prove `git ls-files` returns nothing
-  there before it stages a file.
+- A workflow writing to a branch **SHOULD** empty its worktree before it stages a file.
+- That workflow **SHOULD** prove `git ls-files` returns nothing in the emptied worktree.
 - A person **MUST NOT** edit a published branch, package or release by hand.
 
 _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_

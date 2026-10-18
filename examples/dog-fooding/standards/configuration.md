@@ -160,7 +160,7 @@ Adding a fifth is a decision, not a convenience, so they sit in one file a revie
 
 - 2026-10-18: a grouped update, the opening comment, a comment that leaves its value alone and
   `tooling/Directory.Build.props` become `SHOULD`. A copy of a manifest file has to match its source, as
-  `kac update --check` reports, wherever that check runs.
+  `kac update --check` reports in that corpus.
 - 2026-09-02: initial version.
 
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,

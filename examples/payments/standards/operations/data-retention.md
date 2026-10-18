@@ -34,7 +34,7 @@ _**Covers:** `eng:pol-DATA.LINGER`, `eng:pol-OBSV.RETAIN`_
 
 ### Deletion happens without anyone asking
 
-- Data that has passed its period **MUST** be deleted without anyone asking.
+- A service **MUST** delete data that has passed its period, without anyone asking.
 - A scheduled job **SHOULD** delete it, at least weekly, unless the store expires data itself.
 - A service **MUST** record each deletion, by store and by count.
 - A backup policy **MUST** expire a backup on the same period as the store it came from.
@@ -92,8 +92,8 @@ to keep the books without keeping the name.
 
 ## Changelog
 
-- 2026-10-18: data past its period is deleted without anyone asking. A weekly scheduled job becomes a `SHOULD`, for a
-  store that does not expire data itself.
+- 2026-10-18: a service deletes data past its period without anyone asking. A weekly scheduled job becomes a
+  `SHOULD`, for a store that does not expire data itself.
 - 2026-08-31: initial version.
 
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,

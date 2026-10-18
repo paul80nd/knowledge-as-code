@@ -46,8 +46,8 @@ _**Covers:** `eng:pol-A11Y.CONFORM`, `eng:pol-A11Y.UPFRONT`_
 
 ### The theme owns contrast, focus and keyboard reach
 
-- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows a
-  contrast check against WCAG 2.2 success criterion 1.4.3.
+- `theme:` in `mkdocs.yml` **SHOULD** use the colour schemes Material for MkDocs ships, unless the change shows that
+  its colours meet [WCAG 2.2 AA].
 - `palette:` **SHOULD** offer a light scheme, a dark scheme and the reader's own setting.
 - `docs/assets/extra.css` **SHOULD NOT** set a colour, a focus outline or a font size, unless the change shows that
   what it sets meets [WCAG 2.2 AA].
@@ -144,8 +144,6 @@ header row, so a screen reader announces "validate" as the column heading over t
 - [ ] Every table has a header row and contains data.
 - [ ] Every image has alternative text, and every diagram has a text equivalent stating the same information.
 - [ ] No instruction on the page depends on a colour, a shape or a position.
-- [ ] A colour, focus outline or font size set in `mkdocs.yml` or `docs/assets/extra.css` has a check against
-      WCAG 2.2 AA behind it.
 - [ ] A new `kac` message says in words what its colour says.
 - [ ] A new `kac` prompt has a flag that supplies its answer.
 - [ ] A pin that moved has an assessment against the version it moved to.

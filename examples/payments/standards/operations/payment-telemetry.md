@@ -80,7 +80,7 @@ standards implement that obligation on purpose: the governance layer's own secre
 
 - **Normative.** [OpenTelemetry semantic conventions] define the attributes a span and a log record use. This standard
   says which of them a payment may fill, and renames none of them.
-- **Informative.** [The OpenTelemetry logs data model] describes the fields a log record has. The redaction list is
+- **Informative.** [The OpenTelemetry logs data model] describes the fields a log record has. A redaction list is
   written against those fields.
 
 ## Changelog

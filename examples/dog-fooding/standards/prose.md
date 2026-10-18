@@ -30,12 +30,13 @@ shape on top of them.
 - A sentence **SHOULD** state the rule or the fact before the reason.
 - An instruction **SHOULD** come before the reason for taking it.
 - A purpose or a condition deciding whether to act **MUST** come before the instruction it governs.
-- A verb **SHOULD** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*. *Hold to*, *carry*,
-  *name*, *answer*, *reach* and *seal* **SHOULD NOT** stand in for one. *Holds* has four plain replacements: *has*,
-  *contains*, *keeps* and *checks*. *Carries* has *has*, *contains*, *includes* and *states*.
+- A verb **SHOULD** be literal. A command *lists*, *checks*, *writes*, *reports* or *rejects*.
+- *Hold to*, *carry*, *name*, *answer*, *reach* and *seal* **SHOULD NOT** stand in for a plain verb. *Holds* has four
+  plain replacements: *has*, *contains*, *keeps* and *checks*. *Carries* has *has*, *contains*, *includes* and *states*.
 - A word on that list **MAY** appear where it is itself the plain verb. A heading *names* a topic, a standard *cites*
   a clause, and a service *returns* what a caller asked for.
-- A sentence **SHOULD** state one idea, and an instruction **SHOULD** give one step.
+- A sentence **SHOULD** state one idea.
+- An instruction **SHOULD** give one step.
 - A heading **MUST** name its topic, because a rule heading in a standard becomes its clause id.
 - A heading **SHOULD** be in sentence case.
 - Three or more parallel items **SHOULD** be a list or a table.
@@ -143,8 +144,11 @@ checkout with no corpus in it. This standard is the record the estate cites.
 ## Changelog
 
 - 2026-10-18: the order of a fact and its reason, the plain verb, one idea per sentence, sentence case, lists, *you*,
-  the gloss, figures of speech, one reason, citing, rewriting the block, the imperative subject line and the diff in a
-  pull request body become `SHOULD`. The base guide, the uniformity rules and what prose must not change stay `MUST`.
+  figures of speech, one reason, rewriting the block, the imperative subject line and the diff in a pull request body
+  become `SHOULD`. The gloss is owed unless the page links the glossary entry, and reasoning is cited unless the reader
+  may not have the source. A heading still names its topic, because a rule heading becomes a clause id. The base
+  guide, the house spelling, dash, wrap, naming and contrast rules, and every rule on what prose must not change stay
+  `MUST`.
 - 2026-09-22: separated a purpose from a reason, and stated where each one sits around an instruction.
 - 2026-09-11: replaced the restated rulebook with the Microsoft Writing Style Guide as the base, plus the local changes.
 - 2026-09-06: took the wrapping, generated-block, write-what-exists and schema-precedence rules that `CLAUDE.md` had

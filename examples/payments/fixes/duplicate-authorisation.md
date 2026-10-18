@@ -8,7 +8,7 @@ applies-to:
   - svc-payment-api
   - svc-payment-ledger
 verified:
-  - { at: 2026-08-29T14:10:00Z, by: human:alex.doe }
+  - { at: 2026-10-18T19:30:00Z, by: human:alex.doe }
 review-by: "2027-03-09"
 owner: human:alex.doe
 tags: [ authorisation, idempotency, retries ]
@@ -32,8 +32,8 @@ Any caller of the `POST /authorisations` endpoint that retries after a timeout, 
 ## Cause
 
 The caller generated a fresh `Idempotency-Key` for each attempt, so [svc-payment-api] took the second request for a new
-payment. [std-IDEM] requires a key derived from the order and the operation. A fresh UUID per attempt fills the header
-and breaks that rule.
+payment. [std-IDEM] requires a caller to send the same key on every retry of one attempt. A fresh UUID per attempt fills
+the header and breaks that rule.
 
 ## Resolution
 

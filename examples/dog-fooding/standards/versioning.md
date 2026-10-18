@@ -92,8 +92,8 @@ _**Covers:** `eng:pol-KNOW.DOCS`_
 - You **SHOULD** delete `.imports/` in every consumer before you open the pull request, unless you leave the proof to
   the pull request's CI run.
 - You **SHOULD** repack the producer after that delete, unless you leave the proof to the pull request's CI run.
-- You **SHOULD** run `kac restore` again in every consumer, and read what it reports, unless you leave the proof to the
-  pull request's CI run.
+- You **SHOULD** run `kac restore` again in every consumer, unless you leave the proof to the pull request's CI run.
+- You **SHOULD** read what each of those restores reports.
 - A `kac restore` over an `.imports/` you did not delete **MUST NOT** be offered as proof.
 
 _**Covers:** `eng:pol-KNOW.SYNC`_
@@ -157,7 +157,7 @@ restore keeps a folder that already contains 0.10.0.
       changed.
 - [ ] Every consumer of a corpus whose `content-version` moved has moved its `resolved:` lock.
 - [ ] Every consumer of a producer below 1.0.0 whose minor moved has moved its `version:` range as well.
-- [ ] `kac restore` passes on a clean checkout of every consumer, run locally or in the pull request's CI.
+- [ ] No `kac restore` over an `.imports/` nobody deleted is offered as proof.
 - [ ] `version:` in `manifest.yaml` has moved where a corpus has to respond, and every `upstream.template-version`
       matches it.
 - [ ] A type whose exported files changed shape has moved `version:` under `export:` in its `.schema/<type>.yaml`.
