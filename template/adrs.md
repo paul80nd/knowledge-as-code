@@ -38,8 +38,8 @@ its id.
 One ADR records one decision. Decision states the choice in a sentence or two, and Consequences say what it commits you
 to. How to carry the decision out belongs in a standard or a process that cites the ADR.
 
-An accepted ADR never changes. A later ADR supersedes it. New ADRs arrive a few times a year, when a decision affects
-more than one repository.
+An accepted ADR changes only its status, when a later ADR supersedes it. New ADRs arrive a few times a year, when a
+decision affects more than one repository.
 
 ## Metadata
 

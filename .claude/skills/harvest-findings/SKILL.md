@@ -270,23 +270,22 @@ A finding saying the answer is wrong is `kac:route-record`.
 ### 5. Read the level of detail
 
 **Read `## Level of detail and cadence` on the type page of the record the finding touches.** The page is
-`<folder>.md` at the corpus root. The section says what one step, rule or part of that type contains, and which type
-contains the finer detail.
+`<folder>.md` at the corpus root. The section says what one step, rule or part of that type contains, and where finer
+detail belongs.
 
-**Judge whether the finding asks for detail below that level.** Most findings asking for one more step do. Each step
-added fits the record to one case and makes it longer for every other reader. A finding at the record's level goes on
-to step 6 as it is. Answer a below-level finding with the first of these that fits:
+**Judge whether the finding asks for detail below that level.** Each step added fits the record to one case and makes
+it longer for every other reader. A finding at the record's level goes on to step 6 as it is. Mark a below-level
+finding with the first of these that fits, and step 6 routes it:
 
-1. **Narrow it.** A word of the record is wrong or missing at its own level: an outcome too vague to act on, or a reason
-   that does not reach the case. The route is `kac:route-record`, and the draft refines that step, rule or part.
-2. **Redirect it.** Another type is written at the level the finding asks for: a command goes to a runbook or a fix,
-   and a mechanism goes to a standard's **SHOULD** or a control. The route is `kac:route-record`, for a record of that
-   type. Where the corpus declined that type, step 6 makes it `kac:route-unclear`.
-3. **Settle it.** The record is right at its level, and the finding adds a detail only its own case needed. The route
-   is `kac:route-none`.
+1. **Narrowed.** A word of the record is wrong or missing at its own level: an outcome too vague to act on, or a reason
+   that does not reach the case. The draft refines that step, rule or part.
+2. **Redirected.** Another type in this corpus is written at the level the finding asks for: a command goes to a
+   runbook or a fix, and a mechanism goes to a standard's **SHOULD** or a control. The draft is a record of that type.
+3. **Settled.** The record is right at its level, and the finding adds a detail only its own case needed, or detail the
+   section sends to a repository.
 
-**Where the type page has no such section, say so in the table and skip this step.** A corpus may have rewritten the
-page it was seeded with.
+**Where the type page has no such section, say so in the comment and go on to step 6.** A corpus may have rewritten
+the page it was seeded with.
 
 ### 6. Choose the route
 
@@ -300,8 +299,8 @@ Work down this list and take the first that fits.
 4. **It says a record here is wrong or missing, or step 5 narrowed or redirected it.** `kac:route-record`.
 5. **Anything else.** `kac:route-unclear`.
 
-**A finding asking for a type this corpus declined is `kac:route-unclear`.** Adopting a type is a decision a person
-takes, so say in the comment which type it would need.
+**A finding asking for a type this corpus declined is `kac:route-unclear`, whichever item above it matched.** Adopting a
+type is a decision a person takes, so say in the comment which type it would need.
 
 **A misfiled finding is not always on the wrong tracker.** Compare that corpus's tracker in
 `.imports/<shortcode>/manifest.json` with this corpus's. Where they differ, the ticket has to move, and the comment
@@ -454,8 +453,8 @@ written. Read it and decide which.
 the record's `## Changelog` where it has one, newest first, naming the issue.
 
 **Write the edit at the type's level.** `## Level of detail and cadence` on the type page states it, and the triage
-comment names the step, rule or part to refine. Rework that part, or its reason, before you add another. A sharper
-outcome fits the next case as well, and an added step fits one.
+comment names the step, rule or part to refine. Rework that part, or its reason, before you add a new step, rule or
+part. A sharper outcome fits the next case as well, and an added step fits one.
 
 **A new record: start from the type's `_template.md`.** It sits in the folder the record goes in, and states every field
 that type needs and what each one takes. Follow it rather than copying a neighbouring record.

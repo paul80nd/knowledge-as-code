@@ -28,9 +28,9 @@ can act on alone, and acting on it alone is how an incident gets worse.
 **`last-rehearsed` and `rehearsal-frequency` go together.** A date says nothing about staleness without the cadence you
 read it against, so the two travel as a pair.
 
-**A type page states its level of detail and cadence, and the schema does not.** The section says what one step, rule
-or part contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a
-finding, so no field declares it and no rule reads it.
+**A type page states its level of detail and cadence in prose.** The section says what one step, rule or part
+contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a finding,
+so no field declares it and no rule reads it.
 
 ## The types
 

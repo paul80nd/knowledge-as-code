@@ -38,10 +38,10 @@ the evaluation we already did.
 ## Level of detail and cadence
 
 One record describes one tool: its status, what you use it for, and the version range you stand behind. How to install
-or configure it belongs in a process, or in the tool's own documentation.
+or configure it belongs in the tool's own documentation.
 
-A record changes when you adopt, deprecate or reject the tool, or move its version range. New records arrive when a
-team proposes a tool.
+A record changes when you approve, trial, deprecate or reject the tool, or move its version range. New records arrive
+when a team proposes a tool.
 
 ## Metadata
 

@@ -47,9 +47,9 @@ Each row is a hypothesis until a trial confirms it.
 
 ## Cadence and delivery
 
-Each type page states how often its records change, and how often new ones arrive. A type that changes once a year can
-be built into what ships. A type that changes with every incident is better read live. [Story #946][s946] decides how
-the fast types reach an agent. Tracked in [epic #940][e940].
+A type whose records change once a year can be built into what ships. A type whose records change with every incident
+is better read live. [Story #946][s946] decides how the fast types reach an agent, using the cadence each type page
+states. Tracked in [epic #940][e940].
 
 ## The example corpora as exemplars
 

@@ -57,8 +57,7 @@ the shared one still reads correctly in a corpus that never had the other half.
 Each term has one definition, with the words to avoid and what the term does not mean. How the thing it names works
 belongs in an explanation.
 
-A term changes rarely, once the language has settled. New terms arrive when a team finds a word it has been using two
-ways.
+A term changes rarely, once a team has agreed it. New terms arrive when a team finds a word it has been using two ways.
 
 ## Adding a term
 

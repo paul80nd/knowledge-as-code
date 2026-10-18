@@ -54,8 +54,9 @@ sees what was taken against it, so an auditor reads every corpus in the estate r
 
 ## Level of detail and cadence
 
-One deviation covers one departure from one rule, for a stated scope and a stated period. It says what you do
-instead and what compensates for it. How the work itself is done belongs in the repository doing it.
+One deviation covers one departure, from the clauses it names or from no stated rule, for a stated scope and a stated
+period. It says what you do instead and what compensates for it. How the work itself is done belongs in the repository
+doing it.
 
 A deviation changes at its review and when it closes. New deviations arrive whenever a team has to depart from a rule.
 

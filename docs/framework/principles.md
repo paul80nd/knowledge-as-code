@@ -137,8 +137,8 @@ The writer, the agent and whoever triages a finding all read it. A finding refin
 adds detail below it. A step added for one case makes the record longer for every other reader. The level is guidance
 for whether a record feels right, so nothing fails a record on it.
 
-The same section states how often a record of the type changes, and how often new ones arrive. An accepted ADR never
-changes, and a fix arrives with each problem somebody solves.
+The same section states how often a record of the type changes, and how often new ones arrive. An accepted ADR
+changes only its status. A fix arrives with each problem somebody solves.
 
 ## Readable and writable by agents
 

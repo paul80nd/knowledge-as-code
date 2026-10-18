@@ -43,7 +43,8 @@ One control describes one mechanism: what it checks, how it runs, and the eviden
 verifies and leaves their wording to the record that states them. The code of the check lives in the repository that
 runs it.
 
-A control changes when the check or the pipeline running it changes. New controls arrive when a rule gains a check.
+A control changes when the check or the pipeline running it changes. A manual control also changes each time somebody
+runs it, because `last-verified` records the day. New controls arrive when a rule gains a check.
 
 ## A control or a skill
 

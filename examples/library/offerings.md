@@ -44,10 +44,10 @@ Related but different:
 
 ## Level of detail and cadence
 
-One record describes one thing you offer a customer: who it is for, why it exists, and where they reach it. It links
-to what implements, tests and constrains it, and the detail of each belongs in the record it links to.
+One record describes one thing you offer a customer: who it is for, why it exists, and where they reach it. It links to
+what implements, tests and constrains it, and the detail of each belongs in the record it links to.
 
-An offering changes when the product strategy changes, which is rare. New offerings arrive rarely.
+An offering changes when the product strategy changes. New offerings arrive rarely.
 
 ## Metadata
 
