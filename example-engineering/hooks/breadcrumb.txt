@@ -1,4 +1,4 @@
-example-engineering 0.32.0 travels with this session as data, exported 2026-10-18.
+example-engineering 0.33.0 travels with this session as data, exported 2026-10-18.
 adrs. 1 record: Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to.
 controls. 9 records: Nothing checks that an image is named by digest, Nothing checks that a running service reports its commit, Nothing checks that an alert names an owner and a first action, Nothing checks that a skipped test cites a deviation, Nothing checks that an interface change carries a version and a notice and 4 more.
 glossary. 33 entries across 2 records: Engineering and Knowledge as code.
