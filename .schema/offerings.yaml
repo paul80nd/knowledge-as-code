@@ -34,7 +34,7 @@ lineage:
     offering is read from the outside, so `Surfaces` names where a customer meets it. `feature-files` ties an offering
     to the tests that prove it, and `spans-more-than-one-service` warns where one service delivers the whole of it.
     Neither has a counterpart in any of the three sources. A GOV.UK start page also tells the user what a service costs
-    and how long it takes. An offering is read by the estate and not by somebody starting the task, so it states neither
+    and how long it takes. The reader of an offering is the estate, so it states neither
 id:
   prefix: ofr
   style: slug

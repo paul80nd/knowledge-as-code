@@ -70,11 +70,11 @@ None in this catalogue, so this record has no `depends-on` field. Its downward d
 ## Data
 
 **The legacy database**, which this service maps and does not own. The legacy library management system still writes
-to it directly. Three data domains live there, and each records that second writer:
+to it directly. Three data domains live there:
 
-* [dat-borrowers], in the `BORROWER` table family
-* [dat-loans], in the `CIRC` table family
-* [dat-payments], in the `FIN` table family
+* [dat-borrowers]
+* [dat-loans]
+* [dat-payments]
 
 ## Operational notes
 

@@ -72,7 +72,7 @@ service, so neither is an edge. Each integration names this service in its `used
 ## Data
 
 This service owns the catalogue database, `sqldb-catalogue-<env>`, configured as `ConnectionStrings__Catalogue`.
-[dat-catalogue] describes it. This service designed that schema, and [svc-lending] does not map it.
+[dat-catalogue] describes it.
 
 The account-management and loan-history offerings are compiled into this application, so their stores are read through
 it too. **Which stores those are, and whether they are the legacy database [svc-lending] maps, is an open question.**

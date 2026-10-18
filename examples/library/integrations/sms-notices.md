@@ -65,6 +65,6 @@ nowhere to go.
 * [itg-mail-delivery] took what this used to send.
 * [ofr-borrowing] is the offering the due-date reminder belonged to.
 
-[ofr-borrowing]: ../offerings/borrowing.md
 [itg-mail-delivery]: mail-delivery.md
+[ofr-borrowing]: ../offerings/borrowing.md
 [svc-notices]: ../services/notices.md

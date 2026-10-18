@@ -24,8 +24,7 @@ lineage:
     30(2) asks a vendor contract for a description of the service, a service level and a notice period: `What it does`,
     `their-sla` and `Commercials`. `Exit` and `successor` answer Article 30(3)(f), on moving to another supplier.
     `criticality` grades an integration the way Article 28(3) separates a critical or important function from the rest.
-    The `servers`, security schemes and `externalDocs` of an OpenAPI or AsyncAPI document are the endpoint, auth and
-    docs rows of `Contract`
+    The `servers`, security schemes and `externalDocs` of an OpenAPI or AsyncAPI document are what `Contract` records
   divergence: >
     *Release It!* is a pattern book. Its remedies are timeouts and circuit breakers, which a service implements and a
     vendor record does not state. DORA's register is a supervisory return of machine-readable fields, and this is a

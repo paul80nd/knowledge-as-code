@@ -48,7 +48,7 @@ nobody has filled them in.
 ## Dependencies
 
 None. It consumes from the bus and calls the mail provider, [itg-mail-delivery]. The library does not deploy that
-provider, so it is an integration and not an edge.
+provider, so it is an integration.
 
 ## Data
 

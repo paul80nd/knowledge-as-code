@@ -26,7 +26,7 @@ lineage:
     asks you to review retained personal data regularly. [NIST SP
     800-53r5](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final) RA-2 asks that a categorisation be revisited.
     `review-by` answers both. The Open Data Contract Standard states a dataset's purpose and its retention, which
-    `Purpose` and `retention` state
+    `Purpose` and `retention` record
   divergence: >
     Article 30 is organised by processing activity and by controller, and this type by data domain. **A Data document is
     not a ROPA and does not satisfy Article 30**: it names no controller, no representative and no data protection
@@ -36,7 +36,7 @@ lineage:
     the sources ask separately: ISO/IEC 27002:2022 5.12 grades confidentiality, and GDPR Article 9 names a category.
     Neither the ICO nor RA-2 sets a review interval, so `review-by` fixes one per document. The Open Data Contract
     Standard classifies each property of a schema, where this type grades the domain once and leaves the schema with the
-    code. Its SLA properties promise freshness, latency and availability, which a register of domains does not state,
+    code. Its SLA properties promise latency, frequency and availability, which a register of domains does not state,
     and it has no review date
 notes: >
   The folder is singular because English gives `data` no plural. `glossary/` is the other singular folder in the

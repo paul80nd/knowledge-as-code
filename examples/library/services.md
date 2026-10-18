@@ -21,7 +21,7 @@ what talks to it?* A service document answers it.
 ## Scope
 
 One document per **deployable unit**, not per repository and not per feature. A repository containing three
-independently deployed apps gets three documents. An offering spanning six services gets a
+independently deployed apps gets three documents. An offering spanning six services gets an
 [offering](offerings.md) document that links to all six.
 
 **Where one pipeline publishes several artefacts that differ only in the content they carry, that pipeline is the
