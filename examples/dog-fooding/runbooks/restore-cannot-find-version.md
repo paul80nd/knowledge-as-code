@@ -23,7 +23,8 @@ tags: [ imports, restore, versioning ]
 
 * `kac restore` prints `restore: ../engineering/.dist/package holds no package for example-engineering <version>.` and
   exits 1.
-* `kac validate` fails in `examples/payments` or `examples/dog-fooding`, and says to run `kac restore` first.
+* `kac validate` fails in `examples/payments` or `examples/dog-fooding` with `[import-restored]`, and says
+  ``.imports/eng/ holds no export. Run `kac restore`.``
 * The `corpora` job in `kac.yml` fails at **Restore what this corpus consumes**, for those two corpora only. `library`
   and `engineering` consume nothing, so they pass.
 
@@ -46,7 +47,7 @@ nothing merges.
 * **No** → the producer has never been packed in this checkout. Go to [Resolution](#resolution) and start at step 1.
 * **Yes** → continue.
 
-**Does that folder contain a `.nupkg` for the version in the message?**
+**Does that folder contain a `.nupkg` for the version in the message?** List it from the root of the repository:
 
 ```sh
 ls examples/engineering/.dist/package
@@ -58,28 +59,36 @@ ls examples/engineering/.dist/package
 
 ## Resolution
 
-1. Rebuild the producer's package:
+1. Rebuild the producer's package, from `examples/engineering`:
 
    ```sh
-   cd examples/engineering
    dotnet run --project ../../tooling/kac -- export
    dotnet run --project ../../tooling/kac -- pack
    ```
 
-   The last line reports the version it packed. Every consumer has to ask for that version.
+   `pack` prints `pack: sealed <n> file(s) as example-engineering <version>, cited as 'eng:'.` Every consumer has to
+   ask for that version. The package is rebuilt from the records, so this step needs no undo.
 
 2. Open `.corpus.yaml` in `examples/payments`.
 3. Set `resolved:` to the version step 1 reported.
 4. Where the minor moved, set `version:` to a range that admits it. Below 1.0.0 a caret pins the minor, so `^0.10.0`
    does not admit `0.11.0`.
 5. Repeat steps 2 to 4 in `examples/dog-fooding`.
-6. Delete `.imports/` in both consumers. A restore keeps a folder that already has the version it resolved to.
-7. Run the restore again in each consumer:
+6. Delete `.imports/` in both consumers. A restore keeps a folder that already has the version it resolved to, and the
+   next step writes the folder again.
+7. Run the restore again, from `examples/payments` and then from `examples/dog-fooding`:
 
    ```sh
-   cd examples/payments
    dotnet run --project ../../tooling/kac -- restore
    dotnet run --project ../../tooling/kac -- validate
+   ```
+
+   `restore` prints `restore: example-engineering <version> as 'eng:'.` and writes `resolved:` into `.corpus.yaml`.
+   `validate` reports `0 error(s)`. To undo steps 3 to 7, run this from the root of the repository. It also discards
+   any other uncommitted edit to either file:
+
+   ```sh
+   git checkout -- examples/payments/.corpus.yaml examples/dog-fooding/.corpus.yaml
    ```
 
 Confirmed when both consumers restore and validate with no errors. If a step does not do what it says,

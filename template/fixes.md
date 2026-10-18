@@ -48,8 +48,9 @@ Other boundaries:
 One fix matches one symptom to one verified resolution, usually one or two steps a reader can run. A problem that needs
 a diagnosis tree and an escalation path is a runbook.
 
-A fix changes when somebody verifies it again, or when the resolution stops working. New fixes arrive with each problem
-somebody solves.
+A fix changes when somebody verifies it again, or when the resolution stops working. A reader who applies a fix and
+sees the symptom clear has verified it again. They add a `verified` entry, or move the `at` on the one they have. New
+fixes arrive with each problem somebody solves.
 
 ## Metadata
 
@@ -76,7 +77,8 @@ somebody solves.
    people search for.
 2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
 3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Fill `Environment` with the tool, the operating system and the versions you were running.
+4. Fill `Environment` with the tool, the operating system and the versions the fix is known to apply to, at the
+   precision that changes the answer. Give a build number only where the behaviour depends on it.
 5. Add a `verified` line naming who checked the resolution and the moment they did it. Leave the key out on a
    `draft`.
 6. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.

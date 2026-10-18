@@ -59,8 +59,9 @@ what someone will paste into a search.
 
 ## Environment
 
-What you were running when it happened. Name the tool, the operating system and the version, as precisely as you can.
-A reader matches on this to tell whether the fix is theirs.
+The tool, the operating system and the versions the fix is known to apply to, at the precision that changes the
+answer. Give a build number only where the behaviour depends on it. A reader matches on this to tell whether the fix is
+theirs.
 
 ## Cause
 

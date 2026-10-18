@@ -5,7 +5,7 @@ tier: normative
 status: active
 symptom-keywords: [ editorconfig, formatting, ide, indent, reformat, rider, wrapping ]
 verified:
-  - { at: 2026-09-18T11:40:00Z, by: human:paul.law }
+  - { at: 2026-10-18T20:25:37Z, by: human:paul.law }
 review-by: "2027-03-09"
 owner: human:paul.law
 sources:
@@ -25,8 +25,8 @@ using the settings it already read.
 
 ## Environment
 
-JetBrains Rider, with the repository already open in it. The `.editorconfig` edit is made from a terminal, outside the
-IDE.
+JetBrains Rider 2026.2 on macOS 26, with the repository already open in it. The `.editorconfig` edit is made from a
+terminal, outside the IDE.
 
 ## Cause
 

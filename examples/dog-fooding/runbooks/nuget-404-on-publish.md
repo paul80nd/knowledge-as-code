@@ -61,11 +61,13 @@ Nobody can install `kac` at the new version. An installation already on an older
 that push from failing, but it does not make the version appear.
 
 1. Wait fifteen minutes from the time the publish step reported success.
-2. Ask the flat container which versions it now has:
+2. Ask the flat container which versions it now has. Run it from any directory:
 
    ```sh
    curl -s https://api.nuget.org/v3-flatcontainer/knowledgeascode.tool/index.json | jq -r '.versions[]'
    ```
+
+   It prints one version per line, oldest first.
 
 3. Confirm the version is in that list.
 4. From a directory that is not a corpus, install it:
@@ -75,7 +77,10 @@ that push from failing, but it does not make the version appear.
    kac --version
    ```
 
-Confirmed when `kac --version` prints the version you published. If a step does not do what it says,
+   `kac --version` prints the version, then `+` and the commit it was built from. To go back to the version you had,
+   run `dotnet tool uninstall --global KnowledgeAsCode.Tool`, then install that version with the command above.
+
+Confirmed when `kac --version` opens with the version you published. If a step does not do what it says,
 [escalate](#escalation).
 
 ## Escalation

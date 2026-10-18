@@ -37,17 +37,21 @@ Nothing in production. The branch stays red, so nothing on it merges until the d
 The export golden is a contract a consumer reads.
 
 1. Read the scenario name out of the failing line.
-2. Run that scenario on its own:
+2. Run that scenario on its own, from the root of the repository, the way CI runs it:
 
    ```sh
-   dotnet run tooling/kac-tests.cs -- <name>
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- <name>
    ```
 
-3. Note whether the run reports a generated file, an export path, or a missing expectation.
+   CI sets `GITHUB_ACTIONS`, and a tool the suite runs can read it, so a run without it can pass where CI fails. The
+   suite matches the name as a substring, so it runs every scenario whose name contains it. `export` runs `export`,
+   `export-inherited` and `export-policies`. Each scenario prints one line opening `ok`, `FAIL` or `MISSING`.
+
+3. Note whether each `FAIL` reports a generated file, an export path, or a missing expectation.
 
 ## Diagnosis
 
-**Does the failure reproduce on your machine?**
+**Did step 2 of the immediate actions reproduce the failure?**
 
 * **Yes** → continue.
 * **No** → the three layers assert different things about the same corpus. A regenerated golden can leave you green here
@@ -73,16 +77,22 @@ The export golden is a contract a consumer reads.
 
 ## Resolution
 
-1. Regenerate the one scenario that failed, never the whole set:
+Run steps 1 to 4 from the root of the repository.
+
+1. Regenerate the scenario that failed:
 
    ```sh
-   dotnet run tooling/kac-tests.cs -- --update <name>
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- --update <name>
    ```
+
+   It prints one line opening `UPDATE` for each scenario it regenerated. The name is a substring, so check that every
+   line names a scenario you meant to regenerate. `git checkout -- tooling/tests/fixtures/` undoes the regeneration,
+   along with any other uncommitted change there.
 
 2. Read the diff line by line:
 
    ```sh
-   git diff tooling/tests/fixtures/<name>
+   git diff tooling/tests/fixtures/
    ```
 
 3. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you have
@@ -92,10 +102,14 @@ The export golden is a contract a consumer reads.
    ```sh
    dotnet test tooling/kac.tests
    dotnet test tooling/kac.features
-   dotnet run tooling/kac-tests.cs
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs
    ```
 
-5. Run `kac generate` in each corpus you changed, and in `template/`.
+   The first two each end on a summary line opening `Passed!`. The golden suite ends `all <n> scenario(s) passed.`
+
+5. Run `kac generate` in each corpus you changed, and in `template/`. Each run ends
+   `updated <n> of <m> generated file(s).`, or `generated files already up to date; nothing written.` where nothing
+   moved. Every file it writes is derived from the records, so this step needs no undo.
 6. Say in the commit message why the golden moved.
 
 Confirmed when all three layers pass and the diff contains only lines you can account for. If a step does not do what
