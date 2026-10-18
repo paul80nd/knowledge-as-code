@@ -34,7 +34,7 @@ Any knowing departure from a `MUST` or `MUST NOT` in a policy here, or in a stan
 environment. Also, any shortcut taken knowing someone will have to undo it, any gap an external review, audit or
 oversight process finds in what engineering does, and any finding of engineering's own whose implications reach beyond
 the system it was found in. This binds whether the departure is permanent, temporary, or made under pressure during an
-incident.
+incident. A departure from a `SHOULD` needs its reason stated in the change, and no deviation.
 
 ## Clauses
 

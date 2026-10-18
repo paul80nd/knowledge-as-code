@@ -50,8 +50,8 @@ field and says what each one holds.
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 **The closing line.** Keep the line after the Changelog in every standard. It tells a reader how to depart from a
-rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, point
-it at the person who accepts a departure.
+rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, leave
+"deviation" unlinked, because the `request-deviation` skill files the request on the tracker the corpus names.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
