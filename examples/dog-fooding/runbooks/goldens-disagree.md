@@ -5,8 +5,9 @@ tier: procedural
 status: active
 applies-to: [ svc-kac ]
 severity: sev3
-last-rehearsed: "never"
+last-rehearsed: "2026-10-18"
 rehearsal-frequency: on-change
+rehearsal-method: tabletop
 requires-tools:
   - A .NET 10 SDK
   - A checkout of this repository
@@ -20,10 +21,14 @@ tags: [ goldens, testing ]
 
 ## Symptoms
 
-* `dotnet run tooling/kac-tests.cs` exits 1 and prints one of:
-  * `FAIL <name>: committed generated files do not match the generator.`
+* `dotnet run tooling/kac-tests.cs` exits 1 and prints a line opening `FAIL` and naming the scenario. What differs
+  follows on the same line or on the indented lines under it. For example:
+  * `committed generated files do not match the generator.`, on the `FAIL` line itself
   * `the export no longer writes <path>: what a consumer reads has changed`
+  * `the export writes <path>, which the committed copy does not hold: a new file for a consumer`
+  * `<path> differs from the committed export: <the first difference>`
   * `no expectation for <what> at <file>. run with --update, then read the diff`
+* It prints `MISSING <name>: no golden.`
 * One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.
 * The branch is green on your machine and red in CI.
 
@@ -36,22 +41,53 @@ Nothing in production. The branch stays red, so nothing on it merges until the d
 **Do not run `--update` before you have read what changed.** Regenerating a golden accepts whatever the tool now emits.
 The export golden is a contract a consumer reads.
 
-1. Read the scenario name out of the failing line.
-2. Run that scenario on its own:
+1. Read the scenario name from the line opening `FAIL`. Where only `dotnet test` failed, there is no name, so run
+   step 2 without one.
+2. Run that scenario on its own, from the root of the repository, the way CI runs it:
 
    ```sh
-   dotnet run tooling/kac-tests.cs -- <name>
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- <name>
    ```
 
-3. Note whether the run reports a generated file, an export path, or a missing expectation.
+   CI sets `GITHUB_ACTIONS`, and a tool the suite runs can read it, so a run without it can pass where CI fails. The
+   suite matches the name as a substring, so it runs every scenario whose name contains it. `export` runs
+   `export`, `export-inherited` and `export-policies`. Each scenario prints one line opening `ok`, `FAIL` or
+   `MISSING`.
+
+3. Note whether each `FAIL` reports a generated file, an export path, or a missing expectation.
 
 ## Diagnosis
 
-**Does the failure reproduce on your machine?**
+**Does a line under `FAIL` say `the export no longer writes`?**
+
+* **Yes** → a consumer that reads that path breaks. Restore the path and leave the golden alone. If you cannot restore
+  it, [escalate](#escalation).
+* **No** → continue.
+
+**Did only `dotnet test` fail, and does it fail on your machine as well?**
+
+```sh
+dotnet test tooling/kac.tests
+```
+
+* **Yes** → the golden suite is not the cause. The failing test's message says what to change. Change it, then go to
+  [Resolution](#resolution) and start at step 4.
+* **No** → continue.
+
+**Did step 2 of the immediate actions reproduce the failure?**
 
 * **Yes** → continue.
-* **No** → the three layers assert different things about the same corpus. A regenerated golden can leave you green here
-  and red in CI. Go to [Resolution](#resolution) and start at step 4.
+* **No** → the unit layer's history guards compare your branch with `origin/main`, which is only as new as your last
+  fetch. CI compares it with the pull request's base. Fetch, then run the unit layer against it from the root of the
+  repository. `KAC_BASE_REF` makes the guards fail where `origin/main` is missing, as CI does:
+
+  ```sh
+  git fetch origin main
+  KAC_BASE_REF=origin/main dotnet test tooling/kac.tests
+  ```
+
+  Where a test now fails, its message says what to change. Change it, then go to [Resolution](#resolution) and start
+  at step 4. Where it still passes, [escalate](#escalation) with the CI job's log.
 
 **Did you change `.schema/`?**
 
@@ -65,24 +101,35 @@ The export golden is a contract a consumer reads.
   [Resolution](#resolution).
 * **No** → continue.
 
-**Does the failing line say the export stopped writing a path?**
+**Did you change a check or a message in `tooling/`?**
 
-* **Yes** → a consumer that reads that path breaks. Restore the path and leave the golden alone. If you cannot restore
-  it, [escalate](#escalation).
+* **Yes** → the diff is expected. A validate scenario's golden records the check and the message of every finding.
+  Go to [Resolution](#resolution).
 * **No** → [escalate](#escalation).
 
 ## Resolution
 
-1. Regenerate the one scenario that failed, never the whole set:
+Run steps 1 to 4 from the root of the repository.
+
+1. Regenerate the scenario that failed:
 
    ```sh
-   dotnet run tooling/kac-tests.cs -- --update <name>
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs -- --update <name>
    ```
 
-2. Read the diff line by line:
+   It prints one line opening `UPDATE` for each scenario it regenerated. The name is a substring, so check that every
+   line names a scenario you meant to regenerate. The run exits 0 even where a line says `WARNING: export failed` or
+   `WARNING: still stale after regen`, so read every line for `WARNING`. If one has it, [escalate](#escalation).
+
+   To undo the regeneration, run `git checkout -- tooling/tests/fixtures/`. It also discards any other uncommitted
+   change there. `--update` can write files git does not track yet, and the checkout leaves them. List them with
+   `git clean -n tooling/tests/fixtures/`, and delete each one you did not write yourself.
+
+2. Read the diff line by line, and list the files the update added:
 
    ```sh
-   git diff tooling/tests/fixtures/<name>
+   git diff tooling/tests/fixtures/
+   git status --short tooling/tests/fixtures/
    ```
 
 3. Confirm every moved line is one your change was meant to move. A line you cannot account for is a regression you have
@@ -92,10 +139,21 @@ The export golden is a contract a consumer reads.
    ```sh
    dotnet test tooling/kac.tests
    dotnet test tooling/kac.features
-   dotnet run tooling/kac-tests.cs
+   GITHUB_ACTIONS=true dotnet run tooling/kac-tests.cs
    ```
 
-5. Run `kac generate` in each corpus you changed, and in `template/`.
+   The first two each end on a summary line opening `Passed!`. The golden suite ends `all <n> scenario(s) passed.`
+
+5. Run `kac generate` in each corpus you changed, and in `template/`. From a corpus under `examples/`:
+
+   ```sh
+   dotnet run --project ../../tooling/kac -- generate
+   ```
+
+   From `template/`, write `../tooling/kac` for the project. Each run ends `updated <n> of <m> generated file(s).`, or
+   `generated files already up to date; nothing written.` where nothing moved. Every file it writes is derived from
+   the records, so this step needs no undo.
+
 6. Say in the commit message why the golden moved.
 
 Confirmed when all three layers pass and the diff contains only lines you can account for. If a step does not do what
@@ -103,10 +161,12 @@ it says, [escalate](#escalation).
 
 ## Escalation
 
-| When                                                         | Who                           | How                         |
-|--------------------------------------------------------------|-------------------------------|-----------------------------|
-| The export dropped a path and you cannot restore it          | Paul Law, as the tool's owner | An issue on this repository |
-| The three layers disagree and you cannot tell which is right | Paul Law, as the tool's owner | An issue on this repository |
+| When                                                          | Who                           | How                          |
+|---------------------------------------------------------------|-------------------------------|------------------------------|
+| The export dropped a path and you cannot restore it           | Paul Law, as the tool's owner | An issue on this repository  |
+| The three layers disagree and you cannot tell which is right  | Paul Law, as the tool's owner | An issue on this repository  |
+| `--update` printed a `WARNING`                                | Paul Law, as the tool's owner | An issue on this repository  |
+| CI fails and the unit layer passes here against `origin/main` | Paul Law, as the tool's owner | An issue, with the job's log |
 
 ## Communication
 

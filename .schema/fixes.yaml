@@ -28,8 +28,9 @@ lineage:
     outstanding, and [the ServiceNow known error
     article](https://www.servicenow.com/docs/bundle/zurich-it-service-management/page/product/problem-management/reference/known-error-article-form.html)
     gives *Workaround* a field of its own. This type asks for one resolution somebody has verified, so a problem with
-    no answer yet stays in the tracker. KCS reviews an article when somebody uses it, where `review-by` sets a date.
-    `How we found it` is this type's own
+    no answer yet stays in the tracker. KCS reviews an article each time somebody uses it, and counts the uses. Here a
+    reader who reuses a fix moves `verified`, nothing counts the uses, and `review-by` also sets a date for a fix
+    nobody reuses. `How we found it` is this type's own
 id:
   prefix: fix
   style: numbered
