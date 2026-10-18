@@ -32,7 +32,7 @@ own, separate from the estate's static one.
 
 Content arrives in the underlying container from two places:
 
-* `covers-import` brings jacket imagery from the bibliographic data supplier. Its own pipeline publishes it nightly.
+* `covers-import` brings jacket imagery from [itg-bibliographic-data]. Its own pipeline publishes it nightly.
 * [svc-catalogue-api] writes jackets uploaded by branch staff at runtime, for items the supplier has no image for.
 
 **`repos` names `covers-import` and `infrastructure`.** The infrastructure repository defines the edge, so a change to
@@ -81,6 +81,7 @@ Backed by the `covers` container in the shared storage account. The thumbnailer 
 * **Consumers.** [svc-catalogue-web] is the only service configured with this URL. The branch terminals load from it
   directly. They are not services, so they appear nowhere in the graph.
 
+[itg-bibliographic-data]: ../integrations/bibliographic-data.md
 [svc-catalogue-api]: catalogue-api.md
 [svc-catalogue-web]: catalogue-web.md
 [svc-thumbnailer]: thumbnailer.md

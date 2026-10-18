@@ -97,11 +97,6 @@ where a transfer out of the country is recorded.)_
 * [pol-{{a}}] governs this classification.
 * [adr-{{a}}] decides where this data lives.
 
----
-
-_(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
-readable.)_
-
 [adr-{{a}}]: ../adrs/{{a}}.md
 [itg-{{a}}]: ../integrations/{{a}}.md
 [pol-{{a}}]: ../policies/{{a}}.md

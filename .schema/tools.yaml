@@ -34,14 +34,15 @@ lineage:
     page, which `homepage` states. OpenSSF asks whether a project is still maintained, and `review-by` puts a date on
     the answer
   divergence: >
-    The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is internal,
-    it governs new work, and it expires an entry on the day `review-by` names. `trial` is the only stance both spell
-    the same way: `approved` and `rejected` are acts this estate took, where the Radar's `adopt` and `hold` are advice
-    it offers. There is no `assess` ring, because something nobody has committed to is not yet an entry, and
-    `deprecated` is added. CycloneDX and SPDX inventory what is installed, one version per component, where this
-    register states the range approved for new work. CycloneDX tags each entry of one licence list `declared` or
-    `concluded`, where this states two fields as SPDX does. Its `evidence.licenses` block has no counterpart here,
-    because `Licence and obligations` states the reasoning as prose
+    The Radar publishes industry opinion twice a year and drops a blip that has not moved. This register is internal, it
+    governs new work, and it expires an entry on the day `review-by` names. `trial` is the only stance both spell the
+    same way: `approved` and `rejected` are acts this estate took, where the Radar's `adopt` and `caution` are advice it
+    offers. There is no `assess` ring, because something nobody has committed to is not yet an entry, and `deprecated`
+    is added. CycloneDX and SPDX inventory what is installed, one version per component, where this register states the
+    range approved for new work. Both also name a component's supplier. This register approves packages and makes no
+    software bill of materials, so `homepage` is how a reader reaches the maintainer. CycloneDX tags each entry of one
+    licence list `declared` or `concluded`, where this states two fields as SPDX does. Its `evidence.licenses` block has
+    no counterpart here, because `Licence and obligations` states the reasoning as prose
 id:
   prefix: tol
   style: slug

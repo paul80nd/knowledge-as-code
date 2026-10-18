@@ -47,10 +47,12 @@ Its own hostname, apart from the rest of the catalogue, and the same pages on th
 
 ## Known limitations
 
-This offering is live in no environment above test. [svc-reservations] says what remains.
+Production is deployed, and nothing links to it yet. [svc-reservations] says what remains, and [itg-card-payments]
+stays on trial until a borrower pays a fee.
 
 [ADO#1455]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1455
 [ADO#1462]: https://dev.azure.com/example-libraries/consortium/_workitems/edit/1462
+[itg-card-payments]: ../integrations/card-payments.md
 [svc-catalogue-web]: ../services/catalogue-web.md
 [svc-lending]: ../services/lending.md
 [svc-notices]: ../services/notices.md

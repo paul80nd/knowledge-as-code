@@ -48,16 +48,16 @@ A record changes at a contract renewal, a change of vendor or a new failure mode
 
 <!-- BEGIN GENERATED: schema-integrations -->
 
-| Field           | Value                               | Notes                                                                          |
-|-----------------|-------------------------------------|--------------------------------------------------------------------------------|
-| `tier` *†       | `descriptive`                       | The record's trust level, fixed for the type and checked against the folder.   |
-| `status` *†     | `active` `trial` `retired`          | Whether the integration is active, on trial, or retired. In force at `active`. |
-| `vendor` *      | string                              | Who supplies the system.                                                       |
-| `used-by` *     | list                                | Ids of the services that call this integration.                                |
-| `criticality` * | `critical` `important` `supporting` | The impact on a customer when the integration is unavailable.                  |
-| `their-sla`     | string                              | What the vendor's contract promises, in the contract's own words.              |
-| `replaces`      | id                                  | The integration id this one took over from.                                    |
-| `successor`     | id                                  | The integration id that took over from this one.                               |
+| Field           | Value                               | Notes                                                                               |
+|-----------------|-------------------------------------|-------------------------------------------------------------------------------------|
+| `tier` *†       | `descriptive`                       | The record's trust level, fixed for the type and checked against the folder.        |
+| `status` *†     | `active` `trial` `retired`          | Whether the integration is active, on trial, or retired. In force at `active`.      |
+| `vendor` *      | string                              | Who supplies the system.                                                            |
+| `used-by` *     | list                                | Ids of the services that call this integration, or called it before it was retired. |
+| `criticality` * | `critical` `important` `supporting` | The impact on a customer when the integration is unavailable.                       |
+| `their-sla`     | string                              | What the vendor's contract promises, in the contract's own words.                   |
+| `replaces`      | id                                  | The integration id this one took over from.                                         |
+| `successor`     | id                                  | The integration id that took over from this one.                                    |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  

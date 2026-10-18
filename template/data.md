@@ -37,11 +37,11 @@ exceptions to the plural-folder rule.
 
 ## Level of detail and cadence
 
-One record describes one data store: who owns it, how sensitive it is, how long it is kept and where it flows. The
-table definitions belong in the owning service's repository.
+One record describes one data domain: the entities in it, the service that owns them, how sensitive they are, how long
+they are kept and where they flow. The table definitions belong in the owning service's repository.
 
-A record changes when the store's retention, classification or flows change, which is rare. New records arrive with
-each new store.
+A record changes when the domain's retention, classification or flows change, which is rare. New records arrive with
+each new domain.
 
 ## Metadata
 

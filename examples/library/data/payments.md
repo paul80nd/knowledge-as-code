@@ -91,11 +91,6 @@ reference and an amount.
 * [dat-loans] records the fine a payment clears.
 * [itg-card-payments] takes the money and keeps the card details.
 
----
-
-_(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
-readable.)_
-
 [dat-loans]: loans.md
 [itg-card-payments]: ../integrations/card-payments.md
 [svc-lending]: ../services/lending.md

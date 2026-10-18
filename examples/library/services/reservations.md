@@ -64,9 +64,10 @@ this app service. The single durable write is the provisional hold created in [s
 
 * **Payments.** The payment provider takes the card payment on its own hosted page, and the reader returns against the
   hold reference. This service stores no card detail. The library does not deploy that provider, so it is an
-  integration and absent from the graph.
+  integration, [itg-card-payments], and absent from the graph.
 * **Criticality**: `important`. A failure stops readers reserving online, and branch staff fall back to placing holds at
   the desk. The platform degrades and keeps running.
 
+[itg-card-payments]: ../integrations/card-payments.md
 [svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md

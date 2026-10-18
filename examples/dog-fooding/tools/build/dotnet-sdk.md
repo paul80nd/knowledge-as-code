@@ -18,7 +18,7 @@ tags: [ dotnet, sdk ]
 
 `Tool: tol-dotnet-sdk` `APPROVED`
 
-The SDK that builds, tests and packs `kac`, and the runtime every other tool in this register runs on.
+The SDK that builds, tests and packs `kac`, and the runtime the register's NuGet packages run on.
 
 ## What we use it for
 

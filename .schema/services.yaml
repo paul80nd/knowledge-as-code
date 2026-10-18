@@ -29,22 +29,23 @@ lineage:
     Backstage, OpsLevel and Cortex each produce a row of metadata. This type produces a document somebody reads, so
     `What it does`, `Where it lives` and `Environments` are required prose. Backstage models APIs, resources, systems
     and domains as separate kinds, where this type folds dependencies, data stores and environments into one document.
-    Backstage's `spec.definition` puts the contract text inside the catalogue, where `interfaces` states the address
+    Each of the three records a call to an external system on the caller, in `dependsOn`, `x-cortex-dependency` or
+    `dependencies`. Here `depends-on` names services alone, and an integration's `used-by` names the services that call
+    it. Backstage's `spec.definition` puts the contract text inside the catalogue, where `interfaces` states the address
     the contract is published at. `facets` refuses a value fewer than two services share, and no source has anything
-    like it. Backstage, OpsLevel and Cortex say lifecycle and tier where this type says
-    `status` and `criticality`: `tier` already grades a record's authority, and `status` is on every type. Each of
-    them puts a paging tool's id in `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where
-    `monitoring-output` states a standing commitment a reader can act on. Its `alert`, `ticket` and `log` are the
-    three monitoring outputs the [SRE Book](https://sre.google/sre-book/introduction/) lists, and `none` is this
-    framework's own: no source found names the case where nothing is emitted at all. A `repos` entry is a bare
-    name where each source writes an address: Backstage puts the provider in the annotation key and the value in
-    `org/repo`, OpsLevel puts it in a sibling `provider:` beside an `org/repo` `name:`, and Cortex puts it in the
-    nesting level beside a `repository:` and, for Azure DevOps, a `project:`. Every one of them states the
-    provider outside the value, and `repos-base` in `.corpus.yaml` does the same once per corpus.
+    like it. Backstage, OpsLevel and Cortex say lifecycle and tier where this type says `status` and `criticality`:
+    `tier` already grades a record's authority, and `status` is on every type. Each of them puts a paging tool's id in
+    `pagerduty.com/service-id`, `alert_sources` or `x-cortex-oncall`, where `monitoring-output` states a standing
+    commitment a reader can act on. Its `alert`, `ticket` and `log` are the three monitoring outputs the [SRE
+    Book](https://sre.google/sre-book/introduction/) lists, and `none` is this framework's own: no source found names
+    the case where nothing is emitted at all. A `repos` entry is a bare name where each source writes an address:
+    Backstage puts the provider in the annotation key and the value in `org/repo`, OpsLevel puts it in a sibling
+    `provider:` beside an `org/repo` `name:`, and Cortex puts it in the nesting level beside a `repository:` and, for
+    Azure DevOps, a `project:`. Every one of them states the provider outside the value, and `repos-base` in
+    `.corpus.yaml` does the same once per corpus.
     [purl](https://ecma-international.org/wp-content/uploads/ECMA-427_1st_edition_december_2025.pdf) addresses a
-    repository as `pkg:git/<host>/<owner>/<repo>` and answers the mixed estate none of these corpora has, and it
-    was declined because `feature-file-repo` reads the first segment of a path and `pkg:git` is what it would
-    read there
+    repository as `pkg:git/<host>/<owner>/<repo>` and answers the mixed estate none of these corpora has, and it was
+    declined because `feature-file-repo` reads the first segment of a path and `pkg:git` is what it would read there
 id:
   prefix: svc
   style: slug

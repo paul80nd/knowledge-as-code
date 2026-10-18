@@ -93,11 +93,6 @@ Nothing here leaves the estate. A notice that reaches a borrower by email includ
 * [dat-borrowers] says who a card number belongs to.
 * [svc-lending] owns this data and is the only route to it.
 
----
-
-_(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
-readable.)_
-
 [dat-borrowers]: borrowers.md
 [dat-payments]: payments.md
 [itg-mail-delivery]: ../integrations/mail-delivery.md

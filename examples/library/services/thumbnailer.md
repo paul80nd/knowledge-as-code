@@ -12,7 +12,7 @@ interfaces:
   - type: openapi
     contract: https://git.example.com/example-libraries/thumbnailer/blob/main/contract/openapi.yaml
 owner: human:dev.raman
-tags: [ internal ]
+facets: [ internal ]
 ---
 
 # Thumbnailer
