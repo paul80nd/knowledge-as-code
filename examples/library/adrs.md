@@ -35,8 +35,8 @@ its id.
 
 ## Level of detail and cadence
 
-One ADR records one decision. Decision states the choice in a sentence or two, and Consequences say what it commits you
-to. How to carry the decision out belongs in a standard or a process that cites the ADR.
+One ADR records one decision, in about a page. Decision states the choice in a sentence or two, and Consequences say
+what it commits you to. How to carry the decision out belongs in a standard or a process that cites the ADR.
 
 An accepted ADR changes only its status, when a later ADR supersedes it. New ADRs arrive a few times a year, when a
 decision affects more than one repository.
@@ -65,7 +65,7 @@ decision affects more than one repository.
 
 1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
    number. The [index](adrs/_index.md) shows the highest one in use.
-2. Fill in the frontmatter and the sections. Keep it short: a few narrative paragraphs.
+2. Fill in the frontmatter and the sections. Keep it to about a page.
 3. Open a PR. The status starts at `proposed`.
 4. When the decision is settled, set `status` to `accepted` or `rejected`, and set `decided-on`. The index rebuilds
    itself.
@@ -74,8 +74,8 @@ decision affects more than one repository.
 
 * **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused.
 * **Immutability.** Once an ADR is accepted or rejected, change the decision only by writing a new ADR that supersedes
-  it. Edit everything else in place: a status transition, a typo, a broken link, or a sentence that no longer matches
-  the decision. The commit message says what you changed.
+  it. Edit everything else in place: a status transition, a typo, a broken link, or a correction that leaves the
+  decision, its alternatives and their verdicts as agreed. The commit message says what you changed.
 * **Rejection.** A proposal the team turns down becomes `rejected` and keeps its number. Its Decision section says why.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.

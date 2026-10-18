@@ -40,8 +40,8 @@ One section per type, in tier order. A tier is the level of authority a type sit
 ### adrs
 
 An ADR (architecture decision record) records a decision that affects more than one repository, and the reasoning behind
-it. It is never edited after it is accepted. A later ADR supersedes it instead, and a standard cites the ADR its
-authority comes from in `derived-from`.
+it. Its decision never changes after it is accepted. A later ADR supersedes it instead, and a standard cites the ADR
+its authority comes from in `derived-from`.
 
 `Decision` states the choice, and that sentence is the record. `Consequences` is required beside it: a reader who sees
 what a decision bought but not what it cost sees a better decision than the one you took. `Context` opens on the problem

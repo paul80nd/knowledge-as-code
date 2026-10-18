@@ -28,7 +28,10 @@ lineage:
     HCGF policy is security-scoped, externally driven, and leaves every mandatory requirement to the standard
     beneath it. A policy here states inward-facing engineering intent and binds in its own right, with each
     obligation a clause table row anything else can cite. HCGF's control objective layer is absent, so a standard
-    cites a policy clause directly
+    cites a policy clause directly. A clause may state a figure, which is the limit the owner accepts, and a standard
+    may only tighten it. The advisory levels are SHOULD and COULD. COULD states an aspiration, and BCP 14's MAY grants
+    a permission, which a policy has no use for. There is no roles section and no approver field: `owner` answers for a policy, and the pull request
+    that sets `status: active` is its approval
 
 collision: >
   In ISO/IEC 27001 an information security policy is one approved document, and the topic-specific policies sit

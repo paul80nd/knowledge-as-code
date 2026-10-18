@@ -5,13 +5,13 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-18T18:01:00Z
+  at: 2026-10-18T19:50:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.63.2" }
-  - { resource: example-engineering, version: "0.32.0" }
+  - { resource: example-dogfooding, version: "0.63.3" }
+  - { resource: example-engineering, version: "0.33.0" }
 verified:
   - { at: 2026-10-18T12:26:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.32.0.
+* `eng`, example-engineering, at 0.33.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it.
@@ -321,12 +321,12 @@ where the rule and the practice differ.
 | `DENY`    | MUST     |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `TRANSIT` | MUST     |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `PEERID`  | MUST     |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
-| `PRIVATE` | MUST     |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `EGRESS`  | MUST     |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `ASCODE`  | MUST     |                |            |                | `eng:pol-PIPE.ASCODE` | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `PUBLIC`  | MUST NOT | `eng:std-CONT` |            | `eng:ctl-0001` |                       | Covered      | A container has only what the service needs. No container runs here.                                                                                                                     |
 | `LATERAL` | MUST NOT |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `WEAKEN`  | MUST NOT |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
+| `PRIVATE` | SHOULD   |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 | `ZEROTR`  | COULD    |                |            |                |                       | Out of scope | There is no network here to control. `kac` reads a folder, and contacts a registry only for `restore` or `pack`. GitHub serves the site and the packages over connections it terminates. |
 
 ### eng:pol-MNTN
