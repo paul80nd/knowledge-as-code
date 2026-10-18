@@ -18,7 +18,7 @@
     "applies-to": null,
     "verified": [
       {
-        "at": "2026-09-18T11:40:00Z",
+        "at": "2026-10-18T20:25:37Z",
         "by": "human:paul.law"
       }
     ],
@@ -31,12 +31,12 @@
   },
   "sections": {
     "Symptom": "A key edited in `.editorconfig` from the terminal makes no difference to how Rider formats a file. Reformatting the file, and reopening it, both leave the old behaviour in place. Nothing is reported. The edit is valid, and Rider keeps using the settings it already read.",
-    "Environment": "JetBrains Rider, with the repository already open in it. The `.editorconfig` edit is made from a terminal, outside the IDE.",
+    "Environment": "JetBrains Rider 2026.2 on macOS 26, with the repository already open in it. The `.editorconfig` edit is made from a terminal, outside the IDE.",
     "Cause": "Rider reads an `.editorconfig` when the file is opened in the IDE. A write it never saw leaves the cached settings in place.",
     "Resolution": "1. Open `.editorconfig` in Rider, which reads it on open.\n2. Reformat a file the key governs.\n3. Check the result changed.\n\nWhere the result is unchanged, flip a key with an obvious effect as a control. `max_line_length` works well, because a reformat rewraps the paragraph you are looking at.",
     "Why it happens": "An `.editorconfig` is layered. The corpora under `examples/` read the one at the repository root, `tooling/` adds a second over it, and `template/` has its own with `root = true`. A key that looks inert therefore has two possible causes: another file overrides it, or Rider has not read the edit. The control above tells an override apart from a cached setting."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6318ceeb56419c582af08ca370b404cedc5a23ee/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/dog-fooding/fixes/editorconfig-has-no-effect.md"
   }
 }

@@ -10,7 +10,7 @@
     "applies-to": [
       "svc-kac"
     ],
-    "last-rehearsed": "never",
+    "last-rehearsed": "2026-10-18",
     "rehearsal-frequency": "on-change",
     "requires-tools": [
       "A .NET 10 SDK",
@@ -23,10 +23,10 @@
     ]
   },
   "sections": {
-    "Symptoms": "* `dotnet run tooling/kac-tests.cs` exits 1 and prints one of:\n  * `FAIL <name>: committed generated files do not match the generator.`\n  * `the export no longer writes <path>: what a consumer reads has changed`\n  * `no expectation for <what> at <file>. run with --update, then read the diff`\n* One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.\n* The branch is green on your machine and red in CI.",
+    "Symptoms": "* `dotnet run tooling/kac-tests.cs` exits 1 and prints a line opening `FAIL` and naming the scenario. What differs\n  follows on the same line or on the indented lines under it. For example:\n  * `committed generated files do not match the generator.`, on the `FAIL` line itself\n  * `the export no longer writes <path>: what a consumer reads has changed`\n  * `the export writes <path>, which the committed copy does not hold: a new file for a consumer`\n  * `<path> differs from the committed export: <the first difference>`\n  * `no expectation for <what> at <file>. run with --update, then read the diff`\n* It prints `MISSING <name>: no golden.`\n* One of `dotnet run tooling/kac-tests.cs` and `dotnet test tooling/kac.tests` passes while the other fails.\n* The branch is green on your machine and red in CI.",
     "Impact": "Nothing in production. The branch stays red, so nothing on it merges until the diff is accounted for."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6318ceeb56419c582af08ca370b404cedc5a23ee/examples/dog-fooding/runbooks/goldens-disagree.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/dog-fooding/runbooks/goldens-disagree.md"
   }
 }
