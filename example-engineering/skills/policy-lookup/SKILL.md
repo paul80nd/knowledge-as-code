@@ -87,8 +87,10 @@ build the filename. The owning record for `eng:pol-SCRT.LOGS` is
 **`level` is the field the answer turns on.** Two clauses of one policy open the same shape of sentence and bind
 differently. Read a `COULD` as a `MUST` and you have invented a rule. Read a `MUST` as advice and you have dropped one.
 
-* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it.
-* **`SHOULD` and `COULD` advise.** Neither is a rule, and neither blocks anything on its own.
+* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it. Departing from either takes a
+  deviation the clause's owner accepts, and `request-deviation` asks for one.
+* **`SHOULD` states the usual way.** Follow it, or depart and say why in the change. No deviation is needed.
+* **`COULD` permits.** It blocks nothing.
 
 **Never take the level out of the wording.** `MUST NOT` opens with `MUST`, so a match on the shorter modal files a
 prohibition as an obligation, which is the reverse of what the policy says. The wording also arrives with its markup

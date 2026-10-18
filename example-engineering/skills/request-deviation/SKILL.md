@@ -44,12 +44,14 @@ both, and `departs-from` takes them both. Two pieces of work are two requests.
 and somebody has to say yes before it lands. An incident that left no time for the question is the one case where the
 request follows the departure.
 
-Four things are not deviation requests, and each goes somewhere else.
+Five things are not deviation requests, and each goes somewhere else.
 
 * **A clause you think is wrong** is a finding, and `raise-finding` is the skill for it. A finding says you noticed
   something. This asks somebody to carry a risk, and they are different questions to put to the same people.
 * **A clause you have misread** is neither. Ask `standards-lookup` or `policy-lookup` for the wording again, and read
   what it actually obliges.
+* **A departure from a `SHOULD` or `SHOULD NOT` in a standard** needs nobody's acceptance. Say why in the change, and
+  file nothing from here.
 * **A shortcut that breaks no clause** is technical debt. It is still recorded, dated and owned, and the record takes
   `none` in `departs-from`. There is no clause owner to ask, so nothing is filed from here.
 * **Work already inside the clause** is nothing at all. A request to depart from a rule you are keeping wastes the

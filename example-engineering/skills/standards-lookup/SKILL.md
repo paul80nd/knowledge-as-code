@@ -110,8 +110,11 @@ you build the filename. The owning record for `eng:std-TEST.every-test-is-hermet
 **One line holds several obligations, and they do not all bind.** Each entry in `obligations` is one bullet, and its
 `level` says how strongly that bullet binds. Read `level`, and never the capitals inside `text`.
 
-* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it.
-* **`SHOULD`, `SHOULD NOT` and `MAY` advise.** None is a rule, and none blocks anything on its own.
+* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it. Departing from either takes a
+  deviation the rule's owner accepts, and `request-deviation` asks for one.
+* **`SHOULD` and `SHOULD NOT` state the usual way.** Follow it, or depart and say why in the change. No deviation is
+  needed.
+* **`MAY` permits.** It blocks nothing.
 
 **Compare `level` whole.** `MUST NOT` opens with `MUST`, so a match on the shorter value files a prohibition as an
 obligation, which is the reverse of what the standard says.
@@ -158,8 +161,9 @@ Two things stay behind whatever `types` says, because they are sections of a sta
 
 * **A worked example.** Every standard holds an Examples section showing the rule met and the rule missed, and it stays
   in the record. Send a reader who wants one to the published standard.
-* **Why the rule exists.** The argument lives in the standard's Rationale and provenance section, which stays behind
-  because it reasons over records this export need not carry.
+* **Why the rule exists.** A bullet may end with one short reason opening "because", and that travels in `text`. The
+  full argument lives in the standard's Rationale and provenance section, which stays behind because it reasons over
+  records this export need not carry.
 
 Two more depend on `types`, so check it before you say either is missing:
 
