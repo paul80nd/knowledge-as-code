@@ -16,9 +16,9 @@
   },
   "sections": {
     "When to use this": "You are changing what a type declares. A schema edit on its own leaves every corpus stale. Each type page has generated blocks derived from these files.",
-    "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which states the closed key space and the field-order trap.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite at step 9 and the behaviour specs at step 10.\n* Reading a specification, which step 2 needs.\n* Writing C#, which step 3 needs where the edit reaches `Schema.cs`.\n* Repairing a Reqnroll feature file by hand, which step 10 needs."
+    "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which states the closed key space, the field-order trap and how a rule is\n  written.\n* The fixture guidance at `tooling/CLAUDE.md`, which states what a schema edit does to the fixtures and the behaviour\n  specs.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite and the behaviour specs at step 6.\n* Reading a specification, which step 1 needs.\n* Repairing a Reqnroll feature file by hand, which step 6 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/4afddc497e1e9b6fd24cedb1133bd031e4becc47/examples/dog-fooding/processes/change-the-schema.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/98ec5ac285b3a70cf413d5e0ab2a9ce53ef96da3/examples/dog-fooding/processes/change-the-schema.md"
   }
 }
