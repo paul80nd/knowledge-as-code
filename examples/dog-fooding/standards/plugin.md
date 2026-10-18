@@ -104,7 +104,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 - A skill **MUST** file the item under the area path that `tracker` block states.
 - Where that area path is refused, a skill **MUST** file the item at the project default and say so.
 - A skill **MUST** raise it as an issue or a work item.
-- A skill **MUST** use the client that already authenticates to that platform.
+- A skill **SHOULD** use the client that already authenticates to that platform.
 - A skill **MUST NOT** offer to edit the installed copy.
 - A skill **MUST NOT** ask the reader for a credential.
 
@@ -126,7 +126,7 @@ _**Covers:** `eng:pol-AGNT.ACCESS`, `eng:pol-KNOW.COPY`_
 - Where the agent cannot reach one of those, `provenance` **MUST** name it as unreached.
 - The body **MUST** contain `## What I saw`, `## Context` and `## Why it might matter`, in that order.
 - A finding **MUST NOT** put anything between the block and the first of those headings.
-- The title **MUST** be the observation in one line.
+- The title **SHOULD** be the observation in one line.
 - A skill **MUST** mark the issue `kac:finding`, using whatever the platform calls a label.
 - Where the platform refuses a mark it does not already have, a skill **MUST** file the finding unmarked.
 - A skill **MUST** say that it filed one unmarked.
@@ -153,7 +153,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 - `## Who is asking` **MUST** name the agent, the session it ran in, the repository, the commit it read, and what it was
   doing.
 - Where the agent cannot reach one of those, `## Who is asking` **MUST** name it as unreached.
-- The title **MUST** be the departure in one line, naming the work and the rule it breaks.
+- The title **SHOULD** be the departure in one line, naming the work and the rule it breaks.
 - A skill **MUST** file the request on the backlog addressed under `tracker` by the corpus that owns the clause.
 - A skill **MUST NOT** file a request on a repository outside the organisation holding the plugin.
 - A skill **MUST** mark the issue `kac:deviation`, using whatever the platform calls a label.
@@ -535,6 +535,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-18: using the client that already authenticates, and the one-line title of a finding and of a deviation
+  request, become `SHOULD`. A skill still asks the reader for no credential, and nothing parses a title.
 - 2026-10-18: a skill reads a rule's keyword as what departing from it costs. A `MUST` departure takes a deviation,
   and a `SHOULD` departure takes a reason given in the change, since a standard may now state either.
 - 2026-09-23: a skill that files reads the address from a `tracker` block, and never from `publishing`. On Azure DevOps
@@ -561,5 +563,8 @@ standard.
   survives a bundle that trimmed every lookup.
 - 2026-09-08: added the shape a finding an agent files carries, and the label duty beside it.
 - 2026-09-07: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [Claude Code plugin manifest]: https://json.schemastore.org/claude-code-plugin-manifest.json

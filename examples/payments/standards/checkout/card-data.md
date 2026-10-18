@@ -28,7 +28,8 @@ token. No card number, expiry date or security code crosses a boundary we own.
 - A checkout page **MUST NOT** post a card field to a host we operate.
 - A service **MUST** accept a card token where it needs to charge a card.
 - A service **MUST NOT** accept a card number on any endpoint.
-- A service **MUST** verify the PSP's certificate against the PSP's own published chain before it sends anything.
+- A service **MUST** verify the PSP's certificate before it sends anything.
+- A service **SHOULD** verify that certificate against the PSP's own published chain.
 
 _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
 
@@ -78,4 +79,9 @@ data.
 
 ## Changelog
 
+- 2026-10-18: verifying the PSP's certificate stays a `MUST`, and checking it against the PSP's own published chain
+  becomes a `SHOULD`.
 - 2026-08-28: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.

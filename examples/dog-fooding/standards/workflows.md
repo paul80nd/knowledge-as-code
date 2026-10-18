@@ -55,7 +55,8 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 - A step in `.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s
   `Pinned-Dependencies` check asks for.
-- A pinned step **MUST** state the released version in a trailing comment, as `# v7.0.1`.
+- A pinned step **SHOULD** state the released version in a trailing comment, as `# v7.0.1`, because a reviewer reads
+  the version there.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
 - A job with a write permission **MUST NOT** install a tool at a moving version.
 - A workflow needing a tool at `latest` **MUST** install it in a job with `contents: read`.
@@ -83,7 +84,8 @@ _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `
 - The publishing job **MUST** build what it publishes from that commit.
 - The publishing job **MUST** declare `timeout-minutes`.
 - A workflow publishing a version **MUST** declare a `concurrency` group that queues rather than cancels.
-- A workflow writing to a branch **MUST** empty its worktree, and **MUST** prove `git ls-files` returns nothing
+- A branch a workflow publishes **MUST** contain only the files that workflow built.
+- A workflow writing to a branch **SHOULD** empty its worktree, and **SHOULD** prove `git ls-files` returns nothing
   there before it stages a file.
 - A person **MUST NOT** edit a published branch, package or release by hand.
 
@@ -95,8 +97,8 @@ _**Covers:** `eng:pol-PIPE.DEPLOY`, `eng:pol-PIPE.MANUAL`_
   pull request making that change.
 - A pull request **MUST NOT** move `<Version>` in `tooling/kac/kac.csproj` unless the branch owner has decided to
   release.
-- A pull request moving `<Version>` **MUST** rename `## Unreleased` to that version and its date, in the commit moving
-  `<Version>`.
+- A pull request moving `<Version>` **MUST** rename `## Unreleased` to that version and its date.
+- That rename **SHOULD** sit in the commit moving `<Version>`.
 - `content-version` in a corpus's `.corpus.yaml` **MUST** move in the pull request changing what that corpus knows.
 - A publishing job **MUST** ask the registry whether it already holds the version in front of it.
 - Where the registry holds that version already, a publishing job **MUST** finish green.
@@ -144,7 +146,7 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 
 - [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
-- [ ] Every `uses:` names a commit SHA and states its released version in a trailing comment.
+- [ ] Every `uses:` names a commit SHA.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
 - [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
@@ -190,6 +192,9 @@ corpus receives it, and it names `actions/checkout@v4` today.
 
 ## Changelog
 
+- 2026-10-18: the trailing version comment, emptying the worktree and renaming `## Unreleased` in the commit moving
+  `<Version>` become `SHOULD`. A published branch contains only what its workflow built, and the rename lands in the
+  pull request moving `<Version>`.
 - 2026-09-23: dropped the clauses binding `.azuredevops/kac.yml` to its GitHub twin, and the file with them. No Azure
   DevOps project ever ran it, and mirroring it by hand cost an edit on every workflow change.
 - 2026-09-15: made the release the branch owner's decision, so an observable change takes its changelog entry under
@@ -199,6 +204,9 @@ corpus receives it, and it names `actions/checkout@v4` today.
 - 2026-09-06: took the changelog, semantic `content-version` and consumer-repointing rules that `CLAUDE.md` had been
   stating a second time.
 - 2026-09-02: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [OpenSSF Scorecard]: https://github.com/ossf/scorecard/blob/main/docs/checks.md
 [Security hardening for GitHub Actions]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions

@@ -25,17 +25,21 @@ state. The service resolves that state by asking the PSP what happened.
 ### Every call has a deadline
 
 - A call to the PSP **MUST** have a timeout.
-- A timeout **MUST** be set in configuration, so it can change without a release.
-- The authorisation call **MUST** time out at 5 seconds.
+- A timeout **SHOULD** be set in configuration, so it can change without a release.
+- The authorisation call **SHOULD** time out at 5 seconds.
 
 _**Covers:** `eng:pol-PERF.TARGETS`, `eng:pol-RECV.TIMEOUT`_
 
 ### A retry is bounded and backs off
 
-- A service **MUST** retry a connection failure or a `5xx`.
-- A service **MUST NOT** retry a decline.
-- A service **MUST** stop after two retries, with exponential backoff and jitter between them.
-- A service **MUST** stop calling the PSP for 30 seconds once the failure rate passes its configured threshold.
+- A service **SHOULD** retry a connection failure or a `5xx`.
+- A service **MUST NOT** retry a decline, because a decline is the issuer's answer and the card schemes fine a
+  merchant that keeps retrying one.
+- A service **MUST** stop retrying at a limit set in its configuration, with exponential backoff between attempts.
+- That limit **SHOULD** be two retries, with jitter in the backoff.
+- A service **MUST** stop calling the PSP for a period set in its configuration once the failure rate passes its
+  configured threshold.
+- That period **SHOULD** be 30 seconds.
 
 _**Covers:** `eng:pol-RECV.DEGRADE`, `eng:pol-RECV.RETRY`_
 
@@ -44,7 +48,9 @@ _**Covers:** `eng:pol-RECV.DEGRADE`, `eng:pol-RECV.RETRY`_
 - A service **MUST** record a timed-out authorisation as unknown.
 - A service **MUST** query the PSP for the outcome of an unknown authorisation, quoting the idempotency key from
   [std-IDEM.the-caller-chooses-the-key].
-- A service **MUST** resolve every unknown outcome within 15 minutes, and raise an alert on one it cannot resolve.
+- A service **MUST** resolve every unknown outcome within a window set in its configuration.
+- A service **MUST** raise an alert on an unknown outcome it has not resolved within that window.
+- That window **SHOULD** be 15 minutes.
 - The checkout **MUST** tell the customer the payment is being confirmed.
 
 _**Covers:** `eng:pol-RECV.DEGRADE`_
@@ -70,9 +76,10 @@ and a debit on their statement.
 
 - [ ] Every PSP client in the repository is configured with a timeout.
 - [ ] A decline is not retried, confirmed by a test.
-- [ ] The retry policy stops after two attempts, and the backoff uses jitter.
+- [ ] The retry policy stops at its configured limit, and backs off exponentially.
+- [ ] Calls to the PSP stop for the configured period once the failure rate passes its threshold.
 - [ ] A forced timeout in a test environment leaves the payment marked unknown.
-- [ ] The resolver clears an unknown outcome within 15 minutes, and alerts when it cannot.
+- [ ] The resolver clears an unknown outcome within its configured window, and alerts when it cannot.
 - [ ] The checkout shows a pending message while the outcome is unknown.
 
 ## Rationale and provenance
@@ -89,7 +96,12 @@ governs the ordinary call, and the timeout bounds the slowest one.
 
 ## Changelog
 
+- 2026-10-18: each bound stays a `MUST`. The 5-second timeout, two retries with jitter, the 30-second pause and the
+  15-minute window become `SHOULD` defaults, and so do retrying a `5xx` and keeping the timeout in configuration.
 - 2026-08-31: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [Exponential backoff and jitter]: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
 [nfr-0001]: ../../nfrs/0001-authorisation-latency.md
