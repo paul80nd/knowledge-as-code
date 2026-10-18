@@ -5,7 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-AGNT.ACCEPT, eng:pol-AGNT.ACCESS, eng:pol-AGNT.CONFID, eng:pol-AGNT.EQUAL,
   eng:pol-AGNT.PROV, eng:pol-AGNT.SELFVER, eng:pol-AGNT.UNPROV, eng:pol-DEVI.CONTENT, eng:pol-DEVI.EXPIRY,
-  eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM, eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
+  eng:pol-DEVI.OWNER, eng:pol-DEVI.PERM, eng:pol-DEVI.RECORD, eng:pol-DEVI.SURFACE, eng:pol-KNOW.COPY ]
 verified-by: [ ctl-0008, ctl-0009 ]
 applies-to:
   - all
@@ -162,6 +162,18 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.PROV`, `eng:pol-AGNT.SELFVER`_
 
 _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`, `eng:pol-DEVI.OWNER`,
 `eng:pol-DEVI.PERM`, `eng:pol-DEVI.SURFACE`_
+
+### A skill reads a rule's keyword as what departing from it costs
+
+- A skill reporting a rule **MUST** say that departing from a `MUST` or `MUST NOT` takes a deviation the rule's owner
+  accepts.
+- Where the bundle carries `request-deviation`, a skill **MUST** send that departure to it.
+- A skill reporting a rule **MUST** say that a reader may depart from a `SHOULD` or `SHOULD NOT` by giving the reason in
+  the change.
+- A skill **MUST NOT** send a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`, because
+  a reason given in the change conforms to the rule.
+
+_**Covers:** `eng:pol-DEVI.RECORD`_
 
 ### Triage routes a finding with a label, and says why in a comment
 
@@ -350,6 +362,8 @@ broke it.
 - [ ] Every deviation request is filed inside the organisation holding the plugin, and says that nothing is accepted
       yet.
 - [ ] No deviation request is dropped, or held back, because the target has no `kac:deviation` label.
+- [ ] Every skill that reports a rule says a `MUST` departure takes a deviation, and a `SHOULD` departure a reason.
+- [ ] No skill sends a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
 - [ ] Triage named the corpus from the `corpus:` of the `.corpus.yaml` it walked up to, and never from the
       `publishing` block.
@@ -521,6 +535,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-18: a skill reads a rule's keyword as what departing from it costs. A `MUST` departure takes a deviation,
+  and a `SHOULD` departure takes a reason given in the change, since a standard may now state either.
 - 2026-09-23: a skill that files reads the address from a `tracker` block, and never from `publishing`. On Azure DevOps
   the two differ: the project holds the backlog and the repository inside it holds none. The item carries the area path
   that block states, and falls back to the project default when the area is refused.
