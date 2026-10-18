@@ -279,10 +279,13 @@ finding with the first of these that fits, and step 6 routes it:
 
 1. **Narrowed.** A word of the record is wrong or missing at its own level: an outcome too vague to act on, or a reason
    that does not reach the case. The draft refines that step, rule or part.
-2. **Redirected.** Another type in this corpus is written at the level the finding asks for: a command goes to a
-   runbook or a fix, and a mechanism goes to a standard's **SHOULD** or a control. The draft is a record of that type.
-3. **Settled.** The record is right at its level, and the finding adds a detail only its own case needed, or detail the
-   section sends to a repository.
+2. **Redirected.** Another destination is written at the level the finding asks for. In this corpus, a command for
+   something broken goes to a runbook or a fix, and a mechanism goes to a standard's **SHOULD** or a control. The draft
+   is a record of that type. Outside the corpus, a command or a trap in a planned task goes to the tool's
+   documentation, a `CLAUDE.md` or a contributors' guide.
+   * A redirect outside the corpus routes `kac:route-record` where a record here changes as well, and
+     `kac:route-none` where none does.
+3. **Settled.** The record is right at its level, and the finding adds a detail only its own case needed.
 
 **Where the type page has no such section, say so in the comment and go on to step 6.** A corpus may have rewritten
 the page it was seeded with.
@@ -296,8 +299,9 @@ Work down this list and take the first that fits.
    `kac:route-misfiled`.
 3. **It reports `kac`, the schema, the template, the plugin or a skill.** `kac:route-framework`. `looks-like:
    framework` says so where the block has it.
-4. **It says a record here is wrong or missing, or step 5 narrowed or redirected it.** `kac:route-record`.
-5. **Anything else.** `kac:route-unclear`.
+4. **Step 5 redirected it outside the corpus, and no record here changes.** `kac:route-none`.
+5. **It says a record here is wrong or missing, or step 5 narrowed or redirected it.** `kac:route-record`.
+6. **Anything else.** `kac:route-unclear`.
 
 **A finding asking for a type this corpus declined is `kac:route-unclear`, whichever item above it matched.** Adopting a
 type is a decision a person takes, so say in the comment which type it would need.
@@ -352,7 +356,8 @@ Three sentences is plenty. The route, why, and what happens next.
   `kac:route-none`.
 * **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
 * **Say what step 5 decided** where it narrowed, redirected or settled the finding: the step, rule or part the draft
-  refines, the type the record belongs to, or the section that settles it.
+  refines, the type the record belongs to, the file outside the corpus the detail goes to, or the section that settles
+  it.
 * **Name both routes** where you chose `kac:route-unclear` because two fitted, and say what a person has to decide.
 * **Say nothing about whether the claim is true.** You did not check it.
 

@@ -37,8 +37,8 @@ A process is also not:
 ## Level of detail and cadence
 
 Each step states one outcome, with its reason where the reason is not obvious. The reader judges how to get there. A
-command to run belongs in a runbook, a fix or the tool's own documentation. Answer a case a step does not cover by
-sharpening that step's outcome or its reason.
+command to run belongs in the tool's own documentation, or in a runbook or a fix where something is broken. Answer a
+case a step does not cover by sharpening that step's outcome or its reason.
 
 A process changes when the task it describes changes, or when a rehearsal shows a step no longer works. New processes
 arrive rarely.
