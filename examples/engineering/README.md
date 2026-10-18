@@ -65,6 +65,9 @@ clause table and the checks that hold it.
 They are principle-level and stack-agnostic by design, so they name no service and invent no domain. That is why they
 would survive adoption with only the specifics rewritten, where a service catalogue would not.
 
+Every policy here is a `draft` awaiting approval by the organisation that adopts it. An adopter's owner approves each
+one in their own name, and [`policies.md`](policies.md#adding-a-policy) says how a policy becomes `active`.
+
 ## What the corpus claims about its organisation
 
 Showing how framework alignment works requires something to align with, so this corpus takes a position: ISO/IEC 27001

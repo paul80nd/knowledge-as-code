@@ -51,8 +51,8 @@ enforces, on its own contributing page.
 [In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) says.
 
 **A decision is immutable after merge.** Change it only by writing a new record that supersedes it. Edit everything
-else in place: a status transition, a typo, a broken link, or a sentence that no longer matches the decision. The commit
-message says what you changed.
+else in place: a status transition, a typo, a broken link, or a correction that leaves what was agreed unchanged. The
+commit message says what you changed.
 
 ## What an agent may write
 
