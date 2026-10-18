@@ -15,7 +15,7 @@ Read `tier` in the frontmatter. Find its row below and follow that section. Igno
 | Tier            | Write it as                                                                            |
 |-----------------|----------------------------------------------------------------------------------------|
 | **Procedural**  | One action per step. Imperative. Condition, then action, then reason.                  |
-| **Normative**   | One obligation per clause. Testable. Keyword first. The reason goes in Purpose.        |
+| **Normative**   | One obligation per clause. Testable. Keyword first. Reason in Purpose or after a rule. |
 | **Descriptive** | Indicative, present tense. State what is.                                              |
 | **Decided**     | Prose. Constrain the structure and the length, not the words.                          |
 
@@ -38,6 +38,11 @@ The reader is under pressure and may be new to the system. They skim.
 The reader acts on a clause without checking it. Make it checkable.
 
 * Start each clause of a standard with an RFC 2119 keyword in capitals. Lower-case "must" is prose.
+* In a standard, write **MUST** for the outcome its owner answers for, and **SHOULD** for the usual way to reach it.
+  Departing from a MUST takes a deviation. Departing from a SHOULD takes a reason, written in the change.
+* A standard's rule heading may carry one short reason where the reason is not obvious. End the bullet it explains with
+  a clause opening "because". A policy's reason still goes in Purpose.
+* Test in a standard's conformance checklist what its rules require, and nothing else.
 * Put a policy's modals in the clause table only. Write Purpose and Scope as a commitment. `clause-modal` is an error.
 * Purpose states the position and stops. It does not repeat a clause's threshold, list or exception.
 * Write one obligation per clause. A clause you can fail in two ways is two clauses. `clause-compound` warns on a

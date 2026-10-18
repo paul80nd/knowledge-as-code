@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-17T15:22:00Z
+  at: 2026-10-18T12:22:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.61.6" }
-  - { resource: example-engineering, version: "0.31.0" }
+  - { resource: example-dogfooding, version: "0.62.0" }
+  - { resource: example-engineering, version: "0.31.1" }
 verified:
-  - { at: 2026-10-17T18:28:00Z, by: human:paul.law }
+  - { at: 2026-10-18T12:26:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -63,7 +63,7 @@ where the rule and the practice differ.
 | `eng:pol-COST` | 9       | 0       | 9         |
 | `eng:pol-DATA` | 27      | 0       | 27        |
 | `eng:pol-DERV` | 5       | 0       | 5         |
-| `eng:pol-DEVI` | 11      | 5       | 6         |
+| `eng:pol-DEVI` | 11      | 6       | 5         |
 | `eng:pol-ENVS` | 10      | 7       | 3         |
 | `eng:pol-EVER` | 9       | 7       | 2         |
 | `eng:pol-INCR` | 22      | 0       | 22        |
@@ -80,7 +80,7 @@ where the rule and the practice differ.
 | `eng:pol-SUPL` | 6       | 1       | 5         |
 | `eng:pol-TRUS` | 15      | 7       | 8         |
 | `eng:pol-VURM` | 9       | 4       | 5         |
-| **Total**      | **276** | **92**  | **184**   |
+| **Total**      | **276** | **93**  | **183**   |
 
 ## Clauses
 
@@ -216,19 +216,19 @@ where the rule and the practice differ.
 
 ### eng:pol-DEVI
 
-| Clause    | Level    | Covered by                    | Deviations                | Controls                                                                   | Pair candidate        | Verdict      | Note                                                                                                                               |
-|-----------|----------|-------------------------------|---------------------------|----------------------------------------------------------------------------|-----------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `RECORD`  | MUST     |                               | `dev-deviations-unstated` |                                                                            | `eng:pol-A11Y.RECORD` | Gap          | The register exists. No standard says a record comes before the departure.                                                         |
-| `FINDING` | MUST     |                               |                           |                                                                            |                       | Out of scope | Nothing here is reviewed, audited or overseen from outside.                                                                        |
-| `UPWARD`  | MUST     |                               |                           |                                                                            |                       | Out of scope | One maintainer, and no risk register above this repository.                                                                        |
-| `OWNER`   | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `eng:ctl-0004` |                       | Covered      | A skipped check records who accepted it, and a deviation request asks for that person by name.                                     |
-| `CONTENT` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | `std-PLUGIN` covers what a request an agent files has to say. The four sections are the record's own.                              |
-| `EXPIRY`  | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `eng:ctl-0004` |                       | Covered      | A skipped check has the date it is revisited, and a request proposes one for the owner to settle.                                  |
-| `SURFACE` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | A request arrives where the people accountable for the risk read it. The register is published, and no standard says it has to be. |
-| `CLOSE`   | MUST     |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | Every record here is open, and no standard says what closing takes.                                                                |
-| `PERM`    | MUST NOT | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | A request may not read as a standing departure. Every record has a review date, and `expiry` warns once one goes by.               |
-| `CUSTOM`  | MUST NOT |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | This map did exactly that, once. No standard asks for it again.                                                                    |
-| `DEBT`    | SHOULD   |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | A shortcut becomes an issue on the tracker, and no standard requires that.                                                         |
+| Clause    | Level    | Covered by                    | Deviations                | Controls                                                                   | Pair candidate        | Verdict      | Note                                                                                                                                           |
+|-----------|----------|-------------------------------|---------------------------|----------------------------------------------------------------------------|-----------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `RECORD`  | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     | `eng:pol-A11Y.RECORD` | Covered      | `std-PLUGIN` sends a session about to depart from a MUST to a deviation request first. No standard says a person records one before departing. |
+| `FINDING` | MUST     |                               |                           |                                                                            |                       | Out of scope | Nothing here is reviewed, audited or overseen from outside.                                                                                    |
+| `UPWARD`  | MUST     |                               |                           |                                                                            |                       | Out of scope | One maintainer, and no risk register above this repository.                                                                                    |
+| `OWNER`   | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `eng:ctl-0004` |                       | Covered      | A skipped check records who accepted it, and a deviation request asks for that person by name.                                                 |
+| `CONTENT` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | `std-PLUGIN` covers what a request an agent files has to say. The four sections are the record's own.                                          |
+| `EXPIRY`  | MUST     | `std-PLUGIN`, `eng:std-GATES` |                           | `ctl-0001`, `ctl-0007`, `ctl-0008`, `ctl-0009`, `ctl-0010`, `eng:ctl-0004` |                       | Covered      | A skipped check has the date it is revisited, and a request proposes one for the owner to settle.                                              |
+| `SURFACE` | MUST     | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | A request arrives where the people accountable for the risk read it. The register is published, and no standard says it has to be.             |
+| `CLOSE`   | MUST     |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | Every record here is open, and no standard says what closing takes.                                                                            |
+| `PERM`    | MUST NOT | `std-PLUGIN`                  | `dev-deviations-unstated` | `ctl-0008`, `ctl-0009`                                                     |                       | Covered      | A request may not read as a standing departure. Every record has a review date, and `expiry` warns once one goes by.                           |
+| `CUSTOM`  | MUST NOT |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | This map did exactly that, once. No standard asks for it again.                                                                                |
+| `DEBT`    | SHOULD   |                               | `dev-deviations-unstated` |                                                                            |                       | Gap          | A shortcut becomes an issue on the tracker, and no standard requires that.                                                                     |
 
 ### eng:pol-ENVS
 
