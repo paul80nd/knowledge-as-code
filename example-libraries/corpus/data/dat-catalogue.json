@@ -31,6 +31,6 @@
     "Flows": "| Goes to          | Why                                   | What is shared                      | Where they process it |\n|------------------|---------------------------------------|-------------------------------------|-----------------------|\n| [svc-search]     | Building the search index             | Work, edition and item, in full     | UK South              |\n| [svc-covers-cdn] | Serving a cover image beside a result | ISBN and the cover image it selects | UK South              |\n\nMost of this domain arrives rather than leaves. [itg-bibliographic-data] supplies the work and edition records, and the consortium adds the item and branch records to them. That direction is not recorded in `flows-to`, which lists recipients only."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/98f9cfcd760addf2a079b8af416e5ece41c1386b/examples/library/data/catalogue.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3ffbb893656cf60176e8534b00f57c8de0ab2c7/examples/library/data/catalogue.md"
   }
 }

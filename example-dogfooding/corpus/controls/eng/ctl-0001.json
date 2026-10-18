@@ -1,0 +1,34 @@
+{
+  "type": "controls",
+  "path": "controls/0001-image-pinned-by-digest.md",
+  "trust": null,
+  "fields": {
+    "id": "ctl-0001",
+    "title": "Nothing checks that an image is named by digest",
+    "status": "active",
+    "verifies": [
+      "std-CONT"
+    ],
+    "mechanism": "not-enforced",
+    "frequency": null,
+    "last-verified": null,
+    "evidence": null,
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-10-17",
+    "tags": [
+      "base-images",
+      "containers",
+      "digests"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-CONT.the-base-image-is-chosen-and-pinned] says a Dockerfile \"**MUST** pin the base image by digest rather than by\n  a moving tag\".\n* [std-CONT.a-published-tag-never-moves] says a deployment \"**MUST** name an image by digest, so the running container\n  is the one the pipeline built\".",
+    "How it works": "Nothing runs. The check these rules need reads two kinds of file, and fails on any image reference without\n`@sha256:`:\n\n* every `FROM` line in every Dockerfile, as `grep -nE '^FROM ' Dockerfile | grep -v '@sha256:'` prints them\n* every `image:` value in the deployment manifests, as `grep -nE '^\\s*image:' deploy/*.yaml | grep -v '@sha256:'`\n  prints them\n\nA `FROM` that names a build argument passes only where that `ARG` has a default pinned by digest. A build argument with no default lets the build pass a tag.\n\nThe same check can run in three places. Each one fails the fault at a different moment:\n\n| Where              | When it fails                                                                  |\n|--------------------|--------------------------------------------------------------------------------|\n| A pipeline job     | On the pull request, and a merge waits for it.                                 |\n| A pre-commit check | Before the commit, on the author's machine.                                    |\n| A Claude Code hook | Before an agent writes the file, as a `PreToolUse` hook on `Write` and `Edit`. |",
+    "Coverage and gaps": "A reviewer reading the `FROM` line is the only thing that stops a tag-only base today.\n\nThe check would prove a reference cannot move. It would not prove these:\n\n* the base comes from the organisation's registry, which a second pattern on the registry host would catch\n* the base was refreshed in the last month\n* a manifest the pipeline renders gets the digest the pipeline built, so the check has to read the rendered output\n  where a placeholder such as `@${IMAGE_DIGEST}` stands in the source"
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3ffbb893656cf60176e8534b00f57c8de0ab2c7/examples/engineering/controls/0001-image-pinned-by-digest.md"
+  }
+}

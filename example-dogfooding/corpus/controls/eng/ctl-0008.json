@@ -1,0 +1,34 @@
+{
+  "type": "controls",
+  "path": "controls/0008-dotnet-coverage.md",
+  "trust": null,
+  "fields": {
+    "id": "ctl-0008",
+    "title": "Nothing checks that a .NET build collects coverage",
+    "status": "active",
+    "verifies": [
+      "std-NETTST"
+    ],
+    "mechanism": "not-enforced",
+    "frequency": null,
+    "last-verified": null,
+    "evidence": null,
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-10-17",
+    "tags": [
+      "coverage",
+      "dotnet",
+      "testing"
+    ]
+  },
+  "sections": {
+    "What it checks": "* [std-NETTST.coverage-is-collected-by-the-build] requires the build to collect coverage with the XPlat Code Coverage\n  collector, and to publish the report.",
+    "How it works": "Nothing runs. The check this rule needs is a pipeline step after `dotnet test`. It fails where the run wrote no Cobertura report:\n\n```sh\nfind . -path '*/TestResults/*/coverage.cobertura.xml' | grep -q .\n```\n\nThe step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and could only search it for the collector flag.",
+    "Coverage and gaps": "A reviewer reading the pipeline definition is the only thing that notices a missing collector today.\n\nThe check proves a report was written. It does not prove the report was published, or that each test project is excluded from its own figure."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3ffbb893656cf60176e8534b00f57c8de0ab2c7/examples/engineering/controls/0008-dotnet-coverage.md"
+  }
+}

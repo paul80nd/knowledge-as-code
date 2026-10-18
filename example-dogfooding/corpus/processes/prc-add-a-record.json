@@ -19,6 +19,6 @@
     "Prerequisites": "* A corpus, and a type it lists under `types:` in its `.corpus.yaml`.\n* `kac` run from inside that corpus as `dotnet run --project ../../tooling/kac --`.\n* A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed.\n* Reading a YAML schema, which step 3 needs.\n* Writing prose to a style guide, which step 6 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/98f9cfcd760addf2a079b8af416e5ece41c1386b/examples/dog-fooding/processes/add-a-record.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3ffbb893656cf60176e8534b00f57c8de0ab2c7/examples/dog-fooding/processes/add-a-record.md"
   }
 }

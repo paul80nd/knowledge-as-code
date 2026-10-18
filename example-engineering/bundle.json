@@ -1,14 +1,15 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.30.0",
+    "contentVersion": "0.31.0",
     "types": [
       "adrs",
+      "controls",
       "glossary",
       "policies",
       "reports",
@@ -39,6 +40,13 @@
       "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
     },
     {
+      "path": "skills/controls-lookup",
+      "requires": [
+        "controls@1"
+      ],
+      "note": "Reads a control from corpus/controls/ and says what checks a rule. A control declares no part, so there is no flat file and the record is the unit."
+    },
+    {
       "path": "skills/policy-lookup",
       "requires": [
         "policies@2"
@@ -61,13 +69,6 @@
     }
   ],
   "trimmed": [
-    {
-      "path": "skills/controls-lookup",
-      "requires": [
-        "controls@1"
-      ],
-      "reason": "the export carries no controls"
-    },
     {
       "path": "skills/fix-lookup",
       "requires": [

@@ -39,6 +39,6 @@
     "Scope": "`kac` as published to nuget.org, the documentation site, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/98f9cfcd760addf2a079b8af416e5ece41c1386b/examples/dog-fooding/deviations/no-incident-process.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/a3ffbb893656cf60176e8534b00f57c8de0ab2c7/examples/dog-fooding/deviations/no-incident-process.md"
   }
 }
