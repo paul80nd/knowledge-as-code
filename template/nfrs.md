@@ -53,6 +53,14 @@ We cannot promise more than the dependencies we do not run. A third-party [integ
 caps everything built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can
 deliver.
 
+## Level of detail and cadence
+
+One NFR states one target and how it is measured. The dashboard query or the alert rule belongs in the service's own
+repository, and the NFR links to it.
+
+The target changes rarely, when somebody renegotiates it. Current actual changes with each measurement. New NFRs arrive
+when a service or an offering takes on a target.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-nfrs -->

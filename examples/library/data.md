@@ -34,6 +34,14 @@ Not the place for:
 The folder is singular, `data/`, because English gives no plural. It and [`glossary/`](glossary.md) are the two
 exceptions to the plural-folder rule.
 
+## Level of detail and cadence
+
+One record describes one data store: who owns it, how sensitive it is, how long it is kept and where it flows. The
+table definitions belong in the owning service's repository.
+
+A record changes when the store's retention, classification or flows change, which is rare. New records arrive with
+each new store.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-data -->

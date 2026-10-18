@@ -33,6 +33,14 @@ A report is **not**:
 the price visible: `sources` names the version of each corpus the report answers for, and `verified` names who last
 checked that it still holds.
 
+## Level of detail and cadence
+
+One report answers one question over the whole corpus, and each row is one item with its verdict and a short note.
+The evidence behind a verdict belongs in the record the row names.
+
+A report changes whenever a record it reads changes, because `kac report` regenerates its rows. New reports arrive
+rarely.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-reports -->

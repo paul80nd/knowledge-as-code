@@ -34,6 +34,14 @@ Two other types sit close enough to confuse:
 Disaster recovery and rebuilding the estate from nothing belong here. You rehearse them deliberately, which makes them
 look like processes. You open the document on a day when the estate is already down.
 
+## Level of detail and cadence
+
+Each step is one command or action the reader can run, and says what they see when it worked. Each diagnosis branch
+ends in a resolution or an escalation. Background and theory belong in an explanation.
+
+A runbook changes after each incident that uses it, and after each rehearsal. New runbooks arrive rarely, often from a
+postmortem's actions.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-runbooks -->

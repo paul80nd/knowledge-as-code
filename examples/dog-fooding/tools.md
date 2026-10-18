@@ -35,6 +35,14 @@ cites the ADR in `decided-in`.
 A `rejected` entry earns its place. Somebody proposes the same package two years later, and the entry hands them
 the evaluation we already did.
 
+## Level of detail and cadence
+
+One record describes one tool: its status, what you use it for, and the version range you stand behind. How to install
+or configure it belongs in a process, or in the tool's own documentation.
+
+A record changes when you adopt, deprecate or reject the tool, or move its version range. New records arrive when a
+team proposes a tool.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-tools -->

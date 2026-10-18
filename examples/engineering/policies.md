@@ -43,6 +43,14 @@ A policy commits and a [control](controls.md) verifies, so the two are never the
 records one decision and the alternatives weighed against it, where a policy states a position we hold across all such
 decisions.
 
+## Level of detail and cadence
+
+Each clause states one commitment that stays true after you replace the whole technology estate. A product, a
+version or a mechanism belongs in a standard that implements the clause.
+
+A policy changes about once a year, at its review, or when a law or a framework behind it changes. New policies
+arrive rarely.
+
 ## Categories
 
 A policy's category is the folder it sits in under `policies/`, and the tool reads it from there. It answers *why this

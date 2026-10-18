@@ -36,6 +36,14 @@ it. That copy is the one that goes stale first.
 This type is the residual, and a residual with a low bar fills up with whatever fits nowhere else. If a document could
 plausibly be an explanation *or* something else, it is the something else.
 
+## Level of detail and cadence
+
+One explanation covers one subject, and each section explains one idea. It gives the reader the reasoning and the
+trade-offs, and links to the records that state the detail. Steps to follow belong in a process, and rules in a
+standard.
+
+An explanation changes when the thing it explains changes. New explanations arrive rarely.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-explanations -->

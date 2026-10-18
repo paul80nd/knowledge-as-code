@@ -37,6 +37,14 @@ tells you what to do is a standard.
 A control names the services it applies to, because a control with no scope is one nobody owns. One control may verify
 several rules, and one rule may need several controls.
 
+## Level of detail and cadence
+
+One control describes one mechanism: what it checks, how it runs, and the evidence it leaves. It cites the rules it
+verifies and leaves their wording to the record that states them. The code of the check lives in the repository that
+runs it.
+
+A control changes when the check or the pipeline running it changes. New controls arrive when a rule gains a check.
+
 ## A control or a skill
 
 Where a CI job, a pre-commit check or a Claude Code hook can check a rule, write a control for that check. The control

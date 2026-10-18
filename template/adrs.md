@@ -33,6 +33,14 @@ library choice, an internal naming convention, a refactor approach) belongs in t
 Where a central ADR later supersedes a repo-local one, set the local ADR to superseded and reference the central ADR by
 its id.
 
+## Level of detail and cadence
+
+One ADR records one decision. Decision states the choice in a sentence or two, and Consequences say what it commits you
+to. How to carry the decision out belongs in a standard or a process that cites the ADR.
+
+An accepted ADR never changes. A later ADR supersedes it. New ADRs arrive a few times a year, when a decision affects
+more than one repository.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-adrs -->

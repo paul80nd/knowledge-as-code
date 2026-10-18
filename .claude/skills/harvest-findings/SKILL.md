@@ -45,9 +45,9 @@ Where the client is missing, print what you produced and say which invocation yo
 
 ## Triage does not decide whether a finding is true
 
-**Check two things, and neither is the claim**: whether this finding says what another open one says, and whether a
-record here already covers it. A session's account of its own work is not evidence, and checking every claim turns one
-run into as many investigations.
+**Check three things, and none is the claim**: whether this finding says what another open one says, whether a record
+here already covers it, and whether it asks for detail below the level the record is written at. A session's account of
+its own work is not evidence, and checking every claim turns one run into as many investigations.
 
 **Whether the claim is true is settled at the pull request**, where a person takes accountability for what an agent
 wrote. A verdict says where the observation belongs, never whether it is right.
@@ -105,13 +105,13 @@ that address, so say where you could not read one.
 `kac:triaged` plus one route label says what triage decided. The queue is `kac:finding` without `kac:triaged`, so
 nothing is triaged twice.
 
-| Label                 | What it means                                                                 |
-|-----------------------|-------------------------------------------------------------------------------|
-| `kac:route-framework` | the finding reports `kac`, the schema, a skill or the plugin. No record.      |
-| `kac:route-record`    | a record in this corpus is wrong, or one is missing                           |
-| `kac:route-misfiled`  | a corpus under `consumes:` answers this, and the ticket was filed here        |
-| `kac:route-none`      | a duplicate, or a record here already covers it                               |
-| `kac:route-unclear`   | triaged, and a person has to decide                                           |
+| Label                 | What it means                                                                   |
+|-----------------------|---------------------------------------------------------------------------------|
+| `kac:route-framework` | the finding reports `kac`, the schema, a skill or the plugin. No record.        |
+| `kac:route-record`    | a record in this corpus is wrong, or one is missing                             |
+| `kac:route-misfiled`  | a corpus under `consumes:` answers this, and the ticket was filed here          |
+| `kac:route-none`      | a duplicate, a record here already covers it, or it is below the record's level |
+| `kac:route-unclear`   | triaged, and a person has to decide                                             |
 
 **Apply exactly one route label.** A finding matching two routes is `kac:route-unclear`, and the comment says which two.
 
@@ -121,7 +121,7 @@ An issue left untriaged is an issue nobody sees again.
 ## Making the labels
 
 A corpus that ran `kac new` last week has none of these, and `gh issue edit` rejects the whole command when one label
-is missing. So every label you are about to apply has to exist before step 7 applies the first one.
+is missing. So every label you are about to apply has to exist before step 8 applies the first one.
 
 **List them before you triage, and create nothing yet.** Read what the repository already has, and count the missing
 ones into what you tell the person you are about to write.
@@ -267,16 +267,37 @@ finding. That folder exists only after `kac restore`, so say so where it is miss
 **A record that is wrong is not a record that covers it.** `kac:route-none` is for a finding the corpus already answers.
 A finding saying the answer is wrong is `kac:route-record`.
 
-### 5. Choose the route
+### 5. Read the level of detail
+
+**Read `## Level of detail and cadence` on the type page of the record the finding touches.** The page is
+`<folder>.md` at the corpus root. The section says what one step, rule or part of that type contains, and which type
+contains the finer detail.
+
+**Judge whether the finding asks for detail below that level.** Most findings asking for one more step do. Each step
+added fits the record to one case and makes it longer for every other reader. A finding at the record's level goes on
+to step 6 as it is. Answer a below-level finding with the first of these that fits:
+
+1. **Narrow it.** A word of the record is wrong or missing at its own level: an outcome too vague to act on, or a reason
+   that does not reach the case. The route is `kac:route-record`, and the draft refines that step, rule or part.
+2. **Redirect it.** Another type is written at the level the finding asks for: a command goes to a runbook or a fix,
+   and a mechanism goes to a standard's **SHOULD** or a control. The route is `kac:route-record`, for a record of that
+   type. Where the corpus declined that type, step 6 makes it `kac:route-unclear`.
+3. **Settle it.** The record is right at its level, and the finding adds a detail only its own case needed. The route
+   is `kac:route-none`.
+
+**Where the type page has no such section, say so in the table and skip this step.** A corpus may have rewritten the
+page it was seeded with.
+
+### 6. Choose the route
 
 Work down this list and take the first that fits.
 
-1. **It duplicates another finding, or a record here already answers it.** `kac:route-none`.
+1. **It duplicates another finding, a record here already answers it, or step 5 settled it.** `kac:route-none`.
 2. **Its `corpus` names an entry under `consumes:`, or its subject is a record with that entry's shortcode.**
    `kac:route-misfiled`.
 3. **It reports `kac`, the schema, the template, the plugin or a skill.** `kac:route-framework`. `looks-like:
    framework` says so where the block has it.
-4. **It says a record here is wrong, or that one is missing.** `kac:route-record`.
+4. **It says a record here is wrong or missing, or step 5 narrowed or redirected it.** `kac:route-record`.
 5. **Anything else.** `kac:route-unclear`.
 
 **A finding asking for a type this corpus declined is `kac:route-unclear`.** Adopting a type is a decision a person
@@ -287,7 +308,7 @@ takes, so say in the comment which type it would need.
 names the backlog it goes to. Where they are equal, one repository publishes both corpora, nothing is refiled, and
 what changes is which corpus answers. Say which of the two this is.
 
-### 6. Show the table and wait
+### 7. Show the table and wait
 
 Print one row per finding: the issue number, its title cut short, the route, and the reason in under a dozen words. Put
 the `kac:route-unclear` rows at the top, because those are the ones needing an answer.
@@ -295,7 +316,7 @@ the `kac:route-unclear` rows at the top, because those are the ones needing an a
 **Say what you are about to write**: every label the repository is missing, and then one `kac:triaged` label, one
 route label and one comment on each issue. Then wait for the yes.
 
-### 7. Label, and comment the reason
+### 8. Label, and comment the reason
 
 Create the labels the repository was missing first, as the section above them writes it. Then label and comment one
 issue at a time, doing the pair together. An issue labelled with no comment is a verdict nobody can argue with.
@@ -331,13 +352,15 @@ Three sentences is plenty. The route, why, and what happens next.
 * **Name the issue a duplicate duplicates**, and the record that already covers a finding you routed to
   `kac:route-none`.
 * **Say whether a misfiled finding moves**, and name the corpus that answers it either way.
+* **Say what step 5 decided** where it narrowed, redirected or settled the finding: the step, rule or part the draft
+  refines, the type the record belongs to, or the section that settles it.
 * **Name both routes** where you chose `kac:route-unclear` because two fitted, and say what a person has to decide.
 * **Say nothing about whether the claim is true.** You did not check it.
 
 **Do not repeat the route as machine-readable data.** The label is the data. A second copy in the comment is a second
 thing that can disagree with the first.
 
-### 8. The framework route
+### 9. The framework route
 
 A framework finding describes the tool rather than the person who filed it, so it may travel. It travels under two
 conditions: a person reads every word first, and the body contains none of the filer's own provenance.
@@ -345,7 +368,7 @@ conditions: a person reads every word first, and the body contains none of the f
 **Compare the framework's address with this corpus's tracker address**, both normalised, and compare the targets
 too. They are equal where a problem with `kac` and a problem with a record are filed in the same place.
 
-**Every case here still gets `kac:triaged` and `kac:route-framework`, as step 7 applies them.** A finding left without
+**Every case here still gets `kac:triaged` and `kac:route-framework`, as step 8 applies them.** A finding left without
 `kac:triaged` stays in the queue and is re-read, re-commented and re-drafted on every run.
 
 **Where `framework.base` is `null`, this corpus states no address for the framework.** Mark the finding, draft the
@@ -429,6 +452,10 @@ written. Read it and decide which.
 
 **An edit: read the record, and change the words the finding is about.** Leave everything else alone. Add an entry to
 the record's `## Changelog` where it has one, newest first, naming the issue.
+
+**Write the edit at the type's level.** `## Level of detail and cadence` on the type page states it, and the triage
+comment names the step, rule or part to refine. Rework that part, or its reason, before you add another. A sharper
+outcome fits the next case as well, and an added step fits one.
 
 **A new record: start from the type's `_template.md`.** It sits in the folder the record goes in, and states every field
 that type needs and what each one takes. Follow it rather than copying a neighbouring record.

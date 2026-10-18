@@ -37,6 +37,13 @@ Not the place for:
 * **What to do when it's down.** That is a [runbook](runbooks.md), which this document links to.
 * **Why we chose it.** That is an [ADR](adrs.md).
 
+## Level of detail and cadence
+
+One record describes one external system you depend on: its contract, its failure modes and your fallback. The client
+code and its configuration belong in the repository that calls the system.
+
+A record changes at a contract renewal, a change of vendor or a new failure mode. New records arrive rarely.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-integrations -->

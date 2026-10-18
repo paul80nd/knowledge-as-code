@@ -47,6 +47,14 @@ Other boundaries:
 * **One problem per document.** Someone arriving with a symptom matches the first one on the page and never reads the
   second.
 
+## Level of detail and cadence
+
+One fix matches one symptom to one verified resolution, usually one or two steps a reader can run. A problem that needs
+a diagnosis tree and an escalation path is a runbook.
+
+A fix changes when somebody verifies it again, or when the resolution stops working. New fixes arrive with each problem
+somebody solves.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-fixes -->

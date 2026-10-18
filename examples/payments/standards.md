@@ -56,6 +56,14 @@ Every rule here is about handling a payment, so the folders follow the stages a 
 There is no `platform` folder here. A rule about the runtime binds every service we run, so it is written once in the
 governance corpus and inherited.
 
+## Level of detail and cadence
+
+Each rule states one outcome with **MUST**, or the usual way to reach an outcome with **SHOULD**. A command, a
+configuration line or a tool's setting belongs in the standard's Examples, or in a process.
+
+A standard changes a few times a year as the practice matures, and at its review. New standards arrive rarely, when a
+decision or a policy needs one.
+
 ## Where to find them
 
 * **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, with the category of each.

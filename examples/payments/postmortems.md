@@ -38,6 +38,13 @@ Boundaries:
 Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
 postmortem means something.
 
+## Level of detail and cadence
+
+One postmortem covers one incident. The timeline records what happened at each moment, and each action is one
+follow-up with one owner. A step somebody should run next time belongs in a runbook or a fix, which an action creates.
+
+A published postmortem never changes. New postmortems arrive with each incident serious enough to write up.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-postmortems -->

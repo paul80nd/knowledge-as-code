@@ -40,6 +40,14 @@ A service document is **descriptive**: it mirrors what is actually deployed. It 
 A third-party system we depend on is an integration. The line is whether we deploy it. Infrastructure-as-code stays out
 of the catalogue as well, because it deploys services.
 
+## Level of detail and cadence
+
+One record describes one deployable component as it runs today. A fact the component's own repository already states,
+such as a setting or a list of endpoints, stays there, and the record links to it.
+
+A record changes when the component's repositories, environments or dependencies change. New records arrive with each
+new component.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-services -->
