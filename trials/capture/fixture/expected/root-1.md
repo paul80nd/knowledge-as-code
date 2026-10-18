@@ -3,7 +3,7 @@
 | Field                               |        Value |
 |-------------------------------------|-------------:|
 | `trial`                             |      capture |
-| `method`                            |            2 |
+| `method`                            |            3 |
 | `reading`                           |            1 |
 | `days_since_first_record`           |            8 |
 | `types_adopted`                     |            3 |
@@ -32,3 +32,6 @@
 | `questions_logged`                  |              |
 | `questions_answered_with_link`      |              |
 | `questions_answered_with_link_rate` |              |
+| `faults_logged`                     |              |
+| `faults_in_records`                 |              |
+| `faults_in_tool`                    |              |

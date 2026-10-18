@@ -27,9 +27,12 @@ check() {
     echo "FAIL $what: the aggregate differs from expected/$expected.md"; failed=1
   fi
 }
+# Reading 1 takes the fixture's fault log, and reading 2 the empty one beside capture.sh.
 reading() {
+  faults=$fx/fault-log-1.csv
+  [ "$1" = 1 ] || faults=$here/../fault-log.csv
   check "${3:-reading $1}" "reading-$1" -c "$fx/clone/kb" -d "$2" -r "$1" -o "$owners" -x bot@example.invalid \
-    -f "$fx/findings.tsv" -l "$fx/log-$1.csv"
+    -f "$fx/findings.tsv" -l "$fx/log-$1.csv" -k "$faults"
 }
 
 # Runs capture.sh where it must stop, and checks that it does with the message given.
@@ -83,6 +86,8 @@ PATH=$path
 today=$(date -u +%Y-%m-%d)
 refuses 'a run before the log has ended' 'Run the script on or after that day' \
   -c "$fx/clone/kb" -d "$today" -r 2 -o "$owners" -f "$fx/findings.tsv" -l "$fx/log-2.csv"
+refuses 'a run before the fault log has ended' 'Run the script on or after that day' \
+  -c "$fx/clone/kb" -d "$today" -r 2 -o "$owners" -f "$fx/findings.tsv" -k "$here/../fault-log.csv"
 refuses 'an -o matching no commit' '-o gives nobody@example.invalid, which made no commit to the corpus' \
   -c "$fx/clone/kb" -d 2026-06-10 -r 2 -o nobody@example.invalid -f "$fx/findings.tsv"
 refuses 'a mistyped second -o' '-o gives olive.wrok@example.invalid, which made no commit to the corpus' \
@@ -110,6 +115,19 @@ refuses 'a log line marked neither yes nor no' 'line 3 of the question log: 2026
   -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -l "$dir/maybe-log.csv"
 refuses 'a log with no line inside its days' 'no line of the question log is dated 2026-03-10 to 2026-03-23' \
   -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -l "$fx/log-2.csv"
+
+# A fault log line that is not a date, a rule id, and record or tool. The run stops, and gives the line's number.
+printf 'date,rule,in\n2026-03-10,ref-resolves,record\n2026-03-11,ref-resolves,content\n' >"$dir/content-faults.csv"
+refuses 'a fault line marked neither record nor tool' 'line 3 of the fault log: 2026-03-11,ref-resolves,content' \
+  -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -k "$dir/content-faults.csv"
+printf 'date,rule,in\n2026-03-11,record\n' >"$dir/no-rule-faults.csv"
+refuses 'a fault line with no rule id' 'line 2 of the fault log: 2026-03-11,record' \
+  -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -k "$dir/no-rule-faults.csv"
+printf 'date,rule,in\n2026-03-11,Ref-Resolves,record\n' >"$dir/capital-faults.csv"
+refuses 'a fault line with a rule id in capitals' 'the rule id kac printed' \
+  -c "$fx/clone/kb" -d 2026-03-10 -r 1 -o "$owners" -f "$fx/findings.tsv" -k "$dir/capital-faults.csv"
+refuses 'a fault log with no line inside its days' 'no line of the fault log is dated 2026-06-10 to 2026-06-23' \
+  -c "$fx/clone/kb" -d 2026-06-10 -r 2 -o "$owners" -f "$fx/findings.tsv" -k "$fx/fault-log-1.csv"
 
 # A types block that is not a list of type names, on each day of the third corpus.
 refuses 'a types block that is a mapping' 'the descriptor at 2026-03-01 has line 5:   standards: 2.' \

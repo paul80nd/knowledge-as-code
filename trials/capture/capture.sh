@@ -6,7 +6,7 @@ set -eu
 usage() {
   cat >&2 <<'EOF'
 usage: capture.sh -c <corpus> -d <as-of> -r <1|2> -o <owner-emails> [-x <excluded-emails>]
-                  [-b <branch>] [-f <findings-file>] [-l <question-log>] <empty-directory>
+                  [-b <branch>] [-f <findings-file>] [-l <question-log>] [-k <fault-log>] <empty-directory>
 EOF
   exit 2
 }
@@ -16,8 +16,8 @@ fail() { echo "capture.sh: $*" >&2; exit 2; }
 # Every path git prints is printed as it is spelled, so a name outside ASCII matches itself.
 git() { command git -c core.quotePath=false "$@"; }
 
-corpus='' asof='' reading='' owners='' excluded='' branch='' findings_file='' log_file=''
-while getopts c:d:r:o:x:b:f:l: opt; do
+corpus='' asof='' reading='' owners='' excluded='' branch='' findings_file='' log_file='' fault_file=''
+while getopts c:d:r:o:x:b:f:l:k: opt; do
   case $opt in
     c) corpus=$OPTARG ;;
     d) asof=$OPTARG ;;
@@ -27,6 +27,7 @@ while getopts c:d:r:o:x:b:f:l: opt; do
     b) branch=$OPTARG ;;
     f) findings_file=$OPTARG ;;
     l) log_file=$OPTARG ;;
+    k) fault_file=$OPTARG ;;
     *) usage ;;
   esac
 done
@@ -65,21 +66,23 @@ epoch_of() {
 asof_start=$(epoch_of "$asof") || fail "-d takes a real date as YYYY-MM-DD"
 asof_day=$(day_of "$asof_start")
 
-# The question log runs for the 14 days starting on the as-of day, so the script waits for its last day.
+# Both logs run for the 14 days starting on the as-of day, so the script waits for their last day.
 log_last=$(date_of $((asof_start + 13 * 86400)))
-if [ -n "$log_file" ] && [ "$(day_of "$(date -u +%s)")" -lt $((asof_day + 13)) ]; then
-  fail "the question log runs to $log_last, a day in UTC. Run the script on or after that day."
+if [ -n "$log_file$fault_file" ] && [ "$(day_of "$(date -u +%s)")" -lt $((asof_day + 13)) ]; then
+  fail "the logs run to $log_last, a day in UTC. Run the script on or after that day."
 fi
 
 [ -f "$corpus/.corpus.yaml" ] || fail "no .corpus.yaml in $corpus"
 [ -z "$findings_file" ] || [ -f "$findings_file" ] || fail "no findings file at $findings_file"
 [ -z "$log_file" ] || [ -f "$log_file" ] || fail "no question log at $log_file"
+[ -z "$fault_file" ] || [ -f "$fault_file" ] || fail "no fault log at $fault_file"
 
 mkdir -p "$out"
 [ -z "$(ls -A "$out")" ] || fail "$out is not empty"
 out=$(cd "$out" && pwd)
 [ -z "$findings_file" ] || findings_file=$(cd "$(dirname "$findings_file")" && pwd)/$(basename "$findings_file")
 [ -z "$log_file" ] || log_file=$(cd "$(dirname "$log_file")" && pwd)/$(basename "$log_file")
+[ -z "$fault_file" ] || fault_file=$(cd "$(dirname "$fault_file")" && pwd)/$(basename "$fault_file")
 raw=$out/raw
 mkdir "$raw"
 
@@ -380,9 +383,9 @@ if [ "$findings_source" != none ]; then
 fi
 
 # The question log, kept for the 14 days from the as-of day. A spreadsheet can save a byte-order mark before line 1.
+bom=$(printf '\357\273\277')
 questions='' linked=''
 if [ -n "$log_file" ]; then
-  bom=$(printf '\357\273\277')
   tr -d ' \r' <"$log_file" | LC_ALL=C sed "1s/^$bom//" >"$work/log-lines"
   log_status=0
   awk -F, -v a="$asof" -v z="$log_last" '
@@ -405,6 +408,35 @@ A spreadsheet may have rewritten the dates, as Excel saves 10/03/2026, so edit t
   esac
   questions=$(wc -l <"$raw/question-log.csv" | tr -d ' ')
   linked=$(grep -c ',yes$' "$raw/question-log.csv" || true)
+fi
+
+# The fault log: each fault kac validate or kac generate --check reported on a change before it merged.
+faults='' in_records='' in_tool=''
+if [ -n "$fault_file" ]; then
+  tr -d ' \r' <"$fault_file" | LC_ALL=C sed "1s/^$bom//" >"$work/fault-lines"
+  fault_status=0
+  awk -F, -v a="$asof" -v z="$log_last" '
+    function say(what) { print "capture.sh: " what > "/dev/stderr" }
+    /^#/ || /^$/ || /^date,/ { next }
+    NF != 3 || $1 !~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/ || $2 !~ /^[a-z0-9]+(-[a-z0-9]+)*$/ ||
+      ($3 != "record" && $3 != "tool") {
+      bad = 1; say("line " NR " of the fault log: " $0); next
+    }
+    { seen++ }
+    $1 < a || $1 > z { say("left out line " NR " of the fault log, dated " $1 ", which is outside the log"); next }
+    { kept++; print }
+    END { if (bad) exit 3; if (seen && !kept) exit 4 }
+  ' "$work/fault-lines" >"$raw/fault-log.csv" || fault_status=$?
+  case $fault_status in
+    0) ;;
+    3) fail "each line of the fault log takes a date as YYYY-MM-DD, a comma, the rule id kac printed, a comma, and \
+record or tool. Fix the lines above." ;;
+    4) fail "no line of the fault log is dated $asof to $log_last. Check -d, and that -k is this reading's log." ;;
+    *) fail "awk could not read the fault log" ;;
+  esac
+  faults=$(wc -l <"$raw/fault-log.csv" | tr -d ' ')
+  in_records=$(grep -c ',record$' "$raw/fault-log.csv" || true)
+  in_tool=$(grep -c ',tool$' "$raw/fault-log.csv" || true)
 fi
 
 # The aggregate: counts and rates under the field names the README defines, and nothing else.
@@ -448,7 +480,7 @@ fi
 
 {
   printf 'trial\tcapture\n'
-  printf 'method\t2\n'
+  printf 'method\t3\n'
   printf 'reading\t%s\n' "$reading"
   printf 'days_since_first_record\t%s\n' "$since_first"
   printf 'types_adopted\t%s\n' "$types_adopted"
@@ -476,6 +508,11 @@ fi
   printf 'questions_logged\t%s\n' "$questions"
   printf 'questions_answered_with_link\t%s\n' "$linked"
   printf 'questions_answered_with_link_rate\t%s\n' "$(rate "${linked:-0}" "${questions:-0}")"
+  printf 'faults_logged\t%s\n' "$faults"
+  printf 'faults_in_records\t%s\n' "$in_records"
+  printf 'faults_in_tool\t%s\n' "$in_tool"
+  [ -z "$fault_file" ] ||
+    awk -F, '{ n[$2]++ } END { for (k in n) print "faults." k "\t" n[k] }' "$raw/fault-log.csv" | LC_ALL=C sort
 } >"$work/fields"
 awk -F'\t' -v reading="$reading" '
   { k[NR] = "`" $1 "`"; v[NR] = $2; if (length(k[NR]) > w1) w1 = length(k[NR]); if (length($2) > w2) w2 = length($2) }
@@ -493,7 +530,7 @@ awk -F'\t' -v reading="$reading" '
   printf 'branch\t%s\n' "$branch"
   printf 'snapshot\t%s\n' "$snapshot"
   printf 'as_of\t%s\n' "$asof"
-  [ -z "$log_file" ] || printf 'log\t%s to %s\n' "$asof" "$log_last"
+  [ -z "$log_file$fault_file" ] || printf 'log\t%s to %s\n' "$asof" "$log_last"
   [ -z "$first_landed" ] || printf 'first_record\t%s\n' "$(date_of "$first_landed")"
   printf 'corpus\t%s\n' "$corpus_name"
   printf 'tracker\t%s %s\n' "$tracker_target" "$tracker_base"

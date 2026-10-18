@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds the capture trial's fixture: two corpus repositories, a clone of each, their findings files and two logs.
+# Builds the capture trial's fixture: two corpus repositories, a clone of each, their findings files and three logs.
 set -eu
 
 [ $# -eq 1 ] || { echo "usage: build.sh <empty-directory>" >&2; exit 2; }
@@ -180,6 +180,23 @@ date,linked
 2026-06-24,no
 EOF
 } >"$dir/log-2.csv"
+
+# Reading 1's fault log runs over the same 14 days, with a line on each side of them, which the script leaves out. It
+# starts with a byte-order mark and has CRLF, a comment, a blank line and a line with spaces. Reading 2 takes the empty
+# fault-log.csv beside capture.sh.
+{ printf '\357\273\277'; crlf <<'EOF'
+# kept by the corpus owner
+date,rule,in
+2026-03-09,ref-resolves,record
+2026-03-10,ref-resolves,record
+2026-03-10,link-resolves,record
+
+2026-03-12, key-order , record
+2026-03-17,generate-check,tool
+2026-03-23,ref-resolves,tool
+2026-03-24,link-resolves,record
+EOF
+} >"$dir/fault-log-1.csv"
 
 # A second corpus, at the root of its repository. Its tracker is derived from its publishing block. It adopts guides,
 # whose folder is spelled Guides, so nothing in it is a record. It adopts decisions until 8 March.

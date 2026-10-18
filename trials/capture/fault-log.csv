@@ -1,0 +1,8 @@
+# The capture trial's fault log. Keep one copy for each reading, for the two weeks it runs.
+# Add one line for each fault kac validate or kac generate --check reported on a change before it merged.
+# Write the day it was reported as YYYY-MM-DD, then a comma.
+# Then write the rule id kac printed, such as ref-resolves, then a comma. For kac generate --check, write generate-check.
+# Then write record where the fault was in a record, and tool where it was in kac.
+# Write nothing else on the line: no name, no path, no record id and no commit.
+# Edit this file in a text editor. A spreadsheet can rewrite the dates.
+date,rule,in

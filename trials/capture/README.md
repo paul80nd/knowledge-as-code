@@ -7,16 +7,16 @@ records). It takes two readings of one corpus, three months apart. The corpus ow
 
 Follow these steps to take one reading. Each links to the section that explains it.
 
-1. Copy `README.md`, `capture.sh`, `question-log.csv` and `fixture/` into one folder. Run `sh fixture/test.sh` there,
-   and go on only once it prints `every case passed`. See [What you need](#what-you-need).
+1. Copy `README.md`, `capture.sh`, `question-log.csv`, `fault-log.csv` and `fixture/` into one folder. Run
+   `sh fixture/test.sh` there, and go on only once it prints `every case passed`. See [What you need](#what-you-need).
 2. In the clone, run `git fetch origin`, then `git remote set-head origin --auto`. See
    [Taking a reading](#taking-a-reading).
 3. Before reading 1, check whom the platform credits for a merged pull request. Where it credits whoever completed the
    merge, stop and take no reading. See [Squash merges](#squash-merges).
 4. Run `git -C <corpus> log --format='%aE' origin/HEAD -- . | sort | uniq -c`. At reading 1, your addresses go to `-o`,
    and a bot's to `-x`. For reading 2, see [Taking a reading](#taking-a-reading).
-5. Start a copy of `question-log.csv` on the as-of date, and keep it for 14 days in a text editor. Reading 1's as-of
-   date is the day you start, and reading 2's is three months later. See
+5. Start a copy of `question-log.csv` and a copy of `fault-log.csv` on the as-of date. Keep both for 14 days in a text
+   editor. Reading 1's as-of date is the day you start, and reading 2's is three months later. See
    [When to take each reading](#when-to-take-each-reading).
 6. Where the tracker is on Azure DevOps, write the findings file. Check that it has one line for each finding your
    board shows. See [The findings file](#the-findings-file).
@@ -24,7 +24,7 @@ Follow these steps to take one reading. Each links to the section that explains 
    [The script's arguments](#the-scripts-arguments).
 
    ```sh
-   ./capture.sh -c <corpus> -d <as-of> -r <1 or 2> -o <emails> -l <log> <empty folder>
+   ./capture.sh -c <corpus> -d <as-of> -r <1 or 2> -o <emails> -l <question log> -k <fault log> <empty folder>
    ```
 
 8. Where the script stops, fix what its message says, and run it again into an empty folder.
@@ -32,8 +32,8 @@ Follow these steps to take one reading. Each links to the section that explains 
    [What leaves the organisation](#what-leaves-the-organisation).
 
 The corpus owner runs the trial, in the repository where the corpus lives. The owner needs only `README.md`,
-`capture.sh`, `question-log.csv` and `fixture/` from this folder, and nobody to ask. Whoever decides what the framework
-changes reads the result.
+`capture.sh`, `question-log.csv`, `fault-log.csv` and `fixture/` from this folder, and nobody to ask. Whoever decides
+what the framework changes reads the result.
 
 Each reading counts these, from git and from the tracker the corpus states:
 
@@ -44,17 +44,23 @@ Each reading counts these, from git and from the tracker the corpus states:
 * the types the corpus adopted and has no record of
 * the records moved from one type's folder to another's
 
-For 14 days from each reading's as-of date, the corpus owner also logs each question put to them about how something
-is done.
+For 14 days from each reading's as-of date, the corpus owner also keeps two logs by hand:
+
+* **The question log** lists each question put to them about how something is done.
+* **The fault log** lists each fault `kac validate` or `kac generate --check` reported on a change before it merged. It
+  shows whether validation keeps the corpus correct as several people edit it.
 
 ## What leaves the organisation
 
 Each reading writes two outputs:
 
-* **`raw/`** lists every record, every author's email address, and every finding's address. It stays with the
-  organisation that ran the reading. Never publish it.
-* **`aggregate.md`** contains only counts, rates and type names, under the fields [defined below](#the-aggregate).
-  It contains no person's name, no path and no address, so you can publish it without a review.
+* **`raw/`** lists every record, every author's email address, every finding's address, and the lines of both logs.
+  It stays with the organisation that ran the reading. Never publish it.
+* **`aggregate.md`** contains only counts, rates, type names and `kac` rule ids, under the fields
+  [defined below](#the-aggregate). It contains no person's name, no path, no address, no record id and no commit, so
+  you can publish it without a review.
+
+Keep both logs with `raw/`. Neither leaves the organisation.
 
 Publish `aggregate.md` alone. Where somebody asked you for the reading, post it where they asked.
 
@@ -68,9 +74,10 @@ Publish `aggregate.md` alone. Where somebody asked you for the reading, post it 
 | `gh`                                    | the tracker is on GitHub       | The script queries the findings with it. Sign in with `gh auth login` before you start.                                          |
 | `az`, with the `azure-devops` extension | the tracker is on Azure DevOps | You write the findings file with it. Add the extension with `az extension add --name azure-devops`, and sign in with `az login`. |
 
-Copy [`README.md`](README.md), [`capture.sh`](capture.sh), [`question-log.csv`](question-log.csv) and
-[`fixture/`](fixture/) out of this folder, into one folder of your own. The script needs nothing else from this repository. Run it as `./capture.sh`, or as
-`sh capture.sh` where the copy lost its execute permission.
+Copy [`README.md`](README.md), [`capture.sh`](capture.sh), [`question-log.csv`](question-log.csv),
+[`fault-log.csv`](fault-log.csv) and [`fixture/`](fixture/) out of this folder, into one folder of your own. The script
+needs nothing else from this repository. Run it as `./capture.sh`, or as `sh capture.sh` where the copy lost its
+execute permission.
 
 Then run `sh fixture/test.sh` in that folder. It builds a small corpus and checks every count against a known value.
 Take no real reading until it prints `every case passed`.
@@ -80,18 +87,19 @@ relative to the folder you are in. Never write `C:\...`.
 
 ## When to take each reading
 
-Each reading has an as-of date, which `-d` takes. Its question log runs for the 14 days starting on that date.
+Each reading has an as-of date, which `-d` takes. Its question log and its fault log both run for the 14 days starting
+on that date.
 
 | Reading | As-of date                                | Run the script                 |
 |---------|-------------------------------------------|--------------------------------|
-| 1       | the day you start its question log        | on or after the log's last day |
-| 2       | three months after reading 1's as-of date | on or after the log's last day |
+| 1       | the day you start its logs                | on or after the logs' last day |
+| 2       | three months after reading 1's as-of date | on or after the logs' last day |
 
 Three months after 3 November is 3 February. Where that month is shorter, take its last day.
 
-The script counts the history as it stood at the end of the as-of day, in UTC. So a run on the log's last day gives the
-same counts as a run on the as-of date. The script stops where you pass `-l` before the log's last day, which it also
-reads in UTC.
+The script counts the history as it stood at the end of the as-of day, in UTC. So a run on the logs' last day gives the
+same counts as a run on the as-of date. The script stops where you pass `-l` or `-k` before the logs' last day, which
+it also reads in UTC.
 
 ## Taking a reading
 
@@ -128,8 +136,9 @@ Do every step for each reading.
    to the as-of date is by an address under `-o`. Where one person commits under two addresses, a `.mailmap` file at
    the root of the repository merges them, and the script reads it.
 
-4. **Keep the question log for 14 days.** Copy `question-log.csv`, and start it on the as-of date.
-   [The question log](#the-question-log) says what goes in it.
+4. **Keep the question log and the fault log for 14 days.** Copy `question-log.csv` and `fault-log.csv`, and start
+   both on the as-of date. [The question log](#the-question-log) and [The fault log](#the-fault-log) say what goes in
+   each.
 
 5. **Write the findings file, where the script cannot query the tracker.** [Findings](#findings) says when that is,
    and what the file contains. Pass it to `-f`.
@@ -137,7 +146,7 @@ Do every step for each reading.
 6. **Run the script** into an empty folder, on or after the log's last day:
 
    ```sh
-   ./capture.sh -c <corpus> -d <as-of> -r <1 or 2> -o <your emails> -l <your log> <empty folder>
+   ./capture.sh -c <corpus> -d <as-of> -r <1 or 2> -o <your emails> -l <question log> -k <fault log> <empty folder>
    ```
 
    Run it from anywhere. `-c` is the folder that contains the corpus's `.corpus.yaml`, at the root of a repository or
@@ -160,6 +169,7 @@ and run it again into an empty folder.
 | `-b`     | no       | the default branch, as `origin/<branch>`, where `origin/HEAD` is not set |
 | `-f`     | no       | the findings file, where the script cannot query the tracker             |
 | `-l`     | no       | the question log, kept for the 14 days starting on the as-of date        |
+| `-k`     | no       | the fault log, kept for the same 14 days                                 |
 | last     | yes      | an empty folder to write the reading to                                  |
 
 ## How the script counts
@@ -335,11 +345,40 @@ The script counts the lines from the as-of date to 13 days after it. It reports 
 it out. It stops where no line is inside them. It also stops at any line that is not a date as `YYYY-MM-DD`, a comma,
 and `yes` or `no`, and gives that line's number.
 
+## The fault log
+
+For the same 14 days as the question log, write one line for each fault `kac validate` or `kac generate --check`
+reported on a change before it merged. Count a fault you fixed on your own machine before you pushed, as well as one
+the pipeline reported. Write three values, separated by commas:
+
+| Column | What you write                                                                                                               |
+|--------|------------------------------------------------------------------------------------------------------------------------------|
+| `date` | the day `kac` reported the fault, as `YYYY-MM-DD`                                                                            |
+| `rule` | the rule id `kac validate` printed, such as `ref-resolves`. Write `generate-check` where `kac generate --check` reported it. |
+| `in`   | `record` where the fault was in the corpus's content, or `tool` where it was in `kac` itself                                 |
+
+Write nothing else: no name, no path, no record id and no commit. A fault two people each met on their own change is
+two lines. One run that reported three faults is three lines.
+
+```text
+date,rule,in
+2026-11-03,ref-resolves,record
+2026-11-05,generate-check,record
+2026-11-06,link-resolves,tool
+```
+
+Edit the log in a text editor, as for the question log.
+
+The script counts the lines from the as-of date to 13 days after it. It reports each line outside those days and leaves
+it out. A log with no line, past its header, is a fortnight with no fault, and counts 0. The script stops where every
+line is outside the log's days. It also stops at any line that is not a date as `YYYY-MM-DD`, a rule id in lower-case
+letters, digits and hyphens, and `record` or `tool`, and gives that line's number.
+
 ## The aggregate
 
 `aggregate.md` is a table of fields and values. A value is empty where the reading could not measure it: no new
-author, no tracker the script could read, or no question log. A rate is a fraction to two decimal places, and is empty
-where it would divide by 0.
+author, no tracker the script could read, no question log, or no fault log. A rate is a fraction to two decimal
+places, and is empty where it would divide by 0.
 
 | Field                               | Value                                                                                                   |
 |-------------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -372,6 +411,10 @@ where it would divide by 0.
 | `questions_logged`                  | the questions in the log                                                                                |
 | `questions_answered_with_link`      | of those, the questions answered with a link to a record                                                |
 | `questions_answered_with_link_rate` | `questions_answered_with_link` divided by `questions_logged`                                            |
+| `faults_logged`                     | the faults in the fault log                                                                             |
+| `faults_in_records`                 | of those, the faults in a record                                                                        |
+| `faults_in_tool`                    | of those, the faults in `kac`                                                                           |
+| `faults.<rule>`                     | the faults logged under that rule id. One field for each rule id in the log.                            |
 
 ## The raw results
 
@@ -386,7 +429,8 @@ where it would divide by 0.
 | `moves.tsv`            | each move, with its day, both types and both paths                                                                         |
 | `sources.tsv`          | each address a record cites in `sources`                                                                                   |
 | `findings.tsv`         | each finding counted, with its day, its address and the record that cites it                                               |
-| `question-log.csv`     | the log's lines the script counted. It is there only where you passed `-l`.                                                |
+| `question-log.csv`     | the question log's lines the script counted. It is there only where you passed `-l`.                                       |
+| `fault-log.csv`        | the fault log's lines the script counted. It is there only where you passed `-k`.                                          |
 
 Check a surprising count against these files before you publish the aggregate.
 
@@ -418,6 +462,11 @@ Both question logs are kept by a team that already has the corpus. So the verdic
 
 The per-type counts, the types with no record and the moves are read separately, to decide which types the corpus has
 earned.
+
+The fault counts are read separately too, and have no verdict. They are the evidence that validation keeps a shared
+corpus correct while several people edit it. Read `faults_in_records` with `authors_not_owner` from the same reading:
+each fault in a record is one `kac` stopped before it merged. Read `faults_in_tool` as faults to fix in `kac`, and the
+`faults.<rule>` fields as the rules that do that work.
 
 ## The fixture
 
@@ -451,6 +500,10 @@ The recipe covers:
 * a finding that became a record, cited in its `visualstudio.com` form, and findings filed after each as-of date
 * a commit late on the as-of day, which counts, and one just after it, which does not
 * a question log for each reading, with lines on each side of its 14 days
+* a fault log for reading 1 with a byte-order mark, CRLF, a comment, a blank line, spaces around its values, and lines
+  on each side of its 14 days
+* the empty `fault-log.csv` for reading 2, which counts 0, and no fault log at the root corpus, which leaves the fault
+  fields empty
 * a second corpus at the root of its repository, whose tracker is derived from `publishing`
 * a new author there who changed no record, and a record citing a finding's address with a trailing `.git/`
 * a type there whose folder is spelled `Guides`, and a type dropped before the reading, each with a record by a person
@@ -460,17 +513,29 @@ It takes reading 2 again with a `jq` that ends every line with CRLF, as a Window
 aggregate. It also checks that the script stops, with its message and no `aggregate.md`, for each of these:
 
 * a `git` older than 2.31
-* a run with `-l` before the log's last day
+* a run with `-l` or `-k` before the logs' last day
 * an address under `-o` or `-x` that made no commit to the corpus, including a mistyped second `-o`
 * an `-o` with no commit up to the as-of date
 * an Azure DevOps tracker with no `-f`, stated and derived
 * a findings line with no tab
 * a question log line dated as Excel saves it, or marked neither `yes` nor `no`
 * a question log with no line inside its 14 days
+* a fault log line marked neither `record` nor `tool`, with no rule id, or with a rule id in capitals
+* a fault log whose every line is outside its 14 days
 * a `types:` block that is a mapping, in either form, and a type name in capitals
 
 Where a definition on this page changes, change the recipe or the expected files by hand to match. Do not copy the
 script's output into them, because then the fixture tests nothing.
+
+## Method versions
+
+The `method` field in `aggregate.md` gives the version of this page that a reading used.
+
+| Method | What changed                                                                     |
+|-------:|----------------------------------------------------------------------------------|
+|      1 | The first version. It dated reading 1 to the corpus's first record.              |
+|      2 | Reading 1 is dated to the day it is taken.                                       |
+|      3 | Adds [the fault log](#the-fault-log), the `-k` argument and the `faults` fields. |
 
 ## Runs
 
