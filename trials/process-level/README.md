@@ -44,9 +44,8 @@ each step from the root of the repository.
 
 4. **Triage each finding** with step 5 of
    [`harvest-findings`](../../.claude/skills/harvest-findings/SKILL.md#5-read-the-level-of-detail), and record its
-   verdict. Here **Redirected** covers detail sent out of the process to any home: another record type, a `CLAUDE.md`,
-   a page under `docs/maintaining/`, or a change to `kac`. Then record whether the finding asks for a step, and whether
-   the record it drafts adds one.
+   verdict as step 5 defines it. Then record whether the finding asks for a step, and whether the record it drafts adds
+   one.
 
 5. **Count the misses** among the findings. A miss is a finding reporting something a session's change owed and did
    not do, where a step of the process, or of a process it runs, stated that obligation. Count from the findings alone,

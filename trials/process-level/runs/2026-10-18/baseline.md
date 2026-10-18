@@ -13,15 +13,15 @@ existed, so they have no `kac:finding` label.
 
 ## Findings
 
-Each verdict is step 5 of `harvest-findings`, read against the pilot's level as the trial README defines it. The old
-step is the step number in the text before the pilot. Eight of the ten asked for a step. #672 asked for a `kac` verb,
-and the comment on #934 asked for a route between two processes.
+Each verdict is step 5 of `harvest-findings`, read against the pilot's level. #672 has none, because it reports `kac`
+and step 6 routes it to the framework. The old step is the step number in the text before the pilot. Eight of the ten
+asked for a step. #672 asked for a `kac` verb, and the comment on #934 asked for a route between two processes.
 
 | Finding      | Opened     | Asked for                                                       | Old step | Asks for a step | Verdict    | Answered by                                                    |
 |--------------|------------|-----------------------------------------------------------------|----------|-----------------|------------|----------------------------------------------------------------|
 | #501         | 2026-09-07 | the number of trees holding a `_template.md`                    | 4        | yes             | Narrowed   | step 3 states no count, and counts the trees from the files    |
 | #502         | 2026-09-07 | the line numbers a universal field moves in the behaviour specs | none     | yes             | Redirected | `tooling/CLAUDE.md` § The feature specs pin more than findings |
-| #672         | 2026-09-17 | a `kac` verb to rename a type                                   | none     | no              | Redirected | a change to `kac`, outside the pilot                           |
+| #672         | 2026-09-17 | a `kac` verb to rename a type                                   | none     | no              | none       | `kac:route-framework`, a change to `kac` outside the pilot     |
 | #728         | 2026-09-20 | the guard a date-measured rule makes blind                      | none     | yes             | Redirected | `tooling/CLAUDE.md` § The fixtures                             |
 | #735         | 2026-09-21 | the number of trees holding a `_template.md`                    | 4        | yes             | Narrowed   | step 3, as #501, which it duplicates                           |
 | #776         | 2026-09-22 | the page listing every schema-load fault                        | none     | yes             | Settled    | `prc-pull-request` step 1 already lists it                     |
