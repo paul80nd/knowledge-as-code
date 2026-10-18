@@ -11,6 +11,7 @@ fills it with its own knowledge.
 
 * **[Principles](principles.md)** says why the framework is shaped the way it is, and what the design will not trade
   away.
+* **[Design intent](intent.md)** states the direction the framework is being built towards, before any of it is built.
 * **[Taxonomy](taxonomy.md)** says what a type and a tier are, what the four tiers ask, and the shape a type takes on
   disk.
 * **[The default types](types.md)** introduces every type that ships, grouped by tier, one line each.

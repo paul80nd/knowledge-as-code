@@ -1,8 +1,11 @@
 # Principles
 
+`kac` keeps an organisation's engineering knowledge as validated, identified and versioned Markdown, and packages it for
+the agents that use it.
+
 This page says why the framework is shaped the way it is, and what the design will not trade away. Each principle
-describes how the framework works today. The [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues)
-says what is to come.
+describes how the framework works today. [Design intent](intent.md) states the direction the framework is being built
+towards, and a principle moves here from that page once it is true.
 
 ## Behaviour before subject
 
@@ -90,6 +93,31 @@ The cost is **drift** in the half they own, meaning a file that no longer matche
 descriptor records which version of the shared layer the corpus is on, and which divergences it has accepted, so a
 necessary deviation does not look like an accident.
 
+## Adopt the types you need, and their rules with them
+
+A corpus adopts only the types it has a use for. `kac new` takes a subset, and `kac update --add-type` adopts another
+type later. A team that keeps only standards and a glossary runs a corpus of two types.
+
+Each type it adopts arrives with opinions: the fields a record carries, the sections it holds, and the checks that
+fail it. Those opinions are what make records of one type read alike. They are also yours. The schema is a YAML file
+in your corpus, and you change a rule by editing it.
+
+## The Markdown outlives the tool
+
+A record is a Markdown file with YAML frontmatter. It reads as a page in any viewer, with or without `kac`.
+
+An organisation that stops running `kac` keeps a wiki. The generated indexes stop updating, and nothing else is lost.
+So a corpus that only ever uses `kac` as a validator still keeps what it was worth: knowledge written down, and kept
+correct while it ran.
+
+## Where the design departs from prior art, it says why
+
+Each type is built on established practice, and each one states where it differs. Every type's schema declares a
+`lineage`: its `prior-art`, its `alignment` with that prior art, and a `divergence` saying where it departs and why.
+[Lineage](lineage.md) explains how to read one.
+
+A departure nobody can explain is a mistake. One that is stated is a choice a reader can weigh.
+
 ## Readable and writable by agents
 
 A wiki only humans write grows at the rate humans remember to write. A wiki that AI sessions can also write to grows at
@@ -99,6 +127,11 @@ That changes what the corpus has to be. A human infers structure from the layout
 guesses placement correctly, and an agent needs a decision table. A human reads authority from the tone, and an agent
 needs it in a field. Almost every design choice here answers at least partly to that: typed documents, explicit tiers, a
 glossary treated as load-bearing, and validation that fails rather than warns.
+
+Structure does not make a record easier for an agent to understand. An agent reads prose as a person does. Structure
+makes a record addressable and selectable. A rule's id lets an agent cite the exact rule it followed, and lets a
+reviewer point back at it. A standard's `applies-to` lets a lookup pick the standards that bind the service being
+changed.
 
 None of it replaces human ownership.
 
