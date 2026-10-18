@@ -1,8 +1,9 @@
 # Compared with alternatives
 
-A `CLAUDE.md`, an organisation's managed instructions, a documentation server and a wiki all give an AI coding session
-context. This page says what each one already does well, what Knowledge as Code (KaC) adds, and when the simpler option
-is enough. Each claim about another product cites that product's own documentation, read on 13 October 2026.
+A `CLAUDE.md`, an organisation's managed instructions, a documentation server, a wiki, a package manager for agent
+context and an AI reviewer all give an AI coding session context. This page says what each one already does well, what
+Knowledge as Code (KaC) adds, and when the simpler option is enough. Each claim about another product cites that
+product's own documentation, read between 13 and 18 October 2026.
 
 A **corpus** is one repository of knowledge records kept in git. A **record** is one Markdown document in it, with a
 declared **type** such as a standard or a runbook. The **plugin** is the corpus packaged for Claude Code.
@@ -29,7 +30,8 @@ A Markdown file in the repository gives the agent its instructions as it starts.
 * **What it does well.** Claude Code loads every `CLAUDE.md` from the working directory upwards at the start of each
   session. It loads one in a subdirectory once the agent works there ([Claude Code: memory][cc-memory]). `AGENTS.md`
   is plain Markdown with no required fields. The nearest one in the directory tree takes precedence
-  ([agents.md][agents-md]). Neither needs a tool.
+  ([agents.md][agents-md]). Neither needs a tool. A rule in `.claude/rules/` can name `paths:` globs, and then loads
+  only when Claude works with a matching file ([Claude Code: memory][cc-memory]).
 * **What KaC adds.** Claude Code treats these files as "context, not enforced configuration"
   ([Claude Code: memory][cc-memory]). Nothing checks what they say. A record is checked against its schema, has an
   owner and a status, and gives each rule an id.
@@ -70,10 +72,34 @@ The agent searches the pages people already keep, through a connector.
   A corpus can be published as a wiki too, from the same files the plugin is built from.
 * **When it is enough.** The readers are people, and nobody needs to cite a rule or prove it is checked.
 
+## A package manager for agent context
+
+A manifest in the repository names the skills, instructions and MCP servers a project needs, and a tool installs them.
+
+* **What it does well.** Microsoft's Agent Package Manager (APM) calls itself "a dependency manager for AI agents". A
+  lockfile pins exact versions and content hashes, so a fresh clone resolves the same content. It installs into GitHub
+  Copilot, Claude Code, Cursor, Codex, Gemini and other agents ([APM][apm]).
+* **What KaC adds.** APM installs the content it is given, at the version it is given. `kac` checks what that content
+  says: each record against its type's schema, and each citation against the record it names.
+* **When it is enough.** You are sharing skills and instructions you already trust, and nobody needs to cite or check a
+  rule in them.
+
+## An AI reviewer given your guidelines
+
+A review bot reads your instruction files and checks each pull request against them.
+
+* **What it does well.** CodeRabbit reads `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` and other agents'
+  rule files as code guidelines. Each file applies to its own directory and the directories below it
+  ([CodeRabbit: code guidelines][coderabbit]).
+* **What KaC adds.** A guideline file is free text, so a finding cannot cite the rule it applied. Each rule in a KaC
+  standard has an id, and a control records which rules a tool already checks.
+* **When it is enough.** Your rules fit in a few files, and nobody has to trace a review finding back to a rule.
+
 ## What KaC does not do
 
 * **It does not enforce a rule on code.** The plugin gives a session context, as a `CLAUDE.md` does. A control
-  records what checks a rule. CI on the corpus checks the records.
+  records what checks a rule. CI on the corpus checks the records. [Design intent](framework/intent.md) states where
+  review after the work is going.
 * **The plugin is built for Claude Code.** Another agent can read the Markdown in a checkout. It does without the
   plugin's skills, which look a record up when the work calls for it.
 * **It costs a tool and a schema.** A corpus needs `kac`, the .NET SDK and a CI job to check it.
@@ -88,7 +114,9 @@ plugin ships.
 keep one.
 
 [agents-md]: https://agents.md/
+[apm]: https://microsoft.github.io/apm/
 [cc-memory]: https://code.claude.com/docs/en/memory
+[coderabbit]: https://docs.coderabbit.ai/knowledge-base/code-guidelines
 [gh-org]: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-organization-instructions
 [gh-precedence]: https://docs.github.com/en/copilot/concepts/prompting/response-customization
 [ms-learn-mcp]: https://learn.microsoft.com/en-us/training/support/mcp

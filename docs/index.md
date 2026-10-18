@@ -51,5 +51,6 @@ This site is built from `main`, so it can describe a `kac` no release includes y
 `kac --version`, and read the [changelog](changelog.md) for what each published version brought. Where the two disagree,
 the site is ahead.
 
-Every page here describes what exists today. The
-[issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) says what has been considered and not yet built.
+Every page here describes what exists today, except [Design intent](framework/intent.md), which states the direction.
+The [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) says what has been considered and not yet
+built.

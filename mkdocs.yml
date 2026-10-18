@@ -156,6 +156,7 @@ nav:
   - The framework:
       - framework/index.md
       - Principles: framework/principles.md
+      - Design intent: framework/intent.md
       - Taxonomy: framework/taxonomy.md
       - The default types: framework/types.md
       - Metadata: framework/metadata.md

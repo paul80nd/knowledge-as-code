@@ -118,7 +118,8 @@ every change in the working tree, so `git diff` is your review.
 The set of types is the part least proven. [`examples/library`](examples/library/README.md#maturity) and
 [`examples/engineering`](examples/engineering/README.md#maturity) record which types have met real content.
 
-Every document here describes what exists today. The
+Every document here describes what exists today, except
+[Design intent](https://paul80nd.github.io/knowledge-as-code/framework/intent/), which states the direction. The
 [issue tracker](https://github.com/paul80nd/knowledge-as-code/issues) lists everything considered and not yet built.
 
 ## Opinions
