@@ -37,11 +37,14 @@ Three constraints shape the response.
 
 We treat knowledge as code:
 
-* **Every document has a type**, drawn from a [taxonomy](../knowledge-as-code/taxonomy.md), and validated
-  [frontmatter](../knowledge-as-code/metadata.md). The type's tier sets its review bar and its lifecycle.
+* **Every document has a type and validated frontmatter.** The type comes from a
+  [taxonomy](../knowledge-as-code/taxonomy.md), and the frontmatter follows a
+  [schema](../knowledge-as-code/metadata.md). The type's tier sets its review bar and its lifecycle.
 * **Cheap capture happens in the tracker.** A session files an observation as a work item. It becomes a record only
   when a person verifies it.
 * **CI validates** the frontmatter, the ids and the links, and generates every index.
+
+[Knowledge as Code](../knowledge-as-code.md) describes the full approach.
 
 ## Alternatives Considered
 
@@ -61,11 +64,11 @@ We treat knowledge as code:
   adds friction in exchange for validation.
 * **CI will gate documentation.** A malformed document fails the build, and the first few failures could irritate.
 * **Existing content will have to migrate** into records with frontmatter.
-* **The value depends on the promotion gate.** If unverified observations reach the corpus, trust in everything else
+* **The value depends on that verification.** If unverified observations reach the corpus, trust in everything else
   falls with them.
 * **Session logs will stay out of this corpus**, because they contain credentials and customer data.
 
 ## References
 
-* [Knowledge as Code](../knowledge-as-code.md) sets out the approach.
-* [Contributing](../knowledge-as-code/contributing.md) covers the review model and the promotion path.
+* [Running it in CI](https://paul80nd.github.io/knowledge-as-code/use/ci/#what-the-checks-ask) says what CI validates
+  and generates.

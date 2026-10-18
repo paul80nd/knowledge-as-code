@@ -47,7 +47,7 @@ decisions.
 
 Each clause states one commitment that stays true after you replace the whole technology estate. A product, a
 version or a mechanism belongs in a standard that implements the clause. A figure in a clause, such as a remediation
-window, is the limit the policy's owner accepts. A standard may set a tighter figure, and never a looser one.
+window, is the limit the policy's owner accepts. A standard implementing the clause may only tighten it.
 
 A policy changes about once a year, at its review, or when a law or a framework behind it changes. New policies
 arrive rarely.
@@ -101,8 +101,8 @@ Accessibility under governance is the clearest of them.
    looking for this policy would try first. If none does, that is a taxonomy question, and not a fifth folder made in
    passing.
 5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short upper-case
-   id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. A COULD states an aspiration beyond what the policy requires. A
-   standard writes MAY to grant a permission, and a policy grants none. Write any explicit exceptions beneath the
+   id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. A COULD states an aspiration beyond what the policy requires.
+   MAY grants a permission, so a standard uses it and a policy does not. Write any explicit exceptions beneath the
    clauses, where a reader meets them before relying on the rule.
 6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
    up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](frameworks.md). Decide its
@@ -122,8 +122,8 @@ Accessibility under governance is the clearest of them.
   a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
   standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
   corpus implements is the normal state rather than a gap to be explained.
-* **A policy has no roles section and no approver field.** The `owner` answers for the policy, and the pull request
-  that made it `active` records who approved it. The process that does the work says who carries out a commitment.
+* **A policy has no roles section and no approver field.** The `owner` answers for the policy, and step 8 says how it
+  is approved. The process that does the work says who carries out a commitment.
 * **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
   answers, in the form [Metadata][referring] sets out. Clause ids are immutable for the same reason policy ids are:
   removing or renaming one breaks every citation of it.
