@@ -25,10 +25,12 @@ repository. Analysers run as part of the build. A warning is a defect.
 
 ### The conventions come from one file
 
-- A repository holding C# **MUST** have an `.editorconfig` at its root, taken from the .NET runtime team's own.
+- A repository holding C# **MUST** have an `.editorconfig` at its root.
+- That `.editorconfig` **SHOULD** be the .NET runtime team's own.
+- A repository **SHOULD** state each departure from the runtime team's file in a comment beside it.
 - A project **MUST** set `TreatWarningsAsErrors` and `EnforceCodeStyleInBuild`, so the build checks the style.
 - A project **MUST** enable nullable reference types.
-- Code **MUST NOT** silence a nullability warning with `!`.
+- Code **MUST NOT** silence a nullability warning with `!`, except in a test asserting that a null argument is refused.
 - A project **MUST** enable the .NET analysers at the `latest` analysis level.
 
 _**Covers:** [pol-AUTV].WARN, [pol-SECD].CODING_
@@ -97,6 +99,14 @@ argues about the change, not about the braces. It also means a newcomer has read
   settings above.
 - **Normative.** [Common C# code conventions] states the naming and layout rules the `.editorconfig` encodes.
 - **Informative.** [Code quality analysis rules] lists the rules the build turns into errors.
+
+## Changelog
+
+- 2026-10-18: taking the runtime team's `.editorconfig` becomes a `SHOULD`. A test asserting that a null argument is
+  refused may use `!`.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [Code quality analysis rules]: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/
 [Common C# code conventions]: https://learn.microsoft.com/dotnet/csharp/fundamentals/coding-style/coding-conventions

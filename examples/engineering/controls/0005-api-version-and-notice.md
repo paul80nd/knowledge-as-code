@@ -22,8 +22,10 @@ No check fails a contract whose routes have no version, or a breaking change mad
 
 * [std-API.a-change-carries-a-version-and-a-notice] says a published interface "**MUST** have a version a consumer can
   pin to".
+* It says an HTTP interface "**SHOULD** put its major version in the path, as `/v2/`, unless the contract states another
+  scheme".
 * It says a breaking change "**MUST** ship as a new version, with the previous version still serving requests".
-* It says a deprecated version "**MUST** respond with a `Deprecation` header and a `Sunset` header, so a consumer sees
+* It says a deprecated version "**SHOULD** respond with a `Deprecation` header and a `Sunset` header, so a consumer sees
   the notice in the response".
 
 ## How it works
@@ -36,6 +38,9 @@ contract:
   `deprecated: true` that declares no `Deprecation` or `Sunset` response header.
 * `oasdiff breaking <contract on main> contract/openapi.yaml --fail-on ERR` fails a breaking change made inside a
   version that already exists.
+
+The two spectral rules check a `SHOULD`. A repository departing from one turns that rule off in `.spectral.yaml`, with
+a comment giving the reason. Where the contract states another versioning scheme, that comment names the scheme.
 
 A pre-commit check could run the first command. A Claude Code hook could run it on `Write` and `Edit` of the contract.
 The second needs the contract on `main`, so it belongs in the pipeline.

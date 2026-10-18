@@ -92,6 +92,13 @@ advisory can be answered in minutes.
 
 - **Informative.** [OWASP Dependency-Check] and [OSV] describe the advisory data the scan runs against.
 
+## Changelog
+
+- 2026-10-18: added the route to depart from a rule.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
 [OSV]: https://osv.dev/
 [OWASP Dependency-Check]: https://owasp.org/www-project-dependency-check/
 [pol-TRUS]: ../../policies/security/trus-trusted-components.md#clauses

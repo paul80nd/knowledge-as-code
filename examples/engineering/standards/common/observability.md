@@ -19,8 +19,9 @@ tags: [ alerting, logging, tracing ]
 
 ## Summary
 
-Every service emits structured logs, traces and metrics to the central platform. Each record has a UTC timestamp and a
-trace id that follows the request across services. An alert names an owner and the first action to take.
+Every service emits structured logs, traces and metrics to the central platform. Each record has a timestamp stating
+its offset from UTC, and a trace id that follows the request across services. An alert names an owner and the first
+action to take.
 
 ## Rules
 
@@ -34,7 +35,9 @@ _**Covers:** [pol-OBSV].BLIND, [pol-OBSV].CENTRAL_
 
 ### One request reads as one timeline
 
-- A service **MUST** stamp every record with a UTC timestamp taken from a synchronised clock.
+- A service **MUST** stamp every record with a timestamp taken from a synchronised clock, stating its offset from UTC.
+- A service **SHOULD** write that timestamp in UTC, because records from several services then sort without
+  conversion.
 - A service **MUST** accept an inbound `traceparent`.
 - A service **MUST** pass that `traceparent` to everything it calls.
 - A log line **MUST** include the trace id, so a search on one request returns every service that handled it.
@@ -77,7 +80,7 @@ caused it means reading by eye.
 ## Conformance checklist
 
 - [ ] A search for one trace id returns records from every service the request passed through.
-- [ ] Every timestamp in the central store is UTC, and the hosts agree to within a second.
+- [ ] Every timestamp in the central store states its offset from UTC, and the hosts agree to within a second.
 - [ ] The service has a health check, a dashboard and at least one alert.
 - [ ] Each alert names an owner and a first action.
 - [ ] Every alert raised in the last 30 days was acted on or removed.
@@ -88,12 +91,23 @@ caused it means reading by eye.
 An incident is answered from what was already being recorded. A log line added during the incident tells you about the
 next one.
 
+A timestamp may state any offset, as [ASVS 5.0 requirement 16.2.2] allows, because the offset alone makes two records
+comparable. UTC is the usual way, and saves a conversion on every search.
+
 ## Sources and further reading
 
 - **Normative.** [W3C Trace Context] defines the `traceparent` header this standard passes between services.
 - **Informative.** [Google SRE, Service Level Objectives] covers how an objective is chosen. This standard requires an
   objective and does not teach how to pick one.
 
+## Changelog
+
+- 2026-10-18: a timestamp states its offset from UTC, and writing it in UTC becomes a `SHOULD`.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
+[ASVS 5.0 requirement 16.2.2]: https://github.com/OWASP/ASVS/blob/master/5.0/en/0x25-V16-Security-Logging-and-Error-Handling.md
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/
 [std-SECRET.nowhere-else-holds-a-secret]: secret-handling.md#nowhere-else-holds-a-secret

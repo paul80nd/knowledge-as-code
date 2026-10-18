@@ -85,6 +85,13 @@ a hash of the bytes.
 - **Normative.** [OCI Image Format Specification] defines the digest these rules pin to.
 - **Informative.** [NIST SP 800-190] lists the container risks. This standard covers some of them.
 
+## Changelog
+
+- 2026-10-18: added the route to depart from a rule.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
 [NIST SP 800-190]: https://csrc.nist.gov/pubs/sp/800/190/final
 [OCI Image Format Specification]: https://github.com/opencontainers/image-spec/blob/main/spec.md
 [pol-ACCS]: ../../policies/security/accs-access-by-identity.md#clauses

@@ -94,6 +94,13 @@ than anyone can check it, so a reviewer works from the record of what produced i
 - **Informative.** [Google's Code Review Developer Guide] covers what a reviewer looks for and how they say it. These
   rules say who reviews and what they record, and leave the reading itself to that guide.
 
+## Changelog
+
+- 2026-10-18: added the route to depart from a rule.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
 [Google's Code Review Developer Guide]: https://google.github.io/eng-practices/review/
 [pol-AGNT]: ../../policies/governance/agnt-agent-oversight.md#clauses
 [pol-EVER]: ../../policies/delivery/ever-version-control.md#clauses

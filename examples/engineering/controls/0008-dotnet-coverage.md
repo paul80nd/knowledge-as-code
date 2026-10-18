@@ -20,8 +20,10 @@ No check fails a .NET build that runs its tests and collects no coverage.
 
 ## What it checks
 
-* [std-NETTST.coverage-is-collected-by-the-build] requires the build to collect coverage with the XPlat Code Coverage
-  collector, and to publish the report.
+* [std-NETTST.coverage-is-collected-by-the-build] says a build "**MUST** collect coverage from its test run and publish
+  the report".
+* It says a build "**SHOULD** collect it with `dotnet test --collect:"XPlat Code Coverage"`, which writes a Cobertura
+  report".
 
 ## How it works
 
@@ -31,6 +33,8 @@ Cobertura report:
 ```sh
 find . -path '*/TestResults/*/coverage.cobertura.xml' | grep -q .
 ```
+
+A build using another collector, as the `SHOULD` allows, changes the path the step searches for.
 
 The step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline
 leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and
