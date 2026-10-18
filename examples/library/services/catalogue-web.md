@@ -29,7 +29,7 @@ Serves the reader-facing catalogue: search results, item pages, and a reader's o
 staff-facing screens and stores no data of its own. Item pages, loans and holds arrive through [svc-catalogue-api],
 search results through [svc-search], and jacket imagery through [svc-covers-cdn].
 
-It delegates authentication to the identity provider at `id.example.com`, which issues the tokens the gateway validates.
+It delegates authentication to [itg-identity] at `id.example.com`, which issues the tokens the gateway validates.
 The branch terminals run the same application in a kiosk profile, so no second service exists for them.
 
 ## Where it lives
@@ -72,6 +72,7 @@ grading is recorded on [svc-search].
 
 No database connection is configured for this app service. It reads and writes data through the gateway.
 
+[itg-identity]: ../integrations/identity.md
 [svc-catalogue-api]: catalogue-api.md
 [svc-covers-cdn]: covers-cdn.md
 [svc-search]: search.md

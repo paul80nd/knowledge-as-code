@@ -47,8 +47,8 @@ nobody has filled them in.
 
 ## Dependencies
 
-None. It consumes from the bus and calls the mail provider. The library does not deploy that provider, so it is an
-integration.
+None. It consumes from the bus and calls the mail provider, [itg-mail-delivery]. The library does not deploy that
+provider, so it is an integration and not an edge.
 
 ## Data
 
@@ -67,3 +67,5 @@ Both are in the shared storage account.
   overnight therefore gets the overdue notice and no due-soon notice.
 * **Criticality**: `important`. It is queue-fed, so an outage delays notices and loses none. Work resumes from where it
   stopped when the service returns.
+
+[itg-mail-delivery]: ../integrations/mail-delivery.md

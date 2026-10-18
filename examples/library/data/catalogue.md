@@ -84,11 +84,6 @@ recipients only.
 * [svc-catalogue-api] owns this data.
 * [itg-bibliographic-data] is where the work and edition records come from.
 
----
-
-_(**Never put actual data here**: no sample records, no identifiers, no connection strings. This corpus is broadly
-readable.)_
-
 [itg-bibliographic-data]: ../integrations/bibliographic-data.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md

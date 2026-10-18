@@ -26,9 +26,6 @@ Until then it sent one kind of message: a reminder on the day a loan fell due, t
 number. Hold-ready alerts and membership renewals were always email. It ended for two reasons. The price per message
 rose at the June renewal, and every borrower who got the text also got the email.
 
-**`used-by` still names [svc-notices].** The field is required and nothing calls this vendor today, so the id records
-which service used to.
-
 ## Contract
 
 The account closed on 30 June 2026. This is the contract as it stood.

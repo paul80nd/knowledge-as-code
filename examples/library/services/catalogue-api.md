@@ -66,16 +66,17 @@ Taken from the application settings the infrastructure declares for the app serv
 * [svc-lending] serves loans, holds and borrower records. It is configured as `Apis__Lending__Url`, with a matching
   `Apis__Lending__Key`.
 
-The same settings include the identity provider's authority and the bibliographic data supplier's API. Neither is a
-service in this catalogue.
+The same settings include the authority of [itg-identity] and the API of [itg-bibliographic-data]. Neither is a
+service, so neither is an edge. Each integration names this service in its `used-by`.
 
 ## Data
 
-This service has a database connection, configured as `ConnectionStrings__Catalogue`. The account-management and
-loan-history offerings are compiled into this application, so their stores are read through it too.
+This service owns the catalogue database, `sqldb-catalogue-<env>`, configured as `ConnectionStrings__Catalogue`.
+[dat-catalogue] describes it. This service designed that schema, and [svc-lending] does not map it.
 
-**What that database is, and whether it is the same one [svc-lending] maps, is an open question.** No source this
-catalogue was built from states it.
+The account-management and loan-history offerings are compiled into this application, so their stores are read through
+it too. **Which stores those are, and whether they are the legacy database [svc-lending] maps, is an open question.**
+No source this catalogue was built from states it.
 
 ## Operational notes
 
@@ -83,5 +84,8 @@ catalogue was built from states it.
 * **Consumers.** [svc-catalogue-web] is the only service configured with this URL. Nothing checks this line, so it goes
   stale.
 
+[dat-catalogue]: ../data/catalogue.md
+[itg-bibliographic-data]: ../integrations/bibliographic-data.md
+[itg-identity]: ../integrations/identity.md
 [svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md

@@ -5,7 +5,7 @@ tier: descriptive
 status: approved
 packages:
   - { purl: pkg:nuget/Spectre.Console, versions: 0.57.x }
-  - { purl: pkg:nuget/Spectre.Console.Cli, versions: 0.55.x }
+  - { purl: pkg:nuget/Spectre.Console.Cli, versions: 0.57.x }
 homepage: https://spectreconsole.net/
 licence: MIT
 licence-declared: MIT
@@ -34,7 +34,7 @@ One library now reads the command line and asks a question. `System.CommandLine`
 
 ## Accessibility
 
-Assessed at Spectre.Console 0.57.x and Spectre.Console.Cli 0.55.x, by reading every call that colours or prompts.
+Assessed at Spectre.Console 0.57.2 and Spectre.Console.Cli 0.57.2, by reading every call that colours or prompts.
 [WCAG 2.2 AA] covers content a browser renders and applies to no terminal. [std-A11Y] states the rules for the
 terminal, and this assessment checks `kac` against them.
 
@@ -42,9 +42,9 @@ Nothing the tool prints conveys meaning through colour alone. `Commands.Severity
 `error`, `warning` or `info`. `Tag` and `Tally` print the word beside the colour. `--no-color` calls `Out.NoColor`,
 which drops both consoles to `ColorSystem.NoColors`, and Spectre does the same for `NO_COLOR` in the environment.
 Findings are laid out in a `Grid`, so no box-drawing character separates one column from the next. `--json` writes
-straight to the stream and never through a renderer. Every prompt `ConsoleAsker` draws has a flag on the verb that
-supplies the answer. `Asking.Asks` returns false where there is no terminal, so an unattended run finishes without
-waiting.
+straight to the stream and never through a renderer. `--yes` answers every prompt `ConsoleAsker` draws. Each question
+`new` asks has a flag that supplies its answer, except the address the corpus is browsed at, which `--yes` derives from
+the git remote. `Asking.Asks` returns false where there is no terminal, so an unattended run finishes without waiting.
 
 Two things fall short. `SelectionPrompt` and `MultiSelectionPrompt` redraw the whole list on each keystroke, which a
 screen reader may announce in full every time. `--yes` and the per-answer flags avoid both prompts. `Md.Snippet`

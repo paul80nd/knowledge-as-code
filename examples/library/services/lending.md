@@ -69,8 +69,12 @@ None in this catalogue, so this record has no `depends-on` field. Its downward d
 
 ## Data
 
-**The legacy database**, which this service maps and does not own. Any data document describing it has to record more
-than one writer: the legacy library management system still writes to it directly.
+**The legacy database**, which this service maps and does not own. The legacy library management system still writes
+to it directly. Three data domains live there, and each records that second writer:
+
+* [dat-borrowers], in the `BORROWER` table family
+* [dat-loans], in the `CIRC` table family
+* [dat-payments], in the `FIN` table family
 
 ## Operational notes
 
@@ -79,5 +83,8 @@ than one writer: the legacy library management system still writes to it directl
   so it goes stale.
 * **Criticality**: `critical`. It is the estate's only route to loan data, and nothing degrades gracefully without it.
 
+[dat-borrowers]: ../data/borrowers.md
+[dat-loans]: ../data/loans.md
+[dat-payments]: ../data/payments.md
 [svc-catalogue-api]: catalogue-api.md
 [svc-reservations]: reservations.md
