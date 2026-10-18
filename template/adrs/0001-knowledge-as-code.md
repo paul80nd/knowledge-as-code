@@ -16,11 +16,11 @@ tags: [ documentation, knowledge-management, tooling ]
 > generated indexes, **rather than** unstructured pages or a hosted platform, **to achieve** knowledge that accumulates
 > and stays current, **accepting** schema obligations and CI gating.
 
-## Context
+<!-- This is the decision that brought the corpus into being, seeded so that the reasoning arrives with the mechanism.
+Read it, rewrite the parts that are not true of your estate, and accept it in your own name. Until you do, it stands as
+`proposed` and the corpus has no recorded reason to exist. -->
 
-This is the decision that brought the corpus into being, seeded so that the reasoning arrives with the mechanism. Read
-it, rewrite the parts that are not true of your estate, and accept it in your own name. Until you do, it stands as
-`proposed` and the corpus has no recorded reason to exist.
+## Context
 
 Engineering knowledge is usually split across a wiki, a work tracker and people's memory, and nothing connects them.
 Metadata written in prose cannot be validated or indexed, so hand-kept indexes drift and conventions go unenforced.
