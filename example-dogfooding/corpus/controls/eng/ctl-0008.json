@@ -24,11 +24,11 @@
     ]
   },
   "sections": {
-    "What it checks": "* [std-NETTST.coverage-is-collected-by-the-build] requires the build to collect coverage with the XPlat Code Coverage\n  collector, and to publish the report.",
-    "How it works": "Nothing runs. The check this rule needs is a pipeline step after `dotnet test`. It fails where the run wrote no Cobertura report:\n\n```sh\nfind . -path '*/TestResults/*/coverage.cobertura.xml' | grep -q .\n```\n\nThe step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and could only search it for the collector flag.",
+    "What it checks": "* [std-NETTST.coverage-is-collected-by-the-build] says a build \"**MUST** collect coverage from its test run and publish\n  the report\".\n* It says a build \"**SHOULD** collect it with `dotnet test --collect:\"XPlat Code Coverage\"`, which writes a Cobertura\n  report\".",
+    "How it works": "Nothing runs. The check this rule needs is a pipeline step after `dotnet test`. It fails where the run wrote no Cobertura report:\n\n```sh\nfind . -path '*/TestResults/*/coverage.cobertura.xml' | grep -q .\n```\n\nA build using another collector, as the `SHOULD` allows, changes the path the step searches for.\n\nThe step has to come from a shared pipeline template that branch policy requires. A team writing its own pipeline leaves out the step along with the collector. A pre-commit check or a Claude Code hook sees the pipeline definition, and could only search it for the collector flag.",
     "Coverage and gaps": "A reviewer reading the pipeline definition is the only thing that notices a missing collector today.\n\nThe check proves a report was written. It does not prove the report was published, or that each test project is excluded from its own figure."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/42686fe4191d3948fe99e3f33310877c77dab7c3/examples/engineering/controls/0008-dotnet-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/19dd36457c15757869a913391a668a9b10a94f5a/examples/engineering/controls/0008-dotnet-coverage.md"
   }
 }

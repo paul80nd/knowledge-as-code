@@ -4,7 +4,7 @@
   "trust": null,
   "fields": {
     "id": "std-NETTST",
-    "title": "A .NET test suite is xUnit, and an integration test owns its dependencies",
+    "title": "A .NET test project runs under one framework, and an integration test owns its dependencies",
     "category": "platform/dotnet",
     "status": "draft",
     "superseded-by": null,
@@ -27,10 +27,10 @@
     ]
   },
   "sections": {
-    "Summary": "C# tests are written with xUnit. A unit test crosses no process boundary. An integration test starts the dependencies it needs in containers of its own.",
-    "Conformance checklist": "- [ ] Every test project references xUnit and no second test framework.\n- [ ] No unit test project references Testcontainers or a database driver.\n- [ ] A search for `Thread.Sleep` and `async void` across the test projects returns nothing.\n- [ ] The integration suite passes on a machine with no services running but Docker.\n- [ ] Running the integration suite twice in a row passes both times.\n- [ ] The build publishes a coverage report, and the test projects are excluded from it."
+    "Summary": "A repository's C# tests use one test framework and one assertion style. A unit test crosses no process boundary. An integration test starts the dependencies it needs, and shares none of them with another run.",
+    "Conformance checklist": "- [ ] Every test project in the repository references the same test framework, and `dotnet test` runs them all.\n- [ ] Every test project uses one assertion style.\n- [ ] No unit test project references Testcontainers or a database driver.\n- [ ] A search for `Thread.Sleep` and `async void` across the test projects returns nothing.\n- [ ] The integration suite passes on a machine running no shared database, queue or service.\n- [ ] Running the integration suite twice in a row passes both times.\n- [ ] The build publishes a coverage report, and the test projects are excluded from it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/42686fe4191d3948fe99e3f33310877c77dab7c3/examples/engineering/standards/platform/dotnet/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/19dd36457c15757869a913391a668a9b10a94f5a/examples/engineering/standards/platform/dotnet/testing.md"
   }
 }

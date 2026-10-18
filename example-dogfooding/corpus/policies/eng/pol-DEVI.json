@@ -11,10 +11,10 @@
   },
   "sections": {
     "Purpose": "Sometimes we knowingly break one of these policies, or a standard beneath it. When we do, we write down what we did, name the person accepting the risk, and set a date to look at it again.",
-    "Scope": "Any knowing departure from a policy here, or from a standard that implements one, in any environment. Also, any shortcut taken knowing someone will have to undo it, any gap an external review, audit or oversight process finds in what engineering does, and any finding of engineering's own whose implications reach beyond the system it was found in. This binds whether the departure is permanent, temporary, or made under pressure during an incident.",
+    "Scope": "Any knowing departure from a `MUST` or `MUST NOT` in a policy here, or in a standard that implements one, in any environment. Also, any shortcut taken knowing someone will have to undo it, any gap an external review, audit or oversight process finds in what engineering does, and any finding of engineering's own whose implications reach beyond the system it was found in. This binds whether the departure is permanent, temporary, or made under pressure during an incident. A departure from a `SHOULD` needs its reason stated in the change, and no deviation.",
     "Exceptions": "None. Departing from this policy means not recording a deviation, which is the one thing it exists to stop.\n\nSome commitments admit no deviation at all, and no record makes any of them acceptable:\n\n* [pol-SCRT].EMBED, [pol-SCRT].REUSE and [pol-SCRT].LOGS. The operational obligations beside them are deviable.\n* [pol-DATA].LAWFUL. Its other obligations are deviable.\n* [pol-KNOW].DOCS, at an effort proportionate to the system. The commitment does not vary with the effort.\n* [pol-AGNT].ACCEPT. Being in a hurry does not make agent output authoritative.\n* [pol-INCR].EVIDENC, whether or not a breach is notifiable.\n* This policy, for the reason given above."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/42686fe4191d3948fe99e3f33310877c77dab7c3/examples/engineering/policies/governance/devi-deviations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/19dd36457c15757869a913391a668a9b10a94f5a/examples/engineering/policies/governance/devi-deviations.md"
   }
 }
