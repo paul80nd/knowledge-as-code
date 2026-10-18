@@ -1,5 +1,5 @@
 ---
 type: regex
 target: { source: file, path: monitoring/alerts.yml }
-pattern: '([Rr]unbook|\b[Aa]ction)'
+pattern: '([Rr]unbook|(\b|_)[Aa]ction)'
 ---

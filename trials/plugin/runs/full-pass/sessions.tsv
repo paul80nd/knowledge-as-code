@@ -1,0 +1,199 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	audit-log-retention	1	0	1	1	1	1	0.3082842	11	
+house	plugin	audit-log-retention	2	0	1	1	1	1	0.33972500000000005	12	
+house	plugin	audit-log-retention	3	0	1	1	1	1	0.2841364	10	
+house	none	audit-log-retention	1	0	1	0	0		0.1731768	8	fail
+house	none	audit-log-retention	2	0	1	0	0		0.15549000000000002	7	fail
+house	none	audit-log-retention	3	0	1	0	0		0.18812720000000002	11	fail
+house	plugin	ca1848-build-break	1	0	1	1	1	1	0.2354956	9	
+house	plugin	ca1848-build-break	2	0	1	0	1	1	0.2267006	8	pass
+house	plugin	ca1848-build-break	3	0	1	0	1	1	0.25399780000000005	10	pass
+house	none	ca1848-build-break	1	0	1	0	0		0.16116880000000003	8	fail
+house	none	ca1848-build-break	2	0	1	0	0		0.164011	8	fail
+house	none	ca1848-build-break	3	0	1	0	0		0.1426276	6	fail
+house	plugin	ci-every-branch	1	0	1	1	0	1	0.2919786	11	
+house	plugin	ci-every-branch	2	0	1	1	1	1	0.24423340000000002	8	
+house	plugin	ci-every-branch	3	0	1	1	1	1	0.256705	8	
+house	none	ci-every-branch	1	0	1	1	0		0.138188	9	
+house	none	ci-every-branch	2	0	1	1	0		0.1337314	8	
+house	none	ci-every-branch	3	0	1	1	0		0.143256	9	
+house	plugin	ci-secret-scan	1	0	1	1	1	1	0.3388098000000001	10	
+house	plugin	ci-secret-scan	2	0	1	1	1	1	0.3625032	10	
+house	plugin	ci-secret-scan	3	0	1	1	1	1	0.38844259999999997	13	
+house	none	ci-secret-scan	1	0	1	0	0		0.1768962	7	fail
+house	none	ci-secret-scan	2	0	1	0	0		0.185445	8	fail
+house	none	ci-secret-scan	3	0	1	0	0		0.1488682	6	fail
+house	plugin	ci-uv-locked	1	0	1	1	1	1	0.2498092	8	
+house	plugin	ci-uv-locked	2	0	1	1	1	1	0.29956040000000006	9	
+house	plugin	ci-uv-locked	3	0	1	1	1	1	0.255867	9	
+house	none	ci-uv-locked	1	0	1	1	0		0.12152379999999999	5	
+house	none	ci-uv-locked	2	0	1	1	0		0.11957359999999999	5	
+house	none	ci-uv-locked	3	0	1	1	0		0.11159419999999998	4	
+house	plugin	cover-timeout-pr	1	0	1	1	0	1	0.3441676	17	
+house	plugin	cover-timeout-pr	2	0	1	1	0	1	0.3820516000000001	19	
+house	plugin	cover-timeout-pr	3	0	1	1	0	1	0.36999240000000005	18	
+house	none	cover-timeout-pr	1	0	1	0	0		0.2473304	15	fail
+house	none	cover-timeout-pr	2	0	1	0	0		0.200565	13	fail
+house	none	cover-timeout-pr	3	0	1	0	0		0.19418140000000003	10	fail
+house	plugin	dotnet-ci	1	0	1	1	1	1	0.3125922	10	
+house	plugin	dotnet-ci	2	0	1	1	1	1	0.3755036	12	
+house	plugin	dotnet-ci	3	0	1	1	1	1	0.3583978	11	
+house	none	dotnet-ci	1	0	1	0	0		0.1451354	6	fail
+house	none	dotnet-ci	2	0	1	0	0		0.1440524	6	fail
+house	none	dotnet-ci	3	0	1	0	0		0.12852380000000002	5	fail
+house	plugin	flaky-test-skip	1	0	1	1	1	1	0.2399258	9	pass
+house	plugin	flaky-test-skip	2	0	0	1	1	1	0.226025	7	no task
+house	plugin	flaky-test-skip	3	0	0	1	1	1	0.1872916	6	no task
+house	none	flaky-test-skip	1	0	1	0	0		0.13304539999999998	8	fail
+house	none	flaky-test-skip	2	0	1	0	0		0.13963379999999997	8	fail
+house	none	flaky-test-skip	3	0	1	0	0		0.14462419999999998	9	fail
+house	plugin	go-service-dockerfile	1	0	1	1	1	1	0.2759122	8	
+house	plugin	go-service-dockerfile	2	0	1	0	1	1	0.2878388	9	fail
+house	plugin	go-service-dockerfile	3	0	1	0	1	1	0.327732	12	fail
+house	none	go-service-dockerfile	1	0	1	0	0		0.1345662	7	fail
+house	none	go-service-dockerfile	2	0	1	0	0		0.1447738	9	fail
+house	none	go-service-dockerfile	3	0	1	0	0		0.14076880000000003	7	fail
+house	plugin	health-endpoint	1	0	1	0	0	1	0.4090426000000001	23	fail
+house	plugin	health-endpoint	2	0	1	0	0	1	0.4048368	23	fail
+house	plugin	health-endpoint	3	0	1	0	0	1	0.3320876	19	fail
+house	none	health-endpoint	1	0	1	0	0		0.15967879999999998	8	fail
+house	none	health-endpoint	2	0	1	0	0		0.21181139999999998	15	fail
+house	none	health-endpoint	3	0	1	0	0		0.21991019999999994	16	fail
+control	plugin	label-printer-image	1	0	1	1	1	1	0.3168092	9	
+control	plugin	label-printer-image	2	0	1	1	1	1	0.3226676	10	
+control	plugin	label-printer-image	3	0	1	1	1	1	0.30160639999999994	10	
+control	none	label-printer-image	1	0	1	1	0		0.1544254	11	
+control	none	label-printer-image	2	0	1	1	0		0.15215820000000002	10	
+control	none	label-printer-image	3	0	1	1	0		0.15672419999999998	11	
+house	plugin	label-printer-manifest	1	0	1	1	1	1	0.32429959999999997	10	
+house	plugin	label-printer-manifest	2	0	1	1	1	1	0.32033159999999994	10	
+house	plugin	label-printer-manifest	3	0	1	0	1	1	0.2728688	7	pass
+house	none	label-printer-manifest	1	0	1	0	0		0.161997	8	fail
+house	none	label-printer-manifest	2	0	1	0	0		0.199178	11	fail
+house	none	label-printer-manifest	3	0	1	0	0		0.15621200000000002	8	fail
+house	plugin	order-repository-tests	1	0	1	1	1	1	0.46886800000000006	23	
+house	plugin	order-repository-tests	2	0	1	1	1	1	0.4157302	19	
+house	plugin	order-repository-tests	3	0	1	1	1	1	0.38065780000000005	19	
+house	none	order-repository-tests	1	0	1	1	0		0.2626624000000001	15	
+house	none	order-repository-tests	2	0	1	1	0		0.2486562	17	
+house	none	order-repository-tests	3	0	1	1	0		0.30586880000000005	20	
+house	plugin	orders-column-rename	1	0	1	1	1	1	0.2745156	10	
+house	plugin	orders-column-rename	2	0	1	0	1	1	0.2884164	13	pass
+house	plugin	orders-column-rename	3	0	1	1	1	1	0.2796594	13	
+house	none	orders-column-rename	1	0	1	1	0		0.19157699999999997	7	
+house	none	orders-column-rename	2	0	1	1	0		0.1813052	7	
+house	none	orders-column-rename	3	0	1	0	0		0.1932064	7	pass
+control	plugin	orders-db-connection	1	0	1	1	1	1	0.2647716	10	
+control	plugin	orders-db-connection	2	0	1	1	1	1	0.2847486	10	
+control	plugin	orders-db-connection	3	0	1	1	1	1	0.3008464	12	
+control	none	orders-db-connection	1	0	1	1	0		0.1891156	12	
+control	none	orders-db-connection	2	0	1	1	0		0.18439980000000003	13	
+control	none	orders-db-connection	3	0	1	1	0		0.184937	12	
+house	plugin	pricing-call	1	0	1	0	0	1	0.3763228	15	fail
+house	plugin	pricing-call	2	0	1	0	0	1	0.3731682	16	fail
+house	plugin	pricing-call	3	0	1	0	0	1	0.32667019999999997	15	fail
+house	none	pricing-call	1	0	1	0	0		0.21696120000000002	12	fail
+house	none	pricing-call	2	0	1	0	0		0.19119700000000003	11	fail
+house	none	pricing-call	3	0	1	0	0		0.2032144	12	fail
+house	plugin	request-logging	1	0	1	1	1	1	0.35136899999999993	17	
+house	plugin	request-logging	2	0	1	1	1	1	0.35472100000000006	15	
+house	plugin	request-logging	3	0	1	1	1	1	0.3512928	17	
+house	none	request-logging	1	0	1	0	0		0.19641820000000002	11	fail
+house	none	request-logging	2	0	1	0	0		0.22943000000000005	14	fail
+house	none	request-logging	3	0	1	0	0		0.2003434	12	fail
+house	plugin	returns-api-routes	1	0	1	1	1	1	0.45181099999999996	16	
+house	plugin	returns-api-routes	2	0	1	1	1	1	0.6140354	25	
+house	plugin	returns-api-routes	3	0	1	1	1	1	0.5250308	16	
+house	none	returns-api-routes	1	0	1	0	0		0.1833472	11	fail
+house	none	returns-api-routes	2	0	1	0	0		0.202071	13	fail
+house	none	returns-api-routes	3	0	1	0	0		0.18396279999999998	11	fail
+house	plugin	stock-alert-rules	1	0	1	1	1	1	0.2264724	8	pass
+house	plugin	stock-alert-rules	2	0	1	1	1	1	0.2487546	9	fail
+house	plugin	stock-alert-rules	3	0	1	1	1	1	0.27103020000000005	11	pass
+house	none	stock-alert-rules	1	0	1	0	0		0.145752	7	fail
+house	none	stock-alert-rules	2	0	1	0	0		0.14420719999999998	7	fail
+house	none	stock-alert-rules	3	0	1	0	0		0.1459232	7	fail
+house	plugin	stock-per-warehouse	1	0	1	1	1	1	0.31549779999999994	16	
+house	plugin	stock-per-warehouse	2	0	1	1	1	1	0.3214586	17	
+house	plugin	stock-per-warehouse	3	0	1	1	1	1	0.31051359999999995	16	
+house	none	stock-per-warehouse	1	0	1	0	0		0.15373300000000004	10	fail
+house	none	stock-per-warehouse	2	0	1	0	0		0.1575606	10	fail
+house	none	stock-per-warehouse	3	0	1	0	0		0.160547	11	fail
+control	plugin	stock-reserve-endpoint	1	0	1	1	1	1	0.4866634000000001	21	
+control	plugin	stock-reserve-endpoint	2	0	1	1	0	0	0.4191154	22	
+control	plugin	stock-reserve-endpoint	3	0	1	1	1	1	0.528498	24	
+control	none	stock-reserve-endpoint	1	0	1	0	0		0.27542999999999995	16	fail
+control	none	stock-reserve-endpoint	2	0	1	0	0		0.25922320000000004	16	fail
+control	none	stock-reserve-endpoint	3	0	1	0	0		0.24709899999999999	16	fail
+house	plugin	stock-v1-retirement	1	0	1	1	1	1	0.40795440000000005	21	
+house	plugin	stock-v1-retirement	2	0	1	1	1	1	0.4234938000000001	21	
+house	plugin	stock-v1-retirement	3	0	1	1	1	1	0.4031292	20	
+house	none	stock-v1-retirement	1	0	1	1	0		0.28015660000000003	15	
+house	none	stock-v1-retirement	2	0	1	0	0		0.2428542	15	fail
+house	none	stock-v1-retirement	3	0	1	0	0		0.2574682	16	fail
+house	prose	audit-log-retention	1	0	1	1	1	0	0.6773938	8	
+house	prose	audit-log-retention	2	0	1	1	1	0	0.7476572	11	
+house	prose	audit-log-retention	3	0	1	1	1	0	0.6943974	8	
+house	prose	ca1848-build-break	1	0	1	1	1	0	0.6784533999999999	9	
+house	prose	ca1848-build-break	2	0	1	1	1	0	0.6674737999999999	10	pass
+house	prose	ca1848-build-break	3	0	1	1	1	0	0.6224186	7	pass
+house	prose	ci-every-branch	1	0	1	1	1	0	0.6680302	6	
+house	prose	ci-every-branch	2	0	1	1	1	0	0.6523248	10	
+house	prose	ci-every-branch	3	0	1	1	1	0	0.6472211999999999	9	
+house	prose	ci-secret-scan	1	0	1	1	0	0	0.7220738	10	
+house	prose	ci-secret-scan	2	0	1	1	0	0	0.7698801999999999	12	
+house	prose	ci-secret-scan	3	0	1	1	0	0	0.7351086	11	
+house	prose	ci-uv-locked	1	0	1	1	1	0	0.6534777999999999	7	
+house	prose	ci-uv-locked	2	0	1	1	1	0	0.6150798000000001	5	
+house	prose	ci-uv-locked	3	0	1	1	1	0	0.6183147999999999	7	
+house	prose	cover-timeout-pr	1	0	1	1	0	0	0.790596	15	
+house	prose	cover-timeout-pr	2	0	1	1	0	0	0.7845772	16	
+house	prose	cover-timeout-pr	3	0	1	1	0	0	0.7664534	14	
+house	prose	dotnet-ci	1	0	1	1	1	0	0.636852	5	
+house	prose	dotnet-ci	2	0	1	1	0	0	0.6642386000000001	8	
+house	prose	dotnet-ci	3	0	1	1	0	0	0.6553249999999999	8	
+house	prose	flaky-test-skip	1	0	1	1	1	0	0.6417839999999999	7	fail
+house	prose	flaky-test-skip	2	0	1	1	1	0	0.6545448	9	fail
+house	prose	flaky-test-skip	3	0	1	1	1	0	0.657087	9	fail
+house	prose	go-service-dockerfile	1	0	1	1	1	0	0.6965696	10	
+house	prose	go-service-dockerfile	2	0	1	0	1	0	0.6386668	6	fail
+house	prose	go-service-dockerfile	3	0	1	1	1	0	0.7039490000000002	11	pass
+house	prose	health-endpoint	1	0	1	1	0	0	0.7257488	17	pass
+house	prose	health-endpoint	2	0	1	1	0	0	0.7450238	17	pass
+house	prose	health-endpoint	3	0	1	0	0	0	0.6997688	16	fail
+control	prose	label-printer-image	1	0	1	1	1	0	0.7333944000000001	10	
+control	prose	label-printer-image	2	0	1	1	0	0	0.7529946	11	
+control	prose	label-printer-image	3	0	1	1	1	0	0.678904	10	
+house	prose	label-printer-manifest	1	0	1	1	1	0	0.7310198	10	
+house	prose	label-printer-manifest	2	0	1	1	1	0	0.7231336	10	
+house	prose	label-printer-manifest	3	0	1	1	1	0	0.7232212	10	pass
+house	prose	order-repository-tests	1	0	1	1	0	0	0.8094836	17	
+house	prose	order-repository-tests	2	0	1	1	1	0	0.8352146	19	
+house	prose	order-repository-tests	3	0	1	1	0	0	0.764071	16	
+house	prose	orders-column-rename	1	0	1	1	1	0	0.6986053999999999	11	
+house	prose	orders-column-rename	2	0	1	1	0	0	0.6825977999999999	10	pass
+house	prose	orders-column-rename	3	0	1	1	1	0	0.6806013999999999	10	
+control	prose	orders-db-connection	1	0	1	1	1	0	0.7401458000000002	11	
+control	prose	orders-db-connection	2	0	1	1	1	0	0.6811217999999999	12	
+control	prose	orders-db-connection	3	0	1	1	0	0	0.6859356	11	
+house	prose	pricing-call	1	0	1	1	0	0	0.7808307999999998	12	pass
+house	prose	pricing-call	2	0	1	0	0	0	0.7750194000000001	13	fail
+house	prose	pricing-call	3	0	1	0	0	0	0.8038441999999998	13	fail
+house	prose	request-logging	1	0	1	1	1	0	0.8161127999999999	14	
+house	prose	request-logging	2	0	1	1	1	0	0.8209556	14	
+house	prose	request-logging	3	0	1	1	1	0	0.7808654	14	
+house	prose	returns-api-routes	1	0	1	1	1	0	0.9324674000000001	18	
+house	prose	returns-api-routes	2	0	1	1	1	0	0.896069	17	
+house	prose	returns-api-routes	3	0	1	1	0	0	0.9497016000000001	17	
+house	prose	stock-alert-rules	1	0	1	1	1	0	0.6409433999999998	7	pass
+house	prose	stock-alert-rules	2	0	1	1	0	0	0.6550566000000001	7	pass
+house	prose	stock-alert-rules	3	0	1	1	1	0	0.6577398	7	pass
+house	prose	stock-per-warehouse	1	0	1	1	1	0	0.6713478	12	
+house	prose	stock-per-warehouse	2	0	1	1	0	0	0.6768297999999999	12	
+house	prose	stock-per-warehouse	3	0	1	1	1	0	0.709806	13	
+control	prose	stock-reserve-endpoint	1	0	1	0	1	0	0.8944682000000002	17	fail
+control	prose	stock-reserve-endpoint	2	0	1	1	1	0	1.0006822	19	
+control	prose	stock-reserve-endpoint	3	0	1	1	1	0	0.9600540000000001	21	
+house	prose	stock-v1-retirement	1	0	1	1	1	0	0.7813253999999998	16	
+house	prose	stock-v1-retirement	2	0	1	1	1	0	0.7775023999999999	14	
+house	prose	stock-v1-retirement	3	0	1	1	1	0	0.8142879999999998	15	
