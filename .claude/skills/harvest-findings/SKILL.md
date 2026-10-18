@@ -282,7 +282,7 @@ finding with the first of these that fits, and step 6 routes it:
 2. **Redirected.** Another destination is written at the level the finding asks for. In this corpus, a command for
    something broken goes to a runbook or a fix, and a mechanism goes to a standard's **SHOULD** or a control. The draft
    is a record of that type. Outside the corpus, a command or a trap in a planned task goes to the tool's
-   documentation, a `CLAUDE.md` or a contributors' guide such as `docs/maintaining/`.
+   documentation, a `CLAUDE.md` or a contributors' guide.
    * A redirect outside the corpus routes `kac:route-record` where a record here changes as well, and
      `kac:route-none` where none does.
 3. **Settled.** The record is right at its level, and the finding adds a detail only its own case needed.
