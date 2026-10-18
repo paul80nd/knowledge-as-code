@@ -4,6 +4,7 @@ type: standard
 tier: normative
 status: draft
 implements: [ pol-ENVS.REUSE, pol-SCRT.EMBED, pol-SCRT.LEAKED, pol-SCRT.LOGS, pol-SCRT.ROTATE, pol-SCRT.STORE ]
+verified-by: [ ctl-0006 ]
 applies-to:
   - all
 review-by: "2027-08-26"

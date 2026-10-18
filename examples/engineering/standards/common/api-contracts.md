@@ -5,6 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-INTC.BREAK, pol-INTC.EXPOSE, pol-INTC.HOLDS, pol-INTC.NOTICE, pol-INTC.SECURE, pol-INTC.SPEC,
   pol-INTC.VERSION ]
+verified-by: [ ctl-0005 ]
 applies-to:
   - all
 review-by: "2027-08-31"

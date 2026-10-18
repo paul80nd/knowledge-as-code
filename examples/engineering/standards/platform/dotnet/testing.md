@@ -5,6 +5,7 @@ tier: normative
 status: draft
 implements: [ pol-AUTV.COVER, pol-AUTV.LEVELS ]
 depends-on: [ std-TEST ]
+verified-by: [ ctl-0008 ]
 applies-to:
   - all
 review-by: "2027-08-31"
