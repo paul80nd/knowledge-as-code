@@ -203,6 +203,24 @@ test input, still fail.
 * **A `CLAUDE.md` delivered as a real session delivers it.** The prose arm receives the text on its system prompt.
 * **Another model, or a session with network access.** Every session ran `claude-opus-5-5` in the sandbox.
 
+## What this means in practice
+
+* **Writing the rules down is what changes behaviour.** A session given the house rules complies nearly four times as
+  often as one without them, whichever way the rules arrive. The work of a corpus is in its records.
+* **For a corpus small enough to paste, how the rules arrive matters less.** The plugin and the prose arm comply at
+  about the same rate. The plugin costs under half as much a session and cites the record more often, so a reviewer
+  can trace why a change took the form it did.
+* **The plugin's misses are lookups that found the wrong record.** In `health-endpoint` and `pricing-call` the skill
+  found related standards and missed the one that applied. What a lookup returns is where the plugin can gain, and
+  #929 asks how.
+* **About one house rule in six is still broken with the rules in hand.** A rule a tool can check needs a control to
+  enforce it. #895 records one for each rule this pass found broken.
+* **Score a trial like this by hand.** Adjudication overturned 9 of 85 verdicts, in both directions, and moved the
+  plugin's lead over the prose arm from -0.15 to -0.04.
+* **Claim no more than the run shows.** It supports "rules written down change what a session builds, and the plugin
+  delivers them at lower cost, with citations". It does not support "the plugin beats `CLAUDE.md`". Whether the plugin
+  leads on a corpus too large to paste is #923.
+
 ## What makes the comparison less fair
 
 * **Batch 1 ran at `-j 3`, and batches 2 and 3 at `-j 1`.** Batch 1 is the best run of the plugin and prose arms, and
