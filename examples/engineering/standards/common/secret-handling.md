@@ -83,6 +83,13 @@ the repository changes none of them. Reading from the store at run time keeps ro
 - **Informative.** [OWASP Secrets Management Cheat Sheet] covers the storage, distribution and detection practices
   these rules assume.
 
+## Changelog
+
+- 2026-10-18: added the route to depart from a rule.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
 [NIST SP 800-57 Part 1 Rev. 5]: https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final
 [OWASP Secrets Management Cheat Sheet]: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
 [pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses

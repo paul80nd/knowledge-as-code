@@ -36,7 +36,8 @@ _**Covers:** [pol-EVER].ASSETS, [pol-EVER].ORPHAN, [pol-EVER].PARITY_
 ### Every change is attributable and reviewed
 
 - The default branch **MUST** refuse a direct push, so that every change arrives as a merge.
-- A commit subject **MUST** name the work item that asked for the change, written as `#<id>`.
+- A commit **MUST** name the work item that asked for the change.
+- A commit **SHOULD** name it in the subject as `#<id>`, because the forge then links the commit to the item.
 - A commit **MUST** be made under the author's own verified identity.
 - A commit **MUST NOT** be authored by a shared or generic account.
 
@@ -70,12 +71,19 @@ The second cannot be rebuilt from the repository, so the recovery path runs thro
 - [ ] The repository builds from a clean clone on a machine that has never seen this service.
 - [ ] The infrastructure definition is in the repository, and the running estate matches it.
 - [ ] Branch protection is on, and it blocks direct pushes to the default branch.
-- [ ] Recent commit subjects each name a work item.
+- [ ] Recent commits each name a work item.
 - [ ] No commit in the last release has a shared account as its author.
 
 ## Rationale and provenance
 
 A team that can rebuild a service from source follows a recovery procedure. A team missing one asset investigates
 first. An unattributed change also leaves nobody to ask about it a year later.
+
+## Changelog
+
+- 2026-10-18: a commit names its work item, and writing it as `#<id>` in the subject becomes a `SHOULD`.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [pol-EVER]: ../../policies/delivery/ever-version-control.md#clauses

@@ -23,7 +23,7 @@ Every pull request checks each corpus in this repository against `.schema/`.
 ## What it checks
 
 * `eng:std-GATES.every-change-is-built-and-tested-automatically` says the build "**MUST** run from a clean checkout,
-  on an agent provisioned from a definition in the repository".
+  on an agent that is not a person's own machine".
 * `std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request` says a consuming corpus "**MUST** move
   the `resolved:` lock of its `consumes:` entry in the pull request moving the producer's `content-version`".
 

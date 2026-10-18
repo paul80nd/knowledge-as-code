@@ -27,7 +27,9 @@ off takes a recorded deviation with a named owner.
 ### Every change is built and tested automatically
 
 - A push to any branch **MUST** trigger a build and the test suite, without anyone asking for it.
-- The build **MUST** run from a clean checkout, on an agent provisioned from a definition in the repository.
+- The build **MUST** run from a clean checkout, on an agent that is not a person's own machine.
+- The agent **SHOULD** be provisioned from a definition in the repository, because a change to it is then reviewed like
+  the code.
 - A fix for a defect **MUST** arrive with a test that fails without it.
 
 _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].MACHINE, [pol-AUTV].REGRESS_
@@ -74,6 +76,14 @@ it an end date.
 
 - **Informative.** [SLSA build levels] describe what a build platform guarantees before a gate running on it means
   anything: a clean checkout, an agent defined in the repository, and provenance for what the build produced.
+
+## Changelog
+
+- 2026-10-18: the build agent needs only to be nobody's own machine. Provisioning it from a definition in the
+  repository becomes a `SHOULD`.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 [pol-DEVI]: ../../policies/governance/devi-deviations.md#clauses

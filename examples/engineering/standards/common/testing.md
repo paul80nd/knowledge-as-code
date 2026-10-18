@@ -89,5 +89,12 @@ those clones.
 A fault caught by a unit test costs the minute it takes to read the failure. The same fault caught by an end-to-end
 test costs a triage. Caught in production, it costs an incident.
 
+## Changelog
+
+- 2026-10-18: added the route to depart from a rule.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
+
 [pol-AUTV]: ../../policies/delivery/autv-automated-verification.md#clauses
 [pol-ENVS]: ../../policies/security/envs-environment-separation.md#clauses
