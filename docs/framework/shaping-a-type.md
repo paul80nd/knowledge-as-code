@@ -15,7 +15,7 @@ sees of your record without opening it. [The export format](../reference/export.
 
 ## What every type decides the same way
 
-Three decisions repeat across the set, so they are stated here once.
+These decisions repeat across the set, so they are stated here once.
 
 **`owner` names who keeps a record true, and stays in its corpus.** It is a fact about this corpus's stewardship, and a
 reader holding a copy elsewhere cannot ask that person anything. Every type that exports keeps it out, except
@@ -27,6 +27,10 @@ can act on alone, and acting on it alone is how an incident gets worse.
 
 **`last-rehearsed` and `rehearsal-frequency` go together.** A date says nothing about staleness without the cadence you
 read it against, so the two travel as a pair.
+
+**A type page states its level of detail and cadence in prose.** The section says what one step, rule or part
+contains, how often a record changes, and how often new ones arrive. It guides a writer and whoever triages a finding,
+so no field declares it and no rule reads it.
 
 ## The types
 

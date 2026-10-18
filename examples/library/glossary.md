@@ -48,6 +48,13 @@ about the other.
 is synced, so an entry in it cannot name a record this corpus alone has. The narrower entry carries the reference, and
 the shared one still reads correctly in a corpus that never had the other half.
 
+## Level of detail and cadence
+
+Each term has one definition, with the words to avoid and what the term does not mean. How the thing it names works
+belongs in an explanation.
+
+A term changes rarely, once a team has agreed it. New terms arrive when a team finds a word it has been using two ways.
+
 ## Adding a term
 
 1. Choose the most general glossary that admits the term.

@@ -41,6 +41,13 @@ Related but different:
 * **[Service](services.md)**: a thing we deploy. An offering is a thing a customer gets.
 * **[Explanation](explanations.md)**: how something works internally. An offering is what it does externally.
 
+## Level of detail and cadence
+
+One record describes one thing you offer a customer: who it is for, why it exists, and where they reach it. It links to
+what implements, tests and constrains it, and the detail of each belongs in the record it links to.
+
+An offering changes when the product strategy changes. New offerings arrive rarely.
+
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-offerings -->

@@ -181,6 +181,10 @@ carries the type, the id exactly as the frontmatter spells it, and the status in
 `<type>.md` has no frontmatter and no tier. Hold it to the floor. The generated block says what a field means. The prose
 says what an author does about it. Cut prose that repeats the block.
 
+* Write `## Level of detail and cadence` after `## Scope`, or after `## Categories` on a page with no Scope, in two
+  short paragraphs. The first says what one step, rule or part contains, and where finer detail belongs. The second
+  says how often a record changes, and how often new records arrive. Nothing checks it.
+
 ## A `_template.md`
 
 * `{{placeholder}}` marks what the author supplies, and nothing else does: not `NNNN`, not `XXXX`. The casing shows the

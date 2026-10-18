@@ -60,6 +60,15 @@ Python one by the first alone.
 
 A payment-specific rule belongs in the payments corpus.
 
+## Level of detail and cadence
+
+Each rule states one outcome with **MUST**, the usual way to reach it with **SHOULD**, or a permission with **MAY**. A
+command, a configuration line or a tool's setting belongs in the standard's Examples, or in the tool's own
+documentation.
+
+A standard changes a few times a year as the practice matures, and at its review. New standards arrive rarely, when a
+decision or a policy needs one.
+
 ## Where to find them
 
 * **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, with the category of each.

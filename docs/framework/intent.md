@@ -45,16 +45,11 @@ delivers the type, and of anything generated from it.
 
 Each row is a hypothesis until a trial confirms it.
 
-## Level of detail and change cadence
+## Cadence and delivery
 
-Each type page states the level of detail a record of that type is written at. A step in a runbook is a command you can
-run. A step in a process is an outcome. A rule in a standard states an outcome, with the usual mechanism as a SHOULD.
-
-The writer, the agent and whoever triages a finding all read it. A finding refines a record at its own level, and never
-adds detail below it. It is guidance for whether a record feels right, so nothing fails a record on it.
-
-Each type page also states how often its records are likely to change. A type that changes once a year can be built
-into what ships. A type that changes with every incident is better read live. Tracked in [epic #930][e930].
+A type whose records change once a year can be built into what ships. A type whose records change with every incident
+is better read live. [Story #946][s946] decides how the fast types reach an agent, using the cadence each type page
+states. Tracked in [epic #940][e940].
 
 ## The example corpora as exemplars
 
@@ -101,3 +96,4 @@ or by removing a step. It is never answered by adding a step. Tracked in [epic #
 
 [e930]: https://github.com/paul80nd/knowledge-as-code/issues/930
 [e940]: https://github.com/paul80nd/knowledge-as-code/issues/940
+[s946]: https://github.com/paul80nd/knowledge-as-code/issues/946

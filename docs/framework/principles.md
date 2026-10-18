@@ -128,6 +128,18 @@ A standard is the house style and a checklist to review work against. It is a sa
 anyone out. An agent gets the same latitude as an engineer: the baseline is fixed, and inside it the agent uses its
 judgement.
 
+## Each type states its level of detail
+
+Each type page states the level of detail a record of that type is written at. A step in a runbook is a command you can
+run. A step in a process is an outcome. A rule in a standard states an outcome, with the usual mechanism as a SHOULD.
+
+The writer, the agent and whoever triages a finding all read it. A finding refines a record at its own level, and never
+adds detail below it. A step added for one case makes the record longer for every other reader. The level is guidance
+for whether a record feels right, so nothing fails a record on it.
+
+The same section states how often a record of the type changes, and how often new ones arrive. An accepted ADR
+changes only its status. A fix arrives with each problem somebody solves.
+
 ## Readable and writable by agents
 
 A wiki only humans write grows at the rate humans remember to write. A wiki that AI sessions can also write to grows at

@@ -40,7 +40,8 @@ folder and no page fails `type-setup`. Removing a type reverses these steps.
 6. Record the lineage in that file. `prior-art` names the source, `alignment` and `divergence` state what step 3
    found, and `collision:` names a word this type uses differently from the practice it borrows from. All are read
    into [lineage](../knowledge-as-code/lineage.md).
-7. Write the type's root page.
+7. Write the type's root page. Its `## Level of detail and cadence` says what one step, rule or part contains, how
+   often a record changes, and how often new records arrive.
 8. Write the type's `_template.md`.
 9. Link another type's root page with that type's own noun as the link text. Link one of its records with a placeholder
    definition, such as `[svc-{{a}}]: ../services/{{a}}.md`, and cite it on a line of its own. A corpus that declined
