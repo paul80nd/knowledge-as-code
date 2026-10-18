@@ -45,20 +45,6 @@ delivers the type, and of anything generated from it.
 
 Each row is a hypothesis until a trial confirms it.
 
-## MUST and SHOULD in a standard
-
-A MUST is the baseline the corpus owner is accountable for. A review checks it, a control proves it wherever a tool can,
-and departing from it takes a deviation. A SHOULD is the usual way, given with its reason. An engineer or an agent may
-depart from it and say why in the change.
-
-A standard is the house style and a checklist to review work against. It is a safety net, and it is not there to catch
-anyone out. An agent gets the same latitude as an engineer: the baseline is fixed, and inside it the agent uses its
-judgement.
-
-A standard states SHOULD and MAY as well as MUST, gives a short reason beside a rule where the reason is not obvious,
-and ends by pointing to the deviation route. Almost every rule in the example standards is still a MUST, and bringing
-them into this shape is tracked in [epic #930][e930].
-
 ## Level of detail and change cadence
 
 Each type page states the level of detail a record of that type is written at. A step in a runbook is a command you can
@@ -74,8 +60,9 @@ into what ships. A type that changes with every incident is better read live. Tr
 
 The corpora under [`examples/`](https://github.com/paul80nd/knowledge-as-code/tree/main/examples) show what a good
 record of each type looks like, and adopters model their own records on them. Each type's worked examples are compared
-with well-regarded public ones. Where a record differs from good public practice, the corpus says why. Tracked in
-[epic #930][e930].
+with well-regarded public ones. Where a record differs from good public practice, the corpus says why. Almost every rule
+in the example standards is still a MUST, and they are rewritten first, in the shape [Principles](principles.md)
+describes. Tracked in [epic #930][e930].
 
 ## Views generated for each moment
 
