@@ -71,6 +71,11 @@ from the framework carrying them, and one that has gone is a block that stopped 
 * **Run the golden suite after touching `.schema/`**, not just `kac validate`, because every fixture reads the real
   schema. The `update` and `new` scenarios read no fixture corpus at all: each stands one up from the real template, so
   a manifest change reaches them too.
+* **A required field added to `_universal.yaml` fails every fixture record with `required-field`.** Write the field into
+  each record under `tests/fixtures/` in the same change. An optional field needs none of this.
+* **`FixtureDateTests` sees a date only through the field a rule names.** It reads the fields named by `field('...')` or
+  `days_since('...')` in an `expr:` that measures against the day of the run. A rule measuring a date any other way
+  leaves that date unguarded, so a fixture can drift past today and move a golden. Extend the guard in the same change.
 * A fixture corpus is a corpus, so it obeys `type-setup`: a folder it holds needs its `<type>.md` and `_template.md`
   beside it. Types it does not use are absent, which is silent. Adding a folder to a fixture without standing the type
   up adds a finding to every scenario that reads it.
@@ -96,6 +101,16 @@ from the framework carrying them, and one that has gone is a block that stopped 
 A scenario asserting a whole corpus, such as `Structure.feature` or `Shape.feature`, pins how many documents the fixture
 holds as well as every finding it produces. Adding a file to a fixture changes that count, and regenerating the goldens
 will not tell you: the golden layer and the feature layer assert different things about the same corpus.
+
+**A schema edit breaks a scenario that `--update` cannot repair.** `--update` regenerates the goldens and leaves the
+feature files, so repair each broken expectation by hand and prove it with `dotnet test tooling/kac.features`. A schema
+edit breaks a scenario in two ways:
+
+* **A message the schema decides.** A scenario quotes it in full. An enum's values, a field's pattern, a threshold and a
+  `message:` all appear in one, so adding a value to an enum rewrites the `enum` message.
+* **A line number a new field moved.** A required field written into every fixture moves each finding below it down one
+  line. A finding reported against the frontmatter stays at line 1, and a document with no frontmatter keeps its
+  numbers.
 
 **Keep `Harness` to the two calls `Commands.Validate` makes.** A harness assembling its own subset of the sequence
 leaves whole checks unreachable from a spec, and every spec goes on passing. A spec for any other command states a
