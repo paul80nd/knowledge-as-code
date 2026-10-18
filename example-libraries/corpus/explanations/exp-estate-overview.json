@@ -30,6 +30,6 @@
     "Where the detail lives": "* [svc-catalogue-web] and [svc-catalogue-api] describe the public site and its gateway.\n* [svc-lending] describes the strangler wrapper and the legacy database behind it.\n* [svc-search], [svc-notices] and [svc-shelf-audit] describe the work that runs on a schedule or on an event.\n* [Services](../services.md) states the conventions this catalogue follows, and why some coupling has no edge."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/library/explanations/estate-overview.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/explanations/estate-overview.md"
   }
 }

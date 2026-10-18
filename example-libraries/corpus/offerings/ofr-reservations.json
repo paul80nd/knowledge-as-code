@@ -28,9 +28,9 @@
     "Why it exists": "A consortium of branches is worth more than a single library only where a borrower can reach stock held elsewhere. The hold is what makes the shared collection real.",
     "Surfaces": "Its own hostname, apart from the rest of the catalogue, and the same pages on the branch terminals.",
     "Where the detail lives": "* **Implemented by**: [svc-catalogue-web], [svc-lending], [svc-notices], [svc-reservations]\n* **Specified in**: [ADO#1455], [ADO#1462]",
-    "Known limitations": "This offering is live in no environment above test. [svc-reservations] says what remains."
+    "Known limitations": "Production is deployed, and nothing links to it yet. [svc-reservations] says what remains, and [itg-card-payments] stays on trial until a borrower pays a fee."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/library/offerings/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/offerings/reservations.md"
   }
 }

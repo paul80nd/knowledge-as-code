@@ -20,10 +20,10 @@
     ]
   },
   "sections": {
-    "What it does": "Nothing now. The consortium stopped sending text messages on 30 June 2026, and [svc-notices] sends email alone.\n\nUntil then it sent one kind of message: a reminder on the day a loan fell due, to a borrower who had given a mobile number. Hold-ready alerts and membership renewals were always email. It ended for two reasons. The price per message rose at the June renewal, and every borrower who got the text also got the email.\n\n**`used-by` still names [svc-notices].** The field is required and nothing calls this vendor today, so the id records which service used to.",
+    "What it does": "Nothing now. The consortium stopped sending text messages on 30 June 2026, and [svc-notices] sends email alone.\n\nUntil then it sent one kind of message: a reminder on the day a loan fell due, to a borrower who had given a mobile number. Hold-ready alerts and membership renewals were always email. It ended for two reasons. The price per message rose at the June renewal, and every borrower who got the text also got the email.",
     "Failure modes": "| Failure                      | How it presents                             | Our fallback                                        |\n|------------------------------|---------------------------------------------|-----------------------------------------------------|\n| The number was disconnected  | Accepted by the vendor, and never delivered | The email every borrower on this list also received |\n| The vendor's queue backed up | The reminder arrived the next morning       | None. A late reminder was still sent                |"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/library/integrations/sms-notices.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/integrations/sms-notices.md"
   }
 }

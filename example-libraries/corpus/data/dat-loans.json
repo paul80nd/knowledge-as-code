@@ -33,6 +33,6 @@
     "Flows": "| Goes to            | Why                                | What is shared                       | Where they process it |\n|--------------------|------------------------------------|--------------------------------------|-----------------------|\n| [svc-notices]      | Overdue, due-soon and hold notices | Card number, title, due date, branch | UK South              |\n| [svc-reservations] | Showing a queue position           | Card number, title, queue position   | UK South              |\n\nNothing here leaves the estate. A notice that reaches a borrower by email includes the title, so the title crosses to [itg-mail-delivery] through [dat-borrowers] and not through this domain."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/library/data/loans.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/data/loans.md"
   }
 }

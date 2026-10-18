@@ -28,6 +28,6 @@
     "Coverage and gaps": "The test reads `.github/workflows/kac.yml` and no other workflow. The publishing workflows gate nothing, so a job outside `validate`'s `needs:` is a fault only `kac.yml` can have.\n\nThe branch rule sits outside the repository. [ctl-0001] covers whether it still names `validate`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/145308fb11370bc1dde2f437f9e5eb0752d7432a/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/dog-fooding/controls/0002-workflow-gate-tests.md"
   }
 }
