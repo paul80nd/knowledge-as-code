@@ -55,9 +55,9 @@ A standard is the house style and a checklist to review work against. It is a sa
 anyone out. An agent gets the same latitude as an engineer: the baseline is fixed, and inside it the agent uses its
 judgement.
 
-Today the standards schema keeps a recommendation out of a standard, so every rule in the example standards is a MUST.
-That changes: a standard states SHOULD and MAY, gives a short reason beside each rule, and points to the deviation
-route. Tracked in [epic #930][e930].
+A standard states SHOULD and MAY as well as MUST, gives a short reason beside a rule where the reason is not obvious,
+and ends by pointing to the deviation route. Almost every rule in the example standards is still a MUST, and bringing
+them into this shape is tracked in [epic #930][e930].
 
 ## Level of detail and change cadence
 

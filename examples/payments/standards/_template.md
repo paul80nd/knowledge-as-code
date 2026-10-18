@@ -49,6 +49,10 @@ field and says what each one holds.
 **The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
 what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
+**The closing line.** Keep the line after the Changelog in every standard. It tells a reader how to depart from a
+rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, point
+it at the person who accepts a departure.
+
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
 Standards are living documents. Unlike an ADR, a standard is edited in place as practice matures. Record every
@@ -65,6 +69,17 @@ The normative content, and the only section carrying any. Write each rule as a b
 keyword binds only in bold capitals. `part-modal` reports a bullet with none, and one that leaves a keyword in plain
 text. It calls the keyword a modal, because the same declaration governs a policy's clause table.
 
+Choose the keyword by what a departure costs:
+
+| Keyword                    | What it states                                        | Departing from it takes         |
+|----------------------------|-------------------------------------------------------|---------------------------------|
+| **MUST**, **MUST NOT**     | the outcome the owner of this standard answers for    | an accepted deviation           |
+| **SHOULD**, **SHOULD NOT** | the usual way to reach that outcome                   | a reason, written in the change |
+| **MAY**                    | something a reader might otherwise think is ruled out | nothing                         |
+
+Write **MUST** for the outcome and **SHOULD** for the way to reach it. A reader then keeps the latitude the outcome
+allows.
+
 `modal-outside-rules` warns where a bullet in any other section names one of those keywords, because no citation
 reaches a rule written there. Where a bullet names a keyword rather than using one, as a changelog entry recording a
 modal that moved does, write the keyword in backticks.
@@ -80,8 +95,10 @@ Write every rule the subject has, and stop there. A standard binding every piece
 eight. One covering a single interface may run to thirty.
 
 **Under a heading, write the rules and nothing else.** An export carries the first block beneath the heading, which is
-the bullet list. A paragraph after the bullets is dropped from it without a word, so put the reasoning in Rationale and
-provenance where it travels.
+the bullet list. A paragraph after the bullets is dropped from it without a word.
+
+**Give a heading one short reason where the reason is not obvious.** End the bullet it explains with a clause opening
+"because", so the reason travels in the export with the rule. Put the longer argument in Rationale and provenance.
 
 **Close a heading with the clauses it covers**, as a footnote in italic with the label bold. CI holds the union of
 those lines equal to `implements`, so the frontmatter says which obligations the standard discharges and each heading
@@ -93,9 +110,9 @@ discharges. An id in brackets on every bullet buries the obligation a reader cam
 
 ### {{What the rules below hold a reader to}}
 
-- Services **MUST** ...
-- Responses **SHOULD** ...
-- Clients **MAY** ...
+- Services **MUST** {{the outcome}}, because {{the reason, where it is not obvious}}.
+- Responses **SHOULD** {{the usual way}}.
+- Clients **MAY** {{what is allowed}}.
 
 _**Covers:** [pol-{{MNEM}}].{{CLAUSE}}_
 
@@ -117,6 +134,9 @@ copy-paste accurate.
 
 A tickable list a designer (or an AI session) can mechanically verify a new design against. This is the section that
 makes the standard *usable* rather than merely readable.
+
+Test what the rules above require, and nothing else. An item for a SHOULD is met where the work follows it or the
+change says why it departs.
 
 - [ ] ...
 - [ ] ...
@@ -141,6 +161,9 @@ goes.
 ## Changelog
 
 - {{YYYY-MM-DD}}: initial version.
+
+To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
+say why in the change.
 
 [adr-{{a}}]: {{a}}.md
 [{{Other source}}]: {{url}}

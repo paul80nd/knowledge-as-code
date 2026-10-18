@@ -115,9 +115,16 @@ A standard is the rulebook you build to. It puts a policy's clauses into practic
 and a conformance checklist.
 
 `Rules` has one heading per rule, and `kac validate` requires a bold modal on every bullet beneath it. `Summary` says
-what the rules govern, because a rule read without it binds more than the standard does. `Conformance checklist` is the
-same rules written as a test. `Examples` shows them against one stack, and `Rationale and provenance` says why each rule
-exists.
+what the rules govern, because a rule read without it binds more than the standard does. `Conformance checklist` tests
+what the rules require, and nothing else. `Examples` shows them against one stack, and `Rationale and provenance` says
+why each rule exists.
+
+**A rule states MUST, SHOULD or MAY, as BCP 14 does.** A MUST is the outcome the standard's owner answers for, and
+departing from it takes a deviation. A SHOULD is the usual way to reach it, and whoever departs from it says why in the
+change. A bullet may end with one short reason opening "because", so the reason travels in the export with the rule.
+Every standard ends with a line saying how to depart from it, which the template writes after the `Changelog`. The
+type's `lineage.divergence` says why it follows public API rulebooks here, where HCGF keeps a standard to mandatory
+requirements.
 
 **`implements` cites the policy clauses this standard puts into practice.** The citation points one way, upward. A
 policy lists no standards back, and a clause no standard cites is a normal state. Each rule closes on a `Covers` line

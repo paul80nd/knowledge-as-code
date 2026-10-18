@@ -11,9 +11,11 @@ summary: The rulebook, imperative, BCP 14, with concrete examples and a conforma
 goes-here: A rule people must follow when building
 detail: >
   Imperative throughout, in bold capitals: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and
-  **MAY**. Only the `Rules` section binds, and every other section explains, shows or checks, so a
-  modal written outside it obliges nobody. Standards compose: the rules for a piece of work are the
-  union of the folders that apply to it, and of the standards each of those names in `depends-on`.
+  **MAY**. A MUST states the outcome the owner answers for, and departing from it takes a deviation. A
+  SHOULD states the usual way, and a reader may depart from it by saying why. Only the `Rules` section
+  binds, and every other section explains, shows or checks, so a modal written outside it obliges
+  nobody. Standards compose: the rules for a piece of work are the union of the folders that apply to
+  it, and of the standards each of those names in `depends-on`.
 
 versus:
   controls: >
@@ -31,7 +33,7 @@ lineage:
     document. [W3C QA Framework: Specification Guidelines](https://www.w3.org/TR/qaframe-spec/), the conformance
     clause
   alignment: >
-    HCGF's granular, mandatory requirement, owned by a named person and reviewed on a date the record
+    HCGF's granular requirement beneath a policy, owned by a named person and reviewed on a date the record
     names: `status`, `owner` and `review-by`. BCP 14's keywords, declared in `parts.binding:` and
     `parts.advisory:` and binding only in capitals, which `part-modal` checks on every rule. W3C's
     conformance clause, as the required `Conformance checklist` a design is ticked against, and its good
@@ -39,13 +41,17 @@ lineage:
     normative references, as `depends-on`, and its rule that a document names what replaces it, as
     `superseded-by`
   divergence: >
-    BCP 14 asks for its imperatives sparingly. This type does the opposite and follows HCGF, which puts a
-    recommendation in a guideline and leaves a standard nothing but mandatory requirements. `parts.binding:` and
-    `parts.advisory:` declare a narrower keyword set than BCP 14 offers, and almost every rule written here binds. ISO
-    makes terms and definitions a clause of every document, where a term here is defined once in the glossary and
-    linked. ISO puts the subject and the limits of applicability in a scope clause, which this type splits into
-    `applies-to` and the folder the record sits in. Standards here also compose by union across the folders that
-    apply, where HCGF has no composition model
+    HCGF puts a recommendation in a guideline and leaves a standard only mandatory requirements. This type follows BCP
+    14 instead, which asks for its imperatives sparingly. A MUST is the baseline the owner answers for, and departing
+    from it takes a deviation. A SHOULD is the usual way, and a reader may depart from it by giving the reason. Public
+    API rulebooks work the same way. [Azure's API
+    guidelines](https://github.com/microsoft/api-guidelines/blob/vNext/azure/Guidelines.md) ask a team departing from a
+    SHOULD to give its reason in review, [AIP-200](https://google.aip.dev/200) accepts a departure annotated with its
+    reason, and [Zalando's RESTful API guidelines](https://opensource.zalando.com/restful-api-guidelines/) grade every
+    rule MUST, SHOULD or MAY. ISO makes terms and definitions a clause of every document, where a term here is defined
+    once in the glossary and linked. ISO puts the subject and the limits of applicability in a scope clause, which this
+    type splits into `applies-to` and the folder the record sits in. Standards here also compose by union across the
+    folders that apply, where HCGF has no composition model
 collision: >
   In ordinary engineering conversation a *standard* is something an external body publishes: an ISO, an
   IEEE, an RFC. Here it is an internal rulebook. The governance frameworks this layering comes from have
