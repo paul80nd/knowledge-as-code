@@ -1,18 +1,23 @@
 # The plugin trial
 
 This trial measures whether the plugin a corpus (one repository of knowledge records) ships changes what an agent
-builds. It gives one coding task to three kinds of session. Each task breaks one of the corpus's rules if the session
+builds. It gives one coding task to four kinds of session. Each task breaks one of the corpus's rules if the session
 does not know it. It then checks whether the files each session wrote comply with that rule.
 
 Whoever decides whether a corpus ships its plugin, or how the plugin delivers its records, reads the result.
 
-## The three arms
+## The four arms
 
 | Arm    | The session has                                                             | How it runs                                                           |
 |--------|-----------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| plugin | the plugin `kac bundle` builds from the corpus                              | the with-arm of `claude plugin eval` on the plugin                    |
+| plugin | the plugin `kac bundle` builds from the corpus, its build-index hook silent | the with-arm of `claude plugin eval` on the plugin                    |
+| hook   | the same plugin, its hook pushing the build index at the first read         | a third run, on the plugin as built, under `--ablation none`          |
 | prose  | every record the plugin's export contains, as one text on its system prompt | a second run, on a plugin with no components, under `--ablation none` |
 | none   | nothing                                                                     | the without-arm of the same run as the plugin arm                     |
+
+The plugin and hook arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin arm's copy,
+so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index the first time the
+session calls `Read`, `Grep` or `Glob`. `stage.sh` refuses a plugin that ships no `hooks/build-index.json`.
 
 Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`.
 
@@ -136,9 +141,9 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
    trials/plugin/stage.sh "$CORPUS/.dist/plugin" "$CASES" "$STAGE"
    ```
 
-3. **Count the sessions before you start any.** The plugin stage starts cases × runs × 2 sessions, and the prose stage
-   cases × runs. Count only the cases `stage.sh` staged. An `llm` grader adds three judge calls per run. No case here
-   has one.
+3. **Count the sessions before you start any.** The plugin stage starts cases × runs × 2 sessions, and the hook and
+   prose stages cases × runs each. Count only the cases `stage.sh` staged. An `llm` grader adds three judge calls per
+   run. No case here has one.
 4. **Run the plugin and none arms:**
 
    ```sh
@@ -155,40 +160,53 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
      --output-dir "$STAGE/out-prose" --allow-tools Bash Write Edit
    ```
 
-6. **Score the run** into a new folder under `runs/`, named by its date:
+6. **Run the hook arm:**
 
    ```sh
-   trials/plugin/score.sh "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" \
-     trials/plugin/runs/<date> "$CASES/excluded.tsv"
+   cd "$STAGE/hook" && claude plugin eval . --eval-dir evals --ablation none --runs <runs> \
+     --model claude-opus-5-5 --scaffold --trust-plugin --no-publish --keep-temp -j 3 \
+     --output-dir "$STAGE/out-hook" --allow-tools Bash Write Edit
    ```
 
-7. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
-   every house case where the plugin and prose arms disagree, and every pass by a grader you know passes weak output.
-   Each run prints a `kept temp:` folder, whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open
-   it. The workspace is `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside
-   the folder.
-8. **Record each verdict you read** in `adjudication.tsv` in the run folder, as [Adjudication](#adjudication) says.
-   Then score the run again with it:
+7. **Score the run** into a new folder under `runs/`, named by its date:
 
    ```sh
-   trials/plugin/score.sh -a trials/plugin/runs/<date>/adjudication.tsv "$STAGE/out-plugin/aggregate-result.json" \
+   trials/plugin/score.sh -k "$STAGE/out-hook/aggregate-result.json" "$STAGE/out-plugin/aggregate-result.json" \
      "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> "$CASES/excluded.tsv"
    ```
 
-9. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
+   Leave out `-k` to score a run with no hook arm. Every hook field is then 0 or empty.
+
+8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
+   every house case where the plugin arm disagrees with the hook or prose arm, and every pass by a grader you know
+   passes weak output.
+   Each run prints a `kept temp:` folder, whose workspace is sealed. Run `chmod 700 <folder> <folder>/sealed` to open
+   it. The workspace is `<folder>/sealed/home/cwd`, and the trace is `<folder>/out/trace.jsonl`. Run no `git` inside
+   the folder.
+9. **Record each verdict you read** in `adjudication.tsv` in the run folder, as [Adjudication](#adjudication) says.
+   Then score the run again with it:
+
+   ```sh
+   trials/plugin/score.sh -a trials/plugin/runs/<date>/adjudication.tsv -k "$STAGE/out-hook/aggregate-result.json" \
+     "$STAGE/out-plugin/aggregate-result.json" "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> \
+     "$CASES/excluded.tsv"
+   ```
+
+10. **Write what you found** to `runs/<date>.md`: the setup, the results, the cost, and each grader you fixed. Where
    the result file gives no tokens, take them from the `result` line of each trace.
 
-`--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 7. Without it,
+`--no-publish` keeps the report off claude.ai. `--keep-temp` keeps each workspace and trace for step 8. Without it,
 both are deleted when the stage finishes.
 
 ## Combining batches
 
-Run each batch as steps 4 and 5, with `--runs 1` and its own `--output-dir`. Stage once, and run every batch from
+Run each batch as steps 4, 5 and 6, with `--runs 1` and its own `--output-dir`. Stage once, and run every batch from
 that stage, so every batch has the same plugin and the same prose text. Then merge each stage's result files, and
-score the two merged files as step 6:
+score the three merged files as step 7:
 
 ```sh
 trials/plugin/merge.sh "$STAGE/plugin.json" "$STAGE"/out-plugin-r*/aggregate-result.json
+trials/plugin/merge.sh "$STAGE/hook.json" "$STAGE"/out-hook-r*/aggregate-result.json
 trials/plugin/merge.sh "$STAGE/prose.json" "$STAGE"/out-prose-r*/aggregate-result.json
 ```
 
@@ -240,8 +258,8 @@ reads each grader's verdict, and ignores the tool's score.
 
 ## Scoring
 
-[`score.sh`](score.sh) reads the two result files and writes `sessions.tsv` and `aggregate.md`. It reports each kind
-of case on its own.
+[`score.sh`](score.sh) reads the plugin and prose result files, and the hook result file where `-k` names one. It
+writes `sessions.tsv` and `aggregate.md`, and reports each kind of case on its own.
 
 * **A session complies** where every `comply-` grader, or set of alternatives, passed.
 * **A session cites** where every `cite-` grader passed.
@@ -254,7 +272,8 @@ of case on its own.
 The plugin's lead over an arm is its compliance rate minus that arm's, on the house cases. Citation is reported beside
 it and never added in, because the plugin's skills teach a session to cite and the other arms have nothing that does.
 The controls are reported in fields of their own, so a none arm that follows general practice by default cannot close
-the gap on the house cases.
+the gap on the house cases. The hook arm's lead over an arm is measured the same way, and its lead over the plugin arm
+is what the build index adds to the lookup.
 
 ## Adjudication
 
@@ -265,7 +284,7 @@ read:
 | Column        | Value                                                                                          |
 |---------------|------------------------------------------------------------------------------------------------|
 | `case`        | the case's folder name                                                                         |
-| `arm`         | `plugin`, `prose` or `none`                                                                    |
+| `arm`         | `plugin`, `hook`, `prose` or `none`                                                            |
 | `run`         | the session's place in its arm, from 1. Where batches were merged, batch 2's session is run 2. |
 | `graders`     | the graders' compliance verdict: `pass`, `fail`, or `no task` where a `task-` grader failed    |
 | `adjudicated` | your verdict, in the same three values                                                         |
@@ -284,8 +303,8 @@ When adjudication finds a grader fault, fix the grader for the next run. Prove t
 run against any corpus can be published in the same shape. A rate is a fraction to two decimal places, and is empty
 where it would divide by 0.
 
-`<kind>` is `house` or `control`, and `<arm>` is `plugin`, `prose` or `none`. Each `<kind>.<arm>` field is written for
-every kind and every arm, zero included.
+`<kind>` is `house` or `control`, and `<arm>` is `plugin`, `hook`, `prose` or `none`. Each `<kind>.<arm>` field is
+written for every kind and every arm, zero included.
 
 | Field                                  | Value                                                                                 |
 |----------------------------------------|---------------------------------------------------------------------------------------|
@@ -310,10 +329,13 @@ every kind and every arm, zero included.
 | `<kind>.<arm>.cited`                   | the sessions where every `cite-` grader passed                                        |
 | `<kind>.<arm>.citation_rate`           | `<kind>.<arm>.cited` divided by `<kind>.<arm>.sessions` less `<kind>.<arm>.errors`    |
 | `<kind>.plugin.fired`                  | the plugin sessions of that kind where every `fired-` grader passed                   |
+| `<kind>.hook.fired`                    | the hook sessions of that kind where every `fired-` grader passed                     |
 | `<kind>.lead_over_prose`               | `<kind>.plugin.compliance_rate` minus `<kind>.prose.compliance_rate`                  |
 | `<kind>.lead_over_none`                | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
 | `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
-| `cost_usd`                             | the list-price cost both stages report, judge calls and excluded cases included       |
+| `<kind>.hook_lead_over_<arm>`          | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
+| `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields     |
+| `cost_usd`                             | the list-price cost every stage reports, judge calls and excluded cases included      |
 | `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
 
 ## Reading the result
@@ -325,7 +347,10 @@ general practice.
 A run of one session per case is too small to judge a lead by. The pilot reports one so that the full pass can be
 priced and its grading checked.
 
-Where the plugin leads the prose arm, the next measurement is a fourth arm: the corpus's Markdown on disk, with a
+The hook arm helps where `house.hook_lead_over_plugin` is above 0. Read it case by case against the scenarios in
+[`build.feature`](../use-cases/build.feature), whose thresholds and baselines are per case.
+
+Where the plugin leads the prose arm, the next measurement is another arm: the corpus's Markdown on disk, with a
 `CLAUDE.md` pointing at it.
 
 ## Runs
