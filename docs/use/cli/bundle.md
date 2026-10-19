@@ -92,7 +92,7 @@ bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.25.0. 5 component(s) included, 5 trimmed.
+bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.24.1. 5 component(s) included, 5 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -114,7 +114,7 @@ the three skills that name no type of their own. It also ships both views, becau
 no fixes and no processes, so `fix-lookup` and `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 73 file(s) to .dist/plugin/ as example-engineering 0.37.0. 10 component(s) included, 2 trimmed.
+bundle: wrote 73 file(s) to .dist/plugin/ as example-engineering 0.36.2. 10 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
