@@ -611,7 +611,8 @@ public class BundlerTests
         Assert.InRange(context.Length, 1, BuildIndexHook.Cap);
         Assert.Contains("example-engineering states 200 rules for code in this repository, under 1 standard.", context);
         Assert.Contains("`views/build-index.md` inside this plugin lists every rule by title", context);
-        Assert.Contains("10,000", Assert.Single(plan.Warnings, w => w.Contains("build index", StringComparison.Ordinal)));
+        Assert.Contains("10,000",
+            Assert.Single(plan.Warnings, w => w.Contains("build index", StringComparison.Ordinal)));
     }
 
     private static string BuildIndexView() => ViewComponent("views/build-index.md", View.BuildIndex, "standards@2");
@@ -780,7 +781,10 @@ public class BundlerTests
         (string, string)[] files =
         [
             (Exporter.ManifestFile,
-                $$"""{"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", {{version}}"types": [{{types}}]}"""),
+                $$"""
+                  {"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", {{version}}
+                   "types": [{{types}}]}
+                  """),
             ("standards/rules.jsonl", Rules()),
             ("standards/std-DEPLOY.json", """{"fields":{"id":"std-DEPLOY","title":"Deployment"}}"""),
             ("standards/std-OBS.json", """{"fields":{"id":"std-OBS","title":"Observability"}}""")

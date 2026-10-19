@@ -105,7 +105,7 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
 - A hook **MUST** run under a POSIX shell.
 - A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
 - What a hook prints **MUST** be rendered by `kac bundle`, so the hook computes nothing about the export.
-- A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`.
+- A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`, or under the temporary directory where that is unset.
 - A hook pushing a view **MUST** push it at most once a session.
 - What a hook pushes **MUST** be at most 10,000 characters, because Claude Code shows a session only the first 2,000 of
   a longer one.
@@ -367,7 +367,7 @@ broke it.
 - [ ] Every type a component reads only where the export carries it is named in `optional`, at the shape it reads.
 - [ ] Every view is declared as a component naming it in `view`, and is written by `kac bundle` from the export alone.
 - [ ] Every hook runs under a POSIX shell alone, prints a file `kac bundle` rendered, and writes only under
-      `${CLAUDE_PLUGIN_DATA}`.
+      `${CLAUDE_PLUGIN_DATA}`, or the temporary directory where that is unset.
 - [ ] Every hook pushing a view pushes it at most once a session, at most 10,000 characters, and its path and counts
       where the view is longer.
 - [ ] Every component reading no export declares `standalone` where it supports nothing, and leaves it off where it
@@ -578,7 +578,8 @@ standard.
 ## Changelog
 
 - 2026-10-19: a hook runs in a POSIX shell, prints what `kac bundle` rendered, writes only to the plugin's data
-  directory, and pushes a view once a session within the 10,000 characters Claude Code passes on.
+  directory or the temporary directory, and pushes a view once a session within the 10,000 characters Claude Code
+  passes on.
 - 2026-10-19: a view is declared as a component, and `kac bundle` generates it from the export alone, so it is not a
   second copy kept for agents. A component names a type it reads only where present in `optional`.
 - 2026-10-18: using the client that already authenticates, and the one-line title of a finding and of a deviation

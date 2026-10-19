@@ -12,7 +12,8 @@ set -eu
 
 method=5
 
-usage="usage: score.sh [-a <adjudication.tsv>] [-k <hook stage result>] <plugin stage result> <prose stage result> <run folder> [<excluded.tsv>]"
+usage="usage: score.sh [-a <adjudication.tsv>] [-k <hook stage result>] <plugin stage result> <prose stage result>"
+usage="$usage <run folder> [<excluded.tsv>]"
 adjudication=/dev/null
 hook_json=""
 while getopts a:k: opt; do

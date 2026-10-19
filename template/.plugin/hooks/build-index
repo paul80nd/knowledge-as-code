@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
-# build-index — the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once a session, so the session
-# reads the build index as context. hooks/hooks.json says which tool calls reach it. Without that file it prints nothing.
+# build-index: the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once a session, so the session
+# reads the build index as context. hooks/hooks.json says which tool calls reach it. Without that file it prints
+# nothing.
 # A JSON string escapes every quote inside it, so `"session_id"` with bare quotes is the key and nothing else. A marker
-# made with mkdir fires once, because only one of two parallel calls creates it.
+# made with mkdir fires once, because only one of two parallel calls creates it. With no id, or no marker it can
+# make, it prints every time.
 here=$(dirname "$0")
 [ -f "$here/build-index.json" ] || exit 0
 

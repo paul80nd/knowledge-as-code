@@ -100,8 +100,8 @@ each runs at the first session.
 
 ## The build-index hook
 
-A `PreToolUse` hook on `Read`, `Grep` and `Glob` prints the build index once a session. A session reads code before it
-changes any, so the index arrives before the first edit.
+A `PreToolUse` hook on `Read`, `Grep` and `Glob` prints the build index once a session. A session that reads a file
+before it edits one has the index before its first change.
 
 * **It is rendered at build time.** `BuildIndexHook` writes `hooks/build-index.json`: one line of JSON whose
   `additionalContext` is the build index as `View` rendered it. The script prints that file and parses nothing.

@@ -96,7 +96,7 @@ public static class View
                + $"plugin lists every rule by title, under its standard. {ReadFullText(source)}\n";
     }
 
-    /// <summary>The leading word every surface pushing the index shares.</summary>
+    /// <summary>The sentence carrying the leading word, binds, which the index and its pointer share.</summary>
     private const string Binds = "Each rule binds the code its title bears on.";
 
     private static string Stating(Source source, int rules) =>

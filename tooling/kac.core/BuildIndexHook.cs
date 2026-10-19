@@ -11,8 +11,8 @@ namespace kac.core;
 public static class BuildIndexHook
 {
     /// <summary>
-    /// Beside the script that prints it. <c>Bundler</c> writes it only where the hook directory and the build index both
-    /// survived the trim.
+    /// Beside the script that prints it. <c>Bundler</c> writes it only where the hook directory and the build index
+    /// both survived the trim.
     /// </summary>
     public const string RenderedFile = "hooks/build-index.json";
 
@@ -22,7 +22,7 @@ public static class BuildIndexHook
     /// </summary>
     public const int Cap = 10_000;
 
-    /// <summary><c>Pointed</c> is true where the index was over <see cref="Cap"/>, so the output points at it.</summary>
+    /// <summary><c>Pointed</c> is true where the index was over <see cref="Cap"/>.</summary>
     public sealed record Rendered(string Output, bool Pointed, int IndexLength);
 
     /// <summary>One line of JSON, so the script prints it without a parser.</summary>

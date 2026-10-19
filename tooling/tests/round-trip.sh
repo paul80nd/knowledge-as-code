@@ -306,7 +306,8 @@ if [ -f "$BUILD_INDEX" ]; then
   FIRST=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
   SECOND=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
 
-  [ "$FIRST" = "$(cat "$BUILD_INDEX")" ] || fail "the build-index hook did not print its output on a session's first call."
+  [ "$FIRST" = "$(cat "$BUILD_INDEX")" ] \
+    || fail "the build-index hook did not print its output on a session's first call."
   [ -z "$SECOND" ] || fail "the build-index hook printed its output a second time in one session."
 
   echo "round-trip: the build-index hook pushes $CONTEXT_LENGTH characters, once a session."
