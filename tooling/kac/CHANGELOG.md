@@ -20,10 +20,11 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 ### Added
 
 - **`kac bundle` writes the views a plugin manifest declares.** A component with a `view` key is generated into the
-  plugin from the export, at its `path`. `build-index` lists every standard rule by title, id and status. `review`
-  lists each rule's obligations, and the controls checking it with their mechanism. A type under a component's new
-  `optional` key is read where the export has it, and its absence trims nothing. `kac bundle` refuses a view it does
-  not write, and a view path the plugin tree or `corpusRoot` already uses.
+  plugin from the export, at its `path`. Each view lists the rules under their standard and its status.
+  `build-index` gives each rule's title and id. `review` gives each rule's obligations, and the standard's controls
+  with their mechanism. A type under a component's new `optional` key is read where the export has it, and its absence
+  trims nothing. `kac bundle` refuses a view it does not write, and a view path the plugin tree or `corpusRoot` already
+  uses.
 
 ## 0.35.0 - 2026-10-16
 

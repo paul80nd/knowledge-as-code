@@ -107,6 +107,11 @@ A view is a file `View` renders into the plugin from the export, after the trim.
   `title`, `obligations` and `status` by name.
 * **It names an inherited record as the export does.** A consumed corpus's control sits under its shortcode, and its
   id and `verifies` are read with that shortcode, so a control from `eng` checks `eng:std-DEPLOY`.
+* **It states a standard's status and controls once, in or under the standard's heading.** A rule line repeats its
+  standard's status, so a view reads it from the first rule. The build index puts the status in the heading, to keep
+  the file short. A control is listed under each standard its `verifies` names, or whose rule it names.
+* **The review view names `active` as the status in force.** The export does not state a type's `in-force` value, so
+  `View` fixes the one `.schema/standards.yaml` declares.
 * **The build index names a skill only where one survived.** It names the surviving lookup skill that reads standards,
   and the rules file inside the plugin where none did.
 

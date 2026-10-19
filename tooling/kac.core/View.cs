@@ -9,10 +9,10 @@ namespace kac.core;
 /// </summary>
 public static class View
 {
-    /// <summary>Every standard rule by title, id and status, for a session about to write code.</summary>
+    /// <summary>Each standard's status, and its rules by title and id, for a session about to write code.</summary>
     public const string BuildIndex = "build-index";
 
-    /// <summary>Every standard rule's obligations, and the controls that check each rule, for a reviewer.</summary>
+    /// <summary>Each standard's status and controls, and its rules' obligations, for a reviewer.</summary>
     public const string Review = "review";
 
     public static readonly IReadOnlyList<string> Known = [BuildIndex, Review];
@@ -39,6 +39,12 @@ public static class View
     private const string Controls = "controls";
 
     /// <summary>
+    /// The status <c>.schema/standards.yaml</c> declares as <c>in-force</c>. The export does not state it, so it is
+    /// fixed here for the <c>standards@2</c> every view component pins.
+    /// </summary>
+    private const string InForce = "active";
+
+    /// <summary>
     /// One rule as a standards part line states it at shape 2. A component declaring the view pins that shape, so
     /// these keys are the shape's own.
     /// </summary>
@@ -54,10 +60,16 @@ public static class View
         text.Append($"# Rules the standards of {Corpus(source)} state\n\n");
         text.Append("Before you write or change code, read each rule whose title bears on the change. ");
         text.Append(ReadFullText(source)).Append("\n\n");
-        text.Append("Each line gives a rule's title, then its id and the status of the standard stating it.\n\n");
+        text.Append("Each heading gives a standard's id, title and status. "
+                    + "Each line under it gives a rule's title, then its id.\n");
 
-        foreach (var rule in Rules(source))
-            text.Append($"- {rule.Title} (`{rule.Id}`, {rule.Status})\n");
+        foreach (var standard in StandardsOf(source))
+        {
+            text.Append($"\n## {standard.Heading} ({standard.Status})\n\n");
+
+            foreach (var rule in standard.Rules)
+                text.Append($"- {rule.Title} (`{rule.Id}`)\n");
+        }
 
         return text.ToString();
     }
@@ -73,41 +85,64 @@ public static class View
                     + "Report a change that breaks one as a violation.\n");
         text.Append("- **SHOULD**, **SHOULD NOT** and **MAY** state a default. A change may depart from one by giving "
                     + "its reason. Report the departure and its reason as a judgement call.\n");
+        text.Append($"- A standard is in force at status `{InForce}`. "
+                    + "Report a finding under any other status as not yet binding, and give that status.\n");
         text.Append(controls is null
             ? "- This corpus exports no controls, so check every rule yourself.\n"
-            : "- A rule's controls say what already checks it, and how. Check a rule yourself where no control is "
-              + "listed, or where each one listed is `not-enforced`.\n");
-        text.Append("\nEach rule gives the status of the standard stating it.\n");
+            : "- A standard's controls say what already checks its rules, and how. Check a rule yourself where its "
+              + "standard lists no control, or where each one listed is `not-enforced`.\n");
 
-        var titles = RecordTitles(source);
-        string? record = null;
-
-        foreach (var rule in Rules(source))
+        foreach (var standard in StandardsOf(source))
         {
-            if (rule.Record != record)
+            text.Append($"\n## {standard.Heading}\n\nStatus: {standard.Status}.\n");
+
+            if (controls is not null)
             {
-                record = rule.Record;
-                text.Append(titles.TryGetValue(record, out var title)
-                    ? $"\n## {record}: {title}\n"
-                    : $"\n## {record}\n");
+                var checking = controls
+                    .Where(c => c.Verifies.Any(v => v == standard.Id || standard.Rules.Any(r => r.Id == v)))
+                    .Select(c => $"`{c.Id}` {c.Title} (`{c.Mechanism}`, {c.Status})")
+                    .ToList();
+
+                text.Append(checking.Count == 0
+                    ? "\nControls: none.\n"
+                    : $"\nControls: {string.Join("; ", checking)}.\n");
             }
 
-            text.Append($"\n### {rule.Title}\n\nCite as `{rule.Id}`. Status: {rule.Status}.\n\n");
+            foreach (var rule in standard.Rules)
+            {
+                text.Append($"\n### {rule.Title}\n\nCite as `{rule.Id}`.\n");
+                text.Append(rule.Obligations.Count > 0 ? "\n" : "");
 
-            foreach (var obligation in rule.Obligations)
-                text.Append("- ").Append(obligation.Replace("\n", "\n  ", StringComparison.Ordinal)).Append('\n');
-
-            if (controls is null) continue;
-
-            var checking = controls.Where(c => c.Verifies.Contains(rule.Record) || c.Verifies.Contains(rule.Id))
-                .Select(c => $"`{c.Id}` {c.Title} (`{c.Mechanism}`, {c.Status})")
-                .ToList();
-
-            text.Append(rule.Obligations.Count > 0 ? "\n" : "");
-            text.Append(checking.Count == 0 ? "Controls: none.\n" : $"Controls: {string.Join("; ", checking)}.\n");
+                foreach (var obligation in rule.Obligations)
+                    text.Append("- ").Append(obligation.Replace("\n", "\n  ", StringComparison.Ordinal)).Append('\n');
+            }
         }
 
         return text.ToString();
+    }
+
+    /// <summary>
+    /// One standard with the rules it states. <c>Heading</c> is its id, then its title where the export has one.
+    /// </summary>
+    private sealed record Standard(string Id, string Heading, string Status, IReadOnlyList<Rule> Rules);
+
+    /// <summary>
+    /// In the order the parts file states each standard's first rule. Every rule line of one record states the
+    /// record's status, so the first rule's status is the standard's.
+    /// </summary>
+    private static List<Standard> StandardsOf(Source source)
+    {
+        var titles = RecordTitles(source);
+
+        return
+        [
+            .. Rules(source)
+                .GroupBy(r => r.Record, StringComparer.Ordinal)
+                .Select(g => new Standard(g.Key,
+                    titles.TryGetValue(g.Key, out var title) ? $"{g.Key}: {title}" : g.Key,
+                    g.First().Status,
+                    [.. g]))
+        ];
     }
 
     private static string Corpus(Source source) => source.Manifest.Corpus ?? "this corpus";

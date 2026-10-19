@@ -518,14 +518,15 @@ public class BundlerTests
     }
 
     [Fact]
-    public void A_build_index_lists_every_rule_by_title_id_and_status()
+    public void A_build_index_lists_every_rule_by_title_and_id_under_its_standard_and_status()
     {
         var index = Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))],
             export: Standards(controls: false)), "views/build-index.md");
 
-        Assert.Contains("- An artefact records its commit (`std-DEPLOY.commit`, draft)", index);
-        Assert.Contains("- A call forwards the trace (`std-OBS.trace`, active)", index);
+        Assert.Contains(
+            "## std-DEPLOY: Deployment (draft)\n\n- An artefact records its commit (`std-DEPLOY.commit`)\n", index);
+        Assert.Contains("## std-OBS: Observability (active)\n\n- A call forwards the trace (`std-OBS.trace`)\n", index);
         Assert.DoesNotContain("**MUST**", index);
     }
 
@@ -547,29 +548,45 @@ public class BundlerTests
             export: Standards(controls: false)), "views/build-index.md"));
 
     [Fact]
-    public void A_review_view_lists_each_rule_s_obligations_and_its_controls()
+    public void A_review_view_lists_each_rule_s_obligations_under_its_standard()
     {
         var review = Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
             export: Standards(controls: true)), "views/review.md");
 
-        Assert.Contains("## std-DEPLOY: Deployment", review);
-        Assert.Contains("Cite as `std-DEPLOY.commit`. Status: draft.", review);
+        Assert.Contains("## std-DEPLOY: Deployment\n\nStatus: draft.\n", review);
+        Assert.Contains("Cite as `std-DEPLOY.commit`.\n", review);
         Assert.Contains("- An artefact **MUST** record the commit it was built from.", review);
         Assert.Contains("- A service **SHOULD** report the commit on its health endpoint.", review);
-        Assert.Contains("Controls: `ctl-0002` Health reports commit (`not-enforced`, active).", review);
     }
 
     [Fact]
-    public void A_review_view_says_where_no_control_checks_a_rule()
+    public void A_review_view_states_a_standard_s_controls_once_under_its_heading()
     {
         var review = Text(Plan(
             plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
             export: Standards(controls: true)), "views/review.md");
 
-        var trace = review[review.IndexOf("`std-OBS.trace`", StringComparison.Ordinal)..];
-        Assert.Contains("Controls: none.", trace);
+        Assert.Contains(
+            "Status: draft.\n\nControls: `ctl-0002` Health reports commit (`not-enforced`, active).\n\n### ", review);
+        Assert.Equal(2, review.Split("Controls:").Length - 1);
     }
+
+    [Fact]
+    public void A_review_view_says_where_no_control_checks_a_standard()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true)), "views/review.md");
+
+        Assert.Contains("## std-OBS: Observability\n\nStatus: active.\n\nControls: none.\n", review);
+    }
+
+    [Fact]
+    public void A_review_view_says_how_to_report_a_rule_whose_standard_is_not_in_force()
+        => Assert.Contains("- A standard is in force at status `active`.", Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: false)), "views/review.md"));
 
     [Fact]
     public void A_review_view_renders_where_the_export_carries_no_controls()
