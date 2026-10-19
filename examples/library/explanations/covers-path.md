@@ -28,9 +28,18 @@ belongs to [exp-estate-overview].
 
 ## The request path
 
+```mermaid
+flowchart LR
+  page["Catalogue page"] -->|"image at a size"| edge["svc-covers-cdn: the edge"]
+  edge -->|"not in cache"| origin["svc-thumbnailer: the origin"]
+  origin -->|"reads the original"| store[("covers container")]
+  import["covers-import pipeline, nightly"] -->|"writes"| store
+  api["svc-catalogue-api: staff uploads"] -->|"writes"| store
+```
+
 A catalogue page asks [svc-covers-cdn] for an image at a size. The edge serves it from cache, or forwards to
 [svc-thumbnailer]. That service reads the original from blob storage, resizes it, and returns it. The edge caches the
-resized result, so the requested size is part of the cache key.
+resized result, keyed as [svc-covers-cdn] states.
 
 Nothing calls [svc-thumbnailer] directly. [svc-covers-cdn] is the public hostname, and the origin sits behind the
 platform network.
@@ -38,14 +47,14 @@ platform network.
 ## How images get into storage
 
 Two writers fill the container, and [svc-thumbnailer] is neither of them. The `covers-import` pipeline brings imagery
-from the bibliographic data supplier each night. [svc-catalogue-api] writes the jackets branch staff upload for items
-the supplier has no image for. [svc-covers-cdn] describes both.
+from [itg-bibliographic-data] each night. [svc-catalogue-api] writes the jackets branch staff upload for items the
+supplier has no image for. [svc-covers-cdn] describes both.
 
 ## The repositories behind the path
 
-No single service record can describe this path, because each leg is a service of its own. The edge is defined in
-`infrastructure`, the origin in `thumbnailer`, and the staff uploads in `platform`. [svc-covers-cdn] lists the two
-repositories its own leg is changed in, and the other two legs are [svc-thumbnailer] and [svc-catalogue-api].
+No single service record can describe this path, because each leg is a service of its own. Each record lists the
+repositories its own leg is changed in: [svc-covers-cdn] for the edge and the nightly import, [svc-thumbnailer] for the
+origin, and [svc-catalogue-api] for the staff uploads.
 
 ## What a borrower sees when a leg fails
 
@@ -58,11 +67,13 @@ estate.
 * [svc-covers-cdn] describes the edge, its routes and its cache key.
 * [svc-thumbnailer] describes the origin and the container it reads.
 * [svc-catalogue-api] describes the gateway that writes staff uploads.
-* [ofr-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.
+* [itg-bibliographic-data] describes the supplier the nightly import takes its imagery from.
+* [ofr-discovery] lists what a borrower uses to find a title, and states that a title with no image shows a placeholder.
 * [exp-estate-overview] puts this path beside the rest of the estate.
 
-[ofr-discovery]: ../offerings/discovery.md
 [exp-estate-overview]: estate-overview.md
+[itg-bibliographic-data]: ../integrations/bibliographic-data.md
+[ofr-discovery]: ../offerings/discovery.md
 [svc-catalogue-api]: ../services/catalogue-api.md
 [svc-covers-cdn]: ../services/covers-cdn.md
 [svc-thumbnailer]: ../services/thumbnailer.md

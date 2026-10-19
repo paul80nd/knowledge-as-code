@@ -49,7 +49,8 @@ mermaid diagram where it has a shape, and label it.
 
 ## Where the detail lives
 
-- [{{Service}}](../services/{{a}}.md) describes {{what it describes}}.
+- [svc-{{a}}] describes {{what it describes}}.
 - [adr-{{a}}] records {{what it decided}}.
 
 [adr-{{a}}]: ../adrs/{{a}}.md
+[svc-{{a}}]: ../services/{{a}}.md
