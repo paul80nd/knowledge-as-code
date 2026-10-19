@@ -40,6 +40,8 @@ _**Covers:** `eng:pol-DATA.MINIMAL`, `eng:pol-MEXP.PEERID`_
   telephone.
 - A token **MAY** be stored and reused, because only we and the PSP can use it.
 
+_**Covers:** `eng:pol-DATA.MINIMAL`_
+
 ### The split of responsibility is written down
 
 - The PSP contract **MUST** state which PCI DSS requirements the PSP answers for and which we do.
