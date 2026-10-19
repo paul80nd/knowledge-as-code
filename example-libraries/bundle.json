@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-libraries",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-libraries",
-    "contentVersion": "0.24.0",
+    "contentVersion": "0.24.1",
     "types": [
       "adrs",
       "data",
@@ -45,7 +45,7 @@
       "requires": [
         "glossary"
       ],
-      "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up."
+      "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up. A PreToolUse hook printing the build index once a session, at its first Read, Grep, Glob or edit, where views/build-index.md survived. Both travel with the glossary, so a corpus exporting standards and no glossary ships neither."
     }
   ],
   "trimmed": [

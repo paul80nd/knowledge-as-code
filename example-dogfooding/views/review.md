@@ -284,6 +284,19 @@ Cite as `std-PLUGIN.a-framework-finding-travels-stripped-and-only-by-hand`.
 - The upstream body **MUST NOT** contain the session id, the repository the session worked in, that repository's commit, or the name of the corpus the finding was filed from.
 - The upstream body **MUST** state the version of the framework the session ran.
 
+### A hook runs in a POSIX shell, and pushes a view once a session
+
+Cite as `std-PLUGIN.a-hook-runs-in-a-posix-shell-and-pushes-a-view-once-a-session`.
+
+- A hook **MUST** run under a POSIX shell.
+- A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
+- What a hook prints **MUST** be rendered by `kac bundle`, so the hook computes nothing about the export.
+- A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`, or under the temporary directory where that is unset.
+- A hook pushing a view **MUST** push it at most once a session.
+- What a hook pushes **MUST** be at most 10,000 characters, because Claude Code shows a session only the first 2,000 of a longer one.
+- Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
+- What a hook pushes **SHOULD** state facts, because Claude Code passes it to the session as context.
+
 ### A skill assumes only that the session can read a file
 
 Cite as `std-PLUGIN.a-skill-assumes-only-that-the-session-can-read-a-file`.
