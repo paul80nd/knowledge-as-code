@@ -35,7 +35,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 |--------------------------------------------|----------------------------------------------|----------:|----------------------:|
 | [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     0 |
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     4 |
-| [`review.feature`](review.feature)         | a reviewer, human or AI                      |         3 |                     3 |
+| [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
 | [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     0 |
@@ -47,16 +47,17 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 
 These map to a case a trial has already run, and each gives its baseline from that run:
 
-| Scenario                                                                             | Case                                           | Run                                                      |
-|--------------------------------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------|
-| A rule filed under another topic reaches the session                                 | `plugin/engineering/house/health-endpoint`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A tracing rule reaches a session writing an outbound call                            | `plugin/engineering/house/pricing-call`        | [full pass](../plugin/runs/full-pass.md)                 |
-| A policy clause reaches a session writing infrastructure                             | `plugin/engineering/house/audit-log-retention` | [full pass](../plugin/runs/full-pass.md)                 |
-| A departure from a MUST goes to a deviation                                          | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A process written as outcomes draws no finding asking for a step                     | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
-| A review of a change that broke a MUST cites the clause it broke                     | `review/engineering/health-endpoint`           | [2026-10-19](../review/runs/2026-10-19.md)               |
-| A review notes a departure from a SHOULD that gives its reason, and does not fail it | `review/engineering/should-departure`          | [2026-10-19](../review/runs/2026-10-19.md)               |
-| A review says which rule no control checks                                           | `review/engineering/health-endpoint`           | [2026-10-19](../review/runs/2026-10-19.md)               |
+| Scenario                                                                                  | Case                                           | Run                                                      |
+|-------------------------------------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------|
+| A rule filed under another topic reaches the session                                      | `plugin/engineering/house/health-endpoint`     | [full pass](../plugin/runs/full-pass.md)                 |
+| A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`        | [full pass](../plugin/runs/full-pass.md)                 |
+| A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention` | [full pass](../plugin/runs/full-pass.md)                 |
+| A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
+| A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
+| A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review of a MUST broken in the change's own lines cites it, and files it as a violation | `review/engineering/must-in-added-lines`       | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`          | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review says which rule no control checks                                                | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 
 Every other scenario is `@proposed`.
 
@@ -65,37 +66,38 @@ Every other scenario is `@proposed`.
 Every type in `.schema/` has at least one scenario stating its intent. Where the intent holds only under a condition,
 the condition is in the Intent column.
 
-| Type           | Intent                                              | Moment     | Scenario                                                                                |
-|----------------|-----------------------------------------------------|------------|-----------------------------------------------------------------------------------------|
-| `runbooks`     | follow                                              | operate    | A symptom a runbook opens on gets the runbook's steps, in its order                     |
-| `fixes`        | follow, once the symptom matches and it is verified | operate    | A symptom that matches a verified fix gets the fix's resolution                         |
-| `fixes`        | inform, while it is a draft                         | operate    | A draft fix is a lead, not a resolution                                                 |
-| `processes`    | flow                                                | contribute | A process written as outcomes draws no finding asking for a step                        |
-| `standards`    | nudge                                               | build      | A rule filed under another topic reaches the session                                    |
-| `standards`    | nudge                                               | build      | A tracing rule reaches a session writing an outbound call                               |
-| `standards`    | nudge                                               | build      | A departure from a MUST goes to a deviation                                             |
-| `standards`    | nudge                                               | review     | A review of a change that broke a MUST cites the clause it broke                        |
-| `standards`    | nudge                                               | review     | A review notes a departure from a SHOULD that gives its reason, and does not fail it    |
-| `policies`     | nudge                                               | design     | A design departing from a policy SHOULD says why, and requests no deviation             |
-| `policies`     | nudge                                               | build      | A policy clause reaches a session writing infrastructure                                |
-| `adrs`         | respect                                             | design     | A design the ADR log ruled out follows the ADR or raises it                             |
-| `nfrs`         | respect, where `agreed`                             | design     | A design touching a path an agreed target binds says how it meets the target            |
-| `tools`        | respect: `approved` for new work                    | design     | A design that needs a library chooses an approved tool                                  |
-| `deviations`   | respect, inside its scope and period                | build      | A deviation licenses nothing outside its scope                                          |
-| `deviations`   | respect, inside its scope and period                | contribute | A session that must depart from a MUST requests a deviation, and accepts nothing itself |
-| `deviations`   | respect, inside its scope and period                | assure     | A question about open departures gets each one with its review date                     |
-| `glossary`     | inform                                              | build      | New code takes the estate's word for a concept                                          |
-| `glossary`     | inform                                              | contribute | A term the glossary lacks becomes a finding, not a guess                                |
-| `glossary`     | inform                                              | learn      | A new reader tells two of the estate's words apart                                      |
-| `services`     | inform                                              | operate    | A failing service's owner comes from its service record                                 |
-| `data`         | inform                                              | build      | Code storing personal data keeps the retention its data record states                   |
-| `integrations` | inform                                              | design     | A design that would use a retired integration learns its successor                      |
-| `offerings`    | inform                                              | learn      | A new reader learns what the estate offers, and what is not live yet                    |
-| `explanations` | inform                                              | learn      | A new reader learns how a part of the estate works from its explanation                 |
-| `postmortems`  | inform                                              | operate    | A question about a past failure gets the incident's account                             |
-| `controls`     | inform                                              | review     | A review says which rule no control checks                                              |
-| `controls`     | inform                                              | assure     | A question about enforcement gets the control, and its mechanism                        |
-| `reports`      | inform                                              | assure     | A question about coverage gets the published report, with its date and its limits       |
+| Type           | Intent                                              | Moment     | Scenario                                                                                  |
+|----------------|-----------------------------------------------------|------------|-------------------------------------------------------------------------------------------|
+| `runbooks`     | follow                                              | operate    | A symptom a runbook opens on gets the runbook's steps, in its order                       |
+| `fixes`        | follow, once the symptom matches and it is verified | operate    | A symptom that matches a verified fix gets the fix's resolution                           |
+| `fixes`        | inform, while it is a draft                         | operate    | A draft fix is a lead, not a resolution                                                   |
+| `processes`    | flow                                                | contribute | A process written as outcomes draws no finding asking for a step                          |
+| `standards`    | nudge                                               | build      | A rule filed under another topic reaches the session                                      |
+| `standards`    | nudge                                               | build      | A tracing rule reaches a session writing an outbound call                                 |
+| `standards`    | nudge                                               | build      | A departure from a MUST goes to a deviation                                               |
+| `standards`    | nudge                                               | review     | A review of a change that broke a MUST cites the clause it broke                          |
+| `standards`    | nudge                                               | review     | A review of a MUST broken in the change's own lines cites it, and files it as a violation |
+| `standards`    | nudge                                               | review     | A review notes a departure from a SHOULD that gives its reason, and does not fail it      |
+| `policies`     | nudge                                               | design     | A design departing from a policy SHOULD says why, and requests no deviation               |
+| `policies`     | nudge                                               | build      | A policy clause reaches a session writing infrastructure                                  |
+| `adrs`         | respect                                             | design     | A design the ADR log ruled out follows the ADR or raises it                               |
+| `nfrs`         | respect, where `agreed`                             | design     | A design touching a path an agreed target binds says how it meets the target              |
+| `tools`        | respect: `approved` for new work                    | design     | A design that needs a library chooses an approved tool                                    |
+| `deviations`   | respect, inside its scope and period                | build      | A deviation licenses nothing outside its scope                                            |
+| `deviations`   | respect, inside its scope and period                | contribute | A session that must depart from a MUST requests a deviation, and accepts nothing itself   |
+| `deviations`   | respect, inside its scope and period                | assure     | A question about open departures gets each one with its review date                       |
+| `glossary`     | inform                                              | build      | New code takes the estate's word for a concept                                            |
+| `glossary`     | inform                                              | contribute | A term the glossary lacks becomes a finding, not a guess                                  |
+| `glossary`     | inform                                              | learn      | A new reader tells two of the estate's words apart                                        |
+| `services`     | inform                                              | operate    | A failing service's owner comes from its service record                                   |
+| `data`         | inform                                              | build      | Code storing personal data keeps the retention its data record states                     |
+| `integrations` | inform                                              | design     | A design that would use a retired integration learns its successor                        |
+| `offerings`    | inform                                              | learn      | A new reader learns what the estate offers, and what is not live yet                      |
+| `explanations` | inform                                              | learn      | A new reader learns how a part of the estate works from its explanation                   |
+| `postmortems`  | inform                                              | operate    | A question about a past failure gets the incident's account                               |
+| `controls`     | inform                                              | review     | A review says which rule no control checks                                                |
+| `controls`     | inform                                              | assure     | A question about enforcement gets the control, and its mechanism                          |
+| `reports`      | inform                                              | assure     | A question about coverage gets the published report, with its date and its limits         |
 
 ## Adding a use case
 
