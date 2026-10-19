@@ -137,9 +137,9 @@ A view is a file `View` renders into the plugin from the export, after the trim.
   the file short. A control is listed under each standard its `verifies` names, or whose rule it names.
 * **The review view names `active` as the status in force.** The export does not state a type's `in-force` value, so
   `View` fixes the one `.schema/standards.yaml` declares.
-* **The review view opens on facts.** It says what each keyword means, and that a control checks a rule only where it
-  is `active` and runs as `ci` or `runtime-alert`. The `standards-review` skill reads the view whole in a forked
-  subagent, and gives the instructions itself.
+* **The review view opens on facts.** It says what each keyword means, and that a control checks only the obligations
+  its record's What it checks section names, and only where it is `active` and runs as `ci` or `runtime-alert`. The
+  `standards-review` skill reads the view whole in a forked subagent, and gives the instructions itself.
 * **The build index names a skill only where one survived.** It names the surviving lookup skill that reads standards,
   and the rules file inside the plugin where none did.
 

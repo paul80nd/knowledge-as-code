@@ -43,7 +43,7 @@ first, and whoever owns the branch decides whether it ships now or waits for the
     "path": "skills/standards-review",
     "requires": [ "standards@2" ],
     "optional": [ "controls@1" ],
-    "note": "Reviews a change in a forked subagent against views/review.md, read whole."
+    "note": "Reviews a change in a forked subagent against views/review.md, read whole. It takes a rule's link from corpus/standards/rules.jsonl, and reads a control from corpus/controls/ where the export carries controls."
   }
   ```
 

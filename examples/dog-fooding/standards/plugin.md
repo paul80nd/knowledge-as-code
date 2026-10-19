@@ -441,7 +441,7 @@ a fixed point, and leaves the session to read it, the same way a lookup leaves i
 
 A reviewer leaves a rule out only where a check runs without a person. `ci` and `runtime-alert` run by themselves.
 `review-checklist` and `manual` are a person checking, and in a review that person is the reviewer. A control's
-`verifies` names a whole standard, so the reviewer reads its What it checks section to learn which obligations it
+`verifies` can name a whole standard, so the reviewer reads its What it checks section to learn which obligations it
 covers, and checks the rest.
 
 The frozen export is why a skill states a date and a status. An export reads the same however old it is, so the skill
