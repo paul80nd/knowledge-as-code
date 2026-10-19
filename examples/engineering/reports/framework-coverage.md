@@ -10,7 +10,7 @@ generated:
   report: frameworks
   tool: kac/0.35.0
 sources:
-  - { resource: example-engineering, version: "0.35.0" }
+  - { resource: example-engineering, version: "0.36.0" }
 verified:
   - { at: 2026-10-19T07:31:00Z, by: human:paul.law }
 tags: [ coverage, frameworks ]
@@ -41,9 +41,9 @@ this report decides whether the clause covers that control or one corner of it.
 | NIST SSDF 1.1     | Inspiration    | 15         | 1          |
 | OWASP ASVS 4.0    | Inspiration    | 5          | 3          |
 | SLSA 1.1          | Inspiration    | 2          | 2          |
-| UK GDPR           | Obliged        | 23         | 16         |
+| UK GDPR           | Obliged        | 23         | 15         |
 | WCAG 2.2 AA       | Self-obligated | 1          | 0          |
-| **Total**         |                | **120**    | **36**     |
+| **Total**         |                | **120**    | **35**     |
 
 ## References
 
@@ -223,7 +223,7 @@ Filed under `Obliged` in [`frameworks.md`](../frameworks.md#uk-gdpr).
 | Art.32       | 2         | `pol-DATA.CRYPTO`, `pol-DATA.RETIRE`                    | `pol-DATA`                         | Article 32(1)(c) requires restoring access to personal data in good time. `pol-RECV.RESTORE` cites `Art.32(1)(d)` for testing that it works, and the objectives in `RTORPO` and `BACKUP` have no UK GDPR citation.                                                        |
 | Art.32(1)(a) | 2         | `pol-DATA.MASK`, `pol-DATA.CRYPTO`                      | `pol-DATA`                         |                                                                                                                                                                                                                                                                           |
 | Art.32(1)(d) | 3         | `pol-INCR.DRILL`, `pol-RECV.RESTORE`, `pol-VURM.INDEP`  | `pol-INCR`, `pol-RECV`, `pol-VURM` |                                                                                                                                                                                                                                                                           |
-| Art.33       | 1         | `pol-INCR.NOTIFY`                                       | `pol-INCR`                         |                                                                                                                                                                                                                                                                           |
+| Art.33       | 2         | `pol-INCR.HARM`, `pol-INCR.NOTIFY`                      | `pol-INCR`                         |                                                                                                                                                                                                                                                                           |
 | Art.33(5)    | 1         | `pol-INCR.EVIDENC`                                      | `pol-INCR`                         |                                                                                                                                                                                                                                                                           |
 | Art.34       | 1         | `pol-INCR.INFORM`                                       | `pol-INCR`                         |                                                                                                                                                                                                                                                                           |
 | Art.35       | 1         | `pol-SECD.IMPACT`                                       | `pol-SECD`                         |                                                                                                                                                                                                                                                                           |
