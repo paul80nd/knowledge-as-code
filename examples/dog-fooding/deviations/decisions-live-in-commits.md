@@ -32,8 +32,8 @@ Finding the reasoning behind a design means reading `git log` and knowing what t
 ## Why we need it
 
 `adrs/` in the corpora beside this one records the invented estate's decisions, and a decision about the tool would not
-belong among them. Adopting the type here means moving several years of reasoning out of the commit messages that
-already contain it. Nobody has needed it badly enough to do that.
+belong among them. Adopting the type here means moving the reasoning out of the commit messages that already contain
+it. Nobody has needed it badly enough to do that.
 
 ## What the risk is
 

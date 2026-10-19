@@ -4,10 +4,6 @@ type: deviation
 tier: normative
 status: active
 departs-from:
-  - eng:pol-DERV.CHECK
-  - eng:pol-DERV.EXPECT
-  - eng:pol-DERV.FAILED
-  - eng:pol-DERV.LINEAGE
   - eng:pol-DERV.RUNLOG
 risk: low
 accepted-on: "2026-09-07"
@@ -19,34 +15,27 @@ owner: human:paul.law
 tags: [ derived-data, generate, verification ]
 ---
 
-# No standard governs what `kac generate` computes
+# A generated file keeps no record of the run that wrote it
 
 `Deviation: dev-generated-output-ungoverned` `ACTIVE`
 
-`kac generate` and `kac export` both compute derived data, and nothing here implements the clauses about verifying it.
+`kac generate` and `kac export` compute derived data, and a run's check result lives only in a log that expires.
 
 ## What we are doing instead
 
 `kac generate --check` regenerates every block and index and compares the result against what is committed. [ctl-0007]
-runs it on each pull request, and a stale file fails the gate. That is an expectation stated and checked. It lives in
-the tool, and no standard states it.
-
-A generated block states which generator wrote it, and nothing more. It does not list the records it was computed
-from, and no run keeps its inputs beside its output.
+runs it on each pull request, and the workflow log records the run and its result. That log lives in GitHub Actions
+and expires there, and nothing keeps the result for longer.
 
 ## Why we need it
 
-The behaviour already exists and it is right. The missing piece is a record saying it has to stay right, and writing
-that record only gains somebody a citation. Nothing has gone wrong here yet for want of that citation.
-
-Lineage is the exception, and it is real work: a block would have to list the ids it read, and every generator would
-have to emit them.
+Nothing here has needed a run's result after its log expired. Keeping each result with the release it produced needs
+a step in the publish workflows and somewhere to put the output, and neither exists.
 
 ## What the risk is
 
-A reader doubts a generated block and has no way to tell what it was computed from. `generate --check` fails a stale
-file on the branch, so staleness is covered and lineage is not. Answering the doubt means rebuilding the block and
-comparing.
+A reader doubts a generated block or a published export after the run's log has expired, and nothing shows the run
+that produced it. Answering the doubt means checking out the commit and running the generator again.
 
 ## What compensates
 
@@ -58,11 +47,8 @@ comparing.
 
 ## How it closes
 
-A standard states what a generated file is, and that every pull request regenerates it and compares the result. It
-states that a stale file is unusable, not merely out of date. It cites [ctl-0007]. That closes four of the five
-clauses.
-
-Lineage closes separately, when a generated block lists the record ids it was computed from.
+A run that publishes keeps its inputs, its output and its check result with the release it produced, and a standard
+states that it has to. This record closes on that standard.
 
 ## Scope
 
@@ -70,6 +56,6 @@ Every block between `BEGIN GENERATED` and `END GENERATED`, every `_index.md`, an
 
 ## Related
 
-* [ctl-0007] runs the check four of those clauses describe.
+* [ctl-0007] runs the check that fails a stale file.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md

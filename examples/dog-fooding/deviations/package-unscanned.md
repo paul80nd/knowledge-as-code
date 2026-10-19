@@ -4,7 +4,6 @@ type: deviation
 tier: normative
 status: active
 departs-from:
-  - eng:pol-TRUS.ATTEST
   - eng:pol-TRUS.MALWARE
 risk: medium
 accepted-on: "2026-09-07"
@@ -12,36 +11,32 @@ review-by: "2027-03-07"
 closed-on:
 applies-to:
   - svc-kac
+  - svc-marketplace
 owner: human:paul.law
-tags: [ package, provenance, supply-chain ]
+tags: [ malware, package, supply-chain ]
 ---
 
-# Nothing scans or attests the package `kac` ships
+# Nothing scans the package `kac` ships
 
 `Deviation: dev-package-unscanned` `ACTIVE`
 
-The `.nupkg` published to nuget.org passes through no malware scan, and contains nothing a consumer could check its
-origin against.
+The `.nupkg` published to nuget.org and the plugin served from the marketplace branch pass through no malware scan.
 
 ## What we are doing instead
 
 The package is built by the publish workflow from the commit on `main`, on a runner GitHub gives fresh for that run.
-Dependabot watches the dependencies, and [std-CONFIG] requires every pin to be an exact version.
-
-Whoever installs `kac` gets a package whose provenance is the nuget.org listing and nothing else. There is no
-attestation naming the workflow, the commit or the runner that built it.
+Dependabot watches the dependencies, and [std-CONFIG] requires each pin to name one version. Nothing scans what the
+build produced before it is pushed.
 
 ## Why we need it
 
-Both are available and neither is free. GitHub's artifact attestation needs the publish workflow reworked around it,
-and a scan needs a scanner chosen and a failure path decided. Neither has been done, and the package is a
-documentation tool built from a public repository.
+A scan needs a scanner chosen and a failure path decided, and neither has been done. The package is a documentation
+tool built from a public repository, by one workflow anybody can read.
 
 ## What the risk is
 
-A consumer installs `kac` and cannot check that the package came from this repository. Trusted publishing means no key
-exists for anybody else to push under this name, so the gap is proof and not control. A consumer with a rule about
-provenance has nothing here to satisfy it.
+Something malicious gets into the package through a dependency or a build step, and nothing looks for it before it
+ships. A consumer installing `kac` takes what it contains on trust.
 
 ## What compensates
 
@@ -53,8 +48,8 @@ provenance has nothing here to satisfy it.
 
 ## How it closes
 
-The publish workflow generates a build provenance attestation, and the release notes say how to verify it. A scan runs
-over the package before the push and fails the job on a finding. This record closes when both are in the workflow.
+A scan runs over the package and the plugin before they are published, and fails the job on a finding. This record
+closes when that scan is in the publish workflows.
 
 ## Scope
 
@@ -62,9 +57,7 @@ The `kac` package on nuget.org, and the plugin served from the marketplace branc
 
 ## Related
 
-* [dev-no-reproducible-build] covers the other half of the provenance question.
 * [std-CONFIG] governs the pins the package is built from.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md
-[dev-no-reproducible-build]: no-reproducible-build.md
 [std-CONFIG]: ../standards/configuration.md

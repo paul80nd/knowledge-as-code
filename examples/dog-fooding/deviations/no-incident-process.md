@@ -7,9 +7,10 @@ departs-from:
   - eng:pol-INCR.ADHOC
   - eng:pol-INCR.COMMS
   - eng:pol-INCR.DRILL
+  - eng:pol-INCR.LEARN
   - eng:pol-INCR.PROCESS
-  - eng:pol-INCR.RECOVER
-  - eng:pol-INCR.REPORT
+  - eng:pol-INCR.TOOSOON
+  - eng:pol-INCR.TRIAGE
 risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-03-07"
@@ -32,13 +33,17 @@ told.
 ## What we are doing instead
 
 [`../runbooks/`](../runbooks/) has a runbook for each of three failures somebody has met. Outside those three, there is
-no declaration, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.
+no declaration, no severity, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.
+`eng:std-INCSEV` states the severity scale, and nothing here applies it.
 
 `.github/SECURITY.md` gives the route in for a vulnerability, and says a report is acknowledged within about a week.
 No record here points at that route, and nothing covers an ordinary failure a user meets.
 
 Whoever installed a bad version of `kac` hears nothing until the next version lands. There is no announcement, no
 advisory and no place a user would look.
+
+Nothing reviews an incident afterwards, and nothing keeps one open until that review is written. This corpus has
+adopted no type for a postmortem, so a fix lands with its test and its commit message and nothing else.
 
 ## Why we need it
 
@@ -76,9 +81,7 @@ when both exist.
 
 ## Related
 
-* [dev-nothing-learns-from-a-fault] covers what happens after the fix.
 * [std-VERS] governs the version a correction ships as.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md
-[dev-nothing-learns-from-a-fault]: nothing-learns-from-a-fault.md
 [std-VERS]: ../standards/versioning.md

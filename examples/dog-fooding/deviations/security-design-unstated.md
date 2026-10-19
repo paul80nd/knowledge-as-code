@@ -4,7 +4,6 @@ type: deviation
 tier: normative
 status: active
 departs-from:
-  - eng:pol-SECD.DESIGN
   - eng:pol-SECD.HIRISK
   - eng:pol-SECD.REQS
   - eng:pol-SECD.THREAT
@@ -20,23 +19,21 @@ tags: [ design, security, threat-model ]
 
 `Deviation: dev-security-design-unstated` `ACTIVE`
 
-Nothing here sorts a change by risk before it is built, and no standard states the secure-by-default arrangement the
-workflows already have.
+Nothing here sorts a change by risk before it is built, or records its security requirements before the work starts.
 
 ## What we are doing instead
 
-The workflows fail closed and deny by default: a job declares the permission it needs, and has none it did not ask
-for. `.github/SECURITY.md` says how CI contains what it runs, and states what is in scope for a report. Both are
-accurate, and no standard cites either.
-
 A security requirement arrives as a comment on a pull request, from the maintainer who also wrote the change. Nothing
-identifies a change as higher risk before the work starts.
+identifies a change as higher risk before the work starts, and nothing records how a change could be attacked.
+
+`.github/SECURITY.md` says how CI contains what it runs, and states what is in scope for a report. It covers the
+repository as a whole, and no change is weighed against it.
 
 ## Why we need it
 
 Threat modelling a documentation tool that reads a repository and writes files back into it produces a short list, and
-`.github/SECURITY.md` already contains it. Turning that into a standard, a risk triage and a design review is real
-work. One person in all three roles gets little from the separation.
+`.github/SECURITY.md` already contains it. Turning that into a risk triage and a design review for each change is real
+work. One person in the author, reviewer and approver roles gets little from the separation.
 
 ## What the risk is
 
@@ -53,10 +50,9 @@ and as reviewer. A triage step filled in by that person would miss it a third ti
 
 ## How it closes
 
-A standard states what this repository already does: a workflow denies by default, a job declares its permission, and
-the tool touches nothing outside the corpus it was given. It cites `.github/SECURITY.md` as the threat statement.
-
-Risk triage closes separately, when a second person makes the sorting worth doing.
+A standard says which changes count as high risk here. It requires such a change to record its security requirements,
+and how it could be attacked, before it is built. It cites `.github/SECURITY.md` as the threat statement for the
+repository. This record closes on that standard.
 
 ## Scope
 

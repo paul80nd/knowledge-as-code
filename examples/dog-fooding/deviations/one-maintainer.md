@@ -21,7 +21,7 @@ This repository has one maintainer, and nothing tests what only they know.
 
 ## What we are doing instead
 
-A great deal is written down. Four `CLAUDE.md` files route the work, the playbooks under `.claude/skills/i-want-to/`
+A great deal is written down. The `CLAUDE.md` files route the work, the playbooks under `.claude/skills/i-want-to/`
 give the steps, and this corpus records the rules a change has to meet. Somebody with no context can read any of it,
 and agents do that every day.
 

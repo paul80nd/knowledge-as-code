@@ -5,6 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-A11Y.CONFORM, eng:pol-A11Y.PUBLISH, eng:pol-A11Y.UPFRONT, eng:pol-A11Y.VENDOR,
               eng:pol-A11Y.WORSE ]
+verified-by: [ ctl-0012 ]
 applies-to:
   - svc-docs-site
   - svc-kac

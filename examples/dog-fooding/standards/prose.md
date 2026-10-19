@@ -4,6 +4,7 @@ type: standard
 tier: normative
 status: active
 implements: [ eng:pol-KNOW.AGENTS ]
+verified-by: [ ctl-0013 ]
 applies-to:
   - all
 review-by: "2027-09-02"

@@ -46,8 +46,9 @@ edge or a field out of range. It reads no standard, so a record that obeys the s
 has `contents: read`.
 
 `validate` asks each consumed source what it publishes now, once per run. It fails an import that was never restored,
-warns where a newer version sits inside the declared range, and reports where one sits outside it. It cannot see
-another pull request, so a lock moved in a later one passes here.
+and reports where a newer version sits outside the declared range. Where the newer version sits inside the range, as a
+producer's patch move does, it warns and passes. A patch move with no lock move merges into `main` with a warning. It
+cannot see another pull request, so a lock moved in a later one passes here.
 
 Most of the types the schema declares have no record in any corpus here, and a rule declared on an empty folder has
 never run against content. `kac validate` passes a corpus whose types are empty.
