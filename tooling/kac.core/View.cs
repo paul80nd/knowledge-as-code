@@ -86,7 +86,7 @@ public static class View
         text.Append("- **SHOULD**, **SHOULD NOT** and **MAY** state a default. A change may depart from one by giving "
                     + "its reason. Report the departure and its reason as a judgement call.\n");
         text.Append($"- A standard is in force at status `{InForce}`. "
-                    + "Report a finding under any other status as not yet binding, and give that status.\n");
+                    + "Report a finding under any other status as not in force, and give that status.\n");
         text.Append(controls is null
             ? "- This corpus exports no controls, so check every rule yourself.\n"
             : "- A standard's controls say what already checks its rules, and how. Check a rule yourself where its "
