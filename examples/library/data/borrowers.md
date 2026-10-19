@@ -45,8 +45,6 @@ it does so.
 * **Category**: adult, junior, housebound or staff. It sets the loan allowance and the fine rate.
 * **Contact preference**: whether the borrower takes notices by email, by post, or not at all.
 
-_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
-
 ## Where it lives
 
 |                    |                                                     |

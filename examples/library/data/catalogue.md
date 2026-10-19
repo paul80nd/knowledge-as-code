@@ -38,8 +38,6 @@ No lawful basis is recorded, and `data-subjects` is left out, because `personal-
 * **Item**: one physical copy on one shelf. Barcode, owning branch, shelf location and condition.
 * **Branch**: a library building. Name, address, opening hours and the collections it keeps.
 
-_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
-
 ## Where it lives
 
 |                    |                                             |

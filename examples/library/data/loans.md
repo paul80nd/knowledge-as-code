@@ -43,8 +43,6 @@ The lawful basis for all four is public task, the same as [dat-borrowers].
   position.
 * **Fine**: money owed on an overdue or damaged item. The amount, the reason and whether it is paid.
 
-_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
-
 ## Where it lives
 
 |                    |                                                 |
