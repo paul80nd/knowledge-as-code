@@ -41,6 +41,6 @@
     "Data": "**The legacy database**, which this service maps and does not own. The legacy library management system still writes to it directly. Three data domains live there:\n\n* [dat-borrowers]\n* [dat-loans]\n* [dat-payments]"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/476c610ce9c99e69b4c971ce9311503743f95c9c/examples/library/services/lending.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9eafa192605bc66b32382e499bb83aacb1a3a5e4/examples/library/services/lending.md"
   }
 }
