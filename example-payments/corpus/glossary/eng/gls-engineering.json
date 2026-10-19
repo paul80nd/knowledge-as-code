@@ -5,7 +5,7 @@
   "fields": {
     "id": "gls-engineering",
     "title": "Engineering",
-    "narrows": "gls-knowledge-as-code",
+    "narrows": null,
     "status": "draft",
     "review-by": "2027-09-02",
     "tags": [
@@ -20,6 +20,6 @@
     "Scope": "This glossary covers the estate: what our systems are built from, what data they store, and our obligations to the people that data describes. A word about the framework this corpus runs on belongs in the framework's own glossary, which every corpus shares.\n\nAn entry here may cite a record; the shared glossary may not. Where a policy depends on a word, the entry cites the clause that states the detail."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/engineering/glossary/engineering.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/engineering/glossary/engineering.md"
   }
 }

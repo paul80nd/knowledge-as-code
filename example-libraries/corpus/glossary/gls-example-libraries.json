@@ -14,9 +14,9 @@
     ]
   },
   "sections": {
-    "Scope": "The vocabulary every team here shares: readers, what they borrow, and where they borrow it from. A word one system uses differently belongs in that system's glossary, and the entry here points at it."
+    "Scope": "The vocabulary every team here shares: borrowers, what they borrow, and where they borrow it from. A word one system uses differently belongs in that system's glossary, and the entry here points at it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/glossary/example-libraries.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/library/glossary/example-libraries.md"
   }
 }

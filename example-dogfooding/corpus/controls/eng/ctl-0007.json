@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the description is the only thing that notices a missing model or task today.\n\nThe check finds agent-produced work only where a trailer or a heading declares it. Whether a change is agent-produced at all is a reviewer's judgement. The standard fixes no layout for the three facts, so the check needs one agreed first. The rules about approval and self-merge belong to branch policy, and this check reads none of them."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/engineering/controls/0007-pr-names-agent.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/engineering/controls/0007-pr-names-agent.md"
   }
 }

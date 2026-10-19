@@ -19,9 +19,9 @@
   },
   "sections": {
     "What this covers": "The request path, the writers that fill the image container, and what a borrower sees when a leg of the path fails. The routes, the cache key and the container itself belong to the service records. Where the rest of the estate sits belongs to [exp-estate-overview].",
-    "Where the detail lives": "* [svc-covers-cdn] describes the edge, its routes and its cache key.\n* [svc-thumbnailer] describes the origin and the container it reads.\n* [svc-catalogue-api] describes the gateway that writes staff uploads.\n* [ofr-discovery] lists what a borrower uses to find a title, and what the placeholder costs them.\n* [exp-estate-overview] puts this path beside the rest of the estate."
+    "Where the detail lives": "* [svc-covers-cdn] describes the edge, its routes and its cache key.\n* [svc-thumbnailer] describes the origin and the container it reads.\n* [svc-catalogue-api] describes the gateway that writes staff uploads.\n* [itg-bibliographic-data] describes the supplier the nightly import takes its imagery from.\n* [ofr-discovery] lists what a borrower uses to find a title, and states that a title with no image shows a placeholder.\n* [exp-estate-overview] puts this path beside the rest of the estate."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/library/explanations/covers-path.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/library/explanations/covers-path.md"
   }
 }

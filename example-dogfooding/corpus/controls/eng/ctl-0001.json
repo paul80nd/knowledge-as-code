@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the `FROM` line is the only thing that stops a tag-only base today.\n\nThe check would prove a reference cannot move. It would not prove these:\n\n* the base comes from the organisation's registry, which a second pattern on the registry host would catch\n* the base was refreshed in the last month\n* a manifest the pipeline renders gets the digest the pipeline built, so the check has to read the rendered output\n  where a placeholder such as `@${IMAGE_DIGEST}` stands in the source"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/engineering/controls/0001-image-pinned-by-digest.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/engineering/controls/0001-image-pinned-by-digest.md"
   }
 }

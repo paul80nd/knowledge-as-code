@@ -1,7 +1,7 @@
 {
   "type": "reports",
   "path": "reports/framework-coverage.md",
-  "trust": "unverified",
+  "trust": "human-reviewed",
   "fields": {
     "id": "rpt-framework-coverage",
     "title": "Framework coverage",
@@ -15,12 +15,12 @@
     "sources": [
       {
         "resource": "example-engineering",
-        "version": "0.33.0"
+        "version": "0.34.0"
       }
     ],
     "verified": [
       {
-        "at": "2026-09-21T08:30:00Z",
+        "at": "2026-10-19T07:31:00Z",
         "by": "human:paul.law"
       }
     ],
@@ -31,6 +31,6 @@
   },
   "sections": {},
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/62502f54b31c3df9b3b061d894691dd4797279fd/examples/engineering/reports/framework-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/engineering/reports/framework-coverage.md"
   }
 }
