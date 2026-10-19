@@ -86,8 +86,9 @@ says needs one.
 
 **Conventions**
 
-* **Correct a published postmortem wherever it is wrong.** A fact, a time, a citation that no longer matches the
-  record it cites, or a typo is fixed in place. The commit message says what you changed and why.
+* **Correct a published postmortem where it misstates the incident.** A wrong fact, a wrong time, a typo or a broken
+  link is fixed in place, and so is the prose. Nothing is updated to follow what changed after the incident. The commit
+  message says what you changed and why.
 * **Measure the impact against the [NFRs](nfrs.md)** where targets exist. Where the incident breached one, say which.
   Where no target existed, that absence is itself a finding.
 
@@ -108,9 +109,9 @@ this type's records.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                                        |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------|
-| `immutable-after-published` | Once `status` is `published`, an edit corrects what is wrong in the account and leaves the rest as written. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                                |
+| Rule                        | What it would verify                                                               |
+|-----------------------------|------------------------------------------------------------------------------------|
+| `immutable-after-published` | A published account changes only to correct what it misstates or to fix its prose. |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                       |
 
 <!-- END GENERATED: checks-postmortems -->

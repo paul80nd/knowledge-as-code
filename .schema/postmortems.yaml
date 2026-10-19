@@ -144,7 +144,7 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      Once `status` is `published`, an edit corrects what is wrong in the account and leaves the rest as written.
+      A published account changes only to correct what it misstates or to fix its prose.
   - id: detected-not-before-occurred
     description: '`detected-at` is at or after `occurred-at`.'
     severity: error

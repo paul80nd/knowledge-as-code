@@ -45,7 +45,7 @@ the logs is written that way. Only `restored-at` before `occurred-at` is refused
 * **`prompted`**: the ADRs, runbooks, NFRs, fixes and standards this incident caused to be written.
 * **`severity`**: the highest level the incident reached on the corpus's severity scale.
 * **`status`**: `draft` while it is being assembled, and `published` once it is the account the estate stands behind.
-  Correct a published postmortem in place wherever it turns out wrong.
+  Correct a published postmortem in place where it misstates the incident, and never to follow what changed afterwards.
 
 **Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.

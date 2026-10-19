@@ -38,11 +38,12 @@ type's own page.
 
 <!-- BEGIN GENERATED: types-detail -->
 
-### Decided: immutable once accepted
+### Decided: immutable once accepted, except to correct it
 
-What was decided is superseded rather than rewritten, so what was thought at the time survives being wrong. A decided
-record therefore states the constraints it asserts. It cites a descriptive record for background, and never as the
-authority behind a constraint.
+A decided record is about one moment: a decision, or an incident. Once accepted, it changes only to correct what it
+misstates about that moment, or to fix its prose and spelling. It never follows what changed afterwards, and a changed
+decision is a new record that supersedes it. A decided record states the constraints it asserts. It cites a descriptive
+record for background, and never as the authority behind a constraint.
 
 **[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
 factors, actions). Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a

@@ -74,8 +74,9 @@ decision affects more than one repository.
 
 * **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused.
 * **Immutability.** Once an ADR is accepted or rejected, change the decision only by writing a new ADR that supersedes
-  it. Edit everything else in place: a status transition, a typo, a broken link, or a correction that leaves the
-  decision, its alternatives and their verdicts as agreed. The commit message says what you changed.
+  it. Edit it in place only to correct what it misstates about the decision as agreed, to fix its prose, a typo or a
+  broken link, or to move its status. Never update it to follow what changed afterwards. The commit message says what
+  you changed.
 * **Rejection.** A proposal the team turns down becomes `rejected` and keeps its number. Its Decision section says why.
 * **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
   supersession recorded on one side only fails the build.
