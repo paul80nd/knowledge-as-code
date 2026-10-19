@@ -40,3 +40,14 @@
 |--------------|---------------------------------|----------|------------|--------------------|
 | tol-reqnroll | [Reqnroll](testing/reqnroll.md) | approved | 2027-08-04 | BSD-3-Clause       |
 | tol-xunit    | [xUnit.net](testing/xunit.md)   | approved | 2027-08-04 | Apache-2.0 AND MIT |
+
+## Workflows
+
+| ID               | Title                                             | Status   | Review by  | Licence                                                                |
+|------------------|---------------------------------------------------|----------|------------|------------------------------------------------------------------------|
+| tol-checkout     | [actions/checkout](workflows/checkout.md)         | approved | 2027-08-03 | MIT AND Apache-2.0 AND ISC                                             |
+| tol-github-pages | [GitHub Pages actions](workflows/github-pages.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND BSD-2-Clause AND BlueOak-1.0.0 AND ISC AND 0BSD |
+| tol-nuget-login  | [NuGet/login](workflows/nuget-login.md)           | approved | 2027-08-20 | Apache-2.0 AND MIT                                                     |
+| tol-setup-dotnet | [actions/setup-dotnet](workflows/setup-dotnet.md) | approved | 2027-08-03 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |
+| tol-setup-go     | [actions/setup-go](workflows/setup-go.md)         | approved | 2027-09-02 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |
+| tol-setup-python | [actions/setup-python](workflows/setup-python.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |

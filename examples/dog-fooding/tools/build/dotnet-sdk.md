@@ -25,7 +25,7 @@ The SDK that builds, tests and packs `kac`, and the runtime the register's NuGet
 Every project under `tooling/` targets `net10.0`. The SDK compiles them, runs the three test layers, and packs the CLI
 as a dotnet tool. It also runs `tooling/kac-tests.cs` as a file-based program that has no project around it.
 
-`actions/setup-dotnet` installs `10.0.x` in every job of every workflow here.
+[tol-setup-dotnet] installs `10.0.x` in every job that builds, tests, packs or publishes with `dotnet`.
 
 ## Where it is used
 
@@ -54,6 +54,8 @@ it.
 ## Related
 
 * [std-CONFIG] covers the pins that state the SDK version.
+* [tol-setup-dotnet] is the action that installs it.
 
 [std-CONFIG]: ../../standards/configuration.md
 [svc-kac]: ../../services/kac.md
+[tol-setup-dotnet]: ../workflows/setup-dotnet.md

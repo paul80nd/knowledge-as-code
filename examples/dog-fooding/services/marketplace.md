@@ -52,6 +52,8 @@ None in this catalogue. The Claude Code CLI fetches the branch, and the branch c
 
 [svc-kac] builds every file on it. That is a build-time dependency, so it is not an edge here.
 
+The actions `publish-plugin.yml` runs are in the tool register: [tol-checkout] and [tol-setup-dotnet].
+
 ## Data
 
 Each plugin contains a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so
@@ -72,3 +74,5 @@ an agent that finds a record wrong raises an issue.
   can return a record that branch has already changed.
 
 [svc-kac]: kac.md
+[tol-checkout]: ../tools/workflows/checkout.md
+[tol-setup-dotnet]: ../tools/workflows/setup-dotnet.md
