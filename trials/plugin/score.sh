@@ -7,12 +7,13 @@
 # Writes sessions.tsv, aggregate.md, and each result file with every absolute path cut to its last part.
 # A case listed in <excluded.tsv> is left out of sessions.tsv and every count, and aggregate.md reports how many.
 # A session <adjudication.tsv> lists is counted by the verdict read by hand, and the graders' verdict is kept beside it.
-# Without -k the hook arm has no sessions, and every hook field is 0 or empty.
+# Without -k the hook arm has no sessions, and every hook field is 0 or empty. A prose result of - does the same for the
+# prose arm, and each lead over an arm with no sessions is empty.
 set -eu
 
 method=5
 
-usage="usage: score.sh [-a <adjudication.tsv>] [-k <hook stage result>] <plugin stage result> <prose stage result>"
+usage="usage: score.sh [-a <adjudication.tsv>] [-k <hook stage result>] <plugin stage result> <prose stage result | ->"
 usage="$usage <run folder> [<excluded.tsv>]"
 adjudication=/dev/null
 hook_json=""
@@ -32,19 +33,20 @@ fi
 
 plugin_json=$1
 prose_json=$2
+if [ "$prose_json" = "-" ]; then prose_json=""; fi
 out=$3
 excluded=""
 if [ "$#" -eq 4 ]; then
   excluded=$(cut -f 1 "$4" | sed 's|.*/||' | tr '\n' ' ')
 fi
 
-for f in "$plugin_json" "$prose_json" $hook_json; do
+for f in "$plugin_json" $prose_json $hook_json; do
   if [ "$(jq -r '.partial' "$f")" != "false" ]; then
     echo "score.sh: $f is a partial run, which this trial does not score" >&2
     exit 1
   fi
 done
-for f in "$prose_json" $hook_json; do
+for f in $prose_json $hook_json; do
   if [ "$(jq -r '.suite.ablation' "$f")" != "none" ]; then
     echo "score.sh: $f did not run under --ablation none" >&2
     exit 1
@@ -77,7 +79,7 @@ sessions() {
 {
   printf 'kind\tarm\tcase\trun\terror\ttask\tcomply\tcite\tfired\tcost_usd\tturns\n'
   sessions "$plugin_json" ""
-  sessions "$prose_json" prose
+  if [ -n "$prose_json" ]; then sessions "$prose_json" prose; fi
   if [ -n "$hook_json" ]; then sessions "$hook_json" hook; fi
 } > "$out/graded.tsv"
 
@@ -112,7 +114,7 @@ awk -F '\t' -v OFS='\t' -v adjudication="$adjudication" '
 rm "$out/graded.tsv"
 
 model=$(jq -r '.suite.modelOverride // ""' "$plugin_json")
-for f in "$prose_json" $hook_json; do
+for f in $prose_json $hook_json; do
   other_model=$(jq -r '.suite.modelOverride // ""' "$f")
   if [ "$model" != "$other_model" ]; then
     echo "score.sh: the stages ran on different models, $model and $other_model" >&2
@@ -121,7 +123,7 @@ for f in "$prose_json" $hook_json; do
 done
 version=$(jq -r '.claudeVersion' "$plugin_json")
 runs=$(jq -r '[.cases[].arms[] | length] | max' "$plugin_json")
-cost=$(jq -s '(map(.costUsd) | add) * 100 | round / 100' "$plugin_json" "$prose_json" $hook_json)
+cost=$(jq -s '(map(.costUsd) | add) * 100 | round / 100' "$plugin_json" $prose_json $hook_json)
 
 excluded_cases=$(printf "%s" "$excluded" | wc -w | tr -d ' ')
 adjudicated=$(awk -F '\t' '$12 != "" { n++ } END { print n - 1 }' "$out/sessions.tsv")
@@ -213,7 +215,7 @@ awk -F '\t' -v method="$method" -v excluded="$excluded_cases" -v model="$model" 
 # A path on the machine that ran the trial says nothing to a reader, and may name its user.
 strip='walk(if type == "string" and startswith("/") then (split("/") | last) else . end)'
 jq "$strip" "$plugin_json" > "$out/results/plugin-stage.json"
-jq "$strip" "$prose_json" > "$out/results/prose-stage.json"
+if [ -n "$prose_json" ]; then jq "$strip" "$prose_json" > "$out/results/prose-stage.json"; fi
 if [ -n "$hook_json" ]; then jq "$strip" "$hook_json" > "$out/results/hook-stage.json"; fi
 
 echo "scored $(($(wc -l < "$out/sessions.tsv") - 1)) session(s) into $out"

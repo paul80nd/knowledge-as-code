@@ -175,7 +175,8 @@ the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outsid
      "$STAGE/out-prose/aggregate-result.json" trials/plugin/runs/<date> "$CASES/excluded.tsv"
    ```
 
-   Leave out `-k` to score a run with no hook arm. Every hook field is then 0 or empty.
+   Leave out `-k` to score a run with no hook arm, and pass `-` for the prose result to score one with no prose arm.
+   Every field of the missing arm is then 0 or empty.
 
 8. **Read the verdicts by hand** against the workspace each session left. Read every failing compliance verdict,
    every house case where the plugin arm disagrees with the hook or prose arm, and every pass by a grader you know
@@ -258,8 +259,9 @@ reads each grader's verdict, and ignores the tool's score.
 
 ## Scoring
 
-[`score.sh`](score.sh) reads the plugin and prose result files, and the hook result file where `-k` names one. It
-writes `sessions.tsv` and `aggregate.md`, and reports each kind of case on its own.
+[`score.sh`](score.sh) reads the plugin result file, the prose result file unless you pass `-` in its place, and the
+hook result file where `-k` names one. It writes `sessions.tsv` and `aggregate.md`, and reports each kind of case on its
+own. An arm with no result file has no sessions, so its rates and every lead over it are empty.
 
 * **A session complies** where every `comply-` grader, or set of alternatives, passed.
 * **A session cites** where every `cite-` grader passed.
