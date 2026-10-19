@@ -45,6 +45,12 @@ jqr() {
 
 [ -d "$REPO/.dist/plugin" ] || fail "no .dist/plugin — run kac export and kac bundle first."
 
+# The fetch below reads the commit the export was taken at and compares it with the working tree.
+EXPORT_COMMIT=$(jqr '.commit // empty' "$REPO/.dist/export/manifest.json")
+HEAD_COMMIT=$(git -C "$REPO" rev-parse HEAD)
+[ -z "$EXPORT_COMMIT" ] || [ "$EXPORT_COMMIT" = "$HEAD_COMMIT" ] \
+  || fail "the export was taken at $EXPORT_COMMIT and HEAD is $HEAD_COMMIT. Run kac export and kac bundle again."
+
 # Both names are read rather than written down, because each corpus names its own plugin and marketplace.
 MARKETPLACE=$(jqr '.name' "$REPO/.dist/.claude-plugin/marketplace.json")
 PLUGIN=$(jqr '.plugins[0].name' "$REPO/.dist/.claude-plugin/marketplace.json")

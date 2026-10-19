@@ -65,9 +65,5 @@ guarantee.
 _(If `mechanism` is `not-enforced`, this is the section that matters: say what would need to exist, and what the
 exposure is meanwhile.)_
 
-## Owner
-
-Who is answerable for this control continuing to run, and who notices when it stops.
-
 [std-{{a}}]: ../standards/{{a}}.md#{{anchor}}
 [std-{{b}}]: ../standards/{{b}}.md#{{anchor}}

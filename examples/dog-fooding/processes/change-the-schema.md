@@ -39,9 +39,10 @@ generated blocks derived from these files.
    cannot: a question the expression grammar cannot ask, or a fault one fixed message cannot name. Run
    [prc-change-a-skill] as well where the change alters what the type exports, because a lookup skill restates the
    exported sections.
-3. Make each type page and `_template.md` agree with the schema, in every tree that has the type. Both are `seed`, so
-   nothing compares the copies. Which trees have them depends on which corpora adopted the type, so count them from the
-   files.
+3. Search every tree for the words the old value used, and make each place that restates it agree: each type page and
+   `_template.md`, `_tiers.yaml`, and `docs/framework/`. Nothing compares one statement with another. Both pages are
+   `seed`, so nothing compares the copies either. Count the trees from the files, because which have a type depends
+   on which corpora adopted it.
 4. Write each `description:` and `notes:` for the author who reads it. The generator prints a `description:` onto the
    type page of every corpus that adopted the type.
 5. Account for every rule the change adds or removes. The coverage gate fails a new check id that no fixture trips.
