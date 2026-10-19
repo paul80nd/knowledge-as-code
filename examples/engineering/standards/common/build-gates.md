@@ -49,7 +49,7 @@ _**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].BYPASS, [pol-AUTV].DISABLE, [pol-DEVI]
 ```
 Good
   # covers-api.test.ts
-  test.skip("retries on 503")   // deviation DEV-0114, r.okafor, review 2026-10-01
+  test.skip("retries on 503")   // deviation dev-covers-retry-flaky, r.okafor, review 2026-10-01
 
 Avoid
   test.skip("retries on 503")
