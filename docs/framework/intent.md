@@ -89,7 +89,8 @@ its plugin manifest. Each entry in a view states its record's status, so a draft
 * **The build index** lists every standard rule by title, under its standard's id. A hook the plugin ships pushes it
   once a session.
 * **The review view** lists each rule's obligations: each MUST to check, and each SHOULD to note a departure from. It
-  names the control that checks each rule, and the control's mechanism.
+  lists the controls that check each standard, with each control's mechanism and status. A control names a standard,
+  not a rule, so the reviewer reads the control's record to learn which obligations it checks.
 
 The per-type export stays the format another corpus imports. Tracked in [epic #940][e940].
 

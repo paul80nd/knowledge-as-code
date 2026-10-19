@@ -46,7 +46,7 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 20
+  template-version: 21
   taken-on: "2026-10-19"
 
 # Where to report a problem with the framework itself. This repository authors it, so a finding about

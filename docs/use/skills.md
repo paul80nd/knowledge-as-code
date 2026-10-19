@@ -28,8 +28,28 @@ that export. An install gets the ones whose record types the corpus exported.
 | `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`  |
 | `process-lookup`    | Find the procedure for a planned task, in the processes that travel with this plugin                                                 | `processes@1` |
 | `standards-lookup`  | Find the rules you have to build to, in the standards that travel with this plugin                                                   | `standards@2` |
+| `standards-review`  | Review a change against the standards that travel with this plugin, citing the rule behind every finding                             | `standards@2` |
 
 <!-- END GENERATED: skills-in-the-plugin -->
+
+### Copying the review view to `CODING_STANDARDS.md`
+
+`standards-review` checks a change against the review view: the file [`bundle`](cli/bundle.md#views) writes at
+`views/review.md` inside the plugin, listing every rule's obligations and the controls checking each standard. A review
+tool that reads standards from your repository can read the same rules once you copy that file in:
+
+```bash
+cp ~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/views/review.md CODING_STANDARDS.md
+```
+
+That is where Claude Code keeps an installed plugin, unless you set `CLAUDE_CODE_PLUGIN_CACHE_DIR`.
+`~/.claude/plugins/installed_plugins.json` gives each install's `installPath`, which is the directory to copy from.
+
+If you review with [`code-review`](https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review):
+
+* It reads `CODING_STANDARDS.md` by name, and skips whatever tooling already enforces, which is what the view's
+  control lines state.
+* The copy stays at the version you took it from. Copy it again each time the plugin's version moves.
 
 ## What travels into a corpus
 

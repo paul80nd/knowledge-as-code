@@ -32,6 +32,20 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   or edits a file. The hook prints it once a session, marking the session under `${CLAUDE_PLUGIN_DATA}`. An
   index over the 10,000 characters Claude Code passes to a session is replaced by its rule and standard counts and its
   path, and `kac bundle` warns. The template moves to version 20.
+- **`standards-review`, the skill that reviews a change against the review view.** It runs in a subagent of its own,
+  reads `views/review.md` whole, and cites the rule behind each finding: a broken MUST as a violation, a departure
+  from a SHOULD as a judgement call. It leaves out only what an active `ci` or `runtime-alert` control checks.
+  `kac bundle` ships it wherever the export carries standards. The template moves to version 21. `kac update` writes
+  the skill and leaves your `plugin.json` alone, and `kac bundle` refuses a skill no component declares, so add:
+
+  ```json
+  {
+    "path": "skills/standards-review",
+    "requires": [ "standards@2" ],
+    "optional": [ "controls@1" ],
+    "note": "Reviews a change in a forked subagent against views/review.md, read whole."
+  }
+  ```
 
 ## 0.35.0 - 2026-10-16
 

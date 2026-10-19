@@ -57,6 +57,8 @@ A view is trimmed like any other component. A type under `optional` is read wher
 trims nothing, so a corpus with no controls still gets the review view. The build index opens on how many rules the
 corpus states, and names the lookup skill that reads standards where one survived the trim.
 [The export format](../../reference/export.md#views-generated-from-the-export) says what a view reads.
+[Copying the review view](../skills.md#copying-the-review-view-to-coding_standardsmd) says how another review tool
+can read it.
 
 ### The build-index hook
 
@@ -95,7 +97,8 @@ bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.24.1. 5 component(s) included, 5 trimmed.
+bundle: trimmed skills/standards-review: the export carries no standards.
+bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.24.1. 5 component(s) included, 6 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -113,11 +116,12 @@ Both directories are untracked, so nothing here needs a branch or a credential.
 ### The components that shipped
 
 `example-engineering` exports controls, glossary, policies and standards, so it ships a lookup skill for each, beside
-the three skills that name no type of their own. It also ships both views, because its export has standards. It has
-no fixes and no processes, so `fix-lookup` and `process-lookup` are trimmed. The closing line counts what survived:
+the three skills that name no type of their own. Its export has standards, so it also ships both views and
+`standards-review`, which reads the review view. It has no fixes and no processes, so `fix-lookup` and
+`process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 73 file(s) to .dist/plugin/ as example-engineering 0.36.2. 10 component(s) included, 2 trimmed.
+bundle: wrote 74 file(s) to .dist/plugin/ as example-engineering 0.36.3. 11 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -127,7 +131,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:
