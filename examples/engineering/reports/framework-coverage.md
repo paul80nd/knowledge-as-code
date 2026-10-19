@@ -12,7 +12,7 @@ generated:
 sources:
   - { resource: example-engineering, version: "0.36.0" }
 verified:
-  - { at: 2026-10-19T07:31:00Z, by: human:paul.law }
+  - { at: 2026-10-19T10:51:00Z, by: human:paul.law }
 tags: [ coverage, frameworks ]
 ---
 
