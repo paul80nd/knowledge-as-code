@@ -1,0 +1,5 @@
+case	arm	run	graders	adjudicated	reason
+go-service-dockerfile	plugin	1	fail	fail	Both FROM lines take an ARG with no default, so the file pins no base image and a build can pass a tag.
+go-service-dockerfile	hook	1	pass	pass	Both ARG defaults are pinned by digest, with a placeholder digest the registry would fill.
+stock-alert-rules	plugin	1	pass	pass	Each alert names a placeholder owner, as the repository records none, and a real first action.
+stock-alert-rules	hook	1	pass	pass	Each alert names a placeholder owner, as the repository records none, and a real first action.
