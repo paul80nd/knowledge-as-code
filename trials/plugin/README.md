@@ -11,13 +11,17 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 | Arm    | The session has                                                             | How it runs                                                           |
 |--------|-----------------------------------------------------------------------------|-----------------------------------------------------------------------|
 | plugin | the plugin `kac bundle` builds from the corpus, its build-index hook silent | the with-arm of `claude plugin eval` on the plugin                    |
-| hook   | the same plugin, its hook pushing the build index at the first read         | a third run, on the plugin as built, under `--ablation none`          |
+| hook   | the same plugin, its hook pushing the build index at the first read or edit | a third run, on the plugin as built, under `--ablation none`          |
 | prose  | every record the plugin's export contains, as one text on its system prompt | a second run, on a plugin with no components, under `--ablation none` |
 | none   | nothing                                                                     | the without-arm of the same run as the plugin arm                     |
 
 The plugin and hook arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin arm's copy,
 so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index the first time the
-session calls `Read`, `Grep` or `Glob`. `stage.sh` refuses a plugin that ships no `hooks/build-index.json`.
+session reads or edits a file through a file tool. `stage.sh` refuses a plugin that ships no `hooks/build-index.json`.
+
+`claude plugin eval` leaves a hook's context out of `trace.jsonl`. Read whether the build index arrived from the
+session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
+`hook_additional_context`. The hook's marker is under `config/plugins/data/`.
 
 Every arm's sessions get the same tools: the read-only tools each case lists, and `Bash`, `Write` and `Edit`.
 
@@ -357,7 +361,8 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 
 ## Runs
 
-| Run                              | Method | Corpus                 | Sessions | What it was                                  |
-|----------------------------------|-------:|------------------------|---------:|----------------------------------------------|
-| [2026-10-16](runs/2026-10-16.md) |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm |
-| [Full pass](runs/full-pass.md)   |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each   |
+| Run                              | Method | Corpus                 | Sessions | What it was                                           |
+|----------------------------------|-------:|------------------------|---------:|-------------------------------------------------------|
+| [2026-10-16](runs/2026-10-16.md) |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm          |
+| [Full pass](runs/full-pass.md)   |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each            |
+| [Hook arm](runs/hook-arm.md)     |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none  |

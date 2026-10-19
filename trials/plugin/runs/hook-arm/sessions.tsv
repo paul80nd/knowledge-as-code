@@ -1,0 +1,37 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	audit-log-retention	1	0	1	1	1	1	0.3267826	14	
+house	plugin	audit-log-retention	2	0	1	1	1	1	0.28724540000000004	13	
+house	plugin	audit-log-retention	3	0	1	1	1	1	0.37171380000000004	17	
+house	none	audit-log-retention	1	0	1	1	0		0.1883008	11	
+house	none	audit-log-retention	2	0	1	1	0		0.153075	8	
+house	none	audit-log-retention	3	0	1	1	0		0.16712860000000002	9	
+house	plugin	flaky-test-skip	1	0	0	1	1	1	0.2034412	7	
+house	plugin	flaky-test-skip	2	0	0	1	1	1	0.20459580000000002	8	
+house	plugin	flaky-test-skip	3	0	0	1	1	1	0.18523259999999997	6	
+house	none	flaky-test-skip	1	0	1	0	0		0.1302962	8	
+house	none	flaky-test-skip	2	0	1	0	0		0.12163579999999999	6	
+house	none	flaky-test-skip	3	0	1	0	0		0.1339648	8	
+house	plugin	health-endpoint	1	0	1	1	1	1	0.305084	15	
+house	plugin	health-endpoint	2	0	1	1	1	1	0.3091176	19	
+house	plugin	health-endpoint	3	0	1	1	1	1	0.38567899999999994	22	
+house	none	health-endpoint	1	0	1	0	0		0.20343180000000002	15	
+house	none	health-endpoint	2	0	1	0	0		0.19589140000000002	14	
+house	none	health-endpoint	3	0	1	0	0		0.19896980000000003	15	
+house	plugin	pricing-call	1	0	1	0	0	1	0.33416460000000003	17	
+house	plugin	pricing-call	2	0	1	0	0	1	0.3907272	20	
+house	plugin	pricing-call	3	0	1	1	1	1	0.4134402000000001	21	
+house	none	pricing-call	1	0	1	0	0		0.190879	12	
+house	none	pricing-call	2	0	1	0	0		0.23091219999999998	14	
+house	none	pricing-call	3	0	1	0	0		0.19966779999999998	12	
+house	hook	audit-log-retention	1	0	1	1	1	1	0.34656020000000004	17	
+house	hook	audit-log-retention	2	0	1	1	1	1	0.33041080000000006	11	
+house	hook	audit-log-retention	3	0	1	1	1	1	0.33355460000000003	12	
+house	hook	flaky-test-skip	1	0	0	1	1	1	0.2220274	8	
+house	hook	flaky-test-skip	2	0	0	1	1	1	0.2067168	8	
+house	hook	flaky-test-skip	3	0	0	1	1	1	0.22295759999999998	9	
+house	hook	health-endpoint	1	0	1	1	1	1	0.37360960000000004	16	
+house	hook	health-endpoint	2	0	1	1	1	1	0.3386996	18	
+house	hook	health-endpoint	3	0	1	1	1	1	0.4392888	20	
+house	hook	pricing-call	1	0	1	1	1	1	0.3285344	15	
+house	hook	pricing-call	2	0	1	1	0	1	0.36048320000000006	16	
+house	hook	pricing-call	3	0	1	1	1	1	0.33722979999999997	17	

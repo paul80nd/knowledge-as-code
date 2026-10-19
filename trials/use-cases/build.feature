@@ -9,6 +9,7 @@ Feature: Build. A session writing code meets every rule that binds the code it c
   Scenario: A rule filed under another topic reaches the session
     Baseline: the plugin arm complied in 0 of 3 runs, the prose arm in 2 of 3, and the none arm in 0 of 3.
     The lookup found std-API and std-OBS, and not std-DEPLOY (#929).
+    Measured in trials/plugin/runs/hook-arm.md on 0.36.2: the hook arm 3 of 3, the plugin arm 3 of 3, none 0 of 3.
     Given std-DEPLOY requires an artefact to record its commit, and checks for it on a health or version endpoint
     And a task asking for a health endpoint, which names neither deployment nor the rule
     When the session adds the endpoint
@@ -19,6 +20,7 @@ Feature: Build. A session writing code meets every rule that binds the code it c
   Scenario: A tracing rule reaches a session writing an outbound call
     Baseline: the plugin arm complied in 0 of 3 runs, the prose arm in 1 of 3, and the none arm in 0 of 3.
     The lookup found the timeout and contract rules, and not the tracing rule (#929).
+    Measured in trials/plugin/runs/hook-arm.md on 0.36.2: the hook arm 3 of 3, the plugin arm 1 of 3, none 0 of 3.
     Given std-OBS requires a service to pass the inbound traceparent to everything it calls
     And a task asking for an outbound HTTP call, which names neither tracing nor the rule
     When the session writes the call
