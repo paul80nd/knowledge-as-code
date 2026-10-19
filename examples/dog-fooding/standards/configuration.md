@@ -72,7 +72,7 @@ _**Covers:** `eng:pol-EVER.PARITY`_
 
 - A setting every project under `tooling/` takes **SHOULD** sit in `tooling/Directory.Build.props`.
 - You **MUST** copy a file `manifest.yaml` names into `template/` and into each corpus under `examples/`.
-- Every copy **MUST** match its source, as `kac update --check --from ../../` reports in that corpus.
+- Every overlay copy **MUST** match its source, as `kac update --check --from ../../` reports in that corpus.
 - You **MUST** read `.schema/` and `template/.plugin/` where they are authored.
 - You **MUST NOT** copy `.schema/` or `template/.plugin/` into a corpus here.
 - A corpus's own configuration **MUST** stay in that corpus.
@@ -140,8 +140,9 @@ The tool finds the corpus by walking up for a `.corpus.yaml`, and finds what to 
 rule above is the one the rest depend on.
 
 The `lint` job in `.github/workflows/kac.yml` runs `yamllint --strict .`, so the shape rules fail a build without
-waiting on a reviewer. `kac update --check` checks the copies. No command checks a comment: whether it gives a reason,
-and whether that reason is true. That is what a reviewer is reading for.
+waiting on a reviewer. `kac update --check` checks the overlay copies. A seed, such as a type page or a `_template.md`,
+is copied by hand, and nothing compares it. No command checks a comment: whether it gives a reason, and whether that
+reason is true. That is what a reviewer is reading for.
 
 The four overrides in `.yamllint` are the whole departure from the baseline, and each states its reason beside it.
 Adding a fifth is a decision, not a convenience, so they sit in one file a reviewer can read at once.
@@ -158,6 +159,8 @@ Adding a fifth is a decision, not a convenience, so they sit in one file a revie
 
 ## Changelog
 
+- 2026-10-19: only an overlay copy has to match its source as `kac update --check` reports. A seed is copied by hand,
+  and nothing compares it.
 - 2026-10-18: a grouped update, the opening comment, a comment that leaves its value alone and
   `tooling/Directory.Build.props` become `SHOULD`. A copy of a manifest file has to match its source, as
   `kac update --check` reports in that corpus.

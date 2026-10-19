@@ -22,8 +22,8 @@ The same file lives in the template and in every corpus. A copy that drifted fai
 
 ## What it checks
 
-* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says every copy "**MUST** match its source,
-  as `kac update --check --from ../../` reports in that corpus".
+* [std-CONFIG.a-value-living-in-more-than-one-tree-is-copied-and-proved] says every overlay copy "**MUST** match its
+  source, as `kac update --check --from ../../` reports in that corpus".
 
 ## How it works
 
@@ -37,7 +37,7 @@ template sends nothing to. Either one exits non-zero.
 ## Coverage and gaps
 
 The matrix covers `examples/`. These files are authored in `template/`, and nothing compares `template/` against a
-copy of itself.
+copy of itself. The check compares no seed, such as a type page or a `_template.md`.
 
 `manifest.yaml` covers `.schema/` and `template/.plugin/`, and neither reaches a corpus here as a copy. `.schema/`
 lands on the path it was read from. Every corpus names `plugin.from`, so it reads the plugin tree from `template/`. A
