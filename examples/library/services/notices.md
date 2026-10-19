@@ -17,11 +17,11 @@ tags: [ email, renewals ]
 
 `Service: svc-notices` `LIVE`
 
-Overdue reminders, hold-ready alerts and membership renewals: the emails a reader receives from the library.
+Overdue reminders, hold-ready alerts and membership renewals: the emails a borrower receives from the library.
 
 ## What it does
 
-Sends templated emails to a reader on behalf of the library. It runs on a schedule and reacts to events. Timers sweep
+Sends templated emails to a borrower on behalf of the library. It runs on a schedule and reacts to events. Timers sweep
 for loans falling due and for loans already overdue. Three bus topics deliver the events that need an immediate message.
 
 The message bodies are templates stored with the mail provider, selected by event type. Changing the wording is a
@@ -52,7 +52,7 @@ provider, so it is an integration.
 
 ## Data
 
-* A table recording what has been sent to whom, so a reader is not reminded twice for the same loan.
+* A table recording what has been sent to whom, so a borrower is not reminded twice for the same loan.
 * A blob container storing message bodies too large for the bus.
 
 Both are in the shared storage account.

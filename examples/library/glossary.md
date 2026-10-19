@@ -4,6 +4,10 @@ The words we use, and what we mean by them.
 
 **[→ Index](glossary/_index.md)**
 
+> **`knowledge-as-code.md` is the only glossary that arrives, and it is not yours to edit.** It holds the framework's
+> own vocabulary, it arrives synced, and a local change to it is drift rather than customisation. Write your estate's
+> glossaries beside it.
+
 ## What is a glossary?
 
 The ubiquitous language of one bounded context: one entry per term whose meaning is specific to us, or which is easily
@@ -31,8 +35,8 @@ Not the place for:
 
 * **A component.** That is a [service](services.md). The glossary may define the *concept* the service is named after.
 * **A rule about using the term.** That is a standard.
-* **A full explanation of a pattern.** That is an explanation. A glossary entry is a paragraph, and links out for the
-  rest.
+* **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a paragraph, and
+  links out for the rest.
 
 **Split by bounded context or product surface, never by topic.** A glossary covers the language of one context: the
 framework itself, a product area, a system that names things its own way. A file called "infrastructure terms" starts an
@@ -61,8 +65,9 @@ A term changes rarely, once a team has agreed it. New terms arrive when a team f
 2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md) to a kebab-case filename named for
    the context, and set `narrows` to the glossary it sits inside.
 3. Add an H3 in alphabetical position.
-4. One paragraph of definition, usually one or two sentences. If it needs more, the rest belongs in an explanation and
-   the entry links to it.
+4. Write one paragraph of definition, usually one or two sentences. Name the class the thing belongs to, then what sets
+   it apart within that class. If it needs more, the rest belongs in an [explanation](explanations.md) and the entry
+   links to it.
 5. Add an `**Also:**` line where the thing has a second name: an acronym, an abbreviation, or another word for it.
    A reader searching that name reaches the entry.
 6. Add an `**Avoid:**` line where this glossary has dropped a name for the thing. Say what to write instead.
@@ -93,6 +98,8 @@ follows. Two of them run as checks, and the table says what becomes of the rest.
 | A definition does not repeat the term it defines    | `definition-circular` reports one that does.                            |
 | A definition states no requirement                  | `entry-requirement` reports a bold RFC 2119 keyword inside an entry.    |
 | One definition per entry                            | Yours. Nothing here counts the definitions in an entry.                 |
+| Admitted and deprecated terms sit with the term     | `Also` gives an admitted term, and `Avoid` a deprecated one.            |
+| A definition taken from a document cites it         | Yours. Link the source inside the entry.                                |
 | Only terms the corpus uses are listed               | `unused-terms` states it and does not run.                              |
 | A definition can be substituted for the term        | Yours. Read the entry back into a sentence that used the word.          |
 | A term a qualified reader knows is not defined      | Yours. Scope above says which reader that is.                           |

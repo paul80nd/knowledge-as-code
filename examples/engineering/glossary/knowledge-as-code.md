@@ -70,24 +70,20 @@ The shared mechanism a corpus runs: the schema, the tooling and the documentatio
 
 **Also:** KaC, and Knowledge as Code written out.
 
-**Not:** an external framework such as ISO 27001, which is what the frameworks register means by the word. Both senses
-are in use in every corpus, and only the register states a compliance posture.
+**Not:** `kac`, the tool alone, or an external framework such as ISO 27001. The frameworks register uses the word in
+that second sense, and only the register states a compliance posture.
 
 ### Identity line
 
 The line beneath a record's H1 stating its type, id and status. It is written for a person, and the frontmatter above
 it is written for a machine.
 
-### KaC
-
-Knowledge as Code, abbreviated: the framework itself, and what the tool `kac` is named after.
-
-**Not:** `kac`, which is the tool alone.
-
 ### Layer
 
 What a corpus receives of a file, and what happens to it next: overlay, seed, removed or withheld. The template
 manifest declares it once, and `kac update` reads it file by file.
+
+**Not:** a corpus in a layered arrangement, where one corpus consumes the export of another.
 
 ### Lifecycle
 
@@ -148,7 +144,8 @@ decision, not a defect.
 
 The file a contributor copies to start a record, checked against the fields its type declares.
 
-**Not:** a record. It has no id and appears in no index. The tool checks it anyway, so every copy starts sound.
+**Not:** a record, or the upstream's `template/` folder, which `kac update` reads a corpus's framework files from. A
+template has no id and appears in no index. The tool checks it anyway, so every copy starts sound.
 
 ### Tier
 

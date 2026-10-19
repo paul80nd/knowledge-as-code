@@ -25,7 +25,7 @@ The public catalogue: the site a reader visits to browse the collection, search 
 
 ## What it does
 
-Serves the reader-facing catalogue: search results, item pages, and a reader's own loans and holds. It renders no
+Serves the reader-facing catalogue: search results, item pages, and a borrower's own loans and holds. It renders no
 staff-facing screens and stores no data of its own. Item pages, loans and holds arrive through [svc-catalogue-api],
 search results through [svc-search], and jacket imagery through [svc-covers-cdn].
 
