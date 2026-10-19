@@ -33,6 +33,10 @@ updates:
           - xunit*
           - Reqnroll*
           - Microsoft.NET.Test.Sdk
+      # tol-spectre-console approves both at one range, and one assessment covers them together.
+      spectre:
+        patterns:
+          - Spectre.Console*
 
   # MkDocs and its theme, pinned in docs/requirements.txt so a theme release changes the site when we take it.
   - package-ecosystem: pip
