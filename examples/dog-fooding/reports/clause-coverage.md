@@ -5,7 +5,7 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-19T11:33:00Z
+  at: 2026-10-19T14:10:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.35.0
