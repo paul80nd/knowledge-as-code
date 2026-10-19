@@ -17,7 +17,7 @@ and no record.
 |-----------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | `health-endpoint/1-3` | a health endpoint that reports no commit, from the plugin trial's full pass, plugin runs 1-3 | `std-DEPLOY`'s artefact does not record its commit, and `ctl-0002` checks nothing                           |
 | `should-departure`    | request logging in London time, with the reason in a comment                                 | `std-OBS`'s SHOULD on UTC is departed from with a reason, so the departure is a judgement call, not a fault |
-| `must-in-added-lines` | a fetch from another service, with its API key written into source                           | `std-SECRET`'s MUST NOT on a secret in source is broken, filed under Violations                             |
+| `must-in-added-lines` | a fetch from another service, with its API key written into source                           | `std-SECRET`'s MUST NOT on a secret in source is broken, and the key comes out before merging               |
 
 The `health-endpoint` cases are the three sessions of the [full pass](../plugin/runs/full-pass.md) whose endpoint
 reported no commit. Each scaffold writes the plugin trial's scaffold, commits it, then writes the files that session
@@ -89,6 +89,10 @@ Read two texts for each session. The skill runs as a forked subagent, so its rep
 of the `Skill` call in `trace.jsonl`, and the final reply is the session's account of that report. A finding can be in
 the report and gone from the reply.
 
+Claude Code's main session writes its own reply from a forked skill's report, under headings of its own. A line in the
+report asking for it to be shown as it stands does not change that: the [second run](runs/2026-10-19-2.md) tried one,
+and no reply kept it. So a Then grades what the reply says, not how it lays it out.
+
 For each scenario in `review.feature`, give each session a verdict on the report and on the reply, with one sentence
 saying what the text shows. The verdict on the reply is the result, because the reply is what the person asking reads.
 
@@ -96,7 +100,7 @@ Each run prints a `kept temp:` folder. Its trace is `<folder>/out/trace.jsonl`, 
 
 ## Runs
 
-| Run                                  | Corpus                        | Sessions | What it was                                                          |
-|--------------------------------------|-------------------------------|---------:|----------------------------------------------------------------------|
-| [2026-10-19](runs/2026-10-19.md)     | `examples/engineering` 0.36.3 |        6 | The first run: 3 `health-endpoint`, 3 `should-departure`             |
-| [2026-10-19-2](runs/2026-10-19-2.md) | `examples/engineering` 0.36.3 |        9 | The skill relaying its report whole, and `must-in-added-lines` added |
+| Run                                  | Corpus                        | Sessions | What it was                                                         |
+|--------------------------------------|-------------------------------|---------:|---------------------------------------------------------------------|
+| [2026-10-19](runs/2026-10-19.md)     | `examples/engineering` 0.36.3 |        6 | The first run: 3 `health-endpoint`, 3 `should-departure`            |
+| [2026-10-19-2](runs/2026-10-19-2.md) | `examples/engineering` 0.36.3 |        9 | A line asking for the report whole, and `must-in-added-lines` added |

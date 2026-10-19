@@ -13,11 +13,12 @@ Feature: Review. A reviewer checks a change against the rules, and cites each on
     Then in at least 2 of 3 reviews the finding cites std-DEPLOY and says the artefact does not record its commit
 
   @intent:nudge @type:standards @trial:review/engineering/must-in-added-lines
-  Scenario: A review of a MUST broken in the change's own lines cites it, and files it as a violation
-    Baseline: 3 of 3 replies cited std-SECRET and 0 of 3 filed it under Violations. 3 of 3 reports did both.
+  Scenario: A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed
+    Baseline: the graders passed 3 of 3 replies on citing std-SECRET, and 0 of 3 on filing it under Violations.
+    Read by hand against this Then, which was reworded after the run, 3 of 3 replies cite it as a fix before merging.
     Given a change whose added lines write an API key into source
     When a reviewer reviews the change
-    Then in at least 2 of 3 reviews the review cites std-SECRET, and files the finding under Violations
+    Then in at least 2 of 3 reviews the review cites std-SECRET, and reports it as a change to make before merging
 
   @intent:nudge @type:standards @trial:review/engineering/should-departure
   Scenario: A review notes a departure from a SHOULD that gives its reason, and does not fail it

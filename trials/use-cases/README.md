@@ -55,7 +55,7 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
 | A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
 | A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review of a MUST broken in the change's own lines cites it, and files it as a violation | `review/engineering/must-in-added-lines`       | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`       | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 | A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`          | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 | A review says which rule no control checks                                                | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 
@@ -76,7 +76,7 @@ the condition is in the Intent column.
 | `standards`    | nudge                                               | build      | A tracing rule reaches a session writing an outbound call                                 |
 | `standards`    | nudge                                               | build      | A departure from a MUST goes to a deviation                                               |
 | `standards`    | nudge                                               | review     | A review of a change that broke a MUST cites the clause it broke                          |
-| `standards`    | nudge                                               | review     | A review of a MUST broken in the change's own lines cites it, and files it as a violation |
+| `standards`    | nudge                                               | review     | A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed |
 | `standards`    | nudge                                               | review     | A review notes a departure from a SHOULD that gives its reason, and does not fail it      |
 | `policies`     | nudge                                               | design     | A design departing from a policy SHOULD says why, and requests no deviation               |
 | `policies`     | nudge                                               | build      | A policy clause reaches a session writing infrastructure                                  |
