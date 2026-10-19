@@ -42,6 +42,22 @@ reads, as `requires`, and ships only where the export contains every one of them
 * **A run that trims every component warns and still builds.** The empty plugin installs, and `bundle.json` lists each
   component it dropped and the type that component needed.
 
+### Views
+
+A view is a Markdown file `bundle` writes into the plugin from the export, shaped for one moment of the work. You
+declare one as a component whose `view` key names it. `bundle` writes it at the component's `path`, which nothing in
+the plugin tree may already use.
+
+| `view`        | What it lists, under each standard's id, title and status                             | Its component reads                           |
+|---------------|---------------------------------------------------------------------------------------|-----------------------------------------------|
+| `build-index` | each rule by title and id                                                             | `standards@2`                                 |
+| `review`      | the controls checking the standard, with their mechanism, and each rule's obligations | `standards@2`, and `controls@1` where present |
+
+A view is trimmed like any other component. A type under `optional` is read where the export has it, and its absence
+trims nothing, so a corpus with no controls still gets the review view. The build index names the lookup skill that
+reads standards where one survived the trim.
+[The export format](../../reference/export.md#views-generated-from-the-export) says what a view reads.
+
 ## Examples
 
 ### A built plugin
@@ -82,12 +98,12 @@ Both directories are untracked, so nothing here needs a branch or a credential.
 
 ### The components that shipped
 
-A corpus whose export includes three record types ships a lookup skill for each, beside the three that name no type of
-their own. `example-engineering` adopted `controls` and has no record of one, so `controls-lookup` is trimmed. The
-closing line counts what survived:
+`example-engineering` exports controls, glossary, policies and standards, so it ships a lookup skill for each, beside
+the three skills that name no type of their own. It also ships both views, because its export has standards. It has
+no fixes and no processes, so `fix-lookup` and `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 57 file(s) to .dist/plugin/ as example-engineering 0.19.0. 7 component(s) included, 3 trimmed.
+bundle: wrote 71 file(s) to .dist/plugin/ as example-engineering 0.36.1. 10 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -97,7 +113,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/policy-lookup","skills/standards-lookup","hooks"],"trimmed":["skills/controls-lookup","skills/fix-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:
@@ -154,6 +170,7 @@ Every other key in the manifest survives untouched.
 * an export whose `formatVersion` is not the one this build reads
 * a component reading a type at a shape version the export does not carry, or at one that is not a whole number
 * a file under `skills/` or `hooks/` that no component claims
+* a view `bundle` does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
 
 Where the format versions differ, the message gives both. Rebuild an export that is behind the tool with
 [`export`](export.md). An export ahead of the tool means your `kac` is the older of the two. A shape mismatch means the
@@ -168,6 +185,8 @@ known.
 
 **A component's `requires` is not checked against the schema.** A misspelt type trims its component with the same
 message as a type this corpus declined.
+
+**A view has no `paths:` and loads nowhere by itself.** Delivering it to an agent is a hook's or a skill's job.
 
 **The export is copied whole.** A component that survives the trim brings the entire export, including types no
 surviving component requires.

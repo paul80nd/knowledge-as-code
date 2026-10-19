@@ -1,0 +1,9 @@
+# Both views the plugin manifest declares, written where each component's path says. Neither is in the
+# plugin tree: `bundle` generates them from the export.
+.dist/plugin/views/build-index.md
+.dist/plugin/views/review.md
+
+# The views are written into the plugin and nowhere else. The export they were read from is left where
+# it was.
+!.dist/export/views/review.md
+.dist/export/standards/rules.jsonl

@@ -34,6 +34,9 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 * It cuts the plugin manifest's components to the ones that survived, and keeps every key it does not know.
   [The plugin manifest](#the-plugin-manifest)
 * It renders the breadcrumb the hook prints, and keeps the hook's permission bit. [The breadcrumb](#the-breadcrumb)
+* It writes each view a surviving component declares, from the export alone. [Views](#views)
+* It reads a type under a component's `optional` where the export has it, and trims nothing for its absence.
+  [Views](../use/cli/bundle.md#views)
 * It replaces `.dist/plugin/` whole. [The `.dist/` layout](#the-dist-layout)
 
 ## What it refuses
@@ -47,6 +50,7 @@ Each refusal exits `1` and writes nothing. [Known limits](../use/cli/bundle.md#k
 * an export at a format version this build does not read
 * a component reading a type at a shape version the export does not have, or at a shape that is not a whole number
 * a file under `skills/` or `hooks/` that no component claims
+* a view this build does not write, or a view whose `path` the plugin tree or `corpusRoot` already uses
 
 ## What it promises a consumer
 
@@ -91,6 +95,25 @@ standards (from eng). 37 entries across 12 records: An interface is described by
 
 A hook ships as a POSIX script and a `.cmd` twin. `bundle` keeps the permission bit on the script, so it runs at the
 first session.
+
+## Views
+
+A view is a file `View` renders into the plugin from the export, after the trim. A component declares one with a
+`view` key, and `bundle` writes it at the component's `path`. Nothing in the plugin tree sits at that path.
+
+* **It reads the export inside the plugin, and nothing else.** A fresh bundle of one export writes every view byte for
+  byte, so a view is never a copy somebody keeps beside the export.
+* **It reads part lines at the shape its component pins.** `standards@2` fixes the keys of a rule line, so a view reads
+  `title`, `obligations` and `status` by name.
+* **It names an inherited record as the export does.** A consumed corpus's control sits under its shortcode, and its
+  id and `verifies` are read with that shortcode, so a control from `eng` checks `eng:std-DEPLOY`.
+* **It states a standard's status and controls once, in or under the standard's heading.** A rule line repeats its
+  standard's status, so a view reads it from the first rule. The build index puts the status in the heading, to keep
+  the file short. A control is listed under each standard its `verifies` names, or whose rule it names.
+* **The review view names `active` as the status in force.** The export does not state a type's `in-force` value, so
+  `View` fixes the one `.schema/standards.yaml` declares.
+* **The build index names a skill only where one survived.** It names the surviving lookup skill that reads standards,
+  and the rules file inside the plugin where none did.
 
 ## The plugin's version
 
@@ -164,6 +187,9 @@ type trim.
 * The breadcrumb asks for each announced skill that survived
 * The breadcrumb leaves with a trimmed hook
 * The hook keeps its permission bit
+* A bundle writes each view the plugin manifest declares
+* A view whose types the export lacks is trimmed, and written nowhere
+* A view reads an optional type only where the export carries it
 * A bundle with no export is refused
 * A bundle with no plugin tree is refused
 * A bundle reading the plugin tree from a folder that is not there is refused
@@ -176,6 +202,9 @@ type trim.
 * A bundle over an export at another format is refused
 * A bundle whose component reads a shape the export does not have is refused
 * A bundle whose component reads a shape that is not a whole number is refused
+* A bundle whose view reads a shape the export does not have is refused
+* A bundle declaring a view this tool does not write is refused
+* A bundle whose plugin tree already holds a view's file is refused
 * A bundle whose plugin tree holds a skill no component declares is refused
 
 ## Unspecified

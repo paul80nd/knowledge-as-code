@@ -1,0 +1,7 @@
+# The CLI names each view as it writes it, beside every other file of the plugin.
+wrote .dist/plugin/views/build-index.md
+wrote .dist/plugin/views/review.md
+wrote .dist/plugin/skills/standards-lookup/SKILL.md
+
+# Every component survives: the export has standards at shape 2 and controls at shape 1.
+3 component(s) included, 0 trimmed.

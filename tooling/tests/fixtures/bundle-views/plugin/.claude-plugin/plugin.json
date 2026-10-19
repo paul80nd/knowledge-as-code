@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "example-views",
+  "version": "0.0.1",
+  "metadata": {
+    "corpusRoot": "corpus",
+    "components": [
+      {
+        "path": "skills/standards-lookup",
+        "requires": [
+          "standards@2"
+        ],
+        "note": "Reads a rule from corpus/standards/rules.jsonl."
+      },
+      {
+        "path": "views/build-index.md",
+        "view": "build-index",
+        "requires": [
+          "standards@2"
+        ],
+        "note": "Every standard rule by title, id and status."
+      },
+      {
+        "path": "views/review.md",
+        "view": "review",
+        "requires": [
+          "standards@2"
+        ],
+        "optional": [
+          "controls@1"
+        ],
+        "note": "Each standard rule's obligations, and the controls checking it."
+      }
+    ]
+  }
+}

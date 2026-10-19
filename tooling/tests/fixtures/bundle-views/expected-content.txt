@@ -1,0 +1,28 @@
+# The build index gives each standard under a heading of its id, title and status, and each rule by title and id.
+# It names the lookup skill that survived the trim as the way to read a rule's obligations, and quotes none of them.
+.dist/plugin/views/build-index.md :: # Rules the standards of example-views state
+.dist/plugin/views/build-index.md :: Ask the standards-lookup skill
+.dist/plugin/views/build-index.md :: ## std-DEPLOY: An artefact says which change it came from (draft)
+.dist/plugin/views/build-index.md :: - The artefact records its commit (`std-DEPLOY.the-artefact-records-its-commit`)
+.dist/plugin/views/build-index.md :: ## std-OBS: One request reads as one timeline (active)
+.dist/plugin/views/build-index.md :: - A call forwards the trace (`std-OBS.a-call-forwards-the-trace`)
+.dist/plugin/views/build-index.md :: !Status:
+.dist/plugin/views/build-index.md :: !**MUST**
+
+# The review view gives each rule's obligations in the standard's own words, under the id to cite, and says how to
+# report a rule whose standard is not in force.
+.dist/plugin/views/review.md :: - A standard is in force at status `active`.
+.dist/plugin/views/review.md :: ## std-DEPLOY: An artefact says which change it came from
+.dist/plugin/views/review.md :: Status: draft.
+.dist/plugin/views/review.md :: Cite as `std-DEPLOY.the-artefact-records-its-commit`.
+.dist/plugin/views/review.md :: - An artefact **MUST** record the commit it was built from.
+.dist/plugin/views/review.md :: - A service **SHOULD** report that commit on its health endpoint.
+
+# A control listing a standard in `verifies` is stated once, under that standard, with its mechanism. A standard no
+# control checks says so.
+.dist/plugin/views/review.md :: Controls: `ctl-0002` Nothing checks that a running service reports its commit (`not-enforced`, active).
+.dist/plugin/views/review.md :: Controls: none.
+
+# The plugin manifest keeps each view's declaration, as it keeps every component that survived.
+.dist/plugin/.claude-plugin/plugin.json :: "view": "build-index"
+.dist/plugin/.claude-plugin/plugin.json :: "view": "review"

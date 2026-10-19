@@ -15,14 +15,17 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 /// <c>Requires</c> names the record types the component reads, each optionally at a shape version, as
 /// <c>glossary@1</c>. A component naming no type supports the ones that do, and is trimmed when none of them survives
 /// unless it is <c>Standalone</c>. <c>Announce</c> puts it in the session breadcrumb. <c>docs/maintaining/plugin.md</c>
-/// says which earn it.
+/// says which earn it. <c>View</c> names the <see cref="kac.core.View"/> generated at <c>Path</c>, which no plugin tree
+/// contains. <c>Optional</c> names a type read only where the export carries it, so its absence trims nothing.
 /// </summary>
 public sealed record PluginComponent(
     string Path,
     IReadOnlyList<string> Requires,
     string? Note,
     bool Announce = false,
-    bool Standalone = false);
+    bool Standalone = false,
+    string? View = null,
+    IReadOnlyList<string>? Optional = null);
 
 /// <summary>The reason is carried, because the assembled plugin cannot say why a component is missing.</summary>
 public sealed record TrimmedComponent(string Path, IReadOnlyList<string> Requires, string Reason);
@@ -141,19 +144,32 @@ public static class Bundler
                          + "the export lacks the types it reads. Add it under metadata.components, naming those "
                          + "types in requires.");
 
-        // A missing type trims the component. A type at another shape stops the run, because the component would
-        // read keys that have moved. `docs/use/cli/bundle.md` says why.
+        foreach (var view in declared.Where(c => c.View is not null))
+        {
+            if (!View.Known.Contains(view.View, StringComparer.Ordinal))
+                problems.Add($"{ManifestFile} declares '{view.Path}' as the view '{view.View}', and this tool "
+                             + $"writes {string.Join(" or ", View.Known)}.");
+            else if (Owns(corpusRoot, view.Path))
+                problems.Add($"{ManifestFile} declares the view '{view.Path}' inside metadata.corpusRoot "
+                             + $"'{corpusRoot}', where the export is copied. Move the view out of it.");
+            else if (source.PluginTree.FirstOrDefault(f => Owns(view.Path, f.Path)) is { } taken)
+                problems.Add($"{ManifestFile} declares the view '{view.Path}', and the plugin tree already holds "
+                             + $"{taken.Path}. The view is written there, so one would overwrite the other.");
+        }
+
+        // A missing type trims the component, and a missing optional type does not. A type at another shape stops
+        // the run, because the component would read keys that have moved. `docs/use/cli/bundle.md` says why.
         foreach (var component in declared)
         {
             var missing = new List<string>();
 
-            foreach (var entry in component.Requires)
+            foreach (var entry in component.Requires.Concat(component.Optional ?? []))
             {
                 var (type, shape) = Need(entry);
                 var held = carried.FirstOrDefault(c => string.Equals(c.Type, type, StringComparison.Ordinal));
                 if (held is null)
                 {
-                    missing.Add(type);
+                    if (component.Requires.Contains(entry, StringComparer.Ordinal)) missing.Add(type);
                     continue;
                 }
 
@@ -210,6 +226,11 @@ public static class Bundler
 
         // The export is copied byte for byte, so the two copies of it stay comparable.
         files.AddRange(source.Export.Select(file => file with { Path = $"{Dist.PluginDir}/{corpusRoot}/{file.Path}" }));
+
+        var viewSource = new View.Source(exportManifest, source.Export, included, corpusRoot);
+        foreach (var component in included)
+            if (component.View is { } view)
+                files.Add(Utf8($"{Dist.PluginDir}/{component.Path}", View.Render(view, viewSource)));
 
         var travelling = Rewrite(manifest, exportManifest, version, included);
         files.Add(Utf8($"{Dist.PluginDir}/{ManifestFile}", Serialize(travelling)));
@@ -428,16 +449,17 @@ public static class Bundler
             if (JsonRead.Object(entry) is not { } component) continue;
             if (JsonRead.Str(component["path"]) is not { } path) continue;
 
-            var requires = component["requires"] is JsonArray r
-                ? r.Select(JsonRead.Str).OfType<string>().ToList()
-                : [];
-
-            components.Add(new PluginComponent(path, requires, JsonRead.Str(component["note"]),
-                JsonRead.Bool(component["announce"]), JsonRead.Bool(component["standalone"])));
+            components.Add(new PluginComponent(path, Strings(component["requires"]), JsonRead.Str(component["note"]),
+                JsonRead.Bool(component["announce"]), JsonRead.Bool(component["standalone"]),
+                JsonRead.Str(component["view"]), Strings(component["optional"])));
         }
 
         return components;
     }
+
+    /// <summary>Every string in a JSON array, and none where the node is not one.</summary>
+    private static List<string> Strings(JsonNode? node) =>
+        node is JsonArray array ? [.. array.Select(JsonRead.Str).OfType<string>()] : [];
 
     /// <summary>
     /// Each file under <c>skills/</c> or <c>hooks/</c> no declared component owns, reported by its directory cut at
