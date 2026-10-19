@@ -34,8 +34,8 @@ A corpus that validates can still export a package nobody can install.
 Three jobs share the work. `corpora` runs `export`, `bundle` and `pack` in each of the four corpora. `bundle` fails on a
 directory under `skills/` or `hooks/` that no component in `metadata.components` claims. Then
 `claude plugin validate --strict` runs over the assembled plugin and over its marketplace. Two more checks follow it:
-every component `bundle.json` lists is a directory in the tree, and `.claude-plugin/` contains `plugin.json` and
-nothing else.
+every component `bundle.json` lists is in the tree, as a skill or hook directory or a view's file, and
+`.claude-plugin/` contains `plugin.json` and nothing else.
 
 `round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`, then asks each
 skill in it the questions that skill describes. `import-round-trip` publishes from `engineering`, consumes it from

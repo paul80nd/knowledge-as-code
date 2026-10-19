@@ -97,7 +97,7 @@ jobs:
 
           missing=''
           while read -r component; do
-            [ -d ".dist/plugin/$component" ] || missing="$missing $component"
+            [ -e ".dist/plugin/$component" ] || missing="$missing $component"
           done < "$TEMPDIR/included.txt"
 
           if [ -n "$missing" ]; then
