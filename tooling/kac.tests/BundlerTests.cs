@@ -685,6 +685,17 @@ public class BundlerTests
             export: Standards(controls: false)), "views/review.md"));
 
     [Fact]
+    public void A_review_view_says_a_control_checks_a_rule_only_where_it_runs_by_itself()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true)), "views/review.md");
+
+        Assert.Contains("its status is `active` and its mechanism is `ci` or `runtime-alert`", review);
+        Assert.Contains("`corpus/controls/` inside this plugin has each control's record.", review);
+    }
+
+    [Fact]
     public void A_review_view_renders_where_the_export_carries_no_controls()
     {
         var plan = Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: Standards(controls: false));

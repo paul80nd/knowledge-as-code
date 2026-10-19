@@ -105,23 +105,27 @@ public static class View
 
     private static string Count(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
 
+    /// <summary>Opens on what each keyword, status and control means, stated as facts and with no instruction.</summary>
     private static string RenderReview(Source source)
     {
         var controls = ControlsOf(source);
 
         var text = new StringBuilder();
-        text.Append($"# Review a change against the standards of {Corpus(source)}\n\n");
-        text.Append("Check the change against every rule below, and cite each finding by the rule's id.\n\n");
-        text.Append("- **MUST** and **MUST NOT** state a requirement. "
-                    + "Report a change that breaks one as a violation.\n");
-        text.Append("- **SHOULD**, **SHOULD NOT** and **MAY** state a default. A change may depart from one by giving "
-                    + "its reason. Report the departure and its reason as a judgement call.\n");
-        text.Append($"- A standard is in force at status `{InForce}`. "
-                    + "Report a finding under any other status as not in force, and give that status.\n");
+        text.Append($"# The rules a change is reviewed against, in the standards of {Corpus(source)}\n\n");
+        text.Append("Each rule below gives the id a finding cites, then its obligations, one to a bullet.\n\n");
+        text.Append("- **MUST** and **MUST NOT** state a requirement. A change that breaks one is a violation.\n");
+        text.Append("- **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its "
+                    + "reason conforms, and the departure is a judgement call.\n");
+        text.Append("- **MAY** permits, and a change cannot break it.\n");
+        text.Append($"- A standard is in force at status `{InForce}`. A finding under any other status is not in "
+                    + "force.\n");
         text.Append(controls is null
-            ? "- This corpus exports no controls, so check every rule yourself.\n"
-            : "- A standard's controls say what already checks its rules, and how. Check a rule yourself where its "
-              + "standard lists no control, or where each one listed is `not-enforced`.\n");
+            ? "- This corpus exports no controls, so no rule here has a check recorded against it.\n"
+            : "- A standard's controls are listed with each one's mechanism and status. A control checks a rule only "
+              + "where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the "
+              + "obligations named in its record's What it checks section. "
+              + $"`{source.CorpusRoot}/{Type(source, Controls)?.Dir}/` inside this plugin has each control's record. "
+              + "A person checks every other obligation in the review.\n");
 
         foreach (var standard in StandardsOf(source))
         {

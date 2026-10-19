@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.292",
+  "startedAt": "2026-10-19T18:25:52.969Z",
+  "durationSeconds": 238,
+  "costUsd": 1.5707062,
+  "partial": false,
+  "suite": {
+    "root": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage/plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "tagFilters": [
+      "std-DEPLOY"
+    ],
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.36.3",
+        "path": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage/plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "health-endpoint-1",
+      "dir": "evals/health-endpoint/1",
+      "source": "mixed",
+      "promptMarkdown": "I've added a health endpoint for the load balancer and our dashboards. Review my change before I open a pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "cite-rule",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPLOY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "finds-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(record|report|expose|return|include|carr)\\w*\\s+(\\S+\\s+){0,5}commit|commit\\s+(sha|hash|id|it was built)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-review",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-review\""
+          }
+        },
+        {
+          "name": "unchecked-control",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "ctl-0002|not-enforced|no (automated|CI) (check|control)|nothing (automated )?(checks|enforces)",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.4379390000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 78,
+            "startedAt": "2026-10-19T18:25:53.005Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-TnwQYb/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "finds-commit",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "unchecked-control",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.25,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "health-endpoint-2",
+      "dir": "evals/health-endpoint/2",
+      "source": "mixed",
+      "promptMarkdown": "I've added a health endpoint for the load balancer and our dashboards. Review my change before I open a pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "cite-rule",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPLOY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "finds-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(record|report|expose|return|include|carr)\\w*\\s+(\\S+\\s+){0,5}commit|commit\\s+(sha|hash|id|it was built)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-review",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-review\""
+          }
+        },
+        {
+          "name": "unchecked-control",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "ctl-0002|not-enforced|no (automated|CI) (check|control)|nothing (automated )?(checks|enforces)",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 12,
+            "costUsd": 0.7052917999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 102,
+            "startedAt": "2026-10-19T18:27:11.031Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-C7yobr/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-DEPLOY",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "finds-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (record|report|expose|return|include|carr)\\w*\\s+(\\S+\\s+){0,5}commit|commit\\s+(sha|hash|id|it was built)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "unchecked-control",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ctl-0002|not-enforced|no (automated|CI) (check|control)|nothing (automated )?(checks|enforces)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "health-endpoint-3",
+      "dir": "evals/health-endpoint/3",
+      "source": "mixed",
+      "promptMarkdown": "I've added a health endpoint for the load balancer and our dashboards. Review my change before I open a pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "cite-rule",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPLOY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "finds-commit",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(record|report|expose|return|include|carr)\\w*\\s+(\\S+\\s+){0,5}commit|commit\\s+(sha|hash|id|it was built)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-review",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-review\""
+          }
+        },
+        {
+          "name": "unchecked-control",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "ctl-0002|not-enforced|no (automated|CI) (check|control)|nothing (automated )?(checks|enforces)",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.75,
+            "passed": false,
+            "turns": 6,
+            "costUsd": 0.4274754,
+            "judgeCostUsd": 0,
+            "durationSeconds": 58,
+            "startedAt": "2026-10-19T18:28:52.760Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-6TlVku/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "finds-commit",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (record|report|expose|return|include|carr)\\w*\\s+(\\S+\\s+){0,5}commit|commit\\s+(sha|hash|id|it was built)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "unchecked-control",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ctl-0002|not-enforced|no (automated|CI) (check|control)|nothing (automated )?(checks|enforces)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.75,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 1,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0.3333333333333333
+  }
+}

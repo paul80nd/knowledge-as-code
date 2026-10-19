@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.292",
+  "startedAt": "2026-10-19T18:29:57.043Z",
+  "durationSeconds": 184,
+  "costUsd": 1.215576,
+  "partial": false,
+  "suite": {
+    "root": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage/plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "should-departure",
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.36.3",
+        "path": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage/plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "should-departure",
+      "dir": "evals/should-departure",
+      "source": "mixed",
+      "promptMarkdown": "I've added request logging to this service. Review my change before I open a pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "cite-rule",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-OBS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-review",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-review\""
+          }
+        },
+        {
+          "name": "judgement-call",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "judge?ment call",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "quotes-reason",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "branch staff|counter terminal|wrong minute|London time",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.43125759999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 58,
+            "startedAt": "2026-10-19T18:29:57.077Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-s1HtwN/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "judgement-call",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quotes-reason",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched branch staff|counter terminal|wrong minute|London time",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.42219819999999986,
+            "judgeCostUsd": 0,
+            "durationSeconds": 62,
+            "startedAt": "2026-10-19T18:30:55.021Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-o4tK3N/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "judgement-call",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quotes-reason",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched branch staff|counter terminal|wrong minute|London time",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 4,
+            "costUsd": 0.3621202,
+            "judgeCostUsd": 0,
+            "durationSeconds": 63,
+            "startedAt": "2026-10-19T18:31:57.312Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-T833gO/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-OBS",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "judgement-call",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched judge?ment call",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "quotes-reason",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched branch staff|counter terminal|wrong minute|London time",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0.3333333333333333
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0.3333333333333333
+  }
+}

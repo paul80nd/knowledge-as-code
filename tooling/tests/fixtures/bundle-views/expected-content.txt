@@ -16,9 +16,11 @@
 .dist/plugin/hooks/build-index.json :: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"# Rules the standards of example-views state\n\n
 .dist/plugin/hooks/build-index.json :: - The artefact records its commit\n
 
-# The review view gives each rule's obligations in the standard's own words, under the id to cite, and says how to
-# report a rule whose standard is not in force.
+# The review view gives each rule's obligations in the standard's own words, under the id to cite. It opens on the
+# status a standard is in force at, and on which controls check a rule, stated as facts.
 .dist/plugin/views/review.md :: - A standard is in force at status `active`.
+.dist/plugin/views/review.md :: A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`
+.dist/plugin/views/review.md :: !Report
 .dist/plugin/views/review.md :: ## std-DEPLOY: An artefact says which change it came from
 .dist/plugin/views/review.md :: Status: draft.
 .dist/plugin/views/review.md :: Cite as `std-DEPLOY.the-artefact-records-its-commit`.

@@ -22,14 +22,30 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac bundle` writes the views a plugin manifest declares.** A component with a `view` key is generated into the
   plugin from the export, at its `path`. Each view lists the rules under their standard and its status.
   `build-index` gives each rule's title, under a count of the rules the corpus states. `review` gives each rule's
-  obligations, and the standard's controls with their mechanism. A type under a component's new `optional` key is read
-  where the export has it, and its absence trims nothing. `kac bundle` refuses a view it does not write, and a view
-  path the plugin tree or `corpusRoot` already uses.
+  obligations, and the standard's controls with their mechanism and status. It opens on facts: what each keyword and
+  status means, and that a control checks only the obligations its record's What it checks section names, where it
+  is `active` and runs as `ci` or `runtime-alert`. A type under a component's new `optional` key is read where the
+  export has it, and its absence trims nothing. `kac bundle` refuses a view it does not write, and a view path the
+  plugin tree or `corpusRoot` already uses.
 - **`kac bundle` renders what the build-index hook prints.** Where the hook directory and the build index both ship,
   it writes `hooks/build-index.json`, which the template's new `PreToolUse` hook prints the first time a session reads
   or edits a file. The hook prints it once a session, marking the session under `${CLAUDE_PLUGIN_DATA}`. An
   index over the 10,000 characters Claude Code passes to a session is replaced by its rule and standard counts and its
   path, and `kac bundle` warns. The template moves to version 20.
+- **`standards-review`, the skill that reviews a change against the review view.** It runs in a subagent of its own,
+  reads `views/review.md` whole, and cites the rule behind each finding: a broken MUST as a violation, a departure
+  from a SHOULD as a judgement call. It leaves out only what an active `ci` or `runtime-alert` control checks.
+  `kac bundle` ships it wherever the export carries standards. The template moves to version 21. `kac update` writes
+  the skill and leaves your `plugin.json` alone, and `kac bundle` refuses a skill no component declares, so add:
+
+  ```json
+  {
+    "path": "skills/standards-review",
+    "requires": [ "standards@2" ],
+    "optional": [ "controls@1" ],
+    "note": "Reviews a change in a forked subagent against views/review.md, read whole. It takes a rule's link from corpus/standards/rules.jsonl, and reads a control from corpus/controls/ where the export carries controls."
+  }
+  ```
 
 ## 0.35.0 - 2026-10-16
 

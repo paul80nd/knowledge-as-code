@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.292",
+  "startedAt": "2026-10-19T18:55:56.443Z",
+  "durationSeconds": 203,
+  "costUsd": 1.2334348000000002,
+  "partial": false,
+  "suite": {
+    "root": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage2/plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "must-in-added-lines",
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.36.3",
+        "path": "/private/tmp/claude-501/-Users-paullaw-Source-knowledge-as-code/eabea79a-6b04-49be-b9f5-6c0a893d1f51/scratchpad/stage2/plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "must-in-added-lines",
+      "dir": "evals/must-in-added-lines",
+      "source": "mixed",
+      "promptMarkdown": "I've made the service fetch a cover from the bibliographic data service when we don't hold it. Review my change before\nI open a pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 40,
+      "graders": [
+        {
+          "name": "cite-rule",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-SECRET",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "filed-violation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Violations(?:(?!Judge?ment calls)[\\s\\S]){0,3000}std-SECRET",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-review",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-review\""
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 2,
+            "costUsd": 0.40504320000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 62,
+            "startedAt": "2026-10-19T18:55:56.479Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-XAKCUs/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-SECRET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "filed-violation",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.41265500000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 77,
+            "startedAt": "2026-10-19T18:56:58.863Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-vTH3Ie/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-SECRET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "filed-violation",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.4157366,
+            "judgeCostUsd": 0,
+            "durationSeconds": 64,
+            "startedAt": "2026-10-19T18:58:15.471Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-1aTvrM/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-rule",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-SECRET",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "filed-violation",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-review",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0
+  }
+}

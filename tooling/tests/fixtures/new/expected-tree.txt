@@ -22,6 +22,7 @@
 .plugin/skills/raise-finding/SKILL.md
 .plugin/skills/request-deviation/SKILL.md
 .plugin/skills/standards-lookup/SKILL.md
+.plugin/skills/standards-review/SKILL.md
 .schema/README.md
 .schema/_checks.yaml
 .schema/_enums.yaml

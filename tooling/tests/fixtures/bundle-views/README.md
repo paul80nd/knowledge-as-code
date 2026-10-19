@@ -18,7 +18,7 @@ way to read a rule's obligations.
 ## What is asserted where
 
 `expected-files.txt` names each view where its component's path puts it, and the hook output. `expected-content.txt`
-pins the lines each view states: the build index's opening, a standard's heading, status and controls, a rule's title,
+pins the lines each view states: each view's opening, a standard's heading, status and controls, a rule's title,
 and a rule's id and obligations in the review view. It pins the hook output's event and its first line. `expected-bundle.txt`
 pins what the run printed. A view whose types the export lacks, and a view the tool does not write, are specified in
 [`Bundle.feature`](../../../kac.features/Bundle.feature).

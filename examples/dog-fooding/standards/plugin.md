@@ -25,12 +25,13 @@ Every corpus here publishes a Claude Code plugin: a frozen copy of its export, a
 `kac bundle` also generates each view `plugin.json` declares: a file shaped for one moment of the work, written from the
 export, such as the index of rules a session reads before it writes code. A hook pushes that index once a session. A
 skill answers from the export beside it, using no more than a session's ability to read a file, and states plainly
-what did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue on
-the repository the export came from: a finding where the corpus is wrong, and a request where the work is about to
-depart from a clause that is right. Back at that repository, a skill in the corpus's own working tree triages those
-issues, marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request.
-The record cites the issue it came from, and the pull request cites the record. Merging it closes the issue. That skill
-ships in no plugin, because it writes to the tracker and to the records.
+what did not travel. The reviewer skill reads the review view whole, in a subagent of its own, and reads the change it
+reviews with whatever the session has. The copy a skill reads cannot be changed, so a skill with something to send
+back raises an issue on the repository the export came from: a finding where the corpus is wrong, and a request where
+the work is about to depart from a clause that is right. Back at that repository, a skill in the corpus's own working
+tree triages those issues, marks each one with the route it belongs on, and drafts the record a routed finding asks
+for as a pull request. The record cites the issue it came from, and the pull request cites the record. Merging it
+closes the issue. That skill ships in no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -38,9 +39,13 @@ ships in no plugin, because it writes to the tracker and to the records.
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
-- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine.
+- A skill reviewing a change **MUST** name the change as everything that differs from a fixed point.
+- A skill reviewing a change **MUST** leave the choice of how to read that change to the session.
+- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond what the session
+  uses to read a change under review.
 - A skill reading an export **MUST NOT** require a network call to answer from it.
-- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}`.
+- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the
+  change under review.
 - Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
 
 _**Covers:** `eng:pol-AGNT.ACCESS`_
@@ -191,6 +196,11 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
   the change.
 - A skill **MUST NOT** send a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`, because
   a reason given in the change conforms to the rule.
+- A skill reviewing a change **MUST** report a breach of a `MUST` or `MUST NOT` as a violation, citing the rule's id.
+- A skill reviewing a change **MUST** report a departure from a `SHOULD` or `SHOULD NOT` as a judgement call, citing
+  the rule's id and quoting the reason the change gives.
+- A skill reviewing a change **MUST** check every obligation itself, except one named in the What it checks section of
+  an `active` control whose mechanism is `ci` or `runtime-alert`.
 
 _**Covers:** `eng:pol-DEVI.RECORD`_
 
@@ -356,7 +366,9 @@ broke it.
 
 ## Conformance checklist
 
-- [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else.
+- [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else, apart from
+      reading the change a review is asked about.
+- [ ] Every skill reviewing a change names it as what differs from a fixed point, and names no tool for reading it.
 - [ ] Every path a skill names opens on `${CLAUDE_PLUGIN_ROOT}`.
 - [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.
 - [ ] Every skill names the parts file of the type it requires, and no other.
@@ -389,6 +401,9 @@ broke it.
 - [ ] No deviation request is dropped, or held back, because the target has no `kac:deviation` label.
 - [ ] Every skill that reports a rule says a `MUST` departure takes a deviation, and a `SHOULD` departure a reason.
 - [ ] No skill sends a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`.
+- [ ] Every review files a broken `MUST` as a violation and a `SHOULD` departure as a judgement call, each under its
+      rule's id.
+- [ ] Every review checks each obligation that no `active` control with mechanism `ci` or `runtime-alert` names.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
 - [ ] Triage named the corpus from the `corpus:` of the `.corpus.yaml` it walked up to, and never from the
       `publishing` block.
@@ -417,8 +432,17 @@ facts.
 
 The session is why a skill names a property of the answer and not a tool. A session with no Grep tool met a
 **MUST**-shaped instruction naming one, and its only options were to ignore the instruction or to stop. The machine is
-why nothing here asks for a shell. Each skill promises at the top that there is nothing to install and nothing to run,
-and a Windows reader with no `grep` is who that promise is for.
+why nothing here asks for a shell. Each lookup skill promises at the top that there is nothing to install and nothing
+to run, and a Windows reader with no `grep` is who that promise is for.
+
+A reviewer is the one skill whose input is not in the plugin. The change it reviews lives in the repository's history,
+and every session reading that history already has a way to do it. So the skill names the change as what differs from
+a fixed point, and leaves the session to read it, the same way a lookup leaves it the search.
+
+A reviewer leaves a rule out only where a check runs without a person. `ci` and `runtime-alert` run by themselves.
+`review-checklist` and `manual` are a person checking, and in a review that person is the reviewer. A control's
+`verifies` can name a whole standard, so the reviewer reads its What it checks section to learn which obligations it
+covers, and checks the rest.
 
 The frozen export is why a skill states a date and a status. An export reads the same however old it is, so the skill
 is the only thing that can say how old it is. It is also why a correction goes out through the issue tracker: the
@@ -577,6 +601,9 @@ standard.
 
 ## Changelog
 
+- 2026-10-19: a skill reviewing a change names it as what differs from a fixed point, and leaves the session to read
+  it. It reports a broken `MUST` as a violation and a `SHOULD` departure as a judgement call, and checks every
+  obligation that no running `ci` or `runtime-alert` control names.
 - 2026-10-19: a hook runs in a POSIX shell, prints what `kac bundle` rendered, writes only to the plugin's data
   directory or the temporary directory, and pushes a view once a session within the 10,000 characters Claude Code
   passes on.
