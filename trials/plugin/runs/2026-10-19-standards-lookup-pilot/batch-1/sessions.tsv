@@ -1,0 +1,25 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	audit-log-retention	1	0	1	1	1	1	0.39272560000000006	12	
+house	plugin	audit-log-retention	2	0	1	1	1	1	0.38202059999999993	17	
+house	plugin	audit-log-retention	3	0	1	1	1	1	0.35682	10	
+house	plugin	flaky-test-skip	1	0	0	1	1	1	0.21351539999999997	7	
+house	plugin	flaky-test-skip	2	0	0	1	1	1	0.2149346	7	
+house	plugin	flaky-test-skip	3	0	0	1	1	1	0.2000068	6	
+house	plugin	health-endpoint	1	0	1	1	1	1	0.4187242	23	
+house	plugin	health-endpoint	2	0	1	1	1	1	0.2677138	7	
+house	plugin	health-endpoint	3	0	1	1	1	1	0.4548197999999999	21	
+house	plugin	pricing-call	1	0	1	1	1	1	0.3982378000000001	17	
+house	plugin	pricing-call	2	0	1	1	1	1	0.46938540000000006	18	
+house	plugin	pricing-call	3	0	1	1	1	1	0.43435500000000005	17	
+house	hook	audit-log-retention	1	0	1	1	1	1	0.3412812	16	
+house	hook	audit-log-retention	2	0	1	1	1	1	0.2468112	8	
+house	hook	audit-log-retention	3	0	1	0	1	1	0.3599214	12	pass
+house	hook	flaky-test-skip	1	0	0	1	1	1	0.21329879999999998	7	
+house	hook	flaky-test-skip	2	0	1	1	1	1	0.2646456	12	
+house	hook	flaky-test-skip	3	0	1	1	1	1	0.2408518	9	
+house	hook	health-endpoint	1	0	1	1	1	1	0.39646879999999995	22	
+house	hook	health-endpoint	2	0	1	1	1	1	0.32234	18	
+house	hook	health-endpoint	3	0	1	1	1	1	0.393629	21	
+house	hook	pricing-call	1	0	1	0	0	1	0.33540520000000007	14	fail
+house	hook	pricing-call	2	0	1	1	1	1	0.35545720000000003	16	
+house	hook	pricing-call	3	0	1	1	1	1	0.3992834	19	
