@@ -5,7 +5,7 @@ tier: normative
 status: active
 implements: [ eng:pol-A11Y.CONFORM, eng:pol-A11Y.PUBLISH, eng:pol-A11Y.UPFRONT, eng:pol-A11Y.VENDOR,
               eng:pol-A11Y.WORSE ]
-verified-by: [ ctl-0012 ]
+verified-by: [ ctl-0012, ctl-0014 ]
 applies-to:
   - svc-docs-site
   - svc-kac
@@ -171,11 +171,11 @@ So the rules above are stated in the terms a terminal has. `Commands.Severity` a
 for every prompt their verbs draw. This standard writes down what the code already does, so the next verb keeps doing
 it.
 
-**Nothing in CI checks any of this.** The `docs` job runs `mkdocs build`, and `strict: true` reads links inside the
-site. No check reads the output for contrast, heading order, link text or keyboard reach. No test reads a `kac`
-message for a colour standing alone. Every rule above is a reviewer's, which is what the conformance checklist is for.
-A rule nobody checks still binds whoever reads it, and a `verified-by` naming a control that does not exist would
-claim a check CI never runs.
+**Nothing in CI checks any of this, except the pins.** [ctl-0014] fails a pull request where an assessed component's
+pin leaves the range its tool record approves, or where the assessment names no version at that pin. The `docs` job
+runs `mkdocs build`, and `strict: true` checks links inside the site. No check reads the output for contrast, heading
+order, link text or keyboard reach. No test reads a `kac` message for a colour standing alone. Every other rule above
+is a reviewer's, which is what the conformance checklist is for. [ctl-0012] records what goes unchecked.
 
 **A deviation goes in this corpus's own register.** `eng:pol-DEVI` leaves the location of a deviation to the process,
 not to the policy. This corpus adopts the deviations type, so a departure from a rule above is a record in
@@ -190,6 +190,8 @@ not to the policy. This corpus adopts the deviations type, so a departure from a
 
 ## Changelog
 
+- 2026-10-19: a check now fails a pull request that moves an assessed pin without a new assessment, so the rationale
+  names the pins as the one part of this standard CI checks.
 - 2026-10-18: a diagram has a text equivalent, which should be the prose after it. The theme's colour schemes and an
   `extra.css` setting no colour become `SHOULD`, and a check against WCAG 2.2 AA stands in for either. The three-way
   `palette:` becomes `SHOULD`.
@@ -202,3 +204,5 @@ say why in the change.
 
 [Material for MkDocs]: https://squidfunk.github.io/mkdocs-material/setup/
 [WCAG 2.2 AA]: https://www.w3.org/TR/WCAG22/
+[ctl-0012]: ../controls/0012-accessibility-unchecked.md
+[ctl-0014]: ../controls/0014-assessed-pin-tests.md

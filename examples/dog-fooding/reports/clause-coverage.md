@@ -5,12 +5,12 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-19T09:00:00Z
+  at: 2026-10-19T11:33:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.66.0" }
+  - { resource: example-dogfooding, version: "0.67.0" }
   - { resource: example-engineering, version: "0.36.0" }
 verified:
   - { at: 2026-10-19T11:19:00Z, by: human:paul.law }
@@ -87,19 +87,19 @@ where the rule and the practice differ.
 
 ### eng:pol-A11Y
 
-| Clause    | Level    | Covered by | Deviations | Controls   | Pair candidate        | Verdict      | Note                                                                                                   |
-|-----------|----------|------------|------------|------------|-----------------------|--------------|--------------------------------------------------------------------------------------------------------|
-| `UPFRONT` | MUST     | `std-A11Y` |            | `ctl-0012` |                       | Covered      | `std-A11Y` states what each surface needs before a page is written.                                    |
-| `CONFORM` | MUST     | `std-A11Y` |            | `ctl-0012` |                       | Covered      | WCAG 2.2 AA is the measure, and a reviewer applies it. No check does.                                  |
-| `VENDOR`  | MUST     | `std-A11Y` |            | `ctl-0012` |                       | Covered      | `tol-mkdocs-material` and `tol-spectre-console` each have an assessment.                               |
-| `RECORD`  | MUST     |            |            |            | `eng:pol-DEVI.RECORD` | Gap          | Both third-party components have an assessment in `tools/`, and no standard requires one.              |
-| `PUBLISH` | MUST     | `std-A11Y` |            | `ctl-0012` |                       | Covered      | A statement is required where a law or a contract asks. Neither asks for these two surfaces.           |
-| `CURRENT` | MUST     |            |            |            |                       | Out of scope | `PUBLISH` records that no law or contract asks for a statement here, so there is none to keep current. |
-| `FIX`     | MUST     |            |            |            |                       | Gap          | An accessibility defect becomes an issue on project 3, and nothing sets a timeframe by severity.       |
-| `WORSE`   | MUST NOT | `std-A11Y` |            | `ctl-0012` |                       | Covered      | A change knowingly reducing either surface needs a recorded deviation.                                 |
-| `REPORT`  | SHOULD   |            |            |            | `eng:pol-INCR.REPORT` | Gap          | GitHub issues take a barrier report from anybody, and no standard states that route.                   |
-| `ASSIST`  | SHOULD   |            |            |            |                       | Gap          | Neither surface has been read with a screen reader.                                                    |
-| `INCLUDE` | COULD    |            |            |            |                       | Out of scope | There is no user research here for anybody to take part in.                                            |
+| Clause    | Level    | Covered by | Deviations | Controls               | Pair candidate        | Verdict      | Note                                                                                                   |
+|-----------|----------|------------|------------|------------------------|-----------------------|--------------|--------------------------------------------------------------------------------------------------------|
+| `UPFRONT` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | `std-A11Y` states what each surface needs before a page is written.                                    |
+| `CONFORM` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | WCAG 2.2 AA is the measure, and a reviewer applies it. No check does.                                  |
+| `VENDOR`  | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | `tol-mkdocs-material` and `tol-spectre-console` each have an assessment.                               |
+| `RECORD`  | MUST     |            |            |                        | `eng:pol-DEVI.RECORD` | Gap          | Both third-party components have an assessment in `tools/`, and no standard requires one.              |
+| `PUBLISH` | MUST     | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | A statement is required where a law or a contract asks. Neither asks for these two surfaces.           |
+| `CURRENT` | MUST     |            |            |                        |                       | Out of scope | `PUBLISH` records that no law or contract asks for a statement here, so there is none to keep current. |
+| `FIX`     | MUST     |            |            |                        |                       | Gap          | An accessibility defect becomes an issue on project 3, and nothing sets a timeframe by severity.       |
+| `WORSE`   | MUST NOT | `std-A11Y` |            | `ctl-0012`, `ctl-0014` |                       | Covered      | A change knowingly reducing either surface needs a recorded deviation.                                 |
+| `REPORT`  | SHOULD   |            |            |                        | `eng:pol-INCR.REPORT` | Gap          | GitHub issues take a barrier report from anybody, and no standard states that route.                   |
+| `ASSIST`  | SHOULD   |            |            |                        |                       | Gap          | Neither surface has been read with a screen reader.                                                    |
+| `INCLUDE` | COULD    |            |            |                        |                       | Out of scope | There is no user research here for anybody to take part in.                                            |
 
 ### eng:pol-ACCS
 
