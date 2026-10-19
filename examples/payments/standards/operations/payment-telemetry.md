@@ -3,7 +3,7 @@ id: std-TELEM
 type: standard
 tier: normative
 status: active
-implements: [ eng:pol-DATA.LOGS, eng:pol-SCRT.LOGS, eng:pol-SCRT.STORE ]
+implements: [ eng:pol-DATA.MASK, eng:pol-SCRT.LOGS, eng:pol-SCRT.STORE ]
 applies-to:
   - svc-payment-api
   - svc-payment-ledger
@@ -29,7 +29,7 @@ name and address stay out of every log, trace and error report.
 - A log line **MUST NOT** include a card token, in a message, a property or a structured field.
 - A log line **MUST NOT** include a customer's name, address, email address or telephone number.
 
-_**Covers:** `eng:pol-DATA.LOGS`, `eng:pol-SCRT.LOGS`_
+_**Covers:** `eng:pol-DATA.MASK`, `eng:pol-SCRT.LOGS`_
 
 ### The redaction runs before the sink
 
@@ -38,6 +38,8 @@ _**Covers:** `eng:pol-DATA.LOGS`, `eng:pol-SCRT.LOGS`_
 - A service **MUST** redact a request or response body before it is written.
 - A service **MUST NOT** leave redaction to the log platform, which sees the line only after every copy of it exists.
 - An unhandled exception **MUST** be reported without the request body that caused it.
+
+_**Covers:** `eng:pol-DATA.MASK`, `eng:pol-SCRT.LOGS`_
 
 ### A PSP key is a secret and behaves like one
 
