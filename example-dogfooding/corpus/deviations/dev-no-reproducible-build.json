@@ -4,12 +4,12 @@
   "trust": null,
   "fields": {
     "id": "dev-no-reproducible-build",
-    "title": "Two builds of kac are never compared",
+    "title": "A build of kac takes whichever .NET 10 SDK the runner installs",
     "status": "active",
     "risk": "low",
     "departs-from": [
-      "eng:pol-AUTV.BITWISE",
-      "eng:pol-AUTV.REPRO"
+      "eng:pol-AUTV.REPRO",
+      "std-CONFIG.a-pin-names-an-exact-version"
     ],
     "owner": "human:paul.law",
     "accepted-on": "2026-09-07",
@@ -21,18 +21,18 @@
     "tags": [
       "build",
       "reproducibility",
-      "verification"
+      "sdk"
     ]
   },
   "sections": {
-    "What we are doing instead": "`dotnet run --project tooling/kac` builds from a checkout with the .NET SDK the repository pins, on a runner GitHub\ngives fresh for every job. That is a reproducible environment by construction, and no standard here says so.\n\nThe package published to nuget.org is built once, by the publish workflow, from the commit on `main`. Nobody has ever built the same commit twice and compared the two `.nupkg` files.",
-    "Why we need it": "A byte-identical build needs `ContinuousIntegrationBuild`, a deterministic source path map and a source-link setup, and then a job that builds twice and diffs. That is real work against a threat this repository does not face: the package is built by a workflow whose run is public, from a commit anybody can read.",
-    "What the risk is": "The published package differs from the commit it claims, and nothing here would show it. One public workflow builds what ships, and nuget.org refuses to replace a version, so a substitution nobody catches needs that workflow itself to be compromised.",
-    "What compensates": "* The publish workflow is the only thing that builds what ships, and its run log records the commit.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so what ships has been run.\n* [tol-dotnet-sdk] pins the SDK, and [std-CONFIG] requires that pin to be an exact version.\n* nuget.org never lets a published version be replaced, so a rebuild cannot overwrite what people already have.",
-    "How it closes": "The publish workflow builds the package twice and fails where the two differ. A standard states the rule, and this record closes when both exist.\n\nWhere that is still not worth doing at the review date, the alternative is provenance. An attestation names the workflow, the commit and the runner. [dev-package-unscanned] asks for the same thing.",
-    "Scope": "The `kac` package published to nuget.org, and the local builds a contributor runs."
+    "What we are doing instead": "Each job that builds it installs the SDK with `actions/setup-dotnet` and `dotnet-version: 10.0.x`, which takes the newest 10.0 SDK on the day. [tol-dotnet-sdk] approves the same range. No `global.json` fixes the version, so version control alone does not say which SDK built a commit.\n\nThe package published to nuget.org is built once, by the publish workflow, from the commit on `main`. Its run log shows the SDK that job installed.",
+    "Why we need it": "Fixing the version needs a `global.json` and a way to move it when a patch ships, and neither has been set up. The range takes each SDK patch without a pull request.",
+    "What the risk is": "Two builds of one commit run on different SDK patches, and a difference between them shows only in the package that shipped. Nothing here would explain it without reading both run logs. An SDK patch seldom changes what a build produces, so the cost is a confusing difference and not a broken release.",
+    "What compensates": "* The publish workflow is the only thing that builds what ships, and its run log records the commit and the SDK.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so a build that cannot run is caught before it ships.\n* nuget.org never lets a published version be replaced, so a rebuild cannot overwrite what people already have.",
+    "How it closes": "A `global.json` names the exact SDK, every workflow installs the version it names, and something moves it when a patch ships. This record closes when that file is in the repository. [#971](https://github.com/paul80nd/knowledge-as-code/issues/971) tracks the work.",
+    "Scope": "Every build of `kac`: the publish workflow, CI, and a contributor's own machine."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/deviations/no-reproducible-build.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/deviations/no-reproducible-build.md"
   }
 }

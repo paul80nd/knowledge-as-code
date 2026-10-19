@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.64.1",
+  "contentVersion": "0.65.0",
   "mechanismVersion": 19,
-  "commit": "80e06f5d03c14d23a88d4a4321e4237cb9f563c6",
+  "commit": "6abee0aa4c9fb1058e2f2858583439044f3c36a2",
   "dirty": false,
-  "generatedAt": "2026-10-19T07:58:38Z",
+  "generatedAt": "2026-10-19T10:18:17Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "80e06f5d03c14d23a88d4a4321e4237cb9f563c6"
+    "ref": "6abee0aa4c9fb1058e2f2858583439044f3c36a2"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.34.0",
+      "contentVersion": "0.35.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "80e06f5d03c14d23a88d4a4321e4237cb9f563c6"
+        "ref": "6abee0aa4c9fb1058e2f2858583439044f3c36a2"
       },
       "reposBase": null,
       "tracker": {
@@ -61,7 +61,7 @@
     {
       "type": "controls",
       "shapeVersion": 1,
-      "records": 20,
+      "records": 22,
       "parts": 0,
       "dir": "controls",
       "partsFile": null,
@@ -79,7 +79,7 @@
     {
       "type": "deviations",
       "shapeVersion": 1,
-      "records": 18,
+      "records": 11,
       "parts": 0,
       "dir": "deviations",
       "partsFile": null,
@@ -187,8 +187,8 @@
     {
       "type": "standards",
       "shapeVersion": 2,
-      "records": 18,
-      "parts": 76,
+      "records": 19,
+      "parts": 80,
       "dir": "standards",
       "partsFile": "standards/rules.jsonl",
       "recordKey": "record",

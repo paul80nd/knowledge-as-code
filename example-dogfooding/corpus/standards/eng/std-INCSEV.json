@@ -1,0 +1,36 @@
+{
+  "type": "standards",
+  "path": "standards/common/incident-severity.md",
+  "trust": null,
+  "fields": {
+    "id": "std-INCSEV",
+    "title": "Every incident is handled at a stated severity",
+    "category": "common",
+    "status": "draft",
+    "superseded-by": null,
+    "derived-from": null,
+    "implements": [
+      "pol-INCR.COMMS",
+      "pol-INCR.LEARN",
+      "pol-INCR.TRIAGE"
+    ],
+    "depends-on": null,
+    "applies-to": [
+      "all"
+    ],
+    "review-by": "2027-10-19",
+    "tags": [
+      "incidents",
+      "on-call",
+      "postmortems",
+      "severity"
+    ]
+  },
+  "sections": {
+    "Summary": "An incident takes one of three severities when it is declared. The severity decides who is paged, how often the people affected hear about it, and whether it gets a postmortem. Wherever a policy here says a significant incident, it means sev1 or sev2.",
+    "Conformance checklist": "- [ ] Every incident record states the severity it was declared at.\n- [ ] Every sev1 and sev2 paged the on-call engineer.\n- [ ] Every sev1 and sev2 names its incident lead.\n- [ ] Every sev1 posted its status at least every 30 minutes, and every sev2 at least every 2 hours.\n- [ ] Every lowered severity has its reason in the incident record.\n- [ ] Every sev1 and sev2, and every personal data breach, has a postmortem stating the highest severity reached."
+  },
+  "links": {
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/engineering/standards/common/incident-severity.md"
+  }
+}

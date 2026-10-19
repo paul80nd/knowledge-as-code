@@ -22,7 +22,7 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "A great deal is written down. Four `CLAUDE.md` files route the work, the playbooks under `.claude/skills/i-want-to/` give the steps, and this corpus records the rules a change has to meet. Somebody with no context can read any of it, and agents do that every day.\n\nNone of it has been read by a second person who then had to act on it. The proof that the writing is enough is that an agent can follow it, which is a weaker test than a human taking over.",
+    "What we are doing instead": "A great deal is written down. The `CLAUDE.md` files route the work, the playbooks under `.claude/skills/i-want-to/` give the steps, and this corpus records the rules a change has to meet. Somebody with no context can read any of it, and agents do that every day.\n\nNone of it has been read by a second person who then had to act on it. The proof that the writing is enough is that an agent can follow it, which is a weaker test than a human taking over.",
     "Why we need it": "There is no second person to spread the knowledge to. Writing more of it down is the only option, and this repository does that continuously. A session that finds the guidance wanting is asked to say so in the reply that closes it.",
     "What the risk is": "The maintainer stops, and the work stops with them. The repository is public and MIT licensed, so nothing is lost: what goes is continuity, and the answer to every question the guidance does not cover. That guidance has been read by agents and never by a person who then had to act on it alone.",
     "What compensates": "* The repository is public, under the MIT licence, so nothing is lost if the maintainer stops.\n* The guidance is written for a reader with no context, and agents test that reading daily.\n* Every published version of `kac` stays on nuget.org whatever happens to the repository.\n* A session here reports where the guidance failed it, and that feedback keeps the writing honest.",
@@ -30,6 +30,6 @@
     "Scope": "Everything in this repository: the tool, the schema, the four corpora, the site and the workflows."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/deviations/one-maintainer.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/deviations/one-maintainer.md"
   }
 }

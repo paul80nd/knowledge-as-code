@@ -29,6 +29,6 @@
     "Coverage and gaps": "actionlint reports nothing about these two faults:\n\n* a permission a job declares and never uses\n* a credential written in the wrong place\n\nA reviewer catches both. Those faults are most of what [std-CI] states: its permission, credential, pinning and publishing rules have no check here.\n\nactionlint publishes no manifest Dependabot reads, so the `v1.7.12` pin moves when somebody edits the job."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/controls/0003-actionlint.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/controls/0003-actionlint.md"
   }
 }

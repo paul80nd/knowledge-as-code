@@ -11,9 +11,10 @@
       "eng:pol-INCR.ADHOC",
       "eng:pol-INCR.COMMS",
       "eng:pol-INCR.DRILL",
+      "eng:pol-INCR.LEARN",
       "eng:pol-INCR.PROCESS",
-      "eng:pol-INCR.RECOVER",
-      "eng:pol-INCR.REPORT"
+      "eng:pol-INCR.TOOSOON",
+      "eng:pol-INCR.TRIAGE"
     ],
     "owner": "human:paul.law",
     "accepted-on": "2026-09-07",
@@ -31,7 +32,7 @@
     ]
   },
   "sections": {
-    "What we are doing instead": "[`../runbooks/`](../runbooks/) has a runbook for each of three failures somebody has met. Outside those three, there is no declaration, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.\n\n`.github/SECURITY.md` gives the route in for a vulnerability, and says a report is acknowledged within about a week.\nNo record here points at that route, and nothing covers an ordinary failure a user meets.\n\nWhoever installed a bad version of `kac` hears nothing until the next version lands. There is no announcement, no advisory and no place a user would look.",
+    "What we are doing instead": "[`../runbooks/`](../runbooks/) has a runbook for each of three failures somebody has met. Outside those three, there is\nno declaration, no severity, no roles and no order of work. The maintainer finds the fault, fixes it, and ships.\n`eng:std-INCSEV` states the severity scale, and nothing here applies it.\n\n`.github/SECURITY.md` gives the route in for a vulnerability, and says a report is acknowledged within about a week.\nNo record here points at that route, and nothing covers an ordinary failure a user meets.\n\nWhoever installed a bad version of `kac` hears nothing until the next version lands. There is no announcement, no advisory and no place a user would look.\n\nNothing reviews an incident afterwards, and nothing keeps one open until that review is written. This corpus has adopted no type for a postmortem, so a fix lands with its test and its commit message and nothing else.",
     "Why we need it": "`kac` is a command-line tool with no service behind it, so an incident here is a bad release, not an outage. The\nrecovery is a new version, which [std-VERS] already governs. A declaration procedure with one person to declare it to\nwould be a form the maintainer fills in for themselves.\n\nThe gap that costs a user is the silence, and that one is real.",
     "What the risk is": "Somebody installs a broken version of `kac` and hears nothing. There is no announcement, no advisory and no page a user would check, so they find out when the next version ships or when they debug it themselves. The tool writes into a repository, so a bad release costs that user time and a revert.",
     "What compensates": "* A correction ships as a new version, which [std-VERS] governs, and a published version is never replaced.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so a `kac` that cannot run is caught before it ships.\n* `.github/SECURITY.md` gives a private route for a vulnerability, and GitHub security advisories keep the thread.",
@@ -39,6 +40,6 @@
     "Scope": "`kac` as published to nuget.org, the documentation site, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/deviations/no-incident-process.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/deviations/no-incident-process.md"
   }
 }

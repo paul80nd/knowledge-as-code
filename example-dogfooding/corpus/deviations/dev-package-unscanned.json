@@ -4,11 +4,10 @@
   "trust": null,
   "fields": {
     "id": "dev-package-unscanned",
-    "title": "Nothing scans or attests the package kac ships",
+    "title": "Nothing scans the package kac ships",
     "status": "active",
     "risk": "medium",
     "departs-from": [
-      "eng:pol-TRUS.ATTEST",
       "eng:pol-TRUS.MALWARE"
     ],
     "owner": "human:paul.law",
@@ -16,23 +15,24 @@
     "review-by": "2027-03-07",
     "closed-on": null,
     "applies-to": [
-      "svc-kac"
+      "svc-kac",
+      "svc-marketplace"
     ],
     "tags": [
+      "malware",
       "package",
-      "provenance",
       "supply-chain"
     ]
   },
   "sections": {
-    "What we are doing instead": "The package is built by the publish workflow from the commit on `main`, on a runner GitHub gives fresh for that run. Dependabot watches the dependencies, and [std-CONFIG] requires every pin to be an exact version.\n\nWhoever installs `kac` gets a package whose provenance is the nuget.org listing and nothing else. There is no attestation naming the workflow, the commit or the runner that built it.",
-    "Why we need it": "Both are available and neither is free. GitHub's artifact attestation needs the publish workflow reworked around it, and a scan needs a scanner chosen and a failure path decided. Neither has been done, and the package is a documentation tool built from a public repository.",
-    "What the risk is": "A consumer installs `kac` and cannot check that the package came from this repository. Trusted publishing means no key exists for anybody else to push under this name, so the gap is proof and not control. A consumer with a rule about provenance has nothing here to satisfy it.",
+    "What we are doing instead": "The package is built by the publish workflow from the commit on `main`, on a runner GitHub gives fresh for that run. Dependabot watches the dependencies, and [std-CONFIG] requires each pin to name one version. Nothing scans what the build produced before it is pushed.",
+    "Why we need it": "A scan needs a scanner chosen and a failure path decided, and neither has been done. The package is a documentation tool built from a public repository, by one workflow anybody can read.",
+    "What the risk is": "Something malicious gets into the package through a dependency or a build step, and nothing looks for it before it ships. A consumer installing `kac` takes what it contains on trust.",
     "What compensates": "* The package is built by one workflow, whose run log is public and records the commit it built.\n* [ctl-0007] packs the tool and installs it on every pull request. That copy runs `kac new` and validates the corpus\n  it created, so what ships has been run.\n* Trusted publishing means no key exists that would let anybody else push under this name.\n* nuget.org refuses a second push to a version it already has, so what shipped cannot be replaced.",
-    "How it closes": "The publish workflow generates a build provenance attestation, and the release notes say how to verify it. A scan runs over the package before the push and fails the job on a finding. This record closes when both are in the workflow.",
+    "How it closes": "A scan runs over the package and the plugin before they are published, and fails the job on a finding. This record closes when that scan is in the publish workflows.",
     "Scope": "The `kac` package on nuget.org, and the plugin served from the marketplace branch."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/80e06f5d03c14d23a88d4a4321e4237cb9f563c6/examples/dog-fooding/deviations/package-unscanned.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/deviations/package-unscanned.md"
   }
 }
