@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.65.0" }
-  - { resource: example-engineering, version: "0.35.0" }
+  - { resource: example-dogfooding, version: "0.65.1" }
+  - { resource: example-engineering, version: "0.36.0" }
 verified:
-  - { at: 2026-10-19T10:10:00Z, by: human:paul.law }
+  - { at: 2026-10-19T10:51:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.35.0.
+* `eng`, example-engineering, at 0.36.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it.
@@ -266,7 +266,7 @@ where the rule and the practice differ.
 |-----------|----------|------------------|---------------------------|----------|------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `PROCESS` | MUST     |                  | `dev-no-incident-process` |          |                        | Gap          | The runbooks cover three failures, and nothing says who decides in the rest.                                                                              |
 | `DECLARE` | MUST     |                  |                           |          |                        | Gap          | Nothing states what makes an event here an incident, or who decides.                                                                                      |
-| `HARM`    | MUST     |                  |                           |          |                        | Out of scope | No personal data, so no incident here can harm anybody.                                                                                                   |
+| `HARM`    | MUST     |                  |                           |          |                        | Out of scope | No personal data, so no breach to assess.                                                                                                                 |
 | `AVERTED` | MUST     |                  |                           |          |                        | Gap          | Nothing records a risk caught before it became a fault.                                                                                                   |
 | `TRIAGE`  | MUST     | `eng:std-INCSEV` | `dev-no-incident-process` |          |                        | Covered      | Nothing here applies the scale `eng:std-INCSEV` states.                                                                                                   |
 | `COMMS`   | MUST     | `eng:std-INCSEV` | `dev-no-incident-process` |          |                        | Covered      | Whoever installed a bad version hears nothing until the next one is published.                                                                            |
