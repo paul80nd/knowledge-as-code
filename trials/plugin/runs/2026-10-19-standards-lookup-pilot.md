@@ -4,8 +4,8 @@
 23 of 24 house sessions that did the task, and the rewrite in 25 of 26. Each version missed once, on a different case.
 Both cited the rule in 25 of 27 house sessions, fired the skill in all 30 sessions, and met every control.
 
-The run measured the rewrite [story #945](https://github.com/paul80nd/knowledge-as-code/issues/945) pilots: a skill
-that states its intent and its reasons, and sets out steps only where the order is the content. It ran 60 graded
+The run measured the rewrite that [story #945](https://github.com/paul80nd/knowledge-as-code/issues/945) pilots: a
+skill that states its intent and its reasons, and sets out steps only where the order is the content. It ran 60 graded
 sessions against `examples/engineering`, in two batches: 30 on the shipped skill and 30 on the rewrite.
 
 ## Setup
@@ -96,8 +96,7 @@ Six verdicts were read by hand against the workspace each session kept. One over
 
 The `stock-alert-rules` and `go-service-dockerfile` calls follow the judgements
 [the full pass](full-pass.md#adjudication) made: a placeholder owner or digest passes, and an `ARG` with no default
-fails. Each batch folder's `adjudication.tsv`
-gives every verdict and its reason.
+fails. Each batch folder's `adjudication.tsv` gives every verdict and its reason.
 
 ## The miss on `pricing-call`
 
