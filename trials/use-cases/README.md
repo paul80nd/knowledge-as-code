@@ -35,7 +35,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 |--------------------------------------------|----------------------------------------------|----------:|----------------------:|
 | [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     0 |
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     4 |
-| [`review.feature`](review.feature)         | a reviewer, human or AI                      |         3 |                     0 |
+| [`review.feature`](review.feature)         | a reviewer, human or AI                      |         3 |                     3 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
 | [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     0 |
@@ -45,15 +45,18 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 
 ## Scenarios on a case that exists
 
-These five map to a case a trial has already run, and each gives its baseline from that run:
+These map to a case a trial has already run, and each gives its baseline from that run:
 
-| Scenario                                                         | Case                                           | Run                                                      |
-|------------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------|
-| A rule filed under another topic reaches the session             | `plugin/engineering/house/health-endpoint`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A tracing rule reaches a session writing an outbound call        | `plugin/engineering/house/pricing-call`        | [full pass](../plugin/runs/full-pass.md)                 |
-| A policy clause reaches a session writing infrastructure         | `plugin/engineering/house/audit-log-retention` | [full pass](../plugin/runs/full-pass.md)                 |
-| A departure from a MUST goes to a deviation                      | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A process written as outcomes draws no finding asking for a step | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
+| Scenario                                                                             | Case                                           | Run                                                      |
+|--------------------------------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------|
+| A rule filed under another topic reaches the session                                 | `plugin/engineering/house/health-endpoint`     | [full pass](../plugin/runs/full-pass.md)                 |
+| A tracing rule reaches a session writing an outbound call                            | `plugin/engineering/house/pricing-call`        | [full pass](../plugin/runs/full-pass.md)                 |
+| A policy clause reaches a session writing infrastructure                             | `plugin/engineering/house/audit-log-retention` | [full pass](../plugin/runs/full-pass.md)                 |
+| A departure from a MUST goes to a deviation                                          | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
+| A process written as outcomes draws no finding asking for a step                     | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
+| A review of a change that broke a MUST cites the clause it broke                     | `review/engineering/health-endpoint`           | [2026-10-19](../review/runs/2026-10-19.md)               |
+| A review notes a departure from a SHOULD that gives its reason, and does not fail it | `review/engineering/should-departure`          | [2026-10-19](../review/runs/2026-10-19.md)               |
+| A review says which rule no control checks                                           | `review/engineering/health-endpoint`           | [2026-10-19](../review/runs/2026-10-19.md)               |
 
 Every other scenario is `@proposed`.
 
