@@ -71,8 +71,8 @@ the [`upstream:`](corpus-descriptor.md#upstream) block, which `update` reads lat
 how to run the tool against it. It arrives with the markers for the block it may contain, and it is the one page a
 corpus may decline a block on.
 
-**The breadcrumb hook arrives with its execute bit.** `.plugin/hooks/breadcrumb` is run, and a hook arriving without
-its mode bit fails silently on Unix.
+**Each hook script arrives with its execute bit.** `.plugin/hooks/breadcrumb` and `.plugin/hooks/build-index` are run,
+and a hook arriving without its mode bit fails silently on Unix.
 
 ## `--check`
 

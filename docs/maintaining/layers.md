@@ -87,7 +87,7 @@ Each refusal exits `1` and writes nothing.
 * A template needing a newer kac is refused
 * A new corpus is given a descriptor and a README of its own
 * A corpus built by GitHub is sent the GitHub starter alone
-* The breadcrumb hook arrives with its execute bit
+* Each hook script arrives with its execute bit
 * A corpus that declined types is sent no link it cannot follow
 * A corpus adopting a single type validates
 * A corpus adopting every type keeps the links between its type pages

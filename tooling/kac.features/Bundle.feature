@@ -257,6 +257,23 @@ Scenario: A view reads an optional type only where the export carries it
   And the bundle includes "views/review.md"
   And ".dist/plugin/views/review.md" contains "This corpus exports no controls"
 
+Scenario: The build-index hook prints the build index where the hook and the index both ship
+  Given the bundle-views fixture corpus
+  And it has been exported
+  When I bundle
+  Then it succeeds
+  And ".dist/plugin/hooks/build-index.json" contains "PreToolUse"
+  And ".dist/plugin/hooks/build-index.json" contains "states 2 rules for code in this repository"
+  And ".dist/plugin/hooks/build-index" is executable
+
+Scenario: The build-index hook prints nothing where no build index ships
+  Given the bundle fixture corpus
+  And it has been exported
+  When I bundle
+  Then it succeeds
+  And ".dist/plugin/hooks/breadcrumb.txt" exists
+  And ".dist/plugin/hooks/build-index.json" does not exist
+
 Scenario: The hook keeps its permission bit
   Given the bundle fixture corpus
   And it has been exported

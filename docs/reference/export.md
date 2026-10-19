@@ -391,7 +391,8 @@ A **view** is a Markdown file [`bundle`](../use/cli/bundle.md) writes into the p
 moment of the work. It is not part of `.dist/export/`, and another corpus that imports the export never receives one.
 Each view lists the rules under their standard's id, title and status.
 
-* **`build-index`** lists each rule by title and id.
+* **`build-index`** opens on how many rules the corpus states, then lists each rule by title. A rule's id is its
+  standard's id, a dot, and the slug of its title.
 * **`review`** lists the controls whose `verifies` names the standard or one of its rules, then each rule's
   obligations.
 

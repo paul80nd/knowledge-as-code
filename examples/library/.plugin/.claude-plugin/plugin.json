@@ -67,7 +67,10 @@
         "requires": [
           "glossary"
         ],
-        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up."
+        "optional": [
+          "standards"
+        ],
+        "note": "A SessionStart hook printing the breadcrumb rendered beside it, so a session learns the glossary is here before it has a term to look up. A PreToolUse hook printing the build index once a session, at its first Read, Grep or Glob, where views/build-index.md survived. Both travel with the glossary, so a corpus exporting standards and no glossary ships neither."
       }
     ]
   }

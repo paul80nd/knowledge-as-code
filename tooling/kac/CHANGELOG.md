@@ -21,10 +21,15 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 - **`kac bundle` writes the views a plugin manifest declares.** A component with a `view` key is generated into the
   plugin from the export, at its `path`. Each view lists the rules under their standard and its status.
-  `build-index` gives each rule's title and id. `review` gives each rule's obligations, and the standard's controls
-  with their mechanism. A type under a component's new `optional` key is read where the export has it, and its absence
-  trims nothing. `kac bundle` refuses a view it does not write, and a view path the plugin tree or `corpusRoot` already
-  uses.
+  `build-index` gives each rule's title, under a count of the rules the corpus states. `review` gives each rule's
+  obligations, and the standard's controls with their mechanism. A type under a component's new `optional` key is read
+  where the export has it, and its absence trims nothing. `kac bundle` refuses a view it does not write, and a view
+  path the plugin tree or `corpusRoot` already uses.
+- **`kac bundle` renders what the build-index hook prints.** Where the hook directory and the build index both ship,
+  it writes `hooks/build-index.json`, which the template's new `PreToolUse` hook prints the first time a session calls
+  `Read`, `Grep` or `Glob`. The hook prints it once a session, marking the session under `${CLAUDE_PLUGIN_DATA}`. An
+  index over the 10,000 characters Claude Code passes to a session is replaced by its rule and standard counts and its
+  path, and `kac bundle` warns. The template moves to version 20.
 
 ## 0.35.0 - 2026-10-16
 

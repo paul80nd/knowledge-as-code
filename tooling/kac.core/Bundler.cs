@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -239,8 +240,21 @@ public static class Bundler
         // `docs/maintaining/plugin.md`.
         var breadcrumbDir = $"{Dist.PluginDir}/{Breadcrumb.RenderedFile[..Breadcrumb.RenderedFile.LastIndexOf('/')]}";
         if (files.Any(f => Owns(breadcrumbDir, f.Path)))
+        {
             files.Add(Utf8($"{Dist.PluginDir}/{Breadcrumb.RenderedFile}",
                 Breadcrumb.Render(exportManifest, source.Export, included)));
+
+            if (included.Any(c => c.View == View.BuildIndex))
+            {
+                var hook = BuildIndexHook.Render(viewSource);
+                files.Add(Utf8($"{Dist.PluginDir}/{BuildIndexHook.RenderedFile}", hook.Output));
+
+                if (hook.Pointed)
+                    warnings.Add(string.Format(CultureInfo.InvariantCulture,
+                        "the build index is {0:N0} characters, over the {1:N0} a hook can push, so the hook pushes "
+                        + "where to find it.", hook.IndexLength, BuildIndexHook.Cap));
+            }
+        }
 
         files.Add(Utf8($"{Dist.PluginDir}/{RecordFile}",
             Serialize(new BundleRecord(

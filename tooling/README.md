@@ -126,7 +126,8 @@ how this one is built.
 [`tests/round-trip.sh`](tests/round-trip.sh) sits above them all, and is the only test that leaves the repository.
 It installs the built plugin into a Claude config directory of its own, checks that the components `bundle.json` kept
 arrived and the ones it trimmed did not, asks a surviving skill for something only its own type can answer, and fetches
-a record's source from the base, prefix and ref the export wrote. That fetch is the one assertion that cannot be faked
+a record's source from the base, prefix and ref the export wrote. Where the build index ships, it runs the installed
+build-index hook twice for one session and checks that it prints once. That fetch is the one assertion that cannot be faked
 from the working tree. Run it from a corpus, after `kac export` and `kac bundle`, with `jq`, `curl` and the Claude Code
 CLI on the path:
 

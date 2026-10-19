@@ -11,6 +11,7 @@
 .plugin/.claude-plugin/plugin.json
 .plugin/hooks/breadcrumb
 .plugin/hooks/breadcrumb.cmd
+.plugin/hooks/build-index
 .plugin/hooks/hooks.json
 .plugin/skills/controls-lookup/SKILL.md
 .plugin/skills/corpus-retrieval/SKILL.md

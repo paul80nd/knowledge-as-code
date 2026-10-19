@@ -34,6 +34,8 @@ records, at `.plugin/`. A **component** is one skill or hook inside that tree.
 * It cuts the plugin manifest's components to the ones that survived, and keeps every key it does not know.
   [The plugin manifest](#the-plugin-manifest)
 * It renders the breadcrumb the hook prints, and keeps the hook's permission bit. [The breadcrumb](#the-breadcrumb)
+* It renders what the build-index hook prints, where the build index ships, and warns where the index is over the
+  hook's cap. [The build-index hook](#the-build-index-hook)
 * It writes each view a surviving component declares, from the export alone. [Views](#views)
 * It reads a type under a component's `optional` where the export has it, and trims nothing for its absence.
   [Views](../use/cli/bundle.md#views)
@@ -93,8 +95,30 @@ standards (from eng). 37 entries across 12 records: An interface is described by
 * **It names no record type.** Counts, names, shortcodes and skills are read off the export and the surviving
   components, so a type this tool has never heard of gets a line.
 
-A hook ships as a POSIX script and a `.cmd` twin. `bundle` keeps the permission bit on the script, so it runs at the
-first session.
+The breadcrumb hook ships as a POSIX script and a `.cmd` twin. `bundle` keeps the permission bit on every script, so
+each runs at the first session.
+
+## The build-index hook
+
+A `PreToolUse` hook on `Read`, `Grep` and `Glob` prints the build index once a session. A session reads code before it
+changes any, so the index arrives before the first edit.
+
+* **It is rendered at build time.** `BuildIndexHook` writes `hooks/build-index.json`: one line of JSON whose
+  `additionalContext` is the build index as `View` rendered it. The script prints that file and parses nothing.
+* **It travels with the hook directory and the build index.** `bundle` writes the file only where both survived the
+  trim. Without it the script prints nothing, so a corpus with no standards ships a silent script.
+* **It fires once a session.** The script cuts `session_id` out of its input with `sed`. A JSON string escapes every
+  quote inside it, so the key with bare quotes is the only match. It then makes a directory named after the session
+  under `${CLAUDE_PLUGIN_DATA}/build-index/`. `mkdir` succeeds for one caller only, so two parallel reads print once.
+* **It prunes its own markers.** Each run deletes marker directories older than 7 days.
+* **Over 10,000 characters it points instead.** Claude Code passes a hook's context to the session up to that length,
+  and over it shows a file path and the first 2,000 characters. `bundle` measures the whole build index and, where it
+  is over, writes the rule and standard counts and the view's path in its place, and warns.
+* **It needs only a POSIX shell.** It has no `.cmd` twin, because Claude Code runs a hook under `sh`, Git Bash or
+  PowerShell.
+
+The build index states facts and gives no instruction, because Claude Code passes it to the session as context, and
+the hook's documentation asks for factual statements there. The view and the hook share that text.
 
 ## Views
 
@@ -190,6 +214,8 @@ type trim.
 * A bundle writes each view the plugin manifest declares
 * A view whose types the export lacks is trimmed, and written nowhere
 * A view reads an optional type only where the export carries it
+* The build-index hook prints the build index where the hook and the index both ship
+* The build-index hook prints nothing where no build index ships
 * A bundle with no export is refused
 * A bundle with no plugin tree is refused
 * A bundle reading the plugin tree from a folder that is not there is refused
@@ -211,7 +237,10 @@ type trim.
 
 * A skill reading the parts file of the type it requires. `bundle` never reads a component's files, and
   `tooling/tests/round-trip.sh` checks it over the installed copy.
-* The `.cmd` half of the hook running on Windows. A scenario runs on the machine that runs the suite.
+* The `.cmd` half of the breadcrumb hook running on Windows. A scenario runs on the machine that runs the suite.
+* The build-index hook firing once a session. A scenario reads what `bundle` wrote and runs no script, so
+  `tooling/tests/round-trip.sh` runs the installed script twice.
+* The warning over the build-index hook's cap. A scenario cannot read the output, so `BundlerTests` asserts it.
 * What the run prints: each trim, the closing count, the install hint and every refusal's reason. A scenario cannot
   read the output.
 
