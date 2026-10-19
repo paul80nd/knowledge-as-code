@@ -1,16 +1,18 @@
 ---
 name: standards-lookup
 description: Find the rules you have to build to, in the standards that travel with this plugin. Use when someone
-  asks how something is done here — "what is our standard for X", "how do we do X", "is there a rule about X", "what
-  do I have to do to ship this". Use it as well, unprompted, before you write or change code touching secrets, APIs,
-  tests, builds, deployment, logging, dependencies, or data a service keeps. Read the rule before you assume nothing
-  governs the thing you are about to build.
+  asks what the rule is for something here. Use it as well, unprompted, before you write or change code touching
+  secrets, APIs, tests, builds, deployment, logging, dependencies, or data a service keeps.
 ---
 
 # Looking a rule up in the standards
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
-and nothing to run.
+A standard states how the estate builds. Each `MUST` is the baseline for the work in front of you. Each `SHOULD` is the
+usual way, which the work may leave by saying why. Find every rule that reaches the work, then quote and cite each one,
+so the person you work with can see where it is written. Whether the work conforms is a ruling for the estate, so say
+which part of the question you leave to them.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                       # what this export is, and where each corpus publishes
@@ -19,44 +21,22 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<record>.json             # one standard 
 ${CLAUDE_PLUGIN_ROOT}/corpus/standards/<shortcode>/<record>.json # one standard a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-## Find the rule, and leave the verdict
+## Collect every rule that reaches the work
 
-**This skill finds a rule. It does not certify code against one.** A rule line carries the obligations and the id to
-cite them by. That is enough to quote what the estate requires and say where it is written. It is not enough to say the
-work in front of you conforms. Whoever asked wants a ruling, and the ruling belongs to the estate.
+**Standards compose by union.** Every rule that reaches the work binds it, so one hit is a partial answer. A general
+rule and a stack-specific one often cover the same subject, and both bind. `rules.jsonl` contains this corpus's rules
+and those of every corpus it consumes, so one file reaches them all.
 
-Quote the obligation, name its level, link the standard, and say plainly which part of the question you are
-leaving to the reader.
-
-## Collect every rule that applies, rather than the first
-
-**Standards compose by union.** The rules binding a piece of work are every rule in every category that reaches it, so
-one hit is a partial answer. A general rule and a stack-specific one are two records writing the same subject at two
-altitudes, and both bind.
-
-**`rules.jsonl` already holds the whole union.** One file carries this corpus's rules and the rules of every corpus it
-consumes, so a single search over it reaches everything that binds. What you are collecting is every hit within that
-file, not a set of files to visit in turn.
-
-Two fields on the owning record narrow a standard to your work, and you read both:
-
-* **`category`** says which folder the standard was filed under. `common` reaches everything and a deeper folder reaches
-  less.
-* **`applies-to`** names the service ids the standard binds, or the single literal `all`.
-
-So search the subject, read the categories the hits name, then search the file again for the categories you have not
-covered yet. A rule you inherited narrows the same way a rule written here does.
-
-## Search the rules
+**A rule is filed under its author's topic, which is often not your task's.** Search for what the code does and what it
+touches, as well as for the words of the task. On the owning record, `category` is the folder the standard sits in,
+where `common` reaches everything, and `applies-to` lists the service ids it binds, or `all`.
 
 **Read the `obligations` of every hit before you use it.** The field names in this file are ordinary English words:
-`title`, `obligations`, `record`, `status`, `type`. A search for one of those matches every line in the file. A line
-governs your work when its wording says so, never because it matched.
+`title`, `obligations`, `record`, `status`, `type`. A search for one of those matches every line in the file.
 
-Each line carries one heading of a standard's Rules section, with everything written under it:
+Each line is one heading of a standard's Rules section, with everything written under it:
 
 | Field                | Type                     | What it holds                                                                |
 |----------------------|--------------------------|------------------------------------------------------------------------------|
@@ -80,129 +60,78 @@ Each entry in `obligations` has two keys:
 | `level` | string | the bullet's keyword: `MUST`, `MUST NOT`, `SHOULD`, `SHOULD NOT` or `MAY` |
 | `text`  | string | the bullet as markdown, with its keyword in bold and its lines joined     |
 
-**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is one
-exception, and the row above says so. `links` is the other: a line another corpus exported before the key existed has
-none.
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. Two keys can be
+absent: `shortcode` on a rule written here, and `links` on a line exported before the key existed.
+
+## Read the level of each obligation
+
+One line can hold obligations at different levels. Compare each `level` whole, because `MUST NOT` opens with `MUST`.
+
+* **`MUST` and `MUST NOT` bind.** Departing from one takes a deviation its owner accepts, and `request-deviation` asks.
+* **`SHOULD` and `SHOULD NOT` state the usual way.** The work departs by giving its reason in the change. No deviation.
+* **`MAY` permits.** It blocks nothing.
+
+Quote the entry's `text`, and cite the line's `id`. A rule is addressed by its heading, so an obligation has no id.
 
 ## Read the prefix on an id
 
-**A prefix on an id names the corpus that wrote the rule.** `eng:std-TEST.every-test-is-hermetic` is the rule
-`every-test-is-hermetic`, in the standard `std-TEST`, as the corpus whose shortcode is `eng` published it. The prefix
-sits on `id`, on `record` and on every `seeAlso` value, so an id you take from one line and search for carries it.
+**A prefix names the corpus that wrote the rule.** `eng:std-TEST.every-test-is-hermetic` was published by the corpus
+with shortcode `eng`, and a bare `std-TEST.every-test-is-hermetic` was written here. The prefix is on `id`, `record` and
+every `seeAlso` value. An inherited rule binds as fully as one written here. Look its `shortcode` up in `sources` in
+`manifest.json`, and name that corpus in words.
 
-**A bare id belongs to the corpus you installed.** `std-TEST.every-test-is-hermetic` was written here.
-
-**An inherited rule binds.** A corpus consumes another because that other one governs it, so a rule arriving under a
-prefix is one you have to build to. Quote it as readily as one written here, and say who wrote it.
-
-**`shortcode` is the key into `sources`.** Each entry in `sources` in `manifest.json` holds one producing corpus: its
-name, the version of it that travelled, and where it publishes. Look the shortcode up there before you say anything
-about the rule's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
-
-**A record file sits under its producer's shortcode**, because two corpora can name one standard and a filename cannot
-say whose it is. The shortcode moves out of the id and becomes the directory, so take it off the `record` value before
-you build the filename. The owning record for `eng:std-TEST.every-test-is-hermetic` is
-`${CLAUDE_PLUGIN_ROOT}/corpus/standards/eng/std-TEST.json`, and for a bare id it is
+**A record file sits under its producer's shortcode.** `eng:std-TEST` is
+`${CLAUDE_PLUGIN_ROOT}/corpus/standards/eng/std-TEST.json`, and a bare `std-TEST` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/standards/std-TEST.json`.
-
-## Read the level on every obligation
-
-**One line holds several obligations, and they do not all bind.** Each entry in `obligations` is one bullet, and its
-`level` says how strongly that bullet binds. Read `level`, and never the capitals inside `text`.
-
-* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it. Departing from either takes a
-  deviation the rule's owner accepts, and `request-deviation` asks for one.
-* **`SHOULD` and `SHOULD NOT` state the usual way.** Follow it, or depart and say why in the change. No deviation is
-  needed.
-* **`MAY` permits.** It blocks nothing.
-
-**Compare `level` whole.** `MUST NOT` opens with `MUST`, so a match on the shorter value files a prohibition as an
-obligation, which is the reverse of what the standard says.
-
-**Quote the `text`, and cite the line's `id`.** A rule is addressed by its heading, so an entry has no id of its own.
-Quote the bullet as the standard wrote it, and cite the rule it sits under.
 
 ## Read the standard beside the rule
 
-**A rule read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on an
-id* builds from `record` and `shortcode`, and read two things from `sections`, which is an object keyed by heading:
+A rule read alone is stricter than its standard. Open the owning record, and read two entries of `sections`, an object
+keyed by heading:
 
-* **`Summary`.** It says what the standard is for, in a paragraph. Use it to tell whether the rule you found is about
-  your subject at all.
-* **`Conformance checklist`.** It is the same rules written as a test, so it is the fastest thing to hand somebody who
-  has to show the work conforms.
+* **`Summary`** says what the standard is for, so you can tell whether the rule is about your subject.
+* **`Conformance checklist`** states the rules as a test, for whoever has to show the work conforms.
 
-Read `fields` as well. `applies-to` and `category` are the two the section above turns on. `depends-on` names the
-standards a reader applies to apply this one, so quote those alongside the rule you found. `superseded-by` names the
-standard that replaced this one: quote the replacement instead, and say the rule you were asked about has moved.
+In `fields`, quote the rules of each standard `depends-on` lists. Where `superseded-by` is set, quote the replacement
+and say the rule has moved. The lines of `rules.jsonl` are sorted by heading, so open the record where the author's
+order matters.
 
-The Rules section is not among those sections. Its headings travelled as the lines in `rules.jsonl`, one line each,
-sorted by heading rather than in the order the standard writes them. Open the record where the author's grouping
-matters.
+## Link the rule, and read its source
 
-## Link to the rule, and read its source
-
-**Quote `links.human` to link the rule.** The line already has it, built for the corpus that wrote the rule.
-
-**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
-authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
-the line's `path` and `anchor`.
-
-**A rule is written as a heading**, so it has an anchor of its own and the link lands on the rule rather than at the
-top of the standard.
+Quote `links.human` to link the rule. It lands on the rule's own heading. To read the source, load `corpus-retrieval`
+and bring it the line's `path` and `anchor`.
 
 ## Say what stayed behind
 
-**`types` in `manifest.json` is the list of what travelled.** What a reader receives depends on which types the corpus
-adopted and which its producers exported, so nothing here can name a fixed set of absences. Read `types`, and a type
-that is not in it stayed behind whole.
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published standard for the rest.
 
-Two things stay behind whatever `types` says, because they are sections of a standard rather than types of their own:
+* **Every standard's Examples and Rationale stay in the record.** A bullet's short reason, opening "because", travels.
+* **The clause a rule puts into practice** is here only where `policies` travelled.
+* **Whether anyone checks the rule** is here only where `controls` travelled.
 
-* **A worked example.** Every standard holds an Examples section showing the rule met and the rule missed, and it stays
-  in the record. Send a reader who wants one to the published standard.
-* **Why the rule exists.** A bullet may end with one short reason opening "because", and that travels in `text`. The
-  full argument lives in the standard's Rationale and provenance section, which stays behind because it reasons over
-  records this export need not carry.
-
-Two more depend on `types`, so check it before you say either is missing:
-
-* **What the rule descends from.** A standard names the policy clause it puts into practice. Where `policies` is in
-  `types` the clause is here, under the prefix of the corpus that wrote it, and you can quote it. The obligation travels
-  whole either way.
-* **How anyone checks it happened.** A standard says what to do, and a control says how we know it was done. Where
-  `controls` is not in `types`, no control travelled and nothing here says whether anyone looked.
-
-`seeAlso` is the one cross-reference that does travel: it names the rules of other standards this one leans on, and
-composition means a rule commonly leans on one. Follow them before you answer, prefix and all. A policy clause the rule
-cites stays inside the wording instead, because a clause is a table row and the link names the policy alone.
+`seeAlso` travels. Follow each value, prefix and all, because a rule commonly leans on another.
 
 ## Say when a standard is unsettled
 
-Two fields on the line say how far the standard has settled, in four states. Read both, and tell the user what you saw:
+Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
 
-* **`status: draft`** — the standard was not agreed when the export was taken, so its rules are a proposal.
-* **`status: deprecated`** — the standard is on its way out, and nothing new is built to it.
-* **`status: superseded`** — another standard replaced it. Find that one before you quote this.
-* **`reviewBy` earlier than today** — the standard passed the date it was meant to be read again.
+* **`status: draft`**: the standard was a proposal when the export was taken.
+* **`status: deprecated`**: the standard is on its way out, and new work is not built to it.
+* **`status: superseded`**: another standard replaced it. Find that one, and quote it.
+* **`reviewBy` earlier than today**: the standard passed the date it was meant to be read again.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the four.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
-## Say when the rule is about something else
+## Say when the nearest rule is about something else
 
-A subject the estate has not written a rule for often sits beside one it has. Answer that case in three steps:
-
-1. **Say the estate has not written your subject down**, in the words it would have used.
-2. **Name the nearest rule, and say what it governs.** Quote the obligations as the standard wrote them.
-3. **Leave the reading to whoever owns the standard.** Whether your work falls inside that rule is a ruling, and this
-   skill does not make one.
-
-Answering from the nearest rule without saying it is the nearest one hands the reader a requirement nobody set.
+Where the estate has not written your subject down, say so in the words it would use. Quote the nearest rule, and say
+what it governs. Whether your work falls inside it is a ruling for its owner. A nearest rule passed off as the rule is
+a requirement nobody set.
 
 ## Say when there is nothing
 
-Where no rule matches, say nothing in this export states a rule on the subject, and name the corpus and every entry in
-`sources` from `manifest.json`, so a reader knows which standards were searched. Silence is not permission, and it is
-not a rule you may supply: it says only that the estate has not written this down. Do not read an obligation out of a
-standard about something else. Offer the subject as one worth a standard, and leave that to whoever owns it.
+Where no rule matches, say that this export states no rule on the subject. Name the corpus and every entry in `sources`
+from `manifest.json`, so the reader knows what was searched. An empty search states only that the estate has not
+written this down: it permits nothing. Quote obligations only from a standard about your subject, and offer the subject
+as one worth a standard.

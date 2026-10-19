@@ -1,6 +1,6 @@
 # Rules the standards of example-payments state
 
-example-payments 0.33.4 states 65 rules for code in this repository, under the 21 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-payments 0.33.5 states 65 rules for code in this repository, under the 21 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 

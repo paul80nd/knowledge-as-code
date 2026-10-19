@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.33.4",
+  "contentVersion": "0.33.5",
   "mechanismVersion": 21,
-  "commit": "7906264e864026b7b53ae9eff0859b8d8dc0652b",
+  "commit": "5f331984138693b37af3caf485b3c9e06ab044e2",
   "dirty": false,
-  "generatedAt": "2026-10-19T19:29:19Z",
+  "generatedAt": "2026-10-19T21:26:05Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7906264e864026b7b53ae9eff0859b8d8dc0652b/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/5f331984138693b37af3caf485b3c9e06ab044e2/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "7906264e864026b7b53ae9eff0859b8d8dc0652b"
+    "ref": "5f331984138693b37af3caf485b3c9e06ab044e2"
   },
   "reposBase": "https://git.example.com/example-payments",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.36.3",
+      "contentVersion": "0.36.4",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7906264e864026b7b53ae9eff0859b8d8dc0652b/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/5f331984138693b37af3caf485b3c9e06ab044e2/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "7906264e864026b7b53ae9eff0859b8d8dc0652b"
+        "ref": "5f331984138693b37af3caf485b3c9e06ab044e2"
       },
       "reposBase": null,
       "tracker": {
