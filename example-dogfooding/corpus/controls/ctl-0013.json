@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices any of these today.\n\nThe checks would read Markdown, so an em dash in a workflow message or a YAML comment passes them, and\n`.github/dependabot.yml` has one. They read no commit message and no pull request body, which\n[std-PROSE.commit-messages-and-pull-requests] governs. Most of the other rules ask for a judgement: one idea per\nsentence, a literal verb, no figure of speech. A pattern finds the words and not the meaning.\n\nOne rule has a check elsewhere. `clause-quoted-faithfully`, in the `kac validate` run [ctl-0007] describes, reports a quotation that no longer matches its clause."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6abee0aa4c9fb1058e2f2858583439044f3c36a2/examples/dog-fooding/controls/0013-prose-unchecked.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1862ce014f80a03e3a8a3593eeb84001b45c4483/examples/dog-fooding/controls/0013-prose-unchecked.md"
   }
 }
