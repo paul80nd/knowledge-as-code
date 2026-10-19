@@ -58,6 +58,8 @@ None in this catalogue. A package is a file the registry serves. It calls nothin
 
 [svc-kac] builds every one of them. That is a build-time dependency, so it is not an edge here.
 
+The actions `publish-corpus.yml` runs are in the tool register: [tol-checkout] and [tol-setup-dotnet].
+
 ## Data
 
 Each package contains one corpus export and nothing else. Three of them describe an invented estate, and
@@ -86,3 +88,5 @@ keeps untracked.
 [svc-docs-site]: docs-site.md
 [svc-kac]: kac.md
 [svc-marketplace]: marketplace.md
+[tol-checkout]: ../tools/workflows/checkout.md
+[tol-setup-dotnet]: ../tools/workflows/setup-dotnet.md

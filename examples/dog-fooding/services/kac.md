@@ -51,6 +51,7 @@ Two walk-ups decide what it reads. `kac` walks up for `.corpus.yaml` to find the
 None in this catalogue. `kac` reads a corpus from the filesystem. It calls nothing at run time.
 
 The packages it is built from are in the tool register: [tol-spectre-console], [tol-yamldotnet] and [tol-markdig].
+The actions that build, test and publish it are there too: [tol-checkout], [tol-setup-dotnet] and [tol-nuget-login].
 
 ## Data
 
@@ -72,6 +73,9 @@ under `.dist/`, `.imports/` or `_reports/`. Taken from the `.gitignore` rule in 
 
 [rbk-nuget-404-on-publish]: ../runbooks/nuget-404-on-publish.md
 [std-CONFIG]: ../standards/configuration.md
+[tol-checkout]: ../tools/workflows/checkout.md
 [tol-markdig]: ../tools/build/markdig.md
+[tol-nuget-login]: ../tools/workflows/nuget-login.md
+[tol-setup-dotnet]: ../tools/workflows/setup-dotnet.md
 [tol-spectre-console]: ../tools/build/spectre-console.md
 [tol-yamldotnet]: ../tools/build/yamldotnet.md

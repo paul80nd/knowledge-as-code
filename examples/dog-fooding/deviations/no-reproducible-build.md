@@ -25,7 +25,7 @@ SDKs.
 
 ## What we are doing instead
 
-Each job that builds it installs the SDK with `actions/setup-dotnet` and `dotnet-version: 10.0.x`, which takes the
+Each job that builds it installs the SDK with [tol-setup-dotnet] and `dotnet-version: 10.0.x`, which takes the
 newest 10.0 SDK on the day. [tol-dotnet-sdk] approves the same range. No `global.json` fixes the version, so version
 control alone does not say which SDK built a commit.
 
@@ -64,7 +64,9 @@ Every build of `kac`: the publish workflow, CI, and a contributor's own machine.
 
 * [std-CONFIG] states the exact-version rule this departs from.
 * [tol-dotnet-sdk] records the range the workflows install.
+* [tol-setup-dotnet] is the action that installs it.
 
 [ctl-0007]: ../controls/0007-corpus-validation.md
 [std-CONFIG]: ../standards/configuration.md
 [tol-dotnet-sdk]: ../tools/build/dotnet-sdk.md
+[tol-setup-dotnet]: ../tools/workflows/setup-dotnet.md

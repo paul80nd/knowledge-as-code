@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.65.1" }
+  - { resource: example-dogfooding, version: "0.66.0" }
   - { resource: example-engineering, version: "0.36.0" }
 verified:
-  - { at: 2026-10-19T10:51:00Z, by: human:paul.law }
+  - { at: 2026-10-19T11:19:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -452,7 +452,7 @@ where the rule and the practice differ.
 | Clause    | Level    | Covered by                                             | Deviations              | Controls                                                                                           | Pair candidate        | Verdict             | Note                                                                                                                       |
 |-----------|----------|--------------------------------------------------------|-------------------------|----------------------------------------------------------------------------------------------------|-----------------------|---------------------|----------------------------------------------------------------------------------------------------------------------------|
 | `INVENT`  | MUST     | `std-CONFIG`, `eng:std-DEPS`                           |                         | `ctl-0004`, `ctl-0005`                                                                             | `eng:pol-DATA.INVENT` | Covered             | A pin states an exact version, and `tools/` lists what is chosen.                                                          |
-| `PINNED`  | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | `std-CONFIG` pins every action to a commit and every tool to an exact version. Its `implements` does not list this clause. |
+| `PINNED`  | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | `std-CI` pins every action to a commit, and `std-CONFIG` every other dependency to one version. Neither lists this clause. |
 | `SCREEN`  | MUST     | `eng:std-DEPS`                                         |                         |                                                                                                    |                       | Covered             | A new package is screened before the pull request adding it merges.                                                        |
 | `SUPPORT` | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | `std-CONFIG` pins every tool to an exact version, and nothing asks whether the vendor still supports it.                   |
 | `PATCH`   | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | Dependabot proposes an update weekly, and no standard states the cadence.                                                  |

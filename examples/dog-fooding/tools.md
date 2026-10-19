@@ -35,6 +35,17 @@ cites the ADR in `decided-in`.
 A `rejected` entry earns its place. Somebody proposes the same package two years later, and the entry hands them
 the evaluation we already did.
 
+Each GitHub Action a workflow in `.github/workflows/` runs is a tool, filed under `workflows/`. Two kinds of action have
+no record:
+
+* An action that another action pins, such as the `actions/upload-artifact` that `actions/upload-pages-artifact` runs.
+  This repository neither chooses nor pins it, and the record of the action that runs it names it.
+* An action in the starter workflow under `template/`. That workflow belongs to whichever corpus receives it.
+
+`packages` names an action by the `github` type the purl spec registers, as `pkg:github/actions/checkout`. GitHub's
+dependency-graph SBOM writes the same action as `pkg:githubactions/actions/checkout`, a type the purl spec does not
+register.
+
 ## Level of detail and cadence
 
 One record describes one tool: its status, what you use it for, and the version range you stand behind. How to install

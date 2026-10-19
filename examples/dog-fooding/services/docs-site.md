@@ -57,6 +57,12 @@ The packages that build it are in the tool register:
 * [tol-mkdocs-material]
 * [tol-mkdocs-redirects]
 
+The actions that build and publish it are there too:
+
+* [tol-checkout]
+* [tol-github-pages]
+* [tol-setup-python]
+
 ## Data
 
 None of its own. Every page is built from a file in the repository.
@@ -70,6 +76,9 @@ None of its own. Every page is built from a file in the repository.
 * **The publish concurrency group cancels a superseded run.** There is one live site, so a newer push cancels a run
   already under way.
 
+[tol-checkout]: ../tools/workflows/checkout.md
+[tol-github-pages]: ../tools/workflows/github-pages.md
 [tol-mkdocs]: ../tools/docs/mkdocs.md
 [tol-mkdocs-material]: ../tools/docs/mkdocs-material.md
 [tol-mkdocs-redirects]: ../tools/docs/mkdocs-redirects.md
+[tol-setup-python]: ../tools/workflows/setup-python.md
