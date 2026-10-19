@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the pipeline definition is the only thing that notices a missing collector today.\n\nThe check proves a report was written. It does not prove the report was published, or that each test project is excluded from its own figure."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1862ce014f80a03e3a8a3593eeb84001b45c4483/examples/engineering/controls/0008-dotnet-coverage.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/476c610ce9c99e69b4c971ce9311503743f95c9c/examples/engineering/controls/0008-dotnet-coverage.md"
   }
 }

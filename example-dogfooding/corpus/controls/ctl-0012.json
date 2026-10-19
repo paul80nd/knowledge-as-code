@@ -30,6 +30,6 @@
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices any of these today. Dependabot moved `Spectre.Console.Cli` from 0.55.0 to 0.57.2 in [#802](https://github.com/paul80nd/knowledge-as-code/pull/802) with no new assessment, and every check passed. The assessment was repeated by hand in [#966](https://github.com/paul80nd/knowledge-as-code/pull/966).\n\nThe checks would prove a heading order, an alternative text, words that survive without colour, and a tool record that moved with its pin. They would not prove that link text makes sense out of context, or that an assessment checked the right things. Nobody has read either surface with a screen reader. The theme's contrast, focus and keyboard rules go unchecked. So does every rule under [std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it] and [std-A11Y.a-change-that-makes-either-surface-worse-needs-a-deviation]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1862ce014f80a03e3a8a3593eeb84001b45c4483/examples/dog-fooding/controls/0012-accessibility-unchecked.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/476c610ce9c99e69b4c971ce9311503743f95c9c/examples/dog-fooding/controls/0012-accessibility-unchecked.md"
   }
 }
