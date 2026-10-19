@@ -32,6 +32,6 @@
     "Data": "Each plugin contains a frozen export of its corpus under `corpus/`. The export is read-only where it is installed, so an agent that finds a record wrong raises an issue."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/dog-fooding/services/marketplace.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f69a84d877883bf76a7b416685fc6a6bb44ffcff/examples/dog-fooding/services/marketplace.md"
   }
 }

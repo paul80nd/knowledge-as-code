@@ -22,6 +22,6 @@
     "Prerequisites": "* `technical-writing` and `writing-the-docs`, loaded in that order.\n* The source for every fact the page states, so each one can be checked.\n* The .NET SDK, where you touched the package page.\n* Reading a page as a newcomer would, which step 1 needs.\n* Judging prose against a style guide, which step 5 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/dog-fooding/processes/write-public-docs.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f69a84d877883bf76a7b416685fc6a6bb44ffcff/examples/dog-fooding/processes/write-public-docs.md"
   }
 }

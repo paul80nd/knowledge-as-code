@@ -32,6 +32,6 @@
     "Constraints": "The PSP accepts a refund only against a captured payment, and [ofr-card-payment] captures the payment when the order ships. The hour therefore presumes a payment that has already been captured."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/payments/nfrs/0003-refund-settlement.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f69a84d877883bf76a7b416685fc6a6bb44ffcff/examples/payments/nfrs/0003-refund-settlement.md"
   }
 }

@@ -34,6 +34,6 @@
     "Conformance checklist": "- [ ] The repository contains the contract, and a reviewer can read the diff to it in the pull request.\n- [ ] The build fails when a route, a field or a status code drifts from the contract.\n- [ ] A consumer can name the version it calls, and the previous version still responds.\n- [ ] The contract states the authentication of every endpoint.\n- [ ] Each endpoint the contract does not declare public rejects an unauthenticated call, confirmed by a test.\n- [ ] No endpoint the contract declares public returns personal data or a secret, or changes state.\n- [ ] A request with an unknown or malformed field is refused, not accepted and ignored.\n- [ ] Notice of each version's removal went to its consumers before the removal, on the stated timescale."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/engineering/standards/common/api-contracts.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f69a84d877883bf76a7b416685fc6a6bb44ffcff/examples/engineering/standards/common/api-contracts.md"
   }
 }

@@ -17,6 +17,6 @@
     "Scope": "The vocabulary every team here shares: borrowers, what they borrow, and where they borrow it from. A word one system uses differently belongs in that system's glossary, and the entry here points at it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/library/glossary/example-libraries.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f69a84d877883bf76a7b416685fc6a6bb44ffcff/examples/library/glossary/example-libraries.md"
   }
 }
