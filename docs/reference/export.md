@@ -385,6 +385,17 @@ A corpus that publishes nowhere, names a target nothing builds links for, states
 that target cannot join to, or is one git cannot answer for. Each exports without links, and the manifest states the
 target it was given with nulls beside it. A part line still has `path` and `anchor`, and its `links` is `null`.
 
+## Views generated from the export
+
+A **view** is a Markdown file [`bundle`](../use/cli/bundle.md) writes into the plugin from the export, shaped for one
+moment of the work. It is not part of `.dist/export/`, and another corpus that imports the export never receives one.
+
+* **`build-index`** lists every standard rule by title, id and the status of its standard.
+* **`review`** lists each standard rule's obligations, and the controls whose `verifies` names the rule or its standard.
+
+A view reads the files of each type it needs at the shape version its plugin manifest declares, so a change to those
+files moves that type's `shapeVersion` like any other. A fresh bundle of one export writes every view byte for byte.
+
 ## Three versions, and none implies another
 
 | Version          | Covers                                                                    | Moved by          |

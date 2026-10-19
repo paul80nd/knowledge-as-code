@@ -1,0 +1,6 @@
+# The fixture corpus's descriptor. `corpus` is the name each view gives in its heading, and the name the plugin
+# is installed by.
+descriptor-version: 1
+corpus: example-views
+content-version: "1.0.0"
+publishing-target: none

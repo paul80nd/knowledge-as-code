@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Added
+
+- **`kac bundle` writes the views a plugin manifest declares.** A component with a `view` key is generated into the
+  plugin from the export, at its `path`. `build-index` lists every standard rule by title, id and status. `review`
+  lists each rule's obligations, and the controls checking it with their mechanism. A type under a component's new
+  `optional` key is read where the export has it, and its absence trims nothing. `kac bundle` refuses a view it does
+  not write, and a view path the plugin tree or `corpusRoot` already uses.
+
 ## 0.35.0 - 2026-10-16
 
 ### Changed

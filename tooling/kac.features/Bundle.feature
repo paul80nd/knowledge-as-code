@@ -228,6 +228,35 @@ Scenario: The breadcrumb leaves with a trimmed hook
   Then the bundle trims "hooks" because "the export carries no glossary"
   And ".dist/plugin/hooks/breadcrumb.txt" does not exist
 
+Scenario: A bundle writes each view the plugin manifest declares
+  Given the bundle-views fixture corpus
+  And it has been exported
+  When I bundle
+  Then it succeeds
+  And the bundle includes "views/build-index.md"
+  And the bundle includes "views/review.md"
+  And ".dist/plugin/views/build-index.md" exists
+  And ".dist/plugin/views/review.md" exists
+
+Scenario: A view whose types the export lacks is trimmed, and written nowhere
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree declares the view "views/review.md" as "review" reading "standards@2"
+  When I bundle
+  Then it succeeds
+  And the bundle trims "views/review.md" because "the export carries no standards"
+  And ".dist/plugin/views/review.md" does not exist
+
+Scenario: A view reads an optional type only where the export carries it
+  Given the bundle-views fixture corpus
+  And "controls" is deleted
+  And "controls.md" is deleted
+  And it has been exported
+  When I bundle
+  Then it succeeds
+  And the bundle includes "views/review.md"
+  And ".dist/plugin/views/review.md" contains "This corpus exports no controls"
+
 Scenario: The hook keeps its permission bit
   Given the bundle fixture corpus
   And it has been exported
@@ -324,6 +353,30 @@ Scenario: A bundle whose component reads a shape that is not a whole number is r
   Given the bundle fixture corpus
   And it has been exported
   And the component "skills/glossary-lookup" requires "glossary@one"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A bundle whose view reads a shape the export does not have is refused
+  Given the bundle-views fixture corpus
+  And it has been exported
+  And the component "views/review.md" requires "standards@9"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A bundle declaring a view this tool does not write is refused
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree declares the view "views/summary.md" as "summary" reading "glossary"
+  When I bundle
+  Then it refuses
+  And nothing is written
+
+Scenario: A bundle whose plugin tree already holds a view's file is refused
+  Given the bundle-views fixture corpus
+  And it has been exported
+  And the plugin tree has a file "views/review.md"
   When I bundle
   Then it refuses
   And nothing is written

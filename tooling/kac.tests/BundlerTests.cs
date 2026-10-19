@@ -517,6 +517,172 @@ public class BundlerTests
         Assert.False(record.TryGetProperty("commit", out _));
     }
 
+    [Fact]
+    public void A_build_index_lists_every_rule_by_title_id_and_status()
+    {
+        var index = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))],
+            export: Standards(controls: false)), "views/build-index.md");
+
+        Assert.Contains("- An artefact records its commit (`std-DEPLOY.commit`, draft)", index);
+        Assert.Contains("- A call forwards the trace (`std-OBS.trace`, active)", index);
+        Assert.DoesNotContain("**MUST**", index);
+    }
+
+    [Fact]
+    public void A_build_index_names_the_lookup_skill_that_survived()
+        => Assert.Contains("Ask the standards-lookup skill", Text(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source(Component("skills/standards-lookup", "standards@2"),
+                        ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))
+            ],
+            export: Standards(controls: false)), "views/build-index.md"));
+
+    [Fact]
+    public void A_build_index_with_no_lookup_skill_names_the_rules_file()
+        => Assert.Contains("`corpus/standards/rules.jsonl`", Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))],
+            export: Standards(controls: false)), "views/build-index.md"));
+
+    [Fact]
+    public void A_review_view_lists_each_rule_s_obligations_and_its_controls()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true)), "views/review.md");
+
+        Assert.Contains("## std-DEPLOY: Deployment", review);
+        Assert.Contains("Cite as `std-DEPLOY.commit`. Status: draft.", review);
+        Assert.Contains("- An artefact **MUST** record the commit it was built from.", review);
+        Assert.Contains("- A service **SHOULD** report the commit on its health endpoint.", review);
+        Assert.Contains("Controls: `ctl-0002` Health reports commit (`not-enforced`, active).", review);
+    }
+
+    [Fact]
+    public void A_review_view_says_where_no_control_checks_a_rule()
+    {
+        var review = Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView()))],
+            export: Standards(controls: true)), "views/review.md");
+
+        var trace = review[review.IndexOf("`std-OBS.trace`", StringComparison.Ordinal)..];
+        Assert.Contains("Controls: none.", trace);
+    }
+
+    [Fact]
+    public void A_review_view_renders_where_the_export_carries_no_controls()
+    {
+        var plan = Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: Standards(controls: false));
+        var review = Text(plan, "views/review.md");
+
+        Assert.Equal(["views/review.md"], plan.Included.Select(c => c.Path));
+        Assert.Contains("exports no controls", review);
+        Assert.DoesNotContain("Controls:", review);
+    }
+
+    [Fact]
+    public void A_control_a_consumed_corpus_wrote_checks_that_corpus_s_rule()
+    {
+        const string inherited =
+            """{"id":"eng:std-GATES.skip","title":"A check is skipped only under a deviation","obligations":[{"level":"MUST NOT","text":"A team **MUST NOT** skip a check."}],"record":"eng:std-GATES","part":"skip","status":"draft","shortcode":"eng"}""";
+
+        (string, string)[] export =
+        [
+            .. Standards(controls: true).Where(f => f.Item1 != "standards/rules.jsonl"),
+            ("standards/rules.jsonl", Rules() + "\n" + inherited),
+            ("controls/eng/ctl-0004.json",
+                """{"fields":{"id":"ctl-0004","title":"A skip cites a deviation","status":"active","verifies":["std-GATES"],"mechanism":"ci"}}""")
+        ];
+
+        var review = Text(Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: export),
+            "views/review.md");
+
+        Assert.Contains("Controls: `eng:ctl-0004` A skip cites a deviation (`ci`, active).", review);
+    }
+
+    [Fact]
+    public void A_view_whose_types_the_export_lacks_is_trimmed_and_written_nowhere()
+    {
+        var plan = Plan(plugin: [(Bundler.ManifestFile, Source(ReviewView()))], export: [Manifest("glossary")]);
+
+        Assert.Equal("the export carries no standards", Assert.Single(plan.Trimmed).Reason);
+        Assert.DoesNotContain(plan.Files, f => f.Path.EndsWith("views/review.md", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void A_type_a_view_reads_where_present_at_another_shape_stops_the_run()
+    {
+        var problem = Assert.Single(Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile,
+                    Source($$"""{"path":"views/review.md","view":"review","requires":["standards@2"],"optional":["controls@2"]}"""))
+            ],
+            export: Standards(controls: true)).Problems);
+
+        Assert.Contains("'controls' shape version 2", problem);
+    }
+
+    [Fact]
+    public void A_view_this_tool_does_not_write_is_refused()
+        => Assert.Contains("'summary'", Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/summary.md", "summary", "standards@2")))],
+            export: Standards(controls: false)).Problems));
+
+    [Fact]
+    public void A_view_path_the_plugin_tree_already_uses_is_refused()
+        => Assert.Contains("views/review.md", Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ReviewView())), ("views/review.md", "mine")],
+            export: Standards(controls: true)).Problems));
+
+    [Fact]
+    public void A_view_path_inside_the_corpus_root_is_refused()
+        => Assert.Contains("corpus/review.md", Assert.Single(Plan(
+            plugin: [(Bundler.ManifestFile, Source(ViewComponent("corpus/review.md", View.Review, "standards@2")))],
+            export: Standards(controls: false)).Problems));
+
+    private static string ViewComponent(string path, string view, params string[] requires) =>
+        $$"""{"path":"{{path}}","view":"{{view}}","requires":[{{string.Join(",", requires.Select(r => $"\"{r}\""))}}]}""";
+
+    private static string ReviewView() =>
+        """{"path":"views/review.md","view":"review","requires":["standards@2"],"optional":["controls@1"]}""";
+
+    private static string Rules() =>
+        """
+        {"id":"std-DEPLOY.commit","title":"An artefact records its commit","obligations":[{"level":"MUST","text":"An artefact **MUST** record the commit it was built from."},{"level":"SHOULD","text":"A service **SHOULD** report the commit on its health endpoint."}],"record":"std-DEPLOY","part":"commit","status":"draft"}
+        {"id":"std-OBS.trace","title":"A call forwards the trace","obligations":[{"level":"MUST","text":"A service **MUST** forward the inbound traceparent."}],"record":"std-OBS","part":"trace","status":"active"}
+        """;
+
+    /// <summary>An export of two standards at shape 2, and of one control at shape 1 where <c>controls</c> is set.</summary>
+    private static (string, string)[] Standards(bool controls)
+    {
+        var types = """
+                    {"type":"standards","shapeVersion":2,"records":2,"parts":2,"dir":"standards",
+                     "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"}
+                    """;
+        if (controls) types += """,{"type":"controls","shapeVersion":1,"records":1,"parts":0,"dir":"controls"}""";
+
+        (string, string)[] files =
+        [
+            (Exporter.ManifestFile,
+                $$"""{"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", "types": [{{types}}]}"""),
+            ("standards/rules.jsonl", Rules()),
+            ("standards/std-DEPLOY.json", """{"fields":{"id":"std-DEPLOY","title":"Deployment"}}"""),
+            ("standards/std-OBS.json", """{"fields":{"id":"std-OBS","title":"Observability"}}""")
+        ];
+
+        return controls
+            ?
+            [
+                .. files,
+                ("controls/ctl-0002.json",
+                    """{"fields":{"id":"ctl-0002","title":"Health reports commit","status":"active","verifies":["std-DEPLOY"],"mechanism":"not-enforced"}}""")
+            ]
+            : files;
+    }
+
     private static BundlePlan Plan(
         (string Path, string Content)[] plugin,
         (string Path, string Content)[] export) =>

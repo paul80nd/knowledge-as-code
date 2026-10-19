@@ -103,6 +103,20 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
     public void GivenThePluginTreeHasAComponentReading(string path, string type)
         => AddComponent(path, standalone: false, type);
 
+    /// <summary>Writes no file, because <c>bundle</c> generates a view and the plugin tree contains none.</summary>
+    [Given(@"the plugin tree declares the view ""(.*)"" as ""(.*)"" reading ""(.*)""")]
+    public void GivenThePluginTreeDeclaresTheView(string path, string view, string type)
+    {
+        var manifest = ws.ReadJson(PluginManifest);
+        Components(manifest).Add(new JsonObject
+        {
+            ["path"] = path,
+            ["view"] = view,
+            ["requires"] = new JsonArray(type)
+        });
+        ws.WriteJson(PluginManifest, manifest);
+    }
+
     [Given(@"the plugin tree has a standalone component ""(.*)""")]
     public void GivenThePluginTreeHasAStandaloneComponent(string path) => AddComponent(path, standalone: true);
 
