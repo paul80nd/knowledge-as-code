@@ -27,8 +27,9 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 * **`departs-from`**: the policy or standard clauses this departs from, one entry each. This corpus states no
   policies, so a policy clause is inherited and written `eng:pol-{{MNEM}}.{{CLAUSE}}`. A standard's rule is
   `std-{{MNEM}}.{{rule-heading-slug}}`, and an inherited one takes the same `eng:` prefix. A bare id is refused,
-  because it claims a departure from every clause the rule carries. Write `none` for a shortcut that breaks no rule,
-  which is technical debt and is recorded the same way.
+  because it claims a departure from every clause the rule carries. Name only a `MUST` or a `MUST NOT` the practice
+  breaks: departing from a `SHOULD` takes a reason in the change, and no deviation. Write `none` for a shortcut that
+  breaks no rule, which is technical debt and is recorded the same way.
 * **`risk`**: how bad the risk is once what compensates is working, and never how bad the rule's authors thought it
   was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.

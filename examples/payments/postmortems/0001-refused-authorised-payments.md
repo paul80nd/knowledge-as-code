@@ -109,15 +109,16 @@ than during the incident, so the response ran on a picture that was wrong.
 
 The whole lost window fell inside one settlement file. The PSP sends one file a day, and the 11 minutes ran from
 21:03 to 21:14 on 3 June, so every missing entry was in the file that arrived at 02:00 the next morning. A failover at
-23:55 would have split the window across two days' files.
+00:05 would have split the window across two days' files, and the repair would have waited a further day for the
+second.
 
-[nfr-0002] states five minutes because a gap longer than one file needs the PSP's support desk, and no procedure
-covers that. Eleven minutes was repairable here, and nothing in the design made it so.
+Nothing in the design made eleven minutes repairable in one pass. [nfr-0002] now sets a recovery point of five
+minutes.
 
 ## Actions
 
-| Action                                                    | Work item | Owner         |
-|-----------------------------------------------------------|-----------|---------------|
+| Action                                                 | Work item | Owner         |
+|--------------------------------------------------------|-----------|---------------|
 | Alert when replica lag passes the recovery point       | [gh#3312] | Platform team |
 | Hold the checkout open while a ledger write is retried | [gh#3313] | Payments team |
 | Move platform maintenance out of the evening peak      | [gh#3314] | Platform team |
@@ -127,8 +128,6 @@ covers that. Eleven minutes was repairable here, and nothing in the design made 
 * [nfr-0002] states the recovery point this incident caused to be written.
 * [std-RECON] is the daily run that found the lost entries.
 * [std-LEDGER] is why the repair appended entries.
-
----
 
 [ofr-card-payment]: ../offerings/card-payment.md
 [ofr-refund]: ../offerings/refund.md

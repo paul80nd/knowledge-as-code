@@ -10,8 +10,8 @@ lifecycle: immutable
 summary: What happened during an incident (timeline, impact, root cause, contributing factors, actions).
 goes-here: An account of an incident and what caused it
 detail: >
-  Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
-  outcome.
+  Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a
+  postmortem records the outcome.
 
 lineage:
   prior-art: >
@@ -22,10 +22,10 @@ lineage:
     *what went well*, *what went wrong* and *where we got lucky*, and blamelessness defined as naming
     causes without naming people
   divergence: >
-    Google reviews before publication and treats the document as living. This type freezes a postmortem once
-    it is published, separates root cause from contributing factors, asks for each of the three lessons
-    under its own heading rather than grouping them, and states the three moments of an incident as
-    fields, where Google leaves them in the timeline and the duration in prose
+    This type separates root cause from contributing factors, asks for each of the three lessons under its own
+    heading rather than grouping them, and states the three moments of an incident as fields, where Google leaves
+    them in the timeline and the duration in prose. Google types and prioritises each action item, and here an
+    action is a link to the tracker, which holds its type and priority
 
 id:
   prefix: pmt
@@ -47,7 +47,7 @@ fields:
     type: enum
     values: [draft, published]
     in-force: published
-    description: '`published` freezes the document. A new understanding is a new postmortem citing this one.'
+    description: '`published` is the account the estate stands behind, corrected in place wherever it is wrong.'
 
   occurred-at:
     required: true
@@ -85,7 +85,7 @@ fields:
     required: true
     type: enum
     values: $enums.severity
-    description: The severity the incident was handled at.
+    description: The highest severity the incident reached, on the corpus's severity scale.
 
   affected:
     required: true
@@ -144,7 +144,7 @@ index:
 rules:
   - id: immutable-after-published
     description: >
-      Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place.
+      A published account changes only to correct what it misstates or to fix its prose.
   - id: detected-not-before-occurred
     description: '`detected-at` is at or after `occurred-at`.'
     severity: error

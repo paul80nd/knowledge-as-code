@@ -43,8 +43,7 @@ what raises a breach.
 
 ## Current actual
 
-p95 of 610ms over August 2026, against an average of 240ms. The PSP accounts for the gap. A slow reply from the PSP
-is a slow response here, and its response times account for most of the spread.
+p95 of 610ms over August 2026, against an average of 240ms. The PSP's own response times account for the gap.
 
 ## What a breach costs
 
@@ -62,4 +61,9 @@ The PSP's contract promises a p95 of 500ms on its authorisation endpoint. The 80
 [svc-payment-api]. The `integrations` type is not adopted here, so `constrained-by` has no id and this section records
 the cap in words.
 
+## Related
+
+* [pmt-0002] records the incident that prompted this target.
+
+[pmt-0002]: ../postmortems/0002-two-pending-amounts.md
 [svc-payment-api]: ../services/payment-api.md

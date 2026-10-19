@@ -14,6 +14,8 @@ affected:
   - svc-payment-ledger
 prompted:
   - fix-0001
+  - nfr-0001
+  - std-IDEM
 owner: human:alex.doe
 tags: [ authorisation, idempotency, psp ]
 ---
@@ -27,20 +29,20 @@ tags: [ authorisation, idempotency, psp ]
 The payment service provider (PSP) slowed down for 4 hours 20 minutes, and authorisation calls began hitting their 5
 second deadline. The checkout retried each timed-out call with a fresh idempotency key, so the PSP took the retry as a
 second payment. 31 orders ended with two authorisations. Nothing detected the duplicates, because both calls
-succeeded. A customer counted the holds on their statement the next morning, and the duplicates were released that
+succeeded. Two customers counted the holds on their statements the next morning, and the duplicates were released that
 afternoon.
 
 ## Timeline
 
 | Time (UTC)       | Event                                                                                                             |
 |------------------|-------------------------------------------------------------------------------------------------------------------|
-| 2026-08-12 18:05 | PSP authorisation latency rose from a 240ms average to over 4 seconds.                                            |
-| 2026-08-12 18:12 | The p95 alert on [nfr-0001] fired and paged the on-call engineer.                                                 |
+| 2026-08-12 18:05 | Authorisation latency rose from a 240ms average to over 4 seconds, as the PSP slowed.                             |
+| 2026-08-12 18:12 | A p95 latency alert fired and paged the on-call engineer.                                                         |
 | 2026-08-12 18:20 | Calls began timing out at the 5 second deadline [std-PSPOUT] sets. The checkout retried each one.                 |
-| 2026-08-12 18:20 | Each retry used a new `Idempotency-Key`, so the PSP authorised it as a new payment. Both calls returned `201`. |
+| 2026-08-12 18:20 | Each retry used a new `Idempotency-Key`, so the PSP authorised it as a new payment. Both calls returned `201`.    |
 | 2026-08-12 22:25 | PSP latency returned to its usual range. The on-call engineer closed the incident.                                |
 | 2026-08-13 09:30 | Two customers reported two pending amounts for one order.                                                         |
-| 2026-08-13 11:40 | Matching ledger entries on the order reference found 31 orders with a second authorisation.                  |
+| 2026-08-13 11:40 | Matching ledger entries on the order reference found 31 orders with a second authorisation.                       |
 | 2026-08-13 14:10 | The later authorisation on each of the 31 orders was voided, and each void was written to the ledger.             |
 | 2026-08-14 10:20 | [fix-0001] was written and verified against the PSP sandbox.                                                      |
 
@@ -51,8 +53,8 @@ totalled £1,847. Two customers rang to ask whether they had been charged twice.
 
 No customer was charged twice. [ofr-card-payment] kept taking payments throughout, at the slower speed.
 
-Measured against [nfr-0001]: breached. The p95 held at about 4.2 seconds against a target of 800ms, for 4 hours 20
-minutes.
+No latency target covered the authorisation call on the day. The p95 held at about 4.2 seconds for 4 hours 20 minutes,
+and [nfr-0001] was written afterwards to state one.
 
 ## Resolution
 
@@ -65,15 +67,15 @@ later authorisation on each was voided at 14:10, every void written as its own e
 
 ## Root cause
 
-The checkout generated a fresh idempotency key for each attempt at one payment. [std-IDEM] requires a key derived from
-the order and the operation, so that a retry arrives as the same payment. A fresh key makes every retry a new one.
+The checkout generated a fresh idempotency key for each retry of one payment, so the PSP took every retry as a new
+payment. No standard required a retry to reuse its key. [std-IDEM] was written after this incident to require it.
 
 ## Contributing factors
 
 * [svc-payment-api] cannot tell a retry from a new order. The header was present, well formed and unique, so every check
   the service makes passed.
 * Nothing alerted on two authorisations against one order reference, and both calls returned `201`. The duplicates were
-  invisible until a customer counted the holds on their statement.
+  invisible until customers counted the holds on their statements.
 * The page said latency, so the response was to watch the PSP recover. Nothing prompted anyone to ask what the retries
   were doing while it was slow.
 
@@ -91,7 +93,7 @@ The page said latency and the response stopped there. For four hours nobody aske
 calls that timed out, and the ledger held the answer the whole time.
 
 The incident was closed at 22:25 on the PSP recovering. The 31 duplicate authorisations were already written, and the
-first anybody knew of them was a customer counting holds on a statement fifteen hours later.
+first anybody knew of them was two customers counting holds on their statements fifteen hours later.
 
 ## Where we got lucky
 
@@ -113,10 +115,8 @@ is never charged. It absorbed this incident as a by-product.
 ## Related
 
 * [fix-0001] is the fix this incident produced.
-* [std-IDEM] is the rule the checkout broke.
-* [nfr-0001] is the target the slowdown breached.
-
----
+* [nfr-0001] states the latency target this incident caused to be written.
+* [std-IDEM] is the standard this incident caused to be written.
 
 [ofr-card-payment]: ../offerings/card-payment.md
 [fix-0001]: ../fixes/duplicate-authorisation.md

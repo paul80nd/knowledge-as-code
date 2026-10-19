@@ -50,9 +50,9 @@ enforces, on its own contributing page.
 **The table covers what the corpus keeps.** An observation nobody has checked goes to the tracker, as
 [In through the tracker, out through the export](principles.md#in-through-the-tracker-out-through-the-export) says.
 
-**A decision is immutable after merge.** Change it only by writing a new record that supersedes it. Edit everything
-else in place: a status transition, a typo, a broken link, or a correction that leaves what was agreed unchanged. The
-commit message says what you changed.
+**A decision is immutable after merge.** Change it only by writing a new record that supersedes it. Edit it in place
+only to correct what it misstates about the moment it records, to fix its prose, a typo or a broken link, or to move its
+status. Never update it to follow what changed afterwards. The commit message says what you changed.
 
 ## What an agent may write
 

@@ -86,8 +86,9 @@ A deviation changes at its review and when it closes. New deviations arrive when
 ## Adding a deviation
 
 1. Copy [`_template.md`](deviations/_template.md) to `<slug>.md`. Deviations use slug ids: `dev-legacy-report-secrets`.
-2. Name each clause you are departing from in `departs-from`, one entry per clause. Write `none` for a shortcut that
-   breaks no rule.
+2. Name each clause you are departing from in `departs-from`, one entry per clause. Name only a `MUST` or a `MUST NOT`
+   the practice breaks, because a `SHOULD` takes a reason in the change and no deviation. Write `none` for a shortcut
+   that breaks no rule.
 3. Put the person who accepted the risk in `owner`. One individual with the authority to accept it, never a team and
    never a post. Where somebody else does the work that closes it, name them in `assigned-to`.
 4. Set `accepted-on` to the day they agreed.

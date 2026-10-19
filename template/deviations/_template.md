@@ -26,8 +26,9 @@ and how it is reviewed. What is below is only what a deviation adds to that.
 * **`status`**: a deviation past its review date is still `active`, because that is what is true.
 * **`departs-from`**: the policy or standard clauses this departs from, one entry each. A policy clause is
   `pol-{{MNEM}}.{{CLAUSE}}` and a standard's rule is `std-{{MNEM}}.{{rule-heading-slug}}`. A bare id is refused,
-  because it claims a departure from every clause the rule carries. Write `none` for a shortcut that breaks no rule,
-  which is technical debt and is recorded the same way.
+  because it claims a departure from every clause the rule carries. Name only a `MUST` or a `MUST NOT` the practice
+  breaks: departing from a `SHOULD` takes a reason in the change, and no deviation. Write `none` for a shortcut that
+  breaks no rule, which is technical debt and is recorded the same way.
 * **`risk`**: how bad the risk is once what compensates is working, and never how bad the rule's authors thought it
   was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
@@ -86,8 +87,10 @@ Which services, environments and data this reaches. A deviation with no boundary
 
 ## Related
 
-* [pol-{{MNEM}}].{{CLAUSE}} is the clause this departs from.
+* [std-{{MNEM}}] is the standard here that would close it.
 * [svc-{{a}}] is the service it applies to.
 
-[pol-{{MNEM}}]: ../policies/{{mnem}}-{{a}}.md#clauses
+_(`departs-from` already names the clause, so no bullet here repeats it.)_
+
+[std-{{MNEM}}]: ../standards/{{a}}.md
 [svc-{{a}}]: ../services/{{a}}.md

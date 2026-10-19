@@ -62,7 +62,8 @@ passes. The section stands in for why the link is there, so the check is a warni
 ### postmortems
 
 A postmortem records what happened during one incident, so that the estate, and anybody facing the same failure, can
-learn from it. Like an ADR, it is not rewritten once published.
+learn from it. Once published, it is corrected in place wherever a fact in it is wrong, because a fair account
+is worth more than an unchanged one.
 
 The sections follow the order a reader asks their questions in:
 

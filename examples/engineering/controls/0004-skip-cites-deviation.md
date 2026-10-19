@@ -31,7 +31,7 @@ adds a skip marker and cites no deviation id:
 ```sh
 git diff -U0 origin/main...HEAD \
   | grep -E '^\+.*(Skip *=|\[Ignore|mark\.skip|pytest\.skip\(|t\.Skip\(|(it|test)\.skip\()' \
-  | grep -vE 'DEV-[0-9]+'
+  | grep -vE 'dev-[a-z0-9-]+'
 ```
 
 The job fails where that prints a line. The same pattern can run over the staged diff as a pre-commit check, or over

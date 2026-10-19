@@ -27,9 +27,9 @@ each failure.
 
 ## Why this number
 
-Five minutes is what the reconciliation can repair. The PSP's settlement file lists every authorisation it took, so a
-gap shorter than one file can be rebuilt from it. A longer gap needs the PSP's support desk, and no procedure covers
-that.
+Five minutes is a chosen figure. The PSP's settlement file lists every authorisation it took, so the reconciliation can
+rebuild any gap shorter than a day. Five minutes is how much repair finance accepts after a failure, and no failover
+has tested it.
 
 The hour is a figure the quarterly restore has already met. `Current actual` records the last one at 38 minutes, so
 the target commits to what the procedure does today and not to an improvement nobody has planned.
@@ -40,10 +40,14 @@ A quarterly restore into an isolated environment measures both figures. The reco
 restore to the ledger serving queries. The recovery point compares the last entry in the restored data with the last
 entry the source held.
 
+A failover to the geo-replica loses whatever the replica had not yet received, and nothing measures that lag. [pmt-0001]
+lost 11 minutes that way. Until its action to alert on replica lag lands, a failover can breach this target and nothing
+reports it.
+
 ## Current actual
 
-The last restore took 38 minutes and recovered to within 2 minutes. The database configuration shows point-in-time
-backup on, with a 35-day retention.
+The restore on 2026-08-14 took 38 minutes and recovered to within 2 minutes. The database configuration shows
+point-in-time backup on, with a 35-day retention.
 
 ## What a breach costs
 

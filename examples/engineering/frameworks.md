@@ -139,7 +139,7 @@ Optimization, Operational Excellence and Performance Efficiency. Vendor-publishe
 run on. AWS and Google publish near-identical pillars, so a move would be a relabelling rather than a re-mapping.
 
 Clauses cite the **pillar**, not the individual checklist recommendation: recommendations are renumbered as the
-framework is revised, and a citation that rots quietly is worse than one that is a little coarse.
+framework is revised, and a citation that no longer resolves is worse than one that is a little coarse.
 
 This is the only framework covering [pol-COST], and worth being plain about why. No external body will ever oblige us to
 manage our own cloud spend. Recording the Cost Optimization pillar as a real influence is the difference between a

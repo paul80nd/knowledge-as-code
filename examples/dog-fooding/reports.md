@@ -15,8 +15,8 @@ output with those cells answered.
 
 ## Why we use them
 
-An edge nobody reads back rots. A clause loses its last covering standard, a framework reference loses its last citing
-clause, and the corpus goes on validating. A report is where somebody looks.
+Nothing tells you when an edge is lost. A clause loses its last covering standard, a framework reference loses its last
+citing clause, and the corpus goes on validating. A report is where somebody looks.
 
 Keeping it as a record rather than as a file generated on demand puts an owner on the answer and a date on it. The
 argument written on top of the numbers is written once, and the next reader starts from it.

@@ -5,7 +5,6 @@ tier: normative
 status: active
 departs-from:
   - eng:pol-ACCS.PERSIST
-  - eng:pol-ACCS.ZERO
 risk: medium
 accepted-on: "2026-09-07"
 review-by: "2027-09-07"

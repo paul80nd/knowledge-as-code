@@ -72,8 +72,8 @@ number or is aiming at it. Where it is aiming, say under `What we do about a bre
 
 ## What a breach costs
 
-What a miss costs: degraded service, contractual exposure, a customer conversation, nothing much. An NFR with no
-consequence is documentation theatre, and "nothing much" is a legitimate and clarifying answer.
+What a miss costs: degraded service, contractual exposure, a customer conversation, nothing much. "Nothing much" is an
+answer, and a blank is not.
 
 ## What we do about a breach
 

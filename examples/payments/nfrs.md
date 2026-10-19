@@ -25,7 +25,7 @@ An NFR states a **target**, not a rule and not a mechanism.
 
 * "Availability is 99.5% monthly, measured by the uptime probe" is an NFR.
 * "Services **MUST** expose a `/health` endpoint" is a [standard](standards.md).
-* "The uptime probe alerts at 99.5%" is a control.
+* "CI fails a service that exposes no `/health` endpoint" is a control.
 
 **An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
 build the instrument or state the target you *can* observe. "We'd notice" is not a measurement method.
@@ -93,8 +93,8 @@ when a service or an offering takes on a target.
 5. Say under `Why this number` what fixes the figure, and what it leaves out.
 6. Name the instrument that measures it, and say where a reader can find its reading.
 7. Record the current actual, and the day it was read. The gap between it and the target is the useful part.
-8. Record what a breach costs: degraded service, contractual exposure, or nothing much. An NFR with no consequence is
-   documentation theatre.
+8. Record what a breach costs: degraded service, contractual exposure, or nothing much. "Nothing much" is an answer,
+   and a blank is not.
 9. Record the response to a breach: the alert that fires, who it pages, and the repair.
 10. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
 

@@ -10,6 +10,7 @@
 | std-DEPLOY | [One artefact is built once and promoted to production](common/deployment.md)                | draft  |              | 2027-08-31 |
 | std-DEPS   | [A dependency is pinned, screened and named in the inventory](common/dependencies.md)        | draft  |              | 2027-08-31 |
 | std-GATES  | [A failing check blocks the merge](common/build-gates.md)                                    | draft  |              | 2027-08-26 |
+| std-INCSEV | [Every incident is handled at a stated severity](common/incident-severity.md)                | draft  |              | 2027-10-19 |
 | std-OBS    | [A service ships its telemetry to one place, keyed by one id](common/observability.md)       | draft  |              | 2027-08-31 |
 | std-PR     | [A pull request carries its reasoning and one accountable approval](common/pull-requests.md) | draft  |              | 2027-08-26 |
 | std-SECRET | [A secret is read from the store at run time](common/secret-handling.md)                     | draft  |              | 2027-08-26 |
