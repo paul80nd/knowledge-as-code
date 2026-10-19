@@ -3,7 +3,8 @@ name: standards-review
 description: Review a change against the standards that travel with this plugin, citing the rule behind every finding.
   Use when someone asks for a review of their work, in words like "review my change", "review this branch", "check this
   against our standards", "review since main", and before you open a pull request. Pass the fixed point to review from,
-  such as a branch, a tag or a commit.
+  such as a branch, a tag or a commit. The report it returns is the review, shown to the person as it stands, with
+  every rule id in it.
 argument-hint: "[fixed point]"
 context: fork
 agent: general-purpose
@@ -115,8 +116,8 @@ An inherited rule binds the change as fully as one written here.
 ## Say when a standard is unsettled
 
 A standard is in force at status `active`. The view gives each standard's status under its heading, and a rule's line
-gives the same `status` beside its `reviewBy`. Report a finding under an unsettled standard all the same, and say
-which of these you saw:
+gives the same `status` beside its `reviewBy`. Report a finding under an unsettled standard all the same, under the
+heading its keyword gives, and say which of these you saw:
 
 * **`status: draft`**: the standard was a proposal when the export was taken, so the finding is not in force.
 * **`status: deprecated`**: the standard is on its way out, so the finding is not in force.
@@ -128,13 +129,22 @@ on that day, and reads the same however long ago it was.
 
 ## Report
 
-Report under three headings, each finding on its own line or short paragraph:
+The session that asked for the review receives your report and passes it on, so its first line says what it is. Open
+the report on this line, word for word:
+
+```text
+This is the standards review, shown as it stands: each finding cites the rule it applies by id.
+```
+
+Then report under two headings, each finding on its own line or short paragraph:
 
 * **Violations**: each broken `MUST` or `MUST NOT`, with the rule's id, the obligation quoted, the file and the lines
   that break it, and what checks the rule, or that nothing automated does.
 * **Judgement calls**: each departure from a `SHOULD` or `SHOULD NOT`, with the rule's id, the obligation quoted, and
   the reason the change gives or the fact that it gives none.
-* **Not in force**: each finding under a standard whose status is not `active`, with that status and `generatedAt`.
+
+A finding under a standard whose status is not `active` stays under the heading its keyword gives, marked not in
+force, with that status and `generatedAt`.
 
 Close with one line naming the corpus and every entry in `sources` whose rules you checked, and the rules you left to
 an automated control. Keep the report under 500 words.
