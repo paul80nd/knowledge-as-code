@@ -15,6 +15,7 @@ affected:
 prompted:
   - fix-0001
   - nfr-0001
+  - std-IDEM
 owner: human:alex.doe
 tags: [ authorisation, idempotency, psp ]
 ---
@@ -66,9 +67,8 @@ later authorisation on each was voided at 14:10, every void written as its own e
 
 ## Root cause
 
-The checkout generated a fresh idempotency key for each retry of one payment. [std-IDEM] requires the caller to send
-the same key on every retry of one attempt, so that a retry arrives as the same payment, and recommends deriving the key
-from the order and the operation. A fresh key makes every retry a new one.
+The checkout generated a fresh idempotency key for each retry of one payment, so the PSP took every retry as a new
+payment. No standard required a retry to reuse its key. [std-IDEM] was written after this incident to require it.
 
 ## Contributing factors
 
@@ -115,8 +115,8 @@ is never charged. It absorbed this incident as a by-product.
 ## Related
 
 * [fix-0001] is the fix this incident produced.
-* [std-IDEM] is the rule the checkout broke.
 * [nfr-0001] states the latency target this incident caused to be written.
+* [std-IDEM] is the standard this incident caused to be written.
 
 [ofr-card-payment]: ../offerings/card-payment.md
 [fix-0001]: ../fixes/duplicate-authorisation.md
