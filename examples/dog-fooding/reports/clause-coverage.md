@@ -10,10 +10,10 @@ generated:
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.64.0" }
-  - { resource: example-engineering, version: "0.33.0" }
+  - { resource: example-dogfooding, version: "0.64.1" }
+  - { resource: example-engineering, version: "0.33.1" }
 verified:
-  - { at: 2026-10-18T12:26:00Z, by: human:paul.law }
+  - { at: 2026-10-19T07:31:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
