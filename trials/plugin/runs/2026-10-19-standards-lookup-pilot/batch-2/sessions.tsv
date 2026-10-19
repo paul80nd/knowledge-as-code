@@ -1,0 +1,37 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+control	plugin	label-printer-image	1	0	1	1	1	1	0.3316996	9	
+control	plugin	orders-db-connection	1	0	1	1	1	1	0.2706298	11	
+control	plugin	stock-reserve-endpoint	1	0	1	1	1	1	0.5002154	21	
+house	plugin	ca1848-build-break	1	0	1	1	1	1	0.25139480000000003	11	
+house	plugin	ci-every-branch	1	0	1	1	1	1	0.270224	10	
+house	plugin	ci-secret-scan	1	0	1	1	1	1	0.44765479999999996	14	
+house	plugin	ci-uv-locked	1	0	1	1	1	1	0.2877524	9	
+house	plugin	cover-timeout-pr	1	0	1	1	0	1	0.3798094	17	
+house	plugin	dotnet-ci	1	0	1	1	1	1	0.3458302	11	
+house	plugin	go-service-dockerfile	1	0	1	0	1	1	0.3286968	11	fail
+house	plugin	label-printer-manifest	1	0	1	1	1	1	0.29516440000000005	8	
+house	plugin	order-repository-tests	1	0	1	1	0	1	0.46621920000000006	22	
+house	plugin	orders-column-rename	1	0	1	1	1	1	0.27284200000000003	12	
+house	plugin	request-logging	1	0	1	1	1	1	0.35145480000000007	14	
+house	plugin	returns-api-routes	1	0	1	1	1	1	0.5939288	24	
+house	plugin	stock-alert-rules	1	0	1	1	1	1	0.2644732	10	pass
+house	plugin	stock-per-warehouse	1	0	1	1	1	1	0.3451532	18	
+house	plugin	stock-v1-retirement	1	0	1	1	1	1	0.4389954	21	
+control	hook	label-printer-image	1	0	1	1	1	1	0.3781268	12	
+control	hook	orders-db-connection	1	0	1	1	1	1	0.3504131999999999	15	
+control	hook	stock-reserve-endpoint	1	0	1	1	1	1	0.5163432	23	
+house	hook	ca1848-build-break	1	0	1	1	1	1	0.28002779999999994	15	
+house	hook	ci-every-branch	1	0	1	1	1	1	0.23295639999999998	9	
+house	hook	ci-secret-scan	1	0	1	1	1	1	0.39715919999999993	15	
+house	hook	ci-uv-locked	1	0	1	1	1	1	0.250763	8	
+house	hook	cover-timeout-pr	1	0	1	1	0	1	0.44163600000000003	17	
+house	hook	dotnet-ci	1	0	1	1	1	1	0.32437859999999996	10	
+house	hook	go-service-dockerfile	1	0	1	1	1	1	0.34893	11	pass
+house	hook	label-printer-manifest	1	0	1	1	1	1	0.31051039999999996	9	
+house	hook	order-repository-tests	1	0	1	1	1	1	0.41338100000000005	21	
+house	hook	orders-column-rename	1	0	1	1	1	1	0.26083140000000005	12	
+house	hook	request-logging	1	0	1	1	1	1	0.34599620000000003	13	
+house	hook	returns-api-routes	1	0	1	1	1	1	0.5806436	23	
+house	hook	stock-alert-rules	1	0	1	1	1	1	0.2721724	9	pass
+house	hook	stock-per-warehouse	1	0	1	1	1	1	0.30019320000000005	16	
+house	hook	stock-v1-retirement	1	0	1	1	1	1	0.4459166	21	

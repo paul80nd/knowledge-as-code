@@ -47,6 +47,14 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   }
   ```
 
+### Changed
+
+- **`standards-lookup` states what a standard is for, and why each rule it gives matters.** It opens on the intent: a
+  MUST is the baseline for the work, and a SHOULD is the usual way, which the work may leave by giving its reason. Each
+  rule after that gives its reason, the case of a nearest rule reads as prose with no numbered steps, and the skill is
+  about 40% shorter. A [trial over 22 cases][pilot] found the rewrite complies and cites as often as the skill it
+  replaces.
+
 ## 0.35.0 - 2026-10-16
 
 ### Changed
@@ -2074,3 +2082,4 @@ The first published version.
 - `kac mechanism` compares the shared layers against a reference corpus, or takes them from one.
 
 [OKF v0.2]: https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
+[pilot]: https://github.com/paul80nd/knowledge-as-code/blob/main/trials/plugin/runs/2026-10-19-standards-lookup-pilot.md

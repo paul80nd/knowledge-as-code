@@ -121,7 +121,7 @@ the three skills that name no type of their own. Its export has standards, so it
 `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 74 file(s) to .dist/plugin/ as example-engineering 0.36.3. 11 component(s) included, 2 trimmed.
+bundle: wrote 74 file(s) to .dist/plugin/ as example-engineering 0.36.4. 11 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
