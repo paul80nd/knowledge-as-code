@@ -18,13 +18,13 @@ tags: [ holds, payments ]
 
 `Service: svc-reservations` `BUILDING`
 
-The reserve-and-pay flow: the pages a reader completes to place a hold on an item and settle any fee it attracts.
+The reserve-and-pay flow: the pages a borrower completes to place a hold on an item and settle any fee it attracts.
 
 ## What it does
 
 Hosts the reserve-and-pay flow as a server-rendered application. It deploys on its own, apart from the rest of the
 monorepo, and is served on its own hostname. The flow is multistep and progressive, so it works on the branch terminals
-as well as on a reader's own device.
+as well as on a borrower's own device.
 
 **Stateless.** Wizard state before confirmation is ephemeral and passed through the flow. The only durable write is the
 provisional hold it creates in [svc-lending] at confirm. That hold is also the reference a returning card payment is
@@ -62,11 +62,11 @@ this app service. The single durable write is the provisional hold created in [s
 
 ## Operational notes
 
-* **Payments.** The payment provider takes the card payment on its own hosted page, and the reader returns against the
-  hold reference. This service stores no card detail. The library does not deploy that provider, so it is an
+* **Payments.** The payment provider takes the card payment on its own hosted page, and the borrower returns against
+  the hold reference. This service stores no card detail. The library does not deploy that provider, so it is an
   integration, [itg-card-payments], and absent from the graph.
-* **Criticality**: `important`. A failure stops readers reserving online, and branch staff fall back to placing holds at
-  the desk. The platform degrades and keeps running.
+* **Criticality**: `important`. A failure stops borrowers reserving online, and branch staff fall back to placing holds
+  at the desk. The platform degrades and keeps running.
 
 [itg-card-payments]: ../integrations/card-payments.md
 [svc-catalogue-web]: catalogue-web.md

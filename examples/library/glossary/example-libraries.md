@@ -16,7 +16,7 @@ The words the consortium uses across its systems.
 
 ## Scope
 
-The vocabulary every team here shares: readers, what they borrow, and where they borrow it from. A word one system
+The vocabulary every team here shares: borrowers, what they borrow, and where they borrow it from. A word one system
 uses differently belongs in that system's glossary, and the entry here points at it.
 
 ## Terms

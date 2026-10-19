@@ -62,8 +62,6 @@ For `personal` or `special-category`: name the lawful basis beside the purpose i
 * **{{Entity}}**: what it represents.
 * **{{Entity}}**: …
 
-_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
-
 ## Where it lives
 
 |                    |                                           |

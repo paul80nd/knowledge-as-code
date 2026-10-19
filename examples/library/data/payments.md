@@ -43,8 +43,6 @@ obligation, which is why those two outlive the debt they record.
 * **Refund**: money returned. The original payment, the amount, the reason and who authorised it.
 * **Reconciliation line**: what the card provider says it settled, matched against what the estate recorded.
 
-_(Names and meanings, not schemas. Schemas live with the code that owns them.)_
-
 ## Where it lives
 
 |                    |                                                |
