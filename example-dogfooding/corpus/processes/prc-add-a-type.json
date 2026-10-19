@@ -19,6 +19,6 @@
     "Prerequisites": "* A candidate set of records no existing type would take.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* Reading a published specification, which steps 3 and 4 need.\n* Writing a schema file in YAML, which step 5 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c7ed93c41bc6e055cd444eb80a900925be74451e/examples/dog-fooding/processes/add-a-type.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e29df7d5a076f8e03480aa3f99ab5aede5bb8d02/examples/dog-fooding/processes/add-a-type.md"
   }
 }
