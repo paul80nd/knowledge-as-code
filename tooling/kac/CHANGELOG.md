@@ -26,8 +26,8 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   where the export has it, and its absence trims nothing. `kac bundle` refuses a view it does not write, and a view
   path the plugin tree or `corpusRoot` already uses.
 - **`kac bundle` renders what the build-index hook prints.** Where the hook directory and the build index both ship,
-  it writes `hooks/build-index.json`, which the template's new `PreToolUse` hook prints the first time a session calls
-  `Read`, `Grep` or `Glob`. The hook prints it once a session, marking the session under `${CLAUDE_PLUGIN_DATA}`. An
+  it writes `hooks/build-index.json`, which the template's new `PreToolUse` hook prints the first time a session reads
+  or edits a file. The hook prints it once a session, marking the session under `${CLAUDE_PLUGIN_DATA}`. An
   index over the 10,000 characters Claude Code passes to a session is replaced by its rule and standard counts and its
   path, and `kac bundle` warns. The template moves to version 20.
 

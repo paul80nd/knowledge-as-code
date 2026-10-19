@@ -13,7 +13,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Read|Grep|Glob",
+        "matcher": "Read|Grep|Glob|Write|Edit|NotebookEdit",
         "hooks": [
           {
             "type": "command",

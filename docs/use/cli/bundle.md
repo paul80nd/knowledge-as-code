@@ -61,9 +61,12 @@ corpus states, and names the lookup skill that reads standards where one survive
 ### The build-index hook
 
 Where the `hooks` component and the build index both ship, `bundle` writes `hooks/build-index.json`. The hook prints it
-the first time a session calls `Read`, `Grep` or `Glob`, so a session that reads a file before it edits one has the
-build index as context before its first change. Claude Code passes a hook at most 10,000 characters of context. Over that, `bundle` writes the rule and
-standard counts and the build index's path in its place, and warns.
+the first time a session calls `Read`, `Grep`, `Glob`, `Write`, `Edit` or `NotebookEdit`. A session that reads a file
+before it edits one has the build index before its first change. A session that reads only through `Bash` has it
+straight after its first edit.
+
+Claude Code passes a hook at most 10,000 characters of context. Over that, `bundle` writes the rule and standard counts
+and the build index's path in its place, and warns.
 
 ## Examples
 
