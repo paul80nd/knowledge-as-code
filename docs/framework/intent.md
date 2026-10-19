@@ -27,23 +27,29 @@ corpus, delivered a different way.
 | **Assure**     | the corpus owner, or an auditor            | which policies have no standard, which rules no control proves, what is stale   |
 | **Learn**      | a person new to the team                   | the domain and the house style, read as a wiki                                  |
 
-The use cases for each moment, and for each type, are written as features and measured by a trial under
-[`trials/`](https://github.com/paul80nd/knowledge-as-code/tree/main/trials). Tracked in [epic #940][e940].
+The use cases for each moment, and for each type, are written as features under
+[`trials/use-cases/`](https://github.com/paul80nd/knowledge-as-code/tree/main/trials/use-cases). Each one names the
+trial case that measures it. Tracked in [epic #940][e940].
 
 ## What an agent does with each type
 
 Each type has an intent: what an agent should do with a record of it. The intent sets the tone of the skill that
 delivers the type, and of anything generated from it.
 
-| Intent      | What the agent does                                                          | Types                                                                                                |
-|-------------|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| **Follow**  | follows it closely, as a person would                                        | runbooks, and fixes once the symptom matches                                                         |
-| **Flow**    | follows the shape of the work and judges each step                           | processes                                                                                            |
-| **Nudge**   | treats each MUST as the baseline, and each SHOULD as a default it may depart from, saying why | standards, nfrs                                                                     |
-| **Respect** | does not go against it silently: honours it, or raises it                    | ADRs, policies, deviations                                                                           |
-| **Inform**  | uses it as context where it is relevant                                      | glossary, services, data, integrations, tools, offerings, explanations, postmortems, controls, reports |
+| Intent      | What the agent does                                                                           | Types                                                                                                            |
+|-------------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| **Follow**  | follows it closely, as a person would                                                         | runbooks, and fixes once the symptom matches and somebody has verified the fix                                   |
+| **Flow**    | follows the shape of the work and judges each step                                            | processes                                                                                                        |
+| **Nudge**   | treats each MUST as the baseline, and each SHOULD as a default it may depart from, saying why | standards, policies                                                                                              |
+| **Respect** | does not go against it silently: honours it, or raises it                                     | ADRs, NFRs once `agreed`, tools (only an `approved` tool for new work), deviations inside their scope and period |
+| **Inform**  | uses it as context where it is relevant                                                       | glossary, services, data, integrations, offerings, explanations, postmortems, controls, reports, draft fixes     |
 
-Each row is a hypothesis until a trial confirms it.
+A Nudge type grades each clause by its keyword, so one record states obligations and latitude side by side. A Respect
+type is one obligation as a whole: a decision, a target, a choice of tool, or an accepted departure.
+
+Each row is a hypothesis until a trial confirms it. The
+[per-type index](https://github.com/paul80nd/knowledge-as-code/tree/main/trials/use-cases#the-types) lists the use cases
+that test each row.
 
 ## Cadence and delivery
 

@@ -9,6 +9,7 @@ its method and every run, so you can run it again after a large change and compa
 | [Capture](capture/README.md)             | Whether an adopting team's knowledge is getting written down in its corpus   |
 | [Plugin](plugin/README.md)               | Whether a corpus's plugin makes an agent's code follow the corpus's rules    |
 | [Process level](process-level/README.md) | Whether a process written as outcomes draws fewer findings asking for a step |
+| [Use cases](use-cases/README.md)         | The use cases for each moment of the work, and the case that measures each   |
 
 ## Adding a trial
 

@@ -120,9 +120,10 @@ A departure nobody can explain is a mistake. One that is stated is a choice a re
 
 ## MUST is the baseline, SHOULD is latitude
 
-A standard grades each rule. A MUST states the outcome the standard's owner is accountable for. A control proves it
-wherever a tool can, and departing from it takes a deviation the owner accepts. A SHOULD states the usual way to reach
-that outcome. An engineer or an agent may depart from it, and says why in the change. A MAY permits.
+A standard grades each rule, and a policy each clause. A MUST states the outcome the owner is accountable for. A
+control proves it wherever a tool can, and departing from it takes a deviation the owner accepts. A SHOULD states the
+usual way to reach that outcome. An engineer or an agent may depart from it, and says why in the change. A standard's
+MAY permits, and a policy's COULD states an aspiration.
 
 A standard is the house style and a checklist to review work against. It is a safety net, and it is not there to catch
 anyone out. An agent gets the same latitude as an engineer: the baseline is fixed, and inside it the agent uses its
