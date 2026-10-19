@@ -9,14 +9,14 @@ applies-to:
 target: 95% of refunds submitted to the PSP within one hour of the return being accepted
 window: rolling 1 day
 alert-after: 2 hours
-measured-by: Application Insights, on the gap between the return event and the refund request at [svc-payment-api]
+measured-by: Application Insights, on the gap between the return event and the refund request at svc-payment-api
 agreed-on: "2026-08-28"
 review-by: "2027-08-28"
 owner: human:paul.law
 tags: [ psp, refunds, settlement ]
 ---
 
-# A refund reaches the card scheme within the hour
+# A refund reaches the PSP within the hour
 
 `NFR: nfr-0003` `AGREED`
 
@@ -34,8 +34,8 @@ hour is what [svc-payment-api] can promise for the part it does control, so a re
 submitted the same day. The money arriving in the customer's account is deliberately not committed, because the scheme
 decides when that happens.
 
-The remaining 5% covers a return accepted while [svc-payment-ledger] is mid-deployment. `Current actual` records that
-as the only shape of failure seen so far.
+The remaining 5% covers a return accepted during a deployment of [svc-payment-ledger], the only shape of failure
+`Current actual` records so far.
 
 ## How it is measured
 
@@ -44,8 +44,7 @@ rolling day, and the same query runs in the monthly service review.
 
 ## Current actual
 
-98.2% over August 2026. The failures are all the same shape: a return accepted while
-[svc-payment-ledger] is mid-deployment waits for the next sweep.
+98.2% over August 2026. Every refund that missed the hour was accepted during a deployment of [svc-payment-ledger].
 
 ## What a breach costs
 
@@ -59,9 +58,8 @@ reads the deployment history of [svc-payment-ledger] first.
 
 ## Constraints
 
-The PSP accepts a refund only against a captured payment, so a return accepted before capture waits
-for it. [ofr-card-payment] captures on shipment, which is why the hour is measured from acceptance of
-the return and not from the return itself.
+The PSP accepts a refund only against a captured payment, and [ofr-card-payment] captures the payment when the order
+ships. The hour therefore presumes a payment that has already been captured.
 
 [ofr-card-payment]: ../offerings/card-payment.md
 [svc-payment-api]: ../services/payment-api.md
