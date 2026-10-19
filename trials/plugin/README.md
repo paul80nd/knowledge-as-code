@@ -361,8 +361,9 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 
 ## Runs
 
-| Run                              | Method | Corpus                 | Sessions | What it was                                           |
-|----------------------------------|-------:|------------------------|---------:|-------------------------------------------------------|
-| [2026-10-16](runs/2026-10-16.md) |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm          |
-| [Full pass](runs/full-pass.md)   |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each            |
-| [Hook arm](runs/hook-arm.md)     |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none  |
+| Run                                                                 | Method | Corpus                 | Sessions | What it was                                                       |
+|---------------------------------------------------------------------|-------:|------------------------|---------:|-------------------------------------------------------------------|
+| [2026-10-16](runs/2026-10-16.md)                                    |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm                      |
+| [Full pass](runs/full-pass.md)                                      |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each                        |
+| [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
+| [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering` |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
