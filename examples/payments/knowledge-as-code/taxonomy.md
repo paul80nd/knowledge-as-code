@@ -45,8 +45,8 @@ record therefore states the constraints it asserts. It cites a descriptive recor
 authority behind a constraint.
 
 **[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
-factors, actions). Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
-outcome.
+factors, actions). Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a
+postmortem records the outcome.
 
 ### Normative: living, owned, reviewed
 

@@ -43,8 +43,12 @@ the logs is written that way. Only `restored-at` before `occurred-at` is refused
   minutes and seconds, never days. `kac validate` prints the right value where yours disagrees.
 * **`affected`**: service or offering ids.
 * **`prompted`**: the NFRs, fixes and standards this incident caused to be written.
-* **`status`**: `draft` while it is being assembled; `published` freezes it. Postmortems are **immutable once
-  published**. A materially different understanding becomes a new document that references this one.
+* **`severity`**: the highest level the incident reached on the corpus's severity scale.
+* **`status`**: `draft` while it is being assembled, and `published` once it is the account the estate stands behind.
+  Correct a published postmortem in place wherever it turns out wrong.
+
+**Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
+completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.
 
 **Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
 where you have a value for it, and leave it out where you do not. [The type page](../postmortems.md#metadata) lists
@@ -120,17 +124,13 @@ have happened an hour later.)_
 |--------|--------------|-------|
 |        | gh#{{item}}  |       |
 
-_(Actions live in GitHub issues; this links to them. A postmortem is not a tracker.)_
+_(Actions live as issues in the repository doing the work, and this table links to them. A postmortem is not a
+tracker.)_
 
 ## Related
 
 * [fix-{{a}}] is the fix this incident produced.
 * [nfr-{{a}}] is the target this incident breached.
-
----
-
-_(**Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
-completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.)_
 
 [fix-{{a}}]: ../fixes/{{a}}.md
 [nfr-{{a}}]: ../nfrs/{{a}}.md

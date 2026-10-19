@@ -61,8 +61,8 @@ behind it. The context, the choice, the alternatives weighed, and the consequenc
 later ADR supersedes it. A decision that affects only one repository belongs in that repository.
 
 **[Postmortems](../postmortems.md).** What happened during an incident (timeline, impact, root cause, contributing
-factors, actions). Blameless, and immutable once published. An ADR records the intention, and a postmortem records the
-outcome.
+factors, actions). Blameless, and corrected in place wherever it turns out wrong. An ADR records the intention, and a
+postmortem records the outcome.
 
 ### Normative: living, owned, reviewed
 

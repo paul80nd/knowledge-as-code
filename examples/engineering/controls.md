@@ -56,17 +56,17 @@ and helps only when a session loads it and acts on it. A check fails a broken ru
 
 <!-- BEGIN GENERATED: schema-controls -->
 
-| Field           | Value                                                                     | Notes                                                                                                      |
-|-----------------|---------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| `tier` *†       | `normative`                                                               | The record's trust level, fixed for the type and checked against the folder.                               |
-| `status` *†     | `active` `planned` `retired`                                              | Whether the control is running, intended, or stood down. In force at `active`.                             |
-| `verifies` *    | list                                                                      | The standard ids this control checks, as rule-level anchors where possible.                                |
-| `mechanism` *   | `ci` `review-checklist` `manual` `runtime-alert` `not-enforced`           | How the check runs, or `not-enforced` where nothing checks the rule.                                       |
-| `frequency`     | `continuous` `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual` | How often it runs, or `continuous` where the check never stops. Required when `mechanism != not-enforced`. |
-| `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.           |
-| `evidence`      | string                                                                    | Where the proof lives: the build log, the audit note, or the dashboard.                                    |
-| `applies-to`    | list                                                                      | Service ids, or `all`.                                                                                     |
-| `review-by` *   | date                                                                      | Quoted. The day somebody checks this control still describes what runs.                                    |
+| Field           | Value                                                                     | Notes                                                                                                       |
+|-----------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `tier` *†       | `normative`                                                               | The record's trust level, fixed for the type and checked against the folder.                                |
+| `status` *†     | `active` `planned` `retired`                                              | Whether the record is in force, intended, or stood down, whatever its `mechanism` is. In force at `active`. |
+| `verifies` *    | list                                                                      | The standard ids this control checks, as rule-level anchors where possible.                                 |
+| `mechanism` *   | `ci` `review-checklist` `manual` `runtime-alert` `not-enforced`           | How the check runs, or `not-enforced` where nothing checks the rule.                                        |
+| `frequency`     | `continuous` `per-pr` `per-deploy` `daily` `monthly` `quarterly` `annual` | How often it runs, or `continuous` where the check never stops. Required when `mechanism != not-enforced`.  |
+| `last-verified` | date                                                                      | Quoted. The day somebody last ran this check, or `"never"`. Required when `mechanism == manual`.            |
+| `evidence`      | string                                                                    | Where the proof lives: the build log, the audit note, or the dashboard.                                     |
+| `applies-to`    | list                                                                      | Service ids, or `all`.                                                                                      |
+| `review-by` *   | date                                                                      | Quoted. The day somebody checks this control still describes what runs.                                     |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  

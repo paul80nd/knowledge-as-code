@@ -53,7 +53,7 @@ fields:
     type: enum
     values: [active, planned, retired]
     in-force: active
-    description: Whether the control is running, intended, or stood down.
+    description: Whether the record is in force, intended, or stood down, whatever its `mechanism` is.
 
   verifies:
     required: true

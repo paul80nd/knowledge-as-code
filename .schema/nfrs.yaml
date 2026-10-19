@@ -26,14 +26,15 @@ lineage:
     it, which is why `What a breach costs` and `What we do about a breach` are two sections. Its aspirational
     objective, tracked but exempt from that policy, is `status: aspirational`
   divergence: >
-    25010 lists the characteristics and stops. This type is a document, and `characteristic` takes 25010's
-    subcharacteristic level, because an estate commits to availability and recovery and not to reliability. RPO and
-    RTO come from continuity practice. The SRE workbook turns a target into an error budget a team spends, and no
-    record here does that arithmetic. A breach states a cost and a response, and neither is a quantity anybody draws
-    down. The workbook leaves the current reading to the monitoring, where `Current actual` is a required section, so
-    a record read on its own still says where the estate stands. No source found asks an estate to commit to a
-    detection time, and 25010 names no characteristic for one, so `alert-after` states the alert's own configured
-    delay instead, which is OpenSLO's `alertAfter`
+    25010 lists the characteristics and stops. A target here is a threshold over a measurement, as an SLO is, and
+    not the six-part quality attribute scenario the SEI and arc42 write. This type is a document, and
+    `characteristic` takes 25010's subcharacteristic level, because an estate commits to availability and recovery
+    and not to reliability. RPO and RTO come from continuity practice. The SRE workbook turns a target into an error
+    budget a team spends, and no record here does that arithmetic. A breach states a cost and a response, and
+    neither is a quantity anybody draws down. The workbook leaves the current reading to the monitoring, where
+    `Current actual` is a required section, so a record read on its own still says where the estate stands. No
+    source found asks an estate to commit to a detection time, and 25010 names no characteristic for one, so
+    `alert-after` states the alert's own configured delay instead, which is OpenSLO's `alertAfter`
 
 id:
   prefix: nfr

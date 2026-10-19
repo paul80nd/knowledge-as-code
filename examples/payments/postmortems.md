@@ -9,8 +9,8 @@ What actually happened, and why.
 A blameless account of one incident: when it began, what customers lost, what caused it, what worked, and the actions it
 left us with.
 
-Publishing one closes it. A postmortem states what we understood at the time. Where we later understand the same
-incident differently, we write another one.
+Publishing one makes it the account the estate stands behind. Where a fact in it turns out wrong, we correct it,
+because a fair account is worth more than an unchanged one.
 
 ## Why we use them
 
@@ -33,33 +33,36 @@ Boundaries:
   met.
 * **[Fix](fixes.md)**: a reusable resolution, which an incident often produces as a by-product. A postmortem is the
   account of the incident itself.
-* **A work item.** Each action is a GitHub issue. The postmortem links to it and tracks nothing itself.
+* **A work item.** Each action is an issue in the repository that does the work. The postmortem links to it and
+  tracks nothing itself.
 
-Not every incident needs one. Use severity as the trigger and apply it the same way each time, so that the absence of a
-postmortem means something.
+Not every incident needs one. The corpus's severity scale says which incidents do, and `severity` records the highest
+level the incident reached on it. Applied the same way each time, the scale makes the absence of a postmortem mean
+something.
 
 ## Level of detail and cadence
 
 One postmortem covers one incident. The timeline records what happened at each moment, and each action is one
 follow-up with one owner. A step somebody should run next time belongs in a runbook or a fix, which an action creates.
 
-A published postmortem never changes. New postmortems arrive with each incident serious enough to write up.
+A published postmortem changes where a fact in it is wrong. New postmortems arrive with each incident the severity scale
+says needs one.
 
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-postmortems -->
 
-| Field           | Value                | Notes                                                                                                               |
-|-----------------|----------------------|---------------------------------------------------------------------------------------------------------------------|
-| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                        |
-| `status` *†     | `draft` `published`  | `published` freezes the document. A new understanding is a new postmortem citing this one. In force at `published`. |
-| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                                    |
-| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                         |
-| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`.       |
-| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`.       |
-| `severity` *    | `sev1` `sev2` `sev3` | The severity the incident was handled at.                                                                           |
-| `affected` *    | list                 | Service and offering ids the incident affected.                                                                     |
-| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                                 |
+| Field           | Value                | Notes                                                                                                                  |
+|-----------------|----------------------|------------------------------------------------------------------------------------------------------------------------|
+| `tier` *†       | `decided`            | The record's trust level, fixed for the type and checked against the folder.                                           |
+| `status` *†     | `draft` `published`  | `published` is the account the estate stands behind, corrected in place wherever it is wrong. In force at `published`. |
+| `occurred-at` * | timestamp            | The moment the incident began, in UTC as `2026-09-07T20:18:00Z`.                                                       |
+| `detected-at` * | timestamp            | The moment somebody noticed the incident, in UTC as `2026-09-07T20:18:00Z`.                                            |
+| `restored-at`   | timestamp            | The moment service was back for users, in UTC as `2026-09-07T20:18:00Z`. Required when `status == published`.          |
+| `duration`      | string               | How long the incident lasted, as an ISO 8601 duration such as `PT4H20M`. Required when `status == published`.          |
+| `severity` *    | `sev1` `sev2` `sev3` | The highest severity the incident reached, on the corpus's severity scale.                                             |
+| `affected` *    | list                 | Service and offering ids the incident affected.                                                                        |
+| `prompted`      | list                 | The ADRs, runbooks, NFRs, fixes and standards this incident caused.                                                    |
 
 \* Field is required  
 † Every document has this field, and this type refines it.  
@@ -83,9 +86,8 @@ A published postmortem never changes. New postmortems arrive with each incident 
 
 **Conventions**
 
-* **Immutable once published.** A new understanding is a new postmortem that references this one. Edit everything else
-  in place: a status transition, a typo, a broken link, or a sentence that no longer matches the timeline. The commit
-  message says what you changed.
+* **Correct a published postmortem wherever it is wrong.** A fact, a time, a citation that no longer matches the
+  record it cites, or a typo is fixed in place. The commit message says what you changed and why.
 * **Measure the impact against the [NFRs](nfrs.md)** where targets exist. Where the incident breached one, say which.
   Where no target existed, that absence is itself a finding.
 
@@ -106,9 +108,9 @@ this type's records.
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
 
-| Rule                        | What it would verify                                                                                   |
-|-----------------------------|--------------------------------------------------------------------------------------------------------|
-| `immutable-after-published` | Once `status` is `published`, the account changes only by a new postmortem, never by an edit in place. |
-| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                           |
+| Rule                        | What it would verify                                                                                        |
+|-----------------------------|-------------------------------------------------------------------------------------------------------------|
+| `immutable-after-published` | Once `status` is `published`, an edit corrects what is wrong in the account and leaves the rest as written. |
+| `recurring-root-causes`     | Scheduled. Reports root causes recurring across postmortems.                                                |
 
 <!-- END GENERATED: checks-postmortems -->
