@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-payments",
-  "version": "0.33.3",
+  "version": "0.33.4",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-payments",
-    "contentVersion": "0.33.3",
+    "contentVersion": "0.33.4",
     "types": [
       "fixes",
       "nfrs",
@@ -71,6 +71,13 @@
         "standards@2"
       ],
       "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+    },
+    {
+      "path": "skills/standards-review",
+      "requires": [
+        "standards@2"
+      ],
+      "note": "Reviews a change in a forked subagent against views/review.md, read whole. It takes a rule's link from corpus/standards/rules.jsonl, and reads a control from corpus/controls/ where the export carries controls."
     },
     {
       "path": "views/build-index.md",

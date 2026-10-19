@@ -27,6 +27,6 @@
     "Impact": "Nothing in production. The branch stays red, so nothing on it merges until the diff is accounted for."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7413d190c802b93ae371653fb9b26024fa08f947/examples/dog-fooding/runbooks/goldens-disagree.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/7906264e864026b7b53ae9eff0859b8d8dc0652b/examples/dog-fooding/runbooks/goldens-disagree.md"
   }
 }

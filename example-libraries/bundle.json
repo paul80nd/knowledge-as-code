@@ -83,6 +83,13 @@
         "standards@2"
       ],
       "reason": "the export carries no standards"
+    },
+    {
+      "path": "skills/standards-review",
+      "requires": [
+        "standards@2"
+      ],
+      "reason": "the export carries no standards"
     }
   ]
 }

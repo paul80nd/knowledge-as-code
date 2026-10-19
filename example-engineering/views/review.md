@@ -1,11 +1,12 @@
-# Review a change against the standards of example-engineering
+# The rules a change is reviewed against, in the standards of example-engineering
 
-Check the change against every rule below, and cite each finding by the rule's id.
+Each rule below gives the id a finding cites, then its obligations, one to a bullet.
 
-- **MUST** and **MUST NOT** state a requirement. Report a change that breaks one as a violation.
-- **SHOULD**, **SHOULD NOT** and **MAY** state a default. A change may depart from one by giving its reason. Report the departure and its reason as a judgement call.
-- A standard is in force at status `active`. Report a finding under any other status as not in force, and give that status.
-- A standard's controls say what already checks its rules, and how. Check a rule yourself where its standard lists no control, or where each one listed is `not-enforced`.
+- **MUST** and **MUST NOT** state a requirement. A change that breaks one is a violation.
+- **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its reason conforms, and the departure is a judgement call.
+- **MAY** permits, and a change cannot break it.
+- A standard is in force at status `active`. A finding under any other status is not in force.
+- A standard's controls are listed with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
 
 ## std-API: An interface is described by a contract in the repository
 

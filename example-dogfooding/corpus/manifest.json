@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.70.0",
-  "mechanismVersion": 20,
-  "commit": "7413d190c802b93ae371653fb9b26024fa08f947",
+  "contentVersion": "0.70.1",
+  "mechanismVersion": 21,
+  "commit": "7906264e864026b7b53ae9eff0859b8d8dc0652b",
   "dirty": false,
-  "generatedAt": "2026-10-19T17:57:17Z",
+  "generatedAt": "2026-10-19T19:29:23Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7413d190c802b93ae371653fb9b26024fa08f947/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7906264e864026b7b53ae9eff0859b8d8dc0652b/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "7413d190c802b93ae371653fb9b26024fa08f947"
+    "ref": "7906264e864026b7b53ae9eff0859b8d8dc0652b"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.36.2",
+      "contentVersion": "0.36.3",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7413d190c802b93ae371653fb9b26024fa08f947/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/7906264e864026b7b53ae9eff0859b8d8dc0652b/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "7413d190c802b93ae371653fb9b26024fa08f947"
+        "ref": "7906264e864026b7b53ae9eff0859b8d8dc0652b"
       },
       "reposBase": null,
       "tracker": {

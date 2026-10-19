@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-dogfooding",
-  "version": "0.70.0",
+  "version": "0.70.1",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-dogfooding",
-    "contentVersion": "0.70.0",
+    "contentVersion": "0.70.1",
     "types": [
       "controls",
       "deviations",
@@ -79,6 +79,13 @@
         "standards@2"
       ],
       "note": "Reads a rule from corpus/standards/rules.jsonl and the owning standard beside it."
+    },
+    {
+      "path": "skills/standards-review",
+      "requires": [
+        "standards@2"
+      ],
+      "note": "Reviews a change in a forked subagent against views/review.md, read whole. It takes a rule's link from corpus/standards/rules.jsonl, and reads a control from corpus/controls/ where the export carries controls."
     },
     {
       "path": "views/build-index.md",

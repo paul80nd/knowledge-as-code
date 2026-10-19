@@ -1,11 +1,12 @@
-# Review a change against the standards of example-dogfooding
+# The rules a change is reviewed against, in the standards of example-dogfooding
 
-Check the change against every rule below, and cite each finding by the rule's id.
+Each rule below gives the id a finding cites, then its obligations, one to a bullet.
 
-- **MUST** and **MUST NOT** state a requirement. Report a change that breaks one as a violation.
-- **SHOULD**, **SHOULD NOT** and **MAY** state a default. A change may depart from one by giving its reason. Report the departure and its reason as a judgement call.
-- A standard is in force at status `active`. Report a finding under any other status as not in force, and give that status.
-- A standard's controls say what already checks its rules, and how. Check a rule yourself where its standard lists no control, or where each one listed is `not-enforced`.
+- **MUST** and **MUST NOT** state a requirement. A change that breaks one is a violation.
+- **SHOULD** and **SHOULD NOT** state the usual way. A change that departs from one and gives its reason conforms, and the departure is a judgement call.
+- **MAY** permits, and a change cannot break it.
+- A standard is in force at status `active`. A finding under any other status is not in force.
+- A standard's controls are listed with each one's mechanism and status. A control checks a rule only where its status is `active` and its mechanism is `ci` or `runtime-alert`, and then only the obligations named in its record's What it checks section. `corpus/controls/` inside this plugin has each control's record. A person checks every other obligation in the review.
 
 ## std-A11Y: The documentation site and kac are usable without sight, a mouse or colour
 
@@ -303,9 +304,11 @@ Cite as `std-PLUGIN.a-skill-assumes-only-that-the-session-can-read-a-file`.
 
 - A skill **MUST** leave the choice of search tool to the session.
 - A skill **MUST** name the file or the directory containing the answer.
-- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine.
+- A skill reviewing a change **MUST** name the change as everything that differs from a fixed point.
+- A skill reviewing a change **MUST** leave the choice of how to read that change to the session.
+- A skill **MUST NOT** require a shell, an interpreter or a runtime on the reader's machine, beyond what the session uses to read a change under review.
 - A skill reading an export **MUST NOT** require a network call to answer from it.
-- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}`.
+- A skill reading an export **MUST NOT** ask for access beyond reading the files under `${CLAUDE_PLUGIN_ROOT}` and the change under review.
 - Every path such a skill names **MUST** open on `${CLAUDE_PLUGIN_ROOT}`.
 
 ### A skill names the type of every field it describes
@@ -327,6 +330,9 @@ Cite as `std-PLUGIN.a-skill-reads-a-rules-keyword-as-what-departing-from-it-cost
 - Where the bundle carries `request-deviation`, a skill **MUST** send that departure to it.
 - A skill reporting a rule **MUST** say that a reader may depart from a `SHOULD` or `SHOULD NOT` by giving the reason in the change.
 - A skill **MUST NOT** send a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`, because a reason given in the change conforms to the rule.
+- A skill reviewing a change **MUST** report a breach of a `MUST` or `MUST NOT` as a violation, citing the rule's id.
+- A skill reviewing a change **MUST** report a departure from a `SHOULD` or `SHOULD NOT` as a judgement call, citing the rule's id and quoting the reason the change gives.
+- A skill reviewing a change **MUST** check every obligation itself, except one named in the What it checks section of an `active` control whose mechanism is `ci` or `runtime-alert`.
 
 ### A skill says what its corpus did not carry
 
