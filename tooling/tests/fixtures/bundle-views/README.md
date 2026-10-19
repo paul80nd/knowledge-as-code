@@ -12,11 +12,13 @@ standard with none, and both views show two statuses.
 **A lookup skill reading standards.** `skills/standards-lookup` survives the trim, so the build index names it as the
 way to read a rule's obligations.
 
-**No hook.** The breadcrumb is `bundle`'s concern, and this fixture leaves it out.
+**A hook beside the build index.** The `hooks` component needs only `standards`, so it survives, and `bundle` renders
+`hooks/build-index.json` from the build index. The breadcrumb is [`bundle`](../bundle/README.md)'s to prove.
 
 ## What is asserted where
 
-`expected-files.txt` names each view where its component's path puts it. `expected-content.txt` pins the lines each
-view states: a standard's heading, status and controls, and a rule's title, id and obligations. `expected-bundle.txt`
+`expected-files.txt` names each view where its component's path puts it, and the hook output. `expected-content.txt`
+pins the lines each view states: the build index's opening, a standard's heading, status and controls, a rule's title,
+and a rule's id and obligations in the review view. It pins the hook output's event and its first line. `expected-bundle.txt`
 pins what the run printed. A view whose types the export lacks, and a view the tool does not write, are specified in
 [`Bundle.feature`](../../../kac.features/Bundle.feature).

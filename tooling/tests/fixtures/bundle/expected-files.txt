@@ -12,6 +12,9 @@
 .dist/plugin/hooks/breadcrumb.cmd
 .dist/plugin/hooks/breadcrumb.txt
 
+# The export carries no standards, so no build index ships and there is nothing for the build-index hook to print.
+!.dist/plugin/hooks/build-index.json
+
 # A file under no component's path travels regardless.
 .dist/plugin/README.md
 

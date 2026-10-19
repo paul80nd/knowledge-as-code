@@ -1,13 +1,20 @@
-# The build index gives each standard under a heading of its id, title and status, and each rule by title and id.
-# It names the lookup skill that survived the trim as the way to read a rule's obligations, and quotes none of them.
+# The build index opens on how many rules the corpus states, gives each standard under a heading of its id, title and
+# status, and each rule by its title alone. It names the lookup skill that survived the trim as the way to read a
+# rule's obligations, and quotes none of them.
 .dist/plugin/views/build-index.md :: # Rules the standards of example-views state
-.dist/plugin/views/build-index.md :: Ask the standards-lookup skill
+.dist/plugin/views/build-index.md :: example-views 1.0.0 states 2 rules for code in this repository, under the 2 standards below.
+.dist/plugin/views/build-index.md :: The standards-lookup skill returns a rule's obligations by its standard's id.
 .dist/plugin/views/build-index.md :: ## std-DEPLOY: An artefact says which change it came from (draft)
-.dist/plugin/views/build-index.md :: - The artefact records its commit (`std-DEPLOY.the-artefact-records-its-commit`)
+.dist/plugin/views/build-index.md :: - The artefact records its commit
 .dist/plugin/views/build-index.md :: ## std-OBS: One request reads as one timeline (active)
-.dist/plugin/views/build-index.md :: - A call forwards the trace (`std-OBS.a-call-forwards-the-trace`)
+.dist/plugin/views/build-index.md :: - A call forwards the trace
+.dist/plugin/views/build-index.md :: !std-DEPLOY.the-artefact-records-its-commit
 .dist/plugin/views/build-index.md :: !Status:
 .dist/plugin/views/build-index.md :: !**MUST**
+
+# The build-index hook prints the build index as one line of JSON, as context for the session before a tool runs.
+.dist/plugin/hooks/build-index.json :: {"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"# Rules the standards of example-views state\n\n
+.dist/plugin/hooks/build-index.json :: - The artefact records its commit\n
 
 # The review view gives each rule's obligations in the standard's own words, under the id to cite, and says how to
 # report a rule whose standard is not in force.

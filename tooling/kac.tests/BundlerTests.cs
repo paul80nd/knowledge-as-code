@@ -518,34 +518,130 @@ public class BundlerTests
     }
 
     [Fact]
-    public void A_build_index_lists_every_rule_by_title_and_id_under_its_standard_and_status()
+    public void A_build_index_lists_every_rule_by_title_under_its_standard_and_status()
     {
         var index = Text(Plan(
-            plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))],
+            plugin: [(Bundler.ManifestFile, Source(BuildIndexView()))],
             export: Standards(controls: false)), "views/build-index.md");
 
-        Assert.Contains(
-            "## std-DEPLOY: Deployment (draft)\n\n- An artefact records its commit (`std-DEPLOY.commit`)\n", index);
-        Assert.Contains("## std-OBS: Observability (active)\n\n- A call forwards the trace (`std-OBS.trace`)\n", index);
+        Assert.Contains("## std-DEPLOY: Deployment (draft)\n\n- An artefact records its commit\n", index);
+        Assert.Contains("## std-OBS: Observability (active)\n\n- A call forwards the trace\n", index);
+        Assert.DoesNotContain("std-DEPLOY.commit", index);
         Assert.DoesNotContain("**MUST**", index);
     }
 
     [Fact]
+    public void A_build_index_opens_on_how_many_rules_the_corpus_states()
+        => Assert.Contains(
+            "example-engineering states 2 rules for code in this repository, under the 2 standards below. "
+            + "Each rule binds the code its title bears on.",
+            Text(Plan(plugin: [(Bundler.ManifestFile, Source(BuildIndexView()))], export: Standards(controls: false)),
+                "views/build-index.md"));
+
+    [Fact]
+    public void A_build_index_states_the_content_version_beside_the_corpus()
+        => Assert.Contains("example-engineering 1.2.3 states 2 rules",
+            Text(Plan(plugin: [(Bundler.ManifestFile, Source(BuildIndexView()))],
+                export: Standards(controls: false, contentVersion: "1.2.3")), "views/build-index.md"));
+
+    [Fact]
     public void A_build_index_names_the_lookup_skill_that_survived()
-        => Assert.Contains("Ask the standards-lookup skill", Text(Plan(
+        => Assert.Contains("The standards-lookup skill returns a rule's obligations by its standard's id.", Text(Plan(
             plugin:
             [
                 (Bundler.ManifestFile,
-                    Source(Component("skills/standards-lookup", "standards@2"),
-                        ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))
+                    Source(Component("skills/standards-lookup", "standards@2"), BuildIndexView()))
             ],
             export: Standards(controls: false)), "views/build-index.md"));
 
     [Fact]
     public void A_build_index_with_no_lookup_skill_names_the_rules_file()
-        => Assert.Contains("`corpus/standards/rules.jsonl`", Text(Plan(
-            plugin: [(Bundler.ManifestFile, Source(ViewComponent("views/build-index.md", View.BuildIndex, "standards@2")))],
+        => Assert.Contains("`corpus/standards/rules.jsonl` inside this plugin lists a rule's obligations", Text(Plan(
+            plugin: [(Bundler.ManifestFile, Source(BuildIndexView()))],
             export: Standards(controls: false)), "views/build-index.md"));
+
+    [Fact]
+    public void The_build_index_hook_pushes_the_index_as_context_before_a_tool_runs()
+    {
+        var plan = Plan(plugin: [.. WithHooks(BuildIndexView())], export: Standards(controls: false));
+
+        var output = Required.Json(Text(plan, BuildIndexHook.RenderedFile))["hookSpecificOutput"] as JsonObject;
+
+        Assert.NotNull(output);
+        Assert.Equal("PreToolUse", output["hookEventName"]?.GetValue<string>());
+        Assert.Equal(Text(plan, "views/build-index.md"), output["additionalContext"]?.GetValue<string>());
+        Assert.DoesNotContain(plan.Warnings, w => w.Contains("build index", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void The_build_index_hook_output_is_one_line()
+        => Assert.Single(Text(Plan(plugin: [.. WithHooks(BuildIndexView())], export: Standards(controls: false)),
+            BuildIndexHook.RenderedFile).TrimEnd('\n').Split('\n'));
+
+    [Fact]
+    public void A_plugin_with_no_build_index_carries_no_hook_output()
+        => Assert.DoesNotContain(
+            $"{Dist.PluginDir}/{BuildIndexHook.RenderedFile}",
+            Plan(plugin: [.. WithHooks()], export: Standards(controls: false)).Files.Select(f => f.Path));
+
+    [Fact]
+    public void A_trimmed_hook_takes_the_build_index_hook_output_with_it()
+    {
+        var plan = Plan(
+            plugin:
+            [
+                (Bundler.ManifestFile, Source(Component("hooks", "glossary"), BuildIndexView())),
+                ("hooks/hooks.json", "{}")
+            ],
+            export: Standards(controls: false));
+
+        Assert.Equal("hooks", Assert.Single(plan.Trimmed).Path);
+        Assert.DoesNotContain($"{Dist.PluginDir}/{BuildIndexHook.RenderedFile}", plan.Files.Select(f => f.Path));
+    }
+
+    [Fact]
+    public void A_build_index_over_the_cap_is_pushed_as_a_pointer_and_warned_of()
+    {
+        var plan = Plan(plugin: [.. WithHooks(BuildIndexView())], export: ManyRules(200));
+
+        var context = (Required.Json(Text(plan, BuildIndexHook.RenderedFile))["hookSpecificOutput"] as JsonObject)?
+            ["additionalContext"]?.GetValue<string>() ?? "";
+
+        Assert.True(Text(plan, "views/build-index.md").Length > BuildIndexHook.Cap);
+        Assert.InRange(context.Length, 1, BuildIndexHook.Cap);
+        Assert.Contains("example-engineering states 200 rules for code in this repository, under 1 standard.", context);
+        Assert.Contains("`views/build-index.md` inside this plugin lists every rule by title", context);
+        Assert.Contains("10,000",
+            Assert.Single(plan.Warnings, w => w.Contains("build index", StringComparison.Ordinal)));
+    }
+
+    private static string BuildIndexView() => ViewComponent("views/build-index.md", View.BuildIndex, "standards@2");
+
+    /// <summary>A plugin tree whose <c>hooks</c> component needs only the standards the fixture exports.</summary>
+    private static (string, string)[] WithHooks(params string[] components) =>
+    [
+        (Bundler.ManifestFile, Source([Component("hooks", "standards"), .. components])),
+        ("hooks/hooks.json", "{}")
+    ];
+
+    /// <summary>One standard stating <paramref name="count"/> rules with long titles.</summary>
+    private static (string, string)[] ManyRules(int count)
+    {
+        var lines = Enumerable.Range(1, count).Select(i =>
+            $$"""{"id":"std-BIG.rule-{{i}}","title":"Rule {{i}} states something long enough to fill a line of the index","obligations":[],"record":"std-BIG","part":"rule-{{i}}","status":"draft"}""");
+
+        return
+        [
+            (Exporter.ManifestFile,
+                $$"""
+                  {"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", "types": [
+                   {"type":"standards","shapeVersion":2,"records":1,"parts":{{count}},"dir":"standards",
+                    "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"}]}
+                  """),
+            ("standards/rules.jsonl", string.Join("\n", lines)),
+            ("standards/std-BIG.json", """{"fields":{"id":"std-BIG","title":"Big"}}""")
+        ];
+    }
 
     [Fact]
     public void A_review_view_lists_each_rule_s_obligations_under_its_standard()
@@ -673,8 +769,9 @@ public class BundlerTests
         """;
 
     /// <summary>An export of two standards at shape 2, and of one control at shape 1 where <c>controls</c> is set.</summary>
-    private static (string, string)[] Standards(bool controls)
+    private static (string, string)[] Standards(bool controls, string? contentVersion = null)
     {
+        var version = contentVersion is null ? "" : $"\"contentVersion\": \"{contentVersion}\", ";
         var types = """
                     {"type":"standards","shapeVersion":2,"records":2,"parts":2,"dir":"standards",
                      "partsFile":"standards/rules.jsonl","recordKey":"record","partKey":"part","idKey":"id"}
@@ -684,7 +781,10 @@ public class BundlerTests
         (string, string)[] files =
         [
             (Exporter.ManifestFile,
-                $$"""{"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", "types": [{{types}}]}"""),
+                $$"""
+                  {"formatVersion": {{Exporter.FormatVersion}}, "corpus": "example-engineering", {{version}}
+                   "types": [{{types}}]}
+                  """),
             ("standards/rules.jsonl", Rules()),
             ("standards/std-DEPLOY.json", """{"fields":{"id":"std-DEPLOY","title":"Deployment"}}"""),
             ("standards/std-OBS.json", """{"fields":{"id":"std-OBS","title":"Observability"}}""")

@@ -60,11 +60,12 @@ Scenario: A corpus built by GitHub is sent the GitHub starter alone
   And the new corpus holds ".github/workflows/kac.yml"
   And the new corpus has no "azure-pipelines.yml"
 
-Scenario: The breadcrumb hook arrives with its execute bit
+Scenario: Each hook script arrives with its execute bit
   Given a git repository
   When I create a corpus there
   Then it succeeds
   And ".plugin/hooks/breadcrumb" in the new corpus can be run
+  And ".plugin/hooks/build-index" in the new corpus can be run
 
 Scenario: A corpus that declined types is sent no link it cannot follow
   Given a git repository

@@ -30,6 +30,13 @@
           "controls@1"
         ],
         "note": "Each standard rule's obligations, and the controls checking it."
+      },
+      {
+        "path": "hooks",
+        "requires": [
+          "standards"
+        ],
+        "note": "A PreToolUse hook printing the build index rendered beside it."
       }
     ]
   }

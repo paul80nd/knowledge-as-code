@@ -3,6 +3,9 @@
 .dist/plugin/views/build-index.md
 .dist/plugin/views/review.md
 
+# The hook directory survived beside the build index, so `bundle` renders what the build-index hook prints.
+.dist/plugin/hooks/build-index.json
+
 # The views are written into the plugin and nowhere else. The export they were read from is left where
 # it was.
 !.dist/export/views/review.md

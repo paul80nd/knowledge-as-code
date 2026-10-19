@@ -293,6 +293,28 @@ else
   echo "round-trip: this plugin ships no hook, so there is no breadcrumb to read."
 fi
 
+# The build-index hook prints a file `bundle` wrote, and Claude Code passes at most 10,000 characters of it to the
+# session. Run twice for one session, the installed script prints it once, keyed by a marker in a data dir of its own.
+BUILD_INDEX="$ROOT/hooks/build-index.json"
+
+if [ -f "$BUILD_INDEX" ]; then
+  CONTEXT_LENGTH=$(jqr '.hookSpecificOutput.additionalContext | length' "$BUILD_INDEX")
+  [ "$CONTEXT_LENGTH" -gt 0 ] && [ "$CONTEXT_LENGTH" -le 10000 ] \
+    || fail "the build-index hook pushes $CONTEXT_LENGTH characters, and Claude Code passes 1 to 10,000."
+
+  echo '{"session_id":"round-trip-session","hook_event_name":"PreToolUse","tool_name":"Read"}' > "$WORK/hook-input.json"
+  FIRST=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
+  SECOND=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
+
+  [ "$FIRST" = "$(cat "$BUILD_INDEX")" ] \
+    || fail "the build-index hook did not print its output on a session's first call."
+  [ -z "$SECOND" ] || fail "the build-index hook printed its output a second time in one session."
+
+  echo "round-trip: the build-index hook pushes $CONTEXT_LENGTH characters, once a session."
+else
+  echo "round-trip: this plugin ships no build index, so the build-index hook prints nothing."
+fi
+
 # Everything above is read from the manifests and holds for any corpus. Each lookup below is written about the corpus
 # holding the records its skill was written for.
 

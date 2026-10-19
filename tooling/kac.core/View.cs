@@ -9,7 +9,7 @@ namespace kac.core;
 /// </summary>
 public static class View
 {
-    /// <summary>Each standard's status, and its rules by title and id, for a session about to write code.</summary>
+    /// <summary>Each standard's id and status, and its rules by title, for a session about to write code.</summary>
     public const string BuildIndex = "build-index";
 
     /// <summary>Each standard's status and controls, and its rules' obligations, for a reviewer.</summary>
@@ -54,25 +54,56 @@ public static class View
     private sealed record Control(
         string Id, string Title, string Status, string Mechanism, IReadOnlyList<string> Verifies);
 
+    /// <summary>
+    /// The hook pushes this text as it stands, so it states facts and gives no instruction. A rule's id is its
+    /// standard's id and the slug of its title, so a line gives the title alone.
+    /// </summary>
     private static string RenderBuildIndex(Source source)
     {
+        var standards = StandardsOf(source);
+        var rules = standards.Sum(s => s.Rules.Count);
+
+        var under = standards.Count == 1 ? "the standard" : $"the {standards.Count} standards";
+
         var text = new StringBuilder();
         text.Append($"# Rules the standards of {Corpus(source)} state\n\n");
-        text.Append("Before you write or change code, read each rule whose title bears on the change. ");
-        text.Append(ReadFullText(source)).Append("\n\n");
-        text.Append("Each heading gives a standard's id, title and status. "
-                    + "Each line under it gives a rule's title, then its id.\n");
+        text.Append($"{Stating(source, rules)}, under {under} below. ");
+        text.Append(Binds).Append(' ').Append(ReadFullText(source)).Append("\n\n");
+        text.Append("Each heading gives a standard's id, title and status. Each line under it gives a rule's title.\n");
 
-        foreach (var standard in StandardsOf(source))
+        foreach (var standard in standards)
         {
             text.Append($"\n## {standard.Heading} ({standard.Status})\n\n");
 
             foreach (var rule in standard.Rules)
-                text.Append($"- {rule.Title} (`{rule.Id}`)\n");
+                text.Append($"- {rule.Title}\n");
         }
 
         return text.ToString();
     }
+
+    /// <summary>
+    /// What the build-index hook pushes where the index is too long to push: the counts, the view's path inside the
+    /// plugin, and the way to read a rule's obligations.
+    /// </summary>
+    public static string BuildIndexPointer(Source source)
+    {
+        var standards = StandardsOf(source);
+        var rules = standards.Sum(s => s.Rules.Count);
+        var path = source.Included.FirstOrDefault(c => c.View == BuildIndex)?.Path ?? "views/build-index.md";
+
+        return $"{Stating(source, rules)}, under {Count(standards.Count, "standard")}. {Binds} `{path}` inside this "
+               + $"plugin lists every rule by title, under its standard. {ReadFullText(source)}\n";
+    }
+
+    /// <summary>The sentence carrying the leading word, binds, which the index and its pointer share.</summary>
+    private const string Binds = "Each rule binds the code its title bears on.";
+
+    private static string Stating(Source source, int rules) =>
+        $"{Corpus(source)}{(source.Manifest.ContentVersion is { } version ? $" {version}" : "")} states "
+        + $"{Count(rules, "rule")} for code in this repository";
+
+    private static string Count(int n, string noun) => $"{n} {noun}{(n == 1 ? "" : "s")}";
 
     private static string RenderReview(Source source)
     {
@@ -158,10 +189,10 @@ public static class View
             .FirstOrDefault(c => c.Requires.Any(r => r.Split('@')[0] == Standards));
 
         if (skill is not null)
-            return $"Ask the {skill.Path["skills/".Length..]} skill for a rule's obligations, by its id.";
+            return $"The {skill.Path["skills/".Length..]} skill returns a rule's obligations by its standard's id.";
 
         var file = Type(source, Standards)?.PartsFile;
-        return $"Read a rule's obligations in `{source.CorpusRoot}/{file}` inside this plugin, by its id.";
+        return $"`{source.CorpusRoot}/{file}` inside this plugin lists a rule's obligations, under its standard's id.";
     }
 
     private static ExportedType? Type(Source source, string type) =>

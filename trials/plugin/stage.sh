@@ -1,11 +1,12 @@
 #!/bin/sh
-# Stages the plugin, prose and none arms for `claude plugin eval`, from a built plugin and a folder of cases.
+# Stages the plugin, hook, prose and none arms for `claude plugin eval`, from a built plugin and a folder of cases.
 #
 #   stage.sh <plugin dir> <cases dir> <empty stage dir>
 #
 # <cases dir> keeps each case in house/ or control/, which is how score.sh tells the two kinds apart.
 # A case listed in <cases dir>/excluded.tsv is not staged, so no session runs it.
-# <stage>/plugin is the plugin with the cases under evals/, for the plugin and none arms.
+# <stage>/plugin is the plugin less hooks/build-index.json, so its hook prints nothing, for the plugin and none arms.
+# <stage>/hook is the plugin as built, whose hook pushes the build index, for the hook arm.
 # <stage>/prose is a plugin with no components, whose cases append the generated CLAUDE.md to the system prompt.
 set -eu
 
@@ -21,6 +22,10 @@ here=$(cd "$(dirname "$0")" && pwd)
 
 if [ ! -f "$plugin/.claude-plugin/plugin.json" ] || [ ! -d "$plugin/corpus" ]; then
   echo "stage.sh: $plugin is not a plugin kac bundle built" >&2
+  exit 1
+fi
+if [ ! -f "$plugin/hooks/build-index.json" ]; then
+  echo "stage.sh: $plugin ships no hooks/build-index.json, so the hook arm would push nothing" >&2
   exit 1
 fi
 if [ -e "$stage" ] && [ -n "$(ls -A "$stage")" ]; then
@@ -40,24 +45,27 @@ if [ -n "$misplaced" ]; then
   exit 1
 fi
 
-mkdir -p "$stage/plugin" "$stage/prose/.claude-plugin"
+mkdir -p "$stage/plugin" "$stage/hook" "$stage/prose/.claude-plugin"
 
-cp -R "$plugin/." "$stage/plugin/"
-mkdir "$stage/plugin/evals"
-cp -R "$cases/." "$stage/plugin/evals/"
+for arm in plugin hook; do
+  cp -R "$plugin/." "$stage/$arm/"
+  mkdir "$stage/$arm/evals"
+  cp -R "$cases/." "$stage/$arm/evals/"
+done
+rm "$stage/plugin/hooks/build-index.json"
 
 printf '{ "name": "prose-arm", "version": "0.0.0" }\n' > "$stage/prose/.claude-plugin/plugin.json"
 mkdir "$stage/prose/evals"
 cp -R "$cases/." "$stage/prose/evals/"
 
-rm -f "$stage/plugin/evals/excluded.tsv" "$stage/prose/evals/excluded.tsv"
+rm -f "$stage/plugin/evals/excluded.tsv" "$stage/hook/evals/excluded.tsv" "$stage/prose/evals/excluded.tsv"
 if [ -f "$cases/excluded.tsv" ]; then
   cut -f 1 "$cases/excluded.tsv" | while IFS= read -r excluded; do
     if [ ! -d "$cases/$excluded" ]; then
       echo "stage.sh: excluded.tsv lists $excluded, which is not a case" >&2
       exit 1
     fi
-    rm -rf "$stage/plugin/evals/$excluded" "$stage/prose/evals/$excluded"
+    rm -rf "$stage/plugin/evals/$excluded" "$stage/hook/evals/$excluded" "$stage/prose/evals/$excluded"
   done
 fi
 "$here/prose-claude-md.sh" "$plugin/corpus" "$stage/CLAUDE.md"

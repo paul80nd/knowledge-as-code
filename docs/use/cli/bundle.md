@@ -50,13 +50,23 @@ the plugin tree may already use.
 
 | `view`        | What it lists, under each standard's id, title and status                             | Its component reads                           |
 |---------------|---------------------------------------------------------------------------------------|-----------------------------------------------|
-| `build-index` | each rule by title and id                                                             | `standards@2`                                 |
+| `build-index` | each rule by title                                                                    | `standards@2`                                 |
 | `review`      | the controls checking the standard, with their mechanism, and each rule's obligations | `standards@2`, and `controls@1` where present |
 
 A view is trimmed like any other component. A type under `optional` is read where the export has it, and its absence
-trims nothing, so a corpus with no controls still gets the review view. The build index names the lookup skill that
-reads standards where one survived the trim.
+trims nothing, so a corpus with no controls still gets the review view. The build index opens on how many rules the
+corpus states, and names the lookup skill that reads standards where one survived the trim.
 [The export format](../../reference/export.md#views-generated-from-the-export) says what a view reads.
+
+### The build-index hook
+
+Where the `hooks` component and the build index both ship, `bundle` writes `hooks/build-index.json`. The hook prints it
+the first time a session calls `Read`, `Grep`, `Glob`, `Write`, `Edit` or `NotebookEdit`. A session that reads a file
+before it edits one has the build index before its first change. A session that reads only through `Bash` has it
+straight after its first edit.
+
+Claude Code passes a hook at most 10,000 characters of context. Over that, `bundle` writes the rule and standard counts
+and the build index's path in its place, and warns.
 
 ## Examples
 
@@ -72,6 +82,9 @@ install it:
 
 ```text
 wrote .dist/plugin/hooks/breadcrumb
+wrote .dist/plugin/hooks/breadcrumb.cmd
+wrote .dist/plugin/hooks/breadcrumb.txt
+wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
@@ -82,11 +95,12 @@ bundle: trimmed skills/fix-lookup: the export carries no fixes.
 bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
-bundle: wrote 26 file(s) to .dist/plugin/ as example-libraries 0.5.0. 5 component(s) included, 5 trimmed.
+bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.24.1. 5 component(s) included, 5 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
-A trimmed component is not an error. Its record type is one this corpus does not export.
+A trimmed component is not an error. Its record type is one this corpus does not export. This corpus exports no
+standards, so the build-index hook ships with no `hooks/build-index.json` and prints nothing.
 
 ### An install
 
@@ -103,7 +117,7 @@ the three skills that name no type of their own. It also ships both views, becau
 no fixes and no processes, so `fix-lookup` and `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 71 file(s) to .dist/plugin/ as example-engineering 0.36.1. 10 component(s) included, 2 trimmed.
+bundle: wrote 73 file(s) to .dist/plugin/ as example-engineering 0.36.2. 10 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -186,7 +200,12 @@ known.
 **A component's `requires` is not checked against the schema.** A misspelt type trims its component with the same
 message as a type this corpus declined.
 
-**A view has no `paths:` and loads nowhere by itself.** Delivering it to an agent is a hook's or a skill's job.
+**A view has no `paths:` and loads nowhere by itself.** The build-index hook pushes the build index. The review view
+reaches an agent only where a skill reads it.
+
+**The build-index hook marks a session done in the plugin's data directory.** It makes one directory per session under
+`build-index/`, and deletes any older than 7 days each time it runs. A session whose id the hook cannot read gets the
+build index on every call.
 
 **The export is copied whole.** A component that survives the trim brings the entire export, including types no
 surviving component requires.

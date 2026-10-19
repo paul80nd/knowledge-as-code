@@ -74,7 +74,7 @@ pointer at the moment of use, and the agent reads the full text the pointer name
 
 | Moment                                  | When it arrives                        | What reaches the agent                             | Where the full text is              |
 |-----------------------------------------|----------------------------------------|----------------------------------------------------|-------------------------------------|
-| **Build**                               | the session's first write or edit      | an index of every standard rule, by id and title   | the standard, read through a lookup |
+| **Build**                               | the session's first read or edit       | an index of every standard rule, by title          | the standard, read through a lookup |
 | **Review**                              | somebody asks for a review             | the review view, in full, in a reviewer of its own | the review view                     |
 | **Design, operate, contribute, assure** | the agent decides to look something up | a lookup skill's answer                            | the record                          |
 | **Learn**                               | a person opens the corpus              | the published corpus, read as a wiki               | the record                          |
@@ -86,7 +86,8 @@ A moment whose lookups keep missing in a trial moves to a pointer the plugin pus
 `kac` generates a **view** (an export shaped for one use) when it bundles the plugin. The corpus declares each view in
 its plugin manifest. Each entry in a view states its record's status, so a draft rule reads as a draft.
 
-* **The build index** lists every standard rule by id and title. A hook the plugin ships pushes it once a session.
+* **The build index** lists every standard rule by title, under its standard's id. A hook the plugin ships pushes it
+  once a session.
 * **The review view** lists each rule's obligations: each MUST to check, and each SHOULD to note a departure from. It
   names the control that checks each rule, and the control's mechanism.
 
