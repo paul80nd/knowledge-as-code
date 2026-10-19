@@ -8,7 +8,7 @@ packages:
   - { purl: pkg:github/actions/deploy-pages, versions: 5.x }
   - { purl: pkg:github/actions/upload-pages-artifact, versions: 5.x }
 homepage: https://pages.github.com/
-licence: MIT AND Apache-2.0 AND BSD-2-Clause AND BlueOak-1.0.0 AND ISC AND 0BSD
+licence: NOASSERTION
 licence-declared: MIT
 decided-on: "2026-08-24"
 review-by: "2027-08-24"
@@ -72,14 +72,15 @@ Some entries need a closer read:
 * `chainsaw` and `traverse` state `MIT/X11`, which is the MIT licence. `traverse` includes the MIT text.
 * `dot-object` states no licence in `dist/licenses.txt`. Its npm package at 2.1.4 includes an `MIT-LICENSE` file.
 * The `lodash` licence waives rights in the sample code of its documentation under CC0. That sample code is not in the
-  bundle, so the conclusion leaves CC0 out.
+  bundle, so CC0 does not apply to it.
 
-Two entries are unresolved. `buffers` 0.1.1 and `http-status-messages` 1.1.0 state no licence in
-`dist/licenses.txt`, in their npm registry metadata, or in any file of their npm packages. `licence` concludes for
-everything else `deploy-pages` bundles, and says nothing about these two.
+`licence` is `NOASSERTION`, because two packages `deploy-pages` bundles state no licence. `buffers` 0.1.1 and
+`http-status-messages` 1.1.0 have none in `dist/licenses.txt`, in their npm registry metadata, or in any file of their
+npm packages. Until both are known, no licence can be concluded for the whole bundle. If both turn out to be MIT or
+compatible with it, the conclusion is MIT and the licences in the table above.
 
 `actions/upload-artifact` declares MIT. Its `.licenses/` folder records MIT packages and one BlueOak-1.0.0 package,
-`minimatch`, and both licences are already in the conclusion.
+`minimatch`, and the table above already lists BlueOak-1.0.0.
 
 The runner fetches the actions for each job, and nothing here redistributes them. The published site contains the
 built pages and no part of the actions, so nothing follows for it.

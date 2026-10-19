@@ -4,14 +4,14 @@
 
 ## Build
 
-| ID                     | Title                                             | Status     | Review by  | Licence                                                                                                 |
-|------------------------|---------------------------------------------------|------------|------------|---------------------------------------------------------------------------------------------------------|
-| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   | 2027-08-18 | LicenseRef-Anthropic-Terms-of-Service                                                                   |
-| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 2027-08-03 | MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib |
-| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 2027-08-03 | BSD-2-Clause                                                                                            |
-| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | 2027-08-21 | MIT                                                                                                     |
-| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated | 2027-08-21 | MIT                                                                                                     |
-| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 2027-08-03 | MIT                                                                                                     |
+| ID                     | Title                                             | Status     | Review by  | Licence                                                                                                                                                                                              |
+|------------------------|---------------------------------------------------|------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| tol-claude-code-cli    | [Claude Code CLI](build/claude-code-cli.md)       | approved   | 2027-08-18 | LicenseRef-Anthropic-Terms-of-Service                                                                                                                                                                |
+| tol-dotnet-sdk         | [.NET SDK](build/dotnet-sdk.md)                   | approved   | 2027-08-03 | MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND NCSA AND Unicode-DFS-2020 AND CC0-1.0 AND Zlib AND LicenseRef-Microsoft-DotNet-Library-License AND LicenseRef-Microsoft-Windows-SDK-License |
+| tol-markdig            | [Markdig](build/markdig.md)                       | approved   | 2027-08-03 | BSD-2-Clause                                                                                                                                                                                         |
+| tol-spectre-console    | [Spectre.Console](build/spectre-console.md)       | approved   | 2027-08-21 | MIT                                                                                                                                                                                                  |
+| tol-system-commandline | [System.CommandLine](build/system-commandline.md) | deprecated | 2027-08-21 | MIT                                                                                                                                                                                                  |
+| tol-yamldotnet         | [YamlDotNet](build/yamldotnet.md)                 | approved   | 2027-08-03 | MIT                                                                                                                                                                                                  |
 
 ## Docs
 
@@ -43,11 +43,11 @@
 
 ## Workflows
 
-| ID               | Title                                             | Status   | Review by  | Licence                                                                |
-|------------------|---------------------------------------------------|----------|------------|------------------------------------------------------------------------|
-| tol-checkout     | [actions/checkout](workflows/checkout.md)         | approved | 2027-08-03 | MIT AND Apache-2.0 AND ISC                                             |
-| tol-github-pages | [GitHub Pages actions](workflows/github-pages.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND BSD-2-Clause AND BlueOak-1.0.0 AND ISC AND 0BSD |
-| tol-nuget-login  | [NuGet/login](workflows/nuget-login.md)           | approved | 2027-08-20 | Apache-2.0 AND MIT                                                     |
-| tol-setup-dotnet | [actions/setup-dotnet](workflows/setup-dotnet.md) | approved | 2027-08-03 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |
-| tol-setup-go     | [actions/setup-go](workflows/setup-go.md)         | approved | 2027-09-02 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |
-| tol-setup-python | [actions/setup-python](workflows/setup-python.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD                  |
+| ID               | Title                                             | Status   | Review by  | Licence                                               |
+|------------------|---------------------------------------------------|----------|------------|-------------------------------------------------------|
+| tol-checkout     | [actions/checkout](workflows/checkout.md)         | approved | 2027-08-03 | MIT AND Apache-2.0 AND ISC                            |
+| tol-github-pages | [GitHub Pages actions](workflows/github-pages.md) | approved | 2027-08-24 | NOASSERTION                                           |
+| tol-nuget-login  | [NuGet/login](workflows/nuget-login.md)           | approved | 2027-08-20 | Apache-2.0 AND MIT                                    |
+| tol-setup-dotnet | [actions/setup-dotnet](workflows/setup-dotnet.md) | approved | 2027-08-03 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD |
+| tol-setup-go     | [actions/setup-go](workflows/setup-go.md)         | approved | 2027-09-02 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD |
+| tol-setup-python | [actions/setup-python](workflows/setup-python.md) | approved | 2027-08-24 | MIT AND Apache-2.0 AND BlueOak-1.0.0 AND ISC AND 0BSD |
