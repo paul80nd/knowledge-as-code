@@ -23,14 +23,14 @@ tags: [ agents, export, plugin, skills ]
 Every corpus here publishes a Claude Code plugin: a frozen copy of its export, and the skills that read it.
 `template/.plugin/` contains those skills, `plugin.json` says which of them travel, and `kac bundle` assembles both.
 `kac bundle` also generates each view `plugin.json` declares: a file shaped for one moment of the work, written from the
-export, such as the index of rules a session reads before it writes code. A skill answers from the export beside it,
-using no more than a session's ability to read a file, and states plainly what did not travel. The copy it reads cannot
-be changed, so a skill with something to send back raises an issue on the repository the export came from: a finding
-where the corpus is wrong, and a request where the work is about to depart from a clause that is right. Back at that
-repository, a skill in the corpus's own working tree triages those issues, marks each one with the route it belongs
-on, and drafts the record a routed finding asks for as a pull request. The record cites the issue it came from, and the
-pull request cites the record. Merging it closes the issue. That skill ships in no plugin, because it writes to the
-tracker and to the records.
+export, such as the index of rules a session reads before it writes code. A hook pushes that index once a session. A
+skill answers from the export beside it, using no more than a session's ability to read a file, and states plainly
+what did not travel. The copy it reads cannot be changed, so a skill with something to send back raises an issue on
+the repository the export came from: a finding where the corpus is wrong, and a request where the work is about to
+depart from a clause that is right. Back at that repository, a skill in the corpus's own working tree triages those
+issues, marks each one with the route it belongs on, and drafts the record a routed finding asks for as a pull request.
+The record cites the issue it came from, and the pull request cites the record. Merging it closes the issue. That skill
+ships in no plugin, because it writes to the tracker and to the records.
 
 ## Rules
 
@@ -99,6 +99,20 @@ _**Covers:** `eng:pol-AGNT.UNPROV`_
 - A fresh bundle of the same export **MUST** write every view again, byte for byte.
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-KNOW.COPY`_
+
+### A hook runs in a POSIX shell, and pushes a view once a session
+
+- A hook **MUST** run under a POSIX shell.
+- A hook **MUST NOT** require a parser, an interpreter or a runtime beyond that shell.
+- What a hook prints **MUST** be rendered by `kac bundle`, so the hook computes nothing about the export.
+- A hook **MUST** write only under `${CLAUDE_PLUGIN_DATA}`.
+- A hook pushing a view **MUST** push it at most once a session.
+- What a hook pushes **MUST** be at most 10,000 characters, because Claude Code shows a session only the first 2,000 of
+  a longer one.
+- Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
+- What a hook pushes **SHOULD** state facts, because Claude Code passes it to the session as context.
+
+_**Covers:** `eng:pol-AGNT.ACCESS`_
 
 ### A skill writes back to the tracker the corpus states
 
@@ -352,6 +366,10 @@ broke it.
       files, and empty where the component reads no export.
 - [ ] Every type a component reads only where the export carries it is named in `optional`, at the shape it reads.
 - [ ] Every view is declared as a component naming it in `view`, and is written by `kac bundle` from the export alone.
+- [ ] Every hook runs under a POSIX shell alone, prints a file `kac bundle` rendered, and writes only under
+      `${CLAUDE_PLUGIN_DATA}`.
+- [ ] Every hook pushing a view pushes it at most once a session, at most 10,000 characters, and its path and counts
+      where the view is longer.
 - [ ] Every component reading no export declares `standalone` where it supports nothing, and leaves it off where it
       supports the components that do.
 - [ ] No skill offers to write to the export, and each names the issue tracker instead.
@@ -427,6 +445,14 @@ A view is not a second copy kept for agents. A second copy is one somebody maint
 from the export as soon as either is edited. A view is generated from the export inside the same plugin, at the same
 moment, by the same command, and a fresh bundle writes it again unchanged. So the words it quotes are the export's
 words, and the rule against a second copy is met.
+
+A hook runs on every machine that installs the plugin, with no session deciding to call it, so it asks that machine for
+the least it can. Claude Code runs a hook under `sh`, Git Bash or PowerShell, so a POSIX script reaches the first two
+with nothing installed. `kac bundle` renders the JSON a hook prints, and the script only cuts the session id out of its
+input and prints a file. The plugin's own directory is replaced on every update, so the marker saying a session has
+already seen the view goes in the data directory Claude Code keeps for the plugin. A view pushed on every call would
+cost its length on every turn that followed, and a view over the cap reaches a session as a path and a fragment it is
+not asked to read.
 
 A finding is an observation, and it proposes no record. A session cannot see what the receiving corpus already
 contains, so an id it invents and an expiry it guesses are decisions taken by the wrong reader. The block states what
@@ -551,6 +577,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-19: a hook runs in a POSIX shell, prints what `kac bundle` rendered, writes only to the plugin's data
+  directory, and pushes a view once a session within the 10,000 characters Claude Code passes on.
 - 2026-10-19: a view is declared as a component, and `kac bundle` generates it from the export alone, so it is not a
   second copy kept for agents. A component names a type it reads only where present in `optional`.
 - 2026-10-18: using the client that already authenticates, and the one-line title of a finding and of a deviation
