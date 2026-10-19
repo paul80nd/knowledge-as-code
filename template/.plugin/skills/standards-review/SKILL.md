@@ -3,8 +3,7 @@ name: standards-review
 description: Review a change against the standards that travel with this plugin, citing the rule behind every finding.
   Use when someone asks for a review of their work, in words like "review my change", "review this branch", "check this
   against our standards", "review since main", and before you open a pull request. Pass the fixed point to review from,
-  such as a branch, a tag or a commit. The report it returns is the review, shown to the person as it stands, with
-  every rule id in it.
+  such as a branch, a tag or a commit.
 argument-hint: "[fixed point]"
 context: fork
 agent: general-purpose
@@ -129,14 +128,7 @@ on that day, and reads the same however long ago it was.
 
 ## Report
 
-The session that asked for the review receives your report and passes it on, so its first line says what it is. Open
-the report on this line, word for word:
-
-```text
-This is the standards review, shown as it stands: each finding cites the rule it applies by id.
-```
-
-Then report under two headings, each finding on its own line or short paragraph:
+Report under two headings, each finding on its own line or short paragraph:
 
 * **Violations**: each broken `MUST` or `MUST NOT`, with the rule's id, the obligation quoted, the file and the lines
   that break it, and what checks the rule, or that nothing automated does.
