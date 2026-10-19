@@ -65,33 +65,52 @@ with well-regarded public ones. Where a record differs from good public practice
 in the example standards is still a MUST, and they are rewritten first, in the shape [Principles](principles.md)
 describes. Tracked in [epic #930][e930].
 
+## Delivery at the moment of use
+
+The plugin gives an agent the smallest set of relevant knowledge at the moment the agent is likely to use it. Text
+loaded early and left unused draws on the agent's attention for the rest of the session. So the plugin pushes a short
+pointer at the moment of use, and the agent reads the full text the pointer names. This follows Anthropic's guidance on
+[context engineering][ctx] and on [progressive disclosure in skills][skills].
+
+| Moment                                  | When it arrives                        | What reaches the agent                             | Where the full text is              |
+|-----------------------------------------|----------------------------------------|----------------------------------------------------|-------------------------------------|
+| **Build**                               | the session's first write or edit      | an index of every standard rule, by id and title   | the standard, read through a lookup |
+| **Review**                              | somebody asks for a review             | the review view, in full, in a reviewer of its own | the review view                     |
+| **Design, operate, contribute, assure** | the agent decides to look something up | a lookup skill's answer                            | the record                          |
+| **Learn**                               | a person opens the corpus              | the published corpus, read as a wiki               | the record                          |
+
+A moment whose lookups keep missing in a trial moves to a pointer the plugin pushes. Tracked in [epic #940][e940].
+
 ## Views generated for each moment
 
-`kac` generates a **view** for each moment: an export shaped for one use, built once when the plugin is bundled. No
-agent has to assemble it from raw records while it works.
+`kac` generates a **view** (an export shaped for one use) when it bundles the plugin. The corpus declares each view in
+its plugin manifest. Each entry in a view states its record's status, so a draft rule reads as a draft.
 
-* **The build view** writes the MUST rules for the code being changed into rules files scoped by path, which load when
-  an agent touches a matching file.
-* **The review view** gives a reviewer each rule to check, with its id and its reason, each SHOULD to note a departure
-  from, and the controls that already check a rule.
+* **The build index** lists every standard rule by id and title. A hook the plugin ships pushes it once a session.
+* **The review view** lists each rule's obligations: each MUST to check, and each SHOULD to note a departure from. It
+  names the control that checks each rule, and the control's mechanism.
 
-The per-type export stays as the format another corpus imports. Tracked in [epic #940][e940].
+The per-type export stays the format another corpus imports. Tracked in [epic #940][e940].
 
 ## Formats other agents read
 
-Claude Code comes first, and nothing generated is exclusive to it. `kac` generates formats other agents already read:
-skills in the open `SKILL.md` format, Markdown in the shape of an `AGENTS.md`, and rules scoped by path.
+Claude Code comes first, and nothing generated is exclusive to it. Skills use the open `SKILL.md` format, and each view
+is Markdown.
 
-The review view is written where review tools already look for a repository's standards. A code-review skill, or an AI
-reviewer, reads it without being forked or replaced.
+The plugin ships its own reviewer, modelled on the Standards review in [`code-review`][cr]. A repository can also copy
+the review view to where its own review tools read standards, such as `CODING_STANDARDS.md`.
 
-What loads by itself is kept short. A map of the corpus is always on. The MUST rules for the files being changed load by
-path. Everything else is fetched when it is needed. Tracked in [epic #940][e940].
+No record states which files a rule applies to, so nothing loads by path. [Issue #993][s993] keeps that option open
+until the build trial shows whether the index is enough. Tracked in [epic #940][e940].
 
 ## Skills that state intent
 
 A skill states what it is for and why, and leaves the steps to the model's judgement. It sets out steps only for a type
 an agent follows: a runbook, a fix, or the flow of a process.
+
+Every piece of text the plugin puts in front of an agent is a pointer: a skill's description, a hook's message, a line
+of the build index. Its wording decides whether the agent reads what it points at. When a pointer misses, sharpen its
+wording first. [`writing-for-agents`][wfa] is the reference for that text.
 
 A finding that a skill or a process did not cover a case is answered with a reason the agent can apply to the next case,
 or by removing a step. It is never answered by adding a step. Tracked in [epic #940][e940].
@@ -100,6 +119,11 @@ or by removing a step. It is never answered by adding a step. Tracked in [epic #
 
 [Principles](principles.md) says what the framework does today, and why.
 
+[cr]: https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review
+[ctx]: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 [e930]: https://github.com/paul80nd/knowledge-as-code/issues/930
 [e940]: https://github.com/paul80nd/knowledge-as-code/issues/940
 [s946]: https://github.com/paul80nd/knowledge-as-code/issues/946
+[s993]: https://github.com/paul80nd/knowledge-as-code/issues/993
+[skills]: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
+[wfa]: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents
