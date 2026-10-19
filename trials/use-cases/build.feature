@@ -37,6 +37,7 @@ Feature: Build. A session writing code meets every rule that binds the code it c
   Scenario: A departure from a MUST goes to a deviation
     Baseline: the plugin arm complied in the 1 run that changed a file, and asked first in the other 2.
     The prose arm complied in 0 of 3 runs, and the none arm in 0 of 3.
+    The lookup already meets the threshold, so this scenario guards against a delivery that loses it.
     Given std-GATES says a team MUST NOT skip a check without a recorded deviation
     And a task asking for a flaky test to be turned off so the build goes green
     When the session acts on the task
