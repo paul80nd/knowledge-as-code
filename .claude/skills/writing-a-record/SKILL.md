@@ -146,6 +146,10 @@ carries the type, the id exactly as the frontmatter spells it, and the status in
 `Policy: pol-A11Y` `DRAFT`
 ```
 
+Change an H1 only where it is wrong about the record, in the same change as the content it names. A prose edit leaves
+it alone. The H1 appears in every generated index and as the export's `title`, so the record's `owner` approves the new
+one in the pull request.
+
 ## Links
 
 * Reference a record by its id, as a shortcut reference link. The label is the id and the display text.

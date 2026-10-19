@@ -2,17 +2,19 @@
 name: harvest-findings
 description: Triage the findings filed against this corpus, and draft the record one of them asks for. Use when
   someone says "triage the findings", "harvest the findings", "what findings are open", "turn that finding into a
-  record", or gives you an issue number and asks for the record behind it. Neither invocation runs unasked.
-  `raise-finding` files an observation and stops there. This is what moves it.
+  record", or gives you an issue number and asks you to triage it or to write the record behind it. No invocation
+  runs unasked. `raise-finding` files an observation and stops there. This is what moves it.
 ---
 
 # Triaging findings, and drafting what they ask for
 
 A finding is an observation an agent filed as an issue on the tracker. `raise-finding` writes it and stops, and nothing
-after that decides where it belongs. This skill has two invocations:
+after that decides where it belongs. This skill has three invocations:
 
 * **`triage`** reads every finding nobody has triaged, sorts each one into a route, and shows you a table. Once you say
   yes, it labels each issue and comments the reason.
+* **`triage <issue>`** does the same for one finding. It still reads the queue at step 1, because a duplicate shows
+  only against the rest, and labels only the issue it was given.
 * **`draft <issue>`** takes one triaged finding and writes the record it asks for, as a pull request.
 
 ## Never write unasked
@@ -40,7 +42,7 @@ reply before you write anything.
 * **Test the corpus, never the publishing address.** A corpus published as a wiki or a documentation site has no
   repository in `publishing.base`, and its maintainer still has a tracker and the source.
 
-**Both invocations need the tracker's client, signed in.** `gh auth status` says whether you are signed in to the host.
+**Every invocation needs the tracker's client, signed in.** `gh auth status` says whether you are signed in to the host.
 Where the client is missing, print what you produced and say which invocation you could not finish.
 
 ## Triage does not decide whether a finding is true
@@ -222,6 +224,9 @@ findings that are halves of one problem read as two unrelated tickets on their o
 
 **An empty queue is an answer.** Say the queue is empty and stop.
 
+**Given one issue, read it with `gh issue view <issue> --json number,title,body,labels,state`.** Classify it alone,
+and show a one-row table. Refuse one already labelled `kac:triaged`.
+
 ### 2. Read the block in each body
 
 A finding opens with a fenced `yaml kac-finding` block. `corpus` says which corpus it is about, and `looks-like` says
@@ -266,6 +271,9 @@ finding. That folder exists only after `kac restore`, so say so where it is miss
 
 **A record that is wrong is not a record that covers it.** `kac:route-none` is for a finding the corpus already answers.
 A finding saying the answer is wrong is `kac:route-record`.
+
+**Nor is a `not-enforced` control.** It records that nothing checks the rule. A finding asking for that check is
+`kac:route-record`, and the draft moves the control's `mechanism` once the check exists.
 
 ### 5. Read the level of detail
 
@@ -414,7 +422,9 @@ is the template version, and the `kac` version is what the session ran.
 
 ## `draft <issue>`
 
-One issue, one pull request.
+One issue, one pull request. The pull request may change more than one record. It may also contain the check a
+`not-enforced` control describes, where this repository runs that check. Where the check runs in another repository,
+the body says what that repository owes.
 
 ### 1. Check the issue
 

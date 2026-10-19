@@ -28,6 +28,7 @@ this repository keeps about itself, and each cites the standard its steps stand 
 |----------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | write a record, or rewrite one                           | [prc-add-a-record](../../../examples/dog-fooding/processes/add-a-record.md)               |
 | review records against the rules                         | [reviewing-records](playbooks/reviewing-records.md)                                       |
+| rework a type against public exemplars                   | [reworking-a-type](playbooks/reworking-a-type.md)                                         |
 | change the schema, or write a rule                       | [prc-change-the-schema](../../../examples/dog-fooding/processes/change-the-schema.md)     |
 | change `kac`, or add a check                             | [prc-change-the-tool](../../../examples/dog-fooding/processes/change-the-tool.md)         |
 | write a feature spec for behaviour `kac` already has     | [feature specs](../../../tooling/CLAUDE.md#the-feature-specs-pin-more-than-findings)      |

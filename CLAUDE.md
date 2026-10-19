@@ -33,8 +33,9 @@ Everything else the overlay layer names does live once in `template/` and again 
 cd examples/library && dotnet run --project ../../tooling/kac -- update --check --from ../../
 ```
 
-That check answers in both directions: a copy that differs, and a file the corpus holds that the template sends nothing
-to.
+That check answers in both directions: an overlay copy that differs, and a file the corpus holds that the template sends
+nothing to. A type page and a `_template.md` are seeds, which it never compares, so copy each by hand and `diff` it
+against `template/`.
 
 ## Before you commit
 
@@ -109,7 +110,8 @@ write the issue where they say one belongs. The record itself lands in
 **Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
 it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
 sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. An epic is `1`, and its stories count up
-from `2` in delivery order. An issue left off the board is one the developer never sees.
+from `2` in delivery order. A finding filed during a story under an epic becomes a sub-issue of that epic as well.
+`addSubIssue` takes a GraphQL node id for both issues. An issue left off the board is one the developer never sees.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already

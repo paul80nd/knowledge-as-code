@@ -30,8 +30,8 @@ which of the two is wrong and change neither.
 * **Never delete a required section.** An empty one is a content gap to report.
 * **Never edit a `_template.md` or a `<type>.md`.** See *Template defects* below. Where the request is *about* one of
   those files rather than about the records, this is the wrong playbook: run
-  [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md), whose step 8 is the only one
-  covering them.
+  [prc-sweep-prose](../../../../examples/dog-fooding/processes/sweep-prose.md). Where a comparison with public
+  exemplars reworks the type as a whole, run [reworking-a-type](reworking-a-type.md).
 
 ## The procedure
 
