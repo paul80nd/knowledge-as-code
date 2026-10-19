@@ -43,8 +43,8 @@ upstream:
   path:
   ref:
   commit:
-  template-version: 19
-  taken-on: "2026-09-08"
+  template-version: 20
+  taken-on: "2026-10-19"
 
 # Where to report a problem with the framework itself. This repository authors it, so a finding about
 # `kac`, the schema or a skill goes to the same tracker as one about a record here.
