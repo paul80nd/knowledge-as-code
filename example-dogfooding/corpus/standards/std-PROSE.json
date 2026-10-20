@@ -28,6 +28,6 @@
     "Conformance checklist": "- [ ] Every instruction comes after the purpose or the condition governing it.\n- [ ] Every contrast left standing is one a reader needs, and every clause kept the one it had.\n- [ ] Every heading names a topic.\n- [ ] No em dash survives. Spelling is British.\n- [ ] Every line of prose outside a table or a link definition is under 120 characters.\n- [ ] No hand edit sits inside a generated block.\n- [ ] Every count names what reports it.\n- [ ] Every rule left behind is named in the reply."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/dog-fooding/standards/prose.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c588d195b70d324698ca84dd4ef9c2a60c59de2a/examples/dog-fooding/standards/prose.md"
   }
 }

@@ -32,6 +32,6 @@
     "Where it is used": "* [svc-corpus-feed] is packed and pushed from a checkout.\n* [svc-docs-site] is built from one.\n* [svc-kac] is built, tested and published from one.\n* [svc-marketplace] is assembled and pushed from one."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/dog-fooding/tools/workflows/checkout.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c588d195b70d324698ca84dd4ef9c2a60c59de2a/examples/dog-fooding/tools/workflows/checkout.md"
   }
 }
