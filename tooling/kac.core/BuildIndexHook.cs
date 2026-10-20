@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 namespace kac.core;
 
 /// <summary>
-/// The output the build-index hook prints the first time a session reads a file: the build index as context for the
+/// The output the build-index hook prints at a session's first tool call: the build index as context for the
 /// session. <c>docs/maintaining/plugin.md</c> says why it is rendered at bundle time.
 /// </summary>
 public static class BuildIndexHook

@@ -62,10 +62,10 @@ can read it.
 
 ### The build-index hook
 
-Where the `hooks` component and the build index both ship, `bundle` writes `hooks/build-index.json`. The hook prints it
-the first time a session calls `Read`, `Grep`, `Glob`, `Write`, `Edit` or `NotebookEdit`. A session that reads a file
-before it edits one has the build index before its first change. A session that reads only through `Bash` has it
-straight after its first edit.
+Where the `hooks` component and the build index both ship, `bundle` writes `hooks/build-index.json`. The hook runs
+before every tool call, and prints it at the first call of a session. Claude Code passes the build index to the session
+with that call's result, whichever tool the call used. A session whose first call is an edit has the build index once
+that edit returns.
 
 Claude Code passes a hook at most 10,000 characters of context. Over that, `bundle` writes the rule and standard counts
 and the build index's path in its place, and warns.
@@ -208,8 +208,8 @@ message as a type this corpus declined.
 reaches an agent only where a skill reads it.
 
 **The build-index hook marks a session done in the plugin's data directory.** It makes one directory per session under
-`build-index/`, and deletes any older than 7 days each time it runs. A session whose id the hook cannot read gets the
-build index on every call.
+`build-index/`, and deletes any older than 7 days each time it makes one. A session whose id the hook cannot read gets
+the build index on every call.
 
 **The export is copied whole.** A component that survives the trim brings the entire export, including types no
 surviving component requires.

@@ -39,8 +39,11 @@ every component `bundle.json` lists is in the tree, as a skill or hook directory
 
 `round-trip` installs the plugin on Ubuntu and on Windows for `library`, `engineering` and `payments`, then asks each
 skill in it the questions that skill describes. Where the build index ships, it checks that the build-index hook pushes
-at most 10,000 characters, and runs the installed script twice for one session to check that it prints once. `import-round-trip` publishes from `engineering`, consumes it from
-`payments`, renames a clause upstream, and asserts the downstream build fails and reports that clause.
+at most 10,000 characters, and runs the installed script twice for one session to check that it prints once. It logs
+how long a later call takes on a small input and on a 200 KB one, and fails on neither.
+
+`import-round-trip` publishes from `engineering`, consumes it from `payments`, renames a clause upstream, and asserts
+the downstream build fails and reports that clause.
 
 The `tool` job adds the empty case. It bundles a corpus that adopted no type, then runs
 `claude plugin validate --strict` over the plugin and its marketplace. It asserts that nothing reading a type shipped,
