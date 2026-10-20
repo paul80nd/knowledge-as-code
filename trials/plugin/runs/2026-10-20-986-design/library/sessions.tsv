@@ -1,0 +1,7 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	adr-ruled-out	1	0	1	1	1	1	0.4568618	10	pass
+house	plugin	adr-ruled-out	2	0	1	1	1	1	0.4071702	8	pass
+house	plugin	adr-ruled-out	3	0	1	1	1	1	0.40161559999999996	10	pass
+house	plugin	text-the-borrower	1	0	1	1	1	1	0.4215442	7	pass
+house	plugin	text-the-borrower	2	0	1	1	1	1	0.4468048	8	pass
+house	plugin	text-the-borrower	3	0	1	1	1	1	0.4268382	9	pass

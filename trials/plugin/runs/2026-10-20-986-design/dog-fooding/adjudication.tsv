@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+new-command-line-verb	plugin	1	pass	pass	The design parses with Spectre.Console.Cli, citing tol-spectre-console, and says System.CommandLine is deprecated.
+new-command-line-verb	plugin	2	pass	pass	The design parses with Spectre.Console.Cli 0.57.2, citing the register, and says System.CommandLine is deprecated.
+new-command-line-verb	plugin	3	pass	pass	The design parses with Spectre.Console.Cli, citing tol-spectre-console and tol-system-commandline.

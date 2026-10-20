@@ -389,3 +389,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)                 |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
 | [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md)              |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |
 | [The dog-fooding cut, complete](runs/2026-10-20-1027-dogfooding-cut-complete.md) |      5 | `examples/dog-fooding`                |       44 | #923's cut chosen again from the complete prose text              |
+| [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |

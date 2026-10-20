@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	new-command-line-verb	1	0	1	1	1	1	0.5872848	14	pass
+house	plugin	new-command-line-verb	2	0	1	1	1	1	0.5530196	13	pass
+house	plugin	new-command-line-verb	3	0	1	1	1	1	0.7494040000000001	18	pass

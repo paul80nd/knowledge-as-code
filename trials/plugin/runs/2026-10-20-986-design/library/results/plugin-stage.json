@@ -1,0 +1,554 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T18:53:11.378Z",
+  "durationSeconds": 100,
+  "costUsd": 2.5608348,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-libraries",
+        "version": "0.25.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "adr-ruled-out",
+      "dir": "evals/house/adr-ruled-out",
+      "source": "mixed",
+      "promptMarkdown": "Branch staff say borrowers keep losing half-finished reservations. Somebody starts one on a branch terminal, gets\ncalled to the desk, and has to begin again on their phone at home. I'd like a \"save and finish later\" for the reserve\nflow, so a borrower can leave part-way and pick the reservation up in a later session, on any device.\n\nWrite the design in `docs/design.md` before anyone builds it: where a half-finished reservation is kept, how the\nborrower gets back to it, and what changes in `src/Services/Reservations`. Don't write the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record--design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "adr-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-record--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "adr-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-adr--follows",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "adr-0002[\\s\\S]*(not supported|keeps no state|no state of its own)|(not supported|keeps no state|no state of its own)[\\s\\S]*adr-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-adr--supersedes",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "adr-0002[\\s\\S]*[Ss]upersed|[Ss]upersed[\\s\\S]*adr-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "[Rr]eserv",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 10,
+            "costUsd": 0.4568618,
+            "judgeCostUsd": 0,
+            "durationSeconds": 100,
+            "startedAt": "2026-10-20T18:53:11.420Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--follows",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*(not supported|keeps no state|no state of its own)|(not supported|keeps no state|no state of its own)[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--supersedes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*[Ss]upersed|[Ss]upersed[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]eserv",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.4071702,
+            "judgeCostUsd": 0,
+            "durationSeconds": 84,
+            "startedAt": "2026-10-20T19:22:47.852Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--follows",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*(not supported|keeps no state|no state of its own)|(not supported|keeps no state|no state of its own)[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--supersedes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*[Ss]upersed|[Ss]upersed[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]eserv",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 10,
+            "costUsd": 0.40161559999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 78,
+            "startedAt": "2026-10-20T19:22:47.852Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--follows",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*(not supported|keeps no state|no state of its own)|(not supported|keeps no state|no state of its own)[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-adr--supersedes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched adr-0002[\\s\\S]*[Ss]upersed|[Ss]upersed[\\s\\S]*adr-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]eserv",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "text-the-borrower",
+      "dir": "evals/house/text-the-borrower",
+      "source": "mixed",
+      "promptMarkdown": "Borrowers keep missing the hold-ready email, and their holds go back to the shelf uncollected. Can we text them as\nwell when a hold is ready to collect?\n\nWrite the design in `docs/design.md`: who sends the text, where the borrower's mobile number comes from, and what\nchanges in `src/Notices.FunctionApp`. Don't write the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record--design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "itg-sms-notices",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-record--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "itg-sms-notices",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-says-retired",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "[Rr]etired|account closed|stopped sending text",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "SMS|[Tt]ext",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.8,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.4215442,
+            "judgeCostUsd": 0,
+            "durationSeconds": 70,
+            "startedAt": "2026-10-20T18:53:11.420Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched itg-sms-notices",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-says-retired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]etired|account closed|stopped sending text",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched SMS|[Tt]ext",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.4468048,
+            "judgeCostUsd": 0,
+            "durationSeconds": 76,
+            "startedAt": "2026-10-20T19:22:47.852Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched itg-sms-notices",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-says-retired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]etired|account closed|stopped sending text",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched SMS|[Tt]ext",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.4268382,
+            "judgeCostUsd": 0,
+            "durationSeconds": 76,
+            "startedAt": "2026-10-20T19:24:03.495Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched itg-sms-notices",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-says-retired",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Rr]etired|account closed|stopped sending text",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched SMS|[Tt]ext",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.8,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 1,
+    "overallScore": 0.9,
+    "overallPassRate": 0.5
+  }
+}
