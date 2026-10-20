@@ -41,6 +41,8 @@ _**Covers:** [pol-AUTV].INTEG, [pol-AUTV].MACHINE, [pol-AUTV].REGRESS_
 - A team **MUST NOT** skip, silence or suppress a check without a recorded deviation.
 - A deviation covering a suppressed check **MUST** name the individual who accepts the risk.
 - That deviation **MUST** have a review date.
+- A team **MAY** guard a test off a platform it cannot run on without a deviation, where a required check runs the
+  test on a platform where it can, and the guard states why.
 
 _**Covers:** [pol-AUTV].BLOCK, [pol-AUTV].BYPASS, [pol-AUTV].DISABLE, [pol-DEVI].EXPIRY, [pol-DEVI].OWNER_
 
@@ -64,6 +66,8 @@ back to the second until the retry path breaks in production.
 - [ ] Branch policy lists the build and the test suite as required checks.
 - [ ] The build passes from a clean clone on a fresh agent.
 - [ ] Every skipped, excluded or suppressed check names a deviation.
+- [ ] Every test guarded off a platform states why in the guard, and a required check runs it on a platform where it
+      can.
 - [ ] Every such deviation is open, owned by an individual, and inside its review date.
 - [ ] The last defect fix in this repository has a test that fails without the fix.
 
@@ -79,6 +83,8 @@ it an end date.
 
 ## Changelog
 
+- 2026-10-20: a test guarded off a platform it cannot run on needs no deviation, where a required check runs it on a
+  platform where it can and the guard states why.
 - 2026-10-18: the build agent needs only to be nobody's own machine. Provisioning it from a definition in the
   repository becomes a `SHOULD`.
 

@@ -43,6 +43,8 @@ A reviewer reading the test diff is the only thing that notices an uncited skip 
 
 The check proves an id is cited. It cannot tell whether the deviation exists, names an owner, or is inside its review
 date, which the other rules under [std-GATES.a-failing-check-stops-the-change] require. It knows only the markers in its
-pattern, so a skip in another framework, or a pipeline step set to continue on error, passes it.
+pattern, so a skip in another framework, or a pipeline step set to continue on error, passes it. The rule lets a test be
+guarded off a platform it cannot run on without a deviation, and the check fails such a guard where it uses one of the
+markers. A reviewer decides whether a required check runs the test on a platform where it can.
 
 [std-GATES.a-failing-check-stops-the-change]: ../standards/common/build-gates.md#a-failing-check-stops-the-change
