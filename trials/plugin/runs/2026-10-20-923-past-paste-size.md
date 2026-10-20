@@ -13,6 +13,8 @@ run gives the prose arm what a team writing a `CLAUDE.md` could fit, from a corp
 so the text had none of the 41 `eng` standard rules, 276 policy clauses or 33 glossary terms. Each `eng` standard the
 cut kept arrived as a summary and a checklist. [A service team's cut](2026-10-20-1016-service-team-cut.md) fixed the
 script and says what changed. The counts below stand as measured.
+[The dog-fooding team's cut, complete](2026-10-20-1027-dogfooding-cut-complete.md) chose again from the complete text,
+and the plugin led by 0.47.
 
 ## Choosing the corpus
 

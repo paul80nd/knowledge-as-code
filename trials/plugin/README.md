@@ -348,7 +348,7 @@ written for every kind and every arm, zero included.
 | `<kind>.lead_over_none`                | `<kind>.plugin.compliance_rate` minus `<kind>.none.compliance_rate`                   |
 | `<kind>.graders_lead_over_<arm>`       | the same lead over `prose` or `none`, from the `graders_compliance_rate` fields       |
 | `<kind>.hook_lead_over_<arm>`          | `<kind>.hook.compliance_rate` minus that of `plugin`, `prose` or `none`               |
-| `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields     |
+| `<kind>.graders_hook_lead_over_plugin` | the hook arm's lead over the plugin arm, from the `graders_compliance_rate` fields    |
 | `cost_usd`                             | the list-price cost every stage reports, judge calls and excluded cases included      |
 | `cost_per_session_usd`                 | `cost_usd` divided by `sessions`                                                      |
 
@@ -369,14 +369,15 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 
 ## Runs
 
-| Run                                                                 | Method | Corpus                                | Sessions | What it was                                                       |
-|---------------------------------------------------------------------|-------:|---------------------------------------|---------:|-------------------------------------------------------------------|
-| [2026-10-16](runs/2026-10-16.md)                                    |      1 | `examples/engineering`                |        9 | The pilot: 3 controls, once each in each arm                      |
-| [Full pass](runs/full-pass.md)                                      |      4 | `examples/engineering`                |      198 | 19 house cases and 3 controls, 3 runs each                        |
-| [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering`                |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
-| [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering`                |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
-| [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering`                |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
-| [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding`                |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
-| [#990 assure cases](runs/2026-10-20-990-assure.md)                  |      5 | `examples/dog-fooding`, `engineering` |        9 | The three assure cases, plugin arm only, 3 runs a case            |
-| [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)    |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
-| [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md) |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |
+| Run                                                                              | Method | Corpus                                | Sessions | What it was                                                       |
+|----------------------------------------------------------------------------------|-------:|---------------------------------------|---------:|-------------------------------------------------------------------|
+| [2026-10-16](runs/2026-10-16.md)                                                 |      1 | `examples/engineering`                |        9 | The pilot: 3 controls, once each in each arm                      |
+| [Full pass](runs/full-pass.md)                                                   |      4 | `examples/engineering`                |      198 | 19 house cases and 3 controls, 3 runs each                        |
+| [Hook arm](runs/hook-arm.md)                                                     |      5 | `examples/engineering`                |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
+| [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md)              |      5 | `examples/engineering`                |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
+| [#945 firing check](runs/2026-10-20-945-firing.md)                               |      5 | `examples/engineering`                |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
+| [Past the paste size](runs/2026-10-20-923-past-paste-size.md)                    |      5 | `examples/dog-fooding`                |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
+| [#990 assure cases](runs/2026-10-20-990-assure.md)                               |      5 | `examples/dog-fooding`, `engineering` |        9 | The three assure cases, plugin arm only, 3 runs a case            |
+| [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)                 |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
+| [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md)              |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |
+| [The dog-fooding cut, complete](runs/2026-10-20-1027-dogfooding-cut-complete.md) |      5 | `examples/dog-fooding`                |       44 | #923's cut chosen again from the complete prose text              |
