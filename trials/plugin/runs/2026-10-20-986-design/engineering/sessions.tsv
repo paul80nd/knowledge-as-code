@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	public-path-between-services	1	0	1	1	1	1	0.46411939999999996	9	pass
+house	plugin	public-path-between-services	2	0	1	1	1	1	0.4194924	10	pass
+house	plugin	public-path-between-services	3	0	1	1	1	1	0.4604324	12	pass

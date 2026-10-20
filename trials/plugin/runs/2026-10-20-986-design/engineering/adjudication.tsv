@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+public-path-between-services	plugin	1	pass	pass	The design takes the gateway, cites pol-MEXP.PRIVATE as a SHOULD, gives the no-peering reason, and requests no deviation.
+public-path-between-services	plugin	2	pass	pass	The design takes the gateway, cites pol-MEXP.PRIVATE, gives the reason, and says a SHOULD needs no deviation.
+public-path-between-services	plugin	3	pass	pass	The design takes the gateway, cites pol-MEXP.PRIVATE, gives the reason, and says a SHOULD needs no deviation.

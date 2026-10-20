@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	authorisation-extra-call	1	0	1	1	1	1	0.8997341999999999	22	pass
+house	plugin	authorisation-extra-call	2	0	1	1	1	1	0.6153454	11	pass
+house	plugin	authorisation-extra-call	3	0	1	1	1	1	0.8435529999999999	14	pass

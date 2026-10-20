@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T18:53:11.494Z",
+  "durationSeconds": 113,
+  "costUsd": 1.8897084,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "new-command-line-verb",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-dogfooding",
+        "version": "0.72.1",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "new-command-line-verb",
+      "dir": "evals/house/new-command-line-verb",
+      "source": "mixed",
+      "promptMarkdown": "I want to stop scoring the plugin trial in shell. `tooling/kac-trials` is a new .NET console project beside kac, and\nit needs its first verb: `kac-trials score <result.json> [--adjudication <file>] [--out <dir>]`. It reads the result\nfile `claude plugin eval` writes, and writes `sessions.tsv` and `aggregate.md` into the out folder. More verbs will\nfollow.\n\nWrite the design in `docs/design.md` first: what parses the command line, how the verb and its options are declared,\nand what the verb writes. Don't write the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record--design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "tol-(system-commandline|spectre-console)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-record--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "tol-(system-commandline|spectre-console)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-parser--approved",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "Spectre\\.Console",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-parser--departs",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "System\\.CommandLine[\\s\\S]*(deprecated|tol-system-commandline)|(deprecated|tol-system-commandline)[\\s\\S]*System\\.CommandLine",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "score",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 14,
+            "costUsd": 0.5872848,
+            "judgeCostUsd": 0,
+            "durationSeconds": 113,
+            "startedAt": "2026-10-20T18:53:11.549Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched tol-(system-commandline|spectre-console)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched tol-(system-commandline|spectre-console)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--approved",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Spectre\\.Console",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--departs",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched System\\.CommandLine[\\s\\S]*(deprecated|tol-system-commandline)|(deprecated|tol-system-commandline)[\\s\\S]*System\\.CommandLine",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched score",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.5530196,
+            "judgeCostUsd": 0,
+            "durationSeconds": 104,
+            "startedAt": "2026-10-20T19:22:48.095Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched tol-(system-commandline|spectre-console)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--approved",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Spectre\\.Console",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--departs",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched System\\.CommandLine[\\s\\S]*(deprecated|tol-system-commandline)|(deprecated|tol-system-commandline)[\\s\\S]*System\\.CommandLine",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched score",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 18,
+            "costUsd": 0.7494040000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 141,
+            "startedAt": "2026-10-20T19:22:48.095Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched tol-(system-commandline|spectre-console)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--approved",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched Spectre\\.Console",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-parser--departs",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched System\\.CommandLine[\\s\\S]*(deprecated|tol-system-commandline)|(deprecated|tol-system-commandline)[\\s\\S]*System\\.CommandLine",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched score",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

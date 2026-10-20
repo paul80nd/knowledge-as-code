@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+authorisation-extra-call	plugin	1	pass	pass	The design cites nfr-0001, shows a 350ms p95 cannot fit inside 800ms, and recommends amending the target.
+authorisation-extra-call	plugin	2	pass	pass	The design cites nfr-0001, and puts a revised p95 of about 1,150ms to its owner beside two ways to keep 800ms.
+authorisation-extra-call	plugin	3	pass	pass	The design cites nfr-0001, and recommends revising it to 1,200ms with a 400ms screening deadline.

@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T18:53:11.491Z",
+  "durationSeconds": 88,
+  "costUsd": 1.3440442,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "public-path-between-services",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.37.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "public-path-between-services",
+      "dir": "evals/house/public-path-between-services",
+      "source": "mixed",
+      "promptMarkdown": "Orders should stop trusting the unit price the client sends, and fetch it from the pricing service when an order is\ncreated. Pricing already publishes `GET /v1/prices/<sku>` on our public API gateway at\n`https://api.example.com/pricing`, behind an API key, for partners. It runs in the pricing team's own network with no\npeering to ours, and the platform team can't set up peering or a private endpoint this quarter. The gateway works\ntoday.\n\nWrite the design for how orders calls pricing in `docs/design.md`: the route the call takes, how it authenticates, and\nwhat changes in `orders/`. Don't write the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record--design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "pol-MEXP",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-record--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "pol-MEXP",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-no-deviation-request",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?request-deviation\"",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-path--cites",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "MEXP[\\]`.\\s]*PRIVATE",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-path--private",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "(over|through|via|across) (a |the )?(private (endpoint|link|network|path|route)|peering|VNet|VPC)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "[Pp]ricing",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.8571428571428571,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.46411939999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 88,
+            "startedAt": "2026-10-20T18:53:11.641Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-deviation-request",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--cites",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched MEXP[\\]`.\\s]*PRIVATE",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--private",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file docs/design.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Pp]ricing",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8571428571428571,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.4194924,
+            "judgeCostUsd": 0,
+            "durationSeconds": 77,
+            "startedAt": "2026-10-20T19:22:48.085Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-deviation-request",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--cites",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched MEXP[\\]`.\\s]*PRIVATE",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--private",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file docs/design.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Pp]ricing",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8571428571428571,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.4604324,
+            "judgeCostUsd": 0,
+            "durationSeconds": 88,
+            "startedAt": "2026-10-20T19:22:48.085Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pol-MEXP",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-deviation-request",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--cites",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched MEXP[\\]`.\\s]*PRIVATE",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-path--private",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file docs/design.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Pp]ricing",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.8571428571428571,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.8571428571428571,
+    "overallPassRate": 0
+  }
+}

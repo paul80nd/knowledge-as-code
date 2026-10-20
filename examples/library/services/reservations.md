@@ -26,9 +26,10 @@ Hosts the reserve-and-pay flow as a server-rendered application. It deploys on i
 monorepo, and is served on its own hostname. The flow is multistep and progressive, so it works on the branch terminals
 as well as on a borrower's own device.
 
-**Stateless.** Wizard state before confirmation is ephemeral and passed through the flow. The only durable write is the
-provisional hold it creates in [svc-lending] at confirm. That hold is also the reference a returning card payment is
-matched against. Resuming a half-finished reservation in a later session is deliberately not supported.
+**Stateless**, as [adr-0002] decided. Wizard state before confirmation is ephemeral and passed through the flow. The
+only durable write is the provisional hold it creates in [svc-lending] at confirm. That hold is also the reference a
+returning card payment is matched against. Resuming a half-finished reservation in a later session is deliberately not
+supported.
 
 ## Where it lives
 
@@ -68,6 +69,7 @@ this app service. The single durable write is the provisional hold created in [s
 * **Criticality**: `important`. A failure stops borrowers reserving online, and branch staff fall back to placing holds
   at the desk. The platform degrades and keeps running.
 
+[adr-0002]: ../adrs/0002-reservations-keep-no-state.md
 [itg-card-payments]: ../integrations/card-payments.md
 [svc-catalogue-web]: catalogue-web.md
 [svc-lending]: lending.md

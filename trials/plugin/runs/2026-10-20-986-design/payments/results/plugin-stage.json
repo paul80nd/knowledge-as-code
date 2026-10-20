@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T18:53:11.483Z",
+  "durationSeconds": 191,
+  "costUsd": 2.3586326,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-payments",
+        "version": "0.33.8",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "authorisation-extra-call",
+      "dir": "evals/house/authorisation-extra-call",
+      "source": "mixed",
+      "promptMarkdown": "Finance wants every card authorisation screened for fraud before we send it to the PSP. The screening vendor takes\n`POST https://api.fraudscreen.example.com/v1/score` with the order, the amount and the card token, and returns a score\nfrom 0 to 100. We'd decline anything over 80 without calling the PSP. Their documentation quotes a p95 of 350ms.\n\nWrite the design in `docs/design.md`: where the call goes in `POST /authorisations`, what happens when the vendor is\nslow or down, and what changes in `src/PaymentApi`. Don't write the code yet.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record--design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "nfr-0001",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-record--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "nfr-0001",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-target--raises",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "nfr-0001",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-target--states",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "800\\s?ms",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "docs/design.md"
+            },
+            "pattern": "[Ff]raud",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 22,
+            "costUsd": 0.8997341999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 191,
+            "startedAt": "2026-10-20T18:53:11.521Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--raises",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--states",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 800\\s?ms",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ff]raud",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 11,
+            "costUsd": 0.6153454,
+            "judgeCostUsd": 0,
+            "durationSeconds": 110,
+            "startedAt": "2026-10-20T19:22:47.986Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--raises",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--states",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 800\\s?ms",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ff]raud",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 14,
+            "costUsd": 0.8435529999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 149,
+            "startedAt": "2026-10-20T19:22:47.986Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record--design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-record--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--raises",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nfr-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-target--states",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 800\\s?ms",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ff]raud",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

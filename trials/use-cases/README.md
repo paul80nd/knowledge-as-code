@@ -33,7 +33,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 
 | File                                       | Reader                                       | Scenarios | On a case that exists |
 |--------------------------------------------|----------------------------------------------|----------:|----------------------:|
-| [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     0 |
+| [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     5 |
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     4 |
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
@@ -47,20 +47,25 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 
 These map to a case a trial has already run, and each gives its baseline from that run:
 
-| Scenario                                                                                  | Case                                           | Run                                                      |
-|-------------------------------------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------|
-| A rule filed under another topic reaches the session                                      | `plugin/engineering/house/health-endpoint`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`        | [full pass](../plugin/runs/full-pass.md)                 |
-| A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention` | [full pass](../plugin/runs/full-pass.md)                 |
-| A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`     | [full pass](../plugin/runs/full-pass.md)                 |
-| A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`          | [baseline](../process-level/runs/2026-10-18/baseline.md) |
-| A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`       | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`          | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review says which rule no control checks                                                | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A question about coverage gets the published report, with its date and its limits         | `plugin/dog-fooding/house/uncovered-clauses`   | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
-| A question about enforcement gets the control, and its mechanism                          | `plugin/engineering/house/is-deploy-enforced`  | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
-| A question about open departures gets each one with its review date                       | `plugin/dog-fooding/house/deviations-due`      | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| Scenario                                                                                  | Case                                                    | Run                                                      |
+|-------------------------------------------------------------------------------------------|---------------------------------------------------------|----------------------------------------------------------|
+| A rule filed under another topic reaches the session                                      | `plugin/engineering/house/health-endpoint`              | [full pass](../plugin/runs/full-pass.md)                 |
+| A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`                 | [full pass](../plugin/runs/full-pass.md)                 |
+| A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention`          | [full pass](../plugin/runs/full-pass.md)                 |
+| A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`              | [full pass](../plugin/runs/full-pass.md)                 |
+| A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`                   | [baseline](../process-level/runs/2026-10-18/baseline.md) |
+| A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`                | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`                   | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A review says which rule no control checks                                                | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A question about coverage gets the published report, with its date and its limits         | `plugin/dog-fooding/house/uncovered-clauses`            | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| A question about enforcement gets the control, and its mechanism                          | `plugin/engineering/house/is-deploy-enforced`           | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| A question about open departures gets each one with its review date                       | `plugin/dog-fooding/house/deviations-due`               | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| A design the ADR log ruled out follows the ADR or raises it                               | `plugin/library/house/adr-ruled-out`                    | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
+| A design departing from a policy SHOULD says why, and requests no deviation               | `plugin/engineering/house/public-path-between-services` | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
+| A design touching a path an agreed target binds says how it meets the target              | `plugin/payments/house/authorisation-extra-call`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
+| A design that needs a library chooses an approved tool                                    | `plugin/dog-fooding/house/new-command-line-verb`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
+| A design that would use a retired integration learns its successor                        | `plugin/library/house/text-the-borrower`                | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
 
 Every other scenario is `@proposed`.
 

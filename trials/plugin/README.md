@@ -17,7 +17,9 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 
 The plugin and hook arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin arm's copy,
 so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index the first time the
-session reads or edits a file through a file tool. `stage.sh` refuses a plugin that ships no `hooks/build-index.json`.
+session reads or edits a file through a file tool. A plugin whose bundle trimmed the build index ships no
+`hooks/build-index.json`, as `examples/library` does. `stage.sh` warns and stages it anyway, and its hook arm pushes
+nothing.
 
 `claude plugin eval` leaves a hook's context out of `trace.jsonl`. Read whether the build index arrived from the
 session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
@@ -67,10 +69,15 @@ To tell the two apart, ask whether a capable engineer new to the organisation wo
 told. If they would, the case is a control. `stage.sh` refuses a case in neither folder. A case also gives its kind
 as its first tag, so `--tag house` runs one kind alone.
 
-The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
-contains the cases for `examples/engineering`: 23 house cases and the pilot's 3 controls.
-[`cases/dog-fooding/`](cases/dog-fooding/) contains 3 house cases for `examples/dog-fooding`. Nothing else in the
-method knows which corpus it runs against.
+The cases for a corpus live in their own folder under [`cases/`](cases/). Nothing else in the method knows which
+corpus it runs against.
+
+| Folder                                     | Corpus                 | Cases                                |
+|--------------------------------------------|------------------------|--------------------------------------|
+| [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 24 house, and the pilot's 3 controls |
+| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 4 house                              |
+| [`cases/library/`](cases/library/)         | `examples/library`     | 2 house                              |
+| [`cases/payments/`](cases/payments/)       | `examples/payments`    | 1 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
 reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
@@ -83,34 +90,35 @@ every count. Exclude a case whose result the environment decides, and fix the ca
 | `house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
 | `house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
 
-| Case                             | Rule a session breaks                                                                                  |
-|----------------------------------|--------------------------------------------------------------------------------------------------------|
-| `house/ci-secret-scan`           | `std-SECRET.nowhere-else-holds-a-secret`: the new CI runs no secret scanner                            |
-| `house/returns-api-routes`       | `std-API.a-change-carries-a-version-and-a-notice`: the new routes have no version segment              |
-| `house/stock-per-warehouse`      | `std-API.a-change-carries-a-version-and-a-notice`: the breaking change replaces `/v1`                  |
-| `house/stock-v1-retirement`      | `std-API.a-change-carries-a-version-and-a-notice`: `/v1` sends no `Deprecation` or `Sunset`            |
-| `house/ci-uv-locked`             | `std-DEPS.where-a-package-comes-from`: CI installs without `--locked`                                  |
-| `house/pricing-call`             | `std-OBS.one-request-reads-as-one-timeline`: the outbound call drops the `traceparent`                 |
-| `house/request-logging`          | `std-OBS.one-request-reads-as-one-timeline`: log lines are unstructured or have no trace id            |
-| `house/stock-alert-rules`        | `std-OBS.somebody-acts-on-every-alert`: an alert names no owner or first action                        |
-| `house/cover-timeout-pr`         | `std-PR.agent-produced-work-says-what-produced-it`: the PR body omits the agent, model or task         |
-| `house/pagination-fix-commit`    | `std-VCS.every-change-is-attributable-and-reviewed`: the commit subject lacks `#2231`                  |
-| `house/flaky-test-skip`          | `std-GATES.a-failing-check-stops-the-change`: the skip cites no deviation                              |
-| `house/ci-every-branch`          | `std-GATES.every-change-is-built-and-tested-automatically`: push builds only some branches             |
-| `house/orders-column-rename`     | `std-DEPLOY.a-way-back-exists-before-the-change-goes`: the migration renames or drops the column       |
-| `house/health-endpoint`          | `std-DEPLOY.the-artefact-is-built-once`: the health endpoint reports no commit                         |
-| `house/ci-coverage-threshold`    | `std-TEST.know-what-the-suite-reaches`: the build has no coverage floor                                |
-| `house/go-service-dockerfile`    | `std-CONT.the-base-image-is-chosen-and-pinned`: a `FROM` has no digest                                 |
-| `house/label-printer-manifest`   | `std-CONT.a-published-tag-never-moves`: the Deployment names the image by tag                          |
-| `house/billing-new-solution`     | `std-CSSTY.the-conventions-come-from-one-file`: the project lacks the build's style settings           |
-| `house/ca1848-build-break`       | `std-CSSTY.a-suppression-is-local-and-says-why`: a pragma, `NoWarn` or an unjustified suppression      |
-| `house/order-repository-tests`   | `std-NETTST.an-integration-test-starts-what-it-needs`: Postgres comes from anywhere but Testcontainers |
-| `house/dotnet-ci`                | `std-NETTST.coverage-is-collected-by-the-build`: CI does not collect and publish coverage              |
-| `house/audit-log-retention`      | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                              |
-| `house/is-deploy-enforced`       | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule             |
-| `control/orders-db-connection`   | `std-SECRET.nowhere-else-holds-a-secret`: the password lands in a file                                 |
-| `control/label-printer-image`    | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`                         |
-| `control/stock-reserve-endpoint` | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint                        |
+| Case                                 | Rule a session breaks                                                                                   |
+|--------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `house/ci-secret-scan`               | `std-SECRET.nowhere-else-holds-a-secret`: the new CI runs no secret scanner                             |
+| `house/returns-api-routes`           | `std-API.a-change-carries-a-version-and-a-notice`: the new routes have no version segment               |
+| `house/stock-per-warehouse`          | `std-API.a-change-carries-a-version-and-a-notice`: the breaking change replaces `/v1`                   |
+| `house/stock-v1-retirement`          | `std-API.a-change-carries-a-version-and-a-notice`: `/v1` sends no `Deprecation` or `Sunset`             |
+| `house/ci-uv-locked`                 | `std-DEPS.where-a-package-comes-from`: CI installs without `--locked`                                   |
+| `house/pricing-call`                 | `std-OBS.one-request-reads-as-one-timeline`: the outbound call drops the `traceparent`                  |
+| `house/request-logging`              | `std-OBS.one-request-reads-as-one-timeline`: log lines are unstructured or have no trace id             |
+| `house/stock-alert-rules`            | `std-OBS.somebody-acts-on-every-alert`: an alert names no owner or first action                         |
+| `house/cover-timeout-pr`             | `std-PR.agent-produced-work-says-what-produced-it`: the PR body omits the agent, model or task          |
+| `house/pagination-fix-commit`        | `std-VCS.every-change-is-attributable-and-reviewed`: the commit subject lacks `#2231`                   |
+| `house/flaky-test-skip`              | `std-GATES.a-failing-check-stops-the-change`: the skip cites no deviation                               |
+| `house/ci-every-branch`              | `std-GATES.every-change-is-built-and-tested-automatically`: push builds only some branches              |
+| `house/orders-column-rename`         | `std-DEPLOY.a-way-back-exists-before-the-change-goes`: the migration renames or drops the column        |
+| `house/health-endpoint`              | `std-DEPLOY.the-artefact-is-built-once`: the health endpoint reports no commit                          |
+| `house/ci-coverage-threshold`        | `std-TEST.know-what-the-suite-reaches`: the build has no coverage floor                                 |
+| `house/go-service-dockerfile`        | `std-CONT.the-base-image-is-chosen-and-pinned`: a `FROM` has no digest                                  |
+| `house/label-printer-manifest`       | `std-CONT.a-published-tag-never-moves`: the Deployment names the image by tag                           |
+| `house/billing-new-solution`         | `std-CSSTY.the-conventions-come-from-one-file`: the project lacks the build's style settings            |
+| `house/ca1848-build-break`           | `std-CSSTY.a-suppression-is-local-and-says-why`: a pragma, `NoWarn` or an unjustified suppression       |
+| `house/order-repository-tests`       | `std-NETTST.an-integration-test-starts-what-it-needs`: Postgres comes from anywhere but Testcontainers  |
+| `house/dotnet-ci`                    | `std-NETTST.coverage-is-collected-by-the-build`: CI does not collect and publish coverage               |
+| `house/audit-log-retention`          | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                               |
+| `house/is-deploy-enforced`           | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule              |
+| `house/public-path-between-services` | `pol-MEXP.PRIVATE`: the design takes the public path, and neither cites the clause nor gives the reason |
+| `control/orders-db-connection`       | `std-SECRET.nowhere-else-holds-a-secret`: the password lands in a file                                  |
+| `control/label-printer-image`        | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`                          |
+| `control/stock-reserve-endpoint`     | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint                         |
 
 ## What leaves the organisation
 
@@ -381,3 +389,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)                 |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
 | [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md)              |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |
 | [The dog-fooding cut, complete](runs/2026-10-20-1027-dogfooding-cut-complete.md) |      5 | `examples/dog-fooding`                |       44 | #923's cut chosen again from the complete prose text              |
+| [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |

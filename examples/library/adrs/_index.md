@@ -5,3 +5,4 @@
 | ID       | Title                                                                                                                    | Status   | Decided on |
 |----------|--------------------------------------------------------------------------------------------------------------------------|----------|------------|
 | adr-0001 | [Knowledge as code: a structured, validated wiki that AI sessions can read and contribute to](0001-knowledge-as-code.md) | accepted | 2026-08-05 |
+| adr-0002 | [Reservations keeps no state of its own](0002-reservations-keep-no-state.md)                                             | accepted | 2026-09-02 |

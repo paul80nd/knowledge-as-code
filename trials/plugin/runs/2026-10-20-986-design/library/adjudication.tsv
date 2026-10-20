@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+adr-ruled-out	plugin	1	pass	pass	The design quotes adr-0002 ruling out resume, and says a new ADR superseding it comes before anything is built.
+adr-ruled-out	plugin	2	pass	pass	The design quotes adr-0002, and makes a superseding ADR or the owner's accepted deviation the prerequisite.
+adr-ruled-out	plugin	3	pass	pass	The design says adr-0002 ruled resume out, and makes superseding or amending it the first step.
+text-the-borrower	plugin	1	pass	pass	The design says itg-sms-notices is retired, gives the date and both reasons, and proposes a new integration record.
+text-the-borrower	plugin	2	pass	pass	The design says itg-sms-notices is retired and its traffic moved to itg-mail-delivery, and holds the build for a decision.
+text-the-borrower	plugin	3	pass	pass	The design says itg-sms-notices is retired, gives the date and both reasons, and weighs re-contracting the vendor.
