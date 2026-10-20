@@ -35,6 +35,13 @@ closes the issue. That skill ships in no plugin, because it writes to the tracke
 
 ## Rules
 
+### A skill states what it is for, and the reason for each rule it gives
+
+- A skill **SHOULD** state what it is for, the intent of the type it reads, and the reason behind each rule it gives.
+- A skill **SHOULD** set out steps only where the order is the content: a record of a type an agent follows, or a
+  write-back or review whose order a rule fixes.
+- A skill's description **SHOULD** name each case that triggers it, and each case once.
+
 ### A skill assumes only that the session can read a file
 
 - A skill **MUST** leave the choice of search tool to the session.
@@ -366,6 +373,9 @@ broke it.
 
 ## Conformance checklist
 
+- [ ] Every skill states what it is for and the intent of the type it reads, and gives the reason for each rule.
+- [ ] Every numbered list in a skill is an order that the type it reads, or a rule here, fixes.
+- [ ] Every skill's description names each case that triggers it, and none twice.
 - [ ] Every instruction a skill gives can be followed by a session that can read a file and nothing else, apart from
       reading the change a review is asked about.
 - [ ] Every skill reviewing a change names it as what differs from a fixed point, and names no tool for reading it.
@@ -434,6 +444,13 @@ The session is why a skill names a property of the answer and not a tool. A sess
 **MUST**-shaped instruction naming one, and its only options were to ignore the instruction or to stop. The machine is
 why nothing here asks for a shell. Each lookup skill promises at the top that there is nothing to install and nothing
 to run, and a Windows reader with no `grep` is who that promise is for.
+
+The session is also why a skill states its intent and the reason for each rule. A session meets cases the author never
+saw, and a reason is what it can apply to the next one. A step covers only the case it was written for, so a skill
+that missed a case gains a reason, or loses a step. Steps stay where the order is the content: a runbook, a fix, a
+review, and a write-back whose order a rule above fixes. The description is the one part of a skill in every session's
+context, so it names each case that triggers it once. [writing-for-agents] is the reference for that text. This
+standard cites it and does not restate it, because it changes upstream.
 
 A reviewer is the one skill whose input is not in the plugin. The change it reviews lives in the repository's history,
 and every session reading that history already has a way to do it. So the skill names the change as what differs from
@@ -598,9 +615,13 @@ standard.
 
 - **Normative.** [Claude Code plugin manifest] is the schema `plugin.json` is validated against, and `metadata` is
   where this repository's own keys sit inside it.
+- **Normative.** [writing-for-agents], the `writing-for-agents` skill at v1.3.1, is the reference for how a skill and
+  its description are written.
 
 ## Changelog
 
+- 2026-10-20: a skill states what it is for, the intent of the type it reads, and the reason for each rule it gives.
+  It sets out steps only where the order is the content, and its description names each case that triggers it once.
 - 2026-10-19: a skill reviewing a change names it as what differs from a fixed point, and leaves the session to read
   it. It reports a broken `MUST` as a violation and a `SHOULD` departure as a judgement call, and checks every
   obligation that no running `ci` or `runtime-alert` control names.
@@ -642,3 +663,4 @@ To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart 
 say why in the change.
 
 [Claude Code plugin manifest]: https://json.schemastore.org/claude-code-plugin-manifest.json
+[writing-for-agents]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents
