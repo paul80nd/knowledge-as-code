@@ -9,6 +9,11 @@ The run answers [story #923](https://github.com/paul80nd/knowledge-as-code/issue
 [full pass](full-pass.md) found no plugin lead over a prose arm given the whole export of `examples/engineering`. This
 run gives the prose arm what a team writing a `CLAUDE.md` could fit, from a corpus stack it could not fit whole.
 
+**The prose text this run cut from was incomplete.** `prose-claude-md.sh` wrote no part of a record a layer brings in,
+so the text had none of the 41 `eng` standard rules, 276 policy clauses or 33 glossary terms. Each `eng` standard the
+cut kept arrived as a summary and a checklist. [A service team's cut](2026-10-20-1016-service-team-cut.md) fixed the
+script and says what changed. The counts below stand as measured.
+
 ## Choosing the corpus
 
 No corpus here is too large for a context window. The largest stack is `examples/dog-fooding` over the
@@ -116,8 +121,9 @@ sessions in 14. This matches the full pass, where the prose arm held everything.
 
 ## What the result does not show
 
-* **What a different cut would score.** The cut decides the prose arm's result. A cut chosen for a service team would
-  keep the API, OBS and CONT standards, and lose others in their place.
+* **What a different cut would score.** The cut decides the prose arm's result.
+  [A service team's cut](2026-10-20-1016-service-team-cut.md) kept the rules of 18 of the 19 house cases, and the
+  plugin's lead over it was 0.00.
 * **A corpus past the context window.** None exists here. The adopting corpus is the next place to measure that.
 * **A judgement made blind.** The reader knew each session's arm.
 * **The variance of a third run.** Each case ran twice in each arm.

@@ -378,3 +378,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering`                |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
 | [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding`                |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
 | [#990 assure cases](runs/2026-10-20-990-assure.md)                  |      5 | `examples/dog-fooding`, `engineering` |        9 | The three assure cases, plugin arm only, 3 runs a case            |
+| [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)    |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
