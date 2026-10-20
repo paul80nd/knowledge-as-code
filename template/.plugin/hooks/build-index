@@ -1,16 +1,31 @@
 #!/usr/bin/env sh
 # build-index: the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once a session, so the session
-# reads the build index as context. hooks/hooks.json says which tool calls reach it. Without that file it prints
-# nothing.
-# A JSON string escapes every quote inside it, so `"session_id"` with bare quotes is the key and nothing else. A marker
-# made with mkdir fires once, because only one of two parallel calls creates it. With no id, or no marker it can
-# make, it prints every time.
-here=$(dirname "$0")
+# reads the build index as context. Without that file it prints nothing.
+# hooks/hooks.json sends it every tool call, so up to the marker test it runs shell built-ins and starts no process.
+input=
+while IFS= read -r line || [ -n "$line" ]; do input=$input$line; done
+
+# A JSON string escapes every quote inside it, so `"session_id"` with bare quotes is the key and nothing else.
+id=
+case $input in
+  *'"session_id"'*)
+    rest=${input#*'"session_id"'}
+    rest=${rest#"${rest%%[![:space:]]*}"}
+    rest=${rest#:}
+    rest=${rest#"${rest%%[![:space:]]*}"}
+    case $rest in \"*) rest=${rest#\"}; id=${rest%%\"*} ;; esac
+    ;;
+esac
+case $id in *[!A-Za-z0-9_-]*) id= ;; esac
+
+markers=${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}}/build-index
+[ -n "$id" ] && [ -d "$markers/$id" ] && exit 0
+
+case $0 in */*) here=${0%/*} ;; *) here=. ;; esac
 [ -f "$here/build-index.json" ] || exit 0
 
-id=$(tr -d '\r\n' | sed -n 's/.*"session_id"[[:space:]]*:[[:space:]]*"\([A-Za-z0-9_-]*\)".*/\1/p')
-markers="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}}/build-index"
-
+# A marker made with mkdir fires once, because only one of two parallel calls creates it. With no id, or no marker it
+# can make, it prints every time.
 if [ -n "$id" ] && mkdir -p "$markers" 2>/dev/null; then
   find "$markers/." ! -name . -prune -type d -mtime +7 -exec rmdir {} + 2>/dev/null
   mkdir "$markers/$id" 2>/dev/null || [ ! -d "$markers/$id" ] || exit 0

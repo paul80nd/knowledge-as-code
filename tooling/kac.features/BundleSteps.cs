@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json.Nodes;
 using kac.core;
 using Reqnroll;
@@ -12,6 +13,8 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
     private const string PluginManifest = ".plugin/.claude-plugin/plugin.json";
 
     private const string Breadcrumb = ".dist/plugin/hooks/breadcrumb.txt";
+
+    private readonly List<string> _hookRuns = [];
 
     /// <summary>Outside <see cref="Workspace.Run"/>, so the export is part of what a scenario starts from.</summary>
     [Given("it has been exported")]
@@ -50,6 +53,12 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
                 .Replace("gls-estate", $"gls-extra-{n}", StringComparison.Ordinal)
                 .Replace("# Estate", $"# Extra {n}", StringComparison.Ordinal));
     }
+
+    /// <summary>Over the fixture's stub, so the scenario runs the script every corpus here ships.</summary>
+    [Given("the plugin tree has the template's build-index hook")]
+    public void GivenThePluginTreeHasTheTemplatesBuildIndexHook() => File.Copy(
+        Path.Combine(Harness.RepoRoot, "template", ".plugin", "hooks", "build-index"),
+        ws.PathOf(".plugin/hooks/build-index"), overwrite: true);
 
     [Given("the corpus keeps the bundle fixture's plugin tree")]
     public void GivenTheCorpusKeepsTheBundleFixturesPluginTree()
@@ -123,6 +132,31 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
     [When("I bundle")]
     public void WhenIBundle() => ws.Run(Commands.Bundle);
 
+    /// <summary>
+    /// Ignored on Windows, which puts no <c>sh</c> on the path. The <c>round-trip</c> job in <c>kac.yml</c> runs the
+    /// hook there under Git Bash.
+    /// </summary>
+    [When(@"the build-index hook runs twice in session ""(.*)""")]
+    public void WhenTheBuildIndexHookRunsTwiceInSession(string session)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            runtime.TestIgnore("Windows puts no sh on the path.");
+            return;
+        }
+
+        var input = $"{{\"session_id\":\"{session}\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"Bash\"}}\n";
+        _hookRuns.Add(RunHook(input));
+        _hookRuns.Add(RunHook(input));
+    }
+
+    [Then("the first run printed the build index")]
+    public void ThenTheFirstRunPrintedTheBuildIndex()
+        => Assert.Equal(ws.Read($"{Dist.Plugin}/{BuildIndexHook.RenderedFile}"), _hookRuns[0]);
+
+    [Then("the second run printed nothing")]
+    public void ThenTheSecondRunPrintedNothing() => Assert.Equal("", _hookRuns[1]);
+
     [Then(@"the bundle includes ""(.*)""")]
     public void ThenTheBundleIncludes(string path) => Assert.Contains(path, Paths("included"));
 
@@ -159,6 +193,26 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
 
         Assert.True((File.GetUnixFileMode(ws.PathOf(path)) & UnixFileMode.UserExecute) != 0,
             $"{path} is not executable");
+    }
+
+    /// <summary>With a data directory inside the workspace, so the marker dies with the scenario.</summary>
+    private string RunHook(string input)
+    {
+        var start = new ProcessStartInfo("sh")
+        {
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            Environment = { ["CLAUDE_PLUGIN_DATA"] = ws.PathOf(".hook-data") }
+        };
+        start.ArgumentList.Add(ws.PathOf($"{Dist.Plugin}/hooks/build-index"));
+
+        using var hook = Process.Start(start) ?? throw new InvalidOperationException("sh did not start");
+        hook.StandardInput.Write(input);
+        hook.StandardInput.Close();
+        var printed = hook.StandardOutput.ReadToEnd();
+        hook.WaitForExit();
+        Assert.Equal(0, hook.ExitCode);
+        return printed;
     }
 
     private IEnumerable<string?> Paths(string list) => Entries(list).Select(c => JsonRead.Str(c["path"]));

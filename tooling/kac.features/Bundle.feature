@@ -266,6 +266,15 @@ Scenario: The build-index hook prints the build index where the hook and the ind
   And ".dist/plugin/hooks/build-index.json" contains "states 2 rules for code in this repository"
   And ".dist/plugin/hooks/build-index" is executable
 
+Scenario: The build-index hook prints the build index once a session
+  Given the bundle-views fixture corpus
+  And the plugin tree has the template's build-index hook
+  And it has been exported
+  When I bundle
+  And the build-index hook runs twice in session "spec-session"
+  Then the first run printed the build index
+  And the second run printed nothing
+
 Scenario: The build-index hook prints nothing where no build index ships
   Given the bundle fixture corpus
   And it has been exported

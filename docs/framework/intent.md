@@ -74,7 +74,7 @@ pointer at the moment of use, and the agent reads the full text the pointer name
 
 | Moment                                  | When it arrives                        | What reaches the agent                             | Where the full text is              |
 |-----------------------------------------|----------------------------------------|----------------------------------------------------|-------------------------------------|
-| **Build**                               | the session's first read or edit       | an index of every standard rule, by title          | the standard, read through a lookup |
+| **Build**                               | the session's first tool call          | an index of every standard rule, by title          | the standard, read through a lookup |
 | **Review**                              | somebody asks for a review             | the review view, in full, in a reviewer of its own | the review view                     |
 | **Design, operate, contribute, assure** | the agent decides to look something up | a lookup skill's answer                            | the record                          |
 | **Learn**                               | a person opens the corpus              | the published corpus, read as a wiki               | the record                          |
