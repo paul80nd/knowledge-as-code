@@ -55,10 +55,11 @@ four steps leaves the work half done.
 
 ## Read the steps from the published record
 
-The export carries the trigger and the prerequisites. `Steps`, `Verification` and any rollback stay in the published
-record, because a process is worked against the version in force. Load `corpus-retrieval` to fetch the record, and
-quote its `links.human` to a person. Work only from the steps you fetched. A plausible order written from the trigger
-looks the same to a reader as the one their colleagues follow.
+The export has the trigger and the prerequisites, which decide whether the process is yours. `Steps`, `Verification`
+and any rollback stay in the published record. Load `corpus-retrieval` to fetch it. It reads the record at the commit
+the export was taken at, so the steps you get are the ones written beside the trigger you read. Quote `links.human` to
+a person. Work only from the steps you fetched. A plausible order written from the trigger looks the same to a reader
+as the one their colleagues follow.
 
 ## Read the prefix on an id
 
