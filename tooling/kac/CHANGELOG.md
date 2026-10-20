@@ -49,11 +49,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 
 ### Changed
 
-- **`standards-lookup` states what a standard is for, and why each rule it gives matters.** It opens on the intent: a
-  MUST is the baseline for the work, and a SHOULD is the usual way, which the work may leave by giving its reason. Each
-  rule after that gives its reason, the case of a nearest rule reads as prose with no numbered steps, and the skill is
-  about 40% shorter. A [trial over 22 cases][pilot] found the rewrite complies and cites as often as the skill it
-  replaces.
+- **Every bundled skill states what it is for, the intent of the type it reads, and the reason for each rule it
+  gives.** A MUST is the baseline for the work, and a SHOULD is the usual way, which the work may leave by giving its
+  reason. A skill sets out an order only where the order is the content: filing a finding, requesting a deviation, and
+  reviewing a change. Each description names each case that triggers it once. `process-lookup` states the type of each
+  field it describes, and reads `types` before it says what is missing. A [trial over 22 cases][pilot] found the
+  rewritten `standards-lookup` complies and cites as often as the skill it replaced.
 
 ## 0.35.0 - 2026-10-16
 
