@@ -11,6 +11,8 @@ for Claude Code.
   what they know.
 * **[Running it in CI](ci.md)** wires the commands that check a corpus into a pull request, on GitHub Actions or Azure
   Pipelines, and says what those checks ask.
+* **[Installing the plugin](installing-a-plugin.md)** installs a corpus plugin in Claude Code, and turns on the
+  auto-update that brings each new version to its readers.
 * **[Troubleshooting](troubleshooting.md)** is what `kac` prints when something is wrong, and what to do about it.
 * **[The corpus descriptor](corpus-descriptor.md)** covers `.corpus.yaml`, the one file a corpus writes for itself.
 * **[Discovery](discovery.md)** says which files `kac` opens, which of those count as records, and which it reads for
