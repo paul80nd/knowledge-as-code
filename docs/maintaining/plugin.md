@@ -113,10 +113,9 @@ first call is an edit has the index once that edit returns.
 * **It fires once a session.** The script cuts `session_id` out of its input. A JSON string escapes every quote inside
   it, so the key with bare quotes is the only match. It then makes a directory named after the session under
   `${CLAUDE_PLUGIN_DATA}/build-index/`. `mkdir` succeeds for one caller only, so two parallel calls print once.
-* **A call after the first starts no process.** Every tool call runs the script. It reads its input and finds the
-  session id with shell built-ins, and exits when the session's directory exists. Only a first call runs `mkdir`,
-  `find` and `cat`. A built-in `read` takes a pipe one byte at a time, so the cost grows with the size of the call's
-  input.
+* **A call after the first starts one `cat` and nothing else.** Every tool call runs the script. It reads its input
+  with `cat`, finds the session id with shell built-ins, and exits when the session's directory exists. Only a first
+  call runs `mkdir`, `find` and a second `cat`.
 * **It prunes its own markers.** Each first call deletes marker directories older than 7 days.
 * **Over 10,000 characters it points instead.** Claude Code passes a hook's context to the session up to that length,
   and over it shows a file path and the first 2,000 characters. `bundle` measures the whole build index and, where it

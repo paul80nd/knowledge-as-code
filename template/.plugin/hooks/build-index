@@ -1,9 +1,8 @@
 #!/usr/bin/env sh
 # build-index: the PreToolUse hook. Prints the JSON `kac bundle` rendered beside it once a session, so the session
 # reads the build index as context. Without that file it prints nothing.
-# hooks/hooks.json sends it every tool call, so up to the marker test it runs shell built-ins and starts no process.
-input=
-while IFS= read -r line || [ -n "$line" ]; do input=$input$line; done
+# hooks/hooks.json sends it every tool call, so up to the marker test it starts one cat and runs only built-ins.
+input=$(cat)
 
 # A JSON string escapes every quote inside it, so `"session_id"` with bare quotes is the key and nothing else.
 id=

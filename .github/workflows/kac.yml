@@ -338,24 +338,6 @@ jobs:
       - name: Assemble the plugin bundle
         run: dotnet run --project ../../tooling/kac -- bundle
 
-      # Every tool call runs this hook, so its already-fired path is timed under Git Bash as well as sh.
-      # library exports no standards, so its bundle ships no build index for the hook to print.
-      - name: Run the build-index hook twice in one session, and time the second call
-        if: matrix.corpus != 'library'
-        shell: bash
-        env:
-          CLAUDE_PLUGIN_DATA: ${{ runner.temp }}/build-index-data
-        run: |
-          input='{"session_id":"ci-session","hook_event_name":"PreToolUse","tool_name":"Bash"}'
-          first=$(echo "$input" | .dist/plugin/hooks/build-index)
-          [ -n "$first" ] || { echo "the build-index hook printed nothing at a session's first call"; exit 1; }
-          TIMEFORMAT='the second call took %3R s'
-          time second=$(echo "$input" | .dist/plugin/hooks/build-index)
-          [ -z "$second" ] || { echo "the build-index hook printed a second time in one session"; exit 1; }
-          big="{\"session_id\":\"ci-session\",\"tool_input\":{\"content\":\"$(head -c 200000 /dev/zero | tr '\0' a)\"}}"
-          TIMEFORMAT='a later call with a 200 KB input took %3R s'
-          time printf '%s\n' "$big" | .dist/plugin/hooks/build-index > /dev/null
-
       - name: Install the Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code@latest
 

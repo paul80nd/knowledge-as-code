@@ -36,6 +36,17 @@ fail() {
   exit 1
 }
 
+# Milliseconds since the epoch, or nothing where `date` has no `%N`, which POSIX does not require.
+now_ms() {
+  NS=$(date +%s%N)
+  case $NS in *[!0-9]*) ;; *) echo $((NS / 1000000)) ;; esac
+}
+
+# The span includes starting `date` once, which costs more under Git Bash than under sh.
+elapsed() {
+  if [ -n "$1" ] && [ -n "$2" ]; then echo "$(($2 - $1)) ms"; else echo "an unmeasured time, because date has no %N"; fi
+}
+
 # Every read of a manifest goes through here. jq writes CRLF on Windows and Git Bash keeps the
 # carriage return, which then reaches a path, a comparison and a URL — and is invisible in the
 # message reporting the failure, because printing it returns the cursor to the start of the line.
@@ -304,13 +315,24 @@ if [ -f "$BUILD_INDEX" ]; then
 
   echo '{"session_id":"round-trip-session","hook_event_name":"PreToolUse","tool_name":"Read"}' > "$WORK/hook-input.json"
   FIRST=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
+  BEFORE=$(now_ms)
   SECOND=$(CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input.json")
+  AFTER=$(now_ms)
 
   [ "$FIRST" = "$(cat "$BUILD_INDEX")" ] \
     || fail "the build-index hook did not print its output on a session's first call."
   [ -z "$SECOND" ] || fail "the build-index hook printed its output a second time in one session."
 
   echo "round-trip: the build-index hook pushes $CONTEXT_LENGTH characters, once a session."
+  echo "round-trip: a later call in that session took $(elapsed "$BEFORE" "$AFTER")."
+
+  # Every tool call runs the hook, and a Write call's input carries the whole file.
+  printf '{"session_id":"round-trip-session","tool_input":{"content":"%s"}}\n' \
+    "$(head -c 200000 /dev/zero | tr '\0' a)" > "$WORK/hook-input-large.json"
+  BEFORE=$(now_ms)
+  CLAUDE_PLUGIN_DATA="$WORK/plugin-data" "$ROOT/hooks/build-index" < "$WORK/hook-input-large.json" > /dev/null
+  AFTER=$(now_ms)
+  echo "round-trip: a later call with a 200 KB input took $(elapsed "$BEFORE" "$AFTER")."
 else
   echo "round-trip: this plugin ships no build index, so the build-index hook prints nothing."
 fi
