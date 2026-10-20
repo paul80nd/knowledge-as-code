@@ -30,6 +30,6 @@
     "Coverage and gaps": "A reviewer reading the contract diff is the only thing that notices a missing version today.\n\nBoth checks read the contract, so they prove nothing about a route the contract leaves out. [std-API.the-contract-is-the-source-of-truth] requires the build to fail where the implementation drifts from the contract, and no control records a check of that. A header the contract declares is not proof the service sends it. Only a test against the running service proves that. The notice period before a version is removed goes unchecked."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/engineering/controls/0005-api-version-and-notice.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/engineering/controls/0005-api-version-and-notice.md"
   }
 }

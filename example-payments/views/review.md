@@ -463,6 +463,7 @@ Cite as `eng:std-GATES.a-failing-check-stops-the-change`.
 - A team **MUST NOT** skip, silence or suppress a check without a recorded deviation.
 - A deviation covering a suppressed check **MUST** name the individual who accepts the risk.
 - That deviation **MUST** have a review date.
+- A team **MAY** guard a test off a platform it cannot run on without a deviation, where a required check runs the test on a platform where it can, and the guard states why.
 
 ### Every change is built and tested automatically
 

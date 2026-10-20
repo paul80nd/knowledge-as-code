@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices any of these today.\n\nThe checks would prove a heading order, an alternative text, and words that survive without colour. They would not prove that link text makes sense out of context. Nobody has read either surface with a screen reader. The theme's contrast, focus and keyboard rules go unchecked. So does every rule under [std-A11Y.what-falls-short-is-written-down-where-a-reader-finds-it] and [std-A11Y.a-change-that-makes-either-surface-worse-needs-a-deviation].\n\n[ctl-0014] checks two rules under [std-A11Y.a-pinned-component-carries-an-accessibility-assessment]: that an assessment\nnames the pinned version, and that a pin moving its major or minor brings a new one.\n[#967](https://github.com/paul80nd/knowledge-as-code/issues/967) found the second unchecked after Dependabot moved\n`Spectre.Console.Cli` in [#802](https://github.com/paul80nd/knowledge-as-code/pull/802). The other rules under it go\nunchecked."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/dog-fooding/controls/0012-accessibility-unchecked.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/dog-fooding/controls/0012-accessibility-unchecked.md"
   }
 }

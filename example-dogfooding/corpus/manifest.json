@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.72.0",
+  "contentVersion": "0.72.1",
   "mechanismVersion": 22,
-  "commit": "1d31a3408863b5fe527439cb46d62c4ab40e7d51",
+  "commit": "999ed7c8a4c1f15ebd45804aa2cda31b6c45920f",
   "dirty": false,
-  "generatedAt": "2026-10-20T14:58:30Z",
+  "generatedAt": "2026-10-20T18:15:08Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "1d31a3408863b5fe527439cb46d62c4ab40e7d51"
+    "ref": "999ed7c8a4c1f15ebd45804aa2cda31b6c45920f"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.36.7",
+      "contentVersion": "0.37.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/999ed7c8a4c1f15ebd45804aa2cda31b6c45920f/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "1d31a3408863b5fe527439cb46d62c4ab40e7d51"
+        "ref": "999ed7c8a4c1f15ebd45804aa2cda31b6c45920f"
       },
       "reposBase": null,
       "tracker": {
