@@ -69,7 +69,7 @@ as its first tag, so `--tag house` runs one kind alone.
 
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
 contains the cases for `examples/engineering`: 23 house cases and the pilot's 3 controls.
-[`cases/dog-fooding/`](cases/dog-fooding/) contains 2 house cases for `examples/dog-fooding`. Nothing else in the
+[`cases/dog-fooding/`](cases/dog-fooding/) contains 3 house cases for `examples/dog-fooding`. Nothing else in the
 method knows which corpus it runs against.
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
@@ -260,7 +260,7 @@ The prefix of a grader's file name says what it measures:
 | `task-`   | the session did the task it was given                          | task           |
 | `comply-` | the files the session wrote comply with the rule               | compliance     |
 | `cite-`   | the final reply contains the id of the record the rule sits in | citation       |
-| `fired-`  | the session invoked a lookup skill                             | firing         |
+| `fired-`  | the session invoked a lookup skill or `ask-the-corpus`         | firing         |
 
 **Graders whose names share the part before `--` are alternatives.** The set passes where one of them does. A file
 can arrive through `Write` or through `Bash`, so `comply-contract--written` and `comply-contract--shell` each look for
