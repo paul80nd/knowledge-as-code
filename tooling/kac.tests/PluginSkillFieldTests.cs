@@ -90,7 +90,7 @@ public class PluginSkillFieldTests
 
     /// <summary>
     /// The shape one declared source arrives in. A source with no answer here throws rather than defaulting, so a
-    /// source added to <c>PartLineSource</c> forces a decision about what the three skills have to say about it.
+    /// source added to <c>PartLineSource</c> forces a decision about what each skill this test reads says about it.
     /// </summary>
     private static string Written(Schema schema, TypeSchema type, string source)
     {
@@ -121,7 +121,7 @@ public class PluginSkillFieldTests
             // A part with no list beneath it writes null, the same absence as a missing lead.
             PartLineSource.PartBullets => Bullets,
             _ => throw new InvalidOperationException(
-                $"'{source}' is a line source this test holds no type for. Add it here and to the three skills.")
+                $"'{source}' is a line source this test holds no type for. Add it here and to each skill it reads.")
         };
     }
 

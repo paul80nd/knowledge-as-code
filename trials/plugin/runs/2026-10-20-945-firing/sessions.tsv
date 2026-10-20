@@ -1,0 +1,23 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+control	plugin	label-printer-image	1	0	1	1	1	1	0.32990780000000003	9	
+control	plugin	orders-db-connection	1	0	1	1	1	1	0.2648184	11	
+control	plugin	stock-reserve-endpoint	1	0	1	1	1	1	0.5402927999999999	24	
+house	plugin	audit-log-retention	1	0	1	1	1	1	0.2794286	10	
+house	plugin	ca1848-build-break	1	0	1	1	1	1	0.23032980000000003	9	
+house	plugin	ci-every-branch	1	0	1	1	1	1	0.22393840000000004	9	
+house	plugin	ci-secret-scan	1	0	1	1	1	1	0.38366120000000004	12	
+house	plugin	ci-uv-locked	1	0	1	1	1	1	0.25626400000000005	9	
+house	plugin	cover-timeout-pr	1	0	1	1	1	1	0.3212396	11	
+house	plugin	dotnet-ci	1	0	1	1	1	1	0.36235599999999996	14	
+house	plugin	flaky-test-skip	1	0	0	1	1	1	0.2006732	7	no task
+house	plugin	go-service-dockerfile	1	0	1	0	1	1	0.25705680000000003	9	fail
+house	plugin	health-endpoint	1	0	1	1	0	1	0.41444159999999997	25	pass
+house	plugin	label-printer-manifest	1	0	1	1	1	1	0.308683	10	
+house	plugin	order-repository-tests	1	0	1	1	1	1	0.43661320000000003	21	
+house	plugin	orders-column-rename	1	0	1	1	1	1	0.27556579999999997	13	
+house	plugin	pricing-call	1	0	1	0	0	1	0.29915579999999997	15	fail
+house	plugin	request-logging	1	0	1	1	1	1	0.38263719999999996	17	
+house	plugin	returns-api-routes	1	0	1	1	1	1	0.5605278	17	
+house	plugin	stock-alert-rules	1	0	1	0	1	1	0.21459339999999996	8	fail
+house	plugin	stock-per-warehouse	1	0	1	1	1	1	0.32500039999999997	18	
+house	plugin	stock-v1-retirement	1	0	1	1	1	1	0.44099799999999995	20	

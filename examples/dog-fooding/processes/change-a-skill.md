@@ -31,6 +31,8 @@ one says moves neither. One nothing sends moves nothing.
 * [std-VERS], which states what a move of each version stamp means.
 * `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.
 * A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed.
+* The [`writing-for-agents`][writing-for-agents] skill, which step 3 loads. It is the reference std-PLUGIN cites for
+  how a skill and its description are written.
 * Writing a skill an agent follows, which step 4 needs.
 * Judging which version stamps move, which steps 7 to 9 need.
 
@@ -47,7 +49,7 @@ one says moves neither. One nothing sends moves nothing.
      7 applies to it. A move out of `template/.plugin/` is also a removal from every bundle, so step 8 applies as
      well. Do every step of whichever tree the skill leaves, and of the one it arrives in.
 2. Read [std-PLUGIN]. Its rules bind a bundled skill, and its conformance checklist is what a reviewer reads.
-3. Load `technical-writing`. No second writing skill applies to a skill, a hook or a `plugin.json`.
+3. Load `technical-writing`, then `writing-for-agents` for a skill or a hook. A `plugin.json` needs only the first.
 4. Write the file under `template/.plugin/`. Copy it nowhere. Every corpus under `examples/` names `plugin.from`, so
    each one reads this tree and receives none of it.
 5. If you added or removed a skill directory or a hook directory, declare it under `metadata.components` in
@@ -125,3 +127,4 @@ it from the working tree to read your change, as this corpus's own `README.md` d
 [std-VERS.a-producers-move-obliges-every-consumer-in-the-same-pull-request]: ../standards/versioning.md#a-producers-move-obliges-every-consumer-in-the-same-pull-request
 [std-VERS.which-stamps-move-together-and-which-move-alone]: ../standards/versioning.md#which-stamps-move-together-and-which-move-alone
 [svc-marketplace]: ../services/marketplace.md
+[writing-for-agents]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents

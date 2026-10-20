@@ -367,3 +367,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [Full pass](runs/full-pass.md)                                      |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each                        |
 | [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
 | [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering` |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
+| [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering` |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |

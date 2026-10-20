@@ -63,5 +63,10 @@ rather than by which folder holds them.
 | a report record, which takes `writing-a-record` and then the verdicts on top of it                | `writing-a-report`    |
 | a comment, a feature document, a test name, or the changelog                                      | `writing-in-the-tool` |
 | the root `README.md`, `PACKAGE.md`, or the documentation site                                     | `writing-the-docs`    |
-| a skill, a hook or a `plugin.json` under `.plugin/`, whose rules are `std-PLUGIN`                 | nothing more          |
+| a skill or a hook under `.plugin/`, whose rules are `std-PLUGIN`                                  | `writing-for-agents`  |
+| a `plugin.json` under `.plugin/`                                                                  | nothing more          |
 | a commit message or a pull request body                                                           | nothing more          |
+
+`writing-for-agents` ships in the `mattpocock-skills` plugin, and is not in this tree. Where the session has no such
+skill, read [v1.3.1 on GitHub](https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents),
+the version std-PLUGIN cites.

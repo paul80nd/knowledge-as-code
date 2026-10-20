@@ -1,14 +1,17 @@
 ---
 name: process-lookup
 description: Find the procedure for a planned task, in the processes that travel with this plugin. Use when someone
-  asks how a task is carried out here — "how do we release", "what is the process for onboarding", "is there a
-  procedure for rotating a secret", "what do I do to provision this". Use it as well, unprompted, before you carry out
-  a planned task somebody here may already have written down. Read the process before you invent an order of your own.
+  asks how a task is carried out here. Use it as well, unprompted, before you carry out a planned task somebody here
+  may already have written down.
 ---
 
-# Finding a process to follow
+# Finding the process for a task
 
-The corpus travels with this plugin as data. You read it with the tools you already have.
+A process states how the estate carries out a planned task. Work in the shape it sets out, and judge each step against
+the work in front of you, because a step states an outcome and the means are yours. Find the one process written for
+the task, then quote and cite it, so the person you work with can see whose order you are working to.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                       # what this export is, and where each corpus publishes
@@ -16,86 +19,78 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<record>.json             # one process t
 ${CLAUDE_PLUGIN_ROOT}/corpus/processes/<shortcode>/<record>.json # one process a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-## Find one process, and follow that one
+## Find the one process for the task
 
-**Processes do not compose.** A rule binds alongside every other rule that reaches your work, and a process does not.
-You are looking for the single procedure written for the task in front of you, and following two is following neither.
+A process is written for one task, so look for the single one whose trigger is your situation. Two processes followed
+together interleave two orders, and each assumes the state the other left out. A task done because something broke is a
+runbook's, and a runbook is its own type.
 
-**Are you doing this because you planned to, or because something is broken?** Planned is a process. Broken is a
-runbook, and a runbook is a different type that may not have travelled at all.
+Each process is its own file, because a process is read whole. Search `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`, and
+read the files that hit.
 
-## Search the trigger, not the title
+Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key.
+Both section keys are always present, because this type requires both sections.
 
-**There is no flat file here.** A process is followed whole, so the record is the unit and each one is its own file.
-Search `${CLAUDE_PLUGIN_ROOT}/corpus/processes/`, and read the files that hit.
+| Key                          | Type                     | What it holds                                                     |
+|------------------------------|--------------------------|-------------------------------------------------------------------|
+| `fields.id`                  | string                   | the address to cite the process by                                |
+| `fields.title`               | string                   | what the process achieves                                         |
+| `fields.status`              | string                   | `active`, `draft` or `retired`                                    |
+| `fields.applies-to`          | list of strings, or null | the service ids the process concerns                              |
+| `fields.last-rehearsed`      | string                   | the day somebody last followed it end to end, or `never`          |
+| `fields.rehearsal-frequency` | string                   | `on-change`, `per-release`, `quarterly` or `annual`               |
+| `fields.tags`                | list of strings, or null | the word a reader arrives with                                    |
+| `sections.When to use this`  | string of markdown       | the trigger, which says whether the process is yours              |
+| `sections.Prerequisites`     | string of markdown       | the access, tools, prior work and skills the first step needs     |
+| `path`                       | string                   | where the record sits in its own repository                       |
+| `links`                      | object                   | the built link to that record, under `human`                      |
 
-What travels is what decides whether a process is yours:
+**Read `When to use this` before you decide.** A title says what a process achieves, and two processes can achieve
+similar things. The trigger says which one was written for your situation.
 
-| Key                                     | What it holds                                                          |
-|-----------------------------------------|------------------------------------------------------------------------|
-| `fields.title`                          | what the process achieves                                              |
-| `sections.When to use this`             | the trigger. This is the field that answers whether it is yours        |
-| `sections.Prerequisites`                | the access, tools, prior work and skills before the first step         |
-| `fields.applies-to`                     | the service ids the process concerns                                   |
-| `fields.status`                         | `active`, `draft` or `retired`                                         |
-| `fields.last-rehearsed`                 | a date, or `never`                                                     |
-| `fields.rehearsal-frequency`            | the cadence, or the event, that date is read against                   |
-| `fields.tags`, `fields.id`              | the word a reader arrives with, and the address to cite                |
-| `path`, `links`                         | where the full record lives, and the built link to it                  |
+**Check `Prerequisites` before anybody starts.** Say what is missing before the first step, because a gap found after
+four steps leaves the work half done.
 
-**Read `When to use this` before you decide.** A title says what a process achieves and two processes can achieve
-similar things. The trigger says which one was written for the situation you are in.
+## Read the steps from the published record
 
-## Check the reader can start
-
-**`Prerequisites` travels whole for a reason.** It names the access, the tooling, the prior process and the skills a
-reader needs before step 1. Where one of those is missing, say so before anybody begins, rather than after four steps
-have run.
-
-## The steps are not here
-
-**This export carries the trigger and stops.** `Steps`, `Verification` and any rollback stay in the published record,
-because a procedure is followed in order against the version in force rather than against a copy taken on some earlier
-day.
-
-**Load the `corpus-retrieval` skill and fetch the record.** It says how to fetch the file through the client that
-authenticates to that platform, and what to do where nothing can reach it. Quote the record's own `links.human` to a
-person.
-
-**Do not reconstruct the steps.** Neither from the trigger, nor from what the task usually involves elsewhere. A
-plausible procedure is worse than none, because whoever asked cannot tell it from the one their colleagues follow.
+The export carries the trigger and the prerequisites. `Steps`, `Verification` and any rollback stay in the published
+record, because a process is worked against the version in force. Load `corpus-retrieval` to fetch the record, and
+quote its `links.human` to a person. Work only from the steps you fetched. A plausible order written from the trigger
+looks the same to a reader as the one their colleagues follow.
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the process.** `eng:prc-release` was published by the corpus whose shortcode is
-`eng`, and a bare `prc-release` was written here. The shortcode moves out of the id and becomes the directory, so
-`eng:prc-release` is at `${CLAUDE_PLUGIN_ROOT}/corpus/processes/eng/prc-release.json`.
+**A prefix names the corpus that wrote the process.** `eng:prc-release` was published by the corpus with shortcode
+`eng`, and a bare `prc-release` was written here. `eng:prc-release` is at
+`${CLAUDE_PLUGIN_ROOT}/corpus/processes/eng/prc-release.json`. Look the `shortcode` up in `sources` in `manifest.json`,
+and name that corpus in words.
 
-**`shortcode` is the key into `sources`** in `manifest.json`, which names the producing corpus and where it publishes.
-Look it up before you say anything about where a process came from, and name the corpus in words.
+## Say what stayed behind
+
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published process for the rest.
+
+* **Every process's Steps, Verification and If it goes wrong** stay in the record.
+* **The services in `applies-to`** are here only where `services` travelled. Otherwise report the ids alone.
+* **A runbook for something broken** is here only where `runbooks` travelled, and no skill here reads it.
 
 ## Say when a process is unsettled
 
-Read these before you hand anybody a procedure, and tell them what you saw:
+Read `status` and `last-rehearsed` before you hand anybody a procedure, and tell them what you saw:
 
-* **`last-rehearsed: never`** — nobody has followed this end to end. It is a hypothesis, and the first person to run it
-  is testing it.
-* **`last-rehearsed` older than `rehearsal-frequency` allows** — the procedure has drifted out of its own cadence.
-* **`rehearsal-frequency: on-change`** — no date makes this one stale. Ask the reader what has moved since
-  `last-rehearsed`, and tell them nothing here answers that.
-* **`status: draft`** — it was not agreed when the export was taken.
-* **`status: retired`** — it has been stood down. Find what replaced it before you follow it.
+* **`last-rehearsed: never`**: nobody has followed this end to end, so the first person to run it is testing it.
+* **`last-rehearsed` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
+* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed`, and
+  say nothing here answers that.
+* **`status: draft`**: the process was not agreed when the export was taken.
+* **`status: retired`**: the process was stood down. Find what replaced it, and quote that.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of them.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
 ## Say when there is nothing
 
-Where no process matches, say nothing in this export describes a procedure for the task, and name the corpus and every
-entry in `sources` from `manifest.json`, so a reader knows what was searched.
-
-**Silence is not a procedure you may supply.** It says only that nobody here has written this down. Offer the task as
-one worth a process, and leave that to whoever owns it.
+Where no process matches, say that nothing in this export describes a procedure for the task. Name the corpus and every
+entry in `sources` from `manifest.json`, so the reader knows what was searched. An empty search states only that the
+estate has not written this down: it supplies no order. Offer the task as one worth a process.
