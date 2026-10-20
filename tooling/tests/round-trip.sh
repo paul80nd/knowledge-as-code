@@ -329,9 +329,7 @@ glossary_lookup() {
 
   echo "round-trip: terms reachable at $CORPUS_ROOT/glossary/terms.jsonl inside the installed plugin"
 
-  # The skill's first pattern, written as ERE. It says to write `\s*` rather than a literal space,
-  # because nothing promises the export puts one after a colon; ` *` is the same statement in the
-  # dialect grep speaks.
+  # A search for the term's title. ` *` admits any spacing after the colon, which the export does not fix.
   grep -iE '"title": *"Borrower"' "$TERMS" > "$WORK/hits.txt" || fail "no line defines Borrower."
 
   HITS=$(wc -l < "$WORK/hits.txt" | tr -d ' ')
@@ -343,7 +341,7 @@ glossary_lookup() {
   DEFINITION=$(jqr '.definition // empty' "$WORK/hits.txt")
   [ -n "$DEFINITION" ] || fail "$ID came back with no definition."
 
-  # The skill tells a reader to give the `**Not:**` line beside the definition.
+  # The skill tells a reader to give the `not` line beside the definition.
   NOT=$(jqr '.not // empty' "$WORK/hits.txt")
   [ -n "$NOT" ] || fail "$ID came back with no Not line."
 
@@ -379,13 +377,13 @@ policy_lookup() {
 
   echo "round-trip: clauses reachable at $CORPUS_ROOT/policies/clauses.jsonl inside the installed plugin"
 
-  # The skill's first pattern searches the stem, and `timeframe` is the stem `timeframes` in pol-VURM sits on.
+  # A search for the subject's stem. `timeframe` is the stem `timeframes` in pol-VURM sits on.
   grep -iE 'timeframe' "$CLAUSES" > "$WORK/subject.txt" || fail "no clause mentions a timeframe."
 
   grep -qE '"record": *"pol-VURM"' "$WORK/subject.txt" \
     || fail "a search for the subject reached no clause of pol-VURM."
 
-  # The skill's second pattern, collecting one policy once a first hit has named it.
+  # Every clause of the policy the first hit named.
   grep -E '"record": *"pol-VURM"' "$CLAUSES" > "$WORK/clauses.txt" \
     || fail "no clause belongs to pol-VURM."
 
@@ -448,13 +446,13 @@ standards_lookup() {
 
   echo "round-trip: rules reachable at $CORPUS_ROOT/standards/rules.jsonl inside the installed plugin"
 
-  # The skill's first pattern searches the stem, and `idempot` is the stem `idempotency` and `idempotent` sit on.
+  # A search for the subject's stem. `idempot` is the stem `idempotency` and `idempotent` sit on.
   grep -iE 'idempot' "$RULES" > "$WORK/subject.txt" || fail "no rule mentions idempotency."
 
   grep -qE '"record": *"std-IDEM"' "$WORK/subject.txt" \
     || fail "a search for the subject reached no rule of std-IDEM."
 
-  # The skill's second pattern, collecting one standard once a first hit has named it.
+  # Every rule of the standard the first hit named.
   grep -E '"record": *"std-IDEM"' "$RULES" > "$WORK/rules.txt" \
     || fail "no rule belongs to std-IDEM."
 
