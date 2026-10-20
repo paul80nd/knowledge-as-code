@@ -1,0 +1,6 @@
+case	arm	run	graders	adjudicated	reason
+flaky-test-skip	plugin	1	no task	no task	The session asked whether to skip or fix the test, and changed no file.
+go-service-dockerfile	plugin	1	fail	fail	Both FROM lines take an ARG with no default, so the file pins no base image and a build can pass a tag.
+stock-alert-rules	plugin	1	fail	fail	Each alert gives a TODO placeholder as its first action, so nobody is told what to do first.
+pricing-call	plugin	1	fail	fail	The outbound call sends no traceparent; the session searched for timeouts and retries and never reached std-OBS.
+health-endpoint	plugin	1	pass	pass	The endpoint reports the commit from GIT_COMMIT, and the build passes it in.
