@@ -43,9 +43,9 @@ repos-base: https://git.example.com/example-payments
 consumes:
   - corpus: example-engineering
     shortcode: eng
-    version: ^0.36.0
+    version: ^0.37.0
     source: ../engineering/.dist/package
-    resolved: "0.36.7"
+    resolved: "0.37.0"
 
 # Taken from this repository's root rather than over the network, because the template is served here.
 # `kac update` stamps the last three.
