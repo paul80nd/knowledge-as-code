@@ -135,6 +135,7 @@ nav:
       - Getting started: use/getting-started.md
       - One corpus or several: use/one-corpus-or-several.md
       - Running it in CI: use/ci.md
+      - Installing the plugin: use/installing-a-plugin.md
       - Troubleshooting: use/troubleshooting.md
       - The corpus descriptor: use/corpus-descriptor.md
       - Discovery: use/discovery.md
