@@ -47,6 +47,13 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   }
   ```
 
+- **`ask-the-corpus`, the skill for a question with no known place in the corpus.** It sends a known need to its
+  lookup, and reads deviations and reports from files beside it. `kac bundle` ships it wherever a lookup ships. The
+  breadcrumb names skills by the role `announce` gives them: `"router"`, `"lookup"` or `"write-back"`. `true` still
+  reads as `"lookup"`. The breadcrumb now says the records are the organisation's own knowledge, names the router, and
+  asks a session to report a change with `raise-finding`. The template moves to version 22. Copy its
+  `ask-the-corpus` entry and the two new `announce` values into your `plugin.json`.
+
 ### Changed
 
 - **Every bundled skill states what it is for, the intent of the type it reads, and the reason for each rule it

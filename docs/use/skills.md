@@ -23,6 +23,7 @@ that export. An install gets the ones whose record types the corpus exported.
 | `glossary-lookup`   | Look a term up in the knowledge corpus glossary that travels with this plugin                                                        | `glossary@1`  |
 | `raise-finding`     | File something you noticed about this corpus as an issue on the tracker that corpus states                                           | standalone    |
 | `request-deviation` | Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the corpus holding that clause | supporting    |
+| `ask-the-corpus`    | Send a question to the part of this corpus that answers it, when you do not know which record holds the answer                       | supporting    |
 | `controls-lookup`   | Find out what proves a rule here, in the controls that travel with this plugin                                                       | `controls@1`  |
 | `fix-lookup`        | Find out whether somebody here has already solved this problem, in the fixes that travel with this plugin                            | `fixes@2`     |
 | `policy-lookup`     | Find what this estate is committed to, in the policy clauses that travel with this plugin                                            | `policies@2`  |

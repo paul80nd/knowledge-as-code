@@ -75,7 +75,7 @@ resolves nowhere. `bundle` copies bytes, never text, so the copy cannot change a
 ## The breadcrumb
 
 A `SessionStart` hook prints a few lines into every session. They say which corpus is installed, how many entries it
-holds, which records cover them, and which skill to ask.
+holds, which records cover them, which skill to ask, and how to report a change the records no longer describe.
 
 * **A line names at most six records.** A type over the bound has its first names given and the rest as a count.
 * **A type has a line per corpus that wrote some of it.** The installing corpus has one where it wrote any, and each
@@ -86,14 +86,24 @@ standards. 24 entries across 8 records: Card details reach the PSP and never rea
 standards (from eng). 37 entries across 12 records: An interface is described by a contract in the repository, …
 ```
 
-* **The last line names each surviving skill whose entry says `"announce": true`.** It warns against answering from
-  memory and asks no question of its own. A skill earns the line where a session would never think to ask it.
+* **The closing lines name each surviving skill by the role its entry announces.** They open by saying the records
+  are the organisation's recorded knowledge, and warn against answering from memory. A skill earns a role where a
+  session would never think to ask it, and a role whose skill was trimmed prints nothing. The table below lists the
+  roles.
 * **It is rendered at build time.** Everything it states is a fact about the export inside the plugin, so `bundle`
   writes `hooks/breadcrumb.txt` once and the hook is one `cat`. The consumer's machine needs no parser and no runtime.
 * **It travels with the hook directory.** `bundle` asks which files survived, so a trimmed hook takes the breadcrumb
   with it.
 * **It names no record type.** Counts, names, shortcodes and skills are read off the export and the surviving
   components, so a type this tool has never heard of gets a line.
+
+| `announce`     | The breadcrumb asks a session to load the skill                | In the template   |
+|----------------|----------------------------------------------------------------|-------------------|
+| `"router"`     | for a question whose record the session cannot place           | `ask-the-corpus`  |
+| `"lookup"`     | for a known need, named as an example of a lookup              | `glossary-lookup` |
+| `"write-back"` | when the session's change alters something a record describes  | `raise-finding`   |
+
+`true` reads as `"lookup"`, so a manifest written before the roles keeps its line. Any other value announces nothing.
 
 The breadcrumb hook ships as a POSIX script and a `.cmd` twin. `bundle` keeps the permission bit on every script, so
 each runs at the first session.
@@ -218,6 +228,7 @@ type trim.
 * The breadcrumb names at most six records of a type
 * The breadcrumb gives a type a line for each corpus that wrote some of it
 * The breadcrumb asks for each announced skill that survived
+* The breadcrumb names each surviving skill by the role it announces
 * The breadcrumb leaves with a trimmed hook
 * The hook keeps its permission bit
 * A bundle writes each view the plugin manifest declares

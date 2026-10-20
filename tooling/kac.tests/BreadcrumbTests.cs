@@ -23,30 +23,74 @@ public class BreadcrumbTests
         => Assert.Contains("exported 2026-08-18", Render(Manifest("c", "1.0.0", Type("glossary", 1, 3))));
 
     [Fact]
-    public void It_names_the_skills_that_survived_the_trim()
-        => Assert.Contains("Ask the glossary-lookup skill",
-            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
-                included: [new PluginComponent("skills/glossary-lookup", ["glossary"], null, Announce: true)]));
+    public void It_names_a_lookup_that_survived_the_trim_for_a_known_need()
+        => Assert.Contains("Ask a lookup skill such as glossary-lookup for a known need.",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Glossary]));
 
     [Fact]
-    public void The_skill_line_warns_against_answering_from_memory_and_names_no_type()
-        => Assert.Contains("Ask the standards-lookup skill before you answer from what you already know.",
+    public void It_warns_against_answering_from_memory_and_names_no_type()
+        => Assert.Contains(
+            "These records are the organisation's recorded knowledge, so check them before you answer from what you "
+            + "already know.",
             Render(Manifest("c", "1.0.0", Type("standards", 1, 3)),
-                included: [new PluginComponent("skills/standards-lookup", ["standards"], null, Announce: true)]));
+                included: [new PluginComponent("skills/standards-lookup", ["standards"], null, Breadcrumb.Lookup)]));
+
+    [Fact]
+    public void It_sends_a_question_with_no_known_place_to_the_router_and_a_known_need_to_a_lookup()
+        => Assert.Contains(
+            "Ask the ask-the-corpus skill when you do not know which record answers a question, and a lookup skill "
+            + "such as glossary-lookup for a known need.",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Router, Glossary]));
+
+    [Fact]
+    public void A_router_with_no_announced_lookup_is_named_alone()
+        => Assert.Contains("Ask the ask-the-corpus skill when you do not know which record answers a question.\n",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Router]));
+
+    [Fact]
+    public void It_asks_for_a_finding_where_a_change_alters_what_a_record_describes()
+        => Assert.Contains(
+            "When your change alters something these records describe, say so with the raise-finding skill.",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Glossary, WriteBack]));
+
+    [Fact]
+    public void A_role_whose_skill_was_trimmed_is_not_mentioned()
+    {
+        var text = Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)), included: [Glossary]);
+
+        Assert.DoesNotContain("do not know which record", text);
+        Assert.DoesNotContain("say so with", text);
+    }
 
     [Fact]
     public void A_skill_that_does_not_announce_is_left_out()
         => Assert.DoesNotContain("policy-lookup",
             Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
-                included:
-                [
-                    new PluginComponent("skills/glossary-lookup", ["glossary"], null, Announce: true),
-                    new PluginComponent("skills/policy-lookup", ["policies"], null)
-                ]));
+                included: [Glossary, new PluginComponent("skills/policy-lookup", ["policies"], null)]));
+
+    [Fact]
+    public void A_role_the_breadcrumb_does_not_know_is_left_out()
+        => Assert.DoesNotContain("odd-one",
+            Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)),
+                included: [Glossary, new PluginComponent("skills/odd-one", [], null, "herald")]));
 
     [Fact]
     public void A_plugin_with_no_skill_points_at_nothing()
-        => Assert.DoesNotContain("Ask the", Render(Manifest("c", "1.0.0", Type("glossary", 1, 3))));
+    {
+        var text = Render(Manifest("c", "1.0.0", Type("glossary", 1, 3)));
+
+        Assert.DoesNotContain("Ask ", text);
+        Assert.DoesNotContain("recorded knowledge", text);
+    }
+
+    [Theory]
+    [InlineData("true", Breadcrumb.Lookup)]
+    [InlineData("\"router\"", Breadcrumb.Router)]
+    [InlineData("\"write-back\"", Breadcrumb.WriteBack)]
+    [InlineData("false", null)]
+    [InlineData("1", null)]
+    public void An_announce_value_is_read_as_a_role(string json, string? role)
+        => Assert.Equal(role, Breadcrumb.Role(JsonNode.Parse(json)));
 
     [Fact]
     public void A_type_with_no_parts_is_counted_in_records()
@@ -147,6 +191,14 @@ public class BreadcrumbTests
         Assert.Contains("glossary. 7 records: Context1, Context2, Context3, Context4, Context5 and 2 more.", text);
         Assert.Contains("glossary (from eng). 7 records: Eng1, Eng2, Eng3, Eng4, Eng5 and 2 more.", text);
     }
+
+    private static readonly PluginComponent Glossary =
+        new("skills/glossary-lookup", ["glossary"], null, Breadcrumb.Lookup);
+
+    private static readonly PluginComponent Router = new("skills/ask-the-corpus", [], null, Breadcrumb.Router);
+
+    private static readonly PluginComponent WriteBack =
+        new("skills/raise-finding", [], null, Breadcrumb.WriteBack, Standalone: true);
 
     private static string Render(
         string manifest,

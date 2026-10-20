@@ -36,8 +36,8 @@ reads, as `requires`, and ships only where the export contains every one of them
 * **Every skill and hook needs a component.** A run stops on a file under `skills/` or `hooks/` that no component
   claims, because nothing would trim it. A file anywhere else, such as a README or a licence, ships whatever the corpus
   adopted.
-* **A component naming no type supports the lookups, unless it is standalone.** `corpus-retrieval` and
-  `request-deviation` ship wherever a component reading a type shipped, and leave with the last of them. The trim
+* **A component naming no type supports the lookups, unless it is standalone.** `ask-the-corpus`, `corpus-retrieval`
+  and `request-deviation` ship wherever a component reading a type shipped, and leave with the last of them. The trim
   reports that as `no component it supports survived`. `raise-finding` declares `"standalone": true` and always ships.
 * **A run that trims every component warns and still builds.** The empty plugin installs, and `bundle.json` lists each
   component it dropped and the type that component needed.
@@ -88,6 +88,9 @@ wrote .dist/plugin/hooks/breadcrumb.cmd
 wrote .dist/plugin/hooks/breadcrumb.txt
 wrote .dist/plugin/hooks/build-index
 wrote .dist/plugin/hooks/hooks.json
+wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
+wrote .dist/plugin/skills/ask-the-corpus/deviations.md
+wrote .dist/plugin/skills/ask-the-corpus/reports.md
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
@@ -98,7 +101,7 @@ bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 41 file(s) to .dist/plugin/ as example-libraries 0.24.2. 5 component(s) included, 6 trimmed.
+bundle: wrote 44 file(s) to .dist/plugin/ as example-libraries 0.24.4. 6 component(s) included, 6 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -116,12 +119,12 @@ Both directories are untracked, so nothing here needs a branch or a credential.
 ### The components that shipped
 
 `example-engineering` exports controls, glossary, policies and standards, so it ships a lookup skill for each, beside
-the three skills that name no type of their own. Its export has standards, so it also ships both views and
+the four skills that name no type of their own. Its export has standards, so it also ships both views and
 `standards-review`, which reads the review view. It has no fixes and no processes, so `fix-lookup` and
 `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 74 file(s) to .dist/plugin/ as example-engineering 0.36.5. 11 component(s) included, 2 trimmed.
+bundle: wrote 77 file(s) to .dist/plugin/ as example-engineering 0.36.7. 12 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:
@@ -131,7 +134,7 @@ jq -c '{kept: [.included[].path], trimmed: [.trimmed[].path]}' .dist/plugin/bund
 ```
 
 ```text
-{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
+{"kept":["skills/corpus-retrieval","skills/glossary-lookup","skills/raise-finding","skills/request-deviation","skills/ask-the-corpus","skills/controls-lookup","skills/policy-lookup","skills/standards-lookup","skills/standards-review","views/build-index.md","views/review.md","hooks"],"trimmed":["skills/fix-lookup","skills/process-lookup"]}
 ```
 
 To see which assembled skill reads the file one type exports, search for it:

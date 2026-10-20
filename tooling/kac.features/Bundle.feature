@@ -217,9 +217,20 @@ Scenario: The breadcrumb asks for each announced skill that survived
   And it has been exported
   And the plugin tree has a component "skills/corpus-retrieval" reading no type
   When I bundle
-  Then the breadcrumb has the line "Ask the glossary-lookup skill before you answer from what you already know."
+  Then the breadcrumb has the line "Ask a lookup skill such as glossary-lookup for a known need."
   And the breadcrumb does not mention "corpus-retrieval"
   And the breadcrumb does not mention "decision-lookup"
+
+Scenario: The breadcrumb names each surviving skill by the role it announces
+  Given the bundle fixture corpus
+  And it has been exported
+  And the plugin tree has a component "skills/router" reading no type
+  And the component "skills/router" announces itself as "router"
+  And the plugin tree has a standalone component "skills/report-back"
+  And the component "skills/report-back" announces itself as "write-back"
+  When I bundle
+  Then the breadcrumb has the line "Ask the router skill when you do not know which record answers a question, and a lookup skill such as glossary-lookup for a known need."
+  And the breadcrumb has the line "When your change alters something these records describe, say so with the report-back skill."
 
 Scenario: The breadcrumb leaves with a trimmed hook
   Given the bundle-empty fixture corpus
