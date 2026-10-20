@@ -38,7 +38,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
-| [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     0 |
+| [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     3 |
 | [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     0 |
 
 `grep -c '^  Scenario:' trials/use-cases/*.feature` reports the scenarios in each file.
@@ -58,6 +58,9 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`       | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 | A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`          | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 | A review says which rule no control checks                                                | `review/engineering/health-endpoint`           | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
+| A question about coverage gets the published report, with its date and its limits         | `plugin/dog-fooding/house/uncovered-clauses`   | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| A question about enforcement gets the control, and its mechanism                          | `plugin/engineering/house/is-deploy-enforced`  | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
+| A question about open departures gets each one with its review date                       | `plugin/dog-fooding/house/deviations-due`      | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
 
 Every other scenario is `@proposed`.
 

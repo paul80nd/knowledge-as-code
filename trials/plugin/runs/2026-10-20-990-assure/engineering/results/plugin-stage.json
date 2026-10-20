@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T11:56:55.246Z",
+  "durationSeconds": 57,
+  "costUsd": 0.6453987999999999,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "is-deploy-enforced",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.36.6",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "is-deploy-enforced",
+      "dir": "evals/house/is-deploy-enforced",
+      "source": "mixed",
+      "promptMarkdown": "Does anything actually check that a running build reports the commit it was built from? We want to rely on that when\nwe trace a bad release, so I need to know whether it is checked or just written down.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "ctl-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-not-enforced",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[Nn]ot[- ]enforced|[Uu]nenforced|[Nn]othing (automated |automatically )?(checks|enforces|verifies)|(is|are) not (automatically )?(checked|enforced)|(isn.t|aren.t) (automatically )?(checked|enforced)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-controls-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?controls-lookup\""
+          }
+        },
+        {
+          "name": "task-answers",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[Cc]ommit",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.20368819999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 57,
+            "startedAt": "2026-10-20T11:56:55.357Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ctl-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-enforced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Nn]ot[- ]enforced|[Uu]nenforced|[Nn]othing (automated |automatically )?(checks|enforces|verifies)|(is|are) not (automatically )?(checked|enforced)|(isn.t|aren.t) (automatically )?(checked|enforced)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-controls-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Cc]ommit",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.2192734,
+            "judgeCostUsd": 0,
+            "durationSeconds": 25,
+            "startedAt": "2026-10-20T11:59:20.953Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ctl-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-enforced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Nn]ot[- ]enforced|[Uu]nenforced|[Nn]othing (automated |automatically )?(checks|enforces|verifies)|(is|are) not (automatically )?(checked|enforced)|(isn.t|aren.t) (automatically )?(checked|enforced)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-controls-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Cc]ommit",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.2224372,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-10-20T11:59:20.953Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched ctl-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-enforced",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Nn]ot[- ]enforced|[Uu]nenforced|[Nn]othing (automated |automatically )?(checks|enforces|verifies)|(is|are) not (automatically )?(checked|enforced)|(isn.t|aren.t) (automatically )?(checked|enforced)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-controls-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Cc]ommit",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1
+  }
+}

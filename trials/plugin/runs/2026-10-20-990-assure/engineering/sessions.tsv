@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	is-deploy-enforced	1	0	1	1	1	1	0.20368819999999999	7	pass
+house	plugin	is-deploy-enforced	2	0	1	1	1	1	0.2192734	9	pass
+house	plugin	is-deploy-enforced	3	0	1	1	1	1	0.2224372	9	pass

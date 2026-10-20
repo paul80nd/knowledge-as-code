@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+deviations-due	plugin	1	pass	pass	The reply lists the five deviations due on 7 March 2027 by id, and the six due in September apart.
+deviations-due	plugin	2	pass	pass	The reply tables the five deviations due on 2027-03-07 by title and id, and the six due later apart.
+deviations-due	plugin	3	no task	pass	The reply gives the five deviations due on 7 March 2027 by title alone, so the task grader found no id.
+uncovered-clauses	plugin	1	pass	pass	The reply lists uncovered clauses, dates the report 2026-10-20, and says a control vouches for a whole standard.
+uncovered-clauses	plugin	2	pass	pass	The reply lists uncovered clauses, cites the report and its 2026-10-20 run, and says a control vouches for a whole standard.
+uncovered-clauses	plugin	3	pass	pass	The reply lists uncovered clauses, dates the report 2026-10-20 11:14, and says a control vouches for a whole standard.
