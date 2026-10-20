@@ -1,0 +1,3 @@
+case	arm	run	graders	adjudicated	reason
+uncovered-clauses	plugin	2	no task	pass	The sandbox blocked the fetch, and the reply gives the report, its date and link, says it could not read the limits, and states none.
+uncovered-clauses	plugin	3	no task	pass	The sandbox blocked the fetch, and the reply gives the report, its date and link, says it could not read the verdicts or limits, and states none.

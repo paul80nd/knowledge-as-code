@@ -1,0 +1,3 @@
+case	arm	run	graders	adjudicated	reason
+uncovered-clauses	plugin	1	no task	pass	The reply lists the uncovered clauses by policy in short codes, which the task grader does not match, dates the run and says a control vouches for a whole standard.
+sdk-before-change	plugin	1	fail	fail	The reply finds dev-no-reproducible-build and how it closes, and never gives its review date.

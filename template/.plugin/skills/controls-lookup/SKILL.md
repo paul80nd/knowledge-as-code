@@ -100,6 +100,11 @@ An entry is a whole standard or one rule inside it, and a dot tells them apart: 
 * **A rule anchor is the finer answer.** It is the address `standards-lookup` gives a rule, so both skills agree on
   what is claimed.
 
+**Answer a question about the whole corpus from a report.** Where someone asks which rules or clauses nothing covers
+across the corpus, read `${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/reports.md` and answer from the report it finds.
+A report holds the verdicts and limits a person wrote, and a count built here from the controls has neither. Count from
+the controls only where no report answers, and say so.
+
 To find which standards nothing claims, collect every value of `verifies`, then ask `standards-lookup` which standards
 this export has, and compare the sets. That skill reads the standards, so hand the question to it. Check `types` in
 `manifest.json` first: where `standards` did not travel, report the standards the controls name and say the other half
