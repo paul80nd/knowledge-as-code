@@ -1,9 +1,8 @@
 ---
 name: standards-review
 description: Review a change against the standards that travel with this plugin, citing the rule behind every finding.
-  Use when someone asks for a review of their work, in words like "review my change", "review this branch", "check this
-  against our standards", "review since main", and before you open a pull request. Pass the fixed point to review from,
-  such as a branch, a tag or a commit.
+  Use when someone asks for a review of their work, and before you open a pull request. Pass the fixed point to review
+  from, such as a branch, a tag or a commit.
 argument-hint: "[fixed point]"
 context: fork
 agent: general-purpose
@@ -139,7 +138,7 @@ A finding under a standard whose status is not `active` stays under the heading 
 force, with that status and `generatedAt`.
 
 Close with one line naming the corpus and every entry in `sources` whose rules you checked, and the rules you left to
-an automated control. Keep the report under 500 words.
+an automated control. Keep the report under 500 words, so whoever decides whether to merge can read it at once.
 
 **A review that finds nothing says only that no rule written here was broken.** The estate may not have written a rule
 for what the change does. Say that, and leave the rest of the judgement to whoever approves the change.

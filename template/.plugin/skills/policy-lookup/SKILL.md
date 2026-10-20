@@ -1,17 +1,19 @@
 ---
 name: policy-lookup
 description: Find what this estate is committed to, in the policy clauses that travel with this plugin. Use when
-  someone asks whether something is allowed here — "do we have a policy on X", "what does our policy say about X",
-  "are we allowed to X", "is X against policy", "what are we on the hook for". Use it as well, unprompted, before you
-  propose a design or a change touching secrets, access, retention, backups, logging, accessibility, third-party
-  components, or what reaches production. Read the clause before you assume nothing governs the thing you are about
-  to do.
+  someone asks whether something is allowed here. Use it as well, unprompted, before you propose a design or a change
+  touching secrets, access, retention, backups, logging, accessibility, third-party components, or what reaches
+  production.
 ---
 
 # Looking a clause up in the policies
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
-and nothing to run.
+A policy states what the estate is committed to. Each `MUST` is a commitment the work is held to. Each `SHOULD` is the
+usual way, which the work may leave by saying why. Find every clause that reaches the work, then quote and cite each
+one, so the person you work with can see where it is written. Whether a design meets a clause is a ruling for the
+estate, so say which part of the question you leave to them.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
@@ -20,29 +22,17 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/policies/<record>.json             # one policy thi
 ${CLAUDE_PLUGIN_ROOT}/corpus/policies/<shortcode>/<record>.json # one policy a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-One file holds every clause, whoever committed to it. A corpus that consumes another exports both, so `clauses.jsonl`
-carries this corpus's clauses and the clauses of every corpus above it, and one search reaches all of them. An estate is
-bound by what it inherited as surely as by what it wrote.
+## Search the clauses
 
-## Find the commitment, and leave the verdict
-
-**This skill finds a commitment. It does not rule on one.** A clause line carries the wording, the level it binds at and
-the id to cite it by. That is enough to quote what we committed to and say where it is written. It is not enough to say
-whether a design meets it. Whoever asked wants a ruling, and the ruling belongs to the estate.
-
-Quote the clause, name its level, link the policy, and say plainly which part of the question you are leaving to the
-reader. Send them to the published record for the rest.
-
-## Search the clause table
+`clauses.jsonl` contains this corpus's clauses and those of every corpus it consumes, so one file reaches them all. An
+estate is bound by what it inherited as fully as by what it wrote.
 
 **Read the `clause` of every hit before you use it.** The field names in this file are ordinary English words:
-`clause`, `level`, `record`, `status`, `type`. A search for one of those matches every line in the file. A line governs
-your subject when its wording says so, never because it matched.
+`clause`, `level`, `record`, `status`, `type`. A search for one of those matches every line in the file.
 
-Each line carries the clause whole:
+Each line is one row of a policy's clause table:
 
 | Field                | Type              | What it holds                                                                   |
 |----------------------|-------------------|---------------------------------------------------------------------------------|
@@ -57,116 +47,81 @@ Each line carries the clause whole:
 | `links`              | object or null    | `human`, the link to the clause. `null` where nothing can address it            |
 | `path`, `anchor`     | string            | the record's file in its corpus, and the fragment the clause sits at            |
 
-**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is one
-exception, and the row above says so. `links` is the other: a line another corpus exported before the key existed has
-none. A clause opening with no modal carries `"level": null`, so read the level before you rank the clause.
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. Two keys can be
+absent: `shortcode` on a clause written here, and `links` on a line exported before the key existed.
+
+## Read the level of each clause
+
+The answer turns on `level`, because two clauses of one policy can open the same sentence and bind differently. Compare
+it whole, because `MUST NOT` opens with `MUST`. The wording arrives with its markup stripped, so take the level from
+`level` alone. A clause opening with no modal has a `level` of `null`.
+
+* **`MUST` and `MUST NOT` bind.** Departing from one takes a deviation its owner accepts, and `request-deviation` asks.
+* **`SHOULD` states the usual way.** The work departs by giving its reason in the change. No deviation.
+* **`COULD` permits.** It blocks nothing.
+
+Quote the line's `clause`, name its level, and cite its `id`.
 
 ## Read the prefix on an id
 
-**A prefix on an id names the corpus that committed to the clause.** `eng:pol-SCRT.LOGS` is the clause `LOGS`, in the
-policy `pol-SCRT`, as the corpus whose shortcode is `eng` published it. The prefix sits on `id` and on `record`, so an
-id you take from one line and search for carries it.
+**A prefix names the corpus that committed to the clause.** `eng:pol-SCRT.LOGS` was published by the corpus with
+shortcode `eng`, and a bare `pol-SCRT.LOGS` was written here. The prefix is on `id` and `record`. An inherited clause
+binds as fully as one written here. Look its `shortcode` up in `sources` in `manifest.json`, and name that corpus in
+words.
 
-**A bare id belongs to the corpus you installed.** `pol-SCRT.LOGS` was written here.
-
-**An inherited clause binds.** A corpus consumes another because that other one governs it, so a clause arriving under a
-prefix is a commitment this estate is held to. Quote it as readily as one written here, and say who wrote it.
-
-**`shortcode` is the key into `sources`.** Each entry in `sources` in `manifest.json` holds one producing corpus: its
-name, the version of it that travelled, and where it publishes. Look the shortcode up there before you say anything
-about the clause's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
-
-**A record file sits under its producer's shortcode**, because two corpora can name one policy and a filename cannot say
-whose it is. The shortcode moves out of the id and becomes the directory, so take it off the `record` value before you
-build the filename. The owning record for `eng:pol-SCRT.LOGS` is
-`${CLAUDE_PLUGIN_ROOT}/corpus/policies/eng/pol-SCRT.json`, and for a bare id it is
+**A record file sits under its producer's shortcode.** `eng:pol-SCRT` is
+`${CLAUDE_PLUGIN_ROOT}/corpus/policies/eng/pol-SCRT.json`, and a bare `pol-SCRT` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/policies/pol-SCRT.json`.
-
-## Read `level` before you answer
-
-**`level` is the field the answer turns on.** Two clauses of one policy open the same shape of sentence and bind
-differently. Read a `COULD` as a `MUST` and you have invented a rule. Read a `MUST` as advice and you have dropped one.
-
-* **`MUST` and `MUST NOT` bind.** The first requires the thing, the second prohibits it. Departing from either takes a
-  deviation the clause's owner accepts, and `request-deviation` asks for one.
-* **`SHOULD` states the usual way.** Follow it, or depart and say why in the change. No deviation is needed.
-* **`COULD` permits.** It blocks nothing.
-
-**Never take the level out of the wording.** `MUST NOT` opens with `MUST`, so a match on the shorter modal files a
-prohibition as an obligation, which is the reverse of what the policy says. The wording also arrives with its markup
-stripped, so nothing in it is emphasised the way the table emphasised it. Take `level`, compare it whole, and say which
-of the four you found.
 
 ## Read the policy beside the clause
 
-**A clause read on its own is stricter than the one we wrote.** Open the owning record, at the path *Read the prefix on
-an id* builds from `record` and `shortcode`, and read three things from `sections`, which is an object keyed by heading:
+A clause read alone is stricter than its policy. Open the owning record, and read three entries of `sections`, an
+object keyed by heading:
 
-* **`Scope`.** It says what the clauses bind. A clause about every store binds every store the Scope admits, and nothing
-  outside it.
-* **`Exceptions`.** It says where a clause gives way and what has to be recorded when it does. Someone asking "we cannot
-  do that here" is often asking about this section.
-* **`Purpose`.** It travels as its opening paragraph, which is where a policy states its position. Use it to tell
-  whether the clause you found is about the subject at all.
+* **`Purpose`** travels as its opening paragraph, which states the policy's position. It tells you whether the clause
+  is about your subject.
+* **`Scope`** says what the clauses bind. A clause about every store binds every store the Scope admits.
+* **`Exceptions`** says where a clause gives way, and what has to be recorded when it does. "We cannot do that here" is
+  often a question about this section.
 
-The clause table is not among those sections. Its rows travelled as the lines in `clauses.jsonl`, one line each.
+## Link the clause, and read its source
 
-## Link to the clause, and read its source
-
-**Quote `links.human` to link the clause.** The line already has it, built for the corpus that wrote the clause.
-
-**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
-authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
-the line's `path` and `anchor`.
-
-**Every clause of one policy carries the same anchor**, because a table row is not a heading and no renderer gives it
-a fragment of its own. The link lands on the clause table, and the reader finds the row by the id you quoted.
+Quote `links.human` to link the clause. Every clause of one policy has the same anchor, because a table row has no
+fragment of its own, so the link lands on the clause table and the reader finds the row by its id. To read the source,
+load `corpus-retrieval` and bring it the line's `path` and `anchor`.
 
 ## Say what stayed behind
 
-Four things a reader may expect are not here. Name whichever one the question reaches, rather than filling the gap:
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published policy for the rest.
 
-* **What an external framework obliges us to.** A clause maps to a framework reference through the corpus's own register
-  of frameworks, and no consumer receives that page. The register is what says whether we are obliged, self-obligated or
-  merely borrowing an idea, so a mapping quoted without it claims a commitment nobody can check.
-* **How the commitment is met.** A policy states what we are on the hook for and a standard beneath it states how to
-  satisfy that. `types` in `manifest.json` lists what this export actually carried, and a type absent from it stayed
-  behind whole.
-* **Anything a clause cites.** A table row has no body, so a clause carries no `seeAlso`. A clause pointing at another
-  clause arrives with that id inside its own words: search for the id to read it.
-* **The day a policy came into force.** `status: active` says a policy binds, and nothing here says since when. The
-  record keeps that date in `active-from`, which travels neither on the clause line nor in the record file. A reader
-  asking how long an obligation has stood reads the published record.
+* **How a commitment is met** is here only where `standards` travelled.
+* **What an external framework obliges the estate to** stays in the corpus that wrote the policy. Its register of
+  frameworks says whether the estate is obliged or only borrowing, so a mapping quoted without it claims a commitment
+  nobody can check.
+* **The day a policy came into force** stays in the record's `active-from`.
+
+A clause cites another clause by writing its id in its own words. Search for that id to read it.
 
 ## Say when a policy is unsettled
 
-Two fields on the line say how far the policy has settled, in three states. Read both, and tell the user what you saw:
+Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
 
-* **`status: draft`** — the policy was not agreed when the export was taken, so its clauses are a proposal.
-* **`status: retired`** — the policy was withdrawn and kept for the record. It binds nothing.
-* **`reviewBy` earlier than today** — the policy passed the date it was meant to be read again.
+* **`status: draft`**: the policy was a proposal when the export was taken.
+* **`status: retired`**: the policy was withdrawn, and binds nothing.
+* **`reviewBy` earlier than today**: the policy passed the date it was meant to be read again.
 
-None of the three says when an active policy started binding. *Say what stayed behind* names the field that did not
-travel.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the three.
+## Say when the nearest clause is about something else
 
-## Say when the clause is about something else
-
-A subject the estate has not written down often sits beside one it has. "Password rotation" meets a policy about
-rotating secrets. Answer that case in three steps:
-
-1. **Say the estate has not written your subject down**, in the words it would have used.
-2. **Name the nearest clause, and say what it is about.** Quote it as the estate wrote it.
-3. **Leave the reading to whoever owns the clause.** Whether your subject falls inside that clause's Scope is a ruling,
-   and this skill does not make one.
-
-Answering from the nearest clause without saying it is the nearest one hands the reader a commitment nobody made.
+Where the estate has not written your subject down, say so in the words it would use. "Password rotation" meets a
+policy about rotating secrets. Quote the nearest clause, and say what it governs. Whether your subject falls inside its
+Scope is a ruling for its owner. A nearest clause passed off as the clause is a commitment nobody made.
 
 ## Say when there is nothing
 
-Where no clause matches, say nothing in this export commits to anything on the subject, and name the corpus and every
-entry in `sources` from `manifest.json`, so a reader knows which policies were searched. Silence is not permission, and
-it is not a rule you may supply: it says only that the estate has not written this down. Do not read a commitment out of
-a policy about something else. Offer the subject as one worth a policy, and leave that to whoever owns it.
+Where no clause matches, say that this export commits to nothing on the subject. Name the corpus and every entry in
+`sources` from `manifest.json`, so the reader knows what was searched. An empty search states only that the estate has
+not written this down: it permits nothing. Quote clauses only from a policy about your subject, and offer the subject
+as one worth a policy.

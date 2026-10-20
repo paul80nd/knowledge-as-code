@@ -1,16 +1,17 @@
 ---
 name: glossary-lookup
 description: Look a term up in the knowledge corpus glossary that travels with this plugin. Use when someone asks what a
-  word means here — "what do we mean by X", "is there a definition of X", "what counts as an X", "what is the difference
-  between X and Y". Use it as well, unprompted, when you meet a term in this repository that names something in the
-  business rather than something in the code — a noun in a class, table, field, endpoint, branch or comment that you
-  cannot define from the code around it. Check the glossary before you infer a meaning from usage.
+  word means here, or how two words differ. Use it as well, unprompted, when a noun in this repository names something
+  in the business that you cannot define from the code around it.
 ---
 
 # Looking a term up in the glossary
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
-and nothing to run.
+A glossary states what the estate means by its words. Use the entry as the meaning wherever it is relevant, because a
+meaning inferred from usage is fluent and often belongs to some other estate. Quote and cite the entry, so the person
+you work with can check you read it correctly.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
@@ -19,23 +20,20 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<record>.json             # one glossary t
 ${CLAUDE_PLUGIN_ROOT}/corpus/glossary/<shortcode>/<record>.json # one glossary a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
-
-One file holds every term, whoever wrote it. A corpus that consumes another exports both, so `terms.jsonl` carries this
-corpus's terms and the terms of every corpus above it, and one search reaches all of them.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
 ## Find the term
 
+`terms.jsonl` contains this corpus's terms and those of every corpus it consumes, so one file reaches them all.
+
+**A term answers to more than its heading.** `also` gives other names for the same thing, and `avoid` gives a name the
+corpus has dropped. Search both before you say a word is undefined, because the word you were asked about often sits in
+`also` on a line with another `title`.
+
 **Read the `title` of every hit before you use it.** The field names in this file are ordinary English words: `title`,
-`record`, `definition`, `status`, `type`. A search for one of those matches every line in the file. A line defines a
-term when its `title` says so, never because it matched.
+`record`, `definition`, `status`, `type`. A search for one of those matches every line in the file.
 
-**A term answers to more than its heading.** `also` gives the other names for the same thing, and `avoid` gives a name
-the corpus has dropped. Search both before you say a word is undefined. A word you were asked about often sits in
-`also` on a line whose `title` is something else.
-
-Each line carries the entry whole:
+Each line is one entry of a glossary:
 
 | Field                | Type                     | What it holds                                                                |
 |----------------------|--------------------------|------------------------------------------------------------------------------|
@@ -54,99 +52,69 @@ Each line carries the entry whole:
 | `links`              | object or null           | `human`, the link to the term. `null` where nothing can address it           |
 | `path`, `anchor`     | string                   | the record's file in its corpus, and the fragment the term sits at           |
 
-**A key with no value is `null`, and the key is still there.** Test the value rather than the key. `shortcode` is the
-one exception, and the row above says so.
-
-**A term another corpus wrote may carry none of `also`, `avoid` and `links`.** A producer that published before those
-keys existed sends a line without them, and one search reaches both shapes. Read a missing `also` or `avoid` the same
-way you read a `null` one: the corpus said nothing there. A missing `links` sends you to `corpus-retrieval`.
+**A key with no value is `null`, and the key is still there.** Test the value rather than the key. A line another
+corpus exported before a key existed can lack `also`, `avoid` and `links`, and `shortcode` is absent on a term written
+here. Read a missing `also` or `avoid` as a `null` one: the corpus said nothing there.
 
 ## Read the prefix on an id
 
-**A prefix on an id names the corpus that wrote the entry.** `eng:gls-estate.borrower` is the term `borrower`, in the
-glossary `gls-estate`, as the corpus whose shortcode is `eng` published it. The prefix sits on `id`, on `record` and on
-every `seeAlso` value, so an id you take from one line and search for carries it.
+**A prefix names the corpus that wrote the entry.** `eng:gls-estate.borrower` was published by the corpus with
+shortcode `eng`, and a bare `gls-estate.borrower` was written here. The prefix is on `id`, `record` and every `seeAlso`
+value. Look its `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
 
-**A bare id belongs to the corpus you installed.** `gls-estate.borrower` was written here.
-
-**`shortcode` is the key into `sources`.** Each entry in `sources` in `manifest.json` holds one producing corpus: its
-name, the version of it that travelled, and where it publishes. Look the shortcode up there before you say anything
-about the entry's origin, and name the corpus in words. `eng` means nothing to a reader who has not read the manifest.
-
-**A record file sits under its producer's shortcode**, because two corpora can name one glossary and a filename cannot
-say whose it is. The shortcode moves out of the id and becomes the directory, so take it off the `record` value before
-you build the filename. The owning record for `eng:gls-estate.borrower` is
-`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and for a bare id it is
+**A record file sits under its producer's shortcode.** `eng:gls-estate` is
+`${CLAUDE_PLUGIN_ROOT}/corpus/glossary/eng/gls-estate.json`, and a bare `gls-estate` is
 `${CLAUDE_PLUGIN_ROOT}/corpus/glossary/gls-estate.json`.
 
-## Link to the term, and read its source
+## Read every entry that shares a title
 
-**Quote `links.human` to link the term.** The line already has it, built for the corpus that wrote the term.
+The file's order carries no ranking, so read every hit before you answer. One estate defines *record* as a thing on a
+shelf, and another as a markdown file under version control. Open the owning record for each hit, and read two things:
 
-**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
-authenticates to that platform, what to say where nothing reaches it, and how to link a line with no `links`. Bring it
-the line's `path` and `anchor`.
-
-**A term is written as a heading**, so it has an anchor of its own and the link lands on the entry rather than at
-the top of the glossary.
-
-## Read every hit, not the first
-
-**Where two entries share a title, read both before you answer.** The file's order is stable and carries no ranking you
-can use. One estate defines *record* as a thing on a shelf with a barcode. Another defines it as a markdown file under
-version control. An answer taken from the wrong one is fluent, confident and about the wrong subject.
-
-Open the owning record for each hit, at the path *Read the prefix on an id* builds from `record` and `shortcode`, and
-read two things from it:
-
-* **`fields.narrows`.** Where one glossary narrows the other, the two entries are the general meaning and a refinement
-  of it. The narrower entry wins wherever its context applies.
-* **`sections.Scope`.** Where neither narrows the other, they are separate words that share a spelling. The right entry
+* **`fields.narrows`.** Where one glossary narrows the other, the narrower entry wins wherever its context applies. A
+  consuming corpus narrowing a term it inherited is the ordinary case.
+* **`sections.Scope`.** Where neither narrows the other, the two are separate words with one spelling. The right entry
   is the one whose Scope admits the thing being asked about.
 
-Two entries may also come from two corpora, and `shortcode` says which. A consuming corpus narrowing a term it inherited
-is the ordinary case, so read `fields.narrows` before you treat the pair as a clash.
-
-Where the question does not settle which context it sits in, give both meanings and say which glossary each came from,
-naming the corpus as well wherever the two glossaries were written by different ones.
+Where the question does not settle the context, give both meanings, and say which glossary and which corpus each came
+from.
 
 ## Answer
 
-* **Give the definition, then the `not` line.** A reader who gets only the definition will go on to apply the term to
+* **Give the definition, then the `not` line**, because a reader who gets only the definition applies the term to
   things it excludes.
-* **Say which name the corpus prefers.** Where you matched on `also`, give the `title` as well, because that is the
-  word the estate writes. Where you matched on `avoid`, say the corpus has dropped that name and give the `title`.
-* **Quote the `id`.** `gls-search.title` is one string a reader can search the corpus for, and it settles in seconds
-  whether you read the entry correctly.
-* **Name the glossary in words as well**, every time, and name the corpus that published it wherever that is not the one
-  installed. A reader working in the other context needs to see the mismatch without decoding an id to find it.
-* **Link the reader to the record**, with the `corpus-retrieval` skill.
-* **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids: search for one directly.
+* **Give the `title` where you matched on `also` or `avoid`**, because it is the word the estate writes. Where you
+  matched on `avoid`, say the corpus has dropped that name.
+* **Quote the `id`, and name the glossary in words**, so a reader can check the entry and see a mismatched context
+  without decoding an id.
+* **Follow `seeAlso`** where the question needs a neighbouring term. The values are full ids.
+
+Quote `links.human` to link the term. It lands on the term's own heading. To read the source, load `corpus-retrieval`
+and bring it the line's `path` and `anchor`. A line with no `links` goes there too.
+
+## Say what stayed behind
+
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published glossary for the rest. Every section of a glossary except its Scope stays in the record.
 
 ## Say when an entry is unsettled
 
-Two fields on the line say how far the entry has settled. Use it either way, and tell the user what you saw:
+Read `status` and `reviewBy` on every line you quote, and tell the reader what you saw:
 
-* **`status: draft`** — the terms were still settling when the export was taken.
-* **`reviewBy` earlier than today** — the entry passed the date it was meant to be read again.
+* **`status: draft`**: the terms were still settling when the export was taken.
+* **`reviewBy` earlier than today**: the entry passed the date it was meant to be read again.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside either warning above.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside either.
 
-## Say when the entry is about something else
+## Say when the nearest entry is about something else
 
-A word the glossary has not defined often sits beside one it has. Answer that case in three steps:
-
-1. **Say the corpus has not defined your word**, in the spelling you were asked about.
-2. **Name the nearest entry, and say what it defines.** Quote the definition as the glossary wrote it.
-3. **Leave the reading to whoever owns the glossary.** Whether your word means what that entry means is a ruling, and
-   this skill does not make one.
-
-Answering from the nearest entry without saying it is the nearest one hands the reader a definition nobody wrote.
+Where the corpus has not defined your word, say so in the spelling you were asked about. Quote the nearest entry, and
+say what it defines. Whether your word means what that entry means is a ruling for the glossary's owner. A nearest
+entry passed off as the entry is a definition nobody wrote.
 
 ## Say when there is nothing
 
-Where no entry matches, say the term is defined nowhere in this export, and name the corpus and every entry in
-`sources` from `manifest.json`, so a reader knows which vocabularies were searched. Then answer from the code if you
-can, marked plainly as your reading of the code rather than as the estate's meaning. Offer the term as one worth adding
-to the glossary, and leave that to whoever owns it.
+Where no entry matches, say the term is defined nowhere in this export. Name the corpus and every entry in `sources`
+from `manifest.json`, so the reader knows what was searched. An empty search states only that the estate has not
+written this down. Answer from the code if you can, marked as your reading of the code, and offer the term as one worth
+adding to the glossary.
