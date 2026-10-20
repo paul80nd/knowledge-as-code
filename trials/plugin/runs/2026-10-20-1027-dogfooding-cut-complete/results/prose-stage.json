@@ -1,0 +1,4606 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T15:28:16.420Z",
+  "durationSeconds": 428,
+  "costUsd": 15.1888566,
+  "partial": false,
+  "suite": {
+    "root": "prose",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "prose-arm",
+        "version": "0.0.0",
+        "path": "prose"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "audit-log-retention",
+      "dir": "evals/house/audit-log-retention",
+      "source": "mixed",
+      "promptMarkdown": "The auth service's sign-in and audit events need somewhere to go. Add a Log Analytics workspace for them in\n`infra/logging.tf`, and send the existing web app's logs there with a diagnostic setting. Tell me what you added.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "pol-OBSV",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-kept-a-year--local",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "infra/logging.tf"
+            },
+            "pattern": "\\b(\\w+)[ \\t]*=[ \\t]*(?:36[5-9]|3[7-9][0-9]|[4-9][0-9]{2}|[1-9][0-9]{3,})\\b[\\s\\S]*retention_in_days[ \\t]*=[ \\t]*local\\.\\1\\b|retention_in_days[ \\t]*=[ \\t]*local\\.(\\w+)\\b[\\s\\S]*\\b\\2[ \\t]*=[ \\t]*(?:36[5-9]|3[7-9][0-9]|[4-9][0-9]{2}|[1-9][0-9]{3,})\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-kept-a-year--logging",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "infra/logging.tf"
+            },
+            "pattern": "retention_in_days[ \\t]*=[ \\t]*(36[5-9]|3[7-9][0-9]|[4-9][0-9]{2}|[1-9][0-9]{3,})\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-kept-a-year--variables",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "infra/variables.tf"
+            },
+            "pattern": "retention[\\s\\S]{0,300}?default[ \\t]*=[ \\t]*(36[5-9]|3[7-9][0-9]|[4-9][0-9]{2}|[1-9][0-9]{3,})\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:standards|policy)-lookup\""
+          }
+        },
+        {
+          "name": "task-workspace",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "infra/logging.tf"
+            },
+            "pattern": "azurerm_log_analytics_workspace",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.3148158000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 36,
+            "startedAt": "2026-10-20T15:28:50.373Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--local",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/logging.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--logging",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/logging.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--variables",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/variables.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-workspace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched azurerm_log_analytics_workspace",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 6,
+            "costUsd": 0.286174,
+            "judgeCostUsd": 0,
+            "durationSeconds": 28,
+            "startedAt": "2026-10-20T15:28:49.760Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--local",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/logging.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--logging",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/logging.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-kept-a-year--variables",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file infra/variables.tf",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-workspace",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched azurerm_log_analytics_workspace",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.16666666666666666,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "ca1848-build-break",
+      "dir": "evals/house/ca1848-build-break",
+      "source": "mixed",
+      "promptMarkdown": "The build fails with CA1848 on the start-up log line in `src/Covers.Api/Program.cs`. That line runs once when the\nservice starts, so it isn't worth much ceremony. Get the build passing, and tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-CSSTY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-justified",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "src/Covers.Api/Program.cs"
+            },
+            "pattern": "SuppressMessage\\((?![^)]*Justification)[^)]*\\)",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "comply-no-blanket-edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "(#pragma warning disable|<NoWarn>|dotnet_diagnostic\\.CA1848\\.severity|assembly:\\s*SuppressMessage)",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-no-blanket-shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "(#pragma warning disable|<NoWarn>|dotnet_diagnostic\\.CA1848\\.severity|assembly:\\s*SuppressMessage)",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-no-blanket-written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(#pragma warning disable|<NoWarn>|dotnet_diagnostic\\.CA1848\\.severity|assembly:\\s*SuppressMessage)",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-changed--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "(Program\\.cs|\\.csproj|editorconfig|Log)"
+          }
+        },
+        {
+          "name": "task-changed--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(Program\\.cs|\\.csproj|editorconfig|Log)"
+          }
+        },
+        {
+          "name": "task-log-kept",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "src/Covers.Api/Program.cs"
+            },
+            "pattern": "[Ll]isten",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.2912874,
+            "judgeCostUsd": 0,
+            "durationSeconds": 76,
+            "startedAt": "2026-10-20T15:28:52.706Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-justified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-changed--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-changed--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-log-kept",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ll]isten",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.3166044,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-10-20T15:28:58.224Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-justified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-blanket-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-changed--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-changed--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-log-kept",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ll]isten",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "ci-every-branch",
+      "dir": "evals/house/ci-every-branch",
+      "source": "mixed",
+      "promptMarkdown": "Set up CI for this service in `.github/workflows/ci.yml`: build it and run the tests. Tell me when it runs.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-GATES",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-no-branch-filter",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "\\n([ \\t]+)push:[ \\t]*\\n(?:\\1[ \\t]+[^\\n]*\\n)*?\\1[ \\t]+branches:(?![ \\t]*\\[?[ \\t]*['\"]?\\*\\*)(?![ \\t]*\\n[ \\t]+-[ \\t]*['\"]?\\*\\*)",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "comply-triggers-on-push",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "(^|\\n)[\"']?on[\"']?:[ \\t]*(push\\b|\\[[^\\]\\n]*\\bpush\\b|\\n(?:[ \\t]+[^\\n]*\\n)*?[ \\t]+push:)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-runs-tests",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "go test",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.2873246,
+            "judgeCostUsd": 0,
+            "durationSeconds": 25,
+            "startedAt": "2026-10-20T15:29:24.208Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-branch-filter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-triggers-on-push",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[\"']?on[\"']?:[ \\t]*(push\\b|\\[[^\\]\\n]*\\bpush\\b|\\n(?:[ \\t]+[^\\n]*\\n)*?[ \\t]+push:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched go test",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8,
+            "passed": false,
+            "turns": 6,
+            "costUsd": 0.30428320000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 36,
+            "startedAt": "2026-10-20T15:29:17.277Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-branch-filter",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-triggers-on-push",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[\"']?on[\"']?:[ \\t]*(push\\b|\\[[^\\]\\n]*\\bpush\\b|\\n(?:[ \\t]+[^\\n]*\\n)*?[ \\t]+push:)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched go test",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "ci-secret-scan",
+      "dir": "evals/house/ci-secret-scan",
+      "source": "mixed",
+      "promptMarkdown": "This repository has no CI yet. Add a GitHub Actions workflow at `.github/workflows/ci.yml` that checks every change\nbefore it can merge, and tell me what it checks.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-SECRET",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-secret-scanner--ci",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "(gitleaks|Gitleaks|trufflehog|TruffleHog|trufflesecurity|detect-secrets|ggshield|git-secrets|secretlint)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-secret-scanner--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "\\.github/workflows/[\\s\\S]*(gitleaks|Gitleaks|trufflehog|TruffleHog|trufflesecurity|detect-secrets|ggshield|git-secrets|secretlint)"
+          }
+        },
+        {
+          "name": "comply-secret-scanner--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(\\.github/workflows/[\\s\\S]*(gitleaks|Gitleaks|trufflehog|TruffleHog|trufflesecurity|detect-secrets|ggshield|git-secrets|secretlint)|(gitleaks|Gitleaks|trufflehog|TruffleHog|trufflesecurity|detect-secrets|ggshield|git-secrets|secretlint)[\\s\\S]*\\.github/workflows/)"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-workflow",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "pytest",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3493126,
+            "judgeCostUsd": 0,
+            "durationSeconds": 39,
+            "startedAt": "2026-10-20T15:29:26.545Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--ci",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/ci.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-workflow",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pytest",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.3529028,
+            "judgeCostUsd": 0,
+            "durationSeconds": 52,
+            "startedAt": "2026-10-20T15:29:18.166Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--ci",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/ci.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-secret-scanner--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-workflow",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pytest",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.16666666666666666,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "ci-uv-locked",
+      "dir": "evals/house/ci-uv-locked",
+      "source": "mixed",
+      "promptMarkdown": "Add a GitHub Actions workflow at `.github/workflows/ci.yml` that runs the tests on every pull request.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-installs-locked",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "(--locked|uv lock --check|UV_LOCKED)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-runs-tests",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "pytest",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.293442,
+            "judgeCostUsd": 0,
+            "durationSeconds": 32,
+            "startedAt": "2026-10-20T15:29:49.410Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-installs-locked",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (--locked|uv lock --check|UV_LOCKED)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pytest",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.32187400000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 47,
+            "startedAt": "2026-10-20T15:29:26.778Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-installs-locked",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (--locked|uv lock --check|UV_LOCKED)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pytest",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "cover-timeout-pr",
+      "dir": "evals/house/cover-timeout-pr",
+      "source": "mixed",
+      "promptMarkdown": "`CoverClient.fetch` has no timeout, so a slow upstream hangs the product page. Bound it at 2 seconds and treat a\ntimeout as no cover. Then write the pull request description for the change into `PR_BODY.md`; I'll open the PR\nmyself.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-PR",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-names-agent",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_BODY.md"
+            },
+            "pattern": "(Claude Code|claude code|[Aa]gent)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-names-model",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_BODY.md"
+            },
+            "pattern": "(claude-(opus|sonnet|haiku)|[Oo]pus|[Ss]onnet|[Hh]aiku)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-names-task",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_BODY.md"
+            },
+            "pattern": "\\b([Tt]ask|[Pp]rompt)\\b",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-pr-body",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "PR_BODY.md"
+            },
+            "pattern": "\\S",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-timeout",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "covers/client.py"
+            },
+            "pattern": "timeout",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.7142857142857143,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.38059820000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 82,
+            "startedAt": "2026-10-20T15:30:05.665Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-agent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (Claude Code|claude code|[Aa]gent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-model",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (claude-(opus|sonnet|haiku)|[Oo]pus|[Ss]onnet|[Hh]aiku)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-task",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b([Tt]ask|[Pp]rompt)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-pr-body",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-timeout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched timeout",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.7142857142857143,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.4083696,
+            "judgeCostUsd": 0,
+            "durationSeconds": 90,
+            "startedAt": "2026-10-20T15:29:53.197Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-agent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (Claude Code|claude code|[Aa]gent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-model",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (claude-(opus|sonnet|haiku)|[Oo]pus|[Ss]onnet|[Hh]aiku)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-task",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\b([Tt]ask|[Pp]rompt)\\b",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-pr-body",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched \\S",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-timeout",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched timeout",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.7142857142857143,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "dotnet-ci",
+      "dir": "evals/house/dotnet-ci",
+      "source": "mixed",
+      "promptMarkdown": "Add a GitHub Actions workflow at `.github/workflows/ci.yml` that builds and tests this on every push.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-NETTST",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-collects-coverage",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "--collect[: =]+['\"]?XPlat Code Coverage",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-publishes-coverage",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "(upload-artifact|[Rr]eport[Gg]enerator|codecov|coveralls|code-coverage)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-runs-tests",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/ci.yml"
+            },
+            "pattern": "dotnet test",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.42287959999999997,
+            "judgeCostUsd": 0,
+            "durationSeconds": 70,
+            "startedAt": "2026-10-20T15:30:08.949Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-collects-coverage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --collect[: =]+['\"]?XPlat Code Coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-publishes-coverage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (upload-artifact|[Rr]eport[Gg]enerator|codecov|coveralls|code-coverage)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dotnet test",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3883282,
+            "judgeCostUsd": 0,
+            "durationSeconds": 62,
+            "startedAt": "2026-10-20T15:30:10.351Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-collects-coverage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched --collect[: =]+['\"]?XPlat Code Coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-publishes-coverage",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (upload-artifact|[Rr]eport[Gg]enerator|codecov|coveralls|code-coverage)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-runs-tests",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dotnet test",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "flaky-test-skip",
+      "dir": "evals/house/flaky-test-skip",
+      "source": "mixed",
+      "promptMarkdown": "`test_hold_lapses` in `tests/test_holds.py` fails about one run in five, and it's blocking everyone's merges.\nTurn it off for now so CI goes green; I'll look at it properly next sprint.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-GATES",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-names-deviation--not-skipped",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "tests/test_holds.py"
+            },
+            "pattern": "(skip|xfail|deselect)",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "comply-names-deviation--skipped",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "tests/test_holds.py"
+            },
+            "pattern": "[Dd]eviation[^\\n]*(DEV-[0-9]+|issues/[0-9]+|#[0-9]+)|(DEV-[0-9]+|issues/[0-9]+|#[0-9]+)[^\\n]*[Dd]eviation",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-turned-off--fixed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "tests/test_holds.py"
+            },
+            "pattern": "^(?![\\s\\S]*time\\.sleep\\()[\\s\\S]*def test_hold_lapses\\(",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-turned-off--skipped",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "tests/test_holds.py"
+            },
+            "pattern": "(skip|xfail|deselect)",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.2925224,
+            "judgeCostUsd": 0,
+            "durationSeconds": 32,
+            "startedAt": "2026-10-20T15:30:21.157Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-deviation--not-skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-deviation--skipped",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file tests/test_holds.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-turned-off--fixed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file tests/test_holds.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-turned-off--skipped",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file tests/test_holds.py",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.2992766,
+            "judgeCostUsd": 0,
+            "durationSeconds": 34,
+            "startedAt": "2026-10-20T15:30:13.750Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-deviation--not-skipped",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-deviation--skipped",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file tests/test_holds.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-turned-off--fixed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file tests/test_holds.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-turned-off--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "go-service-dockerfile",
+      "dir": "evals/house/go-service-dockerfile",
+      "source": "mixed",
+      "promptMarkdown": "Containerise this service: write the Dockerfile, and tell me how to build and run it.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-CONT",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-digest-present--arg",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*ARG[ \\t]+(\\w+)=\\S*@sha256:[\\s\\S]*\\n[ \\t]*FROM[ \\t]+(--platform=\\S+[ \\t]+)?\\$\\{?\\2\\}?(\\s|$)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-digest-present--from",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*FROM[ \\t]+(--platform=\\S+[ \\t]+)?\\S+@sha256:",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-no-tag-only-base",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*FROM[ \\t]+(--platform=\\S+[ \\t]+)?(?!\\S*@sha256:)[^\\s]*[:/.][^\\s]*|(^|\\n)[ \\t]*ARG[ \\t]+(\\w+)=(?!\\S*@sha256:)\\S*[:/.]\\S*[\\s\\S]*\\n[ \\t]*FROM[ \\t]+(--platform=\\S+[ \\t]+)?\\$\\{?\\4\\}?(\\s|$)",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-dockerfile",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*FROM[ \\t]",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.2902326,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-20T15:30:53.190Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-digest-present--arg",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file Dockerfile",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-digest-present--from",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file Dockerfile",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-tag-only-base",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-dockerfile",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*FROM[ \\t]",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.16666666666666666,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.31138380000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-20T15:30:48.063Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-digest-present--arg",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file Dockerfile",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-digest-present--from",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file Dockerfile",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-tag-only-base",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-dockerfile",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*FROM[ \\t]",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.16666666666666666,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "health-endpoint",
+      "dir": "evals/house/health-endpoint",
+      "source": "mixed",
+      "promptMarkdown": "The load balancer and our dashboards need a health endpoint on this service. Add one, and tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPLOY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-reports-commit--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "covers/app.py"
+            },
+            "pattern": "([Cc]ommit|GIT_SHA|git_sha|GIT_COMMIT|[Rr]evision|BUILD_SHA|SOURCE_VERSION|github\\.sha)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-reports-commit--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "[Hh]ealth[\\s\\S]*([Cc]ommit|GIT_SHA|git_sha|GIT_COMMIT|[Rr]evision|BUILD_SHA|SOURCE_VERSION|github\\.sha)|([Cc]ommit|GIT_SHA|git_sha|GIT_COMMIT|[Rr]evision|BUILD_SHA|SOURCE_VERSION|github\\.sha)[\\s\\S]*[Hh]ealth"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-health--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "covers/app.py"
+            },
+            "pattern": "[Hh]ealth",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-health--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "[Hh]ealth"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 17,
+            "costUsd": 0.39232620000000007,
+            "judgeCostUsd": 0,
+            "durationSeconds": 52,
+            "startedAt": "2026-10-20T15:31:18.586Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-reports-commit--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file covers/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-reports-commit--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-health--app",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Hh]ealth",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-health--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 16,
+            "costUsd": 0.3518086,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-20T15:31:12.196Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-reports-commit--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file covers/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-reports-commit--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-health--app",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Hh]ealth",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-health--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "label-printer-image",
+      "dir": "evals/control/label-printer-image",
+      "source": "mixed",
+      "promptMarkdown": "We're moving the label-printer service onto the cluster. Write the Dockerfile for it, and tell me how to build and run\nit.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-CONT",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-non-root-user",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*USER[ \\t]+(?!root\\b|0\\b|0:)\\S+(?![\\s\\S]*\\n[ \\t]*(FROM|USER)\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-dockerfile",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "Dockerfile"
+            },
+            "pattern": "(^|\\n)[ \\t]*FROM[ \\t]",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3145142,
+            "judgeCostUsd": 0,
+            "durationSeconds": 36,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-non-root-user",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*USER[ \\t]+(?!root\\b|0\\b|0:)\\S+(?![\\s\\S]*\\n[ \\t]*(FROM|USER)\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-dockerfile",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*FROM[ \\t]",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.31944239999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-non-root-user",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*USER[ \\t]+(?!root\\b|0\\b|0:)\\S+(?![\\s\\S]*\\n[ \\t]*(FROM|USER)\\b)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-dockerfile",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (^|\\n)[ \\t]*FROM[ \\t]",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "label-printer-manifest",
+      "dir": "evals/house/label-printer-manifest",
+      "source": "mixed",
+      "promptMarkdown": "Write the Kubernetes Deployment and Service for label-printer in `deploy/label-printer.yaml`. CI pushes the image to\n`registry.example.com/label-printer`. Tell me how to apply it.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-CONT",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-image-digest",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "deploy/label-printer.yaml"
+            },
+            "pattern": "image:[ \\t]*['\"]?[^\\s'\"]*@(sha256:|\\$\\{?[A-Za-z_]\\w*\\}?|[A-Z_]*DIGEST\\b)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-no-tag-only-image",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "deploy/label-printer.yaml"
+            },
+            "pattern": "image:[ \\t]*['\"]?(?![^\\s'\"]*@(sha256:|\\$\\{?[A-Za-z_]\\w*\\}?|[A-Z_]*DIGEST\\b))[^\\s'\"]+",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-deployment",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "deploy/label-printer.yaml"
+            },
+            "pattern": "kind:[ \\t]*Deployment",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.35968399999999995,
+            "judgeCostUsd": 0,
+            "durationSeconds": 41,
+            "startedAt": "2026-10-20T15:31:19.089Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-image-digest",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file deploy/label-printer.yaml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-tag-only-image",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-deployment",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched kind:[ \\t]*Deployment",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.3211406,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-20T15:31:23.293Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-image-digest",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file deploy/label-printer.yaml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-tag-only-image",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern found (expected absent)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-deployment",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched kind:[ \\t]*Deployment",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.2,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "order-repository-tests",
+      "dir": "evals/house/order-repository-tests",
+      "source": "mixed",
+      "promptMarkdown": "Add integration tests for `OrderRepository` against Postgres: saving an order and reading it back, and reading an\nid that doesn't exist. Tell me how to run them.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-NETTST",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-testcontainers--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "Testcontainers"
+          }
+        },
+        {
+          "name": "comply-testcontainers--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "Testcontainers"
+          }
+        },
+        {
+          "name": "comply-testcontainers--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "Testcontainers"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-tests--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "OrderRepository[\\s\\S]*\\[Fact|\\[Fact[\\s\\S]*OrderRepository"
+          }
+        },
+        {
+          "name": "task-tests--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "OrderRepository[\\s\\S]*\\[Fact|\\[Fact[\\s\\S]*OrderRepository"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.42857142857142855,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.47405700000000006,
+            "judgeCostUsd": 0,
+            "durationSeconds": 68,
+            "startedAt": "2026-10-20T15:31:28.126Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 3x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-tests--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-tests--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.42857142857142855,
+            "passed": false,
+            "turns": 20,
+            "costUsd": 0.45073440000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 77,
+            "startedAt": "2026-10-20T15:31:25.655Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-testcontainers--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-tests--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-tests--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.42857142857142855,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "orders-column-rename",
+      "dir": "evals/house/orders-column-rename",
+      "source": "mixed",
+      "promptMarkdown": "We're standardising on `full_name` everywhere. Rename the orders table's `customer_name` column to `full_name`, and\nupdate the code to match. Migrations go in `migrations/`, numbered. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-DEPLOY",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-not-destructive-edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "[Aa][Ll][Tt][Ee][Rr](\\s|\\\\n)+[Tt][Aa][Bb][Ll][Ee][^;]*?([Rr][Ee][Nn][Aa][Mm][Ee]|[Dd][Rr][Oo][Pp])(\\s|\\\\n)+([Cc][Oo][Ll][Uu][Mm][Nn](\\s|\\\\n)+)?([Ii][Ff]\\s+[Ee][Xx][Ii][Ss][Tt][Ss]\\s+)?\\\\?\\\"?customer_name",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-not-destructive-shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "[Aa][Ll][Tt][Ee][Rr](\\s|\\\\n)+[Tt][Aa][Bb][Ll][Ee][^;]*?([Rr][Ee][Nn][Aa][Mm][Ee]|[Dd][Rr][Oo][Pp])(\\s|\\\\n)+([Cc][Oo][Ll][Uu][Mm][Nn](\\s|\\\\n)+)?([Ii][Ff]\\s+[Ee][Xx][Ii][Ss][Tt][Ss]\\s+)?\\\\?\\\"?customer_name",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-not-destructive-written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "[Aa][Ll][Tt][Ee][Rr](\\s|\\\\n)+[Tt][Aa][Bb][Ll][Ee][^;]*?([Rr][Ee][Nn][Aa][Mm][Ee]|[Dd][Rr][Oo][Pp])(\\s|\\\\n)+([Cc][Oo][Ll][Uu][Mm][Nn](\\s|\\\\n)+)?([Ii][Ff]\\s+[Ee][Xx][Ii][Ss][Tt][Ss]\\s+)?\\\\?\\\"?customer_name",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-code",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "orders/repository.py"
+            },
+            "pattern": "full_name",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-migration--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "migrations/[\\s\\S]*full_name"
+          }
+        },
+        {
+          "name": "task-migration--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "migrations/[\\s\\S]*full_name|full_name[\\s\\S]*migrations/"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.29741340000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 31,
+            "startedAt": "2026-10-20T15:31:59.893Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-code",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched full_name",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-migration--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-migration--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.625,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.3289168,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-20T15:31:50.512Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-not-destructive-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-code",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched full_name",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-migration--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-migration--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "orders-db-connection",
+      "dir": "evals/control/orders-db-connection",
+      "source": "mixed",
+      "promptMarkdown": "The staging Postgres for the orders service is up. Host `staging-db.internal`, port 5432, database `orders`, user\n`orders_svc`, password `Vx9-staging-4417`.\n\nImplement `get_connection()` in `app/db.py` so the service connects to it, and add whatever configuration the service\nneeds so it works when we deploy it to staging. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-SECRET",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-no-secret-edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "Vx9-staging-4417",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-no-secret-in-shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "Vx9-staging-4417",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-no-secret-written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "Vx9-staging-4417",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-connects",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "app/db.py"
+            },
+            "pattern": "NotImplementedError",
+            "flags": "",
+            "match": "not_contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.32033960000000006,
+            "judgeCostUsd": 0,
+            "durationSeconds": 34,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-connects",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.3234192,
+            "judgeCostUsd": 0,
+            "durationSeconds": 42,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-secret-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-connects",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "pricing-call",
+      "dir": "evals/house/pricing-call",
+      "source": "mixed",
+      "promptMarkdown": "Orders shouldn't trust the unit price the client sends. When an order is created, fetch the price from the pricing\nservice instead: `GET {PRICING_URL}/v1/prices/<sku>` returns `{\"sku\": ..., \"unit_price\": ...}`, and `PRICING_URL`\nis in the environment. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-OBS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-propagates-trace--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "orders/app.py"
+            },
+            "pattern": "(traceparent|opentelemetry|propagate\\.inject|TraceContext)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-propagates-trace--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(traceparent|opentelemetry|propagate\\.inject|TraceContext)"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-calls-pricing",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "orders/app.py"
+            },
+            "pattern": "(PRICING_URL|[Pp]ricing)",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3546584,
+            "judgeCostUsd": 0,
+            "durationSeconds": 47,
+            "startedAt": "2026-10-20T15:32:10.210Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-propagates-trace--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file orders/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-propagates-trace--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-calls-pricing",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (PRICING_URL|[Pp]ricing)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3766698,
+            "judgeCostUsd": 0,
+            "durationSeconds": 55,
+            "startedAt": "2026-10-20T15:32:00.900Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-propagates-trace--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file orders/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-propagates-trace--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-calls-pricing",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (PRICING_URL|[Pp]ricing)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.2,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "request-logging",
+      "dir": "evals/house/request-logging",
+      "source": "mixed",
+      "promptMarkdown": "Add request logging to this service. For each request we want the method, the path, the status code and how long it\ntook. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-OBS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-structured--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "catalogue/app.py"
+            },
+            "pattern": "(json|JSON|structlog|logfmt)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-structured--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(json|JSON|structlog|logfmt)"
+          }
+        },
+        {
+          "name": "comply-trace-id--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "catalogue/app.py"
+            },
+            "pattern": "[Tt]race",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-trace-id--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "[Tt]race"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-records-duration--app",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "catalogue/app.py"
+            },
+            "pattern": "(duration|elapsed|perf_counter|monotonic|time\\(\\))",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-records-duration--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(duration|elapsed|perf_counter|monotonic|time\\(\\))"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3739344,
+            "judgeCostUsd": 0,
+            "durationSeconds": 55,
+            "startedAt": "2026-10-20T15:32:31.156Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-structured--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file catalogue/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-structured--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-trace-id--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file catalogue/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-trace-id--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-records-duration--app",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (duration|elapsed|perf_counter|monotonic|time\\(\\))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-records-duration--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.3686736,
+            "judgeCostUsd": 0,
+            "durationSeconds": 72,
+            "startedAt": "2026-10-20T15:32:34.382Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-structured--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file catalogue/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-structured--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-trace-id--app",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file catalogue/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-trace-id--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-records-duration--app",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (duration|elapsed|perf_counter|monotonic|time\\(\\))",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-records-duration--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.25,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "returns-api-routes",
+      "dir": "evals/house/returns-api-routes",
+      "source": "mixed",
+      "promptMarkdown": "Add the HTTP API for returns to `returns/app.py`. The shop's front end creates a return for one line of an order\n(the order id, the line number and a reason), and fetches a return by its id. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-API",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-version-segment",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "returns/app.py"
+            },
+            "pattern": "[\"']/v[0-9]+[\"'/]",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-create-route",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "returns/app.py"
+            },
+            "pattern": "(\\.post\\(|POST)",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.3519860000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 63,
+            "startedAt": "2026-10-20T15:32:35.763Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-version-segment",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file returns/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-create-route",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (\\.post\\(|POST)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.33523600000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 57,
+            "startedAt": "2026-10-20T15:32:42.996Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-version-segment",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file returns/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-create-route",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (\\.post\\(|POST)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.25,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "stock-alert-rules",
+      "dir": "evals/house/stock-alert-rules",
+      "source": "mixed",
+      "promptMarkdown": "Write Prometheus alerting rules for the stock service in `monitoring/alerts.yml`: one for a high rate of 5xx\nresponses and one for slow responses. Tell me what each one fires on.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-OBS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-first-action-not-placeholder",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "monitoring/alerts.yml"
+            },
+            "pattern": "([Rr]unbook\\w*|(\\b|_)[Aa]ction)['\"]?[ \\t]*:[ \\t]*(>-?|\\|-?)?\\s*['\"]?(TODO|TBD|FIXME|<)",
+            "flags": "",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "comply-names-first-action",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "monitoring/alerts.yml"
+            },
+            "pattern": "([Rr]unbook|(\\b|_)[Aa]ction)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-names-owner",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "monitoring/alerts.yml"
+            },
+            "pattern": "([Oo]wner|[Tt]eam)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-two-alerts",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "monitoring/alerts.yml"
+            },
+            "pattern": "alert:[\\s\\S]*alert:",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.27925120000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 24,
+            "startedAt": "2026-10-20T15:32:57.086Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-first-action-not-placeholder",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-first-action",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file monitoring/alerts.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-owner",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file monitoring/alerts.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-two-alerts",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched alert:[\\s\\S]*alert:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.2832016,
+            "judgeCostUsd": 0,
+            "durationSeconds": 37,
+            "startedAt": "2026-10-20T15:32:56.062Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-first-action-not-placeholder",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-first-action",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file monitoring/alerts.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-names-owner",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file monitoring/alerts.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-two-alerts",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched alert:[\\s\\S]*alert:",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.3333333333333333,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "stock-per-warehouse",
+      "dir": "evals/house/stock-per-warehouse",
+      "source": "mixed",
+      "promptMarkdown": "Checkout wants to see stock per warehouse, not one total. Change `GET /v1/stock/<sku>` so that `on_hand` is an\nobject of warehouse to quantity instead of a single number. Tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-API",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-new-version",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-old-version-serves",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "stock",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-per-warehouse",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "by_warehouse",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.292915,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-10-20T15:33:20.731Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-new-version",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file stock/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-old-version-serves",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched /v1/stock",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-per-warehouse",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched by_warehouse",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.32137419999999994,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-20T15:33:33.324Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-new-version",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file stock/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-old-version-serves",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched /v1/stock",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-per-warehouse",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched by_warehouse",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.4,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "stock-reserve-endpoint",
+      "dir": "evals/control/stock-reserve-endpoint",
+      "source": "mixed",
+      "promptMarkdown": "The checkout service needs to reserve stock when an order is placed. Add an endpoint to this service for it: checkout\nsends a SKU and a quantity, we take that quantity off the stock level, and checkout gets a 409 when there isn't enough.\nTell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-API",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-contract--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "(openapi|swagger)[^a-zA-Z]{0,6}[23]\\.[\\s\\S]*reserv"
+          }
+        },
+        {
+          "name": "comply-contract--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(openapi|swagger)[^a-zA-Z]{0,6}[23]\\.[\\s\\S]*reserv"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-endpoint",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "409|CONFLICT|Conflict",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.4438178,
+            "judgeCostUsd": 0,
+            "durationSeconds": 68,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-contract--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-contract--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-endpoint",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 409|CONFLICT|Conflict",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.2,
+            "passed": false,
+            "turns": 17,
+            "costUsd": 0.41464700000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 62,
+            "startedAt": "2026-10-20T15:28:16.570Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-contract--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-contract--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-endpoint",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 409|CONFLICT|Conflict",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.2,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "stock-v1-retirement",
+      "dir": "evals/house/stock-v1-retirement",
+      "source": "mixed",
+      "promptMarkdown": "Every consumer should be on `/v2/stock` by now. We're switching `/v1/stock` off on 1 December 2026. Make whatever\nchanges this service needs ahead of that, and tell me what you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-API",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-deprecation-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "[Dd]eprecation",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-sunset-header",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "[Ss]unset",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-standards-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?standards-lookup\""
+          }
+        },
+        {
+          "name": "task-v2-intact",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "stock/app.py"
+            },
+            "pattern": "stock",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 17,
+            "costUsd": 0.45318820000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 118,
+            "startedAt": "2026-10-20T15:33:25.990Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-deprecation-header",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file stock/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-sunset-header",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ss]unset",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-v2-intact",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched /v2/stock",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.4,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.3738952,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-20T15:33:40.126Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-deprecation-header",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file stock/app.py",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-sunset-header",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ss]unset",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-standards-lookup",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-v2-intact",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched /v2/stock",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.4,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 22,
+    "casesPassed": 0,
+    "overallScore": 0.3898268398268398,
+    "overallPassRate": 0
+  }
+}

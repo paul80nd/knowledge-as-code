@@ -111,8 +111,8 @@ neither session made the health endpoint report it. Both plugin sessions did, fr
 ## What the result does not show
 
 * **Whether a team would choose this way.** One subagent chose the cut, once, knowing the team's work.
-* **#923's lead on a complete text.** Its prose arm had no `eng` rule text. A rerun on the fixed text would say how much
-  of its 0.45 came from that.
+* **#923's lead on a complete text.** Its prose arm had no `eng` rule text.
+  [The dog-fooding team's cut, complete](2026-10-20-1027-dogfooding-cut-complete.md) measured it at 0.47.
 * **A corpus past the context window.** None exists here.
 * **A judgement made blind.** The reader knew each session's arm.
 
@@ -125,5 +125,5 @@ neither session made the health endpoint report it. Both plugin sessions did, fr
 | Total          |       44 |            |    $16.19 |
 
 The batches ran side by side, in about 7 minutes. `cost_usd` in
-[`aggregate.md`](2026-10-20-1016-service-team-cut/aggregate.md) is $41.23, because it includes #923's plugin stage. The cut and the reading by hand ran as subagents, which the list
-cost does not include.
+[`aggregate.md`](2026-10-20-1016-service-team-cut/aggregate.md) is $41.23, because it includes #923's plugin stage.
+The cut and the reading by hand ran as subagents, which the list cost does not include.
