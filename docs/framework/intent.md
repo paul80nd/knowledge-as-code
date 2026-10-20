@@ -105,18 +105,6 @@ the review view to where its own review tools read standards, such as `CODING_ST
 No record states which files a rule applies to, so nothing loads by path. [Issue #993][s993] keeps that option open
 until the build trial shows whether the index is enough. Tracked in [epic #940][e940].
 
-## Skills that state intent
-
-A skill states what it is for and why, and leaves the steps to the model's judgement. It sets out steps only for a type
-an agent follows: a runbook, a fix, or the flow of a process.
-
-Every piece of text the plugin puts in front of an agent is a pointer: a skill's description, a hook's message, a line
-of the build index. Its wording decides whether the agent reads what it points at. When a pointer misses, sharpen its
-wording first. [`writing-for-agents`][wfa] is the reference for that text.
-
-A finding that a skill or a process did not cover a case is answered with a reason the agent can apply to the next case,
-or by removing a step. It is never answered by adding a step. Tracked in [epic #940][e940].
-
 ## Where to go next
 
 [Principles](principles.md) says what the framework does today, and why.
@@ -128,4 +116,3 @@ or by removing a step. It is never answered by adding a step. Tracked in [epic #
 [s946]: https://github.com/paul80nd/knowledge-as-code/issues/946
 [s993]: https://github.com/paul80nd/knowledge-as-code/issues/993
 [skills]: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
-[wfa]: https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents

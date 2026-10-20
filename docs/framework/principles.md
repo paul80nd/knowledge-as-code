@@ -158,6 +158,19 @@ changed.
 
 None of it replaces human ownership.
 
+## Skills that state intent
+
+A skill states what it is for, the intent of the type it reads, and the reason for each rule it gives. It leaves the
+means to the model's judgement, and sets out steps only where the order is the content: a record of a type an agent
+follows, or a write-back or review whose order a rule fixes. [`std-PLUGIN`][std-plugin] states the rule.
+
+Every piece of text the plugin puts in front of an agent is a pointer: a skill's description, a hook's message, a line
+of the build index. Its wording decides whether the agent reads what it points at. When a pointer misses, sharpen its
+wording first. [`writing-for-agents`][wfa] is the reference for that text.
+
+A skill that did not cover a case gains a reason the agent can apply to the next case, or loses a step. It never gains
+a step.
+
 ## One corpus, one bounded context
 
 A corpus is one repository holding everything: policies, standards, services, runbooks and the rest, with the mechanism
@@ -166,3 +179,6 @@ alongside.
 The validator fails a one-sided link because it can see both ends of it, and an owner is authoritative because there
 is a single place the record could be. A session clones the repository and has the whole graph, with nobody to ask for
 the rest of it. [One corpus or several](../use/one-corpus-or-several.md) says when to split.
+
+[std-plugin]: https://github.com/paul80nd/knowledge-as-code/blob/main/examples/dog-fooding/standards/plugin.md#a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives
+[wfa]: https://github.com/mattpocock/skills/tree/v1.3.1/skills/productivity/writing-for-agents
