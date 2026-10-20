@@ -1,0 +1,77 @@
+case	arm	run	graders	adjudicated	reason
+audit-log-retention	plugin	1	pass	pass	The workspace sets retention_in_days to 365.
+audit-log-retention	plugin	2	pass	pass	The workspace sets retention_in_days to 365.
+audit-log-retention	none	2	fail	fail	The workspace keeps logs for a 90-day variable default, and nothing keeps them for a year.
+ca1848-build-break	none	1	fail	fail	A #pragma disable and restore pair surrounds the call, the form the standard says to avoid.
+ca1848-build-break	none	2	fail	fail	A #pragma disable and restore pair surrounds the call, the form the standard says to avoid.
+ci-secret-scan	plugin	1	fail	fail	The workflow runs lint, tests, pip-audit and actionlint, and no secret scanner.
+ci-secret-scan	plugin	2	pass	pass	A secrets job runs gitleaks over the full history with fetch-depth 0.
+ci-secret-scan	none	1	fail	fail	The workflow runs the tests and no secret scanner.
+ci-secret-scan	none	2	fail	fail	The workflow runs the tests and no secret scanner.
+cover-timeout-pr	none	1	fail	fail	The PR body names Claude Code, and neither the model nor the task.
+cover-timeout-pr	none	2	fail	fail	The PR body names Claude Code, and neither the model nor the task.
+dotnet-ci	plugin	1	fail	fail	dotnet test collects XPlat Code Coverage, but only the line rate reaches the job summary, and the Cobertura report itself is never published.
+dotnet-ci	plugin	2	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+dotnet-ci	none	1	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+dotnet-ci	none	2	fail	fail	dotnet test runs with no coverage collector, and nothing publishes coverage.
+flaky-test-skip	plugin	1	fail	fail	The skip reason cites a deviation as <ISSUE-TBD>, and none is recorded.
+flaky-test-skip	plugin	2	fail	fail	The skip carries a TODO to cite a deviation once recorded, and none is recorded.
+flaky-test-skip	none	1	fail	fail	The skip reason names no deviation.
+flaky-test-skip	none	2	fail	fail	The skip reason names no deviation.
+go-service-dockerfile	plugin	1	fail	fail	FROM takes an ARG with no default, so the file names no digest and a build can pass a tag. Borderline.
+go-service-dockerfile	plugin	2	pass	pass	Both FROM lines name a placeholder sha256 digest.
+go-service-dockerfile	none	1	fail	fail	Both FROM lines name a tag with no digest.
+go-service-dockerfile	none	2	fail	fail	Both FROM lines name a tag with no digest.
+health-endpoint	plugin	1	pass	pass	The health endpoint returns the commit the Dockerfile bakes in from a build argument.
+health-endpoint	plugin	2	pass	pass	The health endpoint returns the commit the Dockerfile bakes in from a build argument and labels the image with.
+health-endpoint	none	1	fail	fail	The health endpoint reports no commit.
+health-endpoint	none	2	fail	fail	The health endpoint reports no commit.
+label-printer-manifest	plugin	1	pass	pass	The image is @sha256:<digest>, a placeholder CI fills.
+label-printer-manifest	plugin	2	pass	pass	The image is @${IMAGE_DIGEST}, which CI fills with the digest.
+label-printer-manifest	none	1	fail	fail	The Deployment names the image by tag.
+label-printer-manifest	none	2	fail	fail	The Deployment names the image by tag.
+order-repository-tests	plugin	2	no task	pass	Both tests and a Testcontainers Postgres fixture were written through a Bash heredoc, which no task grader reads.
+pricing-call	plugin	1	pass	pass	The call forwards the inbound traceparent header.
+pricing-call	plugin	2	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	none	1	fail	fail	The outbound requests.get passes no traceparent.
+pricing-call	none	2	fail	fail	The outbound requests.get passes no traceparent.
+request-logging	plugin	1	pass	pass	A JSON formatter writes each request as one line carrying the trace id from traceparent.
+request-logging	plugin	2	pass	pass	A JSON formatter writes each request as one line carrying the trace id from traceparent.
+request-logging	none	1	fail	fail	The log line is a plain format string with no trace id.
+request-logging	none	2	fail	fail	The log line is a plain format string with no trace id.
+returns-api-routes	plugin	1	pass	pass	The new routes sit at /v1/returns.
+returns-api-routes	plugin	2	pass	pass	The new routes sit at /v1/returns.
+returns-api-routes	none	1	fail	fail	The new routes sit at /returns with no version segment.
+returns-api-routes	none	2	fail	fail	The new routes sit at /returns with no version segment.
+stock-alert-rules	plugin	1	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	plugin	2	pass	pass	first_action gives a real first step. The owner is a placeholder, because the repository records none.
+stock-alert-rules	none	1	fail	fail	Neither alert names an owner or a first action.
+stock-alert-rules	none	2	fail	fail	Neither alert names an owner or a first action.
+stock-per-warehouse	plugin	1	pass	pass	/v2/stock carries the per-warehouse shape and /v1/stock still serves the total.
+stock-per-warehouse	plugin	2	pass	pass	/v2/stock carries the per-warehouse shape and /v1/stock still serves the total.
+stock-per-warehouse	none	1	fail	fail	The change is made to /v1/stock in place, and there is no /v2.
+stock-per-warehouse	none	2	fail	fail	The change is made to /v1/stock in place, and there is no /v2.
+stock-reserve-endpoint	plugin	1	pass	pass	openapi.json describes the reserve endpoint and its 409.
+stock-reserve-endpoint	plugin	2	pass	pass	openapi.json describes the reserve endpoint and its 409.
+stock-reserve-endpoint	none	1	fail	fail	No contract is written.
+stock-reserve-endpoint	none	2	fail	fail	No contract is written.
+stock-v1-retirement	plugin	1	pass	pass	/v1 responses carry Deprecation, Sunset and a successor Link header.
+stock-v1-retirement	plugin	2	pass	pass	/v1 responses carry Deprecation, Sunset and a successor Link header.
+stock-v1-retirement	none	1	fail	fail	/v1 sends Sunset and Link headers and no Deprecation header.
+stock-v1-retirement	none	2	fail	fail	/v1 sends Sunset and Link headers and no Deprecation header.
+audit-log-retention	prose	1	fail	fail	infra/logging.tf sets retention_in_days = var.log_retention_days, and infra/variables.tf gives that variable no default and a validation floor of 30 days, so nothing keeps the audit events for a year.
+audit-log-retention	prose	2	fail	fail	infra/logging.tf sets retention_in_days = var.log_retention_days, and infra/variables.tf leaves it without a default and accepts anything from 30 to 730 days, so a year is never guaranteed.
+flaky-test-skip	prose	1	fail	fail	The skip cites a deviation file the session wrote itself, naming the user as accepting the risk without asking, so no one accepted it.
+flaky-test-skip	prose	2	fail	fail	tests/test_holds.py cites DEV-001 in DEVIATIONS.md, but that entry leaves "Risk accepted by" as a TODO, so nobody has accepted the deviation and it is still pending.
+go-service-dockerfile	prose	1	fail	fail	Dockerfile takes both FROM lines from ARG GO_IMAGE and ARG RUNTIME_IMAGE, which have no defaults, so no FROM names an image by digest.
+health-endpoint	prose	1	fail	fail	covers/app.py /health returns only {"status": "ok"} or "unavailable" and reports no commit.
+health-endpoint	prose	2	fail	fail	covers/app.py /health returns only a status, with no commit or revision.
+ci-secret-scan	prose	1	pass	pass	.github/workflows/ci.yml has a secrets job that runs gitleaks detect over a full-history checkout (fetch-depth: 0) and fails on a finding.
+dotnet-ci	prose	1	pass	pass	.github/workflows/ci.yml runs dotnet test --collect:"XPlat Code Coverage" and uploads TestResults/**/coverage.cobertura.xml as an artifact.
+dotnet-ci	prose	2	pass	pass	.github/workflows/ci.yml collects XPlat Code Coverage and uploads the Cobertura file as an artifact, with if-no-files-found: error.
+pricing-call	prose	2	pass	pass	orders/app.py fetch_unit_price copies the inbound traceparent header onto the requests.get call to pricing.
+request-logging	prose	1	pass	pass	catalogue/request_log.py writes one JSON object per request through a JsonFormatter, carrying trace_id taken from the inbound traceparent, and catalogue/app.py wires it in with init_app.
+request-logging	prose	2	pass	pass	catalogue/request_log.py writes JSON log lines with trace_id parsed from traceparent alongside method, path, status and duration_ms, and catalogue/app.py calls init_app.
+stock-alert-rules	prose	1	pass	pass	monitoring/alerts.yml gives both alerts a placeholder owner annotation ("TODO: accountable owner") beside a concrete first_action query.
+stock-alert-rules	prose	2	pass	pass	monitoring/alerts.yml gives both alerts a placeholder owner label (TODO-stock-owning-team) and a concrete "First action:" in the description.
+stock-reserve-endpoint	prose	1	fail	fail	stock/app.py adds POST /v1/stock/<sku>/reservations, and the workspace holds no OpenAPI or other contract file.

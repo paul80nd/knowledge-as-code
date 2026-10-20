@@ -23,7 +23,7 @@ fi
 
 # The keys every line or record has for the tool's own use, which a reader of the prose does not need.
 bookkeeping='["type", "path", "anchor", "links", "trust", "status", "reviewBy", "review-by", "record", "part", "id",
-  "title"]'
+  "title", "shortcode"]'
 
 # A field as one line of prose: a list joined with commas, an object as JSON, a null left out.
 # shellcheck disable=SC2016 # a jq program, whose $skip jq binds
@@ -38,6 +38,10 @@ render_fields='def one: if type == "object" then tojson else tostring end;
   | map("\(.key):\(.value | show)") | .[]'
 
 name=$(jq -r '.about.displayName // .corpus' "$manifest")
+
+# The id of every part written, so a part no record claimed fails the run.
+written=$(mktemp)
+trap 'rm -f "$written"' EXIT
 
 {
   printf '# The knowledge of %s\n\n' "$name"
@@ -62,8 +66,16 @@ name=$(jq -r '.about.displayName // .corpus' "$manifest")
         (.sections // {} | to_entries[] | \"\n#### \(.key)\n\n\(.value)\")
       " "$file"
 
+      # A record a layer brought in sits in a folder named for it, and its parts name it as <layer>:<id>.
+      case ${file#"$dir"/} in
+        */*) owner="${file#"$dir"/}" && owner="${owner%%/*}:$id" ;;
+        *) owner=$id ;;
+      esac
+
       if [ -n "$parts_file" ] && [ -n "$record_key" ]; then
-        jq -r --arg id "$id" --arg key "$record_key" --argjson skip "$bookkeeping" "
+        jq -r --arg key "$record_key" --arg owner "$owner" \
+          'select(.[$key] == $owner) | .id' "$export_dir/$parts_file" >> "$written"
+        jq -r --arg id "$owner" --arg key "$record_key" --argjson skip "$bookkeeping" "
           select(.[\$key] == \$id) |
           \"\n#### \(if .title then \"\(.title) (\`\(.id)\`)\" else \"\`\(.id)\`\" end)\n\",
           (. | $render_fields)
@@ -77,3 +89,10 @@ name=$(jq -r '.about.displayName // .corpus' "$manifest")
     fi
   done
 } > "$out"
+
+expected=$(jq '[.types[].parts] | add' "$manifest")
+actual=$(wc -l < "$written" | tr -d ' ')
+if [ "$actual" -ne "$expected" ]; then
+  echo "prose-claude-md.sh: the manifest counts $expected parts, and $actual were written" >&2
+  exit 1
+fi
