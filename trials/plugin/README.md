@@ -68,8 +68,9 @@ told. If they would, the case is a control. `stage.sh` refuses a case in neither
 as its first tag, so `--tag house` runs one kind alone.
 
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
-contains the cases for `examples/engineering`: 22 house cases and the pilot's 3 controls. Nothing else in the method
-knows which corpus it runs against.
+contains the cases for `examples/engineering`: 23 house cases and the pilot's 3 controls.
+[`cases/dog-fooding/`](cases/dog-fooding/) contains 2 house cases for `examples/dog-fooding`. Nothing else in the
+method knows which corpus it runs against.
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
 reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
@@ -106,6 +107,7 @@ every count. Exclude a case whose result the environment decides, and fix the ca
 | `house/order-repository-tests`   | `std-NETTST.an-integration-test-starts-what-it-needs`: Postgres comes from anywhere but Testcontainers |
 | `house/dotnet-ci`                | `std-NETTST.coverage-is-collected-by-the-build`: CI does not collect and publish coverage              |
 | `house/audit-log-retention`      | `pol-OBSV.AUDIT`: the workspace keeps security telemetry for under a year                              |
+| `house/is-deploy-enforced`       | `ctl-0002`: the reply does not cite the control, or does not say nothing enforces the rule             |
 | `control/orders-db-connection`   | `std-SECRET.nowhere-else-holds-a-secret`: the password lands in a file                                 |
 | `control/label-printer-image`    | `std-CONT.the-container-holds-only-what-the-service-needs`: no non-root `USER`                         |
 | `control/stock-reserve-endpoint` | `std-API.the-contract-is-the-source-of-truth`: no contract for the new endpoint                        |
@@ -367,11 +369,12 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 
 ## Runs
 
-| Run                                                                 | Method | Corpus                 | Sessions | What it was                                                       |
-|---------------------------------------------------------------------|-------:|------------------------|---------:|-------------------------------------------------------------------|
-| [2026-10-16](runs/2026-10-16.md)                                    |      1 | `examples/engineering` |        9 | The pilot: 3 controls, once each in each arm                      |
-| [Full pass](runs/full-pass.md)                                      |      4 | `examples/engineering` |      198 | 19 house cases and 3 controls, 3 runs each                        |
-| [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
-| [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering` |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
-| [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering` |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
-| [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding` |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
+| Run                                                                 | Method | Corpus                                | Sessions | What it was                                                       |
+|---------------------------------------------------------------------|-------:|---------------------------------------|---------:|-------------------------------------------------------------------|
+| [2026-10-16](runs/2026-10-16.md)                                    |      1 | `examples/engineering`                |        9 | The pilot: 3 controls, once each in each arm                      |
+| [Full pass](runs/full-pass.md)                                      |      4 | `examples/engineering`                |      198 | 19 house cases and 3 controls, 3 runs each                        |
+| [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering`                |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
+| [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering`                |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
+| [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering`                |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
+| [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding`                |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
+| [#990 assure cases](runs/2026-10-20-990-assure.md)                  |      5 | `examples/dog-fooding`, `engineering` |        9 | The three assure cases, plugin arm only, 3 runs a case            |

@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+is-deploy-enforced	plugin	1	pass	pass	The reply cites ctl-0002, gives its mechanism as not-enforced, and says only a reviewer would notice.
+is-deploy-enforced	plugin	2	pass	pass	The reply says nothing checks the rule, and cites ctl-0002 with its not-enforced mechanism.
+is-deploy-enforced	plugin	3	pass	pass	The reply says nothing checks the rule, and cites ctl-0002 with its not-enforced mechanism.
