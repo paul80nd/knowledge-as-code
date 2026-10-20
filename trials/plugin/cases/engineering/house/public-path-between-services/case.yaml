@@ -1,0 +1,5 @@
+---
+schema_version: "1.1"
+name: public-path-between-services
+context:
+  scaffold_script: scaffold.sh

@@ -1,0 +1,5 @@
+---
+schema_version: "1.1"
+name: text-the-borrower
+context:
+  scaffold_script: scaffold.sh
