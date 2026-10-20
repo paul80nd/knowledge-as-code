@@ -1,12 +1,12 @@
 {
   "bundleVersion": 1,
   "plugin": "example-engineering",
-  "version": "0.36.6",
+  "version": "0.36.7",
   "corpusRoot": "corpus",
   "export": {
     "formatVersion": 4,
     "corpus": "example-engineering",
-    "contentVersion": "0.36.6",
+    "contentVersion": "0.36.7",
     "types": [
       "adrs",
       "controls",
@@ -38,6 +38,11 @@
       "path": "skills/request-deviation",
       "requires": [],
       "note": "Asks the owner of a clause to accept a knowing departure from it, as an issue on the repository that published the corpus holding that clause. It names no type, because a clause reaches it from a lookup skill, so it travels only where at least one of them did."
+    },
+    {
+      "path": "skills/ask-the-corpus",
+      "requires": [],
+      "note": "Sends a question with no known place to the lookup skill for its type, and reads corpus/deviations/ and corpus/reports/ through the reference files beside it where the export carries them. It needs no type of its own, so it supports the lookup skills and travels only where at least one of them did."
     },
     {
       "path": "skills/controls-lookup",

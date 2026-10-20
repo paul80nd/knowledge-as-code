@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the diff is the only thing that notices a secret today.\n\ngitleaks finds a secret that matches one of its patterns, so a credential in an unfamiliar format passes it. A scanner job in the pipeline definition a team edits can be removed in the same change. It proves the rule only where branch policy requires it as a check the team cannot remove. The rules about images, logs and support tickets go unchecked."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df907d02812a65e307139b7437a84930deeb2811/examples/engineering/controls/0006-secret-scanner.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/engineering/controls/0006-secret-scanner.md"
   }
 }

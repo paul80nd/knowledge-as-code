@@ -1,6 +1,6 @@
 # Rules the standards of example-dogfooding state
 
-example-dogfooding 0.71.2 states 82 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-dogfooding 0.72.0 states 83 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
@@ -36,6 +36,7 @@ Each heading gives a standard's id, title and status. Each line under it gives a
 - A finding an agent files is an observation, and proposes no record
 - A framework finding travels stripped, and only by hand
 - A hook runs in a POSIX shell, and pushes a view once a session
+- A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
 - A skill assumes only that the session can read a file
 - A skill names the type of every field it describes
 - A skill reads a rule's keyword as what departing from it costs

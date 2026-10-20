@@ -298,6 +298,22 @@ Cite as `std-PLUGIN.a-hook-runs-in-a-posix-shell-and-pushes-a-view-once-a-sessio
 - Where a view is longer than that, the hook **MUST** push the view's path and counts in its place.
 - What a hook pushes **SHOULD** state facts, because Claude Code passes it to the session as context.
 
+### A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
+
+Cite as `std-PLUGIN.a-router-sends-a-known-need-to-its-lookup-and-reads-any-other-type-from-a-file-it-loads-when-routed-there`.
+
+- A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill shipped.
+- Where that lookup did not ship, a router **MUST** say so and name the type it needed.
+- A router **MUST** read a type that no lookup skill reads from a reference file beside its `SKILL.md`.
+- A router **MUST** read a reference file only when a question is routed to it, because a file costs a session nothing until it is read.
+- A router **MUST** declare each type a reference file reads in `optional`, at the shape that file reads.
+- A router answering from a report **MUST** compare each version in the report's `sources` with `manifest.json`.
+- A router answering from a report **MUST** fetch the report's body through `corpus-retrieval`, and answer from it.
+- A router answering from a report **MUST NOT** rebuild the report's answer from the records of other types.
+- Where the body cannot be fetched, a router **MUST** give the report's title, its `generated.at` and its link.
+- Where the body cannot be fetched, a router **MUST NOT** state a limit of the report.
+- A router **MUST** send a session whose change leaves a record describing something no longer true to `raise-finding`, naming that record.
+
 ### A skill assumes only that the session can read a file
 
 Cite as `std-PLUGIN.a-skill-assumes-only-that-the-session-can-read-a-file`.

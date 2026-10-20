@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-dogfooding",
   "shortcode": "dog",
-  "contentVersion": "0.71.2",
-  "mechanismVersion": 21,
-  "commit": "df907d02812a65e307139b7437a84930deeb2811",
+  "contentVersion": "0.72.0",
+  "mechanismVersion": 22,
+  "commit": "1d31a3408863b5fe527439cb46d62c4ab40e7d51",
   "dirty": false,
-  "generatedAt": "2026-10-20T11:33:12Z",
+  "generatedAt": "2026-10-20T14:58:30Z",
   "about": {
     "displayName": "Example Dogfooding",
     "description": "The corpus this repository keeps about itself. Its subject is the repository it sits in rather than an invented estate, so a record here is wrong the moment that repository disagrees with it. It consumes Example Engineering the way any domain corpus consumes a governance layer.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/df907d02812a65e307139b7437a84930deeb2811/examples/dog-fooding/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/dog-fooding/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/dog-fooding",
-    "ref": "df907d02812a65e307139b7437a84930deeb2811"
+    "ref": "1d31a3408863b5fe527439cb46d62c4ab40e7d51"
   },
   "reposBase": "https://github.com/paul80nd",
   "tracker": {
@@ -40,13 +40,13 @@
     {
       "shortcode": "eng",
       "corpus": "example-engineering",
-      "contentVersion": "0.36.6",
+      "contentVersion": "0.36.7",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/df907d02812a65e307139b7437a84930deeb2811/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "df907d02812a65e307139b7437a84930deeb2811"
+        "ref": "1d31a3408863b5fe527439cb46d62c4ab40e7d51"
       },
       "reposBase": null,
       "tracker": {
@@ -188,7 +188,7 @@
       "type": "standards",
       "shapeVersion": 2,
       "records": 19,
-      "parts": 82,
+      "parts": 83,
       "dir": "standards",
       "partsFile": "standards/rules.jsonl",
       "recordKey": "record",

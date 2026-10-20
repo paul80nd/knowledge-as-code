@@ -19,6 +19,6 @@
     "Prerequisites": "* The schema guidance at `.schema/CLAUDE.md`, which states the closed key space, the field-order trap and how a rule is\n  written.\n* The fixture guidance at `tooling/CLAUDE.md`, which states what a schema edit does to the fixtures and the behaviour\n  specs.\n* `kac` run from inside a corpus as `dotnet run --project ../../tooling/kac --`.\n* The .NET SDK, for the golden suite and the behaviour specs at step 6.\n* Reading a specification, which step 1 needs.\n* Repairing a Reqnroll feature file by hand, which step 6 needs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/df907d02812a65e307139b7437a84930deeb2811/examples/dog-fooding/processes/change-the-schema.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/1d31a3408863b5fe527439cb46d62c4ab40e7d51/examples/dog-fooding/processes/change-the-schema.md"
   }
 }
