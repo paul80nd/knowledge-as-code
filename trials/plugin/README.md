@@ -69,7 +69,7 @@ as its first tag, so `--tag house` runs one kind alone.
 
 The cases for a corpus live in their own folder under [`cases/`](cases/). [`cases/engineering/`](cases/engineering/)
 contains the cases for `examples/engineering`: 23 house cases and the pilot's 3 controls.
-[`cases/dog-fooding/`](cases/dog-fooding/) contains 2 house cases for `examples/dog-fooding`. Nothing else in the
+[`cases/dog-fooding/`](cases/dog-fooding/) contains 3 house cases for `examples/dog-fooding`. Nothing else in the
 method knows which corpus it runs against.
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
@@ -260,7 +260,7 @@ The prefix of a grader's file name says what it measures:
 | `task-`   | the session did the task it was given                          | task           |
 | `comply-` | the files the session wrote comply with the rule               | compliance     |
 | `cite-`   | the final reply contains the id of the record the rule sits in | citation       |
-| `fired-`  | the session invoked a lookup skill                             | firing         |
+| `fired-`  | the session invoked a lookup skill or `ask-the-corpus`         | firing         |
 
 **Graders whose names share the part before `--` are alternatives.** The set passes where one of them does. A file
 can arrive through `Write` or through `Bash`, so `comply-contract--written` and `comply-contract--shell` each look for
@@ -379,3 +379,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding`                |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
 | [#990 assure cases](runs/2026-10-20-990-assure.md)                  |      5 | `examples/dog-fooding`, `engineering` |        9 | The three assure cases, plugin arm only, 3 runs a case            |
 | [A service team's cut](runs/2026-10-20-1016-service-team-cut.md)    |      5 | `examples/dog-fooding`                |       44 | The prose arm given a cut a service team chose, 2 runs a case     |
+| [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md) |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |

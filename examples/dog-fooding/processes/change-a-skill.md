@@ -54,7 +54,8 @@ one says moves neither. One nothing sends moves nothing.
    each one reads this tree and receives none of it.
 5. If you added or removed a skill directory or a hook directory, declare it under `metadata.components` in
    `template/.plugin/.claude-plugin/plugin.json`. Give it `requires` and a `note`. Add `standalone` where it reads no
-   export and supports no other component, and `announce` where it introduces itself at the start of a session.
+   export and supports no other component. Add `announce` where the breadcrumb names it at the start of a session,
+   with its role: `router`, `lookup` or `write-back`.
 6. Copy that entry into `.plugin/.claude-plugin/plugin.json` in every corpus under `examples/`. Each corpus owns its own
    manifest, so `kac update` seeds it once and never compares it again.
 7. If you added, removed, renamed or moved a file the template sends a corpus, move `version:` in `manifest.yaml`.

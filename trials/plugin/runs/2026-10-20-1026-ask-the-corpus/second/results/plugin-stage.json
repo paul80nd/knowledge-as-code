@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T14:41:35.932Z",
+  "durationSeconds": 71,
+  "costUsd": 1.0550954000000001,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "uncovered-clauses",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-dogfooding",
+        "version": "0.72.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "uncovered-clauses",
+      "dir": "evals/house/uncovered-clauses",
+      "source": "mixed",
+      "promptMarkdown": "Which of the policy clauses this repository is held to does nothing here cover yet? I'm taking the list to a\ngovernance review, so tell me how far I can rely on it.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rpt-clause-coverage",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-dated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "2026-10-20|20 October 2026|October 20,? 2026",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-limits--consumer",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[Cc]orpus consuming|[Cc]onsumers? of (this|it)|consuming (this|it)|[Dd]ownstream corpus",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-limits--verified",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-names-a-clause",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[A-Z0-9]{4}\\.[A-Z0-9]{3,}",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.43283140000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 71,
+            "startedAt": "2026-10-20T14:41:35.970Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rpt-clause-coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [A-Z0-9]{4}\\.[A-Z0-9]{3,}",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.3318564,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-20T14:41:35.970Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rpt-clause-coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.29040760000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 39,
+            "startedAt": "2026-10-20T14:41:35.970Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rpt-clause-coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0
+  }
+}

@@ -1,0 +1,837 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-20T14:26:59.888Z",
+  "durationSeconds": 175,
+  "costUsd": 3.3535566,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "none",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-dogfooding",
+        "version": "0.72.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "deviations-due",
+      "dir": "evals/house/deviations-due",
+      "source": "mixed",
+      "promptMarkdown": "We've signed off a few exceptions to our own rules here. Which of them come up for review first, and when?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-generated-output",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-generated-output-ungoverned",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-incident-process",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-no-incident-process",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-package-unscanned",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-package-unscanned",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-security-design",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-security-design-unstated",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "cite-vulnerability-route",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-vulnerability-route-unstated",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-date",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "2027-03-07|7 March 2027|March 7,? 2027",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-names-a-deviation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-[a-z]|[Dd]eviation",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.2157108,
+            "judgeCostUsd": 0,
+            "durationSeconds": 30,
+            "startedAt": "2026-10-20T14:26:59.928Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-generated-output",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-generated-output-ungoverned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-incident-process",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-incident-process",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-package-unscanned",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-package-unscanned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-security-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-security-design-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-vulnerability-route",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-vulnerability-route-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2027-03-07|7 March 2027|March 7,? 2027",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.2159848,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-10-20T14:26:59.928Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-generated-output",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-generated-output-ungoverned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-incident-process",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-incident-process",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-package-unscanned",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-package-unscanned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-security-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-security-design-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-vulnerability-route",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-vulnerability-route-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2027-03-07|7 March 2027|March 7,? 2027",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.2234106,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-10-20T14:26:59.928Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-generated-output",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-generated-output-ungoverned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-incident-process",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-incident-process",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-package-unscanned",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-package-unscanned",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-security-design",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-security-design-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "cite-vulnerability-route",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-vulnerability-route-unstated",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2027-03-07|7 March 2027|March 7,? 2027",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    },
+    {
+      "name": "sdk-before-change",
+      "dir": "evals/house/sdk-before-change",
+      "source": "mixed",
+      "promptMarkdown": "I want to change how our workflows install the .NET SDK that builds kac. Anything I should know before I touch it?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-no-reproducible-build",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-review-date",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "2027-09-07|7 September 2027|September 7,? 2027",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-names-a-deviation",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "dev-[a-z]|[Dd]eviation|[Ee]xception",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.75,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.3402088,
+            "judgeCostUsd": 0,
+            "durationSeconds": 43,
+            "startedAt": "2026-10-20T14:27:21.781Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-reproducible-build",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-review-date",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation|[Ee]xception",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 8,
+            "costUsd": 0.41063960000000005,
+            "judgeCostUsd": 0,
+            "durationSeconds": 48,
+            "startedAt": "2026-10-20T14:27:23.166Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-reproducible-build",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-review-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2027-09-07|7 September 2027|September 7,? 2027",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation|[Ee]xception",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 9,
+            "costUsd": 0.3580272,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-20T14:27:30.407Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-no-reproducible-build",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-review-date",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2027-09-07|7 September 2027|September 7,? 2027",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-deviation",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched dev-[a-z]|[Dd]eviation|[Ee]xception",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.9166666666666666,
+        "passRate": 0.6666666666666666
+      }
+    },
+    {
+      "name": "uncovered-clauses",
+      "dir": "evals/house/uncovered-clauses",
+      "source": "mixed",
+      "promptMarkdown": "Which of the policy clauses this repository is held to does nothing here cover yet? I'm taking the list to a\ngovernance review, so tell me how far I can rely on it.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rpt-clause-coverage",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-dated",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "2026-10-20|20 October 2026|October 20,? 2026",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-limits--consumer",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[Cc]orpus consuming|[Cc]onsumers? of (this|it)|consuming (this|it)|[Dd]ownstream corpus",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-limits--verified",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-names-a-clause",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[A-Z0-9]{4}\\.[A-Z0-9]{3,}",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.5931624000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 111,
+            "startedAt": "2026-10-20T14:28:04.835Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.5354812,
+            "judgeCostUsd": 0,
+            "durationSeconds": 92,
+            "startedAt": "2026-10-20T14:28:11.120Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rpt-clause-coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [A-Z0-9]{4}\\.[A-Z0-9]{3,}",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.8333333333333334,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.46093120000000004,
+            "judgeCostUsd": 0,
+            "durationSeconds": 74,
+            "startedAt": "2026-10-20T14:28:13.933Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rpt-clause-coverage",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-dated",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched 2026-10-20|20 October 2026|October 20,? 2026",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--consumer",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-limits--verified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched vouches for|whole (document|standard)|not (per[- ]rule|separated)|([Nn]o column|[Nn]othing) (here )?says[^.]{0,40}verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-names-a-clause",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [A-Z0-9]{4}\\.[A-Z0-9]{3,}",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.7222222222222223,
+        "passRate": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 1,
+    "overallScore": 0.8796296296296297,
+    "overallPassRate": 0.5555555555555555
+  }
+}

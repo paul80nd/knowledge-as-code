@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	uncovered-clauses	1	0	1	1	1	1	0.43283140000000003	14	
+house	plugin	uncovered-clauses	2	0	0	1	1	1	0.3318564	9	pass
+house	plugin	uncovered-clauses	3	0	0	0	1	1	0.29040760000000004	11	pass

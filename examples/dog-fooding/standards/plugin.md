@@ -79,6 +79,25 @@ _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
 _**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
 
+### A router sends a known need to its lookup, and reads any other type from a file it loads when routed there
+
+- A router **MUST** send a question whose type it can name to the lookup skill reading that type, where that skill
+  shipped.
+- Where that lookup did not ship, a router **MUST** say so and name the type it needed.
+- A router **MUST** read a type that no lookup skill reads from a reference file beside its `SKILL.md`.
+- A router **MUST** read a reference file only when a question is routed to it, because a file costs a session nothing
+  until it is read.
+- A router **MUST** declare each type a reference file reads in `optional`, at the shape that file reads.
+- A router answering from a report **MUST** compare each version in the report's `sources` with `manifest.json`.
+- A router answering from a report **MUST** fetch the report's body through `corpus-retrieval`, and answer from it.
+- A router answering from a report **MUST NOT** rebuild the report's answer from the records of other types.
+- Where the body cannot be fetched, a router **MUST** give the report's title, its `generated.at` and its link.
+- Where the body cannot be fetched, a router **MUST NOT** state a limit of the report.
+- A router **MUST** send a session whose change leaves a record describing something no longer true to
+  `raise-finding`, naming that record.
+
+_**Covers:** `eng:pol-AGNT.CONFID`, `eng:pol-AGNT.UNPROV`_
+
 ### `plugin.json` declares every component and the types it reads
 
 - Every skill directory and hook directory in the plugin tree **MUST** appear under `metadata.components`.
@@ -383,6 +402,13 @@ broke it.
 - [ ] Every field a skill describes names its JSON type, and agrees with a line of a real export.
 - [ ] Every skill names the parts file of the type it requires, and no other.
 - [ ] Every skill says what its corpus did not include, from `types` in `manifest.json`.
+- [ ] Every router sends a question it can place to the lookup for that type, and says which type is missing where
+      the lookup did not ship.
+- [ ] Every type a router reads with no lookup is read from a reference file it loads only when routed there, and is
+      named in `optional` at that file's shape.
+- [ ] Every answer a router gives from a report compares the report's `sources` with `manifest.json`, comes from the
+      fetched body, and states no limit it could not read.
+- [ ] Every router sends a change that makes a record wrong to `raise-finding`, naming the record.
 - [ ] Every skill directory and hook directory in the plugin tree is declared under `metadata.components`.
 - [ ] Every `requires` entry names a type at the shape version it reads, bare where it opens none of that type's
       files, and empty where the component reads no export.
@@ -451,6 +477,16 @@ that missed a case gains a reason, or loses a step. Steps stay where the order i
 review, and a write-back whose order a rule above fixes. The description is the one part of a skill in every session's
 context, so it names each case that triggers it once. [writing-for-agents] is the reference for that text. This
 standard cites it and does not restate it, because it changes upstream.
+
+A router serves a session that knows the corpus exists and has a question, but not which type answers it. Every
+bundled skill puts its description in every session, so one router costs one description where a lookup for each rarely
+asked type would cost one each. A known need still goes to its lookup, because the lookup states that type's fields and
+reasons. A type with no lookup is read from a file beside the router, which costs nothing until a question is routed to
+it, and a new type joins as one more file. A report is the quick route to a whole-corpus answer, because its value is
+the verdicts and limits a person wrote, and a rebuild from the standards and controls has neither. Its body does not
+travel, so the router fetches it, and where it cannot, it gives the report's place and leaves its limits unstated
+rather than inferring them. Without the fetch it still answers from the export, because the index entry says which
+report exists, how old it is and which versions it is true of.
 
 A reviewer is the one skill whose input is not in the plugin. The change it reviews lives in the repository's history,
 and every session reading that history already has a way to do it. So the skill names the change as what differs from
@@ -620,6 +656,9 @@ standard.
 
 ## Changelog
 
+- 2026-10-20: a router sends a question it can place to the lookup for that type, and reads a type no lookup reads
+  from a reference file it loads only when routed there. It answers a whole-corpus question from the report's fetched
+  body, and sends a change that makes a record wrong to `raise-finding`.
 - 2026-10-20: a skill states what it is for, the intent of the type it reads, and the reason for each rule it gives.
   It sets out steps only where the order is the content, and its description names each case that triggers it once.
 - 2026-10-19: a skill reviewing a change names it as what differs from a fixed point, and leaves the session to read

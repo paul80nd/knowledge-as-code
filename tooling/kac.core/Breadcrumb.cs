@@ -40,21 +40,59 @@ public static class Breadcrumb
         foreach (var held in Contributions(type, exportFiles, sources))
             lines.Add(Line(type.Type, held));
 
-        // What to ask, named from the surviving components whose manifest entry says `announce`. A plugin carrying no
-        // such skill says nothing. `docs/maintaining/plugin.md` explains the split.
-        var skills = included
-            .Where(c => c.Announce)
-            .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))
-            .Select(c => c.Path["skills/".Length..])
-            .Where(name => name.Length > 0 && !name.Contains('/', StringComparison.Ordinal))
-            .ToList();
+        // What to ask, named from the surviving components by the role each announces. A plugin carrying no such skill
+        // says nothing. `docs/maintaining/plugin.md` explains the split.
+        var routers = Announcing(included, Router);
+        var lookups = Announcing(included, Lookup);
+        var writeBacks = Announcing(included, WriteBack);
 
-        if (skills.Count > 0)
-            lines.Add($"Ask the {Join(skills)} skill{(skills.Count > 1 ? "s" : "")} before you answer "
-                      + "from what you already know.");
+        if (routers.Count + lookups.Count + writeBacks.Count == 0)
+            return string.Join("\n", lines) + "\n";
+
+        lines.Add("These records are the organisation's recorded knowledge, so check them before you answer from what "
+                  + "you already know.");
+
+        var knownNeed = $"a lookup skill such as {Join(lookups)} for a known need";
+
+        if (routers.Count > 0)
+            lines.Add($"Ask {Skills(routers)} when you do not know which record answers a question"
+                      + (lookups.Count > 0 ? $", and {knownNeed}." : "."));
+        else if (lookups.Count > 0)
+            lines.Add($"Ask {knownNeed}.");
+
+        if (writeBacks.Count > 0)
+            lines.Add($"When your change alters something these records describe, say so with {Skills(writeBacks)}.");
 
         return string.Join("\n", lines) + "\n";
     }
+
+    /// <summary>The role of a skill that sends a question with no known place to the reader that answers it.</summary>
+    public const string Router = "router";
+
+    /// <summary>The role of a skill that reads one type, for a need the session can already place.</summary>
+    public const string Lookup = "lookup";
+
+    /// <summary>The role of a skill that reports a change the records no longer describe.</summary>
+    public const string WriteBack = "write-back";
+
+    /// <summary>
+    /// A component's <c>announce</c> read as a role. <c>true</c> reads as a lookup, and any other value that is not a
+    /// string announces nothing.
+    /// </summary>
+    public static string? Role(JsonNode? announce) => JsonRead.Bool(announce) ? Lookup : JsonRead.Str(announce);
+
+    /// <summary>The skill names of the surviving components announcing <paramref name="role"/>.</summary>
+    private static List<string> Announcing(IReadOnlyList<PluginComponent> included, string role) =>
+        [
+            .. included
+                .Where(c => string.Equals(c.Announce, role, StringComparison.Ordinal))
+                .Where(c => c.Path.StartsWith("skills/", StringComparison.Ordinal))
+                .Select(c => c.Path["skills/".Length..])
+                .Where(name => name.Length > 0 && !name.Contains('/', StringComparison.Ordinal))
+        ];
+
+    private static string Skills(IReadOnlyList<string> names) =>
+        $"the {Join(names)} skill{(names.Count > 1 ? "s" : "")}";
 
     /// <summary>
     /// The most things one line will name, the remainder counted among them. It fixes what a line costs a session,

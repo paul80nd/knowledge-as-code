@@ -15,15 +15,16 @@ public sealed record BundleFile(string Path, byte[] Content, bool Executable = f
 /// <summary>
 /// <c>Requires</c> names the record types the component reads, each optionally at a shape version, as
 /// <c>glossary@1</c>. A component naming no type supports the ones that do, and is trimmed when none of them survives
-/// unless it is <c>Standalone</c>. <c>Announce</c> puts it in the session breadcrumb. <c>docs/maintaining/plugin.md</c>
-/// says which earn it. <c>View</c> names the <see cref="kac.core.View"/> generated at <c>Path</c>, which no plugin tree
-/// contains. <c>Optional</c> names a type read only where the export carries it, so its absence trims nothing.
+/// unless it is <c>Standalone</c>. <c>Announce</c> is the role that puts it in the session breadcrumb, one of the
+/// <see cref="Breadcrumb"/> roles, and <c>docs/maintaining/plugin.md</c> says which skills earn one. <c>View</c> names
+/// the <see cref="kac.core.View"/> generated at <c>Path</c>, which no plugin tree contains. <c>Optional</c> names a type
+/// read only where the export carries it, so its absence trims nothing.
 /// </summary>
 public sealed record PluginComponent(
     string Path,
     IReadOnlyList<string> Requires,
     string? Note,
-    bool Announce = false,
+    string? Announce = null,
     bool Standalone = false,
     string? View = null,
     IReadOnlyList<string>? Optional = null);
@@ -464,7 +465,7 @@ public static class Bundler
             if (JsonRead.Str(component["path"]) is not { } path) continue;
 
             components.Add(new PluginComponent(path, Strings(component["requires"]), JsonRead.Str(component["note"]),
-                JsonRead.Bool(component["announce"]), JsonRead.Bool(component["standalone"]),
+                Breadcrumb.Role(component["announce"]), JsonRead.Bool(component["standalone"]),
                 JsonRead.Str(component["view"]), Strings(component["optional"])));
         }
 

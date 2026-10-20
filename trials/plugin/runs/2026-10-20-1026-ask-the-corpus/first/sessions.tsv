@@ -1,0 +1,10 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	deviations-due	1	0	1	1	1	1	0.2157108	7	
+house	plugin	deviations-due	2	0	1	1	1	1	0.2159848	6	
+house	plugin	deviations-due	3	0	1	1	1	1	0.2234106	6	
+house	plugin	sdk-before-change	1	0	1	0	1	1	0.3402088	8	fail
+house	plugin	sdk-before-change	2	0	1	1	1	1	0.41063960000000005	8	
+house	plugin	sdk-before-change	3	0	1	1	1	1	0.3580272	9	
+house	plugin	uncovered-clauses	1	0	0	1	0	1	0.5931624000000001	14	pass
+house	plugin	uncovered-clauses	2	0	1	1	1	1	0.5354812	12	
+house	plugin	uncovered-clauses	3	0	1	1	1	1	0.46093120000000004	9	

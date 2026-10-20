@@ -102,6 +102,15 @@ public sealed class BundleSteps(Workspace ws, IUnitTestRuntimeProvider runtime)
         ws.WriteJson(PluginManifest, manifest);
     }
 
+    [Given(@"the component ""(.*)"" announces itself as ""(.*)""")]
+    public void GivenTheComponentAnnouncesItselfAs(string path, string role)
+    {
+        var manifest = ws.ReadJson(PluginManifest);
+        var component = Components(manifest).OfType<JsonObject>().Single(c => JsonRead.Str(c["path"]) == path);
+        component["announce"] = role;
+        ws.WriteJson(PluginManifest, manifest);
+    }
+
     [Given(@"the plugin tree has a file ""(.*)""")]
     public void GivenThePluginTreeHasAFile(string path) => ws.Write($".plugin/{path}", "A file no component claims.\n");
 
