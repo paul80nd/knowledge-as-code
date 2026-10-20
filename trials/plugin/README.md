@@ -35,6 +35,12 @@ writes into the workspace. The prose arm therefore receives the text through eac
 `CLAUDE.md` in a real session arrives as context in the conversation, so the prose arm is close to that delivery and
 not the same.
 
+**Where the prose text is too large for a `CLAUDE.md`, give the prose arm a cut of it.** Claude Code warns on a
+`CLAUDE.md` over 40,000 characters, so cut the text to that size. Have a reader who has not seen the cases choose the
+cut as the corpus's team would, copying record blocks verbatim. After `stage.sh`, rewrite each prose `case.yaml` from
+the case folder with the cut appended in place of the whole text. Keep the cut, and the list of what it left out,
+beside the run. [Past the paste size](runs/2026-10-20-923-past-paste-size.md) is a run made this way.
+
 ## The full pass and the pilot
 
 The full pass is 22 scored cases, run 3 times each in each of the 3 arms: 198 graded sessions. It runs in 3 batches
@@ -368,3 +374,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [Hook arm](runs/hook-arm.md)                                        |      5 | `examples/engineering` |       36 | The 4 build cases, 3 runs each in hook, plugin, none              |
 | [standards-lookup pilot](runs/2026-10-19-standards-lookup-pilot.md) |      5 | `examples/engineering` |       60 | The shipped and the rewritten `standards-lookup`, plugin arm only |
 | [#945 firing check](runs/2026-10-20-945-firing.md)                  |      5 | `examples/engineering` |       22 | The nine other skills rewritten, plugin arm only, 1 run a case    |
+| [Past the paste size](runs/2026-10-20-923-past-paste-size.md)       |      5 | `examples/dog-fooding` |      132 | The prose arm given a 40,000-character cut, 2 runs a case         |
