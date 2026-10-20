@@ -1,16 +1,17 @@
 ---
 name: controls-lookup
 description: Find out what proves a rule here, in the controls that travel with this plugin. Use when someone asks
-  whether a rule is checked, in words like "what checks this", "is that enforced", "where is the evidence", "which
-  rules have no control", "what goes unchecked if I delete this job". Use it as well, unprompted, before you change a
-  check, a job in a pipeline, or a rule some check may be watching. Read the control before you say a rule is
-  enforced, and before you say it is not.
+  whether a rule is checked, or which rules nothing checks. Use it as well, unprompted, before you change or delete a
+  check, a pipeline job, or a rule some check may be watching.
 ---
 
 # Asking what proves a rule
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
-and nothing to run.
+A control states how the estate knows a rule is followed. Use it as evidence: what checks a rule, how, and where the
+check stops. Read the control before you say a rule is enforced, and before you say it is not, because either claim
+made from memory reaches somebody deciding whether to rely on it.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                      # what this export is, and where each corpus publishes
@@ -18,37 +19,29 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/controls/<record>.json             # one control th
 ${CLAUDE_PLUGIN_ROOT}/corpus/controls/<shortcode>/<record>.json # one control a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-## A control here is the check, not the safeguard
+## Say which sense of control you mean
 
-**Say which sense you mean before the word reaches anybody with a governance background.** In NIST SP 800-53, ISO/IEC
-27001 Annex A and ISO/IEC 27002, a *control* is the safeguard itself: the measure that reduces the risk. In this corpus
-a control is the **verification that a rule is being followed**, which those frameworks call an assessment procedure, a
-test, or a metric.
+In this corpus a control is the **verification that a rule is followed**. In NIST SP 800-53, ISO/IEC 27001 Annex A and
+ISO/IEC 27002 a *control* is the safeguard itself, and the verification is an assessment procedure, a test or a metric.
+Say which sense you mean to a reader with a governance background, because a coverage figure from here claims only that
+checks exist.
 
-A reader who takes the other sense reads a coverage figure from here as a claim that safeguards exist. Such a figure
-claims only that checks exist.
+## Find every control that covers a rule
 
-## Find the control that covers a rule
+Each control is its own file, because a control is read whole. Search `${CLAUDE_PLUGIN_ROOT}/corpus/controls/`, and
+read the files that hit.
 
-**Start from the standard, and search `verifies`.** Every control names the standards it checks, so the standard's id is
-the string that finds it.
-
-**There is no flat file here.** A control is read whole, so the record is the unit and each one is its own file. Search
-`${CLAUDE_PLUGIN_ROOT}/corpus/controls/`, and read the files that hit.
-
-**A standard may be covered by more than one control, and commonly is.** Two controls often hold two halves of one
-promise, and each says in `Coverage and gaps` what the other picks up. Collect every hit before you answer.
-
-**Search the id, then search the subject.** `std-CI` finds the controls naming that standard. Where you do not yet know
-which standard covers the subject, search the ordinary word instead: `changelog`, `secret`, `lint`.
+* **Search the standard's id in `verifies`**, as `std-CI`. Every control names the standards it checks.
+* **Search the subject** where you do not yet know the standard, as `changelog`, `secret` or `lint`.
+* **Collect every hit.** One standard is often covered by two controls, each holding half of one promise, and each says
+  in `Coverage and gaps` what the other picks up.
 
 ## Read the control
 
-Every key in `fields` is present, and holds `null` where the record left it empty. Test the value rather than the key.
-The three section keys are always present, because this type requires all three of them.
+Every key in `fields` is present, and is `null` where the record left it empty. Test the value rather than the key. The
+three section keys are always present, because this type requires all three.
 
 | Key                          | Type                     | What it holds                                       |
 |------------------------------|--------------------------|-----------------------------------------------------|
@@ -68,118 +61,87 @@ The three section keys are always present, because this type requires all three 
 | `path`                       | string                   | where the record sits in its own repository         |
 | `links`                      | object                   | the built link to that record, under `human`        |
 
-**`mechanism` takes one of five values**, and the fifth is the one worth reading for:
+`mechanism` takes one of five values:
 
 * **`ci`.** A pipeline runs it, and `evidence` names the log.
 * **`review-checklist`.** A person checks it while reviewing a change.
 * **`manual`.** Somebody runs it on the cadence `frequency` names, and `last-verified` says when they last did.
 * **`runtime-alert`.** A running system reports it.
-* **`not-enforced`.** The rule is written and nothing looks.
+* **`not-enforced`.** The rule is written, and nothing checks it. The author recorded that gap, so report it as the
+  honest state it is.
 
-**`frequency` takes one of seven values**: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
-`annual`. It is set on every control whose mechanism is not `not-enforced`, because the schema requires it there.
+`frequency` takes one of seven values: `continuous`, `per-pr`, `per-deploy`, `daily`, `monthly`, `quarterly` or
+`annual`. The schema requires it on every control whose mechanism is not `not-enforced`.
 
-**A `last-verified` of `never`, or a date long past, is a check that may not have run.** It is set on a `manual`
-control alone, because that is the one mechanism leaving no log of its own. Where you answer from such a record, give
-the date beside the answer.
+**Give `last-verified` beside any answer from a `manual` control.** It is set on that mechanism alone, because no log
+records a manual run, and a date long past or `never` is a check that may not have run.
 
-**Read `Coverage and gaps` before you tell anybody a rule is covered.** A control that runs may still miss the half of
-the rule that matters to the question in front of you, and that section is where the author says so.
+**Read `Coverage and gaps` before you say a rule is covered.** A control that runs may still miss the half of the rule
+the question is about, and this section is where the author says so.
 
-**A bracketed id inside a section is a cross-reference.** The export drops the link definitions at the foot of the
-record, so `[ctl-0002]` arrives as the id alone. The id is the address, so search it here rather than treating it as
-broken markdown.
+**Search a bracketed id inside a section**, as `[ctl-0002]`. The export drops the link definitions, so the id alone is
+the cross-reference.
 
-## Ask what a job is holding up
+## Say what a job is holding up
 
-**Search `How it works` and `evidence` for the name of the thing you are about to change.** A control's mechanism is
-written in the author's own words, so a job, a script or a dashboard appears there under its own name. Search
-`${CLAUDE_PLUGIN_ROOT}/corpus/controls/` for that name before you delete it or rename it.
-
-**Every control the search returns loses its mechanism with that job.** Name each one, name the standards its
-`verifies` holds, and say that those standards go back to unchecked. That is the cost of the change, and it is the part
-the diff does not show.
+Search `How it works` and `evidence` for the name of a job, a script or a dashboard before you delete or rename it. A
+mechanism is written in the author's own words, so the thing appears under its own name. Every control the search
+returns loses its mechanism with the job. Name each one and the standards in its `verifies`, and say those standards
+go back to unchecked, because that cost is the part the diff does not show.
 
 ## Read what `verifies` names before you count
 
-**An entry names a whole standard or one rule inside it, and the dot tells them apart.** `std-CI` is the record.
-`std-CI.the-gate-runs-on-every-pull-request-into-main` is one rule of it. Read the values you collected before you
-report anything, because the two answer different questions.
+An entry is a whole standard or one rule inside it, and a dot tells them apart: `std-CI` is the record, and
+`std-CI.the-gate-runs-on-every-pull-request-into-main` is one of its rules.
 
-**A record id vouches for the whole document, whatever the control checks inside it.** `verifies: [std-CI]` says a
-control watches that standard and never says which of its rules. Where every entry you collected is a record id, no
-per-rule figure can be had from this export. Say which standards are claimed, and say that the rules beneath them are
-not separated, instead of dividing a number nothing here supports.
+* **A record id vouches for the whole standard**, and never says which rules the control checks. Where every entry you
+  collected is a record id, report which standards are claimed and say their rules are not separated. A per-rule
+  figure divided out of that is a number nothing here supports.
+* **A rule anchor is the finer answer.** It is the address `standards-lookup` gives a rule, so both skills agree on
+  what is claimed.
 
-**A rule anchor is the finer answer, and you may report it as one.** It is the same address `standards-lookup` gives a
-rule, so the two skills agree on what has been claimed.
+To find which standards nothing claims, collect every value of `verifies`, then ask `standards-lookup` which standards
+this export has, and compare the sets. That skill reads the standards, so hand the question to it. Check `types` in
+`manifest.json` first: where `standards` did not travel, report the standards the controls name and say the other half
+of the count is not here.
 
-**For which standards nothing claims, work in two steps.** Collect every value of `verifies` across
-`${CLAUDE_PLUGIN_ROOT}/corpus/controls/`, then ask `standards-lookup` which standards this export carries and compare
-the two sets. That skill reads the standards and this one does not, so hand the question over instead of opening its
-files.
-
-**Check `types` in `manifest.json` before you hand it over.** A corpus may adopt `controls` and decline `standards`,
-which leaves this plugin holding neither that skill nor the standards to compare against. Where that is what you find,
-report the standards the controls name and say the other half of the count is not here.
-
-**A `not-enforced` control is a gap somebody wrote down.** The rule is stated, nothing checks it, and the author
-recorded that instead of leaving the standard looking covered. Report it as the honest state it is, and never as an
-omission.
-
-**A standard nothing names at all is a different answer.** Nothing here says whether anybody looked. Say that, and say
-which corpora you searched.
+A standard that no control names is a different answer from a `not-enforced` control. Nothing here says whether anybody
+looked, so say that, and say which corpora you searched.
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the control.** `eng:ctl-0004` was published by the corpus whose shortcode is
-`eng`, and a bare `ctl-0004` was written here. The shortcode moves out of the id and becomes the directory, so
-`eng:ctl-0004` is at `${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-0004.json`.
+**A prefix names the corpus that wrote the control.** `eng:ctl-0004` was published by the corpus with shortcode `eng`,
+and a bare `ctl-0004` was written here. `eng:ctl-0004` is at `${CLAUDE_PLUGIN_ROOT}/corpus/controls/eng/ctl-0004.json`.
+The same prefix reaches every id in `verifies`, so a control here may verify `eng:std-GATES`, a standard it inherited.
+Look the `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
 
-**The same prefix rule reaches every id inside `verifies`.** `eng:std-GATES` is a standard the consumed corpus wrote,
-and `std-CI` is one written here. A control here may verify a standard it inherited, and commonly does.
+## Link the control, and read its source
 
-**`shortcode` is the key into `sources`** in `manifest.json`, which names the producing corpus, the version that
-travelled, and where it publishes. Look it up before you say anything about where a control came from, and name the
-corpus in words.
+Quote the record's `links.human` to link the control. To read the source, load `corpus-retrieval` and bring it the
+record's `path`. A control has no anchor, because the whole record is the unit.
 
 ## Say what stayed behind
 
-**`types` in `manifest.json` is the list of what travelled.** Read it before you say anything is missing. Where
-`standards` is not in it, the standards a control names did not travel, and you can report the ids and no wording.
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published control for the rest.
 
-Two things stay behind whatever `types` says:
-
-* **Who stewards the control.** `owner` is a fact about the corpus that wrote it, and whoever holds a vendored copy has
-  no standing to ask.
-* **Any Owner section the author wrote.** A control's export includes the three required sections and no other.
+* **The standards a control names** are here only where `standards` travelled. Otherwise report the ids alone.
+* **Who stewards the control** stays behind, because `owner` is a fact about the corpus that wrote it.
+* **Any section beyond the three required ones** stays in the record.
 
 ## Say when a control is unsettled
 
 Read `status` and `review-by` before you rely on a control, and tell the reader what you saw:
 
-* **`status: planned`.** The check is intended and is not running. Nothing proves the rule today.
-* **`status: retired`.** The check has been stood down. Find what replaced it before you quote it.
-* **`review-by` earlier than today.** Nobody has confirmed the control still runs the way this record says.
+* **`status: planned`**: the check is intended and is not running. Nothing proves the rule today.
+* **`status: retired`**: the check was stood down. Find what replaced it, and quote that.
+* **`review-by` earlier than today**: nobody has confirmed the control still runs as this record says.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of the three.
-
-## Link to the control, and read its source
-
-**Quote the record's `links.human` to link the control.** The record already has it, built for the corpus that wrote it.
-
-**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
-authenticates to that platform, and what to say where nothing reaches it. Bring it the record's `path`. A control has no
-anchor of its own, because the whole record is the unit.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
 ## Say when there is nothing
 
-Where no control matches, say nothing in this export claims to check the rule, and name the corpus and every entry in
-`sources` from `manifest.json`, so a reader knows what was searched.
-
-**An empty search is not evidence that a rule goes unchecked.** It says the estate has not written a control down. A
-pipeline may well run something nobody recorded here, and this export cannot see it. Offer the rule as one worth a
-control, and leave that to whoever owns it.
-
-**Where no control proves a rule and a tool could check it, tell the developer so.**
+Where no control matches, say that nothing in this export claims to check the rule. Name the corpus and every entry in
+`sources` from `manifest.json`, so the reader knows what was searched. An empty search states only that the estate has
+not written a control down: a pipeline may run a check nobody recorded. Offer the rule as one worth a control. Where a
+tool could check it, tell the developer so, because they can add the check and the control together.

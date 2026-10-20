@@ -37,6 +37,6 @@
     "Conformance checklist": "- [ ] The image or package running in production has the same digest as the one tested below it.\n- [ ] The artefact reports the commit it was built from, on a health or version endpoint.\n- [ ] No configuration file inside the artefact names an environment.\n- [ ] The pipeline definition is in the repository, and its last change went through review.\n- [ ] Production access allows deployment through the pipeline identity alone, apart from a hand change made to\n  restore service.\n- [ ] Every hand change to production has a deviation, and the change is in the repository.\n- [ ] The last release's rollback path is written down, and somebody has run it in an environment below production."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5f331984138693b37af3caf485b3c9e06ab044e2/examples/engineering/standards/common/deployment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e5c5703ba901538cbb7bcab3634aaed7c4757b40/examples/engineering/standards/common/deployment.md"
   }
 }

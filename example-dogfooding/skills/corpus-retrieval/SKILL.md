@@ -1,91 +1,91 @@
 ---
 name: corpus-retrieval
 description: Fetch the published source of a record this corpus export summarises. Load it from a lookup skill that
-  has found what it was asked for and needs the words the export left behind. It says which publishing block addresses
-  a record, how to fetch the file through the client that authenticates to that platform, what to do where nothing
-  here can reach it, and how to link a line that arrived without a link.
+  has found what it was asked for and needs the words the export left behind.
 ---
 
 # Reading a record's published source
 
 An export is a copy taken on a day. A type carries as much of a record as a reader needs to judge it, and the rest
-stays in the corpus that published it. This is how you fetch the rest.
+stays in the corpus that published it. This skill fetches the rest, so an answer can quote what the record says rather
+than what the summary suggests. Every type reads the same way.
 
 **The skill that sent you here names the record.** Bring its `path`, and the line's `anchor` where it came from a
-parts file. Everything below is the same for every type.
+parts file.
 
-## Take the publishing block belonging to the corpus that wrote it
+## Take the publishing block of the corpus that wrote it
 
-`manifest.json` holds a publishing block per corpus. A record or a line carrying `shortcode` is published by that
-entry in `sources`, and its `publishing` block is the one to read. One carrying no `shortcode` is published by the
-top-level `publishing` block.
+`manifest.json` has a `publishing` block per corpus. A record or a line with a `shortcode` is published by the entry in
+`sources` with that shortcode, so read that entry's block. One with no `shortcode` is published by the top-level
+`publishing` block. The wrong block addresses the right path in the wrong repository at the wrong commit, and both the
+404 and somebody else's file that come back look plausible.
 
-Read the wrong one and you address the right path in the wrong repository at the wrong commit. That fetches a 404 or
-somebody else's file, and both read as plausible.
+| Key             | Type           | What it holds                                                         |
+|-----------------|----------------|-----------------------------------------------------------------------|
+| `target`        | string         | `github`, `azure-devops`, `azure-devops-wiki`, `mkdocs` or `none`     |
+| `base`          | string or null | the repository the corpus publishes from                              |
+| `pathPrefix`    | string or null | the corpus's folder inside that repository                            |
+| `ref`           | string or null | the commit the export was taken at                                    |
+| `humanTemplate` | string or null | the link pattern, with `{path}` and `{anchor}` to replace             |
 
-## Read the source yourself
+A key with no value is `null`, and the key is still there.
 
-**Fetch the file rather than the page.** The block names the `target`, the `base`, the `pathPrefix` and the `ref`. Join
-`pathPrefix` ahead of the record's `path` to reach the file inside the repository, and ask for it at that `ref`.
-Fetching the human URL instead hands you the markdown wrapped in someone else's HTML, and you will read the page
-furniture as though it were the record.
+## Fetch the file at its ref
 
-**No unauthenticated host serves that source**, except GitHub's and only for a public repository. So the client that
-authenticates to the platform is what fetches it, and that client is already there: it is the same one that opens an
-issue or a work item when something needs writing back.
+Fetch the file, because a human URL returns the markdown inside somebody else's HTML, and the page furniture reads as
+though it were the record. Join `pathPrefix` ahead of the record's `path`, and ask for it at `ref`.
+
+Only GitHub serves a public repository's source without credentials. Everywhere else, the client that authenticates to
+the platform fetches it. That client is already there: it is the one that opens an issue or a work item when something
+needs writing back.
 
 ### GitHub
 
-`gh` fetches a file at a ref, and the accept header is what makes the response the file rather than JSON describing it:
+`gh` fetches a file at a ref. The accept header makes the response the file, and not JSON describing it:
 
 ```bash
 gh api "repos/<owner>/<repo>/contents/<pathPrefix><path>?ref=<ref>" -H "Accept: application/vnd.github.raw"
 ```
 
-`<owner>/<repo>` comes from the block's `base`. A public repository answers this without credentials, and a private one
-answers it where `gh auth status` reports you signed in to that host.
+`<owner>/<repo>` comes from the block's `base`. A public repository answers without credentials, and a private one
+answers where `gh auth status` reports you signed in to that host.
 
 ### Azure DevOps
 
-`az repos` carries no command for a file's content. `az devops invoke` is the general route to the REST API, and the
-Git Items resource is what serves a file:
+`az repos` has no command for a file's content. `az devops invoke` reaches the REST API, and the Git Items resource
+serves a file:
 
 ```bash
 az devops invoke --area git --resource items --accept-media-type text/plain --org <base> ...
 ```
 
 The [Git Items API](https://learn.microsoft.com/en-us/rest/api/azure/devops/git/items) names the parameters that
-address a path at a ref. Take `--accept-media-type text/plain`, or the response describes the file instead of being
-it.
+address a path at a ref. `--accept-media-type text/plain` makes the response the file, and not a description of it.
 
 ### Where nothing here reaches it
 
-Say plainly that you found the record and cannot read it, name the platform and quote the human link. Then ask whoever
-is with you to paste the section you need.
-
-**Do not answer from the summary as though it were the record.** A process read from its trigger alone is a guess about
-what the steps say, and a reader cannot tell your guess from the corpus.
+Say that you found the record and cannot read it, name the platform, and quote the human link. Ask whoever is with you
+to paste the section you need. Answer only from what the record says, because a reader cannot tell a guess about its
+steps from the corpus.
 
 ## Check what you got
 
-**Read the first line of the response before you use it.** A sign-in page, an HTML wrapper and a JSON error all arrive
-with a success exit code from something. A record opens with its own heading.
+**Read the first line of the response before you use it.** A sign-in page, an HTML wrapper and a JSON error all
+arrive with a success exit code from something. A record opens with its own heading.
 
-**Say when the copy is old.** `generatedAt` and `commit` in `manifest.json` say when the export was taken, and the
-source you just fetched is at the `ref` that export named. Where a reader is about to act on a procedure or an
-obligation, say which commit you read it at.
+**Say which commit you read.** `generatedAt` and `commit` in `manifest.json` say when the export was taken, and the
+file you fetched is at the `ref` that export named. Say it wherever a reader is about to act on a procedure or an
+obligation.
 
-## Send a reader to the record
+## Link the reader to the record
 
-**The record file and the line already have the link.** `links.human`, on a record's own JSON and on each line of a
-parts file, is a built URL with the commit inside it. Quote it as it stands. Do not retype the commit, shorten it, swap
-the host or judge whether it looks right. An inherited line keeps the link its producer built, so it opens the corpus
-that wrote the part.
+**Quote `links.human` exactly as it stands.** A record's JSON and each line of a parts file have it, built with the
+commit inside it. An inherited line keeps the link its producer built, so it opens the corpus that wrote the part.
 
-**A line with no `links` key needs the template.** A producer that exported before lines had the key sends a line
-without it. Copy the `humanTemplate` of the block chosen above exactly, replace `{path}` and `{anchor}`, and change
-nothing else. Where that block's `target` is `azure-devops-wiki`, remove `.md` from `path` and write every `/` as
+**Build a link from `humanTemplate` for a line with no `links` key.** A producer that exported before lines had the
+key sends a line without it. Replace `{path}` and `{anchor}` in the template of the block chosen above, and keep every
+other character. Where that block's `target` is `azure-devops-wiki`, remove `.md` from `path` and write every `/` as
 `%2F`. Every other target takes `path` whole.
 
-**Where `links` or `humanTemplate` is `null`**, that corpus publishes nowhere the export could address. Say so,
-and quote the `path` as the record's place in its own repository. Do not assemble a URL of your own.
+**Quote the `path` where `links` or `humanTemplate` is `null`.** That corpus publishes nowhere the export could
+address, so say so, and give the `path` as the record's place in its own repository.

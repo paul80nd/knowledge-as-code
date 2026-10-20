@@ -1,79 +1,75 @@
 ---
 name: request-deviation
 description: Ask the owner of a clause to accept a knowing departure from it, as an issue on the tracker stated by the
-  corpus holding that clause. Use when the work in front of you is about to break a rule this corpus
-  states, and when someone says "request a deviation", "we need an exception" or "ask for a waiver". Use it as well,
-  unprompted, whenever a design you are about to propose departs from a clause a lookup just gave you. A deviation is
-  accepted by a named individual with the authority to accept the risk, and nothing in this session can name them.
+  corpus holding that clause. Use when the work in front of you, or a design you are about to propose, departs from a
+  clause this corpus states, and when someone asks for a deviation, an exception or a waiver.
 ---
 
 # Asking the owner of a clause to accept a departure
 
-A clause beside you says what has to happen, and the work in front of you is about to do something else. A departure
-somebody decided on, wrote down and gave a review date is managed risk. The same departure taken quietly is erosion, and
-a year later nobody can tell it from never having known the rule.
+A deviation is a departure from a clause that somebody with the authority accepted, wrote down and gave a review date.
+That makes it managed risk. The same departure taken quietly is erosion, and a year later nobody can tell it from never
+having known the rule. This skill writes the request that asks for the acceptance.
 
-Accepting the risk takes an individual with the authority to accept it. You cannot name that person from here. A policy
-and a standard both leave `owner` behind when they travel, and the copy beside you is frozen anyway. So the request
+Accepting the risk takes an individual with the authority to accept it, and you cannot name that person from here. A
+policy and a standard both leave `owner` behind when they travel, and the copy beside you is frozen. So the request
 leaves as an issue on the repository that published the corpus owning the clause.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json   # which corpus this is, what it consumes, and where each one publishes
 ```
 
-Use that path exactly as it appears. It is already absolute. An installed plugin sits in a cache of its own rather than
-in the repository you are working in.
+Use that path exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-**Producing the body needs nothing installed.** Filing it needs whichever client already signs in to the platform.
-Where that client is missing, the body is still the valuable part, so this skill prints it rather than giving up.
+Writing the body needs nothing installed. Filing it needs whichever client already signs in to the platform. Where
+that client is missing, print the body, because the body is the valuable part.
 
-## Never file one unasked
+The sections below run in order. Each one decides whether the next is needed.
 
-**Show the finished body and wait for a yes.** Every time, including when somebody asked you to request a deviation.
-This one says out loud that your organisation is about to break a rule, in which service, and how long for. It goes out
-under their name.
+## Ask before you file
 
-**A silent no is a no.** Where nobody answers, print the body and stop. Do not file it and mention it afterwards.
+**Show the finished body and wait for a yes**, every time, including when somebody asked you to request a deviation.
+It says that your organisation is about to break a rule, in which service and for how long, and it goes out under their
+name. Where nobody answers, print the body and stop.
 
-**One deviation, one issue.** A departure from two clauses is one request where the same work and the same reason cover
-both, and `departs-from` takes them both. Two pieces of work are two requests.
+**File one request per piece of work.** A departure from two clauses is one request where the same work and the same
+reason cover both, and `departs-from` takes both. Two pieces of work are two requests.
 
-## Decide whether this is a deviation
+## Decide that it is a deviation
 
-**A deviation is a departure you have decided on and not yet taken.** The work is designed, the clause says otherwise,
-and somebody has to say yes before it lands. An incident that left no time for the question is the one case where the
+A deviation is a departure you have decided on and not yet taken. The work is designed, the clause says otherwise, and
+somebody has to say yes before it lands. An incident that left no time for the question is the one case where the
 request follows the departure.
 
-Five things are not deviation requests, and each goes somewhere else.
+Five other things each have their own route:
 
-* **A clause you think is wrong** is a finding, and `raise-finding` is the skill for it. A finding says you noticed
-  something. This asks somebody to carry a risk, and they are different questions to put to the same people.
-* **A clause you have misread** is neither. Ask `standards-lookup` or `policy-lookup` for the wording again, and read
-  what it actually obliges.
+* **A clause you think is wrong** is a finding, and `raise-finding` files it. A finding reports what you noticed. A
+  request asks somebody to carry a risk.
+* **A clause you may have misread** needs its wording again. Ask `standards-lookup` or `policy-lookup`, and read what it
+  obliges.
 * **A departure from a `SHOULD` or `SHOULD NOT` in a standard** needs nobody's acceptance. Say why in the change, and
-  file nothing from here.
-* **A shortcut that breaks no clause** is technical debt. It is still recorded, dated and owned, and the record takes
-  `none` in `departs-from`. There is no clause owner to ask, so nothing is filed from here.
-* **Work already inside the clause** is nothing at all. A request to depart from a rule you are keeping wastes the
-  reader and teaches them to skim the next one.
+  file nothing here.
+* **A shortcut that breaks no clause** is technical debt. It is still recorded, dated and owned, with `none` in
+  `departs-from`. No clause owner is there to ask, so file nothing here.
+* **Work already inside the clause** needs nothing. A request to depart from a rule you are keeping teaches its reader
+  to skim the next one.
 
 ## Read the clause before you ask
 
-**Quote the clause in the request, in the words the export carried.** Ask `standards-lookup` or `policy-lookup` for it.
-A request that paraphrases the rule is one the owner has to go and check before they can answer.
+**Quote the clause in the words the export has.** Ask `standards-lookup` or `policy-lookup` for it, because an owner
+reading a paraphrase has to go and check the rule before they can answer.
 
-**Read the record's own exceptions.** A policy export carries its `Exceptions` section whole, and a standard's rule
-says in its own words where it admits a departure. Some commitments admit none, and the record names them. Where the
-clause you are about to break is one of those, the answer is no before anybody reads the request. Say that, and stop.
+**Read the record's own exceptions.** A policy's export has its `Exceptions` section whole, and a standard's rule says
+in its own words where it admits a departure. Some commitments admit none, and the record names them. Where yours is
+one of those, the answer is no before anybody reads the request: say that, and stop.
 
-**Where the export carries neither policies nor standards, say so in the request.** `types` in `manifest.json` lists
-what travelled. A clause id that reached you from outside the export is one whose wording and exceptions you cannot
-check from here, and an owner reading that knows to check them instead.
+**Say in the request where the export has neither policies nor standards.** `types` in `manifest.json` lists what
+travelled. An owner reading a clause id you could not check from here knows to check its wording and exceptions.
 
 ## Pick the corpus that owns the clause
 
 `manifest.json` states a tracker for this corpus's own records under `tracker`, and one for each corpus it consumes
-under `sources`. A clause always belongs to a corpus, so the request goes to one of those.
+under `sources`. A clause always belongs to a corpus, so the request goes to one of those trackers.
 
 | Field                 | Type            | What it holds                                                      |
 |-----------------------|-----------------|--------------------------------------------------------------------|
@@ -90,48 +86,41 @@ under `sources`. A clause always belongs to a corpus, so the request goes to one
 | `sources[].shortcode` | string          | the prefix its records carry, as the `eng` in `eng:pol-DEVI.OWNER` |
 | `sources[].tracker`   | object          | where work about that corpus's records is filed, same keys         |
 
-**The shortcode on the clause id names the corpus that owns it.** `eng:pol-TRUS.SCREEN` belongs to the `sources` entry
-whose `shortcode` is `eng`, and the request goes to the tracker that entry states. A clause id carrying no shortcode
-belongs to the top-level corpus, and the request goes to its `tracker`.
+A tracker block is always there, and its `base` may be present and `null`. Test the value rather than the key.
 
-**A bare record id is not a clause id.** `pol-TRUS` names a whole policy, and a departure from every clause it carries
-is not what you are asking for. Name the clause, as `pol-TRUS.SCREEN`, and name each one where the work departs from
-two.
+* **The shortcode on the clause id names the owning corpus.** `eng:pol-TRUS.SCREEN` belongs to the `sources` entry
+  whose `shortcode` is `eng`, and the request goes to that entry's tracker. A clause id with no shortcode goes to the
+  top-level `tracker`.
+* **Name each clause, as `pol-TRUS.SCREEN`.** A bare `pol-TRUS` names a whole policy, and asks to depart from every
+  clause in it.
+* **A `base` of `null`, or a `target` of `none`,** means nothing here addresses that backlog. Say so, print the body,
+  and ask whoever is with you who owns the clause.
+* **A missing or unreadable `manifest.json`** means the plugin is not assembled as it should be. Say so, print the
+  body, and ask where it belongs.
 
-**Where `manifest.json` is missing or will not parse, stop and say so.** The plugin is not assembled as it should be.
-Print the body and ask whoever is with you where it belongs.
-
-**A tracker block is always there, and its `base` may be present and `null`.** Test the value rather than the key. A
-`base` of `null`, or a `target` of `none`, means nothing here addresses that backlog. Say so, print the body, and ask
-whoever is with you who owns the clause. Do not invent a repository.
-
-**A tracker is not `publishing`.** `publishing.base` is where a record is read, and on Azure DevOps that is a repository
-inside a project. The backlog is the project itself, so filing against `publishing.base` files nowhere.
+Read the address from `tracker`, and leave `publishing` alone. `publishing.base` is where a record is read. On Azure
+DevOps that is a repository inside a project, and the backlog is the project, so a request filed there files nowhere.
 
 ## Stay inside one organisation
 
-A deviation register is what one organisation keeps about itself. A request filed outside it publishes your engineering:
-which rule you are breaking, in which service, what you put in its place, and how long the gap stands. The maintainer
-of a corpus anybody can install never agreed to hold your risk, and cannot accept it on your behalf.
+A deviation register is what one organisation keeps about itself. A request filed outside it publishes your
+engineering: which rule you are breaking, in which service, what replaces it, and how long the gap stands. The
+maintainer of a corpus anybody can install never agreed to hold your risk, and cannot accept it for you.
 
-**Compare the owning tracker's `base` with the top-level `tracker.base`.** The same repository is the same people, and
-the request goes there. A different repository under the same account or organisation is still inside, so compare the
-segment naming the account. On a GitHub address that is the segment after the host, and on an Azure DevOps address it is
-the `<org>`. Two different platforms share no such segment, so treat them as two organisations unless somebody tells you
-otherwise.
+**Compare the owning tracker's `id` with the top-level `tracker.id` first.** The same `id` is one backlog, so the
+request goes there.
 
-**An `id` answers the first half of that in one comparison.** Two trackers stating the same `id` are one backlog, so the
-request goes there and nothing else needs reading. Two `id` values that differ still need the account compared, because
-two backlogs inside one organisation are ordinary.
+**Compare the account where the `id` values differ.** Two backlogs inside one organisation are ordinary. On a GitHub
+address the account is the segment after the host, and on an Azure DevOps address it is the `<org>`. Two platforms
+share no such segment, so treat them as two organisations unless somebody tells you otherwise.
 
-**Where the owner differs, or where you cannot tell, print the body and stop.** Ask whoever is with you who accepts
-this risk inside your own organisation. Never file it on a stranger's repository to find out.
+**Print the body and stop where the account differs, or where you cannot tell.** Ask whoever is with you who accepts
+this risk inside your own organisation. File only on a backlog your organisation holds.
 
-**Where either `base` is `null`, there is nothing to compare.** A corpus with no backlog says nothing about who owns it,
-so the comparison cannot answer. Print the body and ask.
+**Print the body and ask where either `base` is `null`.** A corpus with no backlog says nothing about who owns it.
 
-**Consuming a public corpus is what this is for.** A corpus published by somebody you have no relationship with states
-rules you chose to take on, and a departure from one of them is yours to own. Record it at home.
+Consuming a public corpus is what this protects. A rule you chose to take on from a stranger's corpus is yours to own,
+so record the departure at home.
 
 ## Write the body
 
@@ -185,56 +174,52 @@ Claude Code, in session 01J8ZC4M6QK2XR7VN0PYWTB3AE, working in acme/payments at 
 settlement import. The export beside it was taken at 89d6f54.
 `````
 
-**The title is the departure in one line.** Write the sentence somebody scanning a list of issues can act on. "A
-deviation request for the payments API" names nobody's rule and no piece of work.
+**Write the title as the departure in one line**, naming the work and the rule, so somebody scanning a list of issues
+can act on it. "A deviation request for the payments API" names nobody's rule and no piece of work.
 
-Each key of the block, and what to put in it:
+Each key of the block, in this order:
 
-* **`corpus`** is the top-level `corpus` from `manifest.json`. It is the corpus that will hold the record, which is the
-  one departing rather than the one that wrote the rule.
-* **`id`** is `dev-` and a short slug of the title. You cannot see what ids that corpus already holds, so treat this as
-  a suggestion. Whoever writes the record settles it.
-* **`status`** is `draft`. Nobody has accepted this yet, and that is the whole reason the issue exists.
-* **`departs-from`** is the clause ids, each one scoped exactly as you found it. A request names at least one, because
-  a departure from no clause has nobody to ask.
-* **`risk`** is `high`, `medium` or `low`: how bad the risk is once what compensates is working, and never how bad the
-  clause's authors thought it was. Rate it from `## What the risk is`, and expect the owner to move it.
+* **`corpus`** is the top-level `corpus` from `manifest.json`: the corpus that will hold the record, which is the one
+  departing.
+* **`id`** is `dev-` and a short slug of the title. You cannot see the ids that corpus already has, so whoever writes
+  the record settles it.
+* **`status`** is `draft`, because nobody has accepted this yet.
+* **`departs-from`** is the clause ids, each scoped exactly as you found it. A request names at least one, because a
+  departure from no clause has nobody to ask.
+* **`risk`** is `high`, `medium` or `low`: how bad the risk is once what compensates is working. Rate it from
+  `## What the risk is`, and expect the owner to move it.
 * **`review-by`** is the day somebody looks at this again, quoted. Propose the earliest date the work makes possible,
   and say in `## How it closes` what you based it on. A `high` rating brings that date inside six months, which the
   corpus warns on.
-* **`applies-to`** and `tags` are optional, and go after `review-by` in that order. Nothing else belongs in the block.
+* **`applies-to`** and `tags` are optional, and go after `review-by` in that order. The block takes no other key.
 
-**`owner` and `accepted-on` are the answer, so the block leaves them out.** The individual accepting the risk is what
-the request asks for, and the day they accept it is the day they reply. Proposing a name here reads as a decision
-somebody already took.
+**Leave `owner` and `accepted-on` to the reply.** The individual accepting the risk is what the request asks for, and
+the day they accept is the day they reply. A name proposed here reads as a decision somebody already took. `owner` is
+required on every deviation record, so the reply unblocks the record as well as the work. Say so when you hand the
+request over.
 
-**`owner` is required whatever the status, so the record cannot land without one.** A draft deviation missing it fails
-validation. The reply is what unblocks the record as well as the work, which is worth saying when you hand the request
-over.
+**Give every departure an end.** "Permanent", "indefinitely" and "until further notice" each describe a rule that
+needs rewriting, and a corpus validating the record warns on all three.
 
-**Write nothing open-ended.** "Permanent", "indefinitely" and "until further notice" each describe a rule that needs
-rewriting rather than a deviation, and a corpus validating the record warns on all three.
-
-**Keep the five sections short, and write them as the record will read.** What happens instead, what it buys, what can
+**Keep the five sections short, and write them as the record will read**: what happens instead, what it buys, what can
 still go wrong, what makes that survivable, and what has to be true for it to end. Where you cannot fill one honestly,
-say that in it. A departure with nothing compensating it is an unmanaged risk, and the owner has to know that before
-they accept it.
+say so in it. A departure with nothing compensating it is an unmanaged risk, and the owner has to know that first.
 
-**`## Who is asking` names the agent, the session, the repository, the commit and the work.** Add `manifest.json`'s own
-`commit`, because that says which export you read the clause from. **Name any of those you cannot reach**, rather than
-leaving it out. The five sections above are what a deviation record takes, and this one is not, so whoever writes the
-record keeps it in the issue.
+**`## Who is asking` names the agent, the session, the repository, its commit and the work.** Add `manifest.json`'s
+own `commit`, because that says which export you read the clause from. Name any of those you cannot reach, so a
+reviewer can tell a session with no id from one that did not say. A deviation record has no such section, so whoever
+writes the record keeps it in the issue.
 
 ## File it
 
-**Use the client that already signs in to the platform.** Never ask for a credential, and never offer to edit the copy
-under `${CLAUDE_PLUGIN_ROOT}`.
+Use the client that already signs in to the platform, with the credential it already has. Ask nobody for a credential.
+Leave the copy under `${CLAUDE_PLUGIN_ROOT}` as it is, and offer no edit to it, because a change there reaches nobody.
 
-Write the body to a file first. Passing it inline turns every backtick and quote into a quoting problem, and the block
-is full of both.
+Write the body to a file first, because passing it inline turns every backtick and quote in the block into a quoting
+problem.
 
-The section to follow is chosen by the tracker's `target`, every time. Read it from the tracker of the corpus that owns
-the clause, which may file on a different platform from the one you are holding.
+Choose the section below by the `target` of the tracker of the corpus owning the clause, which may be on a different
+platform from the one you are holding.
 
 ### GitHub
 
@@ -244,68 +229,64 @@ the clause, which may file on a different platform from the one you are holding.
 gh issue create --repo <owner>/<repo> --title "<the title>" --body-file <path> --label kac:deviation
 ```
 
-**A repository that holds no `kac:deviation` label refuses the whole command.** The error names the label. Run it again
-with no `--label`, and say in your reply that you filed it unlabelled and why. Never let a missing label cost the
-request, because the work is waiting on the answer.
+**Run it again with no `--label` where the repository has no `kac:deviation` label.** The error names the label. Say
+in your reply that you filed it unlabelled and why, because the work is waiting on the answer.
 
-**A command that fails on sign-in or on permission is not a failure to report.** `gh auth status` says whether you are
-signed in to that host. A repository with issues turned off, or an account without the rights to open one, ends the same
-way: print the body and say which of the two it was.
+**A failure on sign-in or on permission ends with the body printed.** `gh auth status` says whether you are signed in
+to that host. A repository with issues turned off, or an account without the rights to open one, ends the same way.
+Say which it was.
 
 ### Azure DevOps
 
 `target` is `azure-devops`, and `base` is the project holding the backlog, as `https://dev.azure.com/<org>/<project>`.
-`az` wants the two segments apart: the organisation follows the host, and the project follows the organisation.
+`az` takes the two segments apart: the organisation follows the host, and the project follows the organisation.
 
-**A project name arrives percent-encoded, and `az` wants it spelled out.** A base ending
-`Engineering%20Standards` names a project `az` takes as `Engineering Standards`. Decode every escape before you pass it.
+**Decode the project name before you pass it**, because `base` arrives percent-encoded. A base ending
+`Engineering%20Standards` names the project `Engineering Standards`.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:deviation"
 ```
 
-**A tag is what this platform calls a label**, so `System.Tags` is where the mark goes. Azure creates a tag it does not
-already hold rather than refusing, so nothing is lost here. Where the command fails for any other reason, print the body
-and say so.
+**A tag is what this platform calls a label**, so `System.Tags` takes the mark. Azure creates a tag it does not
+already have. Where the command fails for any other reason, print the body and say so.
 
 #### The area path
 
-**`area` says which area path inside the project the item belongs to.** One project gives one backlog to any number of
-corpora, so the area is what separates the work about one corpus's clauses from the rest.
+**`area` says which area path inside the project the item belongs to**, because one project can give one backlog to
+any number of corpora.
 
 Where the tracker states one, add `System.AreaPath` to `--fields` as the project and the area joined by a backslash.
-Azure Boards separates an area path with backslashes, and `area` arrives separated by forward slashes, so convert every
-one: an `area` of `kac-it-swdev/subteam` goes in as `<project>\kac-it-swdev\subteam`.
+Azure Boards separates an area path with backslashes, and `area` arrives with forward slashes, so convert every one:
+an `area` of `kac-it-swdev/subteam` goes in as `<project>\kac-it-swdev\subteam`.
 
 ```bash
 az boards work-item create --org https://dev.azure.com/<org> --project <project> --type Issue --title "<the title>" --fields "System.Description=@<path>" "System.Tags=kac:deviation" "System.AreaPath=<project>\<area>"
 ```
 
-**Where `area` is null, leave the field out.** The command is then the one above it, and the item lands in the project's
-default area.
+**Leave the field out where `area` is null.** The item then lands in the project's default area.
 
-**An area path that does not exist, or one you have no rights to file into, fails the whole command.** Run it again
-with `System.AreaPath` left off, and say in your reply that it landed in the project's default area and why. Never let
-a wrong area cost the request.
+**Run it again without `System.AreaPath` where the area is refused**, because it does not exist or you cannot file
+into it. Say in your reply that the item landed in the project's default area, and why.
 
 ### Where the tracker files nowhere
 
-`target` of `none` names a corpus with no backlog this export can address. There is nowhere to file.
-Print the whole body, name the corpus that owns the clause, and ask whoever is with you who accepts this risk.
+A `target` of `none` names a corpus with no backlog this export can address. Print the whole body, name the corpus
+that owns the clause, and ask whoever is with you who accepts this risk.
 
 ### Where no client is here
 
-Print the whole body, name the repository it belongs on, and say plainly that you could not file it. Ask whoever is with
-you to paste it. A request read out to somebody is worth more than one lost to a missing tool.
+Print the whole body, name the repository it belongs on, and say that you could not file it. Ask whoever is with you
+to paste it, because a request read out to somebody still reaches the owner.
 
 ## Say what you did
 
-Close by naming the issue you opened and its URL, or the repository the body still needs pasting on. Where you filed it
-unlabelled, or in the project's default area, say so. Where you left something out of `## Who is asking`, say which.
+Name the issue you opened and its URL, or the repository the body still needs pasting on. Say where you filed it
+unlabelled or in the project's default area, and which parts of `## Who is asking` you could not reach.
 
-**Say that nothing is accepted yet.** The issue is a question, and the work departs from the clause until an individual
-with the authority answers it. Name what you are waiting for: a person, and a review date they are content with.
+**Say that nothing is accepted yet.** The work departs from the clause until an individual with the authority answers.
+Name what you are waiting for: a person, and a review date they are content with.
 
-**Say that the record is still to write.** The answer gives `owner` and `accepted-on`, and the deviation then lives as a
-record in the corpus that is departing. Filing the request does not put it there, and an issue nobody turns into a
-record leaves the departure undocumented in the only place a reader looks.
+**Say that the record is still owed.** The answer gives `owner` and `accepted-on`, and the deviation then lives as a
+record in the corpus that is departing. An issue nobody turns into a record leaves the departure undocumented in the
+only place a reader looks.

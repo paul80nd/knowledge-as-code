@@ -345,6 +345,14 @@ Cite as `std-PLUGIN.a-skill-says-what-its-corpus-did-not-carry`.
 - A skill **MUST** say that an empty search states only that the estate has not written this down.
 - A skill **MUST NOT** read an obligation out of a record about something else.
 
+### A skill states what it is for, and the reason for each rule it gives
+
+Cite as `std-PLUGIN.a-skill-states-what-it-is-for-and-the-reason-for-each-rule-it-gives`.
+
+- A skill **SHOULD** state what it is for, the intent of the type it reads, and the reason behind each rule it gives.
+- A skill **SHOULD** set out steps only where the order is the content: a record of a type an agent follows, or a write-back or review whose order a rule fixes.
+- A skill's description **SHOULD** name each case that triggers it, and each case once.
+
 ### A skill writes back to the tracker the corpus states
 
 Cite as `std-PLUGIN.a-skill-writes-back-to-the-tracker-the-corpus-states`.

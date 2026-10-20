@@ -1,15 +1,18 @@
 ---
 name: fix-lookup
 description: Find out whether somebody here has already solved this problem, in the fixes that travel with this
-  plugin. Use when someone asks "has anyone hit this before", "is this a known issue", "why does X fail", or pastes an
-  error message at you. Use it as well, unprompted, before you debug anything, and before you file a finding about a
-  problem you just met. Search the symptom before you spend an hour on the cause.
+  plugin. Use when someone asks whether a problem is known, or pastes an error message at you. Use it as well,
+  unprompted, before you debug anything, and before you file a finding about a problem you just met.
 ---
 
 # Asking whether a problem is already solved
 
-The corpus travels with this plugin as data. You read it with the tools you already have. There is nothing to install
-and nothing to run.
+A fix states one problem and how it was resolved. Search here before you debug, because a fix exists where the problem
+already cost somebody real time. Where the symptom matches and a person has verified the fix, follow its resolution as
+written. Where nobody has verified it, use it as a lead to test. Quote and cite the fix either way, so the person you
+work with can see what you relied on.
+
+The corpus travels with this plugin as data. There is nothing to install and nothing to run.
 
 ```text
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                   # what this export is, and where each corpus publishes
@@ -17,31 +20,24 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/fixes/<record>.json             # one fix this corp
 ${CLAUDE_PLUGIN_ROOT}/corpus/fixes/<shortcode>/<record>.json # one fix a corpus this one consumes wrote
 ```
 
-Use those paths exactly as they appear above. They are already absolute. An installed plugin sits in a cache of its own
-rather than in the repository you are working in. A path you build relative to the working directory resolves nowhere.
+Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-## A fix is one problem with one resolution
+A fix answers a symptom. A planned task is a process, and an incident with a diagnosis tree is a runbook. Each is its
+own type, and `types` in `manifest.json` says whether it travelled.
 
-**Search here first, and debug second.** A fix exists because the problem cost somebody real time. The second person
-to meet it searches for a minute instead of debugging for an hour.
+## Search the symptom
 
-**Are you looking at a symptom, or running a procedure?** A symptom is a fix. A planned task is a process, and an
-incident with a diagnosis tree is a runbook. Both are different types that may not have travelled at all.
+Each fix is its own file, because a fix is read whole. Search `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/`, and read the files
+that hit.
 
-## Search the symptom, not the cause
+**Search the words you arrived with.** `symptom-keywords` is filled with error text, service names and what somebody
+types before they understand the problem, because a fix is written for a reader who has the symptom and not the cause.
 
-**Search the words you arrived with.** A fix is written for a reader who has the symptom and does not yet know what
-causes it. `symptom-keywords` is filled with error text, service names and what somebody types before they understand
-the problem, so search that field before anything else.
+**Cut an error message down to its stable words.** Drop the version numbers, the paths, the timestamps and the ids,
+because those differ on every machine. `no matching distribution found` is what a keyword list contains.
 
-**Cut the error message down.** A whole line matches nothing. Drop the version numbers, the paths, the timestamps and
-the ids, because those differ on every machine. `no matching distribution found` is what a keyword list contains.
-
-**There is no flat file here.** A fix is read whole, so the record is the unit and each one is its own file. Search
-`${CLAUDE_PLUGIN_ROOT}/corpus/fixes/`, and read the files that hit.
-
-**Read `Symptom` on every hit before you pick one.** Each fix describes one problem, so two hits are two problems and
-one of them is not yours. The title is the symptom in one line and two problems often look alike in one line.
+**Read `Symptom` on every hit before you pick one.** Each fix describes one problem, and two problems often look alike
+in a one-line title.
 
 ## Read the fix
 
@@ -67,109 +63,79 @@ Every key in `fields` is present, and is `null` where the record left it empty. 
 | `path`                    | string                   | where the record sits in its own repository              |
 | `links`                   | object                   | the built link to that record, under `human`             |
 
-**`trust` sits beside `fields`, not inside it.** So does `path`, and so does `links`.
+`trust`, `path` and `links` sit beside `fields`. `Why it happens` is optional, so it is absent from `sections` where
+the record has none: test for the key before you read it.
 
-**An optional section is absent from `sections` rather than `null`.** `Why it happens` is the one this type exports, so
-test for the key before you read it.
+Each entry of `verified` is an object with two keys. `at` is a UTC timestamp, as `2026-09-02T17:27:31Z`. `by` names a
+person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`. Each actor appears once, with the last time it
+checked, so the list says who has read the fix and not how often.
 
-**Each entry of `verified` is an object of two keys.** `at` is a UTC timestamp, as `2026-09-02T17:27:31Z`. `by` names a
-person as `human:paul.law`, or an agent as `symptom-sweep/1.4.0`. An actor is written once, and `at` is the last time
-that actor checked, so the list says who has read the fix and not how often.
+**Report Symptom, Environment, Cause and Resolution together.** A resolution read without its cause is half an answer,
+and a reader who cannot see the environment cannot tell whether the steps apply to them.
 
-**Report Symptom, Environment, Cause and Resolution together.** A resolution read without its cause is half an
-answer. A reader who cannot see the environment cannot tell whether the steps apply to them at all.
-
-**A bracketed id inside a section is a cross-reference.** The export drops the link definitions at the foot of the
-record, so `[std-IDEM]` arrives as the id alone. The id is the address, so search it rather than reporting broken
-markdown.
+**Search a bracketed id inside a section**, as `[std-IDEM]`. The export drops the link definitions, so the id alone is
+the cross-reference.
 
 ## Say how far the fix has been taken on trust
 
-**Report `trust` with every answer.** It says who checked the resolution, and it decides whether the reader is applying
-a settled answer or testing one. `kac` derives it from `verified`, so the record cannot claim a tier its own list does
-not support.
+Report `trust` with every answer, because it decides whether the reader applies a settled answer or tests one. `kac`
+derives it from `verified`, so a record cannot claim a tier its own list does not support.
 
-* **`human-reviewed`.** A person checked that the problem is real and the resolution works. Give it as the answer.
-* **`machine-confirmed`.** Agents alone. Somebody reproduced the symptom and ran the resolution, and no person has
-  reviewed either. Give it as worth trying, and say who ran it.
-* **`unverified`.** `verified` is empty. Nobody has checked anything.
+* **`human-reviewed`**: a person checked that the problem is real and the resolution works. Give it as the answer.
+* **`machine-confirmed`**: agents alone reproduced the symptom and ran the resolution. Give it as worth trying, and say
+  which agent ran it, from `by`.
+* **`unverified`**: `verified` is empty, and nobody has checked anything.
 
-**Quote the newest `at` in `verified` alongside the tier.** A resolution checked two years ago and a resolution checked
-last week are the same tier and not the same answer.
-
-**Read `by` before you weigh a machine-confirmed fix.** It names the agent and its version, which is what tells a reader
-whether the run that verified it resembles the one in front of them.
+Quote the newest `at` beside the tier, because a resolution checked two years ago and one checked last week share a
+tier and not an answer.
 
 ## Say when a fix is unsettled
 
 Read `status` and `review-by` before you hand anybody a resolution, and tell them what you saw:
 
-* **`status: draft`.** Nobody has verified the resolution. Say so before you hand it over, and treat it as a
-  suggestion to test rather than an answer to follow.
-* **`status: superseded`.** Something replaced this. Find what, before you follow it.
-* **`status: fixed-upstream`.** The cause is gone. The entry stays for whoever searches for the symptom, so read it for
-  the history and expect the resolution to be unnecessary. Meeting the symptom today means something else produces it.
-* **`review-by` in the past.** Nobody has re-checked the fix since that date, and the thing it repairs may have been
-  rewritten.
+* **`status: draft`**: nobody has verified the resolution. Give it as a suggestion to test.
+* **`status: superseded`**: something replaced this. Find that, and quote it.
+* **`status: fixed-upstream`**: the cause is gone, and the record stays for whoever searches the symptom. Meeting the
+  symptom today means something else produces it.
+* **`review-by` earlier than today**: nobody has re-checked the fix, and the thing it repairs may have changed.
 
-An export is a copy taken on a day, and it reads the same however long ago that was. `generatedAt` and `commit` in
-`manifest.json` say when it was taken, and are worth quoting alongside any of these.
+The export reads the same however old it is. Quote `generatedAt` and `commit` from `manifest.json` beside any of these.
 
 ## Read the prefix on an id
 
-**A prefix names the corpus that wrote the fix.** `eng:fix-0004` was published by the corpus whose shortcode is `eng`,
-and a bare `fix-0004` was written here. The shortcode moves out of the id and becomes the directory, so `eng:fix-0004`
-is at `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/eng/fix-0004.json`.
+**A prefix names the corpus that wrote the fix.** `eng:fix-0004` was published by the corpus with shortcode `eng`, and
+a bare `fix-0004` was written here. `eng:fix-0004` is at `${CLAUDE_PLUGIN_ROOT}/corpus/fixes/eng/fix-0004.json`. Look
+the `shortcode` up in `sources` in `manifest.json`, and name that corpus in words.
 
-**`shortcode` is the key into `sources`** in `manifest.json`, which names the producing corpus, the version that
-travelled, and where it publishes. Look it up before you say anything about where a fix came from, and name the corpus
-in words.
+## Link the fix, and read its source
+
+Quote the record's `links.human` to link the fix. To read the source, load `corpus-retrieval` and bring it the record's
+`path`. A fix has no anchor, because the whole record is the unit.
 
 ## Say what stayed behind
 
-**`types` in `manifest.json` is the list of what travelled.** Read it before you say anything is missing. Where
-`services` is not in it, the ids in `applies-to` name records that did not travel, and you can report the ids and no
-more.
+`types` in `manifest.json` lists what travelled. Read it before you say anything is missing, and send the reader to the
+published fix for the rest.
 
-Two things stay behind whatever `types` says:
+* **The services in `applies-to`** are here only where `services` travelled. Otherwise report the ids alone.
+* **Who stewards the fix** stays behind, because `owner` is a fact about the corpus that wrote it.
+* **How the author found it, and what it relates to**, stay in the record's `How we found it` and `Related` sections.
+  The diagnostic route is often the reusable part, so fetch the record where the resolution does not fit your case.
 
-* **Who stewards the fix.** `owner` is a fact about the corpus that wrote it.
-* **How the author found it, and what it relates to.** A fix may have a `How we found it` section and a `Related`
-  section, and neither is exported. The diagnostic route is often the reusable part, so fetch the record where the
-  resolution does not fit your case.
+## Say when the nearest fix is about a different problem
 
-## Link to the fix, and read its source
-
-**Quote the record's `links.human` to link the fix.** The record already has it, built for the corpus that wrote it.
-
-**Load the `corpus-retrieval` skill to read the source.** It says how to fetch the file through the client that
-authenticates to that platform, and what to say where nothing reaches it. Bring it the record's `path`. A fix has no
-anchor of its own, because the whole record is the unit.
-
-## Say when the fix is about a different problem
-
-A hit that is not yours is common here, because `symptom-keywords` is deliberately over-filled. `pip` and `macos` reach
-a fix about a linter and a fix about a build alike. Answer that case in three steps:
-
-1. **Say the export describes no fix for your symptom**, in the words you searched.
-2. **Name the nearest fix, and say what problem it is about.** Quote its `Symptom` as the author wrote it.
-3. **Leave its resolution alone.** A resolution is verified against the cause its own record states, and yours is a
-   different cause.
-
-Handing over a resolution without saying it was written for something else is worse than handing over nothing. It
-arrives verified, and the verification does not reach your case.
+A hit that is not yours is common, because `symptom-keywords` is filled generously: `pip` and `macos` reach a fix about
+a linter and a fix about a build alike. Say the export describes no fix for your symptom, in the words you searched.
+Quote the nearest fix's `Symptom`, and say what problem it is about. Leave its resolution out of your answer, because
+it was verified against a different cause, and a verified resolution handed over for the wrong problem reads as settled.
 
 ## Say when there is nothing
 
-Where no fix matches, say the export describes no problem like this one, and name the corpus and every entry in
-`sources` from `manifest.json`, so a reader knows what was searched.
+Search a second time with other words before you answer, because the error message, the tool that printed it and the
+task you were doing are three vocabularies. Where no fix matches, say that this export describes no problem like this
+one. Name the corpus and every entry in `sources` from `manifest.json`, so the reader knows what was searched. An empty
+search states only that the estate has not written this one down. Somebody may have solved it last week and told
+nobody.
 
-**Try the words a second time before you answer.** An empty search is usually a search of your own vocabulary. The error
-message, the tool that printed it, and the thing you were doing are three different sets of words, and a keyword list is
-written for one reader who arrived with one of them.
-
-**An empty search is not evidence the problem is new.** It says the estate has not written this one down. Somebody may
-have solved it last week and told nobody.
-
-**What you solve next is worth filing.** A fix is verified, and a session cannot verify its own work, so what you
-noticed goes back as a finding for somebody else to check. Load the `raise-finding` skill and let it write the issue.
+What you solve next is worth filing. A session cannot verify its own fix, so load `raise-finding` and let it file what
+you noticed for somebody else to check.
