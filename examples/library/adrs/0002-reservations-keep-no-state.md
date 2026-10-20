@@ -55,7 +55,7 @@ Resuming a half-finished reservation in a later session is deliberately not supp
 * **The lending API is the one owner of every hold.** A change to what a hold records is a change in `lending`, never a
   second copy in `platform`.
 * **A payment taken after the borrower closes the browser leaves its hold provisional.** The flow keeps nothing that
-  could finish the hold once the borrower has gone, so branch staff match the payment to the hold by hand.
+  could finish the hold once the borrower has gone, and nothing reconciles the payment with the hold.
 
 [itg-card-payments]: ../integrations/card-payments.md
 [svc-lending]: ../services/lending.md
