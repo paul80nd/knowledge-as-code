@@ -6,7 +6,8 @@
 # <cases dir> keeps each case in house/ or control/, which is how score.sh tells the two kinds apart.
 # A case listed in <cases dir>/excluded.tsv is not staged, so no session runs it.
 # <stage>/plugin is the plugin less hooks/build-index.json, so its hook prints nothing, for the plugin and none arms.
-# <stage>/hook is the plugin as built, whose hook pushes the build index, for the hook arm.
+# <stage>/hook is the plugin as built, whose hook pushes the build index, for the hook arm. A plugin with no
+# hooks/build-index.json is staged as well, and its hook arm pushes nothing.
 # <stage>/prose is a plugin with no components, whose cases append the generated CLAUDE.md to the system prompt.
 set -eu
 
@@ -25,8 +26,7 @@ if [ ! -f "$plugin/.claude-plugin/plugin.json" ] || [ ! -d "$plugin/corpus" ]; t
   exit 1
 fi
 if [ ! -f "$plugin/hooks/build-index.json" ]; then
-  echo "stage.sh: $plugin ships no hooks/build-index.json, so the hook arm would push nothing" >&2
-  exit 1
+  echo "stage.sh: $plugin ships no hooks/build-index.json, so the hook arm has no build index to push" >&2
 fi
 if [ -e "$stage" ] && [ -n "$(ls -A "$stage")" ]; then
   echo "stage.sh: $stage is not empty" >&2
@@ -52,7 +52,7 @@ for arm in plugin hook; do
   mkdir "$stage/$arm/evals"
   cp -R "$cases/." "$stage/$arm/evals/"
 done
-rm "$stage/plugin/hooks/build-index.json"
+rm -f "$stage/plugin/hooks/build-index.json"
 
 printf '{ "name": "prose-arm", "version": "0.0.0" }\n' > "$stage/prose/.claude-plugin/plugin.json"
 mkdir "$stage/prose/evals"

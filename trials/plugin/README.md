@@ -17,7 +17,9 @@ Whoever decides whether a corpus ships its plugin, or how the plugin delivers it
 
 The plugin and hook arms differ by one file. `stage.sh` deletes `hooks/build-index.json` from the plugin arm's copy,
 so its build-index hook prints nothing. The hook arm keeps it, so its hook pushes the build index the first time the
-session reads or edits a file through a file tool. `stage.sh` refuses a plugin that ships no `hooks/build-index.json`.
+session reads or edits a file through a file tool. A plugin whose bundle trimmed the build index ships no
+`hooks/build-index.json`, as `examples/library` does. `stage.sh` warns and stages it anyway, and its hook arm pushes
+nothing.
 
 `claude plugin eval` leaves a hook's context out of `trace.jsonl`. Read whether the build index arrived from the
 session's own transcript, under `config/projects/` in the folder `--keep-temp` kept, where it is an attachment of type
