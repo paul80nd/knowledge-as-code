@@ -1,0 +1,52 @@
+# Asked of examples/library alone. ../README.md says how a run is staged, prompted and scored.
+# The corpus is its own source, so each source points at the line of the record that states the answer.
+reader: new member of the consortium's digital team
+section: examples/library/
+questions:
+  - id: L01
+    topic: the estate's words
+    question: >-
+      When somebody takes a book home, are they borrowing a title or an item? Our tickets use both words.
+    answer: >-
+      An item. A title is the catalogued work, and an item is one physical copy of it with its own barcode; only an item
+      can be lent. Partial where the answer is right and cites no glossary entry.
+    doc:
+      page: examples/library/glossary/example-libraries.md
+      anchor: item
+      quote: "A popular title is one work and thirty items. Only an item can be lent."
+    source:
+      path: examples/library/glossary/example-libraries.md
+      line: 44
+      shows: "the Item entry's Not line, which says only an item can be lent"
+  - id: L02
+    topic: how the estate works
+    question: >-
+      If the service that resizes book-cover images goes down, what does a borrower see on the catalogue pages?
+    answer: >-
+      Every cover image the edge has not already cached breaks, across the whole estate, because the CDN has no origin
+      to fetch from. That is worse than the ordinary case, where a title with no supplier image shows a placeholder.
+      Partial where the answer gives only the placeholder, or names no explanation.
+    doc:
+      page: examples/library/explanations/covers-path.md
+      anchor: what-a-borrower-sees-when-a-leg-fails
+      quote: "every uncached image breaks across the estate"
+    source:
+      path: examples/library/explanations/covers-path.md
+      line: 62
+      shows: "a failure of svc-thumbnailer leaves svc-covers-cdn with no origin"
+  - id: L03
+    topic: what the estate offers
+    question: >-
+      Can a borrower reserve a book that is sitting at another branch today, and would it cost them anything?
+    answer: >-
+      Not yet. Reservations are still being built: production is deployed and nothing links to it. When live, a hold
+      on an item at another branch carries a fee that covers the transport. Partial where the answer gives the fee and
+      not the status, or the status and not the offering.
+    doc:
+      page: examples/library/offerings/reservations.md
+      anchor: known-limitations
+      quote: "Production is deployed, and nothing links to it yet."
+    source:
+      path: examples/library/offerings/reservations.md
+      line: 5
+      shows: "status: building"
