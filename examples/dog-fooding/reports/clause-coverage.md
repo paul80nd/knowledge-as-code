@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-20T16:06:00Z
+  at: 2026-10-21T09:30:00Z
   by: claude-code/opus-5.5
   report: coverage
   tool: kac/0.35.0
 sources:
-  - { resource: example-dogfooding, version: "0.72.1" }
+  - { resource: example-dogfooding, version: "0.72.2" }
   - { resource: example-engineering, version: "0.37.0" }
 verified:
-  - { at: 2026-10-20T16:08:00Z, by: human:paul.law }
+  - { at: 2026-10-21T09:31:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -458,7 +458,7 @@ where the rule and the practice differ.
 | `PATCH`   | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | Dependabot proposes an update weekly, and no standard states the cadence.                                                  |
 | `LICENCE` | MUST     | `eng:std-DEPS`                                         |                         |                                                                                                    |                       | Covered             | A licence is checked against the allowed list before adoption.                                                             |
 | `OBLIGE`  | MUST     |                                                        |                         |                                                                                                    |                       | Gap                 | Every dependency's licence is checked once at adoption, and nothing revisits it while `kac` ships.                         |
-| `MALWARE` | MUST     |                                                        | `dev-package-unscanned` |                                                                                                    |                       | Gap                 | Nothing scans the package the tool ships.                                                                                  |
+| `MALWARE` | MUST     |                                                        | `dev-package-unscanned` |                                                                                                    |                       | Gap                 | Nothing scans the packages this repository publishes.                                                                      |
 | `RUNMAL`  | MUST     |                                                        |                         |                                                                                                    |                       | Out of scope        | Nothing here runs a system of its own. Every job runs on a GitHub-hosted runner that GitHub rebuilds.                      |
 | `SOURCE`  | MUST     | `std-CONFIG`, `std-CI`, `eng:std-CONT`, `eng:std-DEPS` |                         | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0004`, `ctl-0005`, `ctl-0006`, `ctl-0011`, `eng:ctl-0001` |                       | Covered             | An action is pinned to a commit, and a package comes from nuget.org.                                                       |
 | `REPO`    | MUST     | `std-CI`, `eng:std-DEPS`                               |                         | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`                                         |                       | Covered             | Every artefact is a version on a registry that keeps it.                                                                   |

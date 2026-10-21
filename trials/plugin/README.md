@@ -75,8 +75,8 @@ corpus it runs against.
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
 | [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 24 house, and the pilot's 3 controls |
-| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 4 house                              |
-| [`cases/library/`](cases/library/)         | `examples/library`     | 2 house                              |
+| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 5 house                              |
+| [`cases/library/`](cases/library/)         | `examples/library`     | 4 house                              |
 | [`cases/payments/`](cases/payments/)       | `examples/payments`    | 1 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
@@ -390,3 +390,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [The ask-the-corpus router](runs/2026-10-20-1026-ask-the-corpus.md)              |      5 | `examples/dog-fooding`                |       12 | The router on 3 cases, plugin arm only, 3 runs a case             |
 | [The dog-fooding cut, complete](runs/2026-10-20-1027-dogfooding-cut-complete.md) |      5 | `examples/dog-fooding`                |       44 | #923's cut chosen again from the complete prose text              |
 | [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |
+| [#987 build cases](runs/2026-10-21-987-build.md)                                 |      5 | `examples/library`, `dog-fooding`     |       18 | The three build cases, plugin and none arms, 3 runs a case        |

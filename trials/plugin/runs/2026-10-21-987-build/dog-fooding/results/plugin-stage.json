@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T08:55:46.517Z",
+  "durationSeconds": 112,
+  "costUsd": 2.2824009999999997,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "second-package-unscanned",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-dogfooding",
+        "version": "0.72.2",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "second-package-unscanned",
+      "dir": "evals/house/second-package-unscanned",
+      "source": "mixed",
+      "promptMarkdown": "kac-lint is ready for its first release. Add a GitHub Actions workflow at `.github/workflows/publish.yml` that packs\nit and publishes it to nuget.org when I push a version tag, and tell me what it does.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "pol-TRUS",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-scan--raises",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "pol-TRUS\\.MALWARE",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-scan--workflow",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/publish.yml"
+            },
+            "pattern": "(clamscan|clamav|ClamAV|freshclam|[Vv]irus[Tt]otal|MpCmdRun|[Mm]alware|pol-TRUS\\.MALWARE)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-publishes",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": ".github/workflows/publish.yml"
+            },
+            "pattern": "nuget push",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 14,
+            "costUsd": 0.6140456,
+            "judgeCostUsd": 0,
+            "durationSeconds": 112,
+            "startedAt": "2026-10-21T08:55:46.563Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.5782312000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 102,
+            "startedAt": "2026-10-21T08:58:08.014Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.5457531999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 78,
+            "startedAt": "2026-10-21T08:58:08.014Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.2101188,
+            "judgeCostUsd": 0,
+            "durationSeconds": 37,
+            "startedAt": "2026-10-21T08:55:46.563Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.16224980000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 28,
+            "startedAt": "2026-10-21T08:58:08.014Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.1720024,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-21T08:58:35.778Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.25,
+        "passRate": 0,
+        "scoreWithout": 0.25,
+        "passRateWithout": 0,
+        "delta": 0
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.25,
+    "overallPassRate": 0,
+    "meanDelta": 0
+  }
+}

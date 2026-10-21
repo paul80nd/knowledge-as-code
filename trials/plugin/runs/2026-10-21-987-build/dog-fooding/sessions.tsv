@@ -1,0 +1,7 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	second-package-unscanned	1	0	1	0	0	1	0.6140456	14	fail
+house	plugin	second-package-unscanned	2	0	1	0	0	1	0.5782312000000001	19	fail
+house	plugin	second-package-unscanned	3	0	1	0	0	1	0.5457531999999999	12	fail
+house	none	second-package-unscanned	1	0	1	0	0		0.2101188	11	fail
+house	none	second-package-unscanned	2	0	1	0	0		0.16224980000000003	7	fail
+house	none	second-package-unscanned	3	0	1	0	0		0.1720024	7	fail

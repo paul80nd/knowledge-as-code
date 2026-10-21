@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+second-package-unscanned	plugin	1	fail	fail	The workflow pushes with no scan step, and the reply raises the std-CI tag rule and never names the malware clause or the deviation.
+second-package-unscanned	plugin	2	fail	fail	The workflow pushes with no scan step, and the reply follows std-CI and names neither the malware clause nor the deviation.
+second-package-unscanned	plugin	3	fail	fail	The workflow pushes with no scan step, and the reply follows std-CI and names neither the malware clause nor the deviation.
+second-package-unscanned	none	1	fail	fail	The workflow pushes with an API key secret and no scan step, and the reply says nothing on malware.
+second-package-unscanned	none	2	fail	fail	The workflow packs and pushes with no scan step, and the reply says nothing on malware.
+second-package-unscanned	none	3	fail	fail	The workflow packs and pushes with no scan step, and the reply says nothing on malware.

@@ -34,7 +34,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | File                                       | Reader                                       | Scenarios | On a case that exists |
 |--------------------------------------------|----------------------------------------------|----------:|----------------------:|
 | [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     5 |
-| [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     4 |
+| [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     7 |
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
@@ -53,6 +53,9 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`                 | [full pass](../plugin/runs/full-pass.md)                 |
 | A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention`          | [full pass](../plugin/runs/full-pass.md)                 |
 | A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`              | [full pass](../plugin/runs/full-pass.md)                 |
+| A deviation licenses nothing outside its scope                                            | `plugin/dog-fooding/house/second-package-unscanned`     | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
+| Code storing personal data keeps the retention its data record states                     | `plugin/library/house/loan-history`                     | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
+| New code takes the estate's word for a concept                                            | `plugin/library/house/patron-reminders`                 | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
 | A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`                   | [baseline](../process-level/runs/2026-10-18/baseline.md) |
 | A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
 | A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`                | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
