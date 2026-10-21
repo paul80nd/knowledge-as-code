@@ -155,9 +155,10 @@ A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. m
 Run each step from the root of this repository, and the commands in the corpus as its `CLAUDE.md` says. `$CORPUS` is
 the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outside the repository.
 
-1. **Build the plugin.** In the corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
+1. **Build the plugin.** Commit the cases first, because `kac export` marks an untracked case as a dirty tree. In the
+   corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
-   plugin and the cases into `$STAGE`:
+   plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
    ```sh
    trials/plugin/stage.sh "$CORPUS/.dist/plugin" "$CASES" "$STAGE"
