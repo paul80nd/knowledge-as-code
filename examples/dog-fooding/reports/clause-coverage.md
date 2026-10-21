@@ -5,15 +5,15 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-21T09:30:00Z
+  at: 2026-10-21T19:18:00Z
   by: claude-code/opus-5.5
   report: coverage
-  tool: kac/0.35.0
+  tool: kac/0.36.0
 sources:
-  - { resource: example-dogfooding, version: "0.75.2" }
-  - { resource: example-engineering, version: "0.37.3" }
+  - { resource: example-dogfooding, version: "0.75.3" }
+  - { resource: example-engineering, version: "0.38.0" }
 verified:
-  - { at: 2026-10-21T19:12:00Z, by: human:paul.law }
+  - { at: 2026-10-21T19:19:00Z, by: human:paul.law }
 tags: [ coverage, governance ]
 ---
 
@@ -28,7 +28,7 @@ this one, and every consumer answers for its own coverage.
 
 Imported:
 
-* `eng`, example-engineering, at 0.37.3.
+* `eng`, example-engineering, at 0.38.0.
 
 No column here says a clause is verified. A control names a standard and not a rule, so it vouches for a whole document
 whatever it checks inside it.
@@ -379,7 +379,7 @@ where the rule and the practice differ.
 | `TRACE`   | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `eng:ctl-0002` | `eng:pol-TRUS.TRACE`  | Covered      | A publish tags the commit it published from.                                                         |
 | `REVERT`  | MUST     | `std-VERS`, `eng:std-DEPLOY`   |            | `ctl-0007`, `eng:ctl-0002`                                                 |                       | Covered      | A correction ships as a new version, and no published one moves.                                     |
 | `ASCODE`  | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `eng:ctl-0002` | `eng:pol-MEXP.ASCODE` | Covered      | The workflows are reviewed like any other file.                                                      |
-| `GATES`   | MUST     | `std-CI`                       |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`                 |                       | Covered      | `validate` is the check a merge waits for.                                                           |
+| `GATES`   | MUST     | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `eng:ctl-0002` |                       | Covered      | `validate` is the check a merge waits for.                                                           |
 | `SIGNOFF` | MUST     |                                |            |                                                                            |                       | Gap          | A person approves the `nuget.org` environment before a publish, and no standard states the approval. |
 | `FLAGS`   | MUST     |                                |            |                                                                            |                       | Out of scope | Nothing here has a flag that changes behaviour in production.                                        |
 | `MANUAL`  | MUST NOT | `std-CI`, `eng:std-DEPLOY`     |            | `ctl-0001`, `ctl-0002`, `ctl-0003`, `ctl-0006`, `ctl-0011`, `eng:ctl-0002` |                       | Covered      | Nobody edits a published branch, package or release by hand.                                         |
