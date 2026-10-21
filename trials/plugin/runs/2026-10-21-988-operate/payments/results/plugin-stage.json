@@ -1,0 +1,1268 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T09:32:39.368Z",
+  "durationSeconds": 74,
+  "costUsd": 4.0747534000000005,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-payments",
+        "version": "0.34.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "has-this-happened-before",
+      "dir": "evals/house/has-this-happened-before",
+      "source": "mixed",
+      "promptMarkdown": "A customer says their card shows two pending amounts for one order. Has this happened to us before? If it has, what\ncaused it last time?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "pmt-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-cause-key",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "(?:fresh|new|different|another|separate|unique)\\W+(?:\\w+\\W+){0,3}(?:idempotency|key)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-cause-retry",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "retr(?:y|ied|ies|ying)",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-answers",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "happened|before|incident|postmortem|cause",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 7,
+            "costUsd": 0.234618,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-10-21T09:32:39.412Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pmt-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:fresh|new|different|another|separate|unique)\\W+(?:\\w+\\W+){0,3}(?:idempotency|key)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.218173,
+            "judgeCostUsd": 0,
+            "durationSeconds": 82,
+            "startedAt": "2026-10-21T09:36:06.156Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pmt-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:fresh|new|different|another|separate|unique)\\W+(?:\\w+\\W+){0,3}(?:idempotency|key)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.23390600000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 20,
+            "startedAt": "2026-10-21T09:36:06.156Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched pmt-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (?:fresh|new|different|another|separate|unique)\\W+(?:\\w+\\W+){0,3}(?:idempotency|key)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 5,
+            "costUsd": 0.1329168,
+            "judgeCostUsd": 0,
+            "durationSeconds": 21,
+            "startedAt": "2026-10-21T09:32:39.412Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.13899620000000001,
+            "judgeCostUsd": 0,
+            "durationSeconds": 19,
+            "startedAt": "2026-10-21T09:36:06.156Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.1371564,
+            "judgeCostUsd": 0,
+            "durationSeconds": 21,
+            "startedAt": "2026-10-21T09:36:25.209Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-key",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-cause-retry",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched retr(?:y|ied|ies|ying)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched happened|before|incident|postmortem|cause",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 0.5,
+        "passRateWithout": 0,
+        "delta": 0.5
+      }
+    },
+    {
+      "name": "two-pending-amounts",
+      "dir": "evals/house/two-pending-amounts",
+      "source": "mixed",
+      "promptMarkdown": "A customer rang support: their card shows two pending amounts for one order. Support says the first payment attempt\ntimed out and the checkout retried it. The call to the payment API is in `src/Checkout`. Please fix it, and tell me\nwhat you changed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "fix-0001",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-key--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "\"new_string\"\\s*:\\s*\"(?:[^\"\\\\]|\\\\.)*(?:\\{[^{}]*[Oo]rder[^{}]*\\}:|[Oo]rder\\w*\\s*\\+\\s*\\\\*\":|string\\.(?:Concat|Format|Join)\\([^)]*[Oo]rder)"
+          }
+        },
+        {
+          "name": "comply-key--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*(?:\\{[^{}]*[Oo]rder[^{}]*\\}:|[Oo]rder\\w*\\s*\\+\\s*\\\\*\":|string\\.(?:Concat|Format|Join)\\([^)]*[Oo]rder)"
+          }
+        },
+        {
+          "name": "comply-key--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "\"content\"\\s*:\\s*\"(?:[^\"\\\\]|\\\\.)*(?:\\{[^{}]*[Oo]rder[^{}]*\\}:|[Oo]rder\\w*\\s*\\+\\s*\\\\*\":|string\\.(?:Concat|Format|Join)\\([^)]*[Oo]rder)"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-key--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "\"new_string\"\\s*:\\s*\"(?:[^\"\\\\]|\\\\.)*[Ii]dempotency"
+          }
+        },
+        {
+          "name": "task-key--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*[Ii]dempotency"
+          }
+        },
+        {
+          "name": "task-key--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "\"content\"\\s*:\\s*\"(?:[^\"\\\\]|\\\\.)*[Ii]dempotency"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.42857142857142855,
+            "passed": false,
+            "turns": 11,
+            "costUsd": 0.291118,
+            "judgeCostUsd": 0,
+            "durationSeconds": 41,
+            "startedAt": "2026-10-21T09:32:39.413Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.42857142857142855,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.27127740000000006,
+            "judgeCostUsd": 0,
+            "durationSeconds": 36,
+            "startedAt": "2026-10-21T09:36:26.280Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.42857142857142855,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3418412,
+            "judgeCostUsd": 0,
+            "durationSeconds": 44,
+            "startedAt": "2026-10-21T09:36:46.405Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0001",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 2x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.14285714285714285,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.1682906,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "startedAt": "2026-10-21T09:33:00.594Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.14285714285714285,
+            "passed": false,
+            "turns": 8,
+            "costUsd": 0.18764899999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 49,
+            "startedAt": "2026-10-21T09:37:02.079Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.14285714285714285,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.173453,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-10-21T09:37:27.812Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-key--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.42857142857142855,
+        "passRate": 0,
+        "scoreWithout": 0.14285714285714285,
+        "passRateWithout": 0,
+        "delta": 0.2857142857142857
+      }
+    },
+    {
+      "name": "unverified-fix",
+      "dir": "evals/house/unverified-fix",
+      "source": "mixed",
+      "promptMarkdown": "The daily reconciliation keeps reporting breaks on refunds issued in the hour before midnight UTC. Each one shows as\nin the file but not the ledger, and then the other way round the next day. The code is in\n`src/PaymentLedger/Reconciliation`. Can you sort it out?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "fix-0002",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-unverified",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "unverified|draft|not (?:yet )?(?:been )?verified|(?:nobody|no one|no-one) has (?:yet )?verified|never (?:been )?verified",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-window",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "UTC|Europe/London|BST|summer time|time ?zone|offset",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 13,
+            "costUsd": 0.2703816,
+            "judgeCostUsd": 0,
+            "durationSeconds": 34,
+            "startedAt": "2026-10-21T09:33:02.262Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unverified|draft|not (?:yet )?(?:been )?verified|(?:nobody|no one|no-one) has (?:yet )?verified|never (?:been )?verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 14,
+            "costUsd": 0.33179960000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 49,
+            "startedAt": "2026-10-21T09:37:30.284Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unverified|draft|not (?:yet )?(?:been )?verified|(?:nobody|no one|no-one) has (?:yet )?verified|never (?:been )?verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 13,
+            "costUsd": 0.2571538,
+            "judgeCostUsd": 0,
+            "durationSeconds": 55,
+            "startedAt": "2026-10-21T09:37:51.180Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched fix-0002",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unverified|draft|not (?:yet )?(?:been )?verified|(?:nobody|no one|no-one) has (?:yet )?verified|never (?:been )?verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.2055036,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-21T09:33:20.441Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.2797146,
+            "judgeCostUsd": 0,
+            "durationSeconds": 58,
+            "startedAt": "2026-10-21T09:37:54.758Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.20080460000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 38,
+            "startedAt": "2026-10-21T09:38:19.721Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-unverified",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unverified|draft|not (?:yet )?(?:been )?verified|(?:nobody|no one|no-one) has (?:yet )?verified|never (?:been )?verified",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-window",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched UTC|Europe/London|BST|summer time|time ?zone|offset",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 0.3333333333333333,
+        "passRateWithout": 0,
+        "delta": 0.6666666666666667
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 3,
+    "casesPassed": 2,
+    "overallScore": 0.8095238095238096,
+    "overallPassRate": 0.6666666666666666,
+    "meanDelta": 0.4841269841269842
+  }
+}

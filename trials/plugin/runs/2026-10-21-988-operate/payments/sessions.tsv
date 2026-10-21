@@ -1,0 +1,19 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	has-this-happened-before	1	0	1	1	1	1	0.234618	7	pass
+house	plugin	has-this-happened-before	2	0	1	1	1	1	0.218173	5	pass
+house	plugin	has-this-happened-before	3	0	1	1	1	1	0.23390600000000003	5	pass
+house	none	has-this-happened-before	1	0	1	0	0		0.1329168	5	fail
+house	none	has-this-happened-before	2	0	1	0	0		0.13899620000000001	9	fail
+house	none	has-this-happened-before	3	0	1	0	0		0.1371564	9	fail
+house	plugin	two-pending-amounts	1	0	1	1	1	1	0.291118	11	pass
+house	plugin	two-pending-amounts	2	0	1	1	1	1	0.27127740000000006	10	pass
+house	plugin	two-pending-amounts	3	0	1	1	1	1	0.3418412	12	pass
+house	none	two-pending-amounts	1	0	1	0	0		0.1682906	7	fail
+house	none	two-pending-amounts	2	0	1	0	0		0.18764899999999998	8	fail
+house	none	two-pending-amounts	3	0	1	0	0		0.173453	7	fail
+house	plugin	unverified-fix	1	0	1	1	1	1	0.2703816	13	pass
+house	plugin	unverified-fix	2	0	1	1	1	1	0.33179960000000003	14	fail
+house	plugin	unverified-fix	3	0	1	1	1	1	0.2571538	13	fail
+house	none	unverified-fix	1	0	1	0	0		0.2055036	10	fail
+house	none	unverified-fix	2	0	1	0	0		0.2797146	13	fail
+house	none	unverified-fix	3	0	1	1	0		0.20080460000000003	10	fail

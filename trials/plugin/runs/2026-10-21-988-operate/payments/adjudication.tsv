@@ -1,0 +1,19 @@
+case	arm	run	graders	adjudicated	reason
+has-this-happened-before	plugin	1	pass	pass	The reply says yes, cites pmt-0002, and gives the cause as a new idempotency key on each retry after PSP timeouts.
+has-this-happened-before	plugin	2	pass	pass	The reply says yes, cites pmt-0002, and gives the cause as a new idempotency key on each retry after PSP timeouts.
+has-this-happened-before	plugin	3	pass	pass	The reply says yes, cites pmt-0002, and gives the cause as a new idempotency key on each retry after the PSP slowed.
+has-this-happened-before	none	1	fail	fail	The reply finds no record of an earlier case, and guesses from the code: a retry after a ledger failure, with no idempotency key sent to the PSP.
+has-this-happened-before	none	2	fail	fail	The reply finds no record of an earlier case, and guesses from the code: a retry after a ledger failure, with no idempotency key sent to the PSP.
+has-this-happened-before	none	3	fail	fail	The reply finds no record of an earlier case, and guesses from the code: a retry after a ledger failure, with no idempotency key sent to the PSP.
+two-pending-amounts	plugin	1	pass	pass	The key is now $"{orderId}:authorise", set once before the loop, and the reply cites fix-0001.
+two-pending-amounts	plugin	2	pass	pass	The key is now $"{orderId}:authorise", set once before the loop, and the reply cites fix-0001.
+two-pending-amounts	plugin	3	pass	pass	The key is now $"{orderId}:authorise", set once before the loop, and the reply cites fix-0001.
+two-pending-amounts	none	1	fail	fail	The session moves one Guid.NewGuid() key out of the loop, so a key still derives from nothing in the order.
+two-pending-amounts	none	2	fail	fail	The session moves one Guid.NewGuid() key out of the loop, so a key still derives from nothing in the order.
+two-pending-amounts	none	3	fail	fail	The session moves one Guid.NewGuid() key out of the loop, so a key still derives from nothing in the order.
+unverified-fix	plugin	1	pass	pass	The session said the code matched the draft fix-0002 before it wrote the UTC window, and the reply calls the fix unverified.
+unverified-fix	plugin	2	pass	fail	The session wrote the UTC window first, and said fix-0002 was a draft nobody had verified only in the reply that followed.
+unverified-fix	plugin	3	pass	fail	The session wrote the UTC window first, and said fix-0002 was a draft and unverified only in the reply that followed.
+unverified-fix	none	1	fail	fail	The session cut the window on UTC and named no record, so nothing said a fix was unverified.
+unverified-fix	none	2	fail	fail	The session cut the window on UTC and named no record, so nothing said a fix was unverified.
+unverified-fix	none	3	pass	fail	The grader matched "Not verified" over the session's own unbuilt change, and the session named no fix.

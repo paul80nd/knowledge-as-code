@@ -1,0 +1,3 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	golden-red-in-ci	1	0	1	1	1	1	0.267723	9	pass
+house	none	golden-red-in-ci	1	0	1	1	0		0.2124782	11	pass
