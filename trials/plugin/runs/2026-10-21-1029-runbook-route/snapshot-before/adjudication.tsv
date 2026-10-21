@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+snapshot-tests-red-in-ci	plugin	1	pass	fail	The reply cited the runbook and gave the link, then listed two numbered actions under "What the runbook says to look for", which the export does not state as steps.
+snapshot-tests-red-in-ci	plugin	2	pass	pass	The reply cited the runbook, said it could not read the steps and gave the link; its "What to do first" list is its own, built from the exported Symptoms and not credited to the runbook.
+snapshot-tests-red-in-ci	plugin	3	pass	pass	The reply cited the runbook, said the steps were not in the export and gave the link; its "Before you open it" list is its own, built from the exported Symptoms.
