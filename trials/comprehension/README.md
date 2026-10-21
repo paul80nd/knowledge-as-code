@@ -77,7 +77,8 @@ Run each step from the root of the repository.
 ### The prompt
 
 Replace `{reader}` and `{what they want}` with that set's row below, and `{staged directory}` with the copy's path.
-For the library set, replace `index.md` with `README.md`, because the corpus has no `index.md`.
+For the library set, replace `index.md` with `README.md`, because the corpus has no `index.md`, and "The documentation
+section written for you" with "The knowledge written for you".
 
 | Set                     | `{reader}`                                    | `{what they want}`                                                                           |
 |-------------------------|-----------------------------------------------|----------------------------------------------------------------------------------------------|
