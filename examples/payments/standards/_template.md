@@ -30,8 +30,9 @@ optional field from [the type page](../standards.md#metadata) where you have a v
 * **Where you save it**: the folder below `standards/` becomes the standard's category, and folders can
   nest. Write the rule in the most general folder where it is still true. A standard saved straight into
   `standards/` has no category, which is fine while there are few enough to read as one list.
-* **`derived-from`**: the ADR id (s) this standard distils. A standard citing neither an ADR here nor a policy in
-  `implements` is guidance, not a standard.
+* **`derived-from`**: the ADR id (s) this standard distils. `provenance-required` fails a standard citing neither an ADR
+  here nor a policy in `implements`. Where you can name neither, make the decision first. Otherwise what you are writing
+  is guidance, not a standard.
 * **`implements`**: the policy clauses this standard puts into practice, as
   `implements: [ pol-EVER.BRANCH, pol-EVER.HISTORY ]`. A bare policy id is refused: a standard discharges some of a
   policy's clauses and seldom all of them, and the bare id reads to anything counting coverage as every clause covered.
@@ -42,25 +43,11 @@ optional field from [the type page](../standards.md#metadata) where you have a v
 * **`applies-to`**: service ids, or `all`.
 * **`review-by`**: a quoted `"YYYY-MM-DD"`. Drives the staleness report.
 
-**The closing line.** Keep the line after the Changelog in every standard. It tells a reader how to depart from a
-rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, leave
-"deviation" unlinked, because the `request-deviation` skill files the request on the tracker the corpus names.
+**The `Rules` section**
 
-<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
-
-Standards are living documents. Unlike an ADR, a standard is edited in place as practice matures. Record every
-material change in the Changelog at the bottom, newest entry first, rather than rewriting silently.
-
-## Summary
-
-The rule in a single scannable sentence: what a reader needs to take away in one breath.
-
-## Rules
-
-The normative content, and the only section carrying any. Write each rule as a bullet, and give it one [BCP
-14](https://www.rfc-editor.org/rfc/rfc8174) keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**. A
-keyword binds only in bold capitals. `part-modal` reports a bullet with none, and one that leaves a keyword in plain
-text. It calls the keyword a modal, because the same declaration governs a policy's clause table.
+A keyword binds only in bold capitals. `part-modal` reports a bullet with none, and one that leaves a keyword in plain
+text. It calls the keyword a modal, because the same declaration governs a policy's clause table. Write each point as a
+bullet of its own: `part-nested` refuses a list inside a bullet, because nothing cites or exports the points it holds.
 
 Choose the keyword by what a departure costs:
 
@@ -77,9 +64,10 @@ allows.
 reaches a rule written there. Where a bullet names a keyword rather than using one, as a changelog entry recording a
 modal that moved does, write the keyword in backticks.
 
-Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. The heading is what
-somebody hunting one rule finds before the bullet, and it is the address a citation and an export both carry. A
-standard with a single group writes one heading. `part-none` reports a Rules section with none.
+Group the rules under `###` headings, one heading per thing the rules beneath it hold a reader to. A reader hunting one
+rule finds the heading before the bullet. A citation and an export both use the heading as the address, as
+`std-SECRET.every-secret-rotates`. A standard with a single group writes one heading. `part-none` reports a Rules
+section with none.
 
 Keep each rule testable. If a rule can't be checked against a concrete artefact, it's guidance, not a standard. Either
 sharpen it or move it to the Rationale section.
@@ -93,13 +81,34 @@ the bullet list. A paragraph after the bullets is dropped from it without a word
 **Give a heading one short reason where the reason is not obvious.** End the bullet it explains with a clause opening
 "because", so the reason travels in the export with the rule. Put the longer argument in Rationale and provenance.
 
-**Close a heading with the clauses it covers**, as a footnote in italic with the label bold. CI holds the union of
-those lines equal to `implements`, so the frontmatter says which obligations the standard discharges and each heading
-says which rule discharges which. Write it as the last thing under the heading, and leave it off a heading that covers
-no clause. CI reports a line naming none, and one a stray space left out of italic.
+**Close a heading with the clauses it covers**, as a footnote in italic with the label bold. `mirrors-citations` checks
+that the union of those lines equals `implements`, in both directions. The frontmatter then says which obligations the
+standard discharges, and each heading says which rule discharges which. Write the line last under the heading, and
+leave it off a heading that covers no clause. CI reports a line naming none, and one a stray space left out of italic.
 
 **The rules themselves carry no clause citation.** One line at the foot of the heading says what that heading
 discharges. An id in brackets on every bullet buries the obligation a reader came for.
+
+**The `Conformance checklist` section.** Test what the rules require, and nothing else. An item for a SHOULD is met
+where the work follows it or the change says why it departs.
+
+**The Changelog.** Edit a standard in place as practice matures. Record every material change in the Changelog, newest
+entry first.
+
+**The closing line.** Keep the line after the Changelog in every standard. It tells a reader how to depart from a
+rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, leave
+"deviation" unlinked, because the `request-deviation` skill files the request on the tracker the corpus names.
+
+<!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
+
+## Summary
+
+The rule in a single scannable sentence: what a reader needs to take away in one breath.
+
+## Rules
+
+The normative content, and the only section carrying any. Write each rule as a bullet, and give it one [BCP
+14](https://www.rfc-editor.org/rfc/rfc8174) keyword: **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** or **MAY**.
 
 ### {{What the rules below hold a reader to}}
 
@@ -127,9 +136,6 @@ copy-paste accurate.
 
 A tickable list a designer (or an AI session) can mechanically verify a new design against. This is the section that
 makes the standard *usable* rather than merely readable.
-
-Test what the rules above require, and nothing else. An item for a SHOULD is met where the work follows it or the
-change says why it departs.
 
 - [ ] ...
 - [ ] ...
