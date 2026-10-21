@@ -67,7 +67,8 @@ dotnet tool install --global KacLint
 kac-lint examples/dog-fooding
 ```
 
-kac-lint is a new tool, shipped from this repository separately from `kac`, as its own package on nuget.org.
+kac-lint is a new service, separate from `kac`. It lives in its own repository and ships as its own package on
+nuget.org.
 EOF
 
 cat > .gitignore <<'EOF'

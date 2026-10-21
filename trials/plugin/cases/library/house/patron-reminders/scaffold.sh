@@ -42,13 +42,13 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace Notices.FunctionApp;
 
-public sealed record HoldReadyEvent(string HoldId, string BorrowerEmail, string Title, string BranchName);
+public sealed record HoldReadyEvent(string HoldId, string RecipientEmail, string Title, string BranchName);
 
 public sealed class HoldReady(MailClient mail)
 {
     [Function(nameof(HoldReady))]
     public Task Run([ServiceBusTrigger("notices-hold-ready", Connection = "ServiceBus")] HoldReadyEvent hold)
-        => mail.SendAsync("hold-ready", hold.BorrowerEmail, new { hold.Title, hold.BranchName });
+        => mail.SendAsync("hold-ready", hold.RecipientEmail, new { hold.Title, hold.BranchName });
 }
 EOF
 
@@ -89,7 +89,7 @@ EOF
 cat > README.md <<'EOF'
 # notices
 
-The emails a borrower receives from the library: overdue reminders, hold-ready alerts and membership renewals.
+The emails the library sends: overdue reminders, hold-ready alerts and membership renewals.
 `src/Notices.FunctionApp` deploys as the `func-notices-<env>` Function App.
 EOF
 
