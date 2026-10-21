@@ -32,6 +32,6 @@
     "Where it is used": "* [svc-corpus-feed] is packed by `kac`, which runs on it.\n* [svc-kac] is built, tested and packed with it.\n* [svc-marketplace] is bundled by `kac`, which runs on it.\n\nThe docs site is built by another toolchain, so it does not use the SDK."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/6b732a4d0484b703f3180e287c85b3da44683ef1/examples/dog-fooding/tools/build/dotnet-sdk.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/da73f8f28bc4074d302214eb27df05cc9591203c/examples/dog-fooding/tools/build/dotnet-sdk.md"
   }
 }
