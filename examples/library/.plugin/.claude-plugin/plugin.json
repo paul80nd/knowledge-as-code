@@ -51,7 +51,10 @@
         "requires": [
           "fixes@2"
         ],
-        "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit."
+        "optional": [
+          "runbooks@2"
+        ],
+        "note": "Reads a fix from corpus/fixes/ and says whether this problem has been solved here before. A fix declares no part, so there is no flat file and the record is the unit. Where no fix matches, or something is broken now, it reads corpus/runbooks/ through ask-the-corpus/runbooks.md."
       },
       {
         "path": "skills/policy-lookup",
