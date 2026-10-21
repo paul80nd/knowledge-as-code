@@ -110,8 +110,12 @@ write the issue where they say one belongs. The record itself lands in
 **Place what you filed on the board.** The skill files the issue and stops, because a corpus elsewhere has no board for
 it to know about. This repository does: project 3, where each issue takes a `Status`, a `Phase` and a `Rank`. The board
 sorts each `Phase` lane by `Rank`, so an issue without one sits in no order. An epic is `1`, and its stories count up
-from `2` in delivery order. A finding filed during a story under an epic becomes a sub-issue of that epic as well.
-`addSubIssue` takes a GraphQL node id for both issues. An issue left off the board is one the developer never sees.
+from `2` in delivery order. An issue left off the board is one the developer never sees.
+
+**Each lane has one epic, and every issue in the lane is a sub-issue of that epic alone.** A finding goes to the lane
+its kind belongs in, under that lane's epic. It joins the lane in flight only where it is worth delivering with that
+lane's stories. An epic then closes when its lane drains, rather than growing with every finding its stories turn up.
+`addSubIssue` takes a GraphQL node id for both issues, and `replaceParent: true` moves an issue from another epic.
 
 **The export is frozen at bundle time, and the branch serves what is on `main`.** A branch editing
 `examples/dog-fooding` leaves the installed plugin behind, so a lookup can answer with a record that branch has already
@@ -150,8 +154,9 @@ and what it reported, under its Evidence. After Merge Danger, say what you did n
 line.
 
 **[The release](docs/maintaining/build-test-release.md#release-a-version) is the developer's call.** Where `kac`
-changed, put it to them before you open the pull request, with a recommendation. Release where the change stands on its
-own. Hold where it is one part of a group that is no use apart.
+changed, put it to them before you open the pull request, with a recommendation. Work usually runs one lane at a time,
+and a release is cut once that lane drains. Recommend releasing sooner only where the change stands on its own and
+somebody needs it before then.
 
 A local run passes over the consumer's lock, because `.imports/` is untracked and a restore keeps a folder already
 holding the version it resolved to. Delete `.imports/` in `examples/payments` and `examples/dog-fooding`, repack the
