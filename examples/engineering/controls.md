@@ -15,8 +15,8 @@ A standard states a rule and says nothing about whether anyone still follows it.
 rule. Taken together, the controls make the gap between *rule* and *enforcement* countable: what share of our standards
 does something check?
 
-That share is worth knowing at three engineers and at three hundred. When someone asks whether we follow our own
-standards, the controls answer honestly. Without them we can only point at the standards and hope.
+When someone asks whether we follow our own standards, the controls answer honestly. Without them we can only point
+at the standards and hope.
 
 **`not-enforced` matters more than any other `mechanism` value.** Using it turns an aspiration into a number someone can
 see, and the number is worth reading only while it is honest.
@@ -28,7 +28,7 @@ checked.
 
 | Standard                                                   | Control                                                                  |
 |------------------------------------------------------------|--------------------------------------------------------------------------|
-| "Secrets **MUST** come from Key Vault."                    | "CI runs secret scanning on every PR, and failures block merge."         |
+| "Secrets **MUST** come from a managed vault."              | "CI runs secret scanning on every PR, and failures block merge."         |
 | "Every public endpoint **MUST** carry a conformance test." | "Quarterly manual audit of the OpenAPI document against the test suite." |
 
 Anything that can fail a build, block a merge, raise an alert or produce an audit artefact is a control. Anything that

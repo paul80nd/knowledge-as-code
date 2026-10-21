@@ -9,8 +9,7 @@ The packages, services and utilities we have approved, rejected, or are triallin
 A record of something we build with: a package, a framework, a linter, a hosted service, a CLI. It says what the tool is
 for, whether it is approved, which versions we stand behind, its licence, and what we chose it over.
 
-Together the entries are a lightweight software approval register. A larger organisation would run one as an approval
-board. Three engineers run it as a folder of records.
+Together the entries are a lightweight software approval register, kept as a folder of records.
 
 ## Why we use them
 

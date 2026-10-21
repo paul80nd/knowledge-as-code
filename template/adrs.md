@@ -19,8 +19,8 @@ the decisions it replaced.
 The platform spans many repositories, and many of our architectural decisions land in more than one of them: message
 contracts, the service bus, auth, deployment ordering, infrastructure patterns. Without a durable record:
 
-* The same questions resurface every few months ("why aren't we using Event Grid?", "why is the migration runner
-  separate?") because nobody can point at the answer.
+* The same questions resurface every few months ("why aren't we using the platform's event bus?", "why is the
+  migration runner separate?") because nobody can point at the answer.
 * A new contributor reads the code and learns the *shape* of the architecture, but not the *reasoning* behind it.
 * An engineer working inside one repository drifts away from the decisions that cross several, because nothing in that
   repository carries the reasoning.

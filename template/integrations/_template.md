@@ -21,7 +21,7 @@ an optional field from [the type page](../integrations.md#metadata) where you ha
 
 **Frontmatter**
 
-* **`id`**: `itg-` plus a slug naming the system, as `itg-sendgrid`. Save the file as `<slug>.md`.
+* **`id`**: `itg-` plus a slug naming the system, as `itg-email-provider`. Save the file as `<slug>.md`.
 * **`used-by`**: the service ids that call it. CI fails an id that names no service. An integration nothing uses is a
   candidate for retirement.
 * **`criticality`**: judged by what breaks for a customer when it is unavailable.

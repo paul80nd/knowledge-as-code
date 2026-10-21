@@ -27,8 +27,7 @@ One document per **customer-visible surface**, not per work item and not per ser
 several services. One service often contributes to several offerings.
 
 **An offering whose `implemented-by` names one service is a synonym for that service.** Write the service record
-instead, and `spans-more-than-one-service` warns where you do not. This type was first tried over an estate of four
-services where every offering mapped onto one of them, and each record restated the service beside it.
+instead, and `spans-more-than-one-service` warns where you do not.
 
 **Offerings link rather than restate.** An offering that specifies behaviour has begun to drift from the work items
 it should point at. The next session to read it will trust it anyway, which makes a drifted offering worse than none.

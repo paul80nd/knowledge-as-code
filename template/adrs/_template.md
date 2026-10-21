@@ -71,7 +71,7 @@ paragraphs. Where the proposal was rejected, say what you turned down, and why.
 * **{{Option name}}** was rejected because {{reason}}.
 
 Include the options that were genuinely weighed, not every theoretical option. One or two sentences per option on why it
-lost out. If there were no real alternatives ("we use Azure because we are on Azure"), say so plainly rather than
+lost out. If there were no real alternatives ("we use the cloud we already run on"), say so plainly rather than
 inventing options.
 
 ## Consequences

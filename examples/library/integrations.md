@@ -7,7 +7,7 @@ The external systems the platform depends on.
 ## What is an integration?
 
 One document per third-party or external system we depend on but do not deploy: payment gateways, tax-calculation
-services, email delivery, accounting systems, and the Azure platform services themselves. The record covers what the
+services, email delivery, accounting systems, and the cloud platform's services themselves. The record covers what the
 system does for us, the contract we call it under, how it authenticates and how it fails. It also states what the vendor
 promises us, what we do when they break that promise, who to contact, and how we would move to somebody else.
 

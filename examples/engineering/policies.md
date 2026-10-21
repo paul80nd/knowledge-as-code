@@ -33,10 +33,10 @@ changes on a schedule of its own, so a policy that carried it would need correct
 **The test:** would this still be true after replacing the entire technology estate? If yes, it is a policy. If it names
 a tool, a framework or a protocol, it is a [standard](standards.md).
 
-| Policy                                          | Standard                                                               |
-|-------------------------------------------------|------------------------------------------------------------------------|
-| "Secrets are never stored in source control."   | "Services **MUST** read secrets from Key Vault via workload identity." |
-| "Quality checks are gates that fail the build." | "ESLint **MUST** run with `--max-warnings 0`."                         |
+| Policy                                          | Standard                                                                     |
+|-------------------------------------------------|------------------------------------------------------------------------------|
+| "Secrets are never stored in source control."   | "Services **MUST** read secrets from a managed vault via workload identity." |
+| "Quality checks are gates that fail the build." | "ESLint **MUST** run with `--max-warnings 0`."                               |
 
 A policy commits and a [control](controls.md) verifies, so the two are never the same document. An [ADR](adrs.md)
 records one decision and the alternatives weighed against it, where a policy states a position we hold across all such
