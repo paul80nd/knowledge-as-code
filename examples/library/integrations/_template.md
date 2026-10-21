@@ -21,11 +21,13 @@ an optional field from [the type page](../integrations.md#metadata) where you ha
 
 **Frontmatter**
 
-* **`used-by`**: the service ids that call it. An integration nothing uses is a candidate for retirement.
+* **`id`**: `itg-` plus a slug naming the system, as `itg-sendgrid`. Save the file as `<slug>.md`.
+* **`used-by`**: the service ids that call it. CI fails an id that names no service. An integration nothing uses is a
+  candidate for retirement.
 * **`criticality`**: judged by what breaks for a customer when it is unavailable.
-* **`their-sla`**: what the contract actually says, not what the marketing page implies.
+* **`their-sla`**: what the contract says, copied word for word, not what the marketing page implies.
 * **`successor`**: what took over, once the status is `retired`. `replaces` is the same edge read the other way, and
-  CI enforces both ends.
+  CI checks both ends, so a reader arriving from an old citation reaches the system that took the traffic.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

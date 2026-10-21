@@ -64,32 +64,8 @@ arrive rarely.
 
 ## Adding a process
 
-1. Copy [`_template.md`](processes/_template.md) to `<slug>.md`. Processes use slug ids: `prc-releasing`.
-2. Write the steps in order and in the imperative, for a reader who has not done this before.
-3. Include prerequisites, a verification step ("you know it worked when…") and a rollback.
-4. Set `last-rehearsed` and `rehearsal-frequency`. Write `"never"` rather than guess a date. Pick `quarterly` or
-   `annual` where somebody keeps the cadence, and `on-change` or `per-release` where an event is the trigger.
-5. Name the systems and roles in `requires-access`, and say who to ask for each. "Obtain the file from the repository
-   owner" helps nobody who does not know the owner.
-
-**Conventions**
-
-* **Name the skills a step needs.** `Prerequisites` names them beside the access, the tools and the prior work. A
-  reader who finds out at the step that they cannot do it has already changed something. Nothing checks it.
-* **No hedging.** A step that opens "typically the order is…" leaves the reader to decide. Where the order varies, say
-  what decides it.
-* **Say what a step produces.** Put the result in the step itself, so a reader can tell it worked before starting the
-  next one.
-* **Open an optional step with `Optional:`.** Nothing else tells a reader which steps they may skip.
-* **Put a warning before the step it guards.** A caution written after the action arrives too late to act on.
-* **Verification is not optional.** A process that stops at the last action leaves the reader guessing whether it
-  worked.
-* **Say how to back out.** `If it goes wrong` is required. Where nothing undoes the process, write that, and warn the
-  reader before step 1.
-* **Rehearse before you trust.** Walk the process end to end before you rely on it. `last-rehearsed` records that
-  walk-through and not the last edit. `staleness` warns on `"never"`, and on a `quarterly` or `annual` process past
-  its window. It measures no event, so it reports an `on-change` or `per-release` process only while
-  `last-rehearsed` is `"never"`.
+Copy [`_template.md`](processes/_template.md). Its guidance block states how to write the id and each field. The prompt
+under each section states how to write that section.
 
 ## What CI checks
 

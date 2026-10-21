@@ -67,28 +67,8 @@ A record changes at a contract renewal, a change of vendor or a new failure mode
 
 ## Adding an integration
 
-1. Copy [`_template.md`](integrations/_template.md) to `<slug>.md`. Integrations use slug ids: `itg-sendgrid`.
-2. Record the contract and how the system authenticates us. Name where the credential is held. Nothing secret goes in
-   this corpus.
-3. Give each way the system fails a row of the Failure modes table, and say in its fallback cell what we do instead. "It
-   goes down sometimes" is not a failure mode; "returns 503 during their maintenance window, we queue and retry" is.
-4. Copy `their-sla` from the contract, word for word.
-5. Name who to contact when the vendor misses that SLA.
-6. Say how we would leave. Name what would have to be rebuilt, what data would have to move, and what makes the move
-   hard.
-
-**Conventions**
-
-* **Every failure mode names its fallback**, or writes `None.` in that cell. Where a row says neither, whoever is on call
-  works it out during the incident.
-* **A `critical` or `important` integration says how we would leave it.** `Exit` states what would have to be rebuilt
-  and what makes the move hard. A vendor's lock-in rarely appears in the contract.
-* **A `trial` integration says what would end the trial.** A trial with no decision criteria stays a trial forever.
-* **A `retired` integration names its `successor`**, and the successor names it back with `replaces`. CI checks both
-  ends, so a reader arriving from an old citation reaches the system that took the traffic.
-* **Record the commercial facts**: cost model, renewal date, account owner. Nobody else writes them down, and you want
-  them on the day the vendor raises the price or stops answering.
-* **`used-by` names the services that call this system**, by id. CI fails an id that names no service.
+Copy [`_template.md`](integrations/_template.md). Its guidance block states how to write the id and each field. The
+prompt under each section states how to write that section.
 
 ## What CI checks
 

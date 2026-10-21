@@ -84,27 +84,8 @@ A deviation changes at its review and when it closes. New deviations arrive when
 
 ## Adding a deviation
 
-1. Copy [`_template.md`](deviations/_template.md) to `<slug>.md`. Deviations use slug ids: `dev-legacy-report-secrets`.
-2. Name each clause you are departing from in `departs-from`, one entry per clause. Name only a `MUST` or a `MUST NOT`
-   the practice breaks, because a `SHOULD` takes a reason in the change and no deviation. Write `none` for a shortcut
-   that breaks no rule.
-3. Put the person who accepted the risk in `owner`. One individual with the authority to accept it, never a team and
-   never a post. Where somebody else does the work that closes it, name them in `assigned-to`.
-4. Set `accepted-on` to the day they agreed.
-5. Say what the risk is, then rate it in `risk`. Rate what is left once what compensates is working.
-6. Set `review-by` to the day somebody has to look at this again. A `high` rating brings that date inside six months.
-7. Say what compensates. A monitoring alert, a manual check, a smaller scope: something that makes the risk survivable.
-
-**Conventions**
-
-* **Write it before you depart**, or immediately afterwards where an incident left no time.
-* **One deviation per departure.** A page collecting every exception to one policy loses the owner, the date and the id
-  that a citation needs.
-* **Name the risk plainly.** A deviation that reads as a defence of the departure hides what the reviewer needs. The
-  rating and the risk section answer to each other, so a `low` beside a section describing a disaster is a record
-  nobody can weigh.
-* **Close it by fixing the gap, or by re-accepting the risk with the same scrutiny as the first time.** Set `closed-on`
-  to the day that happened, and move the status with it.
+Copy [`_template.md`](deviations/_template.md). Its guidance block states how to write the id and each field. The prompt
+under each section states how to write that section.
 
 ## What CI checks
 

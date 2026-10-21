@@ -17,16 +17,23 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what an offering adds to it. Add an
 optional field from [the type page](../offerings.md#metadata) where you have a value for it.
 
+**Link out.** Do not say how the offering works. Link the services and explanations that already do.
+`hub-not-specification` weighs the whole document against its outbound links, at roughly forty words each, so an
+offering that grows a section of its own trips it.
+
 **Frontmatter**
 
+* **`id`**: `ofr-` plus a slug naming the offering. Save the file as `<slug>.md`.
 * **`implemented-by`**: service ids. The `Where the detail lives` list names the same ids, and
   `related-matches-section` reports either end naming one the other does not.
 * **`feature-files`**: each path names its repository first, spelled as an entry of that repository's service
   `repos:`, then the path inside it. `feature-file-repo` warns where that first segment is no repository of a service
-  you listed.
+  you listed. Past that first segment the field is a plain string: `ref-resolves` never sees it, and
+  `feature-file-orphans` is declared and does not run. Keep the rest of the path correct yourself.
 
-**The work items.** They live in the list and nowhere else. This estate plans in GitHub issues, so an issue is
-labelled `gh#2101`, with its link defined at the foot of the document.
+**The work items.** They live in the list, because there is no field for them. This estate plans in GitHub issues, so an
+issue is labelled `gh#2101`, with its link defined at the foot of the document. A consumer reading an export sees the
+label and not the address, because a section travels and its link definitions do not.
 
 **The NFRs.** Add an `nfrs:` key naming each one, and link the same ids from the `Constrained by` bullet. Both ends
 are checked against each other, and the NFR names this offering back in its own `applies-to`. An offering at
@@ -43,7 +50,7 @@ The customer-visible behaviour, in customer terms. Two or three paragraphs at mo
 ## Who it is for
 
 The group of customers this is designed for, named the way they would name themselves. An offering that serves two
-groups in two different ways is usually two offerings.
+groups in two different ways is two offerings, however much they share underneath.
 
 ## Why it exists
 

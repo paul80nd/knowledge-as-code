@@ -19,7 +19,7 @@ That share is worth knowing at three engineers and at three hundred. When someon
 standards, the controls answer honestly. Without them we can only point at the standards and hope.
 
 **`not-enforced` matters more than any other `mechanism` value.** Using it turns an aspiration into a number someone can
-see, and the number is worth reading only while it is honest. Do not invent a mechanism to avoid it.
+see, and the number is worth reading only while it is honest.
 
 ## Scope
 
@@ -76,18 +76,8 @@ and helps only when a session loads it and acts on it. A check fails a broken ru
 
 ## Adding a control
 
-1. Copy [`_template.md`](controls/_template.md) to `NNNN-kebab-slug.md`.
-2. Name the rules it verifies in `verifies`: rule-level anchors where the standard has them, the standard id otherwise.
-3. Pick the mechanism that runs today. Where nothing checks the rule, that is `not-enforced`, and the control still gets
-   written: an unenforced rule you know about is worth more than one you do not.
-4. Record where the evidence lives: the pipeline step, the checklist, the alert rule, the audit note.
-
-**Conventions**
-
-* **A control names rules, not intentions.** "We review carefully" is not a control. "The PR template requires a tick
-  against each conformance checklist item" is.
-* **Controls follow the tooling.** When the way we check a rule changes, update the control. The rule has not changed,
-  so the standard stays as it is.
+Copy [`_template.md`](controls/_template.md). Its guidance block states how to write the id and each field. The prompt
+under each section states how to write that section.
 
 ## What CI checks
 

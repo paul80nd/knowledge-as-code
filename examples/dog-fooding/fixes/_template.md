@@ -21,10 +21,13 @@ optional field from [the type page](../fixes.md#metadata) where you have a value
 
 **Frontmatter**
 
-Name the title and the filename for the **symptom**, not the cause. That is what people search for.
+Name the title and the filename for the **symptom**, not the cause, in the words the error message or the user would
+use. That is what people search for.
 
+* **`id`**: `fix-` plus a four-digit number, as `fix-0001`. Save the file as `<slug>.md`.
 * **`symptom-keywords`**: the literal error text, the service names, and the words someone would type who does not yet
-  know what is wrong. This is the field that makes the document findable, so over-fill it.
+  know what is wrong. This is the field that makes the document findable, so over-fill it with the search terms that
+  failed you the day you hit the problem.
 * **`verified`**: who has checked this fix, one line per actor, oldest first. A `draft` leaves the key out. Every
   other status needs at least one line.
 
@@ -42,6 +45,9 @@ Name the title and the filename for the **symptom**, not the cause. That is what
   Read the list to see how far the fix has been taken on trust. Agents alone leave it machine-confirmed, and one
   `human:` line makes it human-reviewed.
 * **`status`**: write `draft` where nobody has verified the resolution yet.
+* **`applies-to`**: service ids, which a reader follows to the service. The `Environment` section says in prose which
+  machines, tooling and versions the fix matches.
+* **`review-by`**: a quoted date. A resolution goes stale when the thing it repairs is rewritten.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

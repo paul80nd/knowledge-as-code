@@ -81,27 +81,8 @@ when a team proposes a tool.
 
 ## Adding a tool
 
-1. Copy [`_template.md`](tools/_template.md) to `<slug>.md`. Tools use slug ids: `tol-vitest`.
-2. Set `status`. `trial` covers something being evaluated in one place. Promote or reject it once the evaluation ends.
-3. Set `decided-on` to the day you decided, and `review-by` to the day somebody checks the entry again.
-4. List each package in `packages`, as a package URL with the range approved for new work.
-5. Record the `homepage`.
-6. Read the package's own licence files. Write what the package states in `licence-declared`, and what you concluded
-   in `licence`.
-7. Where this tool takes over from an older one, name the older tool in `replaces`, so the deprecation path is visible.
-8. Cite `decided-in` where an ADR exists. Where the choice was contested and no ADR exists, write one.
-
-**Conventions**
-
-* **Approved means approved for new work.** Something already in use but not approved is drift, and finding it is a
-  manual job until something implements `drift-against-manifests`.
-* **A deprecated entry names its successor.** Set `successor` to whatever took over, so somebody arriving from a
-  manifest has somewhere to go next.
-* **Give a package a range, not a pin.** The pin belongs in the manifest.
-* **An entry expires.** `review-in-date` warns once `review-by` has passed, so an approval nobody revisits stops
-  speaking for the estate.
-* **A conclusion that departs from the declaration says why.** `conclusion-states-a-reason` warns where `licence` and
-  `licence-declared` differ and no `## Licence and obligations` section says what you read.
+Copy [`_template.md`](tools/_template.md). Its guidance block states how to write the id and each field. The prompt
+under each section states how to write that section.
 
 ## What CI checks
 

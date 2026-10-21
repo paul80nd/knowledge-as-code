@@ -19,6 +19,8 @@ an optional field from [the type page](../explanations.md#metadata) where you ha
 
 **Frontmatter**
 
+* **`id`**: `exp-` plus a slug naming the subject. Save the file as `<slug>.md`, with no number prefix, because
+  explanations are named, not sequenced.
 * **`status`**: `stale` is an honest state. Use it where the page no longer matches what runs.
 * **`explains`**: the ids of what this explains. A service, an offering, a standard, a process or an ADR.
 * **`review-by`**: a quoted date. Explanations are the residual category, so they need the tightest staleness
@@ -37,8 +39,8 @@ One or two sentences on what this explains and who it's for.
 
 ## {{Section}}
 
-Narrative. Link out to the services, offerings, standards, processes and ADRs with the detail. Draw the subject as a
-mermaid diagram where it has a shape, and label it.
+Narrative. Link out for every concrete fact, to the services, offerings, standards, processes and ADRs that state it.
+Draw the subject as a mermaid diagram where it has a shape, and label it.
 
 ## Where the detail lives
 

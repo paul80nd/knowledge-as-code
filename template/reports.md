@@ -61,21 +61,8 @@ rarely.
 
 ## Adding a report
 
-1. Run `kac report <name>` and read what it printed. The limits it states are part of the document.
-2. Copy [`_template.md`](reports/_template.md) to a kebab-case filename naming the question, and paste the output under
-   the frontmatter.
-3. Answer every judgement cell. A cell you cannot answer is a question for whoever owns the area, not a blank.
-4. Set `sources` to the `content-version` of each corpus the run read, and write yourself into `generated.by`. Leave
-   `verified` empty and the status at `draft`: `no-self-verification` rejects a verification by whoever wrote the
-   content.
-5. Ask somebody else to read it. They add a `verified` entry naming themselves and set the status.
-
-**Regenerating replaces the content.** Carry forward every verdict whose row is unchanged, and answer the rows that
-moved. Where nothing in the corpus touched the report, raise the `sources` version by hand and leave `generated` alone.
-
-**Which `sources` entry you raise decides what else you edit.** The corpus the report answers for comes first, then one
-entry per corpus it imports. Raising the first entry edits frontmatter alone. Raising an imported entry also means
-editing the `Imported:` bullet under `## Limits` to match, and adding a `verified` entry for the body you changed.
+Copy [`_template.md`](reports/_template.md). Its guidance block states how to fill it from `kac report` and how to
+answer the judgement cells. It also states how to write each field, and what to raise when you run the report again.
 
 ## What CI checks
 

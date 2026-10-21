@@ -63,14 +63,8 @@ An explanation changes when the thing it explains changes. New explanations arri
 
 ## Adding an explanation
 
-1. Check it is none of the exclusions above.
-2. Copy [`_template.md`](explanations/_template.md) to a kebab-case filename, with no number prefix. Explanations are
-   named, not sequenced.
-3. Set `explains` to the ids this record explains: a service, an offering, a standard, a process or an ADR. Set
-   `review-by`.
-4. Under `What this covers`, say what the record covers and what it leaves to another record.
-5. Write the rest as prose. Link out for every concrete fact you are tempted to state. Draw the subject as a mermaid
-   diagram where it has a shape.
+Check it is none of the exclusions above. Then copy [`_template.md`](explanations/_template.md). Its guidance block
+states how to write the id and each field. The prompt under each section states how to write that section.
 
 ## What CI checks
 

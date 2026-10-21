@@ -78,39 +78,8 @@ new component.
 
 ## Adding a service
 
-1. Copy [`_template.md`](services/_template.md) to `<slug>.md`. Services take a **slug id**, `svc-<name>`, because they
-   have natural stable names.
-2. Fill in the frontmatter. `depends-on` names other service ids. The [index](services/_index.md) is where to find them.
-3. List each interface the service offers in `interfaces`: the contract format, and the address the contract is
-   published at.
-4. Record environments and URLs, and the data stores it owns.
-5. Keep it current. Everything else in the corpus trusts this catalogue, so an entry that has drifted from the estate
-   sends the next reader to the wrong repository.
-
-**Conventions**
-
-* **The id names the deployable, not the repository.** A repository shipping three independently deployed apps yields
-  three ids, and none of them includes the repository's name. `repos` states it, and that is where to look for the code.
-  Contributors get this wrong more often than anything else here. A repository list is the easiest list to reach for,
-  and it is the wrong one.
-* **`repos` lists every repository you work in when you change this service.** Most services name one. An asset surface
-  names the repository defining it alongside the repository publishing what it serves. Where another service fills that
-  surface at runtime, it is not a repository, and the body says so.
-* **Criticality.** `critical` means a customer-facing failure, `important` means degraded service, and `supporting`
-  means internal impact only. Criticality drives runbook and NFR prioritisation, so grade a service honestly. A service
-  graded above one of its own dependencies is not automatically wrong, but it is worth defending in the record.
-* **Dependencies point downward only.** Record what this service calls. Nothing generates a reverse view today, so
-  anyone who writes a "depended on by" list maintains it by hand. Assume such a list is stale unless it says otherwise.
-* **`depends-on` records calls, not messages.** An edge means this service is configured to reach that one: a URL in its
-  application settings, or a route pointing at it. Publish/subscribe coupling over a message bus is deliberately not an
-  edge, because it is not a call and the publisher does not know its consumers. The graph therefore shows an
-  event-driven service as unconnected when it is not, so its topics and queues sit in its own `## Operational notes`.
-* **A field left out means "nothing in this catalogue", not "nothing at all".** A service that calls a legacy system, a
-  third-party integration or anything else outside this catalogue writes no `depends-on` at all. None of those is an
-  edge. The same holds for `data-stores`. The field records what is here, and the body records the rest.
-* **Sourcing.** Say where a claim came from. "Taken from the application settings the infrastructure declares" weighs
-  differently from "the README says", and the reader needs to know which one they have. Where you cannot establish
-  something, write it down as an open question. Nobody reading later can tell your guess from a fact.
+Copy [`_template.md`](services/_template.md). Its guidance block states how to write the id, each field and where a
+claim came from. The prompt under each section states how to write that section.
 
 ### Deriving the `platform` enum
 

@@ -23,22 +23,28 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a data document adds to it. Add
 an optional field from [the type page](../data.md#metadata) where you have a value for it.
 
+**Never put actual data here**: no sample records, no identifiers, no connection strings.
+
 **Frontmatter**
 
+* **`id`**: `dat-` plus a slug naming the domain, as `dat-bookings`. Save the file as `<slug>.md`.
 * **`owned-by`**: a single service id. Shared ownership means nobody is answerable, so resolve it before writing the
   document.
 * **`classification`**: how widely you may share the data, and nothing else about it.
-* **`personal-data`**: a category of data, not a grade of sensitivity. Data can be `confidential` and `none`, or
-  `public` and `personal`.
-* **`data-subjects`**: required where `personal-data` is anything but `none`. The categories of people the data is
-  about, in the corpus's own words.
-* **`retention`**: required where `personal-data` is `personal` or `special-category`. "indefinitely" is an answer, and
-  a revealing one.
-* **`region`**: where the owning service keeps the data, as a cloud region or a place.
+* **`personal-data`**: whether the data identifies a living person. It is a category of data, not a grade of
+  sensitivity. A payment history is `confidential` and `personal`, and a published catalogue is `public` and `none`.
+* **`data-subjects`**: required where `personal-data` is anything but `none`, and `required-field` fails the build
+  without it. The categories of people the data is about, in the corpus's own words, such as `borrowers` or `staff`.
+* **`retention`**: required where `personal-data` is `personal` or `special-category`, and `required-field` fails the
+  build without it. "indefinitely" is an answer, and a revealing one.
+* **`region`**: where the owning service keeps the data, as a cloud region or a place. Never where a recipient
+  processes it: the last column of the `Flows` table records that.
 * **`flows-to`**: the services and integrations that receive this data. Data leaving the estate is the part that matters
   most.
 * **`review-by`**: the day someone confirms the classification and the retention are still right. A year ahead is
-  usual. `classification-in-date` warns once that day passes, and a warning leaves the build green.
+  usual. `classification-in-date` warns once that day passes, and a warning leaves the build green. When the day has
+  passed, read the record against the store and set a new date. A corpus that sets `export.exclude` to `overdue`
+  withholds the document until you do.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
