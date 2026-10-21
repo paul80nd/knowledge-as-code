@@ -5,14 +5,14 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-21T19:10:00Z
+  at: 2026-10-21T19:25:00Z
   by: claude-code/opus-5.5
   report: frameworks
   tool: kac/0.36.0
 sources:
-  - { resource: example-engineering, version: "0.38.0" }
+  - { resource: example-engineering, version: "0.38.1" }
 verified:
-  - { at: 2026-10-21T19:11:00Z, by: human:paul.law }
+  - { at: 2026-10-21T19:35:00Z, by: human:paul.law }
 tags: [ coverage, frameworks ]
 ---
 
@@ -31,19 +31,23 @@ this report decides whether the clause covers that control or one corner of it.
 
 ## Totals
 
-| Framework         | Standing       | References | Cited once |
-|-------------------|----------------|------------|------------|
-| Azure WAF         | Inspiration    | 4          | 0          |
-| DORA metrics      | Inspiration    | 4          | 1          |
-| Equality Act 2010 | Obliged        | 4          | 3          |
-| ISO 27001:2022    | Obliged        | 58         | 9          |
-| NIST AI RMF 1.0   | Inspiration    | 4          | 1          |
-| NIST SSDF 1.1     | Inspiration    | 15         | 1          |
-| OWASP ASVS 5.0    | Inspiration    | 7          | 6          |
-| SLSA 1.1          | Inspiration    | 2          | 2          |
-| UK GDPR           | Obliged        | 23         | 15         |
-| WCAG 2.2 AA       | Self-obligated | 1          | 0          |
-| **Total**         |                | **122**    | **38**     |
+| Framework                   | Standing       | References | Cited once |
+|-----------------------------|----------------|------------|------------|
+| Azure WAF                   | Inspiration    | 4          | 0          |
+| DORA metrics                | Inspiration    | 4          | 1          |
+| Equality Act 2010           | Obliged        | 4          | 3          |
+| ISO 27001:2022              | Obliged        | 58         | 9          |
+| ISO 31000:2018              | Inspiration    | 4          | 4          |
+| NIST AI RMF 1.0             | Inspiration    | 4          | 1          |
+| NIST SP 800-207             | Inspiration    | 1          | 1          |
+| NIST SP 800-57 Part 1 Rev 5 | Inspiration    | 3          | 3          |
+| NIST SP 800-63B-4           | Inspiration    | 1          | 1          |
+| NIST SSDF 1.1               | Inspiration    | 15         | 1          |
+| OWASP ASVS 5.0              | Inspiration    | 7          | 6          |
+| SLSA 1.1                    | Inspiration    | 2          | 2          |
+| UK GDPR                     | Obliged        | 23         | 15         |
+| WCAG 2.2 AA                 | Self-obligated | 1          | 0          |
+| **Total**                   |                | **131**    | **47**     |
 
 ## References
 
@@ -89,7 +93,7 @@ Filed under `Obliged` in [`frameworks.md`](../frameworks.md#iso-27001).
 | A.5.3     | 2         | `pol-AGNT.DUTIES`, `pol-ACCS.DUTIES`                                                                                                                                                        | `pol-AGNT`, `pol-ACCS`                         |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.5     | 1         | `pol-INCR.NOTIFY`                                                                                                                                                                           | `pol-INCR`                                     | The control asks that contact with the relevant authorities be established and kept up. `NOTIFY` covers the statutory breach instance. `frameworks.md` places the rest with Legal and the ISMS owner.                                                                                                                                                              |
 | A.5.8     | 2         | `pol-SECD.REQS`, `pol-SECD.ACTIONS`                                                                                                                                                         | `pol-SECD`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
-| A.5.9     | 3         | `pol-DATA.INVENT`, `pol-DATA.ARCHIVE`, `pol-DATA.SUNSET`                                                                                                                                    | `pol-DATA`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
+| A.5.9     | 4         | `pol-OBSV.ESTATE`, `pol-DATA.INVENT`, `pol-DATA.ARCHIVE`, `pol-DATA.SUNSET`                                                                                                                 | `pol-OBSV`, `pol-DATA`                         |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.12    | 2         | `pol-DATA.CLASS`, `pol-DATA.TAGGED`                                                                                                                                                         | `pol-DATA`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.14    | 2         | `pol-DATA.CRYPTO`, `pol-MEXP.TRANSIT`                                                                                                                                                       | `pol-DATA`, `pol-MEXP`                         |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.15    | 5         | `pol-ACCS.LEAST`, `pol-ACCS.RECERT`, `pol-ACCS.VALID`, `pol-ACCS.DORMANT`, `pol-ACCS.EXPIRE`                                                                                                | `pol-ACCS`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
@@ -101,7 +105,7 @@ Filed under `Obliged` in [`frameworks.md`](../frameworks.md#iso-27001).
 | A.5.22    | 2         | `pol-SUPL.REVIEW`, `pol-SUPL.SUPCHG`                                                                                                                                                        | `pol-SUPL`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.23    | 4         | `pol-SUPL.CLOUD`, `pol-SUPL.LOCATE`, `pol-SUPL.CHANNEL`, `pol-SUPL.EXIT`                                                                                                                    | `pol-SUPL`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.24    | 3         | `pol-INCR.PROCESS`, `pol-INCR.AVERTED`, `pol-INCR.DRILL`                                                                                                                                    | `pol-INCR`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
-| A.5.25    | 2         | `pol-INCR.DECLARE`, `pol-INCR.HARM`                                                                                                                                                         | `pol-INCR`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
+| A.5.25    | 3         | `pol-INCR.DECLARE`, `pol-INCR.HARM`, `pol-INCR.TRIAGE`                                                                                                                                      | `pol-INCR`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.26    | 3         | `pol-INCR.COMMS`, `pol-INCR.EVIDENC`, `pol-INCR.ADHOC`                                                                                                                                      | `pol-INCR`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.27    | 4         | `pol-INCR.LEARN`, `pol-INCR.ACTIONS`, `pol-INCR.TRENDS`, `pol-INCR.TOOSOON`                                                                                                                 | `pol-INCR`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.5.28    | 1         | `pol-INCR.FREEZE`                                                                                                                                                                           | `pol-INCR`                                     | Chain of custody and what makes evidence admissible are Legal's. `FREEZE` covers the other limb: keeping the state an investigation starts from.                                                                                                                                                                                                                   |
@@ -145,6 +149,17 @@ Filed under `Obliged` in [`frameworks.md`](../frameworks.md#iso-27001).
 | A.8.32    | 10        | `pol-EVER.HISTORY`, `pol-EVER.INTENT`, `pol-EVER.BRANCH`, `pol-EVER.PARITY`, `pol-PIPE.TRACE`, `pol-PIPE.REVERT`, `pol-PIPE.GATES`, `pol-PIPE.SIGNOFF`, `pol-PIPE.FLAGS`, `pol-PIPE.MANUAL` | `pol-EVER`, `pol-PIPE`                         |                                                                                                                                                                                                                                                                                                                                                                    |
 | A.8.33    | 2         | `pol-ENVS.MASK`, `pol-ENVS.UNMASK`                                                                                                                                                          | `pol-ENVS`                                     |                                                                                                                                                                                                                                                                                                                                                                    |
 
+### ISO 31000:2018
+
+Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#iso-31000).
+
+| Reference | Citations | Clauses            | Policies   | Note |
+|-----------|-----------|--------------------|------------|------|
+| 5.4.3     | 1         | `pol-DEVI.OWNER`   | `pol-DEVI` |      |
+| 6.5.3     | 1         | `pol-DEVI.CONTENT` | `pol-DEVI` |      |
+| 6.6       | 1         | `pol-DEVI.EXPIRY`  | `pol-DEVI` |      |
+| 6.7       | 1         | `pol-DEVI.SURFACE` | `pol-DEVI` |      |
+
 ### NIST AI RMF 1.0
 
 Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-ai-rmf).
@@ -155,6 +170,32 @@ Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-ai-rmf).
 | MANAGE    | 3         | `pol-AGNT.EQUAL`, `pol-AGNT.DUTIES`, `pol-AGNT.ACCESS` | `pol-AGNT` |                                                                                                                                                                            |
 | MAP       | 2         | `pol-AGNT.PROV`, `pol-AGNT.UNPROV`                     | `pol-AGNT` |                                                                                                                                                                            |
 | MEASURE   | 2         | `pol-AGNT.CONFID`, `pol-AGNT.SELFVER`                  | `pol-AGNT` |                                                                                                                                                                            |
+
+### NIST SP 800-207
+
+Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-sp-800-207).
+
+| Reference | Citations | Clauses           | Policies   | Note |
+|-----------|-----------|-------------------|------------|------|
+| 2.1       | 1         | `pol-MEXP.ZEROTR` | `pol-MEXP` |      |
+
+### NIST SP 800-57 Part 1 Rev 5
+
+Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-sp-800-57).
+
+| Reference | Citations | Clauses           | Policies   | Note |
+|-----------|-----------|-------------------|------------|------|
+| 5.3       | 1         | `pol-SCRT.ROTATE` | `pol-SCRT` |      |
+| 5.6.4     | 1         | `pol-DATA.AGILE`  | `pol-DATA` |      |
+| 8         | 1         | `pol-SCRT.KEYS`   | `pol-SCRT` |      |
+
+### NIST SP 800-63B-4
+
+Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-sp-800-63b).
+
+| Reference | Citations | Clauses          | Policies   | Note |
+|-----------|-----------|------------------|------------|------|
+| 2.2       | 1         | `pol-ACCS.AUTHN` | `pol-ACCS` |      |
 
 ### NIST SSDF 1.1
 

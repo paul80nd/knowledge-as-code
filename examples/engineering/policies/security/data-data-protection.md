@@ -64,7 +64,7 @@ the data itself requires, in whichever environment it is kept._
 | `LOGS`    | **MUST NOT** write unmasked sensitive personal data into logs or telemetry ([pol-SCRT].LOGS states the same for secrets)                     | [ISO 27001:2022].A.8.12                                                                                           |
 | `LEAK`    | SHOULD detect sensitive data leaving through a route that is open for other traffic                                                          | [ISO 27001:2022].A.8.12                                                                                           |
 | `TAGGED`  | SHOULD carry a data element's classification as an attribute of the system or store that holds it, not only as documentation                 | [ISO 27001:2022].A.5.12                                                                                           |
-| `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it, rather than treating the choice as permanent                |                                                                                                                   |
+| `AGILE`   | COULD change cryptographic algorithm without re-architecting what depends on it, rather than treating the choice as permanent                | [NIST SP 800-57 Part 1 Rev 5].5.6.4                                                                               |
 | `CLEAR`   | COULD protect sensitive data so that it is never processed in the clear                                                                      |                                                                                                                   |
 
 ## Exceptions
@@ -82,3 +82,4 @@ answer whether we were entitled to hold that data at all.
 [pol-SCRT]: ../security/scrt-secrets-management.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
+[NIST SP 800-57 Part 1 Rev 5]: ../../frameworks.md#nist-sp-800-57
