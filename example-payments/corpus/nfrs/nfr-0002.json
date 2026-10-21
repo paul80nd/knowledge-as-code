@@ -31,6 +31,6 @@
     "What we do about a breach": "No alert fires, because the figure is read at a restore and not continuously. The repair is the reconciliation, which rebuilds the missing entries from the PSP's settlement file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/da73f8f28bc4074d302214eb27df05cc9591203c/examples/payments/nfrs/0002-ledger-recovery-point.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f96a6ae804ccde0f214a090722c51139b9bdcd6b/examples/payments/nfrs/0002-ledger-recovery-point.md"
   }
 }

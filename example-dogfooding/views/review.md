@@ -90,6 +90,13 @@ Status: active.
 
 Controls: `ctl-0001` A merge waits for the validate job (`ci`, active); `ctl-0002` Every job in kac.yml sits behind the gate (`ci`, active); `ctl-0003` Every workflow passes actionlint (`ci`, active); `ctl-0006` A version carries the changelog section its release publishes (`ci`, active); `ctl-0011` Every corpus whose records changed has moved its content-version (`ci`, active).
 
+### A checkout leaves no credential behind
+
+Cite as `std-CI.a-checkout-leaves-no-credential-behind`.
+
+- A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which is what [zizmor]'s `artipacked` audit asks for.
+- A step needing git write access **MUST** supply the token itself.
+
 ### A job declares the permission it needs
 
 Cite as `std-CI.a-job-declares-the-permission-it-needs`.

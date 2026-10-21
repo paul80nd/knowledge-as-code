@@ -25,6 +25,6 @@
     "Exit": "No card detail sits in this estate, so nothing has to be migrated. A move is a change to the redirect [svc-reservations] builds, and to the signature it verifies on the way back.\n\n**The old vendor keeps the history.** Every payment is matched to a hold by a reference this estate minted, and the record of what was paid stays with whoever took it. A move leaves that history behind the old vendor's portal."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/da73f8f28bc4074d302214eb27df05cc9591203c/examples/library/integrations/card-payments.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f96a6ae804ccde0f214a090722c51139b9bdcd6b/examples/library/integrations/card-payments.md"
   }
 }
