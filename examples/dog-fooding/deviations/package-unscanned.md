@@ -6,7 +6,7 @@ status: active
 departs-from:
   - eng:pol-TRUS.MALWARE
 risk: medium
-accepted-on: "2026-09-07"
+accepted-on: "2026-10-21"
 review-by: "2027-03-07"
 closed-on:
 applies-to:
