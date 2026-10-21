@@ -98,41 +98,23 @@ graph LR;
   t_reports[Report];
   t_standards[Standard];
   t_adrs -- related --> t_adrs;
-  t_adrs -- superseded-by --> t_adrs;
-  t_controls -- verifies --> t_standards;
+  t_adrs -- superseded-by / supersedes --> t_adrs;
+  t_controls -- verifies / verified-by --> t_standards;
   t_glossary -- narrows --> t_glossary;
   t_standards -- depends-on --> t_standards;
   t_standards -- derived-from --> t_adrs;
   t_standards -- implements --> t_policies;
-  t_standards -- superseded-by --> t_standards;
+  t_standards -- superseded-by / supersedes --> t_standards;
 ```
 
 <!-- END GENERATED: types-graph -->
 
 The spine runs down the normative hierarchy: a standard implements a policy, a control verifies a standard, and both
-land on a service. Everything else hangs off that. The same edges, field by field:
-
-<!-- BEGIN GENERATED: types-edges -->
-
-| From     | Field           | Points at | Answered by     |
-|----------|-----------------|-----------|-----------------|
-| ADR      | `related`       | ADR       |                 |
-| ADR      | `superseded-by` | ADR       | `supersedes`    |
-| ADR      | `supersedes`    | ADR       | `superseded-by` |
-| Control  | `verifies`      | Standard  | `verified-by`   |
-| Glossary | `narrows`       | Glossary  |                 |
-| Standard | `depends-on`    | Standard  |                 |
-| Standard | `derived-from`  | ADR       |                 |
-| Standard | `implements`    | Policy    |                 |
-| Standard | `superseded-by` | Standard  | `supersedes`    |
-| Standard | `supersedes`    | Standard  | `superseded-by` |
-| Standard | `verified-by`   | Control   | `verifies`      |
-
-<!-- END GENERATED: types-edges -->
+land on a service. Everything else hangs off that.
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
-means nobody answers that edge, and nobody has to keep it in step.
+`replaces` / `successor`. A one-sided link fails the build. The graph draws a pair as one edge labelled with both
+fields, as `verifies / verified-by`. An edge with one field in its label has no counterpart to keep in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. A
 downstream corpus inherits both the policies and the standards above it. It also writes standards of its own, so
@@ -142,7 +124,7 @@ no corpus below rewrites it.
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
 [Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records our standing
-against a framework. It carries no `ref:` and so appears in no row above.
+against a framework. It has no `ref:`, so the graph above does not draw it.
 
 ## Disambiguations
 

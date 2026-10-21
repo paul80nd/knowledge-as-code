@@ -137,8 +137,7 @@ public static class GeneratedFiles
             new Block("types-detail",
                 schema => Generator.TypeCatalogue(schema.Tiers, adopted, Up("knowledge-as-code/taxonomy.md"))),
             new Block("types-versus", _ => Generator.Disambiguations(adopted)),
-            new Block("types-graph", _ => Generator.RelationDiagram(adopted)),
-            new Block("types-edges", _ => Generator.RelationTable(adopted))
+            new Block("types-graph", _ => Generator.RelationDiagram(adopted))
         ]));
 
         specs.Add(new FileSpec("knowledge-as-code/lineage.md", true,

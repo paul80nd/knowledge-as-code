@@ -33,8 +33,9 @@ states a verdict, and a fifth status, `rejected`, keeps a proposal the team turn
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
 framework.
 
-**The rows themselves live in the corpus.** Each corpus's lineage page renders them from the schema it has, for the
-types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too.
+**A corpus prints the prior art.** Each corpus's lineage page lists the `prior-art` of every type that corpus adopted,
+from the schema it has. `alignment` and `divergence` stay in the type's schema file. A corpus declaring a type of its
+own writes that type's lineage too.
 
 **Lineage is not a record's `sources`.** A row says where the type came from. The `sources` field on a record says where
 that one record's content came from. [Filling `sources`](metadata.md#filling-sources) says which of them a document

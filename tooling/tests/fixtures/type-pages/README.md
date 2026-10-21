@@ -18,7 +18,7 @@ breaks a template deliberately is `broken-template`.
 `knowledge-as-code/taxonomy.md` is a framework document, and gets three passes: its markers, its links, and the naming
 rule.
 
-It carries the five blocks `kac generate` writes into it, and the `types-graph` pair has lost its BEGIN marker. One pass
+It carries the four blocks `kac generate` writes into it, and the `types-graph` pair has lost its BEGIN marker. One pass
 reads one list and holds a type's page and a framework document to it alike, so the fault reads here exactly as it does
 on `adrs.md` above. A document excluded from discovery is reached at all only because the generator's list names it.
 

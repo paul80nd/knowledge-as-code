@@ -15,6 +15,16 @@ A push to `main` publishes whenever `kac.csproj` names a version nuget.org does 
 the commit and opens a release carrying the section for that version. A change lands its entry under `## Unreleased`
 first, and whoever owns the branch decides whether it ships now or waits for the rest of what it belongs to.
 
+## Unreleased
+
+### Changed
+
+- **`kac generate` prints the type relations once, as a labelled graph.** `knowledge-as-code/taxonomy.md` no longer
+  has the `types-edges` table. Each edge in `types-graph` is labelled with its field, and a reciprocal pair is one edge
+  labelled with both, as `-- superseded-by / supersedes -->`. The `types-lineage` table on
+  `knowledge-as-code/lineage.md` keeps `Type` and `Nearest prior art`. `alignment` and `divergence` stay in each type's
+  schema under `lineage:`. Run `kac update` to take both pages, which removes the old `types-edges` markers.
+
 ## 0.36.0 - 2026-10-21
 
 ### Added

@@ -16,7 +16,7 @@ under a type, with YAML frontmatter above its prose. A **type** is one kind of r
 | `schema-universal` in `knowledge-as-code/metadata.md` | `_universal.yaml`                       |
 | `checks-universal` in `knowledge-as-code/metadata.md` | the checks every type shares            |
 | `types-metadata` in `knowledge-as-code/metadata.md`   | the adopted types                       |
-| five blocks in `knowledge-as-code/taxonomy.md`        | the adopted types                       |
+| four blocks in `knowledge-as-code/taxonomy.md`        | the adopted types                       |
 | two blocks in `knowledge-as-code/lineage.md`          | the adopted types                       |
 | `types-index` block in `README.md`                    | the adopted types                       |
 
@@ -53,8 +53,8 @@ that asks nothing of the type's schema and runs on every record.
 **`schema-universal` documents the universal fields once for the whole taxonomy**, in `knowledge-as-code/metadata.md`,
 as the schema declares them. A type page lists again only the ones it refines, under `†`.
 
-**The taxonomy has five blocks.** `types-placement` is the decision table, `types-detail` is the catalogue by tier,
-`types-versus` is the disambiguations, and `types-graph` and `types-edges` are the relation diagram and its edges.
+**The taxonomy has four blocks.** `types-placement` is the decision table, `types-detail` is the catalogue by tier,
+`types-versus` is the disambiguations, and `types-graph` is the relation diagram.
 
 **Lineage has two.** `types-lineage` records where each type's name came from, and `types-collisions` records where that
 name already means something else to a reader.
@@ -80,7 +80,8 @@ behind.
 
 The types graph goes into a fenced Mermaid block, in the subset an Azure DevOps wiki renders. A diagram that exceeds it
 renders nothing there. So the generator writes `graph` and never `flowchart`, uses no subgraphs, keeps every arrow to
-`-->`, and draws every node as `[...]`. Every publishing target gets the same diagram.
+`-->`, and draws every node as `[...]`. It labels each edge with its field, as `-- text -->`. A reciprocal pair is one
+edge labelled with both fields, as `-- superseded-by / supersedes -->`. Every publishing target gets the same diagram.
 
 ## Byte-stable output
 

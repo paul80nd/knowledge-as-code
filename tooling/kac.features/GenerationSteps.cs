@@ -114,7 +114,7 @@ public sealed partial class GenerationSteps(Workspace ws)
     [GeneratedRegex(@"^\s*\w+\[[^\[\]]+\];$")]
     private static partial Regex Node();
 
-    [GeneratedRegex(@"^\s*\w+ (-- [\w-]+ )?--> \w+;$")]
+    [GeneratedRegex(@"^\s*\w+ (-- [\w-]+( / [\w-]+)? )?--> \w+;$")]
     private static partial Regex Edge();
 
     [GeneratedRegex(@"(<!-- BEGIN GENERATED: [^>]+ -->)[\s\S]*?(<!-- END GENERATED: [^>]+ -->)")]
