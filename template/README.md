@@ -55,7 +55,7 @@ A `README.md` for the corpus is not here either. This folder's own is withheld, 
 the one page nobody else can write.
 
 The repository-shaped files are here: [`.gitignore`](.gitignore), [`.gitattributes`](.gitattributes),
-[`.editorconfig`](.editorconfig), [`.order`](.order) for an Azure DevOps wiki, and a starter pipeline for each of the
-two hosts. The first two are load-bearing. `kac` reads the git listing, so a corpus without an ignore file tracks
-`.dist/` and `_reports/` and then validates its own generated output as records, and without `eol=lf` a Windows checkout
-trips `generate --check`.
+[`.editorconfig`](.editorconfig), [`.order`](.order) for an Azure DevOps wiki, a starter pipeline for each of the two
+hosts, and [`.github/dependabot.yml`](.github/dependabot.yml), which moves the GitHub starter's pins. The first two
+are load-bearing. `kac` reads the git listing, so a corpus without an ignore file tracks `.dist/` and `_reports/` and
+then validates its own generated output as records, and without `eol=lf` a Windows checkout trips `generate --check`.

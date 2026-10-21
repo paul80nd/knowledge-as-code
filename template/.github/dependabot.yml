@@ -1,0 +1,10 @@
+# What Dependabot keeps current in this corpus.
+#
+# It moves the commit each action in `workflows/kac.yml` is pinned to, and the version comment beside
+# it, so a pinned action still takes its fixes.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
