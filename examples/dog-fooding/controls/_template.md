@@ -22,9 +22,12 @@ optional field from [the type page](../controls.md#metadata) where you have a va
 
 **Frontmatter**
 
-* **`verifies`**: standard ids, ideally rule-level anchors.
-* **`mechanism`**: pick the real one. `not-enforced` is a first-class value and the whole point of the coverage report,
-  so do not invent a mechanism to avoid using it.
+* **`id`**: `ctl-` plus a four-digit number, as `ctl-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
+* **`verifies`**: rule-level anchors where the standard has them, and the standard id otherwise. When the way a rule is
+  checked changes, update this control and leave the standard as it is.
+* **`mechanism`**: pick the one that runs today. `not-enforced` is a first-class value and the whole point of the
+  coverage report, so do not invent a mechanism to avoid using it. Write the control for an unenforced rule all the
+  same, because an unenforced rule you know about is worth more than one you do not.
 * **`last-verified`**: the day somebody last ran the check, quoted, or `"never"`. Add it where `mechanism` is `manual`.
 * **`evidence`**: where the proof lives, such as the build log, the audit note or the dashboard. Someone asking "how do
   you know?" should be able to follow it to an artefact. Add it unless `mechanism` is `not-enforced`.

@@ -24,6 +24,7 @@ optional field from [the type page](../runbooks.md#metadata) where you have a va
 
 Title this document for the **failure**, not the fix. A reader at 2am searches for the failure.
 
+* **`id`**: `rbk-` plus a slug naming the failure, as `rbk-estate-rebuild`. Save the file as `<slug>.md`.
 * **`severity`**: how urgent. The `Impact` section says who is affected.
 * **`last-rehearsed`**: a quoted date. A walk is a drill where you cause the fault and follow the steps, or a
   read-through against the running system where you cannot. `"never"` is permitted, and it is what you want to know
@@ -34,7 +35,10 @@ Title this document for the **failure**, not the fix. A reader at 2am searches f
   `last-rehearsed` states a date.
 * **`requires-tools`**: list every tool the reader installs before starting.
 * **`requires-access`**: list every permission and role the runbook needs. Discovering you lack one mid-incident is its
-  own outage.
+  own outage. Where a step needs somebody else's approval, name who it is and how to reach them at 2am.
+
+**The steps.** Write short sentences in the imperative. Leave out background and rationale. Link an explanation in
+`Related` for a reader who wants the theory afterwards.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

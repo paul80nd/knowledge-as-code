@@ -21,8 +21,12 @@ tags: [ a, b ]
 **Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a deviation adds to it. Add an
 optional field from [the type page](../deviations.md#metadata) where you have a value for it.
 
+**Write one deviation per departure.** A page collecting every exception to one policy loses the owner, the date and the
+id that a citation needs. Write it before you depart, or immediately afterwards where an incident left no time.
+
 **Frontmatter**
 
+* **`id`**: `dev-` plus a slug naming the departure, as `dev-legacy-report-secrets`. Save the file as `<slug>.md`.
 * **`status`**: a deviation past its review date is still `active`, because that is what is true.
 * **`departs-from`**: the policy or standard clauses this departs from, one entry each. A policy clause is
   `pol-{{MNEM}}.{{CLAUSE}}` and a standard's rule is `std-{{MNEM}}.{{rule-heading-slug}}`. A bare id is refused,
@@ -30,12 +34,14 @@ optional field from [the type page](../deviations.md#metadata) where you have a 
   breaks: departing from a `SHOULD` takes a reason in the change, and no deviation. Write `none` for a shortcut that
   breaks no rule, which is technical debt and is recorded the same way.
 * **`risk`**: how bad the risk is once what compensates is working, and never how bad the rule's authors thought it
-  was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on.
+  was. A `high` rating brings `review-by` inside six months, which `high-risk-review-window` warns on. Name the risk
+  plainly in `What the risk is`, because a record that reads as a defence of the departure hides what the reviewer
+  needs.
 * **`accepted-on`**: the day the owner accepted the risk. Required once the status leaves `draft`.
 * **`review-by`**: the day somebody has to look at this again. Every deviation has one, a draft included. Once it
   passes, `expiry` warns on an active record and `draft-expiry` on a draft.
-* **`closed-on`**: the day the gap was fixed, or the risk consciously re-accepted. Required when the status is
-  `closed`.
+* **`closed-on`**: the day the gap was fixed, or the risk re-accepted with the same scrutiny as the first time. Move
+  the status in the same change. Required when the status is `closed`.
 * **`owner`**: the individual who accepts the risk, and has the authority to accept it. Write `human:alex.doe`. This
   type refuses `role:`, where every other type admits it.
 * **`assigned-to`**: who does the work that closes this, where that is somebody else. A post may do the work, so this

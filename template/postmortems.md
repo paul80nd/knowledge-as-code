@@ -23,11 +23,7 @@ want to know what keeps breaking.
 
 ## Scope
 
-**Blameless.** We write these to make the estate fail less often, and blame does not do that. Write the causal
-statements about decisions, conditions, systems and roles: "the deploy ran before the migration completed", not
-"X deployed too early".
-
-Boundaries:
+A postmortem is blameless, and [the template](postmortems/_template.md) says how to write one. Its boundaries:
 
 * **[Runbook](runbooks.md)**: instructions for an incident that might happen. A postmortem is an account of one that
   did.
@@ -71,25 +67,8 @@ says needs one.
 
 ## Adding a postmortem
 
-1. Copy [`_template.md`](postmortems/_template.md) to `NNNN-kebab-slug.md`, named for the symptom customers saw rather
-   than for the cause.
-2. Build the timeline from the evidence, before anyone starts theorising.
-3. State the impact as a customer would describe it.
-4. Say in **Resolution** what ended the impairment, and say so where nothing you did ended it.
-5. Separate the root cause from the contributing factors. Name more than one cause where more than one stands out.
-6. Fill in all three lessons. **What went well** and **What went wrong** are halves of one account, and **Where we
-   got lucky** names a control you do not have.
-7. Record each action as a link to its work item. Repair you have already done belongs in **Resolution**.
-8. Fill `prompted` with whatever this incident caused someone to write.
-9. Set `status: draft` while you assemble it, and `published` when it is finished.
-
-**Conventions**
-
-* **Correct a published postmortem where it misstates the incident.** A wrong fact, a wrong time, a typo or a broken
-  link is fixed in place, and so is the prose. Nothing is updated to follow what changed after the incident. The commit
-  message says what you changed and why.
-* **Measure the impact against the [NFRs](nfrs.md)** where targets exist. Where the incident breached one, say which.
-  Where no target existed, that absence is itself a finding.
+Copy [`_template.md`](postmortems/_template.md). Its guidance block states how to write the id and each field. The
+prompt under each section states how to write that section.
 
 ## What CI checks
 

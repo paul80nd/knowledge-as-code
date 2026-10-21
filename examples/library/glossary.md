@@ -38,19 +38,9 @@ Not the place for:
 * **A full explanation of a pattern.** That is an [explanation](explanations.md). A glossary entry is a paragraph, and
   links out for the rest.
 
-**Split by bounded context or product surface, never by topic.** A glossary covers the language of one context: the
-framework itself, a product area, a system that names things its own way. A file called "infrastructure terms" starts an
-argument about placement every time somebody adds a word, and the words drift while the argument runs.
-
 **A term goes in the most general glossary that admits it.** A glossary admits a term when the term belongs to its
 context, so a word the whole estate uses sits in the corpus-wide file and a word only search uses sits with search. A
-narrower glossary redefines a term the general one carries only where the meaning genuinely differs. Each of the two
-entries then names the other. Without that, `title` has two definitions and a reader who finds one has no way of knowing
-about the other.
-
-**A glossary every corpus shares points upward only.** [gls-knowledge-as-code] holds the framework's own vocabulary and
-is synced, so an entry in it cannot name a record this corpus alone has. The narrower entry carries the reference, and
-the shared one still reads correctly in a corpus that never had the other half.
+narrower glossary redefines a term the general one carries only where the meaning genuinely differs.
 
 ## Level of detail and cadence
 
@@ -62,32 +52,9 @@ A term changes rarely, once a team has agreed it. New terms arrive when a team f
 ## Adding a term
 
 1. Choose the most general glossary that admits the term.
-2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md) to a kebab-case filename named for
-   the context, and set `narrows` to the glossary it sits inside.
-3. Add an H3 in alphabetical position.
-4. Write one paragraph of definition, usually one or two sentences. Name the class the thing belongs to, then what sets
-   it apart within that class. If it needs more, the rest belongs in an [explanation](explanations.md) and the entry
-   links to it.
-5. Add an `**Also:**` line where the thing has a second name: an acronym, an abbreviation, or another word for it.
-   A reader searching that name reaches the entry.
-6. Add an `**Avoid:**` line where this glossary has dropped a name for the thing. Say what to write instead.
-7. Add a `**Not:**` line where another thing with a name is confused with this one. Name that thing.
-8. Name the owning [service](services.md) where the concept has one.
-9. Where a narrower glossary redefines a term, reference the other entry from each. Where the general glossary is
-   shared, only the narrower entry carries a reference.
-
-**Conventions**
-
-* **Cross-references name the term**: `[gls-search.title]`, defined as `search.md#title`. The anchor is the term's
-  identifier. There are no numeric ids.
-* **Terms are singular and in canonical casing.** `Term`, not `terms`.
-* **The labelled lines run `Also`, `Avoid`, then `Not`.** `Also` and `Avoid` give the reader other names for this
-  thing. `Not` gives them a different thing. Each travels to a consumer under its own key.
-* **All three are optional.** Leave a line out rather than reach for something to put under it. An entry is read by
-  everyone who reads the glossary, so a line that says nothing costs every one of them.
-* **A `Not:` line names another thing you can point at.** A neighbouring entry, a word from another context, a term the
-  reader already knows. It never names a property this thing lacks: "Not: everything we would like" points at nothing,
-  and a definition that needs it was written badly. Rewrite the definition and drop the line.
+2. Where no glossary covers the context, copy [`_template.md`](glossary/_template.md). Its guidance block states how to
+   write the file, each field and each entry.
+3. Add the entry under `Terms`, as the template's guidance block sets out.
 
 **What ISO asks of a definition.** [ISO/IEC Directives, Part
 2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5, states the drafting rules this type
@@ -149,5 +116,3 @@ this type's records.
 | `unused-terms`    | Reports entries nothing uses, where a use inside the term's own context counts as one. |
 
 <!-- END GENERATED: checks-glossary -->
-
-[gls-knowledge-as-code]: glossary/knowledge-as-code.md

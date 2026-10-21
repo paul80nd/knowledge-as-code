@@ -24,20 +24,25 @@ optional field from [the type page](../nfrs.md#metadata) where you have a value 
 
 **Frontmatter**
 
+* **`id`**: `nfr-` plus a four-digit number, as `nfr-0001`. Save the file as `{{nnnn}}-kebab-slug.md`.
 * **`status`**: `draft` while the figure is still being settled. `aspirational` where it is settled and nobody is held
   to it yet. `agreed` where the estate is held to it. `retired` where it no longer applies.
 * **`characteristic`**: the quality this target commits to, from the values [the type page](../nfrs.md#metadata) lists.
   One record states one quality. A service needing both a latency target and a recovery target gets two records.
 * **`applies-to`**: service or offering ids. Estate-wide targets are almost always wrong, since a marketing page and
   the checkout flow don't deserve the same budget.
-* **`target`**: a concrete figure, such as `99.5%`, `p95 under 400ms` or `RTO 4h`.
+* **`target`**: a concrete figure, such as `99.5%`, `p95 under 400ms` or `RTO 4h`. "Fast" is not a target.
 * **`window`**: the period the figure is read over, such as `monthly` or `rolling 4 weeks`. Required for an
-  availability, capacity, latency or throughput target, because a rate without a period means nothing.
+  availability, capacity, latency or throughput target, because a rate without a period means nothing. A recovery,
+  scalability or accuracy target binds each event or each value, so it needs no window.
 * **`alert-after`**: how long the condition holds before the alert or ticket is raised, such as `15 minutes`. Read
   it from the alert's own configuration. Leave it out where nothing watches this target.
 * **`measured-by`**: required. An NFR you cannot measure is a wish, and "we'd notice" is not a measurement method.
 * **`constrained-by`**: integration ids whose own SLA caps this.
 * **`agreed-on`**: the day the owner accepted the figure. Required once `status` is `agreed`.
+
+**Every section below is required except `Constraints`.** A target whose miss costs nothing much still fills both
+breach sections, and says that nobody is paged.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

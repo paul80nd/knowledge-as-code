@@ -20,12 +20,13 @@ optional field from [the type page](../processes.md#metadata) where you have a v
 
 **Frontmatter**
 
-* **`last-rehearsed`**: a quoted date. `"never"` is permitted, and it is better than a guess: an unrehearsed procedure
-  is a hypothesis. Update it when someone actually follows the process end to end, not when someone edits the document.
-* **`rehearsal-frequency`**: `quarterly` and `annual` are cycles, and `staleness` measures this date against them.
-  `on-change` and `per-release` state an event, which no window measures, so it reports a process using either only
-  while `last-rehearsed` is `"never"`.
-* **`requires-access`**: the systems or roles needed.
+* **`id`**: `prc-` plus a slug naming the task, as `prc-releasing`. Save the file as `<slug>.md`.
+* **`last-rehearsed`**: a quoted date. Write `"never"` rather than guess, because an unrehearsed procedure is a
+  hypothesis. Update it when someone follows the process end to end, not when someone edits the document.
+* **`rehearsal-frequency`**: pick `quarterly` or `annual` where somebody keeps the cadence, and `staleness` measures
+  this date against it. Pick `on-change` or `per-release` where an event is the trigger. No window measures an event,
+  so `staleness` reports a process using either only while `last-rehearsed` is `"never"`.
+* **`requires-access`**: the systems or roles the reader needs. `Prerequisites` says who to ask for each.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

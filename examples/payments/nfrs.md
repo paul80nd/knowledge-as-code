@@ -27,28 +27,6 @@ An NFR states a **target**, not a rule and not a mechanism.
 * "Services **MUST** expose a `/health` endpoint" is a [standard](standards.md).
 * "CI fails a service that exposes no `/health` endpoint" is a control.
 
-**An NFR you cannot measure is a wish.** `measured-by` is required. Where nothing observes the target today, either
-build the instrument or state the target you *can* observe. "We'd notice" is not a measurement method.
-
-**A figure with no period behind it is not a target.** `window` is required for an availability, capacity, latency or
-throughput target, because a rate or a percentile only means something over a stated period. A recovery, scalability or
-accuracy target binds each event or each value, so it needs no window.
-
-**A target with no reason is a number somebody picked.** `Why this number` is required. State what fixes the figure:
-what a customer will tolerate, what a dependency already limits you to, or a measurement you have taken. Say what the
-target leaves out, so a reader can see the gap is deliberate.
-
-**A breach has a cost and a response, and they are two sections.** `What a breach costs` states what a miss costs.
-`What we do about a breach` states the response: the alert that fires, who it pages, and the repair. Both are
-required. A target whose miss costs nothing much answers both, and says that nobody is paged.
-
-**An NFR says what it is achieving now.** `Current actual` is required. A reader sees the reading beside the target,
-so the gap between them is never something to work out elsewhere.
-
-**A target nobody is held to yet says so in `status`.** `aspirational` means somebody settled the figure and the
-estate is not measured against it. `What we do about a breach` then says that nobody is paged. `agreed` means the
-estate is held to the number.
-
 We cannot promise more than the dependencies we do not run. A third-party integration with a 99% SLA caps everything
 built on it at 99%. Name that integration in `constrained-by`, and set the target at what the estate can deliver.
 
@@ -86,24 +64,8 @@ when a service or an offering takes on a target.
 
 ## Adding an NFR
 
-1. Copy [`_template.md`](nfrs/_template.md) to `NNNN-kebab-slug.md`.
-2. Set `characteristic` to the quality this target commits to. One record states one quality.
-3. State the target concretely. "Fast" is not a target; "p95 under 400ms" is.
-4. Set `window` to the period the figure is read over, where the characteristic requires one.
-5. Say under `Why this number` what fixes the figure, and what it leaves out.
-6. Name the instrument that measures it, and say where a reader can find its reading.
-7. Record the current actual, and the day it was read. The gap between it and the target is the useful part.
-8. Record what a breach costs: degraded service, contractual exposure, or nothing much. "Nothing much" is an answer,
-   and a blank is not.
-9. Record the response to a breach: the alert that fires, who it pages, and the repair.
-10. Leave `status: draft` until someone has accepted the target. Then set it to `agreed` and write `agreed-on`.
-
-**Conventions**
-
-* **Scope each target to an offering or a service.** A default covering the whole estate holds a marketing page to the
-  checkout flow's availability budget.
-* **Open an aspirational target at `aspirational`, not `draft`.** `draft` says nobody has settled the figure.
-  `aspirational` says the figure is settled and nobody is held to it.
+Copy [`_template.md`](nfrs/_template.md). Its guidance block states how to write the id and each field. The prompt under
+each section states how to write that section.
 
 ## What CI checks
 

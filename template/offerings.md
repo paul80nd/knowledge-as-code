@@ -68,26 +68,8 @@ An offering changes when the product strategy changes. New offerings arrive rare
 
 ## Adding an offering
 
-1. Copy [`_template.md`](offerings/_template.md) to `<slug>.md`. Offering ids are slugs: `ofr-<name>`.
-2. Write the *what*, the *who* and the *why* in prose. Two or three paragraphs is usually enough.
-3. Fill in `implemented-by` and `feature-files`, and link the work items from the list. Those links make it a hub.
-4. Do not explain how it works. Link to the services and explanations that already do.
-
-**Conventions**
-
-* **The consumer group is what makes this one offering.** `Who it is for` names that group. Two groups served in two
-  different ways are two offerings, however much they share underneath.
-* **Hub, not specification.** `hub-not-specification` weighs the whole document against its outbound links, at roughly
-  forty words each, so an offering that grows a section of its own trips it. Where a section runs longer than the links
-  around it, ask whether the detail belongs in a work item.
-* **The list and the frontmatter say the same thing, and CI checks it.** `related-matches-section` reconciles
-  `implemented-by` and `nfrs` against the ids the list names, in both directions. Write an id in one place and you
-  write it in both.
-* **Work items live in the list alone.** There is no field for them. A consumer reading an export sees the label and
-  not the address, because a section travels and its link definitions do not.
-* **Keep the rest of a feature file path honest yourself.** `feature-file-repo` checks the repository the path opens
-  with. Past that first segment the field is a plain string, `ref-resolves` never sees it, and `feature-file-orphans`
-  is declared and does not run. A path that goes stale there goes stale quietly.
+Copy [`_template.md`](offerings/_template.md). Its guidance block states how to write the id, each field, the work items
+and the NFRs. The prompt under each section states how to write that section.
 
 ## What CI checks
 

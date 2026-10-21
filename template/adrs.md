@@ -63,31 +63,9 @@ decision affects more than one repository.
 
 ## Adding an ADR
 
-1. Copy [`_template.md`](adrs/_template.md) to `NNNN-kebab-case-title.md`, where `NNNN` is the next unused four-digit
-   number. The [index](adrs/_index.md) shows the highest one in use.
-2. Fill in the frontmatter and the sections. Keep it to about a page.
-3. Open a PR. The status starts at `proposed`.
-4. When the decision is settled, set `status` to `accepted` or `rejected`, and set `decided-on`. The index rebuilds
-   itself.
-
-**Conventions**
-
-* **Filename**: `NNNN-kebab-case-title.md`. Sequential, zero-padded, never reused.
-* **Immutability.** Once an ADR is accepted or rejected, change the decision only by writing a new ADR that supersedes
-  it. Edit it in place only to correct what it misstates about the decision as agreed, to fix its prose, a typo or a
-  broken link, or to move its status. Never update it to follow what changed afterwards. The commit message says what
-  you changed.
-* **Rejection.** A proposal the team turns down becomes `rejected` and keeps its number. Its Decision section says why.
-* **Superseding.** Set the old ADR's `status: superseded` and `superseded-by`, and the new one's `supersedes`. A
-  supersession recorded on one side only fails the build.
-* **Prescriptive language.** An ADR that establishes a default or a policy may use
-  [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain
-  declarative prose.
-* **Format**: lean Nygard style, opened by a Y-statement summary and with an explicit Alternatives Considered section.
-  [adr-0001](adrs/0001-knowledge-as-code.md) is the worked example, and arrives with the corpus.
-
-See [Contributing](https://paul80nd.github.io/knowledge-as-code/framework/contributing/) for the review model that
-applies to all Decided-tier documents.
+Copy [`_template.md`](adrs/_template.md). Its guidance block states how to write the id, the filename, each field and
+the form. It also says when you may edit a decided ADR. The prompt under each section states how to write that section.
+Open a pull request with the status at `proposed`.
 
 ## What CI checks
 

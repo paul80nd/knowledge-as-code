@@ -39,13 +39,17 @@ incident whose actions run for weeks still has a `restored-at` on the day.
 **`detected-at` may fall after `restored-at`.** An incident can recover before anybody notices, and one found later in
 the logs is written that way. Only `restored-at` before `occurred-at` is refused.
 
+* **`id`**: `pmt-` plus a four-digit number, as `pmt-0001`. Save the file as `{{nnnn}}-kebab-slug.md`, named for the
+  symptom customers saw, not for the cause.
 * **`duration`**: the span from `occurred-at` to `restored-at`, as an ISO 8601 duration: `PT12M`, `PT4H20M`. Hours,
   minutes and seconds, never days. `kac validate` prints the right value where yours disagrees.
 * **`affected`**: service or offering ids.
 * **`prompted`**: the ADRs, runbooks, NFRs, fixes and standards this incident caused to be written.
 * **`severity`**: the highest level the incident reached on the corpus's severity scale.
 * **`status`**: `draft` while it is being assembled, and `published` once it is the account the estate stands behind.
-  Correct a published postmortem in place where it misstates the incident, and never to follow what changed afterwards.
+  Correct a published postmortem in place where it misstates the incident, and fix a typo, a broken link or unclear
+  prose the same way. Never update it to follow what changed afterwards. The commit message says what you changed and
+  why.
 
 **Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.
@@ -117,7 +121,8 @@ have happened an hour later.)_
 |--------|-----------|-------|
 |        | #{{item}} |       |
 
-_(Actions live in your tracker, and this table links to them. A postmortem is not a tracker.)_
+_(Actions live in your tracker, and this table links to them. A postmortem is not a tracker. Repair you have already
+done belongs in Resolution.)_
 
 ## Related
 

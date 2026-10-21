@@ -10,7 +10,7 @@ An incident-time procedure, read under pressure by someone who may not have seen
 the symptoms, so a reader can tell at once that this is the right document. Impact, immediate actions, a diagnosis
 tree, resolution, escalation and communication follow in that order.
 
-Keep it terse and imperative, and structure it so the reader finds their branch without reading the whole document.
+Its structure lets the reader find their branch without reading the whole document.
 
 ## Why we use them
 
@@ -66,27 +66,8 @@ postmortem's actions.
 
 ## Adding a runbook
 
-1. Copy [`_template.md`](runbooks/_template.md) to `<slug>.md`. Runbooks use slug ids: `rbk-estate-rebuild`.
-2. Lead with **symptoms**: what the reader is seeing. That is how they find this document.
-3. State the **impact** next: who cannot do what while this is broken. `severity` says how urgent, and this says who.
-4. Give the immediate actions before the diagnosis. Stop the bleeding, then work out why.
-5. Structure the diagnosis as a tree, not prose. Each branch ends in a resolution or an escalation.
-6. End the **resolution** with a line opening `Confirmed when`. Say how the reader knows service is back, then link
-   to the escalation for a reader whose step did not work.
-7. Put the escalation path where the reader finds it without scrolling.
-8. Name in **communication** who is waiting and what they need. Escalation wakes the people who can help.
-9. Set `last-rehearsed` and `rehearsal-frequency` honestly, and `rehearsal-method` once somebody has walked it. List
-   tools in `requires-tools` and permissions in `requires-access`.
-
-**Conventions**
-
-* **Short sentences, imperative mood.** No background, no rationale. Link to an [explanation](explanations.md) where the
-  reader wants the theory afterwards.
-* **No prerequisite the reader cannot satisfy at 2am.** Where a step needs someone else's approval, name who and how to
-  reach them.
-* **Rehearse on a cadence, or on the change that breaks it.** Every runbook sets `rehearsal-frequency`, and
-  `last-rehearsed` records the last time someone walked it. `staleness-loud` warns at 92 days whichever cadence you
-  set, because a runbook is read during an incident.
+Copy [`_template.md`](runbooks/_template.md). Its guidance block states how to write the id, the title and each field.
+The prompt under each section states how to write that section.
 
 ## What CI checks
 

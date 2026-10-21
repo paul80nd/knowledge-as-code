@@ -19,15 +19,30 @@ related:
 **Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what an ADR adds to it. Add an
 optional field from [the type page](../adrs.md#metadata) where you have a value for it.
 
+**The form.** Lean Nygard style, opened by a Y-statement summary and with an explicit Alternatives Considered section.
+[adr-0001](0001-knowledge-as-code.md) is the worked example.
+
 **Frontmatter**
 
-* **`id`**: matches the filename number. Four digits, never reused.
+* **`id`**: matches the filename number. Four digits, never reused. Save the file as `{{nnnn}}-kebab-case-title.md`,
+  taking the next unused number. The ADRs index shows the highest one in use.
 * **`tier`**: always `decided` for an ADR.
 * **`status`**: `proposed` while under review, then `accepted` or `rejected`, and later `deprecated` or `superseded`.
-  Values are lowercase.
-* **`decided-on`**: the day the decision was settled, quoted `"YYYY-MM-DD"`. Leave the key bare until then.
+  Values are lowercase. A proposal the team turns down becomes `rejected` and keeps its number.
+* **`decided-on`**: the day the decision was settled, quoted `"YYYY-MM-DD"`. Leave the key bare until then, and set it
+  in the change that moves the status to `accepted` or `rejected`.
+* **`supersedes`** and **`superseded-by`**: set the old ADR's `status: superseded` and `superseded-by`, and the new
+  one's `supersedes`. A supersession recorded on one side only fails the build.
 * **`owner`**: who is answerable for the decision, as `human:alex.doe` or `role:head-of-engineering`. Never a team
   alias.
+
+**Keywords.** An ADR that establishes a default or a policy may use [RFC
+2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain declarative
+prose.
+
+**Once it is decided.** Change an accepted or rejected decision only by writing a new ADR that supersedes it. Edit it in
+place only to correct what it misstates about the decision as agreed, to fix its prose, a typo or a broken link, or to
+move its status. Never update it to follow what changed afterwards. The commit message says what you changed.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

@@ -67,32 +67,8 @@ each new domain.
 
 ## Adding a data document
 
-1. Copy [`_template.md`](data/_template.md) to `<slug>.md`. Data documents take slug ids, `dat-<name>`.
-2. Name the entities the domain covers and the one service that owns them. If two services claim the same entity,
-   resolve the claim before you write the document.
-3. State what the estate does with the data under `Purpose`. Where `personal-data` is `personal` or
-   `special-category`, name the lawful basis beside the purpose it supports.
-4. Set `classification` from how widely the data may be shared, and `personal-data` from whether it identifies a living
-   person. The two answer different questions. A payment history is `confidential` and `personal`, and a published
-   catalogue is `public` and `none`.
-5. Name the `data-subjects`: the categories of people the data is about, such as `borrowers` or `staff`.
-6. State `retention` concretely. "Indefinitely" is an answer, and a revealing one.
-7. Record `region`: where the owning service keeps the data.
-8. Record `flows-to`: the services and [integrations](integrations.md) that receive this data, and say in the `Flows`
-   table where each one processes it.
-9. Set `review-by`: the day someone confirms the classification and the retention are still right. A year ahead is
-   usual.
-
-**Conventions**
-
-* **A `personal` or `special-category` value in `personal-data` requires a `retention` and a `data-subjects`.** Leave
-  either out and `required-field` fails the build.
-* **`region` states where the owning service keeps the data, and never where a recipient processes it.** A recipient
-  abroad is recorded in the last column of the `Flows` table.
-* **Never put actual data here**: no sample records, no identifiers, no connection strings.
-* **When `review-by` has passed, read the record against the store and set a new date.** `classification-in-date`
-  warns, and a warning leaves the build green. A corpus that sets `export.exclude` to `overdue` withholds the document
-  until you do.
+Copy [`_template.md`](data/_template.md). Its guidance block states how to write the id and each field. The prompt under
+each section states how to write that section.
 
 ## What CI checks
 

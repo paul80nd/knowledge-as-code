@@ -22,8 +22,10 @@ optional field from [the type page](../tools.md#metadata) where you have a value
 
 **Frontmatter**
 
+* **`id`**: `tol-` plus a slug naming the tool, as `tol-vitest`. Save the file as `<slug>.md`.
 * **`status`**: approved means approved **for new work**. Something already in use but not approved is drift, and
-  finding it is a manual job.
+  finding it is a manual job until something implements `drift-against-manifests`. `trial` covers something being
+  evaluated in one place. Promote or reject it once the evaluation ends.
 * **`packages`**: one entry per package this entry approves, each a
   [package URL](https://github.com/package-url/purl-spec) with the range approved for new work. Give a range, not a
   pin: the register states what we stand behind, and the manifests state what is installed. Leave `versions` out
@@ -31,12 +33,13 @@ optional field from [the type page](../tools.md#metadata) where you have a value
 * **`homepage`**: the project's own page, so a reader reaches the project and not a fork.
 * **`licence`**: the licence you concluded applies, as an SPDX expression. Write `NOASSERTION` where nobody has
   checked yet, so the gap shows.
-* **`licence-declared`**: what the package states about itself, written as it states it. Fill it wherever you read it,
-  including where your conclusion matches. Where the two differ, `conclusion-states-a-reason` asks for a
+* **`licence-declared`**: what the package's own licence files state, written as they state it. Fill it wherever you
+  read them, including where your conclusion matches. Where the two differ, `conclusion-states-a-reason` asks for a
   `## Licence and obligations` section.
 * **`decided-on`**: the day the current `status` was decided.
 * **`review-by`**: the day somebody checks this entry is still right. `review-in-date` warns once it has passed.
-* **`decided-in`**: an ADR, where one exists.
+* **`decided-in`**: an ADR, where one exists. Where the choice was contested and no ADR exists, write one.
+* **`replaces`**: the older tool this takes over from, so the deprecation path is visible.
 * **`successor`**: what replaces this, once the status is `deprecated`. `replaces` is the same edge read the other way,
   and CI enforces both ends.
 

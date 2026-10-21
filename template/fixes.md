@@ -73,25 +73,8 @@ fixes arrive with each problem somebody solves.
 
 ## Adding a fix
 
-1. Copy [`_template.md`](fixes/_template.md) to `<slug>.md`, named for the symptom rather than the cause. That is what
-   people search for.
-2. Make the H1 the symptom as encountered, in the words the error message or the user would use.
-3. Over-fill `symptom-keywords` with the search terms that failed you the day you hit the problem.
-4. Fill `Environment` with the tool, the operating system and the versions the fix is known to apply to, at the
-   precision that changes the answer. Give a build number only where the behaviour depends on it.
-5. Add a `verified` line naming who checked the resolution and the moment they did it. Leave the key out on a
-   `draft`.
-6. Set `review-by`. A resolution goes stale when the thing it repairs is rewritten.
-
-**Conventions**
-
-* **Symptom, environment, cause, resolution, in that order.** The reader arrives with a symptom and nothing else, and
-  checks the environment is theirs before they act.
-* **`applies-to` names service ids, and `Environment` is prose.** A reader follows an id to the service. They read the
-  section to tell whether their machine, their tooling and their versions match.
-* **Record how you found it**, not just what it was. The diagnostic route is often more reusable than the resolution.
-* **If the root cause is still open**, say so, and raise it somewhere it can be tracked. A fix is not a place to park
-  unowned work.
+Copy [`_template.md`](fixes/_template.md). Its guidance block states how to write the id, the title and each field. The
+prompt under each section states how to write that section.
 
 ## What CI checks
 

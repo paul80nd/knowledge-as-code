@@ -24,24 +24,35 @@ facets: [ public ]
 **Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a service adds to it. Add an
 optional field from [the type page](../services.md#metadata) where you have a value for it.
 
+**Say where a claim came from.** "Taken from the application settings the infrastructure declares" and "its own README
+says" weigh differently, and the next reader needs to know which one they have. Where something is not established,
+write it down as an open question, because nobody reading later can tell your guess from a fact.
+
 **Frontmatter**
 
 * **`id`**: `svc-` plus the name of the **deployable**, not the repository it lives in. A repository shipping three app
-  services yields three ids, and none of them is the repository's name.
+  services yields three ids, and none of them is the repository's name. `repos` states the repository. Contributors get
+  this wrong more often than anything else here. Save the file as `<slug>.md`.
 * **`component-type`**: the sort of component this is, such as an API, a website, a worker or a command line tool.
   [The type page](../services.md) derives the values from the estate, so read the list there before you pick one.
 * **`repos`**: every repository a change to *this service* is made in. Most services name one. An asset surface names
-  the repository defining it alongside the repository publishing what it serves.
+  the repository defining it alongside the repository publishing what it serves. Where another service fills that
+  surface at runtime, that service is not a repository, and the body says so.
 * **`platform`**: what it is **built on**, not what deploys it and not what sort of thing it is. [The type
   page](../services.md) derives the values from the estate, so read the list there before you pick one.
 * **`criticality`**: `critical` if a reader sees the failure, `important` if service degrades, `supporting` if the
-  impact is internal only. It drives runbook and NFR priority, so grade it honestly.
+  impact is internal only. It drives runbook and NFR priority, so grade it honestly. A service graded above one of its
+  own dependencies is not automatically wrong, but defend the grade in the record.
 * **`monitoring-output`**: what a live problem with this service raises. `alert` if a person must act now, `ticket` if
   the system files one and a person acts later, `log` if it is recorded and nobody reads it, `none` if nothing is
   emitted. Required once the service is `live` or `deprecated`. Write `none` where that is the truth: CI warns on a
   `live` or `deprecated` service graded `critical` that emits nothing, and that warning stands until something does.
-* **`depends-on`**: other service ids, pointing downward only (this service is **configured to reach** that one).
-  Messages over a bus are not a dependency.
+* **`depends-on`**: the ids of other services this service is **configured to reach**, such as by a URL in its
+  application settings or a route pointing at it. Point downward only. The services index lists the ids. Publish and
+  subscribe over a message bus is not an edge, because the publisher does not know its consumers. The graph then shows
+  an event-driven service as unconnected, so list its topics and queues under `Operational notes`.
+* **`interfaces`**: each interface the service offers, with its contract format and the address the contract is
+  published at.
 * **`owner`**: who is answerable for the service, as `human:alex.doe` or `role:head-of-engineering`. Never a team
   alias.
 * **`facets`**: one exposure, then any traits that apply. These slice the catalogue, so a value earns its place by
@@ -49,6 +60,10 @@ optional field from [the type page](../services.md#metadata) where you have a va
   and the reasoning behind it, derived from this estate, so read it before you invent a facet.
 * **`tags`**: words a reader would search for that this service does not otherwise say. One service may be the only one
   carrying a tag, which is what separates a tag from a facet. Never restate another field.
+
+**A field left out means "nothing in this catalogue", not "nothing at all".** A service that calls only a legacy system,
+a third-party integration or anything else outside this catalogue writes no `depends-on`. The same applies to
+`data-stores`. The field records what is here, and the body records the rest.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -58,11 +73,6 @@ One or two sentences: what this service is for, in terms someone unfamiliar with
 
 The responsibilities this service owns. Keep it to what is true today. This is a descriptive document, and a catalogue
 that disagrees with the estate is worse than none.
-
-**Say where a claim came from.** "Taken from the application settings the infrastructure declares" and "its own README
-says" are worth the words. They tell the next reader how much weight to give the line, and where to look when it goes
-stale. Where something is genuinely not established write it down as an open question. A guess here will spread with
-everything that reads this page.
 
 ## Where it lives
 
