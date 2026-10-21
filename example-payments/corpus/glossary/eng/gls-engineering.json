@@ -20,6 +20,6 @@
     "Scope": "This glossary covers the estate: what our systems are built from, what data they store, and our obligations to the people that data describes. A word about the framework this corpus runs on belongs in the framework's own glossary, which every corpus shares.\n\nAn entry here may cite a record; the shared glossary may not. Where a policy depends on a word, the entry cites the clause that states the detail."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f1eabec0a72f7d07e87fdd6aa73a469607b64395/examples/engineering/glossary/engineering.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5d2fe43eb501425005276c550f92d88e6063c774/examples/engineering/glossary/engineering.md"
   }
 }

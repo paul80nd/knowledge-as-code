@@ -31,6 +31,6 @@
     "Conformance checklist": "- [ ] Every test project in the repository references the same test framework, and `dotnet test` runs them all.\n- [ ] Every test project uses one assertion style.\n- [ ] No unit test project references Testcontainers or a database driver.\n- [ ] A search for `Thread.Sleep` and `async void` across the test projects returns nothing.\n- [ ] The integration suite passes on a machine running no shared database, queue or service.\n- [ ] Running the integration suite twice in a row passes both times.\n- [ ] The build publishes a coverage report, and the test projects are excluded from it."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f1eabec0a72f7d07e87fdd6aa73a469607b64395/examples/engineering/standards/platform/dotnet/testing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5d2fe43eb501425005276c550f92d88e6063c774/examples/engineering/standards/platform/dotnet/testing.md"
   }
 }

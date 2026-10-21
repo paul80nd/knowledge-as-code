@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the alert rules is the only thing that notices a missing owner today.\n\nThe standard names no field for the owner or the first action, so the check assumes `owner` and `first_action`. It proves a value is present, and a reviewer still judges whether the first action is one somebody can take. The other rules under [std-OBS.somebody-acts-on-every-alert] go unchecked, and so does [std-OBS.one-request-reads-as-one-timeline]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f1eabec0a72f7d07e87fdd6aa73a469607b64395/examples/engineering/controls/0003-alert-owner-and-action.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/5d2fe43eb501425005276c550f92d88e6063c774/examples/engineering/controls/0003-alert-owner-and-action.md"
   }
 }
