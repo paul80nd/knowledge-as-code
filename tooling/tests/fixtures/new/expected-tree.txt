@@ -5,6 +5,7 @@
 .corpus.yaml
 .editorconfig
 .gitattributes
+.github/dependabot.yml
 .github/workflows/kac.yml
 .gitignore
 .order

@@ -5,6 +5,9 @@
 # locally, and the export and the bundle land in an untracked `.dist/` the runner throws away.
 # Publishing what was built is a separate act, and no step here does it.
 #
+# Each action is pinned to a commit, because a tag can be moved to other code. `.github/dependabot.yml`
+# moves each pin and the version comment beside it.
+#
 # The Azure Pipelines twin sits at `azure-pipelines.yml`. Keep whichever one your corpus runs on and
 # delete the other.
 
@@ -23,9 +26,9 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
 

@@ -3,7 +3,7 @@
 # wildcard. The first matching rule wins, so a rule carving a file out of a folder sits above the folder's rule.
 
 # The template's shape. Increment when a corpus has to respond: a file added, removed, renamed or moved between layers.
-version: 23
+version: 24
 
 # The oldest kac that reads this manifest. The template is fetched rather than shipped, so the two version apart.
 minimum-tool: "0.6.0"
@@ -181,6 +181,14 @@ rules:
     layer: seed
     ci: github
     note: The GitHub Actions starter, the twin of the pipeline above and the same bargain.
+
+  - path: "template/.github/dependabot.yml"
+    to: ".github/"
+    layer: seed
+    ci: github
+    note: >
+      Dependabot's configuration, which moves the commits the GitHub Actions starter pins its actions to.
+      It serves that starter alone, so it arrives where the starter does.
 
   - path: "template/*.md"
     to: ""

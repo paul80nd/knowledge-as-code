@@ -14,6 +14,14 @@ updates:
     commit-message:
       prefix: ci
 
+  # The pins in the GitHub Actions starter a new corpus receives. The entry above reads `.github/workflows` alone.
+  - package-ecosystem: github-actions
+    directory: /template/.github/workflows
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+
   - package-ecosystem: nuget
     directories:
       - /tooling/kac

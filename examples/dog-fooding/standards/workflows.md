@@ -53,8 +53,8 @@ _**Covers:** `eng:pol-ACCS.LEAST`_
 
 ### Every action is pinned to a commit
 
-- A step in `.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s
-  `Pinned-Dependencies` check asks for.
+- A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is
+  what [OpenSSF Scorecard]'s `Pinned-Dependencies` check asks for.
 - A pinned step **SHOULD** state the released version in a trailing comment, as `# v7.0.1`, because a reviewer reads
   the version there.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
@@ -146,7 +146,7 @@ group for six hours when a push hangs. A tag moves, so `@v7` is a different acti
 
 - [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
-- [ ] Every `uses:` names a commit SHA.
+- [ ] Every `uses:` in `.github/workflows/` and `template/.github/workflows/` names a commit SHA.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
 - [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
@@ -177,9 +177,6 @@ it. `ChangelogTests` fails a version with no section, so the tag step always has
 The tool's publish runs the three test layers again against the merge commit, because the gate read the pull request's
 head and `main` moved after that.
 
-The pinning rule covers `.github/workflows/`. The starter at `template/.github/workflows/kac.yml` belongs to whichever
-corpus receives it, and it names `actions/checkout@v4` today.
-
 ## Sources and further reading
 
 - **Normative.** [OpenSSF Scorecard] defines `Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow`, the
@@ -192,6 +189,8 @@ corpus receives it, and it names `actions/checkout@v4` today.
 
 ## Changelog
 
+- 2026-10-21: the pinning rule covers `template/.github/workflows/`, which holds the starter every new corpus built on
+  GitHub receives.
 - 2026-10-18: the trailing version comment, emptying the worktree and renaming `## Unreleased` in the commit moving
   `<Version>` become `SHOULD`. A published branch contains only what its workflow built, and the rename lands in the
   pull request moving `<Version>`.
