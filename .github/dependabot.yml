@@ -53,6 +53,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: docs
+    # From 1.2.3, mkdocs-redirects requires properdocs. tol-mkdocs-redirects says why, and #1058 decides the toolchain.
+    ignore:
+      - dependency-name: mkdocs-redirects
+        versions: [">= 1.2.3"]
 
   # yamllint, pinned in .github/requirements.txt, so a linter release changes what the gate rejects
   # when we take it. actionlint sits beside it in the same job and is a Go binary with no manifest,
