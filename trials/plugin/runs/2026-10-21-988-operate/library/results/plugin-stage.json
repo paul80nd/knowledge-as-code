@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T09:32:39.377Z",
+  "durationSeconds": 29,
+  "costUsd": 0.4014396,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "notices-down",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-libraries",
+        "version": "0.25.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "notices-down",
+      "dir": "evals/house/notices-down",
+      "source": "mixed",
+      "promptMarkdown": "Overdue notices have stopped going out. Nobody has had one since yesterday, and the branches are getting calls about\nit. Who do I page?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "svc-notices",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-owner",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "mira[ ._-]?okonjo",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        },
+        {
+          "name": "task-answers",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "page|on-?call|owner|contact|escalat",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.2479654,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-10-21T09:32:39.429Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched svc-notices",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-owner",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched page|on-?call|owner|contact|escalat",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.3333333333333333,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.1534742,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-10-21T09:32:39.429Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-owner",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-answers",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched page|on-?call|owner|contact|escalat",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.6666666666666666,
+        "passRate": 0,
+        "scoreWithout": 0.3333333333333333,
+        "passRateWithout": 0,
+        "delta": 0.3333333333333333
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.6666666666666666,
+    "overallPassRate": 0,
+    "meanDelta": 0.3333333333333333
+  }
+}

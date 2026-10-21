@@ -75,20 +75,22 @@ corpus it runs against.
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
 | [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 24 house, and the pilot's 3 controls |
-| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 5 house                              |
-| [`cases/library/`](cases/library/)         | `examples/library`     | 4 house                              |
-| [`cases/payments/`](cases/payments/)       | `examples/payments`    | 1 house                              |
+| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 6 house                              |
+| [`cases/library/`](cases/library/)         | `examples/library`     | 5 house                              |
+| [`cases/payments/`](cases/payments/)       | `examples/payments`    | 4 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
 reason, separated by a tab. `stage.sh` leaves the case out of both stages, and `score.sh` leaves its sessions out of
 every count. Exclude a case whose result the environment decides, and fix the case before you take it out of the list.
-[`cases/engineering/excluded.tsv`](cases/engineering/excluded.tsv) lists these:
+The lists in `engineering`, `library` and `dog-fooding` exclude these:
 
-| Case                          | Why no session can show the rule                                                         |
-|-------------------------------|------------------------------------------------------------------------------------------|
-| `house/billing-new-solution`  | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
-| `house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
-| `house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
+| Case                                      | Why no session can show the rule                                                         |
+|-------------------------------------------|------------------------------------------------------------------------------------------|
+| `engineering/house/billing-new-solution`  | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
+| `engineering/house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
+| `engineering/house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
+| `library/house/notices-down`              | The sandbox blocks the fetch of the record's source, where a session reads `owner`.      |
+| `dog-fooding/house/golden-red-in-ci`      | The sandbox stops `dotnet`, which fails to create a NuGet mutex under `/tmp`.            |
 
 | Case                                 | Rule a session breaks                                                                                   |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -260,6 +262,9 @@ graders under `graders/`, as `claude plugin eval` reads them.
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
   input of a `Write`, `Edit` or `Bash` call.
+* **What the case grades travels in the export.** Check that the record type's `export:` block in
+  `.schema/<type>.yaml` lists the field or section the case grades. One it leaves out reaches a session only through a
+  fetch, and the sandbox blocks the fetch.
 
 The prefix of a grader's file name says what it measures:
 
@@ -391,3 +396,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [The dog-fooding cut, complete](runs/2026-10-20-1027-dogfooding-cut-complete.md) |      5 | `examples/dog-fooding`                |       44 | #923's cut chosen again from the complete prose text              |
 | [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |
 | [#987 build cases](runs/2026-10-21-987-build.md)                                 |      5 | `examples/library`, `dog-fooding`     |       18 | The three build cases, plugin and none arms, 3 runs a case        |
+| [#988 operate cases](runs/2026-10-21-988-operate.md)                             |      5 | `payments`, `library`, `dog-fooding`  |       22 | The five operate cases, plugin and none arms, two excluded        |

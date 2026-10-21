@@ -1,0 +1,3 @@
+case	arm	run	graders	adjudicated	reason
+notices-down	plugin	1	fail	fail	The session read svc-notices.json, which carries no owner, and replied that no record names whom to page.
+notices-down	none	1	fail	fail	The session found no owner in the repository, and sent the reader to the team rota and the Azure resource tags.

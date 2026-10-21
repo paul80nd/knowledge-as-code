@@ -1,0 +1,3 @@
+case	arm	run	graders	adjudicated	reason
+golden-red-in-ci	plugin	1	pass	pass	The session ran the suite with GITHUB_ACTIONS=true before its one edit, where dotnet failed on a sandbox mutex, then stopped kac-tests.cs passing the variable on.
+golden-red-in-ci	none	1	pass	pass	The session ran the suite with GITHUB_ACTIONS=true before its one edit, where dotnet failed on a sandbox mutex, then stopped kac-tests.cs passing the variable on.

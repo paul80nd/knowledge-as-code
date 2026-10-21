@@ -1,0 +1,67 @@
+---
+id: fix-0002
+type: fix
+tier: normative
+status: draft
+symptom-keywords: [ break, bst, "in file, not in ledger", midnight, reconciliation, refund, "settlement file", utc ]
+applies-to:
+  - svc-payment-ledger
+review-by: "2027-04-21"
+owner: human:alex.doe
+tags: [ ledger, reconciliation, refunds ]
+---
+
+# The reconciliation reports breaks on refunds issued just before midnight UTC
+
+`Fix: fix-0002` `DRAFT`
+
+## Symptom
+
+The daily reconciliation reports breaks on refunds issued between 23:00 and midnight UTC. Each refund breaks twice,
+with the same PSP reference and the same amount:
+
+* `in file, not in ledger` on the day the PSP settled it
+* `in ledger, not in file` on the day after
+
+The breaks appear only while the UK is on British Summer Time, from the last Sunday in March to the last Sunday in
+October.
+
+## Environment
+
+The nightly reconciliation in [svc-payment-ledger], run against the PSP's settlement file during British Summer Time.
+
+## Cause
+
+The run cuts its day at midnight UK local time, and the PSP cuts its settlement file at midnight UTC. During British
+Summer Time, local midnight is 23:00 UTC. A refund written to the ledger between 23:00 and midnight UTC falls into the
+next day's ledger window, and into the current day's settlement file.
+
+## Resolution
+
+1. In `payment-ledger`, change the reconciliation's day boundaries from midnight `Europe/London` to midnight UTC. Build
+   the window's start and end as `DateTimeOffset` values at offset zero, and remove the conversion to local time.
+2. Rerun the reconciliation for each day since the clocks went forward that reported a break on a refund.
+3. Leave the first run's record for each day as it is. [std-RECON] keeps every run's record for seven years, and
+   forbids closing a break by editing a run's output.
+4. Check that each rerun matches every refund written between 23:00 and midnight UTC, and reports no break for it.
+
+## Why it happens
+
+Every ledger entry written in that hour falls on the wrong side of the cut. Refunds are the entries that show, because
+a refund follows an accepted return at any hour, and a capture happens only when an order ships.
+
+The run's window and the settlement file agree for the five months the UK spends on UTC, so the fault appears only
+once the clocks go forward.
+
+## How we found it
+
+Pair the breaks on the PSP reference. Each pair sits on consecutive days with the same amount. Every entry in a pair
+has a ledger timestamp between 23:00 and midnight UTC, and no pair falls before the last Sunday in March.
+
+## Related
+
+* [std-RECON] states what the run compares, and how a break closes.
+* [svc-payment-ledger] runs the reconciliation.
+
+[std-RECON]: ../standards/ledger/reconciliation.md
+[svc-payment-ledger]: ../services/payment-ledger.md

@@ -2,6 +2,7 @@
 
 # Fix Index
 
-| ID       | Title                                                                                          | Applies to                          | Status | Review by  |
-|----------|------------------------------------------------------------------------------------------------|-------------------------------------|--------|------------|
-| fix-0001 | [One order shows two authorisations on the cardholder's statement](duplicate-authorisation.md) | svc-payment-api, svc-payment-ledger | active | 2027-03-09 |
+| ID       | Title                                                                                                            | Applies to                          | Status | Review by  |
+|----------|------------------------------------------------------------------------------------------------------------------|-------------------------------------|--------|------------|
+| fix-0001 | [One order shows two authorisations on the cardholder's statement](duplicate-authorisation.md)                   | svc-payment-api, svc-payment-ledger | active | 2027-03-09 |
+| fix-0002 | [The reconciliation reports breaks on refunds issued just before midnight UTC](refund-breaks-before-midnight.md) | svc-payment-ledger                  | draft  | 2027-04-21 |

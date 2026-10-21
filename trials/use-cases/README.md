@@ -36,7 +36,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | [`design.feature`](design.feature)         | an agent or an engineer choosing an approach |         5 |                     5 |
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     7 |
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
-| [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     0 |
+| [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     5 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
 | [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     3 |
 | [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     0 |
@@ -69,6 +69,11 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A design touching a path an agreed target binds says how it meets the target              | `plugin/payments/house/authorisation-extra-call`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
 | A design that needs a library chooses an approved tool                                    | `plugin/dog-fooding/house/new-command-line-verb`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
 | A design that would use a retired integration learns its successor                        | `plugin/library/house/text-the-borrower`                | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
+| A symptom a runbook opens on gets the runbook's steps, in its order                       | `plugin/dog-fooding/house/golden-red-in-ci`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
+| A symptom that matches a verified fix gets the fix's resolution                           | `plugin/payments/house/two-pending-amounts`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
+| A draft fix is a lead, not a resolution                                                   | `plugin/payments/house/unverified-fix`                  | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
+| A question about a past failure gets the incident's account                               | `plugin/payments/house/has-this-happened-before`        | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
+| A failing service's owner comes from its service record                                   | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
 
 Every other scenario is `@proposed`.
 
