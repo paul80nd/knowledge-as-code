@@ -46,8 +46,7 @@ A type with no useful ancestor says so, and claiming one would be worse than adm
 
 ## Collisions
 
-Some of these words already mean something else to a reader arriving from another framework. Where the collision is
-severe, the type's own root page repeats the warning, because a reader who never opens this page still needs it.
+Some of these words already mean something else to a reader arriving from another framework.
 
 <!-- BEGIN GENERATED: types-collisions -->
 
