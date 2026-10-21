@@ -105,13 +105,13 @@ rules:
       prose has outgrown the links. Link to the document that owns each fact instead of restating it
       here.
   - id: not-normative
-    description: No bold RFC 2119 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.
+    description: No bold BCP 14 keyword (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) binds from an explanation.
     severity: warning
     # Bold is what binds under BCP 14, so a keyword in plain text is a quotation.
     expr: >-
       not matches('\*\*(MUST NOT|MUST|SHOULD NOT|SHOULD|MAY)\*\*')
     message: >
-      a bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard
+      a bold BCP 14 keyword binds, and an explanation does not. Move the obligation into a standard
       and link to it from here.
   - id: explanation-in-date
     description: An explanation names a review date that has not passed.

@@ -24,6 +24,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   labelled with both, as `-- superseded-by / supersedes -->`. The `types-lineage` table on
   `knowledge-as-code/lineage.md` keeps `Type` and `Nearest prior art`. `alignment` and `divergence` stay in each type's
   schema under `lineage:`. Run `kac update` to take both pages, which removes the old `types-edges` markers.
+- **`kac` cites BCP 14 for the bold keywords.** The `not-normative` warning from `kac validate`, and the descriptions
+  of `not-normative` and `entry-requirement` in `kac checks`, say "BCP 14" where they said "RFC 2119". `kac generate`
+  writes the same descriptions into the checks tables on `explanations.md` and `glossary.md`. Run `kac update`, then
+  `kac generate`, to take them.
 
 ## 0.36.0 - 2026-10-21
 

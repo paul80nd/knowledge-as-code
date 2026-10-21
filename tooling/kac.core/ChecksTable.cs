@@ -148,7 +148,7 @@ public static class ChecksTable
             "Where two glossaries define one term, at least one of the entries links to the other's anchor.",
             t => t.Rules.Any(r => r.Id == new RuleId("redefinitions-are-linked"))),
         ("entry-requirement", [new("entry-requirement")],
-            "No bold RFC 2119 keyword states a requirement inside a glossary entry.",
+            "No bold BCP 14 keyword states a requirement inside a glossary entry.",
             t => t.Rules.Any(r => r.Id == new RuleId("entries-state-no-requirement"))),
         ("changelog-order", [new("changelog-order")], "A standard's changelog entries read newest first.",
             t => t.Rules.Any(r => r.Id == new RuleId("changelog-newest-first"))),

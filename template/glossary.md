@@ -88,7 +88,7 @@ this type's records.
 | `terms-alphabetical`        | warning | A glossary's entries read in alphabetical order.                                                      |
 | `definition-circular`       | warning | A glossary entry's definition does not repeat the term it defines.                                    |
 | `redefinition-unlinked`     | warning | Where two glossaries define one term, at least one of the entries links to the other's anchor.        |
-| `entry-requirement`         | warning | No bold RFC 2119 keyword states a requirement inside a glossary entry.                                |
+| `entry-requirement`         | warning | No bold BCP 14 keyword states a requirement inside a glossary entry.                                  |
 | `glossary-in-date`          | warning | A glossary names a review date that has not passed.                                                   |
 
 **Declared, not yet enforced**: carried by the schema, run by nothing.
