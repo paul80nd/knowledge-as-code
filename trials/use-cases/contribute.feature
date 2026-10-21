@@ -29,7 +29,7 @@ Feature: Contribute. A session writing back sends what it learned by the route i
   Scenario: A term the glossary lacks becomes a finding, not a guess
     Baseline: the plugin arm met the threshold in 0 of 3 runs, and no none session did the task.
     Every plugin reply called its meaning unconfirmed, and offered a finding: glossary-lookup offers, it does not draft.
-    The follow-up is a 5c question under #940. Measured in trials/plugin/runs/2026-10-21-989-contribute.md.
+    The follow-up is #1041. Measured in trials/plugin/runs/2026-10-21-989-contribute.md.
     Given gls-example-libraries does not define a term the task uses for a business concept
     And a task asking for code that depends on what that term means
     When the session meets the term
