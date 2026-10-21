@@ -28,6 +28,6 @@
     "Coverage and gaps": "The matrix covers `examples/`. These files are authored in `template/`, and nothing compares `template/` against a copy of itself. The check compares no seed, such as a type page or a `_template.md`.\n\n`manifest.yaml` covers `.schema/` and `template/.plugin/`, and neither reaches a corpus here as a copy. `.schema/`\nlands on the path it was read from. Every corpus names `plugin.from`, so it reads the plugin tree from `template/`. A\ncorpus created elsewhere gets its own `.editorconfig`, and each corpus here declares that file under `skip:`."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b1b0983d2182062037353002f99370ec95513dd1/examples/dog-fooding/controls/0005-update-check.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e46c58518b38636b4a87e4f3fc72048ab0dabd6e/examples/dog-fooding/controls/0005-update-check.md"
   }
 }

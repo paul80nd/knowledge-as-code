@@ -15,6 +15,6 @@
     "Exceptions": "A prototype written to answer a question and then deleted is exempt, and the deletion is the condition of the exemption. A prototype that ships is not a prototype. Keeping a component we can no longer afford to change is a recorded deviation under [pol-DEVI], naming who accepts the slower delivery that follows."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b1b0983d2182062037353002f99370ec95513dd1/examples/engineering/policies/delivery/mntn-maintainability.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e46c58518b38636b4a87e4f3fc72048ab0dabd6e/examples/engineering/policies/delivery/mntn-maintainability.md"
   }
 }

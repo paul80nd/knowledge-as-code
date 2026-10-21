@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the health handler is the only thing that notices a missing commit today.\n\nThe standard names no endpoint and no field, so the check assumes `/health` and `commit`. The other rules under [std-DEPLOY.the-artefact-is-built-once] go unchecked:\n\n* the pipeline builds once and promotes that build\n* the deployment record names the artefact, the change and the approval\n* nothing deploys an artefact built outside the pipeline"
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b1b0983d2182062037353002f99370ec95513dd1/examples/engineering/controls/0002-health-reports-commit.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e46c58518b38636b4a87e4f3fc72048ab0dabd6e/examples/engineering/controls/0002-health-reports-commit.md"
   }
 }
