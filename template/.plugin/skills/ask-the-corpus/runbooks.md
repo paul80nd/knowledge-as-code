@@ -68,6 +68,6 @@ Answer from the fetched record. `Immediate actions`, the section after `Impact`,
 in the order the runbook gives them, and link `links.human`.
 
 **Where the record cannot be fetched**, give the runbook's `title` and `links.human`, and say that its steps did not
-come with the plugin. State no steps of your own. A step you infer from `Symptoms` reads to the
-person at the keyboard as the runbook's, and the runbook may say something else. Ask them to open the link, or to
-paste the steps so you can work through them together.
+come with the plugin. State no steps of your own. A step you infer from `Symptoms` reads to the person at the keyboard
+as the runbook's, and the runbook may say something else. Ask them to open the link, or to paste the steps so you can
+work through them together.
