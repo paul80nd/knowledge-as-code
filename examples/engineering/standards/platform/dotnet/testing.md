@@ -34,8 +34,8 @@ This standard adds the .NET detail to [std-TEST], which says which level a test 
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is on the allowed list
-  [std-DEPS.what-happens-before-adoption] checks a new package against.
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in
+  [std-DEPS's conformance checklist](../../common/dependencies.md#conformance-checklist).
 
 _**Covers:** [pol-AUTV].LEVELS_
 
@@ -120,6 +120,7 @@ community fork of FluentAssertions 7, published under Apache 2.0.
 
 ## Changelog
 
+- 2026-10-21: an assertion library's licence is checked against the allowed ids in std-DEPS's conformance checklist.
 - 2026-10-18: graded the rules. The outcome stays a `MUST`, and xUnit, Testcontainers, `WebApplicationFactory`, the
   injected clock and the coverage collector become `SHOULD`. AwesomeAssertions replaces FluentAssertions.
 
@@ -131,5 +132,4 @@ say why in the change.
 [version 8.0.0]: https://github.com/fluentassertions/fluentassertions/releases/tag/8.0.0
 [xUnit.net documentation]: https://xunit.net/docs/getting-started/v3/getting-started
 [pol-AUTV]: ../../../policies/delivery/autv-automated-verification.md#clauses
-[std-DEPS.what-happens-before-adoption]: ../../common/dependencies.md#what-happens-before-adoption
 [std-TEST]: ../../common/testing.md
