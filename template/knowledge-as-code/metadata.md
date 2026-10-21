@@ -90,6 +90,7 @@ what they need without leaving it, and there is still one definition.
 ```yaml
 ---
 id: adr-0017
+type: adr
 tier: decided
 status: accepted
 decided-on: "2026-07-14"

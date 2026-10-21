@@ -31,8 +31,7 @@ values, and the rule that a reversed decision is superseded and left standing.
 states a verdict, and a fifth status, `rejected`, keeps a proposal the team turned down.
 
 A type with a fourth part, `collision`, means the word already denotes something else to a reader arriving from another
-framework. Where the collision is severe the type's own root page repeats the warning, because a reader who never opens
-the lineage page still needs it.
+framework.
 
 **The rows themselves live in the corpus.** Each corpus's lineage page renders them from the schema it has, for the
 types that corpus adopted. A corpus declaring a type of its own writes that type's lineage too.

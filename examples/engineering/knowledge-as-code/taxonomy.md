@@ -6,7 +6,7 @@ The [decision table](#where-does-this-go) below is the quickest route to the rig
 [disambiguations](#disambiguations) explain the calls that are genuinely close. Both cover the types this corpus adopted
 and no others.
 
-[Taxonomy][taxonomy] carries what is true of every corpus: what a tier is and what the five ask, the shape a type takes
+[Taxonomy][taxonomy] carries what is true of every corpus: what a tier is and what the four ask, the shape a type takes
 on disk, and what changing a taxonomy costs.
 
 ## Where does this go?
@@ -134,9 +134,10 @@ Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, 
 `replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
 means nobody answers that edge, and nobody has to keep it in step.
 
-Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. Policies
-are the layer a downstream corpus inherits, and standards are the layer it writes for itself, so nobody sitting at the
-policy can know what implements it.
+Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. A
+downstream corpus inherits both the policies and the standards above it. It also writes standards of its own, so
+nobody sitting at the policy can know what implements it. An inherited standard stays as its own corpus wrote it, and
+no corpus below rewrites it.
 
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
@@ -163,10 +164,6 @@ statement would survive replacing the whole technology estate, it is a policy.
 it is a control.
 
 <!-- END GENERATED: types-versus -->
-
-## Status of this taxonomy
-
-Not all types are proven. Where that matters, this corpus's own `README.md` records which have met real content.
 
 [taxonomy]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/
 [tiers]: https://paul80nd.github.io/knowledge-as-code/framework/taxonomy/#the-four-tiers
