@@ -45,6 +45,9 @@ jobs:
       # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The checkout keeps no copy of the job's token, so no later step can push with it.
+          persist-credentials: false
 
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -103,6 +106,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -141,6 +145,7 @@ jobs:
         run: |
           set -e
 
+          # Read without a credential, which works because this repository is public.
           if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
             git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH"
           fi
@@ -172,6 +177,7 @@ jobs:
         if: env.NEW == 'yes'
         env:
           BRANCH: marketplace
+          GH_TOKEN: ${{ github.token }}
           MARKETPLACE: knowledge-as-code
           WORKTREE: ${{ runner.temp }}/marketplace
         run: |
@@ -182,7 +188,7 @@ jobs:
             EXISTS=yes
           fi
 
-          # A worktree rather than a second clone, so the branch is built with the checkout's credentials.
+          # A worktree rather than a second clone, so the branch is built from the history the checkout fetched.
           if [ -n "$EXISTS" ]; then
             git worktree add --detach "$WORKTREE" "origin/$BRANCH"
           else
@@ -269,6 +275,7 @@ jobs:
               commit -m "Publish the $MARKETPLACE marketplace" \
                      -m "Built from $GITHUB_SHA."
 
-          git push origin "HEAD:refs/heads/$BRANCH"
+          # The token as the HTTPS password, per GitHub's "Authenticating as a GitHub App installation".
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$BRANCH"
 
           echo "published $MARKETPLACE to $BRANCH."

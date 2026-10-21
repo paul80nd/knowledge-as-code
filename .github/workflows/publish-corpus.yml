@@ -46,6 +46,9 @@ jobs:
       # Pinned to a commit because a tag is mutable. Dependabot moves the pins.
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The checkout keeps no copy of the job's token, so no later step can push with it.
+          persist-credentials: false
 
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
@@ -101,6 +104,8 @@ jobs:
     steps:
       - name: Check out the commit that merged
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0

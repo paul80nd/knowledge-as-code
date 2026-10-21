@@ -24,8 +24,8 @@ tags: [ continuous-integration, github-actions, publishing ]
 One workflow gates a pull request. The others publish what has merged: the tool to nuget.org, each corpus to GitHub
 Packages, the plugins to the `marketplace` branch, and the site to GitHub Pages. A job declares what it may do before
 it does it, pins the actions it runs, and stores no credential of its own. Those three rules are [OpenSSF Scorecard]'s
-`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks. [actionlint] decides the rest of how a
-workflow is written.
+`Token-Permissions`, `Pinned-Dependencies` and `Dangerous-Workflow` checks. A checkout leaves no credential for a later
+step, which is [zizmor]'s `artipacked` audit. [actionlint] decides the rest of how a workflow is written.
 
 ## Rules
 
@@ -75,6 +75,14 @@ _**Covers:** `eng:pol-TRUS.SOURCE`, `eng:pol-TRUS.UNTRUST`_
 - A step **MUST NOT** print a secret.
 
 _**Covers:** `eng:pol-SCRT.EMBED`, `eng:pol-SCRT.LOGS`, `eng:pol-SCRT.ROTATE`, `eng:pol-SCRT.STORE`_
+
+### A checkout leaves no credential behind
+
+- A checkout in `.github/workflows/` or `template/.github/workflows/` **MUST** set `persist-credentials: false`, which
+  is what [zizmor]'s `artipacked` audit asks for.
+- A step needing git write access **MUST** supply the token itself.
+
+_**Covers:** `eng:pol-ACCS.LEAST`_
 
 ### One job holds the write permission
 
@@ -128,6 +136,8 @@ jobs:
       name: nuget.org
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
 ❌ Avoid
 permissions: write-all
@@ -140,13 +150,15 @@ jobs:
 
 `write-all` gives every scope to every job in the file, including the ones that only read. A job with no `needs:`
 publishes whatever the checkout contains, verified by nothing. A job with no `timeout-minutes` keeps its concurrency
-group for six hours when a push hangs. A tag moves, so `@v7` is a different action tomorrow.
+group for six hours when a push hangs. A tag moves, so `@v7` is a different action tomorrow. A checkout without
+`persist-credentials: false` leaves the job's token for every later step to push with.
 
 ## Conformance checklist
 
 - [ ] `actionlint` passes.
 - [ ] Every job in `kac.yml` is named in `validate`'s `needs:`.
 - [ ] Every `uses:` in `.github/workflows/` and `template/.github/workflows/` names a commit SHA.
+- [ ] Every checkout sets `persist-credentials: false`, and every step needing git write access supplies the token.
 - [ ] Every workflow declares `permissions: contents: read` at its top level.
 - [ ] Every job with a write permission has a step that uses it.
 - [ ] No secret appears in a workflow's text, and no step prints one.
@@ -171,6 +183,10 @@ do. What each of these numbers means, and what a producer's move obliges of the 
 outside the gate is invisible. The `lint` job runs `actionlint` over every workflow. Neither checks a permission nobody
 uses or a credential in the wrong place. A reviewer catches both.
 
+A checkout keeping its credential lets every later step push with the job's token, a test run or a package restore
+included. The one `git push` here, to the `marketplace` branch, takes the token in its own step, so the restores and builds
+before it run without write access.
+
 The timeout rule covers the publishing jobs, where a hang keeps a concurrency group and the next merge queues behind
 it. `ChangelogTests` fails a version with no section, so the tag step always has a release body to publish.
 
@@ -186,9 +202,12 @@ head and `main` moved after that.
 - **Normative.** [Security hardening for GitHub Actions] is what Scorecard's three checks operationalise, and it
   gives the reasoning behind each.
 - **Normative.** [Trusted publishing on nuget.org] defines the policy this repository's publish authenticates against.
+- **Normative.** [zizmor] defines `artipacked`, the audit the checkout rule above satisfies.
 
 ## Changelog
 
+- 2026-10-21: a checkout sets `persist-credentials: false`, and a step needing git write access supplies the token
+  itself.
 - 2026-10-21: the pinning rule covers `template/.github/workflows/`, which holds the starter every new corpus built on
   GitHub receives.
 - 2026-10-18: the trailing version comment, emptying the worktree and renaming `## Unreleased` in the commit moving
@@ -213,3 +232,4 @@ say why in the change.
 [actionlint]: https://github.com/rhysd/actionlint
 [ctl-0011]: ../controls/0011-content-version-tests.md
 [std-VERS]: versioning.md
+[zizmor]: https://docs.zizmor.sh/audits/#artipacked

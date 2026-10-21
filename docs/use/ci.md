@@ -71,9 +71,11 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-dotnet@v6
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
 
@@ -87,7 +89,9 @@ jobs:
         run: dotnet tool run kac generate --check
 ```
 
-A tag is mutable, so pin each action to a commit where your organisation asks for it.
+Each action is pinned to a commit, because a tag can be moved to other code. A `.github/dependabot.yml` that tracks
+`github-actions` moves each pin and the version comment beside it. The checkout sets `persist-credentials: false`, so
+no later step can push with the job's token.
 
 ## Azure Pipelines
 

@@ -25,10 +25,9 @@ The action that clones this repository onto the runner. Every job that reads a f
 `kac.yml` checks out the pull request, and each publishing workflow checks out the merge commit on `main`. The
 `validate` job is the one job without it, because it only waits on the others.
 
-The action configures the job's `github.token` as a git credential and removes it when the job ends. No step here sets
-`persist-credentials: false`. The `publish` job of `publish-plugin.yml` declares `contents: write`, and its `git push`
-to the marketplace branch authenticates with that credential. In every other job the credential goes unused, with
-whatever permission the job declared.
+By default the action configures the job's `github.token` as a git credential for every later step. Every checkout here
+sets `persist-credentials: false`, so no step finds one. The `publish` job of `publish-plugin.yml` declares
+`contents: write`, and its push step alone takes `github.token`, through `env:`, as the password in the remote URL.
 
 Every step pins the action to the commit behind `v7.0.1`, and Dependabot moves the pin. `versions` approves the major
 the pin sits in, so a move within 7.x changes nothing here and a move to 8 is a new decision.
@@ -56,7 +55,8 @@ repository publishes.
 
 ## Related
 
-* [std-CI] requires every action to be pinned to a commit, and Dependabot to track `github-actions`.
+* [std-CI] requires every action to be pinned to a commit, Dependabot to track `github-actions`, and every checkout to
+  set `persist-credentials: false`.
 * [tol-actionlint] checks the inputs each step passes to it.
 
 [std-CI]: ../../standards/workflows.md
