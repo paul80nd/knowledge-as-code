@@ -30,6 +30,6 @@
     "Where the detail lives": "* [ofr-discovery], [ofr-borrowing] and [ofr-reservations] say what a borrower can do, and which services do it.\n* [svc-catalogue-web] and [svc-catalogue-api] describe the public site and its gateway.\n* [svc-reservations] describes the reserve-and-pay site, and [svc-covers-cdn] the jacket imagery.\n* [svc-lending] describes the strangler wrapper and the legacy database behind it. [dat-loans] and [dat-borrowers]\n  describe the data it reads and writes.\n* [svc-search], [svc-notices] and [svc-shelf-audit] describe the work that runs on a schedule or on an event.\n* [Services](../services.md) states the conventions this catalogue follows, and why some coupling has no edge.\n* [exp-covers-path] walks the path a jacket image takes, through [svc-thumbnailer]."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c588d195b70d324698ca84dd4ef9c2a60c59de2a/examples/library/explanations/estate-overview.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b0ed9f775490c4d4798bc8630b645a4d55b92ee3/examples/library/explanations/estate-overview.md"
   }
 }

@@ -22,6 +22,6 @@
     "Consequences": "* **Every document will acquire a schema obligation.** A contributor picks a type and completes the frontmatter, which\n  adds friction in exchange for validation.\n* **CI will gate documentation.** A malformed document fails the build, and the first few failures could irritate.\n* **Existing ADRs and standards will have to migrate** into records with frontmatter.\n* **The value depends on that verification.** If unverified observations reach the corpus, trust in everything else\n  falls with them.\n* **Session logs will stay out of this corpus**, because they contain credentials and customer data."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c588d195b70d324698ca84dd4ef9c2a60c59de2a/examples/engineering/adrs/0001-knowledge-as-code.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b0ed9f775490c4d4798bc8630b645a4d55b92ee3/examples/engineering/adrs/0001-knowledge-as-code.md"
   }
 }
