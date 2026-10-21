@@ -37,7 +37,7 @@ The reader is under pressure and may be new to the system. They skim.
 
 The reader acts on a clause without checking it. Make it checkable.
 
-* Start each clause of a standard with an RFC 2119 keyword in capitals. Lower-case "must" is prose.
+* Start each clause of a standard with a BCP 14 keyword in capitals. Lower-case "must" is prose.
 * In a standard, write **MUST** for the outcome its owner answers for, and **SHOULD** for the usual way to reach it.
   Departing from a MUST takes a deviation. Departing from a SHOULD takes a reason, written in the change.
 * A standard's rule heading may carry one short reason where the reason is not obvious. End the bullet it explains with
@@ -65,7 +65,7 @@ The reader acts on a clause without checking it. Make it checkable.
 * Use the indicative mood. Write: "The API authenticates with workload identity." Not: "should authenticate".
 * Use no future tense. Describe what runs today.
 * Use no promotion. Cut "world-class" and "best-in-class".
-* Use no RFC 2119 keyword. `not-normative` warns.
+* Use no BCP 14 keyword. `not-normative` warns.
 * An offering and an explanation are hubs. Link out instead of restating. `hub-not-specification` and
   `links-rather-than-restates` warn at about forty words per outbound link.
 

@@ -139,7 +139,7 @@ rules:
     severity: warning
     # ISO/IEC Directives, Part 2, clause 16.5.6. Read on the first sentence, with code spans dropped.
   - id: entries-state-no-requirement
-    description: No bold RFC 2119 keyword states a requirement inside a glossary entry.
+    description: No bold BCP 14 keyword states a requirement inside a glossary entry.
     severity: warning
     # ISO/IEC Directives, Part 2, clause 16.5.6. Bold binds, so a keyword written plain is passed over.
   - id: glossary-in-date

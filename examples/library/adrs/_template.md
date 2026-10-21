@@ -36,9 +36,8 @@ optional field from [the type page](../adrs.md#metadata) where you have a value 
 * **`owner`**: who is answerable for the decision, as `human:alex.doe` or `role:head-of-engineering`. Never a team
   alias.
 
-**Keywords.** An ADR that establishes a default or a policy may use [RFC
-2119](https://datatracker.ietf.org/doc/html/rfc2119) keywords. An ADR that records a decision uses plain declarative
-prose.
+**Keywords.** An ADR that establishes a default or a policy may use [BCP 14](https://www.rfc-editor.org/rfc/rfc8174)
+keywords. An ADR that records a decision uses plain declarative prose.
 
 **Once it is decided.** Change an accepted or rejected decision only by writing a new ADR that supersedes it. Edit it in
 place only to correct what it misstates about the decision as agreed, to fix its prose, a typo or a broken link, or to

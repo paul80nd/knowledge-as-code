@@ -118,7 +118,7 @@
       "line": 1,
       "severity": "warning",
       "check": "not-normative",
-      "message": "a bold RFC 2119 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
+      "message": "a bold BCP 14 keyword binds, and an explanation does not. Move the obligation into a standard and link to it from here."
     },
     {
       "file": "fixes/one-actor-verified-twice.md",

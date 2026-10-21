@@ -687,7 +687,7 @@ checks:
 
   entry-requirement:
     severity: warning
-    description: No bold RFC 2119 keyword states a requirement inside a glossary entry.
+    description: No bold BCP 14 keyword states a requirement inside a glossary entry.
     notes: >
       ISO/IEC Directives, Part 2, clause 16.5.6. Bold is what binds under BCP 14, so a keyword written plain is a
       term being named and is passed over. The whole entry is read, not the definition alone, because an
