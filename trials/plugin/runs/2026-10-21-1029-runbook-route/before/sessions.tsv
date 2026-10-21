@@ -1,0 +1,7 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	goldens-red-what-first	1	0		1	1	1	0.2468884	12	pass
+house	plugin	goldens-red-what-first	2	0		1	1	1	0.2495422	12	pass
+house	plugin	goldens-red-what-first	3	0		1	1	1	0.23772140000000003	11	pass
+house	none	goldens-red-what-first	1	0		0	0		0.10771879999999999	3	fail
+house	none	goldens-red-what-first	2	0		0	0		0.107781	3	fail
+house	none	goldens-red-what-first	3	0		0	0		0.1137222	4	fail

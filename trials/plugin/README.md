@@ -75,7 +75,7 @@ corpus it runs against.
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
 | [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 25 house, and the pilot's 3 controls |
-| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 6 house                              |
+| [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 7 house                              |
 | [`cases/library/`](cases/library/)         | `examples/library`     | 6 house                              |
 | [`cases/payments/`](cases/payments/)       | `examples/payments`    | 4 house                              |
 
@@ -400,3 +400,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [#987 build cases](runs/2026-10-21-987-build.md)                                 |      5 | `examples/library`, `dog-fooding`     |       18 | The three build cases, plugin and none arms, 3 runs a case        |
 | [#988 operate cases](runs/2026-10-21-988-operate.md)                             |      5 | `payments`, `library`, `dog-fooding`  |       22 | The five operate cases, plugin and none arms, two excluded        |
 | [#989 contribute cases](runs/2026-10-21-989-contribute.md)                       |      5 | `engineering`, `library`              |       12 | The two contribute cases, plugin and none arms, 3 runs a case     |
+| [The runbook route](runs/2026-10-21-1029-runbook-route.md)                       |      5 | `examples/dog-fooding`                |       12 | One runbook case before and after its route, plugin and none arms |

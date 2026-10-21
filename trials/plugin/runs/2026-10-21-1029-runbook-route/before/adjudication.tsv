@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+goldens-red-what-first	plugin	1	pass	pass	The reply quoted the runbook's id, title, the matching symptom and its Impact, said the fetch failed, gave the link and stated no steps of its own.
+goldens-red-what-first	plugin	2	pass	pass	The reply named the runbook, said it could not read the steps, gave the link, and added only what ctl-0009 says about the CI job, credited to that control.
+goldens-red-what-first	plugin	3	pass	pass	The reply named the runbook, said the steps did not come and the fetch failed, gave the link, and drew its advice only from the exported Symptoms, credited to the record.
+goldens-red-what-first	none	1	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.
+goldens-red-what-first	none	2	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.
+goldens-red-what-first	none	3	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.
