@@ -131,7 +131,7 @@ Cite as `std-CI.a-workflow-holds-no-credential-of-its-own`.
 
 Cite as `std-CI.every-action-is-pinned-to-a-commit`.
 
-- A step in `.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s `Pinned-Dependencies` check asks for.
+- A step in `.github/workflows/` or `template/.github/workflows/` **MUST** pin its action to a commit SHA, which is what [OpenSSF Scorecard]'s `Pinned-Dependencies` check asks for.
 - A pinned step **SHOULD** state the released version in a trailing comment, as `# v7.0.1`, because a reviewer reads the version there.
 - `.github/dependabot.yml` **MUST** track `github-actions`.
 - A job with a write permission **MUST NOT** install a tool at a moving version.
