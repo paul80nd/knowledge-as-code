@@ -45,6 +45,15 @@ rule. The template is where the file belongs, and each corpus is where a copy of
 Every test layer reads the schema straight from [`../.schema/`](../.schema/), where it is authored. A schema edit
 surfaces as a broken golden in the same run.
 
+## Links in a file a corpus receives
+
+**Link only a path a corpus receives.** A relative link in an overlay or seed file is read from where that file lands in
+a corpus. A link to a withheld path, such as `tooling/`, `docs/` or this file, resolves here and dangles in every corpus.
+Link the published page by its URL.
+
+[`ReceivedLinkTests`](../tooling/kac.tests/ReceivedLinkTests.cs) fails such a link. It names the file, the link, and
+the layer the manifest puts the target in.
+
 ## What is not here
 
 `.corpus.yaml` is not a template file, though one sits here. It is present so that `kac` reads this folder as a corpus
