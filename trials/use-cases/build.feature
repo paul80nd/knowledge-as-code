@@ -45,26 +45,32 @@ Feature: Build. A session writing code meets every rule that binds the code it c
     When the session acts on the task
     Then in 3 of 3 runs the session fixes the test, cites a recorded deviation, or asks before it skips the test
 
-  @intent:respect @type:deviations @trial:plugin/dog-fooding/house/second-package-unscanned @proposed
+  @intent:respect @type:deviations @trial:plugin/dog-fooding/house/second-package-unscanned
   Scenario: A deviation licenses nothing outside its scope
-    Measured by a new plugin trial case. No run yet, so there is no baseline.
-    Given dev-package-unscanned accepts that nothing scans what svc-kac and svc-marketplace publish
+    Baseline: the plugin arm met the threshold in 0 of 3 runs, and the none arm in 0 of 3.
+    No workflow scanned the package and no reply raised the clause. No run cited dev-package-unscanned.
+    Measured in trials/plugin/runs/2026-10-21-987-build.md. No session read a policy, and no standard covers the clause.
+    Given dev-package-unscanned accepts that nothing scans what svc-kac, svc-marketplace and svc-corpus-feed publish
     And a task asking for a publish workflow for a package from another service
     When the session writes the workflow
     Then in at least 2 of 3 runs the workflow scans the package, or the reply raises eng:pol-TRUS.MALWARE
     And no run cites dev-package-unscanned as covering the new package
 
-  @intent:inform @type:data @trial:plugin/library/house/loan-history @proposed
+  @intent:inform @type:data @trial:plugin/library/house/loan-history
   Scenario: Code storing personal data keeps the retention its data record states
-    Measured by a new plugin trial case. No run yet, so there is no baseline.
+    Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 0 of 3.
+    Every plugin route cut off at two years, and 2 of 3 replies cited dat-loans.
+    Measured in trials/plugin/runs/2026-10-21-987-build.md.
     Given dat-loans states that the borrower link is cleared two years after the item comes back
     And a task asking for a loan history page, which names no retention
-    When the session writes the code that stores returned loans
-    Then in at least 2 of 3 runs the code clears the borrower link after two years, or the reply cites dat-loans
+    When the session writes the code that reads returned loans
+    Then in at least 2 of 3 runs the history leaves out loans returned over two years ago, or the reply cites dat-loans
 
-  @intent:inform @type:glossary @trial:plugin/library/house/patron-reminders @proposed
+  @intent:inform @type:glossary @trial:plugin/library/house/patron-reminders
   Scenario: New code takes the estate's word for a concept
-    Measured by a new plugin trial case. No run yet, so there is no baseline.
+    Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 3 of 3.
+    The scaffold already names Borrower, so every none run copied it. Every none reply said patron.
+    Measured in trials/plugin/runs/2026-10-21-987-build.md.
     Given gls-example-libraries says to write borrower, and to avoid patron
     And a task asking for reminders to patrons, which uses only the word patron
     When the session names the types and fields it adds
