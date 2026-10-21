@@ -2,11 +2,11 @@
   "formatVersion": 4,
   "corpus": "example-payments",
   "shortcode": "pay",
-  "contentVersion": "0.33.8",
+  "contentVersion": "0.34.0",
   "mechanismVersion": 22,
-  "commit": "b0ed9f775490c4d4798bc8630b645a4d55b92ee3",
+  "commit": "c95a5cce3ac1c03912300b0e4bab03a605f65e4e",
   "dirty": false,
-  "generatedAt": "2026-10-21T09:12:28Z",
+  "generatedAt": "2026-10-21T09:54:59Z",
   "about": {
     "displayName": "Example Payments",
     "description": "A worked example corpus shipped with knowledge-as-code, holding the invented standards of a fictional payments system and consuming Example Engineering. It binds nobody.",
@@ -18,10 +18,10 @@
   },
   "publishing": {
     "target": "github",
-    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b0ed9f775490c4d4798bc8630b645a4d55b92ee3/examples/payments/{path}#{anchor}",
+    "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/payments/{path}#{anchor}",
     "base": "https://github.com/paul80nd/knowledge-as-code",
     "pathPrefix": "examples/payments",
-    "ref": "b0ed9f775490c4d4798bc8630b645a4d55b92ee3"
+    "ref": "c95a5cce3ac1c03912300b0e4bab03a605f65e4e"
   },
   "reposBase": "https://git.example.com/example-payments",
   "tracker": {
@@ -43,10 +43,10 @@
       "contentVersion": "0.37.0",
       "publishing": {
         "target": "github",
-        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/b0ed9f775490c4d4798bc8630b645a4d55b92ee3/examples/engineering/{path}#{anchor}",
+        "humanTemplate": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/engineering/{path}#{anchor}",
         "base": "https://github.com/paul80nd/knowledge-as-code",
         "pathPrefix": "examples/engineering",
-        "ref": "b0ed9f775490c4d4798bc8630b645a4d55b92ee3"
+        "ref": "c95a5cce3ac1c03912300b0e4bab03a605f65e4e"
       },
       "reposBase": null,
       "tracker": {
@@ -61,7 +61,7 @@
     {
       "type": "fixes",
       "shapeVersion": 2,
-      "records": 1,
+      "records": 2,
       "parts": 0,
       "dir": "fixes",
       "partsFile": null,
