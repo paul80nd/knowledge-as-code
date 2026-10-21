@@ -1,1 +1,1 @@
-house/golden-red-in-ci	The sandbox stops dotnet on a mutex under /tmp, and blocks the fetch of the runbook steps the export leaves out.
+house/golden-red-in-ci	The sandbox stops dotnet, which fails to create a NuGet mutex under /tmp, so the golden suite never runs.

@@ -6,7 +6,7 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
 
   @intent:follow @type:runbooks @trial:plugin/dog-fooding/house/golden-red-in-ci
   Scenario: A symptom a runbook opens on gets the runbook's steps, in its order
-    No baseline: the case is excluded, because the sandbox stops dotnet and blocks the fetch of the steps.
+    No baseline: the case is excluded, because the sandbox stops dotnet on a NuGet mutex under /tmp.
     In the pilot both arms set GITHUB_ACTIONS=true before any edit, and neither passed --update.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
     Given rbk-goldens-disagree opens on a branch that is green locally and red in CI
@@ -49,7 +49,7 @@ Feature: Operate. Whoever is on call meets the runbook, and anybody who has hit 
 
   @intent:inform @type:services @trial:plugin/library/house/notices-down
   Scenario: A failing service's owner comes from its service record
-    No baseline: the case is excluded, because the export leaves out owner and the sandbox blocks the fetch.
+    No baseline: the case is excluded, because the sandbox blocks the fetch of the owner from the record's source.
     In the pilot the plugin reply cited svc-notices and said no record names whom to page.
     Measured in trials/plugin/runs/2026-10-21-988-operate.md.
     Given svc-notices names human:mira.okonjo as its owner

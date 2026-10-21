@@ -89,8 +89,8 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | `engineering/house/billing-new-solution`  | The rule copies the .NET runtime's `.editorconfig`, and the sandbox blocks the download. |
 | `engineering/house/pagination-fix-commit` | The sandbox blocks the git that `/usr/bin/git` hands off to, so commits fail.            |
 | `engineering/house/ci-coverage-threshold` | The rule needs a coverage figure the repository records, and the scaffold records none.  |
-| `library/house/notices-down`              | The export leaves out `owner`, and the sandbox blocks the fetch that would read it.      |
-| `dog-fooding/house/golden-red-in-ci`      | The sandbox stops `dotnet`, and blocks the fetch of the runbook steps the export omits.  |
+| `library/house/notices-down`              | The sandbox blocks the fetch of the record's source, where a session reads `owner`.      |
+| `dog-fooding/house/golden-red-in-ci`      | The sandbox stops `dotnet`, which fails to create a NuGet mutex under `/tmp`.            |
 
 | Case                                 | Rule a session breaks                                                                                   |
 |--------------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -262,6 +262,9 @@ graders under `graders/`, as `claude plugin eval` reads them.
   every file it writes.
 * **A grader reads what the session wrote, and never what it says it did.** It reads a file in the workspace, or the
   input of a `Write`, `Edit` or `Bash` call.
+* **What the case grades travels in the export.** Check that the record type's `export:` block in
+  `.schema/<type>.yaml` lists the field or section the case grades. One it leaves out reaches a session only through a
+  fetch, and the sandbox blocks the fetch.
 
 The prefix of a grader's file name says what it measures:
 

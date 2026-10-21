@@ -1,1 +1,1 @@
-house/notices-down	The export leaves out owner, and the sandbox blocks the fetch that would read it from the service record.
+house/notices-down	The sandbox blocks the fetch of the record source, which is the one place a session can read the owner.
