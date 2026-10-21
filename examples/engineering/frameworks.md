@@ -195,14 +195,21 @@ standard makes someone check.
 ### OWASP ASVS
 
 **Inspiration.** The Open Worldwide Application Security Project's Application Security Verification Standard, at
-version 4.0: application security requirements in chapters (`V1` architecture and threat modelling, `V2`
-authentication, `V4` access control, `V5` validation and encoding, `V13` APIs and web services), each at three levels of
-rigour.
+version 5.0: application security requirements in chapters, each at three levels of rigour. The policies here cite
+these chapters:
 
-The version is pinned deliberately: ASVS re-chapters between major versions, so `V13` means something specific only
-alongside the version it was written against. Moving to a later one is a re-mapping exercise, which is why the version
-is carried by the label every policy cites it under, `[OWASP ASVS 4.0]`, so nobody has to infer it. A bump has to be
-written out everywhere it is read.
+* `V2` validation and business logic
+* `V4` API and web service
+* `V6` authentication
+* `V8` authorisation
+* `V13` configuration
+* `V15` secure coding and architecture
+* `V16` security logging and error handling
+
+The version is pinned deliberately. ASVS re-chapters between major versions, so a chapter means something specific only
+beside the version it was written against: `V13` is APIs and web services in 4.0, and configuration in 5.0. The label
+every policy cites it under, `[OWASP ASVS 5.0]`, states that version, so nobody has to infer it. Moving to a later
+version re-maps every citation. OWASP's [mapping from 4.0.3 to 5.0.0] states where each 4.0 requirement went.
 
 ## Adding a framework
 
@@ -230,3 +237,4 @@ goes when the last citation goes, and the commit removing it is where the reason
 [pol-TRUS]: policies/security/trus-trusted-components.md
 [Equality Act 2010]: #equality-act-2010
 [WCAG 2.2 AA]: #wcag
+[mapping from 4.0.3 to 5.0.0]: https://github.com/OWASP/ASVS/blob/v5.0.0_release/5.0/mappings/mapping_v4.0.3_to_v5.0.0.yml

@@ -107,7 +107,7 @@ comparable. UTC is the usual way, and saves a conversion on every search.
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
 say why in the change.
 
-[ASVS 5.0 requirement 16.2.2]: https://github.com/OWASP/ASVS/blob/master/5.0/en/0x25-V16-Security-Logging-and-Error-Handling.md
+[ASVS 5.0 requirement 16.2.2]: https://github.com/OWASP/ASVS/blob/v5.0.0_release/5.0/en/0x25-V16-Security-Logging-and-Error-Handling.md
 [Google SRE, Service Level Objectives]: https://sre.google/sre-book/service-level-objectives/
 [W3C Trace Context]: https://www.w3.org/TR/trace-context/
 [std-SECRET.nowhere-else-holds-a-secret]: secret-handling.md#nowhere-else-holds-a-secret
