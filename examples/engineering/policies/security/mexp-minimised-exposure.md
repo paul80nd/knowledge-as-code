@@ -41,7 +41,7 @@ boundary separates. [pol-OBSV] owns watching what crossed it, under `SECMON`._
 | Id        | Clause                                                                                                                              | Alignment                                                               |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `SEGMENT` | **MUST** segment by trust boundary and by environment                                                                               | [ISO 27001:2022].A.8.22                                                 |
-| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                                           | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.21, [OWASP ASVS 4.0].V4   |
+| `DENY`    | **MUST** deny by default, and expose a service only through an intended, controlled route                                           | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.21, [OWASP ASVS 5.0].V8   |
 | `TRANSIT` | **MUST** protect traffic crossing a trust boundary                                                                                  | [ISO 27001:2022].A.5.14, [ISO 27001:2022].A.8.20, [UK GDPR].Art.5(1)(f) |
 | `PEERID`  | **MUST** verify the identity presented at the far end of a connection that crosses a trust boundary, and refuse it where that fails | [ISO 27001:2022].A.8.20, [ISO 27001:2022].A.8.24                        |
 | `EGRESS`  | **MUST** control what leaves our systems, not only what arrives                                                                     | [ISO 27001:2022].A.8.20                                                 |
@@ -64,4 +64,4 @@ under [pol-DEVI].
 [pol-OBSV]: ../operations/obsv-observability.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
-[OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs
+[OWASP ASVS 5.0]: ../../frameworks.md#owasp-asvs

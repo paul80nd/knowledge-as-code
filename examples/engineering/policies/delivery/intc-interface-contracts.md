@@ -36,10 +36,10 @@ interfaces, webhooks and any other integration surface others build against.
 | `VERSION` | **MUST** version interfaces so that a change we need does not become a break others must absorb                                                              | [ISO 27001:2022].A.8.27                                            |
 | `DEPREC`  | **MUST** publish a deprecation approach, saying how much notice a consumer gets                                                                              |                                                                    |
 | `NOTICE`  | **MUST** give notice before removing or changing something consumers depend on                                                                               |                                                                    |
-| `SECURE`  | **MUST** secure interfaces by default: authenticated, authorised, and validating what they are given                                                         | [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V5, [OWASP ASVS 4.0].V13 |
+| `SECURE`  | **MUST** secure interfaces by default: authenticated, authorised, and validating what they are given                                                         | [ISO 27001:2022].A.8.26, [OWASP ASVS 5.0].V2, [OWASP ASVS 5.0].V4  |
 | `HOLDS`   | **MUST** verify our contracts hold, rather than trusting that they do                                                                                        | [ISO 27001:2022].A.8.26                                            |
 | `BREAK`   | **MUST NOT** make a breaking change to a published interface without a version increment and notice to its consumers                                         |                                                                    |
-| `EXPOSE`  | **MUST NOT** expose sensitive data or a sensitive operation through an unauthenticated interface                                                             | [ISO 27001:2022].A.8.26, [OWASP ASVS 4.0].V4                       |
+| `EXPOSE`  | **MUST NOT** expose sensitive data or a sensitive operation through an unauthenticated interface                                                             | [ISO 27001:2022].A.8.26, [OWASP ASVS 5.0].V8, [OWASP ASVS 5.0].V13 |
 | `COMPAT`  | SHOULD compare a change to a published contract against the version consumers hold, so a break is found before they find it                                  |                                                                    |
 
 ## Exceptions
@@ -53,4 +53,4 @@ deviation under [pol-DEVI], and consumers are told as soon as it is safe to tell
 
 [pol-DEVI]: ../governance/devi-deviations.md
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
-[OWASP ASVS 4.0]: ../../frameworks.md#owasp-asvs
+[OWASP ASVS 5.0]: ../../frameworks.md#owasp-asvs

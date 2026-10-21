@@ -5,14 +5,14 @@ tier: descriptive
 status: active
 owner: human:paul.law
 generated:
-  at: 2026-10-18T20:05:00Z
+  at: 2026-10-21T19:10:00Z
   by: claude-code/opus-5.5
   report: frameworks
-  tool: kac/0.35.0
+  tool: kac/0.36.0
 sources:
-  - { resource: example-engineering, version: "0.37.2" }
+  - { resource: example-engineering, version: "0.37.3" }
 verified:
-  - { at: 2026-10-19T10:51:00Z, by: human:paul.law }
+  - { at: 2026-10-21T19:11:00Z, by: human:paul.law }
 tags: [ coverage, frameworks ]
 ---
 
@@ -39,11 +39,11 @@ this report decides whether the clause covers that control or one corner of it.
 | ISO 27001:2022    | Obliged        | 58         | 9          |
 | NIST AI RMF 1.0   | Inspiration    | 4          | 1          |
 | NIST SSDF 1.1     | Inspiration    | 15         | 1          |
-| OWASP ASVS 4.0    | Inspiration    | 5          | 3          |
+| OWASP ASVS 5.0    | Inspiration    | 7          | 6          |
 | SLSA 1.1          | Inspiration    | 2          | 2          |
 | UK GDPR           | Obliged        | 23         | 15         |
 | WCAG 2.2 AA       | Self-obligated | 1          | 0          |
-| **Total**         |                | **120**    | **35**     |
+| **Total**         |                | **122**    | **38**     |
 
 ## References
 
@@ -178,17 +178,19 @@ Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#nist-ssdf).
 | RV.1      | 3         | `pol-VURM.SCAN`, `pol-VURM.DISCLOS`, `pol-VURM.INDEP`                                                                                              | `pol-VURM`             |                                                                                                                                                                                                                                                                 |
 | RV.2      | 4         | `pol-VURM.RANK`, `pol-VURM.TIMEBOX`, `pol-VURM.SHIP`, `pol-VURM.OVERDUE`                                                                           | `pol-VURM`             |                                                                                                                                                                                                                                                                 |
 
-### OWASP ASVS 4.0
+### OWASP ASVS 5.0
 
 Filed under `Inspiration` in [`frameworks.md`](../frameworks.md#owasp-asvs).
 
-| Reference | Citations | Clauses                                               | Policies                           | Note |
-|-----------|-----------|-------------------------------------------------------|------------------------------------|------|
-| V1        | 3         | `pol-SECD.REQS`, `pol-SECD.DESIGN`, `pol-SECD.THREAT` | `pol-SECD`                         |      |
-| V2        | 1         | `pol-ACCS.AUTHN`                                      | `pol-ACCS`                         |      |
-| V4        | 3         | `pol-INTC.EXPOSE`, `pol-ACCS.LEAST`, `pol-MEXP.DENY`  | `pol-INTC`, `pol-ACCS`, `pol-MEXP` |      |
-| V5        | 1         | `pol-INTC.SECURE`                                     | `pol-INTC`                         |      |
-| V13       | 1         | `pol-INTC.SECURE`                                     | `pol-INTC`                         |      |
+| Reference | Citations | Clauses                                              | Policies                           | Note |
+|-----------|-----------|------------------------------------------------------|------------------------------------|------|
+| V2        | 1         | `pol-INTC.SECURE`                                    | `pol-INTC`                         |      |
+| V4        | 1         | `pol-INTC.SECURE`                                    | `pol-INTC`                         |      |
+| V6        | 1         | `pol-ACCS.AUTHN`                                     | `pol-ACCS`                         |      |
+| V8        | 3         | `pol-INTC.EXPOSE`, `pol-ACCS.LEAST`, `pol-MEXP.DENY` | `pol-INTC`, `pol-ACCS`, `pol-MEXP` |      |
+| V13       | 1         | `pol-INTC.EXPOSE`                                    | `pol-INTC`                         |      |
+| V15       | 1         | `pol-SECD.DESIGN`                                    | `pol-SECD`                         |      |
+| V16       | 1         | `pol-SECD.DESIGN`                                    | `pol-SECD`                         |      |
 
 ### SLSA 1.1
 
