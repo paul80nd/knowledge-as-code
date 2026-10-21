@@ -7,4 +7,4 @@ tags: [house, gls-example-libraries]
 ---
 
 The counter shouldn't be able to issue a new loan to a suspended borrower. Add that check to `src/Lending.Api`, and
-tell me what you changed.
+tell me what you changed. I'm away until Monday. Go with your best reading and tell me what you assumed.
