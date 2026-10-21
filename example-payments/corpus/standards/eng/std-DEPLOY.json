@@ -15,6 +15,7 @@
       "pol-PIPE.ASCODE",
       "pol-PIPE.CONFIG",
       "pol-PIPE.DEPLOY",
+      "pol-PIPE.GATES",
       "pol-PIPE.LOCAL",
       "pol-PIPE.MANUAL",
       "pol-PIPE.REVERT",
@@ -33,10 +34,10 @@
     ]
   },
   "sections": {
-    "Summary": "The pipeline builds an artefact once, then promotes that same artefact through each environment. Configuration comes from outside the artefact. The pipeline is the only route into production.",
-    "Conformance checklist": "- [ ] The image or package running in production has the same digest as the one tested below it.\n- [ ] The artefact reports the commit it was built from, on a health or version endpoint.\n- [ ] No configuration file inside the artefact names an environment.\n- [ ] The pipeline definition is in the repository, and its last change went through review.\n- [ ] Production access allows deployment through the pipeline identity alone, apart from a hand change made to\n  restore service.\n- [ ] Every hand change to production has a deviation, and the change is in the repository.\n- [ ] The last release's rollback path is written down, and somebody has run it in an environment below production."
+    "Summary": "The pipeline builds an artefact once, then promotes that same artefact through each environment. Configuration comes from outside the artefact. The pipeline is the only route into production. Somebody other than a change's author approves it before it goes.",
+    "Conformance checklist": "- [ ] The image or package running in production has the same digest as the one tested below it.\n- [ ] The artefact reports the commit it was built from, on a health or version endpoint.\n- [ ] No configuration file inside the artefact names an environment.\n- [ ] The pipeline definition is in the repository, and its last change went through review.\n- [ ] Production access allows deployment through the pipeline identity alone, apart from a hand change made to\n  restore service.\n- [ ] Every hand change to production has a deviation, and the change is in the repository.\n- [ ] Every change in the last release has an approval recorded against it by somebody other than its author, given\n  before the change reached production.\n- [ ] Each higher-risk change in the last release has an approver with authority for that risk.\n- [ ] Every change that bypassed approval has a second person's review recorded against it within two working days\n  of the change reaching production.\n- [ ] The last release's rollback path is written down, and somebody has run it in an environment below production."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/e46c58518b38636b4a87e4f3fc72048ab0dabd6e/examples/engineering/standards/common/deployment.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f1eabec0a72f7d07e87fdd6aa73a469607b64395/examples/engineering/standards/common/deployment.md"
   }
 }

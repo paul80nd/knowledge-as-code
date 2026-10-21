@@ -1,6 +1,6 @@
 # Rules the standards of example-dogfooding state
 
-example-dogfooding 0.75.2 states 84 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
+example-dogfooding 0.75.3 states 85 rules for code in this repository, under the 19 standards below. Each rule binds the code its title bears on. The standards-lookup skill returns a rule's obligations by its standard's id.
 
 Each heading gives a standard's id, title and status. Each line under it gives a rule's title.
 
@@ -86,6 +86,7 @@ Each heading gives a standard's id, title and status. Each line under it gives a
 ## eng:std-DEPLOY: One artefact is built once and promoted to production (draft)
 
 - A way back exists before the change goes
+- Change approval
 - Configuration sits outside the artefact
 - Production changes through the pipeline alone
 - The artefact is built once

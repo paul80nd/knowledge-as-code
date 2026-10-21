@@ -718,6 +718,17 @@ Cite as `eng:std-DEPLOY.a-way-back-exists-before-the-change-goes`.
 - A release **MUST** have a stated rollback or recovery path before it starts.
 - A database migration **MUST** leave the previous version of the service able to run against the new schema, unless the migration removes data the previous version reads.
 
+### Change approval
+
+Cite as `eng:std-DEPLOY.change-approval`.
+
+- A change **MUST** be approved by someone other than its author before it reaches production.
+- The approval **MUST** be recorded where the change is, such as in branch protection.
+- A change of a higher-risk kind **MUST** carry an approver with authority for that risk. The higher-risk kinds are a schema or data migration, a change to access or security configuration, and infrastructure that holds data.
+- A change **MAY** bypass approval during an incident.
+- A change that bypassed approval **MUST** be reviewed by a second person within two working days of the change reaching production.
+- That review **MUST** be recorded against the change.
+
 ### Configuration sits outside the artefact
 
 Cite as `eng:std-DEPLOY.configuration-sits-outside-the-artefact`.
@@ -766,7 +777,10 @@ Cite as `eng:std-DEPS.what-happens-afterwards`.
 Cite as `eng:std-DEPS.what-happens-before-adoption`.
 
 - Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
-- Somebody **MUST** check a new package's licence against the allowed list before that pull request merges.
+- Somebody **MUST** check a new package's licence against the licences the [conformance checklist](#conformance-checklist) allows before that pull request merges.
+- A package a build ships under a review-tier licence **MUST** carry an accepted deviation.
+- A build **MUST NOT** ship a package under a refused licence.
+- A build **MUST NOT** ship a package with no licence.
 - A pull request adding a package **MUST** say what the package is for, so a reviewer can weigh it against writing the code.
 
 ### Where a package comes from
@@ -892,7 +906,7 @@ Cite as `eng:std-NETTST.the-framework-and-the-project-layout`.
 - A test project **MUST** be named for the project it tests, with a `.Tests` or `.IntegrationTests` suffix.
 - A project **MUST** use one assertion style throughout its tests.
 - A project **SHOULD** assert with the test framework's own `Assert`.
-- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is on the allowed list [std-DEPS.what-happens-before-adoption] checks a new package against.
+- A project **MAY** assert with AwesomeAssertions, or with another library whose licence is one of the allowed ids in [std-DEPS's conformance checklist](../../common/dependencies.md#conformance-checklist).
 
 ## eng:std-OBS: A service ships its telemetry to one place, keyed by one id
 
