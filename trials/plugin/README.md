@@ -74,9 +74,9 @@ corpus it runs against.
 
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
-| [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 24 house, and the pilot's 3 controls |
+| [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 25 house, and the pilot's 3 controls |
 | [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 6 house                              |
-| [`cases/library/`](cases/library/)         | `examples/library`     | 5 house                              |
+| [`cases/library/`](cases/library/)         | `examples/library`     | 6 house                              |
 | [`cases/payments/`](cases/payments/)       | `examples/payments`    | 4 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
@@ -105,6 +105,7 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | `house/cover-timeout-pr`             | `std-PR.agent-produced-work-says-what-produced-it`: the PR body omits the agent, model or task          |
 | `house/pagination-fix-commit`        | `std-VCS.every-change-is-attributable-and-reviewed`: the commit subject lacks `#2231`                   |
 | `house/flaky-test-skip`              | `std-GATES.a-failing-check-stops-the-change`: the skip cites no deviation                               |
+| `house/request-a-deviation`          | `std-GATES.a-failing-check-stops-the-change`: no draft request, or one naming an owner                  |
 | `house/ci-every-branch`              | `std-GATES.every-change-is-built-and-tested-automatically`: push builds only some branches              |
 | `house/orders-column-rename`         | `std-DEPLOY.a-way-back-exists-before-the-change-goes`: the migration renames or drops the column        |
 | `house/health-endpoint`              | `std-DEPLOY.the-artefact-is-built-once`: the health endpoint reports no commit                          |
@@ -155,9 +156,10 @@ A run that grants `Bash` needs the sandbox Claude Code runs shell commands in. m
 Run each step from the root of this repository, and the commands in the corpus as its `CLAUDE.md` says. `$CORPUS` is
 the corpus folder, `$CASES` its case folder, and `$STAGE` an empty folder outside the repository.
 
-1. **Build the plugin.** In the corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
+1. **Build the plugin.** Commit the cases first, because `kac export` marks an untracked case as a dirty tree. In the
+   corpus, run `kac export`, then `kac bundle`. The plugin is `$CORPUS/.dist/plugin/`.
 2. **Stage the arms.** `claude plugin eval` reads cases only from a folder below the plugin, so the script copies the
-   plugin and the cases into `$STAGE`:
+   plugin and the cases into `$STAGE`. `stage.sh` refuses a folder that is not empty, so stage each run into a new one:
 
    ```sh
    trials/plugin/stage.sh "$CORPUS/.dist/plugin" "$CASES" "$STAGE"
@@ -397,3 +399,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |
 | [#987 build cases](runs/2026-10-21-987-build.md)                                 |      5 | `examples/library`, `dog-fooding`     |       18 | The three build cases, plugin and none arms, 3 runs a case        |
 | [#988 operate cases](runs/2026-10-21-988-operate.md)                             |      5 | `payments`, `library`, `dog-fooding`  |       22 | The five operate cases, plugin and none arms, two excluded        |
+| [#989 contribute cases](runs/2026-10-21-989-contribute.md)                       |      5 | `engineering`, `library`              |       12 | The two contribute cases, plugin and none arms, 3 runs a case     |

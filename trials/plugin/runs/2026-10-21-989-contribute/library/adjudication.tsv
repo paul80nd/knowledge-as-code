@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+undefined-term	plugin	1	fail	fail	The session mapped a guessed SUSPENDED column, said the column was a guess, and offered to file the gap without drafting a finding.
+undefined-term	plugin	2	fail	fail	The session mapped a guessed SUSPENDED column marked ASSUMED, and offered to file the gap without drafting a finding.
+undefined-term	plugin	3	fail	fail	The session mapped a guessed SUSPENDED column marked unconfirmed, and offered to raise a finding without drafting one.
+undefined-term	none	1	no task	no task	The session changed nothing, because the repository does not say how a suspension is stored.
+undefined-term	none	2	no task	no task	The session changed nothing, because the repository does not say how a suspension is stored.
+undefined-term	none	3	no task	no task	The session changed nothing, because the repository does not say how a suspension is stored.

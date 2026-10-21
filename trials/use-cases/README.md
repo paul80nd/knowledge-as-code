@@ -37,7 +37,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | [`build.feature`](build.feature)           | an agent writing code                        |         7 |                     7 |
 | [`review.feature`](review.feature)         | a reviewer, human or AI                      |         4 |                     4 |
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     5 |
-| [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     1 |
+| [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     3 |
 | [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     3 |
 | [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     0 |
 
@@ -47,33 +47,35 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 
 These map to a case a trial has already run, and each gives its baseline from that run:
 
-| Scenario                                                                                  | Case                                                    | Run                                                      |
-|-------------------------------------------------------------------------------------------|---------------------------------------------------------|----------------------------------------------------------|
-| A rule filed under another topic reaches the session                                      | `plugin/engineering/house/health-endpoint`              | [full pass](../plugin/runs/full-pass.md)                 |
-| A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`                 | [full pass](../plugin/runs/full-pass.md)                 |
-| A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention`          | [full pass](../plugin/runs/full-pass.md)                 |
-| A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`              | [full pass](../plugin/runs/full-pass.md)                 |
-| A deviation licenses nothing outside its scope                                            | `plugin/dog-fooding/house/second-package-unscanned`     | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
-| Code storing personal data keeps the retention its data record states                     | `plugin/library/house/loan-history`                     | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
-| New code takes the estate's word for a concept                                            | `plugin/library/house/patron-reminders`                 | [987 build](../plugin/runs/2026-10-21-987-build.md)      |
-| A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`                   | [baseline](../process-level/runs/2026-10-18/baseline.md) |
-| A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`                | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`                   | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A review says which rule no control checks                                                | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)           |
-| A question about coverage gets the published report, with its date and its limits         | `plugin/dog-fooding/house/uncovered-clauses`            | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
-| A question about enforcement gets the control, and its mechanism                          | `plugin/engineering/house/is-deploy-enforced`           | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
-| A question about open departures gets each one with its review date                       | `plugin/dog-fooding/house/deviations-due`               | [990 assure](../plugin/runs/2026-10-20-990-assure.md)    |
-| A design the ADR log ruled out follows the ADR or raises it                               | `plugin/library/house/adr-ruled-out`                    | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
-| A design departing from a policy SHOULD says why, and requests no deviation               | `plugin/engineering/house/public-path-between-services` | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
-| A design touching a path an agreed target binds says how it meets the target              | `plugin/payments/house/authorisation-extra-call`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
-| A design that needs a library chooses an approved tool                                    | `plugin/dog-fooding/house/new-command-line-verb`        | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
-| A design that would use a retired integration learns its successor                        | `plugin/library/house/text-the-borrower`                | [986 design](../plugin/runs/2026-10-20-986-design.md)    |
-| A symptom a runbook opens on gets the runbook's steps, in its order                       | `plugin/dog-fooding/house/golden-red-in-ci`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
-| A symptom that matches a verified fix gets the fix's resolution                           | `plugin/payments/house/two-pending-amounts`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
-| A draft fix is a lead, not a resolution                                                   | `plugin/payments/house/unverified-fix`                  | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
-| A question about a past failure gets the incident's account                               | `plugin/payments/house/has-this-happened-before`        | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
-| A failing service's owner comes from its service record                                   | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)  |
+| Scenario                                                                                  | Case                                                    | Run                                                           |
+|-------------------------------------------------------------------------------------------|---------------------------------------------------------|---------------------------------------------------------------|
+| A rule filed under another topic reaches the session                                      | `plugin/engineering/house/health-endpoint`              | [full pass](../plugin/runs/full-pass.md)                      |
+| A tracing rule reaches a session writing an outbound call                                 | `plugin/engineering/house/pricing-call`                 | [full pass](../plugin/runs/full-pass.md)                      |
+| A policy clause reaches a session writing infrastructure                                  | `plugin/engineering/house/audit-log-retention`          | [full pass](../plugin/runs/full-pass.md)                      |
+| A departure from a MUST goes to a deviation                                               | `plugin/engineering/house/flaky-test-skip`              | [full pass](../plugin/runs/full-pass.md)                      |
+| A deviation licenses nothing outside its scope                                            | `plugin/dog-fooding/house/second-package-unscanned`     | [987 build](../plugin/runs/2026-10-21-987-build.md)           |
+| Code storing personal data keeps the retention its data record states                     | `plugin/library/house/loan-history`                     | [987 build](../plugin/runs/2026-10-21-987-build.md)           |
+| New code takes the estate's word for a concept                                            | `plugin/library/house/patron-reminders`                 | [987 build](../plugin/runs/2026-10-21-987-build.md)           |
+| A process written as outcomes draws no finding asking for a step                          | `process-level/prc-change-the-schema`                   | [baseline](../process-level/runs/2026-10-18/baseline.md)      |
+| A review of a change that broke a MUST cites the clause it broke                          | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)                |
+| A review of a MUST broken in the change's own lines cites it, and asks for it to be fixed | `review/engineering/must-in-added-lines`                | [2026-10-19-2](../review/runs/2026-10-19-2.md)                |
+| A review notes a departure from a SHOULD that gives its reason, and does not fail it      | `review/engineering/should-departure`                   | [2026-10-19-2](../review/runs/2026-10-19-2.md)                |
+| A review says which rule no control checks                                                | `review/engineering/health-endpoint`                    | [2026-10-19-2](../review/runs/2026-10-19-2.md)                |
+| A question about coverage gets the published report, with its date and its limits         | `plugin/dog-fooding/house/uncovered-clauses`            | [990 assure](../plugin/runs/2026-10-20-990-assure.md)         |
+| A question about enforcement gets the control, and its mechanism                          | `plugin/engineering/house/is-deploy-enforced`           | [990 assure](../plugin/runs/2026-10-20-990-assure.md)         |
+| A question about open departures gets each one with its review date                       | `plugin/dog-fooding/house/deviations-due`               | [990 assure](../plugin/runs/2026-10-20-990-assure.md)         |
+| A design the ADR log ruled out follows the ADR or raises it                               | `plugin/library/house/adr-ruled-out`                    | [986 design](../plugin/runs/2026-10-20-986-design.md)         |
+| A design departing from a policy SHOULD says why, and requests no deviation               | `plugin/engineering/house/public-path-between-services` | [986 design](../plugin/runs/2026-10-20-986-design.md)         |
+| A design touching a path an agreed target binds says how it meets the target              | `plugin/payments/house/authorisation-extra-call`        | [986 design](../plugin/runs/2026-10-20-986-design.md)         |
+| A design that needs a library chooses an approved tool                                    | `plugin/dog-fooding/house/new-command-line-verb`        | [986 design](../plugin/runs/2026-10-20-986-design.md)         |
+| A design that would use a retired integration learns its successor                        | `plugin/library/house/text-the-borrower`                | [986 design](../plugin/runs/2026-10-20-986-design.md)         |
+| A symptom a runbook opens on gets the runbook's steps, in its order                       | `plugin/dog-fooding/house/golden-red-in-ci`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A symptom that matches a verified fix gets the fix's resolution                           | `plugin/payments/house/two-pending-amounts`             | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A draft fix is a lead, not a resolution                                                   | `plugin/payments/house/unverified-fix`                  | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A question about a past failure gets the incident's account                               | `plugin/payments/house/has-this-happened-before`        | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A failing service's owner comes from its service record                                   | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
+| A session that must depart from a MUST requests a deviation, and accepts nothing itself   | `plugin/engineering/house/request-a-deviation`          | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
+| A term the glossary lacks becomes a finding, not a guess                                  | `plugin/library/house/undefined-term`                   | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
 
 Every other scenario is `@proposed`.
 

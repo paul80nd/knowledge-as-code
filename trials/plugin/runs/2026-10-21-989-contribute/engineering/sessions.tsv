@@ -1,0 +1,7 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	request-a-deviation	1	0	1	1	1	1	0.2893824	9	pass
+house	plugin	request-a-deviation	2	0	1	1	1	1	0.35136999999999996	13	pass
+house	plugin	request-a-deviation	3	0	1	1	1	1	0.3031916	12	pass
+house	none	request-a-deviation	1	0	1	0	0		0.1269758	6	fail
+house	none	request-a-deviation	2	0	1	0	0		0.12741319999999998	6	fail
+house	none	request-a-deviation	3	0	1	0	0		0.1545734	7	fail

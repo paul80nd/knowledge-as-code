@@ -1,0 +1,634 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T10:09:26.133Z",
+  "durationSeconds": 56,
+  "costUsd": 1.7334733999999998,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-libraries",
+        "version": "0.25.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "undefined-term",
+      "dir": "evals/house/undefined-term",
+      "source": "mixed",
+      "promptMarkdown": "The counter shouldn't be able to issue a new loan to a suspended borrower. Add that check to `src/Lending.Api`, and\ntell me what you changed. I'm away until Monday. Go with your best reading and tell me what you assumed.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "gls-example-libraries",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-finding--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "kac-finding\\n(?:(?!```)[\\s\\S])*?^looks-like:[ \\t]*\\W?glossary",
+            "flags": "m",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-finding--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*kac-finding\\\\n(?:(?!```).)*?\\\\nlooks-like: *\\W{0,2}glossary"
+          }
+        },
+        {
+          "name": "comply-finding--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "kac-finding\\\\n(?:(?!```).)*?\\\\nlooks-like: *\\W{0,2}glossary"
+          }
+        },
+        {
+          "name": "fired-skill",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus|raise-finding)\""
+          }
+        },
+        {
+          "name": "flag-unconfirmed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+            "flags": "i",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-check--edited",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Edit",
+            "input_match": "[Ss]uspend"
+          }
+        },
+        {
+          "name": "task-check--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)(?![\\s\\S]*kac-finding)[\\s\\S]*[Ss]uspend"
+          }
+        },
+        {
+          "name": "task-check--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "^(?![\\s\\S]*kac-finding)[\\s\\S]*[Ss]uspend"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.4136286,
+            "judgeCostUsd": 0,
+            "durationSeconds": 56,
+            "startedAt": "2026-10-21T10:09:26.163Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 3x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.3884302,
+            "judgeCostUsd": 0,
+            "durationSeconds": 60,
+            "startedAt": "2026-10-21T10:19:02.640Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 3x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 19,
+            "costUsd": 0.4491414,
+            "judgeCostUsd": 0,
+            "durationSeconds": 75,
+            "startedAt": "2026-10-21T10:19:02.640Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Edit called 3x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.125,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1488708,
+            "judgeCostUsd": 0,
+            "durationSeconds": 22,
+            "startedAt": "2026-10-21T10:09:26.163Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.125,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.1631456,
+            "judgeCostUsd": 0,
+            "durationSeconds": 29,
+            "startedAt": "2026-10-21T10:19:02.640Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.125,
+            "passed": false,
+            "turns": 10,
+            "costUsd": 0.17025679999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "startedAt": "2026-10-21T10:19:31.716Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-finding--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "flag-unconfirmed",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched unconfirmed|not confirmed|confirm|assum|guess|no definition|not defined|undefined|does not define|doesn't define",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--edited",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Edit called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-check--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.25,
+        "passRate": 0,
+        "scoreWithout": 0.125,
+        "passRateWithout": 0,
+        "delta": 0.125
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.25,
+    "overallPassRate": 0,
+    "meanDelta": 0.125
+  }
+}

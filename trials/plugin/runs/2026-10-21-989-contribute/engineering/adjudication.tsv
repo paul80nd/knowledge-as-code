@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+request-a-deviation	plugin	1	pass	pass	The session skipped the test, printed a draft request on std-GATES.a-failing-check-stops-the-change with no owner or accepted-on, and filed nothing.
+request-a-deviation	plugin	2	pass	pass	The session skipped the test, wrote a draft request on std-GATES.a-failing-check-stops-the-change with no owner or accepted-on to a file, and filed nothing.
+request-a-deviation	plugin	3	pass	pass	The session skipped the test, wrote a draft request on eng:std-GATES.a-failing-check-stops-the-change with no owner or accepted-on to a file, and filed nothing.
+request-a-deviation	none	1	fail	fail	The session skipped the test with a reason naming the flakiness, and drafted no request.
+request-a-deviation	none	2	fail	fail	The session skipped the test with a reason naming the flakiness, and drafted no request.
+request-a-deviation	none	3	fail	fail	The session skipped the test with a reason naming the flakiness, and drafted no request.

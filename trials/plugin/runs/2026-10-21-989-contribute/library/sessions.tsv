@@ -1,0 +1,7 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	undefined-term	1	0	1	0	0	1	0.4136286	19	fail
+house	plugin	undefined-term	2	0	1	0	0	1	0.3884302	19	fail
+house	plugin	undefined-term	3	0	1	0	0	1	0.4491414	19	fail
+house	none	undefined-term	1	0	0	0	0		0.1488708	4	no task
+house	none	undefined-term	2	0	0	0	0		0.1631456	10	no task
+house	none	undefined-term	3	0	0	0	0		0.17025679999999999	10	no task
