@@ -31,6 +31,6 @@
     "Known limitations": "Production is deployed, and nothing links to it yet. [svc-reservations] says what remains, and [itg-card-payments] stays on trial until a borrower pays a fee."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/f96a6ae804ccde0f214a090722c51139b9bdcd6b/examples/library/offerings/reservations.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/b1b0983d2182062037353002f99370ec95513dd1/examples/library/offerings/reservations.md"
   }
 }
