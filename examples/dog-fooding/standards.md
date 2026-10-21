@@ -61,8 +61,7 @@ decision or a policy needs one.
 ## Where to find them
 
 * **[→ Standards index](standards/_index.md)**: the generated catalogue of every standard, with the category of each.
-* **[`_template.md`](standards/_template.md).** Copy it to start a new standard. The categories above and the steps
-  below cover the rest.
+* **[`_template.md`](standards/_template.md).** Copy it to start a new standard. Its guidance block covers the rest.
 
 ## Metadata
 
@@ -90,60 +89,17 @@ decision or a policy needs one.
 
 ## Adding or changing a Standard
 
-Name where the standard comes from: an ADR in `derived-from`, a policy in `implements`, or both. `provenance-required`
-fails a standard carrying neither. Where you can name neither, either the decision has not been made (make it), or what
-you are writing is guidance rather than a standard.
+Copy [`_template.md`](standards/_template.md). Its guidance block states how to write each field and each section,
+from the keyword a rule takes to the closing line. This section adds what the template leaves out.
 
-Write each rule as a bullet with one BCP 14 keyword in bold capitals: **MUST**, **MUST NOT**, **SHOULD**,
-**SHOULD NOT** or **MAY**. `part-modal` reports a bullet with none, and one that leaves a keyword in plain text. It
-calls the keyword a modal, because the same declaration governs a policy's clause table.
-
-**Choose the keyword by what a departure costs.** A **MUST** or **MUST NOT** states the outcome the standard's owner
-answers for, and departing from it takes an accepted [deviation](deviations.md). A **SHOULD** or **SHOULD NOT** states
-the usual way to reach that outcome. An engineer or an agent may depart from it and say why in the change. A **MAY**
-permits something a reader might otherwise think is ruled out. Write **MUST** for the outcome and **SHOULD** for the
-way to reach it.
-
-**Give a heading one short reason where the reason is not obvious.** End the bullet it explains with a clause opening
-"because". The reason then travels in the export with the rule, and the longer argument stays in Rationale and
-provenance.
-
-Make each rule **testable**. Where a rule cannot be checked against a concrete artefact, sharpen it or move it to the
-rationale section. Every **MUST** and **MUST NOT** should have a corresponding control, even where that control's
-mechanism is `not-enforced`. An honest gap is more useful than a silent one.
-
-**Group the rules under `###` headings.** A heading says what the rules beneath it hold a reader to, and it is the
-address something else cites: `std-SECRET.every-secret-rotates` names one group, and an export carries the group as a
-line of its own. A standard with a single group writes one heading. `part-none` fails a Rules section with none.
-
-**The conformance checklist tests what the rules require, and nothing else.** An item for a SHOULD is met where the
-work follows it or the change says why it departs.
-
-**Close a heading with the clauses it covers**, as a footnote in italic with the label bold:
-`_**Covers:** [pol-SCRT].EMBED, [pol-SCRT].LOGS_`. `mirrors-citations` holds the union of those lines equal to
-`implements`, in both directions, so the frontmatter says which obligations the standard discharges and each heading
-says which rule discharges which. A heading covering no clause carries no line, and a line naming none is reported, as
-is one a stray space left out of italic. The rules themselves carry no citation.
-
-**A standard's size follows its subject.** One binding every piece of work usually runs to seven or eight rules, and one
-covering a single interface may run to thirty. Neither is padded or cut to meet the other.
-
-**Name the external document a standard defers to, in an optional `Sources and further reading` section.** A house rule
-seldom starts from nothing, and a standard adding exceptions to somebody else's conventions is incomplete without that
-document. Mark an entry **normative** where a reader has not read the rule until they have read the source, and
-**informative** where the source is background.
+**Give every MUST and MUST NOT rule a control**, even one whose mechanism is `not-enforced`. An honest gap is more
+useful than a silent one.
 
 **A baseline is not a posture.** [Frameworks](frameworks.md) records the standing we take against a framework a policy
 clause cites, and it is the only page recording one. A baseline is the document a standard's own rules defer to. Where
 the two look alike, apply the test a policy is written against: would this still be true after replacing the entire
 technology estate? A WCAG posture survives it. A C# style baseline dies with C#, and it goes in the standard deferring
 to it.
-
-**End every standard with the line saying how to depart from it.** The template writes it after the Changelog. It
-sends a reader departing from a **MUST** to a deviation, and asks a reader departing from a **SHOULD** for the reason.
-
-Standards are living documents, and we edit them in place. Record every material change in the changelog, newest
-entry first.
 
 ## What CI checks
 

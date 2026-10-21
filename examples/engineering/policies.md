@@ -22,8 +22,7 @@ Policies also give the standards somewhere to point. A standard citing no ADR an
 usually means it is guidance in disguise or a decision nobody made.
 
 Each clause maps to external frameworks in the `Alignment` column of the clause table, most often to **ISO/IEC 27001:
-2022** Annex A. The mapping sits on the clause because a policy meets any one control through a single obligation. Leave
-the cell empty where no genuine mapping exists, since an empty cell tells the reader more than an invented one.
+2022** Annex A. The mapping sits on the clause because a policy meets any one control through a single obligation.
 
 A framework can bind us by certification, bind us because we chose to hold ourselves to it, or serve as something we
 borrow from. [Frameworks](frameworks.md) records which of the three applies, and no policy repeats it. Our standing
@@ -90,52 +89,22 @@ Accessibility under governance is the clearest of them.
 
 ## Adding a policy
 
+Copy [`_template.md`](policies/_template.md). Its guidance block states how to write the id, each field, the title,
+the clauses and the `Alignment` column. The steps below add what the template leaves out.
+
 1. Apply the test above. Most things that feel like policies are standards.
-2. Choose a four-character mnemonic for the policy's *concept*: `VURM` for vulnerability remediation, `PIPE` for
-   pipeline-to-production. Start it with the same letter as the slug, so the folder still reads alphabetically.
-3. Copy [`_template.md`](policies/_template.md) to `mnem-kebab-slug.md`, lower-case, and set `id` to `pol-MNEM`,
-   upper-case. The slug names what the policy is, as `ever-version-control`. The H1 states the commitment in plain
-   words, as `Everything is in version control`. The identity line beneath it carries the id, written
-   ``` `Policy: pol-MNEM` `DRAFT` ```, and CI checks it against the frontmatter.
-4. Save it under whichever of the four category folders the commitment belongs to. If two fit, pick the one a reader
-   looking for this policy would try first. If none does, that is a taxonomy question, and not a fifth folder made in
-   passing.
-5. State the scope it binds, then the commitment itself as clauses: one obligation per row, each with a short upper-case
-   id, ordered **MUST**, **MUST NOT**, SHOULD, COULD. A COULD states an aspiration beyond what the policy requires.
-   MAY grants a permission, so a standard uses it and a policy does not. Write any explicit exceptions beneath the
-   clauses, where a reader meets them before relying on the rule.
-6. Map clauses to framework controls in the `Alignment` column where a genuine mapping exists, and roll the references
-   up into `aligns-with`. A framework cited for the first time gets an entry in [Frameworks](frameworks.md). Decide its
-   posture there before citing it here.
-7. Set `review-by`. Policies change rarely, so an annual review is usually right. Bring the date forward whenever
-   the estate, the law, or a framework this policy cites changes.
-8. Leave `active-from` bare while the policy is a draft. A policy becomes `active` on the day its owner approves it.
-   The approval is the reviewed pull request that sets `status: active` and sets `active-from` to that day. A retired
-   policy keeps the date.
+2. Save it under whichever of the four category folders the commitment belongs to. If none does, that is a
+   taxonomy question, and not a fifth folder made in passing.
+3. Give a framework cited for the first time an entry in [Frameworks](frameworks.md). Decide its posture there
+   before citing it here.
 
 **Conventions**
 
 * **A policy does not state our standing against a framework.** A policy maps its clauses to controls and says nothing
   about what that mapping is worth. Leave out "compliant", "certified" and "registered". [Frameworks](frameworks.md)
   holds the standing, and holds it once.
-* **A policy names no implementers.** The reference points up: a standard declares the policy it puts into practice, and
-  a policy says nothing about what implements it. A downstream corpus inherits these policies and writes its own
-  standards against them, so nobody writing here can know the full set of implementers. A policy that nothing in *this*
-  corpus implements is the normal state rather than a gap to be explained.
-* **A policy has no roles section and no approver field.** The `owner` answers for the policy, and step 8 says how it
-  is approved. The process that does the work says who carries out a commitment.
-* **A clause is the unit anything else cites.** A standard, a control or a deviation names the single obligation it
-  answers, in the form [Metadata][referring] sets out. Clause ids are immutable for the same reason policy ids are:
-  removing or renaming one breaks every citation of it.
-* **A policy id is immutable once the policy is active.** Rewrite the title, sharpen the commitments, correct the scope.
-  The id does not move. Standards, controls and processes cite policies by id. Reassign a mnemonic and every one of
-  those citations tells the reader something untrue: the reference still resolves, so nothing fails and no check fires.
-
-  This is why the mnemonic comes from the concept rather than the wording. A policy whose *meaning* has changed enough
-  to invalidate its mnemonic has not been edited. It has been replaced. **Retire the old policy and write a new one**,
-  so the record shows the position we used to hold, the position we hold now, and that the two differ. Retirement is
-  cheap and keeps the history honest. An id that quietly means something new leaves every citation of it pointing at a
-  position we abandoned.
+* **A policy has no roles section and no approver field.** The `owner` answers for the policy, and the template says how
+  it is approved. The process that does the work says who carries out a commitment.
 
 ## What CI checks
 
@@ -159,5 +128,3 @@ this type's records.
 | `policy-in-date`                       | warning | A policy names a review date that has not passed.                                                                   |
 
 <!-- END GENERATED: checks-policies -->
-
-[referring]: https://paul80nd.github.io/knowledge-as-code/framework/metadata/#referring-to-an-id
