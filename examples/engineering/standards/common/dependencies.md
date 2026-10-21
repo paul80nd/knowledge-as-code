@@ -36,7 +36,11 @@ _**Covers:** [pol-TRUS].INVENT, [pol-TRUS].REPO, [pol-TRUS].SOURCE, [pol-TRUS].U
 ### What happens before adoption
 
 - Somebody **MUST** screen a new package for known vulnerabilities before the pull request that adds it merges.
-- Somebody **MUST** check a new package's licence against the allowed list before that pull request merges.
+- Somebody **MUST** check a new package's licence against the licences the
+  [conformance checklist](#conformance-checklist) allows before that pull request merges.
+- A package a build ships under a review-tier licence **MUST** carry an accepted deviation.
+- A build **MUST NOT** ship a package under a refused licence.
+- A build **MUST NOT** ship a package with no licence.
 - A pull request adding a package **MUST** say what the package is for, so a reviewer can weigh it against writing the
   code.
 
@@ -76,11 +80,21 @@ A reviewer can weigh the first against writing the code. The second gives them n
 
 ## Conformance checklist
 
+The licence items govern what a build ships. A developer or build tool that never ships, such as the Claude Code CLI,
+is judged under [pol-TRUS] on its terms of use, recorded on its tool record. A licence is named by its [SPDX] id.
+
 - [ ] Every package source configured in the repository points at the organisation's feed.
 - [ ] The lockfile is committed, and CI installs from it without resolving afresh.
 - [ ] The dependency scan runs on every build, and its results are visible without opening the tool.
 - [ ] No critical finding is open past 7 days without a recorded deviation.
-- [ ] Every licence in the tree appears on the allowed list.
+- [ ] Every licence in what a build ships is one of the allowed ids, or is in the review tier below. The allowed ids
+  are `MIT`, `Apache-2.0`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `0BSD`, `Zlib`, `PSF-2.0`, `Unlicense` and `CC0-1.0`.
+- [ ] Each review-tier licence has an accepted deviation. The review tier is `MPL-2.0`, `LGPL-2.1-only`,
+  `LGPL-2.1-or-later`, `LGPL-3.0-only` and `LGPL-3.0-or-later` (dynamically linked), `EPL-2.0`, and a proprietary or
+  commercial licence held under a contract.
+- [ ] No licence in what a build ships is a refused id: `GPL-2.0-only`, `GPL-2.0-or-later`, `GPL-3.0-only`,
+  `GPL-3.0-or-later`, `AGPL-3.0-only`, `AGPL-3.0-or-later`, `SSPL-1.0` or `BUSL-1.1`.
+- [ ] Every package a build ships has a licence.
 - [ ] The build artefacts for the last release are still in the managed repository.
 
 ## Rationale and provenance
@@ -94,6 +108,7 @@ advisory can be answered in minutes.
 
 ## Changelog
 
+- 2026-10-21: the conformance checklist lists licences by SPDX id, in an allowed, a review and a refused tier.
 - 2026-10-18: added the route to depart from a rule.
 
 To depart from a `MUST` or `MUST NOT` rule here, request a deviation. To depart from a `SHOULD` or `SHOULD NOT` rule,
@@ -101,5 +116,6 @@ say why in the change.
 
 [OSV]: https://osv.dev/
 [OWASP Dependency-Check]: https://owasp.org/www-project-dependency-check/
+[SPDX]: https://spdx.org/licenses/
 [pol-TRUS]: ../../policies/security/trus-trusted-components.md#clauses
 [pol-VURM]: ../../policies/security/vurm-vulnerability-remediation.md#clauses
