@@ -3,18 +3,13 @@
 > Where this corpus's type names came from.
 
 The types are derived from first principles, and most still have a close analogue in an established framework. The rows
-below name each analogue. What a type takes from it and where the type differs stay in the schema, as `alignment` and
-`divergence` under `lineage:` in `.schema/<type>.yaml`. The rows are generated from the schema, so they cover the types
-this corpus adopted and no others.
+below name each analogue. They are generated from the schema, so they cover the types this corpus adopted and no
+others.
 
-**This is alignment, not compliance.** Naming a framework in a row says the thinking is near theirs. It does not claim
-conformance, certification, or that a record of ours would satisfy an assessment against theirs. Where this corpus has a
-*standing* against an external framework, meaning obligations it accepts and is measured on,
-[`frameworks.md`](../frameworks.md) records it and nowhere else does.
-
-[Lineage][lineage] carries the rest, and the argument does not vary by corpus. Why the register is worth keeping, what
-has no precedent at all, the language work the writing rules draw on, and which of the framework's own rows rest on a
-secondary source. A type this corpus declared for itself is this corpus's to source honestly, on the same terms.
+[Lineage][lineage] has the rest, and the argument does not vary by corpus. It says why naming a framework in a row is
+alignment and not compliance, why the register is worth keeping, and what has no precedent at all. It also covers the
+language work the writing rules draw on, and which of the framework's own rows rest on a secondary source. A type
+this corpus declared for itself is this corpus's to source honestly, on the same terms.
 
 ## The types
 

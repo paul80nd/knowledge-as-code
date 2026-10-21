@@ -6,7 +6,7 @@ Frontmatter is what makes this corpus machine-readable. CI validates it, the gen
 sessions grep it to find things. The tables and the strip below are generated from this corpus's own schema, so they
 cover the fields and checks it actually has.
 
-[Metadata][metadata] carries the model behind them: what belongs in frontmatter and what belongs in the body, why a
+[Metadata][metadata] explains the model behind them: what belongs in frontmatter and what belongs in the body, why a
 field is derived wherever it can be, how ids and their prefixes are formed, and how a citation reaches a part of a
 record. The rules for filling a block in are in the `writing-a-record` skill.
 
@@ -107,8 +107,8 @@ tags: [ public-api, http ]
 
 ## Adding a field
 
-Declare it in the type's `.schema/<folder>.yaml`, add it to that type's `_template.md`, and run `kac generate` so the
-type's own page carries it. The validator reads the schema, so it needs no change of its own. What to ask before you add
-one is in [Metadata][metadata].
+A field on a framework type is a change to the framework, so propose it to the framework's maintainers.
+`kac update` reverts a local edit to that type's `.schema/<folder>.yaml`. A corpus adds a field of its own to a type it
+declares itself. [Metadata][metadata] says what to ask first.
 
 [metadata]: https://paul80nd.github.io/knowledge-as-code/framework/metadata/
