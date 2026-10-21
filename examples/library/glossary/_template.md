@@ -13,8 +13,8 @@ review-by:
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what a glossary adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a glossary adds to it. Add an
+optional field from [the type page](../glossary.md#metadata) where you have a value for it.
 
 **One glossary, one bounded context.** The framework itself, a product surface, a system that names things its own way.
 Never a topic: a file called "infrastructure terms" starts an argument about placement every time somebody adds a word.
@@ -25,13 +25,6 @@ Never a topic: a file called "infrastructure terms" starts an argument about pla
 * **`narrows`**: the more general glossary this one sits inside. Left empty by the corpus-wide glossary, which nothing
   sits above.
 * **`review-by`**: a quoted date. The whole glossary is reviewed at once.
-
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../glossary.md#metadata) lists every
-field and says what each one holds.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 **A glossary every corpus shares names a type and cites no record.** An owning service and a record citation are this
 corpus's, and a corpus that took the file has neither. Leave both out of an entry meant to travel upstream.

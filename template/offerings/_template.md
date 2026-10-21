@@ -14,8 +14,8 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what an offering adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what an offering adds to it. Add an
+optional field from [the type page](../offerings.md#metadata) where you have a value for it.
 
 **Frontmatter**
 
@@ -25,19 +25,12 @@ and how it is reviewed. What is below is only what an offering adds to that.
   `repos:`, then the path inside it. `feature-file-repo` warns where that first segment is no repository of a service
   you listed.
 
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../offerings.md#metadata) lists
-every field and says what each one holds.
-
 **The work items.** They live in the list and nowhere else. Label each one the way your tracker labels it, and define
 the link at the foot of the document. `ADO#1150` and `gh#2101` both read well. The framework names no tracker.
 
 **The NFRs.** Where this corpus adopts `nfrs`, add a `Constrained by` bullet linking each id, and add the ids to an
 `nfrs:` key in the frontmatter. Both ends are checked against each other, and an offering at `status: live` must name
 at least one. A corpus that declined `nfrs` is not asked for any.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

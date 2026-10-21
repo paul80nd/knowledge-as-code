@@ -15,8 +15,8 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what a standard adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a standard adds to it. Add an
+optional field from [the type page](../standards.md#metadata) where you have a value for it.
 
 **Frontmatter**
 
@@ -41,13 +41,6 @@ and how it is reviewed. What is below is only what a standard adds to that.
   next goes in `Sources and further reading`.
 * **`applies-to`**: service ids, or `all`.
 * **`review-by`**: a quoted `"YYYY-MM-DD"`. Drives the staleness report.
-
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../standards.md#metadata) lists every
-field and says what each one holds.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 **The closing line.** Keep the line after the Changelog in every standard. It tells a reader how to depart from a
 rule. Set the link's `../` to the depth of the folder the standard sits in. Where the corpus keeps no deviations, leave
