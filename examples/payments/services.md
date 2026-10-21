@@ -6,8 +6,8 @@ The catalogue of deployable components that make up the platform.
 
 ## What is a service?
 
-One document per independently deployable component: a web app, an API, a function app, a CDN asset bundle. It records
-what the component is for, where its code lives, what it runs on, what it depends on, and what data it owns.
+One document per independently deployable component: a web app, an API, a serverless function, a CDN asset bundle. It
+records what the component is for, where its code lives, what it runs on, what it depends on, and what data it owns.
 
 ## Why we use them
 
@@ -140,9 +140,9 @@ its standards. A facet nobody else carries only costs a grouping, and `min-recor
 
 ### What a tag is for instead
 
-A **tag** brings a reader's word to a service that does not use it. `payments` reaches Reservations, `renewals` reaches
-Notices, `legacy` reaches Lending. Each is carried by one document, which is exactly right: a searcher arriving with
-that word wanted that service. Tags are free-form, and CI holds them to nothing beyond their shape.
+A **tag** brings a reader's word to a service that does not use it. `payments` reaches Checkout, `renewals` reaches
+Subscriptions, `legacy` reaches Archive. Each is carried by one document, which is exactly right: a searcher arriving
+with that word wanted that service. Tags are free-form, and CI holds them to nothing beyond their shape.
 
 So the two tests pull opposite ways, and that is the whole reason for two fields. A word matching a single service fails
 as a facet and succeeds as a tag. A word several services share divides the catalogue and belongs in `facets`, where the

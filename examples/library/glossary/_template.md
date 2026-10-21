@@ -38,6 +38,15 @@ term's identifier, and a term has no numeric id.
 sets it apart within that class. Where it needs more, link an explanation for the rest. Name the owning service where
 the concept has one.
 
+**Follow these drafting rules yourself, because nothing runs them.** They come from [ISO/IEC Directives, Part
+2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5.
+
+* Write one definition per entry.
+* Where the definition comes from a document, link that document inside the entry.
+* Read the definition back into a sentence that used the term. Check that the sentence still reads correctly.
+* Leave out a term a qualified reader already knows. [The type page's Scope](../glossary.md#scope) says which words
+  stay out.
+
 **Three labelled lines sit under a definition, and each answers a different question.** `**Also:**` gives the reader
 another name for this thing, so a search for an acronym or an older word reaches the entry. `**Avoid:**` gives them a
 name for it this glossary has dropped, and says what to write instead. `**Not:**` gives them a different thing this one

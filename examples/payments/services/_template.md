@@ -78,7 +78,7 @@ that disagrees with the estate is worse than none.
 
 * **Repository**: [`{{repo-name}}`]({{url}}), at `{{path within the repo, where it is not the root}}`
 * **Platform**: {{runtime and framework}}
-* **Deployed as**: {{app service, function app, CDN assets, …}}
+* **Deployed as**: {{web app, serverless function, CDN assets, …}}
 
 _(Presented as a list because these are three unlike facts: no column to scan down, and nothing to re-align when one of
 them grows. Environments below has columns and stays a table.)_

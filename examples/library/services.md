@@ -6,8 +6,8 @@ The catalogue of deployable components that make up the platform.
 
 ## What is a service?
 
-One document per independently deployable component: a web app, an API, a function app, a CDN asset bundle. It records
-what the component is for, where its code lives, what it runs on, what it depends on, and what data it owns.
+One document per independently deployable component: a web app, an API, a serverless function, a CDN asset bundle. It
+records what the component is for, where its code lives, what it runs on, what it depends on, and what data it owns.
 
 ## Why we use them
 

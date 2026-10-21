@@ -56,23 +56,6 @@ A term changes rarely, once a team has agreed it. New terms arrive when a team f
    write the file, each field and each entry.
 3. Add the entry under `Terms`, as the template's guidance block sets out.
 
-**What ISO asks of a definition.** [ISO/IEC Directives, Part
-2](https://www.iso.org/sites/directives/current/part2/index.xhtml), clause 16.5, states the drafting rules this type
-follows. Two of them run as checks, and the table says what becomes of the rest.
-
-| Part 2 asks                                         | Here                                                                    |
-|-----------------------------------------------------|-------------------------------------------------------------------------|
-| A definition does not repeat the term it defines    | `definition-circular` reports one that does.                            |
-| A definition states no requirement                  | `entry-requirement` reports a bold RFC 2119 keyword inside an entry.    |
-| One definition per entry                            | Yours. Nothing here counts the definitions in an entry.                 |
-| Admitted and deprecated terms sit with the term     | `Also` gives an admitted term, and `Avoid` a deprecated one.            |
-| A definition taken from a document cites it         | Yours. Link the source inside the entry.                                |
-| Only terms the corpus uses are listed               | `unused-terms` states it and does not run.                              |
-| A definition can be substituted for the term        | Yours. Read the entry back into a sentence that used the word.          |
-| A term a qualified reader knows is not defined      | Yours. Scope above says which reader that is.                           |
-| A definition opens with no article                  | Does not apply. An entry here is read as a sentence, not substituted.   |
-| A definition closes with no full stop               | Does not apply, for the same reason.                                    |
-
 ## Metadata
 
 <!-- BEGIN GENERATED: schema-glossary -->
