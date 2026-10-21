@@ -28,6 +28,3 @@ up rather than from the framework's full range, and naming a type in prose: an A
 The block below has lost its BEGIN marker, so `kac generate` stops writing the relation diagram and says nothing.
 
 <!-- END GENERATED: types-graph -->
-
-<!-- BEGIN GENERATED: types-edges -->
-<!-- END GENERATED: types-edges -->

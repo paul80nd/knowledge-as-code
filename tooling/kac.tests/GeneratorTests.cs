@@ -592,28 +592,25 @@ public class GeneratorTests
     };
 
     [Fact]
-    public void A_lineage_row_carries_the_prior_art_and_both_sides_of_it()
+    public void A_lineage_row_carries_the_prior_art_and_leaves_the_comparison_in_the_schema()
     {
         var table = Generator.LineageTable(
         [
             Ancestor("ADR", "adrs", new LineageSpec("[Nygard](https://x)", "The three sections", "Ours spans repos"))
         ], "../");
 
+        Assert.StartsWith("| Type ", table);
         Assert.Contains("| [ADR](../adrs.md)", table);
         Assert.Contains("[Nygard](https://x)", table);
-        Assert.Contains("The three sections", table);
-        Assert.Contains("Ours spans repos", table);
+        Assert.DoesNotContain("Alignment", table);
+        Assert.DoesNotContain("The three sections", table);
+        Assert.DoesNotContain("Ours spans repos", table);
     }
 
     [Fact]
-    public void A_type_with_no_ancestor_says_so_rather_than_leaving_the_cells_blank()
-    {
-        var table = Generator.LineageTable([Ancestor("Offering", "offerings", new LineageSpec("None.", "", ""))],
-            "../");
-
-        Assert.Contains("| None.", table);
-        Assert.Contains("| — ", table);
-    }
+    public void A_type_with_no_ancestor_says_so_in_the_prior_art()
+        => Assert.Contains("| None.", Generator.LineageTable(
+            [Ancestor("Offering", "offerings", new LineageSpec("None.", "", ""))], "../"));
 
     [Fact]
     public void A_type_that_declares_no_lineage_is_left_out_of_the_table()
@@ -687,28 +684,17 @@ public class GeneratorTests
     ];
 
     [Fact]
-    public void The_relation_table_carries_both_halves_of_a_reciprocal_pair()
-    {
-        var table = Generator.RelationTable(Graph());
-
-        Assert.Contains("| Standard | `verified-by`", table);
-        Assert.Contains("| Control  | `verifies`", table);
-        // Each half names the other in the last column.
-        Assert.Contains("`verifies`    |", table);
-    }
-
-    [Fact]
-    public void A_one_directional_edge_names_no_counterpart()
-        => Assert.Matches(@"\| Standard \| `implements`\s+\| Policy\s+\|\s+\|", Generator.RelationTable(Graph()));
+    public void A_one_directional_edge_is_labelled_with_its_field()
+        => Assert.Contains("t_standards -- implements --> t_policies;", Generator.RelationDiagram(Graph()));
 
     [Fact]
     public void An_edge_at_a_type_the_corpus_has_not_stood_up_is_dropped()
     {
         // Policies not stood up.
-        var table = Generator.RelationTable(Graph()[..2]);
+        var diagram = Generator.RelationDiagram(Graph()[..2]);
 
-        Assert.DoesNotContain("implements", table);
-        Assert.Contains("verifies", table);
+        Assert.DoesNotContain("implements", diagram);
+        Assert.Contains("verifies", diagram);
     }
 
     /// <summary>
@@ -734,8 +720,8 @@ public class GeneratorTests
     {
         var diagram = Generator.RelationDiagram(Graph());
 
-        Assert.Contains("t_controls -- verifies --> t_standards;", diagram);
-        Assert.DoesNotContain("verified-by", diagram);
+        Assert.Contains("t_controls -- verifies / verified-by --> t_standards;", diagram);
+        Assert.DoesNotContain("t_standards -- verified-by", diagram);
     }
 
     [Fact]

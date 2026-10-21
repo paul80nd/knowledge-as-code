@@ -151,22 +151,18 @@ public static class Generator
             .Select(t => $"[{t.DisplayName}]({Link(t, up)}#metadata)")));
 
     /// <summary>
-    /// Where each type's name came from. A type with no useful ancestor leaves the other two columns empty, and an
-    /// empty cell renders as an em dash.
+    /// Where each type's name came from: its prior art, linked from its page.
     /// </summary>
     public static string LineageTable(IEnumerable<TypeSchema> types, string up) =>
-        Gfm.RenderTable(["Type", "Nearest prior art", "Alignment", "Divergence"],
+        Gfm.RenderTable(["Type", "Nearest prior art"],
         [
             .. WithLineage(types)
                 .OrderBy(x => x.Type.DisplayName, StringComparer.Ordinal)
                 .Select(x => new List<string>
                 {
-                    $"[{x.Type.DisplayName}]({Link(x.Type, up)})", Gfm.Escape(x.Lineage.PriorArt),
-                    Cell(x.Lineage.Alignment), Cell(x.Lineage.Divergence)
+                    $"[{x.Type.DisplayName}]({Link(x.Type, up)})", Gfm.Escape(x.Lineage.PriorArt)
                 })
         ]);
-
-    private static string Cell(string text) => text.Length > 0 ? Gfm.Escape(text) : "—";
 
     /// <summary>
     /// The words a reader arrives already holding, and what they take those words to mean. Only the types that collide
@@ -183,24 +179,6 @@ public static class Generator
             .Select(p => p.Trim())
             .Where(p => p.Length > 0)
             .Select(Wrap));
-
-    /// <summary>
-    /// The edges, read off the <c>ref:</c> declarations. One row per cross-reference field, so a reciprocal pair is two
-    /// rows. A target the corpus has not adopted is dropped from the row, and a row left pointing nowhere goes with it.
-    /// </summary>
-    public static string RelationTable(IEnumerable<TypeSchema> types)
-    {
-        var adopted = types.ToDictionary(t => t.Key, StringComparer.Ordinal);
-        var rows = new List<List<string>>();
-
-        foreach (var (t, name, field, targets) in Edges(types, adopted))
-            rows.Add([
-                t.DisplayName, $"`{name}`", string.Join(", ", targets.Select(x => x.DisplayName)),
-                field.Reciprocal is { } back ? $"`{back}`" : ""
-            ]);
-
-        return Gfm.RenderTable(["From", "Field", "Points at", "Answered by"], rows);
-    }
 
     /// <summary>
     /// Every cross-reference a stood-up type declares at another stood-up type, ordered by the type and then by the
@@ -220,9 +198,10 @@ public static class Generator
     }
 
     /// <summary>
-    /// The same edges as a diagram, a reciprocal pair as one edge, in the Mermaid subset
-    /// <c>docs/reference/generation.md</c> names. Labels are <c>-- text --&gt;</c>, because a markdown formatter reads
-    /// the pipes in <c>--&gt;|text|</c> as table cells. The fence is <c>```mermaid</c>, which GitHub renders too.
+    /// The edges read off the <c>ref:</c> declarations, each labelled with its field, in the Mermaid subset
+    /// <c>docs/reference/generation.md</c> names. A target the corpus has not adopted is dropped. Labels are
+    /// <c>-- text --&gt;</c>, because a markdown formatter reads the pipes in <c>--&gt;|text|</c> as table cells. The
+    /// fence is <c>```mermaid</c>, which GitHub renders too.
     /// </summary>
     public static string RelationDiagram(IEnumerable<TypeSchema> types)
     {
@@ -232,7 +211,7 @@ public static class Generator
         foreach (var t in adopted.Values.OrderBy(t => t.DisplayName, StringComparer.Ordinal))
             diagram.Append($"  {Node(t.Key)}[{t.DisplayName}];\n");
 
-        // Reciprocal halves collapse into the one edge they describe. Whichever half comes first names it.
+        // Reciprocal halves collapse into one edge. Whichever half comes first leads its label.
         var drawn = new HashSet<string>(StringComparer.Ordinal);
         foreach (var (from, name, field, targets) in Edges(types, adopted))
         foreach (var to in targets)
@@ -242,7 +221,8 @@ public static class Generator
                 : $"{to.Key}|{from.Key}";
             if (field.Reciprocal is not null && !drawn.Add(pair)) continue;
 
-            diagram.Append($"  {Node(from.Key)} -- {name} --> {Node(to.Key)};\n");
+            var label = field.Reciprocal is { } back ? $"{name} / {back}" : name;
+            diagram.Append($"  {Node(from.Key)} -- {label} --> {Node(to.Key)};\n");
         }
 
         return diagram.Append("```").ToString();

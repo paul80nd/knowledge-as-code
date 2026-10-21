@@ -40,17 +40,7 @@ later ADR supersedes it. A decision that affects only one repository belongs in 
 graph LR;
   t_adrs[ADR];
   t_adrs -- related --> t_adrs;
-  t_adrs -- superseded-by --> t_adrs;
+  t_adrs -- superseded-by / supersedes --> t_adrs;
 ```
 
 <!-- END GENERATED: types-graph -->
-
-<!-- BEGIN GENERATED: types-edges -->
-
-| From | Field           | Points at | Answered by     |
-|------|-----------------|-----------|-----------------|
-| ADR  | `related`       | ADR       |                 |
-| ADR  | `superseded-by` | ADR       | `supersedes`    |
-| ADR  | `supersedes`    | ADR       | `superseded-by` |
-
-<!-- END GENERATED: types-edges -->

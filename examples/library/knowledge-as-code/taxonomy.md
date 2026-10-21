@@ -113,7 +113,7 @@ graph LR;
   t_runbooks[Runbook];
   t_services[Service];
   t_adrs -- related --> t_adrs;
-  t_adrs -- superseded-by --> t_adrs;
+  t_adrs -- superseded-by / supersedes --> t_adrs;
   t_data -- flows-to --> t_services;
   t_data -- flows-to --> t_integrations;
   t_data -- owned-by --> t_services;
@@ -122,7 +122,7 @@ graph LR;
   t_explanations -- explains --> t_processes;
   t_explanations -- explains --> t_adrs;
   t_glossary -- narrows --> t_glossary;
-  t_integrations -- replaces --> t_integrations;
+  t_integrations -- replaces / successor --> t_integrations;
   t_integrations -- used-by --> t_services;
   t_offerings -- implemented-by --> t_services;
   t_processes -- applies-to --> t_services;
@@ -134,33 +134,11 @@ graph LR;
 <!-- END GENERATED: types-graph -->
 
 The spine runs down the normative hierarchy: a standard implements a policy, a control verifies a standard, and both
-land on a service. Everything else hangs off that. The same edges, field by field:
-
-<!-- BEGIN GENERATED: types-edges -->
-
-| From        | Field            | Points at                       | Answered by     |
-|-------------|------------------|---------------------------------|-----------------|
-| ADR         | `related`        | ADR                             |                 |
-| ADR         | `superseded-by`  | ADR                             | `supersedes`    |
-| ADR         | `supersedes`     | ADR                             | `superseded-by` |
-| Data        | `flows-to`       | Service, Integration            |                 |
-| Data        | `owned-by`       | Service                         |                 |
-| Explanation | `explains`       | Service, Offering, Process, ADR |                 |
-| Glossary    | `narrows`        | Glossary                        |                 |
-| Integration | `replaces`       | Integration                     | `successor`     |
-| Integration | `successor`      | Integration                     | `replaces`      |
-| Integration | `used-by`        | Service                         |                 |
-| Offering    | `implemented-by` | Service                         |                 |
-| Process     | `applies-to`     | Service                         |                 |
-| Runbook     | `applies-to`     | Service                         |                 |
-| Service     | `data-stores`    | Data                            |                 |
-| Service     | `depends-on`     | Service                         |                 |
-
-<!-- END GENERATED: types-edges -->
+land on a service. Everything else hangs off that.
 
 Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`replaces` / `successor`. A one-sided link fails the build. Read that off the last column above. An empty cell
-means nobody answers that edge, and nobody has to keep it in step.
+`replaces` / `successor`. A one-sided link fails the build. The graph draws a pair as one edge labelled with both
+fields, as `verifies / verified-by`. An edge with one field in its label has no counterpart to keep in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. A
 downstream corpus inherits both the policies and the standards above it. It also writes standards of its own, so
@@ -170,7 +148,7 @@ no corpus below rewrites it.
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
 [Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records our standing
-against a framework. It carries no `ref:` and so appears in no row above.
+against a framework. It has no `ref:`, so the graph above does not draw it.
 
 ## Disambiguations
 
