@@ -59,19 +59,12 @@ ADRs sit alongside rather than inside this hierarchy. An ADR records a *decision
 the *resulting practice* and is maintained in place. The ADR owns the "why", the standard owns the "what", and the
 standard cites the ADR.
 
-Where a policy corresponds to an external framework it says so, clause by clause. That is **alignment, not
-certification**: the framework covers the same ground, and nobody is audited against it. What this corpus actually
-stands obliged by is recorded in [`frameworks.md`](frameworks.md) and nowhere else.
-
 ## Tiers
 
-**What a document is about** (its type) and **how it behaves** (its tier) are different things, and it is behaviour that
-determines the rules. Every validation rule, review expectation, language rule and generated report keys off the tier
-rather than the type, so a new kind of knowledge needs a tier and no new machinery.
-
-The four are **Decided**, **Normative**, **Descriptive** and **Procedural**.
-[The four tiers][tiers] says what each one asks, and [principles][principles-behaviour] says why that is the
-load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/taxonomy.md).
+Every document has a tier, which sets how it is reviewed and the rules CI checks it against. The four are **Decided**,
+**Normative**, **Descriptive** and **Procedural**. [The four tiers][tiers] says what each one asks, and
+[principles][principles-behaviour] says why the tier sets the rules. [Taxonomy](knowledge-as-code/taxonomy.md) says
+which tier each type has.
 
 ## What this is not
 
@@ -80,7 +73,8 @@ load-bearing idea. Which tier a type carries is on [Taxonomy](knowledge-as-code/
   rather than copying it. [Principles][principles-routes] says why the routes are separate.
 * **Not a document dump.** Every document has a type, a tier, an owner and a reason to exist. Content that fits no type
   is a prompt to discuss the taxonomy, not to create a `misc/` folder.
-* **Not certified compliance.** See the note on alignment above.
+* **Not certified compliance.** A policy may align with an external framework, clause by clause. Only
+  [`frameworks.md`](frameworks.md) records what this corpus is obliged by.
 * **Not automatically true.** Every document has a status. Read it.
 
 ---

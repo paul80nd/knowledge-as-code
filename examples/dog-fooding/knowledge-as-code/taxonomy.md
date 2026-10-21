@@ -6,13 +6,12 @@ The [decision table](#where-does-this-go) below is the quickest route to the rig
 [disambiguations](#disambiguations) explain the calls that are genuinely close. Both cover the types this corpus adopted
 and no others.
 
-[Taxonomy][taxonomy] carries what is true of every corpus: what a tier is and what the four ask, the shape a type takes
+[Taxonomy][taxonomy] states what is true of every corpus: what a tier is and what the four ask, the shape a type takes
 on disk, and what changing a taxonomy costs.
 
 ## Where does this go?
 
-The types this corpus holds, generated from the schema. The table is ordered by what you are holding, so scan the left
-column for your row.
+Scan the left column for what you are holding.
 
 <!-- BEGIN GENERATED: types-placement -->
 
@@ -35,9 +34,7 @@ not adopted.
 
 ## The types
 
-Grouped by [tier][tiers], because tier determines how each behaves, and generated from the same schema as the table
-above. The fuller account of a type, meaning what it looks like here and the records already filed under it, is on the
-type's own page.
+The types are grouped by [tier][tiers]. Each type's own page lists the records filed under it.
 
 <!-- BEGIN GENERATED: types-detail -->
 
@@ -90,8 +87,8 @@ decision tree. Disaster recovery and estate rebuild are runbooks.
 
 ## How the types relate
 
-The edges carry as much value as the nodes, and they are the part that breaks silently. Every one below is a
-cross-reference field the schema declares, so CI can check that it resolves to a document that exists.
+Every edge below is a cross-reference field the schema declares, so CI checks that it resolves to a document that
+exists.
 
 <!-- BEGIN GENERATED: types-graph -->
 
@@ -122,12 +119,8 @@ graph LR;
 
 <!-- END GENERATED: types-graph -->
 
-The spine runs down the normative hierarchy: a standard implements a policy, a control verifies a standard, and both
-land on a service. Everything else hangs off that.
-
-Reciprocal pairs must agree in both directions: `supersedes` / `superseded-by`, `verifies` / `verified-by`,
-`replaces` / `successor`. A one-sided link fails the build. The graph draws a pair as one edge labelled with both
-fields, as `verifies / verified-by`. An edge with one field in its label has no counterpart to keep in step.
+An edge labelled with two fields, such as `verifies / verified-by`, is a reciprocal pair. A pair written on one side
+only fails the build. An edge with one field has no counterpart to keep in step.
 
 Not every edge is a pair. A standard's `implements` points up at a policy, and the policy never points back. A
 downstream corpus inherits both the policies and the standards above it. It also writes standards of its own, so
@@ -136,8 +129,8 @@ no corpus below rewrites it.
 
 Nor does every edge leave from a whole document. A policy aligns with a framework through a single **clause** rather
 than in its entirety, so the edge leaves the clause table and lands on a control: `pol-SCRT.KEYS` to Annex A A.8.24.
-[Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records our standing
-against a framework. It has no `ref:`, so the graph above does not draw it.
+[Frameworks](../frameworks.md) is the far end of every one of those edges, and the only page that records this
+corpus's standing against a framework. It has no `ref:`, so the graph above does not draw it.
 
 ## Disambiguations
 

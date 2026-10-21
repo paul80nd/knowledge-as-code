@@ -201,9 +201,12 @@ and it is no type's prefix, since `std:pol-VURM` reads as a standard. `kac valid
 First ask whether the content belongs in frontmatter at all, as [What goes in a record](#what-goes-in-a-record) says.
 Then check that git, the folder, the H1 or an existing link does not already state the fact.
 
-Where the field is new, declare it in the type's `.schema/<folder>.yaml` and add it to that type's `_template.md`. A
-field every type has goes in `.schema/_universal.yaml` instead, and a type file may refine it with a declaration of its
-own. Then run [`kac generate`](../use/cli/generate.md) so the generated tables pick it up. The validator reads the
-schema, so it needs no change of its own.
+On a type the corpus declares itself, declare a new field in the type's `.schema/<folder>.yaml` and add it to that
+type's `_template.md`. Then run [`kac generate`](../use/cli/generate.md) so the generated tables pick it up. The
+validator reads the schema, so it needs no change of its own.
+
+On a type the framework ships, a new field is a change to the framework, because `kac update` reverts a corpus's edit
+to a schema file it receives. That includes a field every type has, which goes in `.schema/_universal.yaml`. A type file
+may refine it with a declaration of its own.
 
 [Taxonomy](taxonomy.md) is the page for deciding which type a new field belongs to.
