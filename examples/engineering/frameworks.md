@@ -211,6 +211,44 @@ beside the version it was written against: `V13` is APIs and web services in 4.0
 every policy cites it under, `[OWASP ASVS 5.0]`, states that version, so nobody has to infer it. Moving to a later
 version re-maps every citation. OWASP's [mapping from 4.0.3 to 5.0.0] states where each 4.0 requirement went.
 
+### ISO 31000
+
+**Inspiration.** ISO's guidelines for managing risk, ISO 31000, at version 2018: principles, a framework for managing
+risk, and a process for assessing, treating, monitoring and reporting it. Cited by clause number, as `6.6`. Paid.
+
+[pol-DEVI] is the policy this exists for, because a recorded deviation is a risk somebody accepted. Its clauses about
+compliance already cite 27001's `A.5.36`. 31000 covers the four that say what a deviation contains. `OWNER` is
+`5.4.3`, assigning roles, authorities, responsibilities and accountabilities. `CONTENT` is `6.5.3`, preparing and
+implementing a risk treatment plan. `EXPIRY` is `6.6`, monitoring and review. `SURFACE` is `6.7`, recording and
+reporting. Each mapping rests on the clause's title, because the free preview of 31000 stops before clause 4.
+
+### NIST SP 800-57
+
+**Inspiration.** NIST's Recommendation for Key Management, SP 800-57 Part 1, at version Rev 5. Cited by section number,
+as `5.3`. Free.
+
+It adds detail to what [pol-SCRT] asks of a key. `KEYS` asks for a key's full lifecycle, and section 8 divides that
+lifecycle into four phases, with the functions each one performs. `ROTATE` asks for a defined cycle, and section 5.3
+calls that cycle a cryptoperiod where the secret is a key. [pol-DATA]'s `AGILE` asks for an algorithm that can change
+without re-architecting. Section 5.6.4 says the most important approach to a transition is to be flexible.
+
+### NIST SP 800-63B
+
+**Inspiration.** NIST's Digital Identity Guidelines for authentication and authenticator management, SP 800-63B, at
+version 4. Section 2 sets three authentication assurance levels. Cited by section number, as `2.2`. Free.
+
+[pol-ACCS]'s `AUTHN` asks for more than one factor wherever a person authenticates. Level 2, in section 2.2, requires
+proof of two distinct authentication factors. Level 2 is therefore the level that clause sets.
+
+### NIST SP 800-207
+
+**Inspiration.** NIST's Zero Trust Architecture, SP 800-207, at the version published in August 2020. NIST gives it no
+revision number, so its label carries none. Section 2.1 states the tenets a zero trust architecture follows. Cited by
+section number, as `2.1`. Free.
+
+[pol-MEXP]'s `ZEROTR` is its second tenet: network location alone does not imply trust. [pol-SCRT]'s `ZEROSEC` cites
+nothing here. The tenets ask for dynamic authentication, and say nothing about removing a static secret.
+
 ## Adding a framework
 
 1. Decide the posture first. If you cannot say which of the three it is, the corpus is not ready to reference it.
@@ -229,11 +267,14 @@ A framework nothing references does not belong here, and `kac validate` reports 
 goes when the last citation goes, and the commit removing it is where the reason for dropping the framework belongs.
 
 [pol-A11Y]: policies/governance/a11y-accessibility.md
+[pol-ACCS]: policies/security/accs-access-by-identity.md
 [pol-AGNT]: policies/governance/agnt-agent-oversight.md
 [pol-COST]: policies/delivery/cost-cost-as-an-nfr.md
 [pol-DATA]: policies/security/data-data-protection.md
 [pol-DEVI]: policies/governance/devi-deviations.md
 [pol-ENVS]: policies/security/envs-environment-separation.md
+[pol-MEXP]: policies/security/mexp-minimised-exposure.md
+[pol-SCRT]: policies/security/scrt-secrets-management.md
 [pol-TRUS]: policies/security/trus-trusted-components.md
 [Equality Act 2010]: #equality-act-2010
 [WCAG 2.2 AA]: #wcag

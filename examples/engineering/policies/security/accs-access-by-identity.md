@@ -41,7 +41,7 @@ author and not its approver, so `DUTIES` still requires a second person to relea
 | `NAMED`   | **MUST** grant access to a named individual or a distinctly identified workload, never to a shared persona                                                | [ISO 27001:2022].A.5.16                                                                                             |
 | `LEAST`   | **MUST** grant the least privilege that allows the work to be done, and no more                                                                           | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.8.3, [ISO 27001:2022].A.8.4, [OWASP ASVS 5.0].V8, [UK GDPR].Art.5(1)(f) |
 | `DUTIES`  | **MUST** keep the ability to make a change separate from the ability to approve or release it ([pol-AGNT].DUTIES states the agent case)                   | [ISO 27001:2022].A.5.3                                                                                              |
-| `AUTHN`   | **MUST** require more than one factor wherever a person authenticates to our systems, our code or our data                                                | [ISO 27001:2022].A.8.5, [OWASP ASVS 5.0].V6                                                                         |
+| `AUTHN`   | **MUST** require more than one factor wherever a person authenticates to our systems, our code or our data                                                | [ISO 27001:2022].A.8.5, [OWASP ASVS 5.0].V6, [NIST SP 800-63B-4].2.2                                                |
 | `GRANT`   | **MUST** have an access grant authorised by someone accountable for what it gives access to, before it is made                                            | [ISO 27001:2022].A.5.18                                                                                             |
 | `RECERT`  | **MUST** review every access grant at least annually, confirming it is still needed                                                                       | [ISO 27001:2022].A.5.15, [ISO 27001:2022].A.5.18                                                                    |
 | `VALID`   | **MUST** confirm every active account still maps to a current person or workload at least monthly                                                         | [ISO 27001:2022].A.5.15                                                                                             |
@@ -70,3 +70,4 @@ recorded, and someone reviews that use afterwards. Any other departure requires 
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
 [OWASP ASVS 5.0]: ../../frameworks.md#owasp-asvs
+[NIST SP 800-63B-4]: ../../frameworks.md#nist-sp-800-63b

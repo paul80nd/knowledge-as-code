@@ -43,10 +43,10 @@ incident. A departure from a `SHOULD` needs its reason stated in the change, and
 | `RECORD`  | **MUST** record a deviation before departing from a `MUST` or `MUST NOT` in a policy or a standard, or immediately afterwards where an incident left no time | [ISO 27001:2022].A.5.36 |
 | `FINDING` | **MUST** turn a finding from an external review, audit or oversight process into tracked work with someone accountable for it                                | [ISO 27001:2022].A.5.36 |
 | `UPWARD`  | **MUST** report a finding to whoever owns the organisation's risk register, when its implications reach beyond the system it was found in                    | [ISO 27001:2022].A.5.36 |
-| `OWNER`   | **MUST** name an individual who accepts the risk: someone with the authority to accept it, never a team or a role in the abstract                            |                         |
-| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                                           |                         |
-| `EXPIRY`  | **MUST** give every deviation a review date                                                                                                                  |                         |
-| `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look                      |                         |
+| `OWNER`   | **MUST** name an individual who accepts the risk: someone with the authority to accept it, never a team or a role in the abstract                            | [ISO 31000:2018].5.4.3  |
+| `CONTENT` | **MUST** state what the deviation is, why it is needed and what compensates for it                                                                           | [ISO 31000:2018].6.5.3  |
+| `EXPIRY`  | **MUST** give every deviation a review date                                                                                                                  | [ISO 31000:2018].6.6    |
+| `SURFACE` | **MUST** make deviations visible to those affected by the risk, rather than filing them where only the person who raised them will look                      | [ISO 31000:2018].6.7    |
 | `CLOSE`   | **MUST** close a deviation by fixing the underlying gap or by consciously re-accepting the risk, with the same scrutiny as the first time                    | [ISO 27001:2022].A.5.36 |
 | `PERM`    | **MUST NOT** treat a deviation as permanent by default, or let an expired one stand unreviewed                                                               | [ISO 27001:2022].A.5.36 |
 | `CUSTOM`  | **MUST NOT** treat a long-standing practice as exempt from a policy it breaks                                                                                | [ISO 27001:2022].A.5.36 |
@@ -79,3 +79,4 @@ where we file deviations does not change what we committed to.
 [pol-KNOW]: ../governance/know-written-knowledge.md#clauses
 [pol-SCRT]: ../security/scrt-secrets-management.md#clauses
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
+[ISO 31000:2018]: ../../frameworks.md#iso-31000

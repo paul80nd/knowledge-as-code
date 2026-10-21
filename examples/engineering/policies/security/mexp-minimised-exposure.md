@@ -50,7 +50,7 @@ boundary separates. [pol-OBSV] owns watching what crossed it, under `SECMON`._
 | `LATERAL` | **MUST NOT** leave traffic between our own systems unrestricted where they have no need to talk to each other                       | [ISO 27001:2022].A.8.22                                                 |
 | `WEAKEN`  | **MUST NOT** disable, bypass or weaken identity verification at a trust boundary                                                    | [ISO 27001:2022].A.8.24                                                 |
 | `PRIVATE` | SHOULD use private paths rather than public ones for access between our own services                                                | [ISO 27001:2022].A.8.21                                                 |
-| `ZEROTR`  | COULD authenticate and authorise every service-to-service call, so that network location grants no trust                            |                                                                         |
+| `ZEROTR`  | COULD authenticate and authorise every service-to-service call, so that network location grants no trust                            | [NIST SP 800-207].2.1                                                   |
 
 ## Exceptions
 
@@ -65,3 +65,4 @@ under [pol-DEVI].
 [ISO 27001:2022]: ../../frameworks.md#iso-27001
 [UK GDPR]: ../../frameworks.md#uk-gdpr
 [OWASP ASVS 5.0]: ../../frameworks.md#owasp-asvs
+[NIST SP 800-207]: ../../frameworks.md#nist-sp-800-207
