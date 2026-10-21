@@ -1,7 +1,8 @@
 # The comprehension trial
 
-This trial measures whether a section of the documentation site lets its reader act. A sub-agent is given one section
-and nothing else. It answers fifteen questions that section's reader would ask, and each answer is scored two ways:
+This trial measures whether a section of the documentation site, or a corpus (one repository of knowledge records),
+lets its reader act. A sub-agent is given one section or one corpus and nothing else. It answers the questions in its
+set, each one a question its reader would ask, and each answer is scored two ways:
 
 * **Accuracy**: whether each answer matches the key.
 * **Words read**: how many words its tools returned to it before it answered.
@@ -12,13 +13,15 @@ later run is compared against it.
 ## The sets
 
 Each section of the site has one reader, as [the documentation charter](../../docs/maintaining/charter.md) states. Three
-sections have a set. Maintaining `kac` has none while #825 and #826 rewrite it.
+sections have a set of fifteen questions. Maintaining `kac` has none while #825 and #826 rewrite it. The library set
+asks three questions of `examples/library`, one for each scenario in [`learn.feature`](../use-cases/learn.feature).
 
-| Set                                                         | Section           | Reader               | Asked of          |
-|-------------------------------------------------------------|-------------------|----------------------|-------------------|
-| [`use-it.yaml`](questions/use-it.yaml)                      | Use it            | The `kac` user       | `docs/use/`       |
-| [`framework.yaml`](questions/framework.yaml)                | The framework     | The framework reader | `docs/framework/` |
-| [`schema-reference.yaml`](questions/schema-reference.yaml) | Schema reference  | The schema owner     | `docs/reference/` |
+| Set                                                         | Section           | Reader                                        | Asked of            |
+|-------------------------------------------------------------|-------------------|-----------------------------------------------|---------------------|
+| [`use-it.yaml`](questions/use-it.yaml)                      | Use it            | The `kac` user                                | `docs/use/`         |
+| [`framework.yaml`](questions/framework.yaml)                | The framework     | The framework reader                          | `docs/framework/`   |
+| [`schema-reference.yaml`](questions/schema-reference.yaml) | Schema reference  | The schema owner                              | `docs/reference/`   |
+| [`library.yaml`](questions/library.yaml)                    | Library corpus    | A new member of the consortium's digital team | `examples/library/` |
 
 Each question has six keys:
 
@@ -27,7 +30,8 @@ Each question has six keys:
 * `question`: the reader's own words, not the page's.
 * `answer`: the key a scorer marks against, and what makes an answer partial.
 * `doc`: the page and heading that state the answer, with a quote copied from it.
-* `source`: a file outside `docs/` that proves the page right, with the line to read.
+* `source`: a file outside `docs/` that proves the page right, with the line to read. In the library set the record is
+  its own source, so `source` gives the line of the record that states the answer.
 
 A question whose page disagreed with its source was dropped before the baseline, and the run it was dropped from says
 so.
@@ -45,7 +49,8 @@ Run each step from the root of the repository.
    trials/comprehension/stage.sh use "$TMP/use-c"
    ```
 
-   The section names are `use`, `framework` and `reference`.
+   The section names are `use`, `framework`, `reference` and `library`. `library` copies the files git tracks under
+   `examples/library`.
 
 2. **Start one sub-agent per copy.** Use Claude Code's Agent tool with the `general-purpose` type, which has every
    tool, and restrict none of them. Give it the prompt below and nothing else, with only the `id` and `question` of
@@ -72,12 +77,14 @@ Run each step from the root of the repository.
 ### The prompt
 
 Replace `{reader}` and `{what they want}` with that set's row below, and `{staged directory}` with the copy's path.
+For the library set, replace `index.md` with `README.md`, because the corpus has no `index.md`.
 
-| Set                     | `{reader}`           | `{what they want}`                                                                           |
-|-------------------------|----------------------|----------------------------------------------------------------------------------------------|
-| `use-it.yaml`           | the `kac` user       | you want to install the tool, run a corpus, wire CI, build and install the plugin            |
-| `framework.yaml`        | the framework reader | you want to know how the types are laid out, where they came from, and how to write a record |
-| `schema-reference.yaml` | the schema owner     | you want the keys, the expression grammar, the checks and the export contract                |
+| Set                     | `{reader}`                                    | `{what they want}`                                                                           |
+|-------------------------|-----------------------------------------------|----------------------------------------------------------------------------------------------|
+| `use-it.yaml`           | the `kac` user                                | you want to install the tool, run a corpus, wire CI, build and install the plugin            |
+| `framework.yaml`        | the framework reader                          | you want to know how the types are laid out, where they came from, and how to write a record |
+| `schema-reference.yaml` | the schema owner                              | you want the keys, the expression grammar, the checks and the export contract                |
+| `library.yaml`          | a new member of the consortium's digital team | you want to learn the estate's words, how its parts work, and what it offers                 |
 
 ```text
 You are {reader}: {what they want}. The documentation section written for you is a set of
@@ -101,7 +108,11 @@ Page: {the file the answer came from}
 ## Scoring
 
 A correct answer scores 1, a partial answer scores 0.5, and a wrong answer scores 0. A reader's score is the sum over
-its fifteen answers. A set's score is the sum over readers A, B and C, out of 45.
+its answers. A set's score is the sum over readers A, B and C, out of three times the set's question count: 45 for a
+set of fifteen, and 9 for the library set.
+
+For the library set, an answer cites a record where its `Page:` line names the record's file, or where it gives the
+record's id.
 
 Words read is reported for each reader and as the median of the three. One reader with an unusual reading habit cannot
 move a median. The share of the staged section that median represents is reported beside it.
@@ -123,3 +134,4 @@ Where a set fails, the run names the page whose change cost the answer.
 |-----------------------------------------|----------------------------------------------|----------------------------------------------------------------------------------------------------|
 | [Baseline](runs/2026-10-13-baseline.md) | `6df1b43a`                                   | The four-section site from #821, before #824 trims                                                 |
 | [Trimmed](runs/2026-10-13-trimmed.md)   | `e0d55c52`, and `09812365` for the framework | The site #824 trimmed. Use it and Schema reference pass, and The framework is accepted as variance |
+| [Library](runs/2026-10-21-library.md)   | `3779317b`                                   | `examples/library` for #991, the library set's baseline. It scored 8 of 9                          |

@@ -1,0 +1,8 @@
+L01. They borrow an item: one physical copy of a title, with its own barcode, shelved at one branch. A title is the catalogued work, and only an item can be lent.
+Page: glossary/example-libraries.md
+
+L02. A thumbnailer failure leaves the covers CDN with no origin, so every jacket image not already cached breaks across the estate. A title the supplier sent no image for shows a placeholder, but that is the ordinary case and a different one.
+Page: explanations/covers-path.md
+
+L03. Yes, a borrower can place a hold on an item held at another branch and collect it at a branch they choose. It costs them a fee, which covers the transport the consortium pays for, and the amount is not stated. Production is deployed but nothing links to it yet, so borrowers may not be able to reach it today.
+Page: offerings/reservations.md
