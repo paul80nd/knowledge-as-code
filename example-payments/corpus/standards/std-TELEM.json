@@ -31,6 +31,6 @@
     "Conformance checklist": "- [ ] A search of the last 30 days of logs for `tok_` and for `sk_` returns nothing.\n- [ ] A search of the last 30 days of logs for a known test customer's surname returns nothing.\n- [ ] Error reports include a request id and no request body.\n- [ ] The PSP key resolves from the managed store at start-up, and appears in no configuration file."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/payments/standards/operations/payment-telemetry.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9240276ecb2e44d09e5ddf75426c80fd97560593/examples/payments/standards/operations/payment-telemetry.md"
   }
 }

@@ -20,6 +20,7 @@ ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                # which types travelle
 ${CLAUDE_PLUGIN_ROOT}/bundle.json                         # which skills shipped, and which were left out and why
 ${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/deviations.md # how to read a deviation, and whether it is current
 ${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/reports.md    # how to answer from a report
+${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/runbooks.md   # how to answer from a runbook when something is broken
 ```
 
 Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
@@ -45,6 +46,7 @@ Match the question to a row, then go where the row says. Read a reference file o
 | Does my change meet the standards                                | standards  | `standards-review` |
 | Is there an accepted exception to this rule. Is it still current | deviations | `deviations.md`    |
 | What does the corpus cover. Which clauses have nothing behind it | reports    | `reports.md`       |
+| Something is broken. What do I do first                          | runbooks   | `runbooks.md`      |
 | Anything I should know before I change X                         | any        | the next section   |
 
 **Where the row's skill did not ship, say so, and name the type it needed.** That type is not in `types`, so the

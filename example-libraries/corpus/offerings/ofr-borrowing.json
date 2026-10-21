@@ -33,6 +33,6 @@
     "Known limitations": "A loan made at the counter while the legacy system is down is recorded on paper and keyed in afterwards. [svc-lending] is the only route to that system."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/library/offerings/borrowing.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9240276ecb2e44d09e5ddf75426c80fd97560593/examples/library/offerings/borrowing.md"
   }
 }

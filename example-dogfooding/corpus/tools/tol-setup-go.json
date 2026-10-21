@@ -32,6 +32,6 @@
     "Where it is used": "Nowhere in this catalogue. It runs in the `lint` job of `kac.yml`, and no service ships what it installs."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/dog-fooding/tools/workflows/setup-go.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9240276ecb2e44d09e5ddf75426c80fd97560593/examples/dog-fooding/tools/workflows/setup-go.md"
   }
 }

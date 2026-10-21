@@ -22,6 +22,6 @@
     "Prerequisites": "* [std-PLUGIN], which states the rules a bundled skill follows. It states no order, so this page supplies one.\n* [std-VERS], which states what a move of each version stamp means.\n* `kac` run as `dotnet run --project ../../tooling/kac --` from inside a corpus under `examples/`.\n* A corpus declaring `consumes:` needs `kac restore` first. `restore` needs its producer packed.\n* The [`writing-for-agents`][writing-for-agents] skill, which step 3 loads. It is the reference std-PLUGIN cites for\n  how a skill and its description are written.\n* Writing a skill an agent follows, which step 4 needs.\n* Judging which version stamps move, which steps 7 to 9 need."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/dog-fooding/processes/change-a-skill.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9240276ecb2e44d09e5ddf75426c80fd97560593/examples/dog-fooding/processes/change-a-skill.md"
   }
 }

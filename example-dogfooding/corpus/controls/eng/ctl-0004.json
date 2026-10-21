@@ -29,6 +29,6 @@
     "Coverage and gaps": "A reviewer reading the test diff is the only thing that notices an uncited skip today.\n\nThe check proves an id is cited. It cannot tell whether the deviation exists, names an owner, or is inside its review date, which the other rules under [std-GATES.a-failing-check-stops-the-change] require. It knows only the markers in its pattern, so a skip in another framework, or a pipeline step set to continue on error, passes it. The rule lets a test be guarded off a platform it cannot run on without a deviation, and the check fails such a guard where it uses one of the markers. A reviewer decides whether a required check runs the test on a platform where it can."
   },
   "links": {
-    "human": "https://github.com/paul80nd/knowledge-as-code/blob/c95a5cce3ac1c03912300b0e4bab03a605f65e4e/examples/engineering/controls/0004-skip-cites-deviation.md"
+    "human": "https://github.com/paul80nd/knowledge-as-code/blob/9240276ecb2e44d09e5ddf75426c80fd97560593/examples/engineering/controls/0004-skip-cites-deviation.md"
   }
 }
