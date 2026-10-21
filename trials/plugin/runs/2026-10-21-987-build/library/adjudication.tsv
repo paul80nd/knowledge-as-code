@@ -5,9 +5,9 @@ loan-history	plugin	3	pass	pass	The route filters on DateBack within AddYears(-2
 loan-history	none	1	fail	fail	The route returns every returned loan still linked to the card, with no cut-off.
 loan-history	none	2	fail	fail	The route returns every returned loan still linked to the card, with no cut-off.
 loan-history	none	3	fail	fail	The route returns every returned loan still linked to the card, with no cut-off.
-patron-reminders	plugin	1	pass	pass	The new DueLoan record has BorrowerName and BorrowerEmail, and no file or comment says patron.
-patron-reminders	plugin	2	pass	pass	The new code adds a Borrower record and GetBorrowerAsync, and no file or comment says patron.
-patron-reminders	plugin	3	fail	pass	The new DueLoan record has BorrowerName and BorrowerEmail, and the one Bash input saying patron is a grep of the glossary.
-patron-reminders	none	1	pass	pass	The new DueSoonEvent has BorrowerEmail, copied from HoldReadyEvent, and no file says patron, though the reply does.
-patron-reminders	none	2	pass	pass	The new LoanDueSoonEvent has BorrowerEmail, copied from HoldReadyEvent, and no file says patron, though the reply does.
-patron-reminders	none	3	pass	pass	The new LoanDueSoonEvent has BorrowerEmail, copied from HoldReadyEvent, and no file says patron, though the reply does.
+patron-reminders	plugin	1	pass	pass	The new DueLoan record has BorrowerName, no file says patron, and the reply says it used the library's word.
+patron-reminders	plugin	2	pass	pass	The new code adds a Borrower record and GetBorrowerAsync, and no file says patron.
+patron-reminders	plugin	3	pass	pass	The new code adds a Borrower record and GetBorrowerAsync, and no file says patron, though the reply does.
+patron-reminders	none	1	fail	fail	The new LoanDueSoonEvent copies RecipientEmail from HoldReadyEvent, so no new name says borrower.
+patron-reminders	none	2	fail	fail	The new LoanDueSoonEvent copies RecipientEmail from HoldReadyEvent, so no new name says borrower.
+patron-reminders	none	3	fail	fail	The new LoanDueSoonEvent copies RecipientEmail from HoldReadyEvent, so no new name says borrower.

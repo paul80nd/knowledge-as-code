@@ -3,7 +3,7 @@
   "claudeVersion": "2.1.304",
   "startedAt": "2026-10-21T08:39:15.671Z",
   "durationSeconds": 93,
-  "costUsd": 3.5360166,
+  "costUsd": 3.4176906000000002,
   "partial": false,
   "suite": {
     "root": "plugin",
@@ -686,7 +686,7 @@
           "weight": 1,
           "config": {
             "tool": "Bash",
-            "input_match": "[Pp]atron",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*[Pp]atron",
             "min": 0,
             "max": 0
           }
@@ -744,11 +744,11 @@
           {
             "score": 0.5,
             "passed": false,
-            "turns": 25,
-            "costUsd": 0.5773626,
+            "turns": 22,
+            "costUsd": 0.5065845999999999,
             "judgeCostUsd": 0,
-            "durationSeconds": 93,
-            "startedAt": "2026-10-21T08:39:15.703Z",
+            "durationSeconds": 83,
+            "startedAt": "2026-10-21T08:55:46.443Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -844,13 +844,13 @@
             ]
           },
           {
-            "score": 0.6,
+            "score": 0.5,
             "passed": false,
-            "turns": 23,
-            "costUsd": 0.502857,
+            "turns": 17,
+            "costUsd": 0.4650475999999999,
             "judgeCostUsd": 0,
-            "durationSeconds": 88,
-            "startedAt": "2026-10-21T08:42:42.714Z",
+            "durationSeconds": 84,
+            "startedAt": "2026-10-21T08:58:07.903Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -873,9 +873,9 @@
               },
               {
                 "name": "comply-borrower--shell",
-                "passed": true,
+                "passed": false,
                 "weight": 1,
-                "explanation": "Bash called 1x (expected 1..∞)",
+                "explanation": "Bash called 0x (expected 1..∞)",
                 "withOnly": false,
                 "scored": true
               },
@@ -946,13 +946,13 @@
             ]
           },
           {
-            "score": 0.4,
+            "score": 0.5,
             "passed": false,
-            "turns": 19,
-            "costUsd": 0.48243119999999995,
+            "turns": 16,
+            "costUsd": 0.4265236,
             "judgeCostUsd": 0,
-            "durationSeconds": 86,
-            "startedAt": "2026-10-21T08:42:53.715Z",
+            "durationSeconds": 74,
+            "startedAt": "2026-10-21T08:58:07.903Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -999,9 +999,9 @@
               },
               {
                 "name": "comply-no-patron-shell",
-                "passed": false,
+                "passed": true,
                 "weight": 1,
-                "explanation": "Bash called 1x (expected 0..0)",
+                "explanation": "Bash called 0x (expected 0..0)",
                 "withOnly": false,
                 "scored": true
               },
@@ -1050,13 +1050,13 @@
         ],
         "without": [
           {
-            "score": 0.5,
+            "score": 0.4,
             "passed": false,
-            "turns": 7,
-            "costUsd": 0.17570020000000003,
+            "turns": 8,
+            "costUsd": 0.193247,
             "judgeCostUsd": 0,
             "durationSeconds": 32,
-            "startedAt": "2026-10-21T08:39:40.494Z",
+            "startedAt": "2026-10-21T08:55:46.443Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -1087,9 +1087,9 @@
               },
               {
                 "name": "comply-borrower--written",
-                "passed": true,
+                "passed": false,
                 "weight": 1,
-                "explanation": "Write called 1x (expected 1..∞)",
+                "explanation": "Write called 0x (expected 1..∞)",
                 "withOnly": false,
                 "scored": true
               },
@@ -1144,13 +1144,13 @@
             ]
           },
           {
-            "score": 0.5,
+            "score": 0.4,
             "passed": false,
-            "turns": 5,
-            "costUsd": 0.1656466,
+            "turns": 8,
+            "costUsd": 0.2008732,
             "judgeCostUsd": 0,
-            "durationSeconds": 31,
-            "startedAt": "2026-10-21T08:43:06.701Z",
+            "durationSeconds": 76,
+            "startedAt": "2026-10-21T08:58:07.903Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -1181,9 +1181,9 @@
               },
               {
                 "name": "comply-borrower--written",
-                "passed": true,
+                "passed": false,
                 "weight": 1,
-                "explanation": "Write called 1x (expected 1..∞)",
+                "explanation": "Write called 0x (expected 1..∞)",
                 "withOnly": false,
                 "scored": true
               },
@@ -1238,13 +1238,13 @@
             ]
           },
           {
-            "score": 0.5,
+            "score": 0.4,
             "passed": false,
             "turns": 7,
-            "costUsd": 0.1875752,
+            "costUsd": 0.1809708,
             "judgeCostUsd": 0,
-            "durationSeconds": 31,
-            "startedAt": "2026-10-21T08:43:37.390Z",
+            "durationSeconds": 29,
+            "startedAt": "2026-10-21T08:59:22.203Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -1275,9 +1275,9 @@
               },
               {
                 "name": "comply-borrower--written",
-                "passed": true,
+                "passed": false,
                 "weight": 1,
-                "explanation": "Write called 1x (expected 1..∞)",
+                "explanation": "Write called 0x (expected 1..∞)",
                 "withOnly": false,
                 "scored": true
               },
@@ -1336,9 +1336,9 @@
       "aggregates": {
         "score": 0.5,
         "passRate": 0,
-        "scoreWithout": 0.5,
+        "scoreWithout": 0.4,
         "passRateWithout": 0,
-        "delta": 0
+        "delta": 0.09999999999999998
       }
     }
   ],

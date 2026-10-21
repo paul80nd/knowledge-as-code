@@ -117,5 +117,5 @@
 | `control.hook_lead_over_prose` |  |
 | `control.hook_lead_over_none` |  |
 | `control.graders_hook_lead_over_plugin` |  |
-| `cost_usd` | 2.31 |
-| `cost_per_session_usd` | 0.39 |
+| `cost_usd` | 2.28 |
+| `cost_per_session_usd` | 0.38 |

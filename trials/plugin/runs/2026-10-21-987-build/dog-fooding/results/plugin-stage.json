@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "claudeVersion": "2.1.304",
-  "startedAt": "2026-10-21T08:38:55.225Z",
-  "durationSeconds": 115,
-  "costUsd": 2.3052361999999995,
+  "startedAt": "2026-10-21T08:55:46.517Z",
+  "durationSeconds": 112,
+  "costUsd": 2.2824009999999997,
   "partial": false,
   "suite": {
     "root": "plugin",
@@ -95,11 +95,11 @@
           {
             "score": 0.25,
             "passed": false,
-            "turns": 15,
-            "costUsd": 0.622743,
+            "turns": 14,
+            "costUsd": 0.6140456,
             "judgeCostUsd": 0,
-            "durationSeconds": 115,
-            "startedAt": "2026-10-21T08:38:55.259Z",
+            "durationSeconds": 112,
+            "startedAt": "2026-10-21T08:55:46.563Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -149,11 +149,11 @@
           {
             "score": 0.25,
             "passed": false,
-            "turns": 22,
-            "costUsd": 0.7191623999999999,
+            "turns": 19,
+            "costUsd": 0.5782312000000001,
             "judgeCostUsd": 0,
-            "durationSeconds": 132,
-            "startedAt": "2026-10-21T08:42:08.021Z",
+            "durationSeconds": 102,
+            "startedAt": "2026-10-21T08:58:08.014Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -203,11 +203,11 @@
           {
             "score": 0.25,
             "passed": false,
-            "turns": 16,
-            "costUsd": 0.48269719999999994,
+            "turns": 12,
+            "costUsd": 0.5457531999999999,
             "judgeCostUsd": 0,
-            "durationSeconds": 81,
-            "startedAt": "2026-10-21T08:42:08.021Z",
+            "durationSeconds": 78,
+            "startedAt": "2026-10-21T08:58:08.014Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -259,11 +259,57 @@
           {
             "score": 0.25,
             "passed": false,
-            "turns": 6,
-            "costUsd": 0.1734558,
+            "turns": 11,
+            "costUsd": 0.2101188,
+            "judgeCostUsd": 0,
+            "durationSeconds": 37,
+            "startedAt": "2026-10-21T08:55:46.563Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--raises",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-scan--workflow",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in file .github/workflows/publish.yml",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-publishes",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched nuget push",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.25,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.16224980000000003,
             "judgeCostUsd": 0,
             "durationSeconds": 28,
-            "startedAt": "2026-10-21T08:38:55.259Z",
+            "startedAt": "2026-10-21T08:58:08.014Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,
@@ -305,57 +351,11 @@
           {
             "score": 0.25,
             "passed": false,
-            "turns": 6,
-            "costUsd": 0.16914980000000002,
+            "turns": 7,
+            "costUsd": 0.1720024,
             "judgeCostUsd": 0,
-            "durationSeconds": 36,
-            "startedAt": "2026-10-21T08:42:08.021Z",
-            "error": null,
-            "tracePath": "trace.jsonl",
-            "skippedPaidGraders": false,
-            "graders": [
-              {
-                "name": "cite-record",
-                "passed": false,
-                "weight": 1,
-                "explanation": "pattern not found in last_message",
-                "withOnly": false,
-                "scored": true
-              },
-              {
-                "name": "comply-scan--raises",
-                "passed": false,
-                "weight": 1,
-                "explanation": "pattern not found in last_message",
-                "withOnly": false,
-                "scored": true
-              },
-              {
-                "name": "comply-scan--workflow",
-                "passed": false,
-                "weight": 1,
-                "explanation": "pattern not found in file .github/workflows/publish.yml",
-                "withOnly": false,
-                "scored": true
-              },
-              {
-                "name": "task-publishes",
-                "passed": true,
-                "weight": 1,
-                "explanation": "matched nuget push",
-                "withOnly": false,
-                "scored": true
-              }
-            ]
-          },
-          {
-            "score": 0.25,
-            "passed": false,
-            "turns": 4,
-            "costUsd": 0.138028,
-            "judgeCostUsd": 0,
-            "durationSeconds": 21,
-            "startedAt": "2026-10-21T08:42:44.000Z",
+            "durationSeconds": 38,
+            "startedAt": "2026-10-21T08:58:35.778Z",
             "error": null,
             "tracePath": "trace.jsonl",
             "skippedPaidGraders": false,

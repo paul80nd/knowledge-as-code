@@ -68,8 +68,8 @@ Feature: Build. A session writing code meets every rule that binds the code it c
 
   @intent:inform @type:glossary @trial:plugin/library/house/patron-reminders
   Scenario: New code takes the estate's word for a concept
-    Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 3 of 3.
-    The scaffold already names Borrower, so every none run copied it. Every none reply said patron.
+    Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 0 of 3.
+    Every plugin run added a Borrower type or field. Every none run named no person, and every none reply said patron.
     Measured in trials/plugin/runs/2026-10-21-987-build.md.
     Given gls-example-libraries says to write borrower, and to avoid patron
     And a task asking for reminders to patrons, which uses only the word patron

@@ -15,9 +15,9 @@
 | `house.plugin.complied` | 6 |
 | `house.plugin.compliance_rate` | 1.00 |
 | `house.plugin.graders_task_done` | 6 |
-| `house.plugin.graders_complied` | 5 |
-| `house.plugin.graders_compliance_rate` | 0.83 |
-| `house.plugin.overturned` | 1 |
+| `house.plugin.graders_complied` | 6 |
+| `house.plugin.graders_compliance_rate` | 1.00 |
+| `house.plugin.overturned` | 0 |
 | `house.plugin.cited` | 2 |
 | `house.plugin.citation_rate` | 0.33 |
 | `house.hook.sessions` | 0 |
@@ -45,20 +45,20 @@
 | `house.none.sessions` | 6 |
 | `house.none.errors` | 0 |
 | `house.none.task_done` | 6 |
-| `house.none.complied` | 3 |
-| `house.none.compliance_rate` | 0.50 |
+| `house.none.complied` | 0 |
+| `house.none.compliance_rate` | 0.00 |
 | `house.none.graders_task_done` | 6 |
-| `house.none.graders_complied` | 3 |
-| `house.none.graders_compliance_rate` | 0.50 |
+| `house.none.graders_complied` | 0 |
+| `house.none.graders_compliance_rate` | 0.00 |
 | `house.none.overturned` | 0 |
 | `house.none.cited` | 0 |
 | `house.none.citation_rate` | 0.00 |
 | `house.plugin.fired` | 6 |
 | `house.hook.fired` | 0 |
 | `house.lead_over_prose` |  |
-| `house.lead_over_none` | 0.50 |
+| `house.lead_over_none` | 1.00 |
 | `house.graders_lead_over_prose` |  |
-| `house.graders_lead_over_none` | 0.33 |
+| `house.graders_lead_over_none` | 1.00 |
 | `house.hook_lead_over_plugin` |  |
 | `house.hook_lead_over_prose` |  |
 | `house.hook_lead_over_none` |  |
@@ -117,5 +117,5 @@
 | `control.hook_lead_over_prose` |  |
 | `control.hook_lead_over_none` |  |
 | `control.graders_hook_lead_over_plugin` |  |
-| `cost_usd` | 3.54 |
-| `cost_per_session_usd` | 0.29 |
+| `cost_usd` | 3.42 |
+| `cost_per_session_usd` | 0.28 |

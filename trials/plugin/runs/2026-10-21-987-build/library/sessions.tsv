@@ -5,9 +5,9 @@ house	plugin	loan-history	3	0	1	1	0	1	0.29854520000000007	10	pass
 house	none	loan-history	1	0	1	0	0		0.16826999999999998	7	fail
 house	none	loan-history	2	0	1	0	0		0.1877782	12	fail
 house	none	loan-history	3	0	1	0	0		0.1772438	8	fail
-house	plugin	patron-reminders	1	0	1	1	0	1	0.5773626	25	pass
-house	plugin	patron-reminders	2	0	1	1	0	1	0.502857	23	pass
-house	plugin	patron-reminders	3	0	1	0	0	1	0.48243119999999995	19	pass
-house	none	patron-reminders	1	0	1	1	0		0.17570020000000003	7	pass
-house	none	patron-reminders	2	0	1	1	0		0.1656466	5	pass
-house	none	patron-reminders	3	0	1	1	0		0.1875752	7	pass
+house	plugin	patron-reminders	1	0	1	1	0	1	0.5065845999999999	22	pass
+house	plugin	patron-reminders	2	0	1	1	0	1	0.4650475999999999	17	pass
+house	plugin	patron-reminders	3	0	1	1	0	1	0.4265236	16	pass
+house	none	patron-reminders	1	0	1	0	0		0.193247	8	fail
+house	none	patron-reminders	2	0	1	0	0		0.2008732	8	fail
+house	none	patron-reminders	3	0	1	0	0		0.1809708	7	fail
