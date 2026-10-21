@@ -26,6 +26,10 @@ blank.
 read-only copy it installs) files what it noticed as an issue. That skill reads those issues, sorts each one into a
 route, and drafts the record a routed one asks for as a pull request. Run it here, where the records are.
 
+**Directly under the H1, every record has an identity line.** It states the type, the `id` exactly as the frontmatter
+spells it, and the `status` in upper case, as in `` `Policy: pol-A11Y` `DRAFT` ``. CI checks all three against the
+frontmatter.
+
 **The schema outranks all of it.** `.schema/*.yaml`, and what `kac validate` and `kac checks` report, are executable
 where a page is not.
 

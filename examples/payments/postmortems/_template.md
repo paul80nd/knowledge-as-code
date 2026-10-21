@@ -19,8 +19,8 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what a postmortem adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what a postmortem adds to it. Add an
+optional field from [the type page](../postmortems.md#metadata) where you have a value for it.
 
 **Frontmatter**
 
@@ -49,13 +49,6 @@ the logs is written that way. Only `restored-at` before `occurred-at` is refused
 
 **Blameless, always.** Write about decisions and conditions, not individuals: "the deploy ran before the migration
 completed", not "X deployed too early". The output is a system that fails less, not a person who feels worse.
-
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../postmortems.md#metadata) lists
-every field and says what each one holds.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 

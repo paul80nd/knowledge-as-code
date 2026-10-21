@@ -16,8 +16,8 @@ tags: [ a, b ]
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what an integration adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what an integration adds to it. Add
+an optional field from [the type page](../integrations.md#metadata) where you have a value for it.
 
 **Frontmatter**
 
@@ -26,13 +26,6 @@ and how it is reviewed. What is below is only what an integration adds to that.
 * **`their-sla`**: what the contract actually says, not what the marketing page implies.
 * **`successor`**: what took over, once the status is `retired`. `replaces` is the same edge read the other way, and
   CI enforces both ends.
-
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../integrations.md#metadata) lists
-every field and says what each one holds.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
@@ -65,7 +58,7 @@ over.** An undocumented single point of failure is the most expensive kind.)_
 
 ## Trial criteria
 
-_(Required while the status is `trial`, and deleted once it is not.)_
+_(Required while the integration's status is `trial`, and deleted once it is not.)_
 
 What is being evaluated, what would settle it either way, and what has been measured so far. A trial with no decision
 criteria stays a trial forever.

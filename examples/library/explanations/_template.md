@@ -14,8 +14,8 @@ review-by:
 
 <!-- DELETE FROM HERE: guidance for whoever fills this in, not part of the document ----------------------------- -->
 
-**Start with [contributing](../knowledge-as-code/contributing.md).** It says where a document goes, how it is written
-and how it is reviewed. What is below is only what an explanation adds to that.
+**Start with [contributing](../knowledge-as-code/contributing.md).** Below is only what an explanation adds to it. Add
+an optional field from [the type page](../explanations.md#metadata) where you have a value for it.
 
 **Frontmatter**
 
@@ -26,13 +26,6 @@ and how it is reviewed. What is below is only what an explanation adds to that.
 
 **Required sections.** `What this covers` states what the record covers, and what it leaves to another record.
 `Where the detail lives` lists the records with the facts. Everything between them is yours to shape.
-
-**Fields this template leaves out.** This type takes optional fields the frontmatter above does not carry. Add a key
-where you have a value for it, and leave it out where you do not. [The type page](../explanations.md#metadata) lists
-every field and says what each one holds.
-
-**The identity line.** The line beneath the title carries the type, the `id`, then the `status` in upper case. It is
-what a reader arriving from a citation sees first, and CI checks all three against the frontmatter above.
 
 <!-- DELETE TO HERE ---------------------------------------------------------------------------------------------- -->
 
