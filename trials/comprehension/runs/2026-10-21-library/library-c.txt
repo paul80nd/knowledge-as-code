@@ -1,0 +1,8 @@
+L01. They borrow an item. An item is one physical copy of a title, with its own barcode, and only an item can be lent. A title is the catalogued work, so one popular title can be thirty items.
+Page: glossary/example-libraries.md
+
+L02. Every uncached jacket image breaks across the estate, because the covers CDN has no origin to forward to. This is worse than the ordinary case, where a title the supplier sent no image for shows a placeholder.
+Page: explanations/covers-path.md
+
+L03. Not today. The reserve-and-pay flow lets a borrower place a hold on an item at another branch, and the hold carries a fee for transport, but production is deployed and nothing links to it yet (the service status is "building"). The pages do not state the amount of the fee.
+Page: offerings/reservations.md

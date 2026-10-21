@@ -39,7 +39,7 @@ A scenario whose case does not exist yet also has `@proposed`. Its `@trial` tag 
 | [`operate.feature`](operate.feature)       | whoever is on call                           |         5 |                     5 |
 | [`contribute.feature`](contribute.feature) | an agent or an engineer writing back         |         3 |                     3 |
 | [`assure.feature`](assure.feature)         | the corpus owner, or an auditor              |         3 |                     3 |
-| [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     0 |
+| [`learn.feature`](learn.feature)           | a person new to the team                     |         3 |                     3 |
 
 `grep -c '^  Scenario:' trials/use-cases/*.feature` reports the scenarios in each file.
 
@@ -76,8 +76,11 @@ These map to a case a trial has already run, and each gives its baseline from th
 | A failing service's owner comes from its service record                                   | `plugin/library/house/notices-down`                     | [988 operate](../plugin/runs/2026-10-21-988-operate.md)       |
 | A session that must depart from a MUST requests a deviation, and accepts nothing itself   | `plugin/engineering/house/request-a-deviation`          | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
 | A term the glossary lacks becomes a finding, not a guess                                  | `plugin/library/house/undefined-term`                   | [989 contribute](../plugin/runs/2026-10-21-989-contribute.md) |
+| A new reader tells two of the estate's words apart                                        | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
+| A new reader learns how a part of the estate works from its explanation                   | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
+| A new reader learns what the estate offers, and what is not live yet                      | `comprehension/library`                                 | [library](../comprehension/runs/2026-10-21-library.md)        |
 
-Every other scenario is `@proposed`.
+No scenario is `@proposed`.
 
 ## The types
 

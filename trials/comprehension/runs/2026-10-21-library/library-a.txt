@@ -1,0 +1,8 @@
+L01. They borrow an item. An item is one physical copy of a title, with its own barcode, shelved at one branch, and only an item can be lent. A title is the catalogued work, so one popular title can have thirty items.
+Page: glossary/example-libraries.md
+
+L02. Every cover image that is not already in the CDN's cache breaks, on every catalogue page across the estate, because the covers CDN has no origin left to forward requests to. That is worse than the normal case, where a title with no supplier image shows a placeholder.
+Page: explanations/covers-path.md
+
+L03. Yes: any cardholder can place a hold on an item held at another branch and collect it at a branch they choose. It costs them a fee, which covers the transport between branches that the consortium pays for. The amount is not stated, and the offering is still being built: production is deployed but nothing links to it yet.
+Page: offerings/reservations.md
