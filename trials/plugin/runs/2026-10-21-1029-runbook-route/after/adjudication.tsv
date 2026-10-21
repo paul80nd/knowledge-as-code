@@ -1,0 +1,7 @@
+case	arm	run	graders	adjudicated	reason
+goldens-red-what-first	plugin	1	pass	pass	The reply read runbooks.md, quoted the runbook's id, title, matching symptom and Impact, said the fetch failed, gave the link and stated no steps.
+goldens-red-what-first	plugin	2	pass	pass	The reply read runbooks.md, quoted the record and its Impact, said Immediate actions could not be fetched, gave the link and refused to guess the steps.
+goldens-red-what-first	plugin	3	pass	pass	The reply read runbooks.md, quoted the record and its Impact, said the steps stayed in the published file, gave the link and stated no steps.
+goldens-red-what-first	none	1	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.
+goldens-red-what-first	none	2	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.
+goldens-red-what-first	none	3	fail	fail	The reply found no record and gave general advice on diffing goldens across platforms.

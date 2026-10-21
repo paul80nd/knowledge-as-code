@@ -53,6 +53,12 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   reads as `"lookup"`. The breadcrumb now says the records are the organisation's own knowledge, names the router, and
   asks a session to report a change with `raise-finding`. The template moves to version 22. Copy its
   `ask-the-corpus` entry and the two new `announce` values into your `plugin.json`.
+- **`ask-the-corpus` answers "something is broken, what do I do first" from a runbook.** A new `runbooks.md` beside it
+  matches the failure against each runbook's exported `Symptoms`, and quotes its id, title and `Impact`. The steps
+  never travel, so it fetches them through `corpus-retrieval`. Where the fetch fails, it gives the runbook's link and
+  states no steps of its own. `fix-lookup` reads the same file where no fix matches, or something is broken now. The
+  template moves to version 23. Add `"runbooks@2"` to `optional` in the `ask-the-corpus` and `fix-lookup` entries of
+  your `plugin.json`.
 
 ### Changed
 

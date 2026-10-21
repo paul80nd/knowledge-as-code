@@ -1,0 +1,4 @@
+kind	arm	case	run	error	task	comply	cite	fired	cost_usd	turns	adjudicated
+house	plugin	snapshot-tests-red-in-ci	1	0		1	1	1	0.32976539999999993	14	pass
+house	plugin	snapshot-tests-red-in-ci	2	0		1	1	1	0.28564080000000003	14	pass
+house	plugin	snapshot-tests-red-in-ci	3	0		1	1	1	0.28147679999999997	15	pass

@@ -18,12 +18,19 @@ The corpus travels with this plugin as data. There is nothing to install and not
 ${CLAUDE_PLUGIN_ROOT}/corpus/manifest.json                   # what this export is, and where each corpus publishes
 ${CLAUDE_PLUGIN_ROOT}/corpus/fixes/<record>.json             # one fix this corpus wrote
 ${CLAUDE_PLUGIN_ROOT}/corpus/fixes/<shortcode>/<record>.json # one fix a corpus this one consumes wrote
+${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/runbooks.md      # how to answer from a runbook when something is broken
 ```
 
 Use those paths exactly as written. An installed plugin sits in a cache outside the repository you are working in.
 
-A fix answers a symptom. A planned task is a process, and an incident with a diagnosis tree is a runbook. Each is its
-own type, and `types` in `manifest.json` says whether it travelled.
+## Search the runbooks when something is broken now
+
+**Where no fix matches, or the problem is a failure happening now, read
+`${CLAUDE_PLUGIN_ROOT}/skills/ask-the-corpus/runbooks.md`.** Search the runbooks' exported `Symptoms` as it says, and
+answer from a runbook that matches by its rules. A fix is a known issue with a resolution somebody has verified. A
+runbook is a controlled procedure for a failure, run under duress, and its steps stay behind on purpose. Where
+`runbooks` is not in `types` in `manifest.json`, this corpus exports none, so say that. A planned task is a process,
+which `process-lookup` reads.
 
 ## Search the symptom
 
@@ -132,10 +139,10 @@ it was verified against a different cause, and a verified resolution handed over
 ## Say when there is nothing
 
 Search a second time with other words before you answer, because the error message, the tool that printed it and the
-task you were doing are three vocabularies. Where no fix matches, say that this export describes no problem like this
-one. Name the corpus and every entry in `sources` from `manifest.json`, so the reader knows what was searched. An empty
-search states only that the estate has not written this one down. Somebody may have solved it last week and told
-nobody.
+task you were doing are three vocabularies. Where no fix and no runbook matches, say that this export describes no
+problem like this one. Name the corpus and every entry in `sources` from `manifest.json`, so the reader knows what was
+searched. An empty search states only that the estate has not written this one down. Somebody may have solved it last
+week and told nobody.
 
 What you solve next is worth filing. A session cannot verify its own fix, so load `raise-finding` and let it file what
 you noticed for somebody else to check.

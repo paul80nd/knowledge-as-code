@@ -16,6 +16,7 @@
 .plugin/skills/ask-the-corpus/SKILL.md
 .plugin/skills/ask-the-corpus/deviations.md
 .plugin/skills/ask-the-corpus/reports.md
+.plugin/skills/ask-the-corpus/runbooks.md
 .plugin/skills/controls-lookup/SKILL.md
 .plugin/skills/corpus-retrieval/SKILL.md
 .plugin/skills/fix-lookup/SKILL.md

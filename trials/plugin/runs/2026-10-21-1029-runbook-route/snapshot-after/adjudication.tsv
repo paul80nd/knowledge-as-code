@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+snapshot-tests-red-in-ci	plugin	1	pass	pass	The reply cited the runbook, gave the link and said it would not guess the steps; its "Where to start" list is its own, built from the exported Symptoms.
+snapshot-tests-red-in-ci	plugin	2	pass	pass	The reply cited the runbook, quoted Impact, said the steps could not be fetched, gave the link and asked for the steps to be pasted, stating none.
+snapshot-tests-red-in-ci	plugin	3	pass	pass	The reply cited the runbook, gave the link and said the steps were not fetched; it gave three checks labelled as its own and not from the runbook.

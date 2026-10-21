@@ -1,0 +1,4 @@
+case	arm	run	graders	adjudicated	reason
+snapshot-tests-red-in-ci	plugin	1	pass	pass	The reply read runbooks.md from fix-lookup, quoted the runbook, its symptom and Impact, gave the link, said the steps did not come and stated none.
+snapshot-tests-red-in-ci	plugin	2	pass	pass	The reply read runbooks.md from fix-lookup, quoted the runbook and its Impact, gave the link, sent the reader to Immediate actions and stated no steps.
+snapshot-tests-red-in-ci	plugin	3	pass	pass	The reply read runbooks.md from fix-lookup, quoted the runbook and its Impact, said Immediate actions did not come, gave the link and stated no steps.

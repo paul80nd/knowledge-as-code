@@ -91,6 +91,7 @@ wrote .dist/plugin/hooks/hooks.json
 wrote .dist/plugin/skills/ask-the-corpus/SKILL.md
 wrote .dist/plugin/skills/ask-the-corpus/deviations.md
 wrote .dist/plugin/skills/ask-the-corpus/reports.md
+wrote .dist/plugin/skills/ask-the-corpus/runbooks.md
 wrote .dist/plugin/skills/corpus-retrieval/SKILL.md
 wrote .dist/plugin/skills/glossary-lookup/SKILL.md
 wrote .dist/plugin/skills/raise-finding/SKILL.md
@@ -101,7 +102,7 @@ bundle: trimmed skills/policy-lookup: the export carries no policies.
 bundle: trimmed skills/process-lookup: the export carries no processes.
 bundle: trimmed skills/standards-lookup: the export carries no standards.
 bundle: trimmed skills/standards-review: the export carries no standards.
-bundle: wrote 44 file(s) to .dist/plugin/ as example-libraries 0.24.4. 6 component(s) included, 6 trimmed.
+bundle: wrote 46 file(s) to .dist/plugin/ as example-libraries 0.25.1. 6 component(s) included, 6 trimmed.
 bundle: .dist/ is a marketplace holding it. Install it from a path with:  claude plugin marketplace add ./.dist
 ```
 
@@ -124,7 +125,7 @@ the four skills that name no type of their own. Its export has standards, so it 
 `process-lookup` are trimmed. The closing line counts what survived:
 
 ```text
-bundle: wrote 77 file(s) to .dist/plugin/ as example-engineering 0.36.7. 12 component(s) included, 2 trimmed.
+bundle: wrote 78 file(s) to .dist/plugin/ as example-engineering 0.37.1. 12 component(s) included, 2 trimmed.
 ```
 
 `bundle.json` lists them, and it travels inside the plugin:

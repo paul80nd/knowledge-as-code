@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T11:10:24.318Z",
+  "durationSeconds": 33,
+  "costUsd": 1.063374,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "caseFilter": "goldens-red-what-first",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-dogfooding",
+        "version": "0.72.2",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "goldens-red-what-first",
+      "dir": "evals/house/goldens-red-what-first",
+      "source": "mixed",
+      "promptMarkdown": "The golden suite passes on my machine and fails in CI. What do I do first?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "rbk-goldens-disagree",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-steps--link",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "runbooks/goldens-disagree\\.md",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-steps--untravelled",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "[Ss]teps[^.]{0,80}(did not|didn[’']t|do not|don[’']t|does not|doesn[’']t|are not|aren[’']t|were not|weren[’']t) (come|travel|ship|arrive|get exported|exported|included)|(left|kept) out of the (export|plugin)|(couldn[’']t|could not|can[’']t|cannot|was unable to|unable to|wasn[’']t able to) (fetch|read|retrieve|get|pull)[^.]{0,80}(steps|runbook)",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "fired-lookup",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus)\""
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 12,
+            "costUsd": 0.2468884,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-21T11:10:24.368Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rbk-goldens-disagree",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched runbooks/goldens-disagree\\.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ss]teps[^.]{0,80}(did not|didn[’']t|do not|don[’']t|does not|doesn[’']t|are not|aren[’']t|were not|weren[’']t) (come|travel|ship|arrive|get exported|exported|included)|(left|kept) out of the (export|plugin)|(couldn[’']t|could not|can[’']t|cannot|was unable to|unable to|wasn[’']t able to) (fetch|read|retrieve|get|pull)[^.]{0,80}(steps|runbook)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 12,
+            "costUsd": 0.2495422,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-21T11:11:16.785Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rbk-goldens-disagree",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched runbooks/goldens-disagree\\.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ss]teps[^.]{0,80}(did not|didn[’']t|do not|don[’']t|does not|doesn[’']t|are not|aren[’']t|were not|weren[’']t) (come|travel|ship|arrive|get exported|exported|included)|(left|kept) out of the (export|plugin)|(couldn[’']t|could not|can[’']t|cannot|was unable to|unable to|wasn[’']t able to) (fetch|read|retrieve|get|pull)[^.]{0,80}(steps|runbook)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 11,
+            "costUsd": 0.23772140000000003,
+            "judgeCostUsd": 0,
+            "durationSeconds": 42,
+            "startedAt": "2026-10-21T11:11:16.785Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched rbk-goldens-disagree",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched runbooks/goldens-disagree\\.md",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched [Ss]teps[^.]{0,80}(did not|didn[’']t|do not|don[’']t|does not|doesn[’']t|are not|aren[’']t|were not|weren[’']t) (come|travel|ship|arrive|get exported|exported|included)|(left|kept) out of the (export|plugin)|(couldn[’']t|could not|can[’']t|cannot|was unable to|unable to|wasn[’']t able to) (fetch|read|retrieve|get|pull)[^.]{0,80}(steps|runbook)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-lookup",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 1x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.10771879999999999,
+            "judgeCostUsd": 0,
+            "durationSeconds": 23,
+            "startedAt": "2026-10-21T11:10:24.368Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.107781,
+            "judgeCostUsd": 0,
+            "durationSeconds": 16,
+            "startedAt": "2026-10-21T11:11:16.785Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1137222,
+            "judgeCostUsd": 0,
+            "durationSeconds": 18,
+            "startedAt": "2026-10-21T11:11:32.783Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--link",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-steps--untravelled",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1,
+        "scoreWithout": 0,
+        "passRateWithout": 0,
+        "delta": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 1,
+    "overallScore": 1,
+    "overallPassRate": 1,
+    "meanDelta": 1
+  }
+}
