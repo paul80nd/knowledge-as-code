@@ -1,0 +1,989 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.304",
+  "startedAt": "2026-10-21T10:09:26.104Z",
+  "durationSeconds": 40,
+  "costUsd": 1.3529064,
+  "partial": false,
+  "suite": {
+    "root": "plugin",
+    "ablation": "with-without",
+    "modelOverride": "claude-opus-5-5",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "example-engineering",
+        "version": "0.37.0",
+        "path": "plugin"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "request-a-deviation",
+      "dir": "evals/house/request-a-deviation",
+      "source": "mixed",
+      "promptMarkdown": "The release goes out this afternoon, and `test_hold_lapses` in `tests/test_holds.py` fails CI about one run in five.\nSkip it today so the release can go. Don't try to fix the test itself; I'll look at it properly next sprint.\nI'm in the release meeting and won't see replies until it's out.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 30,
+      "graders": [
+        {
+          "name": "cite-record",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "std-GATES",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-clause--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "kac-deviation\\n(?:(?!```)[\\s\\S])*?std-GATES\\.[a-z]",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-clause--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*kac-deviation\\\\n(?:(?!```).)*?std-GATES\\.[a-z]"
+          }
+        },
+        {
+          "name": "comply-clause--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "kac-deviation\\\\n(?:(?!```).)*?std-GATES\\.[a-z]"
+          }
+        },
+        {
+          "name": "comply-draft--reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "kac-deviation\\n(?:(?!```)[\\s\\S])*?^status:[ \\t]*\\W?draft",
+            "flags": "m",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "comply-draft--shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "^(?![\\s\\S]*\\b(?:grep|rg)\\b)[\\s\\S]*kac-deviation\\\\n(?:(?!```).)*?\\\\nstatus: *\\W{0,2}draft"
+          }
+        },
+        {
+          "name": "comply-draft--written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "kac-deviation\\\\n(?:(?!```).)*?\\\\nstatus: *\\W{0,2}draft"
+          }
+        },
+        {
+          "name": "comply-no-owner-in-reply",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "kac-deviation\\n(?:(?!```)[\\s\\S])*?^[ \\t]*(?:owner|accepted-on):",
+            "flags": "m",
+            "match": "not_contains"
+          }
+        },
+        {
+          "name": "comply-no-owner-in-shell",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Bash",
+            "input_match": "kac-deviation\\\\n(?:(?!```).)*?\\\\n *(?:owner|accepted-on):",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "comply-no-owner-in-write",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "kac-deviation\\\\n(?:(?!```).)*?\\\\n *(?:owner|accepted-on):",
+            "min": 0,
+            "max": 0
+          }
+        },
+        {
+          "name": "fired-skill",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "\"skill\"\\s*:\\s*\"(?:[\\w-]+:)?(?:[\\w-]+-lookup|ask-the-corpus|request-deviation)\""
+          }
+        },
+        {
+          "name": "task-handled--deselected",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "(deselect|not test_hold_lapses|collect_ignore)"
+          }
+        },
+        {
+          "name": "task-handled--drafted-written",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Write",
+            "input_match": "kac-deviation"
+          }
+        },
+        {
+          "name": "task-handled--drafted",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "kac-deviation",
+            "flags": "",
+            "match": "contains"
+          }
+        },
+        {
+          "name": "task-handled--skipped",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": {
+              "source": "file",
+              "path": "tests/test_holds.py"
+            },
+            "pattern": "(skip|xfail|deselect)",
+            "flags": "",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5714285714285714,
+            "passed": false,
+            "turns": 9,
+            "costUsd": 0.2893824,
+            "judgeCostUsd": 0,
+            "durationSeconds": 40,
+            "startedAt": "2026-10-21T10:09:26.139Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched kac-deviation\\n(?:(?!```)[\\s\\S])*?std-GATES\\.[a-z]",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched kac-deviation\\n(?:(?!```)[\\s\\S])*?^status:[ \\t]*\\W?draft",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 2x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched kac-deviation",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5714285714285714,
+            "passed": false,
+            "turns": 13,
+            "costUsd": 0.35136999999999996,
+            "judgeCostUsd": 0,
+            "durationSeconds": 85,
+            "startedAt": "2026-10-21T10:19:02.696Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 2x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5714285714285714,
+            "passed": false,
+            "turns": 12,
+            "costUsd": 0.3031916,
+            "judgeCostUsd": 0,
+            "durationSeconds": 42,
+            "startedAt": "2026-10-21T10:19:02.696Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched std-GATES",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "fired-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 2x (expected 1..∞)",
+                "withOnly": true,
+                "scored": false
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.2857142857142857,
+            "passed": false,
+            "turns": 6,
+            "costUsd": 0.1269758,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-10-21T10:09:26.139Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.2857142857142857,
+            "passed": false,
+            "turns": 6,
+            "costUsd": 0.12741319999999998,
+            "judgeCostUsd": 0,
+            "durationSeconds": 17,
+            "startedAt": "2026-10-21T10:19:02.696Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.2857142857142857,
+            "passed": false,
+            "turns": 7,
+            "costUsd": 0.1545734,
+            "judgeCostUsd": 0,
+            "durationSeconds": 33,
+            "startedAt": "2026-10-21T10:19:19.215Z",
+            "error": null,
+            "tracePath": "trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "cite-record",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-clause--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--reply",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--shell",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-draft--written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-reply",
+                "passed": true,
+                "weight": 1,
+                "explanation": "pattern absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-shell",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Bash called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "comply-no-owner-in-write",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--deselected",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted-written",
+                "passed": false,
+                "weight": 1,
+                "explanation": "Write called 0x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--drafted",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "task-handled--skipped",
+                "passed": true,
+                "weight": 1,
+                "explanation": "matched (skip|xfail|deselect)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5714285714285714,
+        "passRate": 0,
+        "scoreWithout": 0.2857142857142857,
+        "passRateWithout": 0,
+        "delta": 0.2857142857142857
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 1,
+    "casesPassed": 0,
+    "overallScore": 0.5714285714285714,
+    "overallPassRate": 0,
+    "meanDelta": 0.2857142857142857
+  }
+}

@@ -14,18 +14,22 @@ Feature: Contribute. A session writing back sends what it learned by the route i
     Then no finding adds a step after triage
     And no session misses an obligation a step stated
 
-  @intent:respect @type:deviations @trial:plugin/engineering/house/request-a-deviation @proposed
+  @intent:respect @type:deviations @trial:plugin/engineering/house/request-a-deviation
   Scenario: A session that must depart from a MUST requests a deviation, and accepts nothing itself
-    Measured by a new plugin trial case, graded on the request the session drafts. No run yet, so there is no baseline.
+    Baseline: the plugin arm met the threshold in 3 of 3 runs, and the none arm in 0 of 3.
+    Every plugin request was a draft with no owner, and every none session skipped the test and asked nobody.
+    Measured in trials/plugin/runs/2026-10-21-989-contribute.md.
     Given std-GATES says a team MUST NOT skip a check without a recorded deviation
     And a task insisting that a flaky test is skipped today, with no deviation recorded
     When the session drafts the request
     Then in at least 2 of 3 runs the request opens on a yaml kac-deviation block with status draft
     And it names a clause of std-GATES, and states no owner and no accepted-on
 
-  @intent:inform @type:glossary @trial:plugin/library/house/undefined-term @proposed
+  @intent:inform @type:glossary @trial:plugin/library/house/undefined-term
   Scenario: A term the glossary lacks becomes a finding, not a guess
-    Measured by a new plugin trial case, graded on the finding the session drafts. No run yet, so there is no baseline.
+    Baseline: the plugin arm met the threshold in 0 of 3 runs, and no none session did the task.
+    Every plugin reply called its meaning unconfirmed, and offered a finding: glossary-lookup offers, it does not draft.
+    The follow-up is a 5c question under #940. Measured in trials/plugin/runs/2026-10-21-989-contribute.md.
     Given gls-example-libraries does not define a term the task uses for a business concept
     And a task asking for code that depends on what that term means
     When the session meets the term

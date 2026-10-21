@@ -74,9 +74,9 @@ corpus it runs against.
 
 | Folder                                     | Corpus                 | Cases                                |
 |--------------------------------------------|------------------------|--------------------------------------|
-| [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 24 house, and the pilot's 3 controls |
+| [`cases/engineering/`](cases/engineering/) | `examples/engineering` | 25 house, and the pilot's 3 controls |
 | [`cases/dog-fooding/`](cases/dog-fooding/) | `examples/dog-fooding` | 6 house                              |
-| [`cases/library/`](cases/library/)         | `examples/library`     | 5 house                              |
+| [`cases/library/`](cases/library/)         | `examples/library`     | 6 house                              |
 | [`cases/payments/`](cases/payments/)       | `examples/payments`    | 4 house                              |
 
 **A case listed in the folder's `excluded.tsv` is neither run nor scored.** Each line gives the case's path and the
@@ -105,6 +105,7 @@ The lists in `engineering`, `library` and `dog-fooding` exclude these:
 | `house/cover-timeout-pr`             | `std-PR.agent-produced-work-says-what-produced-it`: the PR body omits the agent, model or task          |
 | `house/pagination-fix-commit`        | `std-VCS.every-change-is-attributable-and-reviewed`: the commit subject lacks `#2231`                   |
 | `house/flaky-test-skip`              | `std-GATES.a-failing-check-stops-the-change`: the skip cites no deviation                               |
+| `house/request-a-deviation`          | `std-GATES.a-failing-check-stops-the-change`: no draft request, or one naming an owner                  |
 | `house/ci-every-branch`              | `std-GATES.every-change-is-built-and-tested-automatically`: push builds only some branches              |
 | `house/orders-column-rename`         | `std-DEPLOY.a-way-back-exists-before-the-change-goes`: the migration renames or drops the column        |
 | `house/health-endpoint`              | `std-DEPLOY.the-artefact-is-built-once`: the health endpoint reports no commit                          |
@@ -398,3 +399,4 @@ Where the plugin leads the prose arm, the next measurement is another arm: the c
 | [#986 design cases](runs/2026-10-20-986-design.md)                               |      5 | all four under `examples/`            |       15 | The five design cases, plugin arm only, 3 runs a case             |
 | [#987 build cases](runs/2026-10-21-987-build.md)                                 |      5 | `examples/library`, `dog-fooding`     |       18 | The three build cases, plugin and none arms, 3 runs a case        |
 | [#988 operate cases](runs/2026-10-21-988-operate.md)                             |      5 | `payments`, `library`, `dog-fooding`  |       22 | The five operate cases, plugin and none arms, two excluded        |
+| [#989 contribute cases](runs/2026-10-21-989-contribute.md)                       |      5 | `engineering`, `library`              |       12 | The two contribute cases, plugin and none arms, 3 runs a case     |
