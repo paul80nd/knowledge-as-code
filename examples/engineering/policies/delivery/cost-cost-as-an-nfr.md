@@ -15,8 +15,8 @@ tags: [ cost, efficiency, non-functional-requirements ]
 ## Purpose
 
 What a system costs to run is an engineering property of it, like its latency or its availability. Cost is owned and
-visible to the people whose decisions affect it. We design for it, and we optimise within it as a constraint.
-That constraint never justifies a cut to resilience, security or accessibility.
+visible to the people whose decisions affect it. We design for it, and we optimise within it as a constraint. That
+constraint never justifies a cut to [resilience][pol-RECV], [security][pol-SECD] or [accessibility][pol-A11Y].
 
 Treating cost as a finance concern puts the accountability a long way from the decisions that set it. Engineers choose
 the architecture, the data volumes and the resources, so engineers are the people who can act. The discipline we apply
@@ -55,5 +55,8 @@ No ISO/IEC 27001:2022 Annex A area corresponds to cost efficiency, so `aligns-wi
 [Policies](../../policies.md#why-we-use-them). The [Azure WAF] Cost Optimization pillar is the only alignment this
 policy will ever have, because nothing external obliges an organisation to manage its own spend.
 
+[pol-A11Y]: ../governance/a11y-accessibility.md
 [pol-DEVI]: ../governance/devi-deviations.md
+[pol-RECV]: ../operations/recv-recoverability.md
+[pol-SECD]: ../security/secd-security-by-design.md
 [Azure WAF]: ../../frameworks.md#azure-well-architected-framework
