@@ -13,7 +13,7 @@ public class GitTests
             File.WriteAllText(Path.Combine(dir.FullName, "a record.md"), "the body\n");
 
             // No git on this machine is the state Run answers null for.
-            if (!GitCli.Repository(dir.FullName)) return;
+            Assert.SkipUnless(GitCli.Repository(dir.FullName), GitCli.Unavailable);
 
             Assert.Equal("the body\n", Git.Run(dir.FullName, "show", "HEAD:a record.md"));
         }

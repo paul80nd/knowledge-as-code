@@ -94,7 +94,7 @@ public class TemplateSourceTests : IDisposable
         Write(from, ".gitignore", "bin/\n");
         Write(from, "manifest.yaml");
         Write(from, "bin/kac.dll");
-        if (!GitCli.Repository(from)) return;
+        Assert.SkipUnless(GitCli.Repository(from), GitCli.Unavailable);
 
         var files = TemplateSource.Read("new", from, null, null, _temp.FullName, prompt: false).Fetched().Files();
 
@@ -119,7 +119,7 @@ public class TemplateSourceTests : IDisposable
     {
         var origin = Dir("origin");
         Write(origin, "manifest.yaml", "version: 4\n");
-        if (!GitCli.Repository(origin)) return;
+        Assert.SkipUnless(GitCli.Repository(origin), GitCli.Unavailable);
 
         var read = TemplateSource.Read("new", Url(origin), GitCli.Branch, null, _temp.FullName, prompt: false);
 
@@ -136,7 +136,7 @@ public class TemplateSourceTests : IDisposable
     {
         var origin = Dir("origin");
         Write(origin, "manifest.yaml");
-        if (!GitCli.Repository(origin)) return;
+        Assert.SkipUnless(GitCli.Repository(origin), GitCli.Unavailable);
 
         var fetch = TemplateSource.Read("new", Url(origin), null, null, _temp.FullName, prompt: false);
         Assert.Null(fetch.Problem);
@@ -165,7 +165,7 @@ public class TemplateSourceTests : IDisposable
     {
         var origin = Dir("origin");
         Write(origin, "manifest.yaml");
-        if (!GitCli.Repository(origin)) return;
+        Assert.SkipUnless(GitCli.Repository(origin), GitCli.Unavailable);
 
         var fetch = TemplateSource.Read("new", Url(origin), null, "framework", _temp.FullName, prompt: false);
 

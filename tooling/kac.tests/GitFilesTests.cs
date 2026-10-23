@@ -48,7 +48,7 @@ public class GitFilesTests
             File.WriteAllText(Path.Combine(dir.FullName, "gone.md"), "");
 
             // No git on this machine is the state Tracked answers null for, and the callers walk instead.
-            if (!GitCli.Repository(dir.FullName)) return;
+            Assert.SkipUnless(GitCli.Repository(dir.FullName), GitCli.Unavailable);
 
             File.Delete(Path.Combine(dir.FullName, "gone.md"));
 
