@@ -18,4 +18,4 @@
 | ctl-0012 | [Nothing checks a page or the output for accessibility](0012-accessibility-unchecked.md)         | not-enforced |           | std-A11Y                                | active |
 | ctl-0013 | [Nothing checks prose against the house style](0013-prose-unchecked.md)                          | not-enforced |           | std-PROSE                               | active |
 | ctl-0014 | [A pinned component's assessment names the version it is pinned at](0014-assessed-pin-tests.md)  | ci           | per-pr    | std-A11Y                                | active |
-| ctl-0015 | [Every workflow passes zizmor](0015-zizmor.md)                                                   | ci           | per-pr    | std-CI                                  | active |
+| ctl-0015 | [Every workflow and dependabot.yml passes zizmor](0015-zizmor.md)                                | ci           | per-pr    | std-CI, std-CONFIG                      | active |

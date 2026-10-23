@@ -3,7 +3,7 @@ id: ctl-0015
 type: control
 tier: normative
 status: active
-verifies: [ std-CI ]
+verifies: [ std-CI, std-CONFIG ]
 mechanism: ci
 frequency: per-pr
 evidence: The `lint` job's log, under the step "Check the workflows and dependabot.yml for insecure patterns".
@@ -11,14 +11,15 @@ applies-to:
   - all
 review-by: "2027-10-23"
 owner: human:paul.law
-tags: [ github-actions, linting, permissions, pinning, security ]
+tags: [ dependabot, github-actions, linting, permissions, pinning, security ]
 ---
 
-# Every workflow passes zizmor
+# Every workflow and dependabot.yml passes zizmor
 
 `Control: ctl-0015` `ACTIVE`
 
-zizmor settles whether a workflow is safe to run, once actionlint has settled that it runs.
+zizmor settles whether a workflow is safe to run, once actionlint has settled that it runs. It also checks how long
+Dependabot waits before it proposes a release.
 
 ## What it checks
 
@@ -30,6 +31,9 @@ zizmor settles whether a workflow is safe to run, once actionlint has settled th
 * [std-CI.a-job-declares-the-permission-it-needs] says "A workflow **MUST** declare `permissions: contents: read` at
   its top level". zizmor's `excessive-permissions` audit fails a workflow with no `permissions:` block, and one granting
   a write permission at its top level.
+* [std-CONFIG.a-pin-names-an-exact-version] says each ecosystem "**MUST** wait seven days before it proposes a
+  release". zizmor's `dependabot-cooldown` audit fails an ecosystem in a `dependabot.yml` whose `cooldown:` sets fewer
+  than seven days, or none.
 
 ## How it works
 
@@ -63,15 +67,14 @@ It reports nothing about these rules of [std-CI]:
 * a secret printed to the log
 * a write permission declared on more than one job
 
+It does not check that "A security update **MUST NOT** wait", in [std-CONFIG.a-pin-names-an-exact-version].
+Dependabot applies a cooldown to version updates alone, and no `dependabot.yml` key can make a security update wait.
+
 zizmor also reports a template expansion an attacker can write, and a trigger such as `pull_request_target`. No rule of
 [std-CI] states either one, and the workflows here have neither.
-
-In each `dependabot.yml`, its `dependabot-cooldown` audit fails an ecosystem that waits fewer than seven days before
-proposing a new release. Each ecosystem here sets `cooldown: {default-days: 7}`. No rule of [std-CONFIG] states a
-cooldown.
 
 [std-CI]: ../standards/workflows.md
 [std-CI.a-checkout-leaves-no-credential-behind]: ../standards/workflows.md#a-checkout-leaves-no-credential-behind
 [std-CI.a-job-declares-the-permission-it-needs]: ../standards/workflows.md#a-job-declares-the-permission-it-needs
 [std-CI.every-action-is-pinned-to-a-commit]: ../standards/workflows.md#every-action-is-pinned-to-a-commit
-[std-CONFIG]: ../standards/configuration.md
+[std-CONFIG.a-pin-names-an-exact-version]: ../standards/configuration.md#a-pin-names-an-exact-version
