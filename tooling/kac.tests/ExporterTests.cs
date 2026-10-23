@@ -1060,6 +1060,18 @@ public class ExporterTests
         Assert.Equal(3, Assert.Single(plan.Types).Parts);
     }
 
+    [Fact]
+    public void A_line_whose_producer_files_the_type_under_another_folder_does_not_refuse()
+    {
+        var theirs = Consumed("eng", TheirLine);
+        var elsewhere = theirs with { Types = [theirs.Types[0] with { Dir = "lexicon" }] };
+
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")), elsewhere);
+
+        Assert.Empty(plan.Refused);
+        Assert.Contains("lexicon/eng/gls-theirs.json", plan.Files.Select(f => f.Path));
+    }
+
     /// <summary>Gp's line as gp published it, before eng stamped it into <c>TheirInheritedLine</c>.</summary>
     private const string OldLine = """{"id":"gls-old.alpha","record":"gls-old","seeAlso":null,"part":"alpha"}""";
 

@@ -58,6 +58,7 @@ public static class Exporter
         var types = new List<ExportedType>();
         var withheld = new List<string>();
         var unread = new List<string>();
+        var owed = new List<(string Type, string Record, string Path)>();
 
         foreach (var key in Keys(corpus, consumed, type))
         {
@@ -65,6 +66,7 @@ public static class Exporter
             var lines = new List<string>();
             var filed = new HashSet<string>(StringComparer.Ordinal);
             var written = new HashSet<string>(StringComparer.Ordinal);
+            var owedHere = new List<(string Type, string Record, string Path)>();
             var records = 0;
 
             if (local is { Export: { } export })
@@ -78,11 +80,15 @@ public static class Exporter
                 records += own.Count;
 
                 foreach (var doc in own)
-                    files.Add(new ExportFile($"{key}/{Id(doc)}.json",
+                    files.Add(new ExportFile(Filed(key, null, $"{Id(doc)}.json"),
                         Serialize(Record(doc, local, corpus.Schema, publishing))));
 
                 if (export.Parts.Length > 0 && local.Parts is not null)
-                    lines.AddRange(PartLines(own, local, corpus.Tree, publishing, unread));
+                    foreach (var line in PartLines(own, local, corpus.Tree, publishing, unread))
+                    {
+                        lines.Add(line);
+                        owedHere.AddRange(Owed(key, line, KeyFrom(export, PartLineSource.RecordId), key));
+                    }
             }
 
             // Consumed corpora after this one's own, each in its producer's order. Sorting across corpora would
@@ -92,10 +98,9 @@ public static class Exporter
             {
                 if (from.Types.FirstOrDefault(t => t.Type == key) is not { } theirs) continue;
 
-                // Filed under the corpus that wrote the record. See the chain section of docs/reference/export.md.
                 foreach (var record in theirs.Records)
                 {
-                    var path = $"{theirs.Dir}/{record.Producer}/{record.Name}";
+                    var path = Filed(theirs.Dir, record.Producer, record.Name);
                     if (!filed.Add(path)) continue;
 
                     files.Add(new ExportFile(path, record.Content));
@@ -103,10 +108,17 @@ public static class Exporter
                 }
 
                 foreach (var line in theirs.PartLines.Select(line => Stamped(line, from.Shortcode, theirs)))
-                    if (written.Add(line)) lines.Add(line);
+                {
+                    if (!written.Add(line)) continue;
+
+                    lines.Add(line);
+                    owedHere.AddRange(Owed(key, line, theirs.RecordKey, theirs.Dir));
+                }
             }
 
             if (records == 0) continue;
+
+            owed.AddRange(owedHere);
 
             var partsFile = lines.Count > 0 ? PartsPath(key, local, consumed) : null;
             if (partsFile is not null)
@@ -125,7 +137,7 @@ public static class Exporter
             });
         }
 
-        var orphans = Orphans(files, types);
+        var orphans = Orphans(files, owed);
         if (orphans.Count > 0) return new ExportPlan([], [], [], [], orphans);
 
         files.Add(new ExportFile(ManifestFile,
@@ -296,41 +308,45 @@ public static class Exporter
         return found;
     }
 
-    /// <summary>
-    /// A part line naming a record whose file the plan does not write. Matched the way a reader resolves the line: a
-    /// line with a shortcode names <c>&lt;dir&gt;/&lt;shortcode&gt;/&lt;id&gt;.json</c>, and one without names
-    /// <c>&lt;dir&gt;/&lt;id&gt;.json</c>.
-    /// </summary>
-    private static List<string> Orphans(List<ExportFile> files, List<ExportedType> types)
+    /// <summary>A part line naming a record whose file the plan does not write.</summary>
+    private static List<string> Orphans(
+        List<ExportFile> files, List<(string Type, string Record, string Path)> owed)
     {
-        var found = new List<string>();
         var paths = files.Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
 
-        foreach (var type in types)
-        {
-            if (type is not { PartsFile: { } partsFile, RecordKey: { } recordKey }) continue;
-
-            var lines = files.First(f => f.Path == partsFile).Content.Split('\n');
-            foreach (var read in lines.Select(JsonRead.Parse).OfType<JsonObject>())
-            {
-                if (JsonRead.Str(read[recordKey]) is not { } record) continue;
-
-                var shortcode = JsonRead.Str(read[ShortcodeKey]);
-                var expected = shortcode is null
-                    ? $"{type.Dir}/{record}.json"
-                    : $"{type.Dir}/{shortcode}/{Unscoped(record, shortcode)}.json";
-                if (paths.Contains(expected)) continue;
-
-                found.Add($"'{type.Type}' has a part line for {record}, and the export writes no {expected}. "
-                          + "Re-export and re-pack the corpus that sent the line, then run kac restore.");
-            }
-        }
-
-        return found;
-
-        static string Unscoped(string id, string shortcode) =>
-            id.StartsWith($"{shortcode}:", StringComparison.Ordinal) ? id[(shortcode.Length + 1)..] : id;
+        return
+        [
+            .. owed.Where(o => !paths.Contains(o.Path)).Select(o =>
+                $"'{o.Type}' has a part line for {o.Record}, and the export writes no {o.Path}. "
+                + "Re-export and re-pack the corpus that sent the line, then run kac restore.")
+        ];
     }
+
+    /// <summary>
+    /// The record file a part line names, in the folder <c>dir</c> its records are filed under. None where the line
+    /// does not parse or names no record.
+    /// </summary>
+    private static IEnumerable<(string Type, string Record, string Path)> Owed(
+        string type, string line, string? recordKey, string dir)
+    {
+        if (recordKey is null || JsonRead.Parse(line) is not { } read
+                              || JsonRead.Str(read[recordKey]) is not { } record)
+            yield break;
+
+        var shortcode = JsonRead.Str(read[ShortcodeKey]);
+        var id = shortcode is not null && record.StartsWith($"{shortcode}:", StringComparison.Ordinal)
+            ? record[(shortcode.Length + 1)..]
+            : record;
+
+        yield return (type, record, Filed(dir, shortcode, $"{id}.json"));
+    }
+
+    /// <summary>
+    /// Where a record file lands: in <c>dir</c> for this corpus's own, and one folder deeper, named for the corpus that
+    /// wrote it, for an inherited one. See the chain section of docs/reference/export.md.
+    /// </summary>
+    private static string Filed(string dir, string? producer, string name) =>
+        producer is null ? $"{dir}/{name}" : $"{dir}/{producer}/{name}";
 
     private static bool Same(
         IReadOnlyDictionary<string, string> a, IReadOnlyDictionary<string, string> b) =>
