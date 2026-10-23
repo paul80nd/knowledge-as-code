@@ -21,6 +21,40 @@ public class ReportsTests
         => Assert.Contains("| `LEAKED` | MUST |  | `dev-no-scanner` |  |  | uncovered | |", Coverage());
 
     [Fact]
+    public void A_closed_deviation_is_left_out_of_the_clause_it_departed_from()
+        => Assert.DoesNotContain("dev-old-scanner", Coverage());
+
+    [Fact]
+    public void A_draft_deviation_is_left_out_until_it_is_in_force()
+        => Assert.DoesNotContain("dev-new-scanner", Coverage());
+
+    [Fact]
+    public void A_coverage_report_states_that_it_lists_only_a_deviation_in_force()
+        => Assert.Contains("The `Deviations` column lists a deviation only while its `status` is `active`.",
+            Coverage());
+
+    [Fact]
+    public void An_inherited_deviation_in_force_is_named_beside_the_clause()
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` | `gp:dev-OPEN` |  |  | covered | |", Inheriting());
+
+    [Fact]
+    public void An_inherited_closed_deviation_is_left_out()
+        => Assert.DoesNotContain("dev-SHUT", Inheriting());
+
+    [Fact]
+    public void A_deviation_stating_no_status_is_left_out()
+        => Assert.DoesNotContain("dev-unstated", Coverage());
+
+    [Fact]
+    public void Two_in_force_values_are_stated_as_the_rule_and_not_as_one_value()
+    {
+        var body = Inheriting(inForce: "closed");
+
+        Assert.Contains("only while its `status` is the value its type declares in `in-force:`.", body);
+        Assert.DoesNotContain("only while its `status` is `active`.", body);
+    }
+
+    [Fact]
     public void A_control_reaches_a_clause_through_the_standard_covering_it()
         => Assert.Contains("| `STORE` | MUST | `std-SEC` |  |  |", Coverage());
 
@@ -136,13 +170,13 @@ public class ReportsTests
 
     [Fact]
     public void A_clause_a_grandparent_s_standard_implements_reads_covered()
-        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |  |  |  | covered | |", Inheriting());
+        => Assert.Contains("| `HOLD` | MUST | `gp:std-OLD` |", Inheriting());
 
     private static string Coverage() => Plan("coverage").Body;
 
-    private static string Inheriting()
+    private static string Inheriting(string inForce = "active")
     {
-        var plan = Reports.Plan("coverage", Corpus(), [Grandparent], Stamp);
+        var plan = Reports.Plan("coverage", Corpus(), [Grandparent(inForce)], Stamp);
         Assert.NotNull(plan);
         return plan.Body;
     }
@@ -151,7 +185,7 @@ public class ReportsTests
     /// What eng published: gp's clause on a line eng already stamped, and gp's record file keeping the bare ids gp
     /// wrote, in the folder eng filed it under.
     /// </summary>
-    private static readonly InheritedCorpus Grandparent =
+    private static InheritedCorpus Grandparent(string inForce) =>
         new("eng", Exporter.FormatVersion, "example-engineering", "0.1.0",
             new ExportPublishing("github", null, null, null, null),
             null,
@@ -174,7 +208,17 @@ public class ReportsTests
                     [
                         new InheritedRecord("gp", "std-OLD.json",
                             """{"fields":{"id":"std-OLD","implements":["pol-OLD.HOLD"]}}""")
-                    ])
+                    ]),
+                new InheritedType("deviations", 1, "deviations", null, null, null, null, null,
+                    new Dictionary<string, string>(StringComparer.Ordinal),
+                    [],
+                    [
+                        new InheritedRecord("gp", "dev-OPEN.json",
+                            """{"fields":{"id":"dev-OPEN","status":"active","departs-from":["pol-OLD.HOLD"]}}"""),
+                        new InheritedRecord("gp", "dev-SHUT.json",
+                            """{"fields":{"id":"dev-SHUT","status":"closed","departs-from":["pol-OLD.HOLD"]}}""")
+                    ],
+                    InForce: inForce)
             ]);
 
     private static ReportPlan Plan(string name)
@@ -270,6 +314,54 @@ public class ReportsTests
 
         """;
 
+    private const string Closed =
+        """
+        ---
+        id: dev-old-scanner
+        type: deviation
+        tier: normative
+        status: closed
+        owner: human:alex.doe
+        departs-from: [ pol-SCRT.LEAKED ]
+        ---
+
+        # An old scanner
+
+        `Deviation: dev-old-scanner` `CLOSED`
+
+        """;
+
+    private const string Draft =
+        """
+        ---
+        id: dev-new-scanner
+        type: deviation
+        tier: normative
+        status: draft
+        owner: human:alex.doe
+        departs-from: [ pol-SCRT.LEAKED ]
+        ---
+
+        # A new scanner
+
+        `Deviation: dev-new-scanner` `DRAFT`
+
+        """;
+
+    private const string Unstated =
+        """
+        ---
+        id: dev-unstated
+        type: deviation
+        tier: normative
+        owner: human:alex.doe
+        departs-from: [ pol-SCRT.LEAKED ]
+        ---
+
+        # A deviation stating no status
+
+        """;
+
     private const string Register =
         """
         # Frameworks
@@ -287,7 +379,7 @@ public class ReportsTests
         {
             ["policies"] = PolicyType(),
             ["standards"] = Refers("standards", "std", "standard", "implements"),
-            ["deviations"] = Refers("deviations", "dev", "deviation", "departs-from")
+            ["deviations"] = Refers("deviations", "dev", "deviation", "departs-from", inForce: "active")
         };
 
         var schema = new Schema { ByFolder = types };
@@ -296,7 +388,9 @@ public class ReportsTests
         foreach (var (rel, text) in new[]
                  {
                      ("policies/scrt.md", Policy), ("policies/keys.md", Second),
-                     ("standards/sec.md", Standard), ("deviations/no-scanner.md", Deviation)
+                     ("standards/sec.md", Standard), ("deviations/no-scanner.md", Deviation),
+                     ("deviations/old-scanner.md", Closed), ("deviations/new-scanner.md", Draft),
+                     ("deviations/unstated.md", Unstated)
                  })
         {
             var doc = Doc.Parse(rel, text, schema);
@@ -331,15 +425,18 @@ public class ReportsTests
             { Section = "Clauses", Noun = "clause", Columns = ["Id", "Clause", "Alignment"] }
     };
 
-    private static TypeSchema Refers(string key, string prefix, string typeName, string field) => new()
+    private static TypeSchema Refers(string key, string prefix, string typeName, string field,
+        string? inForce = null)
     {
-        Key = key,
-        TypeName = typeName,
-        Folder = key,
-        IdPrefix = prefix,
-        Fields = new Dictionary<string, FieldSpec>(StringComparer.Ordinal)
+        var fields = new Dictionary<string, FieldSpec>(StringComparer.Ordinal)
         {
             [field] = new() { Name = field, Type = "list", Of = "id" }
-        }
-    };
+        };
+
+        if (inForce is not null)
+            fields["status"] = new()
+                { Name = "status", Type = "enum", Values = ["active", "draft", "closed"], InForce = inForce };
+
+        return new TypeSchema { Key = key, TypeName = typeName, Folder = key, IdPrefix = prefix, Fields = fields };
+    }
 }

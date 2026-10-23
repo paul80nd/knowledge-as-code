@@ -20,6 +20,7 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
     ---
     id: dev-open-door
     type: deviation
+    status: active
     departs-from:
       - pol-COVR.OPEN
     ---
@@ -55,6 +56,26 @@ Scenario: A coverage row lists the deviations, the controls and the pair candida
   Then it succeeds
   And "reports/clause-coverage.md" contains "| `WRITTEN` | MUST | `std-COVER` |  | `ctl-0001` |  | covered | |"
   And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  | `dev-open-door` |  | `pol-PAIR.OPEN` | uncovered | |"
+
+Scenario: A coverage row leaves out a deviation that is no longer in force
+  Given the report fixture corpus
+  And the corpus has a record "deviations/shut-door.md" reading:
+    """
+    ---
+    id: dev-shut-door
+    type: deviation
+    status: closed
+    departs-from:
+      - pol-COVR.OPEN
+    ---
+
+    # The door was shut
+    """
+  When I write the "coverage" report to "reports/clause-coverage.md"
+  Then it succeeds
+  And "reports/clause-coverage.md" contains "| `OPEN` | MUST NOT |  |  |  |  | uncovered | |"
+  And "reports/clause-coverage.md" does not contain "dev-shut-door"
+  And "reports/clause-coverage.md" contains "lists a deviation only while its `status` is `active`."
 
 Scenario: A frameworks report counts the clauses citing each reference
   Given the export-policies fixture corpus

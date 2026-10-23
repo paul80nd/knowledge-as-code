@@ -38,9 +38,12 @@ writes whether an uncovered clause is a gap or does not apply to this estate. Th
 Each coverage row arrives with four values read from frontmatter:
 
 * the standards whose `implements:` lists the clause
-* the deviations whose `departs-from:` cites it
+* the deviations in force whose `departs-from:` cites it
 * the controls verifying those standards
 * any clause elsewhere in the corpus sharing its key
+
+A deviation is in force while its `status` is the value its type declares in `in-force:`, which is `active`. A `draft`
+or `closed` deviation is left out, and `## Limits` says so.
 
 A shared key is a candidate pair: one obligation written from both sides as two clauses with one key. `report` lists
 the match and never decides it. Two runs over an unchanged corpus print the same report.

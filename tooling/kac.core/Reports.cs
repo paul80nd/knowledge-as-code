@@ -88,6 +88,9 @@ public static class Reports
     private const string DepartsFrom = "departs-from";
     private const string Verifies = "verifies";
 
+    /// <summary>The field a type's <c>in-force:</c> value is declared on and a record's state is read from.</summary>
+    private const string Status = "status";
+
     /// <summary>
     /// The column a clause states its framework mapping in. <c>AlignmentRollup</c> reads the same one.
     /// </summary>
@@ -182,7 +185,7 @@ public static class Reports
     {
         var clauses = Clauses(corpus, inherited);
         var covers = Edges(corpus, inherited, Implements);
-        var departures = Edges(corpus, inherited, DepartsFrom);
+        var departures = Edges(corpus, inherited, DepartsFrom, inForceOnly: true);
         var controls = Edges(corpus, inherited, Verifies);
         var pairs = Pairs(clauses);
 
@@ -200,7 +203,14 @@ public static class Reports
             "A clause uncovered here may well be covered in a corpus consuming this one, and every "
             + "consumer answers for its own coverage.",
             "No column here says a clause is verified. A control names a standard and not a rule, so it "
-            + "vouches for a whole document whatever it checks inside it.");
+            + "vouches for a whole document whatever it checks inside it."
+            + DeviationsInForce(corpus, inherited) switch
+            {
+                [] => "",
+                [var inForce] => $" The `Deviations` column lists a deviation only while its `status` is `{inForce}`.",
+                _ => " The `Deviations` column lists a deviation only while its `status` is the value its type "
+                     + "declares in `in-force:`."
+            });
         CoverageTotals(body, rows);
         CoverageSections(body, rows);
         Judgement(body, "The tool prints two verdicts and a person writes the rest.",
@@ -303,22 +313,44 @@ public static class Reports
     }
 
     /// <summary>
+    /// Every distinct <c>in-force:</c> value the coverage filter applies to a type declaring <c>departs-from</c>: this
+    /// corpus's own schema, and each inherited type of that name as its producer's manifest states it.
+    /// </summary>
+    private static List<string> DeviationsInForce(LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited)
+    {
+        var types = corpus.Schema.ByFolder.Values.Where(t => t.Fields.ContainsKey(DepartsFrom)).ToList();
+        var keys = types.Select(t => t.Key).ToHashSet(StringComparer.Ordinal);
+
+        return
+        [
+            .. types.Select(t => corpus.Schema.EffectiveField(t, Status)?.InForce)
+                .Concat(inherited.SelectMany(s => s.Types).Where(t => keys.Contains(t.Type)).Select(t => t.InForce))
+                .OfType<string>().Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)
+        ];
+    }
+
+    /// <summary>
     /// Every id a field of the given name names, keyed by the id it points at, across every adopted type. Inherited
     /// records count, and both halves of an inherited edge are scoped to the corpus that wrote the record, so the join
-    /// meets on both sides.
+    /// meets on both sides. <paramref name="inForceOnly"/> drops a record whose <c>status</c> is not the one its type
+    /// names in <c>in-force:</c>, and keeps every record of a type that names none.
     /// </summary>
     private static Dictionary<string, List<string>> Edges(
-        LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field)
+        LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, string field, bool inForceOnly = false)
     {
         var found = new Dictionary<string, List<string>>(StringComparer.Ordinal);
 
         void Add(string target, string id) =>
             (found.TryGetValue(target, out var list) ? list : found[target] = []).Add(id);
 
+        bool Lapsed(string? inForce, string? status) =>
+            inForceOnly && inForce is not null && !string.Equals(status, inForce, StringComparison.Ordinal);
+
         foreach (var doc in corpus.Docs)
         {
-            if (doc.Type?.Fields.ContainsKey(field) != true) continue;
+            if (doc.Type is not { } type || !type.Fields.ContainsKey(field)) continue;
             if (doc.FrontScalar("id") is not { Length: > 0 } id) continue;
+            if (Lapsed(corpus.Schema.EffectiveField(type, Status)?.InForce, doc.FrontScalar(Status))) continue;
 
             foreach (var target in doc.FrontList(field)) Add(target, id);
         }
@@ -331,6 +363,7 @@ public static class Reports
             if (JsonRead.Object(json["fields"]) is not { } fields) continue;
             if (JsonRead.Str(fields["id"]) is not { Length: > 0 } id) continue;
             if (fields[field] is not JsonArray targets) continue;
+            if (Lapsed(type.InForce, JsonRead.Str(fields[Status]))) continue;
 
             foreach (var target in targets)
                 if (JsonRead.Str(target) is { Length: > 0 } value)

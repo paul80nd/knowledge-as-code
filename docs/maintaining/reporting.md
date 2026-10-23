@@ -14,6 +14,8 @@ proving each behaviour. [`report`](../use/cli/report.md) owns the full statement
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
 * It fills the standards, deviations, controls and candidate pairs each coverage row reads from frontmatter.
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
+* It lists a deviation only while its `status` is the value its type declares in `in-force:`.
+  [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
 * Two runs over an unchanged corpus write the same report.
   [What the tool fills](../use/cli/report.md#what-the-tool-fills-and-what-it-leaves-open)
 * It stamps `generated`, and writes `status: draft`, an empty `verified`, and an empty `id` and `owner`.
@@ -42,6 +44,7 @@ Each refusal exits `1` and writes nothing.
 
 * A coverage report marks each clause covered or uncovered and leaves the judgement blank
 * A coverage row lists the deviations, the controls and the pair candidates the frontmatter states
+* A coverage row leaves out a deviation that is no longer in force
 * A frameworks report counts the clauses citing each reference
 * A frameworks report leaves out the references an imported corpus cites
 * A report's frontmatter states the run that wrote it and leaves the rest to a person

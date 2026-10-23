@@ -55,6 +55,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac export` keeps a fence that holds a blank line.** `export` split a section at each blank line before it looked
   for a fence. The lines after a blank line inside a code block were then joined onto one line. A fence now arrives as
   written up to its closing line, or to the end of its section where it has none.
+- **`kac report coverage` lists only a deviation in force.** The `Deviations` column listed every deviation citing a
+  clause in `departs-from:`, so a closed one read as a departure that still stands. A deviation now appears only while
+  its `status` is the value its type declares in `in-force:`, which is `active`. `## Limits` says so.
 
 ## 0.38.0 - 2026-10-23
 
