@@ -20,8 +20,8 @@ internal static class PublishedExport
     private const string LinkRef = "ref";
 
     /// <summary>
-    /// Each export path whose bytes differ between the two revisions, in ordinal order. A path one side writes and the
-    /// other does not is included.
+    /// Each export path whose bytes differ between the two revisions, in ordinal order, with <c>mechanismVersion</c>
+    /// left out of the manifest. A path one side writes and the other does not is included.
     /// </summary>
     /// <exception cref="InvalidOperationException">Where the exporter refuses either revision.</exception>
     internal static IReadOnlyList<string> Moved(Revision before, Revision after, DateOnly today)
@@ -61,10 +61,7 @@ internal static class PublishedExport
             StringComparer.Ordinal);
     }
 
-    /// <summary>
-    /// The manifest less <c>mechanismVersion</c>, which a template take moves in every corpus. It is a stamp of its
-    /// own, so no record moved with it.
-    /// </summary>
+    /// <summary>The manifest without <c>mechanismVersion</c>, which a template take moves in every corpus.</summary>
     private static string WithoutMechanismVersion(string manifest)
     {
         var node = JsonNode.Parse(manifest)?.AsObject()

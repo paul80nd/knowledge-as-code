@@ -122,14 +122,17 @@ public class PublishedExportTests
     [Fact]
     public void A_template_take_alone_moves_nothing()
     {
-        static Revision Took(int templateVersion) =>
+        static string TookTemplate(int version) => Descriptor + $"\nupstream:\n  template-version: {version}\n";
+
+        static Revision WithTemplateVersion(int version) =>
             At("revision", new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                [".corpus.yaml"] = Descriptor + $"\nupstream:\n  template-version: {templateVersion}\n",
+                [".corpus.yaml"] = TookTemplate(version),
                 [Record] = Note()
             });
 
-        Assert.Empty(PublishedExport.Moved(Took(23), Took(24), Today));
+        Assert.Equal(24, CorpusDescriptor.Parse(TookTemplate(24)).TemplateVersion);
+        Assert.Empty(PublishedExport.Moved(WithTemplateVersion(23), WithTemplateVersion(24), Today));
     }
 
     [Fact]
