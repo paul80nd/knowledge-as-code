@@ -48,6 +48,23 @@ public class MirrorsCitationsTests
     }
 
     [Fact]
+    public void A_line_followed_by_a_heading_below_its_part_is_reported_where_it_sits()
+    {
+        var found = Assert.Single(InARule("#### Rotating by hand\n\nMore prose under the same rule."));
+
+        Assert.Equal("this 'Covers' line stands in the middle of a section. Write it as the last thing "
+                     + "under the heading it belongs to.", found.Message);
+        Assert.Equal(15, found.Line);
+    }
+
+    [Theory]
+    [InlineData("### Store the secret\n\nYou MUST store it encrypted.")]
+    [InlineData("## Exceptions\n\nNone.")]
+    [InlineData("")]
+    public void A_line_followed_by_the_next_part_the_next_section_or_nothing_closes_its_part(string after)
+        => Assert.Empty(InARule(after));
+
+    [Fact]
     public void A_line_that_is_both_misplaced_and_empty_is_reported_twice()
         => Assert.Equal(2,
             Reconcile("_**Covers:**_\n\nMore prose under the same heading.").Count);
@@ -190,13 +207,13 @@ public class MirrorsCitationsTests
     /// A standard whose <c>implements:</c> reconciles against a <c>Covers</c> line, and the policy its clause ids point
     /// at. Two types, because the reconciliation is scoped to the types the field references.
     /// </summary>
-    private static Schema Schema(bool partRequired = true) => new()
+    private static Schema Schema(bool partRequired = true, PartSpec? parts = null) => new()
     {
         ByFolder = new Dictionary<string, TypeSchema>
         {
             ["standards"] = new()
             {
-                Key = "standards", Folder = "standards", IdPrefix = "std",
+                Key = "standards", Folder = "standards", IdPrefix = "std", Parts = parts,
                 DeclaredFields =
                 [
                     new FieldSpec
@@ -227,6 +244,27 @@ public class MirrorsCitationsTests
         var text = $"---\nid: std-SECRET\nimplements:\n{field}---\n\n# A standard\n\n"
                    + $"## A rule\n\n{body}\n\n[pol-SCRT]: scrt.md\n[pol-OTHR]: othr.md\n"
                    + "[std-OTHER]: other.md\n";
+        return Findings(schema, text);
+    }
+
+    /// <summary>
+    /// A <c>Covers</c> line closing the body of an H3 rule under <c>## Rules</c>, the way a standard keeps its parts,
+    /// with <paramref name="after"/> written below it.
+    /// </summary>
+    private static List<Finding> InARule(string after)
+    {
+        var schema = Schema(parts: new PartSpec(PartSpec.Headings, "", ["MUST"], [])
+        {
+            Noun = "rule", Section = "Rules"
+        });
+        var text = "---\nid: std-SECRET\nimplements:\n  - pol-SCRT.ROTATE\n---\n\n# A standard\n\n## Rules\n\n"
+                   + "### Rotate the secret\n\nYou MUST rotate it yearly.\n\n_**Covers:** [pol-SCRT].ROTATE_\n\n"
+                   + $"{after}\n\n[pol-SCRT]: scrt.md\n";
+        return Findings(schema, text);
+    }
+
+    private static List<Finding> Findings(Schema schema, string text)
+    {
         var doc = Doc.Parse("standards/secret-handling.md", text, schema);
         Assert.NotNull(doc);
 
