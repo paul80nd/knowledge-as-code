@@ -105,6 +105,56 @@ public class SchemaCheckTests
         => Assert.Empty(Check(Widgets(
             rules: [new RuleSpec { Id = new RuleId("widgets-are-blue"), Description = "One day." }])));
 
+    /// <summary>
+    /// Through the loader, where <c>ParseRule</c> reads the value. Keeps only the findings naming the rule, as the type
+    /// declares nothing else a sound type needs.
+    /// </summary>
+    private static List<Finding> RuleFindings(string id, string entry)
+    {
+        var files = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["_enums.yaml"] = "enums: {}",
+            ["_tiers.yaml"] = "tiers: {}",
+            ["_checks.yaml"] = "checks: {}",
+            ["_universal.yaml"] = "fields: {}",
+            ["widgets.yaml"] = $"rules:\n  - id: {id}\n{entry}"
+        };
+        return [.. Check(Schema.Load(files)).Where(f => f.Message.Contains($"'{id}'", StringComparison.Ordinal))];
+    }
+
+    [Fact]
+    public void A_misspelt_severity_on_a_rule_class_is_reported_at_the_rules_line()
+    {
+        var finding = Assert.Single(RuleFindings("y-statement-present", "    severity: eror\n"));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Equal(".schema/widgets.yaml", finding.File);
+        Assert.Equal(2, finding.Line);
+        Assert.Contains("'severity: eror'", finding.Message);
+    }
+
+    [Fact]
+    public void A_misspelt_severity_on_an_expression_rule_is_reported_once()
+    {
+        var finding = Assert.Single(RuleFindings("widgets-are-blue",
+            "    expr: \"present('colour')\"\n    severity: eror\n    message: say what colour it is.\n"));
+
+        Assert.Equal("schema-dispatch", finding.Check.Value);
+        Assert.Contains("'severity: eror'", finding.Message);
+    }
+
+    [Fact]
+    public void A_rule_class_declaring_no_severity_passes()
+        => Assert.Empty(RuleFindings("y-statement-present", ""));
+
+    [Fact]
+    public void A_severity_in_another_case_is_reported()
+    {
+        var finding = Assert.Single(RuleFindings("y-statement-present", "    severity: Error\n"));
+
+        Assert.Contains("'severity: Error'", finding.Message);
+    }
+
     [Fact]
     public void A_config_key_on_an_expression_rule_is_reported_at_the_rules_line()
     {

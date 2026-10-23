@@ -23,6 +23,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `content-version`, `bundle` warned that the plugin had no version and nothing would install it. The plugin kept the
   version its own `plugin.json` states, so the warning was wrong. It now names that version. Set `content-version` and
   export again to choose the version a plugin publishes.
+- **`kac validate` reports a rule `severity:` it cannot read.** A value other than `error` or `warning`, such as
+  `eror` or `Error`, read as no severity at all. A rule nothing implements then passed as an intention, unreported, and
+  an `expr:` rule was told it had no severity. `schema-dispatch` now reports the value against the rule's line in its
+  `.schema/` file.
 
 ## 0.38.0 - 2026-10-23
 

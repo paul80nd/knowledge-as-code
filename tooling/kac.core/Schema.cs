@@ -342,8 +342,8 @@ public sealed record RequiredWhen(string Field, bool Negated, IReadOnlyList<stri
 }
 
 /// <summary>
-/// One entry of a type's <c>rules:</c> block. An absent <c>severity:</c> means declared but not enforced, not a default
-/// level.
+/// One entry of a type's <c>rules:</c> block. A rule with neither an <c>expr:</c> nor a rule class is declared but not
+/// enforced, and declares no <c>severity:</c>. A rule class runs whether or not it declares one.
 /// </summary>
 public sealed record RuleSpec
 {
@@ -354,7 +354,15 @@ public sealed record RuleSpec
     /// </summary>
     public string? Description { get; init; }
 
+    /// <summary>The values <c>severity:</c> is read as, matched case-sensitively. SchemaChecks reads it.</summary>
+    public static readonly IReadOnlyDictionary<string, Sev> Severities =
+        new Dictionary<string, Sev>(StringComparer.Ordinal) { ["error"] = Sev.Error, ["warning"] = Sev.Warning };
+
+    /// <summary>Null where the key is absent, or where <see cref="Severities"/> has no such value.</summary>
     public Sev? Severity { get; init; }
+
+    /// <summary>The <c>severity:</c> value as written, and null where the key is absent.</summary>
+    public string? SeverityWritten { get; init; }
 
     /// <summary>
     /// The condition a document must satisfy, compiled. Absent on a rule implemented as a class in <c>Rules/</c>, and
@@ -1058,26 +1066,23 @@ public sealed partial class Schema
     }
 
     /// <summary>
-    /// An unrecognised severity reads as absent, leaving the rule declared but not enforced. A rule with an
-    /// <c>expr:</c> must compile and carry a severity and a message. A failure is recorded on the rule for
-    /// <c>SchemaChecks</c>, and the rule loads inert.
+    /// A rule with an <c>expr:</c> must compile and carry a severity and a message. A failure is recorded on the rule
+    /// for <c>SchemaChecks</c>, and the rule loads inert. A severity outside <see cref="RuleSpec.Severities"/> is
+    /// <c>SchemaChecks</c>'s to report, so it records no problem here.
     /// </summary>
     private static RuleSpec ParseRule(YamlNode node, KeyReader keys)
     {
         var rule = keys.At(node, $"rule '{Yaml.Str(Yaml.Get(node, "id")) ?? ""}'");
         var id = Yaml.Str(rule.Get("id")) ?? "";
         var source = Yaml.Str(rule.Get("expr"));
-        var severity = Yaml.Str(rule.Get("severity")) switch
-        {
-            "error" => Sev.Error,
-            "warning" => Sev.Warning,
-            _ => (Sev?)null
-        };
+        var written = Yaml.Str(rule.Get("severity"));
+        Sev? severity = written is not null && RuleSpec.Severities.TryGetValue(written, out var known) ? known : null;
         var message = Collapse(Yaml.Str(rule.Get("message")));
 
         Expr? compiled = null;
         string? problem = null;
-        if (source is not null)
+        // An unreadable severity leaves the expression uncompiled, so SchemaChecks reports the rule once.
+        if (source is not null && (written is null || severity is not null))
         {
             if (severity is null)
                 problem = $"rule '{id}' has an expr but no severity. Say whether it fails "
@@ -1106,6 +1111,7 @@ public sealed partial class Schema
             Id = new RuleId(id),
             Description = Collapse(Yaml.Str(rule.Get("description"))),
             Severity = severity,
+            SeverityWritten = written,
             Expr = source,
             Compiled = compiled,
             Message = message,

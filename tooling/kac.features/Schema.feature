@@ -49,6 +49,7 @@ Scenario: A schema that promises what the tool cannot deliver is reported agains
     | .schema/widgets.yaml | 142  | schema-dispatch    | rule 'widgets-are-brief' on type 'widgets' declares 'max-words:', and an 'expr:' rule reads no config. Drop the key.                                                                                                                                           |
     | .schema/widgets.yaml | 149  | schema-dispatch    | rule 'y-statement-present' on type 'widgets' declares 'postures:', and its rule class reads only 'max-words'. Drop the key.                                                                                                                                    |
     | .schema/widgets.yaml | 149  | schema-dispatch    | rule 'y-statement-present' on type 'widgets': 'max-words' is 'five', and a word limit is a whole number above zero. Write one, such as 60. The rule checks no record until this is fixed.                                                                      |
+    | .schema/widgets.yaml | 155  | schema-dispatch    | rule 'alternatives-have-verdicts' on type 'widgets' declares 'severity: eror', which the tool does not read. A severity is 'error', 'warning'.                                                                                                                  |
 
 Scenario: A part line naming a list field is reported against the type, not the record filling it
   Given the part-line-list fixture corpus
