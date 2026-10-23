@@ -226,7 +226,7 @@ _**Covers:** `eng:pol-AGNT.PROV`, `eng:pol-DEVI.CONTENT`, `eng:pol-DEVI.EXPIRY`,
 - A skill reviewing a change **MUST** report a departure from a `SHOULD` or `SHOULD NOT` as a judgement call, citing
   the rule's id and quoting the reason the change gives.
 - A skill reviewing a change **MUST** check every obligation itself, except one named in the What it checks section of
-  an `active` control whose mechanism is `ci` or `runtime-alert`.
+  a control at the status its type exports as `inForce`, whose mechanism is `ci` or `runtime-alert`.
 
 _**Covers:** `eng:pol-DEVI.RECORD`_
 
@@ -439,7 +439,7 @@ broke it.
 - [ ] No skill sends a departure from a `SHOULD`, `SHOULD NOT`, `MAY` or `COULD` to `request-deviation`.
 - [ ] Every review files a broken `MUST` as a violation and a `SHOULD` departure as a judgement call, each under its
       rule's id.
-- [ ] Every review checks each obligation that no `active` control with mechanism `ci` or `runtime-alert` names.
+- [ ] Every review checks each obligation that no control in force, with mechanism `ci` or `runtime-alert`, names.
 - [ ] No finding is dropped, or held back, because the target has no `kac:finding` label.
 - [ ] Triage named the corpus from the `corpus:` of the `.corpus.yaml` it walked up to, and never from the
       `publishing` block.
@@ -656,6 +656,8 @@ standard.
 
 ## Changelog
 
+- 2026-10-23: a review leaves to CI a control at the status its type exports as `inForce`, and no longer assumes
+  `active`.
 - 2026-10-20: a router sends a question it can place to the lookup for that type, and reads a type no lookup reads
   from a reference file it loads only when routed there. It answers a whole-corpus question from the report's fetched
   body, and sends a change that makes a record wrong to `raise-finding`.
