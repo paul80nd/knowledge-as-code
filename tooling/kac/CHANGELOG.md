@@ -42,6 +42,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   filled in. `bare-key` now reports the spelling, and `required-field` reports the field. A quoted `"—"` counts, as `""`
   does. A dash beside other text, such as `— tbc`, is a value. The `bare-key` message and the checks table on
   `knowledge-as-code/metadata.md` now list `''` beside `""`, so run `kac generate` to update that page.
+- **`kac validate` reports a citation footnote written above a deeper heading inside a part.** A standard's `Covers`
+  line placed above an H4 inside an H3 rule passed `mirrors-citations`, though the rule went on below it. In a type
+  declaring `parts:`, a heading now closes a footnote's section only at or above the part level, anywhere in the
+  record. The next rule, the next H2 and the end of the file still close it, and the line passes there.
 
 ## 0.37.0 - 2026-10-21
 

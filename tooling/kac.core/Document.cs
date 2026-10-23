@@ -287,7 +287,7 @@ public partial class Doc
 
         doc.MirroredSectionLinks = SectionLinks(ast, type?.DeclaredFields.Select(spec => spec.MirrorsSection));
         doc.CitationFootnotes =
-            Footnotes(ast, schema, type?.DeclaredFields.Select(spec => spec.MirrorsCitations));
+            Footnotes(ast, schema, type?.Parts, type?.DeclaredFields.Select(spec => spec.MirrorsCitations));
 
         return doc;
     }
@@ -686,10 +686,12 @@ public partial class Doc
 
     /// <summary>
     /// The form is a whole line in italic opening on a bold label: <c>**Not:**</c> alone is prose. Nested paragraphs
-    /// are read too, so a footnote inside a list item is reported where it sits, not dropped.
+    /// are read too, so a footnote inside a list item is reported where it sits, not dropped. A heading closes the
+    /// footnote's section only at or above the part level. Where <paramref name="parts"/> is null, any heading closes
+    /// it.
     /// </summary>
     private static Dictionary<string, List<CitationFootnote>> Footnotes(
-        MarkdownDocument ast, Schema schema, IEnumerable<string?>? labels)
+        MarkdownDocument ast, Schema schema, PartSpec? parts, IEnumerable<string?>? labels)
     {
         // Matched on the label without its colon, so `mirrors-citations: "Covers:"` matches. Two fields spelling
         // one label two ways share the list.
@@ -730,7 +732,9 @@ public partial class Doc
             if (!matching.TryGetValue(Label(Md.PlainText(bold)), out var footnotes)) continue;
 
             var at = blocks.IndexOf(para);
-            var closes = at >= 0 && (at + 1 == blocks.Count || blocks[at + 1] is HeadingBlock);
+            var closes = at >= 0
+                         && (at + 1 == blocks.Count
+                             || blocks[at + 1] is HeadingBlock next && (parts is null || next.Level <= parts.Level));
 
             // Both notations, in line order: a local record is cited by link, an imported one by code span.
             var cited = scope
