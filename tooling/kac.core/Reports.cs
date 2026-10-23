@@ -93,6 +93,18 @@ public static class Reports
     /// </summary>
     private const string AlignmentColumn = "Alignment";
 
+    /// <summary>
+    /// What a report calls a corpus whose descriptor states no <c>corpus:</c>. Only a printed report meets it.
+    /// </summary>
+    private const string Unnamed = "this corpus";
+
+    /// <summary>The corpora a report answers for, this one first and then each corpus it consumes.</summary>
+    public static List<ReportSource> Sources(CorpusDescriptor descriptor, IReadOnlyList<InheritedCorpus> inherited) =>
+    [
+        new(descriptor.Name ?? Unnamed, descriptor.ContentVersion),
+        .. inherited.Select(i => new ReportSource(i.Corpus ?? i.Shortcode, i.ContentVersion))
+    ];
+
     public static ReportPlan? Plan(
         string name, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited, ReportStamp stamp) =>
         name switch
@@ -381,7 +393,7 @@ public static class Reports
         StringBuilder body, LoadedCorpus corpus, IReadOnlyList<InheritedCorpus> inherited,
         string reach, string closing)
     {
-        var name = corpus.Descriptor.Name ?? "this corpus";
+        var name = corpus.Descriptor.Name ?? Unnamed;
 
         body.AppendLine("## Limits");
         body.AppendLine();

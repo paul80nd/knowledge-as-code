@@ -107,9 +107,15 @@ trust tier.
 
 ### `--out`
 
-`--out` writes the report to the path you name, relative to where you typed the command. It refuses a path a file
-already occupies, and writes nothing, so a run never overwrites a person's verdicts. Write the run somewhere else, and
-merge the two by hand.
+`--out` writes the report to the path you name, relative to where you typed the command. It refuses, and writes
+nothing, in two cases:
+
+* A file already occupies the path, so a run never overwrites a person's verdicts. Write the run somewhere else, and
+  merge the two by hand.
+* `.corpus.yaml` states no `corpus:`. The first entry in `sources` cites your corpus by that name. Write the key, or
+  leave out `--out`.
+
+A report printed without `--out` cites a corpus with no `corpus:` as `this corpus`.
 
 ## Examples
 

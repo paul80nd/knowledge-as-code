@@ -27,6 +27,9 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   `eror` or `Error`, read as no severity at all. A rule nothing implements then passed as an intention, unreported, and
   an `expr:` rule was told it had no severity. `schema-dispatch` now reports the value against the rule's line in its
   `.schema/` file.
+- **`kac report --out` refuses a corpus whose `.corpus.yaml` states no `corpus:`.** The report's `sources` cited the
+  corpus by its absolute path, so a committed report named one machine's folder. It writes nothing now, and says to
+  write the key. A report printed without `--out` cites that corpus as `this corpus`.
 
 ## 0.38.0 - 2026-10-23
 
