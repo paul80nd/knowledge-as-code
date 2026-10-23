@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 
 var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 if (repoRoot is null)
@@ -53,6 +54,7 @@ if (scenarios.Count == 0)
 // once, because `dotnet run` would repeat its up-to-date check on every invocation.
 var kac = BuildKac(kacProject);
 if (kac is null) return 2;
+Invoked.Assembly = kac;
 
 var coveredChecks = new HashSet<string>(StringComparer.Ordinal);
 var failures = new List<string>();
@@ -94,6 +96,9 @@ foreach (var scenario in scenarios)
                 break;
             case "report":
                 RunReportScenario(name, scenario, corpusDir);
+                break;
+            case "restore":
+                RunRestoreScenario(name, scenario, corpusDir);
                 break;
             default:
                 failures.Add(name);
@@ -330,6 +335,59 @@ void RunNewScenario(string name, string scenario)
             Console.WriteLine($"FAIL   {name}");
             foreach (var p in problems) Console.WriteLine($"         {p}");
             foreach (var l in (stderr + stdout).Split('\n').Where(l => l.Trim().Length > 0).TakeLast(5))
+                Console.WriteLine($"       | {l}");
+        }
+    }
+    finally
+    {
+        TryDelete(temp);
+    }
+}
+
+// The consumer is a folder beside the fixture's `producer/`, so its `source:` is a relative path out of the corpus.
+void RunRestoreScenario(string name, string scenario, string corpusDir)
+{
+    var temp = Path.Combine(Path.GetTempPath(), "kac-restore-" + Guid.NewGuid().ToString("N"));
+    var consumer = Path.Combine(temp, "consumer");
+    try
+    {
+        CopyTree(schemaDir, Path.Combine(consumer, ".schema"));
+        CopyTree(corpusDir, consumer);
+        CopyTree(Path.Combine(scenario, "producer"), Path.Combine(temp, "producer"));
+
+        var (stdout, stderr, exit) = Run(consumer, "dotnet", kac, "restore");
+
+        var imports = Path.Combine(consumer, ".imports");
+        var listing = Directory.Exists(imports) ? Listing(imports).Select(rel => ".imports/" + rel).ToList() : [];
+        var tree = string.Join('\n', listing) + "\n";
+        var descriptor = File.ReadAllText(Path.Combine(consumer, ".corpus.yaml")).Replace("\r\n", "\n");
+
+        var treePath = Path.Combine(scenario, "expected-tree.txt");
+        var yamlPath = Path.Combine(scenario, "expected-descriptor.yaml");
+
+        if (update)
+        {
+            File.WriteAllText(treePath, tree);
+            File.WriteAllText(yamlPath, descriptor);
+            Console.WriteLine($"UPDATE {name}  ({listing.Count} file(s), exit {exit})");
+            return;
+        }
+
+        var problems = new List<string>();
+        if (exit != 0) problems.Add($"expected the restore to succeed (exit 0), got exit {exit}");
+        problems.AddRange(Differences("the files under .imports/", treePath, tree));
+        problems.AddRange(Differences(".corpus.yaml", yamlPath, descriptor));
+
+        if (problems.Count == 0)
+        {
+            Console.WriteLine($"ok     {name}  (restored {listing.Count} file(s))");
+        }
+        else
+        {
+            failures.Add(name);
+            Console.WriteLine($"FAIL   {name}");
+            foreach (var p in problems) Console.WriteLine($"         {p}");
+            foreach (var l in (stderr + stdout).Split('\n').Where(l => l.Trim().Length > 0))
                 Console.WriteLine($"       | {l}");
         }
     }
@@ -926,6 +984,21 @@ if (filters.Count == 0)
         failures.Add("(coverage: stale check ids)");
     }
 
+    // `--update` skips the runs of a scenario with no golden to write, so it would report their verbs unrun.
+    if (!update)
+    {
+        var declared = DeclaredVerbs(kac, libraryRoot);
+        var unrun = declared.Where(v => !Invoked.Verbs.Contains(v)).ToList();
+
+        var ran = declared.Count - unrun.Count;
+        Console.WriteLine($"coverage: {ran}/{declared.Count} verbs run by a scenario or a gate.");
+        if (unrun.Count > 0)
+        {
+            Console.WriteLine($"  NOT COVERED, every verb needs a scenario: {string.Join(", ", unrun)}");
+            failures.Add("(coverage: verbs no scenario runs)");
+        }
+    }
+
     // `kac checks` verifies its curated rows against the catalogue and exits non-zero on drift.
     var (_, checksErr, checksExit) = Run(libraryRoot, "dotnet", kac, "checks");
     if (checksExit != 0)
@@ -1098,6 +1171,17 @@ static IReadOnlySet<string> CheckCatalogue(string kac, string corpusRoot)
     return set;
 }
 
+// From the parser's own XML documentation, the source `kac.tests/CliReference.cs` reads, in the order it declares them.
+static List<string> DeclaredVerbs(string kac, string corpusRoot)
+{
+    var (stdout, stderr, exit) = Run(corpusRoot, "dotnet", kac, "cli", "xmldoc");
+    if (exit != 0) throw new Exception($"kac cli xmldoc exited {exit}.\n{stderr}");
+
+    var root = XDocument.Parse(stdout).Root ?? throw new Exception("kac cli xmldoc printed no root element.");
+    return [.. root.Elements("Command").Select(c => c.Attribute("Name")?.Value
+        ?? throw new Exception($"kac cli xmldoc printed a command with no name: {c}"))];
+}
+
 static string FolderOf(string path) =>
     Path.GetDirectoryName(path) ?? throw new Exception($"'{path}' names no folder above it.");
 
@@ -1145,6 +1229,10 @@ static (string stdout, string stderr, int exit) Run(string workingDir, string fi
     };
     foreach (var a in argv) psi.ArgumentList.Add(a);
 
+    // A flag in the verb's place is `--help` or `--version`, which run no verb.
+    if (argv is [var target, var verb, ..] && target == Invoked.Assembly && !verb.StartsWith('-'))
+        Invoked.Verbs.Add(verb);
+
     // Colour off, so what a scenario captures is the same on every machine. Spectre writes escapes to
     // a redirected stream where the environment declares itself a runner that renders them, and
     // GITHUB_ACTIONS is one, so a golden matching on text would pass here and fail in CI.
@@ -1183,6 +1271,16 @@ static void TryDelete(string dir)
 
 static string Rel(string root, string path) => Path.GetRelativePath(root, path).Replace('\\', '/');
 static string Indent(string s) => string.Join('\n', s.Split('\n').Select(l => "       " + l));
+
+/// <summary>
+/// The verbs of every <c>kac</c> process this run started. <c>Run</c> counts a process as <c>kac</c> where its first
+/// argument is <see cref="Assembly"/>, so nothing is counted before the build sets it.
+/// </summary>
+internal static class Invoked
+{
+    internal static string? Assembly { get; set; }
+    internal static HashSet<string> Verbs { get; } = new(StringComparer.Ordinal);
+}
 
 internal record Report(List<F> Findings);
 

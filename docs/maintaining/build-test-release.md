@@ -47,8 +47,8 @@ Each layer proves something the others cannot. CI runs all three on every pull r
 | Feature | `dotnet test tooling/kac.features` | Each check, and each command a `.feature` file covers, does what its scenarios say, run in-process over a fixture corpus |
 | Golden  | `dotnet run tooling/kac-tests.cs`  | Each command, run as a real process, prints the output and writes the files a fixture expects                            |
 
-The golden suite also fails two things no other layer sees: a check that no fixture trips, and a type page whose
-checks table is out of date.
+The golden suite also fails three things no other layer sees: a check that no fixture trips, a command the suite
+never runs, and a type page whose checks table is out of date.
 
 ### Run the unit layer in part
 
