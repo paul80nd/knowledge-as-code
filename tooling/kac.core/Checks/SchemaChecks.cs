@@ -423,9 +423,9 @@ public static class SchemaChecks
         if (spec.Of == "object")
             foreach (var key in ScalarEntryKeys(spec))
                 f.Add(new Finding(at, null, Sev.Error, new CheckId("schema-shape"),
-                    $"field '{name}' declares 'of: object' and '{key}:', which is read from scalar entries only. "
-                    + "Every entry of this field is an object, so the key would check nothing. Drop the key, "
-                    + "or declare the field 'of: id'."));
+                    $"field '{name}' declares 'of: object' and '{key}:'. That key reads each entry as one plain "
+                    + "value, and every entry here is an object, so it would check nothing. Drop the key, or "
+                    + "declare the field 'of: id'."));
 
         if (spec.Entry is { Count: > 0 } && !holdsObjects)
             Dispatch(at, $"field '{name}' declares "

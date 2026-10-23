@@ -330,7 +330,7 @@ public partial class Doc
     /// <summary>
     /// Derived first, because a derived key is never the author's: <c>derived-key</c> reports one written, and this
     /// keeps the two from disagreeing. <c>FrontNode</c> reads the same way, so <c>field()</c> and <c>present()</c>
-    /// agree.
+    /// agree on a derived key.
     /// </summary>
     public string? FrontScalar(string key) => Derived(key) ?? (Front is null
         ? null

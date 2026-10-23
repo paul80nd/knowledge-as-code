@@ -223,7 +223,7 @@
       "line": null,
       "severity": "error",
       "check": "schema-shape",
-      "message": "field 'signoffs' declares 'of: object' and 'ref:', which is read from scalar entries only. Every entry of this field is an object, so the key would check nothing. Drop the key, or declare the field 'of: id'."
+      "message": "field 'signoffs' declares 'of: object' and 'ref:'. That key reads each entry as one plain value, and every entry here is an object, so it would check nothing. Drop the key, or declare the field 'of: id'."
     },
     {
       "file": ".schema/widgets.yaml",
