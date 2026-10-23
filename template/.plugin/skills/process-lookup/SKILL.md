@@ -83,14 +83,14 @@ Read the `status` that puts a process in force from `inForce`, a string, `null`,
 `types` in `manifest.json`. The schema can change it, so take it from the export every time. Read `status` and
 `last-rehearsed` before you hand anybody a procedure, and tell them what you saw:
 
-* **`last-rehearsed: never`**: nobody has followed this end to end, so the first person to run it is testing it.
-* **`last-rehearsed` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
-* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed`, and
-  say nothing here answers that.
 * **The `inForce` value**: in force. Answer from it.
 * **`status: draft`**: the process was not agreed when the export was taken.
 * **`status: retired`**: the process was stood down. Find what replaced it, and quote that.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
+* **`last-rehearsed: never`**: nobody has followed this end to end, so the first person to run it is testing it.
+* **`last-rehearsed` older than `rehearsal-frequency` allows**: the process has drifted out of its own cadence.
+* **`rehearsal-frequency: on-change`**: no date makes this one stale. Ask what has moved since `last-rehearsed`, and
+  say nothing here answers that.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
 the key existed has none. Say so, and give `status` as written. Call no process in force on the strength of its status.

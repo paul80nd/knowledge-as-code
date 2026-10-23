@@ -69,7 +69,7 @@ Read the `status` that puts a report in force from `inForce`, a string, `null`, 
 
 * **The `inForce` value**: in force. Answer from it.
 * **`draft`**: nobody has checked it. Say so before you give any of it.
-* **`stale`**: the corpus has moved past it, as a version that differs says. Say so before you give any of it.
+* **`stale`**: the corpus has moved past it. Say so before you give any of it.
 * **Any other status, where `inForce` gives one**: not in force. Give the status as written before you give any of it.
 
 **Where `inForce` is `null` or absent, the export does not state which status is in force.** An export written before
