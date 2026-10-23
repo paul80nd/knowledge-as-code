@@ -125,6 +125,9 @@ public static class Exporter
             });
         }
 
+        var orphans = Orphans(files, types);
+        if (orphans.Count > 0) return new ExportPlan([], [], [], [], orphans);
+
         files.Add(new ExportFile(ManifestFile,
             Serialize(new ExportManifest(
                 FormatVersion,
@@ -291,6 +294,42 @@ public static class Exporter
         }
 
         return found;
+    }
+
+    /// <summary>
+    /// A part line naming a record whose file the plan does not write. Matched the way a reader resolves the line: a
+    /// line with a shortcode names <c>&lt;dir&gt;/&lt;shortcode&gt;/&lt;id&gt;.json</c>, and one without names
+    /// <c>&lt;dir&gt;/&lt;id&gt;.json</c>.
+    /// </summary>
+    private static List<string> Orphans(List<ExportFile> files, List<ExportedType> types)
+    {
+        var found = new List<string>();
+        var paths = files.Select(f => f.Path).ToHashSet(StringComparer.Ordinal);
+
+        foreach (var type in types)
+        {
+            if (type is not { PartsFile: { } partsFile, RecordKey: { } recordKey }) continue;
+
+            var lines = files.First(f => f.Path == partsFile).Content.Split('\n');
+            foreach (var read in lines.Select(JsonRead.Parse).OfType<JsonObject>())
+            {
+                if (JsonRead.Str(read[recordKey]) is not { } record) continue;
+
+                var shortcode = JsonRead.Str(read[ShortcodeKey]);
+                var expected = shortcode is null
+                    ? $"{type.Dir}/{record}.json"
+                    : $"{type.Dir}/{shortcode}/{Unscoped(record, shortcode)}.json";
+                if (paths.Contains(expected)) continue;
+
+                found.Add($"'{type.Type}' has a part line for {record}, and the export writes no {expected}. "
+                          + "Re-export and re-pack the corpus that sent the line, then run kac restore.");
+            }
+        }
+
+        return found;
+
+        static string Unscoped(string id, string shortcode) =>
+            id.StartsWith($"{shortcode}:", StringComparison.Ordinal) ? id[(shortcode.Length + 1)..] : id;
     }
 
     private static bool Same(

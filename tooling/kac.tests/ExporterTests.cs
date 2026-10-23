@@ -888,7 +888,7 @@ public class ExporterTests
     public void A_line_already_naming_its_writer_keeps_that_name()
     {
         var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
-            Consumed("eng", TheirInheritedLine));
+            Carrying(Consumed("eng", TheirInheritedLine), Old));
 
         var line = Lines(plan).Single(l => l.Text("id").Contains(':'));
 
@@ -900,7 +900,7 @@ public class ExporterTests
     [Fact]
     public void A_corpus_its_producer_consumed_reaches_sources_too()
     {
-        var eng = Consumed("eng", TheirInheritedLine) with
+        var eng = Carrying(Consumed("eng", TheirInheritedLine), Old) with
         {
             Sources =
             [
@@ -1029,11 +1029,35 @@ public class ExporterTests
     {
         var plan = Merged(
             Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
-            Consumed("eng", TheirInheritedLine),
-            Consumed("gp", OldLine));
+            Carrying(Consumed("eng", TheirInheritedLine), Old),
+            Holding(Consumed("gp", OldLine), Old));
 
         Assert.Single(Lines(plan), l => l.Text("id") == "gp:gls-old.alpha");
         Assert.Equal(2, Assert.Single(plan.Types).Parts);
+    }
+
+    [Fact]
+    public void A_part_line_whose_record_did_not_travel_refuses_and_writes_nothing()
+    {
+        var plan = Merged(Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Consumed("eng", TheirInheritedLine));
+
+        Assert.Empty(plan.Files);
+        Assert.Equal(
+            "'glossary' has a part line for gp:gls-old, and the export writes no glossary/gp/gls-old.json. "
+            + "Re-export and re-pack the corpus that sent the line, then run kac restore.",
+            Assert.Single(plan.Refused));
+    }
+
+    [Fact]
+    public void Part_lines_whose_records_all_travelled_do_not_refuse()
+    {
+        var plan = Merged(
+            Corpus(Glossary("gls-one", null, "### Alpha\n\nA.\n")),
+            Carrying(Consumed("eng", TheirLine, TheirInheritedLine), Old));
+
+        Assert.Empty(plan.Refused);
+        Assert.Equal(3, Assert.Single(plan.Types).Parts);
     }
 
     /// <summary>Gp's line as gp published it, before eng stamped it into <c>TheirInheritedLine</c>.</summary>

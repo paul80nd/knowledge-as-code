@@ -46,6 +46,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
   line placed above an H4 inside an H3 rule passed `mirrors-citations`, though the rule went on below it. In a type
   declaring `parts:`, a heading now closes a footnote's section only at or above the part level, anywhere in the
   record. The next rule, the next H2 and the end of the file still close it, and the line passes there.
+- **`kac export` refuses a part line whose record file did not travel with it.** A consumed corpus could send a line
+  naming `gp:gls-old` without `glossary/gp/gls-old.json`, and `export`, `validate` and `bundle` all passed. A lookup
+  skill following that line opened a file nobody received. `export` now writes nothing, and names the type, the line's
+  record and the file it expected. Re-export and re-pack the corpus that sent the line, then run `kac restore`.
 
 ## 0.37.0 - 2026-10-21
 
