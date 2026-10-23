@@ -30,8 +30,8 @@ Branch off `main`. A push to `main` is rejected. Before you open the pull reques
 1. Fix every page your change made wrong. A change to a command usually changes its page under `docs/use/cli/`.
 2. Where `kac` changed, add an entry under `## Unreleased` in `tooling/kac/CHANGELOG.md`.
 3. Leave `<Version>` alone. Moving it publishes a release, and that is the owner's decision.
-4. Where a record changed, move `content-version` in that corpus's `.corpus.yaml`. Where that corpus has consumers,
-   move their `resolved:` lock in the same pull request.
+4. Where a change alters what a corpus exports, move `content-version` in that corpus's `.corpus.yaml`. Where that
+   corpus has consumers, move their `resolved:` lock in the same pull request.
 5. Run the [test layers](build-test-release.md#the-three-test-layers) your change touches.
 6. Put a change of behaviour in a commit of its own.
 
