@@ -82,16 +82,19 @@ Commit first where you are about to publish the result.
 
 ### A refusal
 
-Three things end the run with nothing written, and each prints one line saying why. Where more than one applies, the run
+Each of these ends the run with nothing written, and prints one line saying why. Where more than one applies, the run
 lists every one. Each would otherwise publish a file that reads as whole and answers two ways:
 
 ```text
 export: nothing is restored for eng, which this corpus consumes and an export carries. Run kac restore.
 ```
 
-The other two are a consumed corpus at an export format this `kac` cannot read, and one exporting a type at a different
+The others are a consumed corpus at an export format this `kac` cannot read, and one exporting a type at a different
 shape or a different section fidelity from yours. Fix the first by re-exporting and re-packing upstream. The second is a
 decision about the two corpora, not about this command.
+
+`export` then checks the export it planned. A part line naming a record whose file the export does not write ends the
+run too. Re-export and re-pack the corpus that sent the line, then run `restore`.
 
 ## Known limits
 

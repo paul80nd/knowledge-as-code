@@ -146,6 +146,8 @@ Each of these ends the run with a reason and nothing written:
 * a consumed corpus at an export format this build does not read
 * two corpora exporting one type at two shapes, or sending its sections at two fidelities
 * one corpus arriving twice, at two versions
+* a part line naming a record whose file the export does not write, such as a line for `gp:gls-old` with no
+  `glossary/gp/gls-old.json` beside it
 
 ### `sources`
 
