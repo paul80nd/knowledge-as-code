@@ -58,6 +58,10 @@ first, and whoever owns the branch decides whether it ships now or waits for the
 - **`kac report coverage` lists only a deviation in force.** The `Deviations` column listed every deviation citing a
   clause in `departs-from:`, so a closed one read as a departure that still stands. A deviation now appears only while
   its `status` is the value its type declares in `in-force:`, which is `active`. `## Limits` says so.
+- **`kac validate` reports a clause opening with a keyword in a code span.** A clause such as `` `SHOULD` go `` passed
+  `clause-modal` as though it opened with the keyword. A code span names a keyword, so that clause states no
+  obligation. `clause-modal` now reports it as opening with no modal. It reports a bold `MUST` followed by `` `NOT` ``
+  too, which `kac export` read as `MUST NOT`.
 
 ## 0.38.0 - 2026-10-23
 

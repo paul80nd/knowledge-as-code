@@ -150,7 +150,13 @@ public static class PartChecks
 
         foreach (var row in d.Parts)
         {
-            var modal = spec.Modal(row.Text);
+            // A keyword in a code span is named, not stated. `Modal` reads `Text`, as the exporter does, so a clause
+            // that passes here exports at the level this check judged.
+            var words = row.TextWithoutCode;
+            var opening = spec.Modal(row.Text);
+            var modal = !row.OpensWithCode && opening is not null && words.StartsWith(opening, StringComparison.Ordinal)
+                ? opening
+                : null;
             if (modal is null)
             {
                 report.Err(new CheckId("clause-modal"),
@@ -166,11 +172,9 @@ public static class PartChecks
                 report.Err(new CheckId("clause-modal"),
                     $"'{modal}' does not bind. Write it plain, not bold.", row.Line);
 
-            // `ModalNamed` asks for the whole word, so the `MUST` inside `MUSTERED` is not a second modal. `modal` is
-            // read from `Text`, so a cell opening with a code span does not open with it in `TextWithoutCode`.
-            var words = row.TextWithoutCode;
-            var rest = words.StartsWith(modal, StringComparison.Ordinal) ? words[modal.Length..] : words;
-            if (spec.ModalNamed(rest) is { } second)
+            // `words` opens with `modal`, so the slice cannot throw. `ModalNamed` asks for the whole word, so the
+            // `MUST` inside `MUSTERED` is not a second modal.
+            if (spec.ModalNamed(words[modal.Length..]) is { } second)
                 report.Warn(new CheckId("clause-compound"),
                     $"clause '{row.Id ?? row.IdText}' carries a second '{second}': one obligation per clause, or the "
                     + "citation is ambiguous.", row.Line);

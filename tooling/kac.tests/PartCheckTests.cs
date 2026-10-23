@@ -96,8 +96,48 @@ public class PartCheckTests
     }
 
     [Fact]
-    public void A_clause_opening_with_a_code_span_is_read_without_cutting_its_first_word()
-        => Assert.Empty(Run(Header + "| `LOGS` | `SHOULD` go. |\n"));
+    public void A_keyword_named_in_a_code_span_does_not_open_the_clause()
+    {
+        var found = Run(Header + "| `LOGS` | `SHOULD` go. |\n");
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
+        Assert.Contains("does not open with a modal", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_cell_holding_only_a_keyword_in_a_code_span_states_no_obligation()
+    {
+        var found = Run(Header + "| `LOGS` | `MUST` |\n");
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
+        Assert.Contains("does not open with a modal", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_keyword_in_a_code_span_does_not_open_the_clause_when_the_same_word_follows()
+    {
+        var found = Run(Header + "| `LOGS` | `SHOULD` SHOULD go. |\n");
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
+        Assert.Contains("does not open with a modal", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_modal_completed_by_a_code_span_does_not_open_the_clause()
+    {
+        var found = Run(Header + "| `LOGS` | **MUST** `NOT` leave. |\n");
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
+        Assert.Contains("does not open with a modal", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_bold_modal_behind_a_code_span_does_not_open_the_clause()
+    {
+        var found = Run(Header + "| `LOGS` | `X` **MUST** do y. |\n");
+        Assert.Equal("clause-modal", Assert.Single(found).Check.Value);
+        Assert.Contains("does not open with a modal", Assert.Single(found).Message);
+    }
+
+    [Fact]
+    public void A_code_span_after_the_opening_modal_leaves_the_modal_whole()
+        => Assert.Empty(Run(Header + "| `LOGS` | **MUST** `retain` logs. |\n"));
 
     [Fact]
     public void An_id_that_is_not_a_code_span_is_a_word_rather_than_a_handle()
