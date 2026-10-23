@@ -69,7 +69,7 @@
       "line": 9,
       "severity": "error",
       "check": "bare-key",
-      "message": "'deciders' is absent but not a bare key. Use 'deciders:' with no value (not null, ~, \"\", or —)."
+      "message": "'deciders' is absent but not a bare key. Use 'deciders:' with no value (not null, ~, \"\", '', or —)."
     }
   ]
 }

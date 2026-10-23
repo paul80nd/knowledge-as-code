@@ -48,8 +48,8 @@ public static class ValueChecks
         {
             if (!IsBareKey(node))
                 report.Err(new CheckId("bare-key"),
-                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value (not null, ~, \"\", or —).",
-                    line);
+                    $"'{name}' is absent but not a bare key. Use '{name}:' with no value "
+                    + "(not null, ~, \"\", '', or —).", line);
 
             // A field declaring `required-when:` is exempt, because whether it is optional depends on another field.
             else if (!spec.Required && spec.RequiredWhen is null)
@@ -81,7 +81,7 @@ public static class ValueChecks
     public static bool IsAbsent(YamlNode node, FieldSpec? spec = null) =>
         node switch
         {
-            YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL",
+            YamlScalarNode sc => string.IsNullOrEmpty(sc.Value) || sc.Value is "~" or "null" or "Null" or "NULL" or "—",
             YamlSequenceNode seq => seq.Children.Count == 0,
             // A mapping is a value only where the field declares `object`. Anywhere else it is an unquoted placeholder.
             YamlMappingNode map => spec?.Type != "object" || map.Children.Count == 0,
