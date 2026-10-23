@@ -82,12 +82,11 @@ public sealed class FieldSpec
     /// </summary>
     public bool PartRequired { get; init; }
 
-    /// <summary>Field on the target that must point back.</summary>
+    /// <summary>The name of the field on the referenced record that must list this record back.</summary>
     public string? Reciprocal { get; init; }
     public string? Pattern { get; init; }
     /// <summary>Pattern compiled, though the message still quotes the source string.</summary>
     public Regex? PatternRegex { get; init; }
-    /// <summary>Section whose ids this field must mirror.</summary>
     public string? MirrorsSection { get; init; }
 
     /// <summary>

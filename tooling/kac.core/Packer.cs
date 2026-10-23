@@ -51,7 +51,6 @@ public static class Packer
             return Stop(problems,
                 $"the export holds no readable {Exporter.ManifestFile}. Run the export first: kac export");
 
-        // Held against the shape this build can read, for the reason `Bundler.Plan` asks the same question.
         var declaredFormat = JsonRead.Int(manifest["formatVersion"]);
         if (declaredFormat != Exporter.FormatVersion)
             return Stop(problems,

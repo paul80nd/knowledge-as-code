@@ -312,9 +312,8 @@ public static class Restore
         && !path.Split('/', '\\').Any(s => s is ".." or "");
 
     /// <summary>
-    /// Copies until the cap is passed, and answers whether it stayed inside it. <c>CopyTo</c> reads an entry whole
-    /// before anything can object, which is the point: what a package costs to open has to be decidable while it is
-    /// being opened rather than afterwards.
+    /// Copies until the cap is passed, and answers whether it stayed inside it. <c>CopyTo</c> cannot replace it,
+    /// because it reads an entry whole before the cap is asked.
     /// </summary>
     private static bool CopyCapped(Stream from, Stream to, long cap)
     {

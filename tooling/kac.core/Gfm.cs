@@ -36,9 +36,8 @@ public static class Gfm
     }
 
     /// <summary>
-    /// Dashes fill the cell, padding spaces included: |------| rather than | ---- |. Both are valid GFM and the row
-    /// width is identical, but this is the form markdown formatters normalise to, and a generated file that an editor
-    /// reformats on save is a permanently dirty working tree.
+    /// Dashes fill the cell, padding spaces included. That is the form a Markdown formatter normalises to, so an editor
+    /// saving a generated file leaves it unchanged.
     /// </summary>
     private static string Sep(int[] w)
     {
