@@ -1,4 +1,5 @@
 using kac.core;
+using YamlDotNet.RepresentationModel;
 
 // The types are invented, because a case naming a real one would move whenever that type did.
 
@@ -113,7 +114,7 @@ public class SchemaCheckTests
             {
                 Id = new RuleId("widgets-are-blue"), Severity = Sev.Warning, Expr = "present('colour')",
                 Compiled = RuleExpr.Compile("present('colour')"), Message = "say what colour it is.",
-                Config = ["max-words"], MaxWords = "5", Line = 12
+                Config = Declaring("max-words", new YamlScalarNode("5")), Line = 12
             }
         ])));
 
@@ -128,11 +129,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec
-            {
-                Id = new RuleId("y-statement-present"), Severity = Sev.Warning, Config = ["postures"],
-                Postures = ["Obliged"]
-            }
+            YStatement(Declaring("postures", new YamlSequenceNode(new YamlScalarNode("Obliged"))))
         ])));
 
         Assert.Equal("schema-dispatch", finding.Check.Value);
@@ -149,11 +146,7 @@ public class SchemaCheckTests
     {
         var finding = Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec
-            {
-                Id = new RuleId("y-statement-present"), Severity = Sev.Warning, Config = ["max-words"],
-                MaxWords = declared, Line = 7
-            }
+            YStatement(Declaring("max-words", new YamlScalarNode(declared)))
         ])));
 
         Assert.Equal("schema-dispatch", finding.Check.Value);
@@ -162,15 +155,22 @@ public class SchemaCheckTests
     }
 
     [Fact]
-    public void A_word_limit_that_is_a_whole_number_above_zero_passes()
-        => Assert.Empty(Check(Widgets(rules:
+    public void A_word_limit_written_as_a_list_is_reported_as_no_single_value()
+        => Assert.Contains("is not a single value", Assert.Single(Check(Widgets(rules:
         [
-            new RuleSpec
-            {
-                Id = new RuleId("y-statement-present"), Severity = Sev.Warning, Config = ["max-words"],
-                MaxWords = "60"
-            }
-        ])));
+            YStatement(Declaring("max-words", new YamlSequenceNode(new YamlScalarNode("60"))))
+        ]))).Message);
+
+    [Fact]
+    public void A_word_limit_that_is_a_whole_number_above_zero_passes()
+        => Assert.Empty(Check(Widgets(rules: [YStatement(Declaring("max-words", new YamlScalarNode("60")))])));
+
+    private static Dictionary<string, YamlNode> Declaring(string key, YamlNode value) => new() { [key] = value };
+
+    private static RuleSpec YStatement(Dictionary<string, YamlNode> config) => new()
+    {
+        Id = new RuleId("y-statement-present"), Severity = Sev.Warning, Config = config, Line = 7
+    };
 
     [Fact]
     public void A_rule_the_loader_could_not_read_is_reported_against_its_file()

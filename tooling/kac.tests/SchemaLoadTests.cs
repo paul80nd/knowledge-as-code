@@ -299,8 +299,9 @@ public class SchemaLoadTests
                                 max-words: five
                             """);
 
-        Assert.Equal("five", rule.MaxWords);
-        Assert.Equal(["max-words"], rule.Config);
+        var (key, value) = Assert.Single(rule.Config);
+        Assert.Equal("max-words", key);
+        Assert.Equal("five", Yaml.Str(value));
         Assert.Equal(2, rule.Line);
     }
 

@@ -15,9 +15,12 @@ public sealed class AlignmentRollup : ICorpusRule
 
     private const string Field = "aligns-with";
 
-    private const string Standings = "postures";
+    private const string Postures = "postures";
 
-    public IReadOnlyList<string> Reads => [Standings];
+    public IReadOnlyList<string> Reads => [Postures];
+
+    /// <summary>The standings that bind, as the rule's <c>postures:</c> spells them.</summary>
+    private static List<string> Binding(RuleSpec spec) => Yaml.StrList(spec.Config.GetValueOrDefault(Postures));
 
     /// <summary>
     /// A posture no register page heads a standing with. Judged only against the pages the records link to, so a
@@ -27,7 +30,8 @@ public sealed class AlignmentRollup : ICorpusRule
     {
         if (Column(ctx.Type) is not { } column) yield break;
 
-        var register = new Register(ctx.Tree, ctx.Spec.Postures);
+        var binding = Binding(ctx.Spec);
+        var register = new Register(ctx.Tree, binding);
         var headed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var doc in ctx.Records)
@@ -38,8 +42,8 @@ public sealed class AlignmentRollup : ICorpusRule
 
         if (headed.Count == 0) yield break;
 
-        foreach (var posture in ctx.Spec.Postures.Where(p => !headed.Contains(p)))
-            yield return $"'{Standings}' lists '{posture}', and no register page the records cite has a "
+        foreach (var posture in binding.Where(p => !headed.Contains(p)))
+            yield return $"'{Postures}' lists '{posture}', and no register page the records cite has a "
                          + $"'## {posture}' heading. Spell it as the register heads it, or add the heading.";
     }
 
@@ -50,7 +54,7 @@ public sealed class AlignmentRollup : ICorpusRule
     {
         if (Column(ctx.Type) is not { } column) return;
 
-        var register = new Register(ctx.Tree, ctx.Spec.Postures);
+        var register = new Register(ctx.Tree, Binding(ctx.Spec));
         var reached = new Dictionary<string, (Doc First, HashSet<string> Cited)>(StringComparer.Ordinal);
 
         foreach (var doc in ctx.Records)

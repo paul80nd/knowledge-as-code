@@ -1,4 +1,5 @@
 using kac.core;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.tests;
 
@@ -246,11 +247,6 @@ public class AlignmentRollupTests
     public void A_policy_citing_nothing_leaves_the_register_unread()
         => Assert.Empty(Uncited("aligns-with:", "| `ZEROSEC` | COULD reach zero secrets. | |"));
 
-    /// <summary>
-    /// Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make a
-    /// cell's labels links, and a label names the register page and heading. <c>undefined</c> names the labels left
-    /// without one, which is how a case states a citation markdown never made into a link.
-    /// </summary>
     private static List<Finding> Findings(string frontmatter, IReadOnlyCollection<string> undefined,
         params string[] rows)
     {
@@ -267,6 +263,11 @@ public class AlignmentRollupTests
         return found;
     }
 
+    /// <summary>
+    /// Markdig resolves a shortcut reference only where one is defined, so the definitions at the foot are what make a
+    /// cell's labels links, and a label names the register page and heading. <c>undefined</c> names the labels left
+    /// without one, which is how a case states a citation markdown never made into a link.
+    /// </summary>
     private static (Doc Doc, Tree Tree) Policy(Schema schema, string frontmatter,
         IReadOnlyCollection<string> undefined, string[] rows)
     {
@@ -289,8 +290,11 @@ public class AlignmentRollupTests
 
     private static RuleSpec Rollup(params string[] postures) => new()
     {
-        Id = new RuleId("alignment-rollup"), Severity = Sev.Error, Config = ["postures"], Postures = postures,
-        Line = 9
+        Id = new RuleId("alignment-rollup"), Severity = Sev.Error, Line = 9,
+        Config = new Dictionary<string, YamlNode>
+        {
+            ["postures"] = new YamlSequenceNode(postures.Select(p => new YamlScalarNode(p)))
+        }
     };
 
     /// <summary>

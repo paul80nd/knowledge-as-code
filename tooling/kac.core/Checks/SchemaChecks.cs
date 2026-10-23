@@ -493,8 +493,8 @@ public static class SchemaChecks
 
     /// <summary>
     /// A rule's config keys are what its class <c>Reads</c>, and an <c>expr:</c> rule reads none. A rule nothing
-    /// dispatches is an intention, and its keys are left alone. A corpus rule's values are judged by
-    /// <c>Validator</c>, which holds the corpus they may name.
+    /// dispatches is an intention, and its keys are left alone. <c>Validator</c> judges a corpus rule's values, because
+    /// they may name something only the corpus has.
     /// </summary>
     private static void CheckConfig(string at, string key, RuleSpec rule, Schema schema, List<Finding> f)
     {
@@ -509,7 +509,7 @@ public static class SchemaChecks
             : reads.Count == 0 ? "its rule class reads no config"
             : $"its rule class reads only {List(reads)}";
 
-        foreach (var config in rule.Config.Where(c => !reads.Contains(c, StringComparer.Ordinal)))
+        foreach (var config in rule.Config.Keys.Where(c => !reads.Contains(c, StringComparer.Ordinal)))
             Dispatch(at, $"rule '{rule.Id}' on type '{key}' declares '{config}:', and {reader}. Drop the key.", f,
                 rule.Line);
 

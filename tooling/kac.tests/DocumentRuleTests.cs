@@ -1,4 +1,5 @@
 using kac.core;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.tests;
 
@@ -52,7 +53,7 @@ public class DocumentRuleTests
         var body = "> " + string.Join(" ", Enumerable.Repeat("word", 40)) + " **in the context of** x,"
                    + " **facing** y, **we decided** z, **rather than** w, **to achieve** v, **accepting** u.";
         var found = Run(new YStatementPresent(), Adr(body),
-            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = "20" });
+            Ceiling("20"));
 
         Assert.Equal("y-statement", Single(found).Check.Value);
         Assert.Contains("keep it under 20.", Single(found).Message);
@@ -67,7 +68,7 @@ public class DocumentRuleTests
 
         Assert.Empty(Run(new YStatementPresent(), Adr(body)));
         Assert.NotEmpty(Run(new YStatementPresent(), Adr(body),
-            new RuleSpec { Id = new RuleId("y-statement-present"), MaxWords = "5" }));
+            Ceiling("5")));
     }
 
     [Theory]
@@ -434,6 +435,12 @@ public class DocumentRuleTests
     }
 
     private static Finding Single(List<Finding> found) => Assert.Single(found);
+
+    private static RuleSpec Ceiling(string words) => new()
+    {
+        Id = new RuleId("y-statement-present"),
+        Config = new Dictionary<string, YamlNode> { ["max-words"] = new YamlScalarNode(words) }
+    };
 
     /// <summary>Parsed against an empty schema, because no rule given an ADR asks anything of the type.</summary>
     private static Doc Adr(string body)

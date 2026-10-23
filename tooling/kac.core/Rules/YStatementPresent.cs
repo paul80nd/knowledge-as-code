@@ -1,4 +1,5 @@
 using System.Globalization;
+using YamlDotNet.RepresentationModel;
 
 namespace kac.core;
 
@@ -18,13 +19,16 @@ public sealed class YStatementPresent : IDocumentRule
 
     public IEnumerable<string> Misconfigured(RuleSpec spec, Schema schema)
     {
-        if (spec.Config.Contains(Limit) && MaxWords(spec) is null)
-            yield return $"'{Limit}' is '{spec.MaxWords ?? "not a single value"}', and a word limit is a whole number "
-                         + $"above zero. Write one, such as {DefaultLimit}.";
+        if (!spec.Config.TryGetValue(Limit, out var declared) || MaxWords(spec) is not null) yield break;
+
+        var written = declared is YamlScalarNode { Value: { } value } ? $"is '{value}'" : "is not a single value";
+        yield return $"'{Limit}' {written}, and a word limit is a whole number above zero. Write one, such as "
+                     + $"{DefaultLimit}.";
     }
 
     private static int? MaxWords(RuleSpec spec) =>
-        int.TryParse(spec.MaxWords, NumberStyles.None, CultureInfo.InvariantCulture, out var words) && words > 0
+        int.TryParse(Yaml.Str(spec.Config.GetValueOrDefault(Limit)), NumberStyles.None, CultureInfo.InvariantCulture,
+            out var words) && words > 0
             ? words
             : null;
 

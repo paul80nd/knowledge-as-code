@@ -374,22 +374,10 @@ public sealed record RuleSpec
     public bool IsExpression => Compiled is not null;
 
     /// <summary>
-    /// The framework standings <c>alignment-rollup</c> holds a policy's roll-up to, as the corpus's own register writes
-    /// them.
+    /// The config keys the entry declares, from those some rule class <c>Reads</c>, each with its value as written. A
+    /// rule class reads its own keys from here. <c>SchemaChecks</c> reports a key the rule's own class does not read.
     /// </summary>
-    public IReadOnlyList<string> Postures { get; init; } = [];
-
-    /// <summary>
-    /// The ceiling <c>y-statement-present</c> holds a Y-statement to, as written. The rule reads the number from it,
-    /// and reports a value that is not one.
-    /// </summary>
-    public string? MaxWords { get; init; }
-
-    /// <summary>
-    /// The config keys the entry declares, from those some rule class <c>Reads</c>. <c>SchemaChecks</c> reports one
-    /// the rule's own class does not read.
-    /// </summary>
-    public IReadOnlyList<string> Config { get; init; } = [];
+    public IReadOnlyDictionary<string, YamlNode> Config { get; init; } = new Dictionary<string, YamlNode>();
 
     /// <summary>The line the entry starts on in its <c>.schema/</c> file, and null for a rule built in code.</summary>
     public int? Line { get; init; }
@@ -1108,6 +1096,11 @@ public sealed partial class Schema
                 }
         }
 
+        var config = new Dictionary<string, YamlNode>(StringComparer.Ordinal);
+        foreach (var key in CheckCatalogue.ReadByRules())
+            if (rule.Get(key) is { } value)
+                config[key] = value;
+
         return new RuleSpec
         {
             Id = new RuleId(id),
@@ -1117,9 +1110,7 @@ public sealed partial class Schema
             Compiled = compiled,
             Message = message,
             Problem = problem,
-            Postures = Yaml.StrList(rule.Get("postures")),
-            MaxWords = Yaml.Str(rule.Get("max-words")),
-            Config = [.. CheckCatalogue.ReadByRules().Where(key => rule.Get(key) is not null)],
+            Config = config,
             Line = Yaml.LineOf(node, 0)
         };
     }
